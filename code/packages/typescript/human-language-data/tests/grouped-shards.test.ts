@@ -1,5 +1,5 @@
-import { createHash } from "node:crypto";
 import {
+  existsSync,
   mkdtempSync,
   mkdirSync,
   readFileSync,
@@ -28,7 +28,7 @@ import {
   shardLedger,
   unshardContents,
 } from "../src/shard-cli.js";
-import { defaultCurriculumRoot } from "../src/loader.js";
+import { defaultCurriculumRoot, loadLanguageRegistry } from "../src/loader.js";
 
 const root = defaultCurriculumRoot();
 const temporary: string[] = [];
@@ -75,24 +75,139 @@ function sandbox(): string {
   return path;
 }
 
+// ---------------------------------------------------------------------------
+// Why these expectations are DERIVED and not pinned literals
+// ---------------------------------------------------------------------------
+//
+// These tests used to compare the live corpus against frozen numbers: a byte
+// length, a SHA-256 of the whole reconstructed ledger, and the literals
+// 1_118 / 69 / 1_187 / 23. Every one is a CORPUS-WIDE total, so adding a single
+// chapter in a single language rewrote five lines here — see #13609, which moved
+// 1_117→1_118, 1_186→1_187, the byte length, and the digest for one Spanish
+// chapter.
+//
+// That made the file a global write-lock. Two branches adding a chapter in two
+// unrelated languages edit the same five lines, so they conflict by
+// construction; worse, whichever merges second carries a digest computed before
+// the other landed, so a green PR breaks main on merge. Human-language work was
+// therefore serialised to one in-flight chapter at a time.
+//
+// Replacing a literal with a derivation is only safe if the derivation comes
+// from somewhere that does NOT already agree by construction. That rules out
+// the obvious candidate: `core/generated-book-hashes/` looks like a second
+// opinion, but `book-cli` builds it by iterating `config.targets` straight out
+// of this very ledger (`readBookGenerationOwners` → `for (const configuredTarget
+// of config.targets)` → `BOOK_HASH_MANIFEST_DIR`). Comparing the ledger to it
+// asserts f(X) == X: add a bogus target, regenerate — which CI forces — and both
+// sides move together while the test stays green. That is weaker than the
+// literal it would replace, so this file does not make that comparison.
+//
+// `<track>/chapters.d/` IS independent. It is authored per track by whoever
+// writes the chapter, and the book pipeline only checks one direction
+// (`requireChapterCapability` demands a capability for every ledger entry, never
+// the reverse), so a chapter can exist there without a ledger entry. Comparing
+// the two as SETS is strictly stronger than the old count: a literal only
+// catches a change in size, while a set comparison also catches a swap, a
+// rename, or a chapter moved between languages that preserves the total.
+//
+// ---------------------------------------------------------------------------
+// Why the handwritten count is STILL a literal
+// ---------------------------------------------------------------------------
+//
+// Not every pinned number here was part of the write-lock, and `69` was not.
+// Across the last 300 commits it moved exactly once — when owner sharding was
+// introduced — while the targets/combined literals moved with ordinary chapter
+// work. Authoring a chapter never changes it. It is stable because nothing
+// routine flips a chapter between the two halves.
+//
+// It is also the ONLY thing that can see that flip. `shard-cli` never mentions
+// `handwritten`; its cross-ledger check compares `targets` against the
+// generated hash tree, which is built from `targets`. Deriving the handwritten
+// set from the authored `.tex` does not work either, tempting as it looks: the
+// `% GENERATED FILE.` stamp is itself a function of `targets`, so moving a
+// chapter and regenerating overwrites the authored file with a stamped one —
+// the witness is destroyed by the very act being tested, and both sides move
+// together again.
+//
+// `data/scripts/handwritten_parity.py` records what that flip costs: the prose
+// living only in the hand-written LaTeX — `sounds` blocks, `cousinweb`
+// etymologies, `grammarlens` explanations, `cognates` tables — is not in the
+// lesson markdown, so regeneration silently deletes it. Measured at 88 blocks
+// across the six Indic tracks, "with every gate still green".
+//
+// So this literal stays. A number that only moves when a person deliberately
+// changes the thing it measures is a tripwire, not a maintenance tax.
+
+/**
+ * Authored-chapter identities according to each track's own `chapters.d` — the
+ * independent opinion this file measures the ledger against.
+ */
+function authoredChapterIdentities(): Set<string> {
+  const identities = new Set<string>();
+  for (const language of loadLanguageRegistry(root).languages) {
+    // The registry is repo-controlled, but every other reader here validates
+    // ids before joining them onto a path, so this one does too.
+    expect(language.id).toMatch(/^[a-z][a-z0-9-]*$/);
+    const directory = join(root, language.id, "chapters.d");
+    // A registered track with no chapter owners is a corpus fault, not a
+    // reason to quietly contribute zero.
+    expect(existsSync(directory), `${language.id}: chapters.d is missing`).toBe(
+      true,
+    );
+    for (const file of readdirSync(directory)) {
+      if (file === "_meta.json" || !file.endsWith(".json")) continue;
+      identities.add(`${language.id}/${file.slice(0, -".json".length)}`);
+    }
+  }
+  return identities;
+}
+
 describe("the chapter-owned real book-generation ledger", () => {
-  it("reconstructs the exact fresh-main canonical bytes", () => {
+  it("re-serializes each owner file to its own canonical bytes", () => {
+    // What survives from the pinned digest: every owner file on disk must equal
+    // the bytes the projector would write for it, so raw formatting drift —
+    // indentation, key order, a missing trailing newline — still fails. This
+    // holds at any corpus size, so it never needs rewriting when a chapter
+    // lands. It deliberately does NOT claim to detect changed chapter CONTENT;
+    // that belongs to the per-chapter hashes `check:books` verifies, not here.
     const bytes = unshardContents(root, BOOK_GENERATION_PLAN);
-    expect(Buffer.byteLength(bytes)).toBe(193_875);
-    expect(createHash("sha256").update(bytes).digest("hex")).toBe(
-      "167243f5638eb0018c521d91661ce14e55bcbf2e2bc239705fe4ce0e8be91eff",
+    const directory = join(root, BOOK_GENERATION_DIRECTORY);
+    const reconstructed = bookGenerationOwnerContents(
+      JSON.parse(bytes) as BookGenerationDocument,
+    );
+    let compared = 0;
+    for (const [name, body] of reconstructed) {
+      expect(readFileSync(join(directory, name), "utf8")).toBe(body);
+      compared += 1;
+    }
+    // Both directions: no owner on disk is left unaccounted for.
+    expect(compared).toBe(
+      BOOK_GENERATION_SECTION_DIRECTORIES.reduce(
+        (sum, section) => sum + readdirSync(join(directory, section)).length,
+        1, // _meta.json
+      ),
     );
   });
 
   it("has the measured stable owner counts", () => {
     const directory = join(root, BOOK_GENERATION_DIRECTORY);
+    const tracks = loadLanguageRegistry(root).languages.length;
+    // Genuinely fixed shapes — these do not move when a chapter is authored.
     expect(readdirSync(join(directory, "script-sets.d"))).toHaveLength(8);
     expect(readdirSync(join(directory, "reference-appendices.d"))).toHaveLength(6);
-    expect(readdirSync(join(directory, "glossaries.d"))).toHaveLength(23);
-    expect(readdirSync(join(directory, "answer-keys.d"))).toHaveLength(23);
-    expect(readdirSync(join(directory, "indexes.d"))).toHaveLength(23);
-    expect(readdirSync(join(directory, "targets.d"))).toHaveLength(1_120);
+    // One per registered track, derived from the registry rather than retyped.
+    expect(readdirSync(join(directory, "glossaries.d"))).toHaveLength(tracks);
+    expect(readdirSync(join(directory, "answer-keys.d"))).toHaveLength(tracks);
+    expect(readdirSync(join(directory, "indexes.d"))).toHaveLength(tracks);
+    // The handwritten count STAYS PINNED, and deliberately so — see the note
+    // above on why this particular literal is not part of the write-lock.
     expect(readdirSync(join(directory, "handwritten.d"))).toHaveLength(69);
+    // The total is chapter-scaled, so it is proved against the independently
+    // authored `chapters.d` instead.
+    expect(
+      readdirSync(join(directory, "targets.d")).length +
+        readdirSync(join(directory, "handwritten.d")).length,
+    ).toBe(authoredChapterIdentities().size);
   });
 
   it("uses no routine flat language aggregates", () => {
@@ -110,14 +225,24 @@ describe("the chapter-owned real book-generation ledger", () => {
     expect(runShardCli(["--check", "core/book-generation.json"])).toBe(0);
   });
 
-  it("uses the same language/chapter identity convention as hash owners", () => {
+  it("covers exactly the chapters the tracks actually author", () => {
     const identities = bookGenerationIdentitySets(
       readBookGenerationOwners(root).document,
     );
-    expect(identities.targets.size).toBe(1_120);
+    // The load-bearing assertion: every chapter a track authored has a ledger
+    // entry and vice versa, compared as SETS in both directions so a swap, a
+    // rename, or a chapter moved between languages fails even though the total
+    // survives. `chapters.d` is authored independently of this ledger, so this
+    // is a real second opinion rather than a projection of the tree under test.
+    expect([...identities.combined].sort()).toEqual(
+      [...authoredChapterIdentities()].sort(),
+    );
+    // The split, pinned. A chapter moved from `handwritten` to `targets` keeps
+    // the COMBINED set identical, so only this literal sees the flip.
     expect(identities.handwritten.size).toBe(69);
-    expect(identities.combined.size).toBe(1_189);
-    expect(identities.languages.size).toBe(23);
+    expect(identities.languages.size).toBe(
+      loadLanguageRegistry(root).languages.length,
+    );
   });
 });
 

@@ -2385,6 +2385,53 @@ This broadens local HVAC, energy, and industrial telemetry coverage while the
 independent camera, cloud, radio, and credential prerequisites below remain
 honestly blocked.
 
+## Current Modbus TCP Device Identification Breadth Slice
+
+This follow-on adds standardized native identity to the existing read-only
+Modbus telemetry path while closing its unauthenticated endpoint boundary:
+
+- `modbus-protocol` owns fixed basic Read Device Identification
+  (`0x2B/0x0E`, access code `0x01`) framing for the three mandatory objects:
+  VendorName, ProductCode, and MajorMinorRevision. It exposes no generic MEI
+  request and no caller-selected regular, extended, or private object.
+- Responses correlate MBAP transaction, protocol, length, unit, function, MEI,
+  access code, conformity level, page continuation, next object, ordered object
+  ids, bounded printable ASCII values, and complete framing. At most three
+  pages are accepted over one bounded TCP connection.
+- `smart-home-modbus-tcp-integration` now accepts only an explicit private,
+  link-local, or loopback IP literal and non-zero port. DNS names, public
+  addresses, credentials, redirects, and long-lived connections are rejected.
+- The explicit identity inspection path obtains D23 read authorization before
+  TCP connection, reads and validates the complete native identity, then runs
+  the configured register profile. No bridge, device, entity, or state mutates
+  unless identity and every configured measurement succeed.
+- Native vendor, product code, and revision become the normalized device
+  manufacturer, model, and firmware version. Register writes, arbitrary object
+  access, diagnostics, restart, reset, file transfer, Modbus Security/TLS, and
+  every other mutation remain outside the runtime.
+
+The Modbus Organization specifies the mandatory basic objects, stream
+pagination, and exact response fields in section 6.21 of the application
+protocol specification:
+https://modbus.org/docs/Modbus_Application_Protocol_V1_1b3.pdf.
+
+## Newly Prioritized Smart Home Breadth Backlog
+
+The next prioritization pass starts from these newly identified candidates and
+must revalidate them against live `origin/main` before implementation:
+
+1. **Generic UPnP MediaRenderer inspection and low-risk control — executable
+   candidate.** Reuse the strict SSDP and same-authority UPnP boundaries already
+   proven by Sonos, but target the standardized MediaRenderer device contract
+   rather than a vendor model. Keep AVTransport and RenderingControl to fixed
+   state reads plus response-verified play, pause, stop, volume, and mute. Audit
+   repository reuse first so the slice does not duplicate the Sonos SOAP core.
+2. **DSMR P1 meter telemetry — prerequisite blocked.** The official P1
+   companion standard provides a concrete telegram and checksum contract, but
+   production work waits for one supervised bounded stream owner and an exact
+   serial-versus-local-TCP transport decision. Do not publish a parser-only or
+   documentation-only midpoint.
+
 ## Current BACnet/IP Breadth Slice
 
 The next breadth slice adds vendor-neutral building-automation discovery while

@@ -2052,17 +2052,19 @@ changelog, focused build, and downstream validation.
 
 15. Google Drive `appDataFolder` adapter and sandbox conformance, decomposed
     into the following dependency-ordered, independently tested slices:
-    1. reusable provider-neutral OAuth Authorization Code + mandatory PKCE
-       core from `code/specs/oauth.md`, with first-class privacy-safe audit
-       descriptors and no network/storage authority;
-    2. OAuth token/error/refresh/revocation codecs plus RFC 8414 metadata;
-    3. installed-app loopback host, credential custody, and an audit-before-
+    1. **shipped:** reusable provider-neutral OAuth Authorization Code +
+       mandatory PKCE core from `code/specs/oauth.md`, with first-class
+       privacy-safe audit descriptors and no network/storage authority;
+    2. **active:** bounded OAuth token/error codecs, explicit refresh-token
+       rotation, and audit-gated refresh/revocation request preparation;
+    3. RFC 8414 metadata validation as a separate endpoint/issuer trust slice;
+    4. installed-app loopback host, credential custody, and an audit-before-
        effect/disclosure broker supporting any number of provider configs;
-    4. provider-neutral Google Drive file-client seam and `appDataFolder`
+    5. provider-neutral Google Drive file-client seam and `appDataFolder`
        `VaultObjectStore` adapter over opaque names/properties;
-    5. real Drive HTTPS transport, rate/quota mapping, full-scan/change-feed
+    6. real Drive HTTPS transport, rate/quota mapping, full-scan/change-feed
        reconciliation, resumable upload, and sandbox conformance;
-    6. `storage add gdrive`, verified migration/mirroring, and explicit audited
+    7. `storage add gdrive`, verified migration/mirroring, and explicit audited
        `sync --wait` durability policy.
 16. multi-device enrollment, signed commit merge, conflict UI in CLI.
 17. visible Drive folder mode and storage migration.

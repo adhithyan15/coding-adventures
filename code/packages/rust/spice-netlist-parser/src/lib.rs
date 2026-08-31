@@ -2483,7 +2483,38 @@ fn parse_element(
             if !threshold_voltage.is_finite() {
                 return Err(NetlistParseError::new("JFET VTO must be finite"));
             }
-            let mut jfet = Jfet::with_model(
+            let channel_length_modulation = model
+                .params
+                .get("LAMBDA")
+                .or_else(|| model.params.get("LAM"))
+                .copied()
+                .unwrap_or(0.0);
+            if !channel_length_modulation.is_finite() {
+                return Err(NetlistParseError::new("JFET LAMBDA must be finite"));
+            }
+            let gate_source_capacitance = model
+                .params
+                .get("CGS")
+                .or_else(|| model.params.get("CGS0"))
+                .copied()
+                .unwrap_or(0.0);
+            if !gate_source_capacitance.is_finite() || gate_source_capacitance < 0.0 {
+                return Err(NetlistParseError::new(
+                    "JFET CGS must be finite and non-negative",
+                ));
+            }
+            let gate_drain_capacitance = model
+                .params
+                .get("CGD")
+                .or_else(|| model.params.get("CGD0"))
+                .copied()
+                .unwrap_or(0.0);
+            if !gate_drain_capacitance.is_finite() || gate_drain_capacitance < 0.0 {
+                return Err(NetlistParseError::new(
+                    "JFET CGD must be finite and non-negative",
+                ));
+            }
+            let mut jfet = Jfet::with_model_and_capacitance(
                 name,
                 &fields[1],
                 &fields[2],
@@ -2491,7 +2522,9 @@ fn parse_element(
                 polarity,
                 beta,
                 threshold_voltage,
-                *model.params.get("LAMBDA").unwrap_or(&0.0),
+                channel_length_modulation,
+                gate_source_capacitance,
+                gate_drain_capacitance,
             );
             jfet.doping_tail_parameter = doping_tail_parameter;
             Ok(Element::Jfet(jfet))
