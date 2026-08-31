@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Lower valid JFET `IS` gate saturation currents and reject invalid inputs.
 - Lower valid JFET `FC` forward-bias depletion coefficients and reject invalid
   inputs.
 - Lower JFET `VJ` with canonical `PB` precedence and reject invalid junction
