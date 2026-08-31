@@ -12193,15 +12193,14 @@ primary-language suffix.
 
 The same audit found exact consumed shared ancestors and exact tracked files
 hidden by generated-component pruning that a package-root registry cannot
-safely express: TypeScript's base config, Rust workspace Cargo/config and
-Windows helper inputs, Python's workspace pyproject, Haskell's cabal project,
-Lua's shared configuration and directory registry, Ruby's Gemfile/Rakefile,
-and tracked TypeScript vendor JavaScript loaded by VisiCalc. The new pending
-`build-tool-shared-and-generated-boundary-source-input-contract` owns a
-repository-relative, collision-checked contract for those inputs and explicit
-pruning exceptions. It excludes ambient directories, untracked local config,
-signing material, credentials, and secrets. All eleven engine-adoption leaves
-depend on that contract; no broad selector was added to this registry.
+safely express. The follow-up contract must audit actual consumers before it
+admits any path: candidate workspace files, broad shared directories, and
+standalone scripts are not evidence by themselves. The new pending
+`build-tool-shared-and-generated-boundary-source-input-contract` owns that
+repository-relative, collision-checked review plus explicit pruning
+exceptions. It excludes ambient directories, untracked local config, signing
+material, credentials, and secrets. All eleven engine-adoption leaves depend
+on that contract; no broad selector was added to this registry.
 
 During final validation, current main advanced through merged PR #13650's
 audited token lifecycle codecs and PR #13657's RFC 8414 metadata trust boundary.
@@ -12298,10 +12297,7 @@ The dependency/leverage pass selects
 branch `codex/build-tool-shared-generated-boundary-source-input-contract` from
 the exact current main revision above. Its now-merged registry prerequisite
 exposes a coherent language-neutral boundary for exact shared ancestors and
-tracked files hidden by generated pruning: TypeScript base configuration,
-Rust workspace Cargo and Windows helper inputs, Python workspace pyproject,
-Haskell cabal project, Lua shared configuration and directory registry, Ruby
-Gemfile and Rakefile, and VisiCalc's tracked vendor JavaScript. The contract
+tracked files hidden by generated pruning. The contract
 must preserve exact ownership, repository containment, deterministic
 projection, and collision checks while excluding ambient directories,
 untracked local configuration, credentials, signing material, and secrets.
@@ -12313,18 +12309,42 @@ state has 634 unique owners and 991 dependency edges: 198 merged, 435 pending,
 and exactly this owner in progress. The graph is dependency-complete and
 acyclic.
 
-The four implementation commits then rebased conflict-free onto exact current
-main `0e17579fbfd17bd84b1f59e96c2bff0f0a68816c`. Intervening PRs #13712
-through #13716 touch existing HTML parser, SPICE parser,
-human-language-data, Hindi curriculum, and Wasm package roots only, with no
-new package identity, build-tool marker, or exact overlap. The
-collision-checked schema-3
-inventory therefore remains unchanged at 15 established lanes, 1,395
-implementation identities, 4,609 slots, 1,434 all-reported identities, bands
-175/265, 123/934, 170/2,139, and 927/12,978, 738 Rust singletons, zero OCaml
-packages, zero canonical collisions, and zero unknown buckets. The complete
-634-owner/991-edge graph remains dependency-complete, unique, and acyclic at
-198 merged, 435 pending, and exactly this owner in progress.
+Implementation closes the boundary through a checked schema, canonical
+registry, nine neutral source-collection cases, semantic validation, and
+repository projection. The final registry contains 18 reviewed boundaries,
+21 input registrations over 19 tracked regular files, 481 consumer scopes,
+and 484 input-to-scope authorizations. It covers exact Haskell, Lua, and Python
+workspace inputs; Rust workspace, Cargo config, Windows launcher, and external
+Cargo consumers; TypeScript base-config consumers; five Starlark rule files;
+human-language verifier/data, neural-learning fixture, required-capability,
+cross-language workspace, and VisiCalc sibling inputs. Input origin, role,
+exact/descendant scope, exclusions, canonical aliases, sensitive paths,
+generated-component depth, overlap, and maximum shape are all fail-closed.
+The final projection deliberately rejects unconsumed Ruby workspace files,
+Lua `DIRS`, non-BUILD VisiCalc roots, and machine-local configuration.
+
+The complete 8,671-front BUILD literal audit also found ordinary package-owned
+cross-lane dependency inputs that must not be smuggled into repository-boundary
+authority: four Rust IRC manifests, the Rust bitset-c manifest consumed by C#
+and F#, and Rust C headers copied by Swift wrappers. The new pending
+`build-tool-cross-lane-native-dependency-metadata-repair` owns exact dependency
+metadata and neutral resolution/diff/hash regressions for those paths.
+
+The eight-commit branch finally rebased conflict-free onto exact current main
+`2516389f229cdd0658412c854043c931b5b3aab8`. Intervening PRs #13718 through
+#13735 change existing SPICE, HTML, TaskApp, Engram, and human-language roots
+plus one new Rust `oauth-credential-custody` identity. Engram's new web helper
+is package-local and is not invoked by its BUILD front, so it does not widen
+this registry. The new OAuth identity is classified under pending
+`oauth-credential-custody-portable-conformance`; concrete Vault, filesystem,
+database, durable audit, and host composition stay in the blocked broker and
+custody review. The refreshed collision-checked schema-3 inventory now records
+15 established lanes, 1,396 implementation identities, 4,610 slots, and 1,435
+all-reported identities. Its bands are 175/265, 123/934, 170/2,139, and
+928/12,992; Rust has 739 singletons, OCaml remains at zero packages, and
+canonical collisions and unknown buckets remain zero. The complete
+636-owner/994-edge graph remains dependency-complete, unique, and acyclic at
+198 merged, 437 pending, and exactly this owner in progress.
 
 ## Autonomous Loop Protocol
 
