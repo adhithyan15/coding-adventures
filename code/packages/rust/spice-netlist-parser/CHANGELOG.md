@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Lower JFET `VJ` with canonical `PB` precedence and reject invalid junction
+  potentials.
 - Lower finite, non-negative JFET `KF` and `AF` flicker-noise parameters.
 - Lower JFET `CGS0` and `CGD0` aliases with canonical `CGS` and `CGD`
   precedence, and reject invalid gate capacitance inputs.
