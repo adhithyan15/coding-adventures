@@ -11325,6 +11325,51 @@ changelog changes. Those 94 paths add no package root, BUILD, manifest, build-
 tool contract, parity owner, or exact overlap with this tranche. The inventory
 remains unchanged and collision-free.
 
+### Post-PR #13569 refresh and Python dependency-hashing selection
+
+PR #13569 completed all 41 final-head checks acceptably with 34 successes, six
+expected skips, and one neutral result. Guarded squash auto-merge was enabled
+only after GitHub reported final head
+`eb3562b7fcbc065087e589b06960e16bf04f9b75` clean and mergeable, and GitHub
+merged it as `17efb090089afcb51c926d0fa549c8da556b8e08` at
+2026-08-31T01:17:28Z without a manual merge command. The Python portable
+source-hashing owner therefore advances to `merged` and the active PR is
+cleared.
+
+The exact-main schema-3 inventory remains collision-clean and identity-neutral:
+15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427
+all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880,
+731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown
+buckets. The 68 paths since the stored inventory revision belong only to the
+merged Punjabi/data and Python build-tool tranches. No package root, BUILD, or
+manifest topology changed, and parallel inventory, dependency, fixture, and
+live-PR audits found no newly eligible unowned package gap.
+
+The exact reference audit did expose a systematic build-tool gap before the
+next selection. Every inspected native engine still diverges from hashing v1
+when producing dependency digests: most concatenate digest text without
+framing package identities, while Haskell uses a named but non-SHA fallback
+frame. Nine engine-scoped dependency-hashing owners now follow the matching
+source-hashing owners; Lua's existing cache owner explicitly includes named/raw
+dependency and raw combined-digest framing; and a final aggregate depends on
+all eleven native engine owners. This classification adds ten owners and 20
+dependency edges before selection without widening the Python leaf.
+
+The dependency/leverage pass selects
+`build-tool-python-portable-dependency-hashing-conformance` on branch
+`codex/build-tool-python-portable-dependency-hashing-conformance`. Its sole
+prerequisite is merged. The bounded continuation replaces concatenated hex text
+with the language-neutral stream of sorted UTF-8 package identities and decoded
+32-byte SHA-256 digests, adds the raw package-plus-dependency combined digest,
+and consumes the shared hashing-cache fixtures directly. It preserves the
+existing graph closure and persisted cache representation; the separate hash
+comparisons remain equivalent for native invalidation. Six live PRs have zero
+exact overlap with the expected hasher, tests, README, changelog, state,
+roadmap, and root-changelog paths, and the target remote branch and prior PR
+were absent before the fresh clean worktree was created. At selection, the
+complete 605-owner/916-edge graph is unique, dependency-complete, and acyclic
+at 188 merged, 416 pending, and exactly one `in-progress` owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
