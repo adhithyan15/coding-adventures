@@ -29,6 +29,10 @@ Because this is unpackaged, `org.codingadventures.trestle` is release provenance
 not a claimed Windows package identity. The stable live state path is
 `%LOCALAPPDATA%\task-app\mosaic-state.v1.json`.
 
+Upgrade, backup, restore, uninstall/purge, and corrupt-state recovery are pinned
+by the shared [local-data operations contract](task-app-local-data-operations-v1.md)
+and shipped offline as `LOCAL-DATA.txt` at the portable bundle root.
+
 ## Payload contract
 
 `task-app-xaml-windows-bundle-v<VERSION>.zip` has one
@@ -67,6 +71,11 @@ The Windows release job must:
    the first executable, restart through the replacement executable, and restore
    the standard LocalApplicationData snapshot without `MOSAIC_APP_LIBRARY`; and
 8. retain hosted-runner console conformance against the replacement runtime.
+
+Before that lifecycle, the gate seeds the committed v0.1.0 fixture at the normal
+LocalApplicationData path and requires the extracted executable to accept it
+without relocation or quarantine. It separately launches against invalid bytes
+and requires byte-preserving `.corrupt` quarantine.
 
 The hosted Windows UI Automation gate does not require a foreground desktop, but
 it launches the real WinUI executable and inspects native controls. This is a

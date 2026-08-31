@@ -16,12 +16,14 @@ generated Mosaic output inspectable while giving a user a direct launch path.
 
 Each `task-app-<backend>-linux-bundle-v<semver>.tar.gz` has one root directory
 and contains the complete application tree produced by the backend's release
-build plus four release-owned files:
+build plus five release-owned files:
 
 - `SOURCE_COMMIT` — the exact 40-character source commit;
 - `BUNDLE.json` — product, version, platform, backend, application identity,
   executable, Rust runtime, state path, and launcher;
 - `INSTALL.txt` — honest compatible-system prerequisites and launch steps;
+- `LOCAL-DATA.txt` — offline upgrade, backup, restore, uninstall/purge, and
+  corrupt-state recovery steps;
 - `launch-trestle` — a POSIX entrypoint that can be invoked from any working
   directory and never requires `MOSAIC_APP_LIBRARY`.
 
@@ -44,8 +46,10 @@ $XDG_DATA_HOME/task-app/backups/pre-v<VERSION>-<BACKEND>.json
 ```
 
 The copy uses a temporary file followed by an atomic rename and never overwrites
-an existing snapshot for that version/backend pair. Backup/restore UX and the
-cross-platform recovery contract remain the focused follow-up in #13614.
+an existing snapshot for that version/backend pair. The shared
+[local-data operations contract](task-app-local-data-operations-v1.md) pins
+backup, restore, uninstall/purge, quarantine, and manual recovery across every
+released desktop bundle.
 
 ## Release verification
 
@@ -57,9 +61,12 @@ The release workflow must, for each backend:
 4. compare its installed `libmosaic_app.so` byte-for-byte with the selected Rust
    artifact;
 5. create and re-extract the `.tar.gz` payload;
-6. launch the extracted `launch-trestle` from `/`, without a runtime override,
-   under the backend-appropriate headless display; and
-7. include the bundle in the exact-payload manifest and `SHA256SUMS`.
+6. seed the committed v0.1.0 fixture at the backend's standard data path, launch
+   the extracted `launch-trestle` from `/` without a runtime override, and prove
+   the fixture remains accepted while the one-time pre-upgrade copy is exact;
+7. launch again against invalid bytes and require byte-preserving `.corrupt`
+   quarantine; and
+8. include the bundle in the exact-payload manifest and `SHA256SUMS`.
 
 Qt and Flutter bundles retain compatible system-library prerequisites disclosed
 in `INSTALL.txt`. Compose includes its generated JVM runtime but still targets a

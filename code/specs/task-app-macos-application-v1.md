@@ -25,6 +25,12 @@ SwiftUI sources retain iOS portability, but `Trestle.app` and the bundled
 - `Trestle.icns` icon metadata; and
 - Mosaic application identity `task-app`.
 
+The live state remains at
+`~/Library/Application Support/task-app/mosaic-state.v1.json`; upgrade, backup,
+restore, uninstall/purge, and quarantine behavior is defined by the shared
+[local-data operations contract](task-app-local-data-operations-v1.md) and copied
+into the bundle as `Contents/Resources/LOCAL-DATA.txt`.
+
 The archive records its actual release-runner architecture in `BUNDLE.json`
 instead of claiming universal or Apple-silicon coverage that was not built.
 
@@ -54,6 +60,11 @@ The release workflow must:
    snapshot at an isolated state path;
 6. launch both extracted apps from `/` without `MOSAIC_APP_LIBRARY`; and
 7. use the replacement app's runtime to restore the same persisted snapshot.
+
+The exact release gate also seeds the committed v0.1.0 fixture at the standard
+Application Support path, launches the extracted app without relocating it,
+checks the sentinel task through the replacement runtime, and proves invalid
+bytes are preserved under the `.corrupt` sibling.
 
 Signing, notarization, universal binaries, DMG packaging, and automatic updates
 require explicit future release engineering and credentials. None is implied by

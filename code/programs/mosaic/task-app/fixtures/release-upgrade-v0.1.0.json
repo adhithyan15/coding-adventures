@@ -1,0 +1,170 @@
+{
+  "fixtureSchema": "task-app/release-upgrade-fixture",
+  "fixtureVersion": 1,
+  "sourceVersion": "0.1.0",
+  "snapshotSchema": "task-mosaic-app/state",
+  "snapshotVersion": 1,
+  "expectedTask": {
+    "name": "Upgrade fixture task",
+    "deadline": 20462,
+    "projectComplexity": "full"
+  },
+  "state": {
+    "activeProject": "project",
+    "calendarMonthStart": 20454,
+    "darkTheme": false,
+    "expandedTask": null,
+    "newLabelName": "",
+    "newProjectName": "",
+    "newTaskDue": "",
+    "newTaskName": "",
+    "nextId": 1,
+    "noteBody": "",
+    "noteTaskName": "",
+    "noteTitle": "",
+    "selectedNoteId": null,
+    "sheetEditCol": -1,
+    "sheetEditContent": "",
+    "sheetEditRow": -1,
+    "sheetFilterText": "",
+    "sheetSelectedCol": -1,
+    "sheetSelectedRow": -1,
+    "sheetSortAscending": true,
+    "sheetSortField": "",
+    "sheetSortOpen": false,
+    "taskOrder": [
+      "task-1"
+    ],
+    "view": "list",
+    "workspace": {
+      "crossProjectDependencies": [],
+      "id": "workspace",
+      "name": "",
+      "projects": {
+        "project": {
+          "assignments": [],
+          "baselines": {},
+          "calendars": {
+            "calendar-standard": {
+              "base": null,
+              "exceptions": [],
+              "id": "calendar-standard",
+              "name": "Standard",
+              "workWeek": [
+                {
+                  "intervals": [
+                    {
+                      "endMin": 1020,
+                      "startMin": 540
+                    }
+                  ],
+                  "working": true
+                },
+                {
+                  "intervals": [
+                    {
+                      "endMin": 1020,
+                      "startMin": 540
+                    }
+                  ],
+                  "working": true
+                },
+                {
+                  "intervals": [
+                    {
+                      "endMin": 1020,
+                      "startMin": 540
+                    }
+                  ],
+                  "working": true
+                },
+                {
+                  "intervals": [
+                    {
+                      "endMin": 1020,
+                      "startMin": 540
+                    }
+                  ],
+                  "working": true
+                },
+                {
+                  "intervals": [
+                    {
+                      "endMin": 1020,
+                      "startMin": 540
+                    }
+                  ],
+                  "working": true
+                },
+                {
+                  "intervals": [],
+                  "working": false
+                },
+                {
+                  "intervals": [],
+                  "working": false
+                }
+              ]
+            }
+          },
+          "dependencies": [],
+          "fields": {},
+          "id": "project",
+          "labels": {},
+          "links": [],
+          "name": "Inbox",
+          "notes": {},
+          "projectCalendar": "calendar-standard",
+          "resources": {},
+          "settings": {
+            "complexity": "full",
+            "currency": "USD",
+            "daysPerWeek": 5,
+            "durationUnit": "days",
+            "hoursPerDay": 8,
+            "weekStart": 1
+          },
+          "tasks": {
+            "task-1": {
+              "collapsed": false,
+              "completed": false,
+              "decision": null,
+              "fields": {},
+              "id": "task-1",
+              "kind": "leaf",
+              "name": "Upgrade fixture task",
+              "notes": "",
+              "order": 0,
+              "parent": null,
+              "percentComplete": 0,
+              "schedule": {
+                "actualFinish": null,
+                "actualStart": null,
+                "calendar": null,
+                "constraint": "asap",
+                "deadline": 20462,
+                "duration": {
+                  "elapsed": false,
+                  "workingMinutes": 480
+                },
+                "effortDriven": true,
+                "taskType": "fixedUnits",
+                "work": 0
+              },
+              "status": null
+            }
+          },
+          "views": {},
+          "workflows": {}
+        }
+      },
+      "roots": [
+        "project"
+      ],
+      "settings": {
+        "scheduleAsOneNetwork": false
+      },
+      "sharedResources": {}
+    }
+  }
+}

@@ -1751,6 +1751,31 @@ mod tests {
     }
 
     #[test]
+    fn release_upgrade_fixture_from_v0_1_0_restores() {
+        let fixture: Value = serde_json::from_str(include_str!(
+            "../../../../programs/mosaic/task-app/fixtures/release-upgrade-v0.1.0.json"
+        ))
+        .expect("valid release upgrade fixture");
+        assert_eq!(fixture["fixtureSchema"], "task-app/release-upgrade-fixture");
+        assert_eq!(fixture["sourceVersion"], "0.1.0");
+
+        let snapshot = Snapshot {
+            schema: fixture["snapshotSchema"].as_str().unwrap().to_string(),
+            version: fixture["snapshotVersion"].as_u64().unwrap() as u32,
+            bytes: serde_json::to_vec(&fixture["state"]).unwrap(),
+        };
+        let mut restored = TaskMosaicApp::default();
+        let update = restored.restore(snapshot).unwrap();
+        assert_eq!(
+            update.props["task-rows"][0][1],
+            fixture["expectedTask"]["name"]
+        );
+        assert_eq!(update.props["task-rows"][0][2], "due 2026-01-09");
+        assert_eq!(update.props["task-rows"][0][3], "2026-01-05 → 2026-01-05");
+        assert_eq!(update.props["complexity-label"], "Full CPM");
+    }
+
+    #[test]
     fn protocol_constant_is_current() {
         assert_eq!(PROTOCOL_VERSION, 1);
     }

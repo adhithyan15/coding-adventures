@@ -61,12 +61,14 @@ private func canonical(_ value: NSDictionary?) -> Data? {
 
 private func run(libraryPath: String?) {
   let restoredOnLaunch = ProcessInfo.processInfo.environment["MOSAIC_EXPECT_RESTORED"] == "1"
+  let expectedRestoredTask = ProcessInfo.processInfo.environment["MOSAIC_EXPECT_TASK_NAME"]
+    ?? persistedTaskName
   let host = MosaicRuntimeHost.loadRequired(libraryPath: libraryPath)
   defer { host.close() }
 
   var current = props(host.applyProps(), "startup update")
   if restoredOnLaunch {
-    requireTask(rows(current, "restored startup"), persistedTaskName)
+    requireTask(rows(current, "restored startup"), expectedRestoredTask)
     current = dispatch(host, "onDeleteTask", ["index": 0])
     require(rows(current, "restored delete").isEmpty, "delete restored task")
     print("TaskApp SwiftUI persisted-restart conformance passed")
