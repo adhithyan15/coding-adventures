@@ -12253,6 +12253,66 @@ post-rebase classifications wired, the complete state contains 630 unique
 owners and 987 dependency edges: 197 merged, 432 pending, and exactly this
 registry owner in progress. The graph is dependency-complete and acyclic.
 
+### Post-PR #13707 refresh and shared/generated boundary selection
+
+PR #13707 completed all 40 checks on final head
+`46f5022696661b93ca9360cc2429396e265e3393` acceptably: 33 succeeded and seven
+were skipped. GitHub reported the head clean and mergeable, then executed
+guarded squash auto-merge without a manual merge at 2026-08-31T18:22:03Z. The
+merge commit is `26e1527a03e1c89735e90d04d9101d5a5da7eefa`.
+
+After fetching current main, the collision-checked schema-3 inventory at exact
+revision `f5fdd88526315bf32b616b95b5bb76a04e7363bb` reports 15 established
+lanes, 1,395 implementation identities, 4,609 implementation slots, and 1,434
+all-reported identities. Its bands are 175 packages with 265 missing slots,
+123/934, 170/2,139, and 927/12,978. Rust has 738 singletons, OCaml remains at
+zero packages, and canonical collisions and unknown buckets remain zero. The
+intervening TaskApp, human-language, and PR #13710 SPICE changes affect
+existing roots only.
+
+Two Rust-only identities are new since the preceding inventory:
+`dsmr-p1-protocol` and `smart-home-dsmr-p1-integration`, both introduced by
+merged PR #13702. The protocol owner will close the strict CRLF telegram and
+CRC-16/A001 grammar, fixed OBIS allowlist, exact decimal and calendar-valid
+timestamp rules, resource limits, deterministic telemetry, and payload-blind
+error surface across established lanes. The integration is split into a
+portable injected-reader, fixed 115200 8N1 open-plan, supervision, stable-
+identity, deterministic projection, and atomic-commit owner plus a selection-
+blocked native serial-device authority review. That review owns exact device
+binding, alias and reparse defense, exclusivity, cancellation, timeouts,
+serialport FFI, CLI and clock effects, runtime mutation, and a truthful
+nonempty hardware capability declaration; CRC is integrity rather than
+authentication.
+
+The same dependency audit surfaced the pre-existing Rust-only
+`smart-home-event-streams` package as an unowned reusable prerequisite rather
+than DSMR-local behavior. Its portable owner covers injected stream and MQTT
+planning, cursors, checkpoints, resume, heartbeat and freshness schedules,
+reconnect and backoff, restart and fleet summaries, deterministic queries, and
+caller-supplied time without sockets, brokers, cloud, clocks, credentials, or
+native I/O. Focused current Rust tests pass all seven protocol cases and all
+five DSMR integration cases.
+
+The dependency/leverage pass selects
+`build-tool-shared-and-generated-boundary-source-input-contract` on fresh clean
+branch `codex/build-tool-shared-generated-boundary-source-input-contract` from
+the exact current main revision above. Its now-merged registry prerequisite
+exposes a coherent language-neutral boundary for exact shared ancestors and
+tracked files hidden by generated pruning: TypeScript base configuration,
+Rust workspace Cargo and Windows helper inputs, Python workspace pyproject,
+Haskell cabal project, Lua shared configuration and directory registry, Ruby
+Gemfile and Rakefile, and VisiCalc's tracked vendor JavaScript. The contract
+must preserve exact ownership, repository containment, deterministic
+projection, and collision checks while excluding ambient directories,
+untracked local configuration, credentials, signing material, and secrets.
+It directly blocks eleven engine leaves and reaches eighteen unfinished
+descendants. Higher raw ranks are heterogeneous classifiers or native and
+network authority reviews excluded from autonomous selection. After adding
+the four newly classified owners and making this transition, the complete
+state has 634 unique owners and 991 dependency edges: 198 merged, 435 pending,
+and exactly this owner in progress. The graph is dependency-complete and
+acyclic.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
