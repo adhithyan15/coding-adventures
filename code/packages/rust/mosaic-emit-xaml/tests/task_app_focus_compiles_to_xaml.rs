@@ -131,6 +131,18 @@ fn task_app_package_graph_lowers_notes_to_native_multiline_xaml() {
     )
     .expect("emit Task App XAML");
 
+    assert!(
+        result.xaml.contains("Loaded=\"NameInput_Loaded\""),
+        "Trestle's first-task composer must request native initial focus:\n{}",
+        result.xaml
+    );
+    assert!(
+        result
+            .code_behind
+            .contains("FocusManager.GetFocusedElement(tb.XamlRoot) is null"),
+        "initial focus must not replace a focus target restored by the host:\n{}",
+        result.code_behind
+    );
     let body_input = result
         .xaml
         .lines()

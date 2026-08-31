@@ -121,6 +121,14 @@ fn task_app_package_graph_lowers_notes_to_native_multiline_swiftui() {
     let output = emit_complete_task_app();
 
     assert!(
+        output.contains("_MosaicFocusState(autoFocus: true, content: _mosaicFocusContent)"),
+        "Trestle's first-task composer must request native initial focus:\n{output}"
+    );
+    assert!(
+        output.contains("if autoFocus && !isFocused { isFocused = true }"),
+        "the native focus helper must preserve an already-focused field:\n{output}"
+    );
+    assert!(
         output.contains("TextEditor(text: Binding(get: { noteBodyValue }"),
         "Trestle's Notes body must use a native multiline editor:\n{output}"
     );

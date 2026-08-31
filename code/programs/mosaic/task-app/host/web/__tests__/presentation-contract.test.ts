@@ -58,6 +58,7 @@ function canonicalSlots(props: any) {
     complexityLabel: props.complexityLabel,
     newTaskName: props.newTaskName,
     newTaskDue: props.newTaskDue,
+    emptyList: props.emptyList,
     newProjectName: props.newProjectName,
     projectRows: props.projectRows,
     taskRows: props.taskRows.map((row: string[]) => row.slice(0, 4)),

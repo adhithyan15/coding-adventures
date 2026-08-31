@@ -895,6 +895,27 @@ style TaskApp {
       background : "#b87822" ;
     }
   }
+  part empty-state {
+    gap : 5 ;
+    align : center-horizontal ;
+    background : "#2d271f" ;
+    padding : 24 ;
+    border-width : 1 ;
+    border-color : "#352e25" ;
+    border-style : "dashed" ;
+    border-radius : 13 ;
+  }
+  part empty-title {
+    color : "#f1ebe1" ;
+    font-size : 16 ;
+    font-weight : bold ;
+    text-align : "center" ;
+  }
+  part empty-body {
+    color : "#b3a99c" ;
+    font-size : 13 ;
+    text-align : "center" ;
+  }
 
   // ── sheet: label composer ──────────────────────────────────────────────
   part sheet-view-wrap {

@@ -443,7 +443,9 @@ layout TaskApp {
               HostInput [ name-input ] (
                 value : slot: new-task-name ,
                 placeholder : "What needs doing?" ,
-                onChange : emit: onNewTaskNameChange
+                auto-focus : true ,
+                onChange : emit: onNewTaskNameChange ,
+                onCommit : emit: onAddTask
               )
               HostInput [ due-input ] (
                 value : slot: new-task-due ,
@@ -451,6 +453,13 @@ layout TaskApp {
                 onChange : emit: onNewTaskDueChange
               )
               HostButton [ add-btn ] ( label : "Add task" , onClick : emit: onAddTask )
+            }
+
+            If ( when: slot: empty-list ) {
+              Column [ empty-state ] {
+                Text [ empty-title ] ( content : "Your Inbox is ready" , a11y-role : heading )
+                Text [ empty-body ] ( content : "Add your first task above. Scheduling stays out of the way until you need it." )
+              }
             }
 
             Column [ task-list ] {

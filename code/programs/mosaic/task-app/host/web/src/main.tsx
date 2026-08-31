@@ -878,6 +878,7 @@ export function makeController(engine: any, init: ControllerInit = {}) {
         timelineRows: tl.rows,
         newTaskName: newName,
         newTaskDue: newDue,
+        emptyList: ids.length === 0 ? "empty" : "",
         newProjectName: newProject,
         projectRows,
         summary: `${ids.length} task(s) · ${doneCount} done · projected finish ${
