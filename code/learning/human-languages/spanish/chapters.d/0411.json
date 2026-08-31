@@ -1,0 +1,17 @@
+{
+  "chapter": 411,
+  "title": "Ice Cream",
+  "label": "ch:helado",
+  "canDo": "I can identify and order ice cream in a simple café conversation.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ES-C411-helado-recall-2",
+    "kind": "production",
+    "summary": "Retrieve ice cream across identification and café-order messages.",
+    "assesses": [
+      "ES-LEX-HELADO"
+    ]
+  }
+}

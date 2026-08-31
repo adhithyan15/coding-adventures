@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C411-helado",
+    "language": "spanish",
+    "chapter": 411,
+    "sequence": 9400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8f54552951bda13"
+  },
+  "findings": []
+}

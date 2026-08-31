@@ -1,0 +1,11 @@
+{
+  "language": "spanish",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:b1d58a2de626af41",
+  "lessonIds": [
+    "ES-C411-helado",
+    "ES-C411-helado-recall-1",
+    "ES-C411-helado-recall-2"
+  ],
+  "tex": "spanish/book/chapters/ch411-helado.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C411-helado-recall-2",
+    "language": "spanish",
+    "chapter": 411,
+    "sequence": 9420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:437243cb507f1767"
+  },
+  "findings": []
+}

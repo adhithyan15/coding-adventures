@@ -1,0 +1,13 @@
+{
+  "id": "ES-EXT-411-HELADO",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can identify and order ice cream.",
+  "prerequisites": [
+    "ES-EXT-370-WHERE"
+  ],
+  "lessons": [
+    "ES-C411-helado"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "ES-EXT-411-REVIEWS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "review",
+  "canDo": "I can retrieve helado in short food and café messages.",
+  "prerequisites": [
+    "ES-EXT-411-HELADO"
+  ],
+  "lessons": [
+    "ES-C411-helado-recall-1",
+    "ES-C411-helado-recall-2"
+  ]
+}
