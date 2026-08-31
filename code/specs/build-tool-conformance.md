@@ -650,6 +650,16 @@ The registry has six non-overlapping input roles:
   from one exact relative directory prefix plus closed suffix and exact-name
   sets. They never behave as regular expressions or arbitrary globs.
 
+Every `root_exact_relative_paths` entry names one complete package-relative
+path and matches only that spelling. These entries are the narrow authority
+for BUILD-invoked scripts, directly imported host modules, and fixed binary
+resources whose bytes affect a package result but whose suffix must not become
+language-wide authority. A registration requires a tracked-file projection and
+a concrete source or BUILD consumer. Near names, renamed paths, sibling files,
+and other files sharing the registered suffix remain excluded. Fixed relative
+paths apply in both extension and declared-source modes because an explicit
+declared-source glob cannot safely erase an independently consumed BUILD input.
+
 Every scoped rule is inclusion-only. A registry rule MUST NOT mask a primary
 source or metadata input. Exact generated-component pruning is the only v1
 exclusion mechanism and always runs before selector matching.
@@ -705,6 +715,15 @@ unknown-language, and collision behavior in memory. Symlink, junction,
 reparse, hardlink, handle-race, and real filesystem enforcement remain required
 in each native engine-adoption child and are not inferred from the neutral
 snapshot.
+
+For the Rust `engram-wasm` package, the fixed relative-path set includes the
+BUILD-executed `js/smoke.mjs`, its exact
+`js/engram-mosaic-host-wasm.mjs` import, and the exact
+`pkg/engram_engine.wasm` bytes that the smoke host loads. This registration
+does not authorize JavaScript, module, WebAssembly, generated-output, `js/`, or
+`pkg/` suffix/directory families. A conforming projection includes those three
+tracked paths and rejects case variants, renamed modules, sibling scripts, and
+other `.wasm` files.
 
 #### Repository source-input boundary v1
 
