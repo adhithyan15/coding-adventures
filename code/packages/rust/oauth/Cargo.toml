@@ -1,0 +1,10 @@
+[package]
+name = "coding_adventures_oauth"
+version = "0.1.0"
+edition = "2021"
+description = "Provider-neutral OAuth 2.0 authorization-code and PKCE primitives implemented in-repo"
+
+[dependencies]
+coding_adventures_sha256 = { path = "../sha256" }
+coding_adventures_zeroize = { path = "../zeroize" }
+url-parser = { path = "../url-parser" }
