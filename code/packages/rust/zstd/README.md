@@ -5,10 +5,24 @@ Zstandard lossless compression in pure Rust.
 ## What it does
 
 Compresses and decompresses bytes using the Zstandard algorithm (RFC 8878).
-Output is a valid `.zst` frame: the `zstd` CLI and any RFC-8878-compliant
-library can decompress what this crate produces (and vice-versa for raw and
-RLE blocks; compressed blocks use the predefined FSE tables which all
-conforming decoders support).
+
+The two halves are deliberately asymmetric, and it is worth being explicit
+about why:
+
+- The **encoder** emits a narrow, easy-to-follow subset — Raw literals,
+  predefined FSE tables, explicit offsets. Its output is a valid `.zst`
+  frame that the real `zstd` CLI and any conforming library decodes.
+- The **decoder** accepts the format as real encoders actually use it:
+  Huffman-coded literals (treeless and 4-stream forms included), in-band
+  FSE table descriptions, RLE and repeat table modes, RLE literal blocks,
+  and repeated offsets.
+
+That asymmetry is the point. A codec whose encoder and decoder only ever
+talk to each other proves nothing about the wire format — this crate shipped
+four separate conformance bugs behind exactly that illusion. So the decoder
+is developed and tested against frames it *cannot produce*: live `zstd` CLI
+interop, plus committed golden vectors for machines that have no `zstd`
+binary.
 
 ## Where it fits
 
@@ -97,11 +111,59 @@ The "backward" bitstream means sequences are encoded in reverse (last
 sequence first), and the decoder reads them forward. Initial FSE states are
 flushed as the last thing written, so the decoder reads them first.
 
-## Predefined tables
+## Table modes
 
-The predefined distributions (RFC 8878 Appendix B) allow zero table-description
-overhead. This implementation uses only `Predefined_Mode` (mode byte = 0x00),
-so it is compatible with all decoders that support predefined modes.
+Every entropy-coded field in ZStd can describe its table four ways, trading
+description size against adaptivity. The encoder here always writes
+`Predefined`; the decoder implements all four.
+
+| Mode | Name | Wire cost | Meaning |
+|------|------|-----------|---------|
+| 0 | `Predefined` | 0 bytes | RFC 8878 Appendix B's fixed distribution |
+| 1 | `RLE` | 1 byte | one symbol every time, costing zero bits |
+| 2 | `FSE_Compressed` | variable | distribution described in-band (§4.1.1) |
+| 3 | `Repeat` | 0 bytes | reuse the previous block's table |
+
+A small block cannot afford mode 2 — the description would cost more than
+the sequences it describes — which is why the other three exist, and why a
+decoder implementing only mode 0 fails on small real-world files just as
+badly as on large ones.
+
+## Literals
+
+```
+Literals_Block_Type (bits [1:0] of the section's first byte):
+
+  0  Raw         literal bytes verbatim
+  1  RLE         one byte, repeated Regenerated_Size times
+  2  Compressed  Huffman tree description, then Huffman bitstream(s)
+  3  Treeless    Huffman bitstream(s), reusing the PREVIOUS block's tree
+```
+
+Types 2 and 3 come in a single-stream form and a **4-stream** form. Huffman
+decoding is serial — symbol `n+1` cannot start until symbol `n`'s length is
+known — so ZStd splits the literal run into quarters, each with its own
+independent bitstream, behind a 6-byte jump table holding three little-endian
+`u16` sizes. Only three are transmitted; the fourth stream's size is whatever
+is left over.
+
+The tree description transmits **weights**, not code lengths: a symbol of
+weight `w > 0` gets a code of length `max_bits + 1 - w`, so a bigger weight
+means a shorter code. Weights are small dense integers that compress well.
+The last symbol's weight is never transmitted at all — it is recovered from
+the shortfall between the transmitted weights' Kraft sum and the next power
+of two.
+
+## What survives a block boundary
+
+ZStd blocks are deliberately not independent. Three things carry forward
+within a frame, and a decoder that resets any of them mis-decodes most real
+files:
+
+1. **Repeated offsets** — a 3-slot history of recent match offsets (seeded
+   at 1/4/8), so periodic data can say "same distance as last time".
+2. **The Huffman table** — what a `Treeless_Literals_Block` reuses.
+3. **The three sequence FSE tables** — what `Repeat_Mode` reuses.
 
 ## Tests
 
@@ -109,24 +171,28 @@ so it is compatible with all decoders that support predefined modes.
 cargo test -p zstd
 ```
 
-25 unit tests + 3 doctests:
+49 unit tests + 3 doctests. Grouped by what they can and cannot prove:
 
-| Test | What it checks |
-|------|----------------|
-| `tc1_empty` | Empty input round-trip |
-| `tc2_single` | Single byte |
-| `tc3_all_bytes` | All 256 byte values |
-| `tc4_rle` | 1024 identical bytes → < 30 bytes |
-| `tc5_prose` | English text → ≥ 20% compression |
-| `tc6_random` | Pseudo-random data (LCG) round-trip |
-| `tc7_multiblock` | 200 KB → two blocks |
-| `tc8_repeat_offset` | Pattern with offset matches → < 70% |
-| `tc9_deterministic` | Same input → identical output |
-| `tc10_wire_format` | Hand-built raw frame decoded correctly |
-| `test_fse_*` | Single and two-sequence FSE round-trips |
-| `test_literals_*` | 1-, 2-, 3-byte literals headers |
-| `test_revbit*` | Backward bit-stream round-trip |
-| `test_seq_count*` | Sequence count encoding |
+| Test group | What it checks | Can it catch a wire-format bug? |
+|------------|----------------|---------------------------------|
+| `tc1`–`tc8`, `rt_*` | Self round-trip: sizes, ratios, byte fidelity | **No** — encoder and decoder can be wrong in the same way |
+| `test_fse_*`, `test_literals_*`, `test_revbit*`, `test_seq_count*` | Isolated codec units | **No** — same blindness, one level down |
+| `fwd_bit_reader_*`, `fse_table_description_*`, `huffman_*` | The new table-description parsers against hand-built bit patterns | Partly — pins the parse, not the convention |
+| `tc9_cli_interop`, `tc11_*`, `cli_interop_*` | Live `zstd` CLI, both directions, file-shaped and streamed frames, levels `-1`/`-3`/`-19` | **Yes** — the real oracle |
+| `golden_vectors_decode_exactly` | Seven committed real-CLI frames, `include_bytes!`-embedded | **Yes** — and with no binary needed |
+| `malformed_*`, `degenerate_*`, `oversized_*` | Truncation, byte mutation, hand-built corrupt frames | Robustness, not conformance |
+
+The live-CLI tests **require** the `zstd` binary: a missing one fails the
+test rather than skipping it. The earlier `if !available { return; }` made
+every cross-implementation check a silent no-op, which is how three
+wire-format bugs shipped. They are `#[cfg(unix)]`; on Windows the golden
+vectors carry the same conformance gate without a subprocess.
+
+To rebuild the golden vectors after an intentional change:
+
+```
+cargo test -p zstd -- --ignored regenerate_golden_vectors
+```
 
 ## Dependencies
 
