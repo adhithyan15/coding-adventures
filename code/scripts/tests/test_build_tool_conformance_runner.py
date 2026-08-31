@@ -2626,9 +2626,25 @@ class PureDomainValidationTests(unittest.TestCase):
             entry["path"]
             for entry in engram_case["expected"]["result"]["files"]
         }
-        self.assertNotIn("js/Smoke.mjs", engram_included)
         self.assertNotIn("js/sibling.mjs", engram_included)
         self.assertNotIn("pkg/engram_engine_copy.wasm", engram_included)
+        case_variants = copy.deepcopy(engram_options)
+        case_variants["candidates"] = [
+            {
+                "path": "js/Smoke.mjs",
+                "kind": "file",
+                "content_hex": "736f757263650a",
+            },
+            {
+                "path": "pkg/Engram_engine.wasm",
+                "kind": "file",
+                "content_hex": "736f757263650a",
+            },
+        ]
+        self.assertEqual(
+            runner._expected_source_collection(case_variants, registry),
+            [],
+        )
 
         wrong_digest = copy.deepcopy(role_options)
         wrong_digest["registry_sha256"] = "0" * 64

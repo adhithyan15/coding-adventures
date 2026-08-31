@@ -11,17 +11,15 @@
     "options": {
       "language": "rust",
       "mode": "extension",
-      "registry_sha256": "a64e491e7be2d1e2985cebb7dd1576607c2525ab6590a31af3e98cb2329c55d0",
+      "registry_sha256": "783d49e175b13a267b694172892e154b4a815e7fed807012aec913cf3509a61e",
       "declared_srcs": [],
       "candidates": [
         {"path": "BUILD", "kind": "file", "content_hex": "736f757263650a"},
-        {"path": "js/Smoke.mjs", "kind": "file", "content_hex": "736f757263650a"},
         {"path": "js/engram-mosaic-host-wasm.js", "kind": "file", "content_hex": "736f757263650a"},
         {"path": "js/engram-mosaic-host-wasm.mjs", "kind": "file", "content_hex": "736f757263650a"},
         {"path": "js/sibling.mjs", "kind": "file", "content_hex": "736f757263650a"},
         {"path": "js/smoke.js", "kind": "file", "content_hex": "736f757263650a"},
         {"path": "js/smoke.mjs", "kind": "file", "content_hex": "736f757263650a"},
-        {"path": "pkg/Engram_engine.wasm", "kind": "file", "content_hex": "736f757263650a"},
         {"path": "pkg/engram_engine.wasm", "kind": "file", "content_hex": "736f757263650a"},
         {"path": "pkg/engram_engine_copy.wasm", "kind": "file", "content_hex": "736f757263650a"}
       ]
