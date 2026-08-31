@@ -22,6 +22,27 @@ public:
   Q_INVOKABLE QVariantMap props();
   Q_INVOKABLE QVariantMap handleEvent(const QVariantMap &event);
 
+  // Lifecycle hooks the generated `main.cpp` calls on whatever `MosaicHost` the
+  // project ships. Mosaic's own generated host declares both and leaves both
+  // empty — they are extension points, not behaviour.
+  //
+  // This host is installed over the generated one through `[host_assets]`, and
+  // it did not declare them, so `main.cpp` failed to compile:
+  //
+  //   main.cpp:27: error: 'registerTypes' is not a member of 'MosaicHost'
+  //   main.cpp:47: error: 'class MosaicHost' has no member named 'attach'
+  //
+  // Engram's generated Qt project has therefore never built. Nothing caught it:
+  // `build-all.ps1` emits without compiling, and the package's own suite asserts
+  // on emitted text rather than building it.
+  //
+  // Kept as no-ops to match the generated host exactly. This host reaches the
+  // engine through `engram-capi` and needs neither QML type registration nor a
+  // root-object handle, so implementing them would be inventing behaviour the
+  // contract does not ask for.
+  static void registerTypes();
+  void attach(QObject *root);
+
 private:
   using EgSessionNewDemoFn = void *(*)();
   using EgSessionFreeFn = void (*)(void *);

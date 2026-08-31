@@ -19,6 +19,25 @@
   runtime failure behind a successful build — the same shape of bug the install
   step exists to prevent, so it is checked rather than assumed.
 
+- **Fixed: the generated Qt project never compiled.** `main.cpp` calls
+  `MosaicHost::registerTypes()` and `mosaicHost.attach(root)` on whatever
+  `MosaicHost` the project ships. Engram installs its own over the generated one
+  through `[host_assets]`, and it declared neither:
+
+  ```
+  main.cpp:27: error: 'registerTypes' is not a member of 'MosaicHost'
+  main.cpp:47: error: 'class MosaicHost' has no member named 'attach'
+  ```
+
+  Added as no-ops, matching Mosaic's generated host, which declares both and
+  leaves both empty — they are extension points, not behaviour. This host reaches
+  the engine over `engram-capi` and needs neither QML type registration nor a
+  root-object handle.
+
+  Nothing caught this because nothing ever compiled the output: `build-all.ps1`
+  emits without building, and `tests/package_compiles.rs` asserts on emitted text.
+  The new Qt CI gate builds it, which is how it surfaced.
+
 - Preserved Engram Anki import/export host-side error details in Qt, SwiftUI,
   and Compose `hostResult` statuses so generated shells show actionable read,
   import, export, and write failures instead of generic status text.
