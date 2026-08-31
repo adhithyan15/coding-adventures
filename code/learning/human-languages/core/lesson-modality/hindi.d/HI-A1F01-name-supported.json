@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "HI-A1F01-name-supported",
+    "language": "hindi",
+    "chapter": 67,
+    "sequence": 2580,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8f366b4b8ff3f3fd",
+    "detachableSegments": [
+      "Writing — separate spelling and placement passes"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

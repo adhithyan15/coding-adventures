@@ -11,7 +11,7 @@ it("pins Hindi continuity", () => expectLanguageContinuity("hindi"));
 it("pins Hindi modality", () => expectLanguageModality("hindi"));
 it("pins Hindi lesson-content budgets", () =>
   expectLanguageLessonBudgets("hindi", {
-    lessons: 281,
+    lessons: 286,
     idioms: 21,
     senses: 22,
     cultureClaims: 27,

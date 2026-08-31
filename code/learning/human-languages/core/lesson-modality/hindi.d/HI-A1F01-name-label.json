@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "HI-A1F01-name-label",
+    "language": "hindi",
+    "chapter": 67,
+    "sequence": 2560,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8fe010e384530217",
+    "detachableSegments": [
+      "Writing — one bounded copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
