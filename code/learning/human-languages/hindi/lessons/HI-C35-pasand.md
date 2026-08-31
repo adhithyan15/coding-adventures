@@ -7,8 +7,8 @@ id: HI-C35-pasand
 spine_node: SPINE-SAY-WHAT-I-LIKE
 sequence: 930
 chapter: 35
-type: word
-headword: पसंद
+type: phrase
+headword: मुझे … पसंद है
 gloss: liked, pleasing — a Persian noun, not a verb, in a sentence where the thing you like is the subject and you are only the person it happens to
 concept_tag: VERB-LIKE-LOVE
 prerequisites: [HI-C35-madad, HI-C23-kutta-billi, HI-C29-shaam]
