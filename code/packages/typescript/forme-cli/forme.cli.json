@@ -1,0 +1,62 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "forme",
+  "display_name": "Forme",
+  "description": "Build, validate, and clean a headless Forme project.",
+  "version": "0.1.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
+  "global_flags": [
+    {
+      "id": "config",
+      "long": "config",
+      "description": "Use the selected Forme project config instead of searching the current directory.",
+      "type": "path",
+      "value_name": "PATH"
+    }
+  ],
+  "commands": [
+    {
+      "id": "build",
+      "name": "build",
+      "aliases": ["run"],
+      "description": "Validate and run the configured pipeline once.",
+      "flags": [
+        {
+          "id": "reproducible",
+          "long": "reproducible",
+          "description": "Override settings.reproducibleBuild for this invocation.",
+          "type": "boolean"
+        },
+        {
+          "id": "report",
+          "long": "report",
+          "description": "Write a deterministic JSON build report.",
+          "type": "path",
+          "value_name": "PATH"
+        }
+      ]
+    },
+    {
+      "id": "check",
+      "name": "check",
+      "description": "Validate the config and typed DAG without running stages.",
+      "flags": [
+        {
+          "id": "reproducible",
+          "long": "reproducible",
+          "description": "Validate with settings.reproducibleBuild enabled for this invocation.",
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "id": "clean",
+      "name": "clean",
+      "description": "Remove configured cache and deploy output directories."
+    }
+  ]
+}

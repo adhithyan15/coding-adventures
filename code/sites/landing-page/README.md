@@ -19,13 +19,15 @@ cd code/sites/landing-page
 npm run build:clean
 ```
 
-The clean build bootstraps every local `file:` dependency, validates the
-content model, compiles the portable typography/color layer through Style IR
-and the AOT slicer, inlines the browser-specific layout layer, fingerprints the
-social image, rewrites its metadata URL for the GitHub Pages project prefix,
-and writes `dist/index.html` plus `dist/assets/`.
+The clean build uses the shared Forme local-dependency bootstrap, then drives
+`forme clean` and `forme build` with no site-specific orchestrator wrapper. It
+validates the content model, compiles the portable typography/color layer
+through Style IR and the AOT slicer, inlines the browser-specific layout layer,
+fingerprints the social image, rewrites its metadata URL for the GitHub Pages
+project prefix, and writes `dist/index.html` plus `dist/assets/`.
 
-Run `npm test` for the content-schema, renderer, and bootstrap contracts.
+Run `npm test` for the content-schema and renderer contracts, or `npm run check`
+to validate the imported config and typed DAG without invoking any stage.
 
 ## Editing the page
 
@@ -38,6 +40,8 @@ Run `npm test` for the content-schema, renderer, and bootstrap contracts.
 - `parse-landing.ts` and `render-landing.ts` are the site adapter boundary. The
   remaining source, route, asset, and emitter stages are reusable Forme
   packages.
+- `verify.ts` owns site-specific filesystem acceptance checks after the general
+  `forme build` command.
 
 Do not edit generated files under `dist/`; the Pages workflow always rebuilds
 from a clean checkout before publishing.

@@ -45,25 +45,23 @@ cd code/sites/blog
 npm run build:clean
 ```
 
-That one command discovers every `file:`-linked package, installs the local
-dependency graph from leaves to the site, clears stale output, and runs the
-full pipeline. It writes article pages plus `index.html`, `rss.xml`, `atom.xml`,
+That one command uses Forme's shared local-dependency bootstrap, then runs
+`forme clean` and `forme build` with no site-specific orchestrator wrapper. It
+writes article pages plus `index.html`, `rss.xml`, `atom.xml`,
 and `sitemap.xml` under `dist/blog/`. Subsequent builds can use `npm run build`;
-run `npm test` to exercise both the dependency planner and collection-derived
-surface. The build verifies both named deploy manifests, the exact aggregate
-route set, the fingerprinted asset bytes, stable logical identity, SHA-256
-manifest entry, rewritten project-page URL, and absence of unresolved Forme
-placeholders. HTML files carry matched rules from the
+run `npm run check` to validate the config and typed DAG without invoking
+stages, and run `npm test` to exercise the collection-derived surface. The
+post-build verifier checks the exact surface, fingerprinted asset bytes,
+rewritten project-page URL, and absence of unresolved Forme placeholders. HTML
+files carry matched rules from the
 reusable classless Style IR theme compiled through the AOT slicer and inlined
 in `<style>` — including light/dark preferences, with no JS or external CSS.
 Local post images are emitted under `dist/blog/assets/` with complete content
 hashes, making changed bytes produce a new cache-safe URL while unchanged bytes
 keep the same URL.
 
-`tsx` is a devDependency — it strips TypeScript types at execution
-time so we don't need a separate `tsc` step just to drive the
-pipeline. The stage packages compile their own published types; the
-site driver runs straight from source.
+The installed `forme` launcher registers `tsx` for TypeScript-first packages;
+the site uses `tsx` directly only for its post-build verifier and unit tests.
 
 ## Layout
 
@@ -75,11 +73,11 @@ site driver runs straight from source.
   two deploy outputs.
 - `surface-stage.ts` — collection adapter that composes the reusable Forme
   index/feed/sitemap/head generators into deployable pages.
-- `build.ts` — driver: load config → `createOrchestrator`
-  → `buildPipeline` → `runOnce` → assert success.
-- `scripts/bootstrap.mjs` — discovers and installs the complete local
-  `file:` dependency graph in dependency order. This is the same bootstrap
-  path used by local builds and pull-request CI.
+- `verify.ts` — site-specific filesystem acceptance checks that run after the
+  general `forme build` command.
+- `forme-local-bootstrap` from `@coding-adventures/forme-cli` discovers and
+  installs the local `file:` dependency graph in dependency order. Local builds
+  and pull-request CI share that implementation.
 - `BUILD` — monorepo build-tool entry point. It installs the same dependency
   graph, runs the pipeline, and verifies `dist/blog/` is produced.
 - `dist/` — build output (git-ignored).

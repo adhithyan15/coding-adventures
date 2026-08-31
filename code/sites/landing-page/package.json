@@ -5,11 +5,12 @@
   "description": "The Forme-generated Coding Adventures repository landing page.",
   "type": "module",
   "scripts": {
-    "bootstrap": "node scripts/bootstrap.mjs",
-    "build": "tsx build.ts",
+    "bootstrap": "node ../../packages/typescript/forme-cli/bin/bootstrap.mjs .",
+    "build": "forme build --report dist/.forme-build-report.json && tsx verify.ts",
+    "check": "forme check",
     "build:clean": "npm run bootstrap && npm run clean && npm run build",
-    "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
-    "test": "node --test scripts/bootstrap.test.mjs && vitest run landing.test.ts"
+    "clean": "forme clean",
+    "test": "vitest run landing.test.ts"
   },
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
@@ -29,6 +30,7 @@
     "@coding-adventures/forme-types": "file:../../packages/typescript/forme-types"
   },
   "devDependencies": {
+    "@coding-adventures/forme-cli": "file:../../packages/typescript/forme-cli",
     "@types/node": "^22.0.0",
     "tsx": "^4.0.0",
     "typescript": "^5.0.0",

@@ -39,7 +39,7 @@ for a live cross-language view.
 | Grammar families | 54 |
 | Architecture and roadmap specifications | 1,498 |
 | Learning documents | 4,963 |
-| Forme packages | 61 |
+| Forme packages | 62 |
 | CI, release, and deployment workflows | 36 |
 
 These counts are a dated orientation point, not release promises. The generated
@@ -249,7 +249,7 @@ See the [Mosaic overview](./code/specs/UI00-mosaic.md) and
 
 Forme is the repository's universal authoring pipeline: typed, capability-aware
 stages turn content into web pages, documentation sites, feeds, search indexes,
-and deployment artifacts. Its 61 TypeScript packages now cover the kernel and
+and deployment artifacts. Its 62 TypeScript packages now cover the kernel and
 orchestrator, filesystem and Markdown sources, routing and collection,
 transformations, Style IR, HTML/AOT emitters, metadata, sitemaps, feeds,
 fingerprinted assets, and a complete searchable documentation-site cluster.
@@ -267,10 +267,11 @@ Product sites and focused demos prove the composition model:
   multi-page documentation site with navigation, a table of contents, syntax
   highlighting, and browser search.
 
-The headless build path works, but Forme is not yet a turnkey site generator.
-The remaining product layer includes a general CLI and dev server, watch mode,
-persistent incremental scheduling, a reconciled specification map, the plugin
-host and OS sandboxes, interactivity, the authoring shell, and the deploy runner.
+The headless build path and general build/check/clean CLI work, but Forme is not
+yet a turnkey site generator. The remaining product layer includes a dev
+server, watch mode, persistent incremental scheduling, a reconciled
+specification map, the plugin host and OS sandboxes, interactivity, the
+authoring shell, and the deploy runner.
 The checked-in [completion roadmap](./code/specs/FM00-forme-completion-roadmap.md)
 tracks that path and the gaps discovered while dogfooding both live sites.
 
