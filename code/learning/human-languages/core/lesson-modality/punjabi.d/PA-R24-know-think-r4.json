@@ -3,7 +3,7 @@
     "id": "PA-R24-know-think-r4",
     "language": "punjabi",
     "chapter": 24,
-    "sequence": 1490,
+    "sequence": 1500,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:342fdf6b77e581a5"
+    "sourceHash": "fnv1a64:041638737fa14e06"
   },
   "findings": []
 }

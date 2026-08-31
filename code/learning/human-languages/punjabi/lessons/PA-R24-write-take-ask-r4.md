@@ -2,7 +2,7 @@
 schema_version: 2
 id: PA-R24-write-take-ask-r4
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1510
+sequence: 1520
 chapter: 24
 type: practice
 headword: ਲਿਖਣਾ · ਲੈਣਾ · ਪੁੱਛਣਾ

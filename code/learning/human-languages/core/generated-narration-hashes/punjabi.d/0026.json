@@ -1,0 +1,17 @@
+{
+  "language": "punjabi",
+  "chapter": 26,
+  "sourceHash": "fnv1a64:93b840d77bfa3828",
+  "lessonIds": [
+    "PA-R26-three-repair-r2",
+    "PA-R26-work-build-r3",
+    "PA-R26-work-control-r3"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch26.txt",
+  "json": "punjabi/narration/ch26.json",
+  "textHash": "fnv1a64:eb3522a0a32fcdda",
+  "jsonHash": "fnv1a64:9a50af91f5c39df6",
+  "findings": []
+}

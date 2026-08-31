@@ -2,14 +2,14 @@
 schema_version: 2
 id: PA-R24-know-think-r4
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1490
+sequence: 1500
 chapter: 24
 type: practice
 headword: ਜਾਣਨਾ · ਸੋਚਣਾ
 romanization: jāṇnā · sochṇā
 gloss: retrieve know and think at R4 without adding language
 concept_tag: REVIEW
-prerequisites: [PA-W06-three-field-no-model, PA-C08-sochna]
+prerequisites: [PA-R23-three-no-model-r1, PA-C08-sochna]
 sounds: []
 roots: []
 etymology_hook: The old know and think families return together; one reaches English know, while the other once meant burn and grieve.

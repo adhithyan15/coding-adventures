@@ -1,0 +1,14 @@
+{
+  "id": "PA-PATH-027",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "PA-R26-three-repair-r2",
+    "PA-R26-work-build-r3",
+    "PA-R26-work-control-r3"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-032-A1-FORM-R2-R3"
+  ],
+  "after": []
+}

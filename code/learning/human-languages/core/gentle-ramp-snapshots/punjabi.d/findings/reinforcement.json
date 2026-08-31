@@ -4,7 +4,7 @@
   "finding": {
     "language": "punjabi",
     "kind": "reinforcement",
-    "count": 319,
+    "count": 313,
     "unit": "missed window(s)",
     "detail": "add retrieval at the expanding R1-R4 intervals"
   }

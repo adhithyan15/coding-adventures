@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-R23-three-no-model-r1",
+    "language": "punjabi",
+    "chapter": 23,
+    "sequence": 1490,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:394646068541b335",
+    "detachableSegments": [
+      "Writing — one independent controlled recall"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

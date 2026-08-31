@@ -2,7 +2,7 @@
 schema_version: 2
 id: PA-R24-help-like-r4
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1520
+sequence: 1530
 chapter: 24
 type: practice
 headword: ਮਦਦ ਕਰਨਾ · ਮੈਨੂੰ ਪੰਜਾਬੀ ਪਸੰਦ ਹੈ

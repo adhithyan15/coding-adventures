@@ -1,20 +1,21 @@
 {
   "language": "punjabi",
   "chapter": 23,
-  "sourceHash": "fnv1a64:b338f09f5f062892",
+  "sourceHash": "fnv1a64:fa4f9e57ebd88490",
   "lessonIds": [
     "PA-W06-selection-repair",
     "PA-W06-spelling-repair",
     "PA-W06-spacing-repair",
     "PA-W06-placement-repair",
     "PA-W06-mixed-repair",
-    "PA-W06-three-field-no-model"
+    "PA-W06-three-field-no-model",
+    "PA-R23-three-no-model-r1"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "punjabi/narration/ch23.txt",
   "json": "punjabi/narration/ch23.json",
-  "textHash": "fnv1a64:e929e93778c5f591",
-  "jsonHash": "fnv1a64:eb53bbaa00102bf8",
+  "textHash": "fnv1a64:fc4dd6cacc3c13ed",
+  "jsonHash": "fnv1a64:b87d3da638dddbc9",
   "findings": []
 }

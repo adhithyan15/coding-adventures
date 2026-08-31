@@ -3,7 +3,7 @@
     "id": "PA-R25-kin-eye-r4",
     "language": "punjabi",
     "chapter": 25,
-    "sequence": 1560,
+    "sequence": 1570,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:e6751a6c6d799600"
+    "sourceHash": "fnv1a64:3d00abcf3ffb03e3"
   },
   "findings": []
 }

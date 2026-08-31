@@ -2,7 +2,7 @@
 schema_version: 2
 id: PA-R24-understand-read-r4
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1500
+sequence: 1510
 chapter: 24
 type: practice
 headword: ਸਮਝਣਾ · ਪੜ੍ਹਨਾ

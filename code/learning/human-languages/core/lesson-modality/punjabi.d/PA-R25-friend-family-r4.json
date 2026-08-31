@@ -3,7 +3,7 @@
     "id": "PA-R25-friend-family-r4",
     "language": "punjabi",
     "chapter": 25,
-    "sequence": 1550,
+    "sequence": 1560,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:b750ae91e848a061"
+    "sourceHash": "fnv1a64:644d67f354fc8404"
   },
   "findings": []
 }

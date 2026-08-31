@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 25,
-  "sourceHash": "fnv1a64:9598d80ed7a88725",
+  "sourceHash": "fnv1a64:b7ad49fae0031d22",
   "lessonIds": [
     "PA-R25-drink-request-r4",
     "PA-R25-milk-bread-r4",
@@ -13,6 +13,6 @@
   "text": "punjabi/narration/ch25.txt",
   "json": "punjabi/narration/ch25.json",
   "textHash": "fnv1a64:98dfcbf6cad693dc",
-  "jsonHash": "fnv1a64:d0bab8163251bed0",
+  "jsonHash": "fnv1a64:569d1fb67cf2d40c",
   "findings": []
 }

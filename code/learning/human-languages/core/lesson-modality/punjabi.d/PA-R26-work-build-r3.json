@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "PA-R26-work-build-r3",
+    "language": "punjabi",
+    "chapter": 26,
+    "sequence": 1590,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:44513b5f31d30b42",
+    "detachableSegments": [
+      "Script and value recall",
+      "Writing — one supported work row"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

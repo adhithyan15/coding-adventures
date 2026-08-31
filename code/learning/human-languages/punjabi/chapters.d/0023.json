@@ -7,9 +7,9 @@
     "SPINE-EXCHANGE-NAMES"
   ],
   "payoff": {
-    "lesson": "PA-W06-three-field-no-model",
+    "lesson": "PA-R23-three-no-model-r1",
     "kind": "production",
-    "summary": "The learner fills three requested fields with no model after selection, spelling, spacing, placement, and mixed repair have each received a separate bounded pass.",
+    "summary": "The learner fills three requested fields with no model, then repeats the completed task once inside R1 before changing topic.",
     "assesses": [
       "PA-FORM-THREE-CUE-SELECTION-01",
       "PA-FORM-THREE-SELECTION-REPAIR-01",

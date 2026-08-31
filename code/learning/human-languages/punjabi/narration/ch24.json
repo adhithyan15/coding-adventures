@@ -4,11 +4,11 @@
   "chapter": 24,
   "title": "Old Action Families at R4",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:b43cfbbfefef1b7a",
+  "sourceHash": "fnv1a64:84027b0dffac658c",
   "lessons": [
     {
       "id": "PA-R24-know-think-r4",
-      "sequence": 1490,
+      "sequence": 1500,
       "title": "Know and think return at R4",
       "headword": "ਜਾਣਨਾ · ਸੋਚਣਾ",
       "romanization": "jāṇnā · sochṇā",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:342fdf6b77e581a5",
+      "sourceHash": "fnv1a64:041638737fa14e06",
       "notice": null,
       "blocks": [
         {
@@ -110,7 +110,7 @@
     },
     {
       "id": "PA-R24-understand-read-r4",
-      "sequence": 1500,
+      "sequence": 1510,
       "title": "Understand and read return at R4",
       "headword": "ਸਮਝਣਾ · ਪੜ੍ਹਨਾ",
       "romanization": "samajhṇā · paṛhnā",
@@ -121,7 +121,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c16b142d006b0b86",
+      "sourceHash": "fnv1a64:34919e006ae5268b",
       "notice": null,
       "blocks": [
         {
@@ -235,7 +235,7 @@
     },
     {
       "id": "PA-R24-write-take-ask-r4",
-      "sequence": 1510,
+      "sequence": 1520,
       "title": "Write, take, and ask return at R4",
       "headword": "ਲਿਖਣਾ · ਲੈਣਾ · ਪੁੱਛਣਾ",
       "romanization": "likhṇā · laiṇā · puchhṇā",
@@ -246,7 +246,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9052e8d298e02ae2",
+      "sourceHash": "fnv1a64:0e3808732790d4f5",
       "notice": null,
       "blocks": [
         {
@@ -342,7 +342,7 @@
     },
     {
       "id": "PA-R24-help-like-r4",
-      "sequence": 1520,
+      "sequence": 1530,
       "title": "Help and like return at R4",
       "headword": "ਮਦਦ ਕਰਨਾ · ਮੈਨੂੰ ਪੰਜਾਬੀ ਪਸੰਦ ਹੈ",
       "romanization": "madad karnā · mainū̃ panjābī pasand hai",
@@ -353,7 +353,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b4065de32018c32",
+      "sourceHash": "fnv1a64:c09e6a057b28c5d7",
       "notice": null,
       "blocks": [
         {
