@@ -2,62 +2,51 @@
 
 ## Unreleased
 
-**The emit report now records when a package replaces the generated runtime
-host.** New `DegradationReport::replaced_runtime_host_files`
-(`replacedRuntimeHostFiles` in the JSON), listing the generated binding files a
-package's `[host_assets]` overwrote.
+**The emit report now records when a package overwrites generated files.** New
+`DegradationReport::replaced_generated_files` (`replacedGeneratedFiles` in the
+JSON), listing generated files a package's `[host_assets]` replaced.
 
-Replacing them is **supported** — the generated Qt README says so outright:
+Overwriting them is **supported** — the generated Qt README says so outright:
 "Explicit package host assets may replace `MosaicHost.h/.cpp` when specialized
-platform integration is required." A package with its own native integration has
-a legitimate reason to override the standard binding.
+platform integration is required." What was missing is that it happened silently.
+Generated code is what loads and calls the library `--runtime-library` bundles,
+so overwriting it can leave the selected engine installed and never invoked —
+while the report still said `nativeComplete: true` with no degradations. A CI
+lane that bundles a runtime, byte-compares the installed copy, and launches the
+app could pass every check without executing a line of it.
 
-What was missing is that it happened silently. The generated host is what
-actually loads the library `--runtime-library` bundles, so replacing it means the
-selected engine is installed and never called — while the report still said
-`nativeComplete: true` with no degradations. A CI lane could bundle a runtime,
-byte-compare the installed copy against the build artifact, launch the app, and
-pass every check **without executing a line of the standard runtime**.
+**Derived from what the build actually wrote, not from a list of filenames.** A
+first attempt used a hand-maintained table of runtime-binding paths, and it was
+the wrong shape twice over: one entry named a path the builder never emits, and —
+worse — overwriting the binding is not the only way to unhook the runtime.
+Replacing Qt's `main.cpp` removes the `MosaicHost` construction; replacing
+`CMakeLists.txt` drops the `target_sources` line that compiles the binding at
+all, leaving it byte-identical on disk and never built. Each is one manifest line,
+and each reported an empty list.
+
+`install_host_assets` runs after emission, so it already knows what the build
+produced: a target landing on a path this build wrote is a replacement. That
+cannot drift from the emitter, because it *is* the emitter's output.
+
+Collisions are resolved through `fs::canonicalize`, so the filesystem decides
+what counts as the same file rather than a guess about the platform —
+`mosaichost.cpp` overwrites `MosaicHost.cpp` on macOS and Windows and does not on
+Linux, and the report follows suit. The generated file's own name is reported,
+not the manifest's spelling, since a consumer checking that the binding survived
+looks for `MosaicHost.cpp`.
+
+Kept out of `degradations`/`nativeComplete` for the same reason
+`styleDegradations` is: a supported choice, not a backend failing to express
+something. A consumer that needs generated code intact asserts the list is empty.
+
+Analysis-only callers (`analyze_package_degradations`) get an empty list — they
+emit nothing, so nothing has been replaced, and predicting it would mean
+re-deriving the emitter's behaviour, which is the drift this avoids.
 
 Found by putting Engram on the standard ABI: it ships its own `MosaicHost.cpp`
-bound to `engram-capi`, which lands on exactly the filename the Qt binding is
-generated into. TaskApp declares no Qt host assets, so the existing native lanes
-could not have surfaced this.
-
-Recorded rather than rejected, and deliberately kept out of
-`degradations`/`nativeComplete` for the same reason `styleDegradations` is: this
-is a supported choice, not a backend failing to express something. A consumer
-that needs the standard binding asserts the list is empty; one that expects an
-override asserts it contains the file.
-
-Detection resolves the target through the **same** normalisation the writer uses
-(`safe_manifest_relative_path`), not the raw manifest string. Otherwise
-`"MosaicHost.cpp/"` and `"Sources//App/MosaicRuntimeHost.swift"` would pass the
-writer's validation, land on the generated file, and go unreported — and a false
-negative defeats the field entirely, since consumers assert it is empty. The
-compare is case-insensitive, because macOS and Windows resolve filenames that way
-and Qt/SwiftUI/XAML ship there; that over-reports on case-sensitive filesystems,
-a deliberate trade since over-reporting fails a gate loudly while under-reporting
-ships an unreachable runtime with a clean report.
-
-Guarded by three tests, each verified to fail against the bug it guards: every
-spelling that resolves onto the binding is detected; targets the writer refuses
-(`./X`, `sub/../X`, absolute) fail the build outright rather than being silently
-placed; and a same-named file at project root is **not** reported as replacing
-one that lives in a subdirectory, since the writer does no subdirectory
-resolution.
-
-A fourth test builds every native backend and asserts each listed path exists on
-disk. The table is hand-maintained and gates a CI check, so a stale entry is a
-silent hole rather than a visible failure — and one entry was wrong on the first
-pass (`include/CMosaicRuntime.h` against the emitted
-`Sources/CMosaicRuntime/include/CMosaicRuntime.h`), which is exactly the case
-that test now catches.
-
-Covers the generated runtime-host files for all five native backends: Qt
-(`MosaicHost.cpp`/`.h`), SwiftUI (`MosaicRuntimeHost.swift`, `CMosaicRuntime.c`/`.h`),
-Compose (`MosaicRuntimeHost.kt`), Flutter (`mosaic_host.dart`), XAML
-(`MosaicRuntimeHost.cs`).
+bound to `engram-capi`, and the real package now reports
+`["MosaicHost.cpp", "MosaicHost.h"]`. TaskApp declares no Qt host assets, so the
+existing native lanes could not have surfaced this.
 
 ## [Unreleased] - install application-scoped native persistence (#13519)
 
