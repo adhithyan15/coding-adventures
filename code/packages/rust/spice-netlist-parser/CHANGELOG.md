@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Lower JFET `VT0` and `VTH` threshold aliases with canonical `VTO`
+  precedence and reject non-finite threshold inputs.
 - Lower JFET `B` into the Parker-Skellern doping-tail field instead of treating
   it as a beta alias, while retaining `BETA` and `BET` transconductance inputs.
 - Validate Level-1 MOS model-card `NSS` and `TPG` values, then lower `N_SUB` /

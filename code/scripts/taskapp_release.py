@@ -6,10 +6,13 @@ from __future__ import annotations
 import argparse
 import io
 import json
+import plistlib
 import re
+import struct
 import sys
 import tarfile
 import zipfile
+import zlib
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -101,6 +104,7 @@ def artifact_names(version: str) -> list[str]:
         f"task-app-{target['artifact_label']}-bundle-v{version}.tar.gz"
         for target in LINUX_BUNDLES.values()
     )
+    names.append(f"task-app-swiftui-macos-bundle-v{version}.zip")
     return names
 
 
@@ -287,6 +291,201 @@ own its live state under the stable application identity `task-app`.
     return output
 
 
+def _png_chunk(chunk_type: bytes, data: bytes) -> bytes:
+    return (
+        struct.pack(">I", len(data))
+        + chunk_type
+        + data
+        + struct.pack(">I", zlib.crc32(chunk_type + data) & 0xFFFFFFFF)
+    )
+
+
+def _trestle_icon_png(size: int) -> bytes:
+    """Render a dependency-free square Trestle bridge mark for an ICNS chunk."""
+
+    rows = bytearray()
+    for y in range(size):
+        rows.append(0)
+        for x in range(size):
+            margin = size * 0.17
+            post = size * 0.075
+            deck_y = size * 0.67
+            arch_center = size * 0.5
+            arch_radius = size * 0.28
+            arch_y = size * 0.34 + ((x - arch_center) ** 2) / (arch_radius * 2.4)
+            is_post = (
+                (margin <= x <= margin + post or size - margin - post <= x <= size - margin)
+                and size * 0.36 <= y <= deck_y
+            )
+            is_deck = deck_y - size * 0.035 <= y <= deck_y + size * 0.035
+            is_arch = margin <= x <= size - margin and abs(y - arch_y) <= size * 0.035
+            if is_post or is_deck or is_arch:
+                color = (245, 247, 250, 255)
+            elif y >= size * 0.78:
+                color = (27, 105, 138, 255)
+            else:
+                color = (22, 41, 70, 255)
+            rows.extend(color)
+    header = struct.pack(">IIBBBBB", size, size, 8, 6, 0, 0, 0)
+    return (
+        b"\x89PNG\r\n\x1a\n"
+        + _png_chunk(b"IHDR", header)
+        + _png_chunk(b"IDAT", zlib.compress(bytes(rows), level=9))
+        + _png_chunk(b"IEND", b"")
+    )
+
+
+def _trestle_icns() -> bytes:
+    chunks = []
+    for kind, size in (
+        (b"icp4", 16),
+        (b"icp5", 32),
+        (b"icp6", 64),
+        (b"ic07", 128),
+        (b"ic08", 256),
+        (b"ic09", 512),
+        (b"ic10", 1024),
+    ):
+        payload = _trestle_icon_png(size)
+        chunks.append(kind + struct.pack(">I", len(payload) + 8) + payload)
+    body = b"".join(chunks)
+    return b"icns" + struct.pack(">I", len(body) + 8) + body
+
+
+def _add_zip_member(
+    archive: zipfile.ZipFile,
+    name: str,
+    payload: bytes,
+    mode: int = 0o644,
+) -> None:
+    info = zipfile.ZipInfo(name)
+    info.create_system = 3
+    info.external_attr = mode << 16
+    archive.writestr(info, payload, compress_type=zipfile.ZIP_DEFLATED)
+
+
+def archive_macos_app(
+    version: str,
+    commit: str,
+    architecture: str,
+    executable: Path,
+    resource_bundle: Path,
+    runtime: Path,
+    expected_runtime: Path,
+    output_dir: Path,
+) -> Path:
+    """Assemble and archive the unsigned SwiftUI Trestle.app bundle."""
+
+    validate_identifiers(version, f"{TAG_PREFIX}{version}", commit)
+    if architecture not in {"arm64", "x86_64"}:
+        raise ValueError(f"unsupported macOS architecture: {architecture}")
+    if not executable.is_file():
+        raise ValueError(f"macOS executable does not exist: {executable}")
+    if not resource_bundle.is_dir():
+        raise ValueError(f"SwiftPM resource bundle does not exist: {resource_bundle}")
+    if resource_bundle.name != "App_App.bundle":
+        raise ValueError("SwiftPM resource bundle must be named App_App.bundle")
+    runtime_relative = _relative_bundle_path(resource_bundle, runtime, "runtime")
+    if runtime_relative.as_posix() != "Runtime/libmosaic_app.dylib":
+        raise ValueError("macOS Rust runtime must be Runtime/libmosaic_app.dylib")
+    if not runtime.is_file() or not expected_runtime.is_file():
+        raise ValueError("bundled and expected macOS Rust runtime files must exist")
+    if runtime.read_bytes() != expected_runtime.read_bytes():
+        raise ValueError("bundled macOS Rust runtime does not match the selected build artifact")
+
+    bundle_root = resource_bundle.resolve(strict=True)
+    for path in resource_bundle.rglob("*"):
+        try:
+            path.resolve(strict=True).relative_to(bundle_root)
+        except ValueError as error:
+            raise ValueError(
+                f"SwiftPM resource bundle contains an external path: {path}"
+            ) from error
+
+    core_version = version.split("-", 1)[0].split("+", 1)[0]
+    info_plist = {
+        "CFBundleDevelopmentRegion": "en",
+        "CFBundleDisplayName": "Trestle",
+        "CFBundleExecutable": "Trestle",
+        "CFBundleIconFile": "Trestle",
+        "CFBundleIdentifier": "org.codingadventures.trestle",
+        "CFBundleInfoDictionaryVersion": "6.0",
+        "CFBundleName": "Trestle",
+        "CFBundlePackageType": "APPL",
+        "CFBundleShortVersionString": version,
+        "CFBundleVersion": core_version,
+        "LSApplicationCategoryType": "public.app-category.productivity",
+        "LSMinimumSystemVersion": "13.0",
+        "MosaicApplicationID": "task-app",
+        "NSHighResolutionCapable": True,
+    }
+    metadata = {
+        "schemaVersion": 1,
+        "product": "Trestle",
+        "applicationId": "task-app",
+        "bundleIdentifier": "org.codingadventures.trestle",
+        "version": version,
+        "sourceCommit": commit.lower(),
+        "platform": "macOS 13+",
+        "architecture": architecture,
+        "toolkit": "SwiftUI",
+        "executable": "Contents/MacOS/Trestle",
+        "rustRuntime": f"{resource_bundle.name}/Runtime/libmosaic_app.dylib",
+        "signed": False,
+        "notarized": False,
+        "iosArtifact": False,
+    }
+    instructions = f"""Trestle {version} — unsigned macOS application bundle
+
+Unzip the archive, then open Trestle.app on macOS 13 or newer. This development
+bundle is neither signed nor notarized. macOS may require an explicit first-open
+approval in Privacy & Security. Do not weaken system-wide Gatekeeper settings.
+
+The bundled dylib is the macOS Rust engine selected by the release workflow. The
+SwiftUI source project remains portable to iOS, but this .app and its dylib are
+macOS artifacts and are not presented as an iOS build.
+"""
+    output = output_dir / f"task-app-swiftui-macos-bundle-v{version}.zip"
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with zipfile.ZipFile(output, "w") as archive:
+        _add_zip_member(
+            archive,
+            "Trestle.app/Contents/MacOS/Trestle",
+            executable.read_bytes(),
+            mode=0o755,
+        )
+        for path in sorted(resource_bundle.rglob("*")):
+            if path.is_file():
+                relative = path.relative_to(resource_bundle).as_posix()
+                archive.write(path, f"Trestle.app/{resource_bundle.name}/{relative}")
+        _add_zip_member(
+            archive,
+            "Trestle.app/Contents/Info.plist",
+            plistlib.dumps(info_plist, fmt=plistlib.FMT_XML, sort_keys=True),
+        )
+        _add_zip_member(
+            archive,
+            "Trestle.app/Contents/Resources/Trestle.icns",
+            _trestle_icns(),
+        )
+        _add_zip_member(
+            archive,
+            "Trestle.app/Contents/Resources/SOURCE_COMMIT",
+            f"{commit.lower()}\n".encode(),
+        )
+        _add_zip_member(
+            archive,
+            "Trestle.app/Contents/Resources/BUNDLE.json",
+            (json.dumps(metadata, indent=2, sort_keys=True) + "\n").encode(),
+        )
+        _add_zip_member(
+            archive,
+            "Trestle.app/Contents/Resources/INSTALL.txt",
+            instructions.encode(),
+        )
+    return output
+
+
 def build_manifest(
     version: str,
     tag: str,
@@ -343,6 +542,24 @@ def build_manifest(
                 "backend": backend,
             }
         )
+    artifacts.append(
+        {
+            "name": f"task-app-swiftui-macos-bundle-v{version}.zip",
+            "kind": "unsigned-macos-application",
+            "platform": "macOS 13+ / release-runner architecture",
+            "toolkit": "SwiftUI",
+            "installable": False,
+            "runnable": True,
+            "signed": False,
+            "notarized": False,
+            "applicationId": "task-app",
+            "bundleIdentifier": "org.codingadventures.trestle",
+            "verification": (
+                "release build, byte-identical bundled Rust runtime, unrelated-"
+                "working-directory launch, and upgrade-style state restoration"
+            ),
+        }
+    )
     return {
         "schemaVersion": 1,
         "product": "TaskApp/Trestle",
@@ -352,7 +569,8 @@ def build_manifest(
         "artifacts": artifacts,
         "knownLimitations": [
             "Linux bundles are portable archives, not signed distribution packages.",
-            "macOS and Windows remain generated projects; see GitHub issue #13522.",
+            "The macOS app is unsigned and not notarized.",
+            "Windows remains a generated project; see GitHub issue #13522.",
             "Linux bundles require the compatible system libraries named in INSTALL.txt.",
         ],
     }
@@ -418,7 +636,9 @@ Rust engine.
 - Restore the local workspace after a web reload or generated native app restart.
 - Serve the production web ZIP from any static web server.
 - Unpack and run a verified Linux bundle, or build a strict generated native
-  project for macOS or Windows.
+  project for Windows.
+- Unzip and run the unsigned SwiftUI `Trestle.app` on the matching macOS 13+
+  architecture recorded in its `BUNDLE.json`.
 
 ## Artifact and platform coverage
 
@@ -433,6 +653,7 @@ Rust engine.
 | `task-app-qt-linux-bundle-v{version}.tar.gz` | Linux x86_64 / Qt | Verified portable bundle; compatible Qt 6.8 system required |
 | `task-app-flutter-linux-bundle-v{version}.tar.gz` | Linux x86_64 / Flutter | Verified portable bundle; compatible GTK 3 system required |
 | `task-app-compose-linux-bundle-v{version}.tar.gz` | Linux x86_64 / Compose Desktop | Verified portable bundle with bundled JVM runtime |
+| `task-app-swiftui-macos-bundle-v{version}.zip` | macOS 13+ / runner-native architecture | Verified unsigned `Trestle.app`; not notarized |
 
 `task-app-release-manifest-v{version}.json` records the source commit and exact
 verification claim for every payload. `SHA256SUMS` authenticates every payload and
@@ -441,7 +662,7 @@ the manifest.
 ## Known limitations
 
 - Linux payloads are portable archives rather than signed distribution packages.
-- macOS and Windows installers are not included yet: [#{13522}]({issue_root}/13522).
+- The macOS app is unsigned/not notarized; Windows remains source-only: [#{13522}]({issue_root}/13522).
 - Mobile binaries are not release artifacts in this version.
 
 ## TaskApp GitHub history
@@ -481,6 +702,16 @@ def _parser() -> argparse.ArgumentParser:
     bundle_parser.add_argument("--runtime", type=Path, required=True)
     bundle_parser.add_argument("--expected-runtime", type=Path, required=True)
     bundle_parser.add_argument("--output-dir", type=Path, required=True)
+
+    macos_parser = subparsers.add_parser("archive-macos-app")
+    macos_parser.add_argument("--version", required=True)
+    macos_parser.add_argument("--commit", required=True)
+    macos_parser.add_argument("--architecture", required=True)
+    macos_parser.add_argument("--executable", type=Path, required=True)
+    macos_parser.add_argument("--resource-bundle", type=Path, required=True)
+    macos_parser.add_argument("--runtime", type=Path, required=True)
+    macos_parser.add_argument("--expected-runtime", type=Path, required=True)
+    macos_parser.add_argument("--output-dir", type=Path, required=True)
 
     manifest_parser = subparsers.add_parser("write-manifest")
     manifest_parser.add_argument("--version", required=True)
@@ -522,6 +753,17 @@ def main(argv: list[str] | None = None) -> int:
                 args.backend,
                 args.source,
                 args.executable,
+                args.runtime,
+                args.expected_runtime,
+                args.output_dir,
+            )
+        elif args.command == "archive-macos-app":
+            archive_macos_app(
+                args.version,
+                args.commit,
+                args.architecture,
+                args.executable,
+                args.resource_bundle,
                 args.runtime,
                 args.expected_runtime,
                 args.output_dir,

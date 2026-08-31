@@ -1219,6 +1219,38 @@ TESTSUITE_FILES = [
     "type-canon.wast",
     "type-equivalence.wast",
     "binary-gc.wast",
+    # LEB128/malformed-binary hardening pass: `binary.wast`/`binary-
+    # leb128.wast`/`binary_leb128_64.wast` are dense `assert_malformed`
+    # corpora specifically targeting the binary format's LEB128 encoding
+    # rules (over-long encodings, out-of-range values whose padding bits
+    # don't zero/sign-extend correctly, truncated streams) plus other
+    # structural malformed-binary cases (unrecognized section ids, out-
+    # of-canonical-order sections, section-size mismatches, function/code
+    # section count mismatches, a function body not ending in `end`).
+    # `wasm-module-parser`'s LEB128 decoding previously had none of these
+    # checks: `read_u32leb` silently truncated any u64 value (including
+    # one wider than 32 bits) down to `u32` via `as u32`, and `read_expr`'s
+    # i32.const/i64.const/global.get arms called the raw, unbounded
+    # `decode_unsigned` with no byte-count cap at all -- a crafted module
+    # could smuggle an arbitrarily-overlong or out-of-range integer
+    # encoding straight past parsing. Fixed in `wasm-leb128` (the shared
+    # decoder core now takes a `max_bits` bound and enforces both the
+    # "too many bytes" and "padding bits don't match" rules for ANY
+    # bit-width, not just these three files' specific byte sequences) and
+    # `wasm-module-parser` (wired that bound into every u32-typed field).
+    # Function-body-embedded LEB128 (a memarg's `align`/`offset`
+    # immediates, an extended (`0xFC`-prefixed) opcode's own sub-number)
+    # remains UNFIXED -- `parse_code_section` reads a function body as an
+    # opaque byte blob after its locals, deferring instruction-level
+    # decoding entirely to a future `wasm-validator` instruction walker
+    # (see that crate's own "no instruction-level type-checker yet" doc
+    # comment) -- so `binary_leb128_64.wast`'s one `assert_malformed` case
+    # and a handful of `binary-leb128.wast`'s memarg-specific ones don't
+    # pass. Everything else in these three files -- and everything in the
+    # rest of the corpus that shares any of these fields -- does.
+    "binary.wast",
+    "binary-leb128.wast",
+    "binary_leb128_64.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

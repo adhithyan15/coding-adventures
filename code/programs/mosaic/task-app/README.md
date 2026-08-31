@@ -116,9 +116,12 @@ bundle, generates every native project under the strict `native-complete` profil
 with the platform's real `task-mosaic-app` runtime, and checks each emitted-control
 contract. On Linux it also builds Qt, Flutter, and Compose Desktop release trees,
 compares their installed Rust runtime byte-for-byte with the selected build, and
-launches the archived bundle from `/` without a runtime override. One publisher
-job then creates checksums, a source-commit manifest, product-scoped notes from
-merged `task-app` pull requests, and one GitHub Release.
+launches the archived bundle from `/` without a runtime override. On macOS it
+assembles the release-runner architecture into an unsigned `Trestle.app`, validates
+its stable metadata and bundled dylib, and checks state restoration across a
+replacement-style second extraction. One publisher job then creates checksums, a
+source-commit manifest, product-scoped notes from merged `task-app` pull requests,
+and one GitHub Release.
 
 Release payloads distinguish directly runnable archives from generated projects:
 
@@ -127,13 +130,15 @@ Release payloads distinguish directly runnable archives from generated projects:
 | Web ZIP | Modern browsers | Tested, ready-to-serve production bundle |
 | Qt, Flutter, Compose TAR.GZ files | Linux x86_64 | Verified portable bundles with a `launch-trestle` entrypoint |
 | Qt, Flutter, Compose ZIPs | Linux x86_64 | Native-complete generated projects with the Rust runtime |
+| Trestle.app ZIP | macOS 13+ | Verified unsigned SwiftUI app for the architecture recorded in `BUNDLE.json` |
 | SwiftUI ZIP | macOS | Native-complete generated project with the Rust runtime |
 | XAML ZIP | Windows | Native-complete generated WinUI project with the Rust runtime |
 
 The Linux archives are unpack-and-run bundles for compatible x86_64 systems, not
 signed distribution packages. Each includes exact prerequisites and a launcher
-that takes one version-specific pre-upgrade snapshot of existing local state.
-macOS and Windows packaging remains tracked in
+that takes one version-specific pre-upgrade snapshot of existing local state. The
+macOS app is neither Developer ID signed nor notarized, and its bundled dylib is
+not an iOS artifact. Windows packaging remains tracked in
 [#13522](https://github.com/adhithyan15/coding-adventures/issues/13522), so release
 notes never imply broader platform coverage. To cut the next release, first move
 the relevant entries into this changelog's version section, choose the SemVer bump

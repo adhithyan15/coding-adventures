@@ -1,8 +1,13 @@
 # OAuth
 
+**Status:** Phase 1 implemented — provider-neutral installed-app Authorization
+Code + PKCE pure core; broker, transport, token custody, refresh, device flow,
+and provider integrations remain prioritized below.
+
 ## Overview
 
-`oauth` is the reusable OAuth 2.0 / 2.1 client primitive for the
+`oauth` is the reusable OAuth 2.0 client primitive, updated by RFC 9700's
+OAuth Security Best Current Practice, for the
 agent system. Agents that need to talk to a third-party service —
 Gmail, GitHub, Google Calendar, Slack, Spotify, anything that
 speaks OAuth — go through this crate. Tokens live in the vault
@@ -26,13 +31,14 @@ needs:
 - **Token Revocation (RFC 7009)** — when an account is detached or
   a user explicitly revokes consent, the broker calls the
   provider's revocation endpoint.
-- **OpenID Connect ID tokens** — when present, parsed for the
-  account identity (`sub` claim) so multiple accounts per provider
-  can be distinguished.
+- **OpenID Connect ID tokens** — when present, retained as opaque OAuth token
+  material until a later OIDC layer verifies signature, issuer, audience,
+  expiry, and transaction nonce before exposing `sub`.
 
 We deliberately exclude:
 
-- **Implicit Grant** (deprecated in OAuth 2.1).
+- **Implicit Grant** (not recommended for native apps by RFC 8252 and omitted
+  by the RFC 9700 security baseline).
 - **Resource Owner Password Credentials** (deprecated; insecure).
 - **Token Introspection (RFC 7662)** as a client — agents don't
   introspect their own tokens.
@@ -45,6 +51,50 @@ adds vault storage, auto-refresh, and account management. Provider
 specifics (URLs, scopes, quirks) live in `ProviderConfig` data, not
 in code, so adding a new provider means writing a config — not a
 new client.
+
+## Implementation Boundary and Prioritized Backlog
+
+OAuth and remote storage are independent reusable layers. The OAuth core never
+imports a Google Drive, OneDrive, Dropbox, GitHub, or other provider SDK; the
+vault storage contract never imports OAuth. A composition root joins a generic
+OAuth credential to one storage adapter.
+
+The delivery order is:
+
+1. **Shipped by the first `coding_adventures_oauth` slice:** strict public-client
+   provider configuration; caller-injected 256-bit entropy; mandatory PKCE
+   `S256`; authorization URL construction; exact redirect, state, and explicit
+   RFC 9207 issuer-or-distinct-redirect mix-up defense; one-use callback
+   completion; secret-bearing token-exchange preparation; zeroizing ownership;
+   closed diagnostics; caller-owned trace correlation; and privacy-safe audit
+   descriptors for successful, denied, and failed begin/completion attempts.
+   The result wrapper exposes no bypass around durable
+   `publish_then_release`, so audit failure fails closed.
+2. **OAuth wire codecs:** bounded JSON and form token/error responses, refresh
+   grant requests, rotating refresh-token semantics, revocation, and RFC 8414
+   authorization-server metadata validation. Token or raw provider response
+   bytes never enter errors or audit data.
+3. **Installed-app host:** external browser launch and a transient listener on
+   an IP-literal loopback redirect, with exact request-line/header bounds and
+   the listener closed immediately after the one accepted transaction.
+4. **Credential custody and broker:** opaque credential references, atomic
+   refresh rotation, multiple accounts per provider, audit-before-browser,
+   audit-before-token-exchange, and audit-before-access-token disclosure. Audit
+   publication failure fails the operation closed.
+5. **Device Authorization Grant:** RFC 8628 preparation and a caller-driven
+   polling state machine with no internal sleep or network authority.
+6. **HTTPS transport:** provider-neutral request/response types over the
+   repository's TLS and HTTP primitives, with endpoint/capability authorization
+   before any socket is opened.
+7. **Provider data fixtures:** Google, Microsoft, GitHub, Dropbox, Slack,
+   Spotify, and user-defined providers validated through the same conformance
+   suite. Provider quirks remain data; none creates a new OAuth implementation.
+8. **Later hardening:** DPoP, asymmetric client authentication, and full OpenID
+   Connect discovery/JWKS/ID-token validation.
+
+The first slice intentionally stops before network or token parsing. It is a
+complete pure protocol boundary, not a mock transport and not a provider-
+specific midpoint.
 
 ---
 
@@ -179,7 +229,7 @@ pub struct ProviderConfig {
     // Flow configuration
     pub redirect_uri:          String,            // e.g., http://localhost:53682/callback
     pub default_scopes:        Vec<String>,
-    pub uses_pkce:             bool,              // default true
+    // PKCE is mandatory S256 and therefore is not a provider toggle.
     pub refresh_token_rotates: bool,              // some providers rotate; we track
     pub access_token_lifetime_hint: Duration,    // for proactive refresh tuning
 
@@ -339,7 +389,7 @@ impl OAuthBroker {
 
     /// Complete an Authorization Code flow. The broker stores the
     /// resulting tokens in the vault and returns the account_id
-    /// (derived from id_token sub or userinfo).
+    /// (derived from a fully verified OIDC subject or authenticated userinfo).
     pub fn complete_auth_code(
         &mut self,
         provider:      &str,
@@ -389,7 +439,7 @@ impl OAuthBroker {
 }
 
 pub struct AccountSummary {
-    pub account_id:     AccountId,        // stable, from id_token sub
+    pub account_id:     AccountId,        // verified OIDC sub or userinfo id
     pub label:          String,           // human label
     pub scopes:         Vec<String>,
     pub created_at:     SystemTime,
@@ -410,9 +460,10 @@ vault://oauth/<provider>/<account_id>/id_token           Zeroizing<String>
 vault://oauth/<provider>/<account_id>/metadata           JSON {label, scopes, expires_at, ...}
 ```
 
-The `account_id` is derived from the `sub` claim of the OIDC
-id_token when present; for non-OIDC providers (GitHub, Slack), it
-is the `id` field of the userinfo response. If neither is
+The `account_id` is derived from the `sub` claim only after the OIDC ID token's
+signature, issuer, audience, expiry, and transaction nonce have all been
+verified; for non-OIDC providers (GitHub, Slack), it is the `id` field of an
+authenticated userinfo response. If neither is
 available, the broker uses a content-hash of (provider name +
 canonical user identifier from userinfo).
 
@@ -482,12 +533,11 @@ avoid refresh storms).
        access_token, refresh_token, id_token (if openid scope),
        token_type, expires_in, scope.
    - Converts expires_in to absolute expires_at.
-   - Decodes id_token JWT (header.payload.signature) — payload
-     is base64url JSON with at minimum { sub, iss, aud, exp }.
-     We do NOT verify the JWT signature for v1 (the token came
-     directly from the token endpoint over TLS; the channel is
-     trusted). v2 may add JWKS verification for defense in depth.
-   - account_id = id_token.sub (or userinfo lookup if no id_token).
+   - Treats `id_token` as opaque until an OpenID Connect layer has
+     verified its signature plus `iss`, `aud`, `exp`, and transaction
+     `nonce`. An unverified JWT payload is never an account identity.
+   - A later OIDC layer may derive `account_id` from a fully verified
+     `id_token.sub`; otherwise the broker uses authenticated userinfo.
    - Atomically writes: access_token, refresh_token, id_token,
      metadata to vault under vault://oauth/google/<account_id>/*.
    - Returns account_id.
@@ -639,7 +689,9 @@ pub enum OAuthError {
 2. **State generation.** Cryptographically random; verified on callback; mismatch returns `StateMismatch`.
 3. **Authorization URL construction.** For Google, GitHub, Slack — the URL exactly matches a known-good fixture (parameter order normalized).
 4. **Token response parsing.** Standard JSON response, GitHub's legacy form-encoded response, missing optional fields, extra unknown fields all parse correctly.
-5. **id_token JWT decode.** Valid JWT with known payload decodes; malformed JWT returns parse error. (Signature verification deferred.)
+5. **OIDC validation (later slice).** Discovery/JWKS, signature, issuer,
+   audience, expiry, and transaction-nonce fixtures all pass before `sub` is
+   exposed. The OAuth-only slice does not decode an ID token.
 6. **Refresh logic.** Token within lead time → no refresh. Token outside lead time → refresh fires. Rotated refresh token written atomically.
 7. **Device-flow polling.** Sequence of `authorization_pending`, `slow_down` (with interval increase), `authorized` works correctly.
 8. **Revocation.** Calls revocation endpoint with correct params; tolerates 404 (already revoked).
@@ -666,11 +718,11 @@ specific quirks are tested via fixtures.
 
 ## Trade-Offs
 
-**No JWT signature verification in v1.** The id_token comes back
-over TLS from the token endpoint, which is already authenticated.
-JWKS-based signature verification adds defense in depth (catches a
-compromised TLS-MITM that the OS trust store missed) but requires
-fetching and caching JWKS per provider. We defer it to v2.
+**No unverified JWT identity.** The OAuth-only layer treats an ID token as
+opaque. OpenID Connect account identity is deferred until a separate layer can
+perform discovery, JWKS signature verification, issuer/audience/expiry checks,
+and transaction-nonce validation. TLS authenticity alone is not substituted
+for those protocol checks.
 
 **Refresh-token rotation handled per-provider.** Some providers
 rotate, some don't. Mistaking a rotating provider for a non-
@@ -714,8 +766,9 @@ provider registration.
 
 ## Future Extensions
 
-- **JWT signature verification (JWKS).** Fetch and cache the
-  provider's keys; verify id_token signatures. Defense in depth.
+- **OpenID Connect identity.** Fetch and cache discovery/JWKS data; verify the
+  ID-token signature, issuer, audience, expiry, and nonce before exposing
+  identity claims.
 - **Token introspection (RFC 7662).** Useful for resource servers,
   not for clients; deferred.
 - **Dynamic Client Registration (RFC 7591).** Self-register OAuth
@@ -728,3 +781,12 @@ provider registration.
   any device get usable access tokens without re-authorizing.
 
 These are deliberately out of scope for V1.
+
+## Normative References
+
+- RFC 6749 — OAuth 2.0 Authorization Framework.
+- RFC 7636 — Proof Key for Code Exchange.
+- RFC 8252 — OAuth 2.0 for Native Apps.
+- RFC 8414 — Authorization Server Metadata.
+- RFC 9207 — Authorization Server Issuer Identification.
+- RFC 9700 / BCP 240 — OAuth 2.0 Security Best Current Practice.

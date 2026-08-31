@@ -1,0 +1,496 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 67,
+  "title": "The First Form Line: Name",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:5fa9de6630a0ba4a",
+  "lessons": [
+    {
+      "id": "HI-A1F01-name-label",
+      "sequence": 2560,
+      "title": "नाम (nām) — the first A1 form label",
+      "headword": "नाम",
+      "romanization": "nām",
+      "gloss": "the form label name",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:8fe010e384530217",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the known word नाम (nām). Say what it means, then write it once from the word you already know."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — read the label",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाम (nām): __________."
+            },
+            {
+              "kind": "speech",
+              "text": "On a form, नाम (nām) asks for a name. The colon belongs to the form; it is not a Devanagari letter. Point to the label, then point to the empty answer line."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — one bounded copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy only नाम (nām) once. Check न, then ा, then म, and draw each head-line after its letter shape. Do not add a value yet. This visible copy is supported script practice, not independent form writing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Find नाम (nām) among काम, नाम (nām), दाम without writing the other words."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-A1F01-name-label-meaning",
+              "prompt": "A Hindi form shows नाम (nām). What information belongs on that line?",
+              "assesses": [
+                "HI-FORM-LABEL-NAME-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "name"
+              ],
+              "feedback": {
+                "correct": "नाम labels the name field.",
+                "incorrect": "Point to नाम and say name once."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-A1F01-name-select",
+      "sequence": 2570,
+      "title": "Two people, two known practice names",
+      "headword": "A मीरा · B अरुण",
+      "romanization": "A Mīrā; B Aruṇ",
+      "gloss": "select one already-practised name from a nonverbal identity cue",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type"
+      ],
+      "sourceHash": "fnv1a64:b25a7754e953e9bf",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read both names from the earlier sentence work:"
+            },
+            {
+              "kind": "speech",
+              "text": "मीरा, अरुण."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The two words — attach one nonverbal cue to each person",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "For this closed practice bank only:"
+            },
+            {
+              "kind": "speech",
+              "text": "A becomes मीरा."
+            },
+            {
+              "kind": "speech",
+              "text": "B becomes अरुण."
+            },
+            {
+              "kind": "speech",
+              "text": "Look for five seconds. Cover the Devanagari names. Point to A and recall its name; point to B and recall its name. Uncover and compare."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — select, do not copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "With the bank visible, choose the value requested by B, then the value requested by A. Do not write either one. This pass separates selection from spelling."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after the two-way contrast. No third name enters this field bank."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-A1F01-name-select-b",
+              "prompt": "In this practice bank, select the Devanagari name paired with B.",
+              "assesses": [
+                "HI-FORM-NAME-CUE-MAP-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "अरुण"
+              ],
+              "feedback": {
+                "correct": "B requests अरुण.",
+                "incorrect": "Reveal A becomes मीरा and B becomes अरुण, point to B, then cover the bank again."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-A1F01-name-supported",
+      "sequence": 2580,
+      "title": "Fill one field with the bank visible",
+      "headword": "नाम: मीरा",
+      "romanization": "nām: Mīrā",
+      "gloss": "complete one Hindi name field with a visible two-value bank",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:8f366b4b8ff3f3fd",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the label नाम (nām). Recall the visible bank: A मीरा, B अरुण."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice — supported entry",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the bank visible. Card A requests its known value:"
+            },
+            {
+              "kind": "speech",
+              "text": "A — नाम (nām): __________."
+            },
+            {
+              "kind": "speech",
+              "text": "Select मीरा and copy it on the line. Read the completed field from label to value. This is supported entry, not independent writing evidence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — separate spelling and placement passes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "First check only spelling: मी | रा. Then check one ordinary space after the colon. If one dimension differs, repair that dimension and stop."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one supported field."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-A1F01-name-supported-a",
+              "prompt": "With the two-value bank visible, complete the Hindi name field for A.",
+              "assesses": [
+                "HI-FORM-NAME-SUPPORTED-ENTRY-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "मीरा",
+                "नाम: मीरा",
+                "नाम:मीरा"
+              ],
+              "feedback": {
+                "correct": "Card A selects मीरा.",
+                "incorrect": "Use the visible bank, select A becomes मीरा, then repair spelling or placement in separate passes."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-A1F01-name-delayed",
+      "sequence": 2590,
+      "title": "Hide the bank, then fill one line",
+      "headword": "B → अरुण",
+      "romanization": "B cue: Aruṇ",
+      "gloss": "complete one requested Hindi name field after the answer bank is hidden",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:3e11110db77a4133",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look once: A मीरा, B अरुण. Cover the complete bank and wait ten seconds."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — delayed requested entry",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the bank hidden. Complete only this field:"
+            },
+            {
+              "kind": "speech",
+              "text": "B — नाम (nām): __________."
+            },
+            {
+              "kind": "speech",
+              "text": "The requested value comes from memory; there is no copyable answer beside the line. Reveal the bank only after writing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — separate repair passes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Compare in order: (1) requested person, (2) four written positions, (3) vowel marks and headline, (4) spacing after the colon. Repair the first differing dimension and stop."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is one delayed choice, not the published six-field A1 form."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-A1F01-name-delayed-b",
+              "prompt": "After hiding the bank for ten seconds, complete नाम (nām) for B. Do not reveal the bank until the attempt is finished.",
+              "assesses": [
+                "HI-FORM-NAME-DELAYED-ENTRY-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "अरुण",
+                "नाम: अरुण",
+                "नाम:अरुण"
+              ],
+              "feedback": {
+                "correct": "The hidden-bank cue selected अरुण independently.",
+                "incorrect": "Reveal the bank now, then compare selection, spelling, vowel marks, and spacing in separate passes."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-A1F01-name-no-model",
+      "sequence": 2600,
+      "title": "One no-model Hindi name field",
+      "headword": "नाम: __________",
+      "romanization": "",
+      "gloss": "choose and write one known Hindi name from a nonverbal cue with no model",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:d25e82ad213f6039",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Close the preceding lessons. Keep only the two learned identity symbols in memory. There is no Devanagari value bank, support-language name, romanization, or completed model below."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — independent controlled choice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Complete the requested field:"
+            },
+            {
+              "kind": "speech",
+              "text": "A — नाम (nām): __________."
+            },
+            {
+              "kind": "speech",
+              "text": "Choose the known value attached to A and write it from memory. Do not open an earlier lesson until the attempt is complete."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — separate repair passes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "After writing, compare in four bounded passes: requested person, spelling, vowel marks/headline, then label-value placement. Repair only the first differing dimension."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This completes one field pattern. Five field families remain before the published six-to-eight-item A1 practical-form task can be attempted. This one-field checkpoint is untimed and does not claim full A1 readiness."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-A1F01-name-no-model-a",
+              "prompt": "With no bank, romanization, or copyable answer, complete the Hindi name field for A.",
+              "assesses": [
+                "HI-FORM-NAME-MIRA-01",
+                "HI-FORM-NAME-NO-MODEL-01"
+              ],
+              "responseSeconds": 35,
+              "acceptedResponses": [
+                "मीरा",
+                "नाम: मीरा",
+                "नाम:मीरा"
+              ],
+              "feedback": {
+                "correct": "The nonverbal cue independently selected मीरा.",
+                "incorrect": "Finish the attempt first; then reopen the bank and repair selection, spelling, vowel marks, or placement in separate passes."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

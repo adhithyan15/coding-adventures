@@ -1,0 +1,17 @@
+{
+  "id": "HI-EXT-067-A1-NAME-FIELD",
+  "stage": "A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can recognise the Hindi name label, select a separately practised value, and fill one requested name line in Devanagari without a model.",
+  "prerequisites": [
+    "HI-EXT-006-CONNECTED-WRITING"
+  ],
+  "lessons": [
+    "HI-A1F01-name-label",
+    "HI-A1F01-name-select",
+    "HI-A1F01-name-supported",
+    "HI-A1F01-name-delayed",
+    "HI-A1F01-name-no-model"
+  ]
+}
