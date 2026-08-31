@@ -146,6 +146,33 @@ pub enum Expected {
     /// `RefFuncAny` above. Used by the real `i31.wast`'s own `(assert_return
     /// (invoke "new" (i32.const 1)) (ref.i31))`.
     RefI31Any,
+    /// Bare `(ref.array)` (GC proposal, real corpus vendoring pass --
+    /// `array.wast`/`array_new_data.wast`/`array_new_elem.wast`'s own
+    /// `(assert_return (invoke "new") (ref.array))`) -- same wildcard shape
+    /// as `RefFuncAny`/`RefI31Any` above: the test can't predict the exact
+    /// array object identity `array.new*` allocates, only that it's SOME
+    /// non-null array reference. Graded the same conservative way
+    /// `RefFuncAny` already is (`WasmValue::Ref(Some(_))`) -- this crate's
+    /// value representation carries no per-kind runtime type tag to
+    /// distinguish "some struct ref" from "some array ref" anyway (see
+    /// `wasm-conformance::value_matches_expected`'s own doc comment on
+    /// `RefFuncAny`), so accepting any non-null ref handle here is exact
+    /// for this crate's purposes, not an approximation.
+    RefArrayAny,
+    /// Bare `(ref.struct)` (GC proposal, real corpus vendoring pass --
+    /// `struct.wast`'s own `(assert_return (invoke "new") (ref.struct))`)
+    /// -- same wildcard shape and same grading as `RefArrayAny` above.
+    RefStructAny,
+    /// Bare `(ref.eq)` (GC proposal, real corpus vendoring pass --
+    /// `array.wast`'s own `(assert_return (invoke "new") (ref.eq))`) --
+    /// `eqref` is the GC type hierarchy's common supertype of `i31ref`,
+    /// every struct ref, and every array ref (but NOT `funcref`/
+    /// `externref`), so this wildcard is graded slightly more broadly than
+    /// `RefArrayAny`/`RefStructAny`/`RefFuncAny`: it accepts either a
+    /// non-null ref handle OR an `i31ref` (this crate's own
+    /// `WasmValue::I32`, see `RefI31Any`'s own doc comment) -- everything
+    /// `eqref` can hold, this crate's value representation can express.
+    RefEqAny,
     /// `(either A B)` (relaxed SIMD epic PR1 — see `code/specs/
     /// W19-wasm-relaxed-simd-first-slice.md`) — the actual result must
     /// match `A` **or** `B`, not necessarily either specific one. The
@@ -207,6 +234,32 @@ pub enum Directive {
     /// script (hundreds of directives in a real corpus file) would pad
     /// EVERY entry to this one variant's size.
     Module { id: Option<String>, result: Box<Result<WasmModule, String>> },
+    /// `(module definition $M <fields...>)` (real corpus vendoring pass,
+    /// `instance.wast`'s "Instantiation is generative" tests): a module
+    /// DECLARED under `$M` but deliberately NOT instantiated here -- unlike
+    /// a plain `(module $id ...)` (built AND instantiated eagerly by
+    /// [`Directive::Module`]), a "definition" only becomes a live instance
+    /// when a LATER `(module instance ...)` directive names it, and can be
+    /// instantiated more than once (each instantiation getting its own
+    /// independent global/table/memory state) -- exactly what a single
+    /// eagerly-built [`WasmModule`] + [`Directive::Module`]'s "build once,
+    /// instantiate once" shape can't express. Parsed the same "capture the
+    /// build error, don't abort the whole script" way as `Directive::
+    /// Module` -- see that variant's own doc comment. `id` is `None` for
+    /// the rarer anonymous `(module definition <fields...>)` form (no
+    /// `$name` at all -- the real corpus's own `memory.wast`/`table.wast`
+    /// use this to validate a boundary-case module -- e.g. a memory at
+    /// exactly the max page count -- WITHOUT actually instantiating/
+    /// allocating it, since nothing ever needs to reference it again by
+    /// name).
+    ModuleDefinition { id: Option<String>, result: Box<Result<WasmModule, String>> },
+    /// `(module instance $I $M)` (same real-corpus pass as `ModuleDefinition`
+    /// above): instantiate the module declared by an earlier `(module
+    /// definition $M ...)`, registering the FRESH instance under `$I` (or
+    /// anonymously, for the rare unnamed `(module instance $M)` form --
+    /// `id: None`). `definition_id` is `$M` itself, resolved against
+    /// whatever instance/definition registry the executor keeps.
+    ModuleInstance { id: Option<String>, definition_id: String },
     Register { name: String, module_name: Option<String> },
     Action(Action),
     AssertReturn { action: Action, expected: Vec<Expected> },
@@ -295,6 +348,91 @@ fn parse_directive(e: &SExpr) -> Result<Directive, WastParseError> {
         expected: "a directive keyword",
     })?;
     match head {
+        // `(module definition $M ...)` / `(module instance $I $M)` (real
+        // corpus vendoring pass, `instance.wast`) are recognized BEFORE the
+        // ordinary `(module ...)`/`(module $name ...)` fallback below --
+        // without this, `items[1]` being the bare atom `definition`/
+        // `instance` (never `$`-prefixed) would fall through to
+        // `extract_module_id` (returns `None`, since neither word starts
+        // with `$`) and `build_module_directive`, which would then try to
+        // parse `definition`/`instance` and the following `$name`(s) as
+        // ordinary MODULE FIELDS. Every module-field loop in `module.rs`
+        // only ever matches `SExpr::List` keyword forms (`f.is_keyword_
+        // list("global")` etc.) and silently ignores any other item, so a
+        // bare atom is never an error -- it's quietly skipped. That would
+        // make `(module definition $M (global ...) ...)` build as an
+        // ANONYMOUS module containing $M's own fields (losing the `$M`
+        // identity entirely), and `(module instance $I1 $M)` (three bare
+        // atoms, zero field lists) build as a trivially EMPTY anonymous
+        // module -- both silently "succeed" while doing nothing like what
+        // the script actually asked for, and any later `(register "I1"
+        // $I1)` referencing the never-registered `$I1` name would then hit
+        // a genuine, hard-to-diagnose `Fail` instead of an honest
+        // `NotYetSupported`. Recognizing the two forms explicitly here
+        // avoids that silent-garbage trap.
+        "module" if items.get(1).and_then(|i| i.as_atom()) == Some("definition") => {
+            // The `$name` is OPTIONAL here -- unlike `module instance`
+            // below, where a nameless instance could never be
+            // instantiated-from later so there'd be no point writing one,
+            // an anonymous `(module definition <fields...>)` is exactly
+            // how the real corpus's own `memory.wast`/`table.wast` spell
+            // "validate this boundary-case module (e.g. a memory at
+            // exactly the max page count) but don't actually instantiate/
+            // allocate it" -- see `Directive::ModuleDefinition`'s own doc
+            // comment.
+            let (name, fields_start) = match items.get(2) {
+                Some(SExpr::Atom(s, _)) if s.starts_with('$') => (Some(s.clone()), 3),
+                _ => (None, 2),
+            };
+            // Re-synthesize as an ordinary (optionally named) `(module
+            // [$name] <fields...>)` list and reuse the normal
+            // module-building path unchanged -- a "definition" is a real
+            // module in every way except WHEN it gets instantiated (see
+            // `ModuleInstance` above), so its own fields (globals/tables/
+            // funcs/etc.) parse exactly like any other module's.
+            let synthetic = SExpr::List(
+                std::iter::once(SExpr::Atom("module".to_string(), e.pos()))
+                    .chain(name.clone().map(|n| SExpr::Atom(n, e.pos())))
+                    .chain(items[fields_start..].iter().cloned())
+                    .collect(),
+                e.pos(),
+            );
+            Ok(Directive::ModuleDefinition {
+                id: name,
+                result: Box::new(build_module_directive(&synthetic).map_err(|e| e.to_string())),
+            })
+        }
+        "module" if items.get(1).and_then(|i| i.as_atom()) == Some("instance") => {
+            let names: Vec<&str> = items[2..]
+                .iter()
+                .map(|i| {
+                    i.as_atom().filter(|s| s.starts_with('$')).ok_or(WastParseError::UnexpectedToken {
+                        pos: e.pos(),
+                        found: "".into(),
+                        expected: "a $name after 'module instance'",
+                    })
+                })
+                .collect::<Result<_, _>>()?;
+            let (id, definition_id) = match names.as_slice() {
+                // `(module instance $I $M)` -- named instance $I of
+                // definition $M (the only shape the real corpus's own
+                // `instance.wast` uses).
+                [instance_name, definition_name] => (Some(instance_name.to_string()), definition_name.to_string()),
+                // `(module instance $M)` -- an anonymous instance (no `$I`
+                // to register it under later); not used by any currently
+                // vendored fixture, supported here for completeness since
+                // it's the same grammar rule with one optional name.
+                [definition_name] => (None, definition_name.to_string()),
+                _ => {
+                    return Err(WastParseError::UnexpectedToken {
+                        pos: e.pos(),
+                        found: "".into(),
+                        expected: "'(module instance $definition)' or '(module instance $instance $definition)'",
+                    })
+                }
+            };
+            Ok(Directive::ModuleInstance { id, definition_id })
+        }
         "module" => Ok(Directive::Module {
             id: extract_module_id(e),
             result: Box::new(build_module_directive(e).map_err(|e| e.to_string())),
@@ -563,6 +701,13 @@ fn parse_expected(e: &SExpr) -> Result<Expected, WastParseError> {
         // Bare `(ref.i31)` (W20) -- same wildcard shape as `ref.func`
         // above, see [`Expected::RefI31Any`]'s own doc comment.
         ("ref.i31", None) => Ok(Expected::RefI31Any),
+        // Bare `(ref.array)`/`(ref.struct)`/`(ref.eq)` (GC proposal) -- same
+        // wildcard shape as `ref.func`/`ref.i31` above, see each variant's
+        // own doc comment ([`Expected::RefArrayAny`]/[`Expected::
+        // RefStructAny`]/[`Expected::RefEqAny`]).
+        ("ref.array", None) => Ok(Expected::RefArrayAny),
+        ("ref.struct", None) => Ok(Expected::RefStructAny),
+        ("ref.eq", None) => Ok(Expected::RefEqAny),
         // `(either A B)` (relaxed SIMD epic PR1 -- see [`Expected::Either`]'s
         // own doc comment). `lit` is always `None` here in practice --
         // both children are LISTS (e.g. `(v128.const i8x16 ...)`), never a
@@ -1314,6 +1459,96 @@ mod tests {
             }
             other => panic!("expected AssertReturn, got {other:?}"),
         }
+    }
+
+    #[test]
+    fn bare_ref_array_struct_eq_are_wildcard_expectations() {
+        // GC proposal -- `array.wast`'s own `(assert_return (invoke "new")
+        // (ref.array))`/`(ref.eq)`, `struct.wast`'s own `(ref.struct)`.
+        let dirs = parse_script(r#"(assert_return (invoke "f") (ref.array) (ref.struct) (ref.eq))"#).unwrap();
+        match &dirs[0] {
+            Directive::AssertReturn { expected, .. } => {
+                assert_eq!(*expected, vec![Expected::RefArrayAny, Expected::RefStructAny, Expected::RefEqAny]);
+            }
+            other => panic!("expected AssertReturn, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn module_definition_with_a_name_builds_but_is_not_a_plain_module() {
+        let dirs = parse_script(r#"(module definition $M (memory 1))"#).unwrap();
+        match &dirs[0] {
+            Directive::ModuleDefinition { id, result } => {
+                assert_eq!(id.as_deref(), Some("$M"));
+                assert!(result.is_ok(), "expected a buildable module, got {result:?}");
+            }
+            other => panic!("expected ModuleDefinition, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn module_definition_without_a_name_is_anonymous() {
+        // `memory.wast`/`table.wast`'s own real shape: a boundary-case
+        // module validated but deliberately never instantiated.
+        let dirs = parse_script(r#"(module definition (memory 65536))"#).unwrap();
+        match &dirs[0] {
+            Directive::ModuleDefinition { id, result } => {
+                assert_eq!(*id, None);
+                assert!(result.is_ok(), "expected a buildable module, got {result:?}");
+            }
+            other => panic!("expected ModuleDefinition, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn module_instance_with_both_names_resolves_instance_and_definition_ids() {
+        let dirs = parse_script(r#"(module instance $I1 $M)"#).unwrap();
+        match &dirs[0] {
+            Directive::ModuleInstance { id, definition_id } => {
+                assert_eq!(id.as_deref(), Some("$I1"));
+                assert_eq!(definition_id, "$M");
+            }
+            other => panic!("expected ModuleInstance, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn module_instance_with_only_a_definition_name_is_anonymous() {
+        let dirs = parse_script(r#"(module instance $M)"#).unwrap();
+        match &dirs[0] {
+            Directive::ModuleInstance { id, definition_id } => {
+                assert_eq!(*id, None);
+                assert_eq!(definition_id, "$M");
+            }
+            other => panic!("expected ModuleInstance, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn module_definition_and_instance_do_not_abort_the_rest_of_the_script() {
+        // Regression test for the exact bug this feature fixes: before
+        // `module definition`/`module instance` were recognized as their
+        // own directive shapes, `build_module_directive` silently treated
+        // the bare `definition`/`instance`/`$name` atoms as harmless
+        // unrecognized module fields, quietly building a WRONG (anonymous
+        // or empty) module instead of erroring -- see the real
+        // `instance.wast` fixture this defends against.
+        let dirs = parse_script(
+            r#"
+            (module definition $M (memory (export "mem") 1))
+            (module instance $I $M)
+            (register "I" $I)
+            "#,
+        )
+        .unwrap();
+        assert_eq!(dirs.len(), 3);
+        assert!(matches!(dirs[0], Directive::ModuleDefinition { .. }));
+        assert!(matches!(dirs[1], Directive::ModuleInstance { .. }));
+        assert!(matches!(
+            dirs[2],
+            Directive::Register { ref name, ref module_name }
+                if name == "I" && module_name.as_deref() == Some("$I")
+        ));
     }
 
     #[test]
