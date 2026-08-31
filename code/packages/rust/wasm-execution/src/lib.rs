@@ -275,12 +275,22 @@ impl WasmValue {
             // a handle into `WasmExecutionContext::exception_heap`), but a
             // `(local $x exnref)` still needs SOME default before that ever
             // happens, and null is the only spec-correct one.
+            // The four W32-first-slice bottom reference types are ALSO
+            // nullable references at the runtime-value level (see
+            // `code/specs/W32-wasm-non-null-concrete-reference-types.md`'s
+            // §5: "non-null"/"bottom" is purely a static, validator-
+            // enforced property, never a value-level distinction in this
+            // repo) -- so they default the exact same way.
             ValueType::Anyref
             | ValueType::StructRef(_)
             | ValueType::ConcreteFuncRef(_)
             | ValueType::Funcref
             | ValueType::Externref
-            | ValueType::Exnref => WasmValue::Ref(None),
+            | ValueType::Exnref
+            | ValueType::NullFuncref
+            | ValueType::NullExternref
+            | ValueType::NullExnref
+            | ValueType::NullRef => WasmValue::Ref(None),
             // Handle 0 is the permanently-reserved all-zero v128 (see
             // `v128_heap`'s own doc comment) -- no allocation needed here,
             // unlike a GC struct's default, since `default_for` has no
@@ -2918,7 +2928,20 @@ fn decode_immediates(code: &[u8], offset: usize, immediates: &[&str]) -> (Decode
                 // `-0x17`, continuation bit clear, matching how `0x7B`/
                 // `0x70`/`0x6F` are ALSO simultaneously their type's real
                 // spec opcode and a safe single SLEB128 byte).
-                0x40 | 0x7F | 0x7E | 0x7D | 0x7C | 0x7B | 0x70 | 0x6F | 0x69 => (DecodedOperand::Int(byte as i64), 1),
+                // The four W32-first-slice bottom reference types
+                // (`code/specs/W32-wasm-non-null-concrete-reference-types.md`)
+                // -- `NullFuncref`/`NullExternref`/`NullExnref`/`NullRef`,
+                // bytes `0x73`/`0x72`/`0x74`/`0x71` (105 < n < 118 in
+                // decimal) -- get the SAME explicit-arm treatment `0x69`
+                // needed above: each is a plausible real type-section
+                // index for a large module, and each byte's LEB128
+                // continuation bit is clear (independently verified, see
+                // `ValueType::NullFuncref`'s own doc comment), so each is
+                // safe to special-case here without risking a genuine
+                // multi-byte type-index prefix collision.
+                0x40 | 0x7F | 0x7E | 0x7D | 0x7C | 0x7B | 0x70 | 0x6F | 0x69 | 0x71..=0x74 => {
+                    (DecodedOperand::Int(byte as i64), 1)
+                }
                 _ => {
                     // Type index (signed LEB128)
                     let (value, consumed) = decode_signed(code, offset).unwrap_or((0, 1));
@@ -4103,6 +4126,13 @@ fn block_arity(block_type: i64, types: &[FuncType]) -> (usize, usize) {
         // it can never be the leading byte of a genuine multi-byte type
         // index, only ever a complete, self-contained value on its own.
         0x69 => (0, 1),
+        // The four W32-first-slice bottom reference types -- same
+        // explicit-arm treatment as `0x69` above, for the same reason
+        // (each byte value, 105/113/114/116 in decimal, is a plausible
+        // real type-section index). See `decode_function_body`'s matching
+        // "blocktype" operand-decode arm just above for the full
+        // rationale and the tag-byte verification.
+        0x71..=0x74 => (0, 1),
         n if n >= 0 && (n as usize) < types.len() => {
             let t = &types[n as usize];
             (t.params.len(), t.results.len())

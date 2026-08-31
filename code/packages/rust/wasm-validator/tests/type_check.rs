@@ -3904,3 +3904,128 @@ fn invalid_memory_init_rejects_an_i64_source_offset_on_an_is64_memory() {
              (func (memory.init $d (i64.const 0) (i64.const 0) (i32.const 2))))"#,
     );
 }
+
+// ── W32 first slice: bottom reference-type subtyping ──────────────────────
+//
+// `code/specs/W32-wasm-non-null-concrete-reference-types.md` section 2 --
+// each `<:` rule needs a positive test (accepted) AND a negative test (the
+// reverse direction rejected), per the spec's own "Verification plan".
+// Matches the real corpus's `ref_null.wast` shape: a global declared with a
+// bottom type, read back via `global.get`, flowing into a function result
+// declared with that bottom type's nullable supertype.
+
+#[test]
+fn valid_nullfuncref_global_satisfies_a_funcref_result() {
+    assert_valid(
+        r#"(module
+             (global $g nullfuncref (ref.null nofunc))
+             (func (result funcref) (global.get $g)))"#,
+    );
+}
+
+#[test]
+fn valid_nullfuncref_global_satisfies_a_concrete_funcref_result() {
+    // `NullFuncref` is the bottom of the WHOLE func hierarchy -- including
+    // every SPECIFIC concrete function type, not just the general `funcref`.
+    assert_valid(
+        r#"(module
+             (type $t (func))
+             (global $g nullfuncref (ref.null nofunc))
+             (func (result (ref null $t)) (global.get $g)))"#,
+    );
+}
+
+#[test]
+fn valid_nullexternref_global_satisfies_an_externref_result() {
+    assert_valid(
+        r#"(module
+             (global $g nullexternref (ref.null noextern))
+             (func (result externref) (global.get $g)))"#,
+    );
+}
+
+#[test]
+fn valid_nullexnref_global_satisfies_an_exnref_result() {
+    assert_valid(
+        r#"(module
+             (global $g nullexnref (ref.null noexn))
+             (func (result exnref) (global.get $g)))"#,
+    );
+}
+
+#[test]
+fn valid_nullref_global_satisfies_an_anyref_result() {
+    assert_valid(
+        r#"(module
+             (global $g nullref (ref.null none))
+             (func (result anyref) (global.get $g)))"#,
+    );
+}
+
+#[test]
+fn valid_nullref_global_satisfies_an_i31ref_result() {
+    assert_valid(
+        r#"(module
+             (global $g nullref (ref.null none))
+             (func (result i31ref) (global.get $g)))"#,
+    );
+}
+
+#[test]
+fn invalid_funcref_global_does_not_satisfy_a_nullfuncref_result() {
+    // The reverse direction never holds -- a plain `funcref` carries no
+    // static guarantee it's actually null, so it cannot stand in for the
+    // bottom type.
+    assert_invalid(
+        r#"(module
+             (global $g funcref (ref.null func))
+             (func (result nullfuncref) (global.get $g)))"#,
+    );
+}
+
+#[test]
+fn invalid_externref_global_does_not_satisfy_a_nullexternref_result() {
+    assert_invalid(
+        r#"(module
+             (global $g externref (ref.null extern))
+             (func (result nullexternref) (global.get $g)))"#,
+    );
+}
+
+#[test]
+fn invalid_exnref_global_does_not_satisfy_a_nullexnref_result() {
+    assert_invalid(
+        r#"(module
+             (global $g exnref (ref.null exn))
+             (func (result nullexnref) (global.get $g)))"#,
+    );
+}
+
+#[test]
+fn invalid_anyref_global_does_not_satisfy_a_nullref_result() {
+    assert_invalid(
+        r#"(module
+             (global $g anyref (ref.null any))
+             (func (result nullref) (global.get $g)))"#,
+    );
+}
+
+#[test]
+fn invalid_nullfuncref_does_not_cross_the_func_hierarchy_into_externref() {
+    // No cross-hierarchy subtyping: the func hierarchy's bottom type is
+    // never assignable to a completely different hierarchy's supertype.
+    assert_invalid(
+        r#"(module
+             (global $g nullfuncref (ref.null nofunc))
+             (func (result externref) (global.get $g)))"#,
+    );
+}
+
+#[test]
+fn invalid_nullref_does_not_cross_the_any_hierarchy_into_funcref() {
+    assert_invalid(
+        r#"(module
+             (global $g nullref (ref.null none))
+             (func (result funcref) (global.get $g)))"#,
+    );
+}

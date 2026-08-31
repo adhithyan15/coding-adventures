@@ -2,6 +2,25 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.77] - 2026-08-31 (W32 first slice — bottom reference types)
+
+### Added
+
+- `ValueType::default_for`/`wasm-runtime`'s `call()` argument-conversion
+  match gained arms for the four new bottom reference types
+  (`NullFuncref`/`NullExternref`/`NullExnref`/`NullRef`, `wasm-types`
+  0.1.13) — required just to keep these exhaustive matches compiling;
+  behaviorally identical to their nullable-reference siblings (a null
+  default, the same lossy-legacy-path placeholder for `call()`'s i64
+  argument conversion).
+- `decode_function_body`'s "blocktype" operand decoder and `block_arity`
+  gained explicit arms for the four new tag bytes (`0x71..=0x74`), the
+  same defensive treatment `exnref`'s `0x69` already has (W24) — each
+  byte is a plausible real type-section index for a large module, so it
+  must be special-cased rather than falling into the generic
+  signed-LEB128 type-index branch. See `code/specs/
+  W32-wasm-non-null-concrete-reference-types.md`.
+
 ## [0.9.76] - 2026-08-31 (W30 follow-up — real memory64 bulk operations)
 
 ### Added

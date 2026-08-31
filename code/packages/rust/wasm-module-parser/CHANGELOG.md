@@ -2,6 +2,22 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.11] — 2026-08-31 — W32 first slice: bottom reference-type decoding
+
+### Added
+
+- `decode_value_type` recognizes the four W32-first-slice bottom
+  reference-type bytes (`0x73`/`0x72`/`0x74`/`0x71` →
+  `NullFuncref`/`NullExternref`/`NullExnref`/`NullRef`), independently
+  verified against the real reference interpreter's own
+  `interpreter/binary/decode.ml`. Also closes a small pre-existing gap
+  alongside them: `funcref`/`externref`/`exnref` (`0x70`/`0x6F`/`0x69`)
+  were previously only recognized in table-element-type/heap-type-
+  immediate contexts, never as a plain value-type byte, so a
+  `(module binary ...)` type section with a `(result funcref)`-shaped
+  signature couldn't decode — now every `ValueType::encode()` output
+  round-trips through this decoder byte-for-byte.
+
 ## [0.2.10] — 2026-08-31 — LEB128/malformed-binary hardening pass
 
 Vendored the official testsuite's `binary.wast`/`binary-leb128.wast`/

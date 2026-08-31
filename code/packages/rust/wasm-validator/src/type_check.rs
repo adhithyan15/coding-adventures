@@ -160,11 +160,22 @@ fn pop_val(stack: &mut Vec<StackType>, frame: &ControlFrame) -> Result<StackType
 /// tests: one direction `assert_return`s successfully, the mirror-image
 /// direction `assert_invalid`s with a type mismatch.
 ///
-/// No other subtyping rule (e.g. `StructRef`/`Anyref`) is implemented
-/// here -- out of scope for this addendum, same discipline as everywhere
-/// else in this validator phase.
+/// W32 first slice (`code/specs/W32-wasm-non-null-concrete-reference-types.md`)
+/// adds the four **bottom reference types** -- `NullFuncref`,
+/// `NullExternref`, `NullExnref`, `NullRef` -- each a strict subtype of
+/// every nullable type in its own hierarchy (func/extern/exn/any). That
+/// lattice is owned by `wasm_types::ValueType::is_bottom_subtype_of` (kept
+/// there, not duplicated here, so `wasm-types` stays the single source of
+/// truth for the type system's own shape); this function just asks it.
+///
+/// Non-null concrete refs (`(ref $t)`, no `null` keyword) and full
+/// structural subtyping for `call_indirect`/`ref.cast` against concrete
+/// function/struct types are explicitly NOT part of this slice -- see the
+/// spec's "Explicitly out of scope" / "genuinely open-ended" notes.
 fn is_assignable(actual: ValueType, expected: ValueType) -> bool {
-    actual == expected || matches!((actual, expected), (ValueType::ConcreteFuncRef(_), ValueType::Funcref))
+    actual == expected
+        || matches!((actual, expected), (ValueType::ConcreteFuncRef(_), ValueType::Funcref))
+        || actual.is_bottom_subtype_of(&expected)
 }
 
 /// Pop one value and require it to be assignable to `expected` (an
@@ -391,6 +402,18 @@ fn decode_blocktype(module: &WasmModule, code: &[u8], offset: usize) -> Result<(
         // complete standalone value, never a type-index prefix). See
         // `code/specs/W24-wasm-exceptions-exnref-catch-ref.md`.
         0x69 => Ok((vec![], vec![ValueType::Exnref], 1)),
+        // The four W32-first-slice bottom reference types (`code/specs/
+        // W32-wasm-non-null-concrete-reference-types.md`): same explicit-
+        // arm treatment as `exnref` (`0x69`) directly above, for the same
+        // reason -- each byte is a plausible real type-section index, and
+        // each one's LEB128 continuation bit is independently verified
+        // clear (see `ValueType::NullFuncref`'s own doc comment), so it's
+        // safe to special-case rather than falling into the type-index
+        // branch below.
+        0x73 => Ok((vec![], vec![ValueType::NullFuncref], 1)),
+        0x72 => Ok((vec![], vec![ValueType::NullExternref], 1)),
+        0x74 => Ok((vec![], vec![ValueType::NullExnref], 1)),
+        0x71 => Ok((vec![], vec![ValueType::NullRef], 1)),
         _ => {
             let (idx, size) = decode_signed(code, offset).map_err(|e| ValidationError::Other(format!("bad blocktype immediate: {e}")))?;
             let ty = module
@@ -1161,6 +1184,25 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     0x70 => push_val(&mut stack, ValueType::Funcref),
                     0x6F => push_val(&mut stack, ValueType::Externref),
                     0x0F => push_val(&mut stack, ValueType::Anyref),
+                    // The four BOTTOM heap types (W32 first slice:
+                    // `code/specs/W32-wasm-non-null-concrete-reference-
+                    // types.md`; real corpus vendoring pass --
+                    // `ref_null.wast`'s own `(ref.null nofunc)`/
+                    // `(ref.null noextern)`/`(ref.null noexn)`/
+                    // `(ref.null none)`) -- `wasm-wast-parser::module::
+                    // parse_ref_null_heap_type` now emits the REAL,
+                    // independently-verified GC/function-references
+                    // proposal tag bytes for these (matching `ValueType::
+                    // Null{Funcref,Externref,Exnref,Ref}::byte_tag()`), so
+                    // this handler pushes the genuine bottom-type static
+                    // type instead of falling back to `Unknown` -- this is
+                    // what lets `is_assignable`'s bottom-type lattice
+                    // actually fire on a `ref.null nofunc` result flowing
+                    // into a `funcref`-typed slot.
+                    0x73 => push_val(&mut stack, ValueType::NullFuncref),
+                    0x72 => push_val(&mut stack, ValueType::NullExternref),
+                    0x74 => push_val(&mut stack, ValueType::NullExnref),
+                    0x71 => push_val(&mut stack, ValueType::NullRef),
                     0x63 => {
                         let (idx, size) = decode_idx(code, offset)?;
                         offset += size;

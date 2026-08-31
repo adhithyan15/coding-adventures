@@ -1286,6 +1286,36 @@ mod tests {
         assert_eq!(groups[1].1, ValueType::I32);
     }
 
+    // ── W32 first slice: the four bottom reference types round-trip through
+    //    a REAL binary encode/decode ──────────────────────────────────────
+    //
+    // `code/specs/W32-wasm-non-null-concrete-reference-types.md` -- unlike
+    // `ref_null.wast` itself (a TEXT-format corpus file, which never goes
+    // through this crate at all -- see `wasm-conformance::build_module`),
+    // this exercises the REAL `(module binary ...)` path: a function type
+    // whose params/results use all four new `ValueType` variants, encoded
+    // by this crate and decoded back by `wasm-module-parser`, byte-for-byte.
+
+    #[test]
+    fn encodes_bottom_ref_types_in_a_func_signature_round_trip() {
+        let module = WasmModule {
+            types: vec![FuncType {
+                params: vec![ValueType::NullFuncref, ValueType::NullExternref],
+                results: vec![ValueType::NullExnref, ValueType::NullRef],
+            }],
+            functions: vec![0],
+            code: vec![FunctionBody {
+                locals: vec![ValueType::NullRef],
+                code: vec![0xD0, 0x74, 0x1A, 0xD0, 0x71, 0x0B], // ref.null noexn; drop; ref.null none; end
+            }],
+            ..Default::default()
+        };
+        let encoded = encode_module(&module).unwrap();
+        let parsed = WasmModuleParser::parse(&encoded).unwrap();
+        assert_eq!(parsed.types, module.types);
+        assert_eq!(parsed.code, module.code);
+    }
+
     /// Minimal LEB128 decoder for test assertions — decode one unsigned value.
     fn decode_leb128(bytes: &[u8]) -> (usize, usize) {
         let mut result = 0usize;

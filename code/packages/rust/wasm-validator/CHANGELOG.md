@@ -2,6 +2,40 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.74] - 2026-08-31 (W32 first slice — bottom reference-type subtyping)
+
+### Added
+
+- `is_assignable`'s reference-type subtyping now also checks
+  `wasm_types::ValueType::is_bottom_subtype_of` — the four bottom
+  reference types (`NullFuncref`/`NullExternref`/`NullExnref`/`NullRef`)
+  are accepted wherever their nullable hierarchy supertype (or, for
+  `NullFuncref`/`NullRef`, a specific concrete/struct index) is expected,
+  never the reverse. Per `code/specs/
+  W32-wasm-non-null-concrete-reference-types.md` section 2.
+- `type_check::decode_blocktype` and `wasm-execution`'s matching
+  blocktype decoders gained explicit arms for the four new tag bytes
+  (`0x71`/`0x72`/`0x73`/`0x74`), the same defensive treatment `exnref`'s
+  `0x69` already has — each byte is a plausible real type-section index
+  for a large module, so it must be special-cased rather than falling
+  into the generic signed-LEB128 type-index branch (the exact class of
+  bug W24's `exnref` fix closed).
+- `type_check`'s `ref.null` (`0xD0`) handler now recognizes the four new
+  heap-type immediate bytes and pushes the genuine bottom-type
+  `ValueType` instead of falling back to `Unknown`.
+
+### Tests
+
+- New `assert_valid`/`assert_invalid` pairs in `tests/type_check.rs`
+  covering every bottom-type subtyping direction from the spec's section
+  2 (positive: accepted; negative: the reverse direction, and
+  cross-hierarchy assignment, rejected) — see the spec's own
+  "Verification plan".
+- `NullRef <: StructRef(_)` (unreachable via this crate's text-format
+  parser — no struct-type text-format declarations exist) is covered by
+  a directly-constructed `WasmModule` test in `src/lib.rs`, matching the
+  existing `ConcreteFuncRef` bounds-test pattern.
+
 ## [0.2.73] - 2026-08-31 (W30 follow-up — real memory64 bulk operations)
 
 ### Added

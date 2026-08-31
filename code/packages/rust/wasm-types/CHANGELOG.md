@@ -2,6 +2,45 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.13] - 2026-08-31 (W32 first slice — bottom reference types)
+
+### Added
+
+- **`ValueType::NullFuncref`/`NullExternref`/`NullExnref`/`NullRef`**: the
+  four **bottom reference types** from the GC/function-references/
+  exceptions proposals (`nullfuncref`/`nullexternref`/`nullexnref`/
+  `nullref`, a.k.a. `none`) — each a genuine strict subtype of every
+  compatible nullable reference type in its own hierarchy (func/extern/
+  exn/any), per `code/specs/W32-wasm-non-null-concrete-reference-types.md`
+  section 1. Single-byte encodings `0x73`/`0x72`/`0x74`/`0x71`,
+  independently verified against the real reference interpreter's
+  `interpreter/binary/decode.ml` (`NoFuncHT = -0x0d`, `NoExternHT =
+  -0x0e`, `NoExnHT = -0x0c`, `NoneHT = -0x0f`; SLEB128 single-byte
+  encoding of a small negative value is `value mod 128`) rather than
+  re-asserted from this crate's own prior doc comments — the same
+  discipline W24's `exnref` tag-byte bug established. Replaces an earlier
+  pass's "lossy aliasing" of these four keywords straight onto their
+  nullable supertypes (`nullfuncref` == `funcref`, etc., in
+  `wasm-wast-parser`), which made the bottom types indistinguishable from
+  their supertypes and unable to express the asymmetric subtyping the
+  spec (and the real corpus) requires.
+- **`ValueType::is_bottom_subtype_of`**: the bottom-type subtyping lattice
+  from the spec's section 2 — e.g. `NullFuncref <: Funcref` and
+  `NullFuncref <: ConcreteFuncRef(_)` for every index (bottom of the
+  WHOLE func hierarchy), `NullRef <: Anyref`/`I31ref`/`StructRef(_)`, etc.
+  Deliberately NOT reflexive (`T <: T` is the caller's own `==` check) and
+  deliberately does NOT encode non-null concrete refs or structural
+  subtyping — both explicitly out of scope for this first slice; see the
+  spec's own "Explicitly out of scope" section.
+
+### Scope note
+
+This is the **first slice** of W32: only the four bottom types and their
+subtyping rules. `NonNullStructRef`/`NonNullConcreteFuncRef` (non-null
+concrete refs) and structural subtyping for `call_indirect`/`ref.cast`
+against concrete function/struct types are a separate, later slice — see
+the spec's own addendum.
+
 ## [0.1.12] - 2026-08-26 (W11 addendum — concrete function-type refs)
 
 ### Added
