@@ -11726,6 +11726,90 @@ the PR non-draft and mergeable with required CI and CodeQL checks queued or in
 progress, so auto-merge remains disabled until every final-head check is
 terminal and acceptable and no merge conflict exists.
 
+### Post-PR #13592 refresh and Rust generated-directory hashing selection
+
+PR #13592 completed all 41 final-head checks acceptably with 34 successes, six
+expected skips, and one neutral result. Guarded squash auto-merge was enabled
+only after GitHub reported final head
+`4e0ba42f011f1612dcc38e2633f39b508eb6b8e4` clean and mergeable, and GitHub
+merged it as `d75229daa921a7cf281b76d01ef10f5be2ff8c9d` at
+2026-08-31T05:57:18Z without a manual merge command. The Ruby generated-
+directory hashing owner therefore advances to `merged` and the active PR is
+cleared.
+
+Exact `origin/main` advanced through an existing Mosaic TaskApp lockfile and
+Punjabi curriculum/data work to
+`acef52d0e1d82d0c4432fcab8d077bfcb08f73e3`. The regenerated schema-3 inventory
+remains collision-clean and identity-neutral at 15 established lanes, 1,388
+implementation identities, 4,602 slots, 1,427 all-reported identities, bands
+175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml
+packages, zero collisions, and zero unknown buckets. No package root, BUILD
+front, recognized manifest, identity, or eligible unowned gap was introduced.
+The complete 606-owner/917-edge graph remains unique, dependency-complete, and
+acyclic.
+
+The dependency/leverage pass selects
+`build-tool-rust-generated-directory-hashing-exclusion` on branch
+`codex/build-tool-rust-generated-directory-hashing-exclusion`. Both
+prerequisites are merged. This is the final standalone exact generated-
+directory pruning leaf and has four unfinished descendants: Rust portable
+source and dependency hashing plus both hashing aggregates. It therefore
+outranks ready portable-source owners with three descendants and the broader
+from-scratch Lua hashing/cache owner. The bounded tranche reuses the neutral
+26-component contract in both Rust collectors, preserves case and near names,
+and closes directory-link and Windows reparse traversal without changing
+Cargo metadata, lockfiles, dependencies, BUILD fronts, manifests, or execution
+authority. Seven live PRs have zero exact overlap with the expected six Rust
+hasher, package-documentation, state, roadmap, and root-changelog paths; the
+target local branch, remote branch, and prior PR were absent before the fresh
+clean branch was created from exact main. Reconciliation plus selection leaves
+193 merged, 412 pending, and exactly one `in-progress` owner.
+
+The Rust implementation applies that exact registry before recursion in both
+the extension and declared-source collectors. Native fixture projections cover
+both neutral source-collection cases in both modes, preserve the required case
+and near names, and prove that real POSIX links or Windows junction/reparse
+points cannot add outside files. The complete package passes 165 unit tests and
+three CLI integrations, strict Clippy, release and literal `BUILD_windows`
+fronts, and LLVM coverage at 84.12% lines overall with `hasher.rs` at 95.96%.
+Cargo audit scans 57 dependencies against advisory database revision
+`b331df68b3ed0e99594d259040bdcb9de3c7c8a4` with no vulnerability. The neutral
+corpus validates 121 cases and 283 files; 206 conformance tests pass with 23
+expected skips, and 68 parity/capability/Haskell/OCaml-lock tests pass with two
+expected Windows skips. The Go oracle passes test, vet, trimpath build, and a
+real forced Rust dry plan over 1,172 packages. Cargo fmt retains only the
+package's pre-existing source-wide baseline, with no rustfmt finding in the new
+implementation or tests.
+
+Before publication the branch was rebased without conflict twice, first over
+the TaskApp Linux release-generation repair and then onto exact `origin/main`
+`7cbd6e232a1e6fa50d14fe1daf9418cba49e134c` over Marathi A1 practical-form
+curriculum/data. Those commits remain inside existing TaskApp release and
+human-language curriculum owners, add no package identity or build-tool
+contract, and have zero exact overlap with the six selected paths. The final
+refreshed schema-3 inventory remains 15 lanes, 1,388 implementation identities,
+4,602 slots, 1,427 all-reported identities, zero collisions, and zero unknown
+buckets; the 606-owner/917-edge graph remains unique, dependency-complete, and
+acyclic.
+
+Ready-for-review PR #13599 was opened from clean validated head
+`608765fc6fccedb4ea8aa107b898df774148a764` after a normal first push. The
+target remote branch and prior PR were absent before publication; all five
+other live PRs have zero exact overlap across the six changed paths, and both
+the inventory/publication and correctness/security reviews are clean. GitHub
+reports the PR non-draft and mergeable with required CI and CodeQL checks
+queued, so auto-merge remains disabled until every final-head check is terminal
+and acceptable and no merge conflict exists.
+
+The first hosted macOS build reached the selected Rust package after skipping
+5,110 unrelated packages, then Rust 1.98 Clippy denied the new
+`chunks_exact_to_as_chunks` lint in the test-only neutral-fixture hex decoder.
+Actual job `99407591793` logs were inspected before editing. The smallest
+repair uses the compiler-suggested `as_chunks::<2>().0.iter()` form; local Rust
+1.98.0 strict Clippy and the complete 165-unit plus three-CLI suite pass. The
+repair changes no production behavior, dependency, or authority, and
+replacement final-head checks remain required before auto-merge.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

@@ -42,6 +42,38 @@ use crate::discovery::Package;
 use crate::glob_match;
 use crate::graph::Graph;
 
+/// Exact generated, dependency, VCS, cache, and temporary directory
+/// components excluded by the language-neutral source-collection contract.
+/// Membership is deliberately case-sensitive and component-based.
+const GENERATED_DIRECTORY_COMPONENTS: &[&str] = &[
+    ".git",
+    ".hg",
+    ".svn",
+    ".venv",
+    ".tox",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".stack-work",
+    "__pycache__",
+    "node_modules",
+    "vendor",
+    "dist",
+    "dist-newstyle",
+    "_build",
+    "build",
+    "target",
+    ".claude",
+    "Pods",
+    ".gradle",
+    ".dart_tool",
+    "gradle-build",
+    "deps",
+    ".build",
+    ".cargo",
+    "cover",
+];
+
 // ---------------------------------------------------------------------------
 // Extension maps
 // ---------------------------------------------------------------------------
@@ -190,6 +222,10 @@ fn walk_for_files(
     specials: &HashSet<&str>,
     files: &mut Vec<std::path::PathBuf>,
 ) {
+    if !is_traversable_directory(dir) {
+        return;
+    }
+
     let entries = match fs::read_dir(dir) {
         Ok(e) => e,
         Err(_) => return,
@@ -197,9 +233,24 @@ fn walk_for_files(
 
     for entry in entries.flatten() {
         let path = entry.path();
-        if path.is_dir() {
+        let file_type = match entry.file_type() {
+            Ok(file_type) => file_type,
+            Err(_) => continue,
+        };
+        if file_type.is_symlink() || is_windows_reparse_point(&path) {
+            continue;
+        }
+
+        if file_type.is_dir() {
+            let component = entry.file_name();
+            if GENERATED_DIRECTORY_COMPONENTS
+                .iter()
+                .any(|excluded| component == std::ffi::OsStr::new(excluded))
+            {
+                continue;
+            }
             walk_for_files(&path, extensions, specials, files);
-        } else if path.is_file() {
+        } else if file_type.is_file() {
             let name = path
                 .file_name()
                 .map(|n| n.to_string_lossy().to_string())
@@ -236,6 +287,10 @@ fn walk_for_files(
 /// `tests/test_*.py`, etc.) and we don't want to bake pattern awareness
 /// into the directory walker.
 fn walk_all_files(dir: &Path, files: &mut Vec<std::path::PathBuf>) {
+    if !is_traversable_directory(dir) {
+        return;
+    }
+
     let entries = match fs::read_dir(dir) {
         Ok(e) => e,
         Err(_) => return,
@@ -243,12 +298,66 @@ fn walk_all_files(dir: &Path, files: &mut Vec<std::path::PathBuf>) {
 
     for entry in entries.flatten() {
         let path = entry.path();
-        if path.is_dir() {
+        let file_type = match entry.file_type() {
+            Ok(file_type) => file_type,
+            Err(_) => continue,
+        };
+        if file_type.is_symlink() || is_windows_reparse_point(&path) {
+            continue;
+        }
+
+        if file_type.is_dir() {
+            let component = entry.file_name();
+            if GENERATED_DIRECTORY_COMPONENTS
+                .iter()
+                .any(|excluded| component == std::ffi::OsStr::new(excluded))
+            {
+                continue;
+            }
             walk_all_files(&path, files);
-        } else if path.is_file() {
+        } else if file_type.is_file() {
             files.push(path);
         }
     }
+}
+
+/// Returns whether a directory can be enumerated without crossing a link or
+/// Windows reparse boundary. `symlink_metadata` inspects the lexical entry
+/// itself rather than following its target.
+fn is_traversable_directory(path: &Path) -> bool {
+    let metadata = match fs::symlink_metadata(path) {
+        Ok(metadata) => metadata,
+        Err(_) => return false,
+    };
+
+    metadata.is_dir()
+        && !metadata.file_type().is_symlink()
+        && !metadata_is_windows_reparse_point(&metadata)
+}
+
+#[cfg(windows)]
+fn metadata_is_windows_reparse_point(metadata: &fs::Metadata) -> bool {
+    use std::os::windows::fs::MetadataExt;
+
+    const FILE_ATTRIBUTE_REPARSE_POINT: u32 = 0x0400;
+    metadata.file_attributes() & FILE_ATTRIBUTE_REPARSE_POINT != 0
+}
+
+#[cfg(not(windows))]
+fn metadata_is_windows_reparse_point(_metadata: &fs::Metadata) -> bool {
+    false
+}
+
+#[cfg(windows)]
+fn is_windows_reparse_point(path: &Path) -> bool {
+    fs::symlink_metadata(path)
+        .map(|metadata| metadata_is_windows_reparse_point(&metadata))
+        .unwrap_or(true)
+}
+
+#[cfg(not(windows))]
+fn is_windows_reparse_point(_path: &Path) -> bool {
+    false
 }
 
 // ---------------------------------------------------------------------------
@@ -392,6 +501,212 @@ pub fn collect_transitive_predecessors(node: &str, graph: &Graph) -> HashSet<Str
 mod tests {
     use super::*;
     use std::path::PathBuf;
+    use std::sync::atomic::{AtomicU64, Ordering};
+
+    const SOURCE_COLLECTION_FIXTURES: [&str; 2] = [
+        "source-collection-extension.json",
+        "source-collection-declared.json",
+    ];
+
+    fn fixture_temp_dir(label: &str) -> PathBuf {
+        static NEXT: AtomicU64 = AtomicU64::new(0);
+        std::env::temp_dir().join(format!(
+            "build_tool_hasher_{label}_{}_{}",
+            std::process::id(),
+            NEXT.fetch_add(1, Ordering::Relaxed)
+        ))
+    }
+
+    fn read_source_collection_fixture(filename: &str) -> serde_json::Value {
+        let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../specs/fixtures/build-tool-v1/cases")
+            .join(filename);
+        serde_json::from_slice(&fs::read(path).unwrap()).unwrap()
+    }
+
+    fn project_fixture_path(path: &str) -> String {
+        path.strip_suffix(".mli")
+            .or_else(|| path.strip_suffix(".ml"))
+            .map_or_else(|| path.to_string(), |prefix| format!("{prefix}.rs"))
+    }
+
+    fn decode_hex(value: &str) -> Vec<u8> {
+        value
+            .as_bytes()
+            .as_chunks::<2>()
+            .0
+            .iter()
+            .map(|pair| u8::from_str_radix(std::str::from_utf8(pair).unwrap(), 16).unwrap())
+            .collect()
+    }
+
+    fn materialize_projected_fixture(root: &Path, fixture: &serde_json::Value) {
+        for candidate in fixture["input"]["options"]["candidates"]
+            .as_array()
+            .unwrap()
+        {
+            let path = candidate["path"].as_str().unwrap();
+            if candidate["kind"] != "file"
+                || !(path.starts_with("excluded-")
+                    || path.starts_with("case/")
+                    || path.starts_with("near/"))
+            {
+                continue;
+            }
+
+            let projected = root.join(project_fixture_path(path));
+            fs::create_dir_all(projected.parent().unwrap()).unwrap();
+            fs::write(
+                projected,
+                decode_hex(candidate["content_hex"].as_str().unwrap()),
+            )
+            .unwrap();
+        }
+    }
+
+    fn projected_expected_paths(fixture: &serde_json::Value) -> Vec<String> {
+        let mut expected: Vec<String> = fixture["expected"]["result"]["files"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .filter_map(|entry| {
+                let path = entry["path"].as_str().unwrap();
+                (path.starts_with("case/") || path.starts_with("near/"))
+                    .then(|| project_fixture_path(path))
+            })
+            .collect();
+        expected.sort();
+        expected
+    }
+
+    fn assert_projected_source_collection_fixture(filename: &str, declared: bool) {
+        let dir = fixture_temp_dir(if declared { "declared" } else { "extension" });
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).unwrap();
+
+        let fixture = read_source_collection_fixture(filename);
+        materialize_projected_fixture(&dir, &fixture);
+        let pkg = Package {
+            name: "rust/test-pkg".to_string(),
+            path: dir.clone(),
+            build_commands: vec!["cargo test".to_string()],
+            language: "rust".to_string(),
+        };
+        let patterns = if declared {
+            vec!["**/*.rs".to_string()]
+        } else {
+            vec![]
+        };
+        let actual: Vec<String> = collect_source_files_with_patterns(&pkg, &patterns)
+            .iter()
+            .map(|path| {
+                path.strip_prefix(&dir)
+                    .unwrap()
+                    .to_string_lossy()
+                    .replace('\\', "/")
+            })
+            .collect();
+
+        assert_eq!(projected_expected_paths(&fixture), actual, "{filename}");
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn generated_directory_registry_matches_both_neutral_fixtures() {
+        for filename in SOURCE_COLLECTION_FIXTURES {
+            let fixture = read_source_collection_fixture(filename);
+            let mut excluded: Vec<String> = fixture["input"]["options"]["candidates"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .filter_map(|candidate| {
+                    let path = candidate["path"].as_str().unwrap();
+                    path.starts_with("excluded-")
+                        .then(|| path.split('/').nth(1).unwrap().to_string())
+                })
+                .collect();
+            excluded.sort();
+
+            let mut registry: Vec<String> = GENERATED_DIRECTORY_COMPONENTS
+                .iter()
+                .map(|component| (*component).to_string())
+                .collect();
+            registry.sort();
+            assert_eq!(registry, excluded, "{filename}");
+        }
+    }
+
+    #[test]
+    fn extension_collection_projects_neutral_exact_pruning_fixtures() {
+        for filename in SOURCE_COLLECTION_FIXTURES {
+            assert_projected_source_collection_fixture(filename, false);
+        }
+    }
+
+    #[test]
+    fn declared_collection_projects_neutral_exact_pruning_fixtures() {
+        for filename in SOURCE_COLLECTION_FIXTURES {
+            assert_projected_source_collection_fixture(filename, true);
+        }
+    }
+
+    #[test]
+    fn collectors_do_not_follow_directory_links() {
+        let root = fixture_temp_dir("link-root");
+        let outside = fixture_temp_dir("link-outside");
+        let _ = fs::remove_dir_all(&root);
+        let _ = fs::remove_dir_all(&outside);
+        fs::create_dir_all(&root).unwrap();
+        fs::create_dir_all(&outside).unwrap();
+        fs::write(root.join("source.rs"), "const SOURCE: bool = true;").unwrap();
+        fs::write(outside.join("external.rs"), "const EXTERNAL: bool = true;").unwrap();
+        let linked = root.join("linked");
+
+        #[cfg(unix)]
+        std::os::unix::fs::symlink(&outside, &linked).unwrap();
+
+        #[cfg(windows)]
+        {
+            let output = std::process::Command::new("cmd")
+                .args(["/c", "mklink", "/J"])
+                .arg(&linked)
+                .arg(&outside)
+                .output()
+                .unwrap();
+            assert!(
+                output.status.success(),
+                "junction creation failed: {}",
+                String::from_utf8_lossy(&output.stderr)
+            );
+        }
+
+        let pkg = Package {
+            name: "rust/test-pkg".to_string(),
+            path: root.clone(),
+            build_commands: vec!["cargo test".to_string()],
+            language: "rust".to_string(),
+        };
+
+        for patterns in [vec![], vec!["**/*.rs".to_string()]] {
+            let actual: Vec<String> = collect_source_files_with_patterns(&pkg, &patterns)
+                .iter()
+                .map(|path| {
+                    path.strip_prefix(&root)
+                        .unwrap()
+                        .to_string_lossy()
+                        .replace('\\', "/")
+                })
+                .collect();
+            assert_eq!(vec!["source.rs"], actual);
+        }
+
+        #[cfg(unix)]
+        fs::remove_file(&linked).unwrap();
+        #[cfg(windows)]
+        fs::remove_dir(&linked).unwrap();
+        fs::remove_dir_all(&root).unwrap();
+        fs::remove_dir_all(&outside).unwrap();
+    }
 
     #[test]
     fn test_hash_file() {
