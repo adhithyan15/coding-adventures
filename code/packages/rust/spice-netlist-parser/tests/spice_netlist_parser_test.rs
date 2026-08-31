@@ -1480,6 +1480,47 @@ Jpull drain gate source pch
 }
 
 #[test]
+fn parses_jfet_threshold_aliases_with_canonical_precedence() {
+    let parsed = parse_netlist(
+        r#"
+.model canonical NJF(VTO=-3 VT0=-2 VTH=-1)
+.model vtzero NJF(VT0=-2)
+.model threshold NJF(VTH=-1)
+J1 drain gate source canonical
+J2 drain gate source vtzero
+J3 drain gate source threshold
+"#,
+    )
+    .unwrap();
+
+    let elements = parsed.circuit.elements();
+    let Element::Jfet(canonical) = &elements[0] else {
+        panic!("expected JFET");
+    };
+    let Element::Jfet(vtzero) = &elements[1] else {
+        panic!("expected JFET");
+    };
+    let Element::Jfet(threshold) = &elements[2] else {
+        panic!("expected JFET");
+    };
+    assert_close(canonical.threshold_voltage, -3.0);
+    assert_close(vtzero.threshold_voltage, -2.0);
+    assert_close(threshold.threshold_voltage, -1.0);
+}
+
+#[test]
+fn rejects_non_finite_jfet_threshold_aliases() {
+    for parameter in ["VTO", "VT0", "VTH"] {
+        let error = parse_netlist(&format!(
+            ".model bad NJF({parameter}=1e999)\nJ1 drain gate source bad"
+        ))
+        .unwrap_err();
+
+        assert!(error.to_string().contains("JFET VTO must be finite"));
+    }
+}
+
+#[test]
 fn parses_jfet_b_as_doping_tail_parameter_not_beta_alias() {
     let parsed = parse_netlist(
         r#"

@@ -2470,10 +2470,19 @@ fn parse_element(
             if !doping_tail_parameter.is_finite() {
                 return Err(NetlistParseError::new("JFET B must be finite"));
             }
-            let threshold_voltage = model.params.get("VTO").copied().unwrap_or(match polarity {
-                JfetPolarity::Njf => -2.0,
-                JfetPolarity::Pjf => 2.0,
-            });
+            let threshold_voltage = model
+                .params
+                .get("VTO")
+                .or_else(|| model.params.get("VT0"))
+                .or_else(|| model.params.get("VTH"))
+                .copied()
+                .unwrap_or(match polarity {
+                    JfetPolarity::Njf => -2.0,
+                    JfetPolarity::Pjf => 2.0,
+                });
+            if !threshold_voltage.is_finite() {
+                return Err(NetlistParseError::new("JFET VTO must be finite"));
+            }
             let mut jfet = Jfet::with_model(
                 name,
                 &fields[1],
