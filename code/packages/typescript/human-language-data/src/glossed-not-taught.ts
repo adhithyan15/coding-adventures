@@ -87,7 +87,14 @@ export function measureGlossedNotTaught(
       occurrences: hit.count,
       lessonIds: [...hit.lessonIds].sort(),
     }))
-    .sort((left, right) => left.token.localeCompare(right.token));
+    // Review the strongest signals first. Alphabetical output made the report
+    // deterministic but buried a token repeated across many lessons below
+    // one-off etymological forms. Token order remains the deterministic tie
+    // breaker, so text and JSON stay byte-stable across runs.
+    .sort(
+      (left, right) =>
+        right.occurrences - left.occurrences || left.token.localeCompare(right.token),
+    );
 
   return {
     language,
