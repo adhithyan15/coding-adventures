@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.9.0
+
 - Move shared browser/controller/Cairo ownership into the backend-neutral
   `venture-browser-cairo` crate and retain this package as the thin Qt facade.
 

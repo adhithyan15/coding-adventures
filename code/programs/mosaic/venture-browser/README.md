@@ -242,3 +242,15 @@ shell reports success.
 
 This package is a browser-wiring milestone, not a claim of complete Venture or
 HTML conformance.
+
+## Releases
+
+Venture follows Semantic Versioning on a coordinated pre-1.0 product line.
+The canonical version is stored in `VERSION` and must match the browser core,
+native bridges, smoke harness, and Mosaic package manifests. Release tags use
+`venture-vMAJOR.MINOR.PATCH`; pushing a matching tag builds generated backend
+projects plus Linux, macOS, and Windows native bridges, then publishes them as
+a GitHub prerelease with SHA-256 checksums.
+
+The release validator rejects `1.0.0` and later versions until Venture's
+readiness criteria are explicitly declared complete.

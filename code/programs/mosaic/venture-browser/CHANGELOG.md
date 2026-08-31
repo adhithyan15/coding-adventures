@@ -1,12 +1,16 @@
 # Changelog
 
-## Computed box and flow values
+## [Unreleased]
+
+## [0.9.0] - 2026-08-31
+
+### Computed box and flow values
 
 - Added reusable percentage and font-relative length computation, auto margins,
   min/max sizing, border-box behavior, independent border paint, text
   alignment, and white-space flow with shared cross-host visual geometry.
 
-## Imported and element-authored CSS convergence
+### Imported and element-authored CSS convergence
 
 - Added inline style attributes, inherited custom properties, `var()` value
   resolution, four-side spacing shorthands, attribute/structural selectors,
@@ -16,7 +20,7 @@
   ancestor-cycle diagnostics; the shared real-page corpus exercises the full
   path across available hosts.
 
-## External stylesheets and computed cascade
+### External stylesheets and computed cascade
 
 - Added typed stylesheet requests to the shared subresource lifecycle with
   ordered blocking, media/failure fallback, navigation cancellation, and
@@ -24,7 +28,7 @@
 - Added grammar-validated author/UA computed styles and external-CSS real-page
   acceptance shared by Cairo, Metal, Direct2D, and generated host gates.
 
-## Asynchronous subresource lifecycle
+### Asynchronous subresource lifecycle
 
 - Added document-first image scheduling with deterministic requests,
   cancellation effects, stale-result rejection, retained resource state, and
@@ -32,7 +36,7 @@
 - Extended the real-page fixture with pending-frame and reverse-completion
   acceptance while preserving failure fallback and final visual baselines.
 
-## Generated Unicode text conformance
+### Generated Unicode text conformance
 
 - Promoted shared text flow from handwritten browser heuristics to generated
   UAX #9/#14/#29 data while preserving the host-neutral analyzer contract.
@@ -40,9 +44,9 @@
   machine, Thai/Lao/Khmer dictionary wrapping, diagnostics, and real-page
   acceptance shared by every available host.
 
-## [0.1.0] - Unreleased
+### Foundations
 
-### Fixed
+#### Fixed
 
 - Isolate the branch-protection `CI gate` to pull-request workflows so push CI
   cannot auto-complete Venture changes before required macOS and Windows
@@ -50,7 +54,7 @@
 - Keep the authoritative POSIX `BUILD` wrapper compatible with the repository
   build tool's `/bin/sh` executor instead of requiring Bash `pipefail` syntax.
 
-### Added
+#### Added
 
 - Add deterministic real-page visual acceptance through a reusable fixture
   package with exact layout/link geometry, full and structural RGBA captures,

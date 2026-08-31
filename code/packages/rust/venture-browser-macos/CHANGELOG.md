@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.9.0
+
 - Expose native begin-navigation and incremental image-completion helpers over
   the shared cancellable subresource lifecycle.
 - Forward core-owned View Source auxiliary documents through the generated

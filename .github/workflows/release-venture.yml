@@ -1,0 +1,146 @@
+name: Release Venture
+
+on:
+  push:
+    tags:
+      - "venture-v*"
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: "1.98"
+      - id: version
+        name: Validate semantic release
+        shell: bash
+        run: |
+          version="$(python3 code/scripts/venture_release.py --tag "$GITHUB_REF_NAME")"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - name: Test release contract
+        run: python3 -m unittest discover -s code/scripts/tests -p test_venture_release.py
+      - name: Test portable Venture packages
+        working-directory: code/packages/rust
+        run: cargo test -p venture-browser-core -p venture-browser-cairo -p venture-browser-qt
+
+  generated-projects:
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: "1.98"
+      - name: Emit all Venture backends
+        working-directory: code/programs/mosaic/venture-browser
+        run: ./scripts/build-all.sh --release --emit-only --output "$RUNNER_TEMP/venture-generated"
+      - name: Archive generated projects
+        shell: bash
+        run: tar -C "$RUNNER_TEMP" -czf "venture-${{ needs.validate.outputs.version }}-generated-projects.tar.gz" venture-generated
+      - uses: actions/upload-artifact@v4
+        with:
+          name: generated-projects
+          path: venture-${{ needs.validate.outputs.version }}-generated-projects.tar.gz
+          if-no-files-found: error
+
+  linux-bridge:
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: "1.98"
+      - name: Install Cairo
+        run: sudo apt-get update && sudo apt-get install -y libcairo2-dev
+      - name: Build shared Cairo bridge
+        working-directory: code/packages/rust
+        run: cargo build --release -p venture-browser-cairo
+      - name: Archive Linux bridge
+        shell: bash
+        run: |
+          mkdir venture-linux-x86_64
+          cp code/packages/rust/target/release/libventure_browser_cairo.so venture-linux-x86_64/
+          tar -czf "venture-${{ needs.validate.outputs.version }}-linux-x86_64.tar.gz" venture-linux-x86_64
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-bridge
+          path: venture-${{ needs.validate.outputs.version }}-linux-x86_64.tar.gz
+          if-no-files-found: error
+
+  macos-bridge:
+    needs: validate
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: "1.98"
+      - name: Build Metal bridge
+        working-directory: code/packages/rust
+        run: cargo build --release -p venture-browser-macos
+      - name: Archive macOS bridge
+        shell: bash
+        run: |
+          mkdir venture-macos-native
+          cp code/packages/rust/target/release/libventure_browser_macos.dylib venture-macos-native/
+          tar -czf "venture-${{ needs.validate.outputs.version }}-macos-native.tar.gz" venture-macos-native
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-bridge
+          path: venture-${{ needs.validate.outputs.version }}-macos-native.tar.gz
+          if-no-files-found: error
+
+  windows-bridge:
+    needs: validate
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: "1.98"
+      - name: Build Direct2D bridge
+        working-directory: code/packages/rust
+        run: cargo build --release -p venture-browser-windows
+      - name: Archive Windows bridge
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory venture-windows-x86_64
+          Copy-Item code/packages/rust/target/release/venture_browser_windows.dll venture-windows-x86_64/
+          Compress-Archive venture-windows-x86_64 "venture-${{ needs.validate.outputs.version }}-windows-x86_64.zip"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-bridge
+          path: venture-${{ needs.validate.outputs.version }}-windows-x86_64.zip
+          if-no-files-found: error
+
+  release:
+    needs: [validate, generated-projects, linux-bridge, macos-bridge, windows-bridge]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+      - name: Create checksums
+        working-directory: artifacts
+        run: sha256sum * > SHA256SUMS
+      - name: Publish prerelease
+        uses: softprops/action-gh-release@v2
+        with:
+          prerelease: true
+          generate_release_notes: true
+          files: artifacts/*
+          body: |
+            Venture ${{ needs.validate.outputs.version }} is a pre-1.0 development release.
+
+            It includes the generated Mosaic backend projects and native Rust
+            rendering bridges. It is not yet a claim of complete browser, HTML,
+            accessibility, packaging, or platform conformance.
