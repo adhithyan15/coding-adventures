@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Add a deterministic wrapped flex fixture and shared geometry oracle.
+
 ## 0.1.1
 
 - Expanded the international page with bidi isolate/embedding controls and

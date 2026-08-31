@@ -4,6 +4,8 @@
 
 ### Added
 
+- Compute CSS flex container/item longhands and shorthands into the typed,
+  layout-engine-independent `flex` extension contract.
 - Add context-aware `%`, `em`, and `rem` computation, `auto` sizing/margins,
   min/max constraints, border-box sizing, per-side border values, text
   alignment, and white-space projection into reusable layout and paint seams.

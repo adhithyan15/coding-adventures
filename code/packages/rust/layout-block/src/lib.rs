@@ -52,6 +52,7 @@
 //!
 //! Each exclusion matches the spec's documented non-goals.
 
+use layout_flexbox::layout_flexbox_with;
 use layout_inline::{layout_inline_run_with_options, InlineOptions};
 use layout_ir::{
     Constraints, Content, Edges, ExtValue, LayoutNode, MeasureResult, PositionedNode, SizeValue,
@@ -119,6 +120,24 @@ fn lay_out_any<M: TextMeasurer>(
     // Decide the content-area max width by subtracting the node's own
     // padding. Negative results clamp to zero.
     let padding_horizontal = padding.left + padding.right;
+
+    if is_flex_container(display_value(node)) {
+        let flex_constraints = Constraints {
+            min_width: constraints.min_width,
+            max_width: outer_max_width,
+            min_height: constraints.min_height,
+            max_height: constraints.max_height,
+        };
+        let mut positioned = layout_flexbox_with(
+            node,
+            flex_constraints,
+            measurer,
+            |child, child_constraints| lay_out_any(child, child_constraints, measurer, 0.0, 0.0),
+        );
+        positioned.x = x;
+        positioned.y = y;
+        return positioned;
+    }
 
     if is_leaf_text {
         if let Some(Content::Text(tc)) = &node.content {
@@ -312,7 +331,14 @@ fn display_value(node: &LayoutNode) -> Option<&str> {
 }
 
 fn is_inline_level(display: Option<&str>) -> bool {
-    matches!(display, Some("inline" | "inline-text" | "inline-replaced"))
+    matches!(
+        display,
+        Some("inline" | "inline-text" | "inline-replaced" | "inline-flex")
+    )
+}
+
+fn is_flex_container(display: Option<&str>) -> bool {
+    matches!(display, Some("flex" | "inline-flex"))
 }
 
 fn block_bool(node: &LayoutNode, key: &str) -> bool {

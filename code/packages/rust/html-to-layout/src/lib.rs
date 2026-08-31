@@ -10,6 +10,10 @@ use std::collections::HashMap;
 
 use coding_adventures_css_parser::create_css_parser;
 use coding_adventures_html_parser::{BrowserRenderNode, BrowserRenderTree};
+use layout_flexbox::{
+    flex_ext, AlignContent, AlignItems, AlignSelf, FlexBasis, FlexContainerStyle, FlexDirection,
+    FlexItemStyle, FlexWrap, JustifyContent,
+};
 use layout_ir::{
     color_black, edges_all, edges_xy, font_bold, font_italic, font_spec, rgb, Color, Edges,
     ExtValue, FontSpec, ImageContent, ImageFit, LayoutNode, SizeValue, TextAlign, TextContent,
@@ -135,6 +139,8 @@ pub struct HtmlComputedStyle {
     pub box_sizing: String,
     pub text_align: TextAlign,
     pub white_space: String,
+    pub flex_container: FlexContainerStyle,
+    pub flex_item: FlexItemStyle,
     pub custom_properties: HashMap<String, Vec<String>>,
 }
 
@@ -302,6 +308,10 @@ where
     layout
         .ext
         .insert("block".into(), block_ext(node, display, &style));
+    layout.ext.insert(
+        "flex".into(),
+        flex_ext(style.flex_container, style.flex_item),
+    );
     Some(layout)
 }
 
@@ -415,6 +425,8 @@ where
     style.border_width = Edges::default();
     style.border_color = [None; 4];
     style.box_sizing = "content-box".into();
+    style.flex_container = FlexContainerStyle::default();
+    style.flex_item = FlexItemStyle::default();
     if node.role == "heading" {
         let level = node.heading_level.unwrap_or(1).clamp(1, 6);
         style.font = theme.heading_fonts[usize::from(level - 1)].clone();
@@ -552,6 +564,8 @@ fn root_computed_style(context: &HtmlStyleContext) -> HtmlComputedStyle {
         box_sizing: "content-box".into(),
         text_align: TextAlign::Start,
         white_space: "normal".into(),
+        flex_container: FlexContainerStyle::default(),
+        flex_item: FlexItemStyle::default(),
         custom_properties: HashMap::new(),
     };
     let mut winners = HashMap::new();
@@ -715,6 +729,58 @@ fn apply_declaration_winners(
                     .then(TextDecoration::underline);
             }
             "display" => style.display = value.first().cloned(),
+            "flex-direction" => {
+                style.flex_container.direction = match value.first().map(String::as_str) {
+                    Some("row-reverse") => FlexDirection::RowReverse,
+                    Some("column") => FlexDirection::Column,
+                    Some("column-reverse") => FlexDirection::ColumnReverse,
+                    _ => FlexDirection::Row,
+                }
+            }
+            "flex-wrap" => {
+                style.flex_container.wrap = match value.first().map(String::as_str) {
+                    Some("wrap") => FlexWrap::Wrap,
+                    Some("wrap-reverse") => FlexWrap::WrapReverse,
+                    _ => FlexWrap::NoWrap,
+                }
+            }
+            "flex-flow" => apply_flex_flow(style, &value),
+            "gap" => apply_flex_gap(style, &value, context),
+            "row-gap" => {
+                if let Some(gap) = parse_box_length(&value, style, context, context.viewport_width)
+                {
+                    style.flex_container.row_gap = gap;
+                }
+            }
+            "column-gap" => {
+                if let Some(gap) = parse_box_length(&value, style, context, context.viewport_width)
+                {
+                    style.flex_container.column_gap = gap;
+                }
+            }
+            "justify-content" => {
+                style.flex_container.justify_content = parse_justify_content(&value)
+            }
+            "align-items" => style.flex_container.align_items = parse_align_items(&value),
+            "align-content" => style.flex_container.align_content = parse_align_content(&value),
+            "align-self" => style.flex_item.align_self = parse_align_self(&value),
+            "order" => {
+                if let Some(order) = value.first().and_then(|value| value.parse().ok()) {
+                    style.flex_item.order = order;
+                }
+            }
+            "flex-grow" => {
+                if let Some(grow) = parse_non_negative_number(&value) {
+                    style.flex_item.grow = grow;
+                }
+            }
+            "flex-shrink" => {
+                if let Some(shrink) = parse_non_negative_number(&value) {
+                    style.flex_item.shrink = shrink;
+                }
+            }
+            "flex-basis" => style.flex_item.basis = parse_flex_basis(&value, style, context),
+            "flex" => apply_flex_shorthand(style, &value, context),
             "width" => apply_width_value(style, &value, context),
             "height" => {
                 style.height = parse_css_length_in_context(
@@ -784,6 +850,161 @@ fn apply_declaration_winners(
             }
             _ => {}
         }
+    }
+}
+
+fn apply_flex_flow(style: &mut HtmlComputedStyle, value: &[String]) {
+    for token in value {
+        match token.as_str() {
+            "row" => style.flex_container.direction = FlexDirection::Row,
+            "row-reverse" => style.flex_container.direction = FlexDirection::RowReverse,
+            "column" => style.flex_container.direction = FlexDirection::Column,
+            "column-reverse" => style.flex_container.direction = FlexDirection::ColumnReverse,
+            "nowrap" => style.flex_container.wrap = FlexWrap::NoWrap,
+            "wrap" => style.flex_container.wrap = FlexWrap::Wrap,
+            "wrap-reverse" => style.flex_container.wrap = FlexWrap::WrapReverse,
+            _ => {}
+        }
+    }
+}
+
+fn apply_flex_gap(style: &mut HtmlComputedStyle, value: &[String], context: &HtmlStyleContext) {
+    let values = value
+        .iter()
+        .filter(|token| token.as_str() != ",")
+        .collect::<Vec<_>>();
+    let parse = |token: &String| {
+        parse_box_length(
+            std::slice::from_ref(token),
+            style,
+            context,
+            context.viewport_width,
+        )
+    };
+    if let Some(row_gap) = values.first().and_then(|token| parse(token)) {
+        let column_gap = values
+            .get(1)
+            .and_then(|token| parse(token))
+            .unwrap_or(row_gap);
+        style.flex_container.row_gap = row_gap;
+        style.flex_container.column_gap = column_gap;
+    }
+}
+
+fn parse_justify_content(value: &[String]) -> JustifyContent {
+    match value.first().map(String::as_str) {
+        Some("end" | "flex-end" | "right") => JustifyContent::End,
+        Some("center") => JustifyContent::Center,
+        Some("space-between") => JustifyContent::SpaceBetween,
+        Some("space-around") => JustifyContent::SpaceAround,
+        Some("space-evenly") => JustifyContent::SpaceEvenly,
+        _ => JustifyContent::Start,
+    }
+}
+
+fn parse_align_items(value: &[String]) -> AlignItems {
+    match value.first().map(String::as_str) {
+        Some("start" | "flex-start" | "self-start") => AlignItems::Start,
+        Some("end" | "flex-end" | "self-end") => AlignItems::End,
+        Some("center") => AlignItems::Center,
+        _ => AlignItems::Stretch,
+    }
+}
+
+fn parse_align_self(value: &[String]) -> AlignSelf {
+    match value.first().map(String::as_str) {
+        Some("start" | "flex-start" | "self-start") => AlignSelf::Start,
+        Some("end" | "flex-end" | "self-end") => AlignSelf::End,
+        Some("center") => AlignSelf::Center,
+        Some("stretch") => AlignSelf::Stretch,
+        _ => AlignSelf::Auto,
+    }
+}
+
+fn parse_align_content(value: &[String]) -> AlignContent {
+    match value.first().map(String::as_str) {
+        Some("start" | "flex-start") => AlignContent::Start,
+        Some("end" | "flex-end") => AlignContent::End,
+        Some("center") => AlignContent::Center,
+        Some("space-between") => AlignContent::SpaceBetween,
+        Some("space-around") => AlignContent::SpaceAround,
+        Some("space-evenly") => AlignContent::SpaceEvenly,
+        _ => AlignContent::Stretch,
+    }
+}
+
+fn parse_non_negative_number(value: &[String]) -> Option<f64> {
+    value
+        .first()?
+        .parse::<f64>()
+        .ok()
+        .filter(|value| value.is_finite() && *value >= 0.0)
+}
+
+fn parse_flex_basis(
+    value: &[String],
+    style: &HtmlComputedStyle,
+    context: &HtmlStyleContext,
+) -> FlexBasis {
+    let Some(value) = value.first() else {
+        return FlexBasis::Auto;
+    };
+    match value.as_str() {
+        "auto" => FlexBasis::Auto,
+        "content" => FlexBasis::Content,
+        "min-content" => FlexBasis::MinContent,
+        _ if value.ends_with('%') => value
+            .strip_suffix('%')
+            .and_then(|value| value.parse::<f64>().ok())
+            .map(|value| FlexBasis::Percent((value / 100.0).max(0.0)))
+            .unwrap_or(FlexBasis::Auto),
+        _ => parse_css_length_in_context(
+            std::slice::from_ref(value),
+            style.font.size,
+            context.theme.body_font.size,
+            context.viewport_width,
+        )
+        .map(FlexBasis::Points)
+        .unwrap_or(FlexBasis::Auto),
+    }
+}
+
+fn apply_flex_shorthand(
+    style: &mut HtmlComputedStyle,
+    value: &[String],
+    context: &HtmlStyleContext,
+) {
+    match value.first().map(String::as_str) {
+        Some("none") => {
+            style.flex_item.grow = 0.0;
+            style.flex_item.shrink = 0.0;
+            style.flex_item.basis = FlexBasis::Auto;
+            return;
+        }
+        Some("auto") => {
+            style.flex_item.grow = 1.0;
+            style.flex_item.shrink = 1.0;
+            style.flex_item.basis = FlexBasis::Auto;
+            return;
+        }
+        Some("initial") => {
+            style.flex_item = FlexItemStyle::default();
+            return;
+        }
+        _ => {}
+    }
+    let mut numbers = value
+        .iter()
+        .filter_map(|token| token.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value >= 0.0);
+    if let Some(grow) = numbers.next() {
+        style.flex_item.grow = grow;
+        style.flex_item.shrink = numbers.next().unwrap_or(1.0);
+        style.flex_item.basis = value
+            .iter()
+            .find(|token| token.parse::<f64>().is_err())
+            .map(|token| parse_flex_basis(std::slice::from_ref(token), style, context))
+            .unwrap_or(FlexBasis::Percent(0.0));
     }
 }
 
@@ -1648,7 +1869,7 @@ fn apply_size_hints(
             width
         };
         layout.width = Some(SizeValue::Fixed(width));
-    } else if display == "block" || display.starts_with("table") {
+    } else if display == "block" || display == "flex" || display.starts_with("table") {
         layout.width = Some(SizeValue::Fill);
     } else if layout.width.is_none() {
         layout.width = Some(SizeValue::Wrap);
@@ -1999,6 +2220,46 @@ mod tests {
         let positioned_box = find_positioned_by_id(&positioned, "box").unwrap();
         assert_eq!(positioned_box.width, 184.0);
         assert_eq!(positioned_box.x, 92.0);
+    }
+
+    #[test]
+    fn computed_flex_values_drive_shared_wrapped_geometry() {
+        let render = parse_browser_render_tree(
+            "<div id='deck'><div id='a'>A</div><div id='b'>B</div><div id='c'>C</div></div>",
+        )
+        .unwrap();
+        let context = HtmlStyleContext::with_author_stylesheets(
+            mosaic_html_theme(),
+            ["#deck { display: flex; width: 240px; height: 100px; \
+                flex-flow: row wrap; gap: 10px; align-content: space-between; \
+                align-items: center; } \
+              #deck > div { flex: 0 0 100px; height: 20px; } \
+              #a { order: 2; } #b { order: 0; } #c { order: 1; }"],
+        )
+        .unwrap();
+        let layout =
+            html_render_tree_to_layout_with_style_context(&render, &context, &never_visited);
+        let deck = find_by_id(&layout, "deck").unwrap();
+        let flex = FlexContainerStyle::from_node(deck);
+        assert_eq!(flex.wrap, FlexWrap::Wrap);
+        assert_eq!(flex.row_gap, 10.0);
+        assert_eq!(flex.column_gap, 10.0);
+        assert_eq!(flex.align_content, AlignContent::SpaceBetween);
+        assert_eq!(
+            FlexItemStyle::from_node(find_by_id(&layout, "a").unwrap()).order,
+            2
+        );
+
+        let positioned = layout_block(&layout, constraints_width(640.0), &TestMeasurer);
+        let deck = find_positioned_by_id(&positioned, "deck").unwrap();
+        assert_eq!(deck.children.len(), 3);
+        assert_eq!(deck.children[0].id.as_deref(), Some("b"));
+        assert_eq!(deck.children[1].id.as_deref(), Some("c"));
+        assert_eq!(deck.children[2].id.as_deref(), Some("a"));
+        assert_eq!(deck.children[0].x, 0.0);
+        assert_eq!(deck.children[1].x, 110.0);
+        assert_eq!(deck.children[2].y, 80.0);
+        assert_eq!(deck.children[2].width, 100.0);
     }
 
     #[test]

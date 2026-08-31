@@ -107,11 +107,15 @@ cross-platform proving application. Items are ordered by risk and dependency.
   computation, horizontal auto-margin distribution, min/max constraints,
   content/border-box sizing, independent side borders, inherited alignment and
   white-space flow, plus shared real-page geometry and paint acceptance.
-- [ ] **P2 CSS convergence — flex formatting context.** Add a reusable flex
+- [x] **P2 CSS convergence — flex formatting context.** Add a reusable flex
   container/item contract with main/cross-axis sizing, wrapping, gaps,
   alignment, order, and min-content constraints. Keep computed CSS mapping
   independent from the layout algorithm and reuse the same geometry oracle
-  before adding grid tracks.
+  before adding grid tracks. Completed with a host-neutral Rust flex engine,
+  typed extension mapping and diagnostics, CSS longhand/shorthand computation,
+  recursive block/inline dispatch, intrinsic text minimums, reverse and wrapped
+  axes, complete content distribution, and one browser fixture shared by the
+  native and web host pipelines.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a
