@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-401-AVENUE",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "lessons": [
+    "ES-C401-avenida"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-401-DIRECTIONS"
+  ],
+  "after": []
+}

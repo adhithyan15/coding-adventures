@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-401-QUALITY",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can understand recto as the quality straight in route directions.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C401-recto"
+  ]
+}

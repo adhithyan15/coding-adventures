@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C401-route-recall-2
-spine_node: SPINE-HANDLE-TRAVEL
+spine_node: SPINE-NAME-EVERYDAY-THINGS
 sequence: 8870
 chapter: 401
 type: review

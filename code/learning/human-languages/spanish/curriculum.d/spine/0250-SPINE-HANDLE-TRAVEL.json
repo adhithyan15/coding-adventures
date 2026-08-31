@@ -2,8 +2,7 @@
   "segments": [
     "ES-PATH-268-DIRECTION",
     "ES-PATH-268-TICKET",
-    "ES-PATH-268-PROBLEM",
-    "ES-PATH-401-01"
+    "ES-PATH-268-PROBLEM"
   ],
   "omits": [],
   "relocates": {}

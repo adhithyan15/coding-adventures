@@ -9,6 +9,7 @@ import { validateCurriculum } from "../src/curriculum.js";
 import { buildCurriculumGapReport } from "../src/report.js";
 import { languagesForConcept } from "../src/queries.js";
 import { compileLessonActivities } from "../src/activity.js";
+import { lessonsUpToLevel } from "../src/levels.js";
 import {
   measureGlyphGaps,
   type ScriptInventoryEvidenceModule,
@@ -283,6 +284,24 @@ describe("real curriculum", () => {
     expect(activities.length).toBeGreaterThan(0);
     expect(new Set(ids).size).toBe(ids.length);
     expect(ids.every((id) => id.length > 0 && id.trim() === id)).toBe(true);
+  });
+
+  it("keeps the Spanish chapter 401 directions tranche at A1", () => {
+    const a1Ids = new Set(
+      lessonsUpToLevel(lessons, curricula, spine, "A1")
+        .filter((lesson) => lesson.language === "spanish")
+        .map((lesson) => lesson.realization.lessonId),
+    );
+    expect(
+      [
+        "ES-C401-seguir",
+        "ES-C401-cambiar",
+        "ES-C401-avenida",
+        "ES-C401-recto",
+        "ES-C401-route-recall-1",
+        "ES-C401-route-recall-2",
+      ].filter((id) => !a1Ids.has(id)),
+    ).toEqual([]);
   });
 
   it("keeps the Spanish Chapters 1-3 schema-v2 pilot closed and under five minutes", () => {

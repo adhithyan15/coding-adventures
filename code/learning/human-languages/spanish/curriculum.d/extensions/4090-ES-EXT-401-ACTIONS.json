@@ -1,0 +1,12 @@
+{
+  "id": "ES-EXT-401-ACTIONS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can use seguir and cambiar to follow or change a route.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C401-seguir",
+    "ES-C401-cambiar"
+  ]
+}

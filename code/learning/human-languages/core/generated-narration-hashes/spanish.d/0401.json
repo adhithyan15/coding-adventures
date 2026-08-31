@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 401,
-  "sourceHash": "fnv1a64:bfa6ef5e0747a96e",
+  "sourceHash": "fnv1a64:3edd9e68d96d3aa0",
   "lessonIds": [
     "ES-C401-seguir",
     "ES-C401-cambiar",
@@ -15,6 +15,6 @@
   "text": "spanish/narration/ch401.txt",
   "json": "spanish/narration/ch401.json",
   "textHash": "fnv1a64:0d04630d9695bf71",
-  "jsonHash": "fnv1a64:27ae3c5fbbe3b5ad",
+  "jsonHash": "fnv1a64:904b8eb2ec4efd28",
   "findings": []
 }

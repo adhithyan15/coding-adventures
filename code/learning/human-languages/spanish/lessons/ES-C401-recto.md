@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C401-recto
-spine_node: SPINE-HANDLE-TRAVEL
+spine_node: SPINE-DESCRIBE-QUALITIES
 sequence: 8850
 chapter: 401
 type: word

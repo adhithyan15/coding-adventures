@@ -1,0 +1,12 @@
+{
+  "id": "ES-EXT-401-REVIEWS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can retrieve the chapter's route language in order.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C401-route-recall-1",
+    "ES-C401-route-recall-2"
+  ]
+}

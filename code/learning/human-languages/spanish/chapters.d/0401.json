@@ -4,7 +4,9 @@
   "label": "ch:la-avenida-y-seguir-recto",
   "canDo": "I can say la avenida, seguir, recto and cambiar, and use them to follow or change a route.",
   "spineNodes": [
-    "SPINE-HANDLE-TRAVEL"
+    "SPINE-NAME-EVERYDAY-ACTIONS",
+    "SPINE-NAME-EVERYDAY-THINGS",
+    "SPINE-DESCRIBE-QUALITIES"
   ],
   "payoff": {
     "lesson": "ES-C401-route-recall-2",
