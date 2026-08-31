@@ -11,6 +11,13 @@ require_relative "test_helper"
 class TestHasher < Minitest::Test
   include TestHelper
 
+  SOURCE_COLLECTION_FIXTURES = %w[
+    source-collection-extension.json
+    source-collection-declared.json
+  ].freeze
+  SOURCE_COLLECTION_CASES = Pathname(__dir__).expand_path
+    .join("../../../../specs/fixtures/build-tool-v1/cases")
+
   # -- collect_source_files tests ----------------------------------------------
 
   def test_collect_source_files_python
@@ -81,6 +88,79 @@ class TestHasher < Minitest::Test
     assert_equal relative.sort, relative
   ensure
     FileUtils.rm_rf(dir)
+  end
+
+  def test_generated_directory_registry_matches_both_neutral_fixtures
+    SOURCE_COLLECTION_FIXTURES.each do |filename|
+      fixture = read_source_collection_fixture(filename)
+      excluded = fixture.dig("input", "options", "candidates")
+        .filter_map do |candidate|
+          next unless candidate.fetch("path").start_with?("excluded-")
+
+          candidate.fetch("path").split("/").fetch(1)
+        end
+        .sort
+
+      assert_equal BuildTool::Hasher::GENERATED_DIRECTORY_COMPONENTS.sort, excluded
+    end
+  end
+
+  def test_extension_collection_projects_neutral_exact_pruning_fixtures
+    assert_projected_source_collection_fixtures(glob: false)
+  end
+
+  def test_declared_source_collection_projects_neutral_exact_pruning_fixtures
+    assert_projected_source_collection_fixtures(glob: true)
+  end
+
+  def test_discovery_only_specs_directory_remains_source_eligible
+    dir = create_temp_dir
+    pkg_dir = dir / "ruby" / "mypkg"
+    write_file(pkg_dir / "specs" / "contract.rb", "CONTRACT = true")
+    pkg = BuildTool::Package.new(
+      name: "ruby/mypkg", path: pkg_dir,
+      build_commands: ["echo build"], language: "ruby"
+    )
+
+    [
+      BuildTool::Hasher.collect_source_files_extension(pkg),
+      BuildTool::Hasher.collect_source_files_glob(pkg, ["**/*.rb"])
+    ].each do |files|
+      assert_equal ["specs/contract.rb"], files.map { |path| portable_relative(path, pkg_dir) }
+    end
+  ensure
+    FileUtils.rm_rf(dir) if dir
+  end
+
+  def test_collectors_do_not_follow_directory_symlinks
+    dir = create_temp_dir
+    outside = create_temp_dir
+    pkg_dir = dir / "ruby" / "mypkg"
+    write_file(pkg_dir / "BUILD", "echo build")
+    write_file(pkg_dir / "source.rb", "SOURCE = true")
+    write_file(outside / "external.rb", "EXTERNAL = true")
+
+    begin
+      File.symlink(outside, pkg_dir / "linked")
+    rescue Errno::EACCES, Errno::EPERM, NotImplementedError
+      skip "this host does not permit a directory symlink fixture"
+    end
+
+    pkg = BuildTool::Package.new(
+      name: "ruby/mypkg", path: pkg_dir,
+      build_commands: ["echo build"], language: "ruby"
+    )
+
+    [
+      BuildTool::Hasher.collect_source_files_extension(pkg),
+      BuildTool::Hasher.collect_source_files_glob(pkg, ["**/*.rb"])
+    ].each do |files|
+      relative = files.map { |path| portable_relative(path, pkg_dir) }
+      assert_equal ["BUILD", "source.rb"], relative
+    end
+  ensure
+    FileUtils.rm_rf(dir) if dir
+    FileUtils.rm_rf(outside) if outside
   end
 
   # -- hash_file tests ---------------------------------------------------------
@@ -294,5 +374,57 @@ class TestHasher < Minitest::Test
     refute_includes basenames, "README.md"
   ensure
     FileUtils.rm_rf(dir)
+  end
+
+  private
+
+  def read_source_collection_fixture(filename)
+    JSON.parse((SOURCE_COLLECTION_CASES / filename).read)
+  end
+
+  def portable_relative(path, root)
+    path.relative_path_from(root).to_s.tr("\\", "/")
+  end
+
+  def project_fixture_path(path)
+    path.sub(/\.mli?\z/, ".rb")
+  end
+
+  def materialize_projected_fixture(root, fixture)
+    fixture.dig("input", "options", "candidates").each do |candidate|
+      path = candidate.fetch("path")
+      next unless candidate.fetch("kind") == "file"
+      next unless path.match?(%r{\A(?:excluded-\d+|case/|near/)})
+
+      write_file(root / project_fixture_path(path), [candidate.fetch("content_hex")].pack("H*"))
+    end
+  end
+
+  def projected_expected_paths(fixture)
+    fixture.dig("expected", "result", "files")
+      .map { |entry| project_fixture_path(entry.fetch("path")) }
+      .select { |path| path.match?(%r{\A(?:case/|near/)}) }
+      .sort
+  end
+
+  def assert_projected_source_collection_fixtures(glob:)
+    SOURCE_COLLECTION_FIXTURES.each do |filename|
+      dir = create_temp_dir
+      materialize_projected_fixture(dir, read_source_collection_fixture(filename))
+      pkg = BuildTool::Package.new(
+        name: "ruby/test-pkg", path: dir,
+        build_commands: ["echo build"], language: "ruby"
+      )
+      files = if glob
+        BuildTool::Hasher.collect_source_files_glob(pkg, ["**/*.rb"])
+      else
+        BuildTool::Hasher.collect_source_files_extension(pkg)
+      end
+
+      assert_equal projected_expected_paths(read_source_collection_fixture(filename)),
+        files.map { |path| portable_relative(path, dir) }
+    ensure
+      FileUtils.rm_rf(dir) if dir
+    end
   end
 end

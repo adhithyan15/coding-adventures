@@ -30,6 +30,7 @@
 # hashes, then produces a single hash representing the state of all deps.
 
 require "digest/sha2"
+require "find"
 require "pathname"
 require_relative "glob_match"
 
@@ -66,6 +67,42 @@ module BuildTool
       "perl"       => %w[Makefile.PL Build.PL cpanfile MANIFEST META.json META.yml].freeze,
       "haskell"    => [].freeze
     }.freeze
+
+    # GENERATED_DIRECTORY_COMPONENTS -- Exact directories that are not source.
+    #
+    # This registry is deliberately case-sensitive and component-based. A
+    # directory named `_build` is generated Dune output, while `_Build` and
+    # `_build-example` may be authored source. Pruning happens before either
+    # extension or declared-source matching so a broad glob cannot pull build
+    # artifacts back into a package digest.
+    GENERATED_DIRECTORY_COMPONENTS = %w[
+      .build
+      .cargo
+      .claude
+      .dart_tool
+      .git
+      .gradle
+      .hg
+      .mypy_cache
+      .pytest_cache
+      .ruff_cache
+      .stack-work
+      .svn
+      .tox
+      .venv
+      Pods
+      __pycache__
+      _build
+      build
+      cover
+      deps
+      dist
+      dist-newstyle
+      gradle-build
+      node_modules
+      target
+      vendor
+    ].freeze
 
     module_function
 
@@ -119,11 +156,7 @@ module BuildTool
 
       files = []
 
-      # Pathname#find recursively walks the directory tree, like Python's
-      # Path.rglob("*"). We skip directories and only collect files.
-      package.path.find do |filepath|
-        next unless filepath.file?
-
+      each_source_file(package.path) do |filepath|
         # Always include BUILD files.
         if %w[BUILD BUILD_mac BUILD_linux].include?(filepath.basename.to_s)
           files << filepath
@@ -162,9 +195,7 @@ module BuildTool
     def collect_source_files_glob(package, declared_srcs)
       files = []
 
-      package.path.find do |filepath|
-        next unless filepath.file?
-
+      each_source_file(package.path) do |filepath|
         basename = filepath.basename.to_s
 
         # Always include BUILD files.
@@ -181,6 +212,28 @@ module BuildTool
       end
 
       files.sort_by { |f| f.relative_path_from(package.path).to_s }
+    end
+
+    # each_source_file -- Walk one package without entering generated trees.
+    #
+    # Find walks top-down and uses lstat before recursion, so directory links
+    # retain the existing no-follow boundary. Calling Find.prune while the
+    # directory itself is current prevents enumeration of every descendant;
+    # filtering later would be both wasteful and too late for the contract.
+    #
+    # @param root [Pathname] Package directory to walk.
+    # @return [Enumerator<Pathname>] Regular source candidates only.
+    def each_source_file(root)
+      return enum_for(__method__, root) unless block_given?
+
+      root.find do |filepath|
+        if filepath != root && filepath.directory? &&
+            GENERATED_DIRECTORY_COMPONENTS.include?(filepath.basename.to_s)
+          Find.prune
+        end
+
+        yield filepath if filepath.file?
+      end
     end
 
     # hash_file -- Compute the SHA256 hex digest of a single file.

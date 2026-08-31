@@ -64,6 +64,22 @@ dependencies declared by the selected legacy BUILD file's
 package/program, and BUILD-comment fixtures exercise the same contracts used by
 other build-tool implementations.
 
+## Source Hashing Boundaries
+
+Both extension-based and declared-source collection prune exact generated,
+dependency, VCS, cache, and temporary-directory components before matching
+files. The 26-name registry is case-sensitive: `_build`, `dist-newstyle`, and
+`build` are generated output, while `_Build`, `_build-example`,
+`Dist-newstyle`, `dist-newstyle-example`, and discovery-only `specs`
+directories remain eligible source. Top-down pruning avoids enumerating
+generated descendants, and the existing `lstat` traversal boundary does not
+follow directory links.
+
+The native hasher tests project both language-neutral source-collection
+fixtures through extension and declared-source modes and derive the exact
+registry from those fixtures, so the implementation cannot silently drift from
+the shared contract.
+
 ## Extra CI Toolchain Declarations
 
 `BuildTool::ToolchainDetection.evaluate_snapshot` accepts only caller-owned
