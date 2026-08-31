@@ -3558,6 +3558,7 @@ mod tests {
     /// Sizes straddle the 128 KB block boundary on purpose: a single-block
     /// frame can never exercise Treeless literals or Repeat_Mode tables,
     /// because both mean "same as the previous block".
+    #[cfg(unix)]
     fn interop_corpus() -> Vec<(&'static str, Vec<u8>)> {
         vec![
             ("prose-4k", corpus_prose(4_000)),
