@@ -1,0 +1,11 @@
+[package]
+name = "coding-adventures-alpha-axp-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "DFF-backed DEC Alpha AXP 21064 gate-level simulator"
+license = "MIT"
+
+[dependencies]
+logic-gates = { path = "../logic-gates" }
+arithmetic = { path = "../arithmetic" }
+alpha-axp-simulator = { path = "../alpha-axp-simulator" }
