@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C413-concierto",
+    "language": "spanish",
+    "chapter": 413,
+    "sequence": 9480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d05a6a4502048c0e"
+  },
+  "findings": []
+}

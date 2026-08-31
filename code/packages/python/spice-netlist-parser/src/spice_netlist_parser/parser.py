@@ -1373,9 +1373,7 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             fields[2],
             fields[3],
             polarity=model.kind,
-            beta=model.params.get(
-                "BETA", model.params.get("BET", model.params.get("B", 1.0e-4))
-            ),
+            beta=model.params.get("BETA", model.params.get("BET", 1.0e-4)),
             vto=model.params.get(
                 "VTO",
                 model.params.get(
@@ -1392,6 +1390,7 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             Is=model.params.get("IS", 1.0e-14),
             Xti=model.params.get("XTI", 3.0),
             Eg=model.params.get("EG", 1.11),
+            B=model.params.get("B", 1.0),
             Nlev=model.params.get("NLEV", 1.0),
             Gdsnoi=model.params.get("GDSNOI", 1.0),
             Rd=model.params.get("RD", 0.0),
@@ -2354,6 +2353,9 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             not math.isfinite(transconductance) or transconductance <= 0.0
         ):
             raise NetlistParseError("JFET BETA must be finite and positive")
+        doping_tail_parameter = params.get("B")
+        if doping_tail_parameter is not None and not math.isfinite(doping_tail_parameter):
+            raise NetlistParseError("JFET B must be finite")
         threshold_voltage = params.get(
             "VTO", params.get("VT0", params.get("VTH"))
         )

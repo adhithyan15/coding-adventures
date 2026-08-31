@@ -1,0 +1,14 @@
+{
+  "id": "ES-EXT-413-REVIEWS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "review",
+  "canDo": "I can retrieve music and concert in a simple night-out message.",
+  "prerequisites": [
+    "ES-EXT-413-MUSIC"
+  ],
+  "lessons": [
+    "ES-C413-music-recall-1",
+    "ES-C413-music-recall-2"
+  ]
+}

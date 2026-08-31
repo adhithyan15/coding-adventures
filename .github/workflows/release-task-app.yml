@@ -169,7 +169,7 @@ jobs:
           retention-days: 7
 
   build-native:
-    name: Build native source (${{ matrix.toolkit }} / ${{ matrix.platform }})
+    name: Build native payload (${{ matrix.toolkit }} / ${{ matrix.platform }})
     needs: validate
     strategy:
       fail-fast: false
@@ -217,13 +217,39 @@ jobs:
         with:
           python-version: "3.13"
 
+      - name: Set up Qt
+        if: matrix.backend == 'qt'
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: "6.8.3"
+          cache: true
+
+      - name: Set up Flutter
+        if: matrix.backend == 'flutter'
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.44.0"
+          channel: stable
+          cache: true
+
+      - name: Set up Java
+        if: matrix.backend == 'compose'
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Set up Gradle
+        if: matrix.backend == 'compose'
+        uses: gradle/actions/setup-gradle@v6.3.0
+
       - name: Install Linux Rust build dependencies
         if: runner.os == 'Linux'
         shell: bash
         run: |
           set -euo pipefail
           sudo apt-get update
-          sudo apt-get install -y libcairo2-dev
+          sudo apt-get install -y libcairo2-dev libgtk-3-dev xvfb
 
       - name: Build the Rust runtime and strict generated project
         shell: bash
@@ -234,8 +260,8 @@ jobs:
           RELEASE_COMMIT: ${{ needs.validate.outputs.commit }}
         run: |
           set -euo pipefail
-          cargo build --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app
-          runtime="code/packages/rust/target/debug/$RUNTIME_NAME"
+          cargo build --release --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app
+          runtime="code/packages/rust/target/release/$RUNTIME_NAME"
           test -f "$runtime"
           output="release-work/generated"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- \
@@ -255,11 +281,162 @@ jobs:
             --source "$output/$BACKEND" \
             --output-dir release-assets
 
+      - name: Build, verify, and archive the Qt Linux bundle
+        if: matrix.backend == 'qt'
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+          RELEASE_COMMIT: ${{ needs.validate.outputs.commit }}
+        run: |
+          set -euo pipefail
+          generated="$PWD/release-work/generated/qt"
+          bundle="$PWD/release-work/linux-bundle"
+          expected="$PWD/code/packages/rust/target/release/libtask_mosaic_app.so"
+          cmake -S "$generated" -B "$generated/build" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX="$bundle"
+          cmake --build "$generated/build" --config Release --parallel
+          cmake --install "$generated/build" --config Release
+          runtime="$(find "$bundle" -type f -name libmosaic_app.so -print -quit)"
+          executable="$(dirname "$runtime")/TaskApp"
+          test -x "$executable"
+          cmp "$expected" "$runtime"
+          python code/scripts/taskapp_release.py archive-linux-bundle \
+            --version "$RELEASE_VERSION" \
+            --commit "$RELEASE_COMMIT" \
+            --backend qt \
+            --source "$bundle" \
+            --executable "$executable" \
+            --runtime "$runtime" \
+            --expected-runtime "$expected" \
+            --output-dir release-assets
+          mkdir -p release-work/unpacked
+          tar -xzf "release-assets/task-app-qt-linux-bundle-v${RELEASE_VERSION}.tar.gz" \
+            -C release-work/unpacked
+          launcher="$PWD/release-work/unpacked/task-app-qt-linux-bundle-v${RELEASE_VERSION}/launch-trestle"
+          state_root="$PWD/release-work/qt-state"
+          state_file="$state_root/TaskApp/task-app/mosaic-state.v1.json"
+          probe="$PWD/release-work/qt-pre-upgrade.json"
+          mkdir -p "$(dirname "$state_file")"
+          printf '{}\n' > "$probe"
+          cp "$probe" "$state_file"
+          set +e
+          (cd / && env -u MOSAIC_APP_LIBRARY \
+            XDG_DATA_HOME="$state_root" QT_QPA_PLATFORM=offscreen \
+            timeout 8s "$launcher") \
+            >release-work/qt-launch.log 2>&1
+          status=$?
+          set -e
+          cat release-work/qt-launch.log
+          test "$status" -eq 124
+          ! grep -Fq "Mosaic Rust runtime unavailable" release-work/qt-launch.log
+          cmp "$probe" "$state_root/task-app/backups/pre-v${RELEASE_VERSION}-qt.json"
+
+      - name: Build, verify, and archive the Flutter Linux bundle
+        if: matrix.backend == 'flutter'
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+          RELEASE_COMMIT: ${{ needs.validate.outputs.commit }}
+        run: |
+          set -euo pipefail
+          generated="$PWD/release-work/generated/flutter"
+          expected="$PWD/code/packages/rust/target/release/libtask_mosaic_app.so"
+          (
+            cd "$generated"
+            flutter create --platforms=linux --project-name trestle .
+            flutter pub get
+            flutter analyze
+            flutter build linux --release
+          )
+          executable="$(find "$generated/build/linux" -type f -name trestle -perm -111 -print -quit)"
+          bundle="$(dirname "$executable")"
+          runtime="$(find "$bundle" -type f -name libmosaic_app.so -print -quit)"
+          test -x "$executable"
+          cmp "$expected" "$runtime"
+          python code/scripts/taskapp_release.py archive-linux-bundle \
+            --version "$RELEASE_VERSION" \
+            --commit "$RELEASE_COMMIT" \
+            --backend flutter \
+            --source "$bundle" \
+            --executable "$executable" \
+            --runtime "$runtime" \
+            --expected-runtime "$expected" \
+            --output-dir release-assets
+          mkdir -p release-work/unpacked
+          tar -xzf "release-assets/task-app-flutter-linux-bundle-v${RELEASE_VERSION}.tar.gz" \
+            -C release-work/unpacked
+          launcher="$PWD/release-work/unpacked/task-app-flutter-linux-bundle-v${RELEASE_VERSION}/launch-trestle"
+          state_root="$PWD/release-work/flutter-state"
+          state_file="$state_root/task-app/mosaic-state.v1.json"
+          probe="$PWD/release-work/flutter-pre-upgrade.json"
+          mkdir -p "$(dirname "$state_file")"
+          printf '{}\n' > "$probe"
+          cp "$probe" "$state_file"
+          set +e
+          (cd / && env -u MOSAIC_APP_LIBRARY XDG_DATA_HOME="$state_root" \
+            xvfb-run -a timeout 10s "$launcher") \
+            >release-work/flutter-launch.log 2>&1
+          status=$?
+          set -e
+          cat release-work/flutter-launch.log
+          test "$status" -eq 124
+          ! grep -Fq "Mosaic Rust runtime unavailable" release-work/flutter-launch.log
+          cmp "$probe" "$state_root/task-app/backups/pre-v${RELEASE_VERSION}-flutter.json"
+
+      - name: Build, verify, and archive the Compose Linux bundle
+        if: matrix.backend == 'compose'
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+          RELEASE_COMMIT: ${{ needs.validate.outputs.commit }}
+        run: |
+          set -euo pipefail
+          generated="$PWD/release-work/generated/compose"
+          expected="$PWD/code/packages/rust/target/release/libtask_mosaic_app.so"
+          gradle --no-daemon --stacktrace \
+            -Pcompose.desktop.packaging.checkJdkVendor=false \
+            -p "$generated" compileKotlin createDistributable
+          executable="$(find "$generated/build/compose/binaries/main/app" -type f -path '*/bin/task_app' -perm -111 -print -quit)"
+          bundle="$(dirname "$(dirname "$executable")")"
+          runtime="$(find "$bundle" -type f -path '*/resources/libmosaic_app.so' -print -quit)"
+          test -x "$executable"
+          cmp "$expected" "$runtime"
+          python code/scripts/taskapp_release.py archive-linux-bundle \
+            --version "$RELEASE_VERSION" \
+            --commit "$RELEASE_COMMIT" \
+            --backend compose \
+            --source "$bundle" \
+            --executable "$executable" \
+            --runtime "$runtime" \
+            --expected-runtime "$expected" \
+            --output-dir release-assets
+          mkdir -p release-work/unpacked
+          tar -xzf "release-assets/task-app-compose-linux-bundle-v${RELEASE_VERSION}.tar.gz" \
+            -C release-work/unpacked
+          launcher="$PWD/release-work/unpacked/task-app-compose-linux-bundle-v${RELEASE_VERSION}/launch-trestle"
+          state_root="$PWD/release-work/compose-state"
+          state_file="$state_root/task-app/mosaic-state.v1.json"
+          probe="$PWD/release-work/compose-pre-upgrade.json"
+          mkdir -p "$(dirname "$state_file")"
+          printf '{}\n' > "$probe"
+          cp "$probe" "$state_file"
+          set +e
+          (cd / && env -u MOSAIC_APP_LIBRARY XDG_DATA_HOME="$state_root" \
+            xvfb-run -a timeout 10s "$launcher") \
+            >release-work/compose-launch.log 2>&1
+          status=$?
+          set -e
+          cat release-work/compose-launch.log
+          test "$status" -eq 124
+          ! grep -Fq "Mosaic Rust runtime unavailable" release-work/compose-launch.log
+          cmp "$probe" "$state_root/task-app/backups/pre-v${RELEASE_VERSION}-compose.json"
+
       - name: Upload the verified native payload
         uses: actions/upload-artifact@v7
         with:
           name: task-app-native-${{ matrix.backend }}-release
-          path: release-assets/*.zip
+          path: release-assets/*
           if-no-files-found: error
           retention-days: 7
 
@@ -327,7 +504,7 @@ jobs:
 
           (
             cd release-assets
-            sha256sum -- *.zip *.json | sort -k2 > SHA256SUMS
+            sha256sum -- *.zip *.tar.gz *.json | sort -k2 > SHA256SUMS
             sha256sum --check SHA256SUMS
           )
           cat release-notes.md

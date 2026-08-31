@@ -4871,26 +4871,35 @@ the Rust, Python, and TypeScript surfaces together.
      validation and lowering while leaving the unresolved JFET `B` policy unchanged.
 
 500. Python and TypeScript parser/engine model-card mismatch closeout audit.
-   - Status: completed in this model-card audit reconciliation slice.
+   - Status: completed, including the subsequent JFET `B` policy resolution.
    - Every engine-advertised model type and accepted parameter name is present
      in both parser facades, and the independent direct lowering, validation,
      and alias-precedence audits are complete for diode, BJT, JFET, and MOS
-     Level 1 fields apart from the documented JFET `B` policy collision.
-   - Further model-card parity work is blocked on deciding whether legacy JFET
-     `B` means beta, Parker-Skellern doping-tail shaping, or is rejected as
-     ambiguous; one card value must not populate both engine fields silently.
+     Level 1 fields.
+
+501. Cross-language JFET `B` semantic resolution.
+   - Status: implemented in the JFET `B` policy slice.
+   - `B` lowers only into the Parker-Skellern doping-tail field, matching the
+     engine and Berkeley/ngspice model definition. `BETA` and `BET` remain the
+     explicit transconductance inputs, so one model-card value can never
+     silently populate both engine fields.
+   - All parser facades reject non-finite `B` values before lowering.
 
 ## Backlog
 
 1. Python and TypeScript Berkeley SPICE model-card validation parity.
-   - Status: blocked on the JFET `B` policy decision after completing all
-     independent parser/engine model-card mismatch audits.
-   - All three parser facades currently use `B` as a legacy beta alias, while
-     the engine model uses `B` for Parker-Skellern doping-tail shaping. Decide
-     which meaning is accepted, or reject `B` as ambiguous; do not assign one
-     card value to both fields silently.
+   - Status: completed by the JFET `B` policy slice.
+   - `B` is now a Parker-Skellern doping-tail parameter in every parser facade;
+     `BETA` and `BET` alone control transconductance.
 
-2. Grammar-backed parser and app facade.
+2. Rust JFET model-card parser parity audit.
+   - Status: prioritized next after the JFET `B` policy slice merges.
+   - Live audit found the Rust element lowerer accepts fewer already-supported
+     JFET aliases and model-card validations than the Python and TypeScript
+     facades. Audit the remaining direct aliases and finite/range validation as
+     small independent items, beginning with threshold aliases if confirmed.
+
+3. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
      syntax facade as the grammar evolves, even if that breaks current
      pre-release parser APIs.
@@ -4898,7 +4907,7 @@ the Rust, Python, and TypeScript surfaces together.
      toward packaging, WebAssembly embedding, and product integration backed by
      the same public parser contract.
 
-3. Deck compatibility follow-up.
+4. Deck compatibility follow-up.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.
@@ -4909,7 +4918,7 @@ the Rust, Python, and TypeScript surfaces together.
      command routing, including control flow, variables, and script execution
      policy.
 
-4. Production solver core follow-up.
+5. Production solver core follow-up.
    - Sparse real/complex matrix paths now have cross-language native coverage,
      and Python real DC solves now use an optional SciPy sparse-LU backend with
      structured native fallback metadata.
@@ -4920,14 +4929,14 @@ the Rust, Python, and TypeScript surfaces together.
      damping, device limiting, tolerance policy, and additional convergence
      diagnostics for difficult transistor decks.
 
-5. Device model depth.
+6. Device model depth.
    - Audit diode, BJT, JFET, and MOS Level 1 behavior against reference decks.
    - Decide whether Level 2/3 MOS is in scope before BSIM; if BSIM lands, make
      Rust the first fast path and port stable semantics outward.
    - Expand temperature behavior, capacitance, noise, charge conservation, model
      card aliases, and error messages.
 
-6. Analysis completion.
+7. Analysis completion.
    - Generalize pole-zero beyond constrained fixture helpers.
    - Expand nonlinear distortion coverage.
    - Expand parsed `.FOUR` / `.MEASURE` integration across output plans and
@@ -4936,14 +4945,14 @@ the Rust, Python, and TypeScript surfaces together.
      Carlo trials.
    - Stabilize raw, CSV, JSON, and browser-friendly result formats.
 
-7. Mixed-signal integration.
+8. Mixed-signal integration.
    - Connect SPICE transient stepping to the hardware VM scheduler.
    - Support bidirectional analog/digital thresholds, event scheduling,
      breakpoint coordination, and VCD correlation.
    - Keep mixed-signal coupling deterministic across Python, Rust, and
      TypeScript.
 
-8. Verilog-A and custom models.
+9. Verilog-A and custom models.
    - Specify the accepted model subset and residual/Jacobian hooks.
    - Add parser or compiler support with sandboxing for TypeScript/web usage.
    - Provide a Rust-native fast path for compiled models.

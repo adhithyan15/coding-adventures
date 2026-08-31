@@ -32,10 +32,19 @@ links existing Mosaic work instead of duplicating it.
 7. **P1 — [#13521](https://github.com/adhithyan15/coding-adventures/issues/13521):**
    enforce web/native presentation-contract parity. **Done in #13607.**
 8. **P1 — [#13522](https://github.com/adhithyan15/coding-adventures/issues/13522):**
-   package installable local apps on supported platforms.
-9. **P1 — [#13523](https://github.com/adhithyan15/coding-adventures/issues/13523):**
+   package installable local apps on supported platforms. Decomposed into the
+   independently verifiable platform and operations items below.
+9. **P1 — [#13611](https://github.com/adhithyan15/coding-adventures/issues/13611):**
+   ship verified portable Linux bundles for Qt, Flutter, and Compose Desktop.
+10. **P1 — [#13612](https://github.com/adhithyan15/coding-adventures/issues/13612):**
+   package TaskApp as a macOS application bundle.
+11. **P1 — [#13613](https://github.com/adhithyan15/coding-adventures/issues/13613):**
+   package TaskApp for Windows installation and launch.
+12. **P1 — [#13614](https://github.com/adhithyan15/coding-adventures/issues/13614):**
+   document and verify upgrade, backup, restore, and manual recovery.
+13. **P1 — [#13523](https://github.com/adhithyan15/coding-adventures/issues/13523):**
    audit and refine the first-run simple-todo experience.
-10. **P2 — [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**
+14. **P2 — [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**
    move the Vitest config to Vite's native ESM loading contract.
 
 Newly discovered work is filed as an issue and the queue is reprioritized before

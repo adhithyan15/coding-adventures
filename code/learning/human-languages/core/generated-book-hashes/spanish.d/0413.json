@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:1da6527057e65ae2",
+  "lessonIds": [
+    "ES-C413-musica",
+    "ES-C413-concierto",
+    "ES-C413-music-recall-1",
+    "ES-C413-music-recall-2"
+  ],
+  "tex": "spanish/book/chapters/ch413-musica-concierto.tex"
+}
