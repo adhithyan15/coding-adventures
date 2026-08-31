@@ -1076,7 +1076,43 @@ fn build(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
                 let idx = resolve_idx(&ctx.func_names, expect_get(items, 1)?, "func")?;
                 ctx.module.start = Some(idx);
             }
-            _ => {}
+            // `type` is fully handled by `collect_symbols` (pass 1) --
+            // nothing left to do for it here.
+            "type" => {}
+            // W32 addendum (2026-08-31): every OTHER unrecognized top-level
+            // module field used to fall through here silently -- this was a
+            // real, demonstrated bug, not a hypothetical one. `(rec (type
+            // $a ...) (type $b ...))` (recursive type groups, the GC
+            // proposal's own top-level construct this crate has never
+            // implemented) is neither "type" nor any other keyword this
+            // match recognizes, so a module consisting ONLY of `rec` blocks
+            // whose declared types are never referenced by anything else
+            // silently became an EMPTY, trivially-valid module instead of a
+            // parse error -- caught via `type-subtyping.wast`'s own
+            // "Recursive definitions" section (two of its modules
+            // spuriously reported `Pass` for exactly this reason, verified
+            // by direct inspection, not assumed). A corpus-wide scan for
+            // every OTHER unrecognized top-level field found `rec` is the
+            // ONLY one that occurs anywhere in the pinned testsuite
+            // (`array.wast`/`struct.wast`/`tag.wast`/`type-canon.wast`/
+            // `type-equivalence.wast`/`type-rec.wast`/`type-subtyping.wast`),
+            // so rejecting it explicitly here closes the whole gap without
+            // guessing at other cases. A module whose `rec`-declared types
+            // ARE referenced elsewhere already failed correctly before this
+            // fix too (via "unknown type identifier", since `collect_symbols`
+            // never registers names for types inside a `rec` block) -- this
+            // fix only changes the previously-silent "types declared but
+            // never used" case, from a false `Pass` to an honest, explicit
+            // rejection (matching this crate's own established precedent
+            // for `(type ... (struct/array ...))`'s "not yet supported"
+            // treatment above `collect_symbols`).
+            other => {
+                return Err(WastParseError::UnexpectedToken {
+                    pos: f.pos(),
+                    found: other.to_string(),
+                    expected: "a recognized module field (type/import/func/table/memory/global/tag/export/elem/data/start) -- unrecognized top-level module constructs (e.g. recursive type groups '(rec ...)') must be rejected, never silently ignored",
+                });
+            }
         }
     }
     Ok(())
@@ -6243,6 +6279,36 @@ mod tests {
     #[test]
     fn array_type_declaration_is_also_rejected() {
         let err = parse_module("(module (type $a (array i32)))").unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedToken { .. }), "{err:?}");
+    }
+
+    #[test]
+    fn rec_type_group_is_rejected_not_silently_dropped() {
+        // Regression guard for the sibling bug to the struct/array one
+        // above, found investigating `type-subtyping.wast` (W32 addendum,
+        // 2026-08-31): `(rec (type $a ...) (type $b ...))` matched NEITHER
+        // `collect_symbols`'s `is_keyword_list("type")` check (it's a
+        // `rec`, not a `type`, at the top level) NOR any arm of `build`'s
+        // dispatch match, whose fallback used to be a bare `_ => {}` --
+        // silently doing nothing. A module made ENTIRELY of `rec` blocks
+        // whose declared types were never referenced by anything else
+        // therefore parsed as a trivially-valid EMPTY module instead of
+        // failing with a clear "not yet supported" error -- demonstrated
+        // via two of `type-subtyping.wast`'s own "Recursive definitions"
+        // modules, which used to spuriously report `Pass` under the
+        // conformance harness's `assert_invalid`-shaped "did it get
+        // rejected" grading. Must now be a clean parse error.
+        let err = parse_module("(module (rec (type $a (func))))").unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedToken { .. }), "{err:?}");
+    }
+
+    #[test]
+    fn every_other_unrecognized_top_level_module_field_is_also_rejected() {
+        // Same fix, general case: ANY unrecognized top-level module field
+        // (not just `rec`) must be a clean, loud error -- never silently
+        // ignored. `frobnicate` is not a real WAT keyword; this guards the
+        // general `other => Err(..)` arm, not just the `rec`-specific one.
+        let err = parse_module("(module (frobnicate))").unwrap_err();
         assert!(matches!(err, WastParseError::UnexpectedToken { .. }), "{err:?}");
     }
 
