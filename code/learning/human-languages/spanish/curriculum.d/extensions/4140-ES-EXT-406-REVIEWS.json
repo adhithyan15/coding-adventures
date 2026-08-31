@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-406-REVIEWS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "review",
+  "canDo": "I can retrieve the form-and-document words in practical combinations.",
+  "prerequisites": [
+    "ES-EXT-406-DOCUMENTS",
+    "ES-EXT-406-FILL"
+  ],
+  "lessons": [
+    "ES-C406-documents-recall-1",
+    "ES-C406-documents-recall-2"
+  ]
+}
