@@ -131,7 +131,7 @@ class CorpusTests(unittest.TestCase):
         summary = runner.validate_corpus(FIXTURE_ROOT)
 
         self.assertEqual(summary["schema_version"], 1)
-        self.assertEqual(summary["case_count"], 131)
+        self.assertEqual(summary["case_count"], 132)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -336,6 +336,13 @@ class CorpusTests(unittest.TestCase):
                 for rule in by_language["rust"]["scoped_inputs"]
                 if rule["id"] == "rust-template-source-inputs"
             )["suffixes"],
+        )
+        self.assertTrue(
+            {
+                "js/engram-mosaic-host-wasm.mjs",
+                "js/smoke.mjs",
+                "pkg/engram_engine.wasm",
+            }.issubset(set(by_language["rust"]["root_exact_relative_paths"]))
         )
         self.assertIn(
             ".csproj",
@@ -1191,6 +1198,21 @@ class CorpusTests(unittest.TestCase):
                 "tests/fixtures/echo_agent.py",
             ),
             (
+                "rust",
+                "code/packages/rust/engram-wasm/js/engram-mosaic-host-wasm.mjs",
+                "js/engram-mosaic-host-wasm.mjs",
+            ),
+            (
+                "rust",
+                "code/packages/rust/engram-wasm/js/smoke.mjs",
+                "js/smoke.mjs",
+            ),
+            (
+                "rust",
+                "code/packages/rust/engram-wasm/pkg/engram_engine.wasm",
+                "pkg/engram_engine.wasm",
+            ),
+            (
                 "swift",
                 "code/packages/swift/grammar-tools/regen-embedded-grammars.sh",
                 "regen-embedded-grammars.sh",
@@ -1235,6 +1257,42 @@ class CorpusTests(unittest.TestCase):
                     actual,
                     [{"path": package_path, "digest": expected_digest}],
                 )
+
+    def test_engram_wasm_registry_projects_exact_tracked_bytes(self) -> None:
+        registry = runner.load_document(
+            FIXTURE_ROOT / "language-source-input-registry.json"
+        )
+        registry_sha256 = runner.source_input_registry_digest(registry)
+        package_root = runner.REPO_ROOT / "code/packages/rust/engram-wasm"
+        package_paths = [
+            "js/engram-mosaic-host-wasm.mjs",
+            "js/smoke.mjs",
+            "pkg/engram_engine.wasm",
+        ]
+        candidates = []
+        expected = []
+        for package_path in package_paths:
+            body = (package_root / package_path).read_bytes()
+            candidates.append(
+                {"path": package_path, "kind": "file", "content_hex": body.hex()}
+            )
+            expected.append(
+                {"path": package_path, "digest": hashlib.sha256(body).hexdigest()}
+            )
+
+        self.assertEqual(
+            runner._expected_source_collection(
+                {
+                    "language": "rust",
+                    "mode": "extension",
+                    "registry_sha256": registry_sha256,
+                    "declared_srcs": [],
+                    "candidates": candidates,
+                },
+                registry,
+            ),
+            expected,
+        )
 
     def test_language_source_input_registry_rejects_drift_and_collisions(self) -> None:
         schema = runner.load_document(
@@ -2557,6 +2615,21 @@ class PureDomainValidationTests(unittest.TestCase):
         self.assertNotIn("android/key.properties", included)
         self.assertNotIn("android/local.properties", included)
 
+        engram_case = load_case("source-collection-engram-wasm-exact-inputs.json")
+        engram_options = engram_case["input"]["options"]
+        self.assertEqual(engram_options["registry_sha256"], registry_digest)
+        self.assertEqual(
+            runner._expected_source_collection(engram_options, registry),
+            engram_case["expected"]["result"]["files"],
+        )
+        engram_included = {
+            entry["path"]
+            for entry in engram_case["expected"]["result"]["files"]
+        }
+        self.assertNotIn("js/Smoke.mjs", engram_included)
+        self.assertNotIn("js/sibling.mjs", engram_included)
+        self.assertNotIn("pkg/engram_engine_copy.wasm", engram_included)
+
         wrong_digest = copy.deepcopy(role_options)
         wrong_digest["registry_sha256"] = "0" * 64
         with self.assertRaises(runner.ConformanceError) as raised:
@@ -2947,7 +3020,7 @@ class CommandLineTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
-        self.assertEqual(summary["case_count"], 131)
+        self.assertEqual(summary["case_count"], 132)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"
