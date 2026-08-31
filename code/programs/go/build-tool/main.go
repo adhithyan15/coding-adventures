@@ -300,6 +300,14 @@ func affectedListFromSet(affectedSet map[string]bool) []string {
 // run contains the actual logic, separated from main() so we can
 // return an exit code cleanly.
 func run() int {
+	return runWithPackageHasher(hasher.HashPackage)
+}
+
+func formatHashPackageError(packageName string) string {
+	return fmt.Sprintf("Error: HASH_PACKAGE_FAILED %q", packageName)
+}
+
+func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) int {
 	// CLI flags — using Go's standard flag package.
 	root := flag.String("root", "", "Repo root directory (auto-detect from .git)")
 	force := flag.Bool("force", false, "Rebuild everything regardless of cache")
@@ -711,7 +719,12 @@ func run() int {
 	depsHashes := make(map[string]string)
 
 	for _, pkg := range packages {
-		packageHashes[pkg.Name] = hasher.HashPackage(pkg)
+		packageHash, err := hashPackage(pkg)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, formatHashPackageError(pkg.Name))
+			return 2
+		}
+		packageHashes[pkg.Name] = packageHash
 		depsHashes[pkg.Name] = hasher.HashDeps(pkg.Name, graph, packageHashes)
 	}
 

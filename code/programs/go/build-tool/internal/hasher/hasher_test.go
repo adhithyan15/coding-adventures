@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"runtime"
 	"sort"
@@ -128,12 +129,23 @@ func materializeSourceFixture(t *testing.T, fixture sourceCollectionFixture) str
 		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 			t.Fatal(err)
 		}
-		// Some Windows hosts require Developer Mode or elevated symlink rights.
-		// An unavailable inert link is equivalent to an absent candidate here;
-		// the dedicated real-link regression below records an explicit skip.
-		_ = os.Symlink(target, path)
+		createDirectoryLink(t, target, path)
 	}
 	return root
+}
+
+func createDirectoryLink(t *testing.T, target, path string) {
+	t.Helper()
+	if runtime.GOOS == "windows" {
+		output, err := exec.Command("cmd", "/c", "mklink", "/J", path, target).CombinedOutput()
+		if err != nil {
+			t.Fatalf("create NTFS junction: %v: %s", err, output)
+		}
+		return
+	}
+	if err := os.Symlink(target, path); err != nil {
+		t.Fatalf("create directory symlink: %v", err)
+	}
 }
 
 func relativePaths(t *testing.T, root string, files []string) []string {
@@ -197,6 +209,15 @@ func makeFixture(t *testing.T, tree map[string]string) string {
 func emptyHash() string {
 	h := sha256.Sum256([]byte(""))
 	return hex.EncodeToString(h[:])
+}
+
+func mustHashPackage(t *testing.T, pkg discovery.Package) string {
+	t.Helper()
+	digest, err := HashPackage(pkg)
+	if err != nil {
+		t.Fatalf("HashPackage(%s): %v", pkg.Name, err)
+	}
+	return digest
 }
 
 // ---------------------------------------------------------------------------
@@ -471,9 +492,7 @@ func TestCollectorsDoNotFollowDirectoryLinks(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(external, "external.ml"), []byte("let external = true\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	if err := os.Symlink(external, filepath.Join(pkgPath, "linked")); err != nil {
-		t.Skipf("directory links unavailable on this host: %v", err)
-	}
+	createDirectoryLink(t, external, filepath.Join(pkgPath, "linked"))
 	pkg := discovery.Package{Name: "ocaml/demo", Path: pkgPath, Language: "ocaml"}
 	if got := collectSourceFiles(pkg); len(got) != 0 {
 		t.Fatalf("extension collector crossed directory link: %v", got)
@@ -481,6 +500,24 @@ func TestCollectorsDoNotFollowDirectoryLinks(t *testing.T) {
 	pkg.DeclaredSrcs = []string{"**/*.ml"}
 	if got := resolveDeclaredSrcs(pkg); len(got) != 0 {
 		t.Fatalf("declared collector crossed directory link: %v", got)
+	}
+}
+
+func TestCollectorsRejectPackageRootLink(t *testing.T) {
+	target := makeFixture(t, map[string]string{"main.ml": "let main = ()\n"})
+	container := t.TempDir()
+	linkedRoot := filepath.Join(container, "pkg")
+	createDirectoryLink(t, target, linkedRoot)
+	pkg := discovery.Package{Name: "ocaml/demo", Path: linkedRoot, Language: "ocaml"}
+	if _, err := collectSourceFilesChecked(pkg); err == nil {
+		t.Fatal("extension collector must reject a linked package root")
+	}
+	pkg.DeclaredSrcs = []string{"**/*.ml"}
+	if _, err := resolveDeclaredSrcsChecked(pkg); err == nil {
+		t.Fatal("declared collector must reject a linked package root")
+	}
+	if _, err := HashPackage(pkg); err == nil {
+		t.Fatal("package hashing must fail closed for a linked package root")
 	}
 }
 
@@ -577,8 +614,8 @@ func TestHashPackageDeterministic(t *testing.T) {
 		Language: "python",
 	}
 
-	hash1 := HashPackage(pkg)
-	hash2 := HashPackage(pkg)
+	hash1 := mustHashPackage(t, pkg)
+	hash2 := mustHashPackage(t, pkg)
 
 	if hash1 != hash2 {
 		t.Fatal("hash should be deterministic")
@@ -597,7 +634,7 @@ func TestHashPackageMatchesHashingV1Oracle(t *testing.T) {
 		Path:         pkgPath,
 		DeclaredSrcs: []string{"src/data.bin"},
 	}
-	if got := HashPackage(pkg); got != fixture.Expected.Result.PackageDigest {
+	if got := mustHashPackage(t, pkg); got != fixture.Expected.Result.PackageDigest {
 		t.Fatalf("hashing-v1 oracle mismatch: got %s, want %s", got, fixture.Expected.Result.PackageDigest)
 	}
 }
@@ -614,8 +651,35 @@ func TestHashPackageFramesRepositoryPathAndRawContent(t *testing.T) {
 	}
 	pkg := discovery.Package{Name: "go/demo", Path: pkgPath, DeclaredSrcs: []string{"src/*.bin"}}
 	want := hashingV1Digest(t, map[string][]byte{"code/packages/go/demo/src/\U0001f600.bin": contents})
-	if got := HashPackage(pkg); got != want {
+	if got := mustHashPackage(t, pkg); got != want {
 		t.Fatalf("raw package frame mismatch: got %s, want %s", got, want)
+	}
+}
+
+func TestHashPackageFramesAndSortsMultipleFilesByUTF8Bytes(t *testing.T) {
+	root := t.TempDir()
+	pkgPath := filepath.Join(root, "demo")
+	if err := os.MkdirAll(filepath.Join(pkgPath, "src"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	// Create the astral filename first so directory enumeration order cannot
+	// accidentally satisfy the required raw UTF-8 byte ordering.
+	files := map[string][]byte{
+		"src/\U0001f600.bin": []byte("bc"),
+		"src/\ue000.bin":     []byte("a"),
+	}
+	for _, name := range []string{"src/\U0001f600.bin", "src/\ue000.bin"} {
+		if err := os.WriteFile(filepath.Join(pkgPath, filepath.FromSlash(name)), files[name], 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	pkg := discovery.Package{Name: "go/demo", Path: pkgPath, DeclaredSrcs: []string{"src/*.bin"}}
+	want := hashingV1Digest(t, map[string][]byte{
+		"code/packages/go/demo/src/\U0001f600.bin": files["src/\U0001f600.bin"],
+		"code/packages/go/demo/src/\ue000.bin":     files["src/\ue000.bin"],
+	})
+	if got := mustHashPackage(t, pkg); got != want {
+		t.Fatalf("multi-file hashing-v1 mismatch: got %s, want %s", got, want)
 	}
 }
 
@@ -623,11 +687,11 @@ func TestHashPackageChangesWhenSameContentFileIsRenamed(t *testing.T) {
 	root := makeFixture(t, map[string]string{"pkg/src/a.py": "same\n"})
 	pkgPath := filepath.Join(root, "pkg")
 	pkg := discovery.Package{Name: "python/demo", Path: pkgPath, Language: "python"}
-	before := HashPackage(pkg)
+	before := mustHashPackage(t, pkg)
 	if err := os.Rename(filepath.Join(pkgPath, "src", "a.py"), filepath.Join(pkgPath, "src", "b.py")); err != nil {
 		t.Fatal(err)
 	}
-	after := HashPackage(pkg)
+	after := mustHashPackage(t, pkg)
 	if before == after {
 		t.Fatal("same-content rename must change the package digest")
 	}
@@ -645,12 +709,12 @@ func TestHashPackageChangesOnModification(t *testing.T) {
 		Language: "python",
 	}
 
-	hash1 := HashPackage(pkg)
+	hash1 := mustHashPackage(t, pkg)
 
 	// Modify the file.
 	os.WriteFile(filepath.Join(root, "pkg/src/main.py"), []byte("print('world')\n"), 0644)
 
-	hash2 := HashPackage(pkg)
+	hash2 := mustHashPackage(t, pkg)
 	if hash1 == hash2 {
 		t.Fatal("hash should change when file is modified")
 	}
@@ -664,7 +728,7 @@ func TestHashPackageEmptyPackage(t *testing.T) {
 		Language: "unknown",
 	}
 
-	hash := HashPackage(pkg)
+	hash := mustHashPackage(t, pkg)
 	if hash != emptyHash() {
 		t.Fatalf("expected empty hash, got %s", hash)
 	}

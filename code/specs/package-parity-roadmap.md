@@ -11915,7 +11915,7 @@ all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880,
 unknown buckets. The merged Spanish planning-frame and Ruby hashing changes add
 no package root, BUILD front, recognized manifest, dependency, lockfile, or
 identity. The six live PRs inspected during the refresh own no unclassified
-portable gap and have zero exact overlap with the next seven-path tranche.
+portable gap and have zero exact overlap with the next hashing tranche.
 
 The production-path audit did find one newly unowned prerequisite before
 selection. The Rust build tool's `Package` record does not carry Starlark or
@@ -11933,12 +11933,39 @@ The dependency/leverage pass selects
 `DeclaredSrcs` from production discovery into `HashPackage`, recognizes OCaml
 source and metadata names, and uses standard-library SHA-256. Rust first needs
 the newly recorded plumbing owner, while Swift retains a non-SHA-256 Windows
-fallback. The Go tranche is limited to hasher source and tests, the package and
-root changelogs, the package README, state, and this roadmap; it changes no
+fallback. The Go tranche is limited to hasher source and tests, checked error
+propagation in `main.go`, the package and root changelogs, the package README,
+state, and this roadmap; it changes no
 module metadata, lockfile, BUILD front, workflow, dependency, process,
 environment, network, credential, or new filesystem authority. Reconciliation,
 discovery, and selection leave 195 merged, 411 pending, and exactly this owner
 in progress.
+
+Tests-first execution exposed the expected collector and digest failures before
+the implementation adopted the complete neutral registry and hashing-v1 byte
+stream. Independent review then found that the package root itself was not
+checked before traversal, Windows link candidates were silently absent when
+symlink creation lacked privilege, a one-file oracle did not prove multi-file
+UTF-8 ordering, and the first fail-closed implementation panicked rather than
+returning a stable error. The repair validates package-root and nested links or
+reparse points before traversal, exercises real nonprivileged NTFS junctions,
+adds a reverse-created multi-file oracle, returns a checked package-hash error,
+and makes the CLI emit `HASH_PACKAGE_FAILED` with exit `2`. This necessary
+review repair expands the expected diff from seven to eight paths by adding
+`main.go`. The final correctness and security pass then added an exact front-door
+regression in `main_test.go` and made the quoted package identity escape control
+characters so an adversarial filesystem basename cannot forge a CI log line.
+The resulting nine-path tranche does not add a dependency, manifest, lockfile,
+BUILD front, workflow, process authority, or cache schema change.
+
+Before publication, `origin/main` advanced through merged PR #13602's existing
+TaskApp Compose presentation work and PR #13605's existing Spanish curriculum
+and TypeScript human-language-data tests to exact revision
+`83127966b0112dd0ffe88d328e040e70b581848b`. The two parity commits rebased
+without conflict. Those upstream paths add no package root, BUILD front,
+recognized manifest, dependency, lockfile, identity, owner gap, or exact
+overlap with the selected nine paths. The refreshed schema-3 inventory and
+607-owner/919-edge graph remain structurally unchanged.
 
 ## Autonomous Loop Protocol
 

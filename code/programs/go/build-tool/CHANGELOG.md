@@ -14,6 +14,11 @@ All notable changes to the Go build tool will be documented in this file.
   UTF-8 paths and exact raw file bodies are framed with unsigned 64-bit
   big-endian lengths before SHA-256, so same-content renames and binary bytes
   are observable without hashing absolute paths, host metadata, or locale.
+  Package-root and nested POSIX links plus Windows junction/reparse points fail
+  before traversal; unstable or unreadable sources return a checked error and
+  the CLI exits `2` with a stable root-redacted diagnostic whose quoted package
+  identity escapes control characters instead of caching a sentinel digest,
+  forging a log line, or panicking.
 
 - **Extra CI toolchain declarations strip carriage return only as part of
   CRLF.** A final lone CR and a CR before trailing ASCII whitespace remain

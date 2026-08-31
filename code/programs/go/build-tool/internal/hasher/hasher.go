@@ -228,6 +228,10 @@ func resolveDeclaredSrcsChecked(pkg discovery.Package) ([]string, error) {
 // extension or declared-source rules and never traverses link/reparse entries.
 func walkSourceFiles(root string, visit func(string, os.DirEntry) error) error {
 	cleanRoot := filepath.Clean(root)
+	rootInfo, err := os.Lstat(cleanRoot)
+	if err != nil || !rootInfo.IsDir() || rootInfo.Mode()&os.ModeSymlink != 0 || hasWindowsReparsePoint(rootInfo) {
+		return fmt.Errorf("package root is not a stable directory")
+	}
 	return filepath.WalkDir(cleanRoot, func(path string, entry os.DirEntry, walkErr error) error {
 		if walkErr != nil {
 			return walkErr
@@ -434,7 +438,7 @@ func writeFileFrame(hash io.Writer, packageRoot, root, path string) error {
 //
 // If the package has no source files, we hash the empty string for
 // consistency — every package gets a hash, even empty ones.
-func HashPackage(pkg discovery.Package) string {
+func HashPackage(pkg discovery.Package) (string, error) {
 	var (
 		files []string
 		err   error
@@ -447,19 +451,19 @@ func HashPackage(pkg discovery.Package) string {
 		files, err = collectSourceFilesChecked(pkg)
 	}
 	if err != nil {
-		panic(fmt.Sprintf("cannot hash package %q: source collection failed", pkg.Name))
+		return "", fmt.Errorf("source collection failed")
 	}
 	packageRoot, err := repositoryRelativePackagePath(pkg)
 	if err != nil {
-		panic(fmt.Sprintf("cannot hash package %q: repository identity is invalid", pkg.Name))
+		return "", fmt.Errorf("repository identity is invalid")
 	}
 	hash := sha256.New()
 	for _, file := range files {
 		if err := writeFileFrame(hash, packageRoot, pkg.Path, file); err != nil {
-			panic(fmt.Sprintf("cannot hash package %q: source input is not stable", pkg.Name))
+			return "", fmt.Errorf("source input is not stable")
 		}
 	}
-	return hex.EncodeToString(hash.Sum(nil))
+	return hex.EncodeToString(hash.Sum(nil)), nil
 }
 
 // HashDeps computes a SHA256 hash of all transitive dependency hashes.

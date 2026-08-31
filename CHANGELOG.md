@@ -15,6 +15,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   file body with unsigned 64-bit big-endian lengths before SHA-256, matching
   hashing v1 and making same-content renames and binary bytes observable
   without hashing absolute checkout paths, host metadata, or locale.
+- Made source collection and hashing fail closed before package-root or nested
+  link/reparse traversal. Unstable inputs now return a checked error and a
+  stable root-redacted CLI diagnostic with a control-safe quoted package
+  identity instead of a sentinel digest, forged log line, or panic.
 
 ### Ruby build-tool portable source hashing
 

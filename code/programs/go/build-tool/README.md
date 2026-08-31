@@ -27,6 +27,12 @@ after streaming and source identity/length is rechecked through the open file;
 this is deliberately not described as an atomic descriptor-relative TOCTOU
 boundary on every supported host.
 
+Unreadable, unstable, non-portable, linked, or reparse-backed source inputs do
+not produce a cache digest. `HashPackage` returns a checked error, and the CLI
+emits the root-redacted `Error: HASH_PACKAGE_FAILED "<package-identity>"`
+record with Go-escaped control characters and exits `2` instead of caching a
+sentinel digest or printing an uncontrolled stack trace.
+
 ## Building
 
 ```bash
