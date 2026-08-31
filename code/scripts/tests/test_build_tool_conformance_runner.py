@@ -130,7 +130,7 @@ class CorpusTests(unittest.TestCase):
         summary = runner.validate_corpus(FIXTURE_ROOT)
 
         self.assertEqual(summary["schema_version"], 1)
-        self.assertEqual(summary["case_count"], 122)
+        self.assertEqual(summary["case_count"], 125)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -140,6 +140,9 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(summary["conformance_status"], "not-run")
         self.assertEqual(summary["source_input_language_count"], 23)
         self.assertEqual(len(summary["source_input_registry_sha256"]), 64)
+        self.assertEqual(summary["repository_source_boundary_count"], 8)
+        self.assertEqual(summary["repository_source_input_count"], 14)
+        self.assertEqual(len(summary["repository_source_boundary_sha256"]), 64)
         self.assertEqual(
             summary["domains"],
             [
@@ -379,6 +382,126 @@ class CorpusTests(unittest.TestCase):
             "grammar-tools.cli.json",
             scoped("typescript", "typescript-program-config-inputs")["exact_basenames"],
         )
+
+    def test_repository_source_input_boundary_is_closed_and_canonical(self) -> None:
+        source_registry = runner.load_document(
+            FIXTURE_ROOT / "language-source-input-registry.json"
+        )
+        schema = runner.load_document(
+            FIXTURE_ROOT / "repository-source-input-boundary.schema.json"
+        )
+        boundary = runner.load_document(
+            FIXTURE_ROOT / "repository-source-input-boundary.json"
+        )
+        summary = runner._validate_repository_source_input_boundary(
+            boundary,
+            schema,
+            source_registry,
+        )
+
+        self.assertEqual(summary, {"boundary_count": 8, "input_count": 14})
+        self.assertEqual(
+            runner.repository_source_input_boundary_digest(boundary),
+            "3e438730ec212478a0515501c2ac36f62ae12372ba4f3a5dc253c85146f5fbc6",
+        )
+        by_id = {entry["id"]: entry for entry in boundary["boundaries"]}
+        self.assertEqual(
+            [item["path"] for item in by_id["rust-workspace-configuration"]["inputs"]],
+            [
+                "code/packages/rust/.cargo/config.toml",
+                "code/packages/rust/Cargo.toml",
+                "code/packages/rust/_windows_cargo.sh",
+            ],
+        )
+        self.assertEqual(
+            by_id["typescript-visicalc-webcomponent-vendor-inputs"]["applies_to"],
+            {"kind": "exact", "root": "code/programs/typescript/visicalc-webcomp"},
+        )
+        tracked_paths = {
+            item["path"] for entry in boundary["boundaries"] for item in entry["inputs"]
+        }
+        listed = (
+            subprocess.run(
+                ["git", "ls-files", "-z", "--", *sorted(tracked_paths)],
+                cwd=runner.REPO_ROOT,
+                check=True,
+                capture_output=True,
+            )
+            .stdout.decode("utf-8")
+            .rstrip("\0")
+            .split("\0")
+        )
+        self.assertEqual(set(listed), tracked_paths)
+
+    def test_repository_source_input_boundary_rejects_drift_and_collisions(
+        self,
+    ) -> None:
+        source_registry = runner.load_document(
+            FIXTURE_ROOT / "language-source-input-registry.json"
+        )
+        schema = runner.load_document(
+            FIXTURE_ROOT / "repository-source-input-boundary.schema.json"
+        )
+        canonical = runner.load_document(
+            FIXTURE_ROOT / "repository-source-input-boundary.json"
+        )
+
+        mutations: list[tuple[str, dict[str, object], str]] = []
+        wrong_digest = copy.deepcopy(canonical)
+        wrong_digest["language_source_input_registry_sha256"] = "0" * 64
+        mutations.append(
+            (
+                "wrong-language-registry",
+                wrong_digest,
+                "REPOSITORY_SOURCE_REGISTRY_DIGEST_MISMATCH",
+            )
+        )
+        unordered = copy.deepcopy(canonical)
+        unordered["boundaries"][0], unordered["boundaries"][1] = (
+            unordered["boundaries"][1],
+            unordered["boundaries"][0],
+        )
+        mutations.append(
+            ("unordered-boundaries", unordered, "REPOSITORY_SOURCE_NOT_CANONICAL")
+        )
+        duplicate_path = copy.deepcopy(canonical)
+        duplicate_path["boundaries"][4]["inputs"].append(
+            {"path": "code/packages/rust/cargo.toml", "role": "shared_ancestor"}
+        )
+        mutations.append(
+            ("casefold-path-alias", duplicate_path, "REPOSITORY_SOURCE_INPUT_COLLISION")
+        )
+        generated_as_shared = copy.deepcopy(canonical)
+        generated_as_shared["boundaries"][4]["inputs"][0] = {
+            "path": "code/packages/rust/.cargo/config.toml",
+            "role": "shared_ancestor",
+        }
+        mutations.append(
+            (
+                "generated-as-shared",
+                generated_as_shared,
+                "REPOSITORY_SOURCE_ROLE_INVALID",
+            )
+        )
+        outside_scope = copy.deepcopy(canonical)
+        outside_scope["boundaries"][7]["inputs"][0]["path"] = (
+            "code/packages/python/not-the-typescript-workspace.toml"
+        )
+        mutations.append(
+            ("outside-scope", outside_scope, "REPOSITORY_SOURCE_SCOPE_INVALID")
+        )
+
+        for name, boundary, expected_code in mutations:
+            with (
+                self.subTest(name=name),
+                self.assertRaises(runner.ConformanceError) as raised,
+            ):
+                runner._validate_repository_source_input_boundary(
+                    boundary,
+                    schema,
+                    source_registry,
+                )
+            self.assertEqual(raised.exception.code, expected_code)
 
     def test_language_source_input_registry_covers_reviewed_repository_inputs(
         self,
@@ -1872,6 +1995,48 @@ class PureDomainValidationTests(unittest.TestCase):
             after["required_capabilities.json"],
         )
 
+    def test_repository_source_collection_closes_shared_and_pruned_boundaries(
+        self,
+    ) -> None:
+        boundary = runner.load_document(
+            FIXTURE_ROOT / "repository-source-input-boundary.json"
+        )
+        boundary_digest = runner.repository_source_input_boundary_digest(boundary)
+        case_names = [
+            "source-collection-repository-rust-boundary.json",
+            "source-collection-repository-typescript-shared.json",
+            "source-collection-repository-visicalc-pruning.json",
+        ]
+        cases = [load_case(name) for name in case_names]
+
+        for case in cases:
+            with self.subTest(case=case["id"]):
+                options = case["input"]["options"]
+                self.assertEqual(case["input"]["operation"], "source_collection")
+                self.assertEqual(options["mode"], "repository_boundary")
+                self.assertEqual(options["boundary_sha256"], boundary_digest)
+                self.assertEqual(
+                    runner._expected_repository_source_collection(options, boundary),
+                    case["expected"]["result"]["files"],
+                )
+                runner.validate_case_document(case, **self._schema_args())
+
+        rust_options = copy.deepcopy(cases[0]["input"]["options"])
+        rust_options["boundary_sha256"] = "0" * 64
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner._expected_repository_source_collection(rust_options, boundary)
+        self.assertEqual(
+            raised.exception.code,
+            "CASE_REPOSITORY_SOURCE_BOUNDARY_DIGEST_MISMATCH",
+        )
+
+        unmatched = copy.deepcopy(cases[1]["input"]["options"])
+        unmatched["package_root"] = "code/programs/typescript/unregistered"
+        self.assertEqual(
+            runner._expected_repository_source_collection(unmatched, boundary),
+            [],
+        )
+
     def test_dependency_cycles_are_rejected_without_recursion(self) -> None:
         cyclic = load_case("diff-selection-transitive.json")
         cyclic["input"]["options"]["edges"].append(["python/app", "python/base"])
@@ -1898,6 +2063,12 @@ class PureDomainValidationTests(unittest.TestCase):
                 runner.REPO_ROOT / "code/specs/schemas/build-plan-v1.schema.json"
             ),
             "pure_domain_schema": pure_schema,
+            "source_input_registry": runner.load_document(
+                FIXTURE_ROOT / "language-source-input-registry.json"
+            ),
+            "repository_source_input_boundary": runner.load_document(
+                FIXTURE_ROOT / "repository-source-input-boundary.json"
+            ),
         }
 
         unknown_edge = load_case("diff-selection-transitive.json")
@@ -2098,6 +2269,12 @@ class PureDomainValidationTests(unittest.TestCase):
                 runner.REPO_ROOT / "code/specs/schemas/build-plan-v1.schema.json"
             ),
             "pure_domain_schema": pure_schema,
+            "source_input_registry": runner.load_document(
+                FIXTURE_ROOT / "language-source-input-registry.json"
+            ),
+            "repository_source_input_boundary": runner.load_document(
+                FIXTURE_ROOT / "repository-source-input-boundary.json"
+            ),
         }
         cases = [
             runner.load_document(path)
@@ -2144,7 +2321,7 @@ class CommandLineTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
-        self.assertEqual(summary["case_count"], 122)
+        self.assertEqual(summary["case_count"], 125)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

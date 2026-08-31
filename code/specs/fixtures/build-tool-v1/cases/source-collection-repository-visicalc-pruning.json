@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "id": "source-collection/repository-visicalc-generated-pruning-boundary",
+  "domain": "source_collection",
+  "summary": "VisiCalc selects only exact tracked vendor JavaScript for its exact package despite the generated vendor component.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["source_collection"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "source_collection",
+    "options": {
+      "mode": "repository_boundary",
+      "language": "typescript",
+      "package_root": "code/programs/typescript/visicalc-webcomp",
+      "boundary_sha256": "3e438730ec212478a0515501c2ac36f62ae12372ba4f3a5dc253c85146f5fbc6",
+      "candidates": [
+        {"path": "code/programs/typescript/visicalc-html/vendor/spreadsheet-engine-wasm.js", "kind": "file", "tracked": true, "content_hex": "6f746865720a"},
+        {"path": "code/programs/typescript/visicalc-webcomp/vendor/FormulaBar.js", "kind": "file", "tracked": false, "content_hex": "6c6f63616c0a"},
+        {"path": "code/programs/typescript/visicalc-webcomp/vendor/Grid.js", "kind": "file", "tracked": true, "content_hex": "736f757263650a"},
+        {"path": "code/programs/typescript/visicalc-webcomp/vendor/secret.env", "kind": "file", "tracked": true, "content_hex": "7365637265740a"},
+        {"path": "code/programs/typescript/visicalc-webcomp/vendor/spreadsheet-engine-wasm.js", "kind": "file", "tracked": true, "content_hex": "736f757263650a"}
+      ]
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "source-collection/repository-visicalc-generated-pruning-boundary",
+    "domain": "source_collection",
+    "outcome": "ok",
+    "result": {
+      "files": [
+        {"path": "code/programs/typescript/visicalc-webcomp/vendor/Grid.js", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "code/programs/typescript/visicalc-webcomp/vendor/spreadsheet-engine-wasm.js", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"}
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

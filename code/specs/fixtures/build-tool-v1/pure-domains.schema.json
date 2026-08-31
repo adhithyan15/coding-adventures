@@ -397,7 +397,7 @@
         }
       }
     },
-    "source_collection_input": {
+    "package_source_collection_input": {
       "type": "object",
       "additionalProperties": false,
       "required": [
@@ -491,6 +491,108 @@
         }
       }
     },
+    "repository_source_candidate_file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "kind",
+        "tracked",
+        "content_hex"
+      ],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/safe_path"
+        },
+        "kind": {
+          "const": "file"
+        },
+        "tracked": {
+          "type": "boolean"
+        },
+        "content_hex": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-fA-F]{2})*$",
+          "maxLength": 2097152
+        }
+      }
+    },
+    "repository_source_candidate_link": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "kind",
+        "tracked"
+      ],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/safe_path"
+        },
+        "kind": {
+          "enum": [
+            "symlink",
+            "reparse_point"
+          ]
+        },
+        "tracked": {
+          "type": "boolean"
+        }
+      }
+    },
+    "repository_source_collection_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation",
+        "options"
+      ],
+      "properties": {
+        "operation": {
+          "const": "source_collection"
+        },
+        "options": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "language",
+            "package_root",
+            "boundary_sha256",
+            "candidates"
+          ],
+          "properties": {
+            "mode": {
+              "const": "repository_boundary"
+            },
+            "language": {
+              "$ref": "#/$defs/language"
+            },
+            "package_root": {
+              "$ref": "#/$defs/safe_path"
+            },
+            "boundary_sha256": {
+              "$ref": "#/$defs/digest"
+            },
+            "candidates": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 4096,
+              "items": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/repository_source_candidate_file"
+                  },
+                  {
+                    "$ref": "#/$defs/repository_source_candidate_link"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
     "source_collection_result": {
       "type": "object",
       "additionalProperties": false,
@@ -542,7 +644,14 @@
           ]
         },
         "input": {
-          "$ref": "#/$defs/source_collection_input"
+          "oneOf": [
+            {
+              "$ref": "#/$defs/package_source_collection_input"
+            },
+            {
+              "$ref": "#/$defs/repository_source_collection_input"
+            }
+          ]
         },
         "result": {
           "type": "object"

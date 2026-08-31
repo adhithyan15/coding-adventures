@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "id": "source-collection/repository-typescript-shared-boundary",
+  "domain": "source_collection",
+  "summary": "A TypeScript package receives only its exact tracked shared base configuration from the language workspace root.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["source_collection"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "source_collection",
+    "options": {
+      "mode": "repository_boundary",
+      "language": "typescript",
+      "package_root": "code/packages/typescript/hash-functions",
+      "boundary_sha256": "3e438730ec212478a0515501c2ac36f62ae12372ba4f3a5dc253c85146f5fbc6",
+      "candidates": [
+        {"path": "code/packages/rust/Cargo.toml", "kind": "file", "tracked": true, "content_hex": "727573740a"},
+        {"path": "code/packages/typescript/.env", "kind": "file", "tracked": true, "content_hex": "7365637265740a"},
+        {"path": "code/packages/typescript/tsconfig.base.json", "kind": "file", "tracked": true, "content_hex": "736f757263650a"},
+        {"path": "code/packages/typescript/tsconfig.local.json", "kind": "file", "tracked": false, "content_hex": "6c6f63616c0a"}
+      ]
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "source-collection/repository-typescript-shared-boundary",
+    "domain": "source_collection",
+    "outcome": "ok",
+    "result": {
+      "files": [
+        {"path": "code/packages/typescript/tsconfig.base.json", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"}
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}
