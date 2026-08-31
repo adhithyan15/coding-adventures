@@ -8,7 +8,7 @@
 //! proprietary chip family), later powering Sun's SPARCstation
 //! workstations and Solaris servers for two decades.
 //!
-//! Module split mirrors [`mips_r2000_simulator`], plus one SPARC-specific
+//! Module split mirrors the repository's MIPS R2000 simulator, plus one SPARC-specific
 //! addition (`registers.rs`) for the windowed register file:
 //!
 //! ```text
@@ -70,4 +70,6 @@ pub mod opcodes;
 pub mod registers;
 pub mod simulator;
 
-pub use simulator::{ExecutionResult, SparcV8Simulator};
+pub use simulator::{
+    ExecutionResult, SparcError, SparcState, SparcV8Simulator, StepTrace, MEMORY_SIZE,
+};

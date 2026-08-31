@@ -19,7 +19,10 @@ fn encode_format2_imm(rd: u32, op2: u32, imm22: u32) -> u32 {
 
 /// Format 2, branch shape — `Bicc cond, disp22`.
 fn encode_format2_bicc(cond: u32, disp22: i32) -> u32 {
-    (OP_FMT2 << 30) | ((cond & 0x1F) << 25) | ((OP2_BICC & 0x7) << 22) | ((disp22 as u32) & 0x3F_FFFF)
+    (OP_FMT2 << 30)
+        | ((cond & 0x1F) << 25)
+        | ((OP2_BICC & 0x7) << 22)
+        | ((disp22 as u32) & 0x3F_FFFF)
 }
 
 /// Format 3r — register `rs2` operand (`i` bit = 0).
@@ -156,6 +159,18 @@ pub fn encode_udiv(rd: u32, rs1: u32, rs2: u32) -> u32 {
 pub fn encode_sdiv(rd: u32, rs1: u32, rs2: u32) -> u32 {
     encode_alu_reg(OP3_SDIV, rd, rs1, rs2)
 }
+pub fn encode_umulcc(rd: u32, rs1: u32, rs2: u32) -> u32 {
+    encode_alu_reg(OP3_UMULCC, rd, rs1, rs2)
+}
+pub fn encode_smulcc(rd: u32, rs1: u32, rs2: u32) -> u32 {
+    encode_alu_reg(OP3_SMULCC, rd, rs1, rs2)
+}
+pub fn encode_udivcc(rd: u32, rs1: u32, rs2: u32) -> u32 {
+    encode_alu_reg(OP3_UDIVCC, rd, rs1, rs2)
+}
+pub fn encode_sdivcc(rd: u32, rs1: u32, rs2: u32) -> u32 {
+    encode_alu_reg(OP3_SDIVCC, rd, rs1, rs2)
+}
 
 pub fn encode_rdy(rd: u32) -> u32 {
     encode_alu_reg(OP3_RDY, rd, 0, 0)
@@ -284,5 +299,14 @@ mod tests {
         // happens at execute time.
         let word = encode_sethi(1, 0x3FFFFF);
         assert_eq!(word & 0x3F_FFFF, 0x3FFFFF);
+    }
+
+    #[test]
+    fn condition_code_multiply_divide_use_six_bit_manual_encodings() {
+        let op3 = |word: u32| (word >> 19) & 0x3f;
+        assert_eq!(op3(encode_umulcc(1, 2, 3)), 0b011010);
+        assert_eq!(op3(encode_smulcc(1, 2, 3)), 0b011011);
+        assert_eq!(op3(encode_udivcc(1, 2, 3)), 0b011110);
+        assert_eq!(op3(encode_sdivcc(1, 2, 3)), 0b011111);
     }
 }
