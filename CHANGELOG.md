@@ -36,6 +36,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Build-tool language source-input registry
 
+- Registered the exact Engram WASM BUILD inputs: the smoke script, its imported
+  host module, and the checked-in WebAssembly bytes. Added a language-neutral
+  exact-path fixture and tracked-byte projection while keeping `.mjs`, `.js`,
+  `.wasm`, generated-output, and directory-wide authority closed.
 - Added a closed versioned source-input registry for all 23 canonical build-
   tool language keys. It distinguishes recursive sources and metadata,
   package-root exact and variable manifests, fixed relative inputs, and
