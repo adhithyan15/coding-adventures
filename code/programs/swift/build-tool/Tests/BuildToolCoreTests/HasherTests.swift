@@ -1,6 +1,9 @@
 import BuildToolCore
 import Foundation
 import Testing
+#if os(Windows)
+import WinSDK
+#endif
 
 struct HasherTests {
     private struct SourceCollectionFixture: Decodable {
@@ -201,7 +204,10 @@ struct HasherTests {
             declaredSrcs: declared
         )
 
-        #expect(try Hasher.hashPackage(package) == fixture.expected.result.packageDigest)
+        #expect(
+            try Hasher.hashPackage(package, repositoryRoot: root)
+                == fixture.expected.result.packageDigest
+        )
     }
 
     @Test
@@ -222,7 +228,7 @@ struct HasherTests {
         )
 
         #expect(
-            try Hasher.hashPackage(package)
+            try Hasher.hashPackage(package, repositoryRoot: root)
                 == "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
         )
     }
@@ -242,10 +248,10 @@ struct HasherTests {
             path: packageRoot,
             language: "swift"
         )
-        let first = try Hasher.hashPackage(package)
+        let first = try Hasher.hashPackage(package, repositoryRoot: root)
         try FileManager.default.moveItem(atPath: before, toPath: after)
 
-        #expect(try Hasher.hashPackage(package) != first)
+        #expect(try Hasher.hashPackage(package, repositoryRoot: root) != first)
     }
 
     @Test
@@ -268,15 +274,15 @@ struct HasherTests {
             path: packageRoot,
             language: "swift"
         )
-        let first = try Hasher.hashPackage(package)
+        let first = try Hasher.hashPackage(package, repositoryRoot: root)
 
         #expect(first.count == 64)
-        #expect(try Hasher.hashPackage(package) == first)
+        #expect(try Hasher.hashPackage(package, repositoryRoot: root) == first)
         try writeData(
             (packageRoot as NSString).appendingPathComponent("Sources/é.swift"),
             Data([0x00, 0x0A, 0xFF])
         )
-        #expect(try Hasher.hashPackage(package) != first)
+        #expect(try Hasher.hashPackage(package, repositoryRoot: root) != first)
     }
 
     @Test
@@ -313,6 +319,122 @@ struct HasherTests {
     }
 
     @Test
+    func extensionModeCoversEveryEstablishedLanguageLane() throws {
+        let root = try makeTempDirectory(label: "hasher_lane_registry")
+        defer { try? FileManager.default.removeItem(atPath: root) }
+        let cases: [(String, [String])] = [
+            ("csharp", ["Demo.csproj", "Program.cs", "global.json"]),
+            ("dart", ["lib/demo.dart", "pubspec.yaml"]),
+            ("elixir", ["lib/demo.ex", "mix.exs"]),
+            ("fsharp", ["Demo.fsproj", "Program.fs", "global.json"]),
+            ("go", ["go.mod", "main.go"]),
+            ("haskell", ["Demo.cabal", "Main.hs", "cabal.project"]),
+            ("java", ["build.gradle.kts", "src/Main.java"]),
+            ("kotlin", ["settings.gradle.kts", "src/Main.kt"]),
+            ("lua", ["demo.rockspec", "main.lua"]),
+            ("perl", ["cpanfile", "lib/Demo.pm"]),
+            ("python", ["demo.py", "pyproject.toml"]),
+            ("ruby", ["demo.gemspec", "lib/demo.rb"]),
+            ("rust", ["Cargo.toml", "src/lib.rs"]),
+            ("swift", ["Package.swift", "Sources/Demo.swift"]),
+            ("typescript", ["package.json", "src/demo.ts"]),
+            ("ocaml", ["demo.opam", "dune-project", "src/demo.ml"]),
+        ]
+
+        for (language, expected) in cases {
+            let packageRoot = (root as NSString).appendingPathComponent(
+                "code/packages/\(language)/demo"
+            )
+            for path in expected {
+                try writeFile(
+                    (packageRoot as NSString).appendingPathComponent(path),
+                    "source\n"
+                )
+            }
+            try writeFile(
+                (packageRoot as NSString).appendingPathComponent("ignored.txt"),
+                "not a build input\n"
+            )
+            let package = BuildPackage(
+                name: "\(language)/demo",
+                path: packageRoot,
+                language: language
+            )
+            #expect(
+                relativePaths(try Hasher.collectSourceFiles(package), root: packageRoot)
+                    == expected.sorted { $0.utf8.lexicographicallyPrecedes($1.utf8) },
+                "missing portable inputs for \(language)"
+            )
+        }
+    }
+
+    @Test
+    func declaredModeRetainsVariableRootManifestsOnly() throws {
+        let root = try makeTempDirectory(label: "hasher_declared_manifests")
+        defer { try? FileManager.default.removeItem(atPath: root) }
+        let cases: [(String, String)] = [
+            ("ruby", "demo.gemspec"),
+            ("lua", "demo.rockspec"),
+            ("haskell", "demo.cabal"),
+            ("ocaml", "demo.opam"),
+            ("csharp", "Demo.csproj"),
+            ("fsharp", "Demo.fsproj"),
+            ("dotnet", "Demo.csproj"),
+        ]
+
+        for (language, manifest) in cases {
+            let packageRoot = (root as NSString).appendingPathComponent(
+                "code/packages/\(language)/demo"
+            )
+            try writeFile(
+                (packageRoot as NSString).appendingPathComponent(manifest),
+                "manifest\n"
+            )
+            try writeFile(
+                (packageRoot as NSString).appendingPathComponent("nested/\(manifest)"),
+                "nested manifest\n"
+            )
+            let package = BuildPackage(
+                name: "\(language)/demo",
+                path: packageRoot,
+                language: language,
+                isStarlark: true,
+                declaredSrcs: ["src/**/*.never"]
+            )
+            #expect(
+                relativePaths(try Hasher.collectSourceFiles(package), root: packageRoot)
+                    == [manifest],
+                "declared mode mishandled the root \(language) manifest"
+            )
+        }
+    }
+
+    @Test
+    func emptyStarlarkSrcsFallsBackToExtensionCollection() throws {
+        let root = try makeTempDirectory(label: "hasher_empty_declared_srcs")
+        defer { try? FileManager.default.removeItem(atPath: root) }
+        let packageRoot = (root as NSString).appendingPathComponent(
+            "code/packages/swift/demo"
+        )
+        try writeFile(
+            (packageRoot as NSString).appendingPathComponent("Sources/Demo.swift"),
+            "let answer = 42\n"
+        )
+        let package = BuildPackage(
+            name: "swift/demo",
+            path: packageRoot,
+            language: "swift",
+            isStarlark: true,
+            declaredSrcs: []
+        )
+
+        #expect(
+            relativePaths(try Hasher.collectSourceFiles(package), root: packageRoot)
+                == ["Sources/Demo.swift"]
+        )
+    }
+
+    @Test
     func missingPackageRootFailsClosedWithoutLeakingItsPath() throws {
         let root = try makeTempDirectory(label: "hasher_missing")
         defer { try? FileManager.default.removeItem(atPath: root) }
@@ -326,12 +448,215 @@ struct HasherTests {
         )
 
         do {
-            _ = try Hasher.hashPackage(package)
+            _ = try Hasher.hashPackage(package, repositoryRoot: root)
             Issue.record("missing package root was hashed as an empty package")
         } catch {
             #expect(error.localizedDescription.hasPrefix("HASH_PACKAGE_FAILED: package="))
             #expect(!error.localizedDescription.contains(root))
             #expect(!error.localizedDescription.contains("\n::error::"))
+        }
+    }
+
+    @Test
+    func freshCLIReportsCheckedRedactedHashFailure() throws {
+        let root = try makeTempDirectory(label: "hasher_cli_failure")
+        defer { try? FileManager.default.removeItem(atPath: root) }
+        try FileManager.default.createDirectory(
+            atPath: (root as NSString).appendingPathComponent(".git"),
+            withIntermediateDirectories: false
+        )
+        let planPath = (root as NSString).appendingPathComponent("plan.json")
+        let hostileName = "swift/missing\n\u{0085}\u{2028}\u{202E}::error::forged"
+        try PlanIO.writePlan(
+            BuildPlan(
+                schemaVersion: PlanIO.currentSchemaVersion,
+                diffBase: "origin/main",
+                force: true,
+                affectedPackages: nil,
+                packages: [
+                    PackageEntry(
+                        name: hostileName,
+                        relPath: "code/packages/swift/missing",
+                        language: "swift",
+                        buildCommands: ["swift test"]
+                    ),
+                ],
+                dependencyEdges: [],
+                languagesNeeded: ["swift": true]
+            ),
+            to: planPath
+        )
+
+        let process = Process()
+        process.executableURL = try buildToolExecutableURL()
+        process.arguments = [
+            "--root", root,
+            "--plan-file", "plan.json",
+            "--dry-run",
+        ]
+        let standardOutput = Pipe()
+        let standardError = Pipe()
+        process.standardOutput = standardOutput
+        process.standardError = standardError
+        try process.run()
+        process.waitUntilExit()
+        let stdout = String(
+            decoding: standardOutput.fileHandleForReading.readDataToEndOfFile(),
+            as: UTF8.self
+        ).replacingOccurrences(of: "\r\n", with: "\n")
+        let stderr = String(
+            decoding: standardError.fileHandleForReading.readDataToEndOfFile(),
+            as: UTF8.self
+        ).replacingOccurrences(of: "\r\n", with: "\n")
+
+        #expect(process.terminationStatus == 2)
+        #expect(stdout == "Loaded plan: 1 packages\n")
+        #expect(
+            stderr
+                == "HASH_PACKAGE_FAILED: package=\"swift/missing\\n\\u0085\\u2028\\u202e::error::forged\"\n"
+        )
+        #expect(!stderr.contains(root))
+        #expect(!stderr.contains("\u{0085}"))
+        #expect(!stderr.contains("\u{2028}"))
+        #expect(!stderr.contains("\u{202E}"))
+    }
+
+    @Test
+    func freshCLIRejectsPackageBelowAncestorLink() throws {
+        let root = try makeTempDirectory(label: "hasher_ancestor_link")
+        let outside = try makeTempDirectory(label: "hasher_ancestor_outside")
+        let link = (root as NSString).appendingPathComponent("code/packages/linked")
+        defer {
+            try? FileManager.default.removeItem(atPath: link)
+            try? FileManager.default.removeItem(atPath: root)
+            try? FileManager.default.removeItem(atPath: outside)
+        }
+        try FileManager.default.createDirectory(
+            atPath: (root as NSString).appendingPathComponent(".git"),
+            withIntermediateDirectories: false
+        )
+        try writeFile(
+            (outside as NSString).appendingPathComponent("demo/Main.swift"),
+            "let outside = true\n"
+        )
+        try FileManager.default.createDirectory(
+            atPath: (link as NSString).deletingLastPathComponent,
+            withIntermediateDirectories: true
+        )
+
+        #if os(Windows)
+        let linkProcess = Process()
+        linkProcess.executableURL = URL(
+            fileURLWithPath: ProcessInfo.processInfo.environment["ComSpec"]
+                ?? "C:\\Windows\\System32\\cmd.exe"
+        )
+        linkProcess.arguments = [
+            "/d", "/c", "mklink", "/J",
+            link.replacingOccurrences(of: "/", with: "\\"),
+            outside.replacingOccurrences(of: "/", with: "\\"),
+        ]
+        let linkOutput = Pipe()
+        linkProcess.standardOutput = linkOutput
+        linkProcess.standardError = linkOutput
+        try linkProcess.run()
+        linkProcess.waitUntilExit()
+        #expect(linkProcess.terminationStatus == 0)
+        guard linkProcess.terminationStatus == 0 else { return }
+        #else
+        try FileManager.default.createSymbolicLink(
+            atPath: link,
+            withDestinationPath: outside
+        )
+        #endif
+
+        let planPath = (root as NSString).appendingPathComponent("plan.json")
+        try PlanIO.writePlan(
+            BuildPlan(
+                schemaVersion: PlanIO.currentSchemaVersion,
+                diffBase: "origin/main",
+                force: true,
+                affectedPackages: nil,
+                packages: [
+                    PackageEntry(
+                        name: "swift/linked-demo",
+                        relPath: "code/packages/linked/demo",
+                        language: "swift",
+                        buildCommands: ["swift test"]
+                    ),
+                ],
+                dependencyEdges: [],
+                languagesNeeded: ["swift": true]
+            ),
+            to: planPath
+        )
+
+        let process = Process()
+        process.executableURL = try buildToolExecutableURL()
+        process.arguments = [
+            "--root", root,
+            "--plan-file", "plan.json",
+            "--dry-run",
+        ]
+        let standardOutput = Pipe()
+        let standardError = Pipe()
+        process.standardOutput = standardOutput
+        process.standardError = standardError
+        try process.run()
+        process.waitUntilExit()
+        let stdout = String(
+            decoding: standardOutput.fileHandleForReading.readDataToEndOfFile(),
+            as: UTF8.self
+        ).replacingOccurrences(of: "\r\n", with: "\n")
+        let stderr = String(
+            decoding: standardError.fileHandleForReading.readDataToEndOfFile(),
+            as: UTF8.self
+        ).replacingOccurrences(of: "\r\n", with: "\n")
+
+        #expect(process.terminationStatus == 2)
+        #expect(stdout == "Loaded plan: 1 packages\n")
+        #expect(stderr == "HASH_PACKAGE_FAILED: package=\"swift/linked-demo\"\n")
+        #expect(!stderr.contains(outside))
+    }
+
+    @Test
+    func rejectsSourceHardlinkedToOutsideRepository() throws {
+        let root = try makeTempDirectory(label: "hasher_hardlink_repo")
+        let outside = try makeTempDirectory(label: "hasher_hardlink_outside")
+        defer {
+            try? FileManager.default.removeItem(atPath: root)
+            try? FileManager.default.removeItem(atPath: outside)
+        }
+        let outsideFile = (outside as NSString).appendingPathComponent("outside.swift")
+        let packageRoot = (root as NSString).appendingPathComponent(
+            "code/packages/swift/demo"
+        )
+        let linkedFile = (packageRoot as NSString).appendingPathComponent(
+            "Sources/Outside.swift"
+        )
+        try writeFile(outsideFile, "let outside = true\n")
+        try FileManager.default.createDirectory(
+            atPath: (linkedFile as NSString).deletingLastPathComponent,
+            withIntermediateDirectories: true
+        )
+        #if os(Windows)
+        let linked = linkedFile.withCString(encodedAs: UTF16.self) { destination in
+            outsideFile.withCString(encodedAs: UTF16.self) { existing in
+                CreateHardLinkW(destination, existing, nil)
+            }
+        }
+        #expect(linked)
+        guard linked else { return }
+        #else
+        try FileManager.default.linkItem(atPath: outsideFile, toPath: linkedFile)
+        #endif
+        let package = BuildPackage(
+            name: "swift/demo",
+            path: packageRoot,
+            language: "swift"
+        )
+
+        #expect(throws: (any Error).self) {
+            _ = try Hasher.hashPackage(package, repositoryRoot: root)
         }
     }
 
@@ -380,7 +705,7 @@ struct HasherTests {
             language: "swift"
         )
         #expect(throws: (any Error).self) {
-            _ = try Hasher.hashPackage(package)
+            _ = try Hasher.hashPackage(package, repositoryRoot: root)
         }
     }
     #else
@@ -414,7 +739,7 @@ struct HasherTests {
             language: "swift"
         )
         #expect(throws: (any Error).self) {
-            _ = try Hasher.hashPackage(package)
+            _ = try Hasher.hashPackage(package, repositoryRoot: root)
         }
     }
     #endif

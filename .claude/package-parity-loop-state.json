@@ -843,10 +843,19 @@
       "notes": "Discovered by the post-#13544 source-hashing audit. Go recognizes OCaml sources but prunes only OCaml _build in the extension walker, prunes nothing in declared-source mode, and omits normalized paths from the package digest. Adopt the neutral collector registry and path framing in one engine-scoped tranche."
     },
     {
+      "id": "build-tool-language-source-input-registry-corpus-and-engine-audit",
+      "title": "Define and audit the portable language source-input registry",
+      "status": "pending",
+      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the Swift source-hashing conformance review. Existing engines define language source extensions and package metadata independently, and several maps omit established Java, Kotlin, Dart, C#, or F# inputs while hybrid C/C++, WASM, Mosaic, and native-companion roots have no reviewed language-neutral contract. Add a collision-checked neutral registry and fixtures that distinguish source extensions, fixed metadata, root-only variable manifests, and reviewed hybrid/native inputs; audit every engine against it and register concrete engine-adoption children before this owner can complete. Pending engine source-hashing leaves depend on this corpus so new repairs do not preserve an incomplete local guess; already merged and in-progress engines remain owned by the audit's required follow-up classification."
+    },
+    {
       "id": "build-tool-elixir-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Elixir build tool",
       "status": "pending",
-      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus"],
+      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13544 source-hashing audit. Elixir recursively hashes without the exact generated-component registry and lacks portable path framing and OCaml source recognition. Repair those bounded collector semantics after the neutral corpus lands."
@@ -855,7 +864,7 @@
       "id": "build-tool-perl-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Perl build tool",
       "status": "pending",
-      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus"],
+      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13544 source-hashing audit. Perl has only a partial artifact skip registry, uses platform-native relative paths, and lacks OCaml source recognition. Adopt the complete neutral collector and normalized framing contract in one engine-scoped tranche."
@@ -864,7 +873,7 @@
       "id": "build-tool-haskell-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Haskell build tool",
       "status": "pending",
-      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus"],
+      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13544 source-hashing audit. Haskell lacks OCaml source recognition and its hashing collector uses an incomplete artifact registry. Adopt the neutral collector and portable path-framing contract without mixing discovery-fixture work."
@@ -873,7 +882,7 @@
       "id": "build-tool-csharp-fsharp-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the shared C# and F# build tools",
       "status": "pending",
-      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus"],
+      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13544 source-hashing audit. The shared .NET collector reuses discovery skips but omits normalized path framing and OCaml inputs. Repair the shared engine once for both front doors after the neutral corpus lands."
@@ -936,7 +945,7 @@
       "id": "build-tool-rust-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Rust build tool",
       "status": "pending",
-      "depends_on": ["build-tool-rust-generated-directory-hashing-exclusion", "build-tool-rust-declared-source-metadata-plumbing"],
+      "depends_on": ["build-tool-rust-generated-directory-hashing-exclusion", "build-tool-rust-declared-source-metadata-plumbing", "build-tool-language-source-input-registry-corpus-and-engine-audit"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13544 source-hashing audit. After Rust adopts the neutral generated-directory registry, add OCaml source recognition and normalized unambiguous path framing without mixing declaration or discovery work."
@@ -969,7 +978,7 @@
       "id": "build-tool-lua-hashing-cache-conformance",
       "title": "Implement portable source hashing and cache behavior in the Lua build tool",
       "status": "pending",
-      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-lua-dune-build-discovery-fixture-adoption"],
+      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-lua-dune-build-discovery-fixture-adoption", "build-tool-language-source-input-registry-corpus-and-engine-audit"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13544 source-hashing audit. Lua has no source-hasher/cache layer, so add the complete neutral collector, portable package and named/raw dependency digest framing, raw combined-digest construction, dependency invalidation, and stable cache recovery only after its Dune discovery evidence and the shared source-collection corpus land."
@@ -978,7 +987,7 @@
       "id": "build-tool-portable-source-hashing-remaining-engines",
       "title": "Complete portable source hashing across every remaining build-tool engine",
       "status": "pending",
-      "depends_on": ["build-tool-python-portable-source-hashing-conformance", "build-tool-go-portable-source-hashing-conformance", "build-tool-elixir-portable-source-hashing-conformance", "build-tool-perl-portable-source-hashing-conformance", "build-tool-haskell-portable-source-hashing-conformance", "build-tool-csharp-fsharp-portable-source-hashing-conformance", "build-tool-swift-portable-source-hashing-conformance", "build-tool-ruby-portable-source-hashing-conformance", "build-tool-rust-portable-source-hashing-conformance", "build-tool-typescript-portable-source-hashing-conformance", "build-tool-lua-hashing-cache-conformance"],
+      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-python-portable-source-hashing-conformance", "build-tool-go-portable-source-hashing-conformance", "build-tool-elixir-portable-source-hashing-conformance", "build-tool-perl-portable-source-hashing-conformance", "build-tool-haskell-portable-source-hashing-conformance", "build-tool-csharp-fsharp-portable-source-hashing-conformance", "build-tool-swift-portable-source-hashing-conformance", "build-tool-ruby-portable-source-hashing-conformance", "build-tool-rust-portable-source-hashing-conformance", "build-tool-typescript-portable-source-hashing-conformance", "build-tool-lua-hashing-cache-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Selection-blocked aggregate for the complete hashing contract. It has no independent source behavior and advances only after every engine-scoped leaf proves exact component pruning, portable source recognition, normalized path framing, deterministic byte hashing, dependency invalidation, and stable cache recovery or records a reviewed exception."

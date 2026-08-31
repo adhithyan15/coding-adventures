@@ -12061,6 +12061,42 @@ selection leave the complete 608-owner/922-edge graph unique, dependency-
 complete, and acyclic at 196 merged, 411 pending, and exactly this owner in
 progress.
 
+### Swift portable source-hashing implementation review
+
+The Swift build tool now consumes both neutral source-collection fixtures and
+the hashing-v1 oracle through the local Swift SHA-256 package. Its bounded
+primary/reference registry covers the 15 established implementation lanes plus
+OCaml, preserves exact generated-directory pruning, sorts relative paths by raw
+UTF-8 bytes, and frames path and content lengths as unsigned 64-bit big-endian
+values. Non-empty declared Starlark sources remain authoritative, empty
+declarations fall back to the language registry, supported root variable-name
+manifests remain metadata, and all read and traversal failures reach the CLI as
+stable root-redacted diagnostics with exit status 2.
+
+Security review verified repository-root-bound component walks with retained
+no-follow handles or descriptors, ancestor and directory identity
+revalidation, reparse-point and symlink rejection, singly-linked regular-file
+requirements, and nonblocking close-on-exec POSIX opens. Real package-root,
+ancestor-link, and outside-hardlink regressions exercise those fail-closed
+boundaries. The full Swift package passes 68 tests across 9 suites with one
+expected Windows symlink-capability skip, release and literal Windows build
+fronts pass, the local SHA-256 dependency passes 29 tests, and the neutral
+corpus validates 121 cases, 283 files, 15 languages, and 16 implementations.
+Independent conformance and security reviews found no blocker within this
+bounded tranche.
+
+The review also classified a broader neutral-contract gap under the new
+pending `build-tool-language-source-input-registry-corpus-and-engine-audit`
+owner. That audit must inventory hybrid/native build inputs such as companion
+C/C++ sources, wrappers, resources, version catalogs, headers, module maps, and
+host-language companions, add collision-checked neutral fixtures, and register
+concrete engine adoption children before completion. The six still-pending
+portable-source engine leaves and the remaining-engines aggregate now depend
+on that audit; merged leaves and this in-progress Swift tranche are not
+retroactively blocked. The synchronized state graph contains 609 unique
+owners and 930 dependency edges, is dependency-complete and acyclic, and stands
+at 196 merged, 412 pending, and exactly this owner in progress.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
