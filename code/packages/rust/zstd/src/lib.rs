@@ -12,15 +12,30 @@
 //! - **Predefined decode tables** (RFC 8878 Appendix B) so short frames
 //!   need no table description overhead.
 //!
-//! This crate's own encoder never emits **Repeated-Offset (R1/R2/R3)**
-//! sequence shortcuts (RFC 8878 §3.1.1.3.2.1.1) — an explicit educational
-//! simplification, since every offset it writes is coded in full. The
-//! *decoder*, however, fully understands them: real `zstd` encoders use
-//! repeat offsets constantly (one of their main entropy wins, especially
-//! for periodic or constant data), so a decoder that didn't accept them
-//! would fail to decode a large fraction of real-world `.zst` files despite
-//! passing every self-consistency test. See `decompress_block`'s doc
-//! comment below and lessons.md Lesson 98.
+//! # The encoder and decoder cover deliberately different ground
+//!
+//! The **encoder** here emits one narrow, readable subset of the format:
+//! Raw literals, predefined FSE tables, explicit offsets. That is an
+//! educational simplification, and its output is still a valid `.zst` frame
+//! any conforming decoder reads.
+//!
+//! The **decoder** covers the format as real encoders actually use it:
+//!
+//! - **Huffman-coded literals** (§4.2.1) — `Compressed_Literals_Block` and
+//!   `Treeless_Literals_Block`, single-stream and 4-stream, with tree
+//!   descriptions in both the direct-weight and FSE-coded-weight forms.
+//! - **FSE table descriptions** (§4.1.1) and all four
+//!   `Symbol_Compression_Mode`s — Predefined, RLE, FSE_Compressed, Repeat.
+//! - **Repeated offsets** (R1/R2/R3, §3.1.1.3.2.1.1).
+//! - **RLE literal blocks** (§3.1.1.2).
+//!
+//! None of that is reachable from this crate's own `compress()`, which is
+//! exactly why it needs its own testing strategy. A codec whose two halves
+//! only ever talk to each other is blind to everything they get wrong (or
+//! omit) in the same way — this crate shipped four separate conformance
+//! bugs behind that illusion; see lessons.md Lessons 95, 96 and 98. So the
+//! decoder is tested against frames it cannot produce: live `zstd` CLI
+//! interop, plus committed golden vectors for machines without the binary.
 //!
 //! # Frame layout (RFC 8878 §3)
 //!
@@ -2531,16 +2546,30 @@ pub fn compress(data: &[u8]) -> Vec<u8> {
 
 /// Decompress a ZStd frame, returning the original data.
 ///
-/// Accepts any valid ZStd frame with:
-/// - Single-segment or multi-segment layout
-/// - Raw, RLE, or Compressed blocks
-/// - Predefined FSE modes (no per-frame table description)
+/// Accepts a single ZStd frame using any of:
+/// - Single-segment or multi-segment layout, with or without a content
+///   checksum (the checksum's presence is parsed; its value is not verified,
+///   as this crate has no xxHash64)
+/// - Raw, RLE and Compressed blocks
+/// - All four literals block types: Raw, RLE, Compressed (Huffman) and
+///   Treeless, in both the single-stream and 4-stream forms
+/// - All four sequence table modes: Predefined, RLE, FSE_Compressed and
+///   Repeat, for each of the LL/OF/ML fields
+/// - Repeated offsets (R1/R2/R3)
+///
+/// Not supported: dictionaries (a frame with a Dictionary_ID is parsed but
+/// the dictionary itself is not applied), skippable frames, and multiple
+/// concatenated frames — only the first frame in the buffer is decoded.
 ///
 /// # Errors
 ///
-/// Returns an error string if the input is truncated, has a bad magic number,
-/// or contains unsupported features (non-predefined FSE tables, Huffman
-/// literals, reserved block types).
+/// Returns an error string, never a panic, for any malformed input:
+/// truncation, a bad magic number, a reserved block type, a table
+/// description that does not describe a valid distribution, a Huffman
+/// description whose code space cannot be completed, a Repeat_Mode field
+/// with nothing to repeat, a bitstream that does not end exactly, an offset
+/// pointing before the start of the output, or output exceeding
+/// [`MAX_OUTPUT`].
 ///
 /// # Examples
 ///
@@ -2859,20 +2888,52 @@ mod tests {
     // test, passed regardless of which bugs were present, because both
     // sides of the comparison were wrong in the identical way.
     //
-    // Gracefully no-ops (rather than failing) when the `zstd` binary isn't
-    // on `PATH`, since CI/dev environments vary.
+    // ── A missing `zstd` binary is a FAILURE, not a skip ──────────────────
+    //
+    // These tests used to open with `if !is_zstd_cli_available() { return; }`.
+    // That is not a gate; it is a gate-shaped no-op. On any machine — or CI
+    // runner — without the binary, every cross-implementation test in this
+    // file reported PASS while checking nothing at all. That is exactly the
+    // failure mode they exist to prevent: this crate's history holds four
+    // separate wire-format bugs (Lessons 95/96/98, plus the Huffman/FSE gap
+    // this suite was extended for) that self-round-trip tests could not see
+    // and only the CLI oracle caught. A silently skipped oracle is
+    // indistinguishable from no oracle.
+    //
+    // So [`require_zstd_cli`] panics instead.
+    //
+    // The live-CLI tests are additionally scoped to `#[cfg(unix)]`. That is
+    // NOT a runtime escape hatch — it is a compile-time statement that the
+    // conformance gate on Windows is a different, equally real one: the
+    // GOLDEN VECTOR suite further down, which is genuine `zstd` CLI output
+    // committed as bytes and decoded unconditionally on every platform with
+    // no subprocess involved. Removing the binary from a machine can make
+    // the build fail or narrow coverage; it can never make a conformance
+    // failure look like a pass.
 
-    /// Checks whether the `zstd` CLI binary is reachable on `PATH`.
-    fn is_zstd_cli_available() -> bool {
-        std::process::Command::new("zstd")
+    /// Returns once the `zstd` CLI is confirmed present, and panics with an
+    /// actionable message otherwise. It never reports "unavailable" — see the
+    /// commentary above for why that option was deliberately removed.
+    #[cfg(unix)]
+    fn require_zstd_cli() {
+        let present = std::process::Command::new("zstd")
             .arg("--version")
             .output()
             .map(|o| o.status.success())
-            .unwrap_or(false)
+            .unwrap_or(false);
+        assert!(
+            present,
+            "the real `zstd` CLI is REQUIRED by this crate's interop tests — it is \
+             the conformance oracle, and skipping it would turn every \
+             cross-implementation check in this file into a silent no-op. Install \
+             it (`apt-get install zstd`, `brew install zstd`, `dnf install zstd`) \
+             and re-run."
+        );
     }
 
     /// Runs `zstd` with the given arguments, returning captured stdout.
     /// Panics (failing the calling test) if the CLI exits non-zero.
+    #[cfg(unix)]
     fn run_zstd_capture_stdout(args: &[&str]) -> Vec<u8> {
         let output = std::process::Command::new("zstd")
             .args(args)
@@ -2886,9 +2947,45 @@ mod tests {
         output.stdout
     }
 
+    /// Runs `zstd` with `data` piped in on STDIN, returning captured stdout.
+    ///
+    /// This is a genuinely different frame shape from compressing a named
+    /// file, not a stylistic variation: with no file to `stat`, `zstd`
+    /// cannot know the content size up front, so it omits the
+    /// `Frame_Content_Size` field and emits a `Window_Descriptor` instead
+    /// (`Single_Segment_Flag = 0`). Every library that streams — including
+    /// the one that writes Anki's `.colpkg` payloads — produces frames of
+    /// this shape, and a decoder can parse the file-shaped header perfectly
+    /// while mis-parsing this one.
+    #[cfg(unix)]
+    fn run_zstd_stdin(args: &[&str], data: &[u8]) -> Vec<u8> {
+        use std::io::Write;
+        let mut child = std::process::Command::new("zstd")
+            .args(args)
+            .stdin(std::process::Stdio::piped())
+            .stdout(std::process::Stdio::piped())
+            .stderr(std::process::Stdio::piped())
+            .spawn()
+            .expect("failed to spawn zstd CLI");
+        child
+            .stdin
+            .as_mut()
+            .expect("zstd stdin")
+            .write_all(data)
+            .expect("failed to write to zstd stdin");
+        let output = child.wait_with_output().expect("zstd did not exit");
+        assert!(
+            output.status.success(),
+            "zstd CLI failed (args={args:?}): {}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        output.stdout
+    }
+
     /// Writes `data` to a fresh temp file and returns its path. The caller
     /// is responsible for deleting it (tests use a `finally`-style cleanup
     /// via a guard so the file is removed even if an assertion panics).
+    #[cfg(unix)]
     fn write_temp_file(prefix: &str, data: &[u8]) -> std::path::PathBuf {
         let path = std::env::temp_dir().join(format!(
             "zstd-rust-{prefix}-{}-{}",
@@ -2901,7 +2998,9 @@ mod tests {
 
     /// Deletes a temp file on drop, even if the test panics partway through
     /// — mirrors the Java interop tests' `finally { Files.deleteIfExists }`.
+    #[cfg(unix)]
     struct TempFileGuard(std::path::PathBuf);
+    #[cfg(unix)]
     impl Drop for TempFileGuard {
         fn drop(&mut self) {
             let _ = std::fs::remove_file(&self.0);
@@ -2909,11 +3008,9 @@ mod tests {
     }
 
     #[test]
+    #[cfg(unix)]
     fn tc9_cli_interop() {
-        if !is_zstd_cli_available() {
-            eprintln!("zstd CLI not found on PATH — skipping TC-9 interop test");
-            return;
-        }
+        require_zstd_cli();
 
         let text = "the quick brown fox jumps over the lazy dog ".repeat(25);
         let original = text.as_bytes();
@@ -2965,6 +3062,7 @@ mod tests {
     // writeup and the reference-C-source cross-check
     // (`ZSTD_decodeSequence` in `zstd_decompress_block.c`).
     #[test]
+    #[cfg(unix)]
     fn tc11_repeat_offset_cli_interop_constant_byte() {
         // The exact Lesson 98 repro: 4713 bytes of a single repeated byte.
         // Real `zstd` picks a Compressed block (not RLE) with one sequence:
@@ -2972,10 +3070,7 @@ mod tests {
         // Repeated_Offset1", whose default value (1) happens to already be
         // the right distance for constant data, an unmistakable
         // RLE-via-repeat-offset pattern.
-        if !is_zstd_cli_available() {
-            eprintln!("zstd CLI not found on PATH — skipping interop test");
-            return;
-        }
+        require_zstd_cli();
 
         let original = vec![b'Z'; 4713];
         let theirs_input = write_temp_file("tc11-repoff-const-input", &original);
@@ -2996,16 +3091,14 @@ mod tests {
     }
 
     #[test]
+    #[cfg(unix)]
     fn tc11_repeat_offset_cli_interop_periodic() {
         // A periodic pattern at a FIXED distance is the other classic
         // repeat-offset trigger: after the first match establishes the
         // distance, every subsequent match at that same distance is cheaper
         // to encode as "reuse R1" than as a fresh explicit offset. Real
         // `zstd`'s encoder is very likely to do exactly that here.
-        if !is_zstd_cli_available() {
-            eprintln!("zstd CLI not found on PATH — skipping interop test");
-            return;
-        }
+        require_zstd_cli();
 
         let pattern = b"ABCDEFGHIJ0123456789";
         let mut original = Vec::new();
@@ -3027,6 +3120,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(unix)]
     fn rt_cli_interop_high_sequence_count() {
         // Real `zstd` CLI interop on an input large enough to push our
         // compressor's single-block sequence count past 128 — the exact
@@ -3038,10 +3132,7 @@ mod tests {
         // but silently produces a non-conformant frame, so only a real
         // cross-implementation check like this one can catch it. Not one of
         // the spec's numbered TCs; extra regression coverage for the fix.
-        if !is_zstd_cli_available() {
-            eprintln!("zstd CLI not found on PATH — skipping interop test");
-            return;
-        }
+        require_zstd_cli();
 
         // A repeating 6-byte cycle across 9 KB gives LZSS plenty of short,
         // distinct matches — comfortably more than 128 sequences in one
@@ -3301,5 +3392,637 @@ mod tests {
             assert_eq!(actual.ml, expected.ml, "seq {i} ML");
             assert_eq!(actual.off, expected.off, "seq {i} OFF");
         }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    //  Corpus generators shared by the CLI-interop and golden-vector suites
+    // ═══════════════════════════════════════════════════════════════════════
+    //
+    // These are deterministic so that a golden vector needs only the
+    // COMPRESSED bytes checked in: the plaintext is regenerated here and
+    // compared against what the decoder produced. Checking in a 240 KB
+    // plaintext alongside its 6 KB compressed form would be pure weight, and
+    // would let the two drift apart.
+    //
+    // Each generator targets a different part of the format:
+    //
+    // | Generator        | What it forces real `zstd` to emit                |
+    // |------------------|---------------------------------------------------|
+    // | `corpus_prose`   | Huffman literals over a full-ish byte alphabet,    |
+    // |                  | FSE-compressed weights, FSE sequence tables        |
+    // | `corpus_skewed`  | few distinct bytes → DIRECT (4-bit) weights        |
+    // | `corpus_random`  | incompressible → Raw literals / Raw blocks         |
+    //
+    // and passing >128 KB of any of them additionally forces multi-block
+    // frames, which is where Treeless literals and Repeat_Mode tables appear.
+
+    /// Word-salad text: a 32-bit LCG picks words from a fixed list.
+    ///
+    /// English-like enough that `zstd` finds both matches and a skewed
+    /// literal distribution — the combination that makes Huffman coding
+    /// worthwhile, which is exactly the path this crate could not decode.
+    fn corpus_prose(n: usize) -> Vec<u8> {
+        const WORDS: [&str; 16] = [
+            "the", "quick", "brown", "fox", "jumps", "over", "lazy", "dog",
+            "while", "zstd", "huffman", "fse", "entropy", "coder", "builds",
+            "tables",
+        ];
+        let mut x: u64 = 12345;
+        let mut out = Vec::with_capacity(n + 16);
+        while out.len() < n {
+            x = (1103515245u64.wrapping_mul(x).wrapping_add(12345)) & 0x7FFF_FFFF;
+            out.extend_from_slice(WORDS[(x as usize) % WORDS.len()].as_bytes());
+            out.push(b' ');
+            if x.is_multiple_of(11) {
+                out.push(b'\n');
+            }
+        }
+        out.truncate(n);
+        out
+    }
+
+    /// `n` bytes drawn from the alphabet `0..k` with a geometric-ish skew
+    /// (symbol 0 about half the time, symbol 1 about a quarter, ...).
+    ///
+    /// A small, sharply skewed alphabet is what pushes `zstd` into the
+    /// DIRECT Huffman weight representation: with a handful of symbols the
+    /// FSE table description for the weights would cost more than the
+    /// weights themselves.
+    fn corpus_skewed(n: usize, k: u8) -> Vec<u8> {
+        let mut x: u64 = 987654321;
+        let mut out = Vec::with_capacity(n);
+        for _ in 0..n {
+            x = (1103515245u64.wrapping_mul(x).wrapping_add(12345)) & 0x7FFF_FFFF;
+            let mut v = ((x >> 7) % 100) as i32;
+            let mut w = 50i32;
+            let mut i = 0u8;
+            while i + 1 < k && v >= w {
+                v -= w;
+                w = (w / 2).max(1);
+                i += 1;
+            }
+            out.push(i);
+        }
+        out
+    }
+
+    /// Incompressible bytes from a xorshift32 generator.
+    fn corpus_random(n: usize) -> Vec<u8> {
+        let mut x: u32 = 2463534242;
+        let mut out = Vec::with_capacity(n);
+        for _ in 0..n {
+            x ^= x << 13;
+            x ^= x >> 17;
+            x ^= x << 5;
+            out.push((x >> 8) as u8);
+        }
+        out
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    //  Live CLI interop over a corpus chosen to force the new code paths
+    // ═══════════════════════════════════════════════════════════════════════
+
+    /// The corpus, as `(name, plaintext)` pairs.
+    ///
+    /// Sizes straddle the 128 KB block boundary on purpose: a single-block
+    /// frame can never exercise Treeless literals or Repeat_Mode tables,
+    /// because both mean "same as the previous block".
+    fn interop_corpus() -> Vec<(&'static str, Vec<u8>)> {
+        vec![
+            ("prose-4k", corpus_prose(4_000)),
+            ("prose-20k", corpus_prose(20_000)),
+            ("prose-240k", corpus_prose(240_000)),
+            ("skewed-3sym-6k", corpus_skewed(6_000, 3)),
+            ("skewed-6sym-8k", corpus_skewed(8_000, 6)),
+            ("skewed-5sym-300k", corpus_skewed(300_000, 5)),
+            ("random-2k", corpus_random(2_000)),
+            ("all-bytes", (0u8..=255).cycle().take(9_000).collect()),
+        ]
+    }
+
+    /// Compress every corpus entry with the real `zstd` CLI at several
+    /// levels and require our decoder to reproduce the plaintext EXACTLY.
+    ///
+    /// The levels are not decoration. They pick different internal
+    /// strategies, and those strategies emit structurally different frames:
+    /// `-1` favours cheap literal handling and predefined tables, `-3` is
+    /// the default balance, and `-19` searches hard enough to produce long
+    /// matches, RLE literal blocks and Repeat_Mode tables. A decoder can be
+    /// perfectly correct at one level and broken at another.
+    ///
+    /// This is the test that would have caught the entire gap this suite was
+    /// written for: before Huffman/FSE-description support, every single one
+    /// of these cases failed with "unsupported literals type 2".
+    #[test]
+    #[cfg(unix)]
+    fn cli_interop_corpus_forces_huffman_and_fse_tables() {
+        require_zstd_cli();
+
+        for (name, original) in interop_corpus() {
+            let input = write_temp_file(&format!("corpus-{name}"), &original);
+            let _guard = TempFileGuard(input.clone());
+
+            for level in ["-1", "-3", "-19"] {
+                let compressed =
+                    run_zstd_capture_stdout(&[level, "-q", "-c", input.to_str().unwrap()]);
+                let decoded = decompress(&compressed).unwrap_or_else(|e| {
+                    panic!("decompress() failed on real zstd output ({name} at {level}): {e}")
+                });
+                assert_eq!(
+                    decoded.len(),
+                    original.len(),
+                    "length mismatch decoding real zstd output ({name} at {level})"
+                );
+                assert!(
+                    decoded == original,
+                    "byte mismatch decoding real zstd output ({name} at {level})"
+                );
+            }
+        }
+    }
+
+    /// Both directions, on inputs large enough to be multi-block: our output
+    /// must still satisfy the real CLI, and its output must still satisfy us.
+    ///
+    /// Guards against a one-sided fix — it would be easy to make the decoder
+    /// accept everything while quietly breaking what the encoder emits.
+    #[test]
+    #[cfg(unix)]
+    fn cli_interop_both_directions_multiblock() {
+        require_zstd_cli();
+
+        let original = corpus_prose(300_000);
+        let ours = compress(&original);
+        let path = write_temp_file("bidir-ours", &ours);
+        let _guard = TempFileGuard(path.clone());
+        let by_cli = run_zstd_capture_stdout(&["-d", "-q", "-c", path.to_str().unwrap()]);
+        assert!(by_cli == original, "real `zstd -d` mis-decoded our multi-block frame");
+    }
+
+    /// Frames with NO `Frame_Content_Size`, produced by streaming through
+    /// `zstd`'s stdin.
+    ///
+    /// The decoder must take its output size purely from the blocks, and
+    /// must skip the `Window_Descriptor` byte that only appears when
+    /// `Single_Segment_Flag` is 0. Getting that byte count wrong shifts
+    /// every subsequent field by one and produces a "reserved block type"
+    /// error — or, worse, a plausible-looking wrong answer.
+    #[test]
+    #[cfg(unix)]
+    fn cli_interop_streaming_frames_without_content_size() {
+        require_zstd_cli();
+
+        for (name, original) in interop_corpus() {
+            for level in ["-1", "-3", "-19"] {
+                let compressed = run_zstd_stdin(&[level, "-q", "-c"], &original);
+                // Sanity-check that this really is the header shape we mean
+                // to be testing, so the test cannot quietly stop covering it
+                // if a future `zstd` starts buffering small inputs.
+                let single_segment = (compressed[4] >> 5) & 1;
+                assert_eq!(
+                    single_segment, 0,
+                    "expected a streaming (multi-segment) frame for {name} at {level}"
+                );
+                let decoded = decompress(&compressed).unwrap_or_else(|e| {
+                    panic!("decompress() failed on a streaming frame ({name} at {level}): {e}")
+                });
+                assert!(
+                    decoded == original,
+                    "byte mismatch on a streaming frame ({name} at {level})"
+                );
+            }
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    //  Golden vectors — real CLI output, committed as bytes
+    // ═══════════════════════════════════════════════════════════════════════
+    //
+    // `include_bytes!` embeds these at COMPILE time, so the suite runs
+    // identically on a machine with no `zstd` binary, no network and no
+    // writable temp directory — including the Windows CI leg, where the live
+    // interop tests above are not compiled at all.
+    //
+    // Every one of these files was produced by `zstd` CLI v1.5.7 from the
+    // deterministic generators above; `regenerate_golden_vectors` below
+    // recreates them byte-for-byte on demand, and documents the exact
+    // command line for each.
+    //
+    // Their job is to pin the decoder against frames THIS crate cannot
+    // produce. The encoder here only ever emits Raw literals and predefined
+    // FSE tables, so no amount of self-round-tripping can exercise Huffman
+    // literals, FSE table descriptions, Treeless blocks or Repeat_Mode — the
+    // exact blind spot that let three earlier wire-format bugs survive
+    // (lessons.md Lessons 95/96/98).
+
+    /// `(vector bytes, expected plaintext, what the frame exercises)`.
+    #[allow(clippy::type_complexity)]
+    fn golden_vectors() -> Vec<(&'static [u8], Vec<u8>, &'static str)> {
+        vec![
+            (
+                include_bytes!("../tests/vectors/prose-4k-level1.zst"),
+                corpus_prose(4_000),
+                "Compressed_Literals_Block, 1 stream, FSE-coded Huffman weights; \
+                 all three sequence tables FSE_Compressed",
+            ),
+            (
+                include_bytes!("../tests/vectors/prose-4k-level19.zst"),
+                corpus_prose(4_000),
+                "Compressed_Literals_Block, 1 stream, FSE-coded Huffman weights; \
+                 match-length table falls back to Predefined_Mode",
+            ),
+            (
+                include_bytes!("../tests/vectors/skewed-6sym-8k-level1.zst"),
+                corpus_skewed(8_000, 6),
+                "Compressed_Literals_Block, 4 streams (jump table), DIRECT 4-bit \
+                 Huffman weights",
+            ),
+            (
+                include_bytes!("../tests/vectors/skewed-3sym-6k-level19.zst"),
+                corpus_skewed(6_000, 3),
+                "Compressed_Literals_Block, DIRECT weights, size format 2 (14-bit \
+                 sizes); all three sequence tables Predefined_Mode",
+            ),
+            (
+                include_bytes!("../tests/vectors/prose-240k-level15.zst"),
+                corpus_prose(240_000),
+                "multi-block: RLE_Literals_Block, Treeless_Literals_Block reusing an \
+                 earlier block's Huffman tree, and Repeat_Mode sequence tables",
+            ),
+            (
+                include_bytes!("../tests/vectors/random-2k-level1.zst"),
+                corpus_random(2_000),
+                "incompressible input: Raw block, no literals section at all",
+            ),
+            (
+                include_bytes!("../tests/vectors/prose-20k-level3-streamed.zst"),
+                corpus_prose(20_000),
+                "streamed frame: no Frame_Content_Size, Window_Descriptor present \
+                 (the shape every streaming library emits, including Anki's)",
+            ),
+        ]
+    }
+
+    #[test]
+    fn golden_vectors_decode_exactly() {
+        for (i, (compressed, expected, what)) in golden_vectors().into_iter().enumerate() {
+            let decoded = decompress(compressed)
+                .unwrap_or_else(|e| panic!("golden vector {i} ({what}) failed to decode: {e}"));
+            assert_eq!(
+                decoded.len(),
+                expected.len(),
+                "golden vector {i} ({what}): length mismatch"
+            );
+            assert!(decoded == expected, "golden vector {i} ({what}): byte mismatch");
+        }
+    }
+
+    /// Rewrites `tests/vectors/*.zst` from the real CLI.
+    ///
+    /// Ignored by default — it shells out and writes into the source tree.
+    /// Run it deliberately, and only when a vector needs to change:
+    ///
+    /// ```text
+    /// cargo test -p zstd -- --ignored regenerate_golden_vectors
+    /// ```
+    ///
+    /// Keeping the recipe as executable code rather than prose is the point:
+    /// a checked-in binary fixture nobody can reproduce is a fixture nobody
+    /// can audit.
+    #[test]
+    #[ignore = "writes into the source tree; run explicitly when a vector changes"]
+    #[cfg(unix)]
+    fn regenerate_golden_vectors() {
+        require_zstd_cli();
+
+        let specs: Vec<(&str, Vec<u8>, &str)> = vec![
+            ("prose-4k-level1", corpus_prose(4_000), "-1"),
+            ("prose-4k-level19", corpus_prose(4_000), "-19"),
+            ("skewed-6sym-8k-level1", corpus_skewed(8_000, 6), "-1"),
+            ("skewed-3sym-6k-level19", corpus_skewed(6_000, 3), "-19"),
+            ("prose-240k-level15", corpus_prose(240_000), "-15"),
+            ("random-2k-level1", corpus_random(2_000), "-1"),
+        ];
+
+        let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/vectors");
+        std::fs::create_dir_all(&dir).expect("create tests/vectors");
+
+        for (name, data, level) in specs {
+            let input = write_temp_file(&format!("regen-{name}"), &data);
+            let _guard = TempFileGuard(input.clone());
+            let compressed =
+                run_zstd_capture_stdout(&[level, "-q", "-c", input.to_str().unwrap()]);
+            let out = dir.join(format!("{name}.zst"));
+            std::fs::write(&out, &compressed).expect("write vector");
+            eprintln!("wrote {} ({} bytes, `zstd {level} -c FILE`)", out.display(), compressed.len());
+        }
+
+        // The streamed vector comes from `zstd` reading STDIN, which is what
+        // makes it omit Frame_Content_Size — it cannot be produced by the
+        // file-based command line above.
+        let streamed = run_zstd_stdin(&["-3", "-q", "-c"], &corpus_prose(20_000));
+        let out = dir.join("prose-20k-level3-streamed.zst");
+        std::fs::write(&out, &streamed).expect("write vector");
+        eprintln!("wrote {} ({} bytes, `zstd -3 -c < FILE`)", out.display(), streamed.len());
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    //  Unit tests for the new table-description decoders
+    // ═══════════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn fwd_bit_reader_reads_little_endian_from_the_bottom() {
+        // 0xA7 0x03 as a little-endian integer is 0b11_1010_0111; reads peel
+        // bits off the BOTTOM, which is the opposite end from RevBitReader.
+        let data = [0xA7u8, 0x03];
+        let mut br = FwdBitReader::new(&data);
+        assert_eq!(br.read(4), 0b0111);
+        assert_eq!(br.read(4), 0b1010);
+        assert_eq!(br.read(2), 0b11);
+        // 6 more bits were consumed than the 10 that carry data; the header
+        // still owns both whole bytes.
+        assert_eq!(br.finish().unwrap(), 2);
+    }
+
+    #[test]
+    fn fwd_bit_reader_rejects_reading_past_the_end() {
+        let data = [0xFFu8];
+        let mut br = FwdBitReader::new(&data);
+        br.skip(9); // one bit past the single byte
+        assert!(br.finish().is_err(), "over-read must be reported, not zero-filled silently");
+    }
+
+    #[test]
+    fn fse_table_description_roundtrips_the_predefined_offset_table() {
+        // Hand-encode the predefined OFFSET distribution as an RFC 8878
+        // §4.1.1 table description, then read it back. This exercises the
+        // variable-width count field AND the "-1" (probability below one)
+        // encoding, which the offset table is full of.
+        //
+        // The encoder is the minimum needed to produce a legal
+        // description; the point of the test is that the DECODER recovers
+        // the exact distribution, both field widths included.
+        let acc_log = OF_ACC_LOG;
+        let mut bits: Vec<(u32, u32)> = vec![((acc_log - 5) as u32, 4)];
+        let table_size = 1i32 << acc_log;
+        let mut remaining = table_size + 1;
+        let mut threshold = table_size;
+        let mut nbits = acc_log as u32 + 1;
+        for &c in OF_NORM.iter() {
+            // Mirrors `FSE_writeNCount_generic`: transmit count+1, bias by
+            // `max` once the value reaches `threshold`, and spend one fewer
+            // bit whenever the result lands below `max` (which is exactly
+            // when the decoder's short-form peek is unambiguous).
+            let max = (2 * threshold - 1) - remaining;
+            let mut value = (c as i32) + 1;
+            if value >= threshold {
+                value += max;
+            }
+            let width = if value < max { nbits - 1 } else { nbits };
+            bits.push((value as u32, width));
+            remaining -= (c as i32).unsigned_abs() as i32;
+            if remaining < threshold {
+                if remaining <= 1 {
+                    break;
+                }
+                nbits = 32 - (remaining as u32).leading_zeros();
+                threshold = 1 << (nbits - 1);
+            }
+        }
+
+        // Pack forward, low bit first.
+        let mut bytes = Vec::new();
+        let mut acc: u64 = 0;
+        let mut n = 0u32;
+        for (v, w) in bits {
+            acc |= (v as u64) << n;
+            n += w;
+            while n >= 8 {
+                bytes.push(acc as u8);
+                acc >>= 8;
+                n -= 8;
+            }
+        }
+        if n > 0 {
+            bytes.push(acc as u8);
+        }
+
+        let (norm, log, _used) = read_fse_table_description(&bytes, 8, 31)
+            .expect("hand-built offset table description must parse");
+        assert_eq!(log, OF_ACC_LOG);
+        assert_eq!(&norm[..], &OF_NORM[..]);
+        // And it must build into a usable table.
+        let tbl = FseTable::from_norm(&norm, log).expect("valid distribution");
+        assert_eq!(tbl.de.len(), 1 << OF_ACC_LOG);
+    }
+
+    #[test]
+    fn fse_table_description_rejects_oversized_accuracy_log() {
+        // Low nibble 15 → accuracy_log 20, far past the 9 the sequence
+        // tables allow. Accepting it would allocate a 1 M-entry table from
+        // two bytes of attacker-controlled input.
+        let data = [0x0Fu8, 0x00, 0x00, 0x00];
+        let err = read_fse_table_description(&data, 9, 35).unwrap_err();
+        assert!(err.contains("accuracy_log"), "unexpected error: {err}");
+    }
+
+    #[test]
+    fn fse_table_build_rejects_distributions_that_do_not_sum_to_the_table() {
+        // One slot short.
+        assert!(FseTable::from_norm(&[2, 1], 2).is_err());
+        // One slot over.
+        assert!(FseTable::from_norm(&[3, 2], 2).is_err());
+        // Counts below -1 are not a thing.
+        assert!(FseTable::from_norm(&[-2, 6], 2).is_err());
+        // Exact fit is accepted, including the "-1" one-slot symbols.
+        assert!(FseTable::from_norm(&[2, 1, -1], 2).is_ok());
+    }
+
+    #[test]
+    fn huffman_direct_weights_build_a_complete_code() {
+        // Header 129 = 127 + 2, i.e. two transmitted weights, packed high
+        // nibble first.
+        // Weights [1, 1] sum to 2^1, so max_bits is 2 and the deduced third
+        // weight is 2 — giving symbol 2 a 1-bit code and symbols 0 and 1
+        // 2-bit codes. Kraft: 1/2 + 1/4 + 1/4 = 1.
+        let desc = [129u8, 0x11];
+        let (tbl, used) = read_huffman_table(&desc).expect("valid direct description");
+        assert_eq!(used, 2);
+        assert_eq!(tbl.max_bits, 2);
+        assert_eq!(tbl.entries.len(), 4);
+        // Longest codes come first in ZStd's canonical order: symbols 0 and 1
+        // (weight 1, 2 bits) occupy cells 0 and 1; symbol 2 (weight 2, 1 bit)
+        // occupies cells 2 and 3.
+        assert_eq!((tbl.entries[0].sym, tbl.entries[0].nb), (0, 2));
+        assert_eq!((tbl.entries[1].sym, tbl.entries[1].nb), (1, 2));
+        assert_eq!((tbl.entries[2].sym, tbl.entries[2].nb), (2, 1));
+        assert_eq!((tbl.entries[3].sym, tbl.entries[3].nb), (2, 1));
+    }
+
+    #[test]
+    fn huffman_description_rejects_an_incomplete_code_space() {
+        // Weights [1, 1, 1] sum to 3; the shortfall to the next power of two
+        // is 1, which IS a power of two, so this one is legal (last weight 1,
+        // four symbols of 2 bits each).
+        assert!(read_huffman_table(&[130u8, 0x11, 0x10]).is_ok());
+        // Weights [3, 1, 1] sum to 4+1+1 = 6; shortfall to 8 is 2 — legal.
+        assert!(read_huffman_table(&[130u8, 0x31, 0x10]).is_ok());
+        // Weights [3, 2, 1] sum to 4+2+1 = 7; shortfall to 8 is 1 — legal.
+        assert!(read_huffman_table(&[130u8, 0x32, 0x10]).is_ok());
+        // Weights [3, 3, 1] sum to 4+4+1 = 9; next power of two is 16, so the
+        // shortfall is 7, which is NOT a power of two: the code cannot be
+        // completed by a single symbol, so the description is corrupt.
+        assert!(read_huffman_table(&[130u8, 0x33, 0x10]).is_err());
+        // All-zero weights assign no code space at all.
+        assert!(read_huffman_table(&[129u8, 0x00]).is_err());
+        // A weight above the 12-bit ceiling.
+        assert!(read_huffman_table(&[129u8, 0xF1]).is_err());
+    }
+
+    #[test]
+    fn huffman_description_rejects_truncation() {
+        assert!(read_huffman_table(&[]).is_err());
+        // Direct form claiming 8 weights but carrying one byte.
+        assert!(read_huffman_table(&[135u8, 0x11]).is_err());
+        // FSE form claiming a 60-byte payload it does not have.
+        assert!(read_huffman_table(&[60u8, 0x00]).is_err());
+        // FSE form with a zero-size payload.
+        assert!(read_huffman_table(&[0u8]).is_err());
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    //  Adversarial input — every malformed frame must Err, never panic
+    // ═══════════════════════════════════════════════════════════════════════
+    //
+    // This decoder is destined to read untrusted `.apkg`/`.colpkg` archives,
+    // so a panic is a denial of service rather than a debugging aid — and on
+    // `wasm32-unknown-unknown`, built with `panic = "abort"`, it is an
+    // unrecoverable trap that no caller can catch. Every one of these cases
+    // must come back as an `Err`.
+    //
+    // Note that the assertion is simply "the call returned". A panic inside
+    // `decompress` fails the test by unwinding out of it; there is no need
+    // to catch anything.
+
+    #[test]
+    fn malformed_truncations_never_panic() {
+        for (i, (vector, _, _)) in golden_vectors().into_iter().enumerate() {
+            // Truncating at every length exercises every parser boundary:
+            // mid-frame-header, mid-block-header, mid-Huffman-description,
+            // mid-jump-table, mid-bitstream.
+            for len in 0..vector.len().min(400) {
+                let _ = decompress(&vector[..len]);
+            }
+            // And a few truncations deep inside the payload.
+            for cut in [vector.len() / 4, vector.len() / 2, vector.len() - 1] {
+                let _ = decompress(&vector[..cut]);
+            }
+            assert!(decompress(vector).is_ok(), "vector {i} must still decode intact");
+        }
+    }
+
+    #[test]
+    fn malformed_byte_mutations_never_panic() {
+        // Systematically corrupt the header/table region of the small
+        // vectors — the bytes that steer table sizes, stream counts and
+        // symbol counts, where a bad value does the most damage.
+        let vectors: Vec<&[u8]> = vec![
+            include_bytes!("../tests/vectors/prose-4k-level1.zst"),
+            include_bytes!("../tests/vectors/prose-4k-level19.zst"),
+            include_bytes!("../tests/vectors/skewed-3sym-6k-level19.zst"),
+        ];
+        for vector in vectors {
+            for pos in 0..vector.len().min(96) {
+                for value in [0x00u8, 0x01, 0x0F, 0x55, 0x80, 0xAA, 0xFE, 0xFF] {
+                    let mut mutated = vector.to_vec();
+                    mutated[pos] = value;
+                    let _ = decompress(&mutated);
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn malformed_hand_built_frames_are_rejected() {
+        /// Wraps a compressed-block payload in a minimal single-segment
+        /// frame so it reaches `decompress_block`.
+        fn frame(block: &[u8]) -> Vec<u8> {
+            let mut out = MAGIC.to_le_bytes().to_vec();
+            out.push(0x20); // single segment, 1-byte FCS, no checksum
+            out.push(0x00); // FCS = 0
+            let hdr = ((block.len() as u32) << 3) | (0b10 << 1) | 1;
+            out.extend_from_slice(&hdr.to_le_bytes()[..3]);
+            out.extend_from_slice(block);
+            out
+        }
+
+        // Literals header says "Compressed, 1 stream, regenerated 1023,
+        // compressed 1023" but the block carries nothing.
+        let mut block = vec![0b0000_0010u8, 0xFF, 0xFF];
+        assert!(decompress(&frame(&block)).is_err());
+
+        // Treeless literals with no preceding tree in the frame.
+        // Header bits: type 3, size format 0, Regenerated_Size 6,
+        // Compressed_Size 3 -> 0x00C063 little-endian.
+        block = vec![0x63u8, 0xC0, 0x00, 0xAA, 0xBB, 0xCC];
+        assert!(decompress(&frame(&block)).is_err());
+
+        // Raw literals (0 bytes), 1 sequence, reserved bits set in the
+        // Symbol_Compression_Modes byte.
+        block = vec![0x00, 0x01, 0b0000_0011, 0x01];
+        assert!(decompress(&frame(&block)).is_err());
+
+        // Raw literals, 1 sequence, all three tables in Repeat_Mode with no
+        // previous block to repeat.
+        block = vec![0x00, 0x01, 0b1111_1100, 0x01];
+        let err = decompress(&frame(&block)).unwrap_err();
+        assert!(err.contains("Repeat_Mode"), "unexpected error: {err}");
+
+        // Offset table in RLE mode with symbol 200 — far past the 31 that
+        // offset codes allow, and a value that would shift a u32 into
+        // oblivion if it reached the decode loop.
+        block = vec![0x00, 0x01, 0b0001_0000, 200, 0x01];
+        assert!(decompress(&frame(&block)).is_err());
+
+        // An empty sequences bitstream (no sentinel byte to anchor the
+        // backward reader).
+        block = vec![0x00, 0x01, 0x00];
+        assert!(decompress(&frame(&block)).is_err());
+
+        // A sequences bitstream whose last byte is zero: no sentinel bit, so
+        // the payload length is undefined.
+        block = vec![0x00, 0x01, 0x00, 0x00];
+        assert!(decompress(&frame(&block)).is_err());
+    }
+
+    #[test]
+    fn degenerate_fse_and_huffman_streams_terminate() {
+        // A 2-state interleaved weight stream over a table whose cells all
+        // read zero bits would never advance the bit budget. The RLE table
+        // is exactly that shape, so this pins the `max_out` guard that keeps
+        // `fse_decompress_interleaved2` from looping forever.
+        let tbl = FseTable::rle(7);
+        let err = fse_decompress_interleaved2(&tbl, &[0x02], 16)
+            .expect_err("a zero-bit table must hit the output ceiling, not spin");
+        assert!(err.contains("exceeds"), "unexpected error: {err}");
+    }
+
+    #[test]
+    fn oversized_rle_literals_are_capped() {
+        // RLE literals with a 20-bit size field can claim up to 1 MB from a
+        // single payload byte. Anything past the 128 KB block ceiling is
+        // corrupt by definition, and rejecting it caps the amplification a
+        // malicious frame can achieve per byte of input.
+        let mut huff = None;
+        let header = [0b0000_1101u8, 0xFF, 0xFF, b'x']; // type 1, format 3, size 0xFFFFF
+        assert!(decode_literals_section(&header, &mut huff).is_err());
+
+        // A legal size does work, and expands the single byte.
+        let ok = [0b0000_0101u8, 0x0A, b'q']; // type 1, format 1, size 160
+        let (lits, used) = decode_literals_section(&ok, &mut huff).unwrap();
+        assert_eq!(used, 3);
+        assert_eq!(lits.len(), 160);
+        assert!(lits.iter().all(|&b| b == b'q'));
     }
 }

@@ -1,6 +1,106 @@
 # Changelog — zstd
 
-## Unreleased
+## 0.2.0 — 2026-08-31
+
+The headline of this release is that `decompress()` can now read `.zst`
+files that real encoders actually produce. Before it, the decoder handled
+exactly one shape of Compressed block — `Raw_Literals` plus all-Predefined
+FSE modes — which happens to be the only shape *this crate's own encoder*
+emits. Every self round-trip test passed while `decompress()` returned
+"unsupported literals type 2" on nearly anything the `zstd` CLI produced.
+That is the same blind spot as Lessons 96 and 98: an encoder and decoder
+that only ever talk to each other cannot discover what they both fail to
+implement.
+
+### Added
+
+- **Huffman-coded literals (RFC 8878 §4.2.1).** Both
+  `Compressed_Literals_Block` (type 2, carrying a tree description) and
+  `Treeless_Literals_Block` (type 3, reusing an earlier block's tree), in
+  both the single-stream and 4-stream layouts. The 4-stream layout splits
+  the literal run into quarters behind a 6-byte jump table so a decoder can
+  run four serial Huffman chains concurrently; only three stream sizes are
+  transmitted because the fourth is whatever is left.
+- **Huffman tree descriptions (§4.2.1.1)**, in both representations: raw
+  4-bit weights packed two per byte, and weights carried by a 2-state
+  interleaved FSE stream whose symbol count is implied by where the
+  bitstream runs out. Includes the *deduced final weight* — the last
+  symbol's weight is never transmitted; it is recovered from the shortfall
+  between the transmitted weights' Kraft sum and the next power of two, and
+  a shortfall that is not itself a power of two is what identifies a corrupt
+  description.
+- **FSE table descriptions (§4.1.1)** — `read_fse_table_description`, with
+  the self-synchronising variable-width count field (each count is drawn
+  from the mass still unassigned, so field widths shrink as the description
+  proceeds, and both sides derive the width from state they already share)
+  and the 2-bit repeat field that collapses runs of absent symbols.
+- **All four `Symbol_Compression_Mode`s (§3.1.1.3.2.1)** for each of the
+  literal-length, offset and match-length tables: `Predefined`, `RLE` (one
+  symbol, zero bits, an `accuracy_log` of 0), `FSE_Compressed` (description
+  in-band) and `Repeat` (reuse the previous Compressed block's table). Each
+  table's own `accuracy_log` now drives the width of its initial state read,
+  rather than the fixed predefined constant.
+- **`RLE_Literals_Block` (§3.1.1.2)**, previously rejected alongside the
+  Huffman types.
+- **`FwdBitReader`** — the forward, little-endian bit convention used by
+  table descriptions, as distinct from the backward `RevBitReader` used by
+  every payload stream. Conflating the two is the classic way to build a
+  decoder that reads only its own output.
+- **`FrameState`** — one type now answers "what survives a block boundary":
+  the repeated-offset triple, the Huffman table, and the three sequence FSE
+  tables. Previously only the first of these did, which is why Treeless
+  literals and `Repeat_Mode` were unreachable.
+- **Golden-vector suite** (`tests/vectors/*.zst`): seven frames produced by
+  the real `zstd` CLI v1.5.7 and committed as bytes, embedded with
+  `include_bytes!` and decoded unconditionally on every platform with no
+  subprocess involved. They pin the decoder against frames this crate
+  *cannot produce*, so they keep working on machines with no `zstd` binary.
+  `regenerate_golden_vectors` (an `#[ignore]`d test) recreates them
+  byte-for-byte and documents the exact command line for each.
+- **`cli_interop_corpus_forces_huffman_and_fse_tables`**: real-CLI interop
+  over a corpus chosen so the CLI *must* reach for the new paths — pseudo
+  prose, skewed few-symbol alphabets, incompressible bytes, and inputs on
+  both sides of the 128 KB block boundary — at levels `-1`, `-3` and `-19`,
+  because different levels emit structurally different frames.
+- **`cli_interop_streaming_frames_without_content_size`**: the same corpus
+  piped through `zstd`'s STDIN, which makes it omit `Frame_Content_Size` and
+  emit a `Window_Descriptor` instead. Every streaming library produces frames
+  of that shape — including the one that writes Anki's `.colpkg` payloads —
+  and a decoder can parse the file-shaped header perfectly while mis-parsing
+  this one by exactly one byte.
+- **Adversarial tests**: exhaustive truncation of every golden vector,
+  systematic byte mutation of their header/table regions, and hand-built
+  frames for specific malformed shapes (oversized `accuracy_log`, weights
+  that leave a non-power-of-two code space, `Repeat_Mode` with nothing to
+  repeat, an offset RLE symbol past 31, a bitstream with no sentinel byte,
+  RLE literals claiming 1 MB). All must return `Err`; a panic here would be
+  a denial of service on untrusted `.apkg`/`.colpkg` input, and an
+  unrecoverable trap on `wasm32-unknown-unknown` (`panic = "abort"`).
+
+### Changed
+
+- **A missing `zstd` CLI is now a test FAILURE, not a silent skip.** The
+  interop tests used to open with `if !is_zstd_cli_available() { return; }`,
+  which made every cross-implementation check in the file a no-op on any
+  machine without the binary — a gate-shaped nothing, and precisely the
+  condition under which Lessons 95/96/98 shipped. `require_zstd_cli()` now
+  panics with install instructions. The live-CLI tests are scoped to
+  `#[cfg(unix)]`; on Windows the golden vectors carry the conformance gate
+  instead, so no platform is left without a cross-implementation check.
+- `RevBitReader` now tracks a signed bit budget (`remaining`), mirroring the
+  `i64 offset` of RFC 8878's reference educational decoder. Over-reads are
+  detectable instead of silently decoding zero-fill, which the 2-state
+  Huffman-weight stream *requires* (it has no symbol count on the wire), and
+  which lets the sequences and Huffman literal streams enforce the reference
+  decoder's `BIT_endOfDStream` rule: a conforming stream ends EXACTLY.
+- FSE distributions are validated before a decode table is built from them
+  (`FseTable::from_norm`), and FSE state lookups are bounds-checked
+  (`fse_cell`). `build_decode_table` silently produces a table with
+  duplicated and unwritten cells when the counts do not sum to
+  `2^accuracy_log`; reading such a table can compute an out-of-range state.
+- Literals `Regenerated_Size` is capped at the 128 KB block maximum, which
+  bounds both the allocation and the expansion an `RLE_Literals_Block` can
+  claim from a single payload byte.
 
 ### Fixed
 
@@ -109,8 +209,8 @@
   compress with `zstd` and decompress with this crate — round-trip
   byte-exact. This is the test that actually proves RFC 8878 conformance;
   its absence (not the algorithm bugs alone) was the root cause that let all
-  of the above bugs ship undetected. Gracefully no-ops when `zstd` isn't on
-  `PATH`.
+  of the above bugs ship undetected. (As of 0.2.0 a missing `zstd` binary is
+  a hard failure rather than a silent no-op — see **Changed** above.)
 - `rt_cli_interop_high_sequence_count`: additional real-CLI regression test
   covering the Number_of_Sequences 2-byte-encoding boundary (128+
   sequences in one block).
