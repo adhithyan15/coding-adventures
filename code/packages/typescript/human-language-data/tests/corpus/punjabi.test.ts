@@ -15,14 +15,14 @@ it("pins Punjabi continuity", () => expectLanguageContinuity("punjabi"));
 it("pins Punjabi modality", () => expectLanguageModality("punjabi"));
 it("pins Punjabi lesson-content budgets", () =>
   expectLanguageLessonBudgets("punjabi", {
-    lessons: 144,
+    lessons: 158,
     idioms: 4,
     senses: 3,
     cultureClaims: 7,
     unitPrefix: "PA",
   }));
 
-it("keeps Punjabi's 154-row session map aligned with canonical order", () => {
+it("keeps Punjabi's 168-row session map aligned with canonical order", () => {
   const ordered = loadTrackLessons("punjabi").sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
   );
@@ -37,8 +37,8 @@ it("keeps Punjabi's 154-row session map aligned with canonical order", () => {
       lessonId: match[3]!.trim(),
     }),
   );
-  expect(rows).toHaveLength(154);
-  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 154 }, (_, index) => index + 1));
+  expect(rows).toHaveLength(168);
+  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 168 }, (_, index) => index + 1));
   expect(rows.map((row) => row.lessonId)).toEqual(
     ordered.map((lesson) => lesson.realization.lessonId),
   );
@@ -94,6 +94,11 @@ it("pins Punjabi's complete pre-A1 writing runway", () => {
     "controlled-composition",
     "controlled-composition",
     "guided-copy",
+    "guided-copy",
+    "delayed-copy",
+    "dictation-transcription",
+    "controlled-composition",
+    "controlled-composition",
   ]);
 });
 
@@ -460,7 +465,7 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   ]);
   const report = measureContinuity(ordered);
   expect(report.reinforcement.filter((defect) => chapter3Atoms.has(defect.atom))).toEqual([]);
-  expect(report.summary.missedByWindow).toEqual({ R1: 43, R2: 87, R3: 132, R4: 47 });
+  expect(report.summary.missedByWindow).toEqual({ R1: 44, R2: 91, R3: 135, R4: 59 });
 });
 
 it("services Punjabi's three-field R4 debt without moving the boundary forward", () => {
@@ -569,7 +574,7 @@ it("services Punjabi's three-field R4 debt without moving the boundary forward",
       (defect) => serviced.has(defect.atom) && defect.missed.includes("R4"),
     ),
   ).toEqual([]);
-  expect(report.summary.missedByWindow.R4).toBe(45);
+  expect(report.summary.missedByWindow.R4).toBe(63);
 });
 
 it("services the exact Punjabi R1-R3 debt exposed by the R4 bridge", () => {
@@ -629,7 +634,7 @@ it("services the exact Punjabi R1-R3 debt exposed by the R4 bridge", () => {
       .map((window) => `${window}|${defect.atom}`),
   );
   expect(stillMissing).toEqual([]);
-  expect(report.summary.missedByWindow).toEqual({ R1: 43, R2: 87, R3: 130, R4: 53 });
+  expect(report.summary.missedByWindow).toEqual({ R1: 44, R2: 91, R3: 137, R4: 67 });
 
   const bodyBoundaryAtoms = new Set([
     "PA-LEX-KANN",
@@ -696,7 +701,7 @@ it("services the exact Punjabi body-word R4 debt exposed by the R1-R3 bridge", (
       (defect) => servicedAtoms.has(defect.atom) && defect.missed.includes("R4"),
     ),
   ).toEqual([]);
-  expect(report.summary.missedByWindow).toEqual({ R1: 43, R2: 87, R3: 132, R4: 48 });
+  expect(report.summary.missedByWindow).toEqual({ R1: 44, R2: 91, R3: 137, R4: 60 });
 
   const before = measureContinuity(
     ordered.filter((lesson) => !bridgeIds.includes(lesson.realization.lessonId)),
@@ -712,11 +717,8 @@ it("services the exact Punjabi body-word R4 debt exposed by the R1-R3 bridge", (
     ),
   );
   expect([...afterPairs].filter((pair) => !beforePairs.has(pair)).sort()).toEqual([
-    "R3|PA-FORM-THREE-SUPPORTED-01",
-    "R3|PA-FORM-THREE-TWO-LINE-SUPPORTED-01",
-    "R4|PA-ETYMON-SIR-HORN",
-    "R4|PA-LEX-SIR",
-    "R4|PA-SCRIPT-NA-01",
+    "R4|PA-FORM-NAME-DELAYED-ENTRY-01",
+    "R4|PA-FORM-NAME-NO-MODEL-01",
   ]);
 });
 
@@ -768,7 +770,7 @@ it("services the exact Punjabi form and head-word debt exposed by the body R4 br
       .map((window) => `${window}|${defect.atom}`),
   );
   expect(stillMissing).toEqual([]);
-  expect(report.summary.missedByWindow).toEqual({ R1: 43, R2: 87, R3: 132, R4: 47 });
+  expect(report.summary.missedByWindow).toEqual({ R1: 44, R2: 91, R3: 135, R4: 59 });
 
   const before = measureContinuity(
     ordered.filter((lesson) => !bridgeIds.includes(lesson.realization.lessonId)),
@@ -784,9 +786,7 @@ it("services the exact Punjabi form and head-word debt exposed by the body R4 br
     ),
   );
   expect([...afterPairs].filter((pair) => !beforePairs.has(pair)).sort()).toEqual([
-    "R3|PA-FORM-THREE-SELECTION-REPAIR-01",
-    "R3|PA-FORM-THREE-SPELLING-REPAIR-01",
-    "R4|PA-SCRIPT-II-MATRA-01",
-    "R4|PA-SCRIPT-MA-01",
+    "R4|PA-SCRIPT-BHA-01",
+    "R4|PA-SCRIPT-SHA-01",
   ]);
 });

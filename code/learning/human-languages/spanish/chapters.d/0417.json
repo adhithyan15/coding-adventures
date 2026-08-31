@@ -1,0 +1,19 @@
+{
+  "chapter": 417,
+  "title": "An Adult Swimming Course",
+  "label": "ch:curso-nadar-adulto",
+  "canDo": "I can understand a simple notice for an adult swimming course.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C417-swimming-recall-2",
+    "kind": "production",
+    "summary": "Retrieve course, swim, and adult in a short class notice.",
+    "assesses": [
+      "ES-LEX-CURSO",
+      "ES-LEX-NADAR",
+      "ES-LEX-ADULTO"
+    ]
+  }
+}

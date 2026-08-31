@@ -1,0 +1,13 @@
+{
+  "id": "ES-PATH-417-REVIEWS",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "ES-C417-swimming-recall-1",
+    "ES-C417-swimming-recall-2"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-417-REVIEWS"
+  ],
+  "after": []
+}
