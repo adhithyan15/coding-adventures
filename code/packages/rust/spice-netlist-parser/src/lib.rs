@@ -2537,6 +2537,15 @@ fn parse_element(
                     "JFET PB must be finite and positive",
                 ));
             }
+            let forward_bias_depletion_coefficient = *model.params.get("FC").unwrap_or(&0.5);
+            if !forward_bias_depletion_coefficient.is_finite()
+                || forward_bias_depletion_coefficient < 0.0
+                || forward_bias_depletion_coefficient >= 1.0
+            {
+                return Err(NetlistParseError::new(
+                    "JFET FC must be finite and in [0, 1)",
+                ));
+            }
             let mut jfet = Jfet::with_model_and_capacitance(
                 name,
                 &fields[1],
@@ -2552,6 +2561,7 @@ fn parse_element(
             jfet.flicker_noise_coefficient = flicker_noise_coefficient;
             jfet.flicker_noise_exponent = flicker_noise_exponent;
             jfet.junction_potential = junction_potential;
+            jfet.forward_bias_depletion_coefficient = forward_bias_depletion_coefficient;
             jfet.doping_tail_parameter = doping_tail_parameter;
             Ok(Element::Jfet(jfet))
         }

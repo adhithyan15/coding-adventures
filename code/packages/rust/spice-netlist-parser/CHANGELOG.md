@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Lower valid JFET `FC` forward-bias depletion coefficients and reject invalid
+  inputs.
 - Lower JFET `VJ` with canonical `PB` precedence and reject invalid junction
   potentials.
 - Lower finite, non-negative JFET `KF` and `AF` flicker-noise parameters.
