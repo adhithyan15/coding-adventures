@@ -1176,7 +1176,10 @@ mod tests {
 
         let snap = take(snapshot());
         assert!(snap.contains(r#""title":"Detail""#), "the note survives");
-        assert!(snap.contains(r#""attachedTask":null"#), "orphaned to standalone");
+        assert!(
+            snap.contains(r#""attachedTask":null"#),
+            "orphaned to standalone"
+        );
     }
 
     #[test]
@@ -1323,7 +1326,9 @@ mod tests {
             take(active_project()).contains("project"),
             "a re-created id must not silently re-activate"
         );
-        assert!(call1(create_task, r#"{"id":"a","name":"Goes to default"}"#).contains(r#""ok":true"#));
+        assert!(
+            call1(create_task, r#"{"id":"a","name":"Goes to default"}"#).contains(r#""ok":true"#)
+        );
         assert!(take(checklist()).contains(r#""name":"Goes to default""#));
     }
 
@@ -1545,18 +1550,14 @@ mod tests {
             "a freshly reset project should start Board: {snap}"
         );
 
-        assert!(
-            call1(set_project_complexity, r#"{"complexity":"full"}"#).contains(r#""ok":true"#)
-        );
+        assert!(call1(set_project_complexity, r#"{"complexity":"full"}"#).contains(r#""ok":true"#));
         let snap = take(snapshot());
         assert!(
             snap.contains(r#""complexity":"full""#),
             "expected the flipped setting to show up in the snapshot: {snap}"
         );
 
-        assert!(
-            call1(set_project_complexity, r#"{"complexity":"board"}"#).contains(r#""ok":true"#)
-        );
+        assert!(call1(set_project_complexity, r#"{"complexity":"board"}"#).contains(r#""ok":true"#));
         let snap = take(snapshot());
         assert!(
             snap.contains(r#""complexity":"board""#),

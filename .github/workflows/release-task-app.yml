@@ -1,0 +1,380 @@
+name: Release TaskApp
+
+run-name: Release TaskApp ${{ inputs.tag }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Strict SemVer without the product prefix (for example, 0.1.0)"
+        required: true
+        type: string
+      tag:
+        description: "Matching product tag (for example, task-app-v0.1.0)"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+env:
+  RUST_VERSION: "1.97.0"
+
+concurrency:
+  group: release-task-app
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    name: Validate release identity
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.release.outputs.version }}
+      tag: ${{ steps.release.outputs.tag }}
+      commit: ${{ steps.release.outputs.commit }}
+    steps:
+      - name: Checkout the selected release commit
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Validate version, tag, ref, and publication availability
+        id: release
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+          RELEASE_TAG: ${{ inputs.tag }}
+          RELEASE_COMMIT: ${{ github.sha }}
+          RELEASE_REF: ${{ github.ref }}
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          if [[ "$RELEASE_REF" != "refs/heads/main" ]]; then
+            echo "::error::TaskApp releases must be dispatched from main, not $RELEASE_REF"
+            exit 1
+          fi
+          python code/scripts/taskapp_release.py validate \
+            --version "$RELEASE_VERSION" \
+            --tag "$RELEASE_TAG" \
+            --commit "$RELEASE_COMMIT"
+
+          set +e
+          git ls-remote --exit-code --tags origin "refs/tags/$RELEASE_TAG" >/dev/null 2>&1
+          tag_status=$?
+          set -e
+          case "$tag_status" in
+            0)
+              echo "::error::Tag $RELEASE_TAG already exists and will not be reused."
+              exit 1
+              ;;
+            2)
+              ;;
+            *)
+              echo "::error::Could not verify whether tag $RELEASE_TAG exists."
+              exit 1
+              ;;
+          esac
+
+          set +e
+          gh release view "$RELEASE_TAG" --repo "$REPOSITORY" \
+            >/dev/null 2>release-view-error.txt
+          release_status=$?
+          set -e
+          if [[ "$release_status" -eq 0 ]]; then
+            echo "::error::Release $RELEASE_TAG is already published."
+            exit 1
+          fi
+          if ! grep -Fq "release not found" release-view-error.txt; then
+            cat release-view-error.txt >&2
+            echo "::error::Could not verify whether release $RELEASE_TAG exists."
+            exit 1
+          fi
+
+          printf 'version=%s\n' "$RELEASE_VERSION" >> "$GITHUB_OUTPUT"
+          printf 'tag=%s\n' "$RELEASE_TAG" >> "$GITHUB_OUTPUT"
+          printf 'commit=%s\n' "$RELEASE_COMMIT" >> "$GITHUB_OUTPUT"
+
+  build-web:
+    name: Build and verify web release
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the validated release commit
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.validate.outputs.commit }}
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+          targets: wasm32-unknown-unknown
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: code/programs/mosaic/task-app/host/web/package-lock.json
+
+      - name: Install web dependencies
+        working-directory: code/programs/mosaic/task-app/host/web
+        run: npm ci
+
+      - name: Test the Rust release inputs
+        run: >-
+          cargo test --manifest-path code/packages/rust/Cargo.toml
+          -p task-mosaic-app -p task-wasm
+
+      - name: Regenerate, test, and build the production web bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash code/programs/mosaic/task-app/scripts/build-web.sh
+          npm --prefix code/programs/mosaic/task-app/host/web test
+          npm --prefix code/programs/mosaic/task-app/host/web run build
+          git diff --exit-code
+
+      - name: Archive the verified web bundle
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+          RELEASE_COMMIT: ${{ needs.validate.outputs.commit }}
+        run: |
+          set -euo pipefail
+          python code/scripts/taskapp_release.py archive-web \
+            --version "$RELEASE_VERSION" \
+            --commit "$RELEASE_COMMIT" \
+            --source code/programs/mosaic/task-app/host/web/dist \
+            --output-dir release-assets
+
+      - name: Upload the verified web payload
+        uses: actions/upload-artifact@v7
+        with:
+          name: task-app-web-release
+          path: release-assets/*.zip
+          if-no-files-found: error
+          retention-days: 7
+
+  build-native:
+    name: Build native source (${{ matrix.toolkit }} / ${{ matrix.platform }})
+    needs: validate
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - backend: qt
+            toolkit: Qt
+            platform: Linux
+            os: ubuntu-latest
+            runtime: libtask_mosaic_app.so
+          - backend: flutter
+            toolkit: Flutter
+            platform: Linux
+            os: ubuntu-latest
+            runtime: libtask_mosaic_app.so
+          - backend: compose
+            toolkit: Compose Desktop
+            platform: Linux
+            os: ubuntu-latest
+            runtime: libtask_mosaic_app.so
+          - backend: swiftui
+            toolkit: SwiftUI
+            platform: macOS
+            os: macos-latest
+            runtime: libtask_mosaic_app.dylib
+          - backend: xaml
+            toolkit: WinUI/XAML
+            platform: Windows
+            os: windows-2025
+            runtime: task_mosaic_app.dll
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout the validated release commit
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.validate.outputs.commit }}
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      - name: Build the Rust runtime and strict generated project
+        shell: bash
+        env:
+          BACKEND: ${{ matrix.backend }}
+          RUNTIME_NAME: ${{ matrix.runtime }}
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+          RELEASE_COMMIT: ${{ needs.validate.outputs.commit }}
+        run: |
+          set -euo pipefail
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app
+          runtime="code/packages/rust/target/debug/$RUNTIME_NAME"
+          test -f "$runtime"
+          output="release-work/generated"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- \
+            pkg code/programs/mosaic/task-app \
+            --backend "$BACKEND" \
+            --output "$output" \
+            --emit-project \
+            --profile native-complete \
+            --runtime-library "$runtime"
+          python code/scripts/taskapp_native_control_contract.py \
+            --backend "$BACKEND" \
+            --generated-dir "$output/$BACKEND"
+          python code/scripts/taskapp_release.py archive-native \
+            --version "$RELEASE_VERSION" \
+            --commit "$RELEASE_COMMIT" \
+            --backend "$BACKEND" \
+            --source "$output/$BACKEND" \
+            --output-dir release-assets
+
+      - name: Upload the verified native payload
+        uses: actions/upload-artifact@v7
+        with:
+          name: task-app-native-${{ matrix.backend }}-release
+          path: release-assets/*.zip
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    name: Publish one immutable TaskApp release
+    needs: [validate, build-web, build-native]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout release metadata from the validated commit
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.validate.outputs.commit }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      - name: Download every verified payload
+        uses: actions/download-artifact@v8
+        with:
+          path: release-assets
+          merge-multiple: true
+
+      - name: Build provenance, checksums, and product-scoped release notes
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+          RELEASE_TAG: ${{ needs.validate.outputs.tag }}
+          RELEASE_COMMIT: ${{ needs.validate.outputs.commit }}
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          manifest="release-assets/task-app-release-manifest-v${RELEASE_VERSION}.json"
+          python code/scripts/taskapp_release.py write-manifest \
+            --version "$RELEASE_VERSION" \
+            --tag "$RELEASE_TAG" \
+            --commit "$RELEASE_COMMIT" \
+            --assets-dir release-assets \
+            --output "$manifest"
+
+          previous_published="$(
+            gh release list --repo "$REPOSITORY" --limit 100 \
+              --json tagName,publishedAt \
+              --jq 'map(select(.tagName | startswith("task-app-v"))) | sort_by(.publishedAt) | last | .publishedAt // ""'
+          )"
+          gh pr list --repo "$REPOSITORY" --state merged --label task-app --limit 100 \
+            --json number,title,url,mergedAt > taskapp-history.json
+          notes_args=(
+            --version "$RELEASE_VERSION"
+            --tag "$RELEASE_TAG"
+            --commit "$RELEASE_COMMIT"
+            --repository "$REPOSITORY"
+            --history taskapp-history.json
+            --output release-notes.md
+          )
+          if [[ -n "$previous_published" ]]; then
+            notes_args+=(--since "$previous_published")
+          fi
+          python code/scripts/taskapp_release.py write-notes "${notes_args[@]}"
+
+          (
+            cd release-assets
+            sha256sum -- *.zip *.json | sort -k2 > SHA256SUMS
+            sha256sum --check SHA256SUMS
+          )
+          cat release-notes.md
+          cat release-assets/SHA256SUMS
+
+      - name: Revalidate publication availability after artifact work
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ needs.validate.outputs.tag }}
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          set +e
+          git ls-remote --exit-code --tags origin "refs/tags/$RELEASE_TAG" \
+            >/dev/null 2>&1
+          tag_status=$?
+          set -e
+          case "$tag_status" in
+            0)
+              echo "::error::Tag $RELEASE_TAG appeared while artifacts were building."
+              exit 1
+              ;;
+            2)
+              ;;
+            *)
+              echo "::error::Could not revalidate tag $RELEASE_TAG."
+              exit 1
+              ;;
+          esac
+
+          set +e
+          gh release view "$RELEASE_TAG" --repo "$REPOSITORY" \
+            >/dev/null 2>release-view-error.txt
+          release_status=$?
+          set -e
+          if [[ "$release_status" -eq 0 ]]; then
+            echo "::error::Release $RELEASE_TAG appeared while artifacts were building."
+            exit 1
+          fi
+          if ! grep -Fq "release not found" release-view-error.txt; then
+            cat release-view-error.txt >&2
+            echo "::error::Could not revalidate release $RELEASE_TAG."
+            exit 1
+          fi
+
+      - name: Publish the release and all payloads exactly once
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+          RELEASE_TAG: ${{ needs.validate.outputs.tag }}
+          RELEASE_COMMIT: ${{ needs.validate.outputs.commit }}
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          mapfile -t assets < <(find release-assets -maxdepth 1 -type f -print | sort)
+          release_flags=(--latest=false)
+          if [[ "$RELEASE_VERSION" == *-* ]]; then
+            release_flags+=(--prerelease)
+          fi
+          gh release create "$RELEASE_TAG" "${assets[@]}" \
+            --repo "$REPOSITORY" \
+            --target "$RELEASE_COMMIT" \
+            --title "TaskApp v$RELEASE_VERSION" \
+            --notes-file release-notes.md \
+            "${release_flags[@]}"
+          gh release view "$RELEASE_TAG" --repo "$REPOSITORY" \
+            --json tagName,targetCommitish,url,assets

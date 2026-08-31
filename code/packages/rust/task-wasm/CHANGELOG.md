@@ -4,6 +4,14 @@ All notable changes to `task-wasm` are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Changed - refresh the first-release WASM engine (#13543)
+
+- Rebuilt `pkg/task_engine.wasm` from the current `task-wasm`/`task-core` source
+  closure with Rust 1.97.0 instead of shipping the stale August 12 blob in the
+  first TaskApp release. The release workflow pins that compiler, regenerates
+  the WASM and Mosaic React outputs, and requires a clean tagged tree before it
+  archives the tested Vite bundle.
+
 ### Added - `ensureDefaultWorkflow`
 
 - **`ensure_default_workflow`** export (`EnsureDefaultWorkflowArgs {}` — no
