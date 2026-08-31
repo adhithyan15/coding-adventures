@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.9.1
+
+- Coordinate the package with Venture's first immutable pre-1.0 release.
+
 ## 0.9.0
 
 - Move shared browser/controller/Cairo ownership into the backend-neutral

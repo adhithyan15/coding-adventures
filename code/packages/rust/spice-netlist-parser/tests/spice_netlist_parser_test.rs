@@ -1599,10 +1599,8 @@ fn rejects_invalid_jfet_capacitance_aliases() {
 
 #[test]
 fn parses_jfet_flicker_noise_model_parameters() {
-    let parsed = parse_netlist(
-        ".model noisy NJF(KF=2p AF=1.3)\nJ1 drain gate source noisy",
-    )
-    .unwrap();
+    let parsed =
+        parse_netlist(".model noisy NJF(KF=2p AF=1.3)\nJ1 drain gate source noisy").unwrap();
 
     let Element::Jfet(jfet) = &parsed.circuit.elements()[0] else {
         panic!("expected JFET");
@@ -1625,6 +1623,38 @@ fn rejects_invalid_jfet_flicker_noise_model_parameters() {
         .unwrap_err();
 
         assert!(error.to_string().contains(message));
+    }
+}
+
+#[test]
+fn parses_jfet_junction_potential_alias_with_canonical_precedence() {
+    let parsed = parse_netlist(
+        ".model canonical NJF(PB=0.8 VJ=0.7)\n.model aliased NJF(VJ=0.6)\nJ1 d g s canonical\nJ2 d g s aliased",
+    )
+    .unwrap();
+
+    let elements = parsed.circuit.elements();
+    let Element::Jfet(canonical) = &elements[0] else {
+        panic!("expected JFET");
+    };
+    let Element::Jfet(aliased) = &elements[1] else {
+        panic!("expected JFET");
+    };
+    assert_close(canonical.junction_potential, 0.8);
+    assert_close(aliased.junction_potential, 0.6);
+}
+
+#[test]
+fn rejects_invalid_jfet_junction_potential_aliases() {
+    for (parameter, value) in [("PB", "0"), ("PB", "1e999"), ("VJ", "-0.8")] {
+        let error = parse_netlist(&format!(
+            ".model bad NJF({parameter}={value})\nJ1 drain gate source bad"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("JFET PB must be finite and positive"));
     }
 }
 
