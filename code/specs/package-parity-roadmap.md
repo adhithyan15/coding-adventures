@@ -11765,6 +11765,31 @@ target local branch, remote branch, and prior PR were absent before the fresh
 clean branch was created from exact main. Reconciliation plus selection leaves
 193 merged, 412 pending, and exactly one `in-progress` owner.
 
+The Rust implementation applies that exact registry before recursion in both
+the extension and declared-source collectors. Native fixture projections cover
+both neutral source-collection cases in both modes, preserve the required case
+and near names, and prove that real POSIX links or Windows junction/reparse
+points cannot add outside files. The complete package passes 165 unit tests and
+three CLI integrations, strict Clippy, release and literal `BUILD_windows`
+fronts, and LLVM coverage at 84.12% lines overall with `hasher.rs` at 95.96%.
+Cargo audit scans 57 dependencies against advisory database revision
+`b331df68b3ed0e99594d259040bdcb9de3c7c8a4` with no vulnerability. The neutral
+corpus validates 121 cases and 283 files; 206 conformance tests pass with 23
+expected skips, and 68 parity/capability/Haskell/OCaml-lock tests pass with two
+expected Windows skips. The Go oracle passes test, vet, trimpath build, and a
+real forced Rust dry plan over 1,172 packages. Cargo fmt retains only the
+package's pre-existing source-wide baseline, with no rustfmt finding in the new
+implementation or tests.
+
+Before publication the branch was rebased without conflict onto exact
+`origin/main` `d69e02437374fd2b9c002b704e62b10d9dac4fd0`. The intervening TaskApp
+Linux release-generation repair touches only its workflow, changelog, and
+release-script tests, so it adds no package identity or build-tool contract and
+has zero exact overlap with the six selected paths. The refreshed schema-3
+inventory remains 15 lanes, 1,388 implementation identities, 4,602 slots,
+1,427 all-reported identities, zero collisions, and zero unknown buckets; the
+606-owner/917-edge graph remains unique, dependency-complete, and acyclic.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
