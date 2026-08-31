@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "language_source_input_registry_sha256": "783d49e175b13a267b694172892e154b4a815e7fed807012aec913cf3509a61e",
+  "language_source_input_registry_sha256": "f49bfe8c7c9c0fb9b534ecc9ca4a614f3684abe32bdb0edac82d99bdc806fb70",
   "boundaries": [
     {
       "id": "haskell-workspace-project",

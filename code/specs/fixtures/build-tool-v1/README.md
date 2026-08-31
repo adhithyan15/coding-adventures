@@ -73,8 +73,9 @@ The 132-case bootstrap corpus covers every process-free v1 domain:
   BUILD-invoked and reviewed package build scripts, shared Unix command
   specifications, conventional test fixtures and package resources, a
   representative tracked-repository projection, the exact Rust Engram WASM
-  smoke script, imported host module, and checked-in module bytes without
-  widening JavaScript or WebAssembly suffix authority, extension and declared-
+  smoke script, imported host module, and checked-in module bytes for that
+  package root only without widening other Rust packages or JavaScript and
+  WebAssembly suffix authority, extension and declared-
   source selection modes, exact near-name
   retention, inert symlink/reparse boundaries, Android signing/SDK-property
   exclusion, and per-file SHA-256 digests. Shared ancestors, tracked generated-

@@ -432,7 +432,7 @@ class CorpusTests(unittest.TestCase):
         )
         self.assertEqual(
             runner.repository_source_input_boundary_digest(boundary),
-            "8659cc03e419c1560bd2eb990b954cad0dcd9b6d1b36c52ba13a5d31e4b428d7",
+            "963cc4090e165752fd3a62921b699dfff8f0677b49d7236812398a8abed0a25f",
         )
         by_id = {entry["id"]: entry for entry in boundary["boundaries"]}
         self.assertEqual(
@@ -1422,6 +1422,23 @@ class CorpusTests(unittest.TestCase):
             (
                 "package-global-collision",
                 package_global_collision,
+                "SOURCE_INPUT_SELECTOR_COLLISION",
+            )
+        )
+
+        package_casefold_collision = copy.deepcopy(canonical)
+        rust_entry = next(
+            entry for entry in package_casefold_collision["languages"]
+            if entry["language"] == "rust"
+        )
+        rust_entry["package_exact_inputs"][0]["paths"].append("js/Smoke.mjs")
+        rust_entry["package_exact_inputs"][0]["paths"].sort(
+            key=lambda value: value.encode("utf-8")
+        )
+        mutations.append(
+            (
+                "package-casefold-collision",
+                package_casefold_collision,
                 "SOURCE_INPUT_SELECTOR_COLLISION",
             )
         )
@@ -2693,6 +2710,13 @@ class PureDomainValidationTests(unittest.TestCase):
         }
         self.assertNotIn("js/sibling.mjs", engram_included)
         self.assertNotIn("pkg/engram_engine_copy.wasm", engram_included)
+        declared_engram = copy.deepcopy(engram_options)
+        declared_engram["mode"] = "declared_sources"
+        declared_engram["declared_srcs"] = ["unrelated/**"]
+        self.assertEqual(
+            runner._expected_source_collection(declared_engram, registry),
+            engram_case["expected"]["result"]["files"],
+        )
         case_variants = copy.deepcopy(engram_options)
         case_variants["candidates"] = [
             {
