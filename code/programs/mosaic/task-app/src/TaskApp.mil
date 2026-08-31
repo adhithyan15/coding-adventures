@@ -238,6 +238,8 @@ component TaskApp {
   // notes) are unaffected: they're basic todo-app concepts per the spec's
   // Decision 4, not CPM output, so Board tier keeps them.
   // Cell 15 is a non-empty marker for the one row currently being edited.
+  // Cell 16 is the completion button's action-oriented accessible name, for
+  // example `Complete task: Draft release` or `Reopen task: Draft release`.
   slot task-rows : list<list<text>> ;
 
   // Typing in the inputs.

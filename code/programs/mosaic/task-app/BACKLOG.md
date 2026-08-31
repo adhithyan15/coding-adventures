@@ -63,27 +63,31 @@ links existing Mosaic work instead of duplicating it.
    surface composer validation errors with useful focus behavior. **Done in
    #13719.**
 18. **P1 — [#13688](https://github.com/adhithyan15/coding-adventures/issues/13688):**
-   edit task names and due dates directly from List. **In review in #13740.**
+   edit task names and due dates directly from List. **Done in #13740.**
 19. **P1 — [#13691](https://github.com/adhithyan15/coding-adventures/issues/13691):**
-   give completion controls descriptive accessible names.
+   give completion controls descriptive accessible names. **In review.**
 20. **P1 — [#13717](https://github.com/adhithyan15/coding-adventures/issues/13717):**
    lower authored `HostInput.a11y-label` values across every Mosaic backend.
    Discovered while validating #13689; adjacent semantic error text keeps the
    current correction accessible without overstating input-label coverage.
-21. **P1 — [#13725](https://github.com/adhithyan15/coding-adventures/issues/13725):**
+21. **P1 — [#13754](https://github.com/adhithyan15/coding-adventures/issues/13754):**
+   preserve dynamic `HostButton.a11y-label` values in Qt, Flutter, SwiftUI,
+   and XAML. Discovered while validating #13691; React and Compose are covered
+   by that product fix, while the other native emitters need focused repairs.
+22. **P1 — [#13725](https://github.com/adhithyan15/coding-adventures/issues/13725):**
    make Flutter preserve the correct flex context through nested Mosaic
    `If`/`Else` branches. Discovered by the #13689 native widget lifecycle; the
    TaskApp layout now avoids the invalid lowering, while the emitter needs a
    focused regression so another app cannot recreate it.
-22. **P1 — [#13690](https://github.com/adhithyan15/coding-adventures/issues/13690):**
+23. **P1 — [#13690](https://github.com/adhithyan15/coding-adventures/issues/13690):**
    expose durable-storage fallback, recovery, and backup information in the UI.
-23. **P1 — [#13695](https://github.com/adhithyan15/coding-adventures/issues/13695):**
+24. **P1 — [#13695](https://github.com/adhithyan15/coding-adventures/issues/13695):**
    replace blank startup with loading and failure states.
-24. **P1 — [#13692](https://github.com/adhithyan15/coding-adventures/issues/13692):**
+25. **P1 — [#13692](https://github.com/adhithyan15/coding-adventures/issues/13692):**
    make the List-first shell usable in compact windows.
-25. **P2 — [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**
+26. **P2 — [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**
    move the Vitest config to Vite's native ESM loading contract.
-26. **P2 — [#13625](https://github.com/adhithyan15/coding-adventures/issues/13625):**
+27. **P2 — [#13625](https://github.com/adhithyan15/coding-adventures/issues/13625):**
    roll the TaskApp changelog forward after each published product release and
    gate against already-published versions remaining marked Unreleased.
 

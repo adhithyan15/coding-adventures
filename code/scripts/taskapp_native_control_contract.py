@@ -97,6 +97,7 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
             '.testTag("complexity-toggle")',
             "onClick = { dispatch(TaskAppEvent.ToggleProjectComplexity) }",
             '.testTag("toggle")',
+            "contentDescription = ( row [ 16 ] )",
             "onClick = { dispatch(TaskAppEvent.ToggleTask(i)) }",
             '.testTag("del-btn")',
             "onClick = { dispatch(TaskAppEvent.DeleteTask(i)) }",

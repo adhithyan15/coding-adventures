@@ -7,6 +7,9 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- `HostButton.a11y-label` now lowers to native Compose semantics, including
+  expression-bound labels inside repeated rows (#13691).
+
 - Compose Rows now measure ordinary container children intrinsically instead
   of assigning every child `fillMaxWidth()`. A direct child with `flex-grow`
   or `width: 100%` receives scoped `Modifier.weight(...)`, including in
