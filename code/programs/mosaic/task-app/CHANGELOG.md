@@ -4,6 +4,16 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - shared web/native presentation contract (#13521)
+
+A single data-driven fixture now runs through both the real web/WASM controller
+and `task-mosaic-app`, checking equivalent engine state and user-visible core
+slots after every List/Board, task lifecycle, due-date scheduling, project,
+complexity, and snapshot/restore step. The contract exposed and fixed web's
+first-run `project` id leaking into the UI instead of the native **Inbox** name;
+theme storage and locale-formatted calendar copy remain explicit host-only
+differences.
+
 ### Fixed - visible Compose completion progress (#13565)
 
 Compose now measures the top-bar title as the row's flexible remainder and the

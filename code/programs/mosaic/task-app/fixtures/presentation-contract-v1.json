@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "today": 20458,
+  "todayIso": "2026-01-05",
+  "hostOnlyDifferences": {
+    "theme": "Web stores the resolved light/dark choice in localStorage; generated native hosts include their portable theme flag in the Mosaic snapshot. Theme is excluded from this shared engine/presentation contract.",
+    "calendarLocale": "Calendar month labels are locale-formatted by the host and are outside this deterministic core sequence."
+  },
+  "steps": [
+    {
+      "id": "initial",
+      "expected": {
+        "engine": { "activeProject": "Inbox", "projects": [{ "name": "Inbox", "complexity": "board", "tasks": [] }] },
+        "slots": { "view": "list", "summary": "0 task(s) · 0 done · projected finish —", "ringPercent": "0%", "complexityLabel": "Board", "newTaskName": "", "newTaskDue": "", "newProjectName": "", "projectRows": [["Inbox", "active", ""]], "taskRows": [] }
+      }
+    },
+    {
+      "id": "show-board",
+      "event": { "type": "showBoard", "payload": {} },
+      "expected": {
+        "engine": { "activeProject": "Inbox", "projects": [{ "name": "Inbox", "complexity": "board", "tasks": [] }] },
+        "slots": { "view": "board", "summary": "0 task(s) · 0 done · projected finish —", "ringPercent": "0%", "complexityLabel": "Board", "newTaskName": "", "newTaskDue": "", "newProjectName": "", "projectRows": [["Inbox", "active", ""]], "taskRows": [] }
+      }
+    },
+    {
+      "id": "type-task-name",
+      "event": { "type": "newTaskNameChange", "payload": { "value": "Ship parity" } },
+      "expected": {
+        "engine": { "activeProject": "Inbox", "projects": [{ "name": "Inbox", "complexity": "board", "tasks": [] }] },
+        "slots": { "view": "board", "summary": "0 task(s) · 0 done · projected finish —", "ringPercent": "0%", "complexityLabel": "Board", "newTaskName": "Ship parity", "newTaskDue": "", "newProjectName": "", "projectRows": [["Inbox", "active", ""]], "taskRows": [] }
+      }
+    },
+    {
+      "id": "type-due-date",
+      "event": { "type": "newTaskDueChange", "payload": { "value": "2026-01-09" } },
+      "expected": {
+        "engine": { "activeProject": "Inbox", "projects": [{ "name": "Inbox", "complexity": "board", "tasks": [] }] },
+        "slots": { "view": "board", "summary": "0 task(s) · 0 done · projected finish —", "ringPercent": "0%", "complexityLabel": "Board", "newTaskName": "Ship parity", "newTaskDue": "2026-01-09", "newProjectName": "", "projectRows": [["Inbox", "active", ""]], "taskRows": [] }
+      }
+    },
+    {
+      "id": "create-due-task",
+      "event": { "type": "addTask", "payload": {} },
+      "expected": {
+        "engine": { "activeProject": "Inbox", "projects": [{ "name": "Inbox", "complexity": "board", "tasks": [{ "name": "Ship parity", "completed": false, "deadline": 20462 }] }] },
+        "slots": { "view": "board", "summary": "1 task(s) · 0 done · projected finish 2026-01-05", "ringPercent": "0%", "complexityLabel": "Board", "newTaskName": "", "newTaskDue": "", "newProjectName": "", "projectRows": [["Inbox", "active", ""]], "taskRows": [["○", "Ship parity", "due 2026-01-09", ""]] }
+      }
+    },
+    {
+      "id": "enable-full-scheduling",
+      "event": { "type": "toggleProjectComplexity", "payload": {} },
+      "expected": {
+        "engine": { "activeProject": "Inbox", "projects": [{ "name": "Inbox", "complexity": "full", "tasks": [{ "name": "Ship parity", "completed": false, "deadline": 20462 }] }] },
+        "slots": { "view": "board", "summary": "1 task(s) · 0 done · projected finish 2026-01-05", "ringPercent": "0%", "complexityLabel": "Full CPM", "newTaskName": "", "newTaskDue": "", "newProjectName": "", "projectRows": [["Inbox", "active", ""]], "taskRows": [["○", "Ship parity", "due 2026-01-09", "2026-01-05 → 2026-01-05"]] }
+      }
+    },
+    {
+      "id": "complete-task",
+      "event": { "type": "toggleTask", "payload": { "index": 0 } },
+      "expected": {
+        "engine": { "activeProject": "Inbox", "projects": [{ "name": "Inbox", "complexity": "full", "tasks": [{ "name": "Ship parity", "completed": true, "deadline": 20462 }] }] },
+        "slots": { "view": "board", "summary": "1 task(s) · 1 done · projected finish 2026-01-05", "ringPercent": "100%", "complexityLabel": "Full CPM", "newTaskName": "", "newTaskDue": "", "newProjectName": "", "projectRows": [["Inbox", "active", ""]], "taskRows": [["✓", "Ship parity", "due 2026-01-09", "2026-01-05 → 2026-01-05"]] }
+      }
+    },
+    {
+      "id": "reopen-task",
+      "event": { "type": "toggleTask", "payload": { "index": 0 } },
+      "expected": {
+        "engine": { "activeProject": "Inbox", "projects": [{ "name": "Inbox", "complexity": "full", "tasks": [{ "name": "Ship parity", "completed": false, "deadline": 20462 }] }] },
+        "slots": { "view": "board", "summary": "1 task(s) · 0 done · projected finish 2026-01-05", "ringPercent": "0%", "complexityLabel": "Full CPM", "newTaskName": "", "newTaskDue": "", "newProjectName": "", "projectRows": [["Inbox", "active", ""]], "taskRows": [["○", "Ship parity", "due 2026-01-09", "2026-01-05 → 2026-01-05"]] }
+      }
+    },
+    {
+      "id": "return-to-list",
+      "event": { "type": "showList", "payload": {} },
+      "expected": {
+        "engine": { "activeProject": "Inbox", "projects": [{ "name": "Inbox", "complexity": "full", "tasks": [{ "name": "Ship parity", "completed": false, "deadline": 20462 }] }] },
+        "slots": { "view": "list", "summary": "1 task(s) · 0 done · projected finish 2026-01-05", "ringPercent": "0%", "complexityLabel": "Full CPM", "newTaskName": "", "newTaskDue": "", "newProjectName": "", "projectRows": [["Inbox", "active", ""]], "taskRows": [["○", "Ship parity", "due 2026-01-09", "2026-01-05 → 2026-01-05"]] }
+      }
+    },
+    {
+      "id": "type-project-name",
+      "event": { "type": "newProjectNameChange", "payload": { "value": "Roadmap" } },
+      "expected": {
+        "engine": { "activeProject": "Inbox", "projects": [{ "name": "Inbox", "complexity": "full", "tasks": [{ "name": "Ship parity", "completed": false, "deadline": 20462 }] }] },
+        "slots": { "view": "list", "summary": "1 task(s) · 0 done · projected finish 2026-01-05", "ringPercent": "0%", "complexityLabel": "Full CPM", "newTaskName": "", "newTaskDue": "", "newProjectName": "Roadmap", "projectRows": [["Inbox", "active", ""]], "taskRows": [["○", "Ship parity", "due 2026-01-09", "2026-01-05 → 2026-01-05"]] }
+      }
+    },
+    {
+      "id": "create-and-activate-project",
+      "event": { "type": "addProject", "payload": {} },
+      "expected": {
+        "engine": { "activeProject": "Roadmap", "projects": [{ "name": "Inbox", "complexity": "full", "tasks": [{ "name": "Ship parity", "completed": false, "deadline": 20462 }] }, { "name": "Roadmap", "complexity": "board", "tasks": [] }] },
+        "slots": { "view": "list", "summary": "0 task(s) · 0 done · projected finish —", "ringPercent": "0%", "complexityLabel": "Board", "newTaskName": "", "newTaskDue": "", "newProjectName": "", "projectRows": [["Inbox", "", ""], ["Roadmap", "active", ""]], "taskRows": [] }
+      }
+    },
+    {
+      "id": "activate-inbox",
+      "event": { "type": "selectProject", "payload": { "index": 0 } },
+      "expected": {
+        "engine": { "activeProject": "Inbox", "projects": [{ "name": "Inbox", "complexity": "full", "tasks": [{ "name": "Ship parity", "completed": false, "deadline": 20462 }] }, { "name": "Roadmap", "complexity": "board", "tasks": [] }] },
+        "slots": { "view": "list", "summary": "1 task(s) · 0 done · projected finish 2026-01-05", "ringPercent": "0%", "complexityLabel": "Full CPM", "newTaskName": "", "newTaskDue": "", "newProjectName": "", "projectRows": [["Inbox", "active", ""], ["Roadmap", "", ""]], "taskRows": [["○", "Ship parity", "due 2026-01-09", "2026-01-05 → 2026-01-05"]] }
+      }
+    },
+    {
+      "id": "snapshot-restore",
+      "restore": true,
+      "expected": {
+        "engine": { "activeProject": "Inbox", "projects": [{ "name": "Inbox", "complexity": "full", "tasks": [{ "name": "Ship parity", "completed": false, "deadline": 20462 }] }, { "name": "Roadmap", "complexity": "board", "tasks": [] }] },
+        "slots": { "view": "list", "summary": "1 task(s) · 0 done · projected finish 2026-01-05", "ringPercent": "0%", "complexityLabel": "Full CPM", "newTaskName": "", "newTaskDue": "", "newProjectName": "", "projectRows": [["Inbox", "active", ""], ["Roadmap", "", ""]], "taskRows": [["○", "Ship parity", "due 2026-01-09", "2026-01-05 → 2026-01-05"]] }
+      }
+    },
+    {
+      "id": "delete-task",
+      "event": { "type": "deleteTask", "payload": { "index": 0 } },
+      "expected": {
+        "engine": { "activeProject": "Inbox", "projects": [{ "name": "Inbox", "complexity": "full", "tasks": [] }, { "name": "Roadmap", "complexity": "board", "tasks": [] }] },
+        "slots": { "view": "list", "summary": "0 task(s) · 0 done · projected finish —", "ringPercent": "0%", "complexityLabel": "Full CPM", "newTaskName": "", "newTaskDue": "", "newProjectName": "", "projectRows": [["Inbox", "active", ""], ["Roadmap", "", ""]], "taskRows": [] }
+      }
+    }
+  ]
+}

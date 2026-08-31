@@ -6,6 +6,9 @@ All notable changes to the `task-app-web` host are documented here.
 
 ### Fixed
 
+- A blank first-run or legacy root project is now presented as **Inbox**, matching
+  `task-mosaic-app`, instead of exposing task-core's internal `project` id.
+
 - The generated web host now completes a strict production TypeScript/Vite
   build after emitting both TaskApp themes. The host's `BUILD` contract runs
   that production build after Vitest, closing the CI gap that previously
@@ -14,6 +17,10 @@ All notable changes to the `task-app-web` host are documented here.
   declaration that TypeScript's bundler resolution recognizes.
 
 ### Added
+
+- The real `task-wasm` module and web controller now consume the shared TaskApp
+  presentation fixture, checking engine state and core slot values at every
+  lifecycle checkpoint against the native adapter's identical contract.
 
 - **A proper npm package for the web host.** Previously the host was a set of files
   overlaid onto a generated Vite project; it is now a committed package

@@ -13,6 +13,13 @@ state and calls the same typed `task-core` operations and projections. The adapt
 not a second task engine: domain validation, scheduling, and task/project invariants
 remain in `task-core`.
 
+The two adapters consume the same data-driven presentation lifecycle in
+`fixtures/presentation-contract-v1.json`. The web test runs it through the real
+`task-wasm` module, and the native test runs it through `task-mosaic-app`, comparing
+canonical engine state and user-visible core slots after every step. See
+`code/specs/task-app-presentation-contract-v1.md` for coverage and the two explicit
+host-only exclusions (theme storage and locale-formatted calendar copy).
+
 ```text
 TaskApp.mil / .mll / .msl        (Mosaic: interface / layout / style)
         │  mosaic-compile --backend react   (emits ONE component into host/web/src)

@@ -28,3 +28,9 @@ standard binding, then drives create, scheduling, complete/reopen, delete,
 invalid-input atomicity, and persisted restart restoration against the real Rust
 adapter. `code/scripts/taskapp_native_control_contract.py` separately rejects
 generated sources with inert controls, sample fallbacks, or missing runtime wiring.
+
+The crate also consumes TaskApp's shared
+`fixtures/presentation-contract-v1.json`. Its checkpoint test and the web host's
+real-WASM test assert the same canonical task/project state and user-visible core
+slots after each lifecycle step; intentional theme-storage and locale-copy
+differences are documented in `code/specs/task-app-presentation-contract-v1.md`.

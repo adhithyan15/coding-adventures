@@ -1,5 +1,13 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — share the web/native presentation contract (#13521)
+
+The native adapter now consumes the same data-driven lifecycle fixture as the
+real web/WASM controller. Each checkpoint compares canonical engine state and
+user-visible core slots across navigation, task scheduling and lifecycle,
+project/complexity changes, and snapshot restoration; deliberate host-only
+theme and locale behavior is documented rather than silently normalized.
+
 ## [Unreleased] — require visible Compose completion progress (#13565)
 
 The generated Compose lifecycle fixture once again requires the Rust-owned
