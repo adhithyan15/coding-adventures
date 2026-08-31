@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 4667,
+    "totalLessons": 4671,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -40,7 +40,7 @@
     "tracksWithoutWritingStageEvidence": 4,
     "missingWritingStagePairs": 540,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 3815,
+    "drivableLessons": 3819,
     "drivablePercent": 82,
     "chaptersWithoutDrivablePrefix": 124,
     "unexplainedModalityOverrides": 0
@@ -1329,7 +1329,8 @@
           411,
           412,
           413,
-          414
+          414,
+          415
         ],
         "bookChapters": [
           1,
@@ -1745,7 +1746,8 @@
           411,
           412,
           413,
-          414
+          414,
+          415
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -3552,9 +3554,9 @@
       {
         "language": "spanish",
         "status": "version-2",
-        "lessonCount": 1142,
+        "lessonCount": 1146,
         "versions": {
-          "2": 1142
+          "2": 1146
         }
       },
       {
@@ -4467,8 +4469,8 @@
       },
       {
         "language": "spanish",
-        "bookChapters": 414,
-        "declaredChapters": 414,
+        "bookChapters": 415,
+        "declaredChapters": 415,
         "missingCapability": 0,
         "findings": 26,
         "clean": false
@@ -4499,8 +4501,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 1190,
-      "declaredChapters": 1190,
+      "bookChapters": 1191,
+      "declaredChapters": 1191,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 80,
@@ -4512,10 +4514,10 @@
     }
   },
   "levels": {
-    "totalLessons": 4667,
+    "totalLessons": 4671,
     "byLevel": {
       "pre-A1": 2934,
-      "A1": 1184,
+      "A1": 1188,
       "A2": 407,
       "B1": 39,
       "B2": 17,
@@ -4812,10 +4814,10 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 1142,
+        "lessonCount": 1146,
         "byLevel": {
           "pre-A1": 354,
-          "A1": 578,
+          "A1": 582,
           "A2": 126,
           "B1": 39,
           "B2": 17,
@@ -5477,8 +5479,8 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 1142,
-        "measurable": 1138,
+        "lessonCount": 1146,
+        "measurable": 1142,
         "unmeasurable": 4,
         "lessonViolations": 0,
         "chapterViolations": 0
@@ -6140,7 +6142,7 @@
           "language": "spanish",
           "script": "latin",
           "latinScript": true,
-          "lessonCount": 1142,
+          "lessonCount": 1146,
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -15536,6 +15538,18 @@
         "revisits": 1
       },
       {
+        "atom": "ES-LEX-BONITO",
+        "language": "spanish",
+        "introducedBy": "ES-C399-bonito",
+        "introducedAt": 1062,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "ES-LEX-BORRAR",
         "language": "spanish",
         "introducedBy": "ES-C388-borrar",
@@ -21324,6 +21338,18 @@
         "language": "spanish",
         "introducedBy": "ES-C388-gritar",
         "introducedAt": 1013,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-GUAPO",
+        "language": "spanish",
+        "introducedBy": "ES-C399-guapo",
+        "introducedAt": 1063,
         "missed": [
           "R2",
           "R3",
@@ -40484,6 +40510,17 @@
         "revisits": 3
       },
       {
+        "atom": "ES-LEX-ACADEMIA",
+        "language": "spanish",
+        "introducedBy": "ES-C410-academia",
+        "introducedAt": 1122,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "ES-LEX-ADIOS",
         "language": "spanish",
         "introducedBy": "ES-C05-adios",
@@ -40581,17 +40618,6 @@
           "R4"
         ],
         "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-BONITO",
-        "language": "spanish",
-        "introducedBy": "ES-C399-bonito",
-        "introducedAt": 1062,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
       },
       {
         "atom": "ES-LEX-C302-AWAY-01",
@@ -41122,6 +41148,17 @@
         "revisits": 4
       },
       {
+        "atom": "ES-LEX-EXAMEN",
+        "language": "spanish",
+        "introducedBy": "ES-C410-examen",
+        "introducedAt": 1124,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ES-LEX-FIN-DE-SEMANA",
         "language": "spanish",
         "introducedBy": "ES-C409-fin-de-semana",
@@ -41153,6 +41190,17 @@
           "R3"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "ES-LEX-FRANCES",
+        "language": "spanish",
+        "introducedBy": "ES-C410-frances",
+        "introducedAt": 1123,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
       },
       {
         "atom": "ES-LEX-FUERA",
@@ -41199,17 +41247,6 @@
         "revisits": 12
       },
       {
-        "atom": "ES-LEX-GUAPO",
-        "language": "spanish",
-        "introducedBy": "ES-C399-guapo",
-        "introducedAt": 1063,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "ES-LEX-HABER",
         "language": "spanish",
         "introducedBy": "ES-C49-he-hablado",
@@ -41250,17 +41287,6 @@
         "missed": [
           "R1",
           "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ES-LEX-IMPRESO",
-        "language": "spanish",
-        "introducedBy": "ES-C406-impreso",
-        "introducedAt": 1101,
-        "missed": [
-          "R2",
-          "R3"
         ],
         "revisits": 3
       },
@@ -41782,6 +41808,17 @@
         "revisits": 3
       },
       {
+        "atom": "ES-LEX-TREN",
+        "language": "spanish",
+        "introducedBy": "ES-C400-tren",
+        "introducedAt": 1064,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "ES-LEX-VENIR",
         "language": "spanish",
         "introducedBy": "ES-C13-venir",
@@ -41813,6 +41850,17 @@
           "R4"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "ES-LEX-VUELO",
+        "language": "spanish",
+        "introducedBy": "ES-C400-vuelo",
+        "introducedAt": 1065,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
       },
       {
         "atom": "ES-LEX-WEATHER-03",
@@ -57176,16 +57224,6 @@
         "revisits": 9
       },
       {
-        "atom": "ES-LEX-ACADEMIA",
-        "language": "spanish",
-        "introducedBy": "ES-C410-academia",
-        "introducedAt": 1122,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "ES-LEX-APAGAR",
         "language": "spanish",
         "introducedBy": "ES-C404-apagar",
@@ -57204,6 +57242,16 @@
           "R3"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "ES-LEX-APUNTARSE",
+        "language": "spanish",
+        "introducedBy": "ES-C414-apuntarse",
+        "introducedAt": 1138,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
       },
       {
         "atom": "ES-LEX-BIEN",
@@ -57346,26 +57394,6 @@
         "revisits": 15
       },
       {
-        "atom": "ES-LEX-EXAMEN",
-        "language": "spanish",
-        "introducedBy": "ES-C410-examen",
-        "introducedAt": 1124,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-FRANCES",
-        "language": "spanish",
-        "introducedBy": "ES-C410-frances",
-        "introducedAt": 1123,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "ES-LEX-GIMNASIO",
         "language": "spanish",
         "introducedBy": "ES-C412-gimnasio",
@@ -57384,6 +57412,16 @@
           "R2"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-IMPRESO",
+        "language": "spanish",
+        "introducedBy": "ES-C406-impreso",
+        "introducedAt": 1101,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 4
       },
       {
         "atom": "ES-LEX-IR",
@@ -57476,6 +57514,16 @@
         "revisits": 10
       },
       {
+        "atom": "ES-LEX-RECEPCION",
+        "language": "spanish",
+        "introducedBy": "ES-C414-recepcion",
+        "introducedAt": 1139,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ES-LEX-SEGUIR",
         "language": "spanish",
         "introducedBy": "ES-C401-seguir",
@@ -57516,30 +57564,10 @@
         "revisits": 4
       },
       {
-        "atom": "ES-LEX-TREN",
-        "language": "spanish",
-        "introducedBy": "ES-C400-tren",
-        "introducedAt": 1064,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 4
-      },
-      {
         "atom": "ES-LEX-VER",
         "language": "spanish",
         "introducedBy": "ES-C16-ver",
         "introducedAt": 219,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 4
-      },
-      {
-        "atom": "ES-LEX-VUELO",
-        "language": "spanish",
-        "introducedBy": "ES-C400-vuelo",
-        "introducedAt": 1065,
         "missed": [
           "R3"
         ],
@@ -70283,11 +70311,11 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 1142,
+        "lessonCount": 1146,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 1364,
+        "atomsTaught": 1366,
         "atomsNeverRevisited": 91,
         "forwardReferences": 364
       },
@@ -70327,14 +70355,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 5720,
+      "atomsTaught": 5722,
       "atomsNeverRevisited": 585,
       "neverRevisitedPercent": 10,
       "missedByWindow": {
         "R1": 1197,
-        "R2": 4172,
-        "R3": 4224,
-        "R4": 2837
+        "R2": 4174,
+        "R3": 4226,
+        "R4": 2841
       },
       "forwardReferences": 664
     }
@@ -89353,8 +89381,8 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 1142,
-        "atomMeasurableLessons": 1138,
+        "lessonCount": 1146,
+        "atomMeasurableLessons": 1142,
         "atomMeasurementBlindLessons": 4,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -89369,14 +89397,14 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 364,
-        "atomsTaught": 1364,
+        "atomsTaught": 1366,
         "atomsNeverRevisited": 91,
-        "reinforcementWindowMisses": 3706,
+        "reinforcementWindowMisses": 3714,
         "reinforcementMissesByWindow": {
           "R1": 203,
-          "R2": 1145,
-          "R3": 1197,
-          "R4": 1161
+          "R2": 1147,
+          "R3": 1199,
+          "R4": 1165
         },
         "payoffSurprises": 26,
         "writingPracticeLessons": 14,
@@ -89400,7 +89428,7 @@
           {
             "language": "spanish",
             "kind": "reinforcement",
-            "count": 3706,
+            "count": 3714,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -90171,7 +90199,7 @@
       {
         "language": "spanish",
         "kind": "reinforcement",
-        "count": 3706,
+        "count": 3714,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -91091,8 +91119,8 @@
           },
           {
             "criterion": "vocabulary",
-            "detail": "teaches 769 distinct headwords at or below A2, against 1200",
-            "shortfall": 431
+            "detail": "teaches 771 distinct headwords at or below A2, against 1200",
+            "shortfall": 429
           },
           {
             "criterion": "verb-vocabulary",
@@ -91105,7 +91133,7 @@
             "shortfall": 32
           }
         ],
-        "vocabulary": 818
+        "vocabulary": 820
       },
       {
         "language": "tamil",
@@ -91216,11 +91244,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 4667,
-    "voice": 3337,
+    "totalLessons": 4671,
+    "voice": 3341,
     "sight": 590,
     "pen": 740,
-    "coreVoice": 3815,
+    "coreVoice": 3819,
     "lessonsWithWritingSegments": 408,
     "drivablePercent": 82,
     "tracks": [
@@ -100519,13 +100547,13 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 1142,
-        "voice": 1077,
+        "lessonCount": 1146,
+        "voice": 1081,
         "sight": 51,
         "pen": 14,
-        "coreVoice": 1079,
-        "drivablePercent": 94,
-        "drivablePrefixTotal": 1046,
+        "coreVoice": 1083,
+        "drivablePercent": 95,
+        "drivablePrefixTotal": 1050,
         "chapters": [
           {
             "language": "spanish",
@@ -106353,6 +106381,20 @@
             ],
             "drivablePrefix": 4,
             "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 415,
+            "lessonCount": 4,
+            "voice": 4,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
           }
         ]
       },
@@ -109127,11 +109169,11 @@
     "taughtPercent": 8
   },
   "rootLedger": {
-    "roots": 3562,
-    "underspent": 3421,
-    "neverSpent": 2394,
+    "roots": 3564,
+    "underspent": 3423,
+    "neverSpent": 2396,
     "payoffDistribution": {
-      "0": 2394,
+      "0": 2396,
       "1": 716,
       "2": 311,
       "3": 77,
@@ -109147,7 +109189,7 @@
     "underspentPercent": 96
   },
   "infoDump": {
-    "lessons": 4667,
+    "lessons": 4671,
     "lessonsWithFindings": 121,
     "ruleStatements": 30,
     "paradigmTables": 95,
@@ -109155,7 +109197,7 @@
     "overBudget": 3
   },
   "lessonBudgets": {
-    "lessons": 4667,
+    "lessons": 4671,
     "measuredLessons": 1827,
     "idiomMeasuredLessons": 1827,
     "senseMeasuredLessons": 1827,
@@ -109168,10 +109210,10 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 53,
-    "lessonsUsingTerms": 4333,
-    "usesBeforeIntroduction": 14684,
-    "technicalUsesBeforeIntroduction": 3665,
-    "technicalLessons": 1983,
+    "lessonsUsingTerms": 4335,
+    "usesBeforeIntroduction": 14689,
+    "technicalUsesBeforeIntroduction": 3666,
+    "technicalLessons": 1984,
     "worstTerms": [
       {
         "term": "verb",
@@ -109179,7 +109221,7 @@
       },
       {
         "term": "noun",
-        "lessons": 662
+        "lessons": 663
       },
       {
         "term": "adjective",
@@ -109200,12 +109242,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 4667,
+    "lessonsScanned": 4671,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 1259,
+    "filesScanned": 1260,
     "mainCharacters": 125,
     "scriptCharacters": 722,
     "gaps": 0
