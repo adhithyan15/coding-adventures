@@ -1,0 +1,19 @@
+[package]
+name = "engram-mosaic-app"
+version = "0.1.0"
+edition = "2021"
+description = "Standard Mosaic application adapter for the Engram spaced-repetition core."
+license = "MIT"
+
+[lib]
+# `cdylib` is the artifact the generated native hosts load: the Mosaic build
+# installs it beside the executable as `libmosaic_app.{so,dylib}` /
+# `mosaic_app.dll`, and CI byte-compares the installed copy against this one.
+# `rlib` keeps it usable as a normal Rust dependency for tests.
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+engram-core-wasm = { path = "../engram-core-wasm" }
+mosaic-app-capi = { path = "../mosaic-app-capi" }
+mosaic-app-runtime = { path = "../mosaic-app-runtime" }
+serde_json = "1"
