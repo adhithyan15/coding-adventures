@@ -4,13 +4,13 @@
   "chapter": 20,
   "title": "Weather",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1f8a97a2ce8f7763",
+  "sourceHash": "fnv1a64:dd0b1fe4a34ddfa7",
   "lessons": [
     {
       "id": "HI-C20-mausam",
       "sequence": 680,
       "title": "मौसम — another Perso-Arabic loan, and a false-friend trap",
-      "headword": "मौसम",
+      "headword": "मौसम / बारिश",
       "romanization": "",
       "gloss": "weather — the SAME root as English \"monsoon\"; rain has TWO words that sound alike but are NOT related, a real false-friend trap",
       "script": "devanagari",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f4e232cad6a5a668",
+      "sourceHash": "fnv1a64:7656ba84b156cd4e",
       "notice": null,
       "blocks": [
         {

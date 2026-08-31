@@ -8,7 +8,7 @@ spine_node: SPINE-TIME-OF-DAY
 sequence: 680
 chapter: 20
 type: phrase
-headword: मौसम
+headword: मौसम / बारिश
 gloss: weather — the SAME root as English "monsoon"; rain has TWO words that sound alike but are NOT related, a real false-friend trap
 concept_tag: HI-WEATHER
 prerequisites: [HI-C19-age-grammar]

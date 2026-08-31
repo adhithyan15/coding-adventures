@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Changed — declare everyday Hindi rain
+
+- Chapter 20 now declares **मौसम / बारिश** instead of only **मौसम**. The
+  lesson already defines **बारिश** as the everyday word for rain, contrasts it
+  with formal **वर्षा**, and asks learners to produce and distinguish both;
+  its metadata now matches that assessed vocabulary.
+
 ### Changed — declare the spoken Hindi tea request
 
 - Chapter 37 now declares **एक चाय दीजिए** as a phrase headword instead of
