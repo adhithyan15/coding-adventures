@@ -42,6 +42,9 @@ MAX_SOURCE_INPUT_SELECTORS = 4096
 SOURCE_INPUT_REGISTRY_DOMAIN = (
     b"coding-adventures/build-tool-language-source-input-registry/v1\0"
 )
+REPOSITORY_SOURCE_INPUT_BOUNDARY_DOMAIN = (
+    b"coding-adventures/build-tool-repository-source-input-boundary/v1\0"
+)
 RESERVED_ADAPTER_FLAGS = ("--conformance", "--workspace-root", "--output")
 CLI_MAX_ARGUMENTS = 64
 CLI_MAX_ARGUMENT_CHARACTERS = 256
@@ -593,6 +596,23 @@ def source_input_registry_digest(registry: dict[str, Any]) -> str:
     return hashlib.sha256(framed).hexdigest()
 
 
+def repository_source_input_boundary_digest(boundary: dict[str, Any]) -> str:
+    """Return the versioned digest of an exact repository-input boundary."""
+
+    encoded = json.dumps(
+        boundary,
+        ensure_ascii=False,
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode("utf-8")
+    framed = (
+        REPOSITORY_SOURCE_INPUT_BOUNDARY_DOMAIN
+        + len(encoded).to_bytes(8, "big")
+        + encoded
+    )
+    return hashlib.sha256(framed).hexdigest()
+
+
 def _source_input_text_error(value: str) -> str | None:
     if value != unicodedata.normalize("NFC", value):
         return "value is not NFC-normalized"
@@ -1086,6 +1106,168 @@ def _validate_source_input_registry(
     return {"language_count": len(languages), "selector_count": selector_count}
 
 
+def _validate_repository_source_input_boundary(
+    boundary: dict[str, Any],
+    schema: dict[str, Any],
+    source_input_registry: dict[str, Any],
+) -> dict[str, int]:
+    """Validate exact shared inputs without granting ambient path authority.
+
+    Package source collection is intentionally rooted at a single package.
+    This second registry lists the small set of tracked inputs that cannot be
+    expressed there: language-workspace files and exact files below a pruned
+    generated component.  Every selector is a complete repository-relative
+    path; there is no suffix, glob, or directory-wide fallback.
+    """
+
+    _validate_schema(
+        boundary,
+        schema,
+        "REPOSITORY_SOURCE_BOUNDARY_SCHEMA_INVALID",
+    )
+    if boundary[
+        "language_source_input_registry_sha256"
+    ] != source_input_registry_digest(source_input_registry):
+        raise ConformanceError(
+            "REPOSITORY_SOURCE_REGISTRY_DIGEST_MISMATCH",
+            "repository boundary does not pin the validated language source-input registry",
+        )
+
+    registered_languages = {
+        entry["language"] for entry in source_input_registry["languages"]
+    }
+    generated_components = set(
+        source_input_registry["universal_inputs"]["generated_directory_components"]
+    )
+    boundaries = boundary["boundaries"]
+    ids = [entry["id"] for entry in boundaries]
+    if ids != _utf8_sorted(ids) or len(ids) != len(set(ids)):
+        raise ConformanceError(
+            "REPOSITORY_SOURCE_NOT_CANONICAL",
+            "repository source boundaries are not in unique UTF-8 id order",
+        )
+
+    scope_identities: set[tuple[str, str, str]] = set()
+    global_input_identities: dict[str, str] = {}
+    global_input_paths: list[str] = []
+    input_count = 0
+
+    for entry in boundaries:
+        language = entry["language"]
+        if language not in registered_languages:
+            raise ConformanceError(
+                "REPOSITORY_SOURCE_LANGUAGE_UNKNOWN",
+                f"repository source boundary language is not registered: {language}",
+            )
+        if not entry["owner"] or not entry["reason"]:
+            raise ConformanceError(
+                "REPOSITORY_SOURCE_CLASSIFICATION_INVALID",
+                "repository source boundaries require a durable owner and reason",
+            )
+
+        scope = entry["applies_to"]
+        root = scope["root"]
+        if portable_path_error(root) or _source_input_text_error(root):
+            raise ConformanceError(
+                "REPOSITORY_SOURCE_PATH_UNSAFE",
+                f"repository source applicability root is not portable NFC: {root!r}",
+            )
+        components = root.split("/")
+        if (
+            len(components) < 3
+            or components[0] != "code"
+            or components[1] not in {"packages", "programs"}
+            or components[2] != language
+        ):
+            raise ConformanceError(
+                "REPOSITORY_SOURCE_SCOPE_INVALID",
+                f"repository source applicability root is outside the canonical language lane: {root}",
+            )
+        if scope["kind"] == "descendants" and len(components) != 3:
+            raise ConformanceError(
+                "REPOSITORY_SOURCE_SCOPE_INVALID",
+                f"descendant boundary must name the exact language workspace root: {root}",
+            )
+        if scope["kind"] == "exact" and len(components) == 3:
+            raise ConformanceError(
+                "REPOSITORY_SOURCE_SCOPE_INVALID",
+                f"exact boundary must name a package below the language root: {root}",
+            )
+        scope_identity = (language, scope["kind"], root.casefold())
+        if scope_identity in scope_identities:
+            raise ConformanceError(
+                "REPOSITORY_SOURCE_SCOPE_COLLISION",
+                f"repository source applicability scope is duplicated: {root}",
+            )
+        scope_identities.add(scope_identity)
+
+        inputs = entry["inputs"]
+        paths = [item["path"] for item in inputs]
+        local_identities: dict[str, str] = {}
+        for item in inputs:
+            path = item["path"]
+            if portable_path_error(path) or _source_input_text_error(path):
+                raise ConformanceError(
+                    "REPOSITORY_SOURCE_PATH_UNSAFE",
+                    f"repository source input is not portable NFC: {path!r}",
+                )
+            identity = path.casefold()
+            if identity in local_identities or identity in global_input_identities:
+                raise ConformanceError(
+                    "REPOSITORY_SOURCE_INPUT_COLLISION",
+                    f"repository source input collides by platform identity: {path}",
+                )
+            local_identities[identity] = path
+            global_input_identities[identity] = path
+
+            if not path.startswith(f"{root}/"):
+                raise ConformanceError(
+                    "REPOSITORY_SOURCE_SCOPE_INVALID",
+                    f"repository source input is outside its applicability root: {path}",
+                )
+            generated_in_path = {
+                component
+                for component in path.split("/")
+                if component in generated_components
+            }
+            if item["role"] == "shared_ancestor":
+                if generated_in_path:
+                    raise ConformanceError(
+                        "REPOSITORY_SOURCE_ROLE_INVALID",
+                        f"shared input enters a generated component: {path}",
+                    )
+            else:
+                declared_component = item["generated_component"]
+                if (
+                    declared_component not in generated_components
+                    or generated_in_path != {declared_component}
+                ):
+                    raise ConformanceError(
+                        "REPOSITORY_SOURCE_ROLE_INVALID",
+                        f"pruning exception does not name its one generated component: {path}",
+                    )
+            input_count += 1
+
+        if paths != _utf8_sorted(paths):
+            raise ConformanceError(
+                "REPOSITORY_SOURCE_NOT_CANONICAL",
+                f"repository source inputs are not in UTF-8 path order: {entry['id']}",
+            )
+
+        global_input_paths.extend(paths)
+
+    folded_paths = sorted(path.casefold() for path in global_input_paths)
+    for index, path in enumerate(folded_paths):
+        for other in folded_paths[index + 1 :]:
+            if path.startswith(f"{other}/") or other.startswith(f"{path}/"):
+                raise ConformanceError(
+                    "REPOSITORY_SOURCE_INPUT_COLLISION",
+                    "repository source input files cannot be path prefixes",
+                )
+
+    return {"boundary_count": len(boundaries), "input_count": input_count}
+
+
 @lru_cache(maxsize=1)
 def _default_source_input_registry() -> dict[str, Any]:
     schema = load_document(
@@ -1096,6 +1278,22 @@ def _default_source_input_registry() -> dict[str, Any]:
     )
     _validate_source_input_registry(registry, schema)
     return registry
+
+
+@lru_cache(maxsize=1)
+def _default_repository_source_input_boundary() -> dict[str, Any]:
+    schema = load_document(
+        DEFAULT_FIXTURE_ROOT / "repository-source-input-boundary.schema.json"
+    )
+    boundary = load_document(
+        DEFAULT_FIXTURE_ROOT / "repository-source-input-boundary.json"
+    )
+    _validate_repository_source_input_boundary(
+        boundary,
+        schema,
+        _default_source_input_registry(),
+    )
+    return boundary
 
 
 def _cli_argument_is_unsafe(argument: str) -> bool:
@@ -1848,6 +2046,7 @@ def _validate_pure_case_semantics(
     case: dict[str, Any],
     staged_files: list[WorkspaceFile],
     source_input_registry: dict[str, Any] | None = None,
+    repository_source_input_boundary: dict[str, Any] | None = None,
 ) -> None:
     domain = case["domain"]
     if domain not in PURE_DOMAINS:
@@ -1904,17 +2103,38 @@ def _validate_pure_case_semantics(
             )
     elif domain == "source_collection":
         registry = source_input_registry or _default_source_input_registry()
-        if options["registry_sha256"] != source_input_registry_digest(registry):
-            raise ConformanceError(
-                "CASE_SOURCE_REGISTRY_DIGEST_MISMATCH",
-                "source-collection case does not pin the validated registry snapshot",
-            )
         if options["language"] not in {
             entry["language"] for entry in registry["languages"]
         }:
             raise ConformanceError(
                 "CASE_SOURCE_LANGUAGE_UNKNOWN",
                 f"source-collection language is not registered: {options['language']}",
+            )
+        repository_mode = options["mode"] == "repository_boundary"
+        if repository_mode:
+            boundary = (
+                repository_source_input_boundary
+                or _default_repository_source_input_boundary()
+            )
+            if options["boundary_sha256"] != repository_source_input_boundary_digest(
+                boundary
+            ):
+                raise ConformanceError(
+                    "CASE_REPOSITORY_SOURCE_BOUNDARY_DIGEST_MISMATCH",
+                    "repository source-collection case does not pin the validated boundary",
+                )
+            package_root = options["package_root"]
+            if portable_path_error(package_root) or _source_input_text_error(
+                package_root
+            ):
+                raise ConformanceError(
+                    "CASE_REPOSITORY_SOURCE_ROOT_UNSAFE",
+                    f"repository source package root is not portable NFC: {package_root!r}",
+                )
+        elif options["registry_sha256"] != source_input_registry_digest(registry):
+            raise ConformanceError(
+                "CASE_SOURCE_REGISTRY_DIGEST_MISMATCH",
+                "source-collection case does not pin the validated registry snapshot",
             )
         candidate_paths: dict[str, tuple[str, str]] = {}
         for candidate in options["candidates"]:
@@ -1942,12 +2162,13 @@ def _validate_pure_case_semantics(
                         f"source candidate file paths cannot be prefixes: {other_path!r}, {path!r}",
                     )
             candidate_paths[identity] = (path, candidate["kind"])
-        for pattern in options["declared_srcs"]:
-            if error := portable_glob_error(pattern):
-                raise ConformanceError(
-                    "CASE_SOURCE_GLOB_UNSAFE",
-                    f"unsafe declared source glob {pattern!r}: {error}",
-                )
+        if not repository_mode:
+            for pattern in options["declared_srcs"]:
+                if error := portable_glob_error(pattern):
+                    raise ConformanceError(
+                        "CASE_SOURCE_GLOB_UNSAFE",
+                        f"unsafe declared source glob {pattern!r}: {error}",
+                    )
     elif domain == "starlark":
         workspace_paths = {entry.path for entry in staged_files}
         entrypoint = options["entrypoint"]
@@ -2309,6 +2530,60 @@ def _expected_source_collection(
                 }
             )
 
+    return sorted(files, key=lambda item: item["path"])
+
+
+def _repository_boundary_applies(
+    boundary: dict[str, Any],
+    language: str,
+    package_root: str,
+) -> bool:
+    if boundary["language"] != language:
+        return False
+    scope = boundary["applies_to"]
+    root = scope["root"]
+    if scope["kind"] == "exact":
+        return package_root == root
+    return package_root.startswith(f"{root}/")
+
+
+def _expected_repository_source_collection(
+    options: dict[str, Any],
+    repository_source_input_boundary: dict[str, Any] | None = None,
+) -> list[dict[str, str]]:
+    """Select exact tracked repository inputs for one package snapshot."""
+
+    boundary = (
+        repository_source_input_boundary or _default_repository_source_input_boundary()
+    )
+    if options["boundary_sha256"] != repository_source_input_boundary_digest(boundary):
+        raise ConformanceError(
+            "CASE_REPOSITORY_SOURCE_BOUNDARY_DIGEST_MISMATCH",
+            "repository source-collection case does not pin the validated boundary",
+        )
+
+    allowed_paths = {
+        item["path"]
+        for entry in boundary["boundaries"]
+        if _repository_boundary_applies(
+            entry,
+            options["language"],
+            options["package_root"],
+        )
+        for item in entry["inputs"]
+    }
+    files = [
+        {
+            "path": candidate["path"],
+            "digest": hashlib.sha256(
+                bytes.fromhex(candidate["content_hex"])
+            ).hexdigest(),
+        }
+        for candidate in options["candidates"]
+        if candidate["kind"] == "file"
+        and candidate["tracked"]
+        and candidate["path"] in allowed_paths
+    ]
     return sorted(files, key=lambda item: item["path"])
 
 
@@ -2959,6 +3234,7 @@ def _validate_pure_result_semantics(
     staged_files: list[WorkspaceFile],
     prefix: str,
     source_input_registry: dict[str, Any] | None = None,
+    repository_source_input_boundary: dict[str, Any] | None = None,
 ) -> None:
     domain = case["domain"]
     if domain not in PURE_DOMAINS:
@@ -3041,7 +3317,14 @@ def _validate_pure_result_semantics(
             )
     elif domain == "source_collection" and outcome == "ok":
         actual_files = sorted(payload["files"], key=lambda item: item["path"])
-        if actual_files != _expected_source_collection(options, source_input_registry):
+        if options["mode"] == "repository_boundary":
+            expected_files = _expected_repository_source_collection(
+                options,
+                repository_source_input_boundary,
+            )
+        else:
+            expected_files = _expected_source_collection(options, source_input_registry)
+        if actual_files != expected_files:
             raise ConformanceError(
                 f"{prefix}_SOURCE_COLLECTION_MISMATCH",
                 "source collection does not match pruning, link, mode, and digest rules",
@@ -3403,6 +3686,7 @@ def assert_result_matches(
     plan_schema: dict[str, Any] | None = None,
     pure_domain_schema: dict[str, Any] | None = None,
     source_input_registry: dict[str, Any] | None = None,
+    repository_source_input_boundary: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     reject_execution_intent(case)
     reject_unmodeled_domain(case)
@@ -3424,13 +3708,19 @@ def assert_result_matches(
         code="RESULT_SCHEMA_INVALID",
     )
     staged_files = preflight_workspace(case)
-    _validate_pure_case_semantics(case, staged_files, source_input_registry)
+    _validate_pure_case_semantics(
+        case,
+        staged_files,
+        source_input_registry,
+        repository_source_input_boundary,
+    )
     _validate_pure_result_semantics(
         case,
         actual,
         staged_files,
         "RESULT",
         source_input_registry,
+        repository_source_input_boundary,
     )
     canonical_actual = canonicalize_result(actual)
     canonical_expected = canonicalize_result(case["expected"])
@@ -3450,6 +3740,7 @@ def validate_case_document(
     plan_schema: dict[str, Any],
     pure_domain_schema: dict[str, Any] | None = None,
     source_input_registry: dict[str, Any] | None = None,
+    repository_source_input_boundary: dict[str, Any] | None = None,
 ) -> list[WorkspaceFile]:
     reject_execution_intent(case)
     _validate_schema(case, case_schema, "CASE_SCHEMA_INVALID")
@@ -3461,7 +3752,12 @@ def validate_case_document(
     pure_domain_schema = pure_domain_schema or load_document(
         DEFAULT_FIXTURE_ROOT / "pure-domains.schema.json"
     )
-    _validate_pure_case_semantics(case, staged_files, source_input_registry)
+    _validate_pure_case_semantics(
+        case,
+        staged_files,
+        source_input_registry,
+        repository_source_input_boundary,
+    )
     _validate_result_shape(
         case,
         case["expected"],
@@ -3476,6 +3772,7 @@ def validate_case_document(
         staged_files,
         "EXPECTED",
         source_input_registry,
+        repository_source_input_boundary,
     )
     expected = case["expected"]
     if expected["outcome"] in {"unsupported", "skipped"}:
@@ -3599,12 +3896,23 @@ def validate_corpus(
     source_input_registry = load_document(
         fixture_root / "language-source-input-registry.json"
     )
+    repository_source_boundary_schema = load_document(
+        DEFAULT_FIXTURE_ROOT / "repository-source-input-boundary.schema.json"
+    )
+    repository_source_boundary = load_document(
+        fixture_root / "repository-source-input-boundary.json"
+    )
     plan_schema = load_document(
         REPO_ROOT / "code" / "specs" / "schemas" / "build-plan-v1.schema.json"
     )
     manifest_summary = _validate_manifest(manifest, manifest_schema)
     source_input_summary = _validate_source_input_registry(
         source_input_registry, source_input_registry_schema
+    )
+    repository_source_summary = _validate_repository_source_input_boundary(
+        repository_source_boundary,
+        repository_source_boundary_schema,
+        source_input_registry,
     )
 
     case_paths = sorted((fixture_root / "cases").glob("*.json"))
@@ -3630,6 +3938,7 @@ def validate_corpus(
             plan_schema=plan_schema,
             pure_domain_schema=pure_domain_schema,
             source_input_registry=source_input_registry,
+            repository_source_input_boundary=repository_source_boundary,
         )
         case_ids.add(case["id"])
         domains.add(case["domain"])
@@ -3645,6 +3954,11 @@ def validate_corpus(
         "source_input_language_count": source_input_summary["language_count"],
         "source_input_registry_sha256": source_input_registry_digest(
             source_input_registry
+        ),
+        "repository_source_boundary_count": repository_source_summary["boundary_count"],
+        "repository_source_input_count": repository_source_summary["input_count"],
+        "repository_source_boundary_sha256": repository_source_input_boundary_digest(
+            repository_source_boundary
         ),
         "conformance_run_count": 0,
         "conformance_status": "not-run",
