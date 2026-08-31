@@ -30,6 +30,30 @@ is a supported choice, not a backend failing to express something. A consumer
 that needs the standard binding asserts the list is empty; one that expects an
 override asserts it contains the file.
 
+Detection resolves the target through the **same** normalisation the writer uses
+(`safe_manifest_relative_path`), not the raw manifest string. Otherwise
+`"MosaicHost.cpp/"` and `"Sources//App/MosaicRuntimeHost.swift"` would pass the
+writer's validation, land on the generated file, and go unreported — and a false
+negative defeats the field entirely, since consumers assert it is empty. The
+compare is case-insensitive, because macOS and Windows resolve filenames that way
+and Qt/SwiftUI/XAML ship there; that over-reports on case-sensitive filesystems,
+a deliberate trade since over-reporting fails a gate loudly while under-reporting
+ships an unreachable runtime with a clean report.
+
+Guarded by three tests, each verified to fail against the bug it guards: every
+spelling that resolves onto the binding is detected; targets the writer refuses
+(`./X`, `sub/../X`, absolute) fail the build outright rather than being silently
+placed; and a same-named file at project root is **not** reported as replacing
+one that lives in a subdirectory, since the writer does no subdirectory
+resolution.
+
+A fourth test builds every native backend and asserts each listed path exists on
+disk. The table is hand-maintained and gates a CI check, so a stale entry is a
+silent hole rather than a visible failure — and one entry was wrong on the first
+pass (`include/CMosaicRuntime.h` against the emitted
+`Sources/CMosaicRuntime/include/CMosaicRuntime.h`), which is exactly the case
+that test now catches.
+
 Covers the generated runtime-host files for all five native backends: Qt
 (`MosaicHost.cpp`/`.h`), SwiftUI (`MosaicRuntimeHost.swift`, `CMosaicRuntime.c`/`.h`),
 Compose (`MosaicRuntimeHost.kt`), Flutter (`mosaic_host.dart`), XAML

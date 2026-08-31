@@ -1132,7 +1132,14 @@ fn analyze_package_degradations_with_runtime_and_tokens(
         }
     }
 
-    let replaced_host_files = replaced_runtime_host_files(&manifest, opts.backend);
+    // Without `emit_project` no runtime host is generated, so nothing can be
+    // replaced — reporting a target as overwriting a file that was never written
+    // would be a false positive.
+    let replaced_host_files = if opts.emit_project {
+        replaced_runtime_host_files(&manifest, opts.backend)
+    } else {
+        Vec::new()
+    };
 
     Ok(DegradationReport {
         schema_version: 1,
@@ -1160,7 +1167,7 @@ fn generated_runtime_host_files(backend: Backend) -> &'static [&'static str] {
         Backend::SwiftUI => &[
             "Sources/App/MosaicRuntimeHost.swift",
             "Sources/CMosaicRuntime/CMosaicRuntime.c",
-            "include/CMosaicRuntime.h",
+            "Sources/CMosaicRuntime/include/CMosaicRuntime.h",
         ],
         Backend::Compose => &["src/main/kotlin/MosaicRuntimeHost.kt"],
         Backend::Flutter => &["lib/mosaic_host.dart"],
@@ -1172,8 +1179,28 @@ fn generated_runtime_host_files(backend: Backend) -> &'static [&'static str] {
 
 /// Which generated runtime-host files this package's `host_assets` overwrite.
 ///
-/// Compared on the normalised target path, since a manifest may spell the same
-/// destination different ways.
+/// ## Compared the way the writer resolves it, not the way the manifest spells it
+///
+/// `install_host_assets` writes to `backend_dir.join(safe_manifest_relative_path(target))`,
+/// and that normalisation collapses `//`, interior `./`, and a trailing `/` or
+/// `/.`. Comparing the raw manifest string instead would let a package overwrite
+/// the binding while going unreported — `"MosaicHost.cpp/"` and
+/// `"Sources//App/MosaicRuntimeHost.swift"` both pass the writer's validation,
+/// land on the generated file, and are not byte-equal to any table entry.
+///
+/// A false negative is the direction that matters here: the field exists so a
+/// consumer can assert it is **empty**, so anything that evades detection defeats
+/// the whole point. Running the target through the writer's own normalisation is
+/// what keeps the two from drifting. A target the writer rejects is skipped —
+/// it never reaches disk, so it cannot replace anything.
+///
+/// The compare is case-insensitive because macOS and Windows resolve filenames
+/// that way, and Qt, SwiftUI, and XAML all ship there: `mosaichost.cpp` would
+/// overwrite `MosaicHost.cpp` on those filesystems. That does over-report on a
+/// case-sensitive filesystem, where the two are genuinely different files — a
+/// deliberate trade, since over-reporting fails a gate loudly while
+/// under-reporting lets an app ship with an unreachable runtime and a clean
+/// report.
 fn replaced_runtime_host_files(manifest: &MosaicPackage, backend: Backend) -> Vec<String> {
     let backend_name = backend.dir_name();
     let generated = generated_runtime_host_files(backend);
@@ -1183,16 +1210,17 @@ fn replaced_runtime_host_files(manifest: &MosaicPackage, backend: Backend) -> Ve
         .iter()
         .filter(|asset| asset.backend == backend_name || asset.backend == "*")
         .filter_map(|asset| {
-            let target = asset.target.replace('\\', "/");
+            let target_rel = safe_manifest_relative_path("host asset target", &asset.target).ok()?;
+            let target = path_to_web_src(&target_rel);
+            // Exact match on the resolved path only. There is deliberately no
+            // basename fallback: `install_host_assets` joins the target to
+            // `backend_dir` verbatim and does no subdirectory resolution, so a
+            // root-level `MosaicRuntimeHost.swift` does not touch the generated
+            // `Sources/App/MosaicRuntimeHost.swift` and must not be reported as
+            // if it had.
             generated
                 .iter()
-                .find(|candidate| {
-                    let candidate = **candidate;
-                    target == candidate
-                        // A manifest may name only the file where the generated
-                        // one sits in a subdirectory.
-                        || candidate.rsplit('/').next() == Some(target.as_str())
-                })
+                .find(|candidate| target.eq_ignore_ascii_case(candidate))
                 .map(|candidate| (*candidate).to_string())
         })
         .collect();
@@ -6957,6 +6985,207 @@ layout NativeEvents {
             result.artifacts.iter().any(|path| path == &lattice),
             "Lattice sidecar should appear in BuildResult.artifacts"
         );
+    }
+
+    /// Spellings that resolve to the generated file are all detected.
+    ///
+    /// `install_host_assets` writes through `safe_manifest_relative_path`, which
+    /// collapses `//` and a trailing `/` or `/.`. Comparing the raw manifest
+    /// string would let every spelling below overwrite the binding while
+    /// reporting nothing — and a false negative defeats the field entirely, since
+    /// consumers assert it is empty.
+    ///
+    /// Note what is deliberately absent: `./MosaicHost.cpp` and `sub/../X` are
+    /// *rejected* outright by that validation, so they never reach disk and there
+    /// is nothing to report. The companion test below pins that.
+    #[test]
+    fn alternate_spellings_of_the_generated_host_are_still_detected() {
+        for spelling in [
+            "MosaicHost.cpp",
+            "MosaicHost.cpp/",
+            "MosaicHost.cpp/.",
+            "mosaichost.cpp",
+        ] {
+            let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+            let host_dir = pkg.path().join("host").join("qt");
+            fs::create_dir_all(&host_dir).unwrap();
+            fs::write(host_dir.join("MosaicHost.cpp"), "// bespoke\n").unwrap();
+            append_host_assets(
+                pkg.path(),
+                &format!(
+                    r#"[host_assets]
+files = [
+  {{ backend = "qt", source = "host/qt/MosaicHost.cpp", target = "{spelling}" }},
+]"#
+                ),
+            );
+
+            let out = TempDir::new().unwrap();
+            build_package_with_profile(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend: Backend::Qt,
+                    emit_project: true,
+                    theme: None,
+                },
+                BuildProfile::Permissive,
+            )
+            .unwrap_or_else(|error| panic!("qt build for `{spelling}`: {error:?}"));
+
+            let report: serde_json::Value = serde_json::from_str(
+                &fs::read_to_string(out.path().join("qt/mosaic-degradations.json")).unwrap(),
+            )
+            .unwrap();
+            assert_eq!(
+                report["replacedRuntimeHostFiles"],
+                serde_json::json!(["MosaicHost.cpp"]),
+                "target `{spelling}` resolves onto the generated binding and must be reported"
+            );
+        }
+    }
+
+    /// Targets the writer refuses never reach disk, so they replace nothing.
+    ///
+    /// This is the other half of the spelling story: detection deliberately skips
+    /// a target `safe_manifest_relative_path` rejects, and that is only correct
+    /// because such a target also fails the build outright rather than being
+    /// silently written somewhere.
+    #[test]
+    fn targets_the_writer_rejects_fail_the_build() {
+        for rejected in ["./MosaicHost.cpp", "sub/../MosaicHost.cpp", "/MosaicHost.cpp"] {
+            let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+            let host_dir = pkg.path().join("host").join("qt");
+            fs::create_dir_all(&host_dir).unwrap();
+            fs::write(host_dir.join("MosaicHost.cpp"), "// bespoke\n").unwrap();
+            append_host_assets(
+                pkg.path(),
+                &format!(
+                    r#"[host_assets]
+files = [
+  {{ backend = "qt", source = "host/qt/MosaicHost.cpp", target = "{rejected}" }},
+]"#
+                ),
+            );
+
+            let out = TempDir::new().unwrap();
+            let result = build_package_with_profile(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend: Backend::Qt,
+                    emit_project: true,
+                    theme: None,
+                },
+                BuildProfile::Permissive,
+            );
+            assert!(
+                matches!(result, Err(BuildError::UnsafePath { .. })),
+                "target `{rejected}` should be refused outright, got {result:?}"
+            );
+        }
+    }
+
+    /// A same-named file at project root does not count as replacing a generated
+    /// one that lives in a subdirectory.
+    ///
+    /// `install_host_assets` joins the target to `backend_dir` verbatim and does
+    /// no subdirectory resolution, so a root-level `MosaicRuntimeHost.swift`
+    /// leaves `Sources/App/MosaicRuntimeHost.swift` untouched. An earlier draft
+    /// matched on basename and reported it anyway, which would fail a downstream
+    /// "list is empty" gate for a package that had replaced nothing.
+    #[test]
+    fn a_same_named_file_elsewhere_is_not_a_replacement() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let host_dir = pkg.path().join("host").join("swiftui");
+        fs::create_dir_all(&host_dir).unwrap();
+        fs::write(host_dir.join("MosaicRuntimeHost.swift"), "// unrelated\n").unwrap();
+        append_host_assets(
+            pkg.path(),
+            r#"[host_assets]
+files = [
+  { backend = "swiftui", source = "host/swiftui/MosaicRuntimeHost.swift", target = "MosaicRuntimeHost.swift" },
+]"#,
+        );
+
+        let out = TempDir::new().unwrap();
+        build_package_with_profile(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::SwiftUI,
+                emit_project: true,
+                theme: None,
+            },
+            BuildProfile::Permissive,
+        )
+        .expect("swiftui build");
+
+        let report: serde_json::Value = serde_json::from_str(
+            &fs::read_to_string(out.path().join("swiftui/mosaic-degradations.json")).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(
+            report["replacedRuntimeHostFiles"],
+            serde_json::json!([]),
+            "a root-level file must not be reported as replacing one in Sources/App"
+        );
+
+        // And the generated binding really is untouched.
+        let generated = out
+            .path()
+            .join("swiftui/Sources/App/MosaicRuntimeHost.swift");
+        assert!(generated.exists());
+        assert_ne!(fs::read_to_string(&generated).unwrap(), "// unrelated\n");
+    }
+
+    /// Every path in the runtime-host table is one the builder actually emits.
+    ///
+    /// The table is hand-maintained and it gates a CI check, so a stale entry is
+    /// a silent hole rather than a visible failure: a package overwriting the
+    /// real file goes unreported while the honest spelling of a wrong path gets
+    /// reported instead. One entry was already wrong when this landed —
+    /// `include/CMosaicRuntime.h` against the emitted
+    /// `Sources/CMosaicRuntime/include/CMosaicRuntime.h` — so a comment pointing
+    /// at the template directory is not sufficient. This builds each native
+    /// backend and asserts every listed path exists on disk.
+    #[test]
+    fn every_generated_runtime_host_path_is_actually_emitted() {
+        for backend in [
+            Backend::Qt,
+            Backend::SwiftUI,
+            Backend::Compose,
+            Backend::Flutter,
+            Backend::Xaml,
+        ] {
+            let listed = generated_runtime_host_files(backend);
+            assert!(
+                !listed.is_empty(),
+                "{:?} is a native backend and should list its runtime host files",
+                backend
+            );
+
+            let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+            let out = TempDir::new().unwrap();
+            build_package(&BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend,
+                emit_project: true,
+                theme: None,
+            })
+            .unwrap_or_else(|error| panic!("{:?} build: {error:?}", backend));
+
+            let backend_dir = out.path().join(backend.dir_name());
+            for relative in listed {
+                assert!(
+                    backend_dir.join(relative).exists(),
+                    "{:?} lists `{relative}` as a generated runtime host, but the \
+                     build did not emit it — the table has drifted from the emitter",
+                    backend
+                );
+            }
+        }
     }
 
     /// A `host_asset` that overwrites the generated Qt runtime host is recorded.
