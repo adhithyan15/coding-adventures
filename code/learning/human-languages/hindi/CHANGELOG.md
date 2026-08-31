@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Changed — declare both sides of the Hindi age frame
+
+- Chapter 19 now declares **कितने साल के हो? / मैं … साल का हूँ।** as its
+  grammar headword instead of only the question. The lesson already defines,
+  practises, and assesses both **के** in the question and **का** in the answer;
+  its metadata now matches the complete exchange.
+
 ### Changed — declare the Hindi work conjunct verb
 
 - Chapter 5 now declares **करना / काम करना** as its headword instead of only

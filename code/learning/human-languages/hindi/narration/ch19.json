@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Asking Someone's Age",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:d56b999cbe9dce1e",
+  "sourceHash": "fnv1a64:62876831bc9ae2af",
   "lessons": [
     {
       "id": "HI-C19-umr",
@@ -103,8 +103,8 @@
     {
       "id": "HI-C19-age-grammar",
       "sequence": 670,
-      "title": "कितने साल के हो? (kitne sāl ke ho?) — belonging to so many years",
-      "headword": "कितने साल के हो?",
+      "title": "कितने साल के हो? — belonging to so many years",
+      "headword": "कितने साल के हो? / मैं … साल का हूँ।",
       "romanization": "kitne sāl ke ho?",
       "gloss": "Hindi tells age as belonging to a number of years, a fifth cross-language shape",
       "script": "devanagari",
@@ -113,7 +113,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f047e22b5b00962",
+      "sourceHash": "fnv1a64:7dd5516decbc278d",
       "notice": null,
       "blocks": [
         {
