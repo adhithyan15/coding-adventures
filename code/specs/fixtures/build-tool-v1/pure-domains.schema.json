@@ -513,7 +513,7 @@
         "content_hex": {
           "type": "string",
           "pattern": "^(?:[0-9a-fA-F]{2})*$",
-          "maxLength": 2097152
+          "maxLength": 8388608
         }
       }
     },

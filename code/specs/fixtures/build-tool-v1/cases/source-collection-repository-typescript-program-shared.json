@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "id": "source-collection/repository-typescript-shared-boundary",
+  "id": "source-collection/repository-typescript-program-shared-config",
   "domain": "source_collection",
-  "summary": "A TypeScript package receives only its exact tracked shared base configuration from the language workspace root.",
+  "summary": "An exact TypeScript program consumer includes the package-workspace base compiler config it extends.",
   "platforms": ["darwin", "linux", "windows"],
   "capabilities": ["source_collection"],
   "workspace": {"files": []},
@@ -11,19 +11,17 @@
     "options": {
       "mode": "repository_boundary",
       "language": "typescript",
-      "package_root": "code/packages/typescript/arithmetic",
+      "package_root": "code/programs/typescript/ircd",
       "boundary_sha256": "62c46d6d06559ab553c5c781f4cd1cf632d7e1184030fe6ba127d40acf1d7526",
       "candidates": [
-        {"path": "code/packages/rust/Cargo.toml", "kind": "file", "tracked": true, "content_hex": "727573740a"},
-        {"path": "code/packages/typescript/.env", "kind": "file", "tracked": true, "content_hex": "7365637265740a"},
         {"path": "code/packages/typescript/tsconfig.base.json", "kind": "file", "tracked": true, "content_hex": "736f757263650a"},
-        {"path": "code/packages/typescript/tsconfig.local.json", "kind": "file", "tracked": false, "content_hex": "6c6f63616c0a"}
+        {"path": "code/programs/typescript/ircd/tsconfig.json", "kind": "file", "tracked": true, "content_hex": "7061636b6167650a"}
       ]
     }
   },
   "expected": {
     "schema_version": 1,
-    "case_id": "source-collection/repository-typescript-shared-boundary",
+    "case_id": "source-collection/repository-typescript-program-shared-config",
     "domain": "source_collection",
     "outcome": "ok",
     "result": {

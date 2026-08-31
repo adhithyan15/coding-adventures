@@ -11,15 +11,15 @@
     "options": {
       "mode": "repository_boundary",
       "language": "rust",
-      "package_root": "code/packages/rust/hash-functions",
-      "boundary_sha256": "3e438730ec212478a0515501c2ac36f62ae12372ba4f3a5dc253c85146f5fbc6",
+      "package_root": "code/packages/rust/commonmark",
+      "boundary_sha256": "62c46d6d06559ab553c5c781f4cd1cf632d7e1184030fe6ba127d40acf1d7526",
       "candidates": [
         {"path": "code/packages/rust/.cargo/config.toml", "kind": "file", "tracked": true, "content_hex": "736f757263650a"},
         {"path": "code/packages/rust/.cargo/credentials.toml", "kind": "file", "tracked": true, "content_hex": "7365637265740a"},
         {"path": "code/packages/rust/Cargo.lock", "kind": "file", "tracked": false, "content_hex": "6c6f63616c0a"},
         {"path": "code/packages/rust/Cargo.toml", "kind": "file", "tracked": true, "content_hex": "736f757263650a"},
         {"path": "code/packages/rust/_windows_cargo.sh", "kind": "file", "tracked": true, "content_hex": "736f757263650a"},
-        {"path": "code/packages/rust/hash-functions/Cargo.toml", "kind": "file", "tracked": true, "content_hex": "7061636b6167650a"}
+        {"path": "code/packages/rust/commonmark/Cargo.toml", "kind": "file", "tracked": true, "content_hex": "7061636b6167650a"}
       ]
     }
   },

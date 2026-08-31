@@ -8,20 +8,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Build-tool repository source-input boundary
 
-- Added a closed, versioned repository-relative registry for eight reviewed
-  source boundaries and fourteen exact tracked inputs that package-local
-  selectors cannot represent. Shared Haskell, Lua, Python, Ruby, Rust, and
-  TypeScript ancestors remain exact, while VisiCalc vendor JavaScript is
-  admitted only through package-scoped generated-pruning exceptions.
+- Added a closed, versioned repository-relative registry for 18 reviewed source
+  boundaries, 21 input registrations over 19 tracked inputs, 481 consumer
+  scopes, and 484 authorizations that package-local selectors cannot represent.
+  It covers exact Haskell, Lua, Python, Rust, TypeScript, Starlark, human-language,
+  neural-learning, required-capability, and cross-language consumers plus
+  bounded VisiCalc sibling and generated-pruning inputs.
 - Added canonical collision, containment, scope, role, and tracked-regular-file
   validation plus a domain-separated registry digest pinned by every boundary
   source-collection case. Ambient directories, untracked local configuration,
   credentials, signing material, secrets, broad suffixes, and globs remain
   outside the contract.
-- Added three language-neutral source-collection cases and a tracked-repository
-  projection regression covering Rust workspace inputs, the TypeScript base
-  config, and the two exact VisiCalc vendor boundaries without granting process
-  or filesystem-discovery authority.
+- Added nine language-neutral source-collection cases and a tracked-repository
+  projection regression covering shared-ancestor, generated-pruning, exact
+  cross-package, cross-language workspace, direct BUILD input, Starlark load,
+  exact/descendant/exclusion, and inert registered-path symlink/reparse behavior
+  without granting process or filesystem-discovery authority.
 
 ### Build-tool language source-input registry
 

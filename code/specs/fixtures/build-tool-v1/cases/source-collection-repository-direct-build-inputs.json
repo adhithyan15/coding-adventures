@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "id": "source-collection/repository-direct-build-inputs",
+  "domain": "source_collection",
+  "summary": "A package build includes its exact checked-in verifier and the two repository data files that verifier reads.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["source_collection"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "source_collection",
+    "options": {
+      "mode": "repository_boundary",
+      "language": "typescript",
+      "package_root": "code/packages/typescript/human-language-data",
+      "boundary_sha256": "62c46d6d06559ab553c5c781f4cd1cf632d7e1184030fe6ba127d40acf1d7526",
+      "candidates": [
+        {"path": "code/learning/human-languages/core/grammar-slots.json", "kind": "file", "tracked": true, "content_hex": "736f757263650a"},
+        {"path": "code/learning/human-languages/data/generate_grammar_cells.py", "kind": "file", "tracked": true, "content_hex": "736f757263650a"},
+        {"path": "code/learning/human-languages/spanish/grammar-cells.json", "kind": "file", "tracked": true, "content_hex": "736f757263650a"},
+        {"path": "code/learning/human-languages/spanish/README.md", "kind": "file", "tracked": true, "content_hex": "6f746865720a"}
+      ]
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "source-collection/repository-direct-build-inputs",
+    "domain": "source_collection",
+    "outcome": "ok",
+    "result": {
+      "files": [
+        {"path": "code/learning/human-languages/core/grammar-slots.json", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "code/learning/human-languages/data/generate_grammar_cells.py", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "code/learning/human-languages/spanish/grammar-cells.json", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"}
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}
