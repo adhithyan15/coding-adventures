@@ -1,0 +1,13 @@
+{
+  "id": "ES-PATH-401-REVIEWS",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "lessons": [
+    "ES-C401-route-recall-1",
+    "ES-C401-route-recall-2"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-401-REVIEWS"
+  ],
+  "after": []
+}

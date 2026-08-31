@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C401-cambiar
-spine_node: SPINE-HANDLE-TRAVEL
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 8830
 chapter: 401
 type: word

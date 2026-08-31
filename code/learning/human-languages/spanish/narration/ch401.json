@@ -4,7 +4,7 @@
   "chapter": 401,
   "title": "Four Words for Following Directions",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:bfa6ef5e0747a96e",
+  "sourceHash": "fnv1a64:3edd9e68d96d3aa0",
   "lessons": [
     {
       "id": "ES-C401-seguir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b3f46f3db68ef6f",
+      "sourceHash": "fnv1a64:d085db3d1f9fb825",
       "notice": null,
       "blocks": [
         {
@@ -184,7 +184,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b7738859ace0581c",
+      "sourceHash": "fnv1a64:11629859ffe8ff16",
       "notice": null,
       "blocks": [
         {
@@ -362,7 +362,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd107c69f7c9824e",
+      "sourceHash": "fnv1a64:36eae9a14b030308",
       "notice": null,
       "blocks": [
         {
@@ -536,7 +536,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:861c115ea6846d1b",
+      "sourceHash": "fnv1a64:c734217b5b6d5353",
       "notice": null,
       "blocks": [
         {
@@ -722,7 +722,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2be3cbd20a332be4",
+      "sourceHash": "fnv1a64:d2808d5a38a94ed8",
       "notice": null,
       "blocks": [
         {
@@ -831,7 +831,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1319215a6ad35576",
+      "sourceHash": "fnv1a64:96b6d65f83d54342",
       "notice": null,
       "blocks": [
         {
