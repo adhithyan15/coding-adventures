@@ -159,6 +159,8 @@ full so omissions, duplicates, and ordering drift can be checked mechanically.
 | 150 | 26 | PA-R26-work-control-r3 | retrieve one delayed work row and its spelling, spacing, and agreement checks at R3 |
 | 151 | 27 | PA-R27-ear-mouth-r4 | retrieve ear and mouth with their false-resemblance and worn-consonant histories at R4 |
 | 152 | 27 | PA-R27-nose-heart-r4 | retrieve nose and heart while contrasting inherited and borrowed routes at R4 |
+| 153 | 28 | PA-R28-form-supported-r3 | rebuild the known two-line and three-line supported forms at R3 with answer banks visible |
+| 154 | 28 | PA-R28-head-na-r4 | retrieve head, its horn history, and the na shape at R4 without claiming writing evidence |
 
-After session 152, the track continues through the dependency-linked backlog;
+After session 154, the track continues through the dependency-linked backlog;
 this map makes no claim that the current book is yet complete or exam-ready.

@@ -1,0 +1,12 @@
+{
+  "id": "PA-PATH-029",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "PA-R28-form-supported-r3"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-034-A1-FORM-SUPPORTED-R3"
+  ],
+  "after": []
+}

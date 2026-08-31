@@ -9,7 +9,8 @@
     "PA-PATH-021",
     "PA-PATH-022",
     "PA-PATH-025",
-    "PA-PATH-027"
+    "PA-PATH-027",
+    "PA-PATH-029"
   ],
   "omits": [
     "PRONOUN-ME"

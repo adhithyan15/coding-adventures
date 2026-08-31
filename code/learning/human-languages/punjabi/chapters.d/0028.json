@@ -1,0 +1,20 @@
+{
+  "chapter": 28,
+  "title": "Supported Forms, Then Head and Na at Distance",
+  "label": "ch:pa-form-head-debt",
+  "canDo": "I can rebuild two old supported form shapes and separately retrieve head, its horn history, and the na shape at long distance.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES",
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PA-R28-head-na-r4",
+    "kind": "task",
+    "summary": "The learner retrieves head and its inherited horn connection, then recognizes the already-taught na shape without claiming independent writing evidence.",
+    "assesses": [
+      "PA-LEX-SIR",
+      "PA-ETYMON-SIR-HORN",
+      "PA-SCRIPT-NA-01"
+    ]
+  }
+}

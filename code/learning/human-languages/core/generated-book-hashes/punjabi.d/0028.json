@@ -1,0 +1,10 @@
+{
+  "language": "punjabi",
+  "chapter": 28,
+  "sourceHash": "fnv1a64:5025ca1d40e7cc3c",
+  "lessonIds": [
+    "PA-R28-form-supported-r3",
+    "PA-R28-head-na-r4"
+  ],
+  "tex": "punjabi/book/chapters/ch28-form-head-debt.tex"
+}
