@@ -10,15 +10,16 @@
  *
  * 1. Collect all source files in the package directory, filtered by the
  *    language's relevant extensions. Always include the BUILD file.
- * 2. Sort the file list lexicographically (by relative path) for determinism.
- * 3. SHA256-hash each file's contents individually.
- * 4. Concatenate all individual hashes into one string.
- * 5. SHA256-hash that concatenated string to produce the final package hash.
+ * 2. Normalize repository-relative paths to forward-slash form and sort them.
+ * 3. Frame each UTF-8 path with its unsigned 64-bit byte length.
+ * 4. Append each file's unsigned 64-bit content length and exact raw bytes.
+ * 5. SHA256-hash the unambiguous stream to produce the final package hash.
  *
- * This two-level hashing means:
+ * This framed hashing means:
  * - Reordering files doesn't change the hash (we sort first).
- * - Adding or removing a file changes the hash (the concatenated string changes).
+ * - Adding or removing a file changes the hash (the framed stream changes).
  * - Modifying any file's contents changes the hash.
+ * - Renaming a file changes the hash, even when its contents do not.
  *
  * ## Dependency hashing
  *
@@ -61,6 +62,7 @@ export const SOURCE_EXTENSIONS: Record<string, Set<string>> = {
   elixir: new Set([".ex", ".exs"]),
   perl: new Set([".pl", ".pm", ".t", ".xs"]),
   haskell: new Set([".hs", ".cabal"]),
+  ocaml: new Set([".ml", ".mli", ".opam"]),
 };
 
 /**
@@ -85,6 +87,17 @@ export const SPECIAL_FILENAMES: Record<string, Set<string>> = {
     "META.yml",
   ]),
   haskell: new Set(),
+  ocaml: new Set([".ocamlformat", "dune", "dune-project"]),
+};
+
+/**
+ * Manifest extensions that affect a package independently of declared globs.
+ *
+ * OCaml package manifests live at the package root. Source extensions such as
+ * `.ml` and `.mli` remain governed by the caller's declared source patterns.
+ */
+const DECLARED_MANIFEST_EXTENSIONS: Record<string, Set<string>> = {
+  ocaml: new Set([".opam"]),
 };
 
 /**
@@ -163,6 +176,54 @@ function walkFiles(dir: string): string[] {
   return results;
 }
 
+/** Return a package-local path using the contract's portable separator. */
+function portableRelativePath(root: string, filepath: string): string {
+  return path.relative(root, filepath).split(path.sep).join("/");
+}
+
+/** Compare portable paths by their UTF-8 bytes, independent of host locale. */
+function comparePortablePaths(left: string, right: string): number {
+  return Buffer.compare(
+    Buffer.from(left, "utf-8"),
+    Buffer.from(right, "utf-8"),
+  );
+}
+
+/**
+ * Derive the package root's normalized repository-relative path.
+ *
+ * Production packages live below `code/packages` or `code/programs`. The
+ * identity fallback keeps isolated unit fixtures deterministic without
+ * incorporating an absolute checkout prefix into their digest.
+ */
+function repositoryRelativePackagePath(pkg: Package): string {
+  const parts = path.resolve(pkg.path).split(/[\\/]+/u);
+  for (let index = parts.length - 3; index >= 0; index -= 1) {
+    if (
+      parts[index] === "code" &&
+      (parts[index + 1] === "packages" || parts[index + 1] === "programs")
+    ) {
+      return parts.slice(index).join("/");
+    }
+  }
+
+  const identity = pkg.name.split("/");
+  if (identity.length === 3 && identity[1] === "programs") {
+    return `code/programs/${identity[0]}/${identity[2]}`;
+  }
+  if (identity.length === 2) {
+    return `code/packages/${identity[0]}/${identity[1]}`;
+  }
+  throw new Error("cannot derive repository-relative package path");
+}
+
+/** Append one unsigned 64-bit big-endian length to a SHA-256 stream. */
+function updateUnsigned64(hash: crypto.Hash, value: number): void {
+  const encoded = Buffer.alloc(8);
+  encoded.writeBigUInt64BE(BigInt(value));
+  hash.update(encoded);
+}
+
 /**
  * Collect all source files in a package directory.
  *
@@ -208,11 +269,12 @@ export function collectSourceFiles(pkg: Package): string[] {
   }
 
   // Sort by relative path for determinism.
-  files.sort((a, b) => {
-    const relA = path.relative(pkg.path, a);
-    const relB = path.relative(pkg.path, b);
-    return relA.localeCompare(relB);
-  });
+  files.sort((a, b) =>
+    comparePortablePaths(
+      portableRelativePath(pkg.path, a),
+      portableRelativePath(pkg.path, b),
+    ),
+  );
 
   return files;
 }
@@ -245,6 +307,10 @@ export function collectSourceFilesGlob(
   patterns: string[],
 ): string[] {
   const files: string[] = [];
+  const specialNames = SPECIAL_FILENAMES[pkg.language] ?? new Set<string>();
+  const manifestExtensions =
+    DECLARED_MANIFEST_EXTENSIONS[pkg.language] ?? new Set<string>();
+  const packageRoot = path.resolve(pkg.path);
 
   for (const filepath of walkFiles(pkg.path)) {
     const basename = path.basename(filepath);
@@ -261,12 +327,24 @@ export function collectSourceFilesGlob(
       continue;
     }
 
+    // Exact package metadata remains a hashing input even when the declared
+    // source patterns omit it. Extension manifests are root-scoped so nested
+    // dependency/example metadata does not silently widen the target.
+    if (
+      specialNames.has(basename) ||
+      (path.resolve(path.dirname(filepath)) === packageRoot &&
+        manifestExtensions.has(path.extname(filepath)))
+    ) {
+      files.push(filepath);
+      continue;
+    }
+
     // Compute the path relative to the package directory and match
     // against each declared source pattern.
     //
     // We use forward slashes for consistency, since glob patterns
     // always use forward slashes regardless of platform.
-    const relPath = path.relative(pkg.path, filepath).split(path.sep).join("/");
+    const relPath = portableRelativePath(pkg.path, filepath);
 
     for (const pattern of patterns) {
       if (matchPath(pattern, relPath)) {
@@ -277,11 +355,12 @@ export function collectSourceFilesGlob(
   }
 
   // Sort by relative path for determinism (same as collectSourceFiles).
-  files.sort((a, b) => {
-    const relA = path.relative(pkg.path, a);
-    const relB = path.relative(pkg.path, b);
-    return relA.localeCompare(relB);
-  });
+  files.sort((a, b) =>
+    comparePortablePaths(
+      portableRelativePath(pkg.path, a),
+      portableRelativePath(pkg.path, b),
+    ),
+  );
 
   return files;
 }
@@ -318,10 +397,22 @@ export function hashPackage(pkg: Package): string {
     return crypto.createHash("sha256").update("").digest("hex");
   }
 
-  // Hash each file, concatenate, hash again.
-  const fileHashes = files.map((f) => hashFile(f));
-  const combined = fileHashes.join("");
-  return crypto.createHash("sha256").update(combined).digest("hex");
+  // Hashing v1 frames every normalized repository-relative UTF-8 path and
+  // exact raw content with unsigned 64-bit byte lengths. File identity and
+  // boundaries are therefore unambiguous without hashing absolute checkout
+  // locations, decoded text, or host metadata.
+  const packageHash = crypto.createHash("sha256");
+  const packageRoot = repositoryRelativePackagePath(pkg);
+  for (const filepath of files) {
+    const portablePath = `${packageRoot}/${portableRelativePath(pkg.path, filepath)}`;
+    const pathBytes = Buffer.from(portablePath, "utf-8");
+    const content = fs.readFileSync(filepath);
+    updateUnsigned64(packageHash, pathBytes.length);
+    packageHash.update(pathBytes);
+    updateUnsigned64(packageHash, content.length);
+    packageHash.update(content);
+  }
+  return packageHash.digest("hex");
 }
 
 /**

@@ -27,6 +27,14 @@ separate from discovery: a source directory such as `specs` remains eligible,
 while exact `_build`, `node_modules`, `.cargo`, and `cover` components do not
 affect a package cache key.
 
+The portable source registry includes OCaml `.ml`, `.mli`, and `.opam` inputs
+plus exact `.ocamlformat`, `dune`, and `dune-project` metadata in extension and
+declared-source modes. Package digests sort normalized repository-relative
+paths by UTF-8 bytes and frame each path and exact raw file content with
+unsigned 64-bit big-endian lengths. A same-content rename therefore changes the
+cache identity without incorporating an absolute checkout prefix, host locale,
+decoded source text, or host metadata.
+
 ## How it fits in the stack
 
 This is one of several build tool implementations in the monorepo (Python, Ruby, Go, Rust, Elixir, TypeScript). All implementations share the same architecture and produce identical results. The Go implementation is the primary one used in CI; the others serve as educational implementations demonstrating the same concepts in different languages.

@@ -11572,6 +11572,40 @@ draft and mergeable with required CI and CodeQL checks queued, so auto-merge
 remains disabled until every final-head check is terminal and acceptable and
 no merge conflict exists.
 
+### Post-PR #13582 refresh and TypeScript source-hashing selection
+
+PR #13582 completed all 40 final-head checks acceptably with 33 successes and
+seven expected skips. Guarded squash auto-merge was enabled only after GitHub
+reported final head `201cfc8fb431eaeb9a8d5c8f857b29e6886a0491` clean and
+mergeable, and GitHub merged it as
+`a8fc033619f68033562c6288a3f8353f6a4981a6` at 2026-08-31T04:11:31Z
+without a manual merge command. The Lua Dune-fixture owner therefore advances
+to `merged` and the active PR is cleared.
+
+The exact-main schema-3 inventory remains collision-clean and identity-neutral:
+15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427
+all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880,
+731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown
+buckets. Since the stored `e3ecc38f` revision, only the same seven existing Lua
+discovery, test, documentation, and parity-ledger paths changed. No package
+root, BUILD front, recognized manifest, lockfile, dependency, or identity
+topology changed. Reconciliation retains the complete 606-owner/917-edge graph,
+and both newly unblocked Lua leaves were already owned.
+
+The dependency/leverage pass selects
+`build-tool-typescript-portable-source-hashing-conformance` on branch
+`codex/build-tool-typescript-portable-source-hashing-conformance`. Its sole
+prerequisite is merged. The owner has three total descendants: it immediately
+unlocks TypeScript portable dependency hashing and advances both hashing
+aggregates. The bounded change closes the existing source-hashing contract
+through one TypeScript module and focused tests, so it outranks the ready
+zero-descendant Lua identity leaf and the broader from-scratch Lua hashing/cache
+implementation. The expected seven TypeScript hasher, test, README, changelog,
+state, roadmap, and root-changelog paths overlap no live PR; the branch, remote
+branch, prior PR, and worktree path were absent before a fresh clean worktree
+was created from exact `origin/main`. Selection leaves 191 merged, 414 pending,
+and exactly one `in-progress` owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

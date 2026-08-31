@@ -34,6 +34,13 @@ All notable changes to the TypeScript build tool will be documented in this file
 
 ### Fixed
 
+- Complete portable TypeScript source hashing with OCaml `.ml`, `.mli`, and
+  `.opam` recognition plus exact `.ocamlformat`, `dune`, and `dune-project`
+  metadata in extension and declared-source collection.
+- Frame sorted normalized repository-relative UTF-8 paths and exact raw file
+  bytes with unsigned 64-bit lengths, matching hashing v1 and making
+  same-content renames invalidate the cache without leaking checkout paths,
+  host locale, decoded text, or metadata into the digest.
 - Exclude the complete exact, case-sensitive 26-component generated,
   dependency, VCS, cache, and temporary-directory registry before both
   extension and declared-source hashing. Case variants and near names remain
