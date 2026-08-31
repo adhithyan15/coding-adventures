@@ -49,6 +49,7 @@ describe("assessment policy (HL16)", () => {
     const registryOrder = loadLanguageRegistry().languages.map((track) => track.id);
     expect(contracts).toEqual(expect.arrayContaining([
       "french",
+      "hindi",
       "marathi",
       "marwadi",
       "punjabi",
@@ -65,6 +66,30 @@ describe("assessment policy (HL16)", () => {
 
 describe("track assessment contracts", () => {
   const policy = loadAssessmentPolicy();
+
+  it("loads Hindi's seven-rung independent four-skill destination without claiming readiness", () => {
+    const hindi = parseAssessmentContract(
+      JSON.parse(readFileSync(join(defaultCurriculumRoot(), "hindi", "assessment.json"), "utf8")),
+      "hindi",
+      policy,
+    );
+    expect(hindi.levels.map((level) => level.level)).toEqual(policy.levels);
+    expect(hindi.levels.every((level) => level.target.basis === "project-defined")).toBe(true);
+    expect(hindi.levels.every((level) =>
+      Object.values(level.skills).every((skill) => skill.passThreshold === 0.6)
+    )).toBe(true);
+    expect(hindi.levels[0]?.writingStages).toEqual([
+      "observe-trace",
+      "guided-copy",
+      "delayed-copy",
+      "dictation-transcription",
+    ]);
+    expect(hindi.levels.at(-1)?.writingStages).toEqual(policy.writingStages.map((stage) => stage.id));
+    expect(hindi.levels.every((level) => level.fullMocks.length === 2)).toBe(true);
+    expect(hindi.levels.every((level) =>
+      level.fullMocks.every((mock) => mock.humanValidation === undefined)
+    )).toBe(true);
+  });
 
   it("loads Marathi's seven-rung independent four-skill destination", () => {
     const marathi = parseAssessmentContract(

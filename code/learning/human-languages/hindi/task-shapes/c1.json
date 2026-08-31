@@ -1,0 +1,182 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "level": "C1",
+  "target": {"name": "Coding Adventures Hindi C1 Assessment — project-defined equivalent", "basis": "project-defined"},
+  "sources": [
+    {"id": "ca-hl16-assessment-policy", "title": "HL16 — Exam-ready books and the gentle writing ramp", "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/specs/HL16-exam-ready-books-and-writing-ramp.md", "published": "2026-08-20", "accessed": "2026-08-31"},
+    {"id": "ca-hl18-task-shapes", "title": "HL18 — Four-skill task shapes", "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/specs/HL18-four-skill-task-shapes.md", "published": "2026-08-20", "accessed": "2026-08-31"},
+    {"id": "ca-hindi-assessment", "title": "Coding Adventures Hindi Assessment Specification", "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/hindi/assessment-spec.md", "published": "2026-08-31", "accessed": "2026-08-31"}
+  ],
+  "administration": {"writtenMinutes": 200, "speakingMinutes": 22, "speakingGroupMaximum": 3, "speakingPreparationMinutes": 15, "deliveryModes": ["paper", "recorded-audio", "live-interlocutor"]},
+  "passRule": {
+    "maximumPoints": 400, "passPoints": 240, "requiresEverySectionAttempted": true,
+    "independentSkillThresholds": {"reading": 0.6, "listening": 0.6, "writing": 0.6, "speaking": 0.6},
+    "note": "Each skill is a separate 100-point paper and must independently reach 60/100; the 240-point headline sum cannot compensate for a failed paper."
+  },
+  "sections": [
+    {
+      "skill": "reading", "minutes": 75,
+      "parts": [
+        {
+          "id": "c1-reading-dense-public-text", "promptModes": ["written-devanagari"],
+          "promptGenres": ["dense public-policy, institutional, or civic text"],
+          "responseModes": ["selection", "claim-evidence match", "implicit-stance match"], "items": 9,
+          "stimulusLength": {"unit": "words", "minimum": 650, "maximum": 800, "approximate": false},
+          "responseLength": {"unit": "items", "minimum": 1, "maximum": 1, "approximate": false},
+          "interaction": "individual", "replayCount": 0,
+          "scoring": {"maxRawPoints": 25, "criteria": ["argument structure", "implicit stance", "rhetorical purpose", "specific textual support"]},
+          "aids": {"allowed": ["marking on the question paper", "one unscored example"], "forbidden": ["romanization", "dictionary", "translator"], "notPublished": []},
+          "notPublished": [], "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-hindi-assessment"]
+        },
+        {
+          "id": "c1-reading-professional-text", "promptModes": ["written-devanagari"],
+          "promptGenres": ["professional report, proposal, or analytical memorandum"],
+          "responseModes": ["selection", "source-purpose match", "implication match"], "items": 9,
+          "stimulusLength": {"unit": "words", "minimum": 700, "maximum": 850, "approximate": false},
+          "responseLength": {"unit": "items", "minimum": 1, "maximum": 1, "approximate": false},
+          "interaction": "individual", "replayCount": 0,
+          "scoring": {"maxRawPoints": 25, "criteria": ["professional purpose", "evidence evaluation", "unstated implication", "register effect"]},
+          "aids": {"allowed": ["marking on the question paper", "one unscored example"], "forbidden": ["romanization", "dictionary", "translator"], "notPublished": []},
+          "notPublished": [], "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-hindi-assessment"]
+        },
+        {
+          "id": "c1-reading-academic-text", "promptModes": ["written-devanagari"],
+          "promptGenres": ["academic or research-informed exposition"],
+          "responseModes": ["selection", "argument-stage match", "qualification match"], "items": 9,
+          "stimulusLength": {"unit": "words", "minimum": 700, "maximum": 880, "approximate": false},
+          "responseLength": {"unit": "items", "minimum": 1, "maximum": 1, "approximate": false},
+          "interaction": "individual", "replayCount": 0,
+          "scoring": {"maxRawPoints": 25, "criteria": ["concept relation", "method or evidence evaluation", "qualification recognition", "authorial stance"]},
+          "aids": {"allowed": ["marking on the question paper", "one unscored example"], "forbidden": ["romanization", "dictionary", "translator"], "notPublished": []},
+          "notPublished": [], "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-hindi-assessment"]
+        },
+        {
+          "id": "c1-reading-literary-text", "promptModes": ["written-devanagari"],
+          "promptGenres": ["literary prose or essay with layered voice and cultural context"],
+          "responseModes": ["selection", "voice-effect match", "implicit-meaning match"], "items": 9,
+          "stimulusLength": {"unit": "words", "minimum": 750, "maximum": 970, "approximate": false},
+          "responseLength": {"unit": "items", "minimum": 1, "maximum": 1, "approximate": false},
+          "interaction": "individual", "replayCount": 0,
+          "scoring": {"maxRawPoints": 25, "criteria": ["narrative voice", "figurative and implicit meaning", "cultural context", "stylistic effect"]},
+          "aids": {"allowed": ["marking on the question paper", "one unscored example"], "forbidden": ["romanization", "dictionary", "translator"], "notPublished": []},
+          "notPublished": [], "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-hindi-assessment"]
+        }
+      ], "variants": []
+    },
+    {
+      "skill": "listening", "minutes": 50,
+      "parts": [
+        {
+          "id": "c1-listening-unscripted-discussion", "promptModes": ["recorded Hindi at 160-185 words per minute with natural variation", "multiple speakers"],
+          "promptGenres": ["unscripted discussion with overlap, repair, and implicit alignment"],
+          "responseModes": ["selection", "speaker-stance match", "interaction-function match"], "items": 7,
+          "stimulusLength": {"unit": "seconds", "minimum": 300, "maximum": 420, "approximate": false},
+          "responseLength": {"unit": "items", "minimum": 1, "maximum": 1, "approximate": false},
+          "interaction": "individual", "replayCount": 1,
+          "scoring": {"maxRawPoints": 25, "criteria": ["speaker tracking", "implicit alignment", "interactional purpose", "supporting detail"]},
+          "aids": {"allowed": ["paper notes", "one unscored orienting preview"], "forbidden": ["transcript", "dictionary", "translator", "audio controls"], "notPublished": []},
+          "notPublished": [], "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-hindi-assessment"]
+        },
+        {
+          "id": "c1-listening-lecture", "promptModes": ["recorded Hindi at 160-185 words per minute with natural variation"],
+          "promptGenres": ["extended lecture or expert explanation"],
+          "responseModes": ["selection", "argument-stage match", "note completion"], "items": 7,
+          "stimulusLength": {"unit": "seconds", "minimum": 360, "maximum": 480, "approximate": false},
+          "responseLength": {"unit": "items", "minimum": 1, "maximum": 1, "approximate": false},
+          "interaction": "individual", "replayCount": 1,
+          "scoring": {"maxRawPoints": 25, "criteria": ["lecture structure", "concept relation", "qualification recognition", "supporting detail"]},
+          "aids": {"allowed": ["paper notes", "one unscored orienting preview"], "forbidden": ["transcript", "dictionary", "translator", "audio controls"], "notPublished": []},
+          "notPublished": [], "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-hindi-assessment"]
+        },
+        {
+          "id": "c1-listening-interview", "promptModes": ["recorded Hindi at 160-185 words per minute with natural variation", "multiple speakers"],
+          "promptGenres": ["extended interview with challenge and qualification"],
+          "responseModes": ["selection", "speaker-intent match", "evidence match"], "items": 7,
+          "stimulusLength": {"unit": "seconds", "minimum": 330, "maximum": 450, "approximate": false},
+          "responseLength": {"unit": "items", "minimum": 1, "maximum": 1, "approximate": false},
+          "interaction": "individual", "replayCount": 1,
+          "scoring": {"maxRawPoints": 25, "criteria": ["speaker intent", "challenge-response relation", "qualification", "implicit stance"]},
+          "aids": {"allowed": ["paper notes", "one unscored orienting preview"], "forbidden": ["transcript", "dictionary", "translator", "audio controls"], "notPublished": []},
+          "notPublished": [], "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-hindi-assessment"]
+        },
+        {
+          "id": "c1-listening-narrative", "promptModes": ["recorded Hindi at 160-185 words per minute with natural variation"],
+          "promptGenres": ["extended narrative or documentary account"],
+          "responseModes": ["selection", "voice-effect match", "implicit-meaning match"], "items": 7,
+          "stimulusLength": {"unit": "seconds", "minimum": 330, "maximum": 450, "approximate": false},
+          "responseLength": {"unit": "items", "minimum": 1, "maximum": 1, "approximate": false},
+          "interaction": "individual", "replayCount": 1,
+          "scoring": {"maxRawPoints": 25, "criteria": ["narrative architecture", "voice and attitude", "implicit meaning", "cultural inference"]},
+          "aids": {"allowed": ["paper notes", "one unscored orienting preview"], "forbidden": ["transcript", "dictionary", "translator", "audio controls"], "notPublished": []},
+          "notPublished": [], "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-hindi-assessment"]
+        }
+      ], "variants": []
+    },
+    {
+      "skill": "writing", "minutes": 75,
+      "parts": [
+        {
+          "id": "c1-writing-source-synthesis", "promptModes": ["two short written Devanagari source texts"],
+          "promptGenres": ["contrasting public, professional, or academic source extracts"],
+          "responseModes": ["independent handwritten synthesis in Devanagari"], "items": 1,
+          "stimulusLength": {"unit": "words", "minimum": 450, "maximum": 650, "approximate": false},
+          "responseLength": {"unit": "words", "minimum": 180, "maximum": 220, "approximate": false},
+          "interaction": "individual", "replayCount": 0,
+          "scoring": {"maxRawPoints": 40, "criteria": ["accurate source synthesis", "selection and integration", "organisation and cohesion", "audience and register", "Hindi vocabulary and grammar", "orthographic control"]},
+          "aids": {"allowed": ["paper notes", "marking on source texts"], "forbidden": ["copyable answer model", "romanization", "dictionary", "translator", "spell-checker"], "notPublished": []},
+          "notPublished": [], "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-hindi-assessment"]
+        },
+        {
+          "id": "c1-writing-extended-response", "promptModes": ["written-devanagari task brief"],
+          "promptGenres": ["audience-aware argument, report, or critical response"],
+          "responseModes": ["independent handwritten extended text in Devanagari"], "items": 1,
+          "stimulusLength": {"unit": "words", "minimum": 90, "maximum": 150, "approximate": false},
+          "responseLength": {"unit": "words", "minimum": 300, "maximum": 380, "approximate": false},
+          "interaction": "individual", "replayCount": 0,
+          "scoring": {"maxRawPoints": 60, "criteria": ["task fulfilment and intellectual development", "organisation and cohesion", "genre, audience, and register control", "Hindi vocabulary and grammar", "orthographic control"]},
+          "aids": {"allowed": ["paper planning notes"], "forbidden": ["copyable answer model", "romanization", "dictionary", "translator", "spell-checker"], "notPublished": []},
+          "notPublished": [], "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-hindi-assessment"]
+        }
+      ], "variants": []
+    },
+    {
+      "skill": "speaking", "minutes": 22,
+      "parts": [
+        {
+          "id": "c1-speaking-source-based-presentation", "promptModes": ["two short written Devanagari sources"],
+          "promptGenres": ["contrasting public, professional, or academic viewpoints"],
+          "responseModes": ["five-minute source-based presentation"], "items": 1,
+          "stimulusLength": {"unit": "words", "minimum": 350, "maximum": 500, "approximate": false},
+          "responseLength": {"unit": "seconds", "minimum": 270, "maximum": 300, "approximate": false},
+          "interaction": "individual", "replayCount": 0,
+          "scoring": {"maxRawPoints": 35, "criteria": ["source synthesis", "argument development", "organisation and cohesion", "Hindi vocabulary and grammar", "pronunciation and fluency"]},
+          "aids": {"allowed": ["examiner-provided sources", "paper notes made during fifteen-minute preparation"], "forbidden": ["written answer script", "romanization", "dictionary", "translator", "electronic notes"], "notPublished": []},
+          "notPublished": [], "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-hindi-assessment"]
+        },
+        {
+          "id": "c1-speaking-collaborative-synthesis", "promptModes": ["live-speech", "written-devanagari synthesis brief"],
+          "promptGenres": ["multi-source collaborative synthesis problem"],
+          "responseModes": ["spoken integration, comparison, negotiation, and joint conclusion"], "items": 1,
+          "stimulusLength": {"unit": "words", "minimum": 60, "maximum": 100, "approximate": false},
+          "responseLength": {"unit": "seconds", "minimum": 300, "maximum": 360, "approximate": false},
+          "interaction": "group", "replayCount": 0,
+          "scoring": {"maxRawPoints": 30, "criteria": ["source integration", "collaborative interaction and repair", "negotiation and conclusion", "Hindi vocabulary and grammar", "pronunciation and fluency"]},
+          "aids": {"allowed": ["examiner-provided brief", "paper preparation notes"], "forbidden": ["written answer script", "romanization", "dictionary", "translator", "electronic notes"], "notPublished": []},
+          "notPublished": [], "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-hindi-assessment"]
+        },
+        {
+          "id": "c1-speaking-challenge-and-defence", "promptModes": ["live-speech"],
+          "promptGenres": ["sustained challenge to presentation claims and synthesis decisions"],
+          "responseModes": ["spoken defence, qualification, reformulation, and counterargument"], "items": 6,
+          "stimulusLength": {"unit": "seconds", "minimum": 20, "maximum": 75, "approximate": false},
+          "responseLength": {"unit": "seconds", "minimum": 330, "maximum": 420, "approximate": false},
+          "interaction": "group", "replayCount": 0,
+          "scoring": {"maxRawPoints": 35, "criteria": ["reasoned defence", "qualification and reformulation", "interaction and repair", "register control", "Hindi vocabulary and grammar", "pronunciation and fluency"]},
+          "aids": {"allowed": ["paper preparation notes"], "forbidden": ["written answer script", "romanization", "dictionary", "translator", "electronic notes"], "notPublished": []},
+          "notPublished": [], "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-hindi-assessment"]
+        }
+      ], "variants": []
+    }
+  ]
+}
