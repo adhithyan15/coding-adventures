@@ -66,6 +66,40 @@ let (value, n) = decode_unsigned(&buf, 2)?;
 assert_eq!(value, 624485);
 ```
 
+### Bounded decoding (`decode_unsigned_bounded` / `decode_signed_bounded`)
+
+`decode_unsigned`/`decode_signed` decode into a full 64-bit value — right
+for a genuinely 64-bit WASM field, but the overwhelming majority of the
+binary format's integers are `u32` (every section size, vector count,
+index, and string length). Narrowing the result yourself (`value as u32`)
+would silently accept a value too big to fit instead of rejecting it — use
+the `_bounded` variants instead, which take a `max_bits` width and enforce
+the WASM spec's own two malformed-encoding rules for that width:
+
+```rust
+use wasm_leb128::{decode_unsigned_bounded, decode_signed_bounded};
+
+// Non-minimal but in-budget (5 bytes is the max for a 32-bit field): fine.
+let (value, n) = decode_unsigned_bounded(&[0x82, 0x80, 0x80, 0x80, 0x00], 0, 32)?;
+assert_eq!((value, n), (2, 5));
+
+// Overlong: one byte past the 32-bit budget -- "integer representation too long".
+assert!(decode_unsigned_bounded(&[0x82, 0x80, 0x80, 0x80, 0x80, 0x00], 0, 32).is_err());
+
+// Out of range: in-budget byte count, but the value (2^32) doesn't fit in 32
+// bits -- "integer too large".
+assert!(decode_unsigned_bounded(&[0x80, 0x80, 0x80, 0x80, 0x10], 0, 32).is_err());
+
+// Signed: padding bits above `max_bits` must repeat the sign bit, not just be zero.
+let (neg, n) = decode_signed_bounded(&[0xFF, 0x7F], 0, 32)?; // i32.const -1
+assert_eq!((neg, n), (-1, 2));
+```
+
+`decode_unsigned` and `decode_signed` are themselves just
+`decode_{unsigned,signed}_bounded(.., 64)` — a `u64`/`i64` is a 64-bit-wide
+`uN`/`sN`, so they get the exact same overlong/out-of-range protection at
+the native width, not a separate code path.
+
 ## Error Handling
 
 ```rust

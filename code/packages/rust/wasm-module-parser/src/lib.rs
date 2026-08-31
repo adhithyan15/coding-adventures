@@ -97,7 +97,7 @@
 //! Custom (§0):  name:str  data:remaining_bytes
 //! ```
 
-use wasm_leb128::decode_unsigned;
+use wasm_leb128::{decode_signed_bounded, decode_unsigned, decode_unsigned_bounded};
 use wasm_types::{
     CustomSection, DataSegment, Element, Export, ExternalKind, FieldType, FuncType, FunctionBody,
     Global, GlobalType, Import, ImportTypeInfo, Limits, MemoryType, StructType, TableType,
@@ -138,6 +138,15 @@ const REF_NULL_CONCRETE_TAG: u8 = 0x63;
 /// actually arrive; a truncated module then errors on a missing byte instead.
 const MAX_PREALLOC: usize = 1024;
 
+/// Upper bound on the TOTAL number of locals (summed across every
+/// run-length-encoded group) a single function body may declare. See
+/// `parse_code_section`'s own doc comment at the call site for the
+/// DoS shape this guards against -- the short version: a group's count
+/// field is legitimately as large as `u32::MAX`, and there can be many
+/// groups, so without a cap a few dozen attacker-controlled bytes could
+/// ask this crate to allocate billions of `ValueType` clones.
+const MAX_LOCALS: u64 = 1_000_000;
+
 /// The `end` opcode that terminates constant expressions (init_expr, offset_expr).
 const END_OPCODE: u8 = 0x0B;
 
@@ -167,6 +176,45 @@ const SECTION_DATA: u8 = 11;
 /// into the generic "unknown section, skip it" arm below, so its value was
 /// never even read, let alone checked.
 const SECTION_DATA_COUNT: u8 = 12;
+
+/// Maps a numbered section's byte `id` to its position in the WASM binary
+/// format's CANONICAL section order -- the order every module's numbered
+/// sections must appear in, at most once each. Returns `None` for
+/// `SECTION_CUSTOM` (no fixed position -- allowed any number of times,
+/// anywhere) and for any id the format doesn't define at all.
+///
+/// ## Why this can't just compare `section_id` values directly
+///
+/// The canonical order is **Type, Import, Function, Table, Memory, Global,
+/// Export, Start, Element, DataCount, Code, Data** -- but `DataCount`'s own
+/// byte id is `12`, numerically LARGER than `Code`'s (`10`) and `Data`'s
+/// (`11`), even though it must appear BEFORE both of them. `DataCount` was
+/// added later, by the bulk-memory proposal (a validator needs to know how
+/// many data segments exist before it can type-check a `memory.init`/
+/// `data.drop` inside the code section, which is why it's placed just
+/// ahead of Code rather than appended at the end where its id number would
+/// suggest) -- so naively rejecting any section whose numeric id isn't
+/// greater than the previous one would REJECT perfectly valid modules
+/// (`DataCount` then `Code`, `12` then `10`) while failing to reject some
+/// invalid ones. This table's return value is the section's rank in the
+/// real required sequence; callers compare THAT, not the raw id byte.
+fn canonical_section_order(section_id: u8) -> Option<u8> {
+    match section_id {
+        SECTION_TYPE => Some(1),
+        SECTION_IMPORT => Some(2),
+        SECTION_FUNCTION => Some(3),
+        SECTION_TABLE => Some(4),
+        SECTION_MEMORY => Some(5),
+        SECTION_GLOBAL => Some(6),
+        SECTION_EXPORT => Some(7),
+        SECTION_START => Some(8),
+        SECTION_ELEMENT => Some(9),
+        SECTION_DATA_COUNT => Some(10),
+        SECTION_CODE => Some(11),
+        SECTION_DATA => Some(12),
+        _ => None,
+    }
+}
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Error Type
@@ -279,13 +327,31 @@ impl<'a> Parser<'a> {
     ///   bit 7 (MSB): continuation flag
     ///   bits 0–6:    data
     /// ```
+    ///
+    /// Bounded to 32 significant bits via [`decode_unsigned_bounded`] --
+    /// every `u32` field in the binary format (section sizes, vector counts,
+    /// every index space, string/name lengths, …) goes through this one
+    /// method, so bounding it here is the single fix for all of them at
+    /// once. Two real, corpus-confirmed (`binary-leb128.wast`) bugs this
+    /// closes that the old unbounded `decode_unsigned` + `as u32` cast
+    /// could not:
+    /// - **Overlong**: a `u32` field is only allowed up to `ceil(32/7) = 5`
+    ///   LEB128 bytes. The old code had no cap at all beyond the shared
+    ///   decoder's own generic 10-byte/`u64` limit, so a 6-, 7-, …,
+    ///   10-byte encoding of a small value like `2` parsed successfully.
+    /// - **Out of range**: `val as u32` silently truncates -- a value like
+    ///   `2^32` (one bit too many for `u32`, but still comfortably within
+    ///   `decode_unsigned`'s own `u64` range) wrapped to `0` instead of
+    ///   being rejected.
     fn read_u32leb(&mut self) -> Result<u32, WasmParseError> {
         // We pass the full remaining slice and absolute offset 0 (since we are
         // already positioned at the right place), then advance by `consumed`.
-        match decode_unsigned(self.data, 0) {
+        match decode_unsigned_bounded(self.data, 0, 32) {
             Ok((val, consumed)) => {
                 self.data = &self.data[consumed..];
                 self.pos += consumed;
+                // Safe: `decode_unsigned_bounded(.., 32)` guarantees `val`
+                // fits in 32 bits, or returns `Err` -- never silently wraps.
                 Ok(val as u32)
             }
             Err(e) => Err(WasmParseError {
@@ -350,9 +416,21 @@ impl<'a> Parser<'a> {
             // For the common init_expr instructions (i32.const, i64.const,
             // f32.const, f64.const, global.get) we read the LEB128/raw immediate.
             match b {
-                // i32.const <i32 leb128>
+                // i32.const <i32 leb128> -- SIGNED (s32), bounded to 32 bits:
+                // the same overlong/out-of-range LEB128 rules as
+                // `read_u32leb` apply here too, just with sign-extension
+                // padding instead of zero padding (real corpus cases:
+                // `binary-leb128.wast`'s "Signed LEB128 must not be
+                // overlong"/"Signed LEB128s sign-extend" `assert_malformed`
+                // groups, both specifically targeting `i32.const`/global
+                // init-expr immediates). Previously used the UNSIGNED,
+                // width-less `decode_unsigned` -- byte-consumption happens
+                // to match for well-formed input (the two decoders share
+                // the same continuation-bit loop), but it could never
+                // reject an overlong or badly-padded encoding since it
+                // imposed neither a byte cap nor a sign-consistency check.
                 0x41 => {
-                    let (val, consumed) = decode_unsigned(self.data, 0).map_err(|e| {
+                    let (val, consumed) = decode_signed_bounded(self.data, 0, 32).map_err(|e| {
                         WasmParseError {
                             message: e.message,
                             offset: self.pos,
@@ -364,9 +442,18 @@ impl<'a> Parser<'a> {
                     self.pos += consumed;
                     let _ = val;
                 }
-                // i64.const <i64 leb128>
+                // i64.const <i64 leb128> -- SIGNED (s64). `decode_signed`
+                // (not `decode_unsigned`) for the same reason as `i32.const`
+                // above: a value like `i64.const -1` encoded with
+                // deliberately-unset (instead of sign-extended) high
+                // padding bits is well-formed under an unsigned reading but
+                // not under the signed one the spec actually requires here
+                // -- exactly `binary-leb128.wast`'s "i64.const -1 with
+                // unused bits unset" case. No explicit 64-bit bound needed:
+                // `decode_signed` (== `decode_signed_bounded(.., 64)`)
+                // already enforces the native 10-byte/64-bit cap.
                 0x42 => {
-                    let (val, consumed) = decode_unsigned(self.data, 0).map_err(|e| {
+                    let (val, consumed) = wasm_leb128::decode_signed(self.data, 0).map_err(|e| {
                         WasmParseError {
                             message: e.message,
                             offset: self.pos,
@@ -388,9 +475,12 @@ impl<'a> Parser<'a> {
                     let bytes = self.read_bytes(8)?;
                     expr.extend_from_slice(bytes);
                 }
-                // global.get <u32 leb128>
+                // global.get <u32 leb128> -- a global INDEX, unsigned and
+                // bounded to 32 bits like every other index space in the
+                // format (see `read_u32leb`'s own doc comment for why the
+                // bound matters).
                 0x23 => {
-                    let (val, consumed) = decode_unsigned(self.data, 0).map_err(|e| {
+                    let (val, consumed) = decode_unsigned_bounded(self.data, 0, 32).map_err(|e| {
                         WasmParseError {
                             message: e.message,
                             offset: self.pos,
@@ -557,7 +647,24 @@ fn decode_mutability(byte: u8, offset: usize) -> Result<bool, WasmParseError> {
 /// through keeps this one shared helper simple.
 fn parse_limits(p: &mut Parser) -> Result<(Limits, bool, bool), WasmParseError> {
     const IS64_FLAG: u8 = 0x04;
+    // Only bits 0 (has-max), 1 (shared), 2 (64-bit index) are defined by any
+    // proposal this crate supports -- anything else set is a genuinely
+    // unrecognized flags encoding, not a value to tolerate. Real corpus bug
+    // (`binary.wast`'s "malformed limits flags" cases: `0x08`, `0x10`,
+    // `0x81`, all with exactly one bit outside this mask set): the old code
+    // only ever tested individual bits it cared about (`flags & 0x01`,
+    // `flags & IS64_FLAG`) and never rejected a stray bit elsewhere in the
+    // byte, so e.g. `0x08` silently parsed identically to `0x00` (no max,
+    // 32-bit, not shared) instead of being rejected.
+    const VALID_FLAGS_MASK: u8 = 0x01 | 0x02 | IS64_FLAG;
+    let flags_offset = p.offset();
     let flags = p.read_u8()?;
+    if flags & !VALID_FLAGS_MASK != 0 {
+        return Err(WasmParseError {
+            message: format!("malformed limits flags: 0x{flags:02X}"),
+            offset: flags_offset,
+        });
+    }
     let is64 = flags & IS64_FLAG != 0;
     let (min, max) = if is64 {
         let min = p.read_u64leb()?;
@@ -777,6 +884,15 @@ fn parse_function_section(p: &mut Parser, module: &mut WasmModule) -> Result<(),
     Ok(())
 }
 
+/// The leading byte of a table entry that carries an explicit INIT
+/// EXPRESSION (function-references proposal): `0x40 0x00 et:reftype
+/// lim:limits init:expr`, used when `et` isn't defaultable to `ref.null`
+/// (e.g. a non-nullable `(ref func)` table) so the table's initial contents
+/// need a real initializer instead of every slot defaulting to null. Not
+/// itself a valid `element_type` byte in the plain `et:reftype lim:limits`
+/// form this crate otherwise parses.
+const TABLE_WITH_INIT_EXPR_TAG: u8 = 0x40;
+
 /// Parse the **table section** (§4).
 ///
 /// ```text
@@ -789,7 +905,35 @@ fn parse_function_section(p: &mut Parser, module: &mut WasmModule) -> Result<(),
 fn parse_table_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), WasmParseError> {
     let count = p.read_u32leb()? as usize;
     for _ in 0..count {
+        let element_type_offset = p.offset();
         let element_type = p.read_u8()?;
+        // Real corpus bug, surfaced (not introduced) by this same pass's
+        // section-size-mismatch check (`elem.wast`'s own function-
+        // references-proposal table entries): `0x40` isn't a valid
+        // `element_type` byte in the plain two-field form this function
+        // otherwise parses -- it's the leading byte of an entirely
+        // DIFFERENT, longer entry shape (`0x40 0x00 et:reftype
+        // lim:limits init:expr`) that needs a stored initializer
+        // expression `TableType` has no field for yet. Before the
+        // size-mismatch check existed, this branch didn't exist either:
+        // `0x40` was silently read AS IF it were a normal element_type,
+        // `parse_limits` then misread several bytes of the reftype/init
+        // expression AS IF they were a flags+min/max limits encoding, and
+        // the resulting garbage `TableType` plus leftover unconsumed
+        // bytes were both silently accepted -- a real, if invisible
+        // (nothing downstream happened to reject `element_type: 0x40`),
+        // decode-time bug. Failing loudly and immediately here, with a
+        // message that names the real gap, is strictly better than that
+        // silent corruption -- even though it means these specific
+        // modules now correctly grade `NotYetSupported` (an honest
+        // capability gap) rather than the false `Pass` the silent
+        // misparse used to produce.
+        if element_type == TABLE_WITH_INIT_EXPR_TAG {
+            return Err(WasmParseError {
+                message: "table with an explicit init expression (function-references proposal) is not yet supported".to_string(),
+                offset: element_type_offset,
+            });
+        }
         // W26 (table64 proposal): `is64` (flags bit 0x04) is now wired
         // into `TableType.is64`, mirroring `Memory`'s own arm above --
         // previously rejected outright (see git history/W25's own
@@ -935,8 +1079,29 @@ fn parse_element_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), 
                 (0, Vec::new(), true, false)
             }
             2 => {
+                // Real, pre-existing parsing bug surfaced (not introduced)
+                // by this pass's section-size-mismatch check
+                // (`elem.wast`'s own explicit-table-index active segments):
+                // per spec, mode 2's entry shape is `tableidx:u32leb
+                // offset:expr elemkind:u8 vec(funcidx)` -- the SAME
+                // `elemkind` byte mode 1 (passive) already reads just
+                // below, just after the offset expression instead of
+                // instead of it. This arm skipped straight from the
+                // offset expression to `entry_count`, so it silently read
+                // the elemkind byte (always `0x00`/funcref in every
+                // encoder this crate or the real corpus produces) AS IF
+                // it were the low byte of `entry_count`'s LEB128 -- for a
+                // real 1-or-more-element segment this desynchronized
+                // every subsequent read by exactly one byte, silently
+                // producing a garbage (usually too-small, sometimes
+                // outright wrong) element list instead of erroring.
                 let table_index = p.read_u32leb()?;
-                (table_index, p.read_expr()?, false, false)
+                let offset_expr = p.read_expr()?;
+                let elemkind = p.read_u8()?;
+                if elemkind != 0x00 {
+                    return Err(p.error(format!("unsupported element segment elemkind {elemkind:#04x} (only funcref/0x00 supported)")));
+                }
+                (table_index, offset_expr, false, false)
             }
             5 => {
                 let reftype = p.read_u8()?;
@@ -1022,10 +1187,30 @@ fn parse_code_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), Was
         // --- locals (run-length encoded) ---
         let local_decl_count = body.read_u32leb()? as usize;
         let mut locals = Vec::new();
+        // Real corpus bug (`binary.wast`'s "too many locals" cases): each
+        // group's own count `n` is a plain u32leb -- legitimately as large
+        // as `u32::MAX` per this crate's own (correct) `read_u32leb`, and
+        // there can be many groups. Before this running total + cap, `for
+        // _ in 0..n { locals.push(vt) }` would try to push that many clones
+        // from a handful of attacker-controlled bytes -- the same
+        // tiny-file-claims-enormous-allocation shape `MAX_PREALLOC` already
+        // guards against for the element section's `func_count` (see that
+        // constant's own doc comment), just summed across groups instead
+        // of a single field.
+        let mut total_locals: u64 = 0;
         for _ in 0..local_decl_count {
-            let n = body.read_u32leb()? as usize;
+            let n = body.read_u32leb()?;
             let vt_byte = body.read_u8()?;
             let vt = decode_value_type(vt_byte, body.offset() - 1)?;
+            total_locals += n as u64;
+            if total_locals > MAX_LOCALS {
+                return Err(WasmParseError {
+                    message: format!(
+                        "too many locals: total of {total_locals} exceeds the {MAX_LOCALS} limit"
+                    ),
+                    offset: body.offset(),
+                });
+            }
             for _ in 0..n {
                 // ValueType is no longer Copy (WasmGC added StructRef(u32));
                 // clone for each local in the run.
@@ -1035,6 +1220,19 @@ fn parse_code_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), Was
 
         // --- code bytes (everything remaining in the body, includes trailing 0x0B) ---
         let code = body.read_bytes(body.remaining())?.to_vec();
+
+        // Real corpus bug (`binary.wast`'s "END opcode expected"/
+        // "unexpected end of section or function" cases): a function
+        // body's instruction stream is required to end with the `end`
+        // (0x0B) opcode. Nothing here ever checked that -- `body_size`
+        // taken at face value let a body whose last declared byte is, say,
+        // `drop` (0x1A) parse as a perfectly normal (truncated) function.
+        if code.last() != Some(&END_OPCODE) {
+            return Err(WasmParseError {
+                message: "END opcode expected: function body does not end with 0x0B".to_string(),
+                offset: body.offset(),
+            });
+        }
 
         module.code.push(FunctionBody { locals, code });
     }
@@ -1214,11 +1412,53 @@ impl WasmModuleParser {
 
         let mut module = WasmModule::default();
         let mut data_count: Option<u32> = None;
+        // Tracks how far along the CANONICAL section sequence we've gotten
+        // (see `canonical_section_order`'s own doc comment) -- `0` means
+        // "no numbered section seen yet". Custom sections (id 0) never
+        // touch this: they may appear any number of times, anywhere.
+        let mut last_section_order: u8 = 0;
 
         while !p.is_empty() {
+            let section_id_offset = p.offset();
             let section_id = p.read_u8()?;
+
+            // Real corpus bug (`binary.wast`'s "malformed section id" cases,
+            // ids 13/127/128/129/255): the OLD code's doc comment claimed
+            // "future proposals may add new sections" and silently skipped
+            // any id it didn't recognize. That reasoning doesn't hold up --
+            // the spec defines exactly ids 0-12 and requires anything else
+            // to be REJECTED, not tolerated. A section whose id isn't
+            // Custom(0) and isn't in the canonical sequence below is
+            // malformed.
+            if section_id != SECTION_CUSTOM && canonical_section_order(section_id).is_none() {
+                return Err(WasmParseError {
+                    message: format!("malformed section id: 0x{section_id:02X}"),
+                    offset: section_id_offset,
+                });
+            }
+
             let section_size = p.read_u32leb()? as usize;
             let mut section_p = p.sub_parser(section_size)?;
+
+            // Real corpus bug (`binary.wast`'s "unexpected content after
+            // last section" cases): every numbered section must appear at
+            // most once, in ascending CANONICAL order (see that function's
+            // own doc comment for why this is "canonical position", not
+            // raw numeric id) -- a repeated section, or one that appears
+            // out of sequence, is malformed. The old code never checked
+            // this at all: it happily accepted `Global, Global` or
+            // `Export, Import` back to back.
+            if let Some(order) = canonical_section_order(section_id) {
+                if order <= last_section_order {
+                    return Err(WasmParseError {
+                        message: format!(
+                            "unexpected content after last section: section id 0x{section_id:02X} is repeated or out of the required order"
+                        ),
+                        offset: section_id_offset,
+                    });
+                }
+                last_section_order = order;
+            }
 
             match section_id {
                 SECTION_CUSTOM => parse_custom_section(&mut section_p, &mut module)?,
@@ -1236,15 +1476,64 @@ impl WasmModuleParser {
                 SECTION_DATA_COUNT => {
                     data_count = Some(section_p.read_u32leb()?);
                 }
-                unknown => {
-                    // Unknown section IDs are silently skipped per the WASM spec's
-                    // forward-compatibility rule: future proposals may add new sections.
-                    // We consumed the payload bytes via sub_parser above, so we just
-                    // drop `section_p` here.
-                    let _ = section_p;
-                    let _ = unknown;
+                _ => {
+                    // Unreachable in practice -- every id that reaches this
+                    // match already passed the `malformed section id` check
+                    // above, which only lets Custom(0) or a
+                    // `canonical_section_order`-recognized id through. Kept
+                    // as a real (non-`unreachable!()`) error rather than a
+                    // silent skip anyway: a future edit that adds a new
+                    // section id to ONE of these two places but not the
+                    // other should fail loudly on the very next malformed
+                    // input it sees, not corrupt-but-not-crash.
+                    return Err(WasmParseError {
+                        message: format!("malformed section id: 0x{section_id:02X}"),
+                        offset: section_id_offset,
+                    });
                 }
             }
+
+            // Real corpus bug (`binary.wast`'s "section size mismatch"
+            // cases): the declared section `size` is a promise about
+            // exactly how many bytes the payload occupies. The old code
+            // took that promise on faith -- it sliced `section_size` bytes
+            // into `section_p` and handed it to the section-specific
+            // parser, but never checked whether that parser actually
+            // consumed all of them. A section that finishes parsing with
+            // bytes still unread inside its own declared boundary (e.g. a
+            // type section's declared size is bigger than the single
+            // functype it actually contains) is just as malformed as one
+            // that runs out of bytes too EARLY (which already errors
+            // naturally, via `sub_parser`/`read_bytes`'s own bounds checks).
+            if !section_p.is_empty() {
+                return Err(WasmParseError {
+                    message: format!(
+                        "section size mismatch: {} unconsumed byte(s) left in section id 0x{section_id:02X}'s declared {section_size}-byte payload",
+                        section_p.remaining()
+                    ),
+                    offset: section_p.offset(),
+                });
+            }
+        }
+
+        // Real corpus bug (`binary.wast`'s "function and code section have
+        // inconsistent lengths" cases): the function section declares one
+        // type index per function, and the code section declares one body
+        // per function -- the SAME index space, so they must have the same
+        // length. Same shape as the data-count-vs-data-section cross-check
+        // just below (added first, for the bulk-memory proposal's own data
+        // count section) -- this is the MVP-core version of that same
+        // "two sections both claim to enumerate the same index space, so
+        // they'd better agree" rule.
+        if module.functions.len() != module.code.len() {
+            return Err(WasmParseError {
+                message: format!(
+                    "function and code section have inconsistent lengths: {} function(s), {} code entrie(s)",
+                    module.functions.len(),
+                    module.code.len()
+                ),
+                offset: p.offset(),
+            });
         }
 
         // A data count section, when present, must agree with the data
@@ -1496,9 +1785,38 @@ mod tests {
         let mut payload = vec![0x02]; // count = 2
         payload.extend(encode_u32leb(0)); // func 0 → type 0
         payload.extend(encode_u32leb(1)); // func 1 → type 1
-        let data = wasm_with_sections(&[make_section(3, &payload)]);
+
+        // The function and code sections must declare the same COUNT (see
+        // `test_function_code_length_mismatch_is_rejected`) -- two trivial
+        // matching bodies here.
+        let body = vec![0x00, 0x0B]; // 0 local decls, end
+        let mut code_payload = encode_u32leb(2); // 2 functions
+        code_payload.extend(encode_u32leb(body.len() as u32));
+        code_payload.extend(&body);
+        code_payload.extend(encode_u32leb(body.len() as u32));
+        code_payload.extend(&body);
+
+        let data = wasm_with_sections(&[make_section(3, &payload), make_section(10, &code_payload)]);
         let m = WasmModuleParser::parse(&data).unwrap();
         assert_eq!(m.functions, vec![0, 1]);
+    }
+
+    // ── Section-structure hardening (LEB128/malformed-binary pass) ───────────
+
+    #[test]
+    fn test_function_code_length_mismatch_is_rejected() {
+        // Function section declares 1 function; code section declares 0.
+        let func_payload = encode_u32leb(1)
+            .into_iter()
+            .chain(encode_u32leb(0))
+            .collect::<Vec<u8>>();
+        let data = wasm_with_sections(&[make_section(3, &func_payload)]);
+        let err = WasmModuleParser::parse(&data).unwrap_err();
+        assert!(
+            err.message.contains("function and code section have inconsistent lengths"),
+            "unexpected error: {}",
+            err.message
+        );
     }
 
     // ── Test 4: Export section — function export ──────────────────────────────
@@ -1543,7 +1861,14 @@ mod tests {
         payload.extend(encode_u32leb(body.len() as u32)); // body_size
         payload.extend(&body);
 
-        let data = wasm_with_sections(&[make_section(10, &payload)]);
+        // A function section entry is required to match: the function and
+        // code sections must declare the same COUNT (see
+        // `test_function_code_length_mismatch_is_rejected` below).
+        let func_payload = encode_u32leb(1)
+            .into_iter()
+            .chain(encode_u32leb(0)) // 1 function, type index 0
+            .collect::<Vec<u8>>();
+        let data = wasm_with_sections(&[make_section(3, &func_payload), make_section(10, &payload)]);
         let m = WasmModuleParser::parse(&data).unwrap();
         assert_eq!(m.code.len(), 1);
         assert_eq!(m.code[0].locals, vec![ValueType::I32, ValueType::I32]);
@@ -2269,11 +2594,240 @@ mod tests {
         payload.extend(encode_u32leb(body.len() as u32));
         payload.extend(body);
 
-        let data = wasm_with_sections(&[make_section(10, &payload)]);
+        // Matching function section entry -- see
+        // `test_function_code_length_mismatch_is_rejected`.
+        let func_payload = encode_u32leb(1)
+            .into_iter()
+            .chain(encode_u32leb(0))
+            .collect::<Vec<u8>>();
+        let data = wasm_with_sections(&[make_section(3, &func_payload), make_section(10, &payload)]);
         let m = WasmModuleParser::parse(&data).unwrap();
         assert_eq!(
             m.code[0].locals,
             vec![ValueType::I32, ValueType::I32, ValueType::F64]
         );
+    }
+
+    // ── LEB128 malformed-encoding classes (W?? -- binary.wast /
+    //    binary-leb128.wast / binary_leb128_64.wast vendoring pass) ─────────
+    //
+    // These mirror the real corpus's own `assert_malformed` cases directly,
+    // one per malformed-encoding CLASS, so the rule stays covered even if a
+    // future corpus change ever drops one of those files' specific byte
+    // sequences.
+
+    /// Non-minimal (padded) LEB128 is legal as long as the byte count stays
+    /// within budget -- NOT itself a malformed encoding. `[0x82, 0x80,
+    /// 0x80, 0x80, 0x00]` is 5 bytes (the max for a `u32` field) encoding
+    /// the value 2.
+    #[test]
+    fn u32_field_non_minimal_but_in_budget_is_accepted() {
+        let payload = vec![0x01, 0x00, 0x82, 0x80, 0x80, 0x80, 0x00]; // count=1, flags=0, min=2 (5-byte LEB)
+        let data = wasm_with_sections(&[make_section(5, &payload)]);
+        let m = WasmModuleParser::parse(&data).unwrap();
+        assert_eq!(m.memories[0].limits.min, 2);
+    }
+
+    /// Class 1: overlong -- one byte more than a `u32` field's 5-byte
+    /// budget, even though the extra byte pads a small, otherwise-valid
+    /// value. Uses the memory section's `min` field, same shape as the real
+    /// corpus's own "Unsigned LEB128 must not be overlong" cases.
+    #[test]
+    fn u32_field_overlong_is_rejected() {
+        let payload = vec![0x01, 0x00, 0x82, 0x80, 0x80, 0x80, 0x80, 0x00]; // 6-byte LEB, one too many
+        let data = wasm_with_sections(&[make_section(5, &payload)]);
+        let err = WasmModuleParser::parse(&data).unwrap_err();
+        assert!(err.message.contains("too long"), "unexpected error: {}", err.message);
+    }
+
+    /// Class 2: out of range -- byte count is within the 5-byte budget, but
+    /// the value doesn't fit in 32 bits (`2^32`, one bit too many). Before
+    /// this crate's LEB128 hardening, `read_u32leb`'s `as u32` cast
+    /// silently wrapped this to `0` instead of rejecting it.
+    #[test]
+    fn u32_field_out_of_range_is_rejected() {
+        let payload = vec![0x01, 0x00, 0x80, 0x80, 0x80, 0x80, 0x10]; // count=1, flags=0, min=2^32
+        let data = wasm_with_sections(&[make_section(5, &payload)]);
+        let err = WasmModuleParser::parse(&data).unwrap_err();
+        assert!(err.message.contains("too large"), "unexpected error: {}", err.message);
+    }
+
+    /// Same two classes, but for `i32.const`'s SIGNED immediate inside a
+    /// global's init expr -- confirms `read_expr`'s 0x41 arm is wired
+    /// through `decode_signed_bounded`, not the unsigned/unbounded decoder.
+    #[test]
+    fn i32_const_overlong_is_rejected() {
+        let mut payload = vec![0x01, 0x7F, 0x00]; // 1 global, i32, immutable
+        payload.push(0x41); // i32.const
+        payload.extend([0x80, 0x80, 0x80, 0x80, 0x80, 0x00]); // 6-byte signed LEB for 0 -- one too many
+        payload.push(0x0B); // end
+        let data = wasm_with_sections(&[make_section(6, &payload)]);
+        let err = WasmModuleParser::parse(&data).unwrap_err();
+        assert!(err.message.contains("too long"), "unexpected error: {}", err.message);
+    }
+
+    #[test]
+    fn i32_const_out_of_range_padding_is_rejected() {
+        let mut payload = vec![0x01, 0x7F, 0x00]; // 1 global, i32, immutable
+        payload.push(0x41); // i32.const
+        payload.extend([0x80, 0x80, 0x80, 0x80, 0x70]); // 5 bytes, padding bits inconsistent with sign
+        payload.push(0x0B); // end
+        let data = wasm_with_sections(&[make_section(6, &payload)]);
+        let err = WasmModuleParser::parse(&data).unwrap_err();
+        assert!(err.message.contains("too large"), "unexpected error: {}", err.message);
+    }
+
+    /// Class 3: truncated stream -- a section that ends mid-LEB128 (already
+    /// covered structurally by `test_error_truncated_section_payload`;
+    /// this variant confirms the SAME failure mode for a `u32` field
+    /// specifically, not just a raw byte read).
+    #[test]
+    fn u32_field_truncated_mid_leb128_is_rejected() {
+        let payload = vec![0x01, 0x00, 0x82, 0x80]; // count=1, flags=0, then a 2-byte partial LEB (still wants more)
+        let data = wasm_with_sections(&[make_section(5, &payload)]);
+        assert!(WasmModuleParser::parse(&data).is_err());
+    }
+
+    /// A 64-bit field (memory64 limits) gets the SAME two checks, at the
+    /// wider 10-byte/64-bit boundary -- confirms `read_u64leb` benefits
+    /// from `wasm-leb128`'s own core fix (it calls the now-fixed
+    /// `decode_unsigned` directly) without needing its own code change.
+    #[test]
+    fn u64_field_out_of_range_is_rejected() {
+        let mut payload = vec![0x01]; // count = 1
+        payload.push(0x05); // flags: is64 (0x04) + has-max (0x01)
+        payload.extend([0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x02]); // min = one bit past u64::MAX
+        payload.extend(encode_u32leb(1)); // max (won't be reached)
+        let data = wasm_with_sections(&[make_section(5, &payload)]);
+        let err = WasmModuleParser::parse(&data).unwrap_err();
+        assert!(err.message.contains("too large"), "unexpected error: {}", err.message);
+    }
+
+    // ── Section-structure malformed-binary classes ────────────────────────
+
+    #[test]
+    fn unrecognized_section_id_is_rejected() {
+        let mut data = minimal_module();
+        data.push(0x0E); // id 14 -- not Custom(0), not in 1..=12
+        data.extend(encode_u32leb(1));
+        data.push(0x00);
+        let err = WasmModuleParser::parse(&data).unwrap_err();
+        assert!(err.message.contains("malformed section id"), "unexpected error: {}", err.message);
+    }
+
+    #[test]
+    fn repeated_section_is_rejected() {
+        // Two Global sections back to back -- same id twice.
+        let payload = vec![0x00]; // count = 0
+        let data = wasm_with_sections(&[make_section(6, &payload), make_section(6, &payload)]);
+        let err = WasmModuleParser::parse(&data).unwrap_err();
+        assert!(
+            err.message.contains("unexpected content after last section"),
+            "unexpected error: {}",
+            err.message
+        );
+    }
+
+    #[test]
+    fn out_of_order_sections_are_rejected() {
+        // Export(7) before Import(2) -- valid ids, wrong order.
+        let export_payload = vec![0x00]; // count = 0
+        let import_payload = vec![0x00]; // count = 0
+        let data = wasm_with_sections(&[make_section(7, &export_payload), make_section(2, &import_payload)]);
+        let err = WasmModuleParser::parse(&data).unwrap_err();
+        assert!(
+            err.message.contains("unexpected content after last section"),
+            "unexpected error: {}",
+            err.message
+        );
+    }
+
+    /// The one canonical-order case that ISN'T also numeric order: DataCount
+    /// (byte id 12) must come before Code (byte id 10) despite having a
+    /// numerically LARGER id -- see `canonical_section_order`'s own doc
+    /// comment. A correct implementation must accept this, not reject it.
+    #[test]
+    fn data_count_before_code_is_accepted_despite_higher_numeric_id() {
+        let data_count_payload = encode_u32leb(0); // 0 data segments
+        let body = vec![0x00, 0x0B];
+        let mut code_payload = encode_u32leb(1);
+        code_payload.extend(encode_u32leb(body.len() as u32));
+        code_payload.extend(&body);
+        let func_payload = encode_u32leb(1).into_iter().chain(encode_u32leb(0)).collect::<Vec<u8>>();
+        let data = wasm_with_sections(&[
+            make_section(3, &func_payload),
+            make_section(12, &data_count_payload), // DataCount, id=12
+            make_section(10, &code_payload),        // Code, id=10 -- numerically smaller, but canonically AFTER
+        ]);
+        assert!(WasmModuleParser::parse(&data).is_ok());
+    }
+
+    #[test]
+    fn custom_sections_may_repeat_and_appear_anywhere() {
+        let custom = |name: &str| {
+            let mut p = encode_str(name);
+            p.extend([1, 2, 3]);
+            p
+        };
+        let data = wasm_with_sections(&[
+            make_section(0, &custom("a")),
+            make_section(1, &[0x00]), // empty type section
+            make_section(0, &custom("b")),
+            make_section(0, &custom("c")),
+        ]);
+        let m = WasmModuleParser::parse(&data).unwrap();
+        assert_eq!(m.customs.len(), 3);
+    }
+
+    #[test]
+    fn section_size_mismatch_with_leftover_bytes_is_rejected() {
+        // Type section declares size 5 but the single functype inside it
+        // (`60 00 00`, 3 bytes after the count byte) only accounts for 4 of
+        // those 5 bytes -- one stray trailing byte.
+        let mut data = minimal_module();
+        data.push(0x01); // type section
+        data.extend(encode_u32leb(5)); // declared size
+        data.push(0x01); // count = 1
+        data.extend([0x60, 0x00, 0x00]); // () -> ()
+        data.push(0xFF); // stray byte within the declared section size
+        let err = WasmModuleParser::parse(&data).unwrap_err();
+        assert!(err.message.contains("section size mismatch"), "unexpected error: {}", err.message);
+    }
+
+    #[test]
+    fn malformed_limits_flags_is_rejected() {
+        let payload = vec![0x01, 0x08, 0x00]; // count=1, flags=0x08 (no defined bit), min=0
+        let data = wasm_with_sections(&[make_section(5, &payload)]);
+        let err = WasmModuleParser::parse(&data).unwrap_err();
+        assert!(err.message.contains("malformed limits flags"), "unexpected error: {}", err.message);
+    }
+
+    #[test]
+    fn too_many_locals_is_rejected() {
+        let mut body: Vec<u8> = Vec::new();
+        body.extend(encode_u32leb(1)); // 1 local decl group
+        body.extend(encode_u32leb(u32::MAX)); // an absurd count
+        body.push(0x7F); // i32
+        body.push(0x0B); // end (never reached -- rejected before this)
+
+        let mut code_payload = encode_u32leb(1);
+        code_payload.extend(encode_u32leb(body.len() as u32));
+        code_payload.extend(&body);
+        let func_payload = encode_u32leb(1).into_iter().chain(encode_u32leb(0)).collect::<Vec<u8>>();
+        let data = wasm_with_sections(&[make_section(3, &func_payload), make_section(10, &code_payload)]);
+        let err = WasmModuleParser::parse(&data).unwrap_err();
+        assert!(err.message.contains("too many locals"), "unexpected error: {}", err.message);
+    }
+
+    #[test]
+    fn function_body_not_ending_in_end_opcode_is_rejected() {
+        let body = vec![0x00, 0x41, 0x01, 0x1A]; // 0 locals, i32.const 1, drop -- NO end
+        let mut code_payload = encode_u32leb(1);
+        code_payload.extend(encode_u32leb(body.len() as u32));
+        code_payload.extend(&body);
+        let func_payload = encode_u32leb(1).into_iter().chain(encode_u32leb(0)).collect::<Vec<u8>>();
+        let data = wasm_with_sections(&[make_section(3, &func_payload), make_section(10, &code_payload)]);
+        let err = WasmModuleParser::parse(&data).unwrap_err();
+        assert!(err.message.contains("END opcode expected"), "unexpected error: {}", err.message);
     }
 }
