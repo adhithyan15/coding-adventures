@@ -4,6 +4,15 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - direct List task editing (#13688)
+
+Each List row now exposes a plain-language Edit action for changing its task
+name and optional due date without opening Sheet or scheduling details. The
+keyboard-safe Save/Cancel flow validates both drafts before the Rust engine is
+mutated, persists successful edits, and returns focus to the primary task
+composer. The web host and generated native hosts share the same Mosaic slots,
+events, and emitted-control contract.
+
 ### Fixed - visible, focus-safe composer validation (#13689)
 
 Blank task names and malformed or impossible due dates now produce concise

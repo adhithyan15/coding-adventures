@@ -7,12 +7,15 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.performTextReplacement
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
 import org.junit.Rule
 import org.junit.Test
 
 private const val UI_TASK_NAME = "Native acceptance task"
+private const val UI_EDITED_TASK_NAME = "Edited native task"
+private const val UI_EDITED_DUE = "2026-01-12"
 private const val UI_PERSISTED_TASK_NAME = "Persisted native task"
 private const val UI_DUE = "2026-01-09"
 private const val UI_SUMMARY = "1 task(s) · 0 done · projected finish 2026-01-05"
@@ -65,6 +68,15 @@ class TaskAppUiTest {
         // assume a complexity toggle selects Timeline: its next mode is Board.
         compose.onNodeWithText(UI_SUMMARY).assertIsDisplayed()
 
+        compose.onNodeWithTag("edit-btn").performClick()
+        compose.waitForIdle()
+        compose.onNodeWithTag("edit-name-input").performTextReplacement(UI_EDITED_TASK_NAME)
+        compose.onNodeWithTag("edit-due-input").performTextReplacement(UI_EDITED_DUE)
+        compose.onNodeWithTag("edit-save-btn").performClick()
+        compose.waitForIdle()
+        compose.onNodeWithText(UI_EDITED_TASK_NAME).assertIsDisplayed()
+        compose.onNodeWithText("due $UI_EDITED_DUE").assertIsDisplayed()
+
         compose.onNodeWithTag("toggle").performClick()
         compose.waitForIdle()
         compose.onNodeWithTag("toggle").assertTextContains("✓")
@@ -77,7 +89,7 @@ class TaskAppUiTest {
 
         compose.onNodeWithTag("del-btn").performClick()
         compose.waitForIdle()
-        compose.onAllNodesWithText(UI_TASK_NAME).assertCountEquals(0)
+        compose.onAllNodesWithText(UI_EDITED_TASK_NAME).assertCountEquals(0)
 
         // A successful add deliberately returns focus to the composer through
         // its focus-preserving branch. Exercise that live branch instead of

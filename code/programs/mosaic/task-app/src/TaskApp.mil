@@ -21,6 +21,10 @@ component TaskApp {
   // keyboard capture back to the task name. Like the errors, these are transient.
   slot new-task-name-focus : text ;
   slot new-task-due-focus  : text ;
+  slot edit-task-name : text ;
+  slot edit-task-due : text ;
+  slot edit-task-name-error : text ;
+  slot edit-task-due-error : text ;
   // Non-empty only while the active List has no tasks. The layout uses this
   // marker for first-run guidance without teaching the UI to count rows.
   slot empty-list    : text ;
@@ -233,11 +237,14 @@ component TaskApp {
   // in the collapsed state. Cells 2/4 (due/overdue) and 12/13 (dependencies/
   // notes) are unaffected: they're basic todo-app concepts per the spec's
   // Decision 4, not CPM output, so Board tier keeps them.
+  // Cell 15 is a non-empty marker for the one row currently being edited.
   slot task-rows : list<list<text>> ;
 
   // Typing in the inputs.
   emit onNewTaskNameChange ( value : text ) ;
   emit onNewTaskDueChange ( value : text ) ;
+  emit onEditTaskNameChange ( value : text ) ;
+  emit onEditTaskDueChange ( value : text ) ;
   emit onNewProjectNameChange ( value : text ) ;
 
   // Create a project (top-level, or nested under the one currently shown), and switch
@@ -294,6 +301,9 @@ component TaskApp {
 
   // Expand (or collapse) a task row to reveal its scheduling detail.
   emit onExpandTask ( index : number ) ;
+  emit onEditTask ( index : number ) ;
+  emit onSaveTaskEdit ;
+  emit onCancelTaskEdit ;
 
   // Add the typed task; toggle/delete a row (the row index is delivered as the number
   // payload of a single-number-param event).

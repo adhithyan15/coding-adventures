@@ -1,5 +1,12 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — edit List tasks atomically (#13688)
+
+The native adapter now owns a transient one-row edit session and commits valid
+name and optional due-date changes through `task-core`'s `rename_task` and
+`set_deadline` operations. Blank names and impossible dates leave engine state
+unchanged; save and cancel clear the draft and restore composer focus.
+
 ## [Unreleased] — expose atomic composer validation (#13689)
 
 The native adapter now publishes plain-language task-name and due-date error

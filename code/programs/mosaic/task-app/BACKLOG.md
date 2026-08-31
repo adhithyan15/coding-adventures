@@ -60,7 +60,7 @@ links existing Mosaic work instead of duplicating it.
    give an empty Inbox useful guidance and deterministic first-task focus.
    **Done in #13706.**
 17. **P1 — [#13689](https://github.com/adhithyan15/coding-adventures/issues/13689):**
-   surface composer validation errors with useful focus behavior. **In review in
+   surface composer validation errors with useful focus behavior. **Done in
    #13719.**
 18. **P1 — [#13688](https://github.com/adhithyan15/coding-adventures/issues/13688):**
    edit task names and due dates directly from List.

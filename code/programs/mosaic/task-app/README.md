@@ -83,8 +83,9 @@ window without one.
 - Tasks are chained into a work queue and **auto-scheduled** — each starts when the
   previous finishes, on working days (weekends skipped), with a projected finish date.
 - Tasks scheduled to finish after their due date are flagged **overdue**.
-- Use the round completion control to complete or reopen a task; select the task
-  name to reveal scheduling details; Delete removes it.
+- Use the round completion control to complete or reopen a task; Edit changes
+  the name or optional due date directly in List; select the task name to reveal
+  scheduling details; Delete removes it.
 - **Everything persists** — the whole workspace is saved to IndexedDB after each change
   and restored on reload (see `host/web/`); generated native hosts use their
   platform application-data directory and atomically replace their snapshot after
