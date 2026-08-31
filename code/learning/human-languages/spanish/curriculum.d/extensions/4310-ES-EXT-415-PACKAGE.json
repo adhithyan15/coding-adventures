@@ -1,0 +1,14 @@
+{
+  "id": "ES-EXT-415-PACKAGE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can identify a package and the destination abroad.",
+  "prerequisites": [
+    "ES-EXT-406-DOCUMENTS"
+  ],
+  "lessons": [
+    "ES-C415-paquete",
+    "ES-C415-extranjero"
+  ]
+}

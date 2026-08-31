@@ -1,0 +1,13 @@
+{
+  "id": "ES-PATH-415-PACKAGE",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "lessons": [
+    "ES-C415-paquete",
+    "ES-C415-extranjero"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-415-PACKAGE"
+  ],
+  "after": []
+}
