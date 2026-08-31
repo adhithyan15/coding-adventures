@@ -1,0 +1,18 @@
+{
+  "chapter": 416,
+  "title": "Stay in May",
+  "label": "ch:quedarse-mayo",
+  "canDo": "I can understand the month and length of a simple hotel stay.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C416-stay-recall-2",
+    "kind": "production",
+    "summary": "Retrieve stay and May in a short hotel booking exchange.",
+    "assesses": [
+      "ES-LEX-QUEDARSE",
+      "ES-LEX-MAYO"
+    ]
+  }
+}

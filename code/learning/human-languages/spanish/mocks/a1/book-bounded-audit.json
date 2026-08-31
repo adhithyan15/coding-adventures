@@ -59,9 +59,9 @@
     ],
     "numericCredits": "0-100"
   },
-  "lessonCount": 936,
-  "taughtForms": 1560,
-  "objectiveFailed": 2,
+  "lessonCount": 940,
+  "taughtForms": 1562,
+  "objectiveFailed": 1,
   "mocks": [
     {
       "mock": 1,
@@ -73,8 +73,8 @@
     {
       "mock": 2,
       "reading": 24,
-      "listening": 24,
-      "objectiveFailed": 2,
+      "listening": 25,
+      "objectiveFailed": 1,
       "failed": [
         {
           "paper": 1,
@@ -84,14 +84,6 @@
             "nadar",
             "adulto"
           ]
-        },
-        {
-          "paper": 2,
-          "item": 45,
-          "missing": [
-            "quedarse",
-            "mayo"
-          ]
         }
       ]
     }
@@ -99,9 +91,7 @@
   "missingObjectiveLexemes": [
     "adulto",
     "curso",
-    "mayo",
-    "nadar",
-    "quedarse"
+    "nadar"
   ],
   "missingFrequency": [
     {
@@ -113,15 +103,7 @@
       "count": 1
     },
     {
-      "lexeme": "mayo",
-      "count": 1
-    },
-    {
       "lexeme": "nadar",
-      "count": 1
-    },
-    {
-      "lexeme": "quedarse",
       "count": 1
     }
   ]

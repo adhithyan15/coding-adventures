@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:13c60f7ca4e09bea",
+  "lessonIds": [
+    "ES-C416-quedarse",
+    "ES-C416-mayo",
+    "ES-C416-stay-recall-1",
+    "ES-C416-stay-recall-2"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch416.txt",
+  "json": "spanish/narration/ch416.json",
+  "textHash": "fnv1a64:a58ac4291e5f30b9",
+  "jsonHash": "fnv1a64:8674c7aaa65d35cf",
+  "findings": []
+}
