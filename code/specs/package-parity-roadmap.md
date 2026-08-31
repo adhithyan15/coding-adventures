@@ -12405,6 +12405,50 @@ reconciliation, classification, and selection, the complete state has 638
 unique owners and 1,006 dependency edges: 199 merged, 438 pending, and exactly
 this owner in progress.
 
+### Engram WASM package-scoped source-input repair validation
+
+The selected repair now introduces a seventh neutral source-input role,
+`package_exact_inputs`, because the three Engram paths are required only by the
+exact `code/packages/rust/engram-wasm` BUILD front. Keeping them in Rust's
+language-wide exact-path set would incorrectly hash the same relative smoke
+path in unrelated Rust WASM packages. The rule therefore admits only
+`js/engram-mosaic-host-wasm.mjs`, `js/smoke.mjs`, and
+`pkg/engram_engine.wasm` at that exact package root in both extension and
+declared-source modes. The registry rejects unsafe roots, foreign lanes,
+duplicate or case-folding identities, impossible path prefixes, overlaps with
+language-wide or scoped selectors, generated components, credentials, secrets,
+signing material, and machine-local configuration.
+
+The checked regression reads stage-zero regular-file bytes from Git objects,
+not mutable worktree paths. It also pins the concrete BUILD-to-smoke,
+smoke-to-host-module, and smoke-to-WASM-read edges, excludes near names and
+case variants, and proves that `code/packages/rust/task-wasm/js/smoke.mjs`
+does not inherit Engram authority. The complete 132-case, 283-file corpus is
+valid with registry digest
+`f49bfe8c7c9c0fb9b534ecc9ca4a614f3684abe32bdb0edac82d99bdc806fb70`
+and boundary digest
+`cb721c2652d45a97fad300c85699ea440aa9f9b3bbe015e1e44dca3856d0b7e8`.
+The conformance family passes 192 tests and 329 subtests with 23 expected
+platform skips; the final semantic runner passes 72 tests and 222 subtests.
+Branch-aware coverage is 89% for the runner, 99% for its direct tests, and 92%
+combined. Eight native Engram tests, 28 checked-in-WASM smoke assertions,
+strict Clippy, the complete Go oracle test/vet/build gates, a real 5,122-package
+dry build-file validation, ten package-parity tests, and a zero-collision
+schema-3 inventory also pass. RustSec reports no vulnerability among 1,537
+locked dependencies and retains two existing allowed unmaintained warnings.
+
+After conflict-free rebases onto exact `origin/main`
+`fb02d844c14b8477335825b4e00a6658822d5eee`, the refreshed inventory has 15
+established lanes, 1,397 implementation identities, 4,612 implementation
+slots, and 1,436 all-reported identities. Its bands are 175/265, 123/934,
+171/2,152, and 928/12,992; Rust has 739 singletons, OCaml remains at zero,
+and canonical collisions and unknown buckets remain zero. The merged
+TypeScript-only `forme-cli` identity stays under
+`forme-portable-core-family-classification`. Dedicated auto-merge PR #13768
+owns the corresponding shared TypeScript base-config boundary correction; this
+Engram branch will absorb that correction from `main` before publication so a
+coherent package-scoped repair does not duplicate unrelated Forme work.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
