@@ -12357,6 +12357,54 @@ canonical collisions and unknown buckets remain zero. The complete
 637-owner/1,006-edge graph remains dependency-complete, unique, and acyclic at
 198 merged, 438 pending, and exactly this owner in progress.
 
+### Post-PR #13748 refresh and Engram WASM registry-repair selection
+
+PR #13748 completed all 40 checks on final head
+`d55689a89f1d64c037307c623ac990978c0a53ed` acceptably: 33 succeeded and
+seven were expected skips. GitHub reported the head clean and mergeable, then
+executed guarded squash auto-merge without a plain manual merge command at
+2026-08-31T22:48:23Z. The merge commit is
+`0db04dd61fbfeccf674c677eefe71dd60d63ed6c`.
+
+After fetching exact current `origin/main`
+`d5f6d1c950d0e817bea77c2a73aa6ca36a593758`, the collision-checked schema-3
+inventory reports 15 established lanes, 1,396 implementation identities,
+4,611 implementation slots, and 1,435 all-reported identities. Its bands are
+175 packages with 265 missing slots, 123/934, 171/2,152, and 927/12,978.
+Rust has 739 singletons, OCaml remains at zero packages, and canonical
+collisions and unknown buckets remain zero. The later MOS 6502 functional
+audit changes only an existing package and its tests.
+
+Merged PR #13744 adds Rust `layout-flexbox` beside the existing TypeScript
+implementation. It adds one slot without adding an identity and moves the
+package from the singleton band into the two-to-four-lane band. New pending
+owner `layout-flexbox-two-lane-classification` compares the two pure UI03
+implementations and their shared `layout-ir` dependency, defines neutral
+fixtures for direction, wrap, gaps, ordering, flex sizing, alignment,
+automatic minimum sizes, malformed inputs, numeric behavior, and resource
+ceilings, then decomposes applicable-lane rollout or records narrow reviewed
+exceptions. Fonts, shaping, DOM, windows, render devices, and host measurement
+remain outside the portable layout core.
+
+The dependency/leverage pass selects
+`build-tool-engram-wasm-package-source-input-registry-repair` on fresh clean
+branch `codex/build-tool-engram-wasm-source-input-registry-repair`. Merged PR
+#13732 makes the Rust Engram WASM BUILD front execute `js/smoke.mjs`; that
+script imports `js/engram-mosaic-host-wasm.mjs` and reads the checked-in
+`pkg/engram_engine.wasm`, but the canonical Rust source-input registry omits
+all three exact package-owned inputs. This bounded repair will register only
+those evidenced paths, pin tracked bytes and drift or rename rejection, and
+regenerate the domain-separated registry digest without admitting broad
+JavaScript, generated, build-output, or binary-suffix authority. It directly
+unblocks eleven engine adoptions and reaches eighteen unfinished descendants;
+higher raw graph ranks are heterogeneous classifiers or selection-blocked
+native and network authority reviews. All twelve live PRs have zero exact path
+overlap with the expected registry, fixture, test, specification,
+documentation, state, roadmap, and changelog surfaces. After lifecycle
+reconciliation, classification, and selection, the complete state has 638
+unique owners and 1,006 dependency edges: 199 merged, 438 pending, and exactly
+this owner in progress.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

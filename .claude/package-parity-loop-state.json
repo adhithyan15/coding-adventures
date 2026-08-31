@@ -11,35 +11,28 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 13748,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13748",
-    "branch": "codex/build-tool-shared-generated-boundary-source-input-contract",
-    "item_id": "build-tool-shared-and-generated-boundary-source-input-contract",
-    "opened_at": "2026-08-31T22:07:21Z",
-    "opened_revision": "9d6c9bacf10c2d367b904e23ee81c48765a09f21"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-08-31T22:07:25Z",
+    "observed_at": "2026-08-31T22:48:23Z",
     "pr_number": 13748,
-    "status": "pending",
-    "notes": "Ready-for-review PR #13748 is open at exact initial head 9d6c9bacf10c2d367b904e23ee81c48765a09f21. GitHub reports the branch mergeable and conflict-free while CI and CodeQL checks are queued or pending; guarded auto-merge remains disabled until every required check is terminal and acceptable."
+    "status": "merged",
+    "notes": "All 40 final-head checks completed acceptably on d55689a89f1d64c037307c623ac990978c0a53ed: 33 succeeded and seven were expected skips. GitHub reported the PR clean and mergeable before guarded squash auto-merge completed as 0db04dd61fbfeccf674c677eefe71dd60d63ed6c without a plain manual merge command."
   },
   "last_inventory": {
-    "revision": "c3903521e56d6b2dc747ef682d21b0861488aed3",
+    "revision": "d5f6d1c950d0e817bea77c2a73aa6ca36a593758",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1396,
-    "implementation_package_slots": 4610,
+    "implementation_package_slots": 4611,
     "all_reported_identities": 1435,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 265,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
-    "two_to_four_packages": 170,
-    "two_to_four_missing_slots": 2139,
-    "singleton_packages": 928,
-    "singleton_missing_slots": 12992,
+    "two_to_four_packages": 171,
+    "two_to_four_missing_slots": 2152,
+    "singleton_packages": 927,
+    "singleton_missing_slots": 12978,
     "rust_singletons": 739,
     "ocaml_packages": 0,
     "canonical_collisions": 0,
@@ -879,13 +872,17 @@
     {
       "id": "build-tool-shared-and-generated-boundary-source-input-contract",
       "title": "Define exact shared and generated-boundary source inputs for build tools",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit"],
       "branch": "codex/build-tool-shared-generated-boundary-source-input-contract",
       "pr_number": 13748,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13748",
       "opened_at": "2026-08-31T22:07:21Z",
       "opened_revision": "9d6c9bacf10c2d367b904e23ee81c48765a09f21",
+      "merged_head_revision": "d55689a89f1d64c037307c623ac990978c0a53ed",
+      "merged_at": "2026-08-31T22:48:23Z",
+      "merge_revision": "0db04dd61fbfeccf674c677eefe71dd60d63ed6c",
+      "merge_notes": "All 40 final-head checks reached terminal acceptable conclusions: 33 successes and seven expected skips. GitHub reported exact head d55689a89f1d64c037307c623ac990978c0a53ed clean and mergeable; guarded squash auto-merge completed without a plain manual merge command.",
       "selection_revision": "f5fdd88526315bf32b616b95b5bb76a04e7363bb",
       "selection_notes": "Selected only after PR #13707 completed 40 acceptable final-head checks and merged through guarded squash auto-merge as 26e1527a03e1c89735e90d04d9101d5a5da7eefa, followed by a collision-checked refresh at exact current origin/main f5fdd88526315bf32b616b95b5bb76a04e7363bb. The intervening PR #13710 changes only the existing Rust spice-netlist-parser root and SPICE plan, so it adds no package identity or build-tool topology. The schema-3 inventory now reports 15 established lanes, 1,395 implementation identities, 4,609 slots, 1,434 all-reported identities, bands 175/265, 123/934, 170/2,139, and 927/12,978, 738 Rust singletons, zero OCaml packages, zero canonical collisions, and zero unknown buckets. The two new Rust-only identities dsmr-p1-protocol and smart-home-dsmr-p1-integration are fully classified, and the pre-existing reusable smart-home-event-streams prerequisite is now explicitly owned. Four new DSMR, event-stream, portable-integration, and selection-blocked serial-authority owners were added before selection. The resulting 634-owner/991-edge graph is unique, dependency-complete, and acyclic. This item is the highest-leverage coherent eligible continuation: it has eleven direct unfinished engine dependents and eighteen unfinished transitive descendants, while higher raw ranks are heterogeneous classifiers or selection-blocked native and network authority reviews. The clean worktree and fresh branch were created only after their local and remote identities were verified absent and now exactly match current origin/main. Reconciliation plus selection leaves 198 merged, 435 pending, and exactly this owner in progress.",
       "implementation_revision": "19a9a51ea04181abbf3fa07395791fa04ad4362f",
@@ -911,10 +908,12 @@
     {
       "id": "build-tool-engram-wasm-package-source-input-registry-repair",
       "title": "Register exact Engram WASM BUILD inputs",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit"],
-      "branch": null,
+      "branch": "codex/build-tool-engram-wasm-source-input-registry-repair",
       "pr_number": null,
+      "selection_revision": "d5f6d1c950d0e817bea77c2a73aa6ca36a593758",
+      "selection_notes": "Selected after PR #13748 completed 40 acceptable final-head checks and merged through guarded squash auto-merge as 0db04dd61fbfeccf674c677eefe71dd60d63ed6c, followed by package-neutral MOS 6502 audit PR #13747 on exact current origin/main d5f6d1c950d0e817bea77c2a73aa6ca36a593758. The refreshed collision-checked schema-3 inventory records 15 established lanes, 1,396 implementation identities, 4,611 slots, 1,435 all-reported identities, bands 175/265, 123/934, 171/2,152, and 927/12,978, 739 Rust singletons, zero OCaml packages, zero canonical collisions, and zero unknown buckets. Merged PR #13744 adds Rust layout-flexbox beside TypeScript, moving that identity from singleton to the two-to-four band; layout-flexbox-two-lane-classification now owns its deterministic UI03 contract and missing applicable-lane review. The resulting 638-owner/1,006-edge graph is unique, dependency-complete, and acyclic. This bounded registry repair is the highest-leverage ready eligible item: it directly unblocks eleven engine adoptions and reaches eighteen unfinished descendants, while higher raw ranks are heterogeneous classifiers or selection-blocked native/network authority reviews. The target local branch, remote branch, prior PR, and fresh worktree path were absent before creating this clean exact-main branch, and all twelve live PRs have zero exact overlap with its expected registry, fixture, test, documentation, state, roadmap, and changelog surfaces. Reconciliation, classification, and selection leave 199 merged, 438 pending, and exactly this owner in progress.",
       "notes": "Discovered after merged PR #13732 made code/packages/rust/engram-wasm/BUILD execute node js/smoke.mjs against checked-in package artifacts. The Rust source-input registry currently omits the exact script, its imported js/engram-mosaic-host-wasm.mjs module, and pkg/engram_engine.wasm read by the smoke test. Add narrowly scoped exact package inputs, tracked-byte projection fixtures, drift/rename regressions, and the canonical registry digest update without admitting broad JavaScript, build output, generated, or binary suffix authority. Every engine adoption remains dependent on this repair so no implementation can claim equality with an incomplete neutral registry."
     },
     {
@@ -7709,6 +7708,15 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the collision-clean e6d99bc699 inventory after the Rust-only venture-browser-visual-fixtures identity appeared. Separate reusable deterministic HTML/resources, text measurement, geometry, RGBA, structural screenshot oracles, and resource bounds from Rust Venture integration plus Cairo, WGPU, and Apple native capture adapters. Define the language-neutral fixture contract and explicit applicable-lane exceptions; do not manufacture native screenshot hosts in every lane. PRs #13371, #13390, and #13403 are merged and remain inside this owner, so the former live-path block is cleared."
+    },
+    {
+      "id": "layout-flexbox-two-lane-classification",
+      "title": "Classify layout-flexbox portability across Rust and TypeScript",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean d5f6d1c950 inventory after merged PR #13744 added code/packages/rust/layout-flexbox beside the existing TypeScript implementation. The new directory adds one established-lane slot without adding an identity, moves layout-flexbox from the singleton band into the two-to-four-lane band, and leaves thirteen established lanes without classified coverage. Compare both pure UI03 implementations against their shared layout-ir contract; pin direction, reversal, wrap, gap, order, grow/shrink/basis, justify/align, automatic minimum size, malformed-extension, numeric, overflow, and resource-limit behavior in language-neutral fixtures; then decompose applicable-lane rollout or record narrow reviewed exceptions. Keep fonts, shaping, DOM, windows, rendering devices, and host measurement outside the portable layout core."
     }
   ]
 }
