@@ -1707,6 +1707,23 @@ fn rejects_invalid_jfet_gate_saturation_current() {
 }
 
 #[test]
+fn parses_jfet_gate_current_temperature_exponent() {
+    let parsed = parse_netlist(".model shaped NJF(XTI=2.5)\nJ1 drain gate source shaped").unwrap();
+
+    let Element::Jfet(jfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected JFET");
+    };
+    assert_close(jfet.gate_saturation_current_temperature_exponent, 2.5);
+}
+
+#[test]
+fn rejects_non_finite_jfet_gate_current_temperature_exponent() {
+    let error = parse_netlist(".model bad NJF(XTI=1e999)\nJ1 drain gate source bad").unwrap_err();
+
+    assert!(error.to_string().contains("JFET XTI must be finite"));
+}
+
+#[test]
 fn parses_jfet_b_as_doping_tail_parameter_not_beta_alias() {
     let parsed = parse_netlist(
         r#"
