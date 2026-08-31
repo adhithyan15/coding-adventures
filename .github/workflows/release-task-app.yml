@@ -334,9 +334,10 @@ jobs:
           state_root="$PWD/release-work/qt-state"
           state_file="$state_root/TaskApp/task-app/mosaic-state.v1.json"
           probe="$PWD/release-work/qt-pre-upgrade.json"
-          mkdir -p "$(dirname "$state_file")"
-          printf '{}\n' > "$probe"
-          cp "$probe" "$state_file"
+          python code/scripts/taskapp_release.py materialize-upgrade-fixture \
+            --fixture code/programs/mosaic/task-app/fixtures/release-upgrade-v0.1.0.json \
+            --output "$state_file"
+          cp "$state_file" "$probe"
           set +e
           (cd / && env -u MOSAIC_APP_LIBRARY \
             XDG_DATA_HOME="$state_root" QT_QPA_PLATFORM=offscreen \
@@ -347,7 +348,22 @@ jobs:
           cat release-work/qt-launch.log
           test "$status" -eq 124
           ! grep -Fq "Mosaic Rust runtime unavailable" release-work/qt-launch.log
+          python code/scripts/taskapp_release.py verify-upgrade-state \
+            --fixture code/programs/mosaic/task-app/fixtures/release-upgrade-v0.1.0.json \
+            --state "$state_file"
           cmp "$probe" "$state_root/task-app/backups/pre-v${RELEASE_VERSION}-qt.json"
+          printf 'invalid TaskApp state\n' > "$state_file"
+          cp "$state_file" "$probe"
+          set +e
+          (cd / && env -u MOSAIC_APP_LIBRARY \
+            XDG_DATA_HOME="$state_root" QT_QPA_PLATFORM=offscreen \
+            timeout 8s "$launcher") \
+            >release-work/qt-recovery.log 2>&1
+          status=$?
+          set -e
+          cat release-work/qt-recovery.log
+          test "$status" -eq 124
+          cmp "$probe" "$state_file.corrupt"
 
       - name: Build, verify, and archive the Flutter Linux bundle
         if: matrix.backend == 'flutter'
@@ -387,9 +403,10 @@ jobs:
           state_root="$PWD/release-work/flutter-state"
           state_file="$state_root/task-app/mosaic-state.v1.json"
           probe="$PWD/release-work/flutter-pre-upgrade.json"
-          mkdir -p "$(dirname "$state_file")"
-          printf '{}\n' > "$probe"
-          cp "$probe" "$state_file"
+          python code/scripts/taskapp_release.py materialize-upgrade-fixture \
+            --fixture code/programs/mosaic/task-app/fixtures/release-upgrade-v0.1.0.json \
+            --output "$state_file"
+          cp "$state_file" "$probe"
           set +e
           (cd / && env -u MOSAIC_APP_LIBRARY XDG_DATA_HOME="$state_root" \
             xvfb-run -a timeout 10s "$launcher") \
@@ -399,7 +416,21 @@ jobs:
           cat release-work/flutter-launch.log
           test "$status" -eq 124
           ! grep -Fq "Mosaic Rust runtime unavailable" release-work/flutter-launch.log
+          python code/scripts/taskapp_release.py verify-upgrade-state \
+            --fixture code/programs/mosaic/task-app/fixtures/release-upgrade-v0.1.0.json \
+            --state "$state_file"
           cmp "$probe" "$state_root/task-app/backups/pre-v${RELEASE_VERSION}-flutter.json"
+          printf 'invalid TaskApp state\n' > "$state_file"
+          cp "$state_file" "$probe"
+          set +e
+          (cd / && env -u MOSAIC_APP_LIBRARY XDG_DATA_HOME="$state_root" \
+            xvfb-run -a timeout 10s "$launcher") \
+            >release-work/flutter-recovery.log 2>&1
+          status=$?
+          set -e
+          cat release-work/flutter-recovery.log
+          test "$status" -eq 124
+          cmp "$probe" "$state_file.corrupt"
 
       - name: Build, verify, and archive the Compose Linux bundle
         if: matrix.backend == 'compose'
@@ -435,9 +466,10 @@ jobs:
           state_root="$PWD/release-work/compose-state"
           state_file="$state_root/task-app/mosaic-state.v1.json"
           probe="$PWD/release-work/compose-pre-upgrade.json"
-          mkdir -p "$(dirname "$state_file")"
-          printf '{}\n' > "$probe"
-          cp "$probe" "$state_file"
+          python code/scripts/taskapp_release.py materialize-upgrade-fixture \
+            --fixture code/programs/mosaic/task-app/fixtures/release-upgrade-v0.1.0.json \
+            --output "$state_file"
+          cp "$state_file" "$probe"
           set +e
           (cd / && env -u MOSAIC_APP_LIBRARY XDG_DATA_HOME="$state_root" \
             xvfb-run -a timeout 10s "$launcher") \
@@ -447,7 +479,21 @@ jobs:
           cat release-work/compose-launch.log
           test "$status" -eq 124
           ! grep -Fq "Mosaic Rust runtime unavailable" release-work/compose-launch.log
+          python code/scripts/taskapp_release.py verify-upgrade-state \
+            --fixture code/programs/mosaic/task-app/fixtures/release-upgrade-v0.1.0.json \
+            --state "$state_file"
           cmp "$probe" "$state_root/task-app/backups/pre-v${RELEASE_VERSION}-compose.json"
+          printf 'invalid TaskApp state\n' > "$state_file"
+          cp "$state_file" "$probe"
+          set +e
+          (cd / && env -u MOSAIC_APP_LIBRARY XDG_DATA_HOME="$state_root" \
+            xvfb-run -a timeout 10s "$launcher") \
+            >release-work/compose-recovery.log 2>&1
+          status=$?
+          set -e
+          cat release-work/compose-recovery.log
+          test "$status" -eq 124
+          cmp "$probe" "$state_file.corrupt"
 
       - name: Build, verify, and archive the SwiftUI macOS application
         if: matrix.backend == 'swiftui'
@@ -533,6 +579,44 @@ jobs:
             MOSAIC_EXPECT_RESTORED=1 \
             swift run --package-path "$harness" Conformance \
             --library "$app_replacement/App_App.bundle/Runtime/libmosaic_app.dylib"
+
+          standard_state="$HOME/Library/Application Support/task-app/mosaic-state.v1.json"
+          rm -f "$standard_state" "$standard_state.corrupt" "$standard_state.tmp"
+          python code/scripts/taskapp_release.py materialize-upgrade-fixture \
+            --fixture code/programs/mosaic/task-app/fixtures/release-upgrade-v0.1.0.json \
+            --output "$standard_state"
+          launch_standard_app() {
+            local app="$1"
+            local log="$2"
+            (
+              cd /
+              env -u MOSAIC_APP_LIBRARY -u MOSAIC_APP_STATE_PATH \
+                "$app/Contents/MacOS/Trestle" >"$log" 2>&1 &
+              app_pid=$!
+              trap 'kill "$app_pid" 2>/dev/null || true' EXIT
+              sleep 5
+              kill -0 "$app_pid"
+              kill "$app_pid"
+              wait "$app_pid" || true
+              trap - EXIT
+            )
+            ! grep -Fq "Mosaic Rust runtime unavailable" "$log"
+            ! grep -E "missing required MIL prop|Mosaic runtime failed|Fatal error|Precondition failed" "$log"
+          }
+          launch_standard_app "$app_v1" "$PWD/release-work/macos-upgrade-launch.log"
+          python code/scripts/taskapp_release.py verify-upgrade-state \
+            --fixture code/programs/mosaic/task-app/fixtures/release-upgrade-v0.1.0.json \
+            --state "$standard_state"
+          env -u MOSAIC_APP_LIBRARY -u MOSAIC_APP_STATE_PATH \
+            MOSAIC_EXPECT_RESTORED=1 MOSAIC_EXPECT_TASK_NAME="Upgrade fixture task" \
+            swift run --package-path "$harness" Conformance \
+            --library "$app_replacement/App_App.bundle/Runtime/libmosaic_app.dylib"
+
+          printf 'invalid TaskApp state\n' > "$standard_state"
+          cp "$standard_state" release-work/macos-corrupt-probe
+          launch_standard_app "$app_replacement" "$PWD/release-work/macos-recovery.log"
+          cmp release-work/macos-corrupt-probe "$standard_state.corrupt"
+          rm -f "$standard_state" "$standard_state.corrupt" "$standard_state.tmp"
 
       - name: Build, verify, and archive the WinUI Windows application
         if: matrix.backend == 'xaml'
@@ -635,12 +719,52 @@ jobs:
           $state = Join-Path ([Environment]::GetFolderPath('LocalApplicationData')) `
             'task-app/mosaic-state.v1.json'
           Remove-Item $state, "$state.corrupt", "$state.tmp" -Force -ErrorAction SilentlyContinue
+          python code/scripts/taskapp_release.py materialize-upgrade-fixture `
+            --fixture code/programs/mosaic/task-app/fixtures/release-upgrade-v0.1.0.json `
+            --output $state
+          if ($LASTEXITCODE -ne 0) { throw 'Could not seed the Windows upgrade fixture' }
+          $upgradeProcess = Start-Process -FilePath $firstExecutable -WindowStyle Hidden -PassThru
+          try {
+            Start-Sleep -Seconds 5
+            $upgradeProcess.Refresh()
+            if ($upgradeProcess.HasExited) {
+              throw "Upgrade-fixture app exited with code $($upgradeProcess.ExitCode)"
+            }
+          }
+          finally {
+            if (!$upgradeProcess.HasExited) { Stop-Process -Id $upgradeProcess.Id -Force }
+          }
+          python code/scripts/taskapp_release.py verify-upgrade-state `
+            --fixture code/programs/mosaic/task-app/fixtures/release-upgrade-v0.1.0.json `
+            --state $state
+          if ($LASTEXITCODE -ne 0) { throw 'Windows app did not restore the upgrade fixture' }
+
+          Remove-Item $state, "$state.corrupt", "$state.tmp" -Force -ErrorAction SilentlyContinue
           pwsh -NoProfile -ExecutionPolicy Bypass `
             -File code/scripts/taskapp-xaml-smoke.ps1 `
             -ExePath $firstExecutable `
             -RestartExePath $replacementExecutable
           if ($LASTEXITCODE -ne 0) { throw 'Packaged Windows UI lifecycle failed' }
           if (!(Test-Path $state)) { throw 'Packaged app did not persist under stable LocalApplicationData identity' }
+
+          Set-Content $state 'invalid TaskApp state' -Encoding utf8NoBOM
+          $corruptProbe = Join-Path $PWD 'release-work/windows-corrupt-probe'
+          Copy-Item $state $corruptProbe
+          $recoveryProcess = Start-Process -FilePath $replacementExecutable -WindowStyle Hidden -PassThru
+          try {
+            Start-Sleep -Seconds 5
+            $recoveryProcess.Refresh()
+            if ($recoveryProcess.HasExited) {
+              throw "Corrupt-state recovery app exited with code $($recoveryProcess.ExitCode)"
+            }
+          }
+          finally {
+            if (!$recoveryProcess.HasExited) { Stop-Process -Id $recoveryProcess.Id -Force }
+          }
+          if (!(Test-Path "$state.corrupt")) { throw 'Windows app did not quarantine invalid state' }
+          if ((Get-FileHash $corruptProbe).Hash -ne (Get-FileHash "$state.corrupt").Hash) {
+            throw 'Windows corrupt-state quarantine changed the rejected bytes'
+          }
 
           $harness = Join-Path $PWD 'release-work/xaml-conformance'
           New-Item -ItemType Directory -Path $harness -Force | Out-Null

@@ -1,4 +1,4 @@
-//! Bounded Sonos UPnP discovery, telemetry, and media control for D23.
+//! Bounded MediaRenderer UPnP discovery, telemetry, and media control for D23.
 
 #![forbid(unsafe_code)]
 
@@ -27,15 +27,15 @@ use upnp_av_protocol::{
 use url_parser::{Url, UrlError};
 
 pub const VERSION: &str = "0.1.0";
-pub const INTEGRATION_ID: &str = "sonos";
-pub const PROTOCOL_ID: &str = "sonos_upnp";
-pub const ZONE_PLAYER_DEVICE_TYPE: &str = "urn:schemas-upnp-org:device:ZonePlayer:1";
+pub const INTEGRATION_ID: &str = "upnp_media_renderer";
+pub const PROTOCOL_ID: &str = "upnp_av";
+pub const MEDIA_RENDERER_DEVICE_TYPE: &str = upnp_av_protocol::MEDIA_RENDERER_DEVICE_TYPE;
 pub const AV_TRANSPORT_SERVICE_TYPE: &str = upnp_av_protocol::AV_TRANSPORT_SERVICE_TYPE;
 pub const RENDERING_CONTROL_SERVICE_TYPE: &str = upnp_av_protocol::RENDERING_CONTROL_SERVICE_TYPE;
 pub const DEFAULT_MAX_RESPONSE_BYTES: usize = 2 * 1024 * 1024;
 
 #[derive(Debug)]
-pub enum SonosError {
+pub enum MediaRendererError {
     Validation(String),
     Url(UrlError),
     Udp(UdpError),
@@ -58,8 +58,8 @@ pub enum SonosError {
         expected: &'static str,
     },
     PlaybackPostcondition {
-        expected: SonosPlaybackState,
-        actual: SonosPlaybackState,
+        expected: MediaRendererPlaybackState,
+        actual: MediaRendererPlaybackState,
     },
     VolumePostcondition {
         expected: u8,
@@ -72,79 +72,91 @@ pub enum SonosError {
     Runtime(RuntimeError),
 }
 
-impl fmt::Display for SonosError {
+impl fmt::Display for MediaRendererError {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::Validation(message) => write!(formatter, "invalid Sonos input: {message}"),
-            Self::Url(error) => write!(formatter, "invalid Sonos URL: {error}"),
-            Self::Udp(error) => write!(formatter, "Sonos SSDP failed: {error}"),
-            Self::Io(message) => write!(formatter, "Sonos LAN I/O failed: {message}"),
-            Self::Http(message) => write!(formatter, "invalid Sonos HTTP response: {message}"),
-            Self::HttpStatus(status) => write!(formatter, "Sonos endpoint returned HTTP {status}"),
-            Self::Xml(message) => write!(formatter, "invalid Sonos XML: {message}"),
+            Self::Validation(message) => {
+                write!(formatter, "invalid MediaRenderer input: {message}")
+            }
+            Self::Url(error) => write!(formatter, "invalid MediaRenderer URL: {error}"),
+            Self::Udp(error) => write!(formatter, "MediaRenderer SSDP failed: {error}"),
+            Self::Io(message) => write!(formatter, "MediaRenderer LAN I/O failed: {message}"),
+            Self::Http(message) => {
+                write!(formatter, "invalid MediaRenderer HTTP response: {message}")
+            }
+            Self::HttpStatus(status) => {
+                write!(formatter, "MediaRenderer endpoint returned HTTP {status}")
+            }
+            Self::Xml(message) => write!(formatter, "invalid MediaRenderer XML: {message}"),
             Self::ResponseTooLarge { limit } => {
-                write!(formatter, "Sonos response exceeds {limit} bytes")
+                write!(formatter, "MediaRenderer response exceeds {limit} bytes")
             }
             Self::TruncatedBody { expected, actual } => write!(
                 formatter,
-                "Sonos response body is truncated: expected {expected} bytes, got {actual}"
+                "MediaRenderer response body is truncated: expected {expected} bytes, got {actual}"
             ),
             Self::MissingService(service) => {
-                write!(formatter, "Sonos description has no {service} service")
+                write!(
+                    formatter,
+                    "MediaRenderer description has no {service} service"
+                )
             }
             Self::MissingInspection => {
-                formatter.write_str("Sonos must be inspected before command routing")
+                formatter.write_str("MediaRenderer must be inspected before command routing")
             }
             Self::UnsupportedCommand(command) => {
-                write!(formatter, "Sonos does not support command {command:?}")
+                write!(
+                    formatter,
+                    "MediaRenderer does not support command {command:?}"
+                )
             }
             Self::InvalidCommandArguments {
                 command_type,
                 expected,
             } => write!(
                 formatter,
-                "Sonos command {command_type:?} expects {expected}"
+                "MediaRenderer command {command_type:?} expects {expected}"
             ),
             Self::PlaybackPostcondition { expected, actual } => write!(
                 formatter,
-                "Sonos playback postcondition failed: expected {}, got {}",
+                "MediaRenderer playback postcondition failed: expected {}, got {}",
                 expected.as_str(),
                 actual.as_str()
             ),
             Self::VolumePostcondition { expected, actual } => write!(
                 formatter,
-                "Sonos volume postcondition failed: expected {expected}, got {actual}"
+                "MediaRenderer volume postcondition failed: expected {expected}, got {actual}"
             ),
             Self::MutePostcondition { expected, actual } => write!(
                 formatter,
-                "Sonos mute postcondition failed: expected {expected}, got {actual}"
+                "MediaRenderer mute postcondition failed: expected {expected}, got {actual}"
             ),
             Self::Runtime(error) => error.fmt(formatter),
         }
     }
 }
 
-impl std::error::Error for SonosError {}
+impl std::error::Error for MediaRendererError {}
 
-impl From<UrlError> for SonosError {
+impl From<UrlError> for MediaRendererError {
     fn from(error: UrlError) -> Self {
         Self::Url(error)
     }
 }
 
-impl From<UdpError> for SonosError {
+impl From<UdpError> for MediaRendererError {
     fn from(error: UdpError) -> Self {
         Self::Udp(error)
     }
 }
 
-impl From<RuntimeError> for SonosError {
+impl From<RuntimeError> for MediaRendererError {
     fn from(error: RuntimeError) -> Self {
         Self::Runtime(error)
     }
 }
 
-impl From<UpnpAvError> for SonosError {
+impl From<UpnpAvError> for MediaRendererError {
     fn from(error: UpnpAvError) -> Self {
         match error {
             UpnpAvError::Validation(message) => Self::Validation(message),
@@ -155,13 +167,16 @@ impl From<UpnpAvError> for SonosError {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct SonosConfig {
+pub struct MediaRendererConfig {
     pub bridge_id: BridgeId,
     pub setup_url: String,
 }
 
-impl SonosConfig {
-    pub fn new(bridge_id: BridgeId, setup_url: impl Into<String>) -> Result<Self, SonosError> {
+impl MediaRendererConfig {
+    pub fn new(
+        bridge_id: BridgeId,
+        setup_url: impl Into<String>,
+    ) -> Result<Self, MediaRendererError> {
         let setup_url = setup_url.into();
         let parsed = Url::parse(&setup_url)?;
         if parsed.scheme != "http"
@@ -171,7 +186,7 @@ impl SonosConfig {
             || parsed.fragment.is_some()
             || parsed.path.is_empty()
         {
-            return Err(SonosError::Validation(
+            return Err(MediaRendererError::Validation(
                 "setup URL must be credential-free local HTTP with a path".to_string(),
             ));
         }
@@ -184,36 +199,37 @@ impl SonosConfig {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct SonosSsdpCandidate {
+pub struct MediaRendererSsdpCandidate {
     pub location: String,
     pub usn: String,
     pub server: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct SonosService {
+pub struct MediaRendererService {
     pub service_type: String,
     pub control_url: String,
     pub event_subscription_url: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct SonosDeviceDescription {
+pub struct MediaRendererDeviceDescription {
     pub friendly_name: String,
+    pub manufacturer: Option<String>,
     pub model_name: String,
     pub model_number: Option<String>,
-    pub serial_number: String,
+    pub serial_number: Option<String>,
     pub udn: String,
     pub firmware_version: Option<String>,
     pub room_name: Option<String>,
-    pub av_transport: SonosService,
-    pub rendering_control: SonosService,
+    pub av_transport: MediaRendererService,
+    pub rendering_control: MediaRendererService,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct SonosSnapshot {
-    pub device: SonosDeviceDescription,
-    pub playback_state: SonosPlaybackState,
+pub struct MediaRendererSnapshot {
+    pub device: MediaRendererDeviceDescription,
+    pub playback_state: MediaRendererPlaybackState,
     pub volume: u8,
     pub muted: bool,
     pub track_uri: Option<String>,
@@ -221,11 +237,11 @@ pub struct SonosSnapshot {
     pub track_artist: Option<String>,
 }
 
-pub type SonosPlaybackState = upnp_av_protocol::PlaybackState;
+pub type MediaRendererPlaybackState = upnp_av_protocol::PlaybackState;
 
 pub fn ssdp_search_request() -> Vec<u8> {
     format!(
-        "M-SEARCH * HTTP/1.1\r\nST: {ZONE_PLAYER_DEVICE_TYPE}\r\nMX: 2\r\nMAN: \"ssdp:discover\"\r\nHOST: 239.255.255.250:1900\r\n\r\n"
+        "M-SEARCH * HTTP/1.1\r\nST: {MEDIA_RENDERER_DEVICE_TYPE}\r\nMX: 2\r\nMAN: \"ssdp:discover\"\r\nHOST: 239.255.255.250:1900\r\n\r\n"
     )
     .into_bytes()
 }
@@ -233,7 +249,7 @@ pub fn ssdp_search_request() -> Vec<u8> {
 pub fn discover_ssdp_ipv4(
     timeout: Duration,
     max_responses: usize,
-) -> Result<Vec<SonosSsdpCandidate>, SonosError> {
+) -> Result<Vec<MediaRendererSsdpCandidate>, MediaRendererError> {
     let endpoint = UdpDiscoveryEndpoint::ssdp_ipv4();
     discover_ssdp(
         endpoint.destination,
@@ -246,7 +262,7 @@ pub fn discover_ssdp(
     destination: SocketAddr,
     options: UdpOptions,
     max_responses: usize,
-) -> Result<Vec<SonosSsdpCandidate>, SonosError> {
+) -> Result<Vec<MediaRendererSsdpCandidate>, MediaRendererError> {
     let datagrams =
         send_to_and_collect(destination, &ssdp_search_request(), options, max_responses)?;
     let mut candidates = BTreeMap::new();
@@ -258,13 +274,13 @@ pub fn discover_ssdp(
     Ok(candidates.into_values().collect())
 }
 
-pub fn parse_ssdp_response(bytes: &[u8]) -> Result<SonosSsdpCandidate, SonosError> {
+pub fn parse_ssdp_response(bytes: &[u8]) -> Result<MediaRendererSsdpCandidate, MediaRendererError> {
     let source = std::str::from_utf8(bytes)
-        .map_err(|_| SonosError::Validation("SSDP response is not UTF-8".to_string()))?;
+        .map_err(|_| MediaRendererError::Validation("SSDP response is not UTF-8".to_string()))?;
     let mut lines = source.split("\r\n");
     let status = lines.next().unwrap_or_default();
     if !status.starts_with("HTTP/1.1 200") && !status.starts_with("HTTP/1.0 200") {
-        return Err(SonosError::Validation(
+        return Err(MediaRendererError::Validation(
             "SSDP response is not HTTP 200".to_string(),
         ));
     }
@@ -276,14 +292,17 @@ pub fn parse_ssdp_response(bytes: &[u8]) -> Result<SonosSsdpCandidate, SonosErro
         headers.insert(name.trim().to_ascii_lowercase(), value.trim().to_string());
     }
     let st = required_header(&headers, "st")?;
-    if !st.eq_ignore_ascii_case(ZONE_PLAYER_DEVICE_TYPE) {
-        return Err(SonosError::Validation(format!(
+    if !st.eq_ignore_ascii_case(MEDIA_RENDERER_DEVICE_TYPE) {
+        return Err(MediaRendererError::Validation(format!(
             "unexpected SSDP search target `{st}`"
         )));
     }
     let location = required_header(&headers, "location")?;
-    SonosConfig::new(BridgeId::trusted("sonos.ssdp.validation"), location)?;
-    Ok(SonosSsdpCandidate {
+    MediaRendererConfig::new(
+        BridgeId::trusted("upnp_media_renderer.ssdp.validation"),
+        location,
+    )?;
+    Ok(MediaRendererSsdpCandidate {
         location: location.to_string(),
         usn: required_header(&headers, "usn")?.to_string(),
         server: headers.get("server").cloned(),
@@ -293,18 +312,18 @@ pub fn parse_ssdp_response(bytes: &[u8]) -> Result<SonosSsdpCandidate, SonosErro
 fn required_header<'a>(
     headers: &'a BTreeMap<String, String>,
     name: &str,
-) -> Result<&'a str, SonosError> {
+) -> Result<&'a str, MediaRendererError> {
     headers
         .get(name)
         .map(String::as_str)
         .filter(|value| !value.is_empty())
-        .ok_or_else(|| SonosError::Validation(format!("SSDP response is missing {name}")))
+        .ok_or_else(|| MediaRendererError::Validation(format!("SSDP response is missing {name}")))
 }
 
 pub fn discovery_record(
-    candidate: &SonosSsdpCandidate,
+    candidate: &MediaRendererSsdpCandidate,
     discovered_at_ms: u64,
-) -> Result<DiscoveryRecord, SonosError> {
+) -> Result<DiscoveryRecord, MediaRendererError> {
     Ok(DiscoveryRecord::new(
         IntegrationId::trusted(INTEGRATION_ID),
         ProtocolFamily::Vendor(PROTOCOL_ID.to_string()),
@@ -313,34 +332,34 @@ pub fn discovery_record(
         BridgeTransport::LanHttp,
         discovered_at_ms,
     )
-    .map_err(|error| SonosError::Validation(error.to_string()))?
-    .with_display_name("Sonos UPnP device")
+    .map_err(|error| MediaRendererError::Validation(error.to_string()))?
+    .with_display_name("MediaRenderer UPnP device")
     .with_address(candidate.location.clone())
     .with_confidence(DiscoveryConfidence::Verified)
     .with_pairing_requirement(PairingRequirement::None)
     .with_metadata(
         "smart_home.discovery.search_target",
-        ZONE_PLAYER_DEVICE_TYPE,
+        MEDIA_RENDERER_DEVICE_TYPE,
     ))
 }
 
-pub trait SonosTransport {
-    fn get(&mut self, endpoint: &str) -> Result<Vec<u8>, SonosError>;
+pub trait MediaRendererTransport {
+    fn get(&mut self, endpoint: &str) -> Result<Vec<u8>, MediaRendererError>;
     fn soap(
         &mut self,
         endpoint: &str,
         soap_action: &str,
         body: &[u8],
-    ) -> Result<Vec<u8>, SonosError>;
+    ) -> Result<Vec<u8>, MediaRendererError>;
 }
 
 #[derive(Debug, Clone)]
-pub struct SonosLanTransport {
+pub struct MediaRendererLanTransport {
     timeout: Duration,
     maximum_response_bytes: usize,
 }
 
-impl Default for SonosLanTransport {
+impl Default for MediaRendererLanTransport {
     fn default() -> Self {
         Self {
             timeout: Duration::from_secs(5),
@@ -349,7 +368,7 @@ impl Default for SonosLanTransport {
     }
 }
 
-impl SonosLanTransport {
+impl MediaRendererLanTransport {
     pub fn with_timeout(mut self, timeout: Duration) -> Self {
         self.timeout = timeout.max(Duration::from_millis(1));
         self
@@ -360,34 +379,33 @@ impl SonosLanTransport {
         self
     }
 
-    fn execute(&self, endpoint: &str, request: &[u8]) -> Result<Vec<u8>, SonosError> {
+    fn execute(&self, endpoint: &str, request: &[u8]) -> Result<Vec<u8>, MediaRendererError> {
         let url = Url::parse(endpoint)?;
         if url.scheme != "http" {
-            return Err(SonosError::Validation(
-                "Sonos UPnP requires local HTTP".to_string(),
+            return Err(MediaRendererError::Validation(
+                "MediaRenderer UPnP requires local HTTP".to_string(),
             ));
         }
-        let host = url
-            .host
-            .as_deref()
-            .ok_or_else(|| SonosError::Validation("endpoint is missing a host".to_string()))?;
-        let port = url
-            .effective_port()
-            .ok_or_else(|| SonosError::Validation("endpoint is missing a port".to_string()))?;
+        let host = url.host.as_deref().ok_or_else(|| {
+            MediaRendererError::Validation("endpoint is missing a host".to_string())
+        })?;
+        let port = url.effective_port().ok_or_else(|| {
+            MediaRendererError::Validation("endpoint is missing a port".to_string())
+        })?;
         let mut stream = connect_tcp(host, port, self.timeout)?;
         stream
             .write_all(request)
-            .map_err(|error| SonosError::Io(error.to_string()))?;
+            .map_err(|error| MediaRendererError::Io(error.to_string()))?;
         stream
             .flush()
-            .map_err(|error| SonosError::Io(error.to_string()))?;
+            .map_err(|error| MediaRendererError::Io(error.to_string()))?;
         let response = read_bounded(&mut stream, self.maximum_response_bytes)?;
         decode_http_response(&response, self.maximum_response_bytes)
     }
 }
 
-impl SonosTransport for SonosLanTransport {
-    fn get(&mut self, endpoint: &str) -> Result<Vec<u8>, SonosError> {
+impl MediaRendererTransport for MediaRendererLanTransport {
+    fn get(&mut self, endpoint: &str) -> Result<Vec<u8>, MediaRendererError> {
         let url = Url::parse(endpoint)?;
         self.execute(endpoint, &encode_request(&url, "GET", &[], &[])?)
     }
@@ -397,7 +415,7 @@ impl SonosTransport for SonosLanTransport {
         endpoint: &str,
         soap_action: &str,
         body: &[u8],
-    ) -> Result<Vec<u8>, SonosError> {
+    ) -> Result<Vec<u8>, MediaRendererError> {
         let url = Url::parse(endpoint)?;
         self.execute(
             endpoint,
@@ -414,14 +432,14 @@ impl SonosTransport for SonosLanTransport {
     }
 }
 
-pub struct SonosClient<T> {
-    config: SonosConfig,
+pub struct MediaRendererClient<T> {
+    config: MediaRendererConfig,
     transport: T,
-    description: Option<SonosDeviceDescription>,
+    description: Option<MediaRendererDeviceDescription>,
 }
 
-impl<T: SonosTransport> SonosClient<T> {
-    pub fn new(config: SonosConfig, transport: T) -> Self {
+impl<T: MediaRendererTransport> MediaRendererClient<T> {
+    pub fn new(config: MediaRendererConfig, transport: T) -> Self {
         Self {
             config,
             transport,
@@ -429,11 +447,11 @@ impl<T: SonosTransport> SonosClient<T> {
         }
     }
 
-    pub fn config(&self) -> &SonosConfig {
+    pub fn config(&self) -> &MediaRendererConfig {
         &self.config
     }
 
-    pub fn inspect(&mut self) -> Result<SonosSnapshot, SonosError> {
+    pub fn inspect(&mut self) -> Result<MediaRendererSnapshot, MediaRendererError> {
         let description = parse_device_description(&self.transport.get(&self.config.setup_url)?)?;
         let av_transport_url = resolve_control_url(
             &self.config.setup_url,
@@ -459,7 +477,7 @@ impl<T: SonosTransport> SonosClient<T> {
             .transpose()?
             .unwrap_or((None, None));
         self.description = Some(description.clone());
-        Ok(SonosSnapshot {
+        Ok(MediaRendererSnapshot {
             device: description,
             playback_state,
             volume,
@@ -470,34 +488,37 @@ impl<T: SonosTransport> SonosClient<T> {
         })
     }
 
-    pub fn playback_state(&mut self) -> Result<SonosPlaybackState, SonosError> {
+    pub fn playback_state(&mut self) -> Result<MediaRendererPlaybackState, MediaRendererError> {
         let control_url = self.av_transport_control_url()?;
         let response = self.soap_action(&control_url, UpnpAvAction::GetTransportInfo)?;
         Ok(decode_transport_info(&response)?)
     }
 
-    pub fn volume(&mut self) -> Result<u8, SonosError> {
+    pub fn volume(&mut self) -> Result<u8, MediaRendererError> {
         let control_url = self.rendering_control_url()?;
         let response = self.soap_action(&control_url, UpnpAvAction::GetVolume)?;
         Ok(decode_volume(&response)?)
     }
 
-    pub fn muted(&mut self) -> Result<bool, SonosError> {
+    pub fn muted(&mut self) -> Result<bool, MediaRendererError> {
         let control_url = self.rendering_control_url()?;
         let response = self.soap_action(&control_url, UpnpAvAction::GetMute)?;
         Ok(decode_mute(&response)?)
     }
 
-    fn set_playback_state(&mut self, desired: &SonosPlaybackState) -> Result<(), SonosError> {
+    fn set_playback_state(
+        &mut self,
+        desired: &MediaRendererPlaybackState,
+    ) -> Result<(), MediaRendererError> {
         let action = match desired {
-            SonosPlaybackState::Play => UpnpAvAction::Play,
-            SonosPlaybackState::Pause => UpnpAvAction::Pause,
-            SonosPlaybackState::Stop => UpnpAvAction::Stop,
-            SonosPlaybackState::Transitioning
-            | SonosPlaybackState::NoMedia
-            | SonosPlaybackState::Other(_) => {
-                return Err(SonosError::Validation(
-                    "unsupported Sonos playback target".to_string(),
+            MediaRendererPlaybackState::Play => UpnpAvAction::Play,
+            MediaRendererPlaybackState::Pause => UpnpAvAction::Pause,
+            MediaRendererPlaybackState::Stop => UpnpAvAction::Stop,
+            MediaRendererPlaybackState::Transitioning
+            | MediaRendererPlaybackState::NoMedia
+            | MediaRendererPlaybackState::Other(_) => {
+                return Err(MediaRendererError::Validation(
+                    "unsupported MediaRenderer playback target".to_string(),
                 ))
             }
         };
@@ -506,36 +527,34 @@ impl<T: SonosTransport> SonosClient<T> {
         Ok(())
     }
 
-    fn set_volume(&mut self, volume: u8) -> Result<(), SonosError> {
+    fn set_volume(&mut self, volume: u8) -> Result<(), MediaRendererError> {
         let control_url = self.rendering_control_url()?;
-        let action = UpnpAvAction::SetVolume(volume);
-        self.soap_action(&control_url, action)?;
+        self.soap_action(&control_url, UpnpAvAction::SetVolume(volume))?;
         Ok(())
     }
 
-    fn set_muted(&mut self, muted: bool) -> Result<(), SonosError> {
+    fn set_muted(&mut self, muted: bool) -> Result<(), MediaRendererError> {
         let control_url = self.rendering_control_url()?;
-        let action = UpnpAvAction::SetMute(muted);
-        self.soap_action(&control_url, action)?;
+        self.soap_action(&control_url, UpnpAvAction::SetMute(muted))?;
         Ok(())
     }
 
-    fn av_transport_control_url(&self) -> Result<String, SonosError> {
+    fn av_transport_control_url(&self) -> Result<String, MediaRendererError> {
         let description = self
             .description
             .as_ref()
-            .ok_or(SonosError::MissingInspection)?;
+            .ok_or(MediaRendererError::MissingInspection)?;
         resolve_control_url(
             &self.config.setup_url,
             &description.av_transport.control_url,
         )
     }
 
-    fn rendering_control_url(&self) -> Result<String, SonosError> {
+    fn rendering_control_url(&self) -> Result<String, MediaRendererError> {
         let description = self
             .description
             .as_ref()
-            .ok_or(SonosError::MissingInspection)?;
+            .ok_or(MediaRendererError::MissingInspection)?;
         resolve_control_url(
             &self.config.setup_url,
             &description.rendering_control.control_url,
@@ -546,20 +565,20 @@ impl<T: SonosTransport> SonosClient<T> {
         &mut self,
         control_url: &str,
         action: UpnpAvAction,
-    ) -> Result<Vec<u8>, SonosError> {
+    ) -> Result<Vec<u8>, MediaRendererError> {
         let request = encode_action(action)?;
         self.transport
             .soap(control_url, &request.action_header, &request.body)
     }
 }
 
-pub struct SonosRuntimeIntegration<T> {
-    client: SonosClient<T>,
+pub struct MediaRendererRuntimeIntegration<T> {
+    client: MediaRendererClient<T>,
     entity_id: Option<EntityId>,
 }
 
-impl<T: SonosTransport> SonosRuntimeIntegration<T> {
-    pub fn new(client: SonosClient<T>) -> Self {
+impl<T: MediaRendererTransport> MediaRendererRuntimeIntegration<T> {
+    pub fn new(client: MediaRendererClient<T>) -> Self {
         Self {
             client,
             entity_id: None,
@@ -571,18 +590,20 @@ impl<T: SonosTransport> SonosRuntimeIntegration<T> {
         runtime: &mut SmartHomeRuntime,
         principal_id: AgentId,
         observed_at_ms: u64,
-    ) -> Result<EntityId, SonosError> {
+    ) -> Result<EntityId, MediaRendererError> {
         let decision = runtime.authorize_tool_for_principal(
             principal_id.clone(),
             SmartHomeTool::GetState,
             observed_at_ms,
         );
         if !decision.missing_capabilities.is_empty() {
-            return Err(SonosError::Runtime(RuntimeError::UnauthorizedTool {
-                principal_id,
-                tool: SmartHomeTool::GetState,
-                missing_capabilities: decision.missing_capabilities,
-            }));
+            return Err(MediaRendererError::Runtime(
+                RuntimeError::UnauthorizedTool {
+                    principal_id,
+                    tool: SmartHomeTool::GetState,
+                    missing_capabilities: decision.missing_capabilities,
+                },
+            ));
         }
         let snapshot = self.client.inspect()?;
         let entity_id = install_snapshot(runtime, &self.client.config, &snapshot, observed_at_ms)?;
@@ -596,14 +617,14 @@ impl<T: SonosTransport> SonosRuntimeIntegration<T> {
         principal_id: AgentId,
         request: RuntimeCommandToolRequest,
         now_ms: u64,
-    ) -> Result<CommandResult, SonosError> {
+    ) -> Result<CommandResult, MediaRendererError> {
         if self.entity_id.as_ref() != Some(&request.entity_id) {
-            return Err(SonosError::InvalidCommandArguments {
+            return Err(MediaRendererError::InvalidCommandArguments {
                 command_type: request.command_type,
-                expected: "the installed Sonos media entity",
+                expected: "the installed MediaRenderer media entity",
             });
         }
-        let command = sonos_command(&request)?;
+        let command = upnp_media_renderer_command(&request)?;
         let result = runtime.execute_command_tool(principal_id, request, now_ms)?;
         execute_command(&mut self.client, command)?;
         Ok(result)
@@ -611,13 +632,15 @@ impl<T: SonosTransport> SonosRuntimeIntegration<T> {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-enum SonosCommand {
-    Playback(SonosPlaybackState),
+enum MediaRendererCommand {
+    Playback(MediaRendererPlaybackState),
     Volume(u8),
     Mute(bool),
 }
 
-fn sonos_command(request: &RuntimeCommandToolRequest) -> Result<SonosCommand, SonosError> {
+fn upnp_media_renderer_command(
+    request: &RuntimeCommandToolRequest,
+) -> Result<MediaRendererCommand, MediaRendererError> {
     match request.command_type {
         CommandType::Media(MediaCommandType::SetPlaybackState) => {
             let Value::Text(state) = &request.arguments else {
@@ -627,9 +650,15 @@ fn sonos_command(request: &RuntimeCommandToolRequest) -> Result<SonosCommand, So
                 );
             };
             match state.as_str() {
-                "play" => Ok(SonosCommand::Playback(SonosPlaybackState::Play)),
-                "pause" => Ok(SonosCommand::Playback(SonosPlaybackState::Pause)),
-                "stop" => Ok(SonosCommand::Playback(SonosPlaybackState::Stop)),
+                "play" => Ok(MediaRendererCommand::Playback(
+                    MediaRendererPlaybackState::Play,
+                )),
+                "pause" => Ok(MediaRendererCommand::Playback(
+                    MediaRendererPlaybackState::Pause,
+                )),
+                "stop" => Ok(MediaRendererCommand::Playback(
+                    MediaRendererPlaybackState::Stop,
+                )),
                 _ => invalid_command_arguments(request.command_type, "play, pause, or stop text"),
             }
         }
@@ -637,83 +666,82 @@ fn sonos_command(request: &RuntimeCommandToolRequest) -> Result<SonosCommand, So
             let Value::Percentage(volume) = request.arguments else {
                 return invalid_command_arguments(request.command_type, "a percentage volume");
             };
-            Ok(SonosCommand::Volume(volume))
+            Ok(MediaRendererCommand::Volume(volume))
         }
         CommandType::Media(MediaCommandType::SetMute) => {
             let Value::Bool(muted) = request.arguments else {
                 return invalid_command_arguments(request.command_type, "a boolean mute state");
             };
-            Ok(SonosCommand::Mute(muted))
+            Ok(MediaRendererCommand::Mute(muted))
         }
-        command_type => Err(SonosError::UnsupportedCommand(command_type)),
+        command_type => Err(MediaRendererError::UnsupportedCommand(command_type)),
     }
 }
 
 fn invalid_command_arguments<T>(
     command_type: CommandType,
     expected: &'static str,
-) -> Result<T, SonosError> {
-    Err(SonosError::InvalidCommandArguments {
+) -> Result<T, MediaRendererError> {
+    Err(MediaRendererError::InvalidCommandArguments {
         command_type,
         expected,
     })
 }
 
-fn execute_command<T: SonosTransport>(
-    client: &mut SonosClient<T>,
-    command: SonosCommand,
-) -> Result<(), SonosError> {
+fn execute_command<T: MediaRendererTransport>(
+    client: &mut MediaRendererClient<T>,
+    command: MediaRendererCommand,
+) -> Result<(), MediaRendererError> {
     match command {
-        SonosCommand::Playback(expected) => {
+        MediaRendererCommand::Playback(expected) => {
             if client.playback_state()? == expected {
                 return Ok(());
             }
             client.set_playback_state(&expected)?;
             let actual = client.playback_state()?;
             if actual != expected {
-                return Err(SonosError::PlaybackPostcondition { expected, actual });
+                return Err(MediaRendererError::PlaybackPostcondition { expected, actual });
             }
         }
-        SonosCommand::Volume(expected) => {
+        MediaRendererCommand::Volume(expected) => {
             if client.volume()? == expected {
                 return Ok(());
             }
             client.set_volume(expected)?;
             let actual = client.volume()?;
             if actual != expected {
-                return Err(SonosError::VolumePostcondition { expected, actual });
+                return Err(MediaRendererError::VolumePostcondition { expected, actual });
             }
         }
-        SonosCommand::Mute(expected) => {
+        MediaRendererCommand::Mute(expected) => {
             if client.muted()? == expected {
                 return Ok(());
             }
             client.set_muted(expected)?;
             let actual = client.muted()?;
             if actual != expected {
-                return Err(SonosError::MutePostcondition { expected, actual });
+                return Err(MediaRendererError::MutePostcondition { expected, actual });
             }
         }
     }
     Ok(())
 }
 
-pub fn parse_device_description(bytes: &[u8]) -> Result<SonosDeviceDescription, SonosError> {
-    let description = parse_renderer_description(bytes, ZONE_PLAYER_DEVICE_TYPE)?;
-    let serial_number = description
-        .serial_number
-        .filter(|value| !value.trim().is_empty())
-        .ok_or_else(|| SonosError::Xml("device is missing serialNumber".to_string()))?;
-    let service = |service: upnp_av_protocol::Service| SonosService {
+pub fn parse_device_description(
+    bytes: &[u8],
+) -> Result<MediaRendererDeviceDescription, MediaRendererError> {
+    let description = parse_renderer_description(bytes, MEDIA_RENDERER_DEVICE_TYPE)?;
+    let service = |service: upnp_av_protocol::Service| MediaRendererService {
         service_type: service.service_type,
         control_url: service.control_url,
         event_subscription_url: service.event_subscription_url,
     };
-    Ok(SonosDeviceDescription {
+    Ok(MediaRendererDeviceDescription {
         friendly_name: description.friendly_name,
+        manufacturer: description.manufacturer,
         model_name: description.model_name,
         model_number: description.model_number,
-        serial_number,
+        serial_number: description.serial_number,
         udn: description.udn,
         firmware_version: description.firmware_version,
         room_name: description.room_name,
@@ -722,23 +750,27 @@ pub fn parse_device_description(bytes: &[u8]) -> Result<SonosDeviceDescription, 
     })
 }
 
-pub fn parse_playback_state(value: &str) -> SonosPlaybackState {
+pub fn parse_playback_state(value: &str) -> MediaRendererPlaybackState {
     upnp_av_protocol::parse_playback_state(value)
 }
 
-pub fn parse_didl_metadata(source: &str) -> Result<(Option<String>, Option<String>), SonosError> {
+pub fn parse_didl_metadata(
+    source: &str,
+) -> Result<(Option<String>, Option<String>), MediaRendererError> {
     Ok(upnp_av_protocol::parse_didl_metadata(source)?)
 }
 
 pub fn install_snapshot(
     runtime: &mut SmartHomeRuntime,
-    config: &SonosConfig,
-    snapshot: &SonosSnapshot,
+    config: &MediaRendererConfig,
+    snapshot: &MediaRendererSnapshot,
     observed_at_ms: u64,
-) -> Result<EntityId, SonosError> {
-    let native_id = stable_component(&snapshot.device.serial_number);
+) -> Result<EntityId, MediaRendererError> {
+    let native_id = stable_component(&snapshot.device.udn);
     if native_id.is_empty() {
-        return Err(SonosError::Validation("device serial is empty".to_string()));
+        return Err(MediaRendererError::Validation(
+            "device UDN is empty".to_string(),
+        ));
     }
     let mut bridge = Bridge::new(
         config.bridge_id.clone(),
@@ -750,26 +782,30 @@ pub fn install_snapshot(
     bridge.firmware_version = snapshot.device.firmware_version.clone();
     bridge.health = Health::Online;
     bridge.last_seen_at_ms = Some(observed_at_ms);
-    bridge.identifiers = vec![protocol_identifier("udn", &snapshot.device.udn)?];
-    bridge.metadata = vec![Metadata::new("sonos.protocol", PROTOCOL_ID)];
+    bridge.metadata = vec![Metadata::new("upnp_media_renderer.protocol", PROTOCOL_ID)];
     runtime.upsert_bridge(bridge)?;
 
-    let device_id = DeviceId::trusted(format!("sonos:{native_id}"));
-    let entity_id = EntityId::trusted(format!("sonos:{native_id}:player"));
+    let device_id = DeviceId::trusted(format!("upnp_media_renderer:{native_id}"));
+    let entity_id = EntityId::trusted(format!("upnp_media_renderer:{native_id}:player"));
+    let mut identifiers = vec![protocol_identifier("udn", &snapshot.device.udn)?];
+    if let Some(serial) = snapshot.device.serial_number.as_deref() {
+        identifiers.push(protocol_identifier("serial", serial)?);
+    }
     runtime.upsert_device(Device {
         device_id: device_id.clone(),
         bridge_id: config.bridge_id.clone(),
-        manufacturer: "Sonos".to_string(),
+        manufacturer: snapshot
+            .device
+            .manufacturer
+            .clone()
+            .unwrap_or_else(|| "UPnP".to_string()),
         model: snapshot.device.model_name.clone(),
         name: snapshot.device.friendly_name.clone(),
-        serial: Some(snapshot.device.serial_number.clone()),
+        serial: snapshot.device.serial_number.clone(),
         firmware_version: snapshot.device.firmware_version.clone(),
         room_id: None,
         entity_ids: vec![entity_id.clone()],
-        identifiers: vec![protocol_identifier(
-            "serial",
-            &snapshot.device.serial_number,
-        )?],
+        identifiers,
         health: Health::Online,
         metadata: Vec::new(),
     })?;
@@ -832,17 +868,20 @@ pub fn install_snapshot(
             expires_at_ms: None,
             confidence: StateConfidence::Confirmed,
         }),
-        metadata: vec![Metadata::new("sonos.control_surface", "bounded_media")],
+        metadata: vec![Metadata::new(
+            "upnp_media_renderer.control_surface",
+            "bounded_media",
+        )],
     })?;
     Ok(entity_id)
 }
 
-fn resolve_control_url(setup_url: &str, control_url: &str) -> Result<String, SonosError> {
+fn resolve_control_url(setup_url: &str, control_url: &str) -> Result<String, MediaRendererError> {
     let setup = Url::parse(setup_url)?;
     let host = setup
         .host
         .as_deref()
-        .ok_or_else(|| SonosError::Validation("setup URL is missing a host".to_string()))?;
+        .ok_or_else(|| MediaRendererError::Validation("setup URL is missing a host".to_string()))?;
     let authority = setup
         .port
         .map_or_else(|| host.to_string(), |port| format!("{host}:{port}"));
@@ -860,14 +899,14 @@ fn resolve_control_url(setup_url: &str, control_url: &str) -> Result<String, Son
     let endpoint = Url::parse(&resolved)?;
     validate_local_ip_url(&endpoint, "control URL")?;
     if endpoint.host != setup.host || endpoint.effective_port() != setup.effective_port() {
-        return Err(SonosError::Validation(
+        return Err(MediaRendererError::Validation(
             "control URL must share the configured setup authority".to_string(),
         ));
     }
     Ok(resolved)
 }
 
-fn validate_local_ip_url(url: &Url, label: &str) -> Result<(), SonosError> {
+fn validate_local_ip_url(url: &Url, label: &str) -> Result<(), MediaRendererError> {
     if url.scheme != "http"
         || url.userinfo.is_some()
         || url.query.is_some()
@@ -875,19 +914,19 @@ fn validate_local_ip_url(url: &Url, label: &str) -> Result<(), SonosError> {
         || url.path.is_empty()
         || url.effective_port() == Some(0)
     {
-        return Err(SonosError::Validation(format!(
+        return Err(MediaRendererError::Validation(format!(
             "{label} must be credential-free local HTTP with a path"
         )));
     }
     let host = url
         .host
         .as_deref()
-        .ok_or_else(|| SonosError::Validation(format!("{label} is missing a host")))?;
-    let address = strip_ipv6_brackets(host)
-        .parse::<IpAddr>()
-        .map_err(|_| SonosError::Validation(format!("{label} host must be an IP literal")))?;
+        .ok_or_else(|| MediaRendererError::Validation(format!("{label} is missing a host")))?;
+    let address = strip_ipv6_brackets(host).parse::<IpAddr>().map_err(|_| {
+        MediaRendererError::Validation(format!("{label} host must be an IP literal"))
+    })?;
     if !is_local_ip(address) {
-        return Err(SonosError::Validation(format!(
+        return Err(MediaRendererError::Validation(format!(
             "{label} host must be private, link-local, or loopback"
         )));
     }
@@ -917,9 +956,9 @@ fn strip_ipv6_brackets(host: &str) -> &str {
         .unwrap_or(host)
 }
 
-fn protocol_identifier(kind: &str, value: &str) -> Result<ProtocolIdentifier, SonosError> {
+fn protocol_identifier(kind: &str, value: &str) -> Result<ProtocolIdentifier, MediaRendererError> {
     ProtocolIdentifier::new(ProtocolFamily::Vendor(PROTOCOL_ID.to_string()), kind, value)
-        .map_err(|error| SonosError::Validation(error.to_string()))
+        .map_err(|error| MediaRendererError::Validation(error.to_string()))
 }
 
 fn stable_component(value: &str) -> String {
@@ -935,17 +974,17 @@ fn encode_request(
     method: &str,
     headers: &[(&str, &str)],
     body: &[u8],
-) -> Result<Vec<u8>, SonosError> {
+) -> Result<Vec<u8>, MediaRendererError> {
     let host = url
         .host
         .as_deref()
-        .ok_or_else(|| SonosError::Validation("endpoint is missing a host".to_string()))?;
+        .ok_or_else(|| MediaRendererError::Validation("endpoint is missing a host".to_string()))?;
     if url.path.contains(['\r', '\n'])
         || headers
             .iter()
             .any(|(name, value)| name.contains(['\r', '\n']) || value.contains(['\r', '\n']))
     {
-        return Err(SonosError::Validation(
+        return Err(MediaRendererError::Validation(
             "unsafe HTTP request text".to_string(),
         ));
     }
@@ -968,56 +1007,56 @@ fn encode_request(
     Ok(request)
 }
 
-fn connect_tcp(host: &str, port: u16, timeout: Duration) -> Result<TcpStream, SonosError> {
-    let address = strip_ipv6_brackets(host)
-        .parse::<IpAddr>()
-        .map_err(|_| SonosError::Validation("endpoint host must be an IP literal".to_string()))?;
+fn connect_tcp(host: &str, port: u16, timeout: Duration) -> Result<TcpStream, MediaRendererError> {
+    let address = strip_ipv6_brackets(host).parse::<IpAddr>().map_err(|_| {
+        MediaRendererError::Validation("endpoint host must be an IP literal".to_string())
+    })?;
     if !is_local_ip(address) {
-        return Err(SonosError::Validation(
+        return Err(MediaRendererError::Validation(
             "endpoint host must be private, link-local, or loopback".to_string(),
         ));
     }
     let stream = TcpStream::connect_timeout(&SocketAddr::new(address, port), timeout)
-        .map_err(|error| SonosError::Io(error.to_string()))?;
+        .map_err(|error| MediaRendererError::Io(error.to_string()))?;
     stream
         .set_read_timeout(Some(timeout))
-        .map_err(|error| SonosError::Io(error.to_string()))?;
+        .map_err(|error| MediaRendererError::Io(error.to_string()))?;
     stream
         .set_write_timeout(Some(timeout))
-        .map_err(|error| SonosError::Io(error.to_string()))?;
+        .map_err(|error| MediaRendererError::Io(error.to_string()))?;
     Ok(stream)
 }
 
-fn read_bounded(reader: &mut dyn Read, maximum: usize) -> Result<Vec<u8>, SonosError> {
+fn read_bounded(reader: &mut dyn Read, maximum: usize) -> Result<Vec<u8>, MediaRendererError> {
     let mut bytes = Vec::new();
     let mut buffer = [0u8; 8192];
     loop {
         let read = reader
             .read(&mut buffer)
-            .map_err(|error| SonosError::Io(error.to_string()))?;
+            .map_err(|error| MediaRendererError::Io(error.to_string()))?;
         if read == 0 {
             break;
         }
         if read > maximum.saturating_sub(bytes.len()) {
-            return Err(SonosError::ResponseTooLarge { limit: maximum });
+            return Err(MediaRendererError::ResponseTooLarge { limit: maximum });
         }
         bytes.extend_from_slice(&buffer[..read]);
     }
     Ok(bytes)
 }
 
-fn decode_http_response(bytes: &[u8], maximum: usize) -> Result<Vec<u8>, SonosError> {
+fn decode_http_response(bytes: &[u8], maximum: usize) -> Result<Vec<u8>, MediaRendererError> {
     let parsed = parse_response_head(bytes)
-        .map_err(|error: Http1ParseError| SonosError::Http(error.to_string()))?;
+        .map_err(|error: Http1ParseError| MediaRendererError::Http(error.to_string()))?;
     if !(200..300).contains(&parsed.head.status) {
-        return Err(SonosError::HttpStatus(parsed.head.status));
+        return Err(MediaRendererError::HttpStatus(parsed.head.status));
     }
     let input = &bytes[parsed.body_offset..];
     let body = match parsed.body_kind {
         BodyKind::None => Vec::new(),
         BodyKind::ContentLength(expected) => {
             if input.len() < expected {
-                return Err(SonosError::TruncatedBody {
+                return Err(MediaRendererError::TruncatedBody {
                     expected,
                     actual: input.len(),
                 });
@@ -1026,13 +1065,13 @@ fn decode_http_response(bytes: &[u8], maximum: usize) -> Result<Vec<u8>, SonosEr
         }
         BodyKind::UntilEof => input.to_vec(),
         BodyKind::Chunked => {
-            return Err(SonosError::Http(
-                "chunked Sonos responses are unsupported".to_string(),
+            return Err(MediaRendererError::Http(
+                "chunked MediaRenderer responses are unsupported".to_string(),
             ))
         }
     };
     if body.len() > maximum {
-        return Err(SonosError::ResponseTooLarge { limit: maximum });
+        return Err(MediaRendererError::ResponseTooLarge { limit: maximum });
     }
     Ok(body)
 }
@@ -1047,9 +1086,9 @@ mod tests {
     use std::sync::{Arc, Mutex};
     use std::thread;
 
-    const SETUP: &str = r#"<root xmlns="urn:schemas-upnp-org:device-1-0"><device><deviceType>urn:schemas-upnp-org:device:ZonePlayer:1</deviceType><friendlyName>Living Room</friendlyName><roomName>Living Room</roomName><modelName>Sonos One</modelName><modelNumber>S13</modelNumber><softwareVersion>82.3-60160</softwareVersion><serialNumber>34-7E-5C-AA-BB-CC:8</serialNumber><UDN>uuid:RINCON_347E5CAABBCC01400</UDN><serviceList><service><serviceType>urn:schemas-upnp-org:service:AVTransport:1</serviceType><controlURL>/MediaRenderer/AVTransport/Control</controlURL><eventSubURL>/MediaRenderer/AVTransport/Event</eventSubURL></service><service><serviceType>urn:schemas-upnp-org:service:RenderingControl:1</serviceType><controlURL>/MediaRenderer/RenderingControl/Control</controlURL><eventSubURL>/MediaRenderer/RenderingControl/Event</eventSubURL></service></serviceList></device></root>"#;
+    const SETUP: &str = r#"<root xmlns="urn:schemas-upnp-org:device-1-0"><device><deviceType>urn:schemas-upnp-org:device:MediaRenderer:1</deviceType><friendlyName>Living Room Player</friendlyName><manufacturer>Example Audio</manufacturer><modelName>Renderer One</modelName><modelNumber>MR-1</modelNumber><softwareVersion>1.4.2</softwareVersion><UDN>uuid:renderer-347e5caabbcc</UDN><serviceList><service><serviceType>urn:schemas-upnp-org:service:AVTransport:1</serviceType><controlURL>/upnp/control/avtransport</controlURL><eventSubURL>/upnp/event/avtransport</eventSubURL></service><service><serviceType>urn:schemas-upnp-org:service:RenderingControl:1</serviceType><controlURL>/upnp/control/rendering</controlURL><eventSubURL>/upnp/event/rendering</eventSubURL></service></serviceList></device></root>"#;
     const TRANSPORT: &str = r#"<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><u:GetTransportInfoResponse xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><CurrentTransportState>PLAYING</CurrentTransportState><CurrentTransportStatus>OK</CurrentTransportStatus><CurrentSpeed>1</CurrentSpeed></u:GetTransportInfoResponse></s:Body></s:Envelope>"#;
-    const POSITION: &str = r#"<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><u:GetPositionInfoResponse xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><TrackURI>x-sonos-http:track.mp3</TrackURI><TrackMetaData>&lt;DIDL-Lite xmlns:dc=&quot;http://purl.org/dc/elements/1.1/&quot;&gt;&lt;item&gt;&lt;dc:title&gt;Night Drive&lt;/dc:title&gt;&lt;dc:creator&gt;The Tests&lt;/dc:creator&gt;&lt;/item&gt;&lt;/DIDL-Lite&gt;</TrackMetaData></u:GetPositionInfoResponse></s:Body></s:Envelope>"#;
+    const POSITION: &str = r#"<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><u:GetPositionInfoResponse xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><TrackURI>x-upnp_media_renderer-http:track.mp3</TrackURI><TrackMetaData>&lt;DIDL-Lite xmlns:dc=&quot;http://purl.org/dc/elements/1.1/&quot;&gt;&lt;item&gt;&lt;dc:title&gt;Night Drive&lt;/dc:title&gt;&lt;dc:creator&gt;The Tests&lt;/dc:creator&gt;&lt;/item&gt;&lt;/DIDL-Lite&gt;</TrackMetaData></u:GetPositionInfoResponse></s:Body></s:Envelope>"#;
     const VOLUME: &str = r#"<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><u:GetVolumeResponse xmlns:u="urn:schemas-upnp-org:service:RenderingControl:1"><CurrentVolume>27</CurrentVolume></u:GetVolumeResponse></s:Body></s:Envelope>"#;
     const MUTE: &str = r#"<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><u:GetMuteResponse xmlns:u="urn:schemas-upnp-org:service:RenderingControl:1"><CurrentMute>0</CurrentMute></u:GetMuteResponse></s:Body></s:Envelope>"#;
     const TRANSPORT_PAUSED: &str = r#"<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><u:GetTransportInfoResponse xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><CurrentTransportState>PAUSED_PLAYBACK</CurrentTransportState></u:GetTransportInfoResponse></s:Body></s:Envelope>"#;
@@ -1062,12 +1101,12 @@ mod tests {
         calls: Arc<Mutex<Vec<String>>>,
     }
 
-    impl SonosTransport for ScriptedTransport {
-        fn get(&mut self, endpoint: &str) -> Result<Vec<u8>, SonosError> {
+    impl MediaRendererTransport for ScriptedTransport {
+        fn get(&mut self, endpoint: &str) -> Result<Vec<u8>, MediaRendererError> {
             self.calls.lock().unwrap().push(format!("GET {endpoint}"));
             self.responses
                 .pop_front()
-                .ok_or_else(|| SonosError::Io("scripted response exhausted".to_string()))
+                .ok_or_else(|| MediaRendererError::Io("scripted response exhausted".to_string()))
         }
 
         fn soap(
@@ -1075,27 +1114,27 @@ mod tests {
             endpoint: &str,
             soap_action: &str,
             body: &[u8],
-        ) -> Result<Vec<u8>, SonosError> {
+        ) -> Result<Vec<u8>, MediaRendererError> {
             self.calls.lock().unwrap().push(format!(
                 "SOAP {endpoint} {soap_action} {}",
                 String::from_utf8_lossy(body)
             ));
             self.responses
                 .pop_front()
-                .ok_or_else(|| SonosError::Io("scripted response exhausted".to_string()))
+                .ok_or_else(|| MediaRendererError::Io("scripted response exhausted".to_string()))
         }
     }
 
     fn scripted_integration(
         responses: &[&str],
         calls: Arc<Mutex<Vec<String>>>,
-    ) -> SonosRuntimeIntegration<ScriptedTransport> {
-        let config = SonosConfig::new(
-            BridgeId::trusted("sonos:scripted"),
+    ) -> MediaRendererRuntimeIntegration<ScriptedTransport> {
+        let config = MediaRendererConfig::new(
+            BridgeId::trusted("upnp_media_renderer:scripted"),
             "http://127.0.0.1:1400/xml/device_description.xml",
         )
         .unwrap();
-        SonosRuntimeIntegration::new(SonosClient::new(
+        MediaRendererRuntimeIntegration::new(MediaRendererClient::new(
             config,
             ScriptedTransport {
                 responses: responses
@@ -1123,7 +1162,7 @@ mod tests {
     #[test]
     fn parses_ssdp_description_and_player_state() {
         let candidate = parse_ssdp_response(
-            b"HTTP/1.1 200 OK\r\nST: urn:schemas-upnp-org:device:ZonePlayer:1\r\nUSN: uuid:RINCON_347E5CAABBCC01400::urn:schemas-upnp-org:device:ZonePlayer:1\r\nLOCATION: http://127.0.0.1:1400/xml/device_description.xml\r\nSERVER: Linux UPnP/1.0 Sonos/82.3-60160\r\n\r\n",
+            b"HTTP/1.1 200 OK\r\nST: urn:schemas-upnp-org:device:MediaRenderer:1\r\nUSN: uuid:renderer-347e5caabbcc::urn:schemas-upnp-org:device:MediaRenderer:1\r\nLOCATION: http://127.0.0.1:1400/xml/device_description.xml\r\nSERVER: Linux UPnP/1.0 Example/1.4.2\r\n\r\n",
         )
         .unwrap();
         let description = parse_device_description(SETUP.as_bytes()).unwrap();
@@ -1131,11 +1170,12 @@ mod tests {
             candidate.location,
             "http://127.0.0.1:1400/xml/device_description.xml"
         );
-        assert_eq!(description.friendly_name, "Living Room");
-        assert_eq!(description.room_name.as_deref(), Some("Living Room"));
+        assert_eq!(description.friendly_name, "Living Room Player");
+        assert_eq!(description.manufacturer.as_deref(), Some("Example Audio"));
+        assert_eq!(description.serial_number, None);
         assert_eq!(
             decode_transport_info(TRANSPORT.as_bytes()).unwrap(),
-            SonosPlaybackState::Play
+            MediaRendererPlaybackState::Play
         );
         assert_eq!(decode_volume(VOLUME.as_bytes()).unwrap(), 27);
         assert!(!decode_mute(MUTE.as_bytes()).unwrap());
@@ -1160,16 +1200,19 @@ mod tests {
             "http://127.0.0.1:0/xml/device_description.xml",
         ] {
             assert!(matches!(
-                SonosConfig::new(BridgeId::trusted("sonos:invalid"), setup_url),
-                Err(SonosError::Validation(_))
+                MediaRendererConfig::new(
+                    BridgeId::trusted("upnp_media_renderer:invalid"),
+                    setup_url
+                ),
+                Err(MediaRendererError::Validation(_))
             ));
         }
         assert!(matches!(
             resolve_control_url(
                 "http://127.0.0.1:1400/xml/device_description.xml",
-                "http://127.0.0.2:1400/MediaRenderer/AVTransport/Control"
+                "http://127.0.0.2:1400/upnp/control/avtransport"
             ),
-            Err(SonosError::Validation(_))
+            Err(MediaRendererError::Validation(_))
         ));
     }
 
@@ -1200,7 +1243,7 @@ mod tests {
             Arc::clone(&calls),
         );
         let mut runtime = SmartHomeRuntime::new();
-        let principal = AgentId::trusted("agent:sonos-command");
+        let principal = AgentId::trusted("agent:upnp_media_renderer-command");
         grant_all(&mut runtime, &principal);
         let entity_id = integration
             .inspect_and_install_authorized(&mut runtime, principal.clone(), 10)
@@ -1256,7 +1299,7 @@ mod tests {
         assert!(matches!(
             integration.dispatch_command_authorized(
                 &mut runtime,
-                AgentId::trusted("agent:sonos-denied"),
+                AgentId::trusted("agent:upnp_media_renderer-denied"),
                 RuntimeCommandToolRequest::new(
                     entity_id,
                     CommandType::Media(MediaCommandType::SetPlaybackState),
@@ -1264,7 +1307,7 @@ mod tests {
                 ),
                 30,
             ),
-            Err(SonosError::Runtime(_))
+            Err(MediaRendererError::Runtime(_))
         ));
         assert_eq!(calls.lock().unwrap().len(), before_denial);
     }
@@ -1279,7 +1322,7 @@ mod tests {
             Arc::clone(&calls),
         );
         let mut runtime = SmartHomeRuntime::new();
-        let principal = AgentId::trusted("agent:sonos-postcondition");
+        let principal = AgentId::trusted("agent:upnp_media_renderer-postcondition");
         grant_all(&mut runtime, &principal);
         let entity_id = integration
             .inspect_and_install_authorized(&mut runtime, principal.clone(), 10)
@@ -1296,9 +1339,9 @@ mod tests {
                 ),
                 20,
             ),
-            Err(SonosError::PlaybackPostcondition {
-                expected: SonosPlaybackState::Pause,
-                actual: SonosPlaybackState::Play,
+            Err(MediaRendererError::PlaybackPostcondition {
+                expected: MediaRendererPlaybackState::Pause,
+                actual: MediaRendererPlaybackState::Play,
             })
         ));
         let before_unsupported = calls.lock().unwrap().len();
@@ -1313,7 +1356,7 @@ mod tests {
                 ),
                 30,
             ),
-            Err(SonosError::UnsupportedCommand(CommandType::Media(
+            Err(MediaRendererError::UnsupportedCommand(CommandType::Media(
                 MediaCommandType::PlayNext
             )))
         ));
@@ -1323,8 +1366,8 @@ mod tests {
     #[test]
     fn authorization_denies_before_transport_io() {
         struct CountingTransport(Arc<AtomicUsize>);
-        impl SonosTransport for CountingTransport {
-            fn get(&mut self, _endpoint: &str) -> Result<Vec<u8>, SonosError> {
+        impl MediaRendererTransport for CountingTransport {
+            fn get(&mut self, _endpoint: &str) -> Result<Vec<u8>, MediaRendererError> {
                 self.0.fetch_add(1, Ordering::SeqCst);
                 Ok(Vec::new())
             }
@@ -1333,26 +1376,26 @@ mod tests {
                 _endpoint: &str,
                 _soap_action: &str,
                 _body: &[u8],
-            ) -> Result<Vec<u8>, SonosError> {
+            ) -> Result<Vec<u8>, MediaRendererError> {
                 self.0.fetch_add(1, Ordering::SeqCst);
                 Ok(Vec::new())
             }
         }
         let calls = Arc::new(AtomicUsize::new(0));
-        let config = SonosConfig::new(
-            BridgeId::trusted("sonos:test"),
+        let config = MediaRendererConfig::new(
+            BridgeId::trusted("upnp_media_renderer:test"),
             "http://127.0.0.1:1400/xml/device_description.xml",
         )
         .unwrap();
-        let client = SonosClient::new(config, CountingTransport(Arc::clone(&calls)));
-        let mut integration = SonosRuntimeIntegration::new(client);
+        let client = MediaRendererClient::new(config, CountingTransport(Arc::clone(&calls)));
+        let mut integration = MediaRendererRuntimeIntegration::new(client);
         let mut runtime = SmartHomeRuntime::new();
         let error = integration
             .inspect_and_install_authorized(&mut runtime, AgentId::trusted("agent:test"), 10)
             .unwrap_err();
         assert!(matches!(
             error,
-            SonosError::Runtime(RuntimeError::UnauthorizedTool { .. })
+            MediaRendererError::Runtime(RuntimeError::UnauthorizedTool { .. })
         ));
         assert_eq!(calls.load(Ordering::SeqCst), 0);
     }
@@ -1387,7 +1430,7 @@ mod tests {
             let mut request = [0u8; 2048];
             let (_, source) = udp.recv_from(&mut request).unwrap();
             let response = format!(
-                "HTTP/1.1 200 OK\r\nST: {ZONE_PLAYER_DEVICE_TYPE}\r\nUSN: uuid:RINCON_347E5CAABBCC01400::{ZONE_PLAYER_DEVICE_TYPE}\r\nLOCATION: http://{http_address}/xml/device_description.xml\r\nSERVER: Linux UPnP/1.0 Sonos/82.3-60160\r\n\r\n"
+                "HTTP/1.1 200 OK\r\nST: {MEDIA_RENDERER_DEVICE_TYPE}\r\nUSN: uuid:renderer-347e5caabbcc::{MEDIA_RENDERER_DEVICE_TYPE}\r\nLOCATION: http://{http_address}/xml/device_description.xml\r\nSERVER: Linux UPnP/1.0 Example/1.4.2\r\n\r\n"
             );
             udp.send_to(response.as_bytes(), source).unwrap();
         });
@@ -1404,15 +1447,18 @@ mod tests {
         .unwrap();
         assert_eq!(candidates.len(), 1);
 
-        let config =
-            SonosConfig::new(BridgeId::trusted("sonos:test"), &candidates[0].location).unwrap();
-        let client = SonosClient::new(config, SonosLanTransport::default());
-        let mut integration = SonosRuntimeIntegration::new(client);
+        let config = MediaRendererConfig::new(
+            BridgeId::trusted("upnp_media_renderer:test"),
+            &candidates[0].location,
+        )
+        .unwrap();
+        let client = MediaRendererClient::new(config, MediaRendererLanTransport::default());
+        let mut integration = MediaRendererRuntimeIntegration::new(client);
         let mut runtime = SmartHomeRuntime::new();
-        let principal = AgentId::trusted("agent:sonos-test");
+        let principal = AgentId::trusted("agent:upnp_media_renderer-test");
         let _ = runtime.registry_mut().upsert_capability_grant(
             CapabilityGrant::for_all_smart_home(
-                CapabilityGrantId::trusted("grant:sonos-test"),
+                CapabilityGrantId::trusted("grant:upnp_media_renderer-test"),
                 principal.clone(),
                 PrivilegeTier::LowRisk,
                 "test",
@@ -1482,15 +1528,17 @@ mod tests {
             }
         });
 
-        let config = SonosConfig::new(
-            BridgeId::trusted("sonos:loopback-command"),
+        let config = MediaRendererConfig::new(
+            BridgeId::trusted("upnp_media_renderer:loopback-command"),
             format!("http://{address}/xml/device_description.xml"),
         )
         .unwrap();
-        let mut integration =
-            SonosRuntimeIntegration::new(SonosClient::new(config, SonosLanTransport::default()));
+        let mut integration = MediaRendererRuntimeIntegration::new(MediaRendererClient::new(
+            config,
+            MediaRendererLanTransport::default(),
+        ));
         let mut runtime = SmartHomeRuntime::new();
-        let principal = AgentId::trusted("agent:sonos-loopback-command");
+        let principal = AgentId::trusted("agent:upnp_media_renderer-loopback-command");
         grant_all(&mut runtime, &principal);
         let entity_id = integration
             .inspect_and_install_authorized(&mut runtime, principal.clone(), 10)

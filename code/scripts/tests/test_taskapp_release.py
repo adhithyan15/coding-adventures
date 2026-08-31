@@ -36,12 +36,23 @@ from taskapp_release import (
     archive_windows_app,
     artifact_names,
     build_manifest,
+    materialize_upgrade_fixture,
     render_notes,
     validate_identifiers,
+    verify_upgrade_state,
     write_windows_icon,
 )
 
 COMMIT = "0123456789abcdef0123456789abcdef01234567"
+UPGRADE_FIXTURE = (
+    REPOSITORY_ROOT
+    / "code"
+    / "programs"
+    / "mosaic"
+    / "task-app"
+    / "fixtures"
+    / "release-upgrade-v0.1.0.json"
+)
 
 
 @pytest.mark.parametrize(
@@ -143,13 +154,33 @@ def test_archives_verified_linux_bundle_with_launcher_contract(tmp_path: Path) -
         names = archive.getnames()
         metadata = json.load(archive.extractfile(f"{root}/BUNDLE.json"))
         launcher = archive.extractfile(f"{root}/launch-trestle").read().decode()
+        operations = archive.extractfile(f"{root}/LOCAL-DATA.txt").read().decode()
         launcher_mode = archive.getmember(f"{root}/launch-trestle").mode
     assert f"{root}/bin/trestle" in names
     assert metadata["applicationId"] == "task-app"
     assert metadata["rustRuntime"] == "lib/libmosaic_app.so"
     assert "$XDG_DATA_HOME/task-app/mosaic-state.v1.json" == metadata["statePath"]
     assert "pre-v0.2.0-compose.json" in launcher
+    assert "Application identifier: task-app" in operations
+    assert "mosaic-state.v1.json.corrupt" in operations
     assert launcher_mode & 0o111
+
+
+def test_materializes_and_verifies_v0_1_0_upgrade_fixture(tmp_path: Path) -> None:
+    state = materialize_upgrade_fixture(
+        UPGRADE_FIXTURE,
+        tmp_path / "task-app" / "mosaic-state.v1.json",
+    )
+
+    snapshot = json.loads(state.read_text(encoding="utf-8"))
+    assert snapshot["schema"] == "task-mosaic-app/state"
+    assert snapshot["version"] == 1
+    assert isinstance(snapshot["bytes"], list)
+    verify_upgrade_state(UPGRADE_FIXTURE, state)
+
+    Path(f"{state}.corrupt").write_text("damaged", encoding="utf-8")
+    with pytest.raises(ValueError, match="quarantined a compatible"):
+        verify_upgrade_state(UPGRADE_FIXTURE, state)
 
 
 def test_linux_bundle_rejects_runtime_mismatch_and_external_paths(
@@ -215,6 +246,9 @@ def test_archives_unsigned_macos_app_with_stable_identity(tmp_path: Path) -> Non
         metadata = json.loads(
             archive.read("Trestle.app/Contents/Resources/BUNDLE.json")
         )
+        operations = archive.read(
+            "Trestle.app/Contents/Resources/LOCAL-DATA.txt"
+        ).decode()
         icon = archive.read("Trestle.app/Contents/Resources/Trestle.icns")
         executable_mode = (
             archive.getinfo("Trestle.app/Contents/MacOS/Trestle").external_attr >> 16
@@ -224,9 +258,11 @@ def test_archives_unsigned_macos_app_with_stable_identity(tmp_path: Path) -> Non
     assert plist["CFBundleShortVersionString"] == "0.2.0"
     assert plist["CFBundleIconFile"] == "Trestle"
     assert metadata["architecture"] == "arm64"
+    assert metadata["statePath"] == "~/Library/Application Support/task-app/mosaic-state.v1.json"
     assert metadata["signed"] is False
     assert metadata["iosArtifact"] is False
     assert icon.startswith(b"icns")
+    assert "Uninstall while retaining data" in operations
     assert executable_mode & 0o111
 
     with pytest.raises(ValueError, match="unsupported macOS architecture"):
@@ -270,6 +306,7 @@ def test_archives_self_contained_windows_app_with_stable_identity(tmp_path: Path
     with zipfile.ZipFile(payload) as archive:
         metadata = json.loads(archive.read(f"{root}/BUNDLE.json"))
         icon = archive.read(f"{root}/Trestle.ico")
+        operations = archive.read(f"{root}/LOCAL-DATA.txt").decode()
         names = archive.namelist()
     assert f"{root}/Trestle.exe" in names
     assert f"{root}/mosaic_app.dll" in names
@@ -279,6 +316,7 @@ def test_archives_self_contained_windows_app_with_stable_identity(tmp_path: Path
     assert metadata["statePath"] == "%LOCALAPPDATA%\\task-app\\mosaic-state.v1.json"
     assert metadata["dotnetSelfContained"] is True
     assert metadata["msix"] is False
+    assert "%LOCALAPPDATA%\\task-app\\mosaic-state.v1.json" in operations
     assert icon == icon_path.read_bytes()
     assert icon[:6] == struct.pack("<HHH", 0, 1, 6)
 
@@ -422,6 +460,11 @@ def test_workflow_validates_before_building_and_has_one_publisher() -> None:
     assert "$taskAppExecutable" not in workflow
     assert "@('Trestle.pri', 'App.xbf', 'MainWindow.xbf', 'TaskApp.xbf')" in workflow
     assert "-RestartExePath $replacementExecutable" in workflow
+    assert workflow.count("materialize-upgrade-fixture") == 5
+    assert workflow.count("verify-upgrade-state") == 5
+    assert workflow.count("release-upgrade-v0.1.0.json") >= 10
+    assert "windows-corrupt-probe" in workflow
+    assert "macos-corrupt-probe" in workflow
     assert "code/packages/rust/task-wasm/pkg/task_engine.wasm" in workflow
     assert "host/web/public/task_engine.wasm" in workflow
     assert "':(exclude)code/packages/rust/task-wasm/pkg/task_engine.wasm'" in workflow

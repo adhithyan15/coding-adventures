@@ -1,0 +1,9 @@
+[package]
+name = "upnp-av-protocol"
+version = "0.1.0"
+edition = "2021"
+description = "Strict fixed UPnP AV MediaRenderer description and SOAP codec"
+license = "MIT"
+
+[dependencies]
+coding-adventures-xml-parser = { path = "../xml-parser" }

@@ -60,15 +60,16 @@ The generated SwiftUI sources also compile for the iOS 16 deployment target; tha
 gate is source portability rather than a claim that a macOS dylib can run on iOS.
 
 XAML/WinUI also bundles the concrete adapter and verifies it byte-for-byte beside
-`TaskApp.exe`. A task-specific console fixture drives startup props and a semantic
-event lifecycle plus restart restoration through the generated .NET binding
-without an injected path. Its strict
+`Trestle.exe`. A task-specific console fixture drives startup props and a semantic
+event lifecycle plus restart restoration through the generated .NET binding,
+while hosted-runner UI Automation launches the real packaged app and drives its
+native controls through creation, scheduling, completion, deletion, and
+replacement-executable restoration. Its strict
 `native-complete` build has zero degradations: the canonical Sheet exposes native
 UI Automation table semantics, while board and calendar interactions use native
-WinUI pointer/touch drag/drop plus an accessible keyboard path. GitHub-hosted Windows workers
-do not provide a reliable
-interactive desktop, so visible WinUI launch is deliberately reserved for a local
-or self-hosted interactive Windows gate.
+WinUI pointer/touch drag/drop plus an accessible keyboard path. The gate does not
+claim a foreground interactive desktop; UI Automation can inspect the hosted
+window without one.
 
 ## What it does
 
@@ -80,7 +81,10 @@ or self-hosted interactive Windows gate.
 - **Everything persists** — the whole workspace is saved to IndexedDB after each change
   and restored on reload (see `host/web/`); generated native hosts use their
   platform application-data directory and atomically replace their snapshot after
-  each successful event.
+  each successful event. Exact desktop paths and the close-before-copy backup,
+  restore, upgrade, uninstall/purge, and corrupt-state recovery procedures are in
+  `code/specs/task-app-local-data-operations-v1.md`; every runnable native archive
+  also includes an offline `LOCAL-DATA.txt`.
 
 Everything above runs on the pure Rust engine — the browser only holds UI state,
 persists snapshots, and calls the engine's operations/queries.
@@ -126,6 +130,10 @@ source-commit manifest, product-scoped notes from merged `task-app` pull request
 and one GitHub Release. On Windows it publishes a self-contained x64 folder,
 drives the original and replacement `Trestle.exe` copies through UI Automation,
 and verifies the stable LocalApplicationData state plus console binding contract.
+The same exact matrix materializes the committed v0.1.0 upgrade fixture at each
+desktop backend's normal data path, requires the current bundle to retain it
+without quarantine, and then proves invalid bytes move unchanged to the
+`.corrupt` recovery sibling.
 
 Release payloads distinguish directly runnable archives from generated projects:
 

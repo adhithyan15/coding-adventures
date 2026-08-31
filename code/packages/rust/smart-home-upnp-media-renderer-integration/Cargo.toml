@@ -1,8 +1,8 @@
 [package]
-name = "smart-home-sonos-upnp-integration"
+name = "smart-home-upnp-media-renderer-integration"
 version = "0.1.0"
 edition = "2021"
-description = "Bounded Sonos UPnP discovery, telemetry, and media control for the smart-home runtime"
+description = "Bounded MediaRenderer UPnP discovery, telemetry, and media control for the smart-home runtime"
 license = "MIT"
 
 [dependencies]
