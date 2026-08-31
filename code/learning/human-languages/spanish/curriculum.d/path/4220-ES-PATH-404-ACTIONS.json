@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-404-ACTIONS",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "ES-C404-apagar"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-404-POWER"
+  ],
+  "after": []
+}

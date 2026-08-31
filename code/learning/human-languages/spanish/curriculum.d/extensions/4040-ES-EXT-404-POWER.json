@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-404-POWER",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask someone to turn a phone off.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C404-apagar"
+  ]
+}
