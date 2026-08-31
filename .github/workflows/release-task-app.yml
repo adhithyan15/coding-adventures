@@ -122,6 +122,13 @@ jobs:
         working-directory: code/programs/mosaic/task-app/host/web
         run: npm ci
 
+      - name: Install Linux Rust build dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y libcairo2-dev
+
       - name: Test the Rust release inputs
         run: >-
           cargo test --manifest-path code/packages/rust/Cargo.toml
@@ -134,7 +141,11 @@ jobs:
           bash code/programs/mosaic/task-app/scripts/build-web.sh
           npm --prefix code/programs/mosaic/task-app/host/web test
           npm --prefix code/programs/mosaic/task-app/host/web run build
-          git diff --exit-code
+          cmp \
+            code/packages/rust/task-wasm/pkg/task_engine.wasm \
+            code/programs/mosaic/task-app/host/web/public/task_engine.wasm
+          git diff --exit-code -- . \
+            ':(exclude)code/packages/rust/task-wasm/pkg/task_engine.wasm'
 
       - name: Archive the verified web bundle
         shell: bash

@@ -4,6 +4,13 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Fixed - clean-runner web release build (#13543)
+
+The production web release job installs Cairo before invoking Mosaic's Rust
+emitter. Its clean-tree gate permits only the newly compiled WASM blob to differ
+across host toolchains, verifies that exact blob is the one copied into the web
+bundle, and continues to reject every other tracked-source change.
+
 ### Fixed - clean-runner release prerequisites (#13543)
 
 The release lane now checks in the web host's npm lockfile so dependency caching
