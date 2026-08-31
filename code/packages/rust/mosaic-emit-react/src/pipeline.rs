@@ -1867,6 +1867,10 @@ fn emit_host_input_jsx(
         attrs.push_str(&jsx_string_attr("placeholder", s));
     }
 
+    if find_keyword_prop(node, "auto-focus") == Some("true") {
+        attrs.push_str(" autoFocus");
+    }
+
     // onChange={e => dispatch({ type: "...", value: e.target.value })}
     if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
         let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
@@ -7021,6 +7025,21 @@ mod tests {
                 .output
                 .contains(r#"placeholder={"preset:\"Default\" -is:suspended"}"#),
             "expected expression-form placeholder attr, got:\n{}",
+            result.output
+        );
+    }
+
+    #[test]
+    fn host_input_auto_focus_requests_native_initial_focus() {
+        let m = component("X", vec![], vec![]);
+        let l = host_input_layout(vec![LayoutProp {
+            name: "auto-focus".to_string(),
+            value: LayoutPropValue::Keyword("true".to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("<input type=\"text\" autoFocus />"),
+            "expected native autoFocus attr, got:\n{}",
             result.output
         );
     }

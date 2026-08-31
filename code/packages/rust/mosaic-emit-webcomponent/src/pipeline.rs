@@ -1604,6 +1604,9 @@ fn emit_host_input(node: &LayoutNode, part_styles: &HashMap<String, String>) -> 
             attrs.push_str(" readonly");
         }
     }
+    if find_keyword(node, "auto-focus") == Some("true") {
+        attrs.push_str(" autofocus");
+    }
 
     // onchange — wraps `event.target.value` into the dispatch payload.
     if let Some(emit_name) = find_emit_ref(node, "onChange") {

@@ -109,6 +109,7 @@ pub fn from_pipeline(
     let uses_host_link = layout_contains_tag(&layout.root, "HostLink");
     let uses_host_dialog = layout_contains_tag(&layout.root, "HostDialog");
     let uses_host_slider = layout_contains_tag(&layout.root, "HostSlider");
+    let uses_auto_focus = layout_contains_keyword_prop(&layout.root, "auto-focus", "true");
     let uses_native_table_semantics = layout_has_native_table_semantics(&layout.root);
     let uses_text_heading = layout_has_text_role(&layout.root, "heading");
     let uses_text_replacement_semantics = layout_has_text_replacement_semantics(&layout.root);
@@ -239,8 +240,10 @@ pub fn from_pipeline(
     }
     if uses_drag || uses_host_slider {
         writeln!(out, "import androidx.compose.runtime.getValue").unwrap();
-        writeln!(out, "import androidx.compose.runtime.remember").unwrap();
         writeln!(out, "import androidx.compose.runtime.setValue").unwrap();
+    }
+    if uses_drag || uses_host_slider || uses_auto_focus {
+        writeln!(out, "import androidx.compose.runtime.remember").unwrap();
     }
     if uses_drag {
         writeln!(out, "import androidx.compose.runtime.mutableStateOf").unwrap();
@@ -254,11 +257,15 @@ pub fn from_pipeline(
     if uses_host_slider {
         writeln!(out, "import androidx.compose.runtime.mutableFloatStateOf").unwrap();
     }
-    if uses_host_dialog {
+    if uses_host_dialog || uses_auto_focus {
         writeln!(out, "import androidx.compose.runtime.LaunchedEffect").unwrap();
     }
     writeln!(out, "import androidx.compose.ui.Alignment").unwrap();
     writeln!(out, "import androidx.compose.ui.Modifier").unwrap();
+    if uses_auto_focus {
+        writeln!(out, "import androidx.compose.ui.focus.FocusRequester").unwrap();
+        writeln!(out, "import androidx.compose.ui.focus.focusRequester").unwrap();
+    }
     if uses_drag {
         writeln!(
             out,
@@ -437,6 +444,10 @@ pub fn from_pipeline(
         out.push_str(&emit_host_slider_helper());
         writeln!(out).unwrap();
     }
+    if uses_auto_focus {
+        out.push_str(&emit_auto_focus_helper());
+        writeln!(out).unwrap();
+    }
     if uses_drag {
         out.push_str(&emit_drag_helpers());
         writeln!(out).unwrap();
@@ -464,6 +475,25 @@ fn layout_contains_tag(node: &LayoutNode, tag: &str) -> bool {
             .children
             .iter()
             .any(|child| layout_contains_tag(child, tag))
+}
+
+fn layout_contains_keyword_prop(node: &LayoutNode, name: &str, value: &str) -> bool {
+    matches!(find_prop_value(node, name), Some(LayoutPropValue::Keyword(v)) if v == value)
+        || node
+            .children
+            .iter()
+            .any(|child| layout_contains_keyword_prop(child, name, value))
+}
+
+fn emit_auto_focus_helper() -> String {
+    r#"@Composable
+private fun _MosaicAutoFocus(content: @Composable (Modifier) -> Unit) {
+    val requester = remember { FocusRequester() }
+    LaunchedEffect(requester) { requester.requestFocus() }
+    content(Modifier.focusRequester(requester))
+}
+"#
+    .to_string()
 }
 
 /// Emit the shared slider wrapper used by generated components.
@@ -3905,7 +3935,9 @@ fn emit_host_input(
     text_ctx: Option<&TextStyleCtx>,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
-    let inner = "    ".repeat(depth + 1);
+    let auto_focus = find_keyword_prop(node, "auto-focus").as_deref() == Some("true");
+    let field_pad = "    ".repeat(depth + usize::from(auto_focus));
+    let inner = "    ".repeat(depth + usize::from(auto_focus) + 1);
     let chain_indent = (depth + 2) * 4;
     let inherited_color = text_ctx.and_then(|t| t.color.as_deref());
     let style = compose_style_for_node(node, part_styles, None, chain_indent, inherited_color);
@@ -3918,7 +3950,10 @@ fn emit_host_input(
     let value_expr = text_prop_expr(node, "value")?.unwrap_or_else(|| "\"\"".to_string());
 
     let mut out = String::new();
-    writeln!(out, "{pad}BasicTextField(").unwrap();
+    if auto_focus {
+        writeln!(out, "{pad}_MosaicAutoFocus {{ _mosaicAutoFocusModifier ->").unwrap();
+    }
+    writeln!(out, "{field_pad}BasicTextField(").unwrap();
     writeln!(out, "{inner}value = {value_expr},").unwrap();
 
     let multiline = matches!(
@@ -4008,7 +4043,14 @@ fn emit_host_input(
     }
 
     if let Some(modifier) = host_control_modifier_expr(node, style.as_ref()) {
+        let modifier = if auto_focus {
+            format!("{modifier}.then(_mosaicAutoFocusModifier)")
+        } else {
+            modifier
+        };
         writeln!(out, "{inner}modifier = {modifier},").unwrap();
+    } else if auto_focus {
+        writeln!(out, "{inner}modifier = _mosaicAutoFocusModifier,").unwrap();
     }
     if let Some(text_style) = input_text.text_style_expr() {
         writeln!(out, "{inner}textStyle = {text_style},").unwrap();
@@ -4031,7 +4073,10 @@ fn emit_host_input(
         writeln!(out, "{inner}enabled = !({read_only}),").unwrap();
     }
 
-    writeln!(out, "{pad})").unwrap();
+    writeln!(out, "{field_pad})").unwrap();
+    if auto_focus {
+        writeln!(out, "{pad}}}").unwrap();
+    }
     Ok(out)
 }
 

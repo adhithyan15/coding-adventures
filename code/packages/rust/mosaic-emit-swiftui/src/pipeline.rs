@@ -996,15 +996,20 @@ const HOVER_STATE_HELPER_SWIFT: &str = r#"private struct _MosaicHoverState: View
 
 const FOCUS_STATE_HELPER_SWIFT: &str = r#"private struct _MosaicFocusState: View {
     @FocusState private var isFocused: Bool
+    private let autoFocus: Bool
     private let content: (Bool) -> AnyView
 
-    init(content: @escaping (Bool) -> AnyView) {
+    init(autoFocus: Bool = false, content: @escaping (Bool) -> AnyView) {
+        self.autoFocus = autoFocus
         self.content = content
     }
 
     var body: some View {
         content(isFocused)
             .focused($isFocused)
+            .onAppear {
+                if autoFocus && !isFocused { isFocused = true }
+            }
     }
 }
 "#;
@@ -1218,6 +1223,7 @@ fn automatic_focus_style<'a>(
 
 fn layout_uses_automatic_focus(node: &LayoutNode, part_styles: &PartStyleMap) -> bool {
     automatic_focus_style(node, part_styles).is_some()
+        || (node.tag == "HostInput" && find_keyword_prop(node, "auto-focus") == Some("true"))
         || node
             .children
             .iter()
@@ -3040,7 +3046,8 @@ fn emit_view_tree(
     injected_width: Option<&str>,
 ) -> Result<String, PipelineEmitError> {
     let uses_automatic_hover = automatic_hover_style(node, part_styles).is_some();
-    let uses_automatic_focus = automatic_focus_style(node, part_styles).is_some();
+    let auto_focus = node.tag == "HostInput" && find_keyword_prop(node, "auto-focus") == Some("true");
+    let uses_automatic_focus = automatic_focus_style(node, part_styles).is_some() || auto_focus;
     let uses_automatic_press = automatic_press_style(node, part_styles).is_some();
     let automatic_wrapper_count = usize::from(uses_automatic_hover)
         + usize::from(uses_automatic_focus)
@@ -3347,6 +3354,7 @@ fn emit_view_tree(
             "_MosaicPressState",
             "__mosaicPressActive",
             "_mosaicPressContent",
+            "",
         );
     }
     if uses_automatic_focus {
@@ -3357,6 +3365,7 @@ fn emit_view_tree(
             "_MosaicFocusState",
             "__mosaicFocusActive",
             "_mosaicFocusContent",
+            if auto_focus { "autoFocus: true, " } else { "" },
         );
     }
     if uses_automatic_hover {
@@ -3367,6 +3376,7 @@ fn emit_view_tree(
             "_MosaicHoverState",
             "__mosaicHoverActive",
             "_mosaicHoverContent",
+            "",
         );
     }
 
@@ -3556,13 +3566,14 @@ fn wrap_swiftui_state_view(
     wrapper: &str,
     state_name: &str,
     content_name: &str,
+    wrapper_args: &str,
 ) -> String {
     let pad = " ".repeat(indent);
     let binding_pad = " ".repeat(indent + 4);
     let function_pad = " ".repeat(indent + 8);
     let content = wrap_swiftui_any_view(source, indent + 12, true);
     format!(
-        "{pad}({{ () -> AnyView in\n{binding_pad}let {content_name}: (Bool) -> AnyView = {{ {state_name} in\n{function_pad}func _mosaicStateNode() -> AnyView {{\n{content}{function_pad}}}\n{function_pad}return _mosaicStateNode()\n{binding_pad}}}\n{binding_pad}return AnyView({wrapper}(content: {content_name}))\n{pad}}})()\n"
+        "{pad}({{ () -> AnyView in\n{binding_pad}let {content_name}: (Bool) -> AnyView = {{ {state_name} in\n{function_pad}func _mosaicStateNode() -> AnyView {{\n{content}{function_pad}}}\n{function_pad}return _mosaicStateNode()\n{binding_pad}}}\n{binding_pad}return AnyView({wrapper}({wrapper_args}content: {content_name}))\n{pad}}})()\n"
     )
 }
 

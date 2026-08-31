@@ -19,7 +19,9 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
     "qt": {
         "TaskApp.qml": (
             'objectName: "name-input"',
+            "Component.onCompleted: forceActiveFocus()",
             "onTextChanged: newTaskNameChange(text)",
+            "onAccepted: addTask()",
             'objectName: "due-input"',
             "onTextChanged: newTaskDueChange(text)",
             'objectName: "add-btn"',
@@ -33,10 +35,12 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
             "text: ( row [ 2 ] )",
             "text: ( row [ 3 ] )",
             "onMosaicEvent: function(event) { applyMosaicResponse(mosaicHost.handleRequiredEvent(event)) }",
+            'text: "Your Inbox is ready"',
         ),
     },
     "flutter": {
         "lib/TaskApp.dart": (
+            "autofocus: true,",
             "onChanged: (value) => dispatch(TaskAppEventNewTaskNameChange(value: value))",
             "onChanged: (value) => dispatch(TaskAppEventNewTaskDueChange(value: value))",
             "onPressed: () => dispatch(TaskAppEventAddTask())",
@@ -45,6 +49,7 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
             "onPressed: () => dispatch(TaskAppEventDeleteTask(index: i))",
             "Text(( row [ 2 ] ))",
             "Text(( row [ 3 ] ))",
+            'Text("Your Inbox is ready")',
         ),
         "lib/main.dart": (
             "_mosaicHost.setPropsChangedHandler",
@@ -55,6 +60,8 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
     },
     "compose": {
         "src/main/kotlin/TaskApp.kt": (
+            "private fun _MosaicAutoFocus(content: @Composable (Modifier) -> Unit)",
+            "_MosaicAutoFocus { _mosaicAutoFocusModifier ->",
             '.testTag("name-input")',
             "onValueChange = { v -> dispatch(TaskAppEvent.NewTaskNameChange(v)) }",
             '.testTag("due-input")',
@@ -69,6 +76,7 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
             "onClick = { dispatch(TaskAppEvent.DeleteTask(i)) }",
             "Text(( row [ 2 ] )",
             "Text(( row [ 3 ] )",
+            'Text("Your Inbox is ready"',
         ),
         "src/main/kotlin/Main.kt": (
             "mosaicHost.setPropsChangedHandler",
@@ -78,6 +86,7 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
     },
     "swiftui": {
         "Sources/App/TaskApp.swift": (
+            "_MosaicFocusState(autoFocus: true, content: _mosaicFocusContent)",
             '.accessibilityIdentifier("name-input")',
             "dispatch(.newTaskNameChange(value: $0))",
             '.accessibilityIdentifier("due-input")',
@@ -92,6 +101,7 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
             "dispatch(.deleteTask(index: i))",
             "_mosaicText(( row [ 2 ] ))",
             "_mosaicText(( row [ 3 ] ))",
+            'Text("Your Inbox is ready")',
         ),
         "Sources/App/App.swift": (
             "bridge.setPropsChangedHandler?",
@@ -103,6 +113,7 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
     "xaml": {
         "TaskApp.xaml": (
             'AutomationProperties.AutomationId="name-input"',
+            'Loaded="NameInput_Loaded"',
             "TextChanged=\"NameInput_TextChanged\"",
             'AutomationProperties.AutomationId="due-input"',
             "TextChanged=\"DueInput_TextChanged\"",
@@ -116,8 +127,10 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
             'AutomationProperties.AutomationId="del-btn"',
             "Click=\"DelBtn_Click\"",
             "Mode=OneWay",
+            'Text="Your Inbox is ready"',
         ),
         "TaskApp.xaml.cs": (
+            "FocusManager.GetFocusedElement(tb.XamlRoot) is null",
             "new TaskAppEvent.NewTaskNameChange(tb.Text)",
             "new TaskAppEvent.NewTaskDueChange(tb.Text)",
             "new TaskAppEvent.AddTask()",

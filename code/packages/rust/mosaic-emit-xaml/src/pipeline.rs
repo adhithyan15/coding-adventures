@@ -8201,6 +8201,20 @@ fn emit_host_input(
         attrs.push_str(" AcceptsReturn=\"True\" TextWrapping=\"Wrap\"");
     }
 
+    // Request initial focus after the TextBox joins a XamlRoot, but do not
+    // replace a focus target the native host already restored.
+    if find_prop_keyword(node, "auto-focus") == Some("true") {
+        let handler = format!("{x_name}_Loaded");
+        let body = format!(
+            "    private void {handler}(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)\n    {{\n        if (sender is not Microsoft.UI.Xaml.Controls.TextBox tb || tb.XamlRoot is null) return;\n        if (Microsoft.UI.Xaml.Input.FocusManager.GetFocusedElement(tb.XamlRoot) is null)\n        {{\n            tb.Focus(Microsoft.UI.Xaml.FocusState.Programmatic);\n        }}\n    }}"
+        );
+        ctx.add_host_handler(HostHandler {
+            name: handler.clone(),
+            source: body,
+        });
+        attrs.push_str(&format!(" Loaded=\"{handler}\""));
+    }
+
     // -- Event wiring --
     // onChange handler dispatches with the new text payload.
     if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop_value(node, "onChange") {

@@ -58,6 +58,7 @@ links existing Mosaic work instead of duplicating it.
    queued below.
 16. **P1 — [#13687](https://github.com/adhithyan15/coding-adventures/issues/13687):**
    give an empty Inbox useful guidance and deterministic first-task focus.
+   **In review in #13706.**
 17. **P1 — [#13689](https://github.com/adhithyan15/coding-adventures/issues/13689):**
    surface composer validation errors with useful focus behavior.
 18. **P1 — [#13688](https://github.com/adhithyan15/coding-adventures/issues/13688):**
