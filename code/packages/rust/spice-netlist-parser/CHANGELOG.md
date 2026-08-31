@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Lower finite JFET `VTOTC` alternative threshold-voltage temperature
+  coefficients.
 - Lower finite JFET `TCV` threshold-voltage temperature coefficients.
 - Lower valid JFET `RS` source resistances and reject invalid inputs.
 - Lower valid JFET `RD` drain resistances and reject invalid inputs.
