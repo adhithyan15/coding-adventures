@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+**Fixed a hang on crafted duplicate review ids.** `unique_review_id` resolved
+collisions with `saturating_add`, which does not terminate at `i64::MAX`: the add
+is a no-op, the set insert keeps failing, and the loop spins at 100% CPU forever.
+
+That is reachable from an untrusted file. Review ids come straight from the
+revlog b-tree's cell rowids, and `walk_table` sorts but does not deduplicate, so
+a crafted `.anki2` carrying two rows with rowid `i64::MAX` wedges an
+import-then-export. Now `checked_add`, making exhaustion an error.
+
+Pre-existing rather than introduced by the port, fixed here because the export
+path calls it.
+
 **The V11 export no longer uses `rusqlite`.** `write_v11_collection_bytes_from_engram_state`
 built its `.anki2` database by opening an in-memory `rusqlite` connection, running
 a `CREATE TABLE` batch, executing five `INSERT` loops, and calling `serialize()`.

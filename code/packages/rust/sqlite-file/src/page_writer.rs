@@ -150,6 +150,19 @@ fn pack_leaf_cells(
 ) -> Result<(), SqliteError> {
     let n = cells.len();
 
+    // A page's cell count is a 16-bit field, so more than 65535 cells cannot be
+    // represented — and the `as u16` below would silently truncate it, writing a
+    // page that claims a handful of cells while holding tens of thousands. Reject
+    // it here, where a page is actually framed.
+    //
+    // Callers split by *size* long before reaching this many cells, so in practice
+    // this is an unreachable invariant guard rather than a limit anyone meets.
+    if n > u16::MAX as usize {
+        return Err(SqliteError::Unsupported(
+            "more than 65535 cells on one leaf page",
+        ));
+    }
+
     // --- 8-byte page header. Freeblock (1..3) and fragmented-free (7) stay 0. --
     page[header_offset] = LEAF_TABLE;
     page[header_offset + 3..header_offset + 5].copy_from_slice(&(n as u16).to_be_bytes());
@@ -280,11 +293,15 @@ fn encode_overflow_pages(
 /// Sort `(rowid, record)` cells by rowid and reject duplicate rowids — the
 /// shared preamble for any table-leaf page. Returns borrowed refs in key order.
 fn order_cells(cells: &[(i64, Vec<u8>)]) -> Result<Vec<&(i64, Vec<u8>)>, SqliteError> {
-    if cells.len() > u16::MAX as usize {
-        return Err(SqliteError::Unsupported(
-            "more than 65535 cells on one leaf page",
-        ));
-    }
+    // No cell-count cap here. This function sorts a *whole table's* cells, and a
+    // table is no longer one page: `encode_table_btree` splits them across as many
+    // leaves as it needs and stacks interior levels above them. The 65535 limit is
+    // a property of one page's cell-pointer array, so it belongs in
+    // `pack_leaf_cells`, which is the only place a page is actually framed.
+    //
+    // It used to live here, from when a table was a single leaf, and capped whole
+    // tables at 65535 rows long after that stopped being true — which quietly made
+    // any collection with a year of review history unexportable.
     let mut ordered: Vec<&(i64, Vec<u8>)> = cells.iter().collect();
     ordered.sort_by_key(|(rowid, _)| *rowid);
     for pair in ordered.windows(2) {

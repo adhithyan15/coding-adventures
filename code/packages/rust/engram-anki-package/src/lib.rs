@@ -1772,7 +1772,7 @@ fn v11_export_rows(
                     review.id, review.card_id
                 ))
             })?;
-        let review_id = unique_review_id(review, &mut used_review_ids);
+        let review_id = unique_review_id(review, &mut used_review_ids)?;
         review_rows.push((
             review_id,
             vec![
@@ -2794,7 +2794,7 @@ fn is_dynamic_anki_deck(export: &ExportModel, deck_key: &str) -> bool {
             .is_some_and(|dyn_value| dyn_value != 0)
 }
 
-fn unique_review_id(review: &Review, used: &mut BTreeSet<i64>) -> i64 {
+fn unique_review_id(review: &Review, used: &mut BTreeSet<i64>) -> Result<i64, ApkgError> {
     let mut candidate = review
         .id
         .parse::<i64>()
@@ -2804,10 +2804,22 @@ fn unique_review_id(review: &Review, used: &mut BTreeSet<i64>) -> i64 {
     if candidate <= 0 {
         candidate = 1;
     }
-    while !used.insert(candidate) {
-        candidate = candidate.saturating_add(1);
+    // `saturating_add` used to sit here, which hangs rather than terminating: at
+    // `i64::MAX` the add is a no-op, `insert` keeps returning false, and the loop
+    // spins forever at 100% CPU. That is reachable from an untrusted file — review
+    // ids come straight from the revlog b-tree's cell rowids, and `walk_table`
+    // sorts but does not deduplicate, so a crafted `.anki2` carrying two rows with
+    // rowid `i64::MAX` is enough to wedge an import-then-export.
+    //
+    // `checked_add` makes exhaustion an error instead of a hang.
+    loop {
+        if used.insert(candidate) {
+            return Ok(candidate);
+        }
+        candidate = candidate
+            .checked_add(1)
+            .ok_or_else(|| apkg_error("Anki review ids exhaust the addressable id range"))?;
     }
-    candidate
 }
 
 fn assign_anki_ids<'a>(
@@ -5325,6 +5337,42 @@ CREATE TABLE graves (
     ///   while the bytes differed from anything real Anki writes.
     ///
     /// So this test hands the export to the bundled C library and asks it.
+    /// Two reviews colliding at `i64::MAX` terminate instead of hanging.
+    ///
+    /// Review ids come from the revlog b-tree's cell rowids, and `walk_table`
+    /// sorts but does not deduplicate, so a crafted `.anki2` can carry two rows
+    /// with the same extreme rowid. The old `saturating_add` spun forever on that
+    /// input; this asserts it now ends, either by finding a free id or by saying
+    /// it cannot.
+    #[test]
+    fn duplicate_extreme_review_ids_terminate_instead_of_hanging() {
+        let mut used = BTreeSet::new();
+        let review = |id: &str| Review {
+            id: id.to_string(),
+            session_id: "s".to_string(),
+            card_id: "c".to_string(),
+            rating: Rating::Good,
+            reviewed_at: 1,
+            answer_time_ms: None,
+            leech_event: None,
+            previous_progress: None,
+            resulting_progress: None,
+            previous_active_session: None,
+            sibling_progress_snapshots: Vec::new(),
+        };
+
+        let first = unique_review_id(&review(&i64::MAX.to_string()), &mut used).unwrap();
+        assert_eq!(first, i64::MAX);
+
+        // The second one cannot be placed: MAX is taken and there is nothing above
+        // it. It must return an error rather than loop.
+        let second = unique_review_id(&review(&i64::MAX.to_string()), &mut used);
+        assert!(
+            second.is_err(),
+            "a second id at i64::MAX must error, not hang or silently collide"
+        );
+    }
+
     #[test]
     fn exported_v11_collection_opens_in_real_sqlite() {
         let collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();

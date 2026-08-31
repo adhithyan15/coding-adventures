@@ -2,6 +2,24 @@
 
 ## 0.19.0 - Unreleased
 
+**Writer: a stale cell-count cap limited whole tables to 65535 rows.**
+`order_cells` rejected any table with more than 65535 cells, reporting "more than
+65535 cells on one leaf page". That was correct when a table *was* one leaf; once
+`encode_table_btree` grew multi-level b-trees it capped whole tables at a limit
+that only ever applied to a page.
+
+Not hypothetical: Anki's `revlog` gains a row per answered card, so a collection
+with roughly a year of history crossed it and could not be exported at all.
+
+The guard moves to `pack_leaf_cells`, the only place a page is actually framed —
+which also closes a latent silent truncation there, since the cell count is
+written with an unchecked `n as u16`. Callers split by size long before reaching
+65535 cells, so it is now an unreachable invariant guard rather than a limit.
+
+Regression test writes a 70000-row table and reads it back through real
+bundled-C SQLite (`integrity_check`, full row count, and probes at rows 1,
+65535, 65536, and 70000); it fails with the old guard restored.
+
 **Writer: `DbOptions`, so a caller can set the user version through the front
 door.** 0.18.0 put `user_version` on `Header`, but `write_multi_table_db` still
 hardcoded `0`, so the only way to emit a non-zero user version was to parse the

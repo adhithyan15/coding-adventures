@@ -887,3 +887,61 @@ fn writer_options_user_version_reaches_real_sqlite() {
     drop(conn);
     let _ = std::fs::remove_dir_all(&dir);
 }
+
+/// A table with far more than 65535 rows writes, and real SQLite reads it back.
+///
+/// `order_cells` used to reject any table over 65535 cells with "more than 65535
+/// cells on one leaf page". That limit was true when a table was a single leaf and
+/// stale once `encode_table_btree` grew multi-level b-trees — it capped whole
+/// *tables*, not pages.
+///
+/// It is not a hypothetical bound. Anki's `revlog` gains one row per answered
+/// card, so an ordinary collection with about a year of history crosses 65535 and
+/// would have failed to export at all — with the user's data reachable only
+/// through the app that could no longer write it out.
+///
+/// 70000 rows is deliberately just past the old cliff: enough to prove the fix,
+/// small enough to stay a fast test.
+#[test]
+fn tables_larger_than_65535_rows_write_and_read_back() {
+    use sqlite_file::page_writer::{write_multi_table_db, TableSpec};
+    use sqlite_file::SqlValue;
+
+    const ROWS: i64 = 70_000;
+    let rows: Vec<(i64, Vec<SqlValue>)> = (1..=ROWS)
+        .map(|n| (n, vec![SqlValue::Null, SqlValue::Int(n * 2)]))
+        .collect();
+    let tables: &[TableSpec] = &[("revlog", "CREATE TABLE revlog(id integer primary key, ivl)", &rows)];
+    let db = write_multi_table_db(4096, tables).expect("a table past 65535 rows must write");
+
+    static COUNTER_BIG: AtomicU64 = AtomicU64::new(15_000_000);
+    let unique = COUNTER_BIG.fetch_add(1, Ordering::Relaxed);
+    let mut dir = std::env::temp_dir();
+    dir.push(format!("sqlite_file_bigtable_{}_{}", std::process::id(), unique));
+    std::fs::create_dir(&dir).expect("create fresh fixture dir");
+    let path = dir.join("ours.db");
+    std::fs::write(&path, &db).unwrap();
+
+    let conn = rusqlite::Connection::open(&path).unwrap();
+    let integrity: String = conn
+        .query_row("PRAGMA integrity_check", [], |r| r.get(0))
+        .unwrap();
+    assert_eq!(integrity, "ok", "real SQLite integrity_check on a >65535-row table");
+
+    let count: i64 = conn
+        .query_row("SELECT count(*) FROM revlog", [], |r| r.get(0))
+        .unwrap();
+    assert_eq!(count, ROWS, "every row must survive");
+
+    // Spot-check the ends and the old cliff, and confirm the rowid alias still
+    // resolves across a multi-level tree.
+    for probe in [1_i64, 65_535, 65_536, ROWS] {
+        let ivl: i64 = conn
+            .query_row("SELECT ivl FROM revlog WHERE id = ?1", [probe], |r| r.get(0))
+            .unwrap_or_else(|e| panic!("row {probe} missing: {e}"));
+        assert_eq!(ivl, probe * 2, "row {probe} must read back correctly");
+    }
+
+    drop(conn);
+    let _ = std::fs::remove_dir_all(&dir);
+}
