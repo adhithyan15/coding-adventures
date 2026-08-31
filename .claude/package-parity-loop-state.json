@@ -11,22 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 13608,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13608",
-    "branch": "codex/build-tool-go-portable-source-hashing-conformance",
-    "implementation_revision": "243e8eaaed97935e3f59cdd633efbd76b7ebdbee",
-    "status": "checks-pending",
-    "opened_at": "2026-08-31T10:05:27Z"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-08-31T10:05:56Z",
+    "observed_at": "2026-08-31T10:26:44Z",
     "pr_number": 13608,
-    "status": "checks-pending",
-    "notes": "Ready-for-review PR #13608 opened from clean validated head 1eeda1bcdace08711b27b174df52bc66d58c5862 after a normal first push. GitHub reports the PR non-draft, mergeable, and conflict-free; CI, CodeQL, and human-language checks are queued or in progress, so auto-merge remains disabled until every final-head check is terminal and acceptable and no merge conflict exists."
+    "status": "merged",
+    "notes": "All 41 final-head checks reached terminal acceptable conclusions: 34 successes, six expected skips, and one neutral result, with no failures or pending work. GitHub reported final head aa9170cfe6863c9040c51c495dcffc1b06f71732 clean and mergeable before guarded squash auto-merge was enabled with an exact head lease. GitHub merged PR #13608 as b89043a02264bfdae4193723ab3f27e8b562caa1 without a plain manual merge command."
   },
   "last_inventory": {
-    "revision": "83127966b0112dd0ffe88d328e040e70b581848b",
+    "revision": "5de6681bcbd010e3511819c18da7cd012263759f",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1388,
@@ -826,13 +819,17 @@
     {
       "id": "build-tool-go-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Go build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus"],
       "branch": "codex/build-tool-go-portable-source-hashing-conformance",
       "pr_number": 13608,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13608",
       "opened_at": "2026-08-31T10:05:27Z",
       "opened_revision": "1eeda1bcdace08711b27b174df52bc66d58c5862",
+      "merged_head_revision": "aa9170cfe6863c9040c51c495dcffc1b06f71732",
+      "merged_at": "2026-08-31T10:26:44Z",
+      "merge_revision": "b89043a02264bfdae4193723ab3f27e8b562caa1",
+      "merge_notes": "All 41 final-head checks reached terminal acceptable conclusions: 34 successes, six expected skips, and one neutral result. GitHub reported final head aa9170cfe6863c9040c51c495dcffc1b06f71732 clean and mergeable; guarded squash auto-merge with the exact head lease completed without a plain manual merge command.",
       "selection_revision": "696e750fc40fc1082ae88a19498e9baf81996b87",
       "selection_notes": "Selected after PR #13604 completed 41 acceptable final-head checks and merged through guarded squash auto-merge as exact origin/main 696e750fc40fc1082ae88a19498e9baf81996b87. The refreshed collision-checked schema-3 inventory remains structurally unchanged at 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero canonical collisions, and zero unknown buckets. The merged Spanish planning-frame and Ruby hashing paths add no package root, BUILD front, recognized manifest, lockfile, dependency, or identity. A new Rust declared-source metadata-plumbing prerequisite was added before selection because the production Rust build tool cannot yet reach declared-source hashing; its source-hashing owner now depends on that prerequisite. The resulting 607-owner/919-edge graph is expected to remain unique, dependency-complete, and acyclic. Go wins the bounded leverage pass because production already propagates DeclaredSrcs into HashPackage, recognizes OCaml sources and metadata, and uses standard-library SHA-256. The expected seven-path tranche expanded to nine only after independent review proved production needed checked hash-error propagation through main.go, an exact front-door regression in main_test.go, and control-safe package-identity quoting to avoid an uncontrolled panic, incorrect cache sentinel, or forged log line. Rust needs the newly recorded metadata prerequisite and Swift still has a non-SHA-256 Windows fallback. Live PRs have zero exact overlap with the expected nine paths, and the target local branch, remote branch, and prior PR were absent before this clean branch was created from exact origin/main. Reconciliation, discovery, and selection leave 195 merged, 411 pending, and exactly this owner in progress.",
       "implementation_revision": "243e8eaaed97935e3f59cdd633efbd76b7ebdbee",
@@ -884,10 +881,12 @@
     {
       "id": "build-tool-swift-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Swift build tool",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus"],
-      "branch": null,
+      "branch": "codex/build-tool-swift-portable-source-hashing-conformance",
       "pr_number": null,
+      "selection_revision": "5de6681bcbd010e3511819c18da7cd012263759f",
+      "selection_notes": "Selected after PR #13608 completed all 41 final-head checks acceptably and merged through guarded squash auto-merge as b89043a02264bfdae4193723ab3f27e8b562caa1. The refreshed collision-checked schema-3 inventory remains structurally unchanged at 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero canonical collisions, and zero unknown buckets. Subsequent PRs #13606 and #13607 changed only existing human-language and TaskApp paths and created no package identity, owner, or tranche overlap. Before selection, the Rust evaluator-safety prerequisite was registered because the dormant Rust evaluator exposes a traversal-prone filesystem resolver and only recursion metering; declared-source metadata plumbing now depends on repository-contained loads and the complete neutral metering contract. The resulting 608-owner/922-edge graph is expected to remain unique, dependency-complete, and acyclic. Swift is the highest-leverage genuinely ready bounded continuation: its sole prerequisite is merged, while Rust source hashing is correctly blocked on the new safety and metadata chain. This tranche is limited to Swift source collection, hashing, checked front-door error propagation, focused tests, and documentation; six live PRs have zero exact overlap with the expected paths, and the target local branch, remote branch, prior PR, and worktree path were absent before this clean branch was created from exact origin/main.",
       "notes": "Discovered by the post-#13544 source-hashing audit. Swift reuses discovery skips but omits normalized path framing and OCaml source recognition. Adopt the language-neutral collector and digest framing contract in a separate Swift tranche."
     },
     {
@@ -916,10 +915,19 @@
       "notes": "Discovered by the post-#13544 source-hashing audit. After Ruby adopts the neutral generated-directory registry, add OCaml source recognition and normalized unambiguous path framing as a separate bounded follow-up."
     },
     {
+      "id": "build-tool-rust-starlark-evaluator-safety-conformance",
+      "title": "Make Rust Starlark evaluation repository-contained and deterministically bounded",
+      "status": "pending",
+      "depends_on": ["build-tool-starlark-metering-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#13608 readiness and security audit before selecting Rust declared-source metadata plumbing. The dormant Rust build-tool evaluator constructs the repository-local interpreter with FsResolver, whose raw root-plus-label concatenation permits traversal-like loads and leaks absolute paths, while the interpreter meters only recursion and cannot satisfy the neutral step, aggregate, range/value, load-depth, module-count, cycle, and output limits. Add a repository-contained immutable resolver, deterministic metering and redacted fail-closed diagnostics, consuming host-load-denied and every Starlark metering fixture before any production Rust build-tool path activates this evaluator. This is the early Rust child of the remaining-engines metering umbrella, split because metadata plumbing must not activate unsafe host reads or unbounded evaluation while the broader umbrella remains blocked on the Go oracle."
+    },
+    {
       "id": "build-tool-rust-declared-source-metadata-plumbing",
       "title": "Plumb declared-source metadata through the Rust build tool",
       "status": "pending",
-      "depends_on": ["build-tool-rust-generated-directory-hashing-exclusion"],
+      "depends_on": ["build-tool-rust-generated-directory-hashing-exclusion", "build-tool-rust-starlark-evaluator-safety-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13604 production-path audit before selecting the next source-hashing lane. Rust Package lacks is_starlark and declared_srcs metadata, the production hasher always receives an empty declared pattern set, the Starlark evaluator is not registered in the live module graph, and Cargo lacks its repository-local interpreter dependency. Add fail-closed bounded BUILD evaluation, Package metadata, production propagation, and native plus CLI evidence as a separate prerequisite; do not overclaim declared-mode source parity from test-only collector helpers."
@@ -1405,10 +1413,10 @@
       "id": "build-tool-starlark-metering-remaining-engines",
       "title": "Make every supported build-tool engine consume the Starlark metering contract",
       "status": "pending",
-      "depends_on": ["build-tool-go-oracle"],
+      "depends_on": ["build-tool-go-oracle", "build-tool-rust-starlark-evaluator-safety-conformance"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered by the exact post-#12562 implementation audit. The neutral corpus and Python reference runner now cover fuel, recursion, aggregate allocation, range and scalar bounds, module count, load depth and cycles, and combined print/trace output, but no native build-tool engine consumes those cases yet. After the canonical Go oracle lands, decompose the extant C#, F#, Elixir, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript engines into independent children and route later Dart and JVM engines through the same process-free evaluator contract. Do not infer final Starlark conformance from schema or reference-runner coverage."
+      "notes": "Discovered by the exact post-#12562 implementation audit. The neutral corpus and Python reference runner now cover fuel, recursion, aggregate allocation, range and scalar bounds, module count, load depth and cycles, and combined print/trace output, but no native build-tool engine consumes those cases yet. Rust's explicit evaluator-safety child was registered early because its declared-source metadata owner would otherwise activate a traversal-prone, incompletely metered evaluator; that child advances but does not complete this aggregate. After the canonical Go oracle lands, decompose the remaining C#, F#, Elixir, Haskell, Lua, Perl, Python, Ruby, Swift, and TypeScript engines into independent children and route later Dart and JVM engines through the same process-free evaluator contract. Do not infer final Starlark conformance from schema or reference-runner coverage."
     },
     {
       "id": "build-tool-validation-oracle-corpus",
