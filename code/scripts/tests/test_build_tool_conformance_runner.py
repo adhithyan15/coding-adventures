@@ -1285,10 +1285,8 @@ class CorpusTests(unittest.TestCase):
             "js/smoke.mjs",
             "pkg/engram_engine.wasm",
         ]
-        candidates = []
-        expected = []
-        for package_path in package_paths:
-            repository_path = f"{package_root}/{package_path}"
+
+        def tracked_blob(repository_path: str) -> bytes:
             stage_record = subprocess.check_output(
                 ["git", "ls-files", "--stage", "-z", "--", repository_path],
                 cwd=runner.REPO_ROOT,
@@ -1300,10 +1298,18 @@ class CorpusTests(unittest.TestCase):
             self.assertEqual(mode, "100644")
             self.assertEqual(stage, "0")
             self.assertEqual(staged_path.decode("utf-8"), repository_path)
-            body = subprocess.check_output(
+            return subprocess.check_output(
                 ["git", "cat-file", "blob", object_id],
                 cwd=runner.REPO_ROOT,
             )
+
+        candidates = []
+        expected = []
+        tracked_bodies: dict[str, bytes] = {}
+        for package_path in package_paths:
+            repository_path = f"{package_root}/{package_path}"
+            body = tracked_blob(repository_path)
+            tracked_bodies[package_path] = body
             candidates.append(
                 {"path": package_path, "kind": "file", "content_hex": body.hex()}
             )
@@ -1324,6 +1330,17 @@ class CorpusTests(unittest.TestCase):
                 registry,
             ),
             expected,
+        )
+        build_text = tracked_blob(f"{package_root}/BUILD").decode("utf-8")
+        smoke_text = tracked_bodies["js/smoke.mjs"].decode("utf-8")
+        self.assertIn("node js/smoke.mjs", build_text.splitlines())
+        self.assertIn(
+            'from "./engram-mosaic-host-wasm.mjs"',
+            smoke_text,
+        )
+        self.assertIn(
+            'readFileSync(join(here, "..", "pkg", "engram_engine.wasm"))',
+            smoke_text,
         )
 
     def test_language_source_input_registry_rejects_drift_and_collisions(self) -> None:
