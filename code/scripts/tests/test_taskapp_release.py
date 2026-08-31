@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sys
+import tarfile
 import zipfile
 from pathlib import Path
 
@@ -23,7 +24,9 @@ WEB_LOCK = (
 sys.path.insert(0, str(SCRIPTS))
 
 from taskapp_release import (
+    LINUX_BUNDLES,
     NATIVE_TARGETS,
+    archive_linux_bundle,
     archive_native,
     archive_web,
     artifact_names,
@@ -106,6 +109,79 @@ def test_native_archive_rejects_a_degraded_project(tmp_path: Path) -> None:
         archive_native("0.1.0", COMMIT, "qt", tmp_path, tmp_path / "assets")
 
 
+def test_archives_verified_linux_bundle_with_launcher_contract(tmp_path: Path) -> None:
+    source = tmp_path / "bundle"
+    (source / "bin").mkdir(parents=True)
+    (source / "lib").mkdir()
+    executable = source / "bin" / "trestle"
+    executable.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+    executable.chmod(0o755)
+    runtime = source / "lib" / "libmosaic_app.so"
+    runtime.write_bytes(b"rust-runtime")
+    expected_runtime = tmp_path / "libtask_mosaic_app.so"
+    expected_runtime.write_bytes(b"rust-runtime")
+
+    bundle = archive_linux_bundle(
+        "0.2.0",
+        COMMIT,
+        "compose",
+        source,
+        executable,
+        runtime,
+        expected_runtime,
+        tmp_path / "assets",
+    )
+
+    root = "task-app-compose-linux-bundle-v0.2.0"
+    with tarfile.open(bundle, "r:gz") as archive:
+        names = archive.getnames()
+        metadata = json.load(archive.extractfile(f"{root}/BUNDLE.json"))
+        launcher = archive.extractfile(f"{root}/launch-trestle").read().decode()
+        launcher_mode = archive.getmember(f"{root}/launch-trestle").mode
+    assert f"{root}/bin/trestle" in names
+    assert metadata["applicationId"] == "task-app"
+    assert metadata["rustRuntime"] == "lib/libmosaic_app.so"
+    assert "$XDG_DATA_HOME/task-app/mosaic-state.v1.json" == metadata["statePath"]
+    assert "pre-v0.2.0-compose.json" in launcher
+    assert launcher_mode & 0o111
+
+
+def test_linux_bundle_rejects_runtime_mismatch_and_external_paths(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "bundle"
+    source.mkdir()
+    executable = source / "trestle"
+    executable.write_bytes(b"app")
+    runtime = source / "libmosaic_app.so"
+    runtime.write_bytes(b"wrong")
+    expected_runtime = tmp_path / "expected.so"
+    expected_runtime.write_bytes(b"expected")
+
+    with pytest.raises(ValueError, match="does not match"):
+        archive_linux_bundle(
+            "0.2.0",
+            COMMIT,
+            "qt",
+            source,
+            executable,
+            runtime,
+            expected_runtime,
+            tmp_path / "assets",
+        )
+    with pytest.raises(ValueError, match="executable must be inside"):
+        archive_linux_bundle(
+            "0.2.0",
+            COMMIT,
+            "qt",
+            source,
+            expected_runtime,
+            runtime,
+            runtime,
+            tmp_path / "assets",
+        )
+
+
 def test_manifest_requires_the_exact_release_payload_set(tmp_path: Path) -> None:
     for name in artifact_names("0.1.0"):
         (tmp_path / name).write_bytes(b"payload")
@@ -116,10 +192,24 @@ def test_manifest_requires_the_exact_release_payload_set(tmp_path: Path) -> None
     assert [artifact["name"] for artifact in manifest["artifacts"]] == artifact_names(
         "0.1.0"
     )
-    assert all(artifact["installable"] is False for artifact in manifest["artifacts"])
-    assert {artifact.get("toolkit") for artifact in manifest["artifacts"][1:]} == {
+    project_artifacts = [
+        artifact
+        for artifact in manifest["artifacts"]
+        if artifact["kind"] == "generated-native-project"
+    ]
+    bundle_artifacts = [
+        artifact
+        for artifact in manifest["artifacts"]
+        if artifact["kind"] == "portable-linux-bundle"
+    ]
+    assert manifest["artifacts"][0]["installable"] is False
+    assert all(artifact["installable"] is False for artifact in project_artifacts)
+    assert all(artifact["installable"] is False for artifact in bundle_artifacts)
+    assert all(artifact["runnable"] is True for artifact in bundle_artifacts)
+    assert {artifact.get("toolkit") for artifact in project_artifacts} == {
         target["toolkit"] for target in NATIVE_TARGETS.values()
     }
+    assert {artifact["backend"] for artifact in bundle_artifacts} == set(LINUX_BUNDLES)
 
     (tmp_path / "unexpected.zip").write_bytes(b"unexpected")
     with pytest.raises(ValueError, match="payload mismatch"):
@@ -155,6 +245,8 @@ def test_release_notes_are_product_scoped_and_filter_previous_history() -> None:
     assert "(#13575)" in notes
     assert "(#13542)" not in notes
     assert "no installer" in notes.lower()
+    assert "portable bundle" in notes.lower()
+    assert "task-app-compose-linux-bundle-v0.1.0.tar.gz" in notes
     assert "issues/13522" in notes
     assert "SHA256SUMS" in notes
 
@@ -177,6 +269,12 @@ def test_workflow_validates_before_building_and_has_one_publisher() -> None:
     assert "git diff --exit-code" in workflow
     assert workflow.count("sudo apt-get install -y libcairo2-dev") == 2
     assert "cmp" in workflow
+    assert "archive-linux-bundle" in workflow
+    assert "createDistributable" in workflow
+    assert "flutter build linux --release" in workflow
+    assert "cmake --install" in workflow
+    assert "launch-trestle" in workflow
+    assert "*.tar.gz" in workflow
     assert "code/packages/rust/task-wasm/pkg/task_engine.wasm" in workflow
     assert "host/web/public/task_engine.wasm" in workflow
     assert "':(exclude)code/packages/rust/task-wasm/pkg/task_engine.wasm'" in workflow

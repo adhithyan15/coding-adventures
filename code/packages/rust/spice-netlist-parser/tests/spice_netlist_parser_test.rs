@@ -1465,7 +1465,7 @@ J1 drain gate source nch
 fn parses_pjf_model_beta_aliases() {
     let parsed = parse_netlist(
         r#"
-.model pch PJF(B=750u)
+.model pch PJF(BET=750u)
 Jpull drain gate source pch
 "#,
     )
@@ -1477,6 +1477,30 @@ Jpull drain gate source pch
     assert_eq!(jfet.polarity, JfetPolarity::Pjf);
     assert_close(jfet.beta, 750.0e-6);
     assert_close(jfet.threshold_voltage, 2.0);
+}
+
+#[test]
+fn parses_jfet_b_as_doping_tail_parameter_not_beta_alias() {
+    let parsed = parse_netlist(
+        r#"
+.model shaped NJF(B=1.1)
+J1 drain gate source shaped
+"#,
+    )
+    .unwrap();
+
+    let Element::Jfet(jfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected JFET");
+    };
+    assert_close(jfet.beta, 1.0e-4);
+    assert_close(jfet.doping_tail_parameter, 1.1);
+}
+
+#[test]
+fn rejects_non_finite_jfet_b_doping_tail_parameter() {
+    let error = parse_netlist(".model bad NJF(B=1e999)\nJ1 drain gate source bad").unwrap_err();
+
+    assert!(error.to_string().contains("JFET B must be finite"));
 }
 
 #[test]

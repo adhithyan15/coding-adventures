@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:964887341ab0346c",
+  "lessonIds": [
+    "ES-C413-musica",
+    "ES-C413-concierto",
+    "ES-C413-music-recall-1",
+    "ES-C413-music-recall-2"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch413.txt",
+  "json": "spanish/narration/ch413.json",
+  "textHash": "fnv1a64:7863ff8935271eb3",
+  "jsonHash": "fnv1a64:a43e9728f68c9440",
+  "findings": []
+}
