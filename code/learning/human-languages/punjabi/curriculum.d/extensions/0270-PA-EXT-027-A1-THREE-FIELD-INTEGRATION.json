@@ -1,0 +1,22 @@
+{
+  "id": "PA-EXT-027-A1-THREE-FIELD-INTEGRATION",
+  "stage": "A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can independently select and write known language, residence, and work values on a three-line Gurmukhi form from remembered closed-bank cues.",
+  "prerequisites": [
+    "PA-EXT-026-A1-WORK-FIELD"
+  ],
+  "lessons": [
+    "PA-W06-three-field-labels",
+    "PA-W06-three-field-cues",
+    "PA-W06-two-field-supported",
+    "PA-W06-three-field-supported",
+    "PA-W06-selection-repair",
+    "PA-W06-spelling-repair",
+    "PA-W06-spacing-repair",
+    "PA-W06-placement-repair",
+    "PA-W06-mixed-repair",
+    "PA-W06-three-field-no-model"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "language": "punjabi",
+  "chapter": 22,
+  "sourceHash": "fnv1a64:b153214f22aacf9f",
+  "lessonIds": [
+    "PA-W06-three-field-labels",
+    "PA-W06-three-field-cues",
+    "PA-W06-two-field-supported",
+    "PA-W06-three-field-supported"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch22.txt",
+  "json": "punjabi/narration/ch22.json",
+  "textHash": "fnv1a64:5f3cf2781fbac208",
+  "jsonHash": "fnv1a64:4008719cf1ba1222",
+  "findings": []
+}

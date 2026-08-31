@@ -1,0 +1,12 @@
+{
+  "language": "punjabi",
+  "chapter": 22,
+  "sourceHash": "fnv1a64:da5cd7c1638f380e",
+  "lessonIds": [
+    "PA-W06-three-field-labels",
+    "PA-W06-three-field-cues",
+    "PA-W06-two-field-supported",
+    "PA-W06-three-field-supported"
+  ],
+  "tex": "punjabi/book/chapters/ch22-form-three-preparation.tex"
+}

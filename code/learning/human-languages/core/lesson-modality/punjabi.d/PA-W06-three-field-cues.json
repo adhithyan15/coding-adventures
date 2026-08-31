@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W06-three-field-cues",
+    "language": "punjabi",
+    "chapter": 22,
+    "sequence": 1400,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f91254c83ec1eac7",
+    "detachableSegments": [
+      "Script — one cue per field"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

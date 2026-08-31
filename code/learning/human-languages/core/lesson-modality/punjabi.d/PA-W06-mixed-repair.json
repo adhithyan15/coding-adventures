@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W06-mixed-repair",
+    "language": "punjabi",
+    "chapter": 23,
+    "sequence": 1470,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:51a983215bbcf404",
+    "detachableSegments": [
+      "Writing — one mixed repair"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

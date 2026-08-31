@@ -11325,6 +11325,104 @@ changelog changes. Those 94 paths add no package root, BUILD, manifest, build-
 tool contract, parity owner, or exact overlap with this tranche. The inventory
 remains unchanged and collision-free.
 
+### Post-PR #13569 refresh and Python dependency-hashing selection
+
+PR #13569 completed all 41 final-head checks acceptably with 34 successes, six
+expected skips, and one neutral result. Guarded squash auto-merge was enabled
+only after GitHub reported final head
+`eb3562b7fcbc065087e589b06960e16bf04f9b75` clean and mergeable, and GitHub
+merged it as `17efb090089afcb51c926d0fa549c8da556b8e08` at
+2026-08-31T01:17:28Z without a manual merge command. The Python portable
+source-hashing owner therefore advances to `merged` and the active PR is
+cleared.
+
+The exact-main schema-3 inventory remains collision-clean and identity-neutral:
+15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427
+all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880,
+731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown
+buckets. The 68 paths since the stored inventory revision belong only to the
+merged Punjabi/data and Python build-tool tranches. No package root, BUILD, or
+manifest topology changed, and parallel inventory, dependency, fixture, and
+live-PR audits found no newly eligible unowned package gap.
+
+The exact reference audit did expose a systematic build-tool gap before the
+next selection. Every inspected native engine still diverges from hashing v1
+when producing dependency digests: most concatenate digest text without
+framing package identities, while Haskell uses a named but non-SHA fallback
+frame. Nine engine-scoped dependency-hashing owners now follow the matching
+source-hashing owners; Lua's existing cache owner explicitly includes named/raw
+dependency and raw combined-digest framing; and a final aggregate depends on
+all eleven native engine owners. This classification adds ten owners and 20
+dependency edges before selection without widening the Python leaf.
+
+The dependency/leverage pass selects
+`build-tool-python-portable-dependency-hashing-conformance` on branch
+`codex/build-tool-python-portable-dependency-hashing-conformance`. Its sole
+prerequisite is merged. The bounded continuation replaces concatenated hex text
+with the language-neutral stream of sorted UTF-8 package identities and decoded
+32-byte SHA-256 digests, adds the raw package-plus-dependency combined digest,
+and consumes the shared hashing-cache fixtures directly. It preserves the
+existing graph closure and persisted cache representation; the separate hash
+comparisons remain equivalent for native invalidation. Six live PRs have zero
+exact overlap with the expected hasher, tests, README, changelog, state,
+roadmap, and root-changelog paths, and the target remote branch and prior PR
+were absent before the fresh clean worktree was created. At selection, the
+complete 605-owner/916-edge graph is unique, dependency-complete, and acyclic
+at 188 merged, 416 pending, and exactly one `in-progress` owner.
+
+The implementation keeps the existing transitive prerequisite closure and
+sorts its unique package identities. Each dependency contributes an unsigned
+64-bit big-endian UTF-8 identity length, the identity bytes, an unsigned
+64-bit big-endian value length of 32, and the decoded SHA-256 bytes. A pure
+combined-digest helper hashes the raw 32-byte package digest followed by the
+raw 32-byte dependency digest. Missing, uppercase, short, oversized, or
+non-hex dependency digests fail closed without echoing their content. The
+caller-owned graph and digest map are not mutated, and the native cache file
+continues comparing its separate package/dependency fields without migration.
+
+Tests-first execution failed at collection before the combined helper existed.
+Independent review then reproduced a real dependent-before-prerequisite
+failure in both one-pass CLI flows; a diamond regression failed before a
+shared two-pass helper repaired normal and plan-file execution. The final
+focused hasher/CLI suite passes 72 tests with four expected platform skips.
+The complete literal generic/Windows BUILD recipe passes 492 tests with four
+skips at 90.84% total coverage and 89% hasher coverage on Python 3.13.14; the
+two BUILD fronts are byte-identical. Hasher source/tests pass Ruff, direct
+hasher MyPy, compileall, and Bandit; package-wide CLI Ruff/MyPy retain inherited
+baseline findings outside the changed helper. The neutral schema and runner suites pass
+22 and 63 tests, and `validate-corpus` accepts 121 cases and 283 files across
+16 implementations, 15 established lanes, and 12 front doors. The Go
+reference passes module verification, all tests, vet, and trimpath build. A
+freshly compiled binary evaluates 45 Starlark BUILD files, validates five
+reviewed orphan exemptions, forces all 495 Python packages, and selects exactly
+one affected package for the branch diff. The Python build tool also hashes and
+plans all 495 Python packages without a missing-digest failure. Capability, Haskell, OCaml-lock,
+broker, backend-parity, and package-report suites pass 118 tests with 12
+expected skips. Isolated sdist/wheel builds, uv compatibility, pip audit, the
+collision inventory, the 605-owner/916-edge DAG, and diff hygiene pass.
+
+Before publication, the branch rebased conflict-free onto exact `origin/main`
+`024bac642e04eab0c00395aa7a009b85eef452bb`. Intervening PR #13570 changed
+existing TaskApp workflow, test, and changelog surfaces, while PR #13567 changed
+existing Spanish curriculum and generated learning artifacts. Their 39 paths
+have zero exact overlap with this nine-path tranche and add no package root,
+BUILD, manifest, dependency, build-tool contract, or parity-owner topology.
+Post-rebase package tests, neutral schema/runner/corpus checks, Go reference
+tests/vet/build, lint/type/security checks, schema-3 inventory, and state DAG
+remain acceptable. Two independent final reviewers clear the repaired
+discovery-order behavior, exact fixture framing, caller immutability, authority
+boundary, inventory, and documentation.
+
+Ready-for-review PR #13574 opened from clean validated head
+`204de42860615f168a4da7c46fea3a53ed79deec` after a normal first push. The
+target branch and prior PR were absent before publication, the exact nine-path
+diff was clean, five live PRs had zero exact overlap, and dependency, BUILD,
+manifest, package-root, and secret-pattern checks were clean. GitHub reports
+the PR non-draft and mergeable with required checks queued or in progress;
+auto-merge remains disabled until the final head is conflict-free and every
+required check is terminal and acceptable. The ownership graph therefore has
+188 merged, 416 pending, and exactly one `pr-open` owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

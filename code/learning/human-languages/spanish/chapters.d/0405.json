@@ -1,0 +1,20 @@
+{
+  "chapter": 405,
+  "title": "Photography, Photos and Permission",
+  "label": "ch:fotografia-foto-permitir",
+  "canDo": "I can distinguish a photo from photography and understand whether taking photographs is permitted.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS",
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C405-images-recall-2",
+    "kind": "production",
+    "summary": "Retrieve the three image words across an ID form and a public sign.",
+    "assesses": [
+      "ES-LEX-FOTOGRAFIA",
+      "ES-LEX-FOTO",
+      "ES-LEX-PERMITIR"
+    ]
+  }
+}

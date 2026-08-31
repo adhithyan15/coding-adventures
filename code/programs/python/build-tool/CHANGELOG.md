@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.16] - 2026-08-30
+
+### Fixed
+
+- **Portable dependency digests**: transitive dependency hashes now sort and
+  frame each UTF-8 package identity with the decoded 32-byte SHA-256 digest,
+  matching the language-neutral hashing-v1 oracle instead of concatenating
+  digest hex strings.
+- **Portable combined digests**: package and dependency digests can now be
+  combined from their raw 32-byte values. Missing or noncanonical dependency
+  hashes fail closed with stable diagnostics that do not echo digest content.
+- **Shared oracle coverage**: the missing, hit, and corrupt hashing-cache
+  fixtures now directly verify exact empty/dependency and combined digests,
+  with adversarial coverage for ordering, identities, ambiguous boundaries,
+  invalid values, and caller-owned inputs.
+- **Discovery-order independence**: normal and plan-file CLI execution now
+  compute the complete package-digest map before dependency hashing, so a
+  dependent that sorts before its prerequisites still receives every required
+  digest.
+
 ## [0.3.15] - 2026-08-30
 
 ### Fixed

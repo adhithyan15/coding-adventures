@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W06-spacing-repair",
+    "language": "punjabi",
+    "chapter": 23,
+    "sequence": 1450,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9cbda3972c0d7da7",
+    "detachableSegments": [
+      "Writing — one boundary repair"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

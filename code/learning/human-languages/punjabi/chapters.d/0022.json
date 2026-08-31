@@ -1,0 +1,20 @@
+{
+  "chapter": 22,
+  "title": "Three Known Lines, One Small Form",
+  "label": "ch:pa-form-three-preparation",
+  "canDo": "I can bring the known language, residence, and work fields together with their closed banks still visible.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-W06-three-field-supported",
+    "kind": "production",
+    "summary": "The learner assembles three supported lines only after label placement, cue selection, and a two-line bridge have each received a bounded pass; this supported work is not independent-writing evidence.",
+    "assesses": [
+      "PA-FORM-THREE-LABEL-ORDER-01",
+      "PA-FORM-THREE-CUE-SELECTION-01",
+      "PA-FORM-THREE-TWO-LINE-SUPPORTED-01",
+      "PA-FORM-THREE-SUPPORTED-01"
+    ]
+  }
+}
