@@ -12217,8 +12217,11 @@ selection-blocked host and credential reviews. Host review waits for metadata,
 token-wire, loopback, and audit-continuity contracts, while credential custody
 also waits for the host authority review.
 
-Before publication, the two-commit branch rebased conflict-free onto exact
-`origin/main` `d2dbd94aeb4a8975ab66f46663164291333f2e19`. The refreshed
+Before publication, the three-commit branch rebased conflict-free onto exact
+`origin/main` `8889cb6028cd50f36d275b60c316ca2228d772f4`. The final
+intervening W31 merge changes only the established `wasm-conformance` and
+`wasm-wast-parser` roots plus their spec and tests, adding no package identity
+or build-tool marker. The refreshed
 collision-checked schema-3 inventory records 15 established lanes, 1,393
 implementation identities, 4,607 implementation slots, and 1,432 all-reported
 identities. Its completion bands are 175 packages with 265 missing slots,
