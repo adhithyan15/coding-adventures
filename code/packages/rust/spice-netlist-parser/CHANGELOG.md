@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Lower finite JFET `TCV` threshold-voltage temperature coefficients.
 - Lower valid JFET `RS` source resistances and reject invalid inputs.
 - Lower valid JFET `RD` drain resistances and reject invalid inputs.
 - Lower valid JFET `GDSNOI` channel-noise coefficients and reject invalid
