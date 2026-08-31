@@ -1,0 +1,13 @@
+{
+  "id": "PA-PATH-028",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "PA-R27-ear-mouth-r4",
+    "PA-R27-nose-heart-r4"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-033-A1-BODY-WORDS-R4"
+  ],
+  "after": []
+}

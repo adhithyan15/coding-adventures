@@ -1,0 +1,225 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 27,
+  "title": "Ear, Mouth, Nose, and Heart at R4",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:401c0457ab6de01e",
+  "lessons": [
+    {
+      "id": "PA-R27-ear-mouth-r4",
+      "sequence": 1610,
+      "title": "Ear and mouth return at R4",
+      "headword": "ਕੰਨ · ਮੂੰਹ",
+      "romanization": "kann · mūnh",
+      "gloss": "retrieve ear and mouth with their unrelated lookalike and worn-consonant histories at R4",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5e2274a3e27ba6c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 7,
+              "perItem": false,
+              "source": "[PAUSE 7s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say kann and mūnh from memory: ear, mouth. Keep the two meanings separate before looking at the script."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read, then stop."
+            },
+            {
+              "kind": "speech",
+              "text": "Read ਕੰਨ, ਮੂੰਹ once. This lesson measures listening, speech, and recognition. It does not award independent Gurmukhi writing evidence."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-R27-ear-mouth-r4-meaning",
+              "prompt": "Say ear and mouth in Punjabi. Which word only sounds as though it belongs with karnā, to do?",
+              "assesses": [
+                "PA-LEX-KANN",
+                "PA-CONTRAST-KANN-KARNA",
+                "PA-LEX-MUNH"
+              ],
+              "responseSeconds": 45,
+              "acceptedResponses": [
+                "kann / mūnh; kann is unrelated to karnā",
+                "kann / munh; kann is unrelated to karna",
+                "ਕੰਨ ਮੂੰਹ; ਕੰਨ is unrelated to ਕਰਨਾ"
+              ],
+              "feedback": {
+                "correct": "Both meanings returned, and kann stayed separate from karnā.",
+                "incorrect": "Repair one link at a time: kann is ear, mūnh is mouth, and kann is not related to karnā."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-R27-ear-mouth-r4-history",
+              "prompt": "Match the old histories: karṇa without any link to karnā; mukha whose kh weakened and disappeared into a level high tone.",
+              "assesses": [
+                "PA-CONTRAST-KANN-KARNA",
+                "PA-ETYMON-MUNH-MUKHA"
+              ],
+              "responseSeconds": 45,
+              "acceptedResponses": [
+                "kann — karṇa, unrelated to karnā; mūnh — mukha, with kh lost into level high tone",
+                "kann - karna ear root not do; munh - mukha lost kh high tone"
+              ],
+              "feedback": {
+                "correct": "The false resemblance and the real sound change stayed distinct.",
+                "incorrect": "Kann belongs with karṇa, ear, not karnā, do. Mūnh comes from mukha after kh weakened and disappeared."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say both meanings and one history for each, then stop. No new body word follows."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R27-nose-heart-r4",
+      "sequence": 1620,
+      "title": "Nose and heart return at R4",
+      "headword": "ਨੱਕ · ਦਿਲ",
+      "romanization": "nakk · dil",
+      "gloss": "retrieve nose and heart with their inherited and borrowed histories at R4",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fea8b00d66e6fb5b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 7,
+              "perItem": false,
+              "source": "[PAUSE 7s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say nakk and dil from memory: nose, heart. Hold the doubled consonant in the first word."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read, then stop."
+            },
+            {
+              "kind": "speech",
+              "text": "Read ਨੱਕ, ਦਿਲ once. This lesson measures listening, speech, and recognition. It does not award independent Gurmukhi writing evidence."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-R27-nose-heart-r4-meaning",
+              "prompt": "Say nose and heart in Punjabi, in that order.",
+              "assesses": [
+                "PA-LEX-NAKK",
+                "PA-LEX-DIL"
+              ],
+              "responseSeconds": 35,
+              "acceptedResponses": [
+                "nakk / dil",
+                "nakk dil",
+                "ਨੱਕ ਦਿਲ"
+              ],
+              "feedback": {
+                "correct": "Nose and heart returned in the requested order.",
+                "incorrect": "Repair only the missed link: nakk is nose; dil is heart."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-R27-nose-heart-r4-history",
+              "prompt": "Which word is inherited and cognate with English nose, and which is a Persian loan with a deeper shared ancestor behind English heart?",
+              "assesses": [
+                "PA-ETYMON-NAKK-NOSE",
+                "PA-ETYMON-DIL-HEART"
+              ],
+              "responseSeconds": 45,
+              "acceptedResponses": [
+                "nakk is the inherited nose cognate; dil is the persian heart loan",
+                "nakk inherited nose; dil persian heart",
+                "ਨੱਕ inherited; ਦਿਲ persian loan"
+              ],
+              "feedback": {
+                "correct": "The inherited nose word and borrowed heart word kept their different routes.",
+                "incorrect": "Nakk is inherited and cognate with nose. Dil came through Persian, though it shares a deeper ancestor with heart."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say both meanings and contrast their routes once: inherited nakk, borrowed dil. Then stop."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

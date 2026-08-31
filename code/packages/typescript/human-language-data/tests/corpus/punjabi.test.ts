@@ -15,14 +15,14 @@ it("pins Punjabi continuity", () => expectLanguageContinuity("punjabi"));
 it("pins Punjabi modality", () => expectLanguageModality("punjabi"));
 it("pins Punjabi lesson-content budgets", () =>
   expectLanguageLessonBudgets("punjabi", {
-    lessons: 140,
+    lessons: 142,
     idioms: 4,
     senses: 3,
     cultureClaims: 7,
     unitPrefix: "PA",
   }));
 
-it("keeps Punjabi's 150-row session map aligned with canonical order", () => {
+it("keeps Punjabi's 152-row session map aligned with canonical order", () => {
   const ordered = loadTrackLessons("punjabi").sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
   );
@@ -37,8 +37,8 @@ it("keeps Punjabi's 150-row session map aligned with canonical order", () => {
       lessonId: match[3]!.trim(),
     }),
   );
-  expect(rows).toHaveLength(150);
-  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 150 }, (_, index) => index + 1));
+  expect(rows).toHaveLength(152);
+  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 152 }, (_, index) => index + 1));
   expect(rows.map((row) => row.lessonId)).toEqual(
     ordered.map((lesson) => lesson.realization.lessonId),
   );
@@ -459,7 +459,7 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   ]);
   const report = measureContinuity(ordered);
   expect(report.reinforcement.filter((defect) => chapter3Atoms.has(defect.atom))).toEqual([]);
-  expect(report.summary.missedByWindow).toEqual({ R1: 43, R2: 87, R3: 130, R4: 53 });
+  expect(report.summary.missedByWindow).toEqual({ R1: 43, R2: 87, R3: 132, R4: 48 });
 });
 
 it("services Punjabi's three-field R4 debt without moving the boundary forward", () => {
@@ -471,6 +471,8 @@ it("services Punjabi's three-field R4 debt without moving the boundary forward",
     "PA-R26-three-repair-r2",
     "PA-R26-work-build-r3",
     "PA-R26-work-control-r3",
+    "PA-R27-ear-mouth-r4",
+    "PA-R27-nose-heart-r4",
   ]);
   const orderedAtR4 = ordered.filter(
     (lesson) => !lowerWindowBridgeIds.has(lesson.realization.lessonId),
@@ -571,6 +573,13 @@ it("services the exact Punjabi R1-R3 debt exposed by the R4 bridge", () => {
   const ordered = loadTrackLessons("punjabi").sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
   );
+  const bodyR4BridgeIds = new Set([
+    "PA-R27-ear-mouth-r4",
+    "PA-R27-nose-heart-r4",
+  ]);
+  const orderedBeforeBodyR4 = ordered.filter(
+    (lesson) => !bodyR4BridgeIds.has(lesson.realization.lessonId),
+  );
   const bridgeIds = [
     "PA-R23-three-no-model-r1",
     "PA-R26-three-repair-r2",
@@ -578,9 +587,9 @@ it("services the exact Punjabi R1-R3 debt exposed by the R4 bridge", () => {
     "PA-R26-work-control-r3",
   ];
   const bridge = bridgeIds.map((id) =>
-    ordered.find((lesson) => lesson.realization.lessonId === id)!,
+    orderedBeforeBodyR4.find((lesson) => lesson.realization.lessonId === id)!,
   );
-  expect(bridge.map((lesson) => ordered.indexOf(lesson))).toEqual([138, 147, 148, 149]);
+  expect(bridge.map((lesson) => orderedBeforeBodyR4.indexOf(lesson))).toEqual([138, 147, 148, 149]);
   expect(bridge.every((lesson) => Number(lesson.frontmatter["duration.max_seconds"]) <= 220)).toBe(true);
   expect(bridge.every((lesson) => lesson.frontmatter["introduces.knowledge"]?.length === 0)).toBe(true);
   expect(bridge.every((lesson) => lesson.frontmatter.skills?.includes("reading"))).toBe(true);
@@ -608,7 +617,7 @@ it("services the exact Punjabi R1-R3 debt exposed by the R4 bridge", () => {
     "R3|PA-FORM-THREE-LABEL-ORDER-01",
     "R3|PA-FORM-THREE-CUE-SELECTION-01",
   ]);
-  const report = measureContinuity(ordered);
+  const report = measureContinuity(orderedBeforeBodyR4);
   const stillMissing = report.reinforcement.flatMap((defect) =>
     defect.missed
       .filter((window) => servicedPairs.has(`${window}|${defect.atom}`))
@@ -633,4 +642,71 @@ it("services the exact Punjabi R1-R3 debt exposed by the R4 bridge", () => {
       .map((defect) => defect.atom)
       .sort(),
   ).toEqual([...bodyBoundaryAtoms].sort());
+});
+
+it("services the exact Punjabi body-word R4 debt exposed by the R1-R3 bridge", () => {
+  const ordered = loadTrackLessons("punjabi").sort(
+    (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
+  );
+  const bridgeIds = [
+    "PA-R27-ear-mouth-r4",
+    "PA-R27-nose-heart-r4",
+  ];
+  const bridge = bridgeIds.map((id) =>
+    ordered.find((lesson) => lesson.realization.lessonId === id)!,
+  );
+  expect(bridge.map((lesson) => ordered.indexOf(lesson))).toEqual([150, 151]);
+  expect(bridge.every((lesson) => Number(lesson.frontmatter["duration.max_seconds"]) <= 210)).toBe(true);
+  expect(bridge.every((lesson) => lesson.frontmatter["introduces.knowledge"]?.length === 0)).toBe(true);
+  expect(bridge.every((lesson) => lesson.frontmatter.skills?.includes("listening"))).toBe(true);
+  expect(bridge.every((lesson) => lesson.frontmatter.skills?.includes("speaking"))).toBe(true);
+  expect(bridge.every((lesson) => lesson.frontmatter.skills?.includes("reading"))).toBe(true);
+  expect(bridge.every((lesson) => !lesson.frontmatter.skills?.includes("writing"))).toBe(true);
+  expect(bridge.every((lesson) => !lesson.body.includes("hl-writing-stage"))).toBe(true);
+  expect(bridge.every((lesson) => lesson.body.includes("does not award independent Gurmukhi writing evidence"))).toBe(true);
+  expect(bridge.flatMap((lesson) => compileLessonActivities(lesson.blocks))).toHaveLength(4);
+
+  const servicedAtoms = new Set([
+    "PA-LEX-KANN",
+    "PA-CONTRAST-KANN-KARNA",
+    "PA-LEX-MUNH",
+    "PA-ETYMON-MUNH-MUKHA",
+    "PA-LEX-NAKK",
+    "PA-ETYMON-NAKK-NOSE",
+    "PA-LEX-DIL",
+    "PA-ETYMON-DIL-HEART",
+  ]);
+  const practised = new Set(
+    bridge.flatMap((lesson) => lesson.frontmatter["practises.knowledge"] ?? []),
+  );
+  expect([...servicedAtoms].every((atom) => practised.has(atom))).toBe(true);
+
+  const report = measureContinuity(ordered);
+  expect(
+    report.reinforcement.filter(
+      (defect) => servicedAtoms.has(defect.atom) && defect.missed.includes("R4"),
+    ),
+  ).toEqual([]);
+  expect(report.summary.missedByWindow).toEqual({ R1: 43, R2: 87, R3: 132, R4: 48 });
+
+  const before = measureContinuity(
+    ordered.filter((lesson) => !bridgeIds.includes(lesson.realization.lessonId)),
+  );
+  const beforePairs = new Set(
+    before.reinforcement.flatMap((defect) =>
+      defect.missed.map((window) => `${window}|${defect.atom}`),
+    ),
+  );
+  const afterPairs = new Set(
+    report.reinforcement.flatMap((defect) =>
+      defect.missed.map((window) => `${window}|${defect.atom}`),
+    ),
+  );
+  expect([...afterPairs].filter((pair) => !beforePairs.has(pair)).sort()).toEqual([
+    "R3|PA-FORM-THREE-SUPPORTED-01",
+    "R3|PA-FORM-THREE-TWO-LINE-SUPPORTED-01",
+    "R4|PA-ETYMON-SIR-HORN",
+    "R4|PA-LEX-SIR",
+    "R4|PA-SCRIPT-NA-01",
+  ]);
 });

@@ -1,0 +1,20 @@
+{
+  "chapter": 27,
+  "title": "Ear, Mouth, Nose, and Heart at R4",
+  "label": "ch:pa-body-words-r4",
+  "canDo": "I can retrieve four already-taught Punjabi body words and keep their sound and source histories distinct at long distance.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PA-R27-nose-heart-r4",
+    "kind": "task",
+    "summary": "The learner retrieves nose and heart and distinguishes an inherited English cognate from a Persian loan with a deeper shared ancestor, without claiming writing evidence.",
+    "assesses": [
+      "PA-LEX-NAKK",
+      "PA-ETYMON-NAKK-NOSE",
+      "PA-LEX-DIL",
+      "PA-ETYMON-DIL-HEART"
+    ]
+  }
+}

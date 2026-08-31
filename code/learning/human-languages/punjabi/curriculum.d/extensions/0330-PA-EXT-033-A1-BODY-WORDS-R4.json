@@ -1,0 +1,14 @@
+{
+  "id": "PA-EXT-033-A1-BODY-WORDS-R4",
+  "stage": "A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can retrieve the already-taught Punjabi words for ear, mouth, nose, and heart at R4 distance while keeping their sound and source histories distinct.",
+  "prerequisites": [
+    "PA-EXT-032-A1-FORM-R2-R3"
+  ],
+  "lessons": [
+    "PA-R27-ear-mouth-r4",
+    "PA-R27-nose-heart-r4"
+  ]
+}
