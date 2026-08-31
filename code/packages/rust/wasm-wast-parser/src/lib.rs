@@ -90,6 +90,25 @@ pub enum WastParseError {
     /// through this error) failed to decode as a real `.wasm` binary via
     /// `wasm-module-parser`.
     EmbeddedBinaryModuleError { pos: usize, message: String },
+    /// A `(@...)` **annotation** form (WAT's custom out-of-band tooling
+    /// metadata syntax — source maps, etc.) whose id is empty: bare `(@)`,
+    /// `(@ )`, `(@ x)` (whitespace between `@` and what should be the id
+    /// text), or `(@"")` (an adjacent but empty quoted id). Per the real
+    /// spec grammar, the id must immediately follow `@` with no
+    /// intervening whitespace, and must be non-empty — see
+    /// `sexpr::strip_annotations`'s own doc comment for the full
+    /// annotation-skipping design this error is one small part of.
+    EmptyAnnotationId { pos: usize },
+    /// A raw (unescaped) control character or DEL (byte `< 0x20` or
+    /// `0x7F`) appeared literally inside a `"..."` string literal. WAT's
+    /// own `stringchar` grammar requires such bytes to be written as an
+    /// escape (`\t`, `\n`, or the raw-byte `\XX` hex form) — a literal
+    /// unescaped newline, tab, or NUL inside a string is malformed. Only
+    /// bytes the tokenizer sees OUTSIDE of any `\`-escape trigger this;
+    /// `"\00"`/`"\0a"` (the hex-byte escape) are unaffected, since that's
+    /// exactly the mechanism `assert_malformed` fixtures use to embed
+    /// otherwise-illegal bytes on purpose.
+    IllegalStringCharacter { pos: usize, byte: u8 },
 }
 
 impl std::fmt::Display for WastParseError {
@@ -136,6 +155,12 @@ impl std::fmt::Display for WastParseError {
             }
             WastParseError::EmbeddedBinaryModuleError { pos, message } => {
                 write!(f, "at byte {pos}: embedded (module binary ...) failed to decode: {message}")
+            }
+            WastParseError::EmptyAnnotationId { pos } => {
+                write!(f, "at byte {pos}: empty annotation id")
+            }
+            WastParseError::IllegalStringCharacter { pos, byte } => {
+                write!(f, "at byte {pos}: illegal unescaped character {byte:#04x} inside a string literal")
             }
         }
     }

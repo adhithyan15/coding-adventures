@@ -238,7 +238,49 @@ pub enum Directive {
 /// comment for the full rationale.
 pub fn parse_script(src: &str) -> Result<Vec<Directive>, WastParseError> {
     let exprs = parse_source(src)?;
+    // "Inline module" shorthand: a whole `.wast` SCRIPT (not just a `module
+    // quote` body, which `module.rs::parse_module` already handles via its
+    // own "abbreviated module" support -- see that function's doc comment)
+    // consisting entirely of bare module FIELDS, with no enclosing
+    // `(module ...)` and no directives at all. The real corpus's own
+    // `inline-module.wast` is exactly this: `(func) (memory 0) (func
+    // (export "f"))` at the top level, nothing else. Recognized by
+    // checking every top-level item's head keyword is a module-field
+    // keyword (never a script-directive keyword like `module`/`register`/
+    // `assert_*`/`invoke`/`get`) -- if EVERY item qualifies, synthesize one
+    // `(module <fields...>)` wrapping all of them and parse that as a
+    // single `Directive::Module`, exactly as if the file had written the
+    // wrapper explicitly. A script that's already directive-shaped (every
+    // currently-vendored file) is completely unaffected: `all()` on an
+    // empty iterator is vacuously true, so this only fires when the script
+    // has at least one item and none of them look like a real directive.
+    if !exprs.is_empty() && exprs.iter().all(is_bare_module_field) {
+        let synthetic_module = SExpr::List(
+            std::iter::once(SExpr::Atom("module".to_string(), 0)).chain(exprs).collect(),
+            0,
+        );
+        return Ok(vec![Directive::Module {
+            id: None,
+            result: Box::new(build_module_directive(&synthetic_module).map_err(|e| e.to_string())),
+        }]);
+    }
     exprs.iter().map(parse_directive).collect()
+}
+
+/// Does this top-level item look like a `.wat` module FIELD (`type`,
+/// `import`, `func`, `table`, `memory`, `global`, `export`, `start`,
+/// `elem`, `data`, `tag`) rather than a script-directive keyword? Used
+/// only to detect the "inline module" shorthand above -- real directive
+/// keywords (`module`, `register`, `invoke`, `get`, every `assert_*`)
+/// never overlap with this set, so there's no ambiguity either way.
+fn is_bare_module_field(e: &SExpr) -> bool {
+    matches!(
+        e.as_list().and_then(|items| items.first()).and_then(|i| i.as_atom()),
+        Some(
+            "type" | "import" | "func" | "table" | "memory" | "global" | "export" | "start"
+                | "elem" | "data" | "tag"
+        )
+    )
 }
 
 fn parse_directive(e: &SExpr) -> Result<Directive, WastParseError> {
@@ -638,6 +680,134 @@ mod tests {
         let dirs = parse_script("(module (func (result i32) (i32.const 42)))").unwrap();
         assert_eq!(dirs.len(), 1);
         assert!(matches!(dirs[0], Directive::Module { id: None, .. }));
+    }
+
+    /// "Inline module" shorthand -- the real corpus's own `inline-
+    /// module.wast` is a whole `.wast` FILE with no `(module ...)`
+    /// wrapper at all, just bare fields at the top level.
+    #[test]
+    fn a_whole_script_of_bare_module_fields_is_one_implicit_module() {
+        let dirs = parse_script(r#"(func) (memory 0) (func (export "f"))"#).unwrap();
+        assert_eq!(dirs.len(), 1);
+        match &dirs[0] {
+            Directive::Module { id: None, result } => {
+                let module = result.as_ref().as_ref().expect("inline module must build");
+                assert_eq!(module.functions.len(), 2);
+                assert_eq!(module.memories.len(), 1);
+                assert_eq!(module.exports.len(), 1);
+                assert_eq!(module.exports[0].name, "f");
+            }
+            other => panic!("expected an implicit Directive::Module, got {other:?}"),
+        }
+    }
+
+    /// A script that's already directive-shaped (the overwhelming common
+    /// case, every currently-vendored file) must be completely unaffected
+    /// by the inline-module fallback -- it only fires when EVERY top-level
+    /// item looks like a bare field, never when even one real directive is
+    /// present.
+    #[test]
+    fn a_script_with_a_real_module_directive_is_not_treated_as_inline_fields() {
+        let dirs = parse_script(r#"(module (func $f (export "f") (result i32) (i32.const 1))) (assert_return (invoke "f") (i32.const 1))"#).unwrap();
+        assert_eq!(dirs.len(), 2);
+        assert!(matches!(dirs[0], Directive::Module { .. }));
+        assert!(matches!(dirs[1], Directive::AssertReturn { .. }));
+    }
+
+    #[test]
+    fn an_empty_script_parses_to_zero_directives() {
+        assert_eq!(parse_script("").unwrap(), vec![]);
+        assert_eq!(parse_script("   ;; just a comment\n").unwrap(), vec![]);
+    }
+
+    // ══════════════════════════════════════════════════════════════════════
+    // Annotations -- `(@id ...)` custom out-of-band tooling syntax, must be
+    // silently ignored wherever an ordinary form is allowed. See
+    // `sexpr::strip_annotations`'s own doc comment for the design; these
+    // tests exercise it end-to-end through the real script/module parsing
+    // entry points, mirroring shapes from the real corpus's own
+    // `annotations.wast`.
+    // ══════════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn a_bare_annotation_at_top_level_is_silently_skipped() {
+        let dirs = parse_script(r#"(@a) (module (func))"#).unwrap();
+        assert_eq!(dirs.len(), 1);
+        assert!(matches!(dirs[0], Directive::Module { .. }));
+    }
+
+    #[test]
+    fn annotations_interspersed_through_a_whole_module_do_not_break_parsing() {
+        // Mirrors annotations.wast's own densely-annotated module shape --
+        // an annotation between the `module` keyword and the name, between
+        // every field, and inside `export`/`func`/`param`/`result`/
+        // `block`/instruction positions.
+        let src = r#"
+            ((@a) module (@a) $m (@a)
+              ((@a) import (@a) "spectest" (@a) "global_i32" (@a)
+                ((@a) global (@a) $g (@a) i32 (@a)) (@a)
+              ) (@a)
+              ((@a) func (@a) $f (@a)
+                ((@a) export (@a) "f" (@a)) (@a)
+                ((@a) param (@a) i32 (@a)) (@a)
+                ((@a) result (@a) i32 (@a)) (@a)
+                ((@a) i32.add (@a)
+                  ((@a) local.get (@a) 0 (@a)) (@a)
+                  ((@a) i32.const (@a) 1 (@a))
+                )
+              ) (@a)
+            )
+        "#;
+        let dirs = parse_script(src).unwrap();
+        assert_eq!(dirs.len(), 1);
+        match &dirs[0] {
+            Directive::Module { result, .. } => {
+                let module = result.as_ref().as_ref().expect("densely-annotated module must still build");
+                assert_eq!(module.imports.len(), 1);
+                assert_eq!(module.functions.len(), 1);
+                assert_eq!(module.exports.len(), 1);
+                assert_eq!(module.exports[0].name, "f");
+            }
+            other => panic!("expected Directive::Module, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn annotation_with_an_adjacent_quoted_id_is_accepted() {
+        // `(@"a")` -- the id comes from an immediately-adjacent string, no
+        // intervening whitespace -- one of annotations.wast's own valid
+        // (non-`assert_malformed`) shapes.
+        let dirs = parse_script(r#"(module (@"a") (func))"#).unwrap();
+        assert_eq!(dirs.len(), 1);
+        assert!(matches!(dirs[0], Directive::Module { .. }));
+    }
+
+    #[test]
+    fn bare_at_sign_with_no_id_is_malformed() {
+        assert!(crate::module::parse_module("(@)").is_err());
+    }
+
+    #[test]
+    fn at_sign_followed_by_whitespace_then_an_id_is_malformed() {
+        // The id must be IMMEDIATELY adjacent to `@` -- whitespace in
+        // between means there's no id at all, per annotations.wast's own
+        // `(@ x)` case.
+        assert!(crate::module::parse_module("(@ x)").is_err());
+    }
+
+    #[test]
+    fn empty_quoted_annotation_id_is_malformed() {
+        assert!(crate::module::parse_module(r#"(@"")"#).is_err());
+    }
+
+    #[test]
+    fn nested_annotation_forms_are_dropped_as_a_unit() {
+        // The annotation's own internal grammar is irrelevant once a list
+        // is recognized as an annotation -- everything inside, however
+        // strange, is simply discarded whole.
+        let dirs = parse_script(r#"(module (@a x-y $yz "aa" -2 0.3 0x3 (bla) () ("aa" a)) (func))"#).unwrap();
+        assert_eq!(dirs.len(), 1);
+        assert!(matches!(dirs[0], Directive::Module { .. }));
     }
 
     /// Task #93 (linking.wast): a module's own `(module $Mf ...)` name must
