@@ -2617,6 +2617,11 @@ fn parse_element(
             if !mobility_temperature_exponent.is_finite() {
                 return Err(NetlistParseError::new("JFET BEX must be finite"));
             }
+            let mobility_temperature_coefficient = model.params.get("BETATCE").copied();
+            if mobility_temperature_coefficient.is_some_and(|coefficient| !coefficient.is_finite())
+            {
+                return Err(NetlistParseError::new("JFET BETATCE must be finite"));
+            }
             let mut jfet = Jfet::with_model_and_capacitance(
                 name,
                 &fields[1],
@@ -2648,6 +2653,7 @@ fn parse_element(
             jfet.nominal_temperature_kelvin =
                 nominal_temperature.map(|temperature| *temperature + 273.15);
             jfet.mobility_temperature_exponent = mobility_temperature_exponent;
+            jfet.mobility_temperature_coefficient = mobility_temperature_coefficient;
             jfet.doping_tail_parameter = doping_tail_parameter;
             Ok(Element::Jfet(jfet))
         }
