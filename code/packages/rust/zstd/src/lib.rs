@@ -2557,8 +2557,10 @@ pub fn compress(data: &[u8]) -> Vec<u8> {
 ///   Repeat, for each of the LL/OF/ML fields
 /// - Repeated offsets (R1/R2/R3)
 ///
-/// Not supported: dictionaries (a frame with a Dictionary_ID is parsed but
-/// the dictionary itself is not applied), skippable frames, and multiple
+/// Not supported, and reported as such rather than mis-decoded: frames
+/// compressed against a dictionary (a non-zero `Dictionary_ID` is an
+/// explicit error, since the dictionary pre-seeds match history and all four
+/// entropy tables). Also unsupported: skippable frames, and multiple
 /// concatenated frames — only the first frame in the buffer is decoded.
 ///
 /// # Errors
@@ -2630,8 +2632,36 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
     }
 
     // ── Dict ID ──────────────────────────────────────────────────────────
+    //
+    // A frame compressed against a dictionary is NOT decodable without that
+    // dictionary, and the failure is not merely "some bytes are missing":
+    // the dictionary pre-seeds the match history, the three sequence FSE
+    // tables and the Huffman table, so the frame's very first block may
+    // legitimately use `Repeat_Mode` or a `Treeless_Literals_Block` with no
+    // preceding block to inherit from, and its first offsets may point back
+    // into dictionary content that was never in this frame.
+    //
+    // Skipping the field and pressing on — as this decoder used to — turns
+    // that into whatever error the missing state happens to trip first (in
+    // practice a baffling "offset table uses Repeat_Mode but no previous
+    // table exists in this frame"), or, on a frame that happens not to trip
+    // one, into silently wrong output. Both are worse than saying what is
+    // actually true, so this is checked and reported explicitly.
     let dict_id_bytes = [0usize, 1, 2, 4][dict_flag as usize];
-    pos += dict_id_bytes; // skip dict ID (we don't support custom dicts)
+    if pos + dict_id_bytes > data.len() {
+        return Err("truncated Dictionary_ID".into());
+    }
+    let mut dict_id: u32 = 0;
+    for i in 0..dict_id_bytes {
+        dict_id |= (data[pos + i] as u32) << (8 * i);
+    }
+    pos += dict_id_bytes;
+    // Dictionary_ID 0 means "no dictionary" even when the field is present.
+    if dict_id != 0 {
+        return Err(format!(
+            "frame requires dictionary {dict_id}; dictionaries are not supported"
+        ));
+    }
 
     // ── Frame Content Size ───────────────────────────────────────────────
     // We read but don't validate FCS (we trust the blocks to be correct).
@@ -3994,6 +4024,41 @@ mod tests {
         // the payload length is undefined.
         block = vec![0x00, 0x01, 0x00, 0x00];
         assert!(decompress(&frame(&block)).is_err());
+    }
+
+    #[test]
+    fn dictionary_frames_are_refused_by_name() {
+        // A frame carrying a non-zero Dictionary_ID cannot be decoded
+        // without that dictionary, because the dictionary pre-seeds the
+        // match history AND all four entropy tables — so such a frame may
+        // legitimately open with Repeat_Mode tables or a Treeless literals
+        // block. Pressing on regardless produced a baffling "offset table
+        // uses Repeat_Mode but no previous table exists in this frame", or
+        // on a luckier frame, silently wrong bytes.
+        //
+        // Header: magic, FHD 0x03 (Single_Segment_Flag clear so a
+        // Window_Descriptor follows; FCS_Field_Size 0 so no content size;
+        // Dict_ID_Flag 3 = a 4-byte Dictionary_ID), then the descriptor and
+        // the dictionary ID, in that wire order.
+        let mut frame = MAGIC.to_le_bytes().to_vec();
+        frame.push(0x03);
+        frame.push(0x40); // Window_Descriptor
+        frame.extend_from_slice(&0xDEAD_BEEFu32.to_le_bytes());
+        frame.extend_from_slice(&[0x01, 0x00, 0x00]); // an empty last raw block
+        let err = decompress(&frame).unwrap_err();
+        assert!(
+            err.contains("dictionary") && err.contains("3735928559"),
+            "a dictionary frame must be refused by name, got: {err}"
+        );
+
+        // A Dictionary_ID field that is PRESENT but zero means "no
+        // dictionary" and must still decode.
+        let mut frame = MAGIC.to_le_bytes().to_vec();
+        frame.push(0x21); // single segment, 1-byte FCS, 1-byte Dict_ID
+        frame.push(0x00); // Dictionary_ID = 0
+        frame.push(0x00); // Frame_Content_Size = 0
+        frame.extend_from_slice(&[0x01, 0x00, 0x00]); // empty last raw block
+        assert_eq!(decompress(&frame).unwrap(), Vec::<u8>::new());
     }
 
     #[test]

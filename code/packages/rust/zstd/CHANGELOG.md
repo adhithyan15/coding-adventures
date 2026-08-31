@@ -101,6 +101,16 @@ implement.
 - Literals `Regenerated_Size` is capped at the 128 KB block maximum, which
   bounds both the allocation and the expansion an `RLE_Literals_Block` can
   claim from a single payload byte.
+- **A frame with a non-zero `Dictionary_ID` is now refused by name.** The
+  Dictionary_ID field used to be skipped and decoding attempted anyway. But a
+  dictionary pre-seeds the match history *and* all four entropy tables, so a
+  dictionary frame may legitimately open with `Repeat_Mode` tables or a
+  `Treeless_Literals_Block` and reference offsets pointing into content that
+  was never in the frame. Pressing on produced a baffling
+  "offset table uses Repeat_Mode but no previous table exists in this frame"
+  — or, on a frame that happened not to trip a missing-state check, silently
+  wrong bytes. A field that is present but zero still means "no dictionary"
+  and decodes normally.
 
 ### Fixed
 
