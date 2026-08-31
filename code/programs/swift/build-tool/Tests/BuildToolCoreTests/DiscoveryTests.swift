@@ -94,7 +94,7 @@ struct DiscoveryTests {
         )
         let package = BuildPackage(name: "swift/example", path: root, language: "swift")
         let normalizedRoot = root.replacingOccurrences(of: "\\", with: "/") + "/"
-        let files = Hasher.collectSourceFiles(package).map {
+        let files = try Hasher.collectSourceFiles(package).map {
             $0.replacingOccurrences(of: "\\", with: "/")
                 .replacingOccurrences(of: normalizedRoot, with: "")
         }
@@ -164,7 +164,7 @@ struct DiscoveryTests {
         )
         let package = BuildPackage(name: "swift/example", path: root, language: "swift")
         let normalizedRoot = root.replacingOccurrences(of: "\\", with: "/") + "/"
-        let files = Hasher.collectSourceFiles(package).map {
+        let files = try Hasher.collectSourceFiles(package).map {
             $0.replacingOccurrences(of: "\\", with: "/")
                 .replacingOccurrences(of: normalizedRoot, with: "")
         }
@@ -203,7 +203,7 @@ struct DiscoveryTests {
 
         let package = BuildPackage(name: "swift/example", path: root, language: "swift")
         let normalizedRoot = root.replacingOccurrences(of: "\\", with: "/") + "/"
-        let files = Hasher.collectSourceFiles(package).map {
+        let files = try Hasher.collectSourceFiles(package).map {
             $0.replacingOccurrences(of: "\\", with: "/")
                 .replacingOccurrences(of: normalizedRoot, with: "")
         }
@@ -260,7 +260,7 @@ struct DiscoveryTests {
 
         let package = BuildPackage(name: "swift/example", path: root, language: "swift")
         let normalizedRoot = root.replacingOccurrences(of: "\\", with: "/") + "/"
-        let files = Hasher.collectSourceFiles(package).map {
+        let files = try Hasher.collectSourceFiles(package).map {
             $0.replacingOccurrences(of: "\\", with: "/")
                 .replacingOccurrences(of: normalizedRoot, with: "")
         }
