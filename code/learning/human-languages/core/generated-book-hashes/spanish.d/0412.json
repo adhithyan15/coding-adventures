@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:bf4ae06e3c2193af",
+  "lessonIds": [
+    "ES-C412-gimnasio",
+    "ES-C412-deporte",
+    "ES-C412-fitness-recall-1",
+    "ES-C412-fitness-recall-2"
+  ],
+  "tex": "spanish/book/chapters/ch412-gimnasio-deporte.tex"
+}

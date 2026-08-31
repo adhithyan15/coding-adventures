@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:85b557e408a5b8ce",
+  "lessonIds": [
+    "ES-C412-gimnasio",
+    "ES-C412-deporte",
+    "ES-C412-fitness-recall-1",
+    "ES-C412-fitness-recall-2"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch412.txt",
+  "json": "spanish/narration/ch412.json",
+  "textHash": "fnv1a64:3619ca2dc2556c21",
+  "jsonHash": "fnv1a64:e28b23bd51af5e59",
+  "findings": []
+}

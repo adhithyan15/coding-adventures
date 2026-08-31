@@ -22,7 +22,9 @@
     "ES-PATH-410-EDUCATION",
     "ES-PATH-410-REVIEWS",
     "ES-PATH-411-HELADO",
-    "ES-PATH-411-REVIEWS"
+    "ES-PATH-411-REVIEWS",
+    "ES-PATH-412-FITNESS",
+    "ES-PATH-412-REVIEWS"
   ],
   "omits": [],
   "relocates": {}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C412-gimnasio",
+    "language": "spanish",
+    "chapter": 412,
+    "sequence": 9430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:97e286f7f8b44b9c"
+  },
+  "findings": []
+}
