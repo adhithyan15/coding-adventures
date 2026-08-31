@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Lower valid JFET `RD` drain resistances and reject invalid inputs.
 - Lower valid JFET `GDSNOI` channel-noise coefficients and reject invalid
   inputs.
 - Lower valid JFET `NLEV` noise-equation levels and reject invalid inputs.
