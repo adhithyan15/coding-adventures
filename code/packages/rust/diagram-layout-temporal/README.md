@@ -24,6 +24,10 @@ let temporal = TemporalDiagram { kind: TemporalKind::Gantt, title: None, body: T
 let layout   = layout_temporal_diagram(&temporal, 800.0);
 ```
 
+Timeline diagrams use dedicated section, chronology-spine, and period-card
+layout items. Both top-down and left-right source directions are deterministic,
+and ordered period events remain semantic text through Paint lowering.
+
 ## Algorithms
 
 **Gantt**: Fixed-point date resolution first records typed absolute starts, then resolves

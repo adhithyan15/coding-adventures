@@ -1006,6 +1006,34 @@ pub enum TemporalKind {
     Gantt,
     Git,
     Journey,
+    Timeline,
+}
+
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub enum TimelineDirection {
+    #[default]
+    TopDown,
+    LeftRight,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct TimelinePeriod {
+    pub label: String,
+    pub events: Vec<String>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct TimelineSection {
+    pub label: Option<String>,
+    pub periods: Vec<TimelinePeriod>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct TimelineDiagram {
+    pub accessibility_title: Option<String>,
+    pub accessibility_description: Option<String>,
+    pub direction: TimelineDirection,
+    pub sections: Vec<TimelineSection>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -1283,6 +1311,7 @@ pub enum TemporalBody {
     Gantt(GanttDiagram),
     Git(GitDiagram),
     Journey(Box<JourneyDiagram>),
+    Timeline(TimelineDiagram),
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -1426,6 +1455,28 @@ pub enum LayoutedTemporalItem {
         x: f64,
         y1: f64,
         y2: f64,
+    },
+    TimelineSpine {
+        x1: f64,
+        y1: f64,
+        x2: f64,
+        y2: f64,
+    },
+    TimelineSection {
+        x: f64,
+        y: f64,
+        width: f64,
+        height: f64,
+        label: String,
+    },
+    TimelinePeriod {
+        x: f64,
+        y: f64,
+        width: f64,
+        height: f64,
+        label: String,
+        events: Vec<String>,
+        color_index: usize,
     },
 }
 

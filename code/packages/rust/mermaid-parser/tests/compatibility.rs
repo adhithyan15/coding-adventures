@@ -3,7 +3,7 @@ use std::collections::BTreeSet;
 use mermaid_parser::{
     detect_mermaid_type, parse_any_mermaid, parse_gantt, parse_gitgraph, parse_journey, parse_pie,
     parse_quadrant_chart, parse_requirement_diagram, parse_sankey, parse_sequence_diagram,
-    parse_xychart,
+    parse_timeline, parse_xychart,
     MERMAID_COMPATIBILITY_BASELINE,
 };
 use serde_json::Value;
@@ -19,6 +19,10 @@ const QUADRANT_CORPUS: &str = include_str!(concat!(
 const JOURNEY_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/journey-11.16.1-corpus.json"
+));
+const TIMELINE_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/timeline-11.16.1-corpus.json"
 ));
 const REQUIREMENT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
@@ -56,6 +60,25 @@ const SEQUENCE_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/sequence-11.16.1-visual-corpus.json"
 ));
+
+#[test]
+fn pinned_timeline_core_corpus_matches_upstream_acceptance() {
+    let corpus: Value = serde_json::from_str(TIMELINE_CORPUS).expect("timeline corpus must be JSON");
+    assert_eq!(corpus["upstream_commit"].as_str(),
+        Some("7ecca0cd7f1658ef74f4e7e91f925724ef403bbf"));
+    for fixture in corpus["valid"].as_array().expect("valid corpus array") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        let source = fixture["source"].as_str().expect("fixture source");
+        parse_timeline(source)
+            .unwrap_or_else(|error| panic!("valid upstream fixture {id} failed: {error}"));
+    }
+    for fixture in corpus["invalid"].as_array().expect("invalid corpus array") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        let source = fixture["source"].as_str().expect("fixture source");
+        assert!(parse_timeline(source).is_err(),
+            "invalid upstream fixture {id} unexpectedly parsed");
+    }
+}
 
 #[test]
 fn pinned_sequence_corpus_matches_upstream_acceptance() {

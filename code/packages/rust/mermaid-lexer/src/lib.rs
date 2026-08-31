@@ -21,6 +21,8 @@ const QUADRANT_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/quadrant.tokens");
 const JOURNEY_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/journey.tokens");
+const TIMELINE_TOKEN_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/timeline.tokens");
 const REQUIREMENT_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.tokens");
 const XYCHART_TOKEN_GRAMMAR_SOURCE: &str =
@@ -71,6 +73,10 @@ pub fn create_mermaid_quadrant_lexer(source: &str) -> GrammarLexer<'_> {
 
 pub fn create_mermaid_journey_lexer(source: &str) -> GrammarLexer<'_> {
     create_lexer(source, JOURNEY_TOKEN_GRAMMAR_SOURCE, "journey.tokens")
+}
+
+pub fn create_mermaid_timeline_lexer(source: &str) -> GrammarLexer<'_> {
+    create_lexer(source, TIMELINE_TOKEN_GRAMMAR_SOURCE, "timeline.tokens")
 }
 
 pub fn create_mermaid_requirement_lexer(source: &str) -> GrammarLexer<'_> {
@@ -281,6 +287,11 @@ pub fn try_tokenize_mermaid_quadrant(source: &str) -> Result<Vec<Token>, String>
 
 pub fn try_tokenize_mermaid_journey(source: &str) -> Result<Vec<Token>, String> {
     let mut lexer = create_mermaid_journey_lexer(source);
+    lexer.tokenize().map_err(|error| error.to_string())
+}
+
+pub fn try_tokenize_mermaid_timeline(source: &str) -> Result<Vec<Token>, String> {
+    let mut lexer = create_mermaid_timeline_lexer(source);
     lexer.tokenize().map_err(|error| error.to_string())
 }
 

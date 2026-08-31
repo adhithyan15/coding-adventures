@@ -160,6 +160,10 @@ the native pipeline; resolving host document contents remains an embedding-layer
 compatibility gap.
 Pinned actor-property fixtures and the native renderer exercise authored links,
 properties, and details references through PaintScene metadata without IR injection.
+
+Timeline parsing covers the pinned core header directions, titles,
+accessibility metadata, sections, periods, and ordered events. It lowers to
+timeline-specific temporal IR rather than reusing Gantt task semantics.
 Actor identifiers may contain multiple whitespace-separated words; the full ID
 is retained consistently across declarations, messages, notes, lifecycle events,
 and metadata commands.
