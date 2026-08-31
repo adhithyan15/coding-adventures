@@ -1577,7 +1577,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(unexpected-null-character)".to_string(),
-                "append_text_replacement".to_string(),
+                "append_text(current)".to_string(),
             ],
             consume: true,
         },
