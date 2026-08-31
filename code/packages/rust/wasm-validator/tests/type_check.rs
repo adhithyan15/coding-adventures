@@ -3757,3 +3757,150 @@ fn invalid_try_table_catch_clause_unknown_tag_is_rejected() {
 fn invalid_try_table_catch_clause_label_out_of_range_is_rejected() {
     assert_invalid("(module (tag $e) (func (try_table (catch $e 5))))");
 }
+
+// ── W30 follow-up: real memory64 bulk operations (memory.copy/memory.fill/
+// memory.init against an `is64` memory) ──────────────────────────────────
+
+#[test]
+fn valid_memory_fill_uses_i64_dest_and_len_on_an_is64_memory() {
+    assert_valid(
+        r#"(module
+             (memory $m i64 1)
+             (func (memory.fill $m (i64.const 0) (i32.const 0xff) (i64.const 3))))"#,
+    );
+}
+
+#[test]
+fn invalid_memory_fill_rejects_an_i32_dest_on_an_is64_memory() {
+    assert_invalid(
+        r#"(module
+             (memory $m i64 1)
+             (func (memory.fill $m (i32.const 0) (i32.const 0xff) (i64.const 3))))"#,
+    );
+}
+
+#[test]
+fn invalid_memory_fill_rejects_an_i32_len_on_an_is64_memory() {
+    assert_invalid(
+        r#"(module
+             (memory $m i64 1)
+             (func (memory.fill $m (i64.const 0) (i32.const 0xff) (i32.const 3))))"#,
+    );
+}
+
+#[test]
+fn valid_memory_copy_uses_i64_operands_on_an_is64_memory() {
+    // `memory_copy64.wast`'s own corpus only ever declares a single
+    // `is64` memory per module, and `memory.copy`'s TEXT-form encoder
+    // (`wasm-wast-parser`) always emits the implicit `dst_memidx=0,
+    // src_memidx=0` byte pair unconditionally -- it has no leading-memidx-
+    // token support at all (unlike `memory.fill`/`memory.init` just above
+    // it), so a same-memory copy is written with NO memidx tokens, exactly
+    // matching the real corpus's own text shape. Exercises the "both sides
+    // is64" branch: all three operands must be `i64`.
+    assert_valid(
+        r#"(module
+             (memory i64 1 1)
+             (func (memory.copy (i64.const 13) (i64.const 2) (i64.const 3))))"#,
+    );
+}
+
+#[test]
+fn invalid_memory_copy_rejects_an_i32_operand_on_an_is64_memory() {
+    // `memory_copy64.wast`'s own `assert_invalid` shape: a plain `i32`
+    // operand against an is64 memory 0 is a type mismatch, for each of
+    // dest/src/len independently.
+    assert_invalid(
+        r#"(module
+             (memory i64 1 1)
+             (func (memory.copy (i32.const 13) (i64.const 2) (i64.const 3))))"#,
+    );
+    assert_invalid(
+        r#"(module
+             (memory i64 1 1)
+             (func (memory.copy (i64.const 13) (i32.const 2) (i64.const 3))))"#,
+    );
+    assert_invalid(
+        r#"(module
+             (memory i64 1 1)
+             (func (memory.copy (i64.const 13) (i64.const 2) (i32.const 3))))"#,
+    );
+}
+
+/// No real vendored corpus file exercises a mixed is64/is32 `memory.copy`
+/// (every `*64.wast` file declares only ONE, `is64` memory per module, and
+/// `wasm-wast-parser`'s `memory.copy` text encoder has no leading-memidx-
+/// token support to even NAME a second memory -- see the doc comment on
+/// `valid_memory_copy_uses_i64_operands_on_an_is64_memory` above). This is
+/// this follow-up's own defense-in-depth coverage of the general rule
+/// `table.copy` already established for the identical mixed-table case
+/// (W26 / `table_copy_mixed.wast`), exercised directly at the BINARY level
+/// (`module_with_body`, like `valid_bulk_memory_copy_and_fill` above) since
+/// the text form can't reach it: `dest` follows the DESTINATION memory's
+/// own `is64`, `src` follows the SOURCE's, independently, and `len` stays
+/// `i32` unless BOTH are `is64`.
+#[test]
+fn valid_memory_copy_between_mixed_is64_and_is32_memories_type_checks_each_operand_independently() {
+    let mem32 = wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: Some(1) }, shared: false, is64: false };
+    let mem64 = wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: Some(1) }, shared: false, is64: true };
+
+    // dst=memory 0 (is32), src=memory 1 (is64): dest i32, src i64, len i32.
+    let mut m32_to_64 = module_with_body(
+        wasm_types::FuncType { params: vec![], results: vec![] },
+        vec![0x41, 13, 0x42, 2, 0x41, 3, 0xFC, 0x0A, 0, 1, 0x0B],
+    );
+    m32_to_64.memories.push(mem32.clone());
+    m32_to_64.memories.push(mem64.clone());
+    wasm_validator::validate(&m32_to_64).expect("dst-is32/src-is64 memory.copy should validate");
+
+    // dst=memory 1 (is64), src=memory 0 (is32): dest i64, src i32, len i32.
+    let mut m64_to_32 = module_with_body(
+        wasm_types::FuncType { params: vec![], results: vec![] },
+        vec![0x42, 13, 0x41, 2, 0x41, 3, 0xFC, 0x0A, 1, 0, 0x0B],
+    );
+    m64_to_32.memories.push(mem32);
+    m64_to_32.memories.push(mem64);
+    wasm_validator::validate(&m64_to_32).expect("dst-is64/src-is32 memory.copy should validate");
+}
+
+#[test]
+fn invalid_memory_copy_mixed_rejects_a_length_wider_than_the_smaller_index_type() {
+    let mem32 = wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: Some(1) }, shared: false, is64: false };
+    let mem64 = wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: Some(1) }, shared: false, is64: true };
+    // dst=memory 0 (is32), src=memory 1 (is64), but `len` typed i64 --
+    // must stay i32 (the smaller of the two sides) even though the source
+    // is is64.
+    let mut bad_len = module_with_body(
+        wasm_types::FuncType { params: vec![], results: vec![] },
+        vec![0x41, 13, 0x42, 2, 0x42, 3, 0xFC, 0x0A, 0, 1, 0x0B],
+    );
+    bad_len.memories.push(mem32);
+    bad_len.memories.push(mem64);
+    assert!(wasm_validator::validate(&bad_len).is_err(), "len must stay i32 unless BOTH memories are is64");
+}
+
+#[test]
+fn valid_memory_init_on_an_is64_memory_widens_only_the_destination_operand() {
+    // `dest` is i64 (the target memory's own is64), `src`/`len`
+    // (positions within the data segment) stay i32 -- a passive data
+    // segment isn't itself address-typed, mirroring the real
+    // `bulk64.wast`/`memory_init64.wast` corpus.
+    assert_valid(
+        r#"(module
+             (memory $m i64 1)
+             (data $d "hi")
+             (func (memory.init $d (i64.const 0) (i32.const 0) (i32.const 2))))"#,
+    );
+}
+
+#[test]
+fn invalid_memory_init_rejects_an_i64_source_offset_on_an_is64_memory() {
+    // `src`/`len` must stay i32 even when the target memory is is64 --
+    // an is64 target memory only widens `dest`.
+    assert_invalid(
+        r#"(module
+             (memory $m i64 1)
+             (data $d "hi")
+             (func (memory.init $d (i64.const 0) (i64.const 0) (i32.const 2))))"#,
+    );
+}

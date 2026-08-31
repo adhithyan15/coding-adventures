@@ -795,9 +795,21 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         if data_idx as usize >= ctx.module.data.len() {
                             err!("memory.init references out-of-bounds data segment index {data_idx}");
                         }
-                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // length
-                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // source
-                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // destination
+                        // W27 (memory64 bulk ops): `dest`'s width depends on
+                        // the TARGET memory's own `is64` -- `src`/`len`
+                        // (positions within the data segment) always stay
+                        // `i32`, since a passive data segment isn't itself
+                        // address-typed. Mirrors `table.init`'s identical
+                        // "only the target-side index widens" rule (W26)
+                        // and is confirmed against the real `bulk64.wast`/
+                        // `memory_init64.wast` corpus: `(memory.init 0
+                        // (i64.const 0) (i32.const 1) (i32.const 2))` pops
+                        // `dest` as `i64` for an `is64` memory 0, but
+                        // `src`/`len` stay `i32` even there.
+                        let dest_type = if ctx.memory_is64.get(memory as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
+                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // length (segment-side, always i32)
+                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // source (segment-side, always i32)
+                        pop_expect(&mut stack, frame!(), dest_type)?; // destination
                     }
                     0x09 => {
                         // `data.drop` (task #95): no stack operands, no
@@ -830,9 +842,30 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         if src_memory >= ctx.memory_count {
                             err!("memory.copy references source memory index {src_memory}, but only {} memories exist", ctx.memory_count);
                         }
-                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // length
-                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // source
-                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // destination
+                        // W27 (memory64 bulk ops): `dest`'s width follows
+                        // the DESTINATION memory's own `is64`, `src`'s
+                        // follows the SOURCE memory's own `is64` --
+                        // independently, mirroring `table.copy`'s identical
+                        // mixed-index-width rule (W26 / `table_copy_
+                        // mixed.wast`). `len`'s width is `i64` ONLY when
+                        // BOTH memories are `is64` -- otherwise `i32`, even
+                        // when exactly one side is `is64` -- same "the
+                        // smaller of the two index types governs a shared
+                        // length/count operand" rule `table.copy`'s own
+                        // comment already documents for the combined
+                        // memory64/table64 proposal. Confirmed against the
+                        // real `memory_copy64.wast` corpus's own
+                        // `assert_invalid` cases (an `is64` memory's
+                        // `memory.copy` rejects a plain `i32` operand for
+                        // dest/src/len as "type mismatch").
+                        let dst_is64 = ctx.memory_is64.get(dst_memory as usize).copied().unwrap_or(false);
+                        let src_is64 = ctx.memory_is64.get(src_memory as usize).copied().unwrap_or(false);
+                        let dst_type = if dst_is64 { ValueType::I64 } else { ValueType::I32 };
+                        let src_type = if src_is64 { ValueType::I64 } else { ValueType::I32 };
+                        let len_type = if dst_is64 && src_is64 { ValueType::I64 } else { ValueType::I32 };
+                        pop_expect(&mut stack, frame!(), len_type)?; // length
+                        pop_expect(&mut stack, frame!(), src_type)?; // source
+                        pop_expect(&mut stack, frame!(), dst_type)?; // destination
                     }
                     0x0B => {
                         if !ctx.has_memory {
@@ -844,9 +877,17 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         if memory >= ctx.memory_count {
                             err!("memory.fill references memory index {memory}, but only {} memories exist", ctx.memory_count);
                         }
-                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // length
+                        // W27 (memory64 bulk ops): `dest`/`len` are `i64`
+                        // for an `is64` memory (`value`, the fill byte,
+                        // stays `i32` regardless -- only its low 8 bits are
+                        // ever used, same as the is32 case). Mirrors
+                        // `table.fill`'s identical is64-dependent
+                        // dest/len-only widening (W26).
+                        let is64 = ctx.memory_is64.get(memory as usize).copied().unwrap_or(false);
+                        let idx_type = if is64 { ValueType::I64 } else { ValueType::I32 };
+                        pop_expect(&mut stack, frame!(), idx_type)?; // length
                         pop_expect(&mut stack, frame!(), ValueType::I32)?; // byte value
-                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // destination
+                        pop_expect(&mut stack, frame!(), idx_type)?; // destination
                     }
                     0x0F => {
                         // `table.grow` (task #98): pops `[init, delta]`

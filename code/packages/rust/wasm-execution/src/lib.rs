@@ -3944,6 +3944,43 @@ fn get_memory_at<'a>(ctx: &WasmExecutionContext, memidx: usize) -> Result<&'a mu
     }
 }
 
+// ── memory64 bulk ops (W27 follow-up): is64/is32 operand widening for
+// `memory.copy`/`memory.fill`/`memory.init` ─────────────────────────────
+//
+// `W25`'s first slice widened plain scalar load/store (`pop_effective_addr`)
+// and `memory.size`/`memory.grow` to honor a memory's own `is64`, but
+// deliberately left the bulk-memory family (`memory.copy`/`memory.fill`/
+// `memory.init`) assuming `i32` unconditionally -- those are separate
+// handlers inside the `0xFC` dispatcher below, not routed through
+// `pop_effective_addr` at all. This mirrors that exact fix, and mirrors
+// `pop_table_operand`'s identical table64 shape (W26) applied to table
+// ops, one level down: pop a real `i64` operand for an `is64` memory,
+// `i32` otherwise.
+//
+// Unlike `pop_table_operand`, no `u64`-to-`u32` narrowing sentinel is
+// needed here: `Table`'s storage is `u32`-bounded (so an out-of-range
+// `u64` index has to be mapped to an in-range-but-still-huge `u32`
+// sentinel to keep tripping the downstream `u32` bounds check), but
+// `LinearMemory`'s storage is already `usize`-addressed directly (see
+// `LinearMemory::copy`/`copy_between`/`fill`, all of which bounds-check
+// via `usize::checked_add` already, independent of `is64`). `u64 as
+// usize` is a lossless, non-truncating identity cast on the 64-bit hosts
+// this interpreter targets (`usize` and `u64` are the same width there),
+// so a huge, adversarial `i64` operand -- e.g. `bulk64.wast`'s own
+// `(i64.const -1)` length, or `memory_copy64.wast`'s `assert_trap` cases
+// -- reaches the existing `checked_add`-then-compare bounds check as the
+// same huge value, which correctly traps rather than silently wrapping
+// into a small, coincidentally in-bounds one.
+fn pop_bulk_memory_operand(vm: &mut GenericVM, is64: bool) -> Result<usize, VMError> {
+    if is64 {
+        let v = pop_wasm(vm)?.as_i64().map_err(VMError::from)?;
+        Ok(v as u64 as usize)
+    } else {
+        let v = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+        Ok(v as u32 as usize)
+    }
+}
+
 /// Pure aggregate-cap check for `memory.grow` (task #101): given every
 /// memory's CURRENT page count, which one is being grown, and by how
 /// much, returns whether the resulting CROSS-MEMORY total would exceed
@@ -4582,9 +4619,22 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 // `<= 0` does), but any `size>0` traps -- matching the
                 // real spec's "a dropped segment can never be initialized
                 // from again" rule, not a distinct error path.
+                //
+                // W27 (memory64 bulk ops): `dest`'s width depends on the
+                // TARGET memory's own `is64` -- `src`/`n` (positions within
+                // the data segment) always stay `i32`, since a passive data
+                // segment isn't itself address-typed. Mirrors `table.init`'s
+                // identical "read the target's is64 first, only the
+                // target-side operand widens" pattern (W26) just below.
+                // Verified against the real `bulk64.wast`/`memory_init64.
+                // wast` corpus: `(memory.init 0 (i64.const 0) (i32.const 1)
+                // (i32.const 2))` pops `dest` as `i64` for an `is64` memory
+                // 0, but `src`/`n` stay `i32` even there.
+                let memidx_for_is64 = aux as usize;
+                let is64 = get_memory_at(ctx, memidx_for_is64)?.is64();
                 let n = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
                 let src = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
-                let dest = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let dest = pop_bulk_memory_operand(vm, is64)?;
                 let idx = data_idx as usize;
                 // Security review (task #95): an out-of-range `idx` is
                 // ALWAYS a hard error, checked and rejected BEFORE any
@@ -4610,8 +4660,10 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 // Task #92/W18: `aux` carries the real, decoded memory
                 // index -- previously discarded entirely (`memory.init`
                 // always wrote to memory 0 regardless of what the
-                // trailing immediate actually named).
-                let memidx = aux as usize;
+                // trailing immediate actually named). Same value as
+                // `memidx_for_is64` above (computed early so `is64` could
+                // be known before popping `dest`).
+                let memidx = memidx_for_is64;
                 let dropped = ctx.dropped_data_segments[idx];
                 let segment_bytes: &[u8] = if dropped { &[] } else { ctx.data_segments[idx].as_slice() };
                 match src.checked_add(n) {
@@ -4648,16 +4700,24 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 // same guard every other memory op applies via `effective_addr`.
                 // Sign-extending here would let `offset + width` wrap past the bounds
                 // check and index out of bounds.
-                let n = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
-                let src = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
-                let dest = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
-                // Task #92/W18: `data_idx`/`aux` carry the real, decoded
-                // dst/src memory indices -- previously both discarded
-                // entirely (`memory.copy` always operated on memory 0
-                // regardless of what the two trailing immediates
-                // actually named). Same `Table::copy_between` two-
-                // pointer, no-aliasing pattern task #97's own
-                // `/security-review` finding established.
+                //
+                // W27 (memory64 bulk ops) / `memory_copy64.wast`: `dest`'s
+                // width follows the DESTINATION memory's own `is64`,
+                // `src`'s follows the SOURCE memory's own `is64` --
+                // independently, mirroring `table.copy`'s identical mixed-
+                // index-width rule (W26 / `table_copy_mixed.wast`). `len`'s
+                // width is `i64` ONLY when BOTH memories are `is64` --
+                // otherwise `i32`, same "the smaller of the two index
+                // types governs a shared length/count operand" rule
+                // `table.copy` already documents for the combined
+                // memory64/table64 proposal. `memory_copy64.wast`'s own
+                // corpus only ever declares a single (`is64`) memory per
+                // module, so every real `assert_return`/`assert_trap` case
+                // there exercises the "both sides `is64`" branch (all
+                // three operands `i64`); its `assert_invalid` cases confirm
+                // a plain `i32` operand against an `is64` memory 0 is
+                // correctly rejected as "type mismatch" by `wasm-
+                // validator`'s mirrored fix.
                 let dst_memidx = data_idx as usize;
                 let src_memidx = aux as usize;
                 if dst_memidx >= ctx.memories.len() {
@@ -4666,6 +4726,11 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 if src_memidx >= ctx.memories.len() {
                     return Err(VMError::GenericError(format!("memory.copy: source memory index {src_memidx} out of bounds")));
                 }
+                let dst_is64 = get_memory_at(ctx, dst_memidx)?.is64();
+                let src_is64 = get_memory_at(ctx, src_memidx)?.is64();
+                let n = pop_bulk_memory_operand(vm, dst_is64 && src_is64)?;
+                let src = pop_bulk_memory_operand(vm, src_is64)?;
+                let dest = pop_bulk_memory_operand(vm, dst_is64)?;
                 let dst_ptr = ctx.memories[dst_memidx];
                 let src_ptr: *const LinearMemory = ctx.memories[src_memidx];
                 // SAFETY: both pointers were bounds-checked above and come
@@ -4686,12 +4751,20 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 // order for this same sub-opcode. `value` is a byte
                 // (`i32 as u8`, truncating): the spec defines memory.fill's
                 // fill byte as the low 8 bits of the i32 operand.
-                let n = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
-                let value = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as u8;
-                let dest = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
-                // Task #92/W18: `data_idx` carries the real, decoded
-                // memory index -- previously discarded entirely.
+                //
+                // W27 (memory64 bulk ops): `dest`/`n` are `i64` for an
+                // `is64` memory (`value`, the fill byte, stays `i32`
+                // regardless -- only its low 8 bits are ever used, same as
+                // the is32 case). Mirrors `table.fill`'s identical
+                // is64-dependent dest/len-only widening (W26). `is64` must
+                // be read BEFORE popping `n`/`dest`, same "read target's
+                // is64 first, then pop the correctly-typed operand"
+                // ordering `pop_effective_addr`/`pop_table_operand` use.
                 let memidx = data_idx as usize;
+                let is64 = get_memory_at(ctx, memidx)?.is64();
+                let n = pop_bulk_memory_operand(vm, is64)?;
+                let value = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as u8;
+                let dest = pop_bulk_memory_operand(vm, is64)?;
                 get_memory_at(ctx, memidx)?.fill(dest, value, n).map_err(VMError::from)?;
             }
             0x0C => {
@@ -21087,6 +21160,143 @@ mod tests {
         engine.set_type_section(vec![func_type]);
         let result = engine.call_function(0, &[]).expect("call_indirect against an is64 table should succeed");
         assert_eq!(result, vec![WasmValue::I32(42)]);
+    }
+
+    // ══════════════════════════════════════════════════════════════════════
+    // W30 follow-up: real memory64 bulk operations -- memory.copy/memory.
+    // fill/memory.init against an `is64` memory. Mirrors the W26 table64
+    // follow-up's own tests immediately above, applied to memory dest/src/
+    // len operands instead of table index/dest/src/len/delta operands.
+    // ══════════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn memory_fill_uses_i64_dest_and_len_on_an_is64_memory() {
+        // i64.const 1 (dest); i32.const 0xff (value); i64.const 3 (len);
+        // memory.fill 0
+        let code = vec![
+            0x42, 0x01, // i64.const 1
+            0x41, 0xFF, 0x01, // i32.const 0xff
+            0x42, 0x03, // i64.const 3
+            0xFC, 0x0B, 0x00, // memory.fill 0
+            0x0B,
+        ];
+        let func_type = FuncType { params: vec![], results: vec![] };
+        let body = FunctionBody { locals: vec![], code };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: vec![LinearMemory::new_with_is64(1, None, true).unwrap()],
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.call_function(0, &[]).expect("memory.fill against an is64 memory should succeed");
+        let state = engine.into_state();
+        assert_eq!(state.memories[0].load_i32_8u(0).unwrap(), 0);
+        assert_eq!(state.memories[0].load_i32_8u(1).unwrap(), 0xff);
+        assert_eq!(state.memories[0].load_i32_8u(2).unwrap(), 0xff);
+        assert_eq!(state.memories[0].load_i32_8u(3).unwrap(), 0xff);
+        assert_eq!(state.memories[0].load_i32_8u(4).unwrap(), 0);
+    }
+
+    #[test]
+    fn memory_fill_on_an_is64_memory_with_a_huge_i64_len_traps_cleanly_not_a_panic() {
+        // `(i64.const -1)` (bit pattern u64::MAX) as `len` -- the real
+        // `bulk64.wast` corpus's own "writing 0 bytes outside of memory
+        // limit is NOT allowed" boundary shape, pushed further: this must
+        // trap cleanly via `LinearMemory::fill`'s existing `checked_add`
+        // bounds check, never panic from an overflowing `usize` addition.
+        let code = vec![
+            0x42, 0x00, // i64.const 0 (dest)
+            0x41, 0x00, // i32.const 0 (value)
+            0x42, 0x7F, // i64.const -1 (len)
+            0xFC, 0x0B, 0x00, // memory.fill 0
+            0x0B,
+        ];
+        let func_type = FuncType { params: vec![], results: vec![] };
+        let body = FunctionBody { locals: vec![], code };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: vec![LinearMemory::new_with_is64(1, None, true).unwrap()],
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn memory_copy_uses_i64_operands_on_an_is64_memory() {
+        // Store 0xaa at address 0, `memory.copy` it to address 10 with a
+        // real i64 dest/src/len, then load it back from address 10 --
+        // mirrors `bulk64.wast`'s own "Non-overlapping copy" case (all
+        // three `memory.copy` operands must be `i64` for an `is64`
+        // memory, confirmed by `memory_copy64.wast`'s own `assert_invalid`
+        // cases rejecting a plain `i32` operand there).
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0x42, 0x00, // i64.const 0 (store addr)
+                0x41, 0xAA, 0x01, // i32.const 0xaa
+                0x3A, 0x00, 0x00, // i32.store8 align=0 offset=0
+                0x42, 0x0A, // i64.const 10 (dest)
+                0x42, 0x00, // i64.const 0 (src)
+                0x42, 0x01, // i64.const 1 (len)
+                0xFC, 0x0A, 0x00, 0x00, // memory.copy 0 0
+                0x42, 0x0A, // i64.const 10 (load addr)
+                0x2D, 0x00, 0x00, // i32.load8_u align=0 offset=0
+                0x0B,
+            ],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: vec![LinearMemory::new_with_is64(1, None, true).unwrap()],
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        let result = engine.call_function(0, &[]).expect("memory.copy against an is64 memory should succeed");
+        assert_eq!(result, vec![WasmValue::I32(0xaa)]);
+    }
+
+    #[test]
+    fn memory_init_on_an_is64_memory_widens_only_the_destination_operand() {
+        // `dest` is i64 (is64 target memory); `src`/`len` (positions
+        // within the data segment) stay i32 -- a passive data segment
+        // isn't itself address-typed, mirroring the real `bulk64.wast`/
+        // `memory_init64.wast` corpus.
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0x42, 0x01, // i64.const 1 (dest)
+                0x41, 0x00, // i32.const 0 (src, segment offset -- always i32)
+                0x41, 0x02, // i32.const 2 (len -- always i32)
+                0xFC, 0x08, 0x00, 0x00, // memory.init data_idx=0 memidx=0
+                0x42, 0x01, // i64.const 1 (load addr)
+                0x2D, 0x00, 0x00, // i32.load8_u align=0 offset=0
+                0x0B,
+            ],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: vec![LinearMemory::new_with_is64(1, None, true).unwrap()],
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.set_data_segments(vec![vec![0xAA, 0xBB, 0xCC]]);
+        engine.set_dropped_data_segments(vec![false]);
+        let result = engine.call_function(0, &[]).expect("memory.init against an is64 memory should succeed");
+        assert_eq!(result, vec![WasmValue::I32(0xAA)]);
     }
 
     #[test]
