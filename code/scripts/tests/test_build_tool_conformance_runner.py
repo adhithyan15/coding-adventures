@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import io
 import json
 import os
@@ -12,12 +13,10 @@ from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 from unittest import mock
 
-
 SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPTS_DIR))
 
-import build_tool_conformance as runner  # noqa: E402
-
+import build_tool_conformance as runner
 
 FIXTURE_ROOT = runner.DEFAULT_FIXTURE_ROOT
 CASES_ROOT = FIXTURE_ROOT / "cases"
@@ -131,7 +130,7 @@ class CorpusTests(unittest.TestCase):
         summary = runner.validate_corpus(FIXTURE_ROOT)
 
         self.assertEqual(summary["schema_version"], 1)
-        self.assertEqual(summary["case_count"], 121)
+        self.assertEqual(summary["case_count"], 122)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -139,6 +138,8 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(summary["adapter_ready_count"], 0)
         self.assertEqual(summary["conformance_run_count"], 0)
         self.assertEqual(summary["conformance_status"], "not-run")
+        self.assertEqual(summary["source_input_language_count"], 23)
+        self.assertEqual(len(summary["source_input_registry_sha256"]), 64)
         self.assertEqual(
             summary["domains"],
             [
@@ -199,6 +200,546 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(missing, {"dart", "java", "kotlin", "ocaml"})
         self.assertEqual(implementations["fsharp"]["shared_engine"], "csharp")
         self.assertEqual(implementations["ocaml"]["lane_status"], "emerging")
+
+    def test_language_source_input_registry_is_closed_and_canonical(self) -> None:
+        schema = runner.load_document(
+            FIXTURE_ROOT / "language-source-input-registry.schema.json"
+        )
+        registry = runner.load_document(
+            FIXTURE_ROOT / "language-source-input-registry.json"
+        )
+        summary = runner._validate_source_input_registry(registry, schema)
+
+        self.assertEqual(summary["language_count"], 23)
+        self.assertEqual(
+            {entry["language"] for entry in registry["languages"]},
+            set(runner.CLI_LANGUAGES) - {"all"},
+        )
+        self.assertEqual(
+            registry["universal_inputs"]["root_exact_basenames"],
+            ["required_capabilities.json"],
+        )
+        self.assertEqual(
+            registry["universal_inputs"]["build_filenames"],
+            [
+                "BUILD",
+                "BUILD_linux",
+                "BUILD_mac",
+                "BUILD_mac_and_linux",
+                "BUILD_windows",
+            ],
+        )
+        self.assertEqual(
+            registry["universal_inputs"]["generated_directory_components"],
+            sorted(
+                runner.SOURCE_COLLECTION_SKIP_COMPONENTS,
+                key=lambda value: value.encode("utf-8"),
+            ),
+        )
+        by_language = {entry["language"]: entry for entry in registry["languages"]}
+
+        def scoped(language: str, rule_id: str) -> dict[str, object]:
+            return next(
+                rule
+                for rule in by_language[language]["scoped_inputs"]
+                if rule["id"] == rule_id
+            )
+
+        self.assertIn(".cs", by_language["csharp"]["recursive_suffixes"])
+        self.assertIn(".fs", by_language["fsharp"]["recursive_suffixes"])
+        self.assertIn(".java", by_language["java"]["recursive_suffixes"])
+        self.assertIn(".kt", by_language["kotlin"]["recursive_suffixes"])
+        self.assertIn(".dart", by_language["dart"]["recursive_suffixes"])
+        self.assertIn(".ml", by_language["ocaml"]["recursive_suffixes"])
+        self.assertIn("spec.json", by_language["go"]["root_exact_basenames"])
+        self.assertIn("basename.json", by_language["go"]["root_exact_basenames"])
+        self.assertIn("tools/run.sh", by_language["c"]["root_exact_relative_paths"])
+        self.assertIn(
+            "regen-embedded-grammars.sh",
+            by_language["swift"]["root_exact_relative_paths"],
+        )
+        self.assertTrue(by_language["dart"]["scoped_inputs"])
+        self.assertTrue(by_language["rust"]["scoped_inputs"])
+        self.assertTrue(by_language["swift"]["scoped_inputs"])
+        self.assertTrue(by_language["typescript"]["scoped_inputs"])
+        self.assertIn(
+            "android/gradle/wrapper/gradle-wrapper.properties",
+            by_language["dart"]["root_exact_relative_paths"],
+        )
+        dart_android = next(
+            rule
+            for rule in by_language["dart"]["scoped_inputs"]
+            if rule["id"] == "dart-flutter-android-host-inputs"
+        )
+        self.assertNotIn(".properties", dart_android["suffixes"])
+        self.assertIn(
+            ".csproj",
+            next(
+                rule
+                for rule in by_language["csharp"]["scoped_inputs"]
+                if rule["id"] == "csharp-tests-project-inputs"
+            )["suffixes"],
+        )
+        self.assertIn(
+            ".csproj",
+            next(
+                rule
+                for rule in by_language["csharp"]["scoped_inputs"]
+                if rule["id"] == "csharp-winui-project-inputs"
+            )["suffixes"],
+        )
+        self.assertIn(
+            "gradle/wrapper/gradle-wrapper.properties",
+            by_language["kotlin"]["root_exact_relative_paths"],
+        )
+        self.assertIn(
+            ".ts",
+            next(
+                rule
+                for rule in by_language["mosaic"]["scoped_inputs"]
+                if rule["id"] == "mosaic-host-source-inputs"
+            )["suffixes"],
+        )
+        self.assertIn(
+            ".rs",
+            next(
+                rule
+                for rule in by_language["mosaic"]["scoped_inputs"]
+                if rule["id"] == "mosaic-tests-source-inputs"
+            )["suffixes"],
+        )
+        self.assertIn("py.typed", by_language["python"]["recursive_exact_basenames"])
+        self.assertIn(
+            ".tw",
+            next(
+                rule
+                for rule in by_language["python"]["scoped_inputs"]
+                if rule["id"] == "python-package-resource-inputs"
+            )["suffixes"],
+        )
+        self.assertIn(
+            ".alg",
+            next(
+                rule
+                for rule in by_language["python"]["scoped_inputs"]
+                if rule["id"] == "python-tests-resource-inputs"
+            )["suffixes"],
+        )
+        self.assertIn(
+            ".swift",
+            next(
+                rule
+                for rule in by_language["rust"]["scoped_inputs"]
+                if rule["id"] == "rust-template-source-inputs"
+            )["suffixes"],
+        )
+        self.assertIn(
+            ".csproj",
+            next(
+                rule
+                for rule in by_language["rust"]["scoped_inputs"]
+                if rule["id"] == "rust-test-host-inputs"
+            )["suffixes"],
+        )
+        self.assertIn(
+            ".mil",
+            next(
+                rule
+                for rule in by_language["rust"]["scoped_inputs"]
+                if rule["id"] == "rust-mosaic-package-inputs"
+            )["suffixes"],
+        )
+        self.assertIn(
+            ".json",
+            next(
+                rule
+                for rule in by_language["typescript"]["scoped_inputs"]
+                if rule["id"] == "typescript-test-resource-inputs"
+            )["suffixes"],
+        )
+        self.assertIn(".csv", scoped("go", "go-testdata-resource-inputs")["suffixes"])
+        self.assertIn(".wasm", scoped("dart", "dart-test-resource-inputs")["suffixes"])
+        self.assertIn(
+            ".json", scoped("elixir", "elixir-test-resource-inputs")["suffixes"]
+        )
+        self.assertIn(
+            ".csv", scoped("fsharp", "fsharp-tests-project-inputs")["suffixes"]
+        )
+        self.assertIn(".json", scoped("lua", "lua-tests-resource-inputs")["suffixes"])
+        self.assertIn(".csv", scoped("perl", "perl-test-resource-inputs")["suffixes"])
+        self.assertIn(".json", scoped("ruby", "ruby-test-resource-inputs")["suffixes"])
+        self.assertIn(".py", scoped("ruby", "ruby-test-resource-inputs")["suffixes"])
+        self.assertIn(".toml", scoped("ruby", "ruby-test-resource-inputs")["suffixes"])
+        self.assertIn(".wast", scoped("rust", "rust-tests-resource-inputs")["suffixes"])
+        self.assertIn(
+            ".lattice",
+            scoped("typescript", "typescript-source-resource-inputs")["suffixes"],
+        )
+        self.assertIn(
+            "grammar-tools.cli.json",
+            scoped("typescript", "typescript-program-config-inputs")["exact_basenames"],
+        )
+
+    def test_language_source_input_registry_covers_reviewed_repository_inputs(
+        self,
+    ) -> None:
+        registry = runner.load_document(
+            FIXTURE_ROOT / "language-source-input-registry.json"
+        )
+        registry_sha256 = runner.source_input_registry_digest(registry)
+        samples = [
+            ("c", "code/packages/c/aes/tools/run.sh", "tools/run.sh"),
+            ("cpp", "code/packages/cpp/aes/tools/run.ps1", "tools/run.ps1"),
+            (
+                "csharp",
+                "code/packages/csharp/sql-csv-source/tests/CodingAdventures.SqlCsvSource.Tests/fixtures/departments.csv",
+                "tests/CodingAdventures.SqlCsvSource.Tests/fixtures/departments.csv",
+            ),
+            (
+                "dart",
+                "code/packages/dart/wasm-runtime/test/fixtures/square_nostd.wasm",
+                "test/fixtures/square_nostd.wasm",
+            ),
+            (
+                "elixir",
+                "code/packages/elixir/commonmark_parser/test/fixtures/spec.json",
+                "test/fixtures/spec.json",
+            ),
+            (
+                "fsharp",
+                "code/packages/fsharp/sql-csv-source/tests/CodingAdventures.SqlCsvSource.Tests/fixtures/departments.csv",
+                "tests/CodingAdventures.SqlCsvSource.Tests/fixtures/departments.csv",
+            ),
+            (
+                "go",
+                "code/packages/go/sql-csv-source/testdata/departments.csv",
+                "testdata/departments.csv",
+            ),
+            (
+                "go",
+                "code/programs/go/mosaicbook-server/static/index.html",
+                "static/index.html",
+            ),
+            (
+                "haskell",
+                "code/programs/haskell/conduit-hello/tools/run-tests.sh",
+                "tools/run-tests.sh",
+            ),
+            (
+                "lua",
+                "code/packages/lua/commonmark/tests/commonmark_spec.json",
+                "tests/commonmark_spec.json",
+            ),
+            (
+                "mosaic",
+                "code/programs/mosaic/venture-browser/scripts/build-all.sh",
+                "scripts/build-all.sh",
+            ),
+            (
+                "perl",
+                "code/packages/perl/sql-csv-source/t/fixtures/departments.csv",
+                "t/fixtures/departments.csv",
+            ),
+            (
+                "python",
+                "code/programs/python/unix-tools/basename.json",
+                "basename.json",
+            ),
+            (
+                "ruby",
+                "code/packages/ruby/commonmark_parser/test/spec.json",
+                "test/spec.json",
+            ),
+            (
+                "ruby",
+                "code/programs/ruby/build-tool/test/fixtures/simple/code/packages/ruby/pkg-a/src/main.py",
+                "test/fixtures/simple/code/packages/ruby/pkg-a/src/main.py",
+            ),
+            (
+                "ruby",
+                "code/programs/ruby/build-tool/test/fixtures/simple/code/packages/ruby/pkg-a/pyproject.toml",
+                "test/fixtures/simple/code/packages/ruby/pkg-a/pyproject.toml",
+            ),
+            (
+                "rust",
+                "code/packages/rust/wasm-conformance/tests/fixtures/testsuite/address.wast",
+                "tests/fixtures/testsuite/address.wast",
+            ),
+            (
+                "rust",
+                "code/packages/rust/chief-of-staff-agent-stdio-host/tests/fixtures/echo_agent.py",
+                "tests/fixtures/echo_agent.py",
+            ),
+            (
+                "swift",
+                "code/packages/swift/grammar-tools/regen-embedded-grammars.sh",
+                "regen-embedded-grammars.sh",
+            ),
+            (
+                "typescript",
+                "code/packages/typescript/conduit/tsconfig.test.json",
+                "tsconfig.test.json",
+            ),
+            (
+                "typescript",
+                "code/packages/typescript/grammar-tools/program/grammar-tools.cli.json",
+                "program/grammar-tools.cli.json",
+            ),
+            (
+                "typescript",
+                "code/programs/typescript/checklist-app/electron/tsconfig.json",
+                "electron/tsconfig.json",
+            ),
+        ]
+        expected_digest = hashlib.sha256(b"reviewed-input").hexdigest()
+        for language, repository_path, package_path in samples:
+            with self.subTest(language=language, path=repository_path):
+                self.assertTrue((runner.REPO_ROOT / repository_path).is_file())
+                actual = runner._expected_source_collection(
+                    {
+                        "language": language,
+                        "mode": "extension",
+                        "registry_sha256": registry_sha256,
+                        "declared_srcs": [],
+                        "candidates": [
+                            {
+                                "path": package_path,
+                                "kind": "file",
+                                "content_hex": b"reviewed-input".hex(),
+                            }
+                        ],
+                    },
+                    registry,
+                )
+                self.assertEqual(
+                    actual,
+                    [{"path": package_path, "digest": expected_digest}],
+                )
+
+    def test_language_source_input_registry_rejects_drift_and_collisions(self) -> None:
+        schema = runner.load_document(
+            FIXTURE_ROOT / "language-source-input-registry.schema.json"
+        )
+        canonical = runner.load_document(
+            FIXTURE_ROOT / "language-source-input-registry.json"
+        )
+
+        mutations: list[tuple[str, object, str]] = []
+
+        missing = copy.deepcopy(canonical)
+        missing["languages"].pop()
+        mutations.append(
+            ("missing-language", missing, "SOURCE_INPUT_REGISTRY_SCHEMA_INVALID")
+        )
+
+        duplicate = copy.deepcopy(canonical)
+        duplicate["languages"].insert(1, copy.deepcopy(duplicate["languages"][0]))
+        mutations.append(
+            ("duplicate-language", duplicate, "SOURCE_INPUT_LANGUAGE_DUPLICATE")
+        )
+
+        unsorted = copy.deepcopy(canonical)
+        unsorted["languages"][0], unsorted["languages"][1] = (
+            unsorted["languages"][1],
+            unsorted["languages"][0],
+        )
+        mutations.append(("unsorted-language", unsorted, "SOURCE_INPUT_NOT_CANONICAL"))
+
+        collision = copy.deepcopy(canonical)
+        collision["languages"][0]["root_exact_basenames"].append(
+            collision["languages"][0]["recursive_exact_basenames"][0]
+        )
+        collision["languages"][0]["root_exact_basenames"].sort(
+            key=lambda value: value.encode("utf-8")
+        )
+        mutations.append(("cross-role", collision, "SOURCE_INPUT_SELECTOR_COLLISION"))
+
+        undeclared_alias = copy.deepcopy(canonical)
+        undeclared_alias["languages"][2]["root_exact_basenames"].append("NUGET.CONFIG")
+        undeclared_alias["languages"][2]["root_exact_basenames"].sort(
+            key=lambda value: value.encode("utf-8")
+        )
+        mutations.append(
+            (
+                "undeclared-case-alias",
+                undeclared_alias,
+                "SOURCE_INPUT_SELECTOR_COLLISION",
+            )
+        )
+
+        unsafe = copy.deepcopy(canonical)
+        unsafe["languages"][0]["root_exact_relative_paths"].append("../escape")
+        mutations.append(
+            ("unsafe-path", unsafe, "SOURCE_INPUT_REGISTRY_SCHEMA_INVALID")
+        )
+
+        bidi = copy.deepcopy(canonical)
+        bidi["languages"][0]["root_exact_basenames"].append("safe\u202efile")
+        mutations.append(("bidi-control", bidi, "SOURCE_INPUT_PATH_UNSAFE"))
+
+        generated_scope = copy.deepcopy(canonical)
+        generated_scope["languages"][3]["scoped_inputs"][0]["path_prefix"] = "build"
+        mutations.append(
+            ("generated-scope", generated_scope, "SOURCE_INPUT_PATH_UNSAFE")
+        )
+
+        scoped_collision = copy.deepcopy(canonical)
+        overlapping = copy.deepcopy(
+            scoped_collision["languages"][3]["scoped_inputs"][0]
+        )
+        overlapping["id"] = "dart-flutter-android-overlap"
+        overlapping["suffixes"] = [".kt"]
+        scoped_collision["languages"][3]["scoped_inputs"].append(overlapping)
+        scoped_collision["languages"][3]["scoped_inputs"].sort(
+            key=lambda item: item["id"].encode("utf-8")
+        )
+        mutations.append(
+            (
+                "scoped-collision",
+                scoped_collision,
+                "SOURCE_INPUT_SELECTOR_COLLISION",
+            )
+        )
+
+        scoped_global_suffix = copy.deepcopy(canonical)
+        scoped_global_suffix["languages"][0]["scoped_inputs"].append(
+            {
+                "id": "c-global-suffix-overlap",
+                "role": "native_companion",
+                "decision": "include",
+                "scope": "subtree",
+                "path_prefix": "native",
+                "suffixes": [".c"],
+                "exact_basenames": [],
+                "reason": "negative collision fixture",
+                "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit",
+            }
+        )
+        scoped_global_suffix["languages"][0]["scoped_inputs"].sort(
+            key=lambda item: item["id"].encode("utf-8")
+        )
+        mutations.append(
+            (
+                "scoped-global-suffix",
+                scoped_global_suffix,
+                "SOURCE_INPUT_SELECTOR_COLLISION",
+            )
+        )
+
+        scoped_global_basename = copy.deepcopy(canonical)
+        scoped_global_basename["languages"][0]["scoped_inputs"].append(
+            {
+                "id": "c-global-basename-overlap",
+                "role": "native_companion",
+                "decision": "include",
+                "scope": "subtree",
+                "path_prefix": "native",
+                "suffixes": [],
+                "exact_basenames": ["CMakeLists.txt"],
+                "reason": "negative collision fixture",
+                "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit",
+            }
+        )
+        scoped_global_basename["languages"][0]["scoped_inputs"].sort(
+            key=lambda item: item["id"].encode("utf-8")
+        )
+        mutations.append(
+            (
+                "scoped-global-basename",
+                scoped_global_basename,
+                "SOURCE_INPUT_SELECTOR_COLLISION",
+            )
+        )
+
+        exact_path_suffix = copy.deepcopy(canonical)
+        exact_path_suffix["languages"][3]["root_exact_relative_paths"].append(
+            "main.dart"
+        )
+        exact_path_suffix["languages"][3]["root_exact_relative_paths"].sort(
+            key=lambda value: value.encode("utf-8")
+        )
+        mutations.append(
+            (
+                "exact-path-suffix-overlap",
+                exact_path_suffix,
+                "SOURCE_INPUT_SELECTOR_COLLISION",
+            )
+        )
+
+        recursive_basename_suffix = copy.deepcopy(canonical)
+        recursive_basename_suffix["languages"][3]["recursive_exact_basenames"] = [
+            "main.dart"
+        ]
+        mutations.append(
+            (
+                "recursive-basename-suffix-overlap",
+                recursive_basename_suffix,
+                "SOURCE_INPUT_SELECTOR_COLLISION",
+            )
+        )
+
+        selector_budget = copy.deepcopy(canonical)
+        selector_budget["languages"][0]["scoped_inputs"] = [
+            {
+                "id": f"c-budget-{group:02d}",
+                "role": "native_companion",
+                "decision": "include",
+                "scope": "subtree",
+                "path_prefix": f"budget-{group:02d}",
+                "suffixes": [
+                    f".budget-{group:02d}-{index:03d}" for index in range(256)
+                ],
+                "exact_basenames": [],
+                "reason": "negative aggregate selector-budget fixture",
+                "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit",
+            }
+            for group in range(17)
+        ]
+        mutations.append(
+            (
+                "aggregate-selector-budget",
+                selector_budget,
+                "SOURCE_INPUT_SELECTOR_LIMIT",
+            )
+        )
+
+        excluded_scope = copy.deepcopy(canonical)
+        excluded_scope["languages"][3]["scoped_inputs"][0]["decision"] = "exclude"
+        mutations.append(
+            (
+                "excluded-scope",
+                excluded_scope,
+                "SOURCE_INPUT_REGISTRY_SCHEMA_INVALID",
+            )
+        )
+
+        malformed_selector_type = copy.deepcopy(canonical)
+        malformed_selector_type["languages"][0]["recursive_suffixes"] = 7
+        mutations.append(
+            (
+                "malformed-selector-type",
+                malformed_selector_type,
+                "SOURCE_INPUT_REGISTRY_SCHEMA_INVALID",
+            )
+        )
+
+        missing_owner = copy.deepcopy(canonical)
+        missing_owner["languages"][3]["scoped_inputs"][0]["owner"] = ""
+        mutations.append(
+            (
+                "missing-owner",
+                missing_owner,
+                "SOURCE_INPUT_REGISTRY_SCHEMA_INVALID",
+            )
+        )
+
+        for name, registry, expected_code in mutations:
+            with (
+                self.subTest(name=name),
+                self.assertRaises(runner.ConformanceError) as raised,
+            ):
+                runner._validate_source_input_registry(registry, schema)
+            self.assertEqual(raised.exception.code, expected_code)
 
     def test_expected_results_are_checked_in_canonical_order(self) -> None:
         for case_path in sorted(CASES_ROOT.glob("*.json")):
@@ -894,9 +1435,7 @@ class PureDomainValidationTests(unittest.TestCase):
         ]:
             self.assertNotIn(entry["path"], serialized)
 
-        boundaries = load_case(
-            "validation-tracked-artifacts-unicode-boundaries.json"
-        )
+        boundaries = load_case("validation-tracked-artifacts-unicode-boundaries.json")
         diagnostics = runner._expected_tracked_artifact_validation(
             boundaries["input"]["options"]
         )
@@ -1241,7 +1780,17 @@ class PureDomainValidationTests(unittest.TestCase):
             {"extension", "declared_sources"},
         )
 
+        registry = runner.load_document(
+            FIXTURE_ROOT / "language-source-input-registry.json"
+        )
+        registry_digest = runner.source_input_registry_digest(registry)
+
         for case in cases:
+            options = case["input"]["options"]
+            self.assertEqual(options["language"], "ocaml")
+            self.assertEqual(options["registry_sha256"], registry_digest)
+            self.assertNotIn("include_extensions", options)
+            self.assertNotIn("special_filenames", options)
             candidates = case["input"]["options"]["candidates"]
             excluded_components = {
                 candidate["path"].split("/")[1]
@@ -1253,9 +1802,7 @@ class PureDomainValidationTests(unittest.TestCase):
                 {candidate["kind"] for candidate in candidates},
                 {"file", "symlink", "reparse_point"},
             )
-            included = {
-                entry["path"] for entry in case["expected"]["result"]["files"]
-            }
+            included = {entry["path"] for entry in case["expected"]["result"]["files"]}
             self.assertTrue(
                 {
                     "case/_Build/generated.ml",
@@ -1271,6 +1818,59 @@ class PureDomainValidationTests(unittest.TestCase):
                     for path in included
                 )
             )
+
+        role_case = load_case("source-collection-registry-roles.json")
+        role_options = role_case["input"]["options"]
+        included = {
+            entry["path"]
+            for entry in runner._expected_source_collection(role_options, registry)
+        }
+        self.assertIn("required_capabilities.json", included)
+        self.assertNotIn("nested/required_capabilities.json", included)
+        self.assertNotIn("nested/pubspec.yaml", included)
+        self.assertNotIn("other/lib.rs", included)
+        self.assertIn("android/gradle.properties", included)
+        self.assertIn(
+            "android/gradle/wrapper/gradle-wrapper.properties",
+            included,
+        )
+        self.assertNotIn("android/key.properties", included)
+        self.assertNotIn("android/local.properties", included)
+
+        wrong_digest = copy.deepcopy(role_options)
+        wrong_digest["registry_sha256"] = "0" * 64
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner._expected_source_collection(wrong_digest, registry)
+        self.assertEqual(
+            raised.exception.code,
+            "CASE_SOURCE_REGISTRY_DIGEST_MISMATCH",
+        )
+
+        unknown_language = copy.deepcopy(role_options)
+        unknown_language["language"] = "zig"
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner._expected_source_collection(unknown_language, registry)
+        self.assertEqual(raised.exception.code, "CASE_SOURCE_LANGUAGE_UNKNOWN")
+
+        changed = copy.deepcopy(role_options)
+        capability = next(
+            candidate
+            for candidate in changed["candidates"]
+            if candidate["path"] == "required_capabilities.json"
+        )
+        capability["content_hex"] = "6368616e6765640a"
+        before = {
+            entry["path"]: entry["digest"]
+            for entry in runner._expected_source_collection(role_options, registry)
+        }
+        after = {
+            entry["path"]: entry["digest"]
+            for entry in runner._expected_source_collection(changed, registry)
+        }
+        self.assertNotEqual(
+            before["required_capabilities.json"],
+            after["required_capabilities.json"],
+        )
 
     def test_dependency_cycles_are_rejected_without_recursion(self) -> None:
         cyclic = load_case("diff-selection-transitive.json")
@@ -1426,6 +2026,35 @@ class PureDomainValidationTests(unittest.TestCase):
                 ),
                 "CASE_SOURCE_CANDIDATE_DUPLICATE",
             ),
+            (
+                "source-collection-extension.json",
+                lambda case: case["input"]["options"]["candidates"].append(
+                    {
+                        "path": "src/MAIN.ml",
+                        "kind": "file",
+                        "content_hex": "00",
+                    }
+                ),
+                "CASE_SOURCE_CANDIDATE_DUPLICATE",
+            ),
+            (
+                "source-collection-extension.json",
+                lambda case: case["input"]["options"]["candidates"].append(
+                    {
+                        "path": "src/safe\u202efile.ml",
+                        "kind": "file",
+                        "content_hex": "00",
+                    }
+                ),
+                "CASE_SOURCE_PATH_UNSAFE",
+            ),
+            (
+                "source-collection-extension.json",
+                lambda case: case["input"]["options"]["candidates"].append(
+                    {"path": "src", "kind": "file", "content_hex": "00"}
+                ),
+                "CASE_SOURCE_CANDIDATE_COLLISION",
+            ),
         )
         for filename, mutate, code in mutations:
             with self.subTest(filename=filename, code=code):
@@ -1515,7 +2144,7 @@ class CommandLineTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
-        self.assertEqual(summary["case_count"], 121)
+        self.assertEqual(summary["case_count"], 122)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

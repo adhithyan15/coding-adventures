@@ -10,6 +10,8 @@ build-tool-v1/
   schema.json
   result.schema.json
   pure-domains.schema.json
+  language-source-input-registry.schema.json
+  language-source-input-registry.json
   execution.schema.json
   execution-authority.schema.json
   execution-preflight-loader-authority.schema.json
@@ -35,7 +37,7 @@ emerging OCaml lane. It records front-door and shared-engine state but contains
 no executable commands. Every adapter is currently marked missing, so a valid
 inventory is not reported as conformance success.
 
-The 121-case bootstrap corpus covers every process-free v1 domain:
+The 122-case bootstrap corpus covers every process-free v1 domain:
 
 - canonical package and program membership, language-registry classification
   with paired C#, F#, Haskell, Java, Kotlin, and OCaml package/program
@@ -63,8 +65,17 @@ The 121-case bootstrap corpus covers every process-free v1 domain:
 - conservative diff selection and prerequisite closure;
 - framed SHA-256 hashing plus hit, miss, and corrupt-cache recovery;
 - case-sensitive source collection across the complete generated-artifact
-  registry, extension and declared-source selection modes, exact near-name
-  retention, inert symlink/reparse boundaries, and per-file SHA-256 digests;
+  registry and the closed 23-language source-input registry, including all
+  five BUILD fronts, root-only capability and package metadata, reviewed
+  inclusion-only path-scoped host resources and native companions, exact
+  BUILD-invoked and reviewed package build scripts, shared Unix command
+  specifications, conventional test fixtures and package resources, a
+  representative tracked-repository
+  projection, extension and declared-source selection modes, exact near-name
+  retention, inert symlink/reparse boundaries, Android signing/SDK-property
+  exclusion, and per-file SHA-256 digests. Shared ancestor inputs and tracked
+  generated-pruned inputs remain outside this package-root authority and are
+  assigned to a dependent exact-boundary contract;
 - inline-only Starlark module resolution, bounded evaluation requests,
   structured command extraction, stable missing/outside errors, and adversarial
   fuel, recursion, aggregate, range, scalar-value, load-graph, and output

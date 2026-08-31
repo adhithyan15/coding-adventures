@@ -1,0 +1,966 @@
+{
+  "schema_version": 1,
+  "universal_inputs": {
+    "build_filenames": ["BUILD", "BUILD_linux", "BUILD_mac", "BUILD_mac_and_linux", "BUILD_windows"],
+    "generated_directory_components": [".build", ".cargo", ".claude", ".dart_tool", ".git", ".gradle", ".hg", ".mypy_cache", ".pytest_cache", ".ruff_cache", ".stack-work", ".svn", ".tox", ".venv", "Pods", "__pycache__", "_build", "build", "cover", "deps", "dist", "dist-newstyle", "gradle-build", "node_modules", "target", "vendor"],
+    "root_exact_basenames": ["required_capabilities.json"]
+  },
+  "languages": [
+    {
+      "language": "c",
+      "recursive_suffixes": [".S", ".c", ".h", ".s"],
+      "recursive_exact_basenames": ["CMakeLists.txt", "meson.build"],
+      "root_exact_basenames": [],
+      "root_variable_suffixes": [],
+      "root_exact_relative_paths": ["lib/iso-lib.ps1", "lib/iso-lib.sh", "lib/platform-lib.ps1", "lib/platform-lib.sh", "tools/run.ps1", "tools/run.sh", "tools/selftest.ps1", "tools/selftest.sh"],
+      "case_alias_groups": [[".S", ".s"]],
+      "scoped_inputs": [
+        {
+          "id": "c-cpp-selftest-companions",
+          "role": "native_companion",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "selftest",
+          "suffixes": [".cc", ".cpp", ".cxx", ".hh", ".hpp", ".hxx"],
+          "exact_basenames": [],
+          "reason": "Tracked C harness selftests compile reviewed C++ companion translation units.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        }
+      ]
+    },
+    {
+      "language": "cpp",
+      "recursive_suffixes": [".cc", ".cpp", ".cxx", ".h", ".hh", ".hpp", ".hxx"],
+      "recursive_exact_basenames": ["CMakeLists.txt", "meson.build"],
+      "root_exact_basenames": [],
+      "root_variable_suffixes": [],
+      "root_exact_relative_paths": ["tools/run-tests.sh", "tools/run.ps1", "tools/run.sh"],
+      "case_alias_groups": [],
+      "scoped_inputs": [
+        {
+          "id": "cpp-qt-source-and-project-inputs",
+          "role": "resource",
+          "decision": "include",
+          "scope": "root",
+          "suffixes": [".pri", ".pro", ".qml"],
+          "exact_basenames": [],
+          "reason": "Tracked Qt programs compile qmake project files and QML source beside C++ sources.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+          "id": "cpp-qt-test-project-inputs",
+          "role": "resource",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "test",
+          "suffixes": [".pri", ".pro", ".qml"],
+          "exact_basenames": [],
+          "reason": "Tracked Qt package tests compile reviewed qmake and QML inputs under the test tree.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        }
+      ]
+    },
+  {
+    "language": "csharp",
+    "recursive_suffixes": [".cs", ".xaml"],
+    "recursive_exact_basenames": ["app.manifest"],
+    "root_exact_basenames": ["NuGet.Config", "global.json", "nuget.config"],
+    "root_variable_suffixes": [".csproj"],
+    "root_exact_relative_paths": ["tools/run-tests.sh"],
+    "case_alias_groups": [["NuGet.Config", "nuget.config"]],
+    "scoped_inputs": [
+      {
+        "id": "csharp-test-project-inputs",
+        "role": "resource",
+        "decision": "include",
+        "scope": "subtree",
+        "path_prefix": "test",
+        "suffixes": [".csproj"],
+        "exact_basenames": [],
+        "reason": "Tracked C# programs compile reviewed test projects below the test tree.",
+        "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+      },
+      {
+        "id": "csharp-tests-project-inputs",
+        "role": "resource",
+        "decision": "include",
+        "scope": "subtree",
+        "path_prefix": "tests",
+        "suffixes": [".csproj", ".csv"],
+        "exact_basenames": [],
+        "reason": "Tracked C# packages compile reviewed test projects below the tests tree.",
+        "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+      },
+      {
+        "id": "csharp-winui-project-inputs",
+        "role": "resource",
+        "decision": "include",
+        "scope": "subtree",
+        "path_prefix": "winui",
+        "suffixes": [".csproj"],
+        "exact_basenames": [],
+        "reason": "Tracked C# WinUI programs compile reviewed nested project files below winui.",
+        "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+      }
+    ]
+  },
+    {
+      "language": "dart",
+      "recursive_suffixes": [".dart"],
+      "recursive_exact_basenames": [],
+      "root_exact_basenames": ["analysis_options.yaml", "pubspec.lock", "pubspec.yaml", "scaffold-generator.json"],
+      "root_variable_suffixes": [],
+    "root_exact_relative_paths": ["android/gradle.properties", "android/gradle/wrapper/gradle-wrapper.properties", "tools/run-tests.sh"],
+      "case_alias_groups": [],
+      "scoped_inputs": [
+        {
+          "id": "dart-flutter-android-host-inputs",
+          "role": "resource",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "android",
+        "suffixes": [".kt", ".kts", ".png", ".xml"],
+          "exact_basenames": [],
+          "reason": "Flutter Android hosts compile Kotlin, Gradle, manifest, and packaged resource inputs.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+          "id": "dart-flutter-ios-host-inputs",
+          "role": "resource",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "ios",
+          "suffixes": [".entitlements", ".h", ".json", ".pbxproj", ".plist", ".png", ".storyboard", ".swift", ".xcconfig", ".xcscheme", ".xcsettings", ".xcworkspacedata", ".xib"],
+          "exact_basenames": [],
+          "reason": "Flutter iOS hosts compile Swift bridges, Xcode projects, entitlements, storyboards, and asset metadata.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+          "id": "dart-flutter-macos-host-inputs",
+          "role": "resource",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "macos",
+          "suffixes": [".entitlements", ".h", ".json", ".pbxproj", ".plist", ".png", ".storyboard", ".swift", ".xcconfig", ".xcscheme", ".xcsettings", ".xcworkspacedata", ".xib"],
+          "exact_basenames": [],
+          "reason": "Flutter macOS hosts compile Swift, Xcode configuration, entitlements, menus, and asset metadata.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+        "id": "dart-rust-native-root-inputs",
+          "role": "native_companion",
+          "decision": "include",
+          "scope": "root",
+          "suffixes": [],
+        "exact_basenames": ["Cargo.lock", "Cargo.toml", "build.rs"],
+          "reason": "Tracked Dart native packages build Rust companions from root Cargo metadata.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+          "id": "dart-rust-native-sources",
+          "role": "native_companion",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "src",
+          "suffixes": [".rs"],
+          "exact_basenames": [],
+          "reason": "Tracked Dart native packages compile Rust source under the package src tree.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+          "id": "dart-test-resource-inputs",
+          "role": "resource",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "test",
+          "suffixes": [".wasm"],
+          "exact_basenames": [],
+          "reason": "Tracked Dart runtime tests execute reviewed WebAssembly fixture bytes below test.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        }
+      ]
+    },
+  {
+    "language": "dotnet",
+    "recursive_suffixes": [".cs", ".fs", ".fsi", ".fsx", ".xaml"],
+    "recursive_exact_basenames": ["app.manifest"],
+      "root_exact_basenames": ["NuGet.Config", "global.json", "nuget.config"],
+      "root_variable_suffixes": [".csproj", ".fsproj"],
+      "root_exact_relative_paths": [],
+      "case_alias_groups": [["NuGet.Config", "nuget.config"]],
+    "scoped_inputs": [
+      {
+        "id": "dotnet-test-project-inputs",
+        "role": "resource",
+        "decision": "include",
+        "scope": "subtree",
+        "path_prefix": "test",
+        "suffixes": [".csproj", ".fsproj"],
+        "exact_basenames": [],
+        "reason": "Tracked .NET programs compile reviewed test projects below the test tree.",
+        "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+      },
+      {
+        "id": "dotnet-tests-project-inputs",
+        "role": "resource",
+        "decision": "include",
+        "scope": "subtree",
+        "path_prefix": "tests",
+        "suffixes": [".csproj", ".fsproj"],
+        "exact_basenames": [],
+        "reason": "Tracked .NET packages compile reviewed test projects below the tests tree.",
+        "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+      },
+      {
+        "id": "dotnet-winui-project-inputs",
+        "role": "resource",
+        "decision": "include",
+        "scope": "subtree",
+        "path_prefix": "winui",
+        "suffixes": [".csproj"],
+        "exact_basenames": [],
+        "reason": "Tracked .NET WinUI programs compile reviewed nested project files below winui.",
+        "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+      }
+    ]
+    },
+    {
+      "language": "elixir",
+      "recursive_suffixes": [".ex", ".exs"],
+      "recursive_exact_basenames": [],
+      "root_exact_basenames": ["basename.json", "cat.json", "chmod.json", "chown.json", "cmp.json", "comm.json", "cp.json", "cut.json", "df.json", "diff.json", "dirname.json", "du.json", "echo.json", "env.json", "expand.json", "false.json", "fold.json", "grep.json", "groups.json", "head.json", "id.json", "join.json", "ln.json", "logname.json", "ls.json", "md5sum.json", "mix.lock", "mkdir.json", "mv.json", "nl.json", "nproc.json", "paste.json", "printenv.json", "pwd.json", "realpath.json", "rev.json", "rm.json", "rmdir.json", "seq.json", "sha256sum.json", "sleep.json", "sort.json", "split.json", "tail.json", "tar.json", "tee.json", "touch.json", "tr.json", "true.json", "tty.json", "uname.json", "unexpand.json", "uniq.json", "wc.json", "whoami.json", "xargs.json", "yes.json"],
+      "root_variable_suffixes": [],
+      "root_exact_relative_paths": [],
+      "case_alias_groups": [],
+      "scoped_inputs": [
+        {
+          "id": "elixir-rust-nif-inputs",
+          "role": "native_companion",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "native",
+          "suffixes": [".rs"],
+          "exact_basenames": ["Cargo.lock", "Cargo.toml"],
+          "reason": "Tracked Elixir NIF packages compile Rust crates below the native tree.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+          "id": "elixir-test-resource-inputs",
+          "role": "resource",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "test",
+          "suffixes": [".csv", ".json"],
+          "exact_basenames": [],
+          "reason": "Tracked Elixir package tests consume CommonMark JSON and SQL CSV fixtures below test.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        }
+      ]
+    },
+  {
+    "language": "fsharp",
+      "recursive_suffixes": [".fs", ".fsi", ".fsx", ".xaml"],
+      "recursive_exact_basenames": ["xunit.runner.json"],
+      "root_exact_basenames": ["NuGet.Config", "global.json", "nuget.config"],
+      "root_variable_suffixes": [".fsproj"],
+      "root_exact_relative_paths": ["tools/run-tests.sh"],
+      "case_alias_groups": [["NuGet.Config", "nuget.config"]],
+    "scoped_inputs": [
+      {
+        "id": "fsharp-test-project-inputs",
+        "role": "resource",
+        "decision": "include",
+        "scope": "subtree",
+        "path_prefix": "test",
+        "suffixes": [".fsproj"],
+        "exact_basenames": [],
+        "reason": "Tracked F# programs compile reviewed test projects below the test tree.",
+        "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+      },
+      {
+        "id": "fsharp-tests-project-inputs",
+        "role": "resource",
+        "decision": "include",
+        "scope": "subtree",
+        "path_prefix": "tests",
+        "suffixes": [".csv", ".fsproj"],
+        "exact_basenames": [],
+        "reason": "Tracked F# packages compile reviewed test projects below the tests tree.",
+        "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+      }
+    ]
+    },
+  {
+    "language": "go",
+    "recursive_suffixes": [".go"],
+    "recursive_exact_basenames": [],
+      "root_exact_basenames": ["basename.json", "benchmark-tool.json", "cat.json", "chmod.json", "chown.json", "cmp.json", "comm.json", "cp.json", "cut.json", "df.json", "diff.json", "dirname.json", "du.json", "echo.json", "env.json", "expand.json", "false.json", "fold.json", "go.mod", "go.sum", "grep.json", "groups.json", "head.json", "id.json", "join.json", "ln.json", "logname.json", "ls.json", "md5sum.json", "mkdir.json", "mv.json", "nl.json", "nproc.json", "paste.json", "printenv.json", "pwd.json", "realpath.json", "rev.json", "rm.json", "rmdir.json", "scaffold-generator.json", "seq.json", "sha256sum.json", "sleep.json", "sort.json", "spec.json", "split.json", "tail.json", "tar.json", "tee.json", "touch.json", "tr.json", "true.json", "tty.json", "uname.json", "unexpand.json", "uniq.json", "wc.json", "whoami.json", "xargs.json", "yes.json"],
+      "root_variable_suffixes": [],
+      "root_exact_relative_paths": ["tools/run-tests.sh"],
+      "case_alias_groups": [],
+      "scoped_inputs": [
+        {
+          "id": "go-static-resource-inputs",
+          "role": "resource",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "static",
+          "suffixes": [".html"],
+          "exact_basenames": [],
+          "reason": "Tracked Go servers embed reviewed static HTML below the package static tree.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+          "id": "go-testdata-resource-inputs",
+          "role": "resource",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "testdata",
+          "suffixes": [".csv"],
+          "exact_basenames": [],
+          "reason": "Tracked Go package tests consume reviewed SQL CSV fixtures below testdata.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        }
+      ]
+    },
+    {
+      "language": "haskell",
+      "recursive_suffixes": [".hs", ".hsc", ".lhs"],
+      "recursive_exact_basenames": [],
+      "root_exact_basenames": ["cabal.project"],
+      "root_variable_suffixes": [".cabal"],
+      "root_exact_relative_paths": ["tools/run-tests.sh"],
+      "case_alias_groups": [],
+      "scoped_inputs": []
+    },
+    {
+      "language": "java",
+      "recursive_suffixes": [".java"],
+      "recursive_exact_basenames": [],
+      "root_exact_basenames": ["build.gradle.kts", "gradle.properties", "settings.gradle.kts"],
+      "root_variable_suffixes": [],
+      "root_exact_relative_paths": ["gradle/libs.versions.toml"],
+      "case_alias_groups": [],
+      "scoped_inputs": [
+        {
+          "id": "java-main-resources",
+          "role": "resource",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "src/main/resources",
+          "suffixes": [".csv", ".json", ".properties", ".txt", ".xml"],
+          "exact_basenames": [],
+          "reason": "Gradle packages compile and package reviewed main resources below the conventional source tree.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+          "id": "java-test-resources",
+          "role": "resource",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "src/test/resources",
+          "suffixes": [".csv", ".json", ".properties", ".txt", ".xml"],
+          "exact_basenames": [],
+          "reason": "Gradle package tests consume reviewed fixture resources below the conventional test tree.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        }
+      ]
+    },
+  {
+    "language": "kotlin",
+    "recursive_suffixes": [".kt", ".kts"],
+    "recursive_exact_basenames": [],
+    "root_exact_basenames": ["gradle.properties", "gradlew", "gradlew.bat"],
+    "root_variable_suffixes": [],
+    "root_exact_relative_paths": ["gradle/libs.versions.toml", "gradle/wrapper/gradle-wrapper.jar", "gradle/wrapper/gradle-wrapper.properties"],
+    "case_alias_groups": [],
+    "scoped_inputs": [
+      {
+        "id": "kotlin-android-host-inputs",
+        "role": "resource",
+        "decision": "include",
+        "scope": "subtree",
+        "path_prefix": "app/src",
+        "suffixes": [".png", ".webp", ".xml"],
+        "exact_basenames": [],
+        "reason": "Tracked Kotlin Android programs compile manifests and packaged resources below app/src.",
+        "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+      },
+      {
+        "id": "kotlin-main-resources",
+          "role": "resource",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "src/main/resources",
+          "suffixes": [".csv", ".json", ".properties", ".txt", ".xml"],
+          "exact_basenames": [],
+          "reason": "Gradle packages compile and package reviewed main resources below the conventional source tree.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+          "id": "kotlin-test-resources",
+          "role": "resource",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "src/test/resources",
+          "suffixes": [".csv", ".json", ".properties", ".txt", ".xml"],
+          "exact_basenames": [],
+          "reason": "Gradle package tests consume reviewed fixture resources below the conventional test tree.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        }
+      ]
+    },
+    {
+      "language": "lua",
+      "recursive_suffixes": [".lua"],
+      "recursive_exact_basenames": [],
+      "root_exact_basenames": [".luacov"],
+      "root_variable_suffixes": [".rockspec"],
+      "root_exact_relative_paths": [],
+      "case_alias_groups": [],
+      "scoped_inputs": [
+        {
+          "id": "lua-rust-native-root-inputs",
+          "role": "native_companion",
+          "decision": "include",
+          "scope": "root",
+          "suffixes": [],
+          "exact_basenames": ["Cargo.lock", "Cargo.toml", "build.rs"],
+          "reason": "Tracked Lua native packages build root Rust crates.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+          "id": "lua-rust-native-sources",
+          "role": "native_companion",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "src",
+          "suffixes": [".rs"],
+          "exact_basenames": [],
+          "reason": "Tracked Lua native packages compile Rust sources below src.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+          "id": "lua-rust-nested-extension-inputs",
+          "role": "native_companion",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "ext",
+          "suffixes": [".rs"],
+          "exact_basenames": ["Cargo.lock", "Cargo.toml"],
+          "reason": "Tracked Lua extension packages compile nested Rust crates below ext.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+          "id": "lua-tests-resource-inputs",
+          "role": "resource",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "tests",
+          "suffixes": [".csv", ".json"],
+          "exact_basenames": [],
+          "reason": "Tracked Lua package tests consume CommonMark JSON and SQL CSV fixtures below tests.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        }
+      ]
+    },
+    {
+      "language": "mosaic",
+      "recursive_suffixes": [".mil", ".mll", ".msl"],
+      "recursive_exact_basenames": [],
+      "root_exact_basenames": ["mosaic-package.toml"],
+      "root_variable_suffixes": [],
+    "root_exact_relative_paths": ["scripts/build-all.ps1", "scripts/build-all.sh", "scripts/build-web.sh"],
+    "case_alias_groups": [],
+    "scoped_inputs": [
+      {
+        "id": "mosaic-host-source-inputs",
+        "role": "native_companion",
+        "decision": "include",
+        "scope": "subtree",
+        "path_prefix": "host",
+        "suffixes": [".cpp", ".cs", ".dart", ".h", ".html", ".js", ".json", ".kt", ".md", ".mjs", ".mts", ".qml", ".swift", ".ts", ".tsx"],
+        "exact_basenames": [],
+        "reason": "Tracked Mosaic applications compile reviewed web, Qt, SwiftUI, Compose, Flutter, and XAML host sources below host.",
+        "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+      },
+      {
+        "id": "mosaic-rust-root-inputs",
+          "role": "native_companion",
+          "decision": "include",
+          "scope": "root",
+          "suffixes": [],
+          "exact_basenames": ["Cargo.lock", "Cargo.toml", "build.rs"],
+          "reason": "Tracked Mosaic packages pair Mosaic sources with root Rust compilation metadata.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+          "id": "mosaic-rust-source-inputs",
+          "role": "native_companion",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "src",
+          "suffixes": [".rs"],
+          "exact_basenames": [],
+        "reason": "Tracked Mosaic packages compile Rust runtime source from the package src tree.",
+        "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+      },
+      {
+        "id": "mosaic-tests-source-inputs",
+        "role": "resource",
+        "decision": "include",
+        "scope": "subtree",
+        "path_prefix": "tests",
+        "suffixes": [".html", ".json", ".md", ".qml", ".rs"],
+        "exact_basenames": [],
+        "reason": "Tracked Mosaic package tests compile Rust harnesses and reviewed host fixture resources below tests.",
+        "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+      },
+      {
+        "id": "mosaic-token-resource-inputs",
+        "role": "resource",
+        "decision": "include",
+        "scope": "subtree",
+        "path_prefix": "tokens",
+        "suffixes": [".json"],
+        "exact_basenames": [],
+        "reason": "Tracked Mosaic standard packages compile reviewed design-token JSON below tokens.",
+        "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+      }
+    ]
+    },
+    {
+      "language": "ocaml",
+      "recursive_suffixes": [".ml", ".mli"],
+      "recursive_exact_basenames": ["dune"],
+      "root_exact_basenames": [".ocamlformat", "dune-project"],
+      "root_variable_suffixes": [".opam"],
+      "root_exact_relative_paths": [],
+      "case_alias_groups": [],
+      "scoped_inputs": []
+    },
+    {
+      "language": "perl",
+      "recursive_suffixes": [".pl", ".pm", ".t", ".xs"],
+      "recursive_exact_basenames": [],
+      "root_exact_basenames": ["Build.PL", "MANIFEST", "META.json", "META.yml", "Makefile.PL", "cpanfile"],
+      "root_variable_suffixes": [],
+      "root_exact_relative_paths": [],
+      "case_alias_groups": [],
+      "scoped_inputs": [
+        {
+          "id": "perl-rust-native-root-inputs",
+          "role": "native_companion",
+          "decision": "include",
+          "scope": "root",
+          "suffixes": [],
+          "exact_basenames": ["Cargo.lock", "Cargo.toml", "build.rs"],
+          "reason": "Tracked Perl native packages build root Rust crates.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+          "id": "perl-rust-native-sources",
+          "role": "native_companion",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "src",
+          "suffixes": [".rs"],
+          "exact_basenames": [],
+          "reason": "Tracked Perl native packages compile Rust sources below src.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+          "id": "perl-test-resource-inputs",
+          "role": "resource",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "t",
+          "suffixes": [".csv"],
+          "exact_basenames": [],
+          "reason": "Tracked Perl package tests consume reviewed SQL CSV fixtures below t.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        }
+      ]
+    },
+  {
+    "language": "python",
+    "recursive_suffixes": [".py", ".pyi"],
+    "recursive_exact_basenames": ["py.typed"],
+      "root_exact_basenames": ["basename.json", "cat.json", "chmod.json", "chown.json", "cmp.json", "comm.json", "cp.json", "cut.json", "df.json", "diff.json", "dirname.json", "du.json", "echo.json", "env.json", "expand.json", "false.json", "fold.json", "grep.json", "groups.json", "head.json", "id.json", "join.json", "ln.json", "logname.json", "ls.json", "md5sum.json", "mkdir.json", "mv.json", "nl.json", "nproc.json", "paste.json", "printenv.json", "pwd.json", "pyproject.toml", "realpath.json", "rev.json", "rm.json", "rmdir.json", "seq.json", "setup.cfg", "sha256sum.json", "sleep.json", "sort.json", "split.json", "tail.json", "tar.json", "tee.json", "touch.json", "tr.json", "true.json", "tty.json", "uname.json", "unexpand.json", "uniq.json", "wc.json", "whoami.json", "xargs.json", "yes.json"],
+      "root_variable_suffixes": [],
+      "root_exact_relative_paths": [],
+    "case_alias_groups": [],
+    "scoped_inputs": [
+      {
+        "id": "python-package-resource-inputs",
+        "role": "resource",
+        "decision": "include",
+        "scope": "subtree",
+        "path_prefix": "src",
+        "suffixes": [".json", ".tw"],
+        "exact_basenames": [],
+        "reason": "Tracked Python packages embed reviewed CLI specifications and Twig standard-library sources below src.",
+        "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+      },
+      {
+        "id": "python-rust-native-root-inputs",
+          "role": "native_companion",
+          "decision": "include",
+          "scope": "root",
+          "suffixes": [],
+          "exact_basenames": ["Cargo.lock", "Cargo.toml", "build.rs"],
+          "reason": "Tracked Python native packages build root Rust crates.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+          "id": "python-rust-native-sources",
+          "role": "native_companion",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "src",
+          "suffixes": [".rs"],
+          "exact_basenames": [],
+          "reason": "Tracked Python native packages compile Rust sources below src.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+          "id": "python-rust-nested-extension-inputs",
+          "role": "native_companion",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "ext",
+          "suffixes": [".rs"],
+          "exact_basenames": ["Cargo.lock", "Cargo.toml"],
+          "reason": "Tracked Python extension packages compile nested Rust crates below ext.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+          "id": "python-tests-resource-inputs",
+          "role": "resource",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "tests",
+          "suffixes": [".alg", ".csv", ".json", ".toml"],
+          "exact_basenames": [],
+          "reason": "Tracked Python tests consume reviewed algorithm, CSV, JSON, and TOML fixtures below tests.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        }
+      ]
+    },
+    {
+      "language": "ruby",
+      "recursive_suffixes": [".rb", ".rbs"],
+      "recursive_exact_basenames": [],
+      "root_exact_basenames": ["Gemfile", "Rakefile", "basename.json", "cat.json", "chmod.json", "chown.json", "cmp.json", "comm.json", "cp.json", "cut.json", "df.json", "diff.json", "dirname.json", "du.json", "echo.json", "env.json", "expand.json", "false.json", "fold.json", "grep.json", "groups.json", "head.json", "id.json", "join.json", "ln.json", "logname.json", "ls.json", "md5sum.json", "mkdir.json", "mv.json", "nl.json", "nproc.json", "paste.json", "printenv.json", "pwd.json", "realpath.json", "rev.json", "rm.json", "rmdir.json", "seq.json", "sha256sum.json", "sleep.json", "sort.json", "split.json", "tail.json", "tar.json", "tee.json", "touch.json", "tr.json", "true.json", "tty.json", "uname.json", "unexpand.json", "uniq.json", "wc.json", "whoami.json", "xargs.json", "yes.json"],
+      "root_variable_suffixes": [".gemspec"],
+      "root_exact_relative_paths": [],
+      "case_alias_groups": [],
+      "scoped_inputs": [
+        {
+          "id": "ruby-rust-native-extension-inputs",
+          "role": "native_companion",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "ext",
+          "suffixes": [".rs"],
+          "exact_basenames": ["Cargo.lock", "Cargo.toml"],
+          "reason": "Tracked Ruby native gems compile Rust crates below ext.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+          "id": "ruby-test-resource-inputs",
+          "role": "resource",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "test",
+          "suffixes": [".csv", ".json", ".py", ".toml"],
+          "exact_basenames": [],
+          "reason": "Tracked Ruby package tests consume CommonMark JSON, SQL CSV, and build-tool Python/TOML fixture trees below test.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        }
+      ]
+    },
+    {
+      "language": "rust",
+      "recursive_suffixes": [".rs"],
+      "recursive_exact_basenames": [],
+      "root_exact_basenames": ["Cargo.lock", "Cargo.toml", "basename.json", "cat.json", "chmod.json", "chown.json", "cli.spec.json", "cmp.json", "comm.json", "cp.json", "cut.json", "df.json", "diff.json", "dirname.json", "du.json", "echo.json", "env.json", "expand.json", "false.json", "fold.json", "grep.json", "groups.json", "head.json", "html-skeleton.lexer.states.toml", "html1.lexer.states.toml", "id.json", "join.json", "ln.json", "logname.json", "ls.json", "md5sum.json", "mkdir.json", "mv.json", "nl.json", "nproc.json", "paste.json", "printenv.json", "pwd.json", "realpath.json", "rev.json", "rm.json", "rmdir.json", "ruby-1.8.lexer.states.toml", "seq.json", "sha256sum.json", "sleep.json", "sort.json", "split.json", "tail.json", "tar.json", "tee.json", "touch.json", "tr.json", "true.json", "tty.json", "uname.json", "unexpand.json", "uniq.json", "wc.json", "whoami.json", "xargs.json", "yes.json"],
+      "root_variable_suffixes": [],
+      "root_exact_relative_paths": ["build-wasm.sh"],
+      "case_alias_groups": [],
+      "scoped_inputs": [
+        {
+          "id": "rust-dart-bridge-inputs",
+          "role": "native_companion",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "dart",
+          "suffixes": [".c", ".h"],
+          "exact_basenames": [],
+          "reason": "Tracked Rust Dart bridges compile C shims and headers below dart.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+      {
+        "id": "rust-header-inputs",
+          "role": "native_companion",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "include",
+          "suffixes": [".h", ".hpp"],
+          "exact_basenames": [],
+        "reason": "Tracked Rust C ABI packages ship compiled public headers below include.",
+        "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+      },
+      {
+        "id": "rust-mosaic-fixture-inputs",
+        "role": "resource",
+        "decision": "include",
+        "scope": "subtree",
+        "path_prefix": "fixtures",
+        "suffixes": [".mil", ".mll", ".msl"],
+        "exact_basenames": [],
+        "reason": "Tracked Rust Mosaic emitters compile reviewed Mosaic package fixtures below fixtures.",
+        "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+      },
+      {
+        "id": "rust-mosaic-package-inputs",
+        "role": "resource",
+        "decision": "include",
+        "scope": "subtree",
+        "path_prefix": "package",
+        "suffixes": [".mil", ".mll", ".msl"],
+        "exact_basenames": [],
+        "reason": "Tracked Rust Mosaic conformance packages compile reviewed Mosaic sources below package.",
+        "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+      },
+        {
+          "id": "rust-runtime-inputs",
+          "role": "native_companion",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "runtime",
+          "suffixes": [".c", ".h"],
+          "exact_basenames": [],
+          "reason": "Tracked Rust AOT packages compile C runtime companions below runtime.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+      {
+        "id": "rust-source-tree-native-inputs",
+          "role": "native_companion",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "src",
+          "suffixes": [".c", ".cc", ".cpp", ".cxx", ".h", ".hpp"],
+          "exact_basenames": [],
+        "reason": "Tracked firmware and bridge packages compile native companion sources below src.",
+        "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+      },
+      {
+        "id": "rust-template-source-inputs",
+        "role": "resource",
+        "decision": "include",
+        "scope": "subtree",
+        "path_prefix": "templates",
+        "suffixes": [".c", ".cpp", ".cs", ".dart", ".h", ".kt", ".swift"],
+        "exact_basenames": [],
+        "reason": "Tracked Rust Mosaic bindings compile reviewed cross-language host templates through include_str.",
+        "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+      },
+      {
+        "id": "rust-test-host-inputs",
+          "role": "resource",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "test",
+          "suffixes": [".c", ".cs", ".csproj", ".dart", ".kt", ".swift"],
+          "exact_basenames": [],
+          "reason": "Tracked Rust ABI packages compile cross-language smoke hosts below test.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+          "id": "rust-tests-resource-inputs",
+          "role": "resource",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "tests",
+          "suffixes": [".apkg", ".csv", ".dat", ".js", ".json", ".mil", ".mll", ".msl", ".stdout", ".test", ".toml", ".txt", ".wast", ".xls", ".xlsx"],
+          "exact_basenames": ["echo_agent.py"],
+          "reason": "Tracked Rust tests consume reviewed archive, parser, compiler-diff, Mosaic, spreadsheet, subprocess, and WebAssembly fixtures below tests.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        }
+      ]
+    },
+    {
+      "language": "starlark",
+      "recursive_suffixes": [".bzl", ".star"],
+      "recursive_exact_basenames": [],
+      "root_exact_basenames": [],
+      "root_variable_suffixes": [],
+      "root_exact_relative_paths": [],
+      "case_alias_groups": [],
+      "scoped_inputs": []
+    },
+    {
+      "language": "swift",
+      "recursive_suffixes": [".swift"],
+      "recursive_exact_basenames": [],
+      "root_exact_basenames": [],
+      "root_variable_suffixes": [],
+      "root_exact_relative_paths": ["regen-embedded-grammars.sh"],
+      "case_alias_groups": [],
+      "scoped_inputs": [
+        {
+          "id": "swift-c-family-target-inputs",
+          "role": "native_companion",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "Sources",
+          "suffixes": [".c", ".cc", ".cpp", ".h", ".m", ".mm", ".modulemap"],
+          "exact_basenames": [],
+          "reason": "SwiftPM C-family targets compile headers, module maps, and native sources below Sources.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        }
+      ]
+    },
+    {
+      "language": "twig",
+      "recursive_suffixes": [".tw"],
+      "recursive_exact_basenames": [],
+      "root_exact_basenames": [],
+      "root_variable_suffixes": [],
+      "root_exact_relative_paths": [],
+      "case_alias_groups": [],
+      "scoped_inputs": []
+    },
+  {
+    "language": "typescript",
+      "recursive_suffixes": [".cjs", ".cts", ".js", ".jsx", ".mjs", ".mts", ".ts", ".tsx"],
+      "recursive_exact_basenames": [],
+      "root_exact_basenames": ["basename.json", "cat.json", "chmod.json", "chown.json", "cmp.json", "comm.json", "cp.json", "cut.json", "df.json", "diff.json", "dirname.json", "du.json", "echo.json", "env.json", "expand.json", "false.json", "fold.json", "grep.json", "groups.json", "head.json", "id.json", "index.html", "join.json", "ln.json", "logname.json", "ls.json", "md5sum.json", "mkdir.json", "mv.json", "nl.json", "nproc.json", "package-lock.json", "package.json", "paste.json", "printenv.json", "pwd.json", "realpath.json", "rev.json", "rm.json", "rmdir.json", "seq.json", "sha256sum.json", "sleep.json", "sort.json", "split.json", "tail.json", "tar.json", "tee.json", "touch.json", "tr.json", "true.json", "tsconfig.json", "tsconfig.test.json", "tty.json", "uname.json", "unexpand.json", "uniq.json", "wc.json", "whoami.json", "xargs.json", "yes.json"],
+      "root_variable_suffixes": [],
+      "root_exact_relative_paths": [],
+    "case_alias_groups": [],
+    "scoped_inputs": [
+        {
+          "id": "typescript-css-source-inputs",
+          "role": "resource",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "src",
+          "suffixes": [".css"],
+          "exact_basenames": [],
+          "reason": "Tracked TypeScript UI packages import CSS source below src.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+          "id": "typescript-electron-config-inputs",
+          "role": "resource",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "electron",
+          "suffixes": [],
+          "exact_basenames": ["tsconfig.json"],
+          "reason": "Tracked Electron programs compile reviewed nested TypeScript configuration.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+          "id": "typescript-program-config-inputs",
+          "role": "resource",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "program",
+          "suffixes": [],
+          "exact_basenames": ["grammar-tools.cli.json"],
+          "reason": "Tracked grammar-tools packages embed the reviewed CLI specification below program.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+          "id": "typescript-rust-native-root-inputs",
+          "role": "native_companion",
+          "decision": "include",
+          "scope": "root",
+          "suffixes": [],
+          "exact_basenames": ["Cargo.lock", "Cargo.toml", "build.rs"],
+          "reason": "Tracked TypeScript native packages build root Rust crates.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+          "id": "typescript-rust-native-sources",
+          "role": "native_companion",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "src",
+          "suffixes": [".rs"],
+          "exact_basenames": [],
+          "reason": "Tracked TypeScript native packages compile Rust sources below src.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+          "id": "typescript-rust-nested-extension-inputs",
+          "role": "native_companion",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "ext",
+          "suffixes": [".rs"],
+          "exact_basenames": ["Cargo.lock", "Cargo.toml"],
+          "reason": "Tracked TypeScript native packages also compile nested Rust crates below ext.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+          "id": "typescript-source-resource-inputs",
+          "role": "resource",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "src",
+          "suffixes": [".csv", ".json", ".lattice"],
+          "exact_basenames": [],
+          "reason": "Tracked TypeScript applications import reviewed data, localization, and lattice style resources below src.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+          "id": "typescript-test-resource-inputs",
+          "role": "resource",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "tests",
+          "suffixes": [".csv", ".json", ".lattice", ".md"],
+          "exact_basenames": [],
+          "reason": "Tracked TypeScript tests consume reviewed CSV, JSON, lattice, and Markdown fixtures below tests.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        }
+      ]
+    },
+    {
+      "language": "wasm",
+      "recursive_suffixes": [".wat"],
+      "recursive_exact_basenames": [],
+      "root_exact_basenames": [],
+      "root_variable_suffixes": [],
+      "root_exact_relative_paths": [],
+      "case_alias_groups": [],
+      "scoped_inputs": [
+        {
+          "id": "wasm-rust-root-inputs",
+          "role": "native_companion",
+          "decision": "include",
+          "scope": "root",
+          "suffixes": [],
+          "exact_basenames": ["Cargo.lock", "Cargo.toml", "build.rs"],
+          "reason": "Tracked WASM packages pair textual modules with root Rust compilation metadata.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        },
+        {
+          "id": "wasm-rust-source-inputs",
+          "role": "native_companion",
+          "decision": "include",
+          "scope": "subtree",
+          "path_prefix": "src",
+          "suffixes": [".rs"],
+          "exact_basenames": [],
+          "reason": "Tracked WASM packages compile Rust companion source from the package src tree.",
+          "owner": "build-tool-language-source-input-registry-corpus-and-engine-audit"
+        }
+      ]
+    }
+  ]
+}
