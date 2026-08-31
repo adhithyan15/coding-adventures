@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Lower valid JFET `NLEV` noise-equation levels and reject invalid inputs.
 - Lower valid JFET `EG` bandgap voltages and reject invalid inputs.
 - Lower finite JFET `XTI` gate-current temperature exponents.
 - Lower valid JFET `IS` gate saturation currents and reject invalid inputs.
