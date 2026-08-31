@@ -9,8 +9,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Build-tool repository source-input boundary
 
 - Added a closed, versioned repository-relative registry for 18 reviewed source
-  boundaries, 21 input registrations over 19 tracked inputs, 481 consumer
-  scopes, and 484 authorizations that package-local selectors cannot represent.
+  boundaries, 21 input registrations over 19 tracked inputs, 482 consumer
+  scopes, and 485 authorizations that package-local selectors cannot represent.
   It covers exact Haskell, Lua, Python, Rust, TypeScript, Starlark, human-language,
   neural-learning, required-capability, and cross-language consumers plus
   bounded VisiCalc sibling and generated-pruning inputs.
