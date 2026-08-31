@@ -2595,6 +2595,13 @@ fn parse_element(
             if !threshold_voltage_temperature_coefficient.is_finite() {
                 return Err(NetlistParseError::new("JFET TCV must be finite"));
             }
+            let alternative_threshold_voltage_temperature_coefficient =
+                model.params.get("VTOTC").copied();
+            if alternative_threshold_voltage_temperature_coefficient
+                .is_some_and(|coefficient| !coefficient.is_finite())
+            {
+                return Err(NetlistParseError::new("JFET VTOTC must be finite"));
+            }
             let mut jfet = Jfet::with_model_and_capacitance(
                 name,
                 &fields[1],
@@ -2621,6 +2628,8 @@ fn parse_element(
             jfet.source_resistance = source_resistance;
             jfet.threshold_voltage_temperature_coefficient =
                 threshold_voltage_temperature_coefficient;
+            jfet.alternative_threshold_voltage_temperature_coefficient =
+                alternative_threshold_voltage_temperature_coefficient;
             jfet.doping_tail_parameter = doping_tail_parameter;
             Ok(Element::Jfet(jfet))
         }

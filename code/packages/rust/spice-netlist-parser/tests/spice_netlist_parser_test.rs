@@ -1862,6 +1862,28 @@ fn rejects_non_finite_jfet_threshold_voltage_temperature_coefficient() {
 }
 
 #[test]
+fn parses_jfet_alternative_threshold_voltage_temperature_coefficient() {
+    let parsed =
+        parse_netlist(".model shaped NJF(VTOTC=-0.0025)\nJ1 drain gate source shaped").unwrap();
+
+    let Element::Jfet(jfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected JFET");
+    };
+    assert_close(
+        jfet.alternative_threshold_voltage_temperature_coefficient
+            .expect("VTOTC must be present"),
+        -0.0025,
+    );
+}
+
+#[test]
+fn rejects_non_finite_jfet_alternative_threshold_voltage_temperature_coefficient() {
+    let error = parse_netlist(".model bad NJF(VTOTC=1e999)\nJ1 drain gate source bad").unwrap_err();
+
+    assert!(error.to_string().contains("JFET VTOTC must be finite"));
+}
+
+#[test]
 fn parses_jfet_b_as_doping_tail_parameter_not_beta_alias() {
     let parsed = parse_netlist(
         r#"

@@ -215,7 +215,21 @@ const SHEET_VIEW = (
 
 const isoToDays = (iso: string): number | null => {
   const m = /^\s*(\d{4})-(\d{2})-(\d{2})\s*$/.exec(iso);
-  return m ? Math.floor(Date.UTC(+m[1], +m[2] - 1, +m[3]) / DAY_MS) : null;
+  if (!m) return null;
+  const year = +m[1];
+  const month = +m[2];
+  const day = +m[3];
+  const date = new Date(0);
+  date.setUTCHours(0, 0, 0, 0);
+  date.setUTCFullYear(year, month - 1, day);
+  if (
+    date.getUTCFullYear() !== year ||
+    date.getUTCMonth() !== month - 1 ||
+    date.getUTCDate() !== day
+  ) {
+    return null;
+  }
+  return Math.floor(date.getTime() / DAY_MS);
 };
 const daysToIso = (days: number): string =>
   new Date(days * DAY_MS).toISOString().slice(0, 10);
@@ -303,6 +317,10 @@ export function makeController(engine: any, init: ControllerInit = {}) {
   }
   let newName = "";
   let newDue = "";
+  let newNameError = "";
+  let newDueError = "";
+  let newNameFocus = "";
+  let newDueFocus = "";
   let newProject = "";
   let newLabel = "";
   // Which view is showing. A string rather than a set of booleans, so the six
@@ -878,6 +896,10 @@ export function makeController(engine: any, init: ControllerInit = {}) {
         timelineRows: tl.rows,
         newTaskName: newName,
         newTaskDue: newDue,
+        newTaskNameError: newNameError,
+        newTaskDueError: newDueError,
+        newTaskNameFocus: newNameFocus,
+        newTaskDueFocus: newDueFocus,
         emptyList: ids.length === 0 ? "empty" : "",
         newProjectName: newProject,
         projectRows,
@@ -892,9 +914,14 @@ export function makeController(engine: any, init: ControllerInit = {}) {
       switch (event.type) {
         case "newTaskNameChange":
           newName = event.value;
+          if (newName.trim()) newNameError = "";
           break;
         case "newTaskDueChange":
           newDue = event.value;
+          if (!newDue.trim() || isoToDays(newDue) != null) {
+            if (newDueError) newDueFocus = "focus";
+            newDueError = "";
+          }
           break;
         case "expandTask": {
           // Resolve through the same ordered id list the rows were drawn from, so the
@@ -1196,7 +1223,18 @@ export function makeController(engine: any, init: ControllerInit = {}) {
         }
         case "addTask": {
           const name = newName.trim();
-          if (!name) break;
+          if (!name) {
+            newNameError = "Enter a task name.";
+            break;
+          }
+          newNameError = "";
+          const dueText = newDue.trim();
+          const due = dueText ? isoToDays(dueText) : null;
+          if (dueText && due == null) {
+            newDueError = "Use a real date in YYYY-MM-DD format.";
+            break;
+          }
+          newDueError = "";
           const id = `t${++counter}`;
           engine.createTask({ id, name });
           // A default one working-day duration makes the task schedulable.
@@ -1214,11 +1252,12 @@ export function makeController(engine: any, init: ControllerInit = {}) {
               lag: { workingMinutes: 0, elapsed: false },
             });
           }
-          const due = isoToDays(newDue);
           if (due != null) engine.setDeadline({ id, deadline: due });
           order.push(id);
           newName = "";
           newDue = "";
+          newNameFocus = "focus";
+          newDueFocus = "";
           persist();
           break;
         }

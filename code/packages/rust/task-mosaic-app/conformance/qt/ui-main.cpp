@@ -224,7 +224,10 @@ int main(int argc, char *argv[])
         click(root, "del-btn");
         require(taskRows(root).isEmpty(), "delete task through emitted control");
 
-        control(root, "name-input")->setProperty("text", PersistedTaskName);
+        // A successful add deliberately returns focus to the composer through
+        // its focus-preserving branch. Exercise that live branch instead of
+        // assuming the initial, never-focused control is still mounted.
+        control(root, "name-input-corrected")->setProperty("text", PersistedTaskName);
         settle();
         control(root, "due-input")->setProperty("text", Due);
         settle();
