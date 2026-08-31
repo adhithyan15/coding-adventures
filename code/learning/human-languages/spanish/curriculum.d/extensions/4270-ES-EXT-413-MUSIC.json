@@ -1,0 +1,14 @@
+{
+  "id": "ES-EXT-413-MUSIC",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can identify music and a concert.",
+  "prerequisites": [
+    "ES-EXT-353-PLACE"
+  ],
+  "lessons": [
+    "ES-C413-musica",
+    "ES-C413-concierto"
+  ]
+}

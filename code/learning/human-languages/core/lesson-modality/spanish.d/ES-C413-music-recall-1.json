@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C413-music-recall-1",
+    "language": "spanish",
+    "chapter": 413,
+    "sequence": 9490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69f69e650fbbde62"
+  },
+  "findings": []
+}

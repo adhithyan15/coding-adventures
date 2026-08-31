@@ -1,0 +1,18 @@
+{
+  "chapter": 413,
+  "title": "Music and Concert",
+  "label": "ch:musica-concierto",
+  "canDo": "I can identify music and a concert in a simple night-out announcement.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ES-C413-music-recall-2",
+    "kind": "production",
+    "summary": "Retrieve music and concert across preference and event messages.",
+    "assesses": [
+      "ES-LEX-MUSICA",
+      "ES-LEX-CONCIERTO"
+    ]
+  }
+}
