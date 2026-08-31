@@ -11781,14 +11781,16 @@ real forced Rust dry plan over 1,172 packages. Cargo fmt retains only the
 package's pre-existing source-wide baseline, with no rustfmt finding in the new
 implementation or tests.
 
-Before publication the branch was rebased without conflict onto exact
-`origin/main` `d69e02437374fd2b9c002b704e62b10d9dac4fd0`. The intervening TaskApp
-Linux release-generation repair touches only its workflow, changelog, and
-release-script tests, so it adds no package identity or build-tool contract and
-has zero exact overlap with the six selected paths. The refreshed schema-3
-inventory remains 15 lanes, 1,388 implementation identities, 4,602 slots,
-1,427 all-reported identities, zero collisions, and zero unknown buckets; the
-606-owner/917-edge graph remains unique, dependency-complete, and acyclic.
+Before publication the branch was rebased without conflict twice, first over
+the TaskApp Linux release-generation repair and then onto exact `origin/main`
+`7cbd6e232a1e6fa50d14fe1daf9418cba49e134c` over Marathi A1 practical-form
+curriculum/data. Those commits remain inside existing TaskApp release and
+human-language curriculum owners, add no package identity or build-tool
+contract, and have zero exact overlap with the six selected paths. The final
+refreshed schema-3 inventory remains 15 lanes, 1,388 implementation identities,
+4,602 slots, 1,427 all-reported identities, zero collisions, and zero unknown
+buckets; the 606-owner/917-edge graph remains unique, dependency-complete, and
+acyclic.
 
 ## Autonomous Loop Protocol
 
