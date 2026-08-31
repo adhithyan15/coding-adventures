@@ -1,0 +1,13 @@
+{
+  "id": "ES-PATH-413-MUSIC",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "lessons": [
+    "ES-C413-musica",
+    "ES-C413-concierto"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-413-MUSIC"
+  ],
+  "after": []
+}

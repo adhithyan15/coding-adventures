@@ -24,7 +24,9 @@
     "ES-PATH-411-HELADO",
     "ES-PATH-411-REVIEWS",
     "ES-PATH-412-FITNESS",
-    "ES-PATH-412-REVIEWS"
+    "ES-PATH-412-REVIEWS",
+    "ES-PATH-413-MUSIC",
+    "ES-PATH-413-REVIEWS"
   ],
   "omits": [],
   "relocates": {}
