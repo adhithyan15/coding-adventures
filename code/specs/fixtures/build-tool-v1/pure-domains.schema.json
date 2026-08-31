@@ -412,40 +412,29 @@
           "type": "object",
           "additionalProperties": false,
           "required": [
+            "language",
             "mode",
-            "include_extensions",
-            "special_filenames",
+            "registry_sha256",
             "declared_srcs",
             "candidates"
           ],
           "properties": {
+            "language": {
+              "enum": [
+                "c", "cpp", "csharp", "dart", "dotnet", "elixir",
+                "fsharp", "go", "haskell", "java", "kotlin", "lua",
+                "mosaic", "ocaml", "perl", "python", "ruby", "rust",
+                "starlark", "swift", "twig", "typescript", "wasm"
+              ]
+            },
             "mode": {
               "enum": [
                 "extension",
                 "declared_sources"
               ]
             },
-            "include_extensions": {
-              "type": "array",
-              "maxItems": 128,
-              "uniqueItems": true,
-              "items": {
-                "type": "string",
-                "pattern": "^\\.[A-Za-z0-9][A-Za-z0-9._+-]*$",
-                "maxLength": 32
-              }
-            },
-            "special_filenames": {
-              "type": "array",
-              "minItems": 1,
-              "maxItems": 128,
-              "uniqueItems": true,
-              "items": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 128,
-                "pattern": "^[^/\\\\<>:\"|?*\\u0000-\\u001F]+$"
-              }
+            "registry_sha256": {
+              "$ref": "#/$defs/digest"
             },
             "declared_srcs": {
               "type": "array",
@@ -485,9 +474,6 @@
               },
               "then": {
                 "properties": {
-                  "include_extensions": {
-                    "minItems": 1
-                  },
                   "declared_srcs": {
                     "maxItems": 0
                   }

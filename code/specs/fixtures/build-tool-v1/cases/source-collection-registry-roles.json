@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "id": "source-collection/language-registry-root-and-scoped-roles",
+  "domain": "source_collection",
+  "summary": "The Dart registry includes universal, root-only, recursive, and reviewed host or native companion inputs without widening their scopes.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["source_collection"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "source_collection",
+    "options": {
+      "language": "dart",
+      "mode": "extension",
+      "registry_sha256": "a64e491e7be2d1e2985cebb7dd1576607c2525ab6590a31af3e98cb2329c55d0",
+      "declared_srcs": [],
+      "candidates": [
+        {"path": "BUILD", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "Cargo.toml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "android/app/src/main/AndroidManifest.xml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "android/app/src/main/kotlin/MainActivity.kt", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "android/gradle.properties", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "android/gradle/wrapper/gradle-wrapper.properties", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "android/key.properties", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "android/local.properties", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "nested/build/generated.dart", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "build.rs", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "ios/Runner/AppDelegate.swift", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "lib/main.dart", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "nested/pubspec.yaml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "nested/required_capabilities.json", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "other/lib.rs", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "pubspec.yaml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "required_capabilities.json", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "src/lib.rs", "kind": "file", "content_hex": "736f757263650a"}
+      ]
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "source-collection/language-registry-root-and-scoped-roles",
+    "domain": "source_collection",
+    "outcome": "ok",
+    "result": {
+      "files": [
+        {"path": "BUILD", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "Cargo.toml", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "android/app/src/main/AndroidManifest.xml", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "android/app/src/main/kotlin/MainActivity.kt", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "android/gradle.properties", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "android/gradle/wrapper/gradle-wrapper.properties", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "build.rs", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "ios/Runner/AppDelegate.swift", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "lib/main.dart", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "pubspec.yaml", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "required_capabilities.json", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "src/lib.rs", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"}
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

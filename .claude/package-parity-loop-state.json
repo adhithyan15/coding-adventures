@@ -850,44 +850,99 @@
       "branch": "codex/build-tool-language-source-input-registry-corpus-audit",
       "pr_number": null,
       "selection_revision": "138457fbc2ff2ae7c26c5177148f1460938b0d73",
-      "selection_notes": "Selected only after PR #13647 completed all 43 final-head checks acceptably and GitHub executed guarded squash auto-merge as exact origin/main 138457fbc2ff2ae7c26c5177148f1460938b0d73. The refreshed collision-checked schema-3 inventory now contains 15 established lanes, 1,389 implementation identities, 4,603 slots, 1,428 all-reported identities, bands 175/265, 123/934, 170/2,139, and 921/12,894, 732 Rust singletons, zero OCaml packages, zero canonical collisions, and zero unknown buckets. The new Rust-only oauth identity was classified before selection under oauth-installed-app-pure-core-portable-conformance; open PR #13650 is not current-main evidence and will be reconciled only if it merges. The resulting 610-owner/930-edge graph is expected to remain unique, dependency-complete, and acyclic at 197 merged, 412 pending, and exactly this owner in progress. This registry audit is the highest-leverage genuinely eligible dependency-shaped item: its sole prerequisite is merged, it directly blocks seven pending owners and reaches 13 pending descendants. Higher graph ranks are aggregate umbrellas or network, host-security, credential, native-runtime, and external-approval work excluded from autonomous selection. The clean branch and worktree were created from exact origin/main only after the local branch, remote branch, prior PR, and worktree path were verified absent. This tranche is limited to a neutral collision-checked source-input registry and fixtures, corpus/schema/runner coverage, a complete read-only engine audit, and registration of concrete adoption children; it does not mix engine adoption implementations, native host authority, provider integration, or credential custody.",
-      "notes": "Discovered during the Swift source-hashing conformance review. Existing engines define language source extensions and package metadata independently, and several maps omit established Java, Kotlin, Dart, C#, or F# inputs while hybrid C/C++, WASM, Mosaic, and native-companion roots have no reviewed language-neutral contract. Add a collision-checked neutral registry and fixtures that distinguish source extensions, fixed metadata, root-only variable manifests, and reviewed hybrid/native inputs; audit every engine against it and register concrete engine-adoption children before this owner can complete. Pending engine source-hashing leaves depend on this corpus so new repairs do not preserve an incomplete local guess; already merged and in-progress engines remain owned by the audit's required follow-up classification."
+      "selection_notes": "Selected only after PR #13647 completed all 43 final-head checks acceptably and GitHub executed guarded squash auto-merge as exact origin/main 138457fbc2ff2ae7c26c5177148f1460938b0d73. The refreshed collision-checked schema-3 inventory now contains 15 established lanes, 1,389 implementation identities, 4,603 slots, 1,428 all-reported identities, bands 175/265, 123/934, 170/2,139, and 921/12,894, 732 Rust singletons, zero OCaml packages, zero canonical collisions, and zero unknown buckets. The new Rust-only oauth identity was initially classified before selection and is now decomposed under oauth-authorization-code-pkce-language-neutral-conformance plus explicit portable and blocked authority children. At selection, PR #13650 was not current-main evidence; it and later PR #13657 have since merged and are classified under the token-wire and metadata children. The resulting 610-owner/930-edge graph at selection was expected to remain unique, dependency-complete, and acyclic at 197 merged, 412 pending, and exactly this owner in progress. This registry audit is the highest-leverage genuinely eligible dependency-shaped item: its sole prerequisite is merged, it directly blocked seven pending owners and reached 13 pending descendants before the complete engine audit added exact-registry adoption children. Higher graph ranks are aggregate umbrellas or network, host-security, credential, native-runtime, and external-approval work excluded from autonomous selection. The clean branch and worktree were created from exact origin/main only after the local branch, remote branch, prior PR, and worktree path were verified absent. This tranche is limited to a neutral collision-checked source-input registry and fixtures, corpus/schema/runner coverage, a complete read-only engine audit, and registration of concrete adoption children; it does not mix engine adoption implementations, native host authority, provider integration, or credential custody.",
+      "classification_notes": "The complete read-only engine and tracked-corpus audit registered five previously missing exact-registry adoption children for Go, Python, Ruby, TypeScript, and Swift. Together with the six existing Elixir, Perl, Haskell, shared .NET, Rust, and Lua hashing owners, every current build-tool engine now has an explicit child that must prove complete production lookup equality with this registry. The package-root registry now covers every reviewed directly consumed input, including exact BUILD-invoked scripts, shared Unix command specs, and bounded test/resource families. The remaining shared-ancestor and generated-pruning boundary is classified under build-tool-shared-and-generated-boundary-source-input-contract, and all eleven engine children depend on it so no adoption can silently omit those exact repository-relative inputs or add ambient access. The same audit decomposed OAuth into four portable contracts and two selection-blocked host or credential applicability reviews after merged PRs #13650 and #13657 extended current-main Rust behavior. The resulting 621-owner/967-edge graph is expected to remain unique, dependency-complete, and acyclic at 197 merged, 423 pending, and exactly this owner in progress.",
+      "notes": "Discovered during the Swift source-hashing conformance review. Existing engines define language source extensions and package metadata independently, and several maps omit established Java, Kotlin, Dart, C#, or F# inputs while hybrid C/C++, WASM, Mosaic, and native-companion roots have no reviewed language-neutral contract. This owner completes the collision-checked neutral registry and fixtures, corpus validation, complete read-only engine audit, and registration of concrete engine-adoption children. The eleven production engines then adopt the exact checked registry through those serial dependent children; no engine-local approximation completes an adoption child."
+    },
+    {
+      "id": "build-tool-shared-and-generated-boundary-source-input-contract",
+      "title": "Define exact shared and generated-boundary source inputs for build tools",
+      "status": "pending",
+      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the complete tracked-repository projection audit. Package-local selectors cannot safely express exact consumed inputs above package roots or tracked files intentionally hidden by generated-component pruning. Define a portable language-neutral contract for reviewed repository-relative shared inputs and exact pruning exceptions, including the TypeScript base tsconfig, Rust workspace Cargo.toml, .cargo/config.toml, and _windows_cargo.sh, Python workspace pyproject.toml, Haskell cabal.project, Lua .luacheckrc and DIRS, Ruby Gemfile and Rakefile, and tracked TypeScript vendor JavaScript loaded by VisiCalc. Preserve exact ownership, repository containment, collision checks, deterministic projection, and exclusion of broad ambient directories, untracked local configuration, credentials, signing material, and secrets. This contract must land before any engine claims exact registry adoption."
+    },
+    {
+      "id": "build-tool-go-language-source-input-registry-adoption",
+      "title": "Adopt the exact language source-input registry in the Go build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-go-portable-source-hashing-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Production Go currently owns 14 source-language entries, 14 metadata-language entries, and a 26-name generated-component registry, but the neutral registry adds reviewed Rust companions and package resources for hybrid lanes. Replace the engine-local maps with an exact complete projection and prove no missing or undeclared-extra selector."
+    },
+    {
+      "id": "build-tool-python-language-source-input-registry-adoption",
+      "title": "Adopt the exact language source-input registry in the Python build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-python-portable-source-hashing-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Production Python currently owns only a small global suffix and metadata allowlist plus generated-directory pruning. Adopt the checked registry including scoped Rust companions, package resources, and exact root metadata, and test production lookup equality rather than a fixture-only copy."
+    },
+    {
+      "id": "build-tool-ruby-language-source-input-registry-adoption",
+      "title": "Adopt the exact language source-input registry in the Ruby build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-ruby-portable-source-hashing-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Production Ruby currently owns a small global suffix and metadata allowlist plus generated-directory pruning. Adopt the checked registry including path-scoped native companions and resources, with exact production lookup equality and no selector widening."
+    },
+    {
+      "id": "build-tool-swift-language-source-input-registry-adoption",
+      "title": "Adopt the exact language source-input registry in the Swift build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-swift-portable-source-hashing-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Production Swift has the strongest existing 23-language registry but still omits reviewed Rust companions in several hybrid lanes, Swift C-family headers and module maps, path-scoped resources, and universal required_capabilities.json. Project the complete neutral registry into production and preserve its checked filesystem boundaries."
+    },
+    {
+      "id": "build-tool-typescript-language-source-input-registry-adoption",
+      "title": "Adopt the exact language source-input registry in the TypeScript build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-typescript-portable-source-hashing-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Production TypeScript currently owns a small global suffix and metadata allowlist plus generated-directory pruning. Adopt the checked registry including path-scoped CSS, native Rust companions, exact metadata scope, and universal capability input without blanket JSON, YAML, or TOML inclusion."
     },
     {
       "id": "build-tool-elixir-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Elixir build tool",
       "status": "pending",
-      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit"],
+      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered by the post-#13544 source-hashing audit. Elixir recursively hashes without the exact generated-component registry and lacks portable path framing and OCaml source recognition. Repair those bounded collector semantics after the neutral corpus lands."
+      "notes": "Discovered by the post-#13544 source-hashing audit. Elixir recursively hashes without the exact generated-component registry and lacks portable path framing and OCaml source recognition. Repair those bounded collector semantics, consume the complete checked language source-input registry in production, and prove exact projection equality with no undeclared selector."
     },
     {
       "id": "build-tool-perl-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Perl build tool",
       "status": "pending",
-      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit"],
+      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered by the post-#13544 source-hashing audit. Perl has only a partial artifact skip registry, uses platform-native relative paths, and lacks OCaml source recognition. Adopt the complete neutral collector and normalized framing contract in one engine-scoped tranche."
+      "notes": "Discovered by the post-#13544 source-hashing audit. Perl has only a partial artifact skip registry, uses platform-native relative paths, and lacks OCaml source recognition. Adopt the complete checked language source-input registry and normalized framing contract in one engine-scoped tranche, proving exact production lookup equality."
     },
     {
       "id": "build-tool-haskell-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Haskell build tool",
       "status": "pending",
-      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit"],
+      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered by the post-#13544 source-hashing audit. Haskell lacks OCaml source recognition and its hashing collector uses an incomplete artifact registry. Adopt the neutral collector and portable path-framing contract without mixing discovery-fixture work."
+      "notes": "Discovered by the post-#13544 source-hashing audit. Haskell lacks OCaml source recognition and its hashing collector uses an incomplete global registry whose case aliases can collide. Adopt the complete checked registry with exact scoped projection and portable path framing without mixing discovery-fixture work."
     },
     {
       "id": "build-tool-csharp-fsharp-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the shared C# and F# build tools",
       "status": "pending",
-      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit"],
+      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered by the post-#13544 source-hashing audit. The shared .NET collector reuses discovery skips but omits normalized path framing and OCaml inputs. Repair the shared engine once for both front doors after the neutral corpus lands."
+      "notes": "Discovered by the post-#13544 source-hashing audit. The shared .NET collector reuses discovery skips but omits normalized path framing, exact per-language scope, and several hybrid inputs. Repair the shared engine once for both front doors and prove complete checked-registry equality for C#, F#, and delegated .NET lanes."
     },
     {
       "id": "build-tool-swift-portable-source-hashing-conformance",
@@ -963,10 +1018,10 @@
       "id": "build-tool-rust-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Rust build tool",
       "status": "pending",
-      "depends_on": ["build-tool-rust-generated-directory-hashing-exclusion", "build-tool-rust-declared-source-metadata-plumbing", "build-tool-language-source-input-registry-corpus-and-engine-audit"],
+      "depends_on": ["build-tool-rust-generated-directory-hashing-exclusion", "build-tool-rust-declared-source-metadata-plumbing", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered by the post-#13544 source-hashing audit. After Rust adopts the neutral generated-directory registry, add OCaml source recognition and normalized unambiguous path framing without mixing declaration or discovery work."
+      "notes": "Discovered by the post-#13544 source-hashing audit. After Rust adopts the neutral generated-directory registry, add normalized unambiguous path framing and consume the complete checked language source-input registry, including reviewed cross-language smoke companions, with exact production equality."
     },
     {
       "id": "build-tool-typescript-portable-source-hashing-conformance",
@@ -996,16 +1051,16 @@
       "id": "build-tool-lua-hashing-cache-conformance",
       "title": "Implement portable source hashing and cache behavior in the Lua build tool",
       "status": "pending",
-      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-lua-dune-build-discovery-fixture-adoption", "build-tool-language-source-input-registry-corpus-and-engine-audit"],
+      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-lua-dune-build-discovery-fixture-adoption", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered by the post-#13544 source-hashing audit. Lua has no source-hasher/cache layer, so add the complete neutral collector, portable package and named/raw dependency digest framing, raw combined-digest construction, dependency invalidation, and stable cache recovery only after its Dune discovery evidence and the shared source-collection corpus land."
+      "notes": "Discovered by the post-#13544 source-hashing audit. Lua has no source-hasher/cache layer, so add the complete checked language source-input registry, portable package and named/raw dependency digest framing, raw combined-digest construction, dependency invalidation, and stable cache recovery only after its Dune discovery evidence and the shared corpus land. The new engine must prove exact registry projection rather than introduce another local map."
     },
     {
       "id": "build-tool-portable-source-hashing-remaining-engines",
       "title": "Complete portable source hashing across every remaining build-tool engine",
       "status": "pending",
-      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-python-portable-source-hashing-conformance", "build-tool-go-portable-source-hashing-conformance", "build-tool-elixir-portable-source-hashing-conformance", "build-tool-perl-portable-source-hashing-conformance", "build-tool-haskell-portable-source-hashing-conformance", "build-tool-csharp-fsharp-portable-source-hashing-conformance", "build-tool-swift-portable-source-hashing-conformance", "build-tool-ruby-portable-source-hashing-conformance", "build-tool-rust-portable-source-hashing-conformance", "build-tool-typescript-portable-source-hashing-conformance", "build-tool-lua-hashing-cache-conformance"],
+      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-python-portable-source-hashing-conformance", "build-tool-go-portable-source-hashing-conformance", "build-tool-elixir-portable-source-hashing-conformance", "build-tool-perl-portable-source-hashing-conformance", "build-tool-haskell-portable-source-hashing-conformance", "build-tool-csharp-fsharp-portable-source-hashing-conformance", "build-tool-swift-portable-source-hashing-conformance", "build-tool-ruby-portable-source-hashing-conformance", "build-tool-rust-portable-source-hashing-conformance", "build-tool-typescript-portable-source-hashing-conformance", "build-tool-lua-hashing-cache-conformance", "build-tool-go-language-source-input-registry-adoption", "build-tool-python-language-source-input-registry-adoption", "build-tool-ruby-language-source-input-registry-adoption", "build-tool-swift-language-source-input-registry-adoption", "build-tool-typescript-language-source-input-registry-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Selection-blocked aggregate for the complete hashing contract. It has no independent source behavior and advances only after every engine-scoped leaf proves exact component pruning, portable source recognition, normalized path framing, deterministic byte hashing, dependency invalidation, and stable cache recovery or records a reviewed exception."
@@ -7389,14 +7444,63 @@
       "notes": "Discovered in the collision-clean e6d99bc699 inventory after the new Rust-only ge225-gatelevel identity appeared. Merged PR #13357 adds deterministic controller, printer, card-reader, tape, console, clock-advance, queue, and stable-error behavior to the same package and should be captured by this owner. Audit its deterministic machine state, instruction behavior, queues, resource ceilings, logic-gates and arithmetic dependencies, and controller surface; define language-neutral fixtures and stable errors before any applicable-lane rollout. Keep host clocks, terminals, files, processes, and hardware authority outside the portable core."
     },
     {
-      "id": "oauth-installed-app-pure-core-portable-conformance",
-      "title": "Fixture the portable installed-app OAuth Authorization Code plus PKCE core",
+      "id": "oauth-authorization-code-pkce-language-neutral-conformance",
+      "title": "Fixture the language-neutral OAuth Authorization Code plus PKCE core",
       "status": "pending",
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "classification_notes": "Discovered in the collision-clean 138457fbc2 inventory after merged PR #13626 added the Rust-only oauth identity. Open PR #13650 is not an ancestor of current main and must be reconciled after merge if it extends the pure token-lifecycle codec surface.",
-      "notes": "Define language-neutral fixtures and applicable established-lane coverage for the current provider-neutral, deterministic, process-free installed-app Authorization Code plus PKCE core: configuration validation, verifier and challenge derivation, authorization URL construction, callback parsing and state checks, token-request form encoding, stable errors, and audit descriptors. Keep browsers, loopback listeners, network or HTTPS transport, provider metadata, clocks, credential and token custody, durable storage, refresh execution, device flow, host-native approval, and security-broker authority outside autonomous portable delivery and under explicit reviewed applicability owners if they emerge."
+      "classification_notes": "Discovered in the collision-clean 138457fbc2 inventory after merged PR #13626 added the Rust-only oauth identity. Security review split the original broad owner so portable proof cannot be mistaken for browser, listener, transport, provider-registry, credential, token-custody, or authorization authority. Merged PRs #13650 and #13657 are now current-main evidence and are classified under the token-wire and authorization-server-metadata children without widening this core owner.",
+      "notes": "Define bounded language-neutral fixtures for provider-neutral, deterministic, process-free Authorization Code plus PKCE behavior: configuration syntax, verifier and challenge derivation, authorization URL construction, callback parsing and state checks, token-request form encoding, stable errors, and audit descriptors. Scope validation is syntax, not authorization. A distinct redirect URI assertion is not provider-registry proof; provider identity, URI equivalence, browsers, listeners, transport, clocks, and custody remain outside this owner."
+    },
+    {
+      "id": "oauth-authorization-server-metadata-language-neutral-conformance",
+      "title": "Fixture language-neutral OAuth authorization-server metadata trust",
+      "status": "pending",
+      "depends_on": ["oauth-authorization-code-pkce-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "classification_notes": "Merged PR #13657 added current-main Rust RFC 8414 request and bounded response validation, exact issuer binding, strict endpoint policy, explicit Authorization Code/public-client/PKCE negotiation, immutable capability retention, RFC 9207 support, and redacted audit release.",
+      "notes": "Define language-neutral fixtures for bounded RFC 8414 metadata decoding, exact issuer trust, strict HTTPS endpoint syntax, required response and grant types, public-client none authentication, PKCE S256, RFC 9207 support, immutable capability projection, closed errors, and audit descriptors. Keep metadata HTTPS execution, caches, provider registry ownership, redirect-URI uniqueness proof, clocks, credentials, and host approval outside this pure contract."
+    },
+    {
+      "id": "oauth-authorization-code-pkce-established-lane-parity",
+      "title": "Expand OAuth Authorization Code plus PKCE across applicable established lanes",
+      "status": "pending",
+      "depends_on": ["oauth-authorization-code-pkce-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the neutral provider-independent PKCE, URL, callback, request-form, error, and audit contract in each applicable established lane or record a narrow reviewed exception. Do not add network, browser, loopback, credential, storage, or provider authority as part of parity."
+    },
+    {
+      "id": "oauth-installed-app-host-authority-review",
+      "title": "Review installed-app OAuth host authority and provider redirect proof",
+      "status": "pending",
+      "depends_on": ["oauth-authorization-code-pkce-language-neutral-conformance", "oauth-authorization-server-metadata-language-neutral-conformance", "oauth-wire-codecs-refresh-revocation-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Review browser launch, loopback listener, trusted metadata and token transport, canonical provider registry ownership, redirect URI equivalence and uniqueness, host-native approval, clocks, randomness, and device-flow applicability. The current distinct-URI assertion is not proof of provider registration. This host-security and external-approval surface is excluded from autonomous parity selection."
+    },
+    {
+      "id": "oauth-wire-codecs-refresh-revocation-conformance",
+      "title": "Fixture portable OAuth token, refresh, and revocation wire codecs",
+      "status": "pending",
+      "depends_on": ["oauth-authorization-code-pkce-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "classification_notes": "Merged PR #13650 added current-main Rust bounded JSON/form token and error decoding, explicit refresh-token rotation semantics, public-client refresh preparation, RFC 7009 revocation preparation, zeroizing ownership, and redacted audited release.",
+      "notes": "Define bounded deterministic token-response decoding, refresh and revocation request encoding, normalized server-error codecs, expiry representation, explicit refresh rotation, zeroizing ownership, and redacted audit projections. Keep HTTPS execution, trusted clocks, retries, provider endpoints, token custody, and durable storage behind injected or reviewed host authority."
+    },
+    {
+      "id": "oauth-credential-broker-vault-custody-and-scope",
+      "title": "Review OAuth credential-broker, vault custody, and authorized scope",
+      "status": "pending",
+      "depends_on": ["oauth-authorization-code-pkce-language-neutral-conformance", "oauth-authorization-server-metadata-language-neutral-conformance", "oauth-installed-app-host-authority-review", "oauth-wire-codecs-refresh-revocation-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Review client-secret, refresh-token, and access-token custody; vault references and leases; durable storage; rotation and revocation execution; authorized scope policy; redaction; broker grants; and operator approval. Scope-string syntax is never authorization. This credential and host-security surface is excluded from autonomous parity selection."
     },
     {
       "id": "text-flow-portable-conformance",

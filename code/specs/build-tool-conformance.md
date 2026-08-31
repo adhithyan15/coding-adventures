@@ -624,6 +624,88 @@ bounded normalized candidate records and does not grant filesystem authority.
 Fixtures provide file bytes. Implementations MUST NOT include host metadata,
 absolute paths, mtimes, ownership, locale, or directory enumeration order.
 
+#### Language source-input registry v1
+
+Source-collection cases do not choose their own extension or metadata
+allowlists. The versioned
+`code/specs/fixtures/build-tool-v1/language-source-input-registry.json` file is
+the only language-to-input authority. A case supplies a canonical `language`,
+the registry digest, its collection mode, and inert candidates. Unknown
+language identifiers fail closed. Every native adoption test MUST load this
+exact registry, prove complete equality with its production lookup, reject
+missing and undeclared-extra selectors, and exercise the production lookup
+rather than a test-only copy.
+
+The registry has six non-overlapping input roles:
+
+- `recursive_suffixes` are primary-language suffixes accepted below any
+  retained directory;
+- `recursive_exact_basenames` are reviewed exact metadata names accepted below
+  any retained directory;
+- `root_exact_basenames` apply only to a file directly in the package root;
+- `root_variable_suffixes` are variable-name manifests accepted only in the
+  package root;
+- `root_exact_relative_paths` are reviewed fixed package-relative inputs; and
+- `scoped_inputs` are bounded `native_companion` or `resource` selectors made
+  from one exact relative directory prefix plus closed suffix and exact-name
+  sets. They never behave as regular expressions or arbitrary globs.
+
+Every scoped rule is inclusion-only. A registry rule MUST NOT mask a primary
+source or metadata input. Exact generated-component pruning is the only v1
+exclusion mechanism and always runs before selector matching.
+
+This registry is deliberately package-root relative. It MUST NOT widen a
+package digest to ambient ancestor directories or use a broad selector to
+recover files hidden by generated-component pruning. Exact consumed workspace
+inputs above a package root and exact tracked pruning exceptions require a
+separate repository-relative boundary contract with explicit ownership,
+containment, collision, and secret-exclusion rules. Native registry adoption
+is incomplete until that dependent contract is implemented; untracked local
+configuration, SDK paths, signing material, credentials, and secrets remain
+ineligible.
+
+The universal root-only `required_capabilities.json` input is included for
+every language because changing a package capability profile changes the
+security policy of its generated artifact. The five exact BUILD fronts remain
+universal inputs. They and root-only inputs are included in both extension and
+declared-source modes. Recursive and scoped language selectors apply in
+extension mode; declared-source mode instead uses the target's explicit
+portable globs. Generated-component pruning and inert link/reparse boundaries
+run before either mode and cannot be undone by any selector.
+
+Registry selectors are exact, case-sensitive, NFC strings sorted by raw UTF-8
+bytes. The closed schema rejects unknown fields, unsupported versions,
+unbounded arrays, unsafe suffixes, basenames with separators, unsafe relative
+paths, and arbitrary matching syntax. Semantic validation rejects controls and
+format/bidirectional controls, absolute/drive/UNC/device/extended paths,
+alternate-data-stream syntax, dot or empty components, trailing dot/space,
+Windows-reserved basenames, path-prefix conflicts, generated-component scope
+prefixes, scoped/global and fixed-path/suffix match-set overlap, and duplicate
+selectors within or across roles. NFC and full-casefold aliases also collide
+unless one same-role alias group declares the intentional case-sensitive
+alternatives. Alias groups cannot authorize a cross-role collision. Candidate
+paths additionally reject control/format text, NFC/full-casefold platform
+identity aliases, and impossible file-prefix pairs. Descendants may appear
+below an explicitly inert link or reparse candidate only to prove that the
+collector prunes that boundary.
+
+The registry is bounded to 32 languages, 256 selectors per role, 64 scoped
+rules per language, 256 selectors per scoped rule, 4,096 selectors in total,
+and the runner's normal strict-JSON byte/depth ceilings. Candidate count,
+decoded bytes, and result count retain the closed source-collection limits.
+Registry identity is lowercase SHA-256 over the ASCII domain separator
+`coding-adventures/build-tool-language-source-input-registry/v1`, one NUL,
+the unsigned 64-bit big-endian canonical-byte length, and canonical compact
+UTF-8 JSON bytes with lexicographically sorted object keys and arrays already
+in their required semantic order. The digest is identity, not authority; it
+cannot enable execution or host access.
+
+Neutral candidate snapshots may prove selector, precedence, pruning, digest,
+unknown-language, and collision behavior in memory. Symlink, junction,
+reparse, hardlink, handle-race, and real filesystem enforcement remain required
+in each native engine-adoption child and are not inferred from the neutral
+snapshot.
+
 ### 6. Starlark
 
 Final parity requires:
