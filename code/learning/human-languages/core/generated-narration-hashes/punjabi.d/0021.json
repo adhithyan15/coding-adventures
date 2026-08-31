@@ -1,0 +1,22 @@
+{
+  "language": "punjabi",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:833674920de0c8f7",
+  "lessonIds": [
+    "PA-W05-work-select",
+    "PA-W05-work-supported",
+    "PA-W05-work-spelling",
+    "PA-W05-work-spacing",
+    "PA-W05-work-agreement",
+    "PA-W05-work-delayed",
+    "PA-W05-work-repair",
+    "PA-W05-work-no-model"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch21.txt",
+  "json": "punjabi/narration/ch21.json",
+  "textHash": "fnv1a64:a6d73370cdc0d54c",
+  "jsonHash": "fnv1a64:ede4820f7290d88c",
+  "findings": []
+}

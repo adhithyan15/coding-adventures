@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W05-farming",
+    "language": "punjabi",
+    "chapter": 20,
+    "sequence": 1280,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7b4f48f2284efb5c",
+    "detachableSegments": [
+      "Script — one value"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

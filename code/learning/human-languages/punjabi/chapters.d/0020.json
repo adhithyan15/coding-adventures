@@ -1,0 +1,19 @@
+{
+  "chapter": 20,
+  "title": "Build the Work Label and Values",
+  "label": "ch:pa-form-work-runway",
+  "canDo": "I can recognise and copy the Gurmukhi work label and two separately practised neutral values.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-W05-job",
+    "kind": "production",
+    "summary": "The learner assembles the work label and copies two neutral values after each new Gurmukhi piece has received its own bounded pass.",
+    "assesses": [
+      "PA-FORM-LABEL-WORK-01",
+      "PA-FORM-WORK-FARMING-01",
+      "PA-FORM-WORK-JOB-01"
+    ]
+  }
+}

@@ -15,14 +15,14 @@ it("pins Punjabi continuity", () => expectLanguageContinuity("punjabi"));
 it("pins Punjabi modality", () => expectLanguageModality("punjabi"));
 it("pins Punjabi lesson-content budgets", () =>
   expectLanguageLessonBudgets("punjabi", {
-    lessons: 104,
+    lessons: 118,
     idioms: 4,
     senses: 3,
     cultureClaims: 7,
     unitPrefix: "PA",
   }));
 
-it("keeps Punjabi's 114-row session map aligned with canonical order", () => {
+it("keeps Punjabi's 128-row session map aligned with canonical order", () => {
   const ordered = loadTrackLessons("punjabi").sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
   );
@@ -37,8 +37,8 @@ it("keeps Punjabi's 114-row session map aligned with canonical order", () => {
       lessonId: match[3]!.trim(),
     }),
   );
-  expect(rows).toHaveLength(114);
-  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 114 }, (_, index) => index + 1));
+  expect(rows).toHaveLength(128);
+  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 128 }, (_, index) => index + 1));
   expect(rows.map((row) => row.lessonId)).toEqual(
     ordered.map((lesson) => lesson.realization.lessonId),
   );
@@ -83,6 +83,7 @@ it("pins Punjabi's complete pre-A1 writing runway", () => {
     "guided-copy",
     "delayed-copy",
     "dictation-transcription",
+    "controlled-composition",
     "controlled-composition",
     "controlled-composition",
     "controlled-composition",
@@ -222,6 +223,71 @@ it("builds the Punjabi A1 residence field one script piece at a time", () => {
   expect(activity?.answer).toBe("ਪਿੰਡ");
 });
 
+it("builds the Punjabi A1 work field one script piece and one demand at a time", () => {
+  const ordered = loadTrackLessons("punjabi")
+    .sort((left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence));
+  const runway = ordered.filter((lesson) => lesson.frontmatter.chapter === "20");
+  const entry = ordered.filter((lesson) => lesson.frontmatter.chapter === "21");
+
+  expect(runway.map((lesson) => lesson.realization.lessonId)).toEqual([
+    "PA-W05-ka",
+    "PA-W05-work-label",
+    "PA-W05-kha",
+    "PA-W05-farming",
+    "PA-W05-au-matra",
+    "PA-W05-job",
+  ]);
+  expect(entry.map((lesson) => lesson.realization.lessonId)).toEqual([
+    "PA-W05-work-select",
+    "PA-W05-work-supported",
+    "PA-W05-work-spelling",
+    "PA-W05-work-spacing",
+    "PA-W05-work-agreement",
+    "PA-W05-work-delayed",
+    "PA-W05-work-repair",
+    "PA-W05-work-no-model",
+  ]);
+  expect([...runway, ...entry].every(
+    (lesson) => Number(lesson.frontmatter["duration.max_seconds"]) <= 180,
+  )).toBe(true);
+
+  const supported = entry.find(
+    (lesson) => lesson.realization.lessonId === "PA-W05-work-supported",
+  )!;
+  expect(supported.body).toContain("This is supported entry, not independent writing evidence.");
+  expect(supported.blocks.some((block) => block.writingStage !== undefined)).toBe(false);
+
+  const focusedLessons = [
+    "PA-W05-work-spelling",
+    "PA-W05-work-spacing",
+    "PA-W05-work-agreement",
+    "PA-W05-work-repair",
+  ].map((id) => entry.find((lesson) => lesson.realization.lessonId === id)!);
+  expect(focusedLessons.map((lesson) => lesson.frontmatter["introduces.knowledge"])).toEqual([
+    ["PA-FORM-WORK-SPELLING-CHECK-01"],
+    ["PA-FORM-WORK-SPACING-01"],
+    ["PA-FORM-WORK-AGREEMENT-01"],
+    ["PA-FORM-WORK-REPAIR-01"],
+  ]);
+  expect(focusedLessons[2]!.body).toContain(
+    "This checks field-value meaning, not grammatical gender.",
+  );
+
+  const independent = entry.at(-1)!;
+  expect(independent.blocks.map((block) => block.writingStage).filter(Boolean)).toEqual([
+    "controlled-composition",
+  ]);
+  expect(independent.body).toContain(
+    "There is no value bank, support-language label, or romanized answer below.",
+  );
+  expect(independent.body).toContain("> A — **ਕੰਮ: __________**");
+  expect(independent.body).not.toContain("A — **ਖੇਤੀ**");
+  const [activity] = compileLessonActivities(independent.blocks);
+  expect(activity?.prompt).not.toContain("farming");
+  expect(activity?.prompt).not.toContain("ਖੇਤੀ");
+  expect(activity?.answer).toBe("ਖੇਤੀ");
+});
+
 it("migrates Punjabi Chapter 2 without inventing Gurmukhi writing credit", () => {
   const chapter = loadTrackLessons("punjabi")
     .sort((left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence))
@@ -331,5 +397,5 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   ]);
   const report = measureContinuity(ordered);
   expect(report.reinforcement.filter((defect) => chapter3Atoms.has(defect.atom))).toEqual([]);
-  expect(report.summary.missedByWindow).toEqual({ R1: 36, R2: 73, R3: 121, R4: 17 });
+  expect(report.summary.missedByWindow).toEqual({ R1: 40, R2: 81, R3: 129, R4: 45 });
 });
