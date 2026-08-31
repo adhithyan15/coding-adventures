@@ -179,6 +179,7 @@ pub fn from_pipeline(
     writeln!(out, "import androidx.compose.foundation.layout.Box").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Column").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Row").unwrap();
+    writeln!(out, "import androidx.compose.foundation.layout.RowScope").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Spacer").unwrap();
     writeln!(
         out,
@@ -1139,6 +1140,7 @@ fn emit_composable_function(
             None,
             None,
             None,
+            false,
         )?);
         writeln!(out, "    }}").unwrap();
     } else {
@@ -1152,6 +1154,7 @@ fn emit_composable_function(
             None,
             None,
             None,
+            false,
         )?);
     }
     writeln!(out, "}}").unwrap();
@@ -1226,7 +1229,12 @@ fn emit_split_composable_function(
         writeln!(out).unwrap();
         writeln!(out, "@OptIn(ExperimentalFoundationApi::class)").unwrap();
         writeln!(out, "@Composable").unwrap();
-        writeln!(out, "private fun {component_name}Section{index}(").unwrap();
+        let receiver = if root_composable == "Row" {
+            "RowScope."
+        } else {
+            ""
+        };
+        writeln!(out, "private fun {receiver}{component_name}Section{index}(").unwrap();
         emit_composable_parameters(&mut out, slots, component_name)?;
         writeln!(out, ") {{").unwrap();
         out.push_str(&emit_children_compose(
@@ -1239,6 +1247,7 @@ fn emit_split_composable_function(
             frame.child_text.as_ref(),
             None,
             None,
+            root_composable == "Row",
         )?);
         writeln!(out, "}}").unwrap();
     }
@@ -2510,6 +2519,10 @@ fn emit_compose_tree(
     // cell `For`.  Consumed by the container emitter (merged into the
     // node's own Modifier chain).  NOT propagated to children.
     injected_width: Option<&str>,
+    // Whether this node is a direct child of a Compose Row content scope.
+    // Such children must be intrinsically measured unless their Mosaic
+    // style explicitly asks to consume the remaining horizontal space.
+    in_row_scope: bool,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     match node.tag.as_str() {
@@ -2537,6 +2550,7 @@ fn emit_compose_tree(
             text_ctx,
             for_payload,
             injected_width,
+            in_row_scope,
         ),
         "Row" => emit_container(
             node,
@@ -2549,6 +2563,7 @@ fn emit_compose_tree(
             text_ctx,
             for_payload,
             injected_width,
+            in_row_scope,
         ),
         "HostDraggable" => emit_host_draggable(
             node,
@@ -2583,6 +2598,7 @@ fn emit_compose_tree(
             text_ctx,
             for_payload,
             injected_width,
+            in_row_scope,
         ),
         // UI29 §2.1 — `HostTable` lowers to a vertical `Column`.  Before
         // walking its sections we discover the column-widths slot from a
@@ -2607,6 +2623,7 @@ fn emit_compose_tree(
                 Some(&sheet_text),
                 for_payload,
                 injected_width,
+                in_row_scope,
             )
         }
         // The structural sub-tags lower to `Column` too, preserving the
@@ -2625,6 +2642,7 @@ fn emit_compose_tree(
                 text_ctx,
                 for_payload,
                 injected_width,
+                in_row_scope,
             )
         }
         "HostTableColGroup" => {
@@ -2643,6 +2661,7 @@ fn emit_compose_tree(
                 text_ctx,
                 for_payload,
                 injected_width,
+                in_row_scope,
             )
         }
         "Col" => {
@@ -2720,6 +2739,7 @@ fn emit_compose_tree(
             text_ctx,
             for_payload,
             /*width_thread=*/ false,
+            in_row_scope,
         ),
         "If" => emit_if_compose(
             node,
@@ -2731,6 +2751,7 @@ fn emit_compose_tree(
             table_ctx,
             text_ctx,
             for_payload,
+            in_row_scope,
         ),
         // An orphan `Else` renders as a documenting Kotlin comment.
         "Else" => Ok(format!("{pad}// orphan Else — ignored\n")),
@@ -2744,8 +2765,9 @@ fn emit_compose_tree(
 /// styles (or a column width is injected), the container's `Modifier`
 /// is built from [`compose_box_style`] — `.width/.height/.background/`
 /// `.border/.padding` — and, for a `Box`, the `contentAlignment`
-/// argument is set from `text-align`.  Otherwise the container falls
-/// back to the styleless `Modifier.fillMaxWidth()` shape.
+/// argument is set from `text-align`.  Otherwise the container is
+/// intrinsically measured when it is a direct `Row` child and falls back
+/// to the styleless `Modifier.fillMaxWidth()` shape in other scopes.
 ///
 /// A `Row` inside a HostTable dispatches each child through
 /// [`emit_table_cell`] so a child `For` in cell-position picks up the
@@ -2812,6 +2834,7 @@ fn emit_host_draggable(
         text_ctx,
         for_payload,
         injected_width,
+        false,
     )?);
     writeln!(out, "{pad}}}").unwrap();
     Ok(out)
@@ -2872,6 +2895,7 @@ fn emit_host_drop_target(
         text_ctx,
         for_payload,
         injected_width,
+        false,
     )?);
     writeln!(out, "{pad}}}").unwrap();
     Ok(out)
@@ -3138,6 +3162,27 @@ pub fn radio_groups_with_native_semantics(root: &LayoutNode) -> HashSet<String> 
     result
 }
 
+/// Resolve a Mosaic Row child's request to consume remaining horizontal room.
+///
+/// CSS-authored components commonly use either `flex-grow: N` or
+/// `width: 100%`. Compose Rows do not shrink a preceding `fillMaxWidth()`
+/// child the way CSS flexbox does, so both idioms lower to RowScope `weight`.
+/// Invalid, non-finite, zero, and negative grow values stay intrinsic.
+fn compose_row_weight(props: &[StyleProp]) -> Option<String> {
+    if let Some(value) = props
+        .iter()
+        .find(|prop| prop.name == "flex-grow")
+        .and_then(|prop| prop.value.trim().parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value > 0.0)
+    {
+        return Some(value.to_string());
+    }
+    props
+        .iter()
+        .any(|prop| prop.name == "width" && prop.value.trim() == "100%")
+        .then(|| "1".to_string())
+}
+
 fn collect_grouped_radio_keys(node: &LayoutNode, out: &mut HashSet<String>) {
     let mut counts: HashMap<&str, usize> = HashMap::new();
     for child in &node.children {
@@ -3167,6 +3212,7 @@ fn emit_container(
     text_ctx: Option<&TextStyleCtx>,
     for_payload: Option<ForPayloadScope<'_>>,
     injected_width: Option<&str>,
+    in_row_scope: bool,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let mut out = String::new();
@@ -3180,7 +3226,7 @@ fn emit_container(
     // override doesn't blow away the sheet's base color in the
     // not-selected case.
     let inherited_color = text_ctx.and_then(|t| t.color.as_deref());
-    let style: Option<ComposeStyle> = if let Some(part) = &node.part_name {
+    let mut style: Option<ComposeStyle> = if let Some(part) = &node.part_name {
         let base_props = part_styles.get(part).map(|v| v.as_slice()).unwrap_or(&[]);
         let state_layers = collect_state_layers(node, part, part_styles);
         if !base_props.is_empty() || !state_layers.is_empty() || injected_width.is_some() {
@@ -3206,6 +3252,33 @@ fn emit_container(
     } else {
         None
     };
+
+    // A direct Row child participates in RowScope measurement. Mosaic's
+    // `flex-grow` and percentage-width idioms both mean "take the remaining
+    // horizontal space" here; Compose expresses that as `weight`. Every
+    // other Row child stays intrinsic so it cannot starve later siblings.
+    if in_row_scope {
+        let weight = node
+            .part_name
+            .as_deref()
+            .and_then(|part| part_styles.get(part))
+            .and_then(|props| compose_row_weight(props));
+        if let Some(weight) = weight {
+            let cpad = " ".repeat(chain_indent);
+            let prefix = format!("\n{cpad}.weight({weight}f)");
+            if let Some(style) = &mut style {
+                style.modifier.insert_str(0, &prefix);
+            } else {
+                style = Some(ComposeStyle {
+                    modifier: prefix,
+                    content_alignment: None,
+                    text_color: None,
+                    font_family_mono: false,
+                    font_size: None,
+                });
+            }
+        }
+    }
 
     let has_style_chain = style
         .as_ref()
@@ -3244,7 +3317,12 @@ fn emit_container(
             let chain = style.as_ref().map(|s| s.modifier.as_str()).unwrap_or("");
             write!(out, "{modifier_pad}modifier = Modifier{chain}").unwrap();
         } else {
-            write!(out, "{modifier_pad}modifier = Modifier.fillMaxWidth()").unwrap();
+            let modifier = if in_row_scope {
+                "Modifier"
+            } else {
+                "Modifier.fillMaxWidth()"
+            };
+            write!(out, "{modifier_pad}modifier = {modifier}").unwrap();
         }
         if let Some(semantics) = &semantic_modifier {
             write!(out, "\n{}.{semantics}", " ".repeat(chain_indent)).unwrap();
@@ -3262,20 +3340,18 @@ fn emit_container(
         }
         writeln!(out, "{pad}) {{").unwrap();
     } else {
-        // Styleless fall-back — unchanged from v0.1.0.
+        // A Row child is intrinsic unless its style produced a weight/size.
+        // Outside RowScope, retain the v0.1.0 fill-width fallback.
+        let modifier = if in_row_scope {
+            "Modifier"
+        } else {
+            "Modifier.fillMaxWidth()"
+        };
         if node.children.is_empty() {
-            writeln!(
-                out,
-                "{pad}{composable}(modifier = Modifier.fillMaxWidth()) {{ }}"
-            )
-            .unwrap();
+            writeln!(out, "{pad}{composable}(modifier = {modifier}) {{ }}").unwrap();
             return Ok(out);
         }
-        writeln!(
-            out,
-            "{pad}{composable}(modifier = Modifier.fillMaxWidth()) {{"
-        )
-        .unwrap();
+        writeln!(out, "{pad}{composable}(modifier = {modifier}) {{").unwrap();
     }
 
     // ---- body -------------------------------------------------------
@@ -3305,6 +3381,7 @@ fn emit_container(
             child_text.as_ref(),
             for_payload,
             None,
+            composable == "Row",
         )?);
     }
     writeln!(out, "{pad}}}").unwrap();
@@ -3342,6 +3419,7 @@ fn emit_table_cell(
                 text_ctx,
                 for_payload,
                 /*width_thread=*/ true,
+                true,
             );
         }
     }
@@ -3355,6 +3433,7 @@ fn emit_table_cell(
         text_ctx,
         for_payload,
         None,
+        true,
     )
 }
 
@@ -3378,6 +3457,7 @@ fn emit_children_compose(
     // child's Modifier chain.  `Some` only on the body-children dispatch
     // of a width-threading HostTable cell `For`.
     injected_width: Option<&str>,
+    in_row_scope: bool,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
     let mut i = 0;
@@ -3395,6 +3475,7 @@ fn emit_children_compose(
                 table_ctx,
                 text_ctx,
                 for_payload,
+                in_row_scope,
             )?);
             i += if else_node.is_some() { 2 } else { 1 };
             continue;
@@ -3409,6 +3490,7 @@ fn emit_children_compose(
             text_ctx,
             for_payload,
             injected_width,
+            in_row_scope,
         )?);
         i += 1;
     }
@@ -3442,6 +3524,7 @@ fn emit_for_compose(
     // `index:` binding, each iteration's body Box gets a threaded
     // `.width(<slot>[_kotlinIdx<idx>].dp)`.  See [`emit_table_cell`].
     width_thread: bool,
+    in_row_scope: bool,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_depth = depth + 1;
@@ -3551,6 +3634,7 @@ fn emit_for_compose(
             text_ctx,
             scoped_payload,
             width_expr.as_deref(),
+            in_row_scope,
         )?);
     }
     writeln!(out, "{pad}}}").unwrap();
@@ -3581,6 +3665,7 @@ fn emit_if_compose(
     table_ctx: Option<&TableContext>,
     text_ctx: Option<&TextStyleCtx>,
     for_payload: Option<ForPayloadScope<'_>>,
+    in_row_scope: bool,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_depth = depth + 1;
@@ -3601,6 +3686,7 @@ fn emit_if_compose(
                     text_ctx,
                     for_payload,
                     None,
+                    in_row_scope,
                 );
             }
             "false" => {
@@ -3615,6 +3701,7 @@ fn emit_if_compose(
                         text_ctx,
                         for_payload,
                         None,
+                        in_row_scope,
                     );
                 }
                 return Ok(String::new());
@@ -3649,6 +3736,7 @@ fn emit_if_compose(
         text_ctx,
         for_payload,
         None,
+        in_row_scope,
     )?);
     if let Some(e) = else_node {
         writeln!(out, "{pad}}} else {{").unwrap();
@@ -3662,6 +3750,7 @@ fn emit_if_compose(
             text_ctx,
             for_payload,
             None,
+            in_row_scope,
         )?);
     }
     writeln!(out, "{pad}}}").unwrap();
@@ -4359,6 +4448,7 @@ fn emit_host_dialog(
         child_text.as_ref(),
         for_payload,
         None,
+        false,
     )?);
     writeln!(out, "{body}}}").unwrap();
     writeln!(out, "{content}}}").unwrap();
@@ -5032,6 +5122,7 @@ fn emit_host_tooltip(
         text_ctx,
         for_payload,
         None,
+        false,
     )?);
     writeln!(out, "{pad}}}").unwrap();
     Ok(out)
@@ -5910,6 +6001,81 @@ mod tests {
         assert!(out.contains("XSection0("));
         assert!(out.contains("private fun XSection0("));
         assert!(out.contains("private fun XSection1("));
+    }
+
+    /// Compose Rows must measure ordinary siblings intrinsically. CSS flexbox
+    /// shrinks a `width: 100%` child around later siblings, but Compose's
+    /// `fillMaxWidth()` consumes the Row before those siblings are measured.
+    /// The TaskApp shell also splits its root Row into section functions, so
+    /// those functions must retain an explicit RowScope receiver.
+    #[test]
+    fn row_children_use_weight_and_intrinsic_measurement_in_split_sections() {
+        let topbar = styled_node(
+            "Row",
+            "topbar",
+            vec![],
+            vec![
+                styled_node(
+                    "Column",
+                    "title",
+                    vec![],
+                    vec![node("Text", vec![], vec![])],
+                ),
+                styled_node(
+                    "Row",
+                    "progress",
+                    vec![],
+                    vec![node("Text", vec![], vec![])],
+                ),
+            ],
+        );
+        let root = node(
+            "Row",
+            vec![],
+            vec![
+                styled_node("Column", "rail", vec![], vec![]),
+                styled_node("Column", "main", vec![], vec![topbar]),
+            ],
+        );
+        let styles = style_def(
+            "X",
+            vec![
+                part("rail", vec![sprop("width", "236px")], vec![]),
+                part("main", vec![sprop("flex-grow", "1")], vec![]),
+                part("topbar", vec![sprop("gap", "18px")], vec![]),
+                part("title", vec![sprop("width", "100%")], vec![]),
+                part("progress", vec![sprop("gap", "10px")], vec![]),
+            ],
+        );
+        let out = from_pipeline(&component("X", vec![], vec![]), &layout("X", root), &styles)
+            .unwrap()
+            .output;
+
+        assert!(out.contains("import androidx.compose.foundation.layout.RowScope"));
+        assert!(out.contains("private fun RowScope.XSection1("), "{out}");
+        assert!(
+            out.matches(".weight(1f)").count() >= 2,
+            "main flex-grow and title width must both become weights:\n{out}"
+        );
+        assert!(
+            out.contains("Row(modifier = Modifier) {"),
+            "the progress group must keep intrinsic width:\n{out}"
+        );
+    }
+
+    #[test]
+    fn row_weight_rejects_invalid_or_non_positive_flex_grow() {
+        assert_eq!(
+            compose_row_weight(&[sprop("flex-grow", "2.5")]),
+            Some("2.5".to_string())
+        );
+        assert_eq!(
+            compose_row_weight(&[sprop("width", "100%")]),
+            Some("1".to_string())
+        );
+        for value in ["0", "-1", "NaN", "infinity", "wide"] {
+            assert_eq!(compose_row_weight(&[sprop("flex-grow", value)]), None);
+        }
     }
 
     #[test]

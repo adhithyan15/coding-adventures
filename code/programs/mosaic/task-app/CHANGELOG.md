@@ -6,11 +6,12 @@ All notable changes to the `task-app` web program are documented here.
 
 ### Fixed - visible Compose completion progress (#13565)
 
-The top-bar title and progress groups now keep finite native width bases while
-retaining their flexible web behavior. Compose no longer measures the title as
-the entire row and places the Rust-owned completion percentage beyond the
-default desktop viewport; the real-runtime lifecycle again requires `100%` to
-be displayed after completing a task.
+Compose now measures the top-bar title as the row's flexible remainder and the
+progress group at its intrinsic width. The title no longer consumes the entire
+row and places the Rust-owned completion percentage beyond the default desktop
+viewport; the real-runtime lifecycle again requires `100%` to be displayed
+after completing a task. Shared TaskApp styles remain unchanged for web,
+Flutter, and SwiftUI.
 
 ### Fixed - self-contained browser storage entrypoint (#13543)
 
