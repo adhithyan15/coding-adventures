@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Lower JFET `LAM` with canonical `LAMBDA` precedence and reject non-finite
+  channel-length modulation inputs.
 - Lower JFET `VT0` and `VTH` threshold aliases with canonical `VTO`
   precedence and reject non-finite threshold inputs.
 - Lower JFET `B` into the Parker-Skellern doping-tail field instead of treating

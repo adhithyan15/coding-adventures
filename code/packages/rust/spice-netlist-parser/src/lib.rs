@@ -2483,6 +2483,15 @@ fn parse_element(
             if !threshold_voltage.is_finite() {
                 return Err(NetlistParseError::new("JFET VTO must be finite"));
             }
+            let channel_length_modulation = model
+                .params
+                .get("LAMBDA")
+                .or_else(|| model.params.get("LAM"))
+                .copied()
+                .unwrap_or(0.0);
+            if !channel_length_modulation.is_finite() {
+                return Err(NetlistParseError::new("JFET LAMBDA must be finite"));
+            }
             let mut jfet = Jfet::with_model(
                 name,
                 &fields[1],
@@ -2491,7 +2500,7 @@ fn parse_element(
                 polarity,
                 beta,
                 threshold_voltage,
-                *model.params.get("LAMBDA").unwrap_or(&0.0),
+                channel_length_modulation,
             );
             jfet.doping_tail_parameter = doping_tail_parameter;
             Ok(Element::Jfet(jfet))
