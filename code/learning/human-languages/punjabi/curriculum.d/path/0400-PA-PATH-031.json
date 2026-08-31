@@ -1,0 +1,25 @@
+{
+  "id": "PA-PATH-031",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "PA-W07-independent-u",
+    "PA-W07-age-label",
+    "PA-W07-digit-one",
+    "PA-W07-digit-two",
+    "PA-W07-digit-five",
+    "PA-W07-age-fifteen",
+    "PA-W07-age-twenty-five",
+    "PA-W07-age-select",
+    "PA-W07-age-supported",
+    "PA-W07-age-spacing",
+    "PA-W07-age-delayed",
+    "PA-W07-age-dictation",
+    "PA-W07-age-repair",
+    "PA-W07-age-no-model"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-036-A1-AGE-FIELD"
+  ],
+  "after": []
+}

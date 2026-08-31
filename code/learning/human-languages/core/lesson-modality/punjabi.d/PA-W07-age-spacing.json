@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W07-age-spacing",
+    "language": "punjabi",
+    "chapter": 29,
+    "sequence": 1740,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:122d47ab67fedec3",
+    "detachableSegments": [
+      "Writing — repair only spacing"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

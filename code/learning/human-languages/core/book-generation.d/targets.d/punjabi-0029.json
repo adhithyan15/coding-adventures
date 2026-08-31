@@ -1,0 +1,7 @@
+{
+  "language": "punjabi",
+  "chapter": 29,
+  "output": "punjabi/book/chapters/ch29-age-field.tex",
+  "unicodeScript": "Gurmukhi",
+  "scriptCommand": "pa"
+}

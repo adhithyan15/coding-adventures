@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W07-digit-five",
+    "language": "punjabi",
+    "chapter": 29,
+    "sequence": 1690,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5109f8da415cfadc",
+    "detachableSegments": [
+      "Script — one digit"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
