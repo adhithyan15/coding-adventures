@@ -1845,6 +1845,23 @@ fn rejects_invalid_jfet_source_resistance() {
 }
 
 #[test]
+fn parses_jfet_threshold_voltage_temperature_coefficient() {
+    let parsed = parse_netlist(".model shaped NJF(TCV=0.01)\nJ1 drain gate source shaped").unwrap();
+
+    let Element::Jfet(jfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected JFET");
+    };
+    assert_close(jfet.threshold_voltage_temperature_coefficient, 0.01);
+}
+
+#[test]
+fn rejects_non_finite_jfet_threshold_voltage_temperature_coefficient() {
+    let error = parse_netlist(".model bad NJF(TCV=1e999)\nJ1 drain gate source bad").unwrap_err();
+
+    assert!(error.to_string().contains("JFET TCV must be finite"));
+}
+
+#[test]
 fn parses_jfet_b_as_doping_tail_parameter_not_beta_alias() {
     let parsed = parse_netlist(
         r#"

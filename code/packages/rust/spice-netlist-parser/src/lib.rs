@@ -2590,6 +2590,11 @@ fn parse_element(
                     "JFET RS must be finite and non-negative",
                 ));
             }
+            let threshold_voltage_temperature_coefficient =
+                *model.params.get("TCV").unwrap_or(&0.0);
+            if !threshold_voltage_temperature_coefficient.is_finite() {
+                return Err(NetlistParseError::new("JFET TCV must be finite"));
+            }
             let mut jfet = Jfet::with_model_and_capacitance(
                 name,
                 &fields[1],
@@ -2614,6 +2619,8 @@ fn parse_element(
             jfet.channel_noise_coefficient = channel_noise_coefficient;
             jfet.drain_resistance = drain_resistance;
             jfet.source_resistance = source_resistance;
+            jfet.threshold_voltage_temperature_coefficient =
+                threshold_voltage_temperature_coefficient;
             jfet.doping_tail_parameter = doping_tail_parameter;
             Ok(Element::Jfet(jfet))
         }
