@@ -413,6 +413,7 @@
           "additionalProperties": false,
           "required": [
             "language",
+            "package_root",
             "mode",
             "registry_sha256",
             "declared_srcs",
@@ -426,6 +427,9 @@
                 "mosaic", "ocaml", "perl", "python", "ruby", "rust",
                 "starlark", "swift", "twig", "typescript", "wasm"
               ]
+            },
+            "package_root": {
+              "$ref": "#/$defs/safe_path"
             },
             "mode": {
               "enum": [
