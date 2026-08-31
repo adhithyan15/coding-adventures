@@ -11231,6 +11231,100 @@ is terminal and acceptable and GitHub still reports no merge conflict. The
 ownership graph therefore contains 186 merged, 407 pending, and exactly one
 `pr-open` owner.
 
+### Post-PR #13558 refresh and Python portable hashing selection
+
+PR #13558 completed all 41 final-head checks acceptably with 34 successes, six
+expected skips, and one neutral result. Guarded squash auto-merge was enabled
+only after GitHub reported final head
+`85ef7fcbf58d80b14500e3f80f481fd8935da2d1` clean and mergeable, and GitHub
+merged it as `88e77a6309e1112f0cb16886f315ef05b020da37` at
+2026-08-30T23:40:04Z without a manual merge command. The Python generated-
+directory hashing owner therefore advances to `merged` and the active PR is
+cleared.
+
+The exact-main schema-3 inventory remains collision-clean and identity-neutral:
+15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427
+all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880,
+731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown
+buckets. The 75 paths since the prior inventory revision belong to existing
+Punjabi, Mosaic, Python build-tool, state, or documentation surfaces. No
+package root, BUILD, or manifest topology changed, and parallel inventory,
+dependency, fixture, and live-PR audits found no newly eligible unowned gap.
+
+The dependency/leverage pass selects
+`build-tool-python-portable-source-hashing-conformance` on branch
+`codex/build-tool-python-portable-source-hashing-conformance`. Both
+prerequisites are merged. This bounded continuation closes the Python engine's
+two remaining portable source/package-hashing contract holes: applicable OCaml
+source and metadata recognition plus normalized relative-path framing that
+makes same-content renames observable while preserving raw source bytes and
+file boundaries. It directly advances the eleven-engine portable-source-hashing
+aggregate across the 503-package Python lane and therefore outranks independent
+ready leaves. Six live PRs have zero exact overlap with the expected hasher,
+tests, README, changelog, state, roadmap, and root-changelog paths; the branch,
+remote branch, and prior PR were absent before the fresh clean worktree was
+created. At selection, reconciliation left the complete 594-owner/895-edge
+graph unique, dependency-complete, and acyclic at 187 merged, 406 pending, and
+exactly one `in-progress` owner.
+
+Independent implementation review then found a distinct dependency-hashing
+gap before publication. Python still concatenates transitive dependency digest
+hex strings without hashing-v1 frames for the sorted package identity and
+decoded 32-byte digest. That behavior is now classified as the separate
+pending `build-tool-python-portable-dependency-hashing-conformance` owner,
+dependent on this source/package-hashing slice; this tranche makes no complete
+hashing-v1 or combined-cache claim. The complete graph therefore expands to
+595 owners/896 edges with 187 merged, 407 pending, and exactly one
+`in-progress` owner.
+
+The implementation now recognizes OCaml `.ml`, `.mli`, and `.opam` inputs plus
+exact `.ocamlformat`, `dune`, and `dune-project` metadata in both collection
+modes. Root `.opam` manifests remain applicable when declared globs omit them;
+nested `.opam` inputs still require a declared match. Package hashes use the
+shared hashing-v1 frame over normalized repository-relative UTF-8 path length,
+path bytes, unsigned 64-bit content length, and exact streamed raw bytes. A
+direct regression materializes the language-neutral hashing-cache fixture and
+matches its package digest. POSIX opens every lexical directory component and
+the leaf with no-follow semantics. Windows retains non-delete-sharing handles
+for every directory component through the source parent, rejects reparse
+attributes including at the package root, opens the leaf while ancestry stays
+locked, and requires the final opened-handle path to equal the lexical source
+path. Both platforms then prove regular-file and path/handle identity and
+reject replacement or same-size mutation through before/after descriptor
+signatures without exposing the checkout path.
+
+The focused suite passes 35 tests with four expected platform skips. The
+complete package and literal generic/Windows BUILD recipe each pass 478 tests
+with four skips at 90.80% coverage, with `hasher.py` at 89%. Changed
+source/tests pass
+Ruff, direct MyPy, compileall, and Bandit; package-wide Ruff and broad fixture
+MyPy retain only inherited baseline findings outside this seven-path diff. The
+neutral schema/runner suite passes 85 tests and 132 subtests, `validate-corpus`
+accepts 121 cases and 283 files, and parity/capability/Haskell/OCaml-lock suites
+pass 66 tests and 811 subtests with two expected Windows skips. The Go oracle
+passes module verification, tests, vet, and trimpath build; a freshly compiled
+binary evaluates 45 Starlark BUILD files, validates five reviewed orphan
+exemptions, forces all 495 Python packages, and selects exactly
+`python/programs/build-tool` for the branch diff. Isolated sdist/wheel builds,
+uv dependency compatibility, pip audit, schema-3 collision inventory, the
+595-owner/896-edge DAG, and diff hygiene pass.
+
+Independent adversarial review first reproduced an external read by replacing
+a collected ancestor with an NTFS junction, then found same-package,
+package-root, post-lock FSCTL mutation, and toggle-back variants. Exact opened-
+handle path binding rejects all real probes while an ordinary nested source
+remains accepted. POSIX review also found and verified closure of a lexical
+parent escape plus the missing-`O_NOFOLLOW` fallback. No remaining entire-path
+no-follow or authority blocker was found.
+
+Before publication, the branch rebased conflict-free onto exact `origin/main`
+`248a6ff20767d12dc1f6d91040382bcc675494bb` after PRs #13561, #13562, #13564,
+and #13566 added only Spanish/Punjabi learning artifacts plus existing Mosaic
+binding/type-test, human-language-data test, and Rust task-mosaic-app source/
+changelog changes. Those 94 paths add no package root, BUILD, manifest, build-
+tool contract, parity owner, or exact overlap with this tranche. The inventory
+remains unchanged and collision-free.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

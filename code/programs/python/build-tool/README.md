@@ -28,6 +28,21 @@ declared-source matching. Component names are exact and case-sensitive, so
 Directory and file symlinks plus Windows junction/reparse attributes are
 excluded before source matching or file reads.
 
+The source registry includes OCaml `.ml`, `.mli`, and `.opam` inputs plus the
+exact `.ocamlformat`, `dune`, and `dune-project` metadata names in extension
+and declared-source modes; applicable `.opam` manifests remain inputs even
+when declared source globs omit them. Package digests sort normalized
+repository-relative paths, encode each path as UTF-8 with an explicit byte-
+length frame, then append an unsigned 64-bit content length and the file's
+exact raw bytes. A same-content rename therefore invalidates the cache without
+leaking an absolute checkout path, host metadata, or locale-dependent decoding
+into the digest. POSIX opens every lexical directory component and the leaf
+with no-follow semantics. Windows retains non-delete-sharing handles for every
+directory component, rejects reparse attributes including at the package root,
+then requires the opened leaf's final path to equal its lexical source path.
+The file descriptor's identity and mutation signature are checked before and
+after streaming on both platforms.
+
 ## Usage
 
 ```bash
