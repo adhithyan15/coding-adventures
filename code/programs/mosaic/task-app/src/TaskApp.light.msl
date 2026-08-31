@@ -108,7 +108,13 @@ style TaskApp {
     padding-left : 30 ;
   }
   part title-block {
-    width : 100% ;
+    // Web keeps the flexible title region, while the 300px basis gives
+    // fixed-width native layout engines a finite measurement. Compose used
+    // to lower the old 100% width to fillMaxWidth() inside topbar's Row,
+    // placing every following sibling (including completion progress)
+    // beyond the default desktop viewport.
+    width : 300 ;
+    flex-grow : 1 ;
     gap : 3 ;
   }
   part title {
@@ -174,6 +180,11 @@ style TaskApp {
   }
   // ── progress ring (task-app-icon-assets-v1.md) ─────────────────────────
   part ring-wrap {
+    // Keep the native row finite as well. Without an explicit basis the
+    // Compose fallback is fillMaxWidth(), which leaves no measured room for
+    // the theme, complexity, and view controls that follow it.
+    width : 90 ;
+    flex-shrink : 0 ;
     gap : 10 ;
     align : center-vertical ;
   }

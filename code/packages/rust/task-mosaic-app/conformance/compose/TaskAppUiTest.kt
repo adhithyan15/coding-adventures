@@ -68,9 +68,9 @@ class TaskAppUiTest {
         compose.onNodeWithTag("toggle").performClick()
         compose.waitForIdle()
         compose.onNodeWithTag("toggle").assertTextContains("✓")
-        // The progress node carries the updated Rust value, but issue #13565
-        // tracks making it visible in the default desktop viewport.
-        compose.onAllNodesWithText("100%").assertCountEquals(1)
+        // The Rust-owned completion value must be visible, not merely present
+        // in the semantics tree beyond the measured desktop viewport.
+        compose.onNodeWithText("100%").assertIsDisplayed()
         compose.onNodeWithTag("toggle").performClick()
         compose.waitForIdle()
         compose.onNodeWithTag("toggle").assertTextContains("○")
