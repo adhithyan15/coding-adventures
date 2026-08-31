@@ -11,12 +11,19 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 13647,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/13647",
+    "branch": "codex/build-tool-swift-portable-source-hashing-conformance",
+    "implementation_revision": "d5d0195a294e9c97b41415d00280fbf74c2205ae",
+    "status": "checks-pending",
+    "opened_at": "2026-08-31T12:09:11Z"
+  },
   "last_ci_action": {
-    "observed_at": "2026-08-31T10:26:44Z",
-    "pr_number": 13608,
-    "status": "merged",
-    "notes": "All 41 final-head checks reached terminal acceptable conclusions: 34 successes, six expected skips, and one neutral result, with no failures or pending work. GitHub reported final head aa9170cfe6863c9040c51c495dcffc1b06f71732 clean and mergeable before guarded squash auto-merge was enabled with an exact head lease. GitHub merged PR #13608 as b89043a02264bfdae4193723ab3f27e8b562caa1 without a plain manual merge command."
+    "observed_at": "2026-08-31T12:09:16Z",
+    "pr_number": 13647,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #13647 opened from clean validated head ac910a9d7331498df13ea3950c617988ecb3de63 after a normal first push. GitHub reports the PR non-draft, mergeable, and conflict-free at the repository level; CI, CodeQL, Swift-app, and human-language checks are queued or in progress, so auto-merge remains disabled until every final-head check is terminal and acceptable and no merge conflict exists."
   },
   "last_inventory": {
     "revision": "5de6681bcbd010e3511819c18da7cd012263759f",
@@ -890,10 +897,13 @@
     {
       "id": "build-tool-swift-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Swift build tool",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus"],
       "branch": "codex/build-tool-swift-portable-source-hashing-conformance",
-      "pr_number": null,
+      "pr_number": 13647,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13647",
+      "opened_at": "2026-08-31T12:09:11Z",
+      "opened_revision": "ac910a9d7331498df13ea3950c617988ecb3de63",
       "selection_revision": "5de6681bcbd010e3511819c18da7cd012263759f",
       "selection_notes": "Selected after PR #13608 completed all 41 final-head checks acceptably and merged through guarded squash auto-merge as b89043a02264bfdae4193723ab3f27e8b562caa1. The refreshed collision-checked schema-3 inventory remains structurally unchanged at 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero canonical collisions, and zero unknown buckets. Subsequent PRs #13606 and #13607 changed only existing human-language and TaskApp paths and created no package identity, owner, or tranche overlap. Before selection, the Rust evaluator-safety prerequisite was registered because the dormant Rust evaluator exposes a traversal-prone filesystem resolver and only recursion metering; declared-source metadata plumbing now depends on repository-contained loads and the complete neutral metering contract. The resulting 608-owner/922-edge graph is expected to remain unique, dependency-complete, and acyclic. Swift is the highest-leverage genuinely ready bounded continuation: its sole prerequisite is merged, while Rust source hashing is correctly blocked on the new safety and metadata chain. This tranche is limited to Swift source collection, hashing, checked front-door error propagation, focused tests, and documentation; six live PRs have zero exact overlap with the expected paths, and the target local branch, remote branch, prior PR, and worktree path were absent before this clean branch was created from exact origin/main.",
       "implementation_revision": "d5d0195a294e9c97b41415d00280fbf74c2205ae",
@@ -905,6 +915,7 @@
       "security_review_notes": "Independent security review cleared repository-root-bound retained handle and descriptor walks, ancestor and final-name revalidation, Windows reparse rejection, POSIX no-follow/nonblocking/close-on-exec opens, handle-based byte reads, stable identity/size/timestamp checks, singly-linked regular-file enforcement, root-redacted Unicode-safe diagnostics, and the local-only SHA-256 dependency. Real package-root junction, ancestor-junction, and external-hardlink regressions pass. The deliberate fail-closed behavior on unusual filesystems or conflicting handles adds no network, process, credential, secret, or remote dependency authority.",
       "final_review_revision": "d5d0195a294e9c97b41415d00280fbf74c2205ae",
       "final_review_notes": "Independent conformance review reproduced the complete and focused Swift suites, the 609-owner/930-edge acyclic state graph, exact dependency wiring, roadmap synchronization, diff hygiene, and scoped primary/reference registry wording. It classified the broader hybrid/native build-input gap under build-tool-language-source-input-registry-corpus-and-engine-audit, verified every still-pending source-hashing engine and the remaining-engines aggregate depend on that neutral audit, and found no implementation, test, documentation, lifecycle, ownership, scope, security, or publication blocker in this bounded Swift tranche.",
+      "publication_notes": "Opened ready-for-review PR #13647 from clean validated head ac910a9d7331498df13ea3950c617988ecb3de63 after a normal first push from exact origin/main 0e1f08b552a17d7f18463986b9235583f32163ca. Immediately before publication, the target remote branch and prior PR were absent, all 14 other open PRs had zero exact overlap across the ten changed paths, and package, BUILD, release, coverage, neutral corpus, dry-plan, collision, state-DAG, diff, credential, security, and independent conformance-review gates were acceptable. GitHub reports the PR non-draft and mergeable with CI, CodeQL, Swift-app, and human-language checks queued or in progress, so auto-merge remains disabled until every final-head check is terminal and acceptable and no merge conflict exists.",
       "notes": "Discovered by the post-#13544 source-hashing audit. Swift reuses discovery skips but omits normalized path framing and OCaml source recognition. Adopt the language-neutral collector and digest framing contract in a separate Swift tranche."
     },
     {
