@@ -2707,7 +2707,7 @@ impl Compiler {
         nodes: &[&GrammarASTNode],
     ) -> Option<u32> {
         self.static_nonnegative_power_chain_with(nodes, &|node| {
-            let dependencies = self.static_predicate_dependencies(node)?;
+            let dependencies = self.tracked_integer_expression_dependencies(node)?;
             if dependencies.is_empty() {
                 return None;
             }
@@ -2733,6 +2733,12 @@ impl Compiler {
     /// Recognize checked integer arithmetic whose leaves are literals, exact
     /// tracked locals, or pure supported standard-function calls.
     fn exact_tracked_integer_expression(&self, node: &GrammarASTNode) -> bool {
+        if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
+            return self.static_predicate_dependencies(condition).is_some()
+                && self.exact_tracked_integer_expression(then_node)
+                && self.exact_tracked_integer_expression(else_node)
+                && self.static_integer_scalar_value(node).is_some();
+        }
         if exact_signed_bare_variable_expression(node).is_some() {
             return true;
         }
@@ -2772,6 +2778,41 @@ impl Compiler {
         tokens.is_empty()
             && child_nodes.len() == 1
             && self.exact_tracked_integer_expression(child_nodes[0])
+    }
+
+    /// Collect only the dependencies that determine an exact integer result.
+    /// Conditional selectors are evaluated normally before an unrolled power,
+    /// so they need to be pure but do not need tracked integer metadata.
+    fn tracked_integer_expression_dependencies(
+        &self,
+        node: &GrammarASTNode,
+    ) -> Option<HashSet<String>> {
+        if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
+            self.static_predicate_dependencies(condition)?;
+            let mut dependencies = self.tracked_integer_expression_dependencies(then_node)?;
+            dependencies.extend(self.tracked_integer_expression_dependencies(else_node)?);
+            return Some(dependencies);
+        }
+        let children = direct_nodes(node);
+        if children
+            .iter()
+            .any(|child| self.contains_conditional_expression(child))
+        {
+            self.static_predicate_dependencies(node)?;
+            let mut dependencies = HashSet::new();
+            for child in children {
+                dependencies.extend(self.tracked_integer_expression_dependencies(child)?);
+            }
+            return Some(dependencies);
+        }
+        self.static_predicate_dependencies(node)
+    }
+
+    fn contains_conditional_expression(&self, node: &GrammarASTNode) -> bool {
+        self.conditional_expression_parts(node).is_some()
+            || direct_nodes(node)
+                .into_iter()
+                .any(|child| self.contains_conditional_expression(child))
     }
 
     /// Recognize one pure integer-valued standard function over exact tracked
@@ -7360,6 +7401,13 @@ impl Compiler {
                     .flatten()
             });
         if let Some(k) = exponent {
+            // A conditional exponent may have a path-independent static value,
+            // but its pure selector must still execute in source order.
+            for exponent_node in exponent_nodes {
+                if self.contains_conditional_expression(exponent_node) {
+                    let _ = self.emit_expr(exponent_node)?;
+                }
+            }
             return Ok(self.emit_pow_unroll(base, k));
         }
 
@@ -10622,15 +10670,16 @@ mod tests {
     }
 
     #[test]
-    fn al4_tracks_path_independent_conditional_exponents_for_real_metadata() {
+    fn al4_unrolls_path_independent_conditional_exponents_without_erasing_the_selector() {
         let module = compile_source(
             "begin integer gate, exponent; real saved; exponent := 2; saved := 6.0 ^ (if gate = 0 then exponent else exponent) + 6.0; exponent := 3; output(saved + 0.5) end",
             "test",
         )
-        .expect("equal conditional exponent branches may contribute to real metadata");
+        .expect("equal conditional exponent branches may retain bounded multiplication");
         let main = module.get_function("main").expect("has main");
         assert!(main.instructions.iter().any(|instr| instr.op == "jmp_if_false"));
-        assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"));
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+        assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
         assert!(main.instructions.iter().any(|instr| {
             instr.op == "str_const"
                 && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.5")
@@ -10645,6 +10694,18 @@ mod tests {
         )
         .expect_err("different runtime-selected exponents must remain dynamic");
         assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_conditional_exponent_unrolling_rejects_effectful_selectors() {
+        let module = compile_source(
+            "begin boolean procedure choose; choose := true; integer exponent; real saved; exponent := 2; saved := 6.0 ^ (if choose() then exponent else exponent) end",
+            "test",
+        )
+        .expect("an effectful selector must retain runtime power lowering");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| instr.op == "call"));
+        assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"));
     }
 
     #[test]
