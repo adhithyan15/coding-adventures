@@ -2546,6 +2546,12 @@ fn parse_element(
                     "JFET FC must be finite and in [0, 1)",
                 ));
             }
+            let gate_saturation_current = *model.params.get("IS").unwrap_or(&1.0e-14);
+            if !gate_saturation_current.is_finite() || gate_saturation_current <= 0.0 {
+                return Err(NetlistParseError::new(
+                    "JFET IS must be finite and positive",
+                ));
+            }
             let mut jfet = Jfet::with_model_and_capacitance(
                 name,
                 &fields[1],
@@ -2562,6 +2568,7 @@ fn parse_element(
             jfet.flicker_noise_exponent = flicker_noise_exponent;
             jfet.junction_potential = junction_potential;
             jfet.forward_bias_depletion_coefficient = forward_bias_depletion_coefficient;
+            jfet.gate_saturation_current = gate_saturation_current;
             jfet.doping_tail_parameter = doping_tail_parameter;
             Ok(Element::Jfet(jfet))
         }
