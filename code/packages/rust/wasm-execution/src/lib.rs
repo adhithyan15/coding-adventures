@@ -3944,7 +3944,7 @@ fn get_memory_at<'a>(ctx: &WasmExecutionContext, memidx: usize) -> Result<&'a mu
     }
 }
 
-// ── memory64 bulk ops (W27 follow-up): is64/is32 operand widening for
+// ── memory64 bulk ops (W30 follow-up): is64/is32 operand widening for
 // `memory.copy`/`memory.fill`/`memory.init` ─────────────────────────────
 //
 // `W25`'s first slice widened plain scalar load/store (`pop_effective_addr`)
@@ -4620,7 +4620,7 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 // real spec's "a dropped segment can never be initialized
                 // from again" rule, not a distinct error path.
                 //
-                // W27 (memory64 bulk ops): `dest`'s width depends on the
+                // W30 (memory64 bulk ops): `dest`'s width depends on the
                 // TARGET memory's own `is64` -- `src`/`n` (positions within
                 // the data segment) always stay `i32`, since a passive data
                 // segment isn't itself address-typed. Mirrors `table.init`'s
@@ -4701,7 +4701,7 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 // Sign-extending here would let `offset + width` wrap past the bounds
                 // check and index out of bounds.
                 //
-                // W27 (memory64 bulk ops) / `memory_copy64.wast`: `dest`'s
+                // W30 (memory64 bulk ops) / `memory_copy64.wast`: `dest`'s
                 // width follows the DESTINATION memory's own `is64`,
                 // `src`'s follows the SOURCE memory's own `is64` --
                 // independently, mirroring `table.copy`'s identical mixed-
@@ -4752,7 +4752,7 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 // (`i32 as u8`, truncating): the spec defines memory.fill's
                 // fill byte as the low 8 bits of the i32 operand.
                 //
-                // W27 (memory64 bulk ops): `dest`/`n` are `i64` for an
+                // W30 (memory64 bulk ops): `dest`/`n` are `i64` for an
                 // `is64` memory (`value`, the fill byte, stays `i32`
                 // regardless -- only its low 8 bits are ever used, same as
                 // the is32 case). Mirrors `table.fill`'s identical

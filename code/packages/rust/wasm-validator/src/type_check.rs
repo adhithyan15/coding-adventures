@@ -795,7 +795,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         if data_idx as usize >= ctx.module.data.len() {
                             err!("memory.init references out-of-bounds data segment index {data_idx}");
                         }
-                        // W27 (memory64 bulk ops): `dest`'s width depends on
+                        // W30 (memory64 bulk ops): `dest`'s width depends on
                         // the TARGET memory's own `is64` -- `src`/`len`
                         // (positions within the data segment) always stay
                         // `i32`, since a passive data segment isn't itself
@@ -842,7 +842,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         if src_memory >= ctx.memory_count {
                             err!("memory.copy references source memory index {src_memory}, but only {} memories exist", ctx.memory_count);
                         }
-                        // W27 (memory64 bulk ops): `dest`'s width follows
+                        // W30 (memory64 bulk ops): `dest`'s width follows
                         // the DESTINATION memory's own `is64`, `src`'s
                         // follows the SOURCE memory's own `is64` --
                         // independently, mirroring `table.copy`'s identical
@@ -877,7 +877,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         if memory >= ctx.memory_count {
                             err!("memory.fill references memory index {memory}, but only {} memories exist", ctx.memory_count);
                         }
-                        // W27 (memory64 bulk ops): `dest`/`len` are `i64`
+                        // W30 (memory64 bulk ops): `dest`/`len` are `i64`
                         // for an `is64` memory (`value`, the fill byte,
                         // stays `i32` regardless -- only its low 8 bits are
                         // ever used, same as the is32 case). Mirrors
