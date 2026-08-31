@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:a89eb764aebea74c",
+  "lessonIds": [
+    "ES-C410-academia",
+    "ES-C410-frances",
+    "ES-C410-examen",
+    "ES-C410-education-recall-1",
+    "ES-C410-education-recall-2"
+  ],
+  "tex": "spanish/book/chapters/ch410-academia-frances-estudiante-examen.tex"
+}

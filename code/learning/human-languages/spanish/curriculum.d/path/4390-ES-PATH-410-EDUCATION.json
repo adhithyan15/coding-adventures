@@ -1,0 +1,14 @@
+{
+  "id": "ES-PATH-410-EDUCATION",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "lessons": [
+    "ES-C410-academia",
+    "ES-C410-frances",
+    "ES-C410-examen"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-410-EDUCATION"
+  ],
+  "after": []
+}

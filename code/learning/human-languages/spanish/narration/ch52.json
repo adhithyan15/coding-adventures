@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "Estudiante --- a Word You Can Build",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8b6172542524dacb",
+  "sourceHash": "fnv1a64:5f5860dd0dd18685",
   "lessons": [
     {
       "id": "ES-C09-estudiante",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:17b32a18e8b99151",
+      "sourceHash": "fnv1a64:16ed1344d05102bc",
       "notice": null,
       "blocks": [
         {

@@ -1,5 +1,6 @@
 {
   "segments": [
+    "ES-PATH-030-ESTUDIANTE",
     "ES-PATH-268-ROOM",
     "ES-PATH-390-01",
     "ES-PATH-391-01",
@@ -17,7 +18,9 @@
     "ES-PATH-406-DOCUMENTS",
     "ES-PATH-406-REVIEWS",
     "ES-PATH-408-HEALTH",
-    "ES-PATH-408-REVIEWS"
+    "ES-PATH-408-REVIEWS",
+    "ES-PATH-410-EDUCATION",
+    "ES-PATH-410-REVIEWS"
   ],
   "omits": [],
   "relocates": {}

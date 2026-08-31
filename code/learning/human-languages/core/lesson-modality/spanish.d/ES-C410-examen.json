@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "ES-C09-estudiante",
+    "id": "ES-C410-examen",
     "language": "spanish",
-    "chapter": 52,
-    "sequence": 965,
+    "chapter": 410,
+    "sequence": 9370,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:16ed1344d05102bc"
+    "sourceHash": "fnv1a64:d6cb2e417abf2ec8"
   },
   "findings": []
 }
