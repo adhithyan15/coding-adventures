@@ -11504,6 +11504,64 @@ overlap. GitHub reports the PR non-draft and mergeable with required CI and
 CodeQL checks queued or in progress, so auto-merge remains disabled until every
 final-head check is terminal and acceptable and no merge conflict exists.
 
+### Post-PR #13579 refresh and Lua Dune-fixture selection
+
+PR #13579 completed all 41 final-head checks acceptably with 34 successes, six
+expected skips, and one neutral result. Guarded squash auto-merge was enabled
+only after GitHub reported final head
+`790154cb1ea967f59d2ab4327ec58cc7a6a4b888` clean and mergeable, and GitHub
+merged it as `524cec6902b6bcdc5bc133ab7de2a4b07f3550ec` at
+2026-08-31T03:10:31Z without a manual merge command. The TypeScript generated-
+directory hashing owner therefore advances to `merged` and the active PR is
+cleared.
+
+Exact `origin/main` then advanced only through merged Punjabi and Spanish
+curriculum/data work to `e3ecc38fcd0e641c2402d125a16b8e76f64245d6`.
+The regenerated schema-3 inventory remains collision-clean and identity-
+neutral at 15 established lanes, 1,388 implementation identities, 4,602 slots,
+1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and
+920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero
+unknown buckets. No package root, BUILD, recognized manifest, lockfile,
+dependency, or identity topology changed, and no new owner was required.
+
+The dependency/leverage pass selects
+`build-tool-lua-dune-build-discovery-fixture-adoption` on branch
+`codex/build-tool-lua-dune-build-discovery-fixture-adoption`. Its sole
+prerequisite is merged. The owner now has five total downstream consumers and
+immediately advances both the remaining Dune-exclusion aggregate and Lua
+hashing/cache conformance, which feeds both hashing aggregates. A filtered
+projection of the shared OCaml/Dune records is a smaller coherent tranche than
+the three-descendant TypeScript source-hashing runner-up and avoids widening
+this PR into independent Lua identity-registry debt. Final review classifies
+that eligible broader registry work under the new pending
+`build-tool-lua-language-identity-registry` owner, dependent on this fixture-
+adoption leaf. Five live PRs have zero exact overlap with the seven expected
+Lua discovery, test, README, changelog, state, roadmap, and root-changelog
+paths; the local branch, remote branch, and prior PR were absent before the
+fresh clean branch and worktree were created. Reconciliation and selection
+leave the complete 606-owner/917-edge graph unique, dependency-complete, and
+acyclic at 190 merged, 415 pending, and exactly one `in-progress` owner.
+
+Implementation followed the existing Dune discovery contract test-first. The
+new filtered shared-fixture projection failed in exactly the three expected
+Lua language classifications before source changed. The production repair adds
+only `ocaml` to the established immutable language set; exact case-sensitive
+`_build` pruning was already correct. The focused discovery suite passes 24
+tests, the complete package and generic BUILD front pass 90 tests, `luac`
+accepts both changed Lua files, LuaCheck reports zero production findings, and
+focused LuaCov measures 84.50% discovery-module and 98.01% test-file coverage.
+The neutral corpus validates 121 cases and 283 files across 16 implementations;
+230 conformance, capability, authority, package-parity, and OCaml-lock tests
+pass with 25 expected platform skips and 999 subtests. The Go oracle passes
+module verification, all tests, vet, and trimpath build. A real forced-Lua Go
+plan covers all 260 Lua packages, while the real Lua CLI scans 5,120 packages,
+filters the same 260, resolves eight levels, and exits zero. The collision-
+checked inventory retains every recorded count. The 606-owner/917-edge graph
+is unique, complete, and acyclic. Diff hygiene and two independent reviews are
+clean; no manifest, lockfile, BUILD front, dependency, generated artifact, or
+production process, network, environment, credential, or new filesystem
+authority changed.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
