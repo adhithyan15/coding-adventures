@@ -12097,6 +12097,44 @@ retroactively blocked. The synchronized state graph contains 609 unique
 owners and 930 dependency edges, is dependency-complete and acyclic, and stands
 at 196 merged, 412 pending, and exactly this owner in progress.
 
+### Post-PR #13647 refresh and source-input registry audit selection
+
+PR #13647 completed all 43 checks on final head
+`1bb2228ece74e136b6fc7f52570d596e9ddb7aef` acceptably: 36 succeeded, six
+were skipped, and one completed neutral. GitHub executed the guarded squash
+auto-merge that had been enabled for that exact head, without a manual merge,
+at 2026-08-31T13:01:27Z. Exact `origin/main` is now
+`138457fbc2ff2ae7c26c5177148f1460938b0d73`.
+
+The collision-checked schema-3 inventory at that revision reports 15
+established lanes, 1,389 implementation identities, 4,603 implementation
+slots, and 1,428 all-reported identities. Its bands are 175 packages with 265
+missing slots, 123/934, 170/2,139, and 921/12,894; Rust has 732 singletons,
+OCaml still has zero packages, and both canonical-collision and unknown-bucket
+counts remain zero. The only new identity is the Rust-only `oauth` package from
+merged PR #13626. The new
+`oauth-installed-app-pure-core-portable-conformance` owner captures its pure,
+provider-neutral Authorization Code plus PKCE behavior. Open PR #13650 is not
+current-main evidence and will be reconciled only if it merges. Browser,
+listener, network, HTTPS, provider, clock, credential/token custody, durable
+storage, and host-security authority remain outside autonomous portable
+selection.
+
+The dependency/leverage pass selects
+`build-tool-language-source-input-registry-corpus-and-engine-audit` on clean
+branch `codex/build-tool-language-source-input-registry-corpus-audit` from the
+exact main revision above. Its sole prerequisite is merged, it directly blocks
+seven pending owners, and it reaches 13 pending descendants. Higher-ranked
+nodes are aggregate umbrellas or network, host-security, credential,
+native-runtime, and external-approval work excluded by policy. This tranche
+will define the collision-checked neutral registry and fixtures, exercise the
+schema and corpus runners, audit every build-tool engine, and register concrete
+engine-adoption children before completion. It will not mix those engine
+adoptions or host-native authority into the registry PR. After the OAuth owner
+was added and this owner transitioned from pending to in-progress, the complete
+610-owner/930-edge graph stands at 197 merged, 412 pending, and exactly one
+in-progress owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
