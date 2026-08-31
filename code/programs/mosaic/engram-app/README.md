@@ -153,12 +153,34 @@ cd code/programs/mosaic/engram-app
 cargo test
 ```
 
-## Emitting host shells
+## Building the web host
+
+```bash
+cd code/programs/mosaic/engram-app
+./scripts/build-web.sh --build
+```
+
+Compiles the engine to wasm, emits the app as a complete React/Vite project, and
+installs the wasm runtime into it. `--build` also produces `dist/`; without it the
+script stops at a project ready for `npm install && npm run dev`. `--theme light`
+selects the light stylesheet.
+
+The runtime-install step is not optional: the emitted `src/engram-host.ts` imports
+`./engram-mosaic-host-wasm`, and emission copies only the `.d.ts` — the loader
+itself lives in `engram-wasm/js`. Without it the build fails with
+`Could not resolve "./engram-mosaic-host-wasm"`. That step previously existed only
+in `build-all.ps1`, which cannot run on a Linux CI runner.
+
+## Emitting every host shell
 
 ```powershell
 cd code/programs/mosaic/engram-app
 ./scripts/build-all.ps1
 ```
+
+Windows only, and it emits permissively — it passes neither `--profile
+native-complete` nor `--runtime-library`, so it does not check the degradation
+report. `build-web.sh` above is the cross-platform path for the web backend.
 
 The script writes HTML, WebComponent, React, Electron, SwiftUI, Qt, XAML,
 Flutter, and Compose outputs under `target/mosaic-engram-app/` by default. The

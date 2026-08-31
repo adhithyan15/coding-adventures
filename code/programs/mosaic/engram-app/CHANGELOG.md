@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+- Added `scripts/build-web.sh`, a cross-platform build for the web host:
+  compiles the engine to wasm, emits the app as a complete React/Vite project,
+  and installs the wasm runtime into it. `--build` also produces `dist/`;
+  `--theme` selects a stylesheet.
+
+  The runtime-install step is what makes the emitted project buildable at all.
+  `src/engram-host.ts` imports `./engram-mosaic-host-wasm` and emission copies
+  only the `.d.ts`, so without it the build fails with
+  `Could not resolve "./engram-mosaic-host-wasm"`. That step previously existed
+  only in `build-all.ps1` — PowerShell, and therefore unavailable on the Linux
+  CI runner, which is why no lane could produce a web bundle.
+
+  With `--build` the script also `cmp`s the wasm in `dist/` against the one it
+  compiled. Vite copies `public/` into `dist/`, and a missing engine there is a
+  runtime failure behind a successful build — the same shape of bug the install
+  step exists to prevent, so it is checked rather than assumed.
+
 - Preserved Engram Anki import/export host-side error details in Qt, SwiftUI,
   and Compose `hostResult` statuses so generated shells show actionable read,
   import, export, and write failures instead of generic status text.
