@@ -1,5 +1,18 @@
 # Changelog — sqlite-file
 
+## Unreleased
+
+**`content_size` no longer truncates a serial-type length on 32-bit targets.**
+For serial types ≥ 12 the payload length was computed as `((n - 12) / 2) as usize`.
+Serial types come from an untrusted file, and `usize` is 32 bits on `wasm32`, so a
+crafted serial of `2·2³² + 12` truncated to length `0`: the column decoded as an
+empty value and every column after it read from the wrong payload offset —
+silently, with no error. Now `usize::try_from(..)`, making it a decode failure.
+
+Data integrity only; the payload slice was always bounds-checked, so there was no
+memory-safety issue. Reachable in a browser now that the Anki package layer builds
+for wasm.
+
 ## 0.19.0 - Unreleased
 
 **Writer: a stale cell-count cap limited whole tables to 65535 rows.**

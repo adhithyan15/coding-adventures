@@ -2,6 +2,76 @@
 
 ## Unreleased
 
+**Media expansion is now budgeted**, with the budget clamped at both ends and
+computed in `u64`. An earlier draft used `usize::saturating_mul`, which on
+`wasm32` saturates to `usize::MAX` for any archive over ~82 MiB — and since the
+running total saturated to the same value, the comparison became
+`usize::MAX > usize::MAX` and never fired. The control was inert at exactly the
+sizes where it mattered. The arithmetic now has its own unit test, which fails if
+the ceiling clamp is removed.
+
+The ceiling is target-aware: 32 MiB on wasm, 256 MiB elsewhere. That is not
+arbitrary — returning state through the JSON facade amplifies media roughly 24x
+in transient memory (`Vec<u8>` serialises as a JSON number array through an
+intermediate `Value` tree), so the wasm ceiling is set against the amplified
+peak. It is a visible limit on browser media size; removing the amplification is
+tracked in #13671.
+
+Bounding each decode to the *remaining* budget, rather than measuring after the
+allocation, is tracked in #13672.
+
+**The lookup by name is no longer linear.** `ZipReader::read_by_name` scanned
+entries; `read_media_files` calls it once per media entry, so the pair was
+quadratic in entry count — and entry count is linear in archive size. A ~8 MB
+archive with ~148,000 aliased entries sharing a long name prefix is on the order
+of 10^10 string comparisons: a frozen tab, with no memory pressure and no error
+to show for it, which the media budget cannot catch because the payloads are
+tiny. `ZipReader` now builds a name index once.
+
+ Nothing in the ZIP format stops a central
+directory from listing thousands of entries pointing at the *same* local header,
+and `read_media_files` read and **retained** each one. A ~1 MB archive was measured
+expanding to over 1.3 GB of retained memory (a 1278x ratio) with plain stored
+members; a DEFLATE bomb behind each alias multiplies that further.
+
+Survivable natively — a failed allocation is an `Err`. Not survivable in a
+browser, where `panic = "abort"` turns it into a module abort that takes the
+user's unsaved collection with it. `read_media_files` now caps total decompressed
+output at `max(16 MiB, 50 x archive size)` and fails with a clear message. The
+budget is on output bytes rather than entry count, because entry count is not
+what exhausts memory.
+
+**Anki packages now work in the browser.** `zstd_crate` moves behind a new
+default-on `modern-format` feature, making it optional. That is what finally lets
+this crate build for `wasm32`.
+
+The blockers were two C dependencies. `rusqlite` went when the export moved onto
+`sqlite-file`'s writer; `zstd_crate` reaches libzstd through `zstd-sys`, and
+`clang` has no `wasm32-unknown-unknown` target, so its build script failed
+outright. Removing the first was necessary but not sufficient — the build simply
+moved on to failing at the second.
+
+Legacy V11 `.apkg` never needs zstd: `write_legacy_apkg` stores its members
+uncompressed through the repo's own `zip` crate, and `decode_package_payload`
+copies them straight back. So a build without `modern-format` still does full
+legacy import and export — a genuine importer in the browser rather than the
+previous state, where the whole package layer was compiled out of wasm and every
+APKG call returned "handled by native hosts for WASM shells".
+
+Modern `.anki21b` / `.colpkg` returns an explicit, actionable error there, naming
+the legacy format as the way through. Deliberately an error rather than a
+fallback to the raw bytes: handing back a zstd frame as if it were a collection
+would surface later as corrupt data of unclear origin.
+
+Native builds are unchanged — the feature is on by default, so full modern Anki
+compatibility is preserved with no caller changes.
+
+Verified in both configurations: the legacy golden `.apkg` round-trips pass with
+`--no-default-features` (the configuration wasm uses), a new test asserts the
+modern path fails with an actionable message rather than importing partial data,
+and `cargo build --target wasm32-unknown-unknown` succeeds for this crate and for
+`engram-wasm` with the package layer included.
+
 **Fixed two DoS paths in revlog id assignment, both reachable from an imported
 file.** Review ids come straight from the revlog b-tree's cell rowids, and
 `walk_table` sorts but does not deduplicate, so a crafted `.anki2` controls them
