@@ -337,6 +337,23 @@ impl Executor {
     /// does NOT (an instance is only ever reachable by its own `$I`, never
     /// implicitly "current" -- matching the real corpus's own `instance.
     /// wast`, which always addresses `$I1`/`$I2`/`$I` by name).
+    ///
+    /// Security note (flagged in this feature's own review): a single
+    /// `(module definition $M ...)` can now be instantiated an arbitrary
+    /// number of times via repeated short `(module instance $I_k $M)`
+    /// lines, each triggering a REAL, eager allocation (this crate's
+    /// `instantiate()` has never been lazy about memory/table sizing --
+    /// see `memory64.wast`/`table64.wast`'s own already-existing boundary-
+    /// case tests). That's a cheaper allocation-amplification primitive
+    /// than existed before this feature (previously, triggering N real
+    /// instantiations needed N full module bodies, not N one-line
+    /// references to one shared template). Not a concern for THIS crate's
+    /// actual use (`run_wast_source` only ever runs the pinned, trusted
+    /// `WebAssembly/testsuite` corpus fetched by `fetch_testsuite.py`, never
+    /// arbitrary/untrusted `.wast` text) -- but if this parser/executor is
+    /// ever pointed at untrusted `.wast` input, cap either the number of
+    /// `Directive::ModuleInstance` directives or cumulative allocated
+    /// memory/table bytes per script before doing so.
     fn instantiate_and_register(&mut self, module: &WasmModule, id: Option<String>, set_current: bool) -> DirectiveOutcome {
         match self.runtime.validate(module) {
             Err(e) => DirectiveOutcome::Fail(format!("module failed structural validation: {e}")),
