@@ -15,6 +15,10 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::{self, Debug, Display, Formatter};
 use url_parser::Url;
 
+mod token;
+
+pub use token::*;
+
 const ENTROPY_BYTES: usize = 32;
 const MAX_ENDPOINT_BYTES: usize = 2_048;
 const MAX_CLIENT_ID_BYTES: usize = 1_024;
@@ -131,6 +135,7 @@ pub struct ProviderConfig {
     token_endpoint: String,
     client_id: String,
     redirect_uri: String,
+    revocation_endpoint: Option<String>,
     mix_up_defense: Option<MixUpDefense>,
     authorization_extra_parameters: BTreeMap<String, String>,
 }
@@ -160,6 +165,7 @@ impl ProviderConfig {
             token_endpoint,
             client_id,
             redirect_uri,
+            revocation_endpoint: None,
             mix_up_defense: None,
             authorization_extra_parameters: BTreeMap::new(),
         })
@@ -180,6 +186,17 @@ impl ProviderConfig {
     pub fn with_distinct_redirect_uri(mut self) -> Self {
         self.mix_up_defense = Some(MixUpDefense::DistinctRedirectUri);
         self
+    }
+
+    /// Configure an optional RFC 7009 token revocation endpoint.
+    pub fn with_revocation_endpoint(
+        mut self,
+        endpoint: impl Into<String>,
+    ) -> Result<Self, OAuthError> {
+        let endpoint = endpoint.into();
+        validate_https_endpoint(&endpoint)?;
+        self.revocation_endpoint = Some(endpoint);
+        Ok(self)
     }
 
     /// Add bounded provider-defined authorization parameters.
@@ -224,6 +241,10 @@ impl Debug for ProviderConfig {
             .field("token_endpoint", &"<redacted>")
             .field("client_id", &"<redacted>")
             .field("redirect_uri", &"<redacted>")
+            .field(
+                "has_revocation_endpoint",
+                &self.revocation_endpoint.is_some(),
+            )
             .field("mix_up_defense", &self.mix_up_defense)
             .field(
                 "authorization_extra_parameter_count",
@@ -346,6 +367,7 @@ pub fn pkce_s256_challenge(verifier: &PkceVerifier) -> String {
 /// Prepared public-client token exchange with secret-bearing form body.
 pub struct TokenExchangeRequest {
     provider: ProviderId,
+    trace: OAuthTraceId,
     endpoint: String,
     form_body: Zeroizing<String>,
 }
@@ -390,6 +412,14 @@ pub enum OAuthAuditAction {
     AuthorizationBegin,
     /// An authorization callback was validated and an exchange was prepared.
     AuthorizationComplete,
+    /// A refresh grant request was prepared for transport.
+    TokenRefreshPrepare,
+    /// A token endpoint response was decoded and classified.
+    TokenResponseDecode,
+    /// Parsed credential material was released to its next custodian.
+    TokenCredentialRelease,
+    /// An RFC 7009 revocation request was prepared for transport.
+    TokenRevocationPrepare,
 }
 
 /// Privacy-safe outcome stored without callback, code, token, URL, or scope.
@@ -620,7 +650,7 @@ fn prepare_token_exchange(
         return Err(OAuthError::InvalidCallback(CallbackViolation::Code));
     }
 
-    let form_body = render_form([
+    let form_body = render_secret_form([
         ("grant_type", "authorization_code"),
         ("code", code),
         ("redirect_uri", transaction.redirect_uri.as_str()),
@@ -629,8 +659,9 @@ fn prepare_token_exchange(
     ]);
     Ok(TokenExchangeRequest {
         provider: transaction.provider,
+        trace: transaction.trace,
         endpoint: transaction.token_endpoint,
-        form_body: Zeroizing::new(form_body),
+        form_body,
     })
 }
 
@@ -677,6 +708,8 @@ pub enum ConfigurationViolation {
     Scope,
     /// PKCE verifier grammar or bounds failed.
     PkceVerifier,
+    /// A token, token response, or revocation input failed strict bounds.
+    TokenInput,
 }
 
 /// Closed callback validation violation.
@@ -707,6 +740,10 @@ pub enum OAuthError {
     ProviderDenied,
     /// Authorization server returned another OAuth error code.
     ProviderError,
+    /// The token endpoint response was malformed or internally inconsistent.
+    InvalidTokenResponse(TokenResponseViolation),
+    /// The token endpoint returned a bounded, classified OAuth error code.
+    TokenEndpoint(ProviderTokenError),
     /// Durable audit publication failed; the wrapped result was not released.
     Audit,
 }
@@ -717,7 +754,10 @@ impl OAuthError {
             Self::InvalidConfiguration(_) => OAuthFailureClass::InvalidInput,
             Self::Entropy => OAuthFailureClass::Entropy,
             Self::InvalidCallback(_) => OAuthFailureClass::InvalidCallback,
-            Self::ProviderDenied | Self::ProviderError => OAuthFailureClass::Provider,
+            Self::ProviderDenied
+            | Self::ProviderError
+            | Self::InvalidTokenResponse(_)
+            | Self::TokenEndpoint(_) => OAuthFailureClass::Provider,
             Self::Audit => OAuthFailureClass::Audit,
         }
     }
@@ -737,6 +777,13 @@ impl Debug for OAuthError {
             Self::Entropy => formatter.write_str("Entropy"),
             Self::ProviderDenied => formatter.write_str("ProviderDenied"),
             Self::ProviderError => formatter.write_str("ProviderError"),
+            Self::InvalidTokenResponse(reason) => formatter
+                .debug_tuple("InvalidTokenResponse")
+                .field(reason)
+                .finish(),
+            Self::TokenEndpoint(code) => {
+                formatter.debug_tuple("TokenEndpoint").field(code).finish()
+            }
             Self::Audit => formatter.write_str("Audit"),
         }
     }
@@ -750,6 +797,8 @@ impl Display for OAuthError {
             Self::InvalidCallback(_) => "oauth: invalid authorization callback",
             Self::ProviderDenied => "oauth: authorization denied",
             Self::ProviderError => "oauth: provider rejected authorization",
+            Self::InvalidTokenResponse(_) => "oauth: invalid token response",
+            Self::TokenEndpoint(_) => "oauth: token endpoint rejected request",
             Self::Audit => "oauth: audit publication failed",
         })
     }
@@ -899,15 +948,42 @@ fn render_form<'a, I>(parameters: I) -> String
 where
     I: IntoIterator<Item = (&'a str, &'a str)>,
 {
-    parameters
-        .into_iter()
-        .map(|(key, value)| format!("{}={}", form_encode(key), form_encode(value)))
-        .collect::<Vec<_>>()
-        .join("&")
+    let mut output = String::new();
+    append_form(&mut output, parameters);
+    output
 }
 
+fn render_secret_form<'a, I>(parameters: I) -> Zeroizing<String>
+where
+    I: IntoIterator<Item = (&'a str, &'a str)>,
+{
+    let mut output = Zeroizing::new(String::new());
+    append_form(&mut output, parameters);
+    output
+}
+
+fn append_form<'a, I>(output: &mut String, parameters: I)
+where
+    I: IntoIterator<Item = (&'a str, &'a str)>,
+{
+    for (index, (key, value)) in parameters.into_iter().enumerate() {
+        if index > 0 {
+            output.push('&');
+        }
+        append_form_encoded(output, key);
+        output.push('=');
+        append_form_encoded(output, value);
+    }
+}
+
+#[cfg(test)]
 fn form_encode(value: &str) -> String {
     let mut output = String::with_capacity(value.len());
+    append_form_encoded(&mut output, value);
+    output
+}
+
+fn append_form_encoded(output: &mut String, value: &str) {
     for byte in value.bytes() {
         if byte.is_ascii_alphanumeric() || matches!(byte, b'-' | b'.' | b'_' | b'~') {
             output.push(char::from(byte));
@@ -918,7 +994,6 @@ fn form_encode(value: &str) -> String {
             output.push(char::from(HEX[(byte & 0x0f) as usize]));
         }
     }
-    output
 }
 
 fn parse_form(query: &str) -> Result<BTreeMap<String, String>, OAuthError> {
