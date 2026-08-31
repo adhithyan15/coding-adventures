@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Complete portable source hashing with every established lane's primary
+  sources and package metadata, the shared 26-component exact pruning registry, OCaml
+  coverage, strict declared-source selection, and both neutral collection
+  fixtures. Package digests now use the local pure Swift SHA-256 package and
+  hashing-v1 path/content length frames on every platform; no-follow reads
+  retain and recheck ancestor/object identities, and failures use one stable,
+  root-redacted CLI diagnostic with exit code `2`.
 - Add a pure bounded extra-CI toolchain snapshot evaluator that consumes all 11
   language-neutral declaration fixtures. It enforces selected BUILD-front
   precedence, UTF-8 byte and LF-delimited logical-line ceilings, exact CRLF
