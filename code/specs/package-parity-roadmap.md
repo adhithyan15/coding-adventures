@@ -11898,6 +11898,117 @@ reports the PR non-draft, mergeable, and conflict-free with CI and CodeQL
 checks queued or running. Auto-merge remains disabled until every final-head
 check is terminal and acceptable and no merge conflict exists.
 
+### Post-PR #13604 refresh and Go portable source-hashing selection
+
+PR #13604 completed all 41 final-head checks acceptably with 34 successes, six
+expected skips, and one neutral result. GitHub reported final head
+`ad5b8663043782dc7d1b235244b6777cbf619493` conflict-free before guarded
+squash auto-merge was enabled with an exact head lease. GitHub merged it as
+`696e750fc40fc1082ae88a19498e9baf81996b87` at 2026-08-31T08:47:48Z
+without a plain manual merge command. The Ruby source-hashing owner therefore
+advances from `pr-open` to `merged`, and the active parity PR is cleared.
+
+The collision-checked exact-main schema-3 inventory is structurally unchanged:
+15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427
+all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880,
+731 Rust singletons, zero OCaml packages, zero canonical collisions, and zero
+unknown buckets. The merged Spanish planning-frame and Ruby hashing changes add
+no package root, BUILD front, recognized manifest, dependency, lockfile, or
+identity. The six live PRs inspected during the refresh own no unclassified
+portable gap and have zero exact overlap with the next hashing tranche.
+
+The production-path audit did find one newly unowned prerequisite before
+selection. The Rust build tool's `Package` record does not carry Starlark or
+declared-source metadata, production hashing always receives an empty declared
+pattern set, the evaluator is not registered in the live module graph, and the
+Cargo manifest lacks its repository-local interpreter dependency. New pending
+owner `build-tool-rust-declared-source-metadata-plumbing` captures that bounded
+work and is now a prerequisite of Rust portable source hashing. With that owner
+and its two dependency edges, the complete state graph has 607 owners and 919
+edges and must remain unique, dependency-complete, and acyclic.
+
+The dependency/leverage pass selects
+`build-tool-go-portable-source-hashing-conformance` on branch
+`codex/build-tool-go-portable-source-hashing-conformance`. Go already carries
+`DeclaredSrcs` from production discovery into `HashPackage`, recognizes OCaml
+source and metadata names, and uses standard-library SHA-256. Rust first needs
+the newly recorded plumbing owner, while Swift retains a non-SHA-256 Windows
+fallback. The Go tranche is limited to hasher source and tests, checked error
+propagation in `main.go`, the package and root changelogs, the package README,
+state, and this roadmap; it changes no
+module metadata, lockfile, BUILD front, workflow, dependency, process,
+environment, network, credential, or new filesystem authority. Reconciliation,
+discovery, and selection leave 195 merged, 411 pending, and exactly this owner
+in progress.
+
+Tests-first execution exposed the expected collector and digest failures before
+the implementation adopted the complete neutral registry and hashing-v1 byte
+stream. Independent review then found that the package root itself was not
+checked before traversal, Windows link candidates were silently absent when
+symlink creation lacked privilege, a one-file oracle did not prove multi-file
+UTF-8 ordering, and the first fail-closed implementation panicked rather than
+returning a stable error. The repair validates package-root and nested links or
+reparse points before traversal, exercises real nonprivileged NTFS junctions,
+adds a reverse-created multi-file oracle, returns a checked package-hash error,
+and makes the CLI emit `HASH_PACKAGE_FAILED` with exit `2`. This necessary
+review repair expands the expected diff from seven to eight paths by adding
+`main.go`. The final correctness and security pass then added an exact front-door
+regression in `main_test.go` and made the quoted package identity escape control
+characters so an adversarial filesystem basename cannot forge a CI log line.
+The resulting nine-path tranche does not add a dependency, manifest, lockfile,
+BUILD front, workflow, process authority, or cache schema change.
+
+Before publication, `origin/main` advanced through merged PR #13602's existing
+TaskApp Compose presentation work and PR #13605's existing Spanish curriculum
+and TypeScript human-language-data tests to exact revision
+`83127966b0112dd0ffe88d328e040e70b581848b`. The two parity commits rebased
+without conflict. Those upstream paths add no package root, BUILD front,
+recognized manifest, dependency, lockfile, identity, owner gap, or exact
+overlap with the selected nine paths. The refreshed schema-3 inventory and
+607-owner/919-edge graph remain structurally unchanged.
+
+### Go source-hashing implementation and validation
+
+The Go engine now consumes the complete case-sensitive 26-component generated
+directory registry in both collection modes, recognizes the five exact BUILD
+fronts plus OCaml sources and metadata, retains only the package-root OPAM
+manifest implicitly, and rejects a linked or reparse-backed package root before
+walking. Nested POSIX links and Windows junctions are inert. Hashing v1 sorts
+portable UTF-8 repository-relative paths and frames every path and raw file
+body with unsigned 64-bit big-endian lengths before SHA-256. The front door
+propagates checked hash errors as exit `2` with one root-redacted, Go-quoted,
+control-safe package identity.
+
+The focused and complete Go suites pass, including real nonprivileged Windows
+junction coverage and the literal `BUILD` front. `go vet`, a trimpath build,
+and the hasher race test pass. Hasher coverage is 84.8% of statements, with
+`HashPackage` at 85.7%; the new run and diagnostic seams are fully executed.
+The neutral corpus validates 121 cases and 283 files, and 85 schema/runner tests
+plus 132 subtests pass. A forced Go dry plan evaluates 45 Starlark BUILD files,
+discovers 306 packages, keeps the five-entry orphan ledger valid, and reports
+all 306 as `WOULD-BUILD`. Govulncheck finds no called vulnerability, while
+dependency, BUILD, workflow, credential-pattern, generated-artifact,
+formatting, and diff gates are clean.
+
+The final schema-3 inventory remains 15 established lanes, 1,388 identities,
+4,602 slots, 1,427 all-reported identities, 731 Rust singletons, zero
+collisions, and zero unknown buckets. The 607-owner/919-edge graph is unique,
+dependency-complete, and acyclic with 195 merged, 411 pending, and exactly one
+in-progress owner. Three independent read-only reviews closed every reported
+root-junction, Windows-evidence, panic, one-file-oracle, front-door-test, and
+log-injection gap and found no remaining publication blocker. The remaining
+same-user check/open/check race is explicitly documented as a non-atomic TOCTOU
+boundary rather than overclaimed away.
+
+Ready-for-review PR #13608 opened from clean validated head
+`1eeda1bcdace08711b27b174df52bc66d58c5862` after a normal first push from
+exact `origin/main` `83127966b0112dd0ffe88d328e040e70b581848b`.
+Immediately before publication, the target remote branch and prior PR were
+absent, every local gate above remained acceptable, and six other live PRs had
+zero exact overlap across the nine paths. GitHub reports the PR non-draft,
+mergeable, and conflict-free with checks queued or in progress, so auto-merge
+remains disabled until all final-head checks are terminal and acceptable.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

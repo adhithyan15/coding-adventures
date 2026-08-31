@@ -6,6 +6,33 @@ The **primary build tool** for the coding-adventures monorepo. Compiled to a nat
 
 This tool discovers packages in the monorepo by recursively walking for `BUILD` files, resolves inter-package dependencies, hashes source files for change detection, and only rebuilds packages whose source or dependency inputs changed. Independent packages are built in parallel using Go goroutines.
 
+## Portable source hashing
+
+Extension and declared-source collection share the language-neutral v1 rules.
+Both modes prune the exact case-sensitive 26-component generated-directory
+registry before matching files, preserve near names such as `_Build` and
+`_build-example`, and never traverse symlink or Windows reparse-point
+components. The five exact BUILD fronts participate in both modes. OCaml adds
+`.ml`, `.mli`, and `.opam` sources plus exact `.ocamlformat`, `dune`, and
+`dune-project` metadata; declared mode retains a root `.opam` manifest when a
+glob omits it, while a nested manifest still needs an explicit match.
+
+Package digests use hashing v1. Included files sort by normalized
+repository-relative forward-slash UTF-8 path. Each path and its exact raw file
+bytes are framed with unsigned 64-bit big-endian byte lengths before one
+SHA-256 digest is computed. Absolute checkout paths, host locale, timestamps,
+ownership, and directory enumeration order do not enter the digest, while a
+same-content rename does. Stable lexical link/reparse checks run before and
+after streaming and source identity/length is rechecked through the open file;
+this is deliberately not described as an atomic descriptor-relative TOCTOU
+boundary on every supported host.
+
+Unreadable, unstable, non-portable, linked, or reparse-backed source inputs do
+not produce a cache digest. `HashPackage` returns a checked error, and the CLI
+emits the root-redacted `Error: HASH_PACKAGE_FAILED "<package-identity>"`
+record with Go-escaped control characters and exits `2` instead of caching a
+sentinel digest or printing an uncontrolled stack trace.
+
 ## Building
 
 ```bash

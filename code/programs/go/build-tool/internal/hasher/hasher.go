@@ -16,11 +16,11 @@
 //     language's relevant extensions. Always include BUILD files.
 //  2. Sort the file list lexicographically by relative path. This ensures
 //     that file ordering does not affect the hash.
-//  3. SHA256-hash each file's contents individually.
-//  4. Concatenate all individual hashes into one string.
-//  5. SHA256-hash that concatenated string to produce the final hash.
+//  3. Frame each repository-relative UTF-8 path and exact raw content with
+//     unsigned 64-bit big-endian byte lengths.
+//  4. SHA256-hash that single unambiguous stream.
 //
-// This two-level hashing means:
+// This framed hashing means:
 //   - Reordering files doesn't change the hash (we sort first).
 //   - Adding or removing a file changes the hash.
 //   - Modifying any file's contents changes the hash.
@@ -34,12 +34,16 @@ package hasher
 
 import (
 	"crypto/sha256"
+	"encoding/binary"
 	"encoding/hex"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
+	"reflect"
 	"sort"
 	"strings"
+	"unicode/utf8"
 
 	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
@@ -92,6 +96,50 @@ var specialFilenames = map[string]map[string]bool{
 	"dotnet": {"global.json": true, "NuGet.Config": true, "nuget.config": true},
 }
 
+var buildFilenames = map[string]bool{
+	"BUILD":               true,
+	"BUILD_mac":           true,
+	"BUILD_linux":         true,
+	"BUILD_windows":       true,
+	"BUILD_mac_and_linux": true,
+}
+
+// generatedDirectoryComponents is the shared, case-sensitive v1 registry.
+// Matching is by an exact normalized path component, so authored directories
+// such as _Build and _build-example remain source candidates.
+var generatedDirectoryComponents = map[string]bool{
+	".build":        true,
+	".cargo":        true,
+	".claude":       true,
+	".dart_tool":    true,
+	".git":          true,
+	".gradle":       true,
+	".hg":           true,
+	".mypy_cache":   true,
+	".pytest_cache": true,
+	".ruff_cache":   true,
+	".stack-work":   true,
+	".svn":          true,
+	".tox":          true,
+	".venv":         true,
+	"Pods":          true,
+	"__pycache__":   true,
+	"_build":        true,
+	"build":         true,
+	"cover":         true,
+	"deps":          true,
+	"dist":          true,
+	"dist-newstyle": true,
+	"gradle-build":  true,
+	"node_modules":  true,
+	"target":        true,
+	"vendor":        true,
+}
+
+var declaredManifestExtensions = map[string]map[string]bool{
+	"ocaml": {".opam": true},
+}
+
 // collectSourceFiles walks the package directory and returns all source
 // files relevant to the package's language. Files are sorted by their
 // relative path for deterministic hashing.
@@ -102,62 +150,29 @@ var specialFilenames = map[string]map[string]bool{
 //   - Special filenames (go.mod, Gemfile, etc.) are included.
 //   - Everything else is ignored.
 func collectSourceFiles(pkg discovery.Package) []string {
+	files, _ := collectSourceFilesChecked(pkg)
+	return files
+}
+
+func collectSourceFilesChecked(pkg discovery.Package) ([]string, error) {
 	extensions := sourceExtensions[pkg.Language]
 	specials := specialFilenames[pkg.Language]
-	if extensions == nil {
-		extensions = make(map[string]bool)
-	}
-	if specials == nil {
-		specials = make(map[string]bool)
-	}
+	files := make([]string, 0)
 
-	var files []string
-
-	// Walk the package directory recursively.
-	filepath.Walk(pkg.Path, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return nil
-		}
-		if info.IsDir() {
-			if pkg.Language == "ocaml" && path != pkg.Path && info.Name() == "_build" {
-				return filepath.SkipDir
-			}
-			return nil
-		}
-
-		name := info.Name()
-
-		// Always include BUILD files — they define how the package is built.
-		if name == "BUILD" || name == "BUILD_mac" || name == "BUILD_linux" || name == "BUILD_windows" {
+	err := walkSourceFiles(pkg.Path, func(path string, entry os.DirEntry) error {
+		name := entry.Name()
+		if buildFilenames[name] || extensions[filepath.Ext(name)] || specials[name] {
 			files = append(files, path)
-			return nil
 		}
-
-		// Check if the file extension matches.
-		ext := filepath.Ext(name)
-		if extensions[ext] {
-			files = append(files, path)
-			return nil
-		}
-
-		// Check special filenames.
-		if specials[name] {
-			files = append(files, path)
-			return nil
-		}
-
 		return nil
 	})
-
-	// Sort by relative path for determinism. Two developers with different
-	// absolute paths to the repo should get the same hash.
-	sort.Slice(files, func(i, j int) bool {
-		relI, _ := filepath.Rel(pkg.Path, files[i])
-		relJ, _ := filepath.Rel(pkg.Path, files[j])
-		return relI < relJ
-	})
-
-	return files
+	if err != nil {
+		return nil, err
+	}
+	if err := sortPortablePaths(files, pkg.Path); err != nil {
+		return nil, err
+	}
+	return files, nil
 }
 
 // resolveDeclaredSrcs converts the declared source patterns from a Starlark
@@ -167,87 +182,250 @@ func collectSourceFiles(pkg discovery.Package) []string {
 //
 // Files are sorted by relative path for deterministic hashing.
 func resolveDeclaredSrcs(pkg discovery.Package) []string {
-	var files []string
+	files, _ := resolveDeclaredSrcsChecked(pkg)
+	return files
+}
 
-	// Always include the BUILD file itself.
-	for _, name := range []string{"BUILD", "BUILD_mac", "BUILD_linux", "BUILD_windows"} {
-		buildPath := filepath.Join(pkg.Path, name)
-		if fileExists(buildPath) {
-			files = append(files, buildPath)
+func resolveDeclaredSrcsChecked(pkg discovery.Package) ([]string, error) {
+	files := make([]string, 0)
+	specials := specialFilenames[pkg.Language]
+	manifestExtensions := declaredManifestExtensions[pkg.Language]
+
+	err := walkSourceFiles(pkg.Path, func(path string, entry os.DirEntry) error {
+		name := entry.Name()
+		rel, err := portableRelativePath(pkg.Path, path)
+		if err != nil {
+			return err
 		}
-	}
-
-	// Resolve each declared pattern by walking the package directory
-	// and matching each file against the pattern using globmatch.MatchPath.
-	//
-	// We use WalkDir + globmatch instead of filepath.Glob because
-	// filepath.Glob does NOT support ** (recursive globbing). The
-	// pattern "src/**/*.py" would silently match nothing with Glob.
-	if len(pkg.DeclaredSrcs) > 0 {
-		filepath.WalkDir(pkg.Path, func(path string, d os.DirEntry, err error) error {
-			if err != nil || d.IsDir() {
-				return nil
-			}
-
-			// Get path relative to the package directory, using forward slashes.
-			rel, err := filepath.Rel(pkg.Path, path)
-			if err != nil {
-				return nil
-			}
-			rel = filepath.ToSlash(rel)
-
-			// Check against each declared source pattern.
+		include := buildFilenames[name] || specials[name]
+		if !include && filepath.Dir(path) == filepath.Clean(pkg.Path) && manifestExtensions[filepath.Ext(name)] {
+			include = true
+		}
+		if !include {
 			for _, pattern := range pkg.DeclaredSrcs {
 				if globmatch.MatchPath(pattern, rel) {
-					files = append(files, path)
+					include = true
 					break
 				}
 			}
-			return nil
-		})
-	}
-
-	// Sort by relative path for determinism.
-	sort.Slice(files, func(i, j int) bool {
-		relI, _ := filepath.Rel(pkg.Path, files[i])
-		relJ, _ := filepath.Rel(pkg.Path, files[j])
-		return relI < relJ
+		}
+		if include {
+			files = append(files, path)
+		}
+		return nil
 	})
+	if err != nil {
+		return nil, err
+	}
+	if err := sortPortablePaths(files, pkg.Path); err != nil {
+		return nil, err
+	}
+	return files, nil
+}
 
-	// Deduplicate (BUILD file may also match a pattern).
-	deduped := make([]string, 0, len(files))
-	seen := make(map[string]bool)
-	for _, f := range files {
-		if !seen[f] {
-			seen[f] = true
-			deduped = append(deduped, f)
+// walkSourceFiles enumerates only regular lexical descendants of root. It
+// prunes the exact shared generated-directory registry before matching either
+// extension or declared-source rules and never traverses link/reparse entries.
+func walkSourceFiles(root string, visit func(string, os.DirEntry) error) error {
+	cleanRoot := filepath.Clean(root)
+	rootInfo, err := os.Lstat(cleanRoot)
+	if err != nil || !rootInfo.IsDir() || rootInfo.Mode()&os.ModeSymlink != 0 || hasWindowsReparsePoint(rootInfo) {
+		return fmt.Errorf("package root is not a stable directory")
+	}
+	return filepath.WalkDir(cleanRoot, func(path string, entry os.DirEntry, walkErr error) error {
+		if walkErr != nil {
+			return walkErr
+		}
+		if path == cleanRoot {
+			return nil
+		}
+		info, err := entry.Info()
+		if err != nil {
+			return err
+		}
+		linked := info.Mode()&os.ModeSymlink != 0 || hasWindowsReparsePoint(info)
+		if entry.IsDir() {
+			if linked || generatedDirectoryComponents[entry.Name()] {
+				return filepath.SkipDir
+			}
+			return nil
+		}
+		if linked || !info.Mode().IsRegular() {
+			return nil
+		}
+		return visit(path, entry)
+	})
+}
+
+// hasWindowsReparsePoint avoids a platform-specific source file while still
+// rejecting NTFS junctions and other reparse entries. On Windows the Sys value
+// exposes a FileAttributes field; FILE_ATTRIBUTE_REPARSE_POINT is 0x400.
+func hasWindowsReparsePoint(info os.FileInfo) bool {
+	system := reflect.ValueOf(info.Sys())
+	if !system.IsValid() {
+		return false
+	}
+	if system.Kind() == reflect.Pointer {
+		if system.IsNil() {
+			return false
+		}
+		system = system.Elem()
+	}
+	if system.Kind() != reflect.Struct {
+		return false
+	}
+	attributes := system.FieldByName("FileAttributes")
+	return attributes.IsValid() && attributes.CanUint() && attributes.Uint()&0x400 != 0
+}
+
+func portableRelativePath(root, path string) (string, error) {
+	relative, err := filepath.Rel(filepath.Clean(root), filepath.Clean(path))
+	if err != nil {
+		return "", fmt.Errorf("source path is not relative to package root")
+	}
+	portable := filepath.ToSlash(relative)
+	if err := validateRepositoryPath(portable); err != nil {
+		return "", fmt.Errorf("source path is not portable UTF-8")
+	}
+	return portable, nil
+}
+
+func sortPortablePaths(files []string, root string) error {
+	relatives := make(map[string]string, len(files))
+	for _, file := range files {
+		relative, err := portableRelativePath(root, file)
+		if err != nil {
+			return err
+		}
+		relatives[file] = relative
+	}
+	sort.Slice(files, func(i, j int) bool {
+		return relatives[files[i]] < relatives[files[j]]
+	})
+	return nil
+}
+
+func repositoryRelativePackagePath(pkg discovery.Package) (string, error) {
+	normalized := filepath.ToSlash(filepath.Clean(pkg.Path))
+	parts := strings.Split(normalized, "/")
+	canonicalStart := -1
+	for index := 0; index+1 < len(parts); index++ {
+		if parts[index] == "code" && (parts[index+1] == "packages" || parts[index+1] == "programs") {
+			canonicalStart = index
 		}
 	}
+	if canonicalStart >= 0 {
+		candidate := strings.Join(parts[canonicalStart:], "/")
+		if err := validateRepositoryPath(candidate); err != nil {
+			return "", err
+		}
+		return candidate, nil
+	}
 
-	return deduped
+	identity := strings.Split(pkg.Name, "/")
+	var candidate string
+	if len(identity) == 3 && identity[1] == "programs" {
+		candidate = "code/programs/" + identity[0] + "/" + identity[2]
+	} else if len(identity) == 2 {
+		candidate = "code/packages/" + identity[0] + "/" + identity[1]
+	} else {
+		return "", fmt.Errorf("cannot derive repository-relative package path")
+	}
+	if err := validateRepositoryPath(candidate); err != nil {
+		return "", err
+	}
+	return candidate, nil
 }
 
-// fileExists reports whether a file exists and is not a directory.
-func fileExists(path string) bool {
-	info, err := os.Stat(path)
-	return err == nil && !info.IsDir()
+func validateRepositoryPath(path string) error {
+	if path == "" || !utf8.ValidString(path) || strings.ContainsRune(path, '\x00') || strings.Contains(path, "\\") || strings.HasPrefix(path, "/") {
+		return fmt.Errorf("path is not portable UTF-8")
+	}
+	for _, component := range strings.Split(path, "/") {
+		if component == "" || component == "." || component == ".." {
+			return fmt.Errorf("path is not portable UTF-8")
+		}
+	}
+	return nil
 }
 
-// hashFile computes the SHA256 hex digest of a single file's contents.
-// We read in 8KB chunks to handle large files without loading them
-// entirely into memory.
-func hashFile(path string) (string, error) {
-	f, err := os.Open(path)
+func ensureUnlinkedComponents(root, path string) error {
+	relative, err := filepath.Rel(filepath.Clean(root), filepath.Clean(path))
+	if err != nil || relative == ".." || strings.HasPrefix(relative, ".."+string(filepath.Separator)) {
+		return fmt.Errorf("source path escapes package root")
+	}
+	current := filepath.Clean(root)
+	components := []string{"."}
+	if relative != "." {
+		components = append(components, strings.Split(relative, string(filepath.Separator))...)
+	}
+	for _, component := range components {
+		if component != "." {
+			current = filepath.Join(current, component)
+		}
+		info, err := os.Lstat(current)
+		if err != nil {
+			return fmt.Errorf("source path is unavailable")
+		}
+		if info.Mode()&os.ModeSymlink != 0 || hasWindowsReparsePoint(info) {
+			return fmt.Errorf("source link component is not hashable")
+		}
+	}
+	return nil
+}
+
+func writeFileFrame(hash io.Writer, packageRoot, root, path string) error {
+	relative, err := portableRelativePath(root, path)
 	if err != nil {
-		return "", err
+		return err
 	}
-	defer f.Close()
+	repositoryPath := packageRoot + "/" + relative
+	if err := validateRepositoryPath(repositoryPath); err != nil {
+		return err
+	}
+	pathBytes := []byte(repositoryPath)
+	if err := binary.Write(hash, binary.BigEndian, uint64(len(pathBytes))); err != nil {
+		return err
+	}
+	if _, err := hash.Write(pathBytes); err != nil {
+		return err
+	}
 
-	h := sha256.New()
-	if _, err := io.Copy(h, f); err != nil {
-		return "", err
+	if err := ensureUnlinkedComponents(root, path); err != nil {
+		return err
 	}
-	return hex.EncodeToString(h.Sum(nil)), nil
+	before, err := os.Lstat(path)
+	if err != nil || !before.Mode().IsRegular() || before.Mode()&os.ModeSymlink != 0 || hasWindowsReparsePoint(before) {
+		return fmt.Errorf("source is not a stable regular file")
+	}
+	source, err := os.Open(path)
+	if err != nil {
+		return fmt.Errorf("source is not readable")
+	}
+	defer source.Close()
+	opened, err := source.Stat()
+	if err != nil || !opened.Mode().IsRegular() || !os.SameFile(before, opened) {
+		return fmt.Errorf("source changed before hashing")
+	}
+	contentLength := opened.Size()
+	if contentLength < 0 {
+		return fmt.Errorf("source length is invalid")
+	}
+	if err := binary.Write(hash, binary.BigEndian, uint64(contentLength)); err != nil {
+		return err
+	}
+	written, err := io.CopyBuffer(hash, source, make([]byte, 8192))
+	if err != nil {
+		return fmt.Errorf("source read failed")
+	}
+	after, err := source.Stat()
+	if err != nil || written != contentLength || after.Size() != opened.Size() || !after.ModTime().Equal(opened.ModTime()) {
+		return fmt.Errorf("source changed while hashing")
+	}
+	if err := ensureUnlinkedComponents(root, path); err != nil {
+		return err
+	}
+	return nil
 }
 
 // HashPackage computes a SHA256 hash representing all source files in
@@ -260,39 +438,32 @@ func hashFile(path string) (string, error) {
 //
 // If the package has no source files, we hash the empty string for
 // consistency — every package gets a hash, even empty ones.
-func HashPackage(pkg discovery.Package) string {
-	var files []string
+func HashPackage(pkg discovery.Package) (string, error) {
+	var (
+		files []string
+		err   error
+	)
 	if len(pkg.DeclaredSrcs) > 0 {
 		// Strict mode: hash only declared sources.
-		files = resolveDeclaredSrcs(pkg)
+		files, err = resolveDeclaredSrcsChecked(pkg)
 	} else {
 		// Legacy mode: extension-based collection.
-		files = collectSourceFiles(pkg)
+		files, err = collectSourceFilesChecked(pkg)
 	}
-
-	if len(files) == 0 {
-		// No source files — hash the empty string.
-		h := sha256.Sum256([]byte(""))
-		return hex.EncodeToString(h[:])
+	if err != nil {
+		return "", fmt.Errorf("source collection failed")
 	}
-
-	// Hash each file individually, concatenate all hashes, hash again.
-	// This two-level scheme means the final hash changes if any file
-	// changes, is added, or is removed.
-	var fileHashes []string
-	for _, f := range files {
-		fh, err := hashFile(f)
-		if err != nil {
-			// If we can't read a file, use a sentinel to ensure the hash
-			// differs from the cached version, triggering a rebuild.
-			fh = "error-reading-file"
+	packageRoot, err := repositoryRelativePackagePath(pkg)
+	if err != nil {
+		return "", fmt.Errorf("repository identity is invalid")
+	}
+	hash := sha256.New()
+	for _, file := range files {
+		if err := writeFileFrame(hash, packageRoot, pkg.Path, file); err != nil {
+			return "", fmt.Errorf("source input is not stable")
 		}
-		fileHashes = append(fileHashes, fh)
 	}
-
-	combined := strings.Join(fileHashes, "")
-	h := sha256.Sum256([]byte(combined))
-	return hex.EncodeToString(h[:])
+	return hex.EncodeToString(hash.Sum(nil)), nil
 }
 
 // HashDeps computes a SHA256 hash of all transitive dependency hashes.
