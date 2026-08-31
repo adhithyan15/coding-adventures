@@ -1,0 +1,18 @@
+{
+  "language": "marathi",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:99ff5b9c4480379d",
+  "lessonIds": [
+    "MR-A1F04-first-three-select",
+    "MR-A1F05-last-three-select",
+    "MR-A1F06-first-three-supported",
+    "MR-A1F07-first-three-spelling",
+    "MR-A1F08-last-three-supported",
+    "MR-A1F09-last-three-agreement",
+    "MR-A1F10-first-three-delayed",
+    "MR-A1F11-last-three-delayed",
+    "MR-A1F12-six-field-supported",
+    "MR-A1F13-six-field-independent"
+  ],
+  "tex": "marathi/book/chapters/ch21-a1-practical-form.tex"
+}

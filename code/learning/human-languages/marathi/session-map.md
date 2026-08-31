@@ -200,6 +200,24 @@ Every line is practised separately before block ordering begins. The final
 checkpoint is independent but untimed; timed integration and full A1 readiness
 remain later work.
 
+## Chapter 21 — A Six-Field Profile
+
+| Session | Lesson | One small writing job |
+|---|---|---|
+| 140 | A1F04-first-three-select | match name, city, and language labels to Profile A's support-language details |
+| 141 | A1F05-last-three-select | match favorite drink, favorite activity, and friend's-name labels |
+| 142 | A1F06-first-three-supported | enter three selected Devanagari values with the profile card visible |
+| 143 | A1F07-first-three-spelling | repair one value's spelling without recopying correct rows |
+| 144 | A1F08-last-three-supported | enter the last three selected values without a Marathi answer bank |
+| 145 | A1F09-last-three-agreement | repair **-ते / -ती / -चे** separately from value spelling |
+| 146–147 | A1F10-first-three-delayed / A1F11-last-three-delayed | fill the two three-row halves after a ten-second delay |
+| 148 | A1F12-six-field-supported | join the two mastered halves with Profile A visible |
+| 149 | A1F13-six-field-independent | complete new Profile B from meanings alone, without romanization or a completed model |
+
+The final checkpoint changes the requested values, so it tests selection rather
+than copying a memorized completed form. It is independent but untimed; the
+timed checkpoint remains #13474 and full A1 readiness remains #13459.
+
 ## Next
 
 The next Marathi script-closure tranche starts at the Chapter 5 doorway and

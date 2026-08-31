@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MR-A1F13-six-field-independent",
+    "language": "marathi",
+    "chapter": 21,
+    "sequence": 869,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4298f62aa1fb5a7c",
+    "detachableSegments": [
+      "Writing — independent controlled composition"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

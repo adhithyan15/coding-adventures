@@ -1,0 +1,821 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 21,
+  "title": "A Six-Field Profile",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:887c247b97502497",
+  "lessons": [
+    {
+      "id": "MR-A1F04-first-three-select",
+      "sequence": 860,
+      "title": "Choose the first three answers",
+      "headword": "नाव · शहर · भाषा",
+      "romanization": "",
+      "gloss": "choose which known profile detail belongs in each of the first three form rows",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type"
+      ],
+      "sourceHash": "fnv1a64:d35736804de9e35f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read three known labels: नाव, शहर, भाषा. Today you choose what each row asks for; you do not yet write the whole form."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided practice — one profile, three choices",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Profile A says in the support language: name Arun; city Pune; language Marathi. Point to the matching detail when each Marathi label is shown. Keep the profile card open. There is no Marathi answer bank to copy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after three meaning choices."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-A1F04-first-three-select-check",
+              "prompt": "Match the labels to Profile A's details: नाव; शहर; भाषा.",
+              "assesses": [
+                "MR-A1-FORM-LABEL-NAAV",
+                "MR-A1-FORM-LABEL-SHAHAR",
+                "MR-A1-FORM-LABEL-BHASHA"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "name arun; city pune; language marathi"
+              ],
+              "feedback": {
+                "correct": "Each label now selects one requested detail.",
+                "incorrect": "Repair only the first label-detail match that failed."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-A1F05-last-three-select",
+      "sequence": 861,
+      "title": "Choose the last three answers",
+      "headword": "आवडते पेय · आवडती कृती · मित्राचे नाव",
+      "romanization": "",
+      "gloss": "choose the requested favorite and friend details without copying Marathi answers",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type"
+      ],
+      "sourceHash": "fnv1a64:6acb9575ff81b0c7",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say the three jobs once: favorite drink, favorite activity, friend's name. Keep -ते, -ती, and -चे attached to the printed labels."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided practice — one profile, three choices",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Profile A says: favorite drink tea; favorite activity reading; friend Mira. Choose the requested detail for each Marathi label. Do not write a full row yet."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop before entry begins."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-A1F05-last-three-select-check",
+              "prompt": "Match the last three labels to Profile A's details.",
+              "assesses": [
+                "MR-A1-FORM-LABEL-AVDATE-PEY",
+                "MR-A1-FORM-AGREEMENT-NEUTER",
+                "MR-A1-FORM-LABEL-AVADTI-KRUTI",
+                "MR-A1-FORM-AGREEMENT-FEMININE",
+                "MR-A1-FORM-LABEL-MITRACHE-NAAV",
+                "MR-A1-FORM-POSSESSIVE-NEUTER"
+              ],
+              "responseSeconds": 22,
+              "acceptedResponses": [
+                "favorite drink tea; favorite activity reading; friend's name mira"
+              ],
+              "feedback": {
+                "correct": "The three longer labels each select one known detail.",
+                "incorrect": "Repair the label meaning before any spelling."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-A1F06-first-three-supported",
+      "sequence": 862,
+      "title": "Enter the first three values",
+      "headword": "नाव: ___ · शहर: ___ · भाषा: ___",
+      "romanization": "",
+      "gloss": "complete three visible form rows from a support-language profile card",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:a06edd11ecd4ee56",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep Profile A visible: Arun; Pune; Marathi. The card gives meanings, not copyable Devanagari answers."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — supported controlled composition",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Complete only these rows:"
+            },
+            {
+              "kind": "speech",
+              "text": "नाव: ______ शहर: ______ भाषा: ______."
+            },
+            {
+              "kind": "speech",
+              "text": "Choose the requested known value and write it in Devanagari. The labels stay visible because they are the form, not an answer model."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after three rows."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-A1F06-first-three-supported-check",
+              "prompt": "Using Profile A, complete the first three blank rows without a Marathi answer bank.",
+              "assesses": [
+                "MR-A1-FORM-LABEL-NAAV",
+                "MR-A1-FORM-LABEL-SHAHAR",
+                "MR-A1-FORM-LABEL-BHASHA"
+              ],
+              "responseSeconds": 45,
+              "acceptedResponses": [
+                "नाव: अरुण; शहर: पुणे; भाषा: मराठी"
+              ],
+              "feedback": {
+                "correct": "Three requested known values are independently selected and written.",
+                "incorrect": "Repair only the first incorrect value; leave later rows closed."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-A1F07-first-three-spelling",
+      "sequence": 863,
+      "title": "Repair one value, not the whole form",
+      "headword": "अरुण · पुणे · मराठी",
+      "romanization": "",
+      "gloss": "repair only the orthography of the first three selected values",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:56dfff25da763ef5",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover yesterday's entries. Say which row held the first spelling difference. Do not recopy a correct row."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — bounded spelling repair",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write only the failed value from name, city, language. Compare in three passes: base letters, vowel signs, then the final headline. If it is correct, write the next requested value once instead."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One repair pass is enough."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-A1F07-first-three-spelling-check",
+              "prompt": "Write only the first value that needs repair; if none failed, write Profile A's city value once.",
+              "assesses": [
+                "MR-A1-FORM-LABEL-NAAV",
+                "MR-A1-FORM-LABEL-SHAHAR",
+                "MR-A1-FORM-LABEL-BHASHA"
+              ],
+              "responseSeconds": 28,
+              "acceptedResponses": [
+                "पुणे",
+                "अरुण",
+                "मराठी"
+              ],
+              "feedback": {
+                "correct": "One bounded value was repaired without recopying the form.",
+                "incorrect": "Return to the first differing character and stop there."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-A1F08-last-three-supported",
+      "sequence": 864,
+      "title": "Enter the last three values",
+      "headword": "आवडते पेय: ___ · आवडती कृती: ___ · मित्राचे नाव: ___",
+      "romanization": "",
+      "gloss": "complete the last three visible rows from a support-language profile card",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:ab8ef150fd2290c5",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep Profile A visible: tea; reading; Mira. Say the three printed label endings once: -ते, -ती, -चे."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — supported controlled composition",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Complete only the three blank value spaces. The support-language card chooses the meanings; you supply the known Marathi spellings. No Marathi answer bank is visible."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after three rows."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-A1F08-last-three-supported-check",
+              "prompt": "Using Profile A, complete the last three blank rows without a Marathi answer bank.",
+              "assesses": [
+                "MR-A1-FORM-LABEL-AVDATE-PEY",
+                "MR-A1-FORM-AGREEMENT-NEUTER",
+                "MR-A1-FORM-LABEL-AVADTI-KRUTI",
+                "MR-A1-FORM-AGREEMENT-FEMININE",
+                "MR-A1-FORM-LABEL-MITRACHE-NAAV",
+                "MR-A1-FORM-POSSESSIVE-NEUTER"
+              ],
+              "responseSeconds": 55,
+              "acceptedResponses": [
+                "आवडते पेय: चहा; आवडती कृती: वाचणे; मित्राचे नाव: मीरा"
+              ],
+              "feedback": {
+                "correct": "Three requested values are selected while the printed agreement stays intact.",
+                "incorrect": "Repair value choice first; repair label agreement in the next lesson."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-A1F09-last-three-agreement",
+      "sequence": 865,
+      "title": "Repair endings before values",
+      "headword": "-ते · -ती · -चे",
+      "romanization": "",
+      "gloss": "repair form-label agreement separately from value spelling",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:ec73c1c64be55f81",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the values. Look only at the labels and say: neuter drink -ते, feminine activity -ती, neuter name -चे."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — bounded agreement repair",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Complete only these endings: आवड__ पेय, आवड__ कृती, मित्रा__ नाव. Do not rewrite tea, reading, or Mira. This pass repairs grammar separately from value spelling."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop before values return."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-A1F09-last-three-agreement-check",
+              "prompt": "Supply only the three missing endings: आवड__ पेय; आवड__ कृती; मित्रा__ नाव.",
+              "assesses": [
+                "MR-A1-FORM-AGREEMENT-NEUTER",
+                "MR-A1-FORM-AGREEMENT-FEMININE",
+                "MR-A1-FORM-POSSESSIVE-NEUTER"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "ते; ती; चे",
+                "-ते; -ती; -चे"
+              ],
+              "feedback": {
+                "correct": "Agreement and possessive are repaired in one bounded pass.",
+                "incorrect": "Match the noun first: neuter, feminine, neuter."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-A1F10-first-three-delayed",
+      "sequence": 866,
+      "title": "Delay the first three entries",
+      "headword": "नाव: अरुण · शहर: पुणे · भाषा: मराठी",
+      "romanization": "",
+      "gloss": "fill the first three rows after a short delay, without an answer model",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:72c929c1371de5fb",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read Profile A once: Arun, Pune, Marathi. Close it and wait ten seconds."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — delayed controlled composition",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "With only the three printed Marathi labels visible, fill all three values from the delayed profile. There is no romanization and no completed row to copy. Compare only after all three values are written."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one delayed attempt."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-A1F10-first-three-delayed-check",
+              "prompt": "After the delay, complete Profile A's first three rows without an answer model.",
+              "assesses": [
+                "MR-A1-FORM-LABEL-NAAV",
+                "MR-A1-FORM-LABEL-SHAHAR",
+                "MR-A1-FORM-LABEL-BHASHA"
+              ],
+              "responseSeconds": 50,
+              "acceptedResponses": [
+                "नाव: अरुण; शहर: पुणे; भाषा: मराठी"
+              ],
+              "feedback": {
+                "correct": "The first half survives after support is removed.",
+                "incorrect": "Record the first failed row; repair it tomorrow, not during scoring."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-A1F11-last-three-delayed",
+      "sequence": 867,
+      "title": "Delay the last three entries",
+      "headword": "आवडते पेय: चहा · आवडती कृती: वाचणे · मित्राचे नाव: मीरा",
+      "romanization": "",
+      "gloss": "fill the last three rows after a short delay, separating labels from values",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:9a531bfe66c96e4e",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read Profile A once: tea, reading, Mira. Close it and wait ten seconds."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — delayed controlled composition",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Fill the three values with only the blank form visible. Compare in two passes afterward: requested value first, then the printed -ते / -ती / -चे forms."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one delayed attempt."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-A1F11-last-three-delayed-check",
+              "prompt": "After the delay, complete Profile A's last three rows without an answer model.",
+              "assesses": [
+                "MR-A1-FORM-LABEL-AVDATE-PEY",
+                "MR-A1-FORM-AGREEMENT-NEUTER",
+                "MR-A1-FORM-LABEL-AVADTI-KRUTI",
+                "MR-A1-FORM-AGREEMENT-FEMININE",
+                "MR-A1-FORM-LABEL-MITRACHE-NAAV",
+                "MR-A1-FORM-POSSESSIVE-NEUTER"
+              ],
+              "responseSeconds": 60,
+              "acceptedResponses": [
+                "आवडते पेय: चहा; आवडती कृती: वाचणे; मित्राचे नाव: मीरा"
+              ],
+              "feedback": {
+                "correct": "The second half survives after support is removed.",
+                "incorrect": "Record whether value choice or label agreement failed; repair only that dimension later."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-A1F12-six-field-supported",
+      "sequence": 868,
+      "title": "Join the two halves",
+      "headword": "six-field Marathi profile",
+      "romanization": "",
+      "gloss": "join two mastered three-row batches while the support-language profile remains visible",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:b79c1a837fb4998f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep Profile A visible. The first three and last three rows have already passed separately; today the only new load is joining them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — supported six-field composition",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Complete the six blank Marathi rows from the support-language profile. There is no Marathi value bank or completed example. Check rows 1–3, pause, then rows 4–6. Repair only the first failed half."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The independent profile changes next time."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-A1F12-six-field-supported-check",
+              "prompt": "With Profile A visible but no Marathi answer bank, complete all six blank rows.",
+              "assesses": [
+                "MR-A1-FORM-LABEL-NAAV",
+                "MR-A1-FORM-LABEL-SHAHAR",
+                "MR-A1-FORM-LABEL-BHASHA",
+                "MR-A1-FORM-LABEL-AVDATE-PEY",
+                "MR-A1-FORM-AGREEMENT-NEUTER",
+                "MR-A1-FORM-LABEL-AVADTI-KRUTI",
+                "MR-A1-FORM-AGREEMENT-FEMININE",
+                "MR-A1-FORM-LABEL-MITRACHE-NAAV",
+                "MR-A1-FORM-POSSESSIVE-NEUTER"
+              ],
+              "responseSeconds": 90,
+              "acceptedResponses": [
+                "नाव: अरुण; शहर: पुणे; भाषा: मराठी; आवडते पेय: चहा; आवडती कृती: वाचणे; मित्राचे नाव: मीरा"
+              ],
+              "feedback": {
+                "correct": "Two mastered halves now form one supported six-field form.",
+                "incorrect": "Record the first failed half and stop; do not recopy correct rows."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-A1F13-six-field-independent",
+      "sequence": 869,
+      "title": "Complete a new six-field form",
+      "headword": "independent six-field Marathi profile",
+      "romanization": "",
+      "gloss": "complete a new six-field profile without romanization, an answer bank, or a completed model",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:4298f62aa1fb5a7c",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Profile B says: name Mira; city Pune; language Marathi; favorite drink milk; favorite activity writing; friend Arun. These meanings are the task. No Marathi values are displayed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — independent controlled composition",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Complete the six printed Marathi labels from Profile B. There is no romanization, Marathi answer bank, or completed model. Do not reveal the answer while scoring. The task is untimed; timing belongs to the later checkpoint issue."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall — checkpoint",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This proves untimed practical-form composition only. It does not claim timed writing or full A1 readiness."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-A1F13-six-field-independent-check",
+              "prompt": "Without a Marathi value model, complete Profile B's six-field form.",
+              "assesses": [
+                "MR-A1-FORM-LABEL-NAAV",
+                "MR-A1-FORM-LABEL-SHAHAR",
+                "MR-A1-FORM-LABEL-BHASHA",
+                "MR-A1-FORM-LABEL-AVDATE-PEY",
+                "MR-A1-FORM-AGREEMENT-NEUTER",
+                "MR-A1-FORM-LABEL-AVADTI-KRUTI",
+                "MR-A1-FORM-AGREEMENT-FEMININE",
+                "MR-A1-FORM-LABEL-MITRACHE-NAAV",
+                "MR-A1-FORM-POSSESSIVE-NEUTER"
+              ],
+              "responseSeconds": 110,
+              "acceptedResponses": [
+                "नाव: मीरा; शहर: पुणे; भाषा: मराठी; आवडते पेय: दूध; आवडती कृती: लिहिणे; मित्राचे नाव: अरुण"
+              ],
+              "feedback": {
+                "correct": "A new six-field profile is independently selected and written in Devanagari.",
+                "incorrect": "Do not reveal the model during scoring; record the first failed row or repair dimension."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
