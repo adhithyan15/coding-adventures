@@ -20,7 +20,9 @@
     "ES-PATH-408-HEALTH",
     "ES-PATH-408-REVIEWS",
     "ES-PATH-410-EDUCATION",
-    "ES-PATH-410-REVIEWS"
+    "ES-PATH-410-REVIEWS",
+    "ES-PATH-411-HELADO",
+    "ES-PATH-411-REVIEWS"
   ],
   "omits": [],
   "relocates": {}

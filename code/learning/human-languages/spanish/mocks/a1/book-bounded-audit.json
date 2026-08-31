@@ -59,9 +59,9 @@
     ],
     "numericCredits": "0-100"
   },
-  "lessonCount": 917,
-  "taughtForms": 1543,
-  "objectiveFailed": 7,
+  "lessonCount": 920,
+  "taughtForms": 1545,
+  "objectiveFailed": 6,
   "mocks": [
     {
       "mock": 1,
@@ -82,8 +82,8 @@
     {
       "mock": 2,
       "reading": 22,
-      "listening": 22,
-      "objectiveFailed": 6,
+      "listening": 23,
+      "objectiveFailed": 5,
       "failed": [
         {
           "paper": 1,
@@ -108,13 +108,6 @@
           "missing": [
             "apuntarse",
             "recepción"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 30,
-          "missing": [
-            "helado"
           ]
         },
         {
@@ -144,7 +137,6 @@
     "deporte",
     "extranjero",
     "gimnasio",
-    "helado",
     "mayo",
     "música",
     "nadar",
@@ -179,10 +171,6 @@
     },
     {
       "lexeme": "gimnasio",
-      "count": 1
-    },
-    {
-      "lexeme": "helado",
       "count": 1
     },
     {

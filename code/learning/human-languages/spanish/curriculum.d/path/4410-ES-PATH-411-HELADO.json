@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-411-HELADO",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "lessons": [
+    "ES-C411-helado"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-411-HELADO"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "id": "ES-PATH-411-REVIEWS",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "lessons": [
+    "ES-C411-helado-recall-1",
+    "ES-C411-helado-recall-2"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-411-REVIEWS"
+  ],
+  "after": []
+}
