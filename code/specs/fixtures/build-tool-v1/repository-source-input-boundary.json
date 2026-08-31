@@ -552,6 +552,7 @@
           "code/packages/typescript/forme-collect-by-author",
           "code/packages/typescript/forme-collect-by-tag",
           "code/packages/typescript/forme-collect-chronological",
+          "code/packages/typescript/forme-dev-server",
           "code/packages/typescript/forme-doc-code-block-decorator",
           "code/packages/typescript/forme-doc-frontmatter",
           "code/packages/typescript/forme-doc-heading-anchors",
