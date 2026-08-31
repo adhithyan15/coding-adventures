@@ -1667,42 +1667,40 @@ jobs:
           env -u MOSAIC_APP_LIBRARY QT_QPA_PLATFORM=offscreen MOSAIC_APP_STATE_PATH="$task_state_path" \
             MOSAIC_EXPECT_RESTORED=1 "$task_ui_binary"
 
-          # ---- Engram: gate the EMISSION, not a runtime round-trip. ----------
+          # ---- Engram: prove the Qt emission COMPILES. ------------------------
           #
-          # Engram overrides MosaicHost.cpp/.h through [host_assets] with its own
-          # binding to engram-capi, because engram-capi carries the Anki
-          # import/export host intents that the standard ABI cannot express at
-          # protocol v1 (Effect is delivered on the wire and read by no generated
-          # host, with no completion entry point). So unlike TaskApp above, the
-          # emitted Engram app does NOT call into the bundled libmosaic_app.so,
-          # and launching it would prove nothing about the standard runtime.
+          # Nothing compiled Engram's Qt output before this. Its own suite is
+          # substring assertions over emitted text, so a project that could not
+          # build would have looked entirely healthy.
           #
-          # Deliberately no launch step here for that reason: a green launch would
-          # read as "the standard runtime works" while never touching it. What is
-          # gated instead is that Engram emits native-complete, that the selected
-          # engine is bundled byte-identically, and that the override is EXACTLY
-          # the two files it is supposed to be — so a third replacement (someone
-          # overriding main.cpp or CMakeLists.txt, either of which also unhooks
-          # the runtime) fails loudly rather than widening the gap in silence.
+          # Deliberately NOT --profile native-complete and NOT --runtime-library,
+          # which is a correction: both switch the generated main.cpp to the
+          # strict standard-binding shape, calling registerTypes/requireRuntime/
+          # configureRequiredProps/attach. Engram replaces MosaicHost.h/.cpp via
+          # [host_assets] with its own engram-capi binding, which exposes
+          # props/handleEvent/ensureLoaded instead — a different API. Combining
+          # them emits a project that does not compile at all:
           #
-          # That pinned assertion is also what forces this step to be revisited
-          # when the adapters migrate onto the standard runtime.
+          #   main.cpp:26: error: 'registerTypes' is not a member of 'MosaicHost'
+          #
+          # So Engram cannot reach native-complete until its adapters move onto
+          # the standard runtime (#13728). Emitting the way build-all.ps1 does is
+          # the configuration Engram actually ships, and compiling THAT is a real
+          # gate rather than a green check on an incoherent combination.
           cargo build --manifest-path code/packages/rust/Cargo.toml -p engram-mosaic-app
-          engram_runtime_library="$(pwd)/code/packages/rust/target/debug/libengram_mosaic_app.so"
 
           engram_output="$RUNNER_TEMP/mosaic-qt-engram"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/engram-app --backend qt --output "$engram_output" --emit-project --profile native-complete --runtime-library "$engram_runtime_library"
-          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$engram_output/qt/mosaic-degradations.json"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/engram-app --backend qt --output "$engram_output" --emit-project
 
-          # The override is pinned, not merely allowed.
+          # The override is pinned, not merely allowed: replacing main.cpp or
+          # CMakeLists.txt would also unhook the runtime, so a third entry here
+          # must fail rather than widen the gap silently. This assertion is also
+          # what #13728 has to update, so the migration cannot be forgotten.
           jq -e '.replacedGeneratedFiles == ["MosaicHost.cpp", "MosaicHost.h"]' "$engram_output/qt/mosaic-degradations.json"
 
-          cmake -S "$engram_output/qt" -B "$engram_output/qt/build" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$engram_output/install"
+          # The gate: it builds.
+          cmake -S "$engram_output/qt" -B "$engram_output/qt/build" -DCMAKE_BUILD_TYPE=Release
           cmake --build "$engram_output/qt/build" --config Release --parallel
-          cmake --install "$engram_output/qt/build" --config Release
-          installed_engram_runtime="$(find "$engram_output/install" -type f -name libmosaic_app.so -print -quit)"
-          test -n "$installed_engram_runtime"
-          cmp "$engram_runtime_library" "$installed_engram_runtime"
 
           toolkit_output="$RUNNER_TEMP/mosaic-qt-toolkit"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend qt --output "$toolkit_output" --emit-project

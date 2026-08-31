@@ -166,34 +166,33 @@ class MosaicQtRuntimeCIAcceptanceTests(unittest.TestCase):
             '! grep -E "missing required MIL prop|ReferenceError|TypeError" "$taskapp_log"',
             workflow,
         )
-        # Engram's Qt step gates EMISSION, not a runtime round-trip — it
-        # overrides MosaicHost.cpp, so the emitted app never calls the bundled
-        # engine. These assertions pin that distinction so the step cannot
-        # quietly grow a launch that would read as more than it proves.
+        # Engram's Qt step proves the emission COMPILES. It deliberately does
+        # NOT pass --profile native-complete or --runtime-library: both switch
+        # the generated main.cpp to the strict standard-binding shape, which
+        # collides with Engram's own [host_assets] MosaicHost and produces a
+        # project that does not compile. These assertions pin that, so the flags
+        # cannot be reintroduced without the migration (#13728) landing first.
         self.assertIn("mosaic-qt-engram", workflow)
         self.assertIn(
             "cargo build --manifest-path code/packages/rust/Cargo.toml -p engram-mosaic-app",
             workflow,
         )
         self.assertIn(
-            "pkg code/programs/mosaic/engram-app --backend qt --output \"$engram_output\" --emit-project --profile native-complete --runtime-library \"$engram_runtime_library\"",
+            "pkg code/programs/mosaic/engram-app --backend qt --output \"$engram_output\" --emit-project",
             workflow,
         )
-        self.assertIn(
-            "'.nativeComplete == true and (.degradations | length == 0)' \"$engram_output/qt/mosaic-degradations.json\"",
-            workflow,
-        )
-        # The override is pinned to exactly two files, so a third replacement
-        # (main.cpp, CMakeLists.txt — either also unhooks the runtime) fails.
+        engram_step = qt_runtime_step[qt_runtime_step.index("mosaic-qt-engram"):]
+        self.assertNotIn("--runtime-library \"$engram", engram_step)
+        self.assertNotIn("$engram_output/qt --profile native-complete", engram_step)
+        # The override is pinned to exactly two files.
         self.assertIn(
             "'.replacedGeneratedFiles == [\"MosaicHost.cpp\", \"MosaicHost.h\"]'",
             workflow,
         )
-        self.assertIn(
-            'cmp "$engram_runtime_library" "$installed_engram_runtime"',
-            workflow,
-        )
-        # No launch: it would pass while never touching the standard runtime.
+        # The gate is that it builds.
+        self.assertIn('cmake --build "$engram_output/qt/build"', workflow)
+        # No launch: with its own host binding, running it proves nothing about
+        # the standard runtime.
         self.assertNotIn('"$installed_engram"', workflow)
 
         self.assertIn("mosaic-qt-toolkit", workflow)
