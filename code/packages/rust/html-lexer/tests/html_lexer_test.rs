@@ -626,7 +626,7 @@ fn default_html_lexer_reconsumes_missing_space_after_quoted_attributes() {
 }
 
 #[test]
-fn default_html_lexer_replaces_null_characters_in_text_and_attributes() {
+fn default_html_lexer_preserves_data_nulls_and_replaces_attribute_nulls() {
     let mut lexer = create_html_lexer().unwrap();
 
     lexer
@@ -637,7 +637,7 @@ fn default_html_lexer_replaces_null_characters_in_text_and_attributes() {
     assert_eq!(
         lexer.drain_tokens(),
         vec![
-            Token::Text("A\u{FFFD}".to_string()),
+            Token::Text("A\0".to_string()),
             Token::StartTag {
                 name: "a".to_string(),
                 attributes: vec![
@@ -1626,7 +1626,7 @@ fn default_html_lexer_recovers_invalid_tag_open_as_text() {
 }
 
 #[test]
-fn default_html_lexer_reconsumes_null_tag_open_as_text() {
+fn default_html_lexer_reconsumes_null_tag_open_into_data_text() {
     let mut lexer = create_html_lexer().unwrap();
 
     lexer.push("Before <\0 after").unwrap();
@@ -1636,7 +1636,7 @@ fn default_html_lexer_reconsumes_null_tag_open_as_text() {
         lexer.drain_tokens(),
         vec![
             Token::Text("Before ".to_string()),
-            Token::Text("<\u{FFFD} after".to_string()),
+            Token::Text("<\0 after".to_string()),
             Token::Eof,
         ]
     );

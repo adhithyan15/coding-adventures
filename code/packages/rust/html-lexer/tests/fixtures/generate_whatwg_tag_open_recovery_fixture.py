@@ -199,7 +199,7 @@ def invalid_tag_open_cases() -> list[dict[str, object]]:
             "id": "less-than-null-reconsumes-as-text",
             "description": "NULL after less-than reports invalid tag open then data NULL recovery",
             "input": "Before <\u0000 after",
-            "tokens": ["Text(data=Before )", "Text(data=<� after)", "EOF"],
+            "tokens": ["Text(data=Before )", "Text(data=<\u0000 after)", "EOF"],
             "diagnostics": [
                 "invalid-first-character-of-tag-name",
                 "unexpected-null-character",

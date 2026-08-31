@@ -533,7 +533,7 @@
       "description": "null characters are replaced in data and attributes",
       "input": "A\u0000<a title=\"x\u0000y\" data=x\u0000y bare=\u0000>z",
       "tokens": [
-        "Text(data=A\ufffd)",
+        "Text(data=A\u0000)",
         "StartTag(name=a, attributes=[title=x\ufffdy, data=x\ufffdy, bare=\ufffd], self_closing=false)",
         "Text(data=z)",
         "EOF"
@@ -3901,7 +3901,7 @@
       "description": "Null Byte Replacement",
       "input": "\u0000",
       "tokens": [
-        "Text(data=\ufffd)",
+        "Text(data=\u0000)",
         "EOF"
       ],
       "diagnostics": [
@@ -4418,7 +4418,7 @@
       "description": "<\\u0000",
       "input": "<\u0000",
       "tokens": [
-        "Text(data=<\ufffd)",
+        "Text(data=<\u0000)",
         "EOF"
       ],
       "diagnostics": [
@@ -23322,7 +23322,7 @@
       "input": "<!doc>\u0000",
       "tokens": [
         "Comment(data=DOC)",
-        "Text(data=\ufffd)",
+        "Text(data=\u0000)",
         "EOF"
       ],
       "diagnostics": [
@@ -30891,7 +30891,7 @@
       "description": "CR followed by U+0000",
       "input": "\r\u0000",
       "tokens": [
-        "Text(data=\n\ufffd)",
+        "Text(data=\n\u0000)",
         "EOF"
       ],
       "diagnostics": [

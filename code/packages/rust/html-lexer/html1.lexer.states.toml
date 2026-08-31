@@ -699,7 +699,7 @@ actions = [
 from = "data"
 matcher = { literal = "\u0000" }
 to = "data"
-actions = ["parse_error(unexpected-null-character)", "append_text_replacement"]
+actions = ["parse_error(unexpected-null-character)", "append_text(current)"]
 
 [[transitions]]
 from = "data"

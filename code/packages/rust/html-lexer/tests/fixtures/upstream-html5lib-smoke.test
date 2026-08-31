@@ -723,7 +723,7 @@
       "output": [
         [
           "Character",
-          "A�"
+          "A\u0000"
         ],
         [
           "StartTag",
