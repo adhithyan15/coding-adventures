@@ -11277,6 +11277,40 @@ hashing-v1 or combined-cache claim. The complete graph therefore expands to
 595 owners/896 edges with 187 merged, 407 pending, and exactly one
 `in-progress` owner.
 
+The implementation now recognizes OCaml `.ml`, `.mli`, and `.opam` inputs plus
+exact `.ocamlformat`, `dune`, and `dune-project` metadata in both collection
+modes. Root `.opam` manifests remain applicable when declared globs omit them;
+nested `.opam` inputs still require a declared match. Package hashes use the
+shared hashing-v1 frame over normalized repository-relative UTF-8 path length,
+path bytes, unsigned 64-bit content length, and exact streamed raw bytes. A
+direct regression materializes the language-neutral hashing-cache fixture and
+matches its package digest. The source handle uses no-follow where available,
+then proves regular-file and path/handle identity before reading and rejects
+replacement or same-size mutation through before/after descriptor signatures
+without exposing the checkout path.
+
+The focused suite passes 31 tests with one Windows platform skip. The complete
+package and literal generic/Windows BUILD recipe each pass 474 tests with one
+skip at 91.34% coverage, with `hasher.py` at 96%. Changed source/tests pass
+Ruff, direct MyPy, compileall, and Bandit; package-wide Ruff and broad fixture
+MyPy retain only inherited baseline findings outside this seven-path diff. The
+neutral schema/runner suite passes 85 tests and 132 subtests, `validate-corpus`
+accepts 121 cases and 283 files, and parity/capability/Haskell/OCaml-lock suites
+pass 66 tests and 811 subtests with two expected Windows skips. The Go oracle
+passes module verification, tests, vet, and trimpath build; a freshly compiled
+binary evaluates 45 Starlark BUILD files, validates five reviewed orphan
+exemptions, forces all 495 Python packages, and selects exactly
+`python/programs/build-tool` for the branch diff. Isolated sdist/wheel builds,
+uv dependency compatibility, pip audit, schema-3 collision inventory, the
+595-owner/896-edge DAG, and diff hygiene pass.
+
+Before publication, the branch rebased conflict-free onto exact `origin/main`
+`ca32b94c6df4331068d786e70684d7e9384eecb9` after PRs #13561 and #13562 added
+only Spanish learning artifacts and existing Mosaic binding/type-test changes.
+Those 33 paths add no package root, BUILD, manifest, build-tool contract,
+parity owner, or exact overlap with this tranche. The inventory remains
+unchanged and collision-free.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
