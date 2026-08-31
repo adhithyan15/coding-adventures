@@ -43,6 +43,18 @@ then requires the opened leaf's final path to equal its lexical source path.
 The file descriptor's identity and mutation signature are checked before and
 after streaming on both platforms.
 
+Dependency digests use the same hashing-v1 frame: transitive dependencies are
+sorted by package identity, then each UTF-8 identity and decoded 32-byte
+SHA-256 digest is preceded by its unsigned 64-bit byte length. The cache's
+combined identity is SHA-256 over the raw 32-byte package digest followed by
+the raw 32-byte dependency digest. Missing or noncanonical dependency digests
+fail closed instead of silently creating an incomplete cache identity. The
+native cache file continues to retain package and dependency hashes separately;
+comparing both fields is equivalent for local invalidation and avoids a cache-
+format migration. Both normal and plan-file execution compute all package
+digests before dependency digests, keeping fail-closed validation independent
+of lexical discovery order.
+
 ## Usage
 
 ```bash

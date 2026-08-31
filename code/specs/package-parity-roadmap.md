@@ -11370,6 +11370,37 @@ were absent before the fresh clean worktree was created. At selection, the
 complete 605-owner/916-edge graph is unique, dependency-complete, and acyclic
 at 188 merged, 416 pending, and exactly one `in-progress` owner.
 
+The implementation keeps the existing transitive prerequisite closure and
+sorts its unique package identities. Each dependency contributes an unsigned
+64-bit big-endian UTF-8 identity length, the identity bytes, an unsigned
+64-bit big-endian value length of 32, and the decoded SHA-256 bytes. A pure
+combined-digest helper hashes the raw 32-byte package digest followed by the
+raw 32-byte dependency digest. Missing, uppercase, short, oversized, or
+non-hex dependency digests fail closed without echoing their content. The
+caller-owned graph and digest map are not mutated, and the native cache file
+continues comparing its separate package/dependency fields without migration.
+
+Tests-first execution failed at collection before the combined helper existed.
+Independent review then reproduced a real dependent-before-prerequisite
+failure in both one-pass CLI flows; a diamond regression failed before a
+shared two-pass helper repaired normal and plan-file execution. The final
+focused hasher/CLI suite passes 72 tests with four expected platform skips.
+The complete literal generic/Windows BUILD recipe passes 492 tests with four
+skips at 90.84% total coverage and 89% hasher coverage on Python 3.13.14; the
+two BUILD fronts are byte-identical. Hasher source/tests pass Ruff, direct
+hasher MyPy, compileall, and Bandit; package-wide CLI Ruff/MyPy retain inherited
+baseline findings outside the changed helper. The neutral schema and runner suites pass
+22 and 63 tests, and `validate-corpus` accepts 121 cases and 283 files across
+16 implementations, 15 established lanes, and 12 front doors. The Go
+reference passes module verification, all tests, vet, and trimpath build. A
+freshly compiled binary evaluates 45 Starlark BUILD files, validates five
+reviewed orphan exemptions, forces all 495 Python packages, and selects exactly
+one affected package for the branch diff. The Python build tool also hashes and
+plans all 495 Python packages without a missing-digest failure. Capability, Haskell, OCaml-lock,
+broker, backend-parity, and package-report suites pass 118 tests with 12
+expected skips. Isolated sdist/wheel builds, uv compatibility, pip audit, the
+collision inventory, the 605-owner/916-edge DAG, and diff hygiene pass.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
