@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Lower finite JFET `BEX` mobility-temperature exponents.
 - Lower valid JFET `TNOM` / `T_NOM` nominal temperatures with canonical
   precedence and Kelvin conversion.
 - Lower finite JFET `VTOTC` alternative threshold-voltage temperature
