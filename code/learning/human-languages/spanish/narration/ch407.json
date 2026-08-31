@@ -1,0 +1,685 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 407,
+  "title": "Middle, Below, Outside and Beside",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:75c185092b35bf69",
+  "lessons": [
+    {
+      "id": "ES-C407-medio",
+      "sequence": 9180,
+      "title": "en medio — in the middle",
+      "headword": "en medio",
+      "romanization": "en medio",
+      "gloss": "in the middle",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1350b09838e1ee21",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall la puerta, the door. Now place it at the centre: la puerta está en medio."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Medio comes from Latin medius, “middle.” English kept the same root in median, medium and intermediate. Spanish uses en medio for a position between the edges or between two things."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the frame en medio de",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say en medio when the reference is understood. Add de before the thing that frames the middle: en medio de la puerta, in the middle of the door."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "en medio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *en medio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "en medio de la puerta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *en medio de la puerta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la puerta está en medio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la puerta está en medio*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In the middle? (En medio.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: DLE: medio."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C407-debajo",
+      "sequence": 9190,
+      "title": "debajo — underneath",
+      "headword": "debajo",
+      "romanization": "debajo",
+      "gloss": "underneath; below",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1704a98540c84c23",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall la mesa. Something lower than the tabletop can be debajo de la mesa."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The history is visible: de + bajo. Bajo is low; debajo names the lower position. The DLE defines it as a place below another higher one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: debajo de",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Before a reference object, use debajo de: debajo de la mesa. With no object stated, está debajo is complete."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "debajo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *debajo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "debajo de la mesa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *debajo de la mesa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "está debajo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *está debajo*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Underneath? (Debajo.) Under the table? (Debajo de la mesa.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: DLE: debajo."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C407-fuera",
+      "sequence": 9200,
+      "title": "fuera — outside",
+      "headword": "fuera",
+      "romanization": "fuera",
+      "gloss": "outside",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dbbbccb6cdd9b83f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall la casa. Inside it is one location; beyond it is fuera, outside."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Fuera comes from Latin foras, “outward.” The core picture is crossing the boundary and standing beyond it. The opening fue- is one syllable: say FWE-ra, not fu-E-ra."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: fuera and fuera de",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Está fuera means it is outside. Add de for the boundary: fuera de la casa, outside the house."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fuera",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fuera*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "está fuera",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *está fuera*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fuera de la casa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fuera de la casa*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Outside? (Fuera.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: DLE: fuera."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C407-lado",
+      "sequence": 9210,
+      "title": "el lado — the side",
+      "headword": "el lado",
+      "romanization": "el lado",
+      "gloss": "side",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b962aed8210f7ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A door has a left edge and a right edge. Each edge belongs to un lado, a side."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Lado continues Latin latus, “side.” English lateral is the learned cousin: a lateral movement goes toward one side."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: al lado de",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The useful location frame is al lado de, beside or next to: al lado de la puerta. The al is a + el, literally “at the side of.”"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el lado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el lado*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "al lado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *al lado*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "al lado de la puerta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *al lado de la puerta*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The side? (El lado.) Beside the door? (Al lado de la puerta.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: DLE: lado."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C407-location-recall-1",
+      "sequence": 9220,
+      "title": "location recall one — place four points",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "first retrieval of middle, underneath, outside and side",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f3a17592c2074868",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the four locations. (En medio, debajo, fuera, el lado.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "en medio de la puerta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *en medio de la puerta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "debajo de la mesa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *debajo de la mesa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fuera de la casa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fuera de la casa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "al lado de la puerta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *al lado de la puerta*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Middle, below, outside, side? (Medio, debajo, fuera, lado.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C407-location-recall-2",
+      "sequence": 9230,
+      "title": "location recall two — complete the map",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "delayed production of four location frames",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ecbd1df3ed76edf6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Complete each frame: en ___ de, ___ de, ___ de, al ___ de. (Medio, debajo, fuera, lado.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "en medio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *en medio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "debajo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *debajo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fuera",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fuera*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "al lado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *al lado*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Place an object in four different relations without translating. (En medio de, debajo de, fuera de, al lado de.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

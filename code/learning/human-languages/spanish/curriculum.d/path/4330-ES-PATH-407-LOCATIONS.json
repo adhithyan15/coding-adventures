@@ -1,0 +1,8 @@
+{
+  "id": "ES-PATH-407-LOCATIONS",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": ["ES-C407-medio", "ES-C407-debajo", "ES-C407-fuera", "ES-C407-lado"],
+  "before": [],
+  "inline": ["ES-EXT-407-LOCATIONS"],
+  "after": []
+}

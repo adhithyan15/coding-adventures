@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:75c185092b35bf69",
+  "lessonIds": [
+    "ES-C407-medio",
+    "ES-C407-debajo",
+    "ES-C407-fuera",
+    "ES-C407-lado",
+    "ES-C407-location-recall-1",
+    "ES-C407-location-recall-2"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch407.txt",
+  "json": "spanish/narration/ch407.json",
+  "textHash": "fnv1a64:12fde1ecd084fb07",
+  "jsonHash": "fnv1a64:fc4381bb23abaaba",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ES-EXT-407-LOCATIONS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can locate something in the middle, underneath, outside or beside.",
+  "prerequisites": [],
+  "lessons": ["ES-C407-medio", "ES-C407-debajo", "ES-C407-fuera", "ES-C407-lado"]
+}

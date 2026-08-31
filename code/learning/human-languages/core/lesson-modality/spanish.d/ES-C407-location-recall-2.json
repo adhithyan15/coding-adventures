@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C407-location-recall-2",
+    "language": "spanish",
+    "chapter": 407,
+    "sequence": 9230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ecbd1df3ed76edf6"
+  },
+  "findings": []
+}
