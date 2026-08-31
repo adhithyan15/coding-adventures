@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-404-MEDIA",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can identify Wi-Fi, a mobile phone and a film.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C404-wifi",
+    "ES-C404-movil",
+    "ES-C404-pelicula",
+    "ES-C404-media-recall-1",
+    "ES-C404-media-recall-2"
+  ]
+}

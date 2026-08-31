@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C404-wifi",
+    "language": "spanish",
+    "chapter": 404,
+    "sequence": 9010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:843ea2194e209ef5"
+  },
+  "findings": []
+}

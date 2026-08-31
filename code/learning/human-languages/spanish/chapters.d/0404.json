@@ -1,0 +1,21 @@
+{
+  "chapter": 404,
+  "title": "Wi-Fi, Mobile Phones and Films",
+  "label": "ch:wifi-movil-pelicula-apagar",
+  "canDo": "I can identify Wi-Fi, a mobile phone and a film, and ask someone to turn a phone off.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS",
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ES-C404-media-recall-2",
+    "kind": "production",
+    "summary": "Retrieve the four media words across hotel, phone and cinema scenes.",
+    "assesses": [
+      "ES-LEX-APAGAR",
+      "ES-LEX-WIFI",
+      "ES-LEX-MOVIL",
+      "ES-LEX-PELICULA"
+    ]
+  }
+}

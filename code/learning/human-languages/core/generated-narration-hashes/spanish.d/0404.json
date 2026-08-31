@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:e3830a569263a0d9",
+  "lessonIds": [
+    "ES-C404-apagar",
+    "ES-C404-wifi",
+    "ES-C404-movil",
+    "ES-C404-pelicula",
+    "ES-C404-media-recall-1",
+    "ES-C404-media-recall-2"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch404.txt",
+  "json": "spanish/narration/ch404.json",
+  "textHash": "fnv1a64:94ffdd6e2ebd8c65",
+  "jsonHash": "fnv1a64:51bf4f143292ad12",
+  "findings": []
+}
