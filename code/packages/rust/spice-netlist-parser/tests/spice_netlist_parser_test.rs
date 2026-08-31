@@ -1659,6 +1659,30 @@ fn rejects_invalid_jfet_junction_potential_aliases() {
 }
 
 #[test]
+fn parses_jfet_forward_bias_depletion_coefficient() {
+    let parsed = parse_netlist(".model shaped NJF(FC=0.35)\nJ1 drain gate source shaped").unwrap();
+
+    let Element::Jfet(jfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected JFET");
+    };
+    assert_close(jfet.forward_bias_depletion_coefficient, 0.35);
+}
+
+#[test]
+fn rejects_invalid_jfet_forward_bias_depletion_coefficient() {
+    for coefficient in ["-0.1", "1", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model bad NJF(FC={coefficient})\nJ1 drain gate source bad"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("JFET FC must be finite and in [0, 1)"));
+    }
+}
+
+#[test]
 fn parses_jfet_b_as_doping_tail_parameter_not_beta_alias() {
     let parsed = parse_netlist(
         r#"
