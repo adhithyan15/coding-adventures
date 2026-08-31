@@ -31,19 +31,8 @@ export type {
 // no query() or transaction(). Apps that import KVStorage keep working.
 // Once all consumers migrate to Storage, this alias can be removed.
 //
-// We define it as a standalone interface (not a type alias for Storage)
-// because KVStorage intentionally omits query() and transaction().
+// The browser-safe contract intentionally omits query() and transaction().
 // IndexedDBStorage implements KVStorage today; it will implement the full
 // Storage interface when query/transaction support is added.
 
-export interface KVStorage {
-  open(): Promise<void>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  get<T = any>(storeName: string, key: string): Promise<T | undefined>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getAll<T = any>(storeName: string): Promise<T[]>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  put(storeName: string, record: any): Promise<void>;
-  delete(storeName: string, key: string): Promise<void>;
-  close(): void;
-}
+export type { KVStorage } from "./browser-types.js";

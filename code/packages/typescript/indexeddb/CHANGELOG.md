@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.3.1] - Unreleased
+
+### Added
+
+- **Browser-safe CRUD entrypoint** — `src/browser.ts` exports the IndexedDB and
+  lightweight memory backends plus their structural types without resolving the
+  SQL-capable `@coding-adventures/storage` dependency graph. Browser programs can
+  now build from a clean checkout using only this package's declared file link.
+
 ## [0.3.0] - 2026-03-31
 
 ### Changed

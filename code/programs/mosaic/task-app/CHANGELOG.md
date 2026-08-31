@@ -4,6 +4,13 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Fixed - self-contained browser storage entrypoint (#13543)
+
+The web host now imports IndexedDB and its CRUD-only memory fallback through the
+browser-safe package entrypoint. A clean checkout no longer needs the unrelated
+SQL storage dependency graph installed beside the linked package to type-check
+and bundle local-first persistence.
+
 ### Fixed - clean-runner web release build (#13543)
 
 The production web release job installs Cairo before invoking Mosaic's Rust

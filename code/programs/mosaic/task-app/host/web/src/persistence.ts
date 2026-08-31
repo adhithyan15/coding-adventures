@@ -31,8 +31,11 @@
  *   engine.snapshot()  ──►  { id, snapshot, order, counter } ──►  storage.put
  *   storage.get        ──►  { … , snapshot }                 ──►  engine.load
  */
-import { IndexedDBStorage, MemoryStorage } from "@coding-adventures/indexeddb";
-import type { KVStorage } from "@coding-adventures/indexeddb";
+import {
+  IndexedDBStorage,
+  MemoryStorage,
+  type KVStorage,
+} from "@coding-adventures/indexeddb/src/browser.js";
 
 /** The single object store; one record in it holds the entire workspace. */
 export const WORKSPACE_STORE = "workspace";

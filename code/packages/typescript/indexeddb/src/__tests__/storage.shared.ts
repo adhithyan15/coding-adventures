@@ -7,7 +7,7 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
-import type { KVStorage } from "../types.js";
+import type { KVStorage } from "../browser-types.js";
 
 interface TestRecord {
   id: string;
