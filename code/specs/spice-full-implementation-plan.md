@@ -4885,6 +4885,12 @@ the Rust, Python, and TypeScript surfaces together.
      silently populate both engine fields.
    - All parser facades reject non-finite `B` values before lowering.
 
+502. Rust JFET threshold-alias parity.
+   - Status: implemented in the Rust JFET threshold-alias slice.
+   - The Rust element lowerer gives canonical `VTO` precedence over `VT0` and
+     `VTH`, matching engine normalization and the Python and TypeScript
+     facades, and rejects non-finite threshold inputs before lowering.
+
 ## Backlog
 
 1. Python and TypeScript Berkeley SPICE model-card validation parity.
@@ -4893,13 +4899,19 @@ the Rust, Python, and TypeScript surfaces together.
      `BETA` and `BET` alone control transconductance.
 
 2. Rust JFET model-card parser parity audit.
-   - Status: prioritized next after the JFET `B` policy slice merges.
+   - Status: in progress; threshold aliases completed in the current slice.
    - Live audit found the Rust element lowerer accepts fewer already-supported
      JFET aliases and model-card validations than the Python and TypeScript
      facades. Audit the remaining direct aliases and finite/range validation as
-     small independent items, beginning with threshold aliases if confirmed.
+     small independent items.
 
-3. Grammar-backed parser and app facade.
+3. Rust JFET `LAMBDA` / `LAM` parser parity.
+   - Status: prioritized next after the threshold-alias slice merges.
+   - The engine and Python/TypeScript facades normalize `LAM` into canonical
+     `LAMBDA`; confirm Rust lowering and finite validation, then implement the
+     smallest compatible correction.
+
+4. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
      syntax facade as the grammar evolves, even if that breaks current
      pre-release parser APIs.
@@ -4907,7 +4919,7 @@ the Rust, Python, and TypeScript surfaces together.
      toward packaging, WebAssembly embedding, and product integration backed by
      the same public parser contract.
 
-4. Deck compatibility follow-up.
+5. Deck compatibility follow-up.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.
@@ -4918,7 +4930,7 @@ the Rust, Python, and TypeScript surfaces together.
      command routing, including control flow, variables, and script execution
      policy.
 
-5. Production solver core follow-up.
+6. Production solver core follow-up.
    - Sparse real/complex matrix paths now have cross-language native coverage,
      and Python real DC solves now use an optional SciPy sparse-LU backend with
      structured native fallback metadata.
@@ -4929,14 +4941,14 @@ the Rust, Python, and TypeScript surfaces together.
      damping, device limiting, tolerance policy, and additional convergence
      diagnostics for difficult transistor decks.
 
-6. Device model depth.
+7. Device model depth.
    - Audit diode, BJT, JFET, and MOS Level 1 behavior against reference decks.
    - Decide whether Level 2/3 MOS is in scope before BSIM; if BSIM lands, make
      Rust the first fast path and port stable semantics outward.
    - Expand temperature behavior, capacitance, noise, charge conservation, model
      card aliases, and error messages.
 
-7. Analysis completion.
+8. Analysis completion.
    - Generalize pole-zero beyond constrained fixture helpers.
    - Expand nonlinear distortion coverage.
    - Expand parsed `.FOUR` / `.MEASURE` integration across output plans and
@@ -4945,14 +4957,14 @@ the Rust, Python, and TypeScript surfaces together.
      Carlo trials.
    - Stabilize raw, CSV, JSON, and browser-friendly result formats.
 
-8. Mixed-signal integration.
+9. Mixed-signal integration.
    - Connect SPICE transient stepping to the hardware VM scheduler.
    - Support bidirectional analog/digital thresholds, event scheduling,
      breakpoint coordination, and VCD correlation.
    - Keep mixed-signal coupling deterministic across Python, Rust, and
      TypeScript.
 
-9. Verilog-A and custom models.
+10. Verilog-A and custom models.
    - Specify the accepted model subset and residual/Jacobian hooks.
    - Add parser or compiler support with sandboxing for TypeScript/web usage.
    - Provide a Rust-native fast path for compiled models.
