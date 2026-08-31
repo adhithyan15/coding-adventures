@@ -1,0 +1,14 @@
+{
+  "id": "ES-EXT-417-REVIEWS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "review",
+  "canDo": "I can retrieve course, swim, and adult in a short class notice.",
+  "prerequisites": [
+    "ES-EXT-417-SWIMMING"
+  ],
+  "lessons": [
+    "ES-C417-swimming-recall-1",
+    "ES-C417-swimming-recall-2"
+  ]
+}

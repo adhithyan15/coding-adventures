@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:0ad9aa72e28f1a23",
+  "lessonIds": [
+    "ES-C417-curso",
+    "ES-C417-nadar",
+    "ES-C417-adulto",
+    "ES-C417-swimming-recall-1",
+    "ES-C417-swimming-recall-2"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch417.txt",
+  "json": "spanish/narration/ch417.json",
+  "textHash": "fnv1a64:56a05c994ccd4f5b",
+  "jsonHash": "fnv1a64:cf26372ec606cf05",
+  "findings": []
+}
