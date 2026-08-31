@@ -1,0 +1,9 @@
+[package]
+name = "coding_adventures_oauth_installed_app_host"
+version = "0.1.0"
+edition = "2021"
+description = "Audit-first bounded loopback host for provider-neutral installed-app OAuth"
+
+[dependencies]
+coding_adventures_oauth = { path = "../oauth" }
+coding_adventures_zeroize = { path = "../zeroize" }
