@@ -18,6 +18,7 @@
     "operation": "source_collection",
     "options": {
       "language": "ocaml",
+      "package_root": "code/packages/ocaml/source-collection-fixture",
       "mode": "declared_sources",
       "registry_sha256": "783d49e175b13a267b694172892e154b4a815e7fed807012aec913cf3509a61e",
       "declared_srcs": [

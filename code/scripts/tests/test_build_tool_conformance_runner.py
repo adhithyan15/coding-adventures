@@ -337,12 +337,26 @@ class CorpusTests(unittest.TestCase):
                 if rule["id"] == "rust-template-source-inputs"
             )["suffixes"],
         )
-        self.assertTrue(
-            {
+        self.assertNotIn(
+            "js/smoke.mjs",
+            by_language["rust"]["root_exact_relative_paths"],
+        )
+        engram_inputs = next(
+            item
+            for item in by_language["rust"]["package_exact_inputs"]
+            if item["id"] == "rust-engram-wasm-build-inputs"
+        )
+        self.assertEqual(
+            engram_inputs["package_root"],
+            "code/packages/rust/engram-wasm",
+        )
+        self.assertEqual(
+            engram_inputs["paths"],
+            [
                 "js/engram-mosaic-host-wasm.mjs",
                 "js/smoke.mjs",
                 "pkg/engram_engine.wasm",
-            }.issubset(set(by_language["rust"]["root_exact_relative_paths"]))
+            ],
         )
         self.assertIn(
             ".csproj",
@@ -1237,9 +1251,11 @@ class CorpusTests(unittest.TestCase):
         for language, repository_path, package_path in samples:
             with self.subTest(language=language, path=repository_path):
                 self.assertTrue((runner.REPO_ROOT / repository_path).is_file())
+                package_root = repository_path[: -(len(package_path) + 1)]
                 actual = runner._expected_source_collection(
                     {
                         "language": language,
+                        "package_root": package_root,
                         "mode": "extension",
                         "registry_sha256": registry_sha256,
                         "declared_srcs": [],
@@ -1263,7 +1279,7 @@ class CorpusTests(unittest.TestCase):
             FIXTURE_ROOT / "language-source-input-registry.json"
         )
         registry_sha256 = runner.source_input_registry_digest(registry)
-        package_root = runner.REPO_ROOT / "code/packages/rust/engram-wasm"
+        package_root = "code/packages/rust/engram-wasm"
         package_paths = [
             "js/engram-mosaic-host-wasm.mjs",
             "js/smoke.mjs",
@@ -1272,7 +1288,22 @@ class CorpusTests(unittest.TestCase):
         candidates = []
         expected = []
         for package_path in package_paths:
-            body = (package_root / package_path).read_bytes()
+            repository_path = f"{package_root}/{package_path}"
+            stage_record = subprocess.check_output(
+                ["git", "ls-files", "--stage", "-z", "--", repository_path],
+                cwd=runner.REPO_ROOT,
+            )
+            entries = [entry for entry in stage_record.split(b"\0") if entry]
+            self.assertEqual(len(entries), 1)
+            metadata, staged_path = entries[0].split(b"\t", 1)
+            mode, object_id, stage = metadata.decode("ascii").split()
+            self.assertEqual(mode, "100644")
+            self.assertEqual(stage, "0")
+            self.assertEqual(staged_path.decode("utf-8"), repository_path)
+            body = subprocess.check_output(
+                ["git", "cat-file", "blob", object_id],
+                cwd=runner.REPO_ROOT,
+            )
             candidates.append(
                 {"path": package_path, "kind": "file", "content_hex": body.hex()}
             )
@@ -1284,6 +1315,7 @@ class CorpusTests(unittest.TestCase):
             runner._expected_source_collection(
                 {
                     "language": "rust",
+                    "package_root": package_root,
                     "mode": "extension",
                     "registry_sha256": registry_sha256,
                     "declared_srcs": [],
@@ -1359,6 +1391,39 @@ class CorpusTests(unittest.TestCase):
         generated_scope["languages"][3]["scoped_inputs"][0]["path_prefix"] = "build"
         mutations.append(
             ("generated-scope", generated_scope, "SOURCE_INPUT_PATH_UNSAFE")
+        )
+
+        package_language = copy.deepcopy(canonical)
+        rust_entry = next(
+            entry for entry in package_language["languages"]
+            if entry["language"] == "rust"
+        )
+        rust_entry["package_exact_inputs"][0]["package_root"] = (
+            "code/packages/typescript/engram-wasm"
+        )
+        mutations.append(
+            (
+                "package-root-language-mismatch",
+                package_language,
+                "SOURCE_INPUT_PACKAGE_ROOT_LANGUAGE_MISMATCH",
+            )
+        )
+
+        package_global_collision = copy.deepcopy(canonical)
+        rust_entry = next(
+            entry for entry in package_global_collision["languages"]
+            if entry["language"] == "rust"
+        )
+        rust_entry["root_exact_relative_paths"].append("js/smoke.mjs")
+        rust_entry["root_exact_relative_paths"].sort(
+            key=lambda value: value.encode("utf-8")
+        )
+        mutations.append(
+            (
+                "package-global-collision",
+                package_global_collision,
+                "SOURCE_INPUT_SELECTOR_COLLISION",
+            )
         )
 
         scoped_collision = copy.deepcopy(canonical)
@@ -2643,6 +2708,19 @@ class PureDomainValidationTests(unittest.TestCase):
         ]
         self.assertEqual(
             runner._expected_source_collection(case_variants, registry),
+            [],
+        )
+        other_rust_package = copy.deepcopy(engram_options)
+        other_rust_package["package_root"] = "code/packages/rust/task-wasm"
+        other_rust_package["candidates"] = [
+            {
+                "path": "js/smoke.mjs",
+                "kind": "file",
+                "content_hex": "736f757263650a",
+            }
+        ]
+        self.assertEqual(
+            runner._expected_source_collection(other_rust_package, registry),
             [],
         )
 
