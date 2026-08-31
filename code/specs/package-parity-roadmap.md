@@ -11318,11 +11318,11 @@ parent escape plus the missing-`O_NOFOLLOW` fallback. No remaining entire-path
 no-follow or authority blocker was found.
 
 Before publication, the branch rebased conflict-free onto exact `origin/main`
-`ca32b94c6df4331068d786e70684d7e9384eecb9` after PRs #13561 and #13562 added
-only Spanish learning artifacts and existing Mosaic binding/type-test changes.
-Those 33 paths add no package root, BUILD, manifest, build-tool contract,
-parity owner, or exact overlap with this tranche. The inventory remains
-unchanged and collision-free.
+`558d144ee2a63f5467be088cccd41cce48de2936` after PRs #13561, #13562, and
+#13564 added only Spanish/Punjabi learning artifacts plus existing Mosaic
+binding/type-test and human-language-data test changes. Those 92 paths add no
+package root, BUILD, manifest, build-tool contract, parity owner, or exact
+overlap with this tranche. The inventory remains unchanged and collision-free.
 
 ## Autonomous Loop Protocol
 
