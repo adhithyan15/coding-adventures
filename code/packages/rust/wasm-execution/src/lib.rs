@@ -1887,7 +1887,7 @@ pub fn evaluate_const_expr(
             // arithmetic the ordinary instruction-execution loop elsewhere
             // in this crate already uses for these same three opcodes
             // outside a constant expression.
-            0x6A | 0x6B | 0x6C => {
+            0x6A..=0x6C => {
                 let b = match stack.pop() {
                     Some(WasmValue::I32(v)) => v,
                     _ => return Err(TrapError::new("extended-const i32 arithmetic: expected an i32 operand")),
@@ -1906,7 +1906,7 @@ pub fn evaluate_const_expr(
             }
             // Extended-const proposal: i64.add/i64.sub/i64.mul -- same
             // pop-two-push-one shape as the i32 trio just above.
-            0x7C | 0x7D | 0x7E => {
+            0x7C..=0x7E => {
                 let b = match stack.pop() {
                     Some(WasmValue::I64(v)) => v,
                     _ => return Err(TrapError::new("extended-const i64 arithmetic: expected an i64 operand")),
