@@ -4,6 +4,17 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - unsigned macOS Trestle application bundle (#13612)
+
+The TaskApp release lane now turns the strict SwiftUI release build into a real
+`Trestle.app` archive with stable `org.codingadventures.trestle` identity,
+product/version/icon metadata, source provenance, and its exact Rust engine inside
+SwiftPM's resource bundle. macOS CI extracts two copies, validates the property
+list and dylib bytes, launches both from `/` without `MOSAIC_APP_LIBRARY`, and
+proves a Rust-created local snapshot restores after the replacement-style second
+launch. Release metadata explicitly identifies the app as runner-architecture,
+unsigned, not notarized, and not an iOS artifact.
+
 ### Added - verified portable Linux release bundles (#13611)
 
 The product-scoped release lane now builds runnable Qt, Flutter, and Compose

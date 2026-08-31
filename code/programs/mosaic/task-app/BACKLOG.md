@@ -36,6 +36,7 @@ links existing Mosaic work instead of duplicating it.
    independently verifiable platform and operations items below.
 9. **P1 — [#13611](https://github.com/adhithyan15/coding-adventures/issues/13611):**
    ship verified portable Linux bundles for Qt, Flutter, and Compose Desktop.
+   **Done in #13616.**
 10. **P1 — [#13612](https://github.com/adhithyan15/coding-adventures/issues/13612):**
    package TaskApp as a macOS application bundle.
 11. **P1 — [#13613](https://github.com/adhithyan15/coding-adventures/issues/13613):**
@@ -46,6 +47,9 @@ links existing Mosaic work instead of duplicating it.
    audit and refine the first-run simple-todo experience.
 14. **P2 — [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**
    move the Vitest config to Vite's native ESM loading contract.
+15. **P2 — [#13625](https://github.com/adhithyan15/coding-adventures/issues/13625):**
+   roll the TaskApp changelog forward after each published product release and
+   gate against already-published versions remaining marked Unreleased.
 
 Newly discovered work is filed as an issue and the queue is reprioritized before
 the next item is selected. Only one TaskApp completion-loop PR is active at a time.
