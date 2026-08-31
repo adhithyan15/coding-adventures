@@ -13,7 +13,7 @@ it("pins Marathi continuity", () => expectLanguageContinuity("marathi"));
 it("pins Marathi modality", () => expectLanguageModality("marathi"));
 it("pins Marathi lesson-content budgets", () =>
   expectLanguageLessonBudgets("marathi", {
-    lessons: 113,
+    lessons: 123,
     idioms: 5,
     senses: 4,
     cultureClaims: 7,
@@ -97,6 +97,7 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     ["18", 5],
     ["19", 10],
     ["20", 18],
+    ["21", 10],
   ]);
 });
 

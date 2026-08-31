@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MR-A1F08-last-three-supported",
+    "language": "marathi",
+    "chapter": 21,
+    "sequence": 864,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ab8ef150fd2290c5",
+    "detachableSegments": [
+      "Writing — supported controlled composition"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

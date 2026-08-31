@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MR-A1F10-first-three-delayed",
+    "language": "marathi",
+    "chapter": 21,
+    "sequence": 866,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:72c929c1371de5fb",
+    "detachableSegments": [
+      "Writing — delayed controlled composition"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

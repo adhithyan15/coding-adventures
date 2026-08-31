@@ -1,0 +1,22 @@
+{
+  "lesson": {
+    "id": "MR-A1F05-last-three-select",
+    "language": "marathi",
+    "chapter": 21,
+    "sequence": 861,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6acb9575ff81b0c7",
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "id": "MR-PATH-023",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "lessons": [
+    "MR-A1F04-first-three-select",
+    "MR-A1F05-last-three-select",
+    "MR-A1F06-first-three-supported",
+    "MR-A1F07-first-three-spelling",
+    "MR-A1F08-last-three-supported",
+    "MR-A1F09-last-three-agreement",
+    "MR-A1F10-first-three-delayed",
+    "MR-A1F11-last-three-delayed",
+    "MR-A1F12-six-field-supported",
+    "MR-A1F13-six-field-independent"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "MR-EXT-026-A1-PRACTICAL-FORM"
+  ]
+}

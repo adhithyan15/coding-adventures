@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MR-A1F12-six-field-supported",
+    "language": "marathi",
+    "chapter": 21,
+    "sequence": 868,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b79c1a837fb4998f",
+    "detachableSegments": [
+      "Writing — supported six-field composition"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
