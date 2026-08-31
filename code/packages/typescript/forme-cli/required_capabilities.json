@@ -6,8 +6,20 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "packaged CLI specification, project Forme config, and local package manifests",
-      "justification": "Loads the declarative CLI Builder specification, the selected project config, and local file dependencies for the repository bootstrap helper."
+      "target": "packaged CLI specification, project Forme config/content, and local package manifests",
+      "justification": "Loads the declarative CLI Builder specification, the selected project config/content, and local file dependencies for builds, watch mode, and the repository bootstrap helper."
+    },
+    {
+      "category": "fs",
+      "action": "watch",
+      "target": "selected Forme project root excluding generated output, cache, dependency, and VCS trees",
+      "justification": "Coalesces authored project changes into conservative full-pipeline preview rebuilds."
+    },
+    {
+      "category": "net",
+      "action": "listen",
+      "target": "127.0.0.1:*",
+      "justification": "The watch command serves successful in-memory preview artifacts and live-reload events on loopback."
     },
     {
       "category": "fs",

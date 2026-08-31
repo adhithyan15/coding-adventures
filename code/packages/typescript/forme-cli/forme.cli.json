@@ -2,8 +2,8 @@
   "cli_builder_spec_version": "1.0",
   "name": "forme",
   "display_name": "Forme",
-  "description": "Build, validate, and clean a headless Forme project.",
-  "version": "0.1.0",
+  "description": "Build, validate, preview, and clean a headless Forme project.",
+  "version": "0.2.0",
   "parsing_mode": "gnu",
   "builtin_flags": {
     "help": true,
@@ -57,6 +57,29 @@
       "id": "clean",
       "name": "clean",
       "description": "Remove configured cache and deploy output directories."
+    },
+    {
+      "id": "watch",
+      "name": "watch",
+      "description": "Build and serve a live preview, rebuilding on project changes.",
+      "flags": [
+        {
+          "id": "port",
+          "long": "port",
+          "description": "Bind the loopback preview server to this TCP port.",
+          "type": "integer",
+          "default": 3000,
+          "value_name": "PORT"
+        },
+        {
+          "id": "debounce",
+          "long": "debounce",
+          "description": "Coalesce project changes for this many milliseconds.",
+          "type": "integer",
+          "default": 200,
+          "value_name": "MS"
+        }
+      ]
     }
   ]
 }

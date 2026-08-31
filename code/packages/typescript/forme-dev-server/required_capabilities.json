@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "typescript/forme-dev-server",
+  "capabilities": [
+    {
+      "category": "net",
+      "action": "listen",
+      "target": "127.0.0.1:*",
+      "justification": "Serves caller-supplied in-memory Forme preview artifacts and live-reload events on loopback by default."
+    },
+    {
+      "category": "net",
+      "action": "connect",
+      "target": "127.0.0.1:*",
+      "justification": "Integration tests connect to the ephemeral loopback preview listener."
+    }
+  ],
+  "justification": "The preview server owns only a local HTTP listener. It serves in-memory DeployArtifact bytes and never reads project output from the filesystem."
+}

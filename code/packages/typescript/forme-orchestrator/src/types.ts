@@ -4,9 +4,8 @@
  * Five surfaces:
  *
  *   - `Orchestrator` — the runtime handle returned by
- *     `createOrchestrator`.  Three methods: buildPipeline, runOnce,
- *     dispose.  v0 omits `watch` (FM03 §7) — that's deferred to a
- *     follow-up.
+ *     `createOrchestrator`. Four methods: buildPipeline, runOnce,
+ *     watch, dispose.
  *
  *   - `Pipeline` — the resolved + typechecked + DAG-constructed value
  *     handed to runOnce.  Carries the original config so the caller
@@ -76,6 +75,23 @@ export interface RunOptions {
   readonly useCache?: boolean;
 }
 
+/** Options for a long-lived, conservatively full-pipeline watch session. */
+export interface WatchOptions {
+  /** Project-change notifications supplied by the host filesystem adapter. */
+  readonly changes: AsyncIterable<unknown>;
+  /** Coalesce bursts of notifications. Default: 200 ms. */
+  readonly debounceMs?: number;
+  /** Stop the session when the host cancellation token is cancelled. */
+  readonly cancellation?: CancellationToken;
+}
+
+/** A running watch loop. Results include the initial build and every rebuild. */
+export interface WatchSession {
+  results(): AsyncIterable<RunResult>;
+  rebuild(): Promise<RunResult>;
+  stop(): Promise<void>;
+}
+
 /** Pipeline value — the resolved+validated config plus its constructed DAG. */
 export interface Pipeline {
   readonly config: PipelineConfig;
@@ -96,6 +112,8 @@ export interface Orchestrator {
   buildPipeline(config: PipelineConfig): Promise<Pipeline>;
   /** Run a pipeline once. */
   runOnce(pipeline: Pipeline, options?: RunOptions): Promise<RunResult>;
+  /** Run once, then coalesce host change events into conservative rebuilds. */
+  watch(pipeline: Pipeline, options: WatchOptions): WatchSession;
   /** Tear down resources held by the orchestrator. */
   dispose(): Promise<void>;
 }

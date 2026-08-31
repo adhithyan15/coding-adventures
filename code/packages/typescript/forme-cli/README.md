@@ -17,6 +17,8 @@ forme run # FM03-compatible alias for build
 forme build --reproducible
 forme build --report dist/.forme-build-report.json
 forme clean
+forme watch
+forme watch --port 4321 --debounce 100
 forme build --config pipelines/site.ts
 forme build --help
 ```
@@ -40,6 +42,13 @@ project.
   and `outDir` values only from stages that produce `DeployArtifact`. Targets
   must be descendants of the project directory; project-root and outside
   deletion is refused.
+- `watch` runs the real pipeline once, serves successful `DeployArtifact`
+  outputs from memory on loopback, and coalesces authored project changes into
+  rebuilds. Browsers reconnect to the live-reload event stream automatically.
+  A failed rebuild reports diagnostics while the server keeps the last good
+  output available. Generated output, cache, `node_modules`, and `.git` trees
+  are excluded from filesystem notifications. FM-B010 will replace the current
+  conservative full-pipeline rebuild with exact affected-stage scheduling.
 
 `--config` is a global option and can be written before or after a command.
 `build` also accepts the `run` alias. Help and version output are generated
