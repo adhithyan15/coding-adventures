@@ -11,7 +11,7 @@
     "options": {
       "language": "dart",
       "mode": "extension",
-      "registry_sha256": "a64e491e7be2d1e2985cebb7dd1576607c2525ab6590a31af3e98cb2329c55d0",
+      "registry_sha256": "783d49e175b13a267b694172892e154b4a815e7fed807012aec913cf3509a61e",
       "declared_srcs": [],
       "candidates": [
         {"path": "BUILD", "kind": "file", "content_hex": "736f757263650a"},

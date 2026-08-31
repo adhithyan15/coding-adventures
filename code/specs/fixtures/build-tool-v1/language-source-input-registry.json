@@ -686,7 +686,7 @@
       "recursive_exact_basenames": [],
       "root_exact_basenames": ["Cargo.lock", "Cargo.toml", "basename.json", "cat.json", "chmod.json", "chown.json", "cli.spec.json", "cmp.json", "comm.json", "cp.json", "cut.json", "df.json", "diff.json", "dirname.json", "du.json", "echo.json", "env.json", "expand.json", "false.json", "fold.json", "grep.json", "groups.json", "head.json", "html-skeleton.lexer.states.toml", "html1.lexer.states.toml", "id.json", "join.json", "ln.json", "logname.json", "ls.json", "md5sum.json", "mkdir.json", "mv.json", "nl.json", "nproc.json", "paste.json", "printenv.json", "pwd.json", "realpath.json", "rev.json", "rm.json", "rmdir.json", "ruby-1.8.lexer.states.toml", "seq.json", "sha256sum.json", "sleep.json", "sort.json", "split.json", "tail.json", "tar.json", "tee.json", "touch.json", "tr.json", "true.json", "tty.json", "uname.json", "unexpand.json", "uniq.json", "wc.json", "whoami.json", "xargs.json", "yes.json"],
       "root_variable_suffixes": [],
-      "root_exact_relative_paths": ["build-wasm.sh"],
+      "root_exact_relative_paths": ["build-wasm.sh", "js/engram-mosaic-host-wasm.mjs", "js/smoke.mjs", "pkg/engram_engine.wasm"],
       "case_alias_groups": [],
       "scoped_inputs": [
         {
