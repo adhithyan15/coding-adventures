@@ -706,6 +706,67 @@ reparse, hardlink, handle-race, and real filesystem enforcement remain required
 in each native engine-adoption child and are not inferred from the neutral
 snapshot.
 
+#### Repository source-input boundary v1
+
+The package-relative language registry cannot authorize files above a package
+root, and its generated-component rule intentionally prunes `.cargo` and
+`vendor`. The closed
+`code/specs/fixtures/build-tool-v1/repository-source-input-boundary.json`
+registry is the only v1 authority for exact repository-relative inputs that
+cross either boundary. It pins the language-registry digest it extends; a
+consumer MUST validate both registries and reject a mismatched digest before
+selecting any file.
+
+Each boundary has one canonical id, one canonical language, one exact
+applicability scope, one or more exact input paths, a durable owner, and a
+reason. `descendants` applies only to package roots strictly below its named
+language root. `exact` applies only to the named package root. There is no
+ancestor fallback, glob, suffix, regular expression, environment lookup, or
+directory-wide permission. Matching additionally requires the candidate to be
+declared Git-tracked and a regular file. A symlink or reparse record, an
+untracked record, or an exact file outside the applicable package does not
+select.
+
+Two input roles are closed in v1:
+
+- `shared_ancestor` names a tracked input held at a language workspace root
+  and consumed by packages below that root; and
+- `generated_pruning_exception` names one tracked input whose path contains
+  exactly the declared component from the language registry's generated-
+  directory set.
+
+A shared-ancestor input MUST NOT enter any generated component. A pruning
+exception MUST contain its declared generated component, and that component
+MUST remain present in the pinned language registry. Removing a generated
+component from the language contract therefore invalidates any stale
+exception rather than silently widening collection. Input paths are exact,
+case-sensitive, NFC repository-relative paths. Boundary ids, boundary
+records, and input records are unique and sorted by raw UTF-8 bytes. Full-
+casefold path aliases, scope aliases, duplicate ownership, path-prefix
+collisions between an applicability root and another root's exact input, and
+conflicting rules for the same language, scope, and input fail closed.
+
+The v1 registry owns only the reviewed TypeScript base config; Rust workspace
+manifest, target config, and Windows Cargo launcher; Python workspace project;
+Haskell Cabal project; Lua lint and directory registries; Ruby bundle and task
+files; and exact tracked VisiCalc vendor JavaScript. Every path MUST be present
+in the Git-tracked repository projection. Broad workspace directories,
+lockfiles not explicitly listed, user or SDK configuration, local Android
+properties, signing material, credentials, tokens, environment files, and
+secrets remain ineligible.
+
+Repository source collection is a process-free `source_collection` operation.
+Its input supplies one language, one package root, the boundary digest, and a
+bounded inert candidate snapshot. Its output is the UTF-8 path-sorted list of
+selected exact repository paths and lowercase SHA-256 content digests. The
+digest uses the same length-framed canonical-JSON construction as the language
+registry with domain separator
+`coding-adventures/build-tool-repository-source-input-boundary/v1`. The
+registry and digest are identity, not filesystem, Git, execution, credential,
+or host authority. Native engine-adoption children still own no-follow file
+opening, repository-root handle retention, regular-file and tracked-state
+proof, race defense, bounded reads, and redacted failures.
+
 ### 6. Starlark
 
 Final parity requires:

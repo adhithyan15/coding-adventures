@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/build-tool-repository-source-input-boundary-v1.json",
+  "title": "Build-tool repository source-input boundary v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "language_source_input_registry_sha256",
+    "boundaries"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "language_source_input_registry_sha256": {"$ref": "#/$defs/digest"},
+    "boundaries": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "items": {"$ref": "#/$defs/boundary"}
+    }
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120,
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "language": {
+      "enum": [
+        "c", "cpp", "csharp", "dart", "dotnet", "elixir", "fsharp",
+        "go", "haskell", "java", "kotlin", "lua", "mosaic", "ocaml",
+        "perl", "python", "ruby", "rust", "starlark", "swift", "twig",
+        "typescript", "wasm"
+      ]
+    },
+    "safe_relative_path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*\\\\)(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*//)[^<>:\"|?*\\u0000-\\u001F/]+(?:/[^<>:\"|?*\\u0000-\\u001F/]+)*$"
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "root"],
+      "properties": {
+        "kind": {"enum": ["descendants", "exact"]},
+        "root": {"$ref": "#/$defs/safe_relative_path"}
+      }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "role"],
+      "properties": {
+        "path": {"$ref": "#/$defs/safe_relative_path"},
+        "role": {"enum": ["generated_pruning_exception", "shared_ancestor"]},
+        "generated_component": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[^/\\\\<>:\"|?*\\u0000-\\u001F]+$"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"role": {"const": "generated_pruning_exception"}},
+            "required": ["role"]
+          },
+          "then": {"required": ["generated_component"]},
+          "else": {"not": {"required": ["generated_component"]}}
+        }
+      ]
+    },
+    "boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "language",
+        "applies_to",
+        "inputs",
+        "reason",
+        "owner"
+      ],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "language": {"$ref": "#/$defs/language"},
+        "applies_to": {"$ref": "#/$defs/scope"},
+        "inputs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {"$ref": "#/$defs/input"}
+        },
+        "reason": {"type": "string", "minLength": 1, "maxLength": 512},
+        "owner": {"$ref": "#/$defs/id"}
+      }
+    }
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "language_source_input_registry_sha256": "a64e491e7be2d1e2985cebb7dd1576607c2525ab6590a31af3e98cb2329c55d0",
+  "boundaries": [
+    {
+      "id": "haskell-workspace-project",
+      "language": "haskell",
+      "applies_to": {"kind": "descendants", "root": "code/packages/haskell"},
+      "inputs": [
+        {"path": "code/packages/haskell/cabal.project", "role": "shared_ancestor"}
+      ],
+      "reason": "Every Haskell package build consumes the tracked workspace package graph above its package root.",
+      "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+    },
+    {
+      "id": "lua-workspace-configuration",
+      "language": "lua",
+      "applies_to": {"kind": "descendants", "root": "code/packages/lua"},
+      "inputs": [
+        {"path": "code/packages/lua/.luacheckrc", "role": "shared_ancestor"},
+        {"path": "code/packages/lua/DIRS", "role": "shared_ancestor"}
+      ],
+      "reason": "Lua package validation consumes the tracked shared lint policy and directory registry above each package root.",
+      "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+    },
+    {
+      "id": "python-workspace-project",
+      "language": "python",
+      "applies_to": {"kind": "descendants", "root": "code/packages/python"},
+      "inputs": [
+        {"path": "code/packages/python/pyproject.toml", "role": "shared_ancestor"}
+      ],
+      "reason": "Every Python package build consumes the tracked workspace project and tool configuration above its package root.",
+      "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+    },
+    {
+      "id": "ruby-workspace-configuration",
+      "language": "ruby",
+      "applies_to": {"kind": "descendants", "root": "code/packages/ruby"},
+      "inputs": [
+        {"path": "code/packages/ruby/Gemfile", "role": "shared_ancestor"},
+        {"path": "code/packages/ruby/Rakefile", "role": "shared_ancestor"}
+      ],
+      "reason": "Ruby package validation consumes the tracked workspace bundle and task configuration above each package root.",
+      "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+    },
+    {
+      "id": "rust-workspace-configuration",
+      "language": "rust",
+      "applies_to": {"kind": "descendants", "root": "code/packages/rust"},
+      "inputs": [
+        {"path": "code/packages/rust/.cargo/config.toml", "role": "generated_pruning_exception", "generated_component": ".cargo"},
+        {"path": "code/packages/rust/Cargo.toml", "role": "shared_ancestor"},
+        {"path": "code/packages/rust/_windows_cargo.sh", "role": "shared_ancestor"}
+      ],
+      "reason": "Rust packages consume the tracked workspace manifest, target configuration, and Windows Cargo launcher above their package roots.",
+      "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+    },
+    {
+      "id": "typescript-visicalc-html-vendor-input",
+      "language": "typescript",
+      "applies_to": {"kind": "exact", "root": "code/programs/typescript/visicalc-html"},
+      "inputs": [
+        {"path": "code/programs/typescript/visicalc-html/vendor/spreadsheet-engine-wasm.js", "role": "generated_pruning_exception", "generated_component": "vendor"}
+      ],
+      "reason": "The tracked VisiCalc HTML pages load the exact vendored JavaScript wrapper that embeds the reviewed WASM engine.",
+      "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+    },
+    {
+      "id": "typescript-visicalc-webcomponent-vendor-inputs",
+      "language": "typescript",
+      "applies_to": {"kind": "exact", "root": "code/programs/typescript/visicalc-webcomp"},
+      "inputs": [
+        {"path": "code/programs/typescript/visicalc-webcomp/vendor/FormulaBar.js", "role": "generated_pruning_exception", "generated_component": "vendor"},
+        {"path": "code/programs/typescript/visicalc-webcomp/vendor/Grid.js", "role": "generated_pruning_exception", "generated_component": "vendor"},
+        {"path": "code/programs/typescript/visicalc-webcomp/vendor/spreadsheet-engine-wasm.js", "role": "generated_pruning_exception", "generated_component": "vendor"}
+      ],
+      "reason": "The tracked VisiCalc Web Component page imports the exact generated Mosaic components and reviewed WASM engine wrapper.",
+      "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+    },
+    {
+      "id": "typescript-workspace-configuration",
+      "language": "typescript",
+      "applies_to": {"kind": "descendants", "root": "code/packages/typescript"},
+      "inputs": [
+        {"path": "code/packages/typescript/tsconfig.base.json", "role": "shared_ancestor"}
+      ],
+      "reason": "TypeScript packages extend the tracked base compiler configuration above their package roots.",
+      "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+    }
+  ]
+}
