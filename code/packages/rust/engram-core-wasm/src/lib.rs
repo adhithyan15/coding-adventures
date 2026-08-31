@@ -9,7 +9,6 @@
 use std::collections::HashMap;
 use std::panic::{catch_unwind, AssertUnwindSafe};
 
-#[cfg(not(target_arch = "wasm32"))]
 use engram_anki_package::{
     read_v11_collection_as_engram_state, write_legacy_apkg_from_engram_state,
 };
@@ -1884,14 +1883,14 @@ impl EngramSession {
         })
     }
 
+    /// Export the collection as a legacy V11 `.apkg`.
+    ///
+    /// This runs on every target, wasm included. It used to return "handled by
+    /// native hosts for WASM shells" in the browser, because the whole package
+    /// layer was excluded there — see this crate's `Cargo.toml` for why that is
+    /// no longer necessary. Legacy packages store their members uncompressed, so
+    /// nothing on this path needs zstd.
     pub fn export_anki_apkg(&self) -> String {
-        #[cfg(target_arch = "wasm32")]
-        {
-            let _ = self;
-            return error_json("Anki APKG export is handled by native hosts for WASM shells");
-        }
-
-        #[cfg(not(target_arch = "wasm32"))]
         catch_json(
             || match write_legacy_apkg_from_engram_state(&self.state, &[]) {
                 Ok(apkg) => Ok(ok_with("apkg", &apkg)),
@@ -1900,14 +1899,12 @@ impl EngramSession {
         )
     }
 
+    /// Merge an imported Anki package into the current collection.
+    ///
+    /// Runs on every target, wasm included. A modern `.anki21b` / `.colpkg` on a
+    /// build without `modern-format` (which is how wasm is built) surfaces the
+    /// package layer's explicit error rather than importing partial data.
     pub fn merge_anki_apkg(&mut self, bytes: &[u8]) -> String {
-        #[cfg(target_arch = "wasm32")]
-        {
-            let _ = bytes;
-            return error_json("Anki APKG import is handled by native hosts for WASM shells");
-        }
-
-        #[cfg(not(target_arch = "wasm32"))]
         catch_json(|| match read_v11_collection_as_engram_state(bytes) {
             Ok(imported_state) => {
                 self.state = merge_app_states(&self.state, imported_state);

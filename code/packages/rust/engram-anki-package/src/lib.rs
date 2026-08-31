@@ -7,6 +7,8 @@
 
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::fmt;
+// Only the zstd call sites need this; without `modern-format` there are none.
+#[cfg(feature = "modern-format")]
 use std::io::Cursor;
 
 use coding_adventures_sha1::sum1;
@@ -4202,22 +4204,61 @@ fn collection_member_for_format(
     })
 }
 
+/// The message a build without `modern-format` returns for a modern package.
+#[cfg(not(feature = "modern-format"))]
+///
+/// It names the format and the limitation rather than saying "unsupported", so a
+/// user who drags a `.colpkg` into browser Engram learns that legacy `.apkg` is
+/// the way through, instead of concluding the app is broken.
+const MODERN_FORMAT_UNAVAILABLE: &str = "this build supports legacy Anki .apkg packages only; \
+     modern .anki21b / .colpkg packages need zstd decompression, which is not \
+     available here — export from Anki in the legacy format, or use a desktop build";
+
+/// Decompress a package member.
+///
+/// Legacy packages store members uncompressed, so this is a copy for them and the
+/// `modern-format` feature is irrelevant. Only the modern branch needs zstd, which
+/// is why turning the feature off still leaves a fully working legacy importer
+/// rather than no importer at all.
 fn decode_package_payload(
     format: CollectionFormat,
     label: &str,
     bytes: &[u8],
 ) -> Result<Vec<u8>, ApkgError> {
     if format.is_modern() {
-        zstd_crate::stream::decode_all(Cursor::new(bytes))
-            .map_err(|err| apkg_error(format!("failed to decode zstd-compressed {label}: {err}")))
-    } else {
-        Ok(bytes.to_vec())
+        #[cfg(feature = "modern-format")]
+        {
+            return zstd_crate::stream::decode_all(Cursor::new(bytes)).map_err(|err| {
+                apkg_error(format!("failed to decode zstd-compressed {label}: {err}"))
+            });
+        }
+        #[cfg(not(feature = "modern-format"))]
+        {
+            // Deliberately an error, not a fallback to the raw bytes. Handing back
+            // a zstd frame as if it were a collection would surface much later as
+            // corrupt data of unclear origin; failing here says what happened.
+            let _ = (label, bytes);
+            return Err(apkg_error(MODERN_FORMAT_UNAVAILABLE));
+        }
     }
+    Ok(bytes.to_vec())
 }
 
+/// Compress a package member for a modern package.
+///
+/// Only ever called on the modern write path, so without `modern-format` there is
+/// nothing meaningful to return.
 fn encode_package_payload(label: &str, bytes: &[u8]) -> Result<Vec<u8>, ApkgError> {
-    zstd_crate::stream::encode_all(Cursor::new(bytes), 0)
-        .map_err(|err| apkg_error(format!("failed to encode zstd-compressed {label}: {err}")))
+    #[cfg(feature = "modern-format")]
+    {
+        zstd_crate::stream::encode_all(Cursor::new(bytes), 0)
+            .map_err(|err| apkg_error(format!("failed to encode zstd-compressed {label}: {err}")))
+    }
+    #[cfg(not(feature = "modern-format"))]
+    {
+        let _ = (label, bytes);
+        Err(apkg_error(MODERN_FORMAT_UNAVAILABLE))
+    }
 }
 
 fn media_manifest(
@@ -4353,10 +4394,12 @@ mod tests {
         writer.finish()
     }
 
+    #[cfg(feature = "modern-format")]
     fn zstd_encode(data: &[u8]) -> Vec<u8> {
         zstd_crate::stream::encode_all(Cursor::new(data), 0).unwrap()
     }
 
+    #[cfg(feature = "modern-format")]
     fn modern_package(collection: &[u8], media_assets: &[MediaAsset<'_>]) -> Vec<u8> {
         let mut writer = ZipWriter::new();
 
@@ -4669,6 +4712,7 @@ CREATE TABLE graves (
         assert_eq!(manifest.media.unmapped_files, vec!["2"]);
     }
 
+    #[cfg(feature = "modern-format")]
     #[test]
     fn recognizes_modern_collection_members() {
         let apkg = modern_package(b"modern collection", &[]);
@@ -4681,6 +4725,7 @@ CREATE TABLE graves (
         assert_eq!(collection, b"modern collection");
     }
 
+    #[cfg(feature = "modern-format")]
     #[test]
     fn reads_collection_members_across_legacy_and_modern_packages() {
         let legacy = package(&[(LEGACY_COLLECTION, b"legacy collection")]);
@@ -6560,6 +6605,39 @@ CREATE TABLE graves (
         assert!(imported.card_progress.is_empty());
     }
 
+    /// Without `modern-format`, a modern package fails with a message that says
+    /// what to do — it does not import partial data.
+    ///
+    /// This is the configuration wasm is built in, so it is the behaviour a
+    /// browser user actually meets when they drag in a `.colpkg`. The failure mode
+    /// worth guarding against is not the error; it is a build that treats the
+    /// still-compressed payload as a collection and imports something plausible
+    /// and wrong.
+    ///
+    /// The package here carries deliberately invalid payload bytes. That is the
+    /// point: format is detected by member name, so the code must refuse before it
+    /// ever looks at the content, and the test needs no zstd to construct.
+    #[cfg(not(feature = "modern-format"))]
+    #[test]
+    fn modern_packages_fail_with_an_actionable_error_when_zstd_is_unavailable() {
+        let apkg = package(&[(SQLITE_21B_COLLECTION, b"not actually zstd")]);
+
+        let error = read_v11_collection(&apkg)
+            .expect_err("a modern package must not import in a legacy-only build");
+
+        assert!(
+            error.message.contains("legacy Anki .apkg"),
+            "the error should point at the legacy format as the way through, got: {}",
+            error.message
+        );
+        assert!(
+            error.message.contains(".anki21b") || error.message.contains(".colpkg"),
+            "the error should name the format that failed, got: {}",
+            error.message
+        );
+    }
+
+    #[cfg(feature = "modern-format")]
     #[test]
     fn v11_collection_reader_accepts_modern_zstd_envelope() {
         let sqlite = v11_sqlite_collection_bytes();
@@ -6609,6 +6687,7 @@ CREATE TABLE graves (
         assert_eq!(audio.data, b"mp3");
     }
 
+    #[cfg(feature = "modern-format")]
     #[test]
     fn inspects_and_reads_modern_zstd_media_entries() {
         let apkg = modern_package(
@@ -6678,6 +6757,7 @@ CREATE TABLE graves (
         assert_eq!(state.media_assets[0].data, b"mp3");
     }
 
+    #[cfg(feature = "modern-format")]
     #[test]
     fn reads_modern_media_payloads_via_legacy_zip_filename() {
         let mut writer = ZipWriter::new();
@@ -6780,6 +6860,7 @@ CREATE TABLE graves (
         assert_eq!(image.data, b"png");
     }
 
+    #[cfg(feature = "modern-format")]
     #[test]
     fn writes_modern_apkg_envelope_and_state_export() {
         let sqlite = v11_sqlite_collection_bytes();

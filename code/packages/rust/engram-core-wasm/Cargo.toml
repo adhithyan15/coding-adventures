@@ -10,5 +10,22 @@ engram-core = { path = "../engram-core", features = ["serde"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 
+# The Anki package layer is available on every target now, including wasm.
+#
+# It used to be excluded from wasm entirely, because it linked `rusqlite`
+# (bundled C SQLite) and `zstd_crate` (libzstd through `zstd-sys`) — both compile
+# C, and `wasm32-unknown-unknown` has no C toolchain. That left browser Engram
+# advertising an APKG API that always failed.
+#
+# The export has since moved onto the zero-dependency `sqlite-file` writer, and
+# zstd now sits behind the package's `modern-format` feature. Turning that off is
+# what makes the wasm build possible: legacy V11 `.apkg` stores its members
+# uncompressed through the repo's own `zip` crate and never needs zstd, so the
+# browser gets a genuine legacy importer and exporter. Modern `.anki21b` /
+# `.colpkg` returns an explicit, actionable error there until the repo's own zstd
+# handles arbitrary frames.
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 engram-anki-package = { path = "../engram-anki-package" }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+engram-anki-package = { path = "../engram-anki-package", default-features = false }

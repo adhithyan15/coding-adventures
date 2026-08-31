@@ -2,6 +2,37 @@
 
 ## Unreleased
 
+**Anki packages now work in the browser.** `zstd_crate` moves behind a new
+default-on `modern-format` feature, making it optional. That is what finally lets
+this crate build for `wasm32`.
+
+The blockers were two C dependencies. `rusqlite` went when the export moved onto
+`sqlite-file`'s writer; `zstd_crate` reaches libzstd through `zstd-sys`, and
+`clang` has no `wasm32-unknown-unknown` target, so its build script failed
+outright. Removing the first was necessary but not sufficient — the build simply
+moved on to failing at the second.
+
+Legacy V11 `.apkg` never needs zstd: `write_legacy_apkg` stores its members
+uncompressed through the repo's own `zip` crate, and `decode_package_payload`
+copies them straight back. So a build without `modern-format` still does full
+legacy import and export — a genuine importer in the browser rather than the
+previous state, where the whole package layer was compiled out of wasm and every
+APKG call returned "handled by native hosts for WASM shells".
+
+Modern `.anki21b` / `.colpkg` returns an explicit, actionable error there, naming
+the legacy format as the way through. Deliberately an error rather than a
+fallback to the raw bytes: handing back a zstd frame as if it were a collection
+would surface later as corrupt data of unclear origin.
+
+Native builds are unchanged — the feature is on by default, so full modern Anki
+compatibility is preserved with no caller changes.
+
+Verified in both configurations: the legacy golden `.apkg` round-trips pass with
+`--no-default-features` (the configuration wasm uses), a new test asserts the
+modern path fails with an actionable message rather than importing partial data,
+and `cargo build --target wasm32-unknown-unknown` succeeds for this crate and for
+`engram-wasm` with the package layer included.
+
 **Fixed two DoS paths in revlog id assignment, both reachable from an imported
 file.** Review ids come straight from the revlog b-tree's cell rowids, and
 `walk_table` sorts but does not deduplicate, so a crafted `.anki2` controls them
