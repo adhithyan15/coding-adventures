@@ -11,12 +11,19 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 13748,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/13748",
+    "branch": "codex/build-tool-shared-generated-boundary-source-input-contract",
+    "item_id": "build-tool-shared-and-generated-boundary-source-input-contract",
+    "opened_at": "2026-08-31T22:07:21Z",
+    "opened_revision": "9d6c9bacf10c2d367b904e23ee81c48765a09f21"
+  },
   "last_ci_action": {
-    "observed_at": "2026-08-31T18:22:03Z",
-    "pr_number": 13707,
-    "status": "merged",
-    "notes": "PR #13707 completed all 40 final-head checks acceptably at exact head 46f5022696661b93ca9360cc2429396e265e3393: 33 succeeded and seven were skipped. GitHub reported the head clean and mergeable, then executed guarded squash auto-merge without a manual merge at 2026-08-31T18:22:03Z, producing merge commit 26e1527a03e1c89735e90d04d9101d5a5da7eefa. The active parity PR is cleared."
+    "observed_at": "2026-08-31T22:07:25Z",
+    "pr_number": 13748,
+    "status": "pending",
+    "notes": "Ready-for-review PR #13748 is open at exact initial head 9d6c9bacf10c2d367b904e23ee81c48765a09f21. GitHub reports the branch mergeable and conflict-free while CI and CodeQL checks are queued or pending; guarded auto-merge remains disabled until every required check is terminal and acceptable."
   },
   "last_inventory": {
     "revision": "c3903521e56d6b2dc747ef682d21b0861488aed3",
@@ -872,10 +879,13 @@
     {
       "id": "build-tool-shared-and-generated-boundary-source-input-contract",
       "title": "Define exact shared and generated-boundary source inputs for build tools",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit"],
       "branch": "codex/build-tool-shared-generated-boundary-source-input-contract",
-      "pr_number": null,
+      "pr_number": 13748,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13748",
+      "opened_at": "2026-08-31T22:07:21Z",
+      "opened_revision": "9d6c9bacf10c2d367b904e23ee81c48765a09f21",
       "selection_revision": "f5fdd88526315bf32b616b95b5bb76a04e7363bb",
       "selection_notes": "Selected only after PR #13707 completed 40 acceptable final-head checks and merged through guarded squash auto-merge as 26e1527a03e1c89735e90d04d9101d5a5da7eefa, followed by a collision-checked refresh at exact current origin/main f5fdd88526315bf32b616b95b5bb76a04e7363bb. The intervening PR #13710 changes only the existing Rust spice-netlist-parser root and SPICE plan, so it adds no package identity or build-tool topology. The schema-3 inventory now reports 15 established lanes, 1,395 implementation identities, 4,609 slots, 1,434 all-reported identities, bands 175/265, 123/934, 170/2,139, and 927/12,978, 738 Rust singletons, zero OCaml packages, zero canonical collisions, and zero unknown buckets. The two new Rust-only identities dsmr-p1-protocol and smart-home-dsmr-p1-integration are fully classified, and the pre-existing reusable smart-home-event-streams prerequisite is now explicitly owned. Four new DSMR, event-stream, portable-integration, and selection-blocked serial-authority owners were added before selection. The resulting 634-owner/991-edge graph is unique, dependency-complete, and acyclic. This item is the highest-leverage coherent eligible continuation: it has eleven direct unfinished engine dependents and eighteen unfinished transitive descendants, while higher raw ranks are heterogeneous classifiers or selection-blocked native and network authority reviews. The clean worktree and fresh branch were created only after their local and remote identities were verified absent and now exactly match current origin/main. Reconciliation plus selection leaves 198 merged, 435 pending, and exactly this owner in progress.",
       "implementation_revision": "19a9a51ea04181abbf3fa07395791fa04ad4362f",
@@ -886,6 +896,7 @@
       "validation_notes": "After the final conflict-free rebase, the schema and semantic-runner suites pass 93 tests plus 217 subtests; direct corpus validation accepts 131 cases and 283 tracked files with 18 boundaries, 21 input registrations, and boundary digest b108fed4bde93a44b3dbcadae02b325335e1da0fa49aedd197b5fefa750caa37. Branch-aware coverage reports 90% for build_tool_conformance.py. Package-parity, capability-taxonomy, Haskell-capability, and OCaml-lock validation pass 66 tests plus 811 subtests with two expected platform skips. The complete Go build-tool module passes all package tests, vet, and trimpath compilation. Changed Python files pass Ruff format, Bandit, and py_compile; Ruff check reproduces exactly the three unchanged origin/main UP033, SIM114, and SIM102 recommendations. The collision-checked schema-3 inventory records 1,396 implementation identities, 4,610 slots, 1,435 all-reported identities, zero canonical collisions, zero unknown buckets, and zero OCaml packages. Strict JSON, diff hygiene, added-line credential scanning, the 637-owner/1,006-edge complete acyclic state graph, and exact 20-path overlap checks across all 16 open PRs pass. The Engram WASM package-local registry gap and OAuth custody identity discovered after the final main refresh are explicitly owned before publication.",
       "final_review_revision": "f8488707f8cf5d43f1f3feb903012df2de15207f",
       "final_review_notes": "Three independent read-only audits reviewed the final implementation, registry projection, adversarial limits, metadata, security boundary, live-main drift, inventory, and dependency graph. Reviewers found and this branch closed missing BUILD/resource consumers, incorrect candidate roots, origin and alias gaps, repeated generated components, sensitive local paths, quadratic prefix validation, a stale boundary count, and inaccurate Rust exclusions. Final live-main review then exposed the Engram WASM package-local source-registry omission; the state and roadmap now register the exact repair and block all eleven engine adoptions on it without widening this repository-boundary contract. Final conformance and security reviews reproduce the 131-case corpus, 93 schema/runner tests, b108fed4 digest, 637-owner/1,006-edge DAG, zero live-PR overlap, and no remaining publication blocker.",
+      "publication_notes": "Opened ready-for-review PR #13748 from clean validated head 9d6c9bacf10c2d367b904e23ee81c48765a09f21 after a normal first push from exact origin/main c3903521e56d6b2dc747ef682d21b0861488aed3. Immediately before publication, the target remote branch and prior PR were absent, no parity PR was active, all 20 changed paths had zero exact overlap with live open PRs, and corpus, schema, runner, coverage, Go, parity, state-DAG, format, security, diff, and independent review gates were acceptable. GitHub reports the PR non-draft and mergeable while checks are queued; auto-merge stays disabled until every required check is terminal and acceptable and no merge conflict exists.",
       "notes": "Discovered by the complete tracked-repository projection audit. Package-local selectors cannot safely express exact consumed inputs above package roots, exact cross-package BUILD inputs, or tracked files intentionally hidden by generated-component pruning. The reviewed projection covers only evidenced consumers of the Haskell Cabal project, Lua lint configuration, Python uv workspace manifest, Rust workspace manifest, Cargo target config and Windows launcher, TypeScript base config, five Starlark rule files, human-language verifier/data, neural fixture, required-capability input, and VisiCalc sibling imports. Unconsumed Ruby workspace files, Lua DIRS, non-BUILD VisiCalc static roots, ordinary dependency manifests and headers, broad ambient directories, untracked local configuration, credentials, signing material, and secrets remain outside this authority. The separate build-tool-cross-lane-native-dependency-metadata-repair owner now covers ordinary cross-lane package dependency inputs without widening this registry. This contract must land before any engine claims exact registry adoption."
     },
     {
