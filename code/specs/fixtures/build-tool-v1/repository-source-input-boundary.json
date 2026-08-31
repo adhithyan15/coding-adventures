@@ -548,6 +548,7 @@
           "code/packages/typescript/forme-aot-style-tag-emitter",
           "code/packages/typescript/forme-cache",
           "code/packages/typescript/forme-capability",
+          "code/packages/typescript/forme-cli",
           "code/packages/typescript/forme-collect-by-author",
           "code/packages/typescript/forme-collect-by-tag",
           "code/packages/typescript/forme-collect-chronological",
