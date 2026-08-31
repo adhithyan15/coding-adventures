@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C417-nadar",
+    "language": "spanish",
+    "chapter": 417,
+    "sequence": 9640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef593d2f9a8fef52"
+  },
+  "findings": []
+}
