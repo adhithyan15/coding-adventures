@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.9.0
+
 - Expose WinUI-facing begin-navigation and incremental image-completion methods
   over the shared cancellable subresource lifecycle.
 - Return core-owned View Source auxiliary documents through the WinUI bridge
