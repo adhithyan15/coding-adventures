@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added an ownership-transferring `TokenCredentials::into_parts` handoff so an
+  opaque custodian can ingest decoded credentials without plaintext clones.
 - Exposed read-only provider, trace, and redirect-URI ceremony bindings on
   `AuthorizationRequest` so an authorized host can reject cross-ceremony or
   cross-provider browser release without exposing transaction secrets.

@@ -27,15 +27,17 @@ form bodies are zeroizing from their first byte and create no encoded temporary
 strings.
 
 The crate performs no network, browser, listener, clock, storage, or credential
-I/O. The sibling `coding_adventures_oauth_installed_app_host` package now owns
-the separately audited literal-loopback and injected-browser boundary. Later
-broker and transport packages will inject the remaining authorities. Provider
-differences are data in `ProviderConfig`; the core contains no Google,
-Microsoft, GitHub, Dropbox, or other provider branch.
+I/O. The sibling `coding_adventures_oauth_installed_app_host` package owns the
+separately audited literal-loopback and injected-browser boundary, while
+`coding_adventures_oauth_credential_custody` owns audited secret lifecycle over
+an injected atomic store. Later broker and transport packages will inject the
+remaining authorities. Provider differences are data in `ProviderConfig`; the
+core contains no Google, Microsoft, GitHub, Dropbox, or other provider branch.
 
 This implements the pure authorization, token-lifecycle, and RFC 8414 metadata
-trust slices of `code/specs/oauth.md`. Credential custody, device authorization,
-DPoP, and production HTTPS transport remain separately testable backlog items.
+trust slices of `code/specs/oauth.md`. Broker orchestration, concrete encrypted
+credential storage, device authorization, DPoP, and production HTTPS transport
+remain separately testable backlog items.
 
 ## Verification
 
