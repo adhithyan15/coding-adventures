@@ -234,7 +234,7 @@ function assertRealOutputDirectory(root: string): string {
   return target;
 }
 
-function validateExistingForMigration(root: string, generated: GentleRampGeneration): void {
+export function validateExistingForMigration(root: string, generated: GentleRampGeneration): void {
   const target = assertRealOutputDirectory(root);
   if (!existsSync(target)) return;
   const entries = readdirSync(target, { withFileTypes: true });
@@ -264,7 +264,12 @@ function validateExistingForMigration(root: string, generated: GentleRampGenerat
     }
     return;
   }
-  if (entries.length > 0) assertReconstruction(root, generated);
+  if (entries.length > 0) {
+    readGentleRampOwners(root, {
+      expectedLanguages: generated.languages,
+      deriveLessonCountsFromOwners: true,
+    });
+  }
 }
 
 function recoveryPath(target: string): string {
@@ -282,7 +287,7 @@ function recoverInterruptedInstall(root: string, generated: GentleRampGeneration
   if (lstatIfPresent(target) === undefined) {
     renameSync(backup, target);
     try {
-      assertReconstruction(root, generated);
+      validateExistingForMigration(root, generated);
     } catch (cause) {
       renameSync(target, backup);
       throw new Error(
@@ -363,6 +368,17 @@ export function installGentleRampOwnerTree(
   }
 }
 
+/** Recover, validate, and atomically replace a prior canonical owner tree. */
+export function replaceGentleRampOwnerTree(
+  root: string,
+  generated: GentleRampGeneration,
+  faultHooks: GentleRampInstallFaultHooks = {},
+): void {
+  recoverInterruptedInstall(root, generated);
+  validateExistingForMigration(root, generated);
+  installGentleRampOwnerTree(root, generated, faultHooks);
+}
+
 export function runGentleRampSnapshots(
   args = process.argv.slice(2),
   root = defaultCurriculumRoot(),
@@ -379,9 +395,7 @@ export function runGentleRampSnapshots(
     loadLanguageRegistry(root);
     const generated = generation(root);
     if (mode === "--write") {
-      recoverInterruptedInstall(root, generated);
-      validateExistingForMigration(root, generated);
-      installGentleRampOwnerTree(root, generated, faultHooks);
+      replaceGentleRampOwnerTree(root, generated, faultHooks);
       process.stdout.write(
         `generated ${GENTLE_RAMP_SNAPSHOT_DIR} (${generated.outputs.size} direct owners)\n`,
       );
