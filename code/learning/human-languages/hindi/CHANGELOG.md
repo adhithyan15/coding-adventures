@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Changed — declare the spoken Hindi tea request
+
+- Chapter 37 now declares **एक चाय दीजिए** as a phrase headword instead of
+  declaring only **चाय** as a word. The lesson already defines the polite
+  **दीजिए** request, contrasts it with written **कृपया**, and repeatedly asks
+  learners to produce the complete counter request; its metadata now matches
+  that outcome.
+
 ### Changed — declare both sides of the Hindi age frame
 
 - Chapter 19 now declares **कितने साल के हो? / मैं … साल का हूँ।** as its

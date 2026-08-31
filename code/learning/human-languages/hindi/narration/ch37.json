@@ -4,13 +4,13 @@
   "chapter": 37,
   "title": "One Tea, Please",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:84efc074b4505b86",
+  "sourceHash": "fnv1a64:0bf774a20595d279",
   "lessons": [
     {
       "id": "HI-C37-chai",
       "sequence": 980,
       "title": "चाय (chāy) — tea, and how to actually ask for one",
-      "headword": "चाय",
+      "headword": "एक चाय दीजिए",
       "romanization": "",
       "gloss": "tea — feminine, and one of the two names the world uses for the same leaf",
       "script": "devanagari",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f5b271d489c9abf7",
+      "sourceHash": "fnv1a64:13d04027087aa667",
       "notice": null,
       "blocks": [
         {
