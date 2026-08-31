@@ -22,7 +22,9 @@
 --
 -- We infer the language from the directory path. If the path contains
 -- ``packages/python/X`` or ``programs/python/X``, the language is "python".
--- Similarly for "ruby", "go", "rust", "typescript", "elixir", and "lua".
+-- The registry also recognizes every implementation bucket the Lua engine
+-- currently advertises, including the emerging OCaml lane whose Dune output
+-- must be distinguished from source packages.
 
 -- lfs is optional — if available, we use it for directory listing.
 -- Otherwise, we fall back to os.execute with ls/dir.
@@ -34,7 +36,8 @@ local Discovery = {}
 -- inferring which ecosystem a package belongs to.
 local KNOWN_LANGUAGES = {
     "python", "ruby", "go", "rust", "typescript", "elixir", "lua", "perl",
-    "swift", "haskell", "starlark", "wasm", "csharp", "fsharp", "dotnet",
+    "swift", "haskell", "ocaml", "starlark", "wasm", "csharp", "fsharp",
+    "dotnet",
 }
 
 -- SKIP_DIRS is the set of directory names that should never be traversed
