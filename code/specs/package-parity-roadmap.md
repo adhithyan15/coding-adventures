@@ -11423,6 +11423,42 @@ auto-merge remains disabled until the final head is conflict-free and every
 required check is terminal and acceptable. The ownership graph therefore has
 188 merged, 416 pending, and exactly one `pr-open` owner.
 
+### Post-PR #13574 refresh and TypeScript hashing-exclusion selection
+
+PR #13574 completed all 41 final-head checks acceptably with 34 successes, six
+expected skips, and one neutral result. Guarded squash auto-merge was enabled
+only after GitHub reported final head
+`a25e96e2fe51115838beddc472370846f6dc8942` clean and mergeable, and GitHub
+merged it as `bb7e19c9b66531bf406d66c3976e5c31e23e0200` at
+2026-08-31T02:10:25Z without a manual merge command. The Python portable
+dependency-hashing owner therefore advances to `merged` and the active PR is
+cleared.
+
+The exact-main schema-3 inventory remains collision-clean and identity-neutral:
+15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427
+all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880,
+731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown
+buckets. Since the stored `024bac642e` revision, only merged Punjabi
+curriculum/data and Python dependency-hashing paths changed. No package root,
+BUILD variant, recognized manifest, or dependency topology changed, and an
+independent post-merge collision audit found no newly eligible unowned gap.
+
+The dependency/leverage pass selects
+`build-tool-typescript-generated-directory-hashing-exclusion` on branch
+`codex/build-tool-typescript-generated-directory-hashing-exclusion`. Both
+prerequisites are merged. This exact-directory hashing leaf ties the Ruby and
+Rust leaves at four downstream owners but is the smallest bounded
+implementation: one TypeScript `walkFiles` seam serves extension and
+declared-source collection. It unlocks TypeScript portable source hashing,
+TypeScript dependency hashing, and both completion aggregates, so it outranks
+larger ready leaves at equal leverage. Six live PRs have zero exact overlap
+with the seven expected TypeScript hasher, test, README, changelog, state,
+roadmap, and root-changelog paths; the target branch, remote branch, and prior
+PR were absent before the fresh clean worktree and branch were created. At
+selection, the complete 605-owner/916-edge graph is unique,
+dependency-complete, and acyclic at 189 merged, 415 pending, and exactly one
+`in-progress` owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

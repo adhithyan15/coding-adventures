@@ -18,6 +18,15 @@ output without excluding similarly named source directories such as `_Build`
 and `_build-example`. The shared language-registry fixture and direct
 Windows-safe discovery regressions enforce these boundaries.
 
+Source hashing independently prunes the language-neutral 26-component
+generated-artifact registry before both extension and declared-source
+selection. The hasher tests project both neutral source-collection fixtures,
+retain exact case variants and near names, and verify that directory symlinks
+or Windows junctions are not traversed. This hashing policy is intentionally
+separate from discovery: a source directory such as `specs` remains eligible,
+while exact `_build`, `node_modules`, `.cargo`, and `cover` components do not
+affect a package cache key.
+
 ## How it fits in the stack
 
 This is one of several build tool implementations in the monorepo (Python, Ruby, Go, Rust, Elixir, TypeScript). All implementations share the same architecture and produce identical results. The Go implementation is the primary one used in CI; the others serve as educational implementations demonstrating the same concepts in different languages.

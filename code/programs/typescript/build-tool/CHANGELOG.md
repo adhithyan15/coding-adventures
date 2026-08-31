@@ -34,6 +34,10 @@ All notable changes to the TypeScript build tool will be documented in this file
 
 ### Fixed
 
+- Exclude the complete exact, case-sensitive 26-component generated,
+  dependency, VCS, cache, and temporary-directory registry before both
+  extension and declared-source hashing. Case variants and near names remain
+  eligible, and directory links remain outside the recursive walker.
 - Exclude Dune's exact case-sensitive `_build` output component from package
   discovery while preserving `_Build` and `_build-example` source directories.
   The shared language-registry fixture and a direct Windows-safe regression
