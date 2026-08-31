@@ -12,23 +12,23 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 13569,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13569",
-    "branch": "codex/build-tool-python-portable-source-hashing-conformance",
-    "implementation_revision": "0bb417e6ab60659a141d6a4783e57e9e977a1906",
+    "number": 13574,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/13574",
+    "branch": "codex/build-tool-python-portable-dependency-hashing-conformance",
+    "implementation_revision": "a4b4e3045b2841f0adc1b6057ff886a34b7841af",
     "status": "checks-pending",
-    "opened_at": "2026-08-31T00:54:15Z"
+    "opened_at": "2026-08-31T01:50:14Z"
   },
   "last_ci_action": {
-    "observed_at": "2026-08-31T00:54:15Z",
-    "pr_number": 13569,
+    "observed_at": "2026-08-31T01:50:18Z",
+    "pr_number": 13574,
     "run_id": null,
     "attempt": null,
     "status": "checks-pending",
-    "notes": "Opened ready-for-review PR #13569 from clean validated head b1b2092fa2a5e7dbeeb6a454fa47b591c6d269ad. GitHub reports it non-draft and mergeable, with required checks queued or in progress; auto-merge remains disabled until every final-head check is terminal and acceptable and no merge conflict exists."
+    "notes": "Opened ready-for-review PR #13574 from clean validated head 204de42860615f168a4da7c46fea3a53ed79deec. GitHub reports it non-draft and mergeable, with required checks queued or in progress; auto-merge remains disabled until every final-head check is terminal and acceptable and no merge conflict exists."
   },
   "last_inventory": {
-    "revision": "248a6ff20767d12dc1f6d91040382bcc675494bb",
+    "revision": "024bac642e04eab0c00395aa7a009b85eef452bb",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1388,
@@ -733,7 +733,7 @@
     {
       "id": "build-tool-python-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Python build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-python-generated-directory-hashing-exclusion", "build-tool-generated-directory-hashing-conformance-corpus"],
       "branch": "codex/build-tool-python-portable-source-hashing-conformance",
       "pr_number": 13569,
@@ -741,7 +741,7 @@
       "opened_at": "2026-08-31T00:54:15Z",
       "opened_revision": "b1b2092fa2a5e7dbeeb6a454fa47b591c6d269ad",
       "selection_revision": "88e77a6309e1112f0cb16886f315ef05b020da37",
-      "implementation_revision": "0bb417e6ab60659a141d6a4783e57e9e977a1906",
+      "implementation_revision": "eb3562b7fcbc065087e589b06960e16bf04f9b75",
       "rebase_revision": "248a6ff20767d12dc1f6d91040382bcc675494bb",
       "rebase_notes": "Rebased conflict-free before publication onto exact origin/main 248a6ff20767d12dc1f6d91040382bcc675494bb after merged PRs #13561, #13562, #13564, and #13566 added only Spanish/Punjabi curriculum and generated learning artifacts plus existing Mosaic binding/type-test, human-language-data test, and Rust task-mosaic-app source/changelog changes. Those 94 paths add no package root, BUILD, manifest, build-tool contract, parity owner, or exact overlap with this seven-path tranche. The regenerated schema-3 inventory remains unchanged and collision-free.",
       "selection_notes": "Selected immediately after PR #13558 completed 41 terminal acceptable checks and merged through guarded squash auto-merge as 88e77a6309e1112f0cb16886f315ef05b020da37. The exact-main schema-3 inventory remains identity-neutral and collision-clean at 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. Intervening PRs #13555 and #13557 changed only existing Punjabi curriculum and Mosaic binding surfaces; no package root, BUILD, or manifest topology changed, and parallel inventory, dependency, fixture, and live-PR audits found no new eligible unowned gap. Both prerequisites are now merged. This bounded continuation closes the two remaining Python source/package-hashing contract holes across its 503-package lane: OCaml source and metadata recognition plus unambiguous normalized relative-path framing. It directly advances the eleven-engine portable-source-hashing aggregate and outranks independent ready leaves by completing the chain unlocked by #13558. Six live PRs have zero exact overlap with the expected seven-path tranche, and the target branch, remote branch, and prior PR were absent before this fresh clean worktree was created. At selection, reconciliation left the complete 594-owner/895-edge graph unique, dependency-complete, and acyclic at 187 merged, 406 pending, and exactly this owner in progress.",
@@ -750,15 +750,30 @@
       "security_notes": "The final hasher opens every lexical POSIX directory component and the leaf with mandatory no-follow semantics, rejects dot or parent escapes, and fails closed when O_NOFOLLOW is unavailable. Windows retains non-delete-sharing handles for every lexical directory component through the source parent, rejects reparse attributes including at the package root, opens the leaf while ancestry stays locked, and requires the final opened-handle path to equal the lexical source path exactly. Both platforms then require post-open path/descriptor identity and regular-file type, compare descriptor identity, size, nanosecond modification time, and change time before and after streamed raw-byte hashing, and reject replacement or mutation with checkout-independent diagnostics. Nested .opam files remain governed by declared globs while only root manifests bypass them. Changed-production Bandit is clean; the package-wide scan retains only inherited subprocess/shell authority findings in untouched execution modules. Pip-audit finds no known third-party vulnerability, both editable local packages are intentionally absent from PyPI, and this tranche adds no dependency, process, environment, network, credential, BUILD-front, workflow, or capability authority.",
       "review_notes": "Independent conformance, security/correctness, and inventory reviewers first found the duplicated noncanonical content-digest oracle, omitted declared-mode root .opam manifest, link/reparse and concurrent-mutation races, a noncanonical path anchor, stale graph claims, and the separate dependency-hashing gap. Tests captured each bounded defect before repair. Adversarial Windows review then reproduced nested external, same-package, package-root, post-lock FSCTL mutation, and toggle-back variants; the final exact-handle path binding rejects every real probe while ordinary nested sources remain accepted. POSIX review found and verified closure of a lexical parent escape plus missing-O_NOFOLLOW fallback. Final exact-code review clears hashing-v1 package framing, the shared fixture oracle, root-only manifest bypass, canonical code bucket anchoring, entire-path no-follow and post-open identity checks, mutation signatures, redacted diagnostics, authority scope, and narrowed claims with 35 focused tests and four platform skips. The final inventory review confirms unchanged collision counts, the valid 595-owner/896-edge DAG, zero live-PR path overlap, and the absent target remote branch/PR after the validation binary was restored and exact-main provenance advanced to 248a6ff20767d12dc1f6d91040382bcc675494bb.",
       "publication_notes": "Opened ready-for-review PR #13569 from clean validated initial head b1b2092fa2a5e7dbeeb6a454fa47b591c6d269ad after a normal first push from exact origin/main 248a6ff20767d12dc1f6d91040382bcc675494bb. Immediately before publication, the target remote branch and prior PR were absent, the exact seven-path diff was clean, and six live open PRs had zero exact overlap. GitHub reports the PR non-draft and mergeable with required checks queued or in progress, so auto-merge remains disabled until every final-head check is terminal and acceptable and no merge conflict exists.",
+      "merged_at": "2026-08-31T01:17:28Z",
+      "merge_commit": "17efb090089afcb51c926d0fa549c8da556b8e08",
+      "merge_notes": "All 41 final-head checks were terminal and acceptable: 34 succeeded, six were expected skips, and one was neutral. GitHub reported final head eb3562b7fcbc065087e589b06960e16bf04f9b75 clean and mergeable before guarded squash auto-merge completed; no manual merge command was used.",
       "notes": "Discovered by the post-#13544 source-hashing audit. Python recognizes source inputs only for Python, Ruby, Go, and Perl and concatenates content digests without normalized relative paths, so OCaml source/metadata changes and same-content renames can be invisible. After directory pruning lands, add complete portable source recognition and unambiguous normalized path framing without expanding host authority."
     },
     {
       "id": "build-tool-python-portable-dependency-hashing-conformance",
       "title": "Complete portable dependency hashing in the Python build tool",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-python-portable-source-hashing-conformance"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/build-tool-python-portable-dependency-hashing-conformance",
+      "pr_number": 13574,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13574",
+      "opened_at": "2026-08-31T01:50:14Z",
+      "opened_revision": "204de42860615f168a4da7c46fea3a53ed79deec",
+      "selection_revision": "17efb090089afcb51c926d0fa549c8da556b8e08",
+      "implementation_revision": "a4b4e3045b2841f0adc1b6057ff886a34b7841af",
+      "rebase_revision": "024bac642e04eab0c00395aa7a009b85eef452bb",
+      "rebase_notes": "Rebased conflict-free before publication onto exact origin/main 024bac642e04eab0c00395aa7a009b85eef452bb after PR #13570 changed existing TaskApp workflow/test/changelog surfaces and PR #13567 changed existing Spanish curriculum/generated learning artifacts. Their 39 paths have zero exact overlap with this nine-path tranche and add no package root, BUILD, manifest, dependency, build-tool contract, or parity-owner topology. Post-rebase package, neutral-conformance, Go reference, lint/type/security, inventory, state-DAG, and corpus validation remain acceptable.",
+      "selection_notes": "Selected immediately after PR #13569 completed 41 terminal acceptable checks and merged through guarded squash auto-merge as exact origin/main 17efb090089afcb51c926d0fa549c8da556b8e08. The regenerated schema-3 inventory remains identity-neutral and collision-clean at 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. The 68 paths since the stored inventory revision belong only to the merged Punjabi/data and Python build-tool tranches; no package root, BUILD, or manifest topology changed. Parallel collision, dependency, fixture, and live-PR audits found no newly eligible unowned gap, and six live PRs have zero exact overlap with the expected Python hasher, tests, README, changelog, state, roadmap, and root-changelog paths. Before selection, the reference audit classified equivalent named/raw dependency-framing leaves for the nine other native engines, expanded Lua's existing cache owner, and added the dependency-hashing aggregate. The sole prerequisite is now merged, making this bounded hashing-v1 continuation the highest-leverage ready owner. At selection, reconciliation leaves the complete 605-owner/916-edge graph unique, dependency-complete, and acyclic at 188 merged, 416 pending, and exactly this owner in progress.",
+      "validation_notes": "Tests-first execution failed at collection because the new combined-digest helper did not exist. Independent review then reproduced a real dependent-before-prerequisite failure in both one-pass CLI flows; the two-pass regression failed before the shared helper repaired both normal and plan-file execution paths. The focused hasher/CLI suite now passes 72 tests with four expected Windows/POSIX platform skips. The complete literal generic/Windows BUILD recipe passes 492 tests with four skips at 90.84% total coverage and 89% hasher coverage on Python 3.13.14; BUILD and BUILD_windows are byte-identical. Hasher source/tests pass Ruff, direct hasher MyPy, compileall, and Bandit; package-wide CLI Ruff/MyPy retain only inherited baseline findings outside the changed helper. The neutral schema suite passes 22 tests, the runner passes 63 tests, and validate-corpus accepts 121 cases and 283 files across 16 implementations, 15 established lanes, and 12 front doors. The Go reference passes module verification, all package tests, vet, and trimpath build; a freshly compiled binary evaluates 45 Starlark BUILD files, validates five reviewed orphan exemptions, forces all 495 Python packages, and selects exactly one affected package for the branch diff. The Python build-tool itself also hashes and plans all 495 Python packages without a missing-digest failure. Capability, Haskell, OCaml-lock, broker, backend-parity, and package-report suites pass 118 tests with 12 expected skips. Isolated sdist/wheel builds, uv dependency compatibility, and pip-audit pass. The schema-3 inventory remains 15 lanes, 1,388 identities, 4,602 slots, 1,427 all-reported identities, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets; the 605-owner/916-edge graph is unique, dependency-complete, and acyclic.",
+      "security_notes": "The implementation is pure SHA-256 framing over caller-supplied graph identities and digest strings. It adds no filesystem, process, Git, environment, clock, network, credential, cache-format, or dependency authority. Required dependency digests must be canonical lowercase 64-character hex, are decoded to exactly 32 bytes, and fail closed when missing or malformed without echoing digest content. The caller-owned graph and digest map are not mutated. Changed-source Bandit is clean, pip-audit finds no known third-party vulnerability while correctly skipping the two editable local packages absent from PyPI, and uv reports a compatible environment.",
+      "review_notes": "Two independent reviewers found the same production compatibility defect after the first exact-oracle implementation: both normal and plan-file CLI flows computed dependency hashes before the complete package-hash map existed, so lexical discovery order could place a dependent before its prerequisites and trigger the new fail-closed validation. A tests-first diamond regression captured the exact failure before a shared two-pass helper repaired both flows. Review also requested exact transitive diamond framing and graph/map immutability evidence; the focused suite now proves both. Both reviewers clear the repaired exact code, fixture coverage, caller immutability, authority boundary, nine-path scope, inventory, and documentation. The conflict-free rebase onto 024bac642e04eab0c00395aa7a009b85eef452bb has zero upstream overlap and all post-rebase checks remain acceptable.",
+      "publication_notes": "Opened ready-for-review PR #13574 from clean validated head 204de42860615f168a4da7c46fea3a53ed79deec after a normal first push from exact origin/main 024bac642e04eab0c00395aa7a009b85eef452bb. Immediately before publication, the target remote branch and prior PR were absent, the exact nine-path diff was clean, five live open PRs had zero exact overlap, dependency/BUILD/manifest/package-root changes were zero, and secret-pattern scanning was clean. GitHub reports the PR non-draft and mergeable with required checks queued or in progress, so auto-merge remains disabled until every final-head check is terminal and acceptable and no merge conflict exists.",
       "notes": "Discovered by the independent review of the Python portable source-hashing tranche. Python still concatenates transitive dependency digest hex strings without framing their sorted package identities or decoding the 32-byte digests, while hashing v1 requires package-name and raw-digest frames. Add a direct language-neutral hashing-cache oracle regression and repair dependency plus combined cache digests in a separate coherent tranche; do not overclaim complete hashing-v1 coverage from the source-only owner."
     },
     {
@@ -849,7 +864,7 @@
       "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-lua-dune-build-discovery-fixture-adoption"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered by the post-#13544 source-hashing audit. Lua has no source-hasher/cache layer, so add the complete neutral collector, portable digest framing, dependency invalidation, and stable cache recovery only after its Dune discovery evidence and the shared source-collection corpus land."
+      "notes": "Discovered by the post-#13544 source-hashing audit. Lua has no source-hasher/cache layer, so add the complete neutral collector, portable package and named/raw dependency digest framing, raw combined-digest construction, dependency invalidation, and stable cache recovery only after its Dune discovery evidence and the shared source-collection corpus land."
     },
     {
       "id": "build-tool-portable-source-hashing-remaining-engines",
@@ -859,6 +874,96 @@
       "branch": null,
       "pr_number": null,
       "notes": "Selection-blocked aggregate for the complete hashing contract. It has no independent source behavior and advances only after every engine-scoped leaf proves exact component pruning, portable source recognition, normalized path framing, deterministic byte hashing, dependency invalidation, and stable cache recovery or records a reviewed exception."
+    },
+    {
+      "id": "build-tool-go-portable-dependency-hashing-conformance",
+      "title": "Complete portable dependency hashing in the Go build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-go-portable-source-hashing-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#13569 cross-engine hashing audit. Go concatenates transitive dependency digest text without hashing-v1 package-identity and decoded raw-digest frames. After its source-hashing owner lands, adopt the neutral dependency and combined digest oracle in one engine-scoped tranche."
+    },
+    {
+      "id": "build-tool-elixir-portable-dependency-hashing-conformance",
+      "title": "Complete portable dependency hashing in the Elixir build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-elixir-portable-source-hashing-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#13569 cross-engine hashing audit. Elixir concatenates transitive dependency digest text without hashing-v1 package-identity and decoded raw-digest frames. After its source-hashing owner lands, adopt the neutral dependency and combined digest oracle in one engine-scoped tranche."
+    },
+    {
+      "id": "build-tool-perl-portable-dependency-hashing-conformance",
+      "title": "Complete portable dependency hashing in the Perl build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-perl-portable-source-hashing-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#13569 cross-engine hashing audit. Perl concatenates transitive dependency digest text without hashing-v1 package-identity and decoded raw-digest frames. After its source-hashing owner lands, adopt the neutral dependency and combined digest oracle in one engine-scoped tranche."
+    },
+    {
+      "id": "build-tool-haskell-portable-dependency-hashing-conformance",
+      "title": "Complete portable dependency hashing in the Haskell build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-haskell-portable-source-hashing-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#13569 cross-engine hashing audit. Haskell includes dependency names but uses a non-SHA fallback framing rather than the hashing-v1 named/raw-digest stream. After its source-hashing owner lands, adopt the neutral dependency and combined digest oracle in one engine-scoped tranche."
+    },
+    {
+      "id": "build-tool-csharp-fsharp-portable-dependency-hashing-conformance",
+      "title": "Complete portable dependency hashing in the shared C# and F# build tools",
+      "status": "pending",
+      "depends_on": ["build-tool-csharp-fsharp-portable-source-hashing-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#13569 cross-engine hashing audit. The shared .NET engine concatenates dependency digest text without hashing-v1 package-identity and decoded raw-digest frames. After its source-hashing owner lands, repair the shared dependency and combined digest path once for both front doors."
+    },
+    {
+      "id": "build-tool-swift-portable-dependency-hashing-conformance",
+      "title": "Complete portable dependency hashing in the Swift build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-swift-portable-source-hashing-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#13569 cross-engine hashing audit. Swift concatenates transitive dependency digest text without hashing-v1 package-identity and decoded raw-digest frames. After its source-hashing owner lands, adopt the neutral dependency and combined digest oracle in one engine-scoped tranche."
+    },
+    {
+      "id": "build-tool-ruby-portable-dependency-hashing-conformance",
+      "title": "Complete portable dependency hashing in the Ruby build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-ruby-portable-source-hashing-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#13569 cross-engine hashing audit. Ruby concatenates transitive dependency digest text without hashing-v1 package-identity and decoded raw-digest frames. After its source-hashing owner lands, adopt the neutral dependency and combined digest oracle in one engine-scoped tranche."
+    },
+    {
+      "id": "build-tool-rust-portable-dependency-hashing-conformance",
+      "title": "Complete portable dependency hashing in the Rust build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-rust-portable-source-hashing-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#13569 cross-engine hashing audit. Rust concatenates transitive dependency digest text without hashing-v1 package-identity and decoded raw-digest frames. After its source-hashing owner lands, adopt the neutral dependency and combined digest oracle in one engine-scoped tranche."
+    },
+    {
+      "id": "build-tool-typescript-portable-dependency-hashing-conformance",
+      "title": "Complete portable dependency hashing in the TypeScript build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-typescript-portable-source-hashing-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#13569 cross-engine hashing audit. TypeScript concatenates transitive dependency digest text without hashing-v1 package-identity and decoded raw-digest frames. After its source-hashing owner lands, adopt the neutral dependency and combined digest oracle in one engine-scoped tranche."
+    },
+    {
+      "id": "build-tool-portable-dependency-hashing-remaining-engines",
+      "title": "Complete portable dependency hashing across every build-tool engine",
+      "status": "pending",
+      "depends_on": ["build-tool-python-portable-dependency-hashing-conformance", "build-tool-go-portable-dependency-hashing-conformance", "build-tool-elixir-portable-dependency-hashing-conformance", "build-tool-perl-portable-dependency-hashing-conformance", "build-tool-haskell-portable-dependency-hashing-conformance", "build-tool-csharp-fsharp-portable-dependency-hashing-conformance", "build-tool-swift-portable-dependency-hashing-conformance", "build-tool-ruby-portable-dependency-hashing-conformance", "build-tool-rust-portable-dependency-hashing-conformance", "build-tool-typescript-portable-dependency-hashing-conformance", "build-tool-lua-hashing-cache-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Selection-blocked aggregate for hashing-v1 dependency and combined digests. It has no independent source behavior and advances only after every native build-tool engine frames sorted package identities with decoded 32-byte dependency digests, combines raw package and dependency digests, consumes the language-neutral oracle, or records a reviewed exception."
     },
     {
       "id": "build-tool-elixir-dune-build-discovery-fixture-adoption",

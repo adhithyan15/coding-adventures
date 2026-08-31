@@ -27,7 +27,10 @@ Dependency hashing
 
 A package should be rebuilt if any of its transitive dependencies changed.
 ``hash_deps`` takes a package name, the dependency graph, and the per-package
-hashes, then produces a single hash representing the state of all dependencies.
+hashes, then frames each sorted dependency identity with its decoded 32-byte
+digest and produces a single hash representing the dependency state.
+``combine_hashes`` hashes the raw package and dependency digests together for
+the portable cache identity.
 """
 
 from __future__ import annotations
@@ -583,7 +586,44 @@ def hash_deps(
     if not transitive_deps:
         return hashlib.sha256(b"").hexdigest()
 
-    # Sort dependency names for determinism, concatenate their hashes.
-    sorted_deps = sorted(transitive_deps)
-    combined = "".join(package_hashes.get(dep, "") for dep in sorted_deps)
-    return hashlib.sha256(combined.encode("utf-8")).hexdigest()
+    # Hashing v1 frames each sorted UTF-8 package identity with the dependency's
+    # decoded 32-byte digest. Including both byte lengths preserves boundaries,
+    # while decoding the digest avoids hashing a presentation-specific hex
+    # string. Missing or malformed digests fail closed instead of silently
+    # producing a cache identity for incomplete graph state.
+    dependencies_hash = hashlib.sha256()
+    for dependency in sorted(transitive_deps):
+        if dependency not in package_hashes:
+            raise ValueError("missing SHA-256 dependency digest")
+        dependency_name = dependency.encode("utf-8")
+        dependency_digest = _decode_sha256_digest(
+            package_hashes[dependency], "dependency"
+        )
+        dependencies_hash.update(len(dependency_name).to_bytes(8, "big"))
+        dependencies_hash.update(dependency_name)
+        dependencies_hash.update(len(dependency_digest).to_bytes(8, "big"))
+        dependencies_hash.update(dependency_digest)
+    return dependencies_hash.hexdigest()
+
+
+def _decode_sha256_digest(digest: str, role: str) -> bytes:
+    """Decode one canonical lowercase SHA-256 digest without echoing its value."""
+    if (
+        not isinstance(digest, str)
+        or len(digest) != 64
+        or any(character not in "0123456789abcdef" for character in digest)
+    ):
+        raise ValueError(f"invalid SHA-256 {role} digest")
+    return bytes.fromhex(digest)
+
+
+def combine_hashes(package_digest: str, dependencies_digest: str) -> str:
+    """Return the hashing-v1 cache digest for package and dependency state.
+
+    The two inputs are canonical lowercase SHA-256 hex strings. Hashing v1
+    combines their decoded 32-byte values directly, with the package digest
+    first, rather than hashing the 128-byte textual representation.
+    """
+    package_bytes = _decode_sha256_digest(package_digest, "package")
+    dependency_bytes = _decode_sha256_digest(dependencies_digest, "dependency")
+    return hashlib.sha256(package_bytes + dependency_bytes).hexdigest()

@@ -9,12 +9,39 @@ from pathlib import Path
 import pytest
 
 from build_tool.cli import (
+    _compute_package_and_dependency_hashes,
     _expand_affected_set_with_prereqs,
     _output_language_flags,
     _rebuild_argv,
     main,
 )
-from build_tool.resolver import DirectedGraph
+from build_tool.discovery import discover_packages
+from build_tool.hasher import hash_deps
+from build_tool.resolver import DirectedGraph, resolve_dependencies
+
+
+class TestComputePackageAndDependencyHashes:
+    """Tests for the two-pass cache-hash preparation shared by both CLI flows."""
+
+    def test_hashes_all_packages_before_dependent_first_dependency_lookup(self):
+        fixtures = Path(__file__).parent / "fixtures" / "diamond"
+        packages = discover_packages(fixtures)
+        graph = resolve_dependencies(packages)
+
+        assert packages[0].name == "python/pkg-a"
+        assert set(graph.predecessors("python/pkg-a")) == {
+            "python/pkg-b",
+            "python/pkg-c",
+        }
+
+        package_hashes, dependency_hashes = (
+            _compute_package_and_dependency_hashes(packages, graph)
+        )
+
+        assert set(package_hashes) == {package.name for package in packages}
+        assert dependency_hashes["python/pkg-a"] == hash_deps(
+            "python/pkg-a", graph, package_hashes
+        )
 
 
 class TestExpandAffectedSetWithPrereqs:
