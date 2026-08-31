@@ -10522,7 +10522,7 @@ impl HtmlParser {
         element
             .children
             .iter()
-            .any(|child| !matches!(child, Node::Text(text) if text.data.chars().all(char::is_whitespace)))
+            .any(|child| !matches!(child, Node::Text(text) if text.data.chars().all(is_html_whitespace)))
     }
 
     fn unwrap_current_empty_font_newline_before_bold(&mut self, incoming_name: &str) {
@@ -41227,6 +41227,89 @@ mod tests {
         ] {
             direct.process_token(token);
         }
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn treats_non_ascii_whitespace_as_anchor_content_before_paragraphs() {
+        for marker in ['\u{00A0}', '\u{2003}', '\u{3000}'] {
+            let source = format!("<!doctype html><!--é-->\r\n<a>{marker}<p>x");
+            let document = parse_html(&source).unwrap();
+            let body = body(&document);
+            let anchor = body
+                .children
+                .iter()
+                .find_map(|node| match node {
+                    Node::Element(element) if element.name == "a" => Some(element),
+                    _ => None,
+                })
+                .expect("source anchor should remain in the body");
+            assert_eq!(anchor.children[0], Node::text(marker.to_string()));
+            let paragraph = element(&anchor.children[1]);
+            assert_eq!(paragraph.name, "p", "source {source:?}");
+            assert_eq!(paragraph.children, vec![Node::text("x")]);
+        }
+
+        let ascii = parse_html("<!doctype html><a> \t\r\n<p>x").unwrap();
+        let ascii_body = body(&ascii);
+        assert_eq!(element(&ascii_body.children[0]).name, "a");
+        assert_eq!(element(&ascii_body.children[1]).name, "p");
+        assert_eq!(
+            element(&element(&ascii_body.children[1]).children[0]).name,
+            "a"
+        );
+
+        let completed = parse_html("<!doctype html><a>\u{00A0}<p>x</a></p>").unwrap();
+        let completed_body = body(&completed);
+        assert_eq!(element(&completed_body.children[0]).name, "a");
+        assert_eq!(element(&completed_body.children[1]).name, "p");
+        assert_eq!(
+            element(&element(&completed_body.children[1]).children[0]).name,
+            "a"
+        );
+
+        let fragment = parse_html_fragment_for_context("<a>\u{00A0}<p>x", "body").unwrap();
+        let fragment_anchor = element(&fragment[0]);
+        assert_eq!(fragment_anchor.name, "a");
+        assert_eq!(element(&fragment_anchor.children[1]).name, "p");
+
+        let foreign =
+            parse_html("<!doctype html><svg><foreignObject><a>\u{00A0}<p>x").unwrap();
+        let svg = element(&body(&foreign).children[0]);
+        let foreign_object = element(&svg.children[0]);
+        let foreign_anchor = element(&foreign_object.children[0]);
+        assert_eq!(foreign_anchor.name, "a");
+        assert_eq!(element(&foreign_anchor.children[1]).name, "p");
+
+        let table = parse_html("<!doctype html><table><a>\u{00A0}<p>x").unwrap();
+        let table_body = body(&table);
+        assert_eq!(element(&table_body.children[0]).name, "a");
+        assert_eq!(element(&table_body.children[1]).name, "p");
+        assert_eq!(element(table_body.children.last().unwrap()).name, "table");
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("\u{00A0}".to_string()),
+            Token::StartTag {
+                name: "p".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("x".to_string()),
+            Token::Eof,
+        ] {
+            direct.process_token(token);
+        }
+        let direct_anchor = element(&body(&direct.document).children[0]);
+        assert_eq!(element(&direct_anchor.children[1]).name, "p");
         assert!(direct
             .diagnostics()
             .iter()
