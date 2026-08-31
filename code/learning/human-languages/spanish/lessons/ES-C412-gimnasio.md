@@ -41,7 +41,7 @@ old word: **el gimnasio**.
 
 Spanish **gimnasio** came through Latin **gymnasium** from Greek
 **gymnásion**, a place for exercise and training. English **gymnasium** is the
-same travelled word, and **gym** is simply its clipped form. Spanish spelling
+same travelled word, and **gym** is its clipped form. Spanish spelling
 turns the learned **gy-** into **gi-**, pronounced with the strong Spanish
 **g** sound heard before **i**.
 

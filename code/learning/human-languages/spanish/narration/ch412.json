@@ -4,7 +4,7 @@
   "chapter": 412,
   "title": "Gym and Sport",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f94f26a8a105cc07",
+  "sourceHash": "fnv1a64:85b557e408a5b8ce",
   "lessons": [
     {
       "id": "ES-C412-gimnasio",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54410bade66d253a",
+      "sourceHash": "fnv1a64:97e286f7f8b44b9c",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Spanish gimnasio came through Latin gymnasium from Greek gymnásion, a place for exercise and training. English gymnasium is the same travelled word, and gym is simply its clipped form. Spanish spelling turns the learned gy- into gi-, pronounced with the strong Spanish g sound heard before i."
+              "text": "Spanish gimnasio came through Latin gymnasium from Greek gymnásion, a place for exercise and training. English gymnasium is the same travelled word, and gym is its clipped form. Spanish spelling turns the learned gy- into gi-, pronounced with the strong Spanish g sound heard before i."
             }
           ]
         },
