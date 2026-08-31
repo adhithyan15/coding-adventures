@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-R24-know-think-r4",
+    "language": "punjabi",
+    "chapter": 24,
+    "sequence": 1490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:342fdf6b77e581a5"
+  },
+  "findings": []
+}

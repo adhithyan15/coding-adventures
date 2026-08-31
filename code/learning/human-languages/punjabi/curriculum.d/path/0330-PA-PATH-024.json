@@ -1,0 +1,13 @@
+{
+  "id": "PA-PATH-024",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "PA-R25-drink-request-r4",
+    "PA-R25-milk-bread-r4"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-029-A1-REQUEST-R4"
+  ],
+  "after": []
+}

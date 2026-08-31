@@ -1,0 +1,12 @@
+{
+  "id": "PA-PATH-025",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "PA-R25-friend-family-r4"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-030-A1-PEOPLE-R4"
+  ],
+  "after": []
+}

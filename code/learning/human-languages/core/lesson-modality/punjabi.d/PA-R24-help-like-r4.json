@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-R24-help-like-r4",
+    "language": "punjabi",
+    "chapter": 24,
+    "sequence": 1520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b4065de32018c32"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "id": "PA-EXT-031-A1-KIN-BODY-R4",
+  "stage": "A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can retrieve the already-taught brother, sister, and eye words at R4 distance while distinguishing low tone from a surviving doubled consonant.",
+  "prerequisites": [
+    "PA-EXT-030-A1-PEOPLE-R4"
+  ],
+  "lessons": [
+    "PA-R25-kin-eye-r4"
+  ]
+}

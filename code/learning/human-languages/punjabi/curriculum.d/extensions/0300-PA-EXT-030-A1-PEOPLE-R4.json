@@ -1,0 +1,13 @@
+{
+  "id": "PA-EXT-030-A1-PEOPLE-R4",
+  "stage": "A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can retrieve the already-taught friend and family words at R4 distance and keep their Persian and Sanskrit histories distinct.",
+  "prerequisites": [
+    "PA-EXT-029-A1-REQUEST-R4"
+  ],
+  "lessons": [
+    "PA-R25-friend-family-r4"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "PA-EXT-029-A1-REQUEST-R4",
+  "stage": "A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can retrieve the already-taught water, tea, milk, and bread request families at R4 distance with their old source and sound distinctions.",
+  "prerequisites": [
+    "PA-EXT-028-A1-ACTION-R4"
+  ],
+  "lessons": [
+    "PA-R25-drink-request-r4",
+    "PA-R25-milk-bread-r4"
+  ]
+}

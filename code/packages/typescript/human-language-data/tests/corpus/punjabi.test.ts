@@ -15,14 +15,14 @@ it("pins Punjabi continuity", () => expectLanguageContinuity("punjabi"));
 it("pins Punjabi modality", () => expectLanguageModality("punjabi"));
 it("pins Punjabi lesson-content budgets", () =>
   expectLanguageLessonBudgets("punjabi", {
-    lessons: 128,
+    lessons: 136,
     idioms: 4,
     senses: 3,
     cultureClaims: 7,
     unitPrefix: "PA",
   }));
 
-it("keeps Punjabi's 138-row session map aligned with canonical order", () => {
+it("keeps Punjabi's 146-row session map aligned with canonical order", () => {
   const ordered = loadTrackLessons("punjabi").sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
   );
@@ -37,8 +37,8 @@ it("keeps Punjabi's 138-row session map aligned with canonical order", () => {
       lessonId: match[3]!.trim(),
     }),
   );
-  expect(rows).toHaveLength(138);
-  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 138 }, (_, index) => index + 1));
+  expect(rows).toHaveLength(146);
+  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 146 }, (_, index) => index + 1));
   expect(rows.map((row) => row.lessonId)).toEqual(
     ordered.map((lesson) => lesson.realization.lessonId),
   );
@@ -452,5 +452,101 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   ]);
   const report = measureContinuity(ordered);
   expect(report.reinforcement.filter((defect) => chapter3Atoms.has(defect.atom))).toEqual([]);
-  expect(report.summary.missedByWindow).toEqual({ R1: 43, R2: 87, R3: 130, R4: 71 });
+  expect(report.summary.missedByWindow).toEqual({ R1: 44, R2: 92, R3: 138, R4: 45 });
+});
+
+it("services Punjabi's three-field R4 debt without moving the boundary forward", () => {
+  const ordered = loadTrackLessons("punjabi").sort(
+    (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
+  );
+  const bridgeIds = [
+    "PA-R24-know-think-r4",
+    "PA-R24-understand-read-r4",
+    "PA-R24-write-take-ask-r4",
+    "PA-R24-help-like-r4",
+    "PA-R25-drink-request-r4",
+    "PA-R25-milk-bread-r4",
+    "PA-R25-friend-family-r4",
+    "PA-R25-kin-eye-r4",
+  ];
+  const bridge = bridgeIds.map((id) =>
+    ordered.find((lesson) => lesson.realization.lessonId === id)!,
+  );
+  expect(bridge.map((lesson) => ordered.indexOf(lesson))).toEqual([138, 139, 140, 141, 142, 143, 144, 145]);
+  expect(bridge.every((lesson) => Number(lesson.frontmatter["duration.max_seconds"]) <= 220)).toBe(true);
+  expect(bridge.every((lesson) => lesson.frontmatter["introduces.knowledge"]?.length === 0)).toBe(true);
+  expect(bridge.every((lesson) => lesson.frontmatter.skills?.includes("listening"))).toBe(true);
+  expect(bridge.every((lesson) => lesson.frontmatter.skills?.includes("speaking"))).toBe(true);
+  expect(bridge.every((lesson) => lesson.frontmatter.skills?.includes("reading"))).toBe(true);
+  expect(bridge.every((lesson) => !lesson.frontmatter.skills?.includes("writing"))).toBe(true);
+  expect(bridge.every((lesson) => !lesson.body.includes("hl-writing-stage"))).toBe(true);
+  expect(bridge.flatMap((lesson) => compileLessonActivities(lesson.blocks))).toHaveLength(17);
+
+  const exposedByThreeFieldIntegration = [
+    "PA-ETYMON-PASAND-SHINE",
+    "PA-CONTRAST-JANA-JANNA",
+    "PA-ETYMON-JANNA-KNOW",
+    "PA-ETYMON-LAINA-LABH",
+    "PA-ETYMON-LIKH-SCRATCH",
+    "PA-ETYMON-MADAD-ARABIC",
+    "PA-ETYMON-PAANI-DRINK",
+    "PA-ETYMON-PARHNA-PATH",
+    "PA-ETYMON-PUCHHNA-PRACH",
+    "PA-ETYMON-SAMAJH-BUDH",
+    "PA-ETYMON-SOCHNA-SHUC",
+    "PA-GRAMMAR-DATIVE-LIKING",
+    "PA-GRAMMAR-NOUN-PLUS-KARNA",
+    "PA-LEX-JANNA",
+    "PA-LEX-LAINA",
+    "PA-LEX-LIKHNA",
+    "PA-LEX-PAANI",
+    "PA-LEX-PASAND",
+    "PA-LEX-PUCHHNA",
+    "PA-LEX-SAMAJHNA",
+    "PA-LEX-SOCHNA",
+    "PA-PHRASE-KIRPA-KARKE",
+    "PA-SCRIPT-SUBJOINED-HA",
+    "PA-LEX-MADAD-KARNA",
+    "PA-LEX-PARHNA",
+    "PA-SOUND-TONE-FALLING",
+  ];
+  expect(exposedByThreeFieldIntegration).toHaveLength(26);
+
+  const movingBoundaryAtoms = [
+    "PA-LEX-CHA",
+    "PA-ETYMON-CHA-CHINESE",
+    "PA-SOUND-TONE-HIGH-LEVEL",
+    "PA-LEX-DUDH",
+    "PA-ETYMON-DUDH-DUGDHA",
+    "PA-LEX-ROTI",
+    "PA-ETYMON-ROTI-UNKNOWN",
+    "PA-LEX-DOST",
+    "PA-ETYMON-DOST-CHOOSE",
+    "PA-LEX-PARIVAR",
+    "PA-ETYMON-PARIVAR-SURROUND",
+    "PA-LEX-BHARA",
+    "PA-ETYMON-BHARA-BROTHER",
+    "PA-SOUND-TONE-LOW",
+    "PA-LEX-BHAIN",
+    "PA-ETYMON-BHAIN-BHAGA",
+    "PA-LEX-AKKH",
+    "PA-ETYMON-AKKH-EYE",
+  ];
+  expect(movingBoundaryAtoms).toHaveLength(18);
+
+  const practised = new Set(
+    bridge.flatMap((lesson) => lesson.frontmatter["practises.knowledge"] ?? []),
+  );
+  expect(
+    [...exposedByThreeFieldIntegration, ...movingBoundaryAtoms].every((atom) => practised.has(atom)),
+  ).toBe(true);
+
+  const report = measureContinuity(ordered);
+  const serviced = new Set([...exposedByThreeFieldIntegration, ...movingBoundaryAtoms]);
+  expect(
+    report.reinforcement.filter(
+      (defect) => serviced.has(defect.atom) && defect.missed.includes("R4"),
+    ),
+  ).toEqual([]);
+  expect(report.summary.missedByWindow.R4).toBe(45);
 });

@@ -1,0 +1,22 @@
+{
+  "chapter": 24,
+  "title": "Old Action Families at R4",
+  "label": "ch:pa-action-r4-bridge",
+  "canDo": "I can retrieve the already-taught Punjabi action families at long distance without confusing speech or reading with independent writing.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "PA-R24-help-like-r4",
+    "kind": "task",
+    "summary": "The learner completes the action-family R4 bridge through four bounded no-new-language retrieval steps, ending with the distinct help and liking frames.",
+    "assesses": [
+      "PA-LEX-MADAD-KARNA",
+      "PA-ETYMON-MADAD-ARABIC",
+      "PA-GRAMMAR-NOUN-PLUS-KARNA",
+      "PA-LEX-PASAND",
+      "PA-GRAMMAR-DATIVE-LIKING",
+      "PA-ETYMON-PASAND-SHINE"
+    ]
+  }
+}
