@@ -1643,6 +1643,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("JFET BETA must be finite and positive");
   }
+  const jfetDopingTailParameter = params.get("B");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetDopingTailParameter !== undefined &&
+    !Number.isFinite(jfetDopingTailParameter)
+  ) {
+    throw new NetlistParseError("JFET B must be finite");
+  }
   const jfetThresholdVoltage =
     params.get("VTO") ?? params.get("VT0") ?? params.get("VTH");
   if (
@@ -2469,10 +2477,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       fields[2],
       fields[3],
       polarity,
-      model.params.get("BETA") ??
-        model.params.get("BET") ??
-        model.params.get("B") ??
-        1.0e-4,
+      model.params.get("BETA") ?? model.params.get("BET") ?? 1.0e-4,
       model.params.get("VTO") ??
         model.params.get("VT0") ??
         model.params.get("VTH") ??
@@ -2487,7 +2492,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("IS") ?? 1.0e-14,
       model.params.get("XTI") ?? 3.0,
       model.params.get("EG") ?? 1.11,
-      1.0,
+      model.params.get("B") ?? 1.0,
       model.params.get("NLEV") ?? 1.0,
       model.params.get("GDSNOI") ?? 1.0,
       model.params.get("RD") ?? 0.0,

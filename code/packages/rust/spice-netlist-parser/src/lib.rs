@@ -2463,14 +2463,18 @@ fn parse_element(
             let beta = model
                 .params
                 .get("BETA")
-                .or_else(|| model.params.get("B"))
+                .or_else(|| model.params.get("BET"))
                 .copied()
                 .unwrap_or(1.0e-4);
+            let doping_tail_parameter = *model.params.get("B").unwrap_or(&1.0);
+            if !doping_tail_parameter.is_finite() {
+                return Err(NetlistParseError::new("JFET B must be finite"));
+            }
             let threshold_voltage = model.params.get("VTO").copied().unwrap_or(match polarity {
                 JfetPolarity::Njf => -2.0,
                 JfetPolarity::Pjf => 2.0,
             });
-            Ok(Element::Jfet(Jfet::with_model(
+            let mut jfet = Jfet::with_model(
                 name,
                 &fields[1],
                 &fields[2],
@@ -2479,7 +2483,9 @@ fn parse_element(
                 beta,
                 threshold_voltage,
                 *model.params.get("LAMBDA").unwrap_or(&0.0),
-            )))
+            );
+            jfet.doping_tail_parameter = doping_tail_parameter;
+            Ok(Element::Jfet(jfet))
         }
         'M' => {
             require_min_fields(fields, 6, "MOSFET")?;
