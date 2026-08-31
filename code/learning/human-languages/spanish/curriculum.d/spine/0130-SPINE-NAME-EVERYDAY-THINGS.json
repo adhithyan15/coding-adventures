@@ -13,7 +13,9 @@
     "ES-PATH-403-FOOD",
     "ES-PATH-404-MEDIA",
     "ES-PATH-405-IMAGES",
-    "ES-PATH-405-IMAGE-REVIEWS"
+    "ES-PATH-405-IMAGE-REVIEWS",
+    "ES-PATH-406-DOCUMENTS",
+    "ES-PATH-406-REVIEWS"
   ],
   "omits": [],
   "relocates": {}

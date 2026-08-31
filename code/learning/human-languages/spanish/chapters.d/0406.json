@@ -1,0 +1,22 @@
+{
+  "chapter": 406,
+  "title": "Clients, Documents and Data",
+  "label": "ch:cliente-documento-dato-impreso-rellenar",
+  "canDo": "I can understand a basic form and say that a client fills in a document with data.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS",
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C406-documents-recall-2",
+    "kind": "production",
+    "summary": "Retrieve the five form-and-document words in one practical instruction.",
+    "assesses": [
+      "ES-LEX-CLIENTE",
+      "ES-LEX-DOCUMENTO",
+      "ES-LEX-DATO",
+      "ES-LEX-IMPRESO",
+      "ES-LEX-RELLENAR"
+    ]
+  }
+}

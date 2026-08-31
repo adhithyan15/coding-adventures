@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-406-FILL",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "ES-C406-rellenar"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-406-FILL"
+  ],
+  "after": []
+}
