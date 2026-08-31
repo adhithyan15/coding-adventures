@@ -59,25 +59,16 @@
     ],
     "numericCredits": "0-100"
   },
-  "lessonCount": 920,
-  "taughtForms": 1545,
-  "objectiveFailed": 6,
+  "lessonCount": 924,
+  "taughtForms": 1549,
+  "objectiveFailed": 5,
   "mocks": [
     {
       "mock": 1,
-      "reading": 24,
+      "reading": 25,
       "listening": 25,
-      "objectiveFailed": 1,
-      "failed": [
-        {
-          "paper": 1,
-          "item": 12,
-          "missing": [
-            "gimnasio",
-            "deporte"
-          ]
-        }
-      ]
+      "objectiveFailed": 0,
+      "failed": []
     },
     {
       "mock": 2,
@@ -134,9 +125,7 @@
     "apuntarse",
     "concierto",
     "curso",
-    "deporte",
     "extranjero",
-    "gimnasio",
     "mayo",
     "música",
     "nadar",
@@ -162,15 +151,7 @@
       "count": 1
     },
     {
-      "lexeme": "deporte",
-      "count": 1
-    },
-    {
       "lexeme": "extranjero",
-      "count": 1
-    },
-    {
-      "lexeme": "gimnasio",
       "count": 1
     },
     {

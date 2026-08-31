@@ -1,0 +1,430 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 412,
+  "title": "Gym and Sport",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:f94f26a8a105cc07",
+  "lessons": [
+    {
+      "id": "ES-C412-gimnasio",
+      "sequence": 9430,
+      "title": "el gimnasio — the long form behind gym",
+      "headword": "el gimnasio",
+      "romanization": "el gimnasio",
+      "gloss": "gym, gymnasium",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54410bade66d253a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "English shortens gymnasium to gym. Spanish keeps more of the old word: el gimnasio."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Spanish gimnasio came through Latin gymnasium from Greek gymnásion, a place for exercise and training. English gymnasium is the same travelled word, and gym is simply its clipped form. Spanish spelling turns the learned gy- into gi-, pronounced with the strong Spanish g sound heard before i."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: naming the place",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The noun is masculine: el gimnasio, un gimnasio. Opening-hours signs often place the name first: Gimnasio Atlas — abierto de 7 a 23 h."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el gimnasio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el gimnasio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un gimnasio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un gimnasio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el gimnasio está abierto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el gimnasio está abierto*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Gym? (El gimnasio.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: DLE: gimnasio."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C412-deporte",
+      "sequence": 9440,
+      "title": "el deporte — recreation that became sport",
+      "headword": "el deporte",
+      "romanization": "el deporte",
+      "gloss": "sport",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d572dd6251fd2a6f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the place for exercise: el gimnasio. What you may do there is deporte, sport."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Deporte belongs to an older deportar family that once meant recreation or amusement. English sport hides a useful cousin: it is the shortened form of disport, which came through French from the same Latin deportāre family. The histories narrowed toward organised physical activity."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: hacer deporte",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Spanish commonly says hacer deporte, literally “to do sport,” for taking exercise. No article is needed in that general expression. Compare el deporte es importante, where the noun is the subject and keeps el."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el deporte",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el deporte*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hacer deporte",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hacer deporte*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hacer deporte en el gimnasio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hacer deporte en el gimnasio*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To do sport? (Hacer deporte.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: DLE: deporte."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C412-fitness-recall-1",
+      "sequence": 9450,
+      "title": "fitness recall one — place and activity",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "first retrieval of gym and sport",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7df5410c9fc014f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the place and the activity. (Gimnasio, deporte.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el gimnasio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el gimnasio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hacer deporte",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hacer deporte*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hacer deporte en el gimnasio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hacer deporte en el gimnasio*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Gym, sport? (Gimnasio, deporte.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C412-fitness-recall-2",
+      "sequence": 9460,
+      "title": "fitness recall two — choose from the opening hours",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "second retrieval of gym and sport",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb0d9aabbab20905",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A place open until 23 h suits someone active after work."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "“The gym is open until eleven.”"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "El gimnasio está abierto hasta las once.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *El gimnasio está abierto hasta las once.*]"
+            },
+            {
+              "kind": "speech",
+              "text": "“Marta wants to do sport after work.”"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Marta quiere hacer deporte después del trabajo.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Marta quiere hacer deporte después del trabajo.*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which place matches hacer deporte por la noche? (El gimnasio.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

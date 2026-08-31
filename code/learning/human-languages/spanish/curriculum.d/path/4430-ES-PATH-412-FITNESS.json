@@ -1,0 +1,13 @@
+{
+  "id": "ES-PATH-412-FITNESS",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "lessons": [
+    "ES-C412-gimnasio",
+    "ES-C412-deporte"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-412-FITNESS"
+  ],
+  "after": []
+}

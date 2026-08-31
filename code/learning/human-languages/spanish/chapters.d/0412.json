@@ -1,0 +1,18 @@
+{
+  "chapter": 412,
+  "title": "Gym and Sport",
+  "label": "ch:gimnasio-deporte",
+  "canDo": "I can identify a gym and understand a simple message about doing sport.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ES-C412-fitness-recall-2",
+    "kind": "production",
+    "summary": "Retrieve gym and sport across opening-hours and after-work messages.",
+    "assesses": [
+      "ES-LEX-GIMNASIO",
+      "ES-LEX-DEPORTE"
+    ]
+  }
+}
