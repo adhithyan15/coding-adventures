@@ -1,0 +1,14 @@
+{
+  "id": "ES-EXT-406-DOCUMENTS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a client, document, piece of data and printed form.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C406-cliente",
+    "ES-C406-documento",
+    "ES-C406-dato",
+    "ES-C406-impreso"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C406-rellenar",
+    "language": "spanish",
+    "chapter": 406,
+    "sequence": 9150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:784d1bc04ca629ed"
+  },
+  "findings": []
+}

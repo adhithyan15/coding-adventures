@@ -1,0 +1,871 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 406,
+  "title": "Clients, Documents and Data",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:9161252e62c56336",
+  "lessons": [
+    {
+      "id": "ES-C406-cliente",
+      "sequence": 9110,
+      "title": "el cliente, la cliente — the person on the other side of the counter",
+      "headword": "el cliente, la cliente",
+      "romanization": "el cliente, la cliente",
+      "gloss": "client; customer — the person who buys or uses a service",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:52222e01bf27f690",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the shop. (La tienda.) Now name the person who buys there: el cliente or la cliente."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cliente comes from Latin cliens, a person connected to and protected by a patron. The relationship changed over time. In modern Spanish, a cliente is a customer of a shop or a client who uses a professional service."
+            },
+            {
+              "kind": "speech",
+              "text": "The word itself can stay the same for a man or a woman; the article does the work: el cliente, la cliente. You may also meet clienta for a woman."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: meaning in a scene",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Picture a counter. One person works for the shop; the other asks for a product or service. That second person is el cliente or la cliente."
+            },
+            {
+              "kind": "speech",
+              "text": "el cliente de la tienda — the shop's customer."
+            },
+            {
+              "kind": "speech",
+              "text": "la cliente necesita ayuda — the customer needs help."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el cliente",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el cliente*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la cliente",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la cliente*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el cliente de la tienda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el cliente de la tienda*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the customer or client? (El cliente; la cliente.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: DLE: cliente."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C406-documento",
+      "sequence": 9120,
+      "title": "el documento — a paper that shows or proves",
+      "headword": "el documento",
+      "romanization": "el documento",
+      "gloss": "document — a written record or proof",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3c8f57aa760071c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the passport and the paper. (El pasaporte, el papel.) A passport is one kind of documento."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "El documento comes from Latin documentum, something that gives evidence or instruction. Its deeper verb is docēre, “to teach.” English document, doctor, doctrine and docent belong to the same family: each points to showing, teaching or establishing something."
+            },
+            {
+              "kind": "speech",
+              "text": "A papel is the material. A documento is the meaningful record on it — or the digital equivalent. A passport is both a small book and an official documento."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: useful combinations",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el documento de identidad — the identity document."
+            },
+            {
+              "kind": "speech",
+              "text": "el pasaporte es un documento — the passport is a document."
+            },
+            {
+              "kind": "speech",
+              "text": "necesito el documento — I need the document."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el documento",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el documento*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el documento de identidad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el documento de identidad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el pasaporte es un documento",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el pasaporte es un documento*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What written record can serve as proof? (El documento.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: DLE: documento."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C406-dato",
+      "sequence": 9130,
+      "title": "el dato — one thing given as information",
+      "headword": "el dato",
+      "romanization": "el dato",
+      "gloss": "piece of information; datum",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:630a86a6e71cbac0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A form may ask for your name and address: el nombre, la dirección. Each answer is un dato."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Dato comes straight from Latin datum, “something given.” English kept datum for one item and data for several; Spanish made the everyday noun el dato, plural los datos."
+            },
+            {
+              "kind": "speech",
+              "text": "A name, address or telephone number can each be un dato. Together they are los datos personales, personal details."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: one or several",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "un dato — one piece of information."
+            },
+            {
+              "kind": "speech",
+              "text": "los datos — the information / details."
+            },
+            {
+              "kind": "speech",
+              "text": "nombre y dirección: dos datos — name and address: two details."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un dato",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un dato*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "los datos",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *los datos*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "los datos personales",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *los datos personales*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One piece of information? (Un dato.) Several details? (Los datos.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: DLE: dato."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C406-impreso",
+      "sequence": 9140,
+      "title": "el impreso — a form waiting for your data",
+      "headword": "el impreso",
+      "romanization": "el impreso",
+      "gloss": "printed form — a sheet with spaces to fill in",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dda65d682b0f63bd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the document, the data and the paper. (El documento, los datos, el papel.) Put blank spaces on that paper and you have el impreso."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Impreso is the irregular past participle of imprimir, “to print,” from Latin impressus, “pressed into.” Printing once meant pressing inked type onto paper. English impress preserves the same image."
+            },
+            {
+              "kind": "speech",
+              "text": "As a noun, el impreso can mean a printed sheet, especially a form with blank spaces for a procedure. In much of the Spanish-speaking world you will also hear el formulario. Here the exam-derived word is impreso."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: a form has two sides",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The impreso supplies the labels; you supply los datos:"
+            },
+            {
+              "kind": "speech",
+              "text": "Nombre: Ana."
+            },
+            {
+              "kind": "speech",
+              "text": "Dirección: Calle Sol, 4."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el impreso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el impreso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "los datos del impreso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *los datos del impreso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el documento y el impreso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el documento y el impreso*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What printed sheet waits for your details? (El impreso.) What do you put in it? (Los datos.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: DLE: impreso."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C406-rellenar",
+      "sequence": 9150,
+      "title": "rellenar — fill the blanks with what they need",
+      "headword": "rellenar",
+      "romanization": "rellenar",
+      "gloss": "to fill in; to fill out — especially a form or document",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:784d1bc04ca629ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the form, the data and full. (El impreso, los datos, lleno.) The action that connects them is rellenar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Rellenar shows its construction on the surface: re- + llenar, “to fill.” Its broad sense is to fill something again or completely. In an office, it has the practical meaning “to fill in” or “to fill out.”"
+            },
+            {
+              "kind": "speech",
+              "text": "The DLE gives the form sense precisely: putting the necessary data into blank spaces in forms or documents. That is why the noun chain from this chapter ends in an action:"
+            },
+            {
+              "kind": "speech",
+              "text": "rellenar el impreso con los datos."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: a regular -ar action",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You already know the regular -ar machine:"
+            },
+            {
+              "kind": "speech",
+              "text": "relleno el impreso — I fill in the form."
+            },
+            {
+              "kind": "speech",
+              "text": "rellena el impreso — he/she fills in the form; fill in the form."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun relleno can also mean a filling, but the sentence and article tell you what job the form is doing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rellenar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rellenar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rellenar el impreso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rellenar el impreso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rellenar el impreso con los datos",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rellenar el impreso con los datos*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say to fill in the form with the data. (Rellenar el impreso con los datos.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: DLE: rellenar."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C406-documents-recall-1",
+      "sequence": 9160,
+      "title": "documents recall one — build the form scene",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "first retrieval of client, document, data, printed form and fill in",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3722b3e347455b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the five new forms. (El cliente, el documento, el dato, el impreso, rellenar.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el cliente y el documento",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el cliente y el documento*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "los datos del cliente",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *los datos del cliente*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rellenar el impreso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rellenar el impreso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rellenar el impreso con los datos",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rellenar el impreso con los datos*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Who has the details, what sheet receives them, and what is the action? (El cliente; el impreso; rellenar.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C406-documents-recall-2",
+      "sequence": 9170,
+      "title": "documents recall two — one complete instruction",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "delayed retrieval of the five form-and-document words",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c430c84e8198e31",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Rebuild the chain without looking: person, record, information, printed form, action. (Cliente, documento, dato, impreso, rellenar.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el documento del cliente",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el documento del cliente*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "los datos: nombre y dirección",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *los datos: nombre y dirección*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el cliente rellena el impreso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el cliente rellena el impreso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el cliente rellena el impreso con los datos",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el cliente rellena el impreso con los datos*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the whole office sentence. (El cliente rellena el impreso con los datos.) Then name the record it creates. (El documento.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
