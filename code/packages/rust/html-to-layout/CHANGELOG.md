@@ -4,6 +4,9 @@
 
 ### Added
 
+- Compute CSS grid container and item values into a typed `ext["grid"]`
+  boundary, including track lists, named areas, implicit tracks, placement
+  shorthands, spans, gaps, ordering, and two-axis alignment.
 - Compute CSS flex container/item longhands and shorthands into the typed,
   layout-engine-independent `flex` extension contract.
 - Add context-aware `%`, `em`, and `rem` computation, `auto` sizing/margins,

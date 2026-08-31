@@ -14,6 +14,10 @@ use layout_flexbox::{
     flex_ext, AlignContent, AlignItems, AlignSelf, FlexBasis, FlexContainerStyle, FlexDirection,
     FlexItemStyle, FlexWrap, JustifyContent,
 };
+use layout_grid::{
+    grid_ext, GridAlignment, GridAutoFlow, GridContainerStyle, GridContentAlignment, GridItemStyle,
+    GridSelfAlignment, GridTrack,
+};
 use layout_ir::{
     color_black, edges_all, edges_xy, font_bold, font_italic, font_spec, rgb, Color, Edges,
     ExtValue, FontSpec, ImageContent, ImageFit, LayoutNode, SizeValue, TextAlign, TextContent,
@@ -141,6 +145,8 @@ pub struct HtmlComputedStyle {
     pub white_space: String,
     pub flex_container: FlexContainerStyle,
     pub flex_item: FlexItemStyle,
+    pub grid_container: GridContainerStyle,
+    pub grid_item: GridItemStyle,
     pub custom_properties: HashMap<String, Vec<String>>,
 }
 
@@ -312,6 +318,10 @@ where
         "flex".into(),
         flex_ext(style.flex_container, style.flex_item),
     );
+    layout.ext.insert(
+        "grid".into(),
+        grid_ext(&style.grid_container, &style.grid_item),
+    );
     Some(layout)
 }
 
@@ -427,6 +437,8 @@ where
     style.box_sizing = "content-box".into();
     style.flex_container = FlexContainerStyle::default();
     style.flex_item = FlexItemStyle::default();
+    style.grid_container = GridContainerStyle::default();
+    style.grid_item = GridItemStyle::default();
     if node.role == "heading" {
         let level = node.heading_level.unwrap_or(1).clamp(1, 6);
         style.font = theme.heading_fonts[usize::from(level - 1)].clone();
@@ -566,6 +578,8 @@ fn root_computed_style(context: &HtmlStyleContext) -> HtmlComputedStyle {
         white_space: "normal".into(),
         flex_container: FlexContainerStyle::default(),
         flex_item: FlexItemStyle::default(),
+        grid_container: GridContainerStyle::default(),
+        grid_item: GridItemStyle::default(),
         custom_properties: HashMap::new(),
     };
     let mut winners = HashMap::new();
@@ -745,28 +759,46 @@ fn apply_declaration_winners(
                 }
             }
             "flex-flow" => apply_flex_flow(style, &value),
-            "gap" => apply_flex_gap(style, &value, context),
-            "row-gap" => {
+            "gap" | "grid-gap" => apply_layout_gap(style, &value, context),
+            "row-gap" | "grid-row-gap" => {
                 if let Some(gap) = parse_box_length(&value, style, context, context.viewport_width)
                 {
                     style.flex_container.row_gap = gap;
+                    style.grid_container.row_gap = gap;
                 }
             }
-            "column-gap" => {
+            "column-gap" | "grid-column-gap" => {
                 if let Some(gap) = parse_box_length(&value, style, context, context.viewport_width)
                 {
                     style.flex_container.column_gap = gap;
+                    style.grid_container.column_gap = gap;
                 }
             }
             "justify-content" => {
-                style.flex_container.justify_content = parse_justify_content(&value)
+                style.flex_container.justify_content = parse_justify_content(&value);
+                style.grid_container.justify_content = parse_grid_content_alignment(&value);
             }
-            "align-items" => style.flex_container.align_items = parse_align_items(&value),
-            "align-content" => style.flex_container.align_content = parse_align_content(&value),
-            "align-self" => style.flex_item.align_self = parse_align_self(&value),
+            "align-items" => {
+                style.flex_container.align_items = parse_align_items(&value);
+                style.grid_container.align_items = parse_grid_alignment(&value);
+            }
+            "align-content" => {
+                style.flex_container.align_content = parse_align_content(&value);
+                style.grid_container.align_content = parse_grid_content_alignment(&value);
+            }
+            "align-self" => {
+                style.flex_item.align_self = parse_align_self(&value);
+                style.grid_item.align_self = parse_grid_self_alignment(&value);
+            }
+            "justify-items" => style.grid_container.justify_items = parse_grid_alignment(&value),
+            "justify-self" => style.grid_item.justify_self = parse_grid_self_alignment(&value),
+            "place-items" => apply_place_items(style, &value),
+            "place-self" => apply_place_self(style, &value),
+            "place-content" => apply_place_content(style, &value),
             "order" => {
                 if let Some(order) = value.first().and_then(|value| value.parse().ok()) {
                     style.flex_item.order = order;
+                    style.grid_item.order = order;
                 }
             }
             "flex-grow" => {
@@ -781,6 +813,39 @@ fn apply_declaration_winners(
             }
             "flex-basis" => style.flex_item.basis = parse_flex_basis(&value, style, context),
             "flex" => apply_flex_shorthand(style, &value, context),
+            "grid-template-columns" => {
+                if let Some(tracks) = parse_grid_track_list(&value, style, context) {
+                    style.grid_container.template_columns = tracks;
+                }
+            }
+            "grid-template-rows" => {
+                if let Some(tracks) = parse_grid_track_list(&value, style, context) {
+                    style.grid_container.template_rows = tracks;
+                }
+            }
+            "grid-template-areas" => {
+                style.grid_container.template_areas = parse_grid_template_areas(&value)
+            }
+            "grid-template" => apply_grid_template(style, &value, context),
+            "grid" => apply_grid_template(style, &value, context),
+            "grid-auto-columns" => {
+                if let Some(track) = parse_grid_track(&value, style, context) {
+                    style.grid_container.auto_columns = track;
+                }
+            }
+            "grid-auto-rows" => {
+                if let Some(track) = parse_grid_track(&value, style, context) {
+                    style.grid_container.auto_rows = track;
+                }
+            }
+            "grid-auto-flow" => style.grid_container.auto_flow = parse_grid_auto_flow(&value),
+            "grid-column-start" => apply_grid_line(&mut style.grid_item, true, true, &value),
+            "grid-column-end" => apply_grid_line(&mut style.grid_item, true, false, &value),
+            "grid-row-start" => apply_grid_line(&mut style.grid_item, false, true, &value),
+            "grid-row-end" => apply_grid_line(&mut style.grid_item, false, false, &value),
+            "grid-column" => apply_grid_axis_shorthand(&mut style.grid_item, true, &value),
+            "grid-row" => apply_grid_axis_shorthand(&mut style.grid_item, false, &value),
+            "grid-area" => apply_grid_area(&mut style.grid_item, &value),
             "width" => apply_width_value(style, &value, context),
             "height" => {
                 style.height = parse_css_length_in_context(
@@ -868,7 +933,7 @@ fn apply_flex_flow(style: &mut HtmlComputedStyle, value: &[String]) {
     }
 }
 
-fn apply_flex_gap(style: &mut HtmlComputedStyle, value: &[String], context: &HtmlStyleContext) {
+fn apply_layout_gap(style: &mut HtmlComputedStyle, value: &[String], context: &HtmlStyleContext) {
     let values = value
         .iter()
         .filter(|token| token.as_str() != ",")
@@ -888,6 +953,240 @@ fn apply_flex_gap(style: &mut HtmlComputedStyle, value: &[String], context: &Htm
             .unwrap_or(row_gap);
         style.flex_container.row_gap = row_gap;
         style.flex_container.column_gap = column_gap;
+        style.grid_container.row_gap = row_gap;
+        style.grid_container.column_gap = column_gap;
+    }
+}
+
+fn parse_grid_alignment(value: &[String]) -> GridAlignment {
+    match value.first().map(String::as_str) {
+        Some("start" | "flex-start" | "self-start" | "left") => GridAlignment::Start,
+        Some("end" | "flex-end" | "self-end" | "right") => GridAlignment::End,
+        Some("center") => GridAlignment::Center,
+        _ => GridAlignment::Stretch,
+    }
+}
+
+fn parse_grid_self_alignment(value: &[String]) -> GridSelfAlignment {
+    match value.first().map(String::as_str) {
+        Some("start" | "flex-start" | "self-start" | "left") => GridSelfAlignment::Start,
+        Some("end" | "flex-end" | "self-end" | "right") => GridSelfAlignment::End,
+        Some("center") => GridSelfAlignment::Center,
+        Some("stretch") => GridSelfAlignment::Stretch,
+        _ => GridSelfAlignment::Auto,
+    }
+}
+
+fn parse_grid_content_alignment(value: &[String]) -> GridContentAlignment {
+    match value.first().map(String::as_str) {
+        Some("start" | "flex-start" | "left") => GridContentAlignment::Start,
+        Some("end" | "flex-end" | "right") => GridContentAlignment::End,
+        Some("center") => GridContentAlignment::Center,
+        Some("space-between") => GridContentAlignment::SpaceBetween,
+        Some("space-around") => GridContentAlignment::SpaceAround,
+        Some("space-evenly") => GridContentAlignment::SpaceEvenly,
+        _ => GridContentAlignment::Stretch,
+    }
+}
+
+fn apply_place_items(style: &mut HtmlComputedStyle, value: &[String]) {
+    if value.is_empty() {
+        return;
+    }
+    style.grid_container.align_items = parse_grid_alignment(&value[..1]);
+    style.grid_container.justify_items = value
+        .get(1)
+        .map(|_| parse_grid_alignment(&value[1..2]))
+        .unwrap_or(style.grid_container.align_items);
+}
+
+fn apply_place_self(style: &mut HtmlComputedStyle, value: &[String]) {
+    if value.is_empty() {
+        return;
+    }
+    style.grid_item.align_self = parse_grid_self_alignment(&value[..1]);
+    style.grid_item.justify_self = value
+        .get(1)
+        .map(|_| parse_grid_self_alignment(&value[1..2]))
+        .unwrap_or(style.grid_item.align_self);
+}
+
+fn apply_place_content(style: &mut HtmlComputedStyle, value: &[String]) {
+    if value.is_empty() {
+        return;
+    }
+    style.grid_container.align_content = parse_grid_content_alignment(&value[..1]);
+    style.grid_container.justify_content = value
+        .get(1)
+        .map(|_| parse_grid_content_alignment(&value[1..2]))
+        .unwrap_or(style.grid_container.align_content);
+}
+
+fn parse_grid_auto_flow(value: &[String]) -> GridAutoFlow {
+    let column = value.iter().any(|token| token == "column");
+    let dense = value.iter().any(|token| token == "dense");
+    match (column, dense) {
+        (true, true) => GridAutoFlow::ColumnDense,
+        (true, false) => GridAutoFlow::Column,
+        (false, true) => GridAutoFlow::RowDense,
+        (false, false) => GridAutoFlow::Row,
+    }
+}
+
+fn parse_grid_track_list(
+    value: &[String],
+    style: &HtmlComputedStyle,
+    context: &HtmlStyleContext,
+) -> Option<Vec<GridTrack>> {
+    let source = normalized_grid_track_source(value, style, context);
+    GridTrack::parse_list(&source).ok()
+}
+
+fn parse_grid_track(
+    value: &[String],
+    style: &HtmlComputedStyle,
+    context: &HtmlStyleContext,
+) -> Option<GridTrack> {
+    let source = normalized_grid_track_source(value, style, context);
+    GridTrack::parse(&source).ok()
+}
+
+fn normalized_grid_track_source(
+    value: &[String],
+    style: &HtmlComputedStyle,
+    context: &HtmlStyleContext,
+) -> String {
+    let converted = value
+        .iter()
+        .map(|token| {
+            if token == "0" {
+                return "0px".into();
+            }
+            if token.ends_with("em") || token.ends_with("rem") {
+                return parse_css_length_in_context(
+                    std::slice::from_ref(token),
+                    style.font.size,
+                    context.theme.body_font.size,
+                    context.viewport_width,
+                )
+                .map(|value| format!("{value}px"))
+                .unwrap_or_else(|| token.clone());
+            }
+            token.clone()
+        })
+        .collect::<Vec<_>>();
+    css_component_text(&converted)
+}
+
+fn css_component_text(tokens: &[String]) -> String {
+    let mut result = String::new();
+    for token in tokens {
+        let punctuation = matches!(token.as_str(), "(" | ")" | ",");
+        let adjacent =
+            result.ends_with('(') || result.ends_with(',') || token == ")" || token == ",";
+        if !result.is_empty() && !punctuation && !adjacent {
+            result.push(' ');
+        }
+        if token == "(" && result.ends_with(' ') {
+            result.pop();
+        }
+        result.push_str(token);
+    }
+    result
+}
+
+fn parse_grid_template_areas(value: &[String]) -> Vec<Vec<Option<String>>> {
+    value
+        .iter()
+        .filter(|token| !matches!(token.as_str(), "none" | "," | "/"))
+        .map(|row| {
+            row.trim_matches(['\'', '"'])
+                .split_whitespace()
+                .map(|name| (name != ".").then(|| name.to_string()))
+                .collect()
+        })
+        .collect()
+}
+
+fn apply_grid_template(
+    style: &mut HtmlComputedStyle,
+    value: &[String],
+    context: &HtmlStyleContext,
+) {
+    let Some(slash) = value.iter().position(|token| token == "/") else {
+        return;
+    };
+    if let Some(rows) = parse_grid_track_list(&value[..slash], style, context) {
+        style.grid_container.template_rows = rows;
+    }
+    if let Some(columns) = parse_grid_track_list(&value[slash + 1..], style, context) {
+        style.grid_container.template_columns = columns;
+    }
+}
+
+fn apply_grid_line(item: &mut GridItemStyle, column: bool, start: bool, value: &[String]) {
+    if value.first().is_some_and(|token| token == "auto") {
+        set_grid_line(item, column, start, None);
+        return;
+    }
+    if let Some(span) = value
+        .iter()
+        .position(|token| token == "span")
+        .and_then(|index| value.get(index + 1))
+        .and_then(|token| token.parse::<usize>().ok())
+        .filter(|span| *span > 0)
+    {
+        if column {
+            item.column_span = span;
+        } else {
+            item.row_span = span;
+        }
+        return;
+    }
+    let line = value
+        .iter()
+        .find_map(|token| token.parse::<usize>().ok())
+        .filter(|line| *line > 0);
+    set_grid_line(item, column, start, line);
+}
+
+fn set_grid_line(item: &mut GridItemStyle, column: bool, start: bool, value: Option<usize>) {
+    match (column, start) {
+        (true, true) => item.column_start = value,
+        (true, false) => item.column_end = value,
+        (false, true) => item.row_start = value,
+        (false, false) => item.row_end = value,
+    }
+}
+
+fn apply_grid_axis_shorthand(item: &mut GridItemStyle, column: bool, value: &[String]) {
+    let slash = value.iter().position(|token| token == "/");
+    let (start, end) = slash
+        .map(|index| (&value[..index], &value[index + 1..]))
+        .unwrap_or((value, &[]));
+    apply_grid_line(item, column, true, start);
+    if !end.is_empty() {
+        apply_grid_line(item, column, false, end);
+    }
+}
+
+fn apply_grid_area(item: &mut GridItemStyle, value: &[String]) {
+    if !value.iter().any(|token| token == "/") {
+        item.area = value
+            .first()
+            .filter(|token| token.as_str() != "auto")
+            .cloned();
+        return;
+    }
+    let parts = value.split(|token| token == "/").collect::<Vec<_>>();
+    for (index, part) in parts.into_iter().take(4).enumerate() {
+        match index {
+            0 => apply_grid_line(item, false, true, part),
+            1 => apply_grid_line(item, true, true, part),
+            2 => apply_grid_line(item, false, false, part),
+            3 => apply_grid_line(item, true, false, part),
+            _ => unreachable!(),
+        }
     }
 }
 
@@ -1869,7 +2168,11 @@ fn apply_size_hints(
             width
         };
         layout.width = Some(SizeValue::Fixed(width));
-    } else if display == "block" || display == "flex" || display.starts_with("table") {
+    } else if display == "block"
+        || display == "flex"
+        || display == "grid"
+        || display.starts_with("table")
+    {
         layout.width = Some(SizeValue::Fill);
     } else if layout.width.is_none() {
         layout.width = Some(SizeValue::Wrap);
@@ -2260,6 +2563,43 @@ mod tests {
         assert_eq!(deck.children[1].x, 110.0);
         assert_eq!(deck.children[2].y, 80.0);
         assert_eq!(deck.children[2].width, 100.0);
+    }
+
+    #[test]
+    fn computed_grid_values_drive_named_track_geometry() {
+        let render = parse_browser_render_tree(
+            "<div id='grid'><div id='head'>Head</div><div id='main'>Main</div><div id='side'>Side</div></div>",
+        )
+        .unwrap();
+        let context = HtmlStyleContext::with_author_stylesheets(
+            mosaic_html_theme(),
+            ["#grid { display: grid; width: 300px; height: 120px; \
+                grid-template-columns: 80px minmax(50px, 1fr) 1fr; \
+                grid-template-rows: 40px 1fr; gap: 10px; \
+                grid-template-areas: 'head head side' 'main main side'; } \
+              #head { grid-area: head; } #main { grid-area: main; } \
+              #side { grid-area: side; order: -1; justify-self: center; }"],
+        )
+        .unwrap();
+        let layout =
+            html_render_tree_to_layout_with_style_context(&render, &context, &never_visited);
+        let grid = find_by_id(&layout, "grid").unwrap();
+        let style = GridContainerStyle::from_node(grid);
+        assert_eq!(style.template_columns.len(), 3);
+        assert_eq!(style.template_areas.len(), 2);
+        assert_eq!(style.row_gap, 10.0);
+        assert_eq!(
+            GridItemStyle::from_node(find_by_id(&layout, "side").unwrap()).order,
+            -1
+        );
+
+        let positioned = layout_block(&layout, constraints_width(640.0), &TestMeasurer);
+        let grid = find_positioned_by_id(&positioned, "grid").unwrap();
+        assert_eq!(grid.children[0].id.as_deref(), Some("side"));
+        assert_eq!((grid.children[0].x, grid.children[0].y), (236.0, 0.0));
+        assert_eq!((grid.children[1].x, grid.children[1].y), (0.0, 0.0));
+        assert_eq!((grid.children[2].x, grid.children[2].y), (0.0, 50.0));
+        assert_eq!(grid.children[2].width, 190.0);
     }
 
     #[test]

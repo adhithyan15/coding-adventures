@@ -8,3 +8,4 @@ description = "UI07 block-and-inline flow layout. Takes a LayoutNode tree + Cons
 layout-ir = { path = "../layout-ir" }
 layout-inline = { path = "../layout-inline" }
 layout-flexbox = { path = "../layout-flexbox" }
+layout-grid = { path = "../layout-grid" }

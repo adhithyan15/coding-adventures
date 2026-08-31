@@ -1,0 +1,8 @@
+[package]
+name = "layout-grid"
+version = "0.1.0"
+edition = "2021"
+description = "Reusable CSS grid formatting context for the shared Layout IR"
+
+[dependencies]
+layout-ir = { path = "../layout-ir" }
