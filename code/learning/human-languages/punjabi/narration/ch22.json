@@ -1,0 +1,378 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 22,
+  "title": "Three Known Lines, One Small Form",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:b153214f22aacf9f",
+  "lessons": [
+    {
+      "id": "PA-W06-three-field-labels",
+      "sequence": 1390,
+      "title": "Put three known labels on one small form",
+      "headword": "ਭਾਸ਼ਾ · ਰਿਹਾਇਸ਼ · ਕੰਮ",
+      "romanization": "three known form labels",
+      "gloss": "read and place the known language, residence, and work labels",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ff9ddf764e23f278",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — one placement pass"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one placement pass until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the three labels once: ਭਾਸ਼ਾ, ਰਿਹਾਇਸ਼, ਕੰਮ. Each label is old; only seeing all three together is new."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one placement pass",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point from the first blank line to the third. Place ਭਾਸ਼ਾ first, ਰਿਹਾਇਸ਼ second, and ਕੰਮ third. Do not choose or write any value."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the labels. Say which known label belongs on the middle line, then reveal and check only its placement."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after the labels are in place. Values arrive in the next lesson."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W06-three-field-labels-check",
+              "prompt": "Write the known label that belongs on the middle line.",
+              "assesses": [
+                "PA-FORM-THREE-LABEL-ORDER-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ਰਿਹਾਇਸ਼"
+              ],
+              "feedback": {
+                "correct": "The residence label holds the middle line in this practice form.",
+                "incorrect": "Read the fixed order once more: language, residence, work."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W06-three-field-cues",
+      "sequence": 1400,
+      "title": "Select three values before writing",
+      "headword": "A · B · A",
+      "romanization": "three remembered bank cues",
+      "gloss": "select one value from each already practised closed bank",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f91254c83ec1eac7",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — one cue per field"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one cue per field until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read each closed practice bank once:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਭਾਸ਼ਾ: A — ਪੰਜਾਬੀ, B — ਹਿੰਦੀ ਰਿਹਾਇਸ਼: A — ਪਿੰਡ, B — ਸ਼ਹਿਰ ਕੰਮ: A — ਖੇਤੀ, B — ਨੌਕਰੀ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one cue per field",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "For the cue row A, B, A, point to the selected language, residence, and work values in that order. Do not copy them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover all three banks and name the selections once. Reveal and check only selection; spelling and form placement wait."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Selection is now ready for a two-line writing bridge."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W06-three-field-cues-check",
+              "prompt": "For A, B, A, write the selected value sequence.",
+              "assesses": [
+                "PA-FORM-THREE-CUE-SELECTION-01"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "ਪੰਜਾਬੀ · ਸ਼ਹਿਰ · ਖੇਤੀ"
+              ],
+              "feedback": {
+                "correct": "Each cue was read inside its own closed bank.",
+                "incorrect": "Return to one bank at a time; A and B do not carry one value across all fields."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W06-two-field-supported",
+      "sequence": 1410,
+      "title": "Join two supported lines first",
+      "headword": "ਭਾਸ਼ਾ: ਪੰਜਾਬੀ · ਰਿਹਾਇਸ਼: ਸ਼ਹਿਰ",
+      "romanization": "two supported form lines",
+      "gloss": "join the known language and residence fields with both banks visible",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:ba1068cfb95d6563",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the language and residence banks visible. Read the cue pair A, B and point to ਪੰਜਾਬੀ, then ਸ਼ਹਿਰ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — two models remain visible",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Complete only these two lines:"
+            },
+            {
+              "kind": "speech",
+              "text": "A — ਭਾਸ਼ਾ: __________ B — ਰਿਹਾਇਸ਼: __________."
+            },
+            {
+              "kind": "speech",
+              "text": "Copy the selected values while their banks remain visible. This is supported entry, not independent writing evidence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Check the first line, then the second. Stop before adding a work line."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The third line joins only after two lines feel small."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W06-two-field-supported-check",
+              "prompt": "How many lines belong in this bridge?",
+              "assesses": [
+                "PA-FORM-THREE-TWO-LINE-SUPPORTED-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "two",
+                "2"
+              ],
+              "feedback": {
+                "correct": "Two supported lines make the smallest bridge into the combined form.",
+                "incorrect": "Stop after language and residence; work joins next."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W06-three-field-supported",
+      "sequence": 1420,
+      "title": "Add the third supported line",
+      "headword": "ਭਾਸ਼ਾ · ਰਿਹਾਇਸ਼ · ਕੰਮ",
+      "romanization": "three supported form lines",
+      "gloss": "join all three known fields while every closed bank remains visible",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:0846a2cf42121239",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep all three old banks visible. Select the cue row A, B, A without writing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — all models remain visible",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Complete one language line, one residence line, and one work line. Copy from the visible banks. This is supported entry, not independent writing evidence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — one pass at a time",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Check selection on all three lines. Then check spelling. Then check spacing and placement. Do not mix the passes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Close the banks before beginning the separate repair lessons."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W06-three-field-supported-check",
+              "prompt": "Does this visible-bank practice count as independent writing evidence?",
+              "assesses": [
+                "PA-FORM-THREE-SUPPORTED-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "no"
+              ],
+              "feedback": {
+                "correct": "Visible answers support assembly but do not prove independent recall.",
+                "incorrect": "The models remain visible, so this is preparation only."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

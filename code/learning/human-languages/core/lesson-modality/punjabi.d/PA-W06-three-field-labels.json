@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W06-three-field-labels",
+    "language": "punjabi",
+    "chapter": 22,
+    "sequence": 1390,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ff9ddf764e23f278",
+    "detachableSegments": [
+      "Script — one placement pass"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

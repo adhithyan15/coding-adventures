@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W06-selection-repair",
+    "language": "punjabi",
+    "chapter": 23,
+    "sequence": 1430,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3bcdb9c4184b404b",
+    "detachableSegments": [
+      "Writing — one selection repair"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

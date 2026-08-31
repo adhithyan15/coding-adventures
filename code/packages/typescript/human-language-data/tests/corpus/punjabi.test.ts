@@ -15,14 +15,14 @@ it("pins Punjabi continuity", () => expectLanguageContinuity("punjabi"));
 it("pins Punjabi modality", () => expectLanguageModality("punjabi"));
 it("pins Punjabi lesson-content budgets", () =>
   expectLanguageLessonBudgets("punjabi", {
-    lessons: 118,
+    lessons: 128,
     idioms: 4,
     senses: 3,
     cultureClaims: 7,
     unitPrefix: "PA",
   }));
 
-it("keeps Punjabi's 128-row session map aligned with canonical order", () => {
+it("keeps Punjabi's 138-row session map aligned with canonical order", () => {
   const ordered = loadTrackLessons("punjabi").sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
   );
@@ -37,8 +37,8 @@ it("keeps Punjabi's 128-row session map aligned with canonical order", () => {
       lessonId: match[3]!.trim(),
     }),
   );
-  expect(rows).toHaveLength(128);
-  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 128 }, (_, index) => index + 1));
+  expect(rows).toHaveLength(138);
+  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 138 }, (_, index) => index + 1));
   expect(rows.map((row) => row.lessonId)).toEqual(
     ordered.map((lesson) => lesson.realization.lessonId),
   );
@@ -83,6 +83,7 @@ it("pins Punjabi's complete pre-A1 writing runway", () => {
     "guided-copy",
     "delayed-copy",
     "dictation-transcription",
+    "controlled-composition",
     "controlled-composition",
     "controlled-composition",
     "controlled-composition",
@@ -288,6 +289,60 @@ it("builds the Punjabi A1 work field one script piece and one demand at a time",
   expect(activity?.answer).toBe("ਖੇਤੀ");
 });
 
+it("integrates Punjabi language, residence, and work with separate repair passes", () => {
+  const ordered = loadTrackLessons("punjabi")
+    .sort((left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence));
+  const preparation = ordered.filter((lesson) => lesson.frontmatter.chapter === "22");
+  const checkpoint = ordered.filter((lesson) => lesson.frontmatter.chapter === "23");
+
+  expect(preparation.map((lesson) => lesson.realization.lessonId)).toEqual([
+    "PA-W06-three-field-labels",
+    "PA-W06-three-field-cues",
+    "PA-W06-two-field-supported",
+    "PA-W06-three-field-supported",
+  ]);
+  expect(checkpoint.map((lesson) => lesson.realization.lessonId)).toEqual([
+    "PA-W06-selection-repair",
+    "PA-W06-spelling-repair",
+    "PA-W06-spacing-repair",
+    "PA-W06-placement-repair",
+    "PA-W06-mixed-repair",
+    "PA-W06-three-field-no-model",
+  ]);
+  expect([...preparation, ...checkpoint].every(
+    (lesson) => Number(lesson.frontmatter["duration.max_seconds"]) <= 180,
+  )).toBe(true);
+
+  const supported = preparation.at(-1)!;
+  expect(supported.body).toContain("This is supported entry, not independent writing evidence.");
+  expect(supported.blocks.some((block) => block.writingStage !== undefined)).toBe(false);
+
+  const focused = checkpoint.slice(0, 5);
+  expect(focused.map((lesson) => lesson.frontmatter["introduces.knowledge"])).toEqual([
+    ["PA-FORM-THREE-SELECTION-REPAIR-01"],
+    ["PA-FORM-THREE-SPELLING-REPAIR-01"],
+    ["PA-FORM-THREE-SPACING-REPAIR-01"],
+    ["PA-FORM-THREE-PLACEMENT-REPAIR-01"],
+    ["PA-FORM-THREE-MIXED-REPAIR-01"],
+  ]);
+
+  const independent = checkpoint.at(-1)!;
+  expect(independent.blocks.map((block) => block.writingStage).filter(Boolean)).toEqual([
+    "controlled-composition",
+  ]);
+  expect(independent.body).toContain(
+    "There is no value bank, support-language label, romanization, or copyable answer below.",
+  );
+  expect(independent.body).toContain("> A — **ਭਾਸ਼ਾ: __________**");
+  expect(independent.body).toContain("> B — **ਰਿਹਾਇਸ਼: __________**");
+  expect(independent.body).toContain("> A — **ਕੰਮ: __________**");
+  const [activity] = compileLessonActivities(independent.blocks);
+  expect(activity?.prompt).not.toContain("ਪੰਜਾਬੀ");
+  expect(activity?.prompt).not.toContain("ਸ਼ਹਿਰ");
+  expect(activity?.prompt).not.toContain("ਖੇਤੀ");
+  expect(activity?.answer).toBe("ਭਾਸ਼ਾ: ਪੰਜਾਬੀ\nਰਿਹਾਇਸ਼: ਸ਼ਹਿਰ\nਕੰਮ: ਖੇਤੀ");
+});
+
 it("migrates Punjabi Chapter 2 without inventing Gurmukhi writing credit", () => {
   const chapter = loadTrackLessons("punjabi")
     .sort((left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence))
@@ -397,5 +452,5 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   ]);
   const report = measureContinuity(ordered);
   expect(report.reinforcement.filter((defect) => chapter3Atoms.has(defect.atom))).toEqual([]);
-  expect(report.summary.missedByWindow).toEqual({ R1: 40, R2: 81, R3: 129, R4: 45 });
+  expect(report.summary.missedByWindow).toEqual({ R1: 43, R2: 87, R3: 130, R4: 71 });
 });

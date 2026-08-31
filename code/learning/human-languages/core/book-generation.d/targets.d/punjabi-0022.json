@@ -1,0 +1,7 @@
+{
+  "language": "punjabi",
+  "chapter": 22,
+  "output": "punjabi/book/chapters/ch22-form-three-preparation.tex",
+  "unicodeScript": "Gurmukhi",
+  "scriptCommand": "pa"
+}

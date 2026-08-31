@@ -1,0 +1,23 @@
+{
+  "chapter": 23,
+  "title": "Three-Field No-Model Checkpoint",
+  "label": "ch:pa-form-three-checkpoint",
+  "canDo": "I can use three remembered closed-bank cues to fill the known language, residence, and work fields without romanization or a copyable answer.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-W06-three-field-no-model",
+    "kind": "production",
+    "summary": "The learner fills three requested fields with no model after selection, spelling, spacing, placement, and mixed repair have each received a separate bounded pass.",
+    "assesses": [
+      "PA-FORM-THREE-CUE-SELECTION-01",
+      "PA-FORM-THREE-SELECTION-REPAIR-01",
+      "PA-FORM-THREE-SPELLING-REPAIR-01",
+      "PA-FORM-THREE-SPACING-REPAIR-01",
+      "PA-FORM-THREE-PLACEMENT-REPAIR-01",
+      "PA-FORM-THREE-MIXED-REPAIR-01",
+      "PA-FORM-THREE-NO-MODEL-01"
+    ]
+  }
+}
