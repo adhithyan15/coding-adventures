@@ -587,7 +587,6 @@ jobs:
           if (!(Test-Path $trestleExecutable)) {
             throw 'WinUI publish did not produce the build-time Trestle executable identity'
           }
-          Remove-Item $taskAppExecutable
           Copy-Item $expected.Path (Join-Path $publish 'mosaic_app.dll') -Force
           $runtime = Join-Path $publish 'mosaic_app.dll'
           if ((Get-FileHash $expected.Path -Algorithm SHA256).Hash -ne

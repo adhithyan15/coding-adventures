@@ -393,7 +393,7 @@ def test_workflow_validates_before_building_and_has_one_publisher() -> None:
     assert "write-windows-icon" in workflow
     assert "-p:SelfContained=true" in workflow
     assert "-p:AssemblyName=Trestle" in workflow
-    assert "Copy-Item $taskAppExecutable" not in workflow
+    assert "$taskAppExecutable" not in workflow
     assert "-RestartExePath $replacementExecutable" in workflow
     assert "code/packages/rust/task-wasm/pkg/task_engine.wasm" in workflow
     assert "host/web/public/task_engine.wasm" in workflow
