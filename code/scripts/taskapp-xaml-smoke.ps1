@@ -32,10 +32,15 @@
 
 .PARAMETER TimeoutSeconds
     How long to wait for the window and for each dispatched event to land.
+
+.PARAMETER RestartExePath
+    Optional replacement executable used for the persistence restart. Omitting
+    it restarts ExePath, preserving the original single-build acceptance flow.
 #>
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)][string]$ExePath,
+    [string]$RestartExePath = '',
     [int]$TimeoutSeconds = 30
 )
 
@@ -47,6 +52,11 @@ Add-Type -AssemblyName UIAutomationTypes
 
 if (-not (Test-Path $ExePath)) {
     Write-Error "TaskApp executable not found at $ExePath"
+    exit 1
+}
+$effectiveRestartExePath = if ($RestartExePath) { $RestartExePath } else { $ExePath }
+if (-not (Test-Path $effectiveRestartExePath)) {
+    Write-Error "TaskApp replacement executable not found at $effectiveRestartExePath"
     exit 1
 }
 
@@ -255,7 +265,7 @@ try {
 
     Stop-Process -Id $proc.Id -Force
     $proc.WaitForExit()
-    $proc = Start-Process -FilePath $ExePath -PassThru
+    $proc = Start-Process -FilePath $effectiveRestartExePath -PassThru
     $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
     while ((Get-Date) -lt $deadline) {
         Start-Sleep -Milliseconds 500

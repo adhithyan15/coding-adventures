@@ -1,5 +1,82 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.84 — 2026-08-31 — annotations (`(@id ...)`) + inline-module script shorthand
+
+### Added
+
+- **WAT annotation syntax (`(@id ...)`)** — custom out-of-band tooling
+  metadata (source maps, etc.) that a conformant parser must accept
+  wherever an ordinary form is allowed and then behave as if it was never
+  there. Two real, independent gaps, both real corpus motivated
+  (`WebAssembly/testsuite`'s `annotations.wast`, pinned SHA
+  `28864811cf03bdbf880733786148feaba339582d`):
+  - `sexpr::strip_annotations` — a single recursive pass over the whole
+    parsed S-expression tree, run immediately after `parse_sexprs`
+    (wired into `sexpr::parse_source`, so both `module.rs` and
+    `script.rs` get it for free). Recognizes any `(head ...)` list whose
+    head is an atom starting with `@` (no real WAT keyword ever does)
+    and drops it, recursively, at every depth. Chosen over teaching each
+    of `module.rs`'s ~8000 lines of positional field/instruction
+    dispatch to notice and skip an interloping annotation — the real
+    corpus file sprinkles `(@a)` between literally every token of a
+    module, including inside `param`/`result`/`export`/`offset`/folded-
+    instruction positions, so a single whole-tree strip is the only
+    approach that doesn't require touching every call site.
+  - `tokenizer::scan_annotation_body` — the ordinary `idchar`-based atom
+    scanner can't even TOKENIZE an annotation's body in the first place:
+    `(@a , ; ] [ }} }x{ ({) ,{{};}] ;)` uses `,`/`[`/`]`/`{`/`}`, none of
+    which are legal in an ordinary WAT atom. Once an annotation's id is
+    tokenized normally, its remaining body (up to its own matching close
+    paren) is scanned by a dedicated, permissive routine that still
+    respects paren balance, both comment forms (nested block comments,
+    line comments — a stray `)`/`(` inside either must NOT affect paren
+    depth), and string literals, but otherwise accepts nearly any byte —
+    except a raw control character (other than tab/LF/CR), DEL, or any
+    byte `>= 0x80` (both non-ASCII text and raw invalid-UTF-8 bytes are
+    real `assert_malformed` cases in the corpus; one "no top-bit-set
+    bytes outside a string" rule catches both without a real UTF-8
+    validity pass).
+  - New `WastParseError::EmptyAnnotationId` (a `(@)`/`(@ x)`/`(@"")` —
+    missing, non-adjacent, or empty id) and
+    `WastParseError::IllegalStringCharacter` (a raw, unescaped control
+    character or DEL literally inside a `"..."` string literal — WAT's
+    `stringchar` grammar requires these to be written as an escape;
+    needed for `annotations.wast`'s own `(@"\n")` case, a literal
+    newline byte inside a quoted annotation id).
+  - Real numbers (see `wasm-conformance`'s own CHANGELOG for the full
+    accounting): `annotations.wast`'s `module` directives 4/4 (100%, +6
+    not-yet-supported — pre-existing, unrelated `spectest`-import gap),
+    `assert_malformed` 62/64 (97%, 2 not-yet-supported — an unexpectedly-
+    accepted malformed case degrades gracefully per that directive
+    kind's own grading rule, never a hard fail).
+- **Inline-module script shorthand** — a whole `.wast` SCRIPT consisting
+  entirely of bare module fields, no `(module ...)` wrapper and no
+  directives at all (the real corpus's own `inline-module.wast`:
+  `(func) (memory 0) (func (export "f"))`, nothing else). `module.rs::
+  parse_module` already supported this "abbreviated module" shorthand
+  for standalone `.wat` text and `module quote` bodies (pre-existing);
+  the real gap was `script::parse_script` never extending the same
+  shorthand to a whole SCRIPT. `parse_script` now checks whether every
+  top-level item looks like a module-field keyword (never a script-
+  directive keyword — the two sets never overlap) and, if so, synthesizes
+  one `(module <fields...>)` wrapping all of them instead of erroring.
+  A script that's already directive-shaped (every previously-vendored
+  file) is completely unaffected — the check only fires when EVERY
+  top-level item qualifies. `inline-module.wast`'s own `module` directive:
+  1/1 (100%), an unconditional real pass.
+
+### Notes on scope
+
+- Extended-const (`i32.add`/`i32.sub`/`i32.mul` inside a constant
+  expression, `data.wast`'s own remaining gap) needed **no changes** in
+  this crate — see `wasm-execution`'s own CHANGELOG and
+  `code/specs/W29-wasm-extended-const.md`; this crate's instruction
+  encoder already handled it.
+- Annotation-skipping is deliberately best-effort for the FULL malformed
+  matrix — `sexpr::strip_annotations`'s own doc comment explains why an
+  occasional missed malformed case is an acceptable, honestly-reported
+  `NotYetSupported`, not a correctness bug.
+
 ## 0.1.83 — 2026-08-26 — W26 follow-up: real table64 operations (inline-elem-shorthand offset fix)
 
 ### Fixed

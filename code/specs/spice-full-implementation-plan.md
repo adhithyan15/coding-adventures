@@ -4903,6 +4903,17 @@ the Rust, Python, and TypeScript surfaces together.
      `CGS0` / `CGD0`, passes the selected values through to the engine, and
      rejects negative or non-finite capacitance inputs before lowering.
 
+505. Rust JFET flicker-noise parameter parity.
+   - Status: implemented in the Rust JFET flicker-noise slice.
+   - The Rust element lowerer passes finite, non-negative `KF` and `AF` values
+     through to the engine and rejects invalid inputs before lowering.
+
+506. Rust JFET junction-potential alias parity.
+   - Status: implemented in the Rust JFET junction-potential slice.
+   - The Rust element lowerer gives canonical `PB` precedence over `VJ`, passes
+     the selected value through to the engine, and rejects non-finite or
+     non-positive junction potentials before lowering.
+
 ## Backlog
 
 1. Python and TypeScript Berkeley SPICE model-card validation parity.
@@ -4912,7 +4923,8 @@ the Rust, Python, and TypeScript surfaces together.
 
 2. Rust JFET model-card parser parity audit.
    - Status: in progress; threshold, channel-length-modulation, and
-     gate-capacitance aliases are completed in the current slices.
+     gate-capacitance, flicker-noise, and junction-potential parameters are
+     completed in the current slices.
    - Live audit found the Rust element lowerer accepts fewer already-supported
      JFET aliases and model-card validations than the Python and TypeScript
      facades. Audit the remaining direct aliases and finite/range validation as
@@ -4929,12 +4941,22 @@ the Rust, Python, and TypeScript surfaces together.
      aliases are rejected when negative or non-finite before element lowering.
 
 5. Rust JFET flicker-noise parser parity.
-   - Status: prioritized next after the gate-capacitance slice merges.
-   - The engine and Python/TypeScript facades lower JFET `KF` and `AF` with
-     finite/non-negative validation; confirm Rust lowering and implement the
-     smallest compatible correction.
+   - Status: completed by the flicker-noise slice.
+   - Finite, non-negative `KF` and `AF` values now lower into the engine JFET
+     model, while invalid inputs are rejected before element lowering.
 
-6. Grammar-backed parser and app facade.
+6. Rust JFET junction-potential alias parser parity.
+   - Status: completed by the junction-potential slice.
+   - Canonical `PB` now takes precedence over `VJ`, and both names are rejected
+     when non-finite or non-positive before element lowering.
+
+7. Rust JFET forward-bias depletion-coefficient parser parity.
+   - Status: prioritized next after the junction-potential slice merges.
+   - The engine and Python/TypeScript facades lower JFET `FC` and require a
+     finite value in the interval `[0, 1)`; confirm Rust lowering and implement
+     the smallest compatible correction.
+
+8. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
      syntax facade as the grammar evolves, even if that breaks current
      pre-release parser APIs.
@@ -4942,7 +4964,7 @@ the Rust, Python, and TypeScript surfaces together.
      toward packaging, WebAssembly embedding, and product integration backed by
      the same public parser contract.
 
-7. Deck compatibility follow-up.
+9. Deck compatibility follow-up.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.
@@ -4953,7 +4975,7 @@ the Rust, Python, and TypeScript surfaces together.
      command routing, including control flow, variables, and script execution
      policy.
 
-8. Production solver core follow-up.
+10. Production solver core follow-up.
    - Sparse real/complex matrix paths now have cross-language native coverage,
      and Python real DC solves now use an optional SciPy sparse-LU backend with
      structured native fallback metadata.
@@ -4964,14 +4986,14 @@ the Rust, Python, and TypeScript surfaces together.
      damping, device limiting, tolerance policy, and additional convergence
      diagnostics for difficult transistor decks.
 
-9. Device model depth.
+11. Device model depth.
    - Audit diode, BJT, JFET, and MOS Level 1 behavior against reference decks.
    - Decide whether Level 2/3 MOS is in scope before BSIM; if BSIM lands, make
      Rust the first fast path and port stable semantics outward.
    - Expand temperature behavior, capacitance, noise, charge conservation, model
      card aliases, and error messages.
 
-10. Analysis completion.
+12. Analysis completion.
    - Generalize pole-zero beyond constrained fixture helpers.
    - Expand nonlinear distortion coverage.
    - Expand parsed `.FOUR` / `.MEASURE` integration across output plans and
@@ -4980,7 +5002,7 @@ the Rust, Python, and TypeScript surfaces together.
      Carlo trials.
    - Stabilize raw, CSV, JSON, and browser-friendly result formats.
 
-11. Mixed-signal integration.
+13. Mixed-signal integration.
    - Connect SPICE transient stepping to the hardware VM scheduler.
    - Support bidirectional analog/digital thresholds, event scheduling,
      breakpoint coordination, and VCD correlation.

@@ -1790,7 +1790,30 @@ pub trait HostInterface {
 /// data segment offsets, and element segment offsets).
 ///
 /// Allowed opcodes: i32.const (0x41), i64.const (0x42), f32.const (0x43),
-/// f64.const (0x44), global.get (0x23), v128.const (0xFD 0x0C), end (0x0B).
+/// f64.const (0x44), global.get (0x23), v128.const (0xFD 0x0C), end (0x0B),
+/// plus the **extended-const proposal**'s six arithmetic ops: i32.add
+/// (0x6A), i32.sub (0x6B), i32.mul (0x6C), i64.add (0x7C), i64.sub (0x7D),
+/// i64.mul (0x7E).
+///
+/// ## Extended-const: why this needs a real stack
+///
+/// Before the extended-const proposal, a constant expression was always
+/// exactly ONE value-producing instruction followed by `end` -- so a single
+/// `Option<WasmValue>` "running accumulator," overwritten each time an
+/// opcode ran, was indistinguishable from a real stack: there was only
+/// ever at most one value in flight. Extended-const allows a small
+/// arithmetic combinator on top of that, e.g. `(i32.add (i32.const 1)
+/// (i32.const 2))`, which the WAT text encoder (`wasm-wast-parser`) lowers
+/// to flat bytecode as `i32.const 1, i32.const 2, i32.add, end` -- TWO
+/// values must be live at once (both operands) right before `i32.add`
+/// consumes them, which a single accumulator variable literally cannot
+/// represent. `stack: Vec<WasmValue>` below replaces the old accumulator:
+/// every value-producing opcode `push`es, every arithmetic opcode `pop`s
+/// its operands and pushes the result, and `end` pops exactly the one
+/// value that must remain. For every expression that predates extended-
+/// const (still the overwhelming majority: a lone `i32.const`, a lone
+/// `global.get`, etc.), this is byte-for-byte the same behavior as before
+/// -- one push, then `end` pops it right back off.
 ///
 /// `v128_heap` is the instance's own persistent v128 heap (see
 /// `code/specs/W15-wasm-v128-persistent-storage.md`) -- a `v128.const` here
@@ -1802,7 +1825,7 @@ pub fn evaluate_const_expr(
     globals: &[WasmValue],
     v128_heap: &mut Vec<[u8; 16]>,
 ) -> Result<WasmValue, TrapError> {
-    let mut result: Option<WasmValue> = None;
+    let mut stack: Vec<WasmValue> = Vec::new();
     let mut pos: usize = 0;
 
     while pos < expr.len() {
@@ -1815,13 +1838,13 @@ pub fn evaluate_const_expr(
                 let (value, consumed) =
                     decode_signed(expr, pos).map_err(|e| TrapError::new(e.message))?;
                 pos += consumed;
-                result = Some(WasmValue::I32(value as i32));
+                stack.push(WasmValue::I32(value as i32));
             }
             // i64.const
             0x42 => {
                 let (value, consumed) = decode_signed_64(expr, pos)?;
                 pos += consumed;
-                result = Some(WasmValue::I64(value));
+                stack.push(WasmValue::I64(value));
             }
             // f32.const
             0x43 => {
@@ -1831,7 +1854,7 @@ pub fn evaluate_const_expr(
                 let value =
                     f32::from_le_bytes([expr[pos], expr[pos + 1], expr[pos + 2], expr[pos + 3]]);
                 pos += 4;
-                result = Some(WasmValue::F32(value));
+                stack.push(WasmValue::F32(value));
             }
             // f64.const
             0x44 => {
@@ -1842,7 +1865,7 @@ pub fn evaluate_const_expr(
                 bytes.copy_from_slice(&expr[pos..pos + 8]);
                 let value = f64::from_le_bytes(bytes);
                 pos += 8;
-                result = Some(WasmValue::F64(value));
+                stack.push(WasmValue::F64(value));
             }
             // global.get
             0x23 => {
@@ -1855,7 +1878,50 @@ pub fn evaluate_const_expr(
                         idx
                     )));
                 }
-                result = Some(globals[idx as usize]);
+                stack.push(globals[idx as usize]);
+            }
+            // Extended-const proposal: i32.add/i32.sub/i32.mul. Each pops
+            // TWO i32 operands (`b` popped first -- it was pushed last,
+            // i.e. it's the right-hand operand -- then `a`, the left-hand
+            // operand) and pushes one i32 result, using the same wrapping
+            // arithmetic the ordinary instruction-execution loop elsewhere
+            // in this crate already uses for these same three opcodes
+            // outside a constant expression.
+            0x6A..=0x6C => {
+                let b = match stack.pop() {
+                    Some(WasmValue::I32(v)) => v,
+                    _ => return Err(TrapError::new("extended-const i32 arithmetic: expected an i32 operand")),
+                };
+                let a = match stack.pop() {
+                    Some(WasmValue::I32(v)) => v,
+                    _ => return Err(TrapError::new("extended-const i32 arithmetic: expected an i32 operand")),
+                };
+                let value = match opcode {
+                    0x6A => a.wrapping_add(b),
+                    0x6B => a.wrapping_sub(b),
+                    0x6C => a.wrapping_mul(b),
+                    _ => unreachable!("opcode already matched to one of 0x6A/0x6B/0x6C"),
+                };
+                stack.push(WasmValue::I32(value));
+            }
+            // Extended-const proposal: i64.add/i64.sub/i64.mul -- same
+            // pop-two-push-one shape as the i32 trio just above.
+            0x7C..=0x7E => {
+                let b = match stack.pop() {
+                    Some(WasmValue::I64(v)) => v,
+                    _ => return Err(TrapError::new("extended-const i64 arithmetic: expected an i64 operand")),
+                };
+                let a = match stack.pop() {
+                    Some(WasmValue::I64(v)) => v,
+                    _ => return Err(TrapError::new("extended-const i64 arithmetic: expected an i64 operand")),
+                };
+                let value = match opcode {
+                    0x7C => a.wrapping_add(b),
+                    0x7D => a.wrapping_sub(b),
+                    0x7E => a.wrapping_mul(b),
+                    _ => unreachable!("opcode already matched to one of 0x7C/0x7D/0x7E"),
+                };
+                stack.push(WasmValue::I64(value));
             }
             // v128.const (SIMD, 0xFD-prefixed) -- the sub-opcode is a
             // LEB128 u32 (verified against the real binary encoding, see
@@ -1887,16 +1953,15 @@ pub fn evaluate_const_expr(
                 pos += 16;
                 let handle = v128_heap.len() as u32;
                 v128_heap.push(bytes);
-                result = Some(WasmValue::V128(handle));
+                stack.push(WasmValue::V128(handle));
             }
             // WasmGC prefix (0xFB), W20: `ref.i31` (sub-opcode `0x1C`) is the
             // one GC instruction the real spec allows in a constant
             // expression (needed by `i31.wast`'s `(global $i (ref i31)
-            // (ref.i31 (i32.const 2)))`). Like every other opcode in this
-            // restricted evaluator, it transforms the running `result`
-            // rather than pushing/popping a real stack -- valid here
-            // because `ref.i31` takes exactly the single value the
-            // immediately preceding opcode already computed. Any other
+            // (ref.i31 (i32.const 2)))`). Pops the single i32 the
+            // immediately preceding opcode pushed and pushes the masked
+            // result back -- same pop-then-push shape as the extended-const
+            // arithmetic ops above, just arity 1 instead of 2. Any other
             // `0xFB` sub-opcode is illegal in a constant expression and
             // falls through to the catch-all below.
             0xFB => {
@@ -1911,11 +1976,11 @@ pub fn evaluate_const_expr(
                         sub
                     )));
                 }
-                let v = match result {
+                let v = match stack.pop() {
                     Some(WasmValue::I32(v)) => v,
                     _ => return Err(TrapError::new("ref.i31: expected an i32 operand")),
                 };
-                result = Some(WasmValue::I32(v & 0x7FFF_FFFF));
+                stack.push(WasmValue::I32(v & 0x7FFF_FFFF));
             }
             // `ref.null <heap_type>` (`0xD0`, reference-types proposal --
             // real corpus vendoring pass, `ref_null.wast`'s own `(global
@@ -1947,11 +2012,17 @@ pub fn evaluate_const_expr(
                 } else {
                     pos += 1;
                 }
-                result = Some(WasmValue::Ref(None));
+                stack.push(WasmValue::Ref(None));
             }
-            // end
+            // end -- pop the one value that must remain on the stack. A
+            // well-formed constant expression (checked by
+            // `wasm-validator`'s own structural checks, where it checks at
+            // all -- see that crate's doc comment on the limits of its
+            // const-expr validation) always leaves exactly one value here;
+            // `pop()` returning `None` means the expression was empty
+            // (`(offset)` with no instructions at all).
             0x0B => {
-                return result.ok_or_else(|| TrapError::new("empty constant expression"));
+                return stack.pop().ok_or_else(|| TrapError::new("empty constant expression"));
             }
             _ => {
                 return Err(TrapError::new(format!(
@@ -18115,8 +18186,138 @@ mod tests {
 
     #[test]
     fn test_const_expr_illegal_opcode() {
-        let expr = vec![0x6A, 0x0B]; // i32.add is not allowed in const expr
+        // `br` (0x0C) is never legal in a constant expression, extended-const
+        // or not -- unlike `i32.add` (see the extended-const tests below),
+        // there's no proposal that adds control flow here.
+        let expr = vec![0x0C, 0x00, 0x0B];
         assert!(evaluate_const_expr(&expr, &[], &mut Vec::new()).is_err());
+    }
+
+    // ══════════════════════════════════════════════════════════════════════
+    // Extended-const proposal: i32.add/i32.sub/i32.mul, i64.add/i64.sub/
+    // i64.mul in a constant expression (global initializers, data/element
+    // segment offsets). See `evaluate_const_expr`'s own doc comment for why
+    // this needed a real operand stack, not just new opcode arms.
+    // ══════════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn test_extended_const_i32_add() {
+        // (i32.add (i32.const 1) (i32.const 2)) -> 3
+        let expr = vec![0x41, 0x01, 0x41, 0x02, 0x6A, 0x0B];
+        let result = evaluate_const_expr(&expr, &[], &mut Vec::new()).unwrap();
+        assert_eq!(result, WasmValue::I32(3));
+    }
+
+    #[test]
+    fn test_extended_const_i32_sub() {
+        // (i32.sub (i32.const 42) (i32.const 0)) -> 42 -- operand ORDER
+        // matters for subtraction, so this also pins down that `a` (the
+        // first-pushed value) is the left-hand operand, not `b`.
+        let expr = vec![0x41, 0x2A, 0x41, 0x00, 0x6B, 0x0B];
+        let result = evaluate_const_expr(&expr, &[], &mut Vec::new()).unwrap();
+        assert_eq!(result, WasmValue::I32(42));
+    }
+
+    #[test]
+    fn test_extended_const_i32_sub_operand_order() {
+        // (i32.sub (i32.const 10) (i32.const 3)) -> 7, not -7 -- would only
+        // be -7 if the operands were swapped.
+        let expr = vec![0x41, 0x0A, 0x41, 0x03, 0x6B, 0x0B];
+        let result = evaluate_const_expr(&expr, &[], &mut Vec::new()).unwrap();
+        assert_eq!(result, WasmValue::I32(7));
+    }
+
+    #[test]
+    fn test_extended_const_i32_mul() {
+        // (i32.mul (i32.const 6) (i32.const 7)) -> 42
+        let expr = vec![0x41, 0x06, 0x41, 0x07, 0x6C, 0x0B];
+        let result = evaluate_const_expr(&expr, &[], &mut Vec::new()).unwrap();
+        assert_eq!(result, WasmValue::I32(42));
+    }
+
+    #[test]
+    fn test_extended_const_i32_wraps_on_overflow() {
+        // i32::MAX + 1 wraps to i32::MIN -- same wrapping semantics as the
+        // ordinary (non-const) i32.add instruction elsewhere in this crate.
+        let expr = vec![0x41, 0xFF, 0xFF, 0xFF, 0xFF, 0x07, 0x41, 0x01, 0x6A, 0x0B];
+        let result = evaluate_const_expr(&expr, &[], &mut Vec::new()).unwrap();
+        assert_eq!(result, WasmValue::I32(i32::MIN));
+    }
+
+    #[test]
+    fn test_extended_const_i64_add_sub_mul() {
+        // (i64.mul (i64.add (i64.const 2) (i64.const 3)) (i64.sub (i64.const 10) (i64.const 4)))
+        // -> (2+3) * (10-4) -> 5 * 6 -> 30
+        let expr = vec![
+            0x42, 0x02, // i64.const 2
+            0x42, 0x03, // i64.const 3
+            0x7C, // i64.add -> 5
+            0x42, 0x0A, // i64.const 10
+            0x42, 0x04, // i64.const 4
+            0x7D, // i64.sub -> 6
+            0x7E, // i64.mul -> 30
+            0x0B,
+        ];
+        let result = evaluate_const_expr(&expr, &[], &mut Vec::new()).unwrap();
+        assert_eq!(result, WasmValue::I64(30));
+    }
+
+    #[test]
+    fn test_extended_const_nested_combination_with_global_get() {
+        // (i32.mul (i32.const 2) (i32.add (i32.sub (global.get 0) (i32.const 1)) (i32.const 2)))
+        // matches data.wast's own "Combining add, sub, mul and global.get"
+        // case. global 0 = 10 -> (10-1)+2 = 11 -> 2*11 = 22.
+        let expr = vec![
+            0x41, 0x02, // i32.const 2
+            0x23, 0x00, // global.get 0
+            0x41, 0x01, // i32.const 1
+            0x6B, // i32.sub -> global-1
+            0x41, 0x02, // i32.const 2
+            0x6A, // i32.add -> (global-1)+2
+            0x6C, // i32.mul -> 2 * ((global-1)+2)
+            0x0B,
+        ];
+        let globals = vec![WasmValue::I32(10)];
+        let result = evaluate_const_expr(&expr, &globals, &mut Vec::new()).unwrap();
+        assert_eq!(result, WasmValue::I32(22));
+    }
+
+    #[test]
+    fn test_extended_const_i32_add_with_too_few_operands_is_a_clean_error() {
+        // Only one value pushed; i32.add needs two. Must be a clean Err, not
+        // a panic on an empty-stack pop.
+        let expr = vec![0x41, 0x01, 0x6A, 0x0B];
+        assert!(evaluate_const_expr(&expr, &[], &mut Vec::new()).is_err());
+    }
+
+    #[test]
+    fn test_extended_const_i32_add_on_completely_empty_stack_is_a_clean_error() {
+        let expr = vec![0x6A, 0x0B];
+        assert!(evaluate_const_expr(&expr, &[], &mut Vec::new()).is_err());
+    }
+
+    #[test]
+    fn test_extended_const_i32_add_rejects_mixed_i32_i64_operands() {
+        // i32.add over an i64 and an i32 operand must be a type error, not
+        // a silent bit-reinterpretation.
+        let expr = vec![0x42, 0x01, 0x41, 0x02, 0x6A, 0x0B];
+        assert!(evaluate_const_expr(&expr, &[], &mut Vec::new()).is_err());
+    }
+
+    #[test]
+    fn test_extended_const_i64_sub_with_too_few_operands_is_a_clean_error() {
+        let expr = vec![0x42, 0x01, 0x7D, 0x0B];
+        assert!(evaluate_const_expr(&expr, &[], &mut Vec::new()).is_err());
+    }
+
+    #[test]
+    fn test_const_expr_single_instruction_still_works_unchanged() {
+        // Backward-compatibility guard: the overwhelming majority of real
+        // constant expressions are still a single value-producing opcode --
+        // this must behave identically to before the stack refactor.
+        let expr = vec![0x41, 0x2A, 0x0B]; // i32.const 42
+        let result = evaluate_const_expr(&expr, &[], &mut Vec::new()).unwrap();
+        assert_eq!(result, WasmValue::I32(42));
     }
 
     #[test]

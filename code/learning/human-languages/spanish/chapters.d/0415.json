@@ -1,0 +1,18 @@
+{
+  "chapter": 415,
+  "title": "A Package Abroad",
+  "label": "ch:paquete-extranjero",
+  "canDo": "I can identify a package being sent abroad in a simple post-office message.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ES-C415-package-recall-2",
+    "kind": "production",
+    "summary": "Retrieve package and abroad in a short post-office instruction.",
+    "assesses": [
+      "ES-LEX-PAQUETE",
+      "ES-LEX-EXTRANJERO"
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:4596de173a214c96",
+  "lessonIds": [
+    "ES-C415-paquete",
+    "ES-C415-extranjero",
+    "ES-C415-package-recall-1",
+    "ES-C415-package-recall-2"
+  ],
+  "tex": "spanish/book/chapters/ch415-paquete-extranjero.tex"
+}

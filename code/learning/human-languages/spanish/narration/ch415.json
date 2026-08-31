@@ -1,0 +1,430 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 415,
+  "title": "A Package Abroad",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:48bac7afd274b0cd",
+  "lessons": [
+    {
+      "id": "ES-C415-paquete",
+      "sequence": 9550,
+      "title": "el paquete — a bundle packed for travel",
+      "headword": "el paquete",
+      "romanization": "el paquete",
+      "gloss": "package, parcel",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:657dc8f664509222",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall el impreso, the form you fill in. At a post office, the form may travel with el paquete, the package or parcel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Spanish borrowed paquete through French paquet, a small bundle. English packet travelled from the same word, and pack is a close family clue. Picture several things packed together into one parcel."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: what happens to the package?",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The noun is masculine: el paquete, un paquete. Use enviar for the action: enviar el paquete, to send the package."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el paquete",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el paquete*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un paquete",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un paquete*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enviar el paquete",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enviar el paquete*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Package? (El paquete.) To send the package? (Enviar el paquete.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: DLE: paquete."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C415-extranjero",
+      "sequence": 9560,
+      "title": "el extranjero — the world outside one's country",
+      "headword": "el extranjero",
+      "romanization": "el extranjero",
+      "gloss": "abroad, a foreign country; a foreign person",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2c99cb31db95eeb2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall el paquete. If it crosses a national border, you can send it al extranjero, abroad."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The family reaches back to Latin extraneus, “from outside.” It travelled through Romance in several directions; English strange and stranger are distant relatives. Spanish extranjero can name a foreign person, but el extranjero in the frame al extranjero means abroad."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: a + el",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Spanish contracts a + el to al: enviar el paquete al extranjero. The place frame, not a person's nationality, is the useful meaning here."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el extranjero",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el extranjero*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "al extranjero",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *al extranjero*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enviar el paquete al extranjero",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enviar el paquete al extranjero*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Abroad? (Al extranjero.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: DLE: extranjero."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C415-package-recall-1",
+      "sequence": 9570,
+      "title": "package recall one — parcel and destination",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "first retrieval of package and abroad",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ffeebf29f0a16168",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the parcel and the destination. (Paquete, al extranjero.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el paquete",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el paquete*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "al extranjero",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *al extranjero*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enviar el paquete al extranjero",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enviar el paquete al extranjero*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Package, abroad? (Paquete, al extranjero.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C415-package-recall-2",
+      "sequence": 9580,
+      "title": "package recall two — hear the post-office message",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "second retrieval of package and abroad",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b37043f675f98986",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A post-office worker explains which form a customer needs for an international parcel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "“Send the package abroad.”"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Enviar el paquete al extranjero.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Enviar el paquete al extranjero.*]"
+            },
+            {
+              "kind": "speech",
+              "text": "“To send the package abroad, you need to fill in this form.”"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Para enviar el paquete al extranjero, necesita rellenar este impreso.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Para enviar el paquete al extranjero, necesita rellenar este impreso.*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which place does that message belong to? (Una oficina de correos.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

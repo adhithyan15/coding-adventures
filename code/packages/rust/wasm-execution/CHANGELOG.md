@@ -2,6 +2,68 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.75] - 2026-08-31 (extended-const proposal — real operand stack in `evaluate_const_expr`)
+
+### Added
+
+- **Extended-const proposal**: `evaluate_const_expr` now accepts
+  `i32.add`/`i32.sub`/`i32.mul` (0x6A/0x6B/0x6C) and
+  `i64.add`/`i64.sub`/`i64.mul` (0x7C/0x7D/0x7E) inside a constant
+  expression (a global initializer, or a data/element segment's offset
+  expression), so `(data (i32.add (i32.const 0) (i32.const 42)))` and
+  arbitrarily nested combinations of add/sub/mul/`global.get`/`*.const`
+  now evaluate correctly instead of trapping with "illegal opcode."
+  Real corpus motivation: `WebAssembly/testsuite`'s `data.wast` (pinned
+  SHA `28864811cf03bdbf880733786148feaba339582d`), whose own "Extended
+  constant expressions" and "Combining add, sub, mul and global.get"
+  sections exercise exactly this.
+
+### Changed
+
+- **`evaluate_const_expr` internals: `Option<WasmValue>` running
+  accumulator replaced with a real `Vec<WasmValue>` operand stack.**
+  Every constant expression before extended-const was always exactly one
+  value-producing opcode followed by `end`, so a single overwritten
+  variable was indistinguishable from a real stack. Extended-const's
+  arithmetic ops need TWO operands live at once right before they run
+  (e.g. both `i32.const`s in `i32.add (i32.const 1) (i32.const 2)`),
+  which one accumulator variable cannot represent. Every existing
+  opcode arm (`i32.const`/`i64.const`/`f32.const`/`f64.const`/
+  `global.get`/`v128.const`/`ref.i31`/`ref.null`) now `push`es onto this
+  stack instead of overwriting the accumulator, and `end` `pop`s exactly
+  the one value that must remain. For the overwhelming majority of real
+  expressions (still a lone `i32.const`, a lone `global.get`, etc.) this
+  is byte-for-byte the same behavior as before — one push, then `end`
+  pops it right back off. A too-few-operands case (e.g. `i32.add` with
+  an empty or single-element stack) is a clean `Err`, not a panic on an
+  empty-`Vec::pop()`.
+- Renamed/repurposed `test_const_expr_illegal_opcode`: it used to assert
+  `i32.add` was rejected as an unknown opcode, which is no longer true
+  (it's now a legal extended-const opcode, just one this particular test
+  case starves of operands). Repointed at `br` (0x0C), an opcode no
+  proposal makes legal inside a constant expression, so the test still
+  covers "genuinely illegal opcode" without the stale claim.
+
+### Notes on scope
+
+- `wasm-wast-parser`'s text encoder and `wasm-module-parser`'s binary
+  `read_expr` needed **no changes** for this: both already handle any
+  no-immediate opcode inside a constant expression correctly (the text
+  encoder reuses the same general folded-instruction encoder ordinary
+  function bodies go through; the binary reader's `read_expr` already
+  pushes every opcode byte verbatim and only special-cases opcodes that
+  actually carry immediate bytes). The entire gap was the runtime
+  evaluator's accumulator-vs-stack shape — see `evaluate_const_expr`'s
+  own doc comment for the full explanation.
+- `wasm-validator` still has no instruction-level type-checker for
+  constant expressions (unchanged, pre-existing scope limit — see that
+  crate's own doc comments), so `data.wast`'s `assert_invalid` cases
+  probing const-expr type errors (`i64.const` in an i32 offset,
+  `(nop)`, two instructions in one offset, a mutable global's
+  `global.get`, etc.) grade `NotYetSupported` in `wasm-conformance`,
+  not `Pass` — the same pre-existing, honestly-reported gap every other
+  vendored file with `assert_invalid` type-error cases already has.
+
 ## [0.9.74] - 2026-08-26 (W26 follow-up — real table64 operations)
 
 ### Added

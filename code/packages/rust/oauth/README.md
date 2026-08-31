@@ -4,6 +4,8 @@ Provider-neutral OAuth 2.0 client primitives implemented in this repository.
 The crate owns the security-sensitive, pure portion of installed-app OAuth:
 
 - strict provider/end-point configuration;
+- bounded RFC 8414 metadata discovery with exact issuer trust binding and
+  explicit RFC 9207 or registry-owned distinct-redirect mix-up defense;
 - 256-bit caller-injected state and PKCE entropy;
 - mandatory PKCE `S256` authorization requests;
 - deterministic RFC 3986 form encoding;
@@ -16,7 +18,8 @@ The crate owns the security-sensitive, pure portion of installed-app OAuth:
 Caller-owned trace correlation and privacy-safe audit descriptors cover every
 implemented boundary. `Audited::publish_then_release` is the only result
 release path, so audit failure closes before a browser URL, secret-bearing
-request, provider error, parsed response, or credential material is exposed.
+request, metadata URL, validated provider record, provider error, parsed
+response, or credential material is exposed.
 Raw response bytes, attacker descriptions, URLs, scopes, and credentials never
 enter audit records or diagnostics. Parsed JSON trees and request/response
 buffers containing credentials are wipe-on-drop or explicitly scrubbed; secret
@@ -28,9 +31,10 @@ I/O. Those authorities are deliberately injected by later broker and host
 packages. Provider differences are data in `ProviderConfig`; the core contains
 no Google, Microsoft, GitHub, Dropbox, or other provider branch.
 
-This is the token-boundary implementation slice of `code/specs/oauth.md`.
-Credential custody, loopback hosting, discovery, device authorization, DPoP,
-and production HTTPS transport remain separately testable backlog items.
+This implements the pure authorization, token-lifecycle, and RFC 8414 metadata
+trust slices of `code/specs/oauth.md`. Credential custody, loopback hosting,
+device authorization, DPoP, and production HTTPS transport remain separately
+testable backlog items.
 
 ## Verification
 

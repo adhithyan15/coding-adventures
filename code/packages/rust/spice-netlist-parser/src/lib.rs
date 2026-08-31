@@ -2514,6 +2514,29 @@ fn parse_element(
                     "JFET CGD must be finite and non-negative",
                 ));
             }
+            let flicker_noise_coefficient = *model.params.get("KF").unwrap_or(&0.0);
+            if !flicker_noise_coefficient.is_finite() || flicker_noise_coefficient < 0.0 {
+                return Err(NetlistParseError::new(
+                    "JFET KF must be finite and non-negative",
+                ));
+            }
+            let flicker_noise_exponent = *model.params.get("AF").unwrap_or(&1.0);
+            if !flicker_noise_exponent.is_finite() || flicker_noise_exponent < 0.0 {
+                return Err(NetlistParseError::new(
+                    "JFET AF must be finite and non-negative",
+                ));
+            }
+            let junction_potential = model
+                .params
+                .get("PB")
+                .or_else(|| model.params.get("VJ"))
+                .copied()
+                .unwrap_or(1.0);
+            if !junction_potential.is_finite() || junction_potential <= 0.0 {
+                return Err(NetlistParseError::new(
+                    "JFET PB must be finite and positive",
+                ));
+            }
             let mut jfet = Jfet::with_model_and_capacitance(
                 name,
                 &fields[1],
@@ -2526,6 +2549,9 @@ fn parse_element(
                 gate_source_capacitance,
                 gate_drain_capacitance,
             );
+            jfet.flicker_noise_coefficient = flicker_noise_coefficient;
+            jfet.flicker_noise_exponent = flicker_noise_exponent;
+            jfet.junction_potential = junction_potential;
             jfet.doping_tail_parameter = doping_tail_parameter;
             Ok(Element::Jfet(jfet))
         }
