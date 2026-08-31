@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Lower JFET `CGS0` and `CGD0` aliases with canonical `CGS` and `CGD`
+  precedence, and reject invalid gate capacitance inputs.
 - Lower JFET `LAM` with canonical `LAMBDA` precedence and reject non-finite
   channel-length modulation inputs.
 - Lower JFET `VT0` and `VTH` threshold aliases with canonical `VTO`
