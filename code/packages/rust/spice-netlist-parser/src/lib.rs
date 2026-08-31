@@ -2613,6 +2613,10 @@ fn parse_element(
                     "JFET TNOM must be finite and positive",
                 ));
             }
+            let mobility_temperature_exponent = *model.params.get("BEX").unwrap_or(&0.0);
+            if !mobility_temperature_exponent.is_finite() {
+                return Err(NetlistParseError::new("JFET BEX must be finite"));
+            }
             let mut jfet = Jfet::with_model_and_capacitance(
                 name,
                 &fields[1],
@@ -2643,6 +2647,7 @@ fn parse_element(
                 alternative_threshold_voltage_temperature_coefficient;
             jfet.nominal_temperature_kelvin =
                 nominal_temperature.map(|temperature| *temperature + 273.15);
+            jfet.mobility_temperature_exponent = mobility_temperature_exponent;
             jfet.doping_tail_parameter = doping_tail_parameter;
             Ok(Element::Jfet(jfet))
         }

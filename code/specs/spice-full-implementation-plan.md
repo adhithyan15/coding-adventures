@@ -5043,12 +5043,18 @@ the Rust, Python, and TypeScript surfaces together.
      invalid selected value before element lowering.
 
 18. Rust JFET mobility-temperature-exponent parser parity.
-   - Status: prioritized next after the nominal-temperature slice.
+   - Status: completed by the JFET mobility-temperature-exponent slice.
    - The engine and Python/TypeScript facades lower finite JFET `BEX` values
-     into the mobility-temperature-exponent field; audit the Rust element
-     lowerer and implement the smallest compatible correction.
+     into the mobility-temperature-exponent field; Rust now does the same and
+     rejects non-finite input before element lowering.
 
-19. Grammar-backed parser and app facade.
+19. Rust JFET alternative mobility-temperature-coefficient parser parity.
+   - Status: prioritized next after the mobility-temperature-exponent slice.
+   - The engine and Python/TypeScript facades lower finite optional JFET
+     `BETATCE` values into the mobility-temperature-coefficient field; audit
+     the Rust element lowerer while preserving omitted `None` semantics.
+
+20. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
      syntax facade as the grammar evolves, even if that breaks current
      pre-release parser APIs.
@@ -5056,7 +5062,7 @@ the Rust, Python, and TypeScript surfaces together.
      toward packaging, WebAssembly embedding, and product integration backed by
      the same public parser contract.
 
-20. Deck compatibility follow-up.
+21. Deck compatibility follow-up.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.
@@ -5067,7 +5073,7 @@ the Rust, Python, and TypeScript surfaces together.
      command routing, including control flow, variables, and script execution
      policy.
 
-21. Production solver core follow-up.
+22. Production solver core follow-up.
    - Sparse real/complex matrix paths now have cross-language native coverage,
      and Python real DC solves now use an optional SciPy sparse-LU backend with
      structured native fallback metadata.

@@ -213,6 +213,16 @@ int main(int argc, char *argv[])
                 "Board mode hides schedule");
         click(root, "complexity-toggle");
         requireTask(root, TaskName);
+        click(root, "edit-btn");
+        control(root, "edit-name-input")->setProperty("text", QStringLiteral("Edited native task"));
+        settle();
+        control(root, "edit-due-input")->setProperty("text", QStringLiteral("2026-01-12"));
+        settle();
+        click(root, "edit-save-btn");
+        require(taskRows(root).first().toList().at(1).toString() == QStringLiteral("Edited native task"),
+                "edit task name through emitted control");
+        require(taskRows(root).first().toList().at(2).toString() == QStringLiteral("due 2026-01-12"),
+                "edit due date through emitted control");
 
         click(root, "toggle");
         require(taskRows(root).first().toList().at(0).toString() == QStringLiteral("✓"),

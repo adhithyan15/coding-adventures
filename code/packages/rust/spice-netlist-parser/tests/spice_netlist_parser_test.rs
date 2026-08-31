@@ -1913,6 +1913,23 @@ fn rejects_invalid_jfet_nominal_temperature() {
 }
 
 #[test]
+fn parses_jfet_mobility_temperature_exponent() {
+    let parsed = parse_netlist(".model shaped NJF(BEX=1.5)\nJ1 drain gate source shaped").unwrap();
+
+    let Element::Jfet(jfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected JFET");
+    };
+    assert_close(jfet.mobility_temperature_exponent, 1.5);
+}
+
+#[test]
+fn rejects_non_finite_jfet_mobility_temperature_exponent() {
+    let error = parse_netlist(".model bad NJF(BEX=1e999)\nJ1 drain gate source bad").unwrap_err();
+
+    assert!(error.to_string().contains("JFET BEX must be finite"));
+}
+
+#[test]
 fn parses_jfet_b_as_doping_tail_parameter_not_beta_alias() {
     let parsed = parse_netlist(
         r#"

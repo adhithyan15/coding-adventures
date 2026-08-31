@@ -1075,6 +1075,66 @@ style TaskApp {
     padding-bottom : 12 ;
     padding-left : 14 ;
   }
+  part edit-form {
+    gap : 8 ;
+    padding : 12 ;
+    background : "#28221d" ;
+  }
+  part edit-name-input {
+    width : 100% ;
+    background : "#1d1916" ;
+    color : "#eee7dc" ;
+    font-size : 14 ;
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#4b4037" ;
+    border-radius : 8 ;
+  }
+  part edit-due-input {
+    width : 100% ;
+    background : "#1d1916" ;
+    color : "#eee7dc" ;
+    font-size : 14 ;
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#4b4037" ;
+    border-radius : 8 ;
+  }
+  part edit-name-error {
+    color : "#f49a86" ;
+    font-size : 12 ;
+  }
+  part edit-due-error {
+    color : "#f49a86" ;
+    font-size : 12 ;
+  }
+  part edit-action-row {
+    gap : 8 ;
+    align : center-vertical ;
+  }
+  part edit-save-btn {
+    background : "#d99632" ;
+    color : "#1d1916" ;
+    padding : 8 ;
+    border-width : 0 ;
+    border-radius : 8 ;
+  }
+  part edit-cancel-btn {
+    background : "transparent" ;
+    color : "#c8bfb4" ;
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#4b4037" ;
+    border-radius : 8 ;
+  }
+  part edit-btn {
+    background : "transparent" ;
+    color : "#c8bfb4" ;
+    font-size : 12 ;
+    padding : 6 ;
+    border-width : 0 ;
+    border-radius : 8 ;
+  }
   // The completion toggle — a round control whose label is the engine's glyph.
   part toggle {
     background : "transparent" ;

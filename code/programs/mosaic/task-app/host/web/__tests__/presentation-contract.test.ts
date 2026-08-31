@@ -139,4 +139,44 @@ describe("shared TaskApp web/native presentation contract", () => {
     expect(controller.getProps().newTaskDueFocus).toBe("");
     expect(mutations).toBe(1);
   });
+
+  it("edits a List task atomically and persists through the Rust engine", async () => {
+    const wasmPath = path.resolve(
+      process.cwd(),
+      "../../../../../packages/rust/target/wasm32-unknown-unknown/release/task_wasm.wasm",
+    );
+    const engine = createTaskEngine(await readFile(wasmPath));
+    let mutations = 0;
+    const controller = makeController(engine, { onMutate: () => mutations++ });
+
+    controller.apply({ type: "newTaskNameChange", value: "Draft plan" });
+    controller.apply({ type: "addTask" });
+    controller.apply({ type: "editTask", index: 0 } as never);
+    expect(controller.getProps().taskRows[0][15]).toBe("editing");
+    expect(controller.getProps().editTaskName).toBe("Draft plan");
+
+    controller.apply({ type: "editTaskNameChange", value: "" } as never);
+    controller.apply({ type: "editTaskDueChange", value: "2026-02-31" } as never);
+    controller.apply({ type: "saveTaskEdit" } as never);
+    expect(controller.getProps().editTaskNameError).toBe("Enter a task name.");
+    expect(engine.workspace().data.projects.project.tasks.t1.name).toBe("Draft plan");
+    expect(mutations).toBe(1);
+
+    controller.apply({ type: "editTaskNameChange", value: "Launch plan" } as never);
+    controller.apply({ type: "saveTaskEdit" } as never);
+    expect(controller.getProps().editTaskDueError).toBe(
+      "Use a real date in YYYY-MM-DD format.",
+    );
+    expect(engine.workspace().data.projects.project.tasks.t1.name).toBe("Draft plan");
+    expect(mutations).toBe(1);
+
+    controller.apply({ type: "editTaskDueChange", value: "2026-02-28" } as never);
+    controller.apply({ type: "saveTaskEdit" } as never);
+    const task = engine.workspace().data.projects.project.tasks.t1;
+    expect(task.name).toBe("Launch plan");
+    expect(task.schedule.deadline).toBe(20512);
+    expect(controller.getProps().taskRows[0][15]).toBe("");
+    expect(controller.getProps().newTaskNameFocus).toBe("focus");
+    expect(mutations).toBe(2);
+  });
 });

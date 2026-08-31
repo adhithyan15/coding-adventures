@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.282.0 - 2026-08-29 (ALGOL conditional exponent unrolling)
+
+The ALGOL matrix now proves on all seven standard backends that a pure runtime
+conditional with equal exact tracked integer branches keeps its selector
+control flow while the enclosing real power uses bounded multiplication.
+
 ## 0.281.0 - 2026-08-28 (ALGOL exact tracked `entier` real-power exponents)
 
 The ALGOL matrix now proves on all seven standard backends that built-in
