@@ -131,6 +131,16 @@ const STRUCT_TYPE_MARKER: u8 = 0x5F;
 /// e.g. `structref` to a named struct type: `0x63 <typeidx: u32 LEB>`.
 const REF_NULL_CONCRETE_TAG: u8 = 0x63;
 
+/// The leading byte of a NON-NULL concrete reference type (`(ref $n)`, no
+/// `null` keyword) -- `0x64 <typeidx: u32 LEB>`, one more than
+/// [`REF_NULL_CONCRETE_TAG`] (W32 second slice: `code/specs/
+/// W32-wasm-non-null-concrete-reference-types.md`). Independently verified
+/// against the real reference interpreter's `interpreter/binary/decode.ml`
+/// (`ref_type`'s `-0x1c -> (NoNull, heap_type s)` arm: `-28 mod 128 =
+/// 0x64`), same discipline `wasm_types::ValueType::NonNullStructRef`'s own
+/// doc comment uses.
+const REF_NON_NULL_CONCRETE_TAG: u8 = 0x64;
+
 /// An upper bound on how much a length-prefixed vector may **pre-allocate**.
 /// The byte stream is untrusted, so a crafted count (e.g. `0xFFFFFFFF`) must not
 /// trigger a multi-gigabyte allocation before the (failing) element reads. We
@@ -599,6 +609,18 @@ fn read_value_type(p: &mut Parser) -> Result<ValueType, WasmParseError> {
     if byte == REF_NULL_CONCRETE_TAG {
         let idx = p.read_u32leb()?;
         return Ok(ValueType::StructRef(idx));
+    }
+    // W32 second slice: a NON-NULL concrete reference in a struct field
+    // (`(field (ref $t))`, no `null` keyword) -- same 2-byte shape, one
+    // more than `REF_NULL_CONCRETE_TAG`. This function is only ever called
+    // for STRUCT FIELD types (see its own doc comment), so -- exactly like
+    // `REF_NULL_CONCRETE_TAG` immediately above -- the index always names
+    // a struct type here, never a function type: `wasm-wast-parser` has no
+    // struct-type TEXT-format declarations at all, so no real `.wast`
+    // source can produce `NonNullConcreteFuncRef` via THIS path either.
+    if byte == REF_NON_NULL_CONCRETE_TAG {
+        let idx = p.read_u32leb()?;
+        return Ok(ValueType::NonNullStructRef(idx));
     }
     // `offset()` now points one past `byte`, so the error offset is `- 1`.
     decode_value_type(byte, p.offset().saturating_sub(1))
@@ -1753,6 +1775,29 @@ mod tests {
         assert!(!st.fields[0].mutable, "field 0 is immutable");
         assert_eq!(st.fields[1].val_type, ValueType::StructRef(0));
         assert!(st.fields[1].mutable, "field 1 is mutable");
+    }
+
+    #[test]
+    fn test_struct_field_non_null_concrete_ref_roundtrips() {
+        // W32 second slice: `0x64 <typeidx>` -- the NON-NULL counterpart to
+        // `0x63`'s nullable `(ref null $t)` immediately above, verified
+        // against the real reference interpreter's `interpreter/binary/
+        // decode.ml` (see `REF_NON_NULL_CONCRETE_TAG`'s own doc comment).
+        let payload = vec![
+            0x01, // count = 1
+            0x50, 0x00, 0x5F, // sub-type, 0 supers, struct
+            0x02, // 2 fields
+            0x64, 0x00, 0x01, // field 0: (ref $0), mutable
+            0x64, 0x01, 0x00, // field 1: (ref $1), immutable
+        ];
+        let data = wasm_with_sections(&[make_section(1, &payload)]);
+        let m = WasmModuleParser::parse(&data).unwrap();
+
+        let st = &m.struct_types[0];
+        assert_eq!(st.fields[0].val_type, ValueType::NonNullStructRef(0));
+        assert!(st.fields[0].mutable);
+        assert_eq!(st.fields[1].val_type, ValueType::NonNullStructRef(1));
+        assert!(!st.fields[1].mutable);
     }
 
     #[test]

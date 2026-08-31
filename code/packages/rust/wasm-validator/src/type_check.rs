@@ -172,10 +172,27 @@ fn pop_val(stack: &mut Vec<StackType>, frame: &ControlFrame) -> Result<StackType
 /// structural subtyping for `call_indirect`/`ref.cast` against concrete
 /// function/struct types are explicitly NOT part of this slice -- see the
 /// spec's "Explicitly out of scope" / "genuinely open-ended" notes.
+/// Whether `vt` is a WASM `numtype` or `vectype` -- the ONLY categories
+/// the untyped `select` (`0x1B`) instruction accepts, per the real
+/// reference-types proposal spec text (a reference-typed operand pair
+/// requires the explicit `(result t)`-annotated `select`, `0x1C`, which
+/// this crate does not implement -- see that opcode's own doc comment).
+/// `false` for every reference type (`Anyref`/`I31ref`/`StructRef`/
+/// `ConcreteFuncRef`/their W32-second-slice non-null counterparts/
+/// `Funcref`/`Externref`/`Exnref`/every W32-first-slice bottom type).
+fn is_numeric_or_vector(vt: ValueType) -> bool {
+    matches!(vt, ValueType::I32 | ValueType::I64 | ValueType::F32 | ValueType::F64 | ValueType::V128)
+}
+
 fn is_assignable(actual: ValueType, expected: ValueType) -> bool {
     actual == expected
         || matches!((actual, expected), (ValueType::ConcreteFuncRef(_), ValueType::Funcref))
         || actual.is_bottom_subtype_of(&expected)
+        // W32 second slice: `NonNullStructRef(i) <: StructRef(i) <: Anyref`,
+        // `NonNullConcreteFuncRef(i) <: ConcreteFuncRef(i) <: Funcref` --
+        // see `ValueType::is_non_null_subtype_of`'s own doc comment for why
+        // both hops of each chain are direct rules, not composed ones.
+        || actual.is_non_null_subtype_of(&expected)
 }
 
 /// Pop one value and require it to be assignable to `expected` (an
@@ -414,6 +431,53 @@ fn decode_blocktype(module: &WasmModule, code: &[u8], offset: usize) -> Result<(
         0x72 => Ok((vec![], vec![ValueType::NullExternref], 1)),
         0x74 => Ok((vec![], vec![ValueType::NullExnref], 1)),
         0x71 => Ok((vec![], vec![ValueType::NullRef], 1)),
+        // `(ref null $t)` / `(ref $t)` as a single-value blocktype result
+        // (W32 second slice: real corpus regression found, not a
+        // hypothetical -- `ref.wast`'s own `block-result-invalid`/
+        // `loop-result-invalid` cases, `(block (result (ref 1)) ...)`,
+        // started silently structurally validating instead of being
+        // rejected once this slice's `(ref $t)` TEXT parsing made this
+        // shape reachable). Same real gap `exnref`'s `0x69` fix and the
+        // four bottom types above already closed for THEIR bytes: `0x63`/
+        // `0x64` are ALSO plausible real type-section indices when
+        // (mis)decoded as a bare signed LEB128 byte by the generic
+        // fallback below, and BOTH carry a trailing LEB128 type index
+        // that fallback does not know to skip -- on a module with 100+
+        // declared types this would silently desynchronize the rest of
+        // the instruction stream instead of erroring.
+        //
+        // Resolves to `ConcreteFuncRef`/`NonNullConcreteFuncRef`
+        // specifically, never `StructRef`/`NonNullStructRef` -- same
+        // reasoning `ref.null`'s own `0xD0` handler documents: this
+        // crate's `wasm-wast-parser` has no struct-type TEXT-format
+        // declarations at all, so no real `.wast` source can put a
+        // struct-type index here. The index IS bounds-checked (unlike
+        // `ref.null`'s permissive out-of-range-falls-back-to-Unknown
+        // convention) because a blocktype has no `Unknown` fallback to
+        // fall back TO -- it must resolve to a real, concrete result
+        // type list or the block cannot be type-checked at all, so an
+        // out-of-range index here is unconditionally a real error
+        // (exactly the "unknown type" `ref.wast` itself expects).
+        0x63 => {
+            let (idx, size) = decode_idx(code, offset + 1)?;
+            if idx as usize >= module.types.len() {
+                return Err(ValidationError::TypeIndexOutOfBounds(format!(
+                    "blocktype references type index {idx}, but only {} types exist",
+                    module.types.len()
+                )));
+            }
+            Ok((vec![], vec![ValueType::ConcreteFuncRef(idx)], 1 + size))
+        }
+        0x64 => {
+            let (idx, size) = decode_idx(code, offset + 1)?;
+            if idx as usize >= module.types.len() {
+                return Err(ValidationError::TypeIndexOutOfBounds(format!(
+                    "blocktype references type index {idx}, but only {} types exist",
+                    module.types.len()
+                )));
+            }
+            Ok((vec![], vec![ValueType::NonNullConcreteFuncRef(idx)], 1 + size))
+        }
         _ => {
             let (idx, size) = decode_signed(code, offset).map_err(|e| ValidationError::Other(format!("bad blocktype immediate: {e}")))?;
             let ty = module
@@ -548,6 +612,23 @@ struct ModuleContext<'a> {
     /// combined function index space (imports first, matching every other
     /// index space in the binary format).
     func_types: Vec<FuncType>,
+    /// Each function's OWN declared type-SECTION index, same combined
+    /// imports-first-then-declared index space as `func_types` (parallel
+    /// array, same length, built in lockstep). Needed for `ref.func`'s
+    /// real spec typing rule (W32 second slice: `code/specs/
+    /// W32-wasm-non-null-concrete-reference-types.md`): `ref.func $f :
+    /// [] -> [(ref $t)]` where `$t` is `$f`'s own function-type index
+    /// (verified against WebAssembly/function-references's own
+    /// `Overview.md`) -- `func_types[i]` alone gives the RESOLVED
+    /// `FuncType` (params/results), which isn't enough to build a
+    /// `ValueType::NonNullConcreteFuncRef(idx)` naming the type-SECTION
+    /// index specifically (two different functions can declare
+    /// byte-identical signatures at two different type-section indices,
+    /// and the real spec's `ref.func` result must name the ACTUAL index
+    /// the function declared, not merely an equal-looking one -- this
+    /// repo's own scope explicitly excludes structural type-equivalence,
+    /// see the spec's "explicitly out of scope" section).
+    func_type_indices: Vec<u32>,
     /// Combined imported + module-defined global types, same index-space
     /// convention as `func_types`.
     global_types: Vec<GlobalType>,
@@ -610,6 +691,7 @@ fn build_module_context(module: &WasmModule) -> Result<ModuleContext<'_>, Valida
     use wasm_types::ImportTypeInfo;
 
     let mut func_types = Vec::new();
+    let mut func_type_indices = Vec::new();
     let mut global_types = Vec::new();
     let mut tag_types = Vec::new();
     for imp in &module.imports {
@@ -620,6 +702,7 @@ fn build_module_context(module: &WasmModule) -> Result<ModuleContext<'_>, Valida
                     .get(*type_idx as usize)
                     .ok_or_else(|| ValidationError::TypeIndexOutOfBounds(format!("import {}.{} references type index {type_idx}, but only {} types exist", imp.module_name, imp.name, module.types.len())))?;
                 func_types.push(ty.clone());
+                func_type_indices.push(*type_idx);
             }
             ImportTypeInfo::Global(gt) => global_types.push(gt.clone()),
             ImportTypeInfo::Tag(type_idx) => {
@@ -638,6 +721,7 @@ fn build_module_context(module: &WasmModule) -> Result<ModuleContext<'_>, Valida
             .get(type_idx as usize)
             .ok_or_else(|| ValidationError::TypeIndexOutOfBounds(format!("function references type index {type_idx}, but only {} types exist", module.types.len())))?;
         func_types.push(ty.clone());
+        func_type_indices.push(type_idx);
     }
     for g in &module.globals {
         global_types.push(g.global_type.clone());
@@ -685,6 +769,7 @@ fn build_module_context(module: &WasmModule) -> Result<ModuleContext<'_>, Valida
     Ok(ModuleContext {
         module,
         func_types,
+        func_type_indices,
         global_types,
         has_memory,
         memory_count,
@@ -1223,18 +1308,35 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 push_val(&mut stack, ValueType::I32);
             }
             0xD2 => {
-                // ref.func <funcidx> (WASM17): pushes a non-null funcref
-                // referring to a function by index. Bounds-checked the same
-                // way `call`'s type rule above checks its own funcidx.
+                // ref.func <funcidx>: pushes a reference to a function by
+                // index. Bounds-checked the same way `call`'s type rule
+                // above checks its own funcidx.
+                //
+                // W32 second slice: the real spec's typing rule is
+                // `ref.func $f : [] -> [(ref $t)]` where `$t` is `$f`'s OWN
+                // function-type index (WebAssembly/function-references's
+                // `Overview.md`, verified directly -- see
+                // `ValueType::NonNullConcreteFuncRef`'s own doc comment),
+                // NOT the pre-W32-second-slice placeholder of pushing bare
+                // `Funcref` for every `ref.func` regardless of which
+                // function it names. `NonNullConcreteFuncRef(idx) <:
+                // ConcreteFuncRef(idx) <: Funcref` (both direct rules, see
+                // `is_assignable`) means every PRE-EXISTING corpus use of
+                // `ref.func` where a plain `funcref`-typed slot was
+                // expected keeps validating exactly as before -- this is a
+                // strictly MORE PRECISE static type, not a behavior change
+                // for anything that only ever checked assignability.
                 let (callee, size) = decode_idx(code, offset)?;
                 offset += size;
-                if ctx.func_types.get(callee as usize).is_none() {
-                    return Err(ValidationError::FuncIndexOutOfBounds(format!(
-                        "function #{func_idx}: ref.func references function index {callee}, but only {} functions exist",
-                        ctx.func_types.len()
-                    )));
+                match ctx.func_type_indices.get(callee as usize) {
+                    Some(&type_idx) => push_val(&mut stack, ValueType::NonNullConcreteFuncRef(type_idx)),
+                    None => {
+                        return Err(ValidationError::FuncIndexOutOfBounds(format!(
+                            "function #{func_idx}: ref.func references function index {callee}, but only {} functions exist",
+                            ctx.func_types.len()
+                        )));
+                    }
                 }
-                push_val(&mut stack, ValueType::Funcref);
             }
 
             // ── Control ──────────────────────────────────────────────────────
@@ -1577,20 +1679,93 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 pop_expect_many(&mut stack, frame!(), &callee_type.params)?;
                 mark_unreachable(&mut stack, frame_mut!());
             }
+            0x14 => {
+                // call_ref $t (function-references proposal, W32 second
+                // slice): `[t1* (ref null $t)] -> [t2*]`, traps on null --
+                // independently verified against WebAssembly/function-
+                // references's own `Overview.md`, NOT restricted to a
+                // non-null-only operand the way this repo's own W32 spec
+                // document first assumed before this slice checked (see
+                // `ValueType::NonNullConcreteFuncRef`'s own doc comment).
+                // The ref operand is popped LAST (it's on TOP of the
+                // stack, per the type rule's own `t1* (ref null $t)`
+                // ordering), same shape `call_indirect`'s own table-index
+                // operand already uses.
+                let (type_idx, size) = decode_idx(code, offset)?;
+                offset += size;
+                let callee_type = ctx
+                    .module
+                    .types
+                    .get(type_idx as usize)
+                    .ok_or_else(|| ValidationError::TypeIndexOutOfBounds(format!("function #{func_idx}: call_ref references type index {type_idx}, but only {} types exist", ctx.module.types.len())))?;
+                pop_expect(&mut stack, frame!(), ValueType::ConcreteFuncRef(type_idx))?; // the ref operand
+                pop_expect_many(&mut stack, frame!(), &callee_type.params)?;
+                push_vals(&mut stack, &callee_type.results);
+            }
+            0x15 => {
+                // return_call_ref (function-references proposal, W32
+                // second slice): same immediate/operand shape as
+                // `call_ref` (0x14) above, same tail-call result-type-
+                // must-be-assignable + dead-code-after rule `return_call`/
+                // `return_call_indirect` already use.
+                let (type_idx, size) = decode_idx(code, offset)?;
+                offset += size;
+                let callee_type = ctx
+                    .module
+                    .types
+                    .get(type_idx as usize)
+                    .ok_or_else(|| ValidationError::TypeIndexOutOfBounds(format!("function #{func_idx}: return_call_ref references type index {type_idx}, but only {} types exist", ctx.module.types.len())))?;
+                let function_results = &control_stack
+                    .first()
+                    .ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: return_call_ref with no open block")))?
+                    .end_types;
+                if !results_assignable(&callee_type.results, function_results) {
+                    err!("return_call_ref to type #{type_idx} returning {:?}, but the current function returns {function_results:?}", callee_type.results);
+                }
+                pop_expect(&mut stack, frame!(), ValueType::ConcreteFuncRef(type_idx))?; // the ref operand
+                pop_expect_many(&mut stack, frame!(), &callee_type.params)?;
+                mark_unreachable(&mut stack, frame_mut!());
+            }
 
             // ── Parametric ───────────────────────────────────────────────────
             0x1A => {
                 pop_val(&mut stack, frame!())?; // drop: any type
             }
             0x1B => {
-                // select
+                // select (untyped -- MVP form, no `(result t)` immediate;
+                // the reference-types proposal's TYPED select, opcode
+                // `0x1C` with an explicit `vec(valtype)` immediate, is a
+                // separate, unrelated capability gap this crate's
+                // `wasm-wast-parser` does not yet parse at all -- see
+                // `select.wast`'s own real corpus census, which fails at
+                // the FIRST module using it).
+                //
+                // W32 second slice: real corpus regression found (not a
+                // pre-existing test this slice broke) -- `select.wast`'s
+                // own `type-ref-implicit`/`type-funcref-implicit`/
+                // `type-externref-implicit` `assert_invalid` cases require
+                // rejecting a REFERENCE-typed operand pair here (the real
+                // spec restricts the UNTYPED form to `numtype`/`vectype`
+                // operands only -- `(ref $t)`/`funcref`/`externref` must
+                // use the explicit `(result t)` form instead, which this
+                // crate doesn't support, so the untyped form must reject
+                // them outright rather than silently accept). Before this
+                // slice, `(ref $t)`/`(param $r (ref $t))` was entirely
+                // unparseable, so these three cases passed only via a
+                // lucky parse failure, never by this check actually
+                // running.
                 pop_expect(&mut stack, frame!(), ValueType::I32)?; // condition
                 let t2 = pop_val(&mut stack, frame!())?;
                 let t1 = pop_val(&mut stack, frame!())?;
                 let result = match (t1, t2) {
                     (StackType::Unknown, StackType::Unknown) => StackType::Unknown,
                     (StackType::Unknown, k @ StackType::Known(_)) | (k @ StackType::Known(_), StackType::Unknown) => k,
-                    (StackType::Known(a), StackType::Known(b)) if a == b => StackType::Known(a),
+                    (StackType::Known(a), StackType::Known(b)) if a == b => {
+                        if !is_numeric_or_vector(a) {
+                            err!("untyped select operand {a:?} is a reference type -- the explicit '(result t)' form is required for reference-typed select operands");
+                        }
+                        StackType::Known(a)
+                    }
                     (StackType::Known(a), StackType::Known(b)) => err!("select operands have different types ({a:?} vs {b:?})"),
                 };
                 stack.push(result);

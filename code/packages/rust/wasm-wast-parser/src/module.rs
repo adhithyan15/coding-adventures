@@ -258,7 +258,10 @@ fn parse_value_type(expr: &SExpr, type_names: &HashMap<String, u32>) -> Result<V
     // `funcref`/`externref` keywords below (WASM17; found in the real
     // corpus's `br_table.wast`, e.g. `(result (ref null func))`). Non-null
     // `(ref func)` is deliberately NOT recognized -- see `code/specs/
-    // W08-wasm-funcref-externref.md`'s "explicitly out of scope" section.
+    // W08-wasm-funcref-externref.md`'s "explicitly out of scope" section
+    // (this remains out of scope even after W32's second slice below: a
+    // non-null ABSTRACT heap type still has no `ValueType` variant, only
+    // non-null CONCRETE ones do).
     //
     // `(ref null $t)` (function-references proposal's own narrow slice,
     // W11 addendum): a NULLABLE reference to a CONCRETE function type
@@ -266,10 +269,20 @@ fn parse_value_type(expr: &SExpr, type_names: &HashMap<String, u32>) -> Result<V
     // `type_names` into `ValueType::ConcreteFuncRef`. This repo's own
     // `wasm-wast-parser` has no struct-type text-format declarations at
     // all (see `ConcreteFuncRef`'s own doc comment), so any named/numeric
-    // heap type reaching this branch always names a `func` type. Still
-    // deliberately NOT recognized: non-null `(ref $t)` (needs a second,
-    // non-nullable `ValueType` variant this repo's type system doesn't
-    // have -- the real "typed function references" wall, out of scope).
+    // heap type reaching this branch always names a `func` type.
+    //
+    // `(ref $t)` (W32 second slice: `code/specs/
+    // W32-wasm-non-null-concrete-reference-types.md`) -- the NON-NULL
+    // counterpart, same "$t always names a func type in THIS crate's text
+    // format" caveat as `(ref null $t)` above (no struct-type text
+    // declarations exist to name a struct type instead), resolved into
+    // `ValueType::NonNullConcreteFuncRef`. Real corpus vendoring pass:
+    // `call_ref.wast`'s own `(param $f (ref $ii))` / `(global $fac
+    // (ref $ll) (ref.func $fac))`. `(ref func)`/`(ref extern)` (non-null
+    // ABSTRACT heap types) stay unrecognized -- see the doc comment on the
+    // `null` branch above -- so those two atoms fall through to
+    // `resolve_idx`, which rejects them with a clear "expected an index"
+    // error rather than silently misinterpreting them as a type name.
     //
     // `(ref i31)` / `(ref null i31)` (W20): unlike `func`/`extern` above,
     // this crate does NOT distinguish the null and non-null spellings for
@@ -278,7 +291,9 @@ fn parse_value_type(expr: &SExpr, type_names: &HashMap<String, u32>) -> Result<V
     // already makes elsewhere (see `code/specs/
     // W20-wasm-gc-i31-conformance.md`). This is a deliberate scope choice,
     // not an oversight: a real non-null/nullable distinction would need a
-    // second `ValueType` variant this repo's type system doesn't have.
+    // second `ValueType` variant this repo's type system doesn't have --
+    // moot for `i31ref` specifically (there is no `NonNullI31ref`), unlike
+    // `func`/struct concrete refs where W32's second slice now adds one.
     if let Some(items) = expr.as_list() {
         if items.len() == 3 && items[0].as_atom() == Some("ref") && items[1].as_atom() == Some("null") {
             return match items[2].as_atom() {
@@ -291,6 +306,14 @@ fn parse_value_type(expr: &SExpr, type_names: &HashMap<String, u32>) -> Result<V
         }
         if items.len() == 2 && items[0].as_atom() == Some("ref") && items[1].as_atom() == Some("i31") {
             return Ok(ValueType::I31ref);
+        }
+        // W32 second slice: `(ref $t)` -- non-null concrete reference, no
+        // `null` keyword. Must come AFTER the `(ref i31)` check above (i31
+        // stays unified into `I31ref` regardless of nullability, see that
+        // branch's own doc comment) so it only ever catches a real
+        // named/numeric type reference here.
+        if items.len() == 2 && items[0].as_atom() == Some("ref") {
+            return Ok(ValueType::NonNullConcreteFuncRef(resolve_idx(type_names, &items[1], "type")?));
         }
         return Err(WastParseError::UnexpectedToken { pos: expr.pos(), found: "list".to_string(), expected: "a value type" });
     }
@@ -468,7 +491,45 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
                     rest = &rest[1..];
                 }
             }
-            let func_sig = rest.first().and_then(|e| e.as_list()).unwrap_or(&[]);
+            let sig_form = rest.first().and_then(|e| e.as_list());
+            // W32 second slice fix (found while investigating why a
+            // struct-declaring module started reporting a misleading
+            // `Pass` once `(ref $t)` parsing landed, NOT a pre-existing
+            // test this slice broke): a `(type ... (struct ...))` /
+            // `(type ... (array ...))` body's head atom is NOT "func", but
+            // the code below this used to swallow it anyway --
+            // `parse_func_signature` only ever recognizes `(param ...)`/
+            // `(result ...)` fields, so a struct's `(field ...)` entries
+            // were silently ignored and EVERY struct/array type
+            // declaration silently became an EMPTY `(func)` type
+            // (`FuncType { params: [], results: [] }`) instead of a real
+            // parse error. That was invisible before this slice (nothing
+            // could reference the resulting bogus empty func type in a
+            // way that validated), but `(ref $t)`'s new non-null-concrete-
+            // ref parsing (this slice) is EXACTLY the shape that CAN
+            // reference it silently correctly-typed-looking
+            // (`struct.wast`'s own `(func (param (ref $forward))) (type
+            // $forward (struct))` -- `$forward` resolves to a real, if
+            // WRONG, `NonNullConcreteFuncRef` index instead of failing to
+            // parse). Reject explicitly instead: a real "not yet
+            // supported" (this parser has no struct/array TEXT-format
+            // type declarations at all, see `wasm_types::ValueType::
+            // NonNullStructRef`'s own doc comment) must stay a
+            // `NotYetSupported` grade at the conformance-harness level,
+            // never silently downgrade the type into fabricated `func`
+            // shape a later reference can walk into unnoticed.
+            if let Some(sig) = sig_form {
+                if let Some(head) = sig.first().and_then(|e| e.as_atom()) {
+                    if head != "func" {
+                        return Err(WastParseError::UnexpectedToken {
+                            pos: f.pos(),
+                            found: head.to_string(),
+                            expected: "a func type body ('(func ...)') -- struct/array type declarations are not yet supported by this parser",
+                        });
+                    }
+                }
+            }
+            let func_sig = sig_form.unwrap_or(&[]);
             let sig_fields: Vec<&SExpr> = func_sig.iter().skip(1).collect();
             let func_type = parse_func_signature(&sig_fields, &ctx.type_names)?;
             ctx.module.types.push(func_type);
@@ -1500,7 +1561,33 @@ fn build_elem(fields: &[SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseErro
     if fields.first().and_then(|e| e.as_atom()).is_some_and(|s| s.starts_with('$')) {
         i += 1;
     }
-    let has_table_clause = fields.get(i).is_some_and(|e| e.is_keyword_list("table"));
+    // Declarative segment (reference-types proposal; needed by the W32
+    // second slice's own real corpus wins, `call_ref.wast`/
+    // `return_call_ref.wast`'s pervasive `(elem declare func $f $g ...)`):
+    // a THIRD element-segment mode, distinct from both active and passive
+    // -- it names no table (like passive) but additionally is never a
+    // valid `table.init`/`elem.drop` target either; its only purpose is
+    // to make `ref.func $f`/`ref.func $g` legal by marking those
+    // functions "declared" (the real spec's own validity rule this
+    // repo's `wasm-validator` does not separately enforce, so no
+    // dedicated `Element` field is needed to model that rule -- see
+    // `ref.func`'s own W32-second-slice-updated validator doc comment).
+    // This repo's `wasm_types::Element` has no distinct THIRD variant for
+    // "declarative" (only `is_passive: bool`) -- representing it as
+    // `is_passive: true` is a real, deliberate simplification, not an
+    // oversight: `wasm-validator`'s own per-element check (`lib.rs`, "a
+    // passive segment... table checks... apply only to ACTIVE segments")
+    // already skips every check a declarative segment would also need
+    // skipped, and nothing in this repo's vendored corpus ever
+    // `table.init`s/`elem.drop`s a segment this parser marks declarative
+    // (they are never given an `$id` in the real corpus either), so the
+    // two modes are behaviorally indistinguishable for every module this
+    // parser actually needs to accept.
+    let is_declarative = fields.get(i).and_then(|e| e.as_atom()) == Some("declare");
+    if is_declarative {
+        i += 1;
+    }
+    let has_table_clause = !is_declarative && fields.get(i).is_some_and(|e| e.is_keyword_list("table"));
     let table_index = if has_table_clause {
         let table_form = fields[i].as_list().unwrap();
         let idx = resolve_idx(&ctx.table_names, expect_get(table_form, 1)?, "table")?;
@@ -1517,8 +1604,9 @@ fn build_elem(fields: &[SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseErro
     // alone already proves this segment is active (a passive segment has
     // no target table to name at declaration time -- `table.init`
     // supplies one per-call instead).
-    let is_passive = !has_table_clause
-        && fields.get(i).and_then(|e| e.as_atom()).is_some_and(|s| s == "func" || s == "funcref" || s == "externref");
+    let is_passive = is_declarative
+        || (!has_table_clause
+            && fields.get(i).and_then(|e| e.as_atom()).is_some_and(|s| s == "func" || s == "funcref" || s == "externref"));
     let offset_expr = if is_passive {
         Vec::new()
     } else {
@@ -2639,6 +2727,21 @@ fn encode_stream_instr(
         }
         "call" | "return_call" => {
             let idx = resolve_idx(&icx.module.func_names, following.first().ok_or(WastParseError::UnexpectedEof)?, "func")?;
+            out.push(info.opcode);
+            out.extend(wasm_leb128::encode_unsigned(idx as u64));
+            Ok(1)
+        }
+        // `call_ref $t` / `return_call_ref $t` flat form (W32 second
+        // slice) -- no vendored corpus file needs this bare-atom/streaming
+        // shape (the real corpus's own `call_ref.wast`/
+        // `return_call_ref.wast` always fold every operand, see
+        // `encode_folded_instr`'s matching arm), but this crate's own
+        // convention is to support both forms symmetrically for every
+        // instruction (see `call`/`throw`/`ref.i31` above for precedent),
+        // backed by this crate's own unit tests, not left as an unverified
+        // gap.
+        "call_ref" | "return_call_ref" => {
+            let idx = resolve_idx(&icx.module.type_names, following.first().ok_or(WastParseError::UnexpectedEof)?, "type")?;
             out.push(info.opcode);
             out.extend(wasm_leb128::encode_unsigned(idx as u64));
             Ok(1)
@@ -3776,6 +3879,29 @@ fn encode_flat_instr(
             encode_instr_list(&args[1..], icx, out)?;
             out.push(info.opcode);
             let idx = resolve_idx(&icx.module.func_names, idx_expr, "func")?;
+            out.extend(wasm_leb128::encode_unsigned(idx as u64));
+            Ok(())
+        }
+        // `(call_ref $t operand-exprs...)` / `(return_call_ref $t
+        // operand-exprs...)` (function-references proposal, W32 second
+        // slice: `code/specs/W32-wasm-non-null-concrete-reference-
+        // types.md`) -- `$t` is a bare TYPE reference (into the func-type
+        // index space), not wrapped in a `(type $t)` list the way
+        // `call_indirect` needs to distinguish it from an inline
+        // param/result signature; `call_ref`/`return_call_ref` have no
+        // such inline-signature form, so this is the SAME shape `call`/
+        // `ref.func` above already use (idx first, then every remaining
+        // arg is a folded operand expression -- the LAST of which
+        // evaluates to the function reference itself, per the real spec's
+        // `[t1* (ref null $t)] -> [t2*]` typing rule: the ref is popped
+        // off the TOP of the stack, so it must be pushed LAST). Real
+        // corpus shape: `call_ref.wast`'s own `(call_ref $ii (local.get
+        // $x) (local.get $f))`.
+        "call_ref" | "return_call_ref" => {
+            let idx_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
+            encode_instr_list(&args[1..], icx, out)?;
+            out.push(info.opcode);
+            let idx = resolve_idx(&icx.module.type_names, idx_expr, "type")?;
             out.extend(wasm_leb128::encode_unsigned(idx as u64));
             Ok(())
         }
@@ -5989,6 +6115,144 @@ mod tests {
             FuncType { params: vec![], results: vec![ValueType::ConcreteFuncRef(0)] },
             "$f's own signature carries the concrete-func-ref result type"
         );
+    }
+
+    // ── W32 second slice: non-null concrete reference types ──────────────
+
+    #[test]
+    fn ref_non_null_concrete_type_parses_to_non_null_concrete_func_ref() {
+        // `(ref $t)` (no `null`) -- section 3's new branch, resolving into
+        // `ValueType::NonNullConcreteFuncRef` via the SAME `type_names`
+        // lookup `(ref null $t)` already uses (no struct-type text
+        // declarations exist in this crate either, see that variant's own
+        // doc comment).
+        let m = parse_module("(module (type $t (func)) (func (param $f (ref $t)) (drop (local.get $f))))").unwrap();
+        assert_eq!(
+            m.types[1],
+            FuncType { params: vec![ValueType::NonNullConcreteFuncRef(0)], results: vec![] },
+        );
+    }
+
+    #[test]
+    fn ref_non_null_concrete_type_by_numeric_index_also_resolves() {
+        let m = parse_module("(module (type (func)) (func (param (ref 0)) (drop (local.get 0))))").unwrap();
+        assert_eq!(m.types[1].params, vec![ValueType::NonNullConcreteFuncRef(0)]);
+    }
+
+    #[test]
+    fn ref_non_null_undeclared_type_is_a_clean_error_not_a_panic() {
+        let err = parse_module("(module (func (param (ref $nope))))").unwrap_err();
+        assert!(matches!(err, WastParseError::UnknownIdentifier { .. }));
+    }
+
+    #[test]
+    fn ref_non_null_abstract_heap_types_stay_unrecognized() {
+        // `(ref func)`/`(ref extern)` (non-null ABSTRACT heap types) remain
+        // deliberately out of scope -- see `parse_value_type`'s own doc
+        // comment. Real corpus finding: `ref.wast`'s own module using this
+        // exact construct alongside `(ref $t)`/`(ref 0)`, confirming this
+        // is a genuinely SEPARATE gap from the one this slice closes, not
+        // an oversight in the new `(ref $t)` branch.
+        let err = parse_module("(module (func (param (ref func))))").unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedToken { .. }), "{err:?}");
+    }
+
+    #[test]
+    fn ref_non_null_produces_the_real_value_type_variant() {
+        // `NonNullConcreteFuncRef`'s own `.encode()` (`wasm-types`) is
+        // `0x64 <LEB128(idx)>`, independently verified there against the
+        // real reference interpreter -- this just confirms the TEXT
+        // pipeline actually produces that Rust variant (not, say,
+        // `ConcreteFuncRef` by mistake), which the binary-encoding test
+        // lives closer to the source of truth for.
+        let m = parse_module("(module (type $t (func)) (func (param (ref $t))))").unwrap();
+        assert_eq!(m.types[1].params, vec![ValueType::NonNullConcreteFuncRef(0)]);
+        assert_eq!(m.types[1].params[0].encode(), vec![0x64, 0x00]);
+    }
+
+    #[test]
+    fn call_ref_folded_form_encodes_typeidx_immediate() {
+        let m = parse_module(
+            "(module \
+               (type $t (func (param i32) (result i32))) \
+               (func $f (type $t) (local.get 0)) \
+               (func (param $x i32) (result i32) (call_ref $t (local.get $x) (ref.func $f))))",
+        )
+        .unwrap();
+        // ref.func $f (0xD2 0x00); call_ref $t (0x14 <typeidx>); end.
+        // local.get $x (0x20 0x00) precedes the ref.func push.
+        assert_eq!(code_of(&m, 1), &[0x20, 0x00, 0xD2, 0x00, 0x14, 0x00, 0x0B]);
+    }
+
+    #[test]
+    fn return_call_ref_folded_form_encodes_typeidx_immediate() {
+        let m = parse_module(
+            "(module \
+               (type $t (func (result i32))) \
+               (func $f (type $t) (i32.const 1)) \
+               (func (result i32) (return_call_ref $t (ref.func $f))))",
+        )
+        .unwrap();
+        assert_eq!(code_of(&m, 1), &[0xD2, 0x00, 0x15, 0x00, 0x0B]);
+    }
+
+    #[test]
+    fn call_ref_flat_form_matches_folded_form() {
+        let folded = parse_module(
+            "(module (type $t (func)) (func $f (type $t)) (func (call_ref $t (ref.func $f))))",
+        )
+        .unwrap();
+        let flat = parse_module(
+            "(module (type $t (func)) (func $f (type $t)) (func ref.func $f call_ref $t))",
+        )
+        .unwrap();
+        assert_eq!(code_of(&folded, 1), code_of(&flat, 1));
+    }
+
+    #[test]
+    fn elem_declare_func_parses_as_a_passive_segment() {
+        // Real corpus shape (`call_ref.wast`/`return_call_ref.wast`'s own
+        // pervasive `(elem declare func $f $g)`): a THIRD element-segment
+        // mode this crate models as `is_passive: true` -- see `build_elem`'s
+        // own doc comment for why that's a deliberate, sound simplification
+        // rather than a distinct representation.
+        let m = parse_module("(module (func $f) (elem declare func $f))").unwrap();
+        assert_eq!(m.elements.len(), 1);
+        assert!(m.elements[0].is_passive);
+        assert_eq!(m.elements[0].function_indices, vec![Some(0)]);
+    }
+
+    #[test]
+    fn elem_declare_multiple_funcs_parses() {
+        let m = parse_module("(module (func $f) (func $g) (elem declare func $f $g))").unwrap();
+        assert_eq!(m.elements[0].function_indices, vec![Some(0), Some(1)]);
+    }
+
+    #[test]
+    fn struct_type_declaration_is_rejected_not_silently_misparsed_as_an_empty_func() {
+        // Regression guard: a `(type ... (struct ...))` body used to be
+        // silently swallowed by `parse_func_signature` (which only
+        // recognizes `(param ...)`/`(result ...)` fields) into a bogus
+        // EMPTY `(func)` type -- invisible until `(ref $t)` parsing (this
+        // slice) made it possible to reference that bogus type in a way
+        // that validated. Must now be a clean parse error instead.
+        let err = parse_module("(module (type $s (struct)))").unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedToken { .. }), "{err:?}");
+    }
+
+    #[test]
+    fn array_type_declaration_is_also_rejected() {
+        let err = parse_module("(module (type $a (array i32)))").unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedToken { .. }), "{err:?}");
+    }
+
+    #[test]
+    fn bare_type_declaration_with_no_signature_still_parses_as_an_empty_func() {
+        // Must NOT be swept up by the struct/array rejection above -- a
+        // bare `(type $t)` (no signature form at all) is legitimate MVP
+        // syntax for an implicit empty `(func)` type.
+        let m = parse_module("(module (type $t) (func (type $t)))").unwrap();
+        assert_eq!(m.types[0], FuncType { params: vec![], results: vec![] });
     }
 
     #[test]

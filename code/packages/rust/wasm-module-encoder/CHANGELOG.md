@@ -1,5 +1,14 @@
 # Changelog
 
+- 0.2.8 (W32 second slice — non-null concrete reference types): no code
+  change needed in this crate itself, same reason as 0.2.7 below --
+  `ValueType::encode()` already handles `NonNullStructRef`/
+  `NonNullConcreteFuncRef` (`wasm-types` 0.1.14) universally. Added a
+  round-trip test (`encodes_non_null_structref_field_round_trip`) proving
+  a struct type mixing a non-null AND a nullable concrete-ref field
+  round-trips through this crate's `encode_module` and
+  `wasm-module-parser::WasmModuleParser::parse` byte-for-byte. See
+  `code/specs/W32-wasm-non-null-concrete-reference-types.md`.
 - 0.2.7 (W32 first slice — bottom reference types): no code change needed
   in this crate itself -- every value-type encode call site already goes
   through `ValueType::encode()` universally, so the four new

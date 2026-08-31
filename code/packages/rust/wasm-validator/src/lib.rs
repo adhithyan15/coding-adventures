@@ -533,12 +533,30 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
     // anyway would require the same struct-vs-func index disambiguation
     // `wasm-validator::type_check`'s `0xD0` handler already documents as
     // out of scope for this addendum.
-    // Returns the out-of-range index, if `vt` is a `ConcreteFuncRef` whose
-    // index is `>= types_len` -- `None` for every other `ValueType`
-    // (including an in-range `ConcreteFuncRef`).
+    // Returns the out-of-range index, if `vt` is a `ConcreteFuncRef` (or,
+    // W32 second slice, its non-null counterpart `NonNullConcreteFuncRef`
+    // -- same func-type index space, same `0..types_len` bound, see that
+    // variant's own doc comment) whose index is `>= types_len` -- `None`
+    // for every other `ValueType` (including an in-range one).
+    //
+    // W32 second slice: real corpus regression found (not a pre-existing
+    // gap this slice merely exposed by coincidence) -- `wasm-wast-parser`
+    // happily produces a `NonNullConcreteFuncRef` with an out-of-range
+    // index (`resolve_idx` on a bare numeric atom just parses the digits,
+    // it does not bounds-check them, exactly like `ConcreteFuncRef`'s own
+    // doc comment on this function's test already explains for the
+    // nullable case), and this repo's real corpus (`ref.wast`'s own
+    // `(module (type $type-func-param-invalid (func (param (ref
+    // 1)))))"unknown type"` etc.) genuinely exercises the NON-null form
+    // of exactly the check this function already performed for the
+    // nullable one -- without this arm, five `ref.wast` `assert_invalid`
+    // cases that used to pass only because non-null `(ref $t)` was
+    // entirely unparseable (a lucky parse-failure `Pass`, not a real
+    // check) would silently validate instead once this slice's `(ref $t)`
+    // parsing landed.
     fn out_of_range_concrete_func_ref(vt: &ValueType, types_len: usize) -> Option<u32> {
         match vt {
-            ValueType::ConcreteFuncRef(idx) if *idx as usize >= types_len => Some(*idx),
+            ValueType::ConcreteFuncRef(idx) | ValueType::NonNullConcreteFuncRef(idx) if *idx as usize >= types_len => Some(*idx),
             _ => None,
         }
     }
@@ -888,6 +906,66 @@ mod tests {
             ..Default::default()
         };
         assert!(validate(&module).is_ok(), "{:?}", validate(&module).unwrap_err());
+    }
+
+    // ── W32 second slice: `NonNullStructRef(i) <: StructRef(i) <: Anyref` ────
+    //
+    // Same "no struct-type TEXT-format declarations exist" limitation as the
+    // first slice's `NullRef <: StructRef(_)` tests just above -- a
+    // `NonNullStructRef`-typed LOCAL, read via `local.get`, is this crate's
+    // only way to get a statically-`Known(NonNullStructRef(_))` value onto
+    // the stack without a real `struct.new` instruction (not implemented by
+    // this repo's execution engine yet -- irrelevant here, since this is a
+    // pure STATIC type-check, never actually run).
+
+    #[test]
+    fn accepts_non_null_structref_flowing_into_a_structref_result_same_index() {
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![ValueType::StructRef(0)] }],
+            functions: vec![0],
+            // local.get 0; end -- local 0 is a NonNullStructRef(0).
+            code: vec![FunctionBody { locals: vec![ValueType::NonNullStructRef(0)], code: vec![0x20, 0x00, 0x0B] }],
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok(), "{:?}", validate(&module).unwrap_err());
+    }
+
+    #[test]
+    fn accepts_non_null_structref_flowing_into_an_anyref_result() {
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![ValueType::Anyref] }],
+            functions: vec![0],
+            code: vec![FunctionBody { locals: vec![ValueType::NonNullStructRef(0)], code: vec![0x20, 0x00, 0x0B] }],
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok(), "{:?}", validate(&module).unwrap_err());
+    }
+
+    #[test]
+    fn rejects_structref_flowing_into_a_non_null_structref_result() {
+        // The reverse direction never holds -- a NULLABLE `StructRef` carries
+        // no static guarantee it's actually non-null, so it cannot stand in
+        // for the non-null slot (the exact asymmetry this slice's own
+        // "Verification plan" calls out).
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![ValueType::NonNullStructRef(0)] }],
+            functions: vec![0],
+            code: vec![FunctionBody { locals: vec![ValueType::StructRef(0)], code: vec![0x20, 0x00, 0x0B] }],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::Other(_)), "{err:?}");
+    }
+
+    #[test]
+    fn rejects_non_null_structref_flowing_into_a_mismatched_index() {
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![ValueType::StructRef(1)] }],
+            functions: vec![0],
+            code: vec![FunctionBody { locals: vec![ValueType::NonNullStructRef(0)], code: vec![0x20, 0x00, 0x0B] }],
+            ..Default::default()
+        };
+        assert!(validate(&module).is_err());
     }
 
     #[test]

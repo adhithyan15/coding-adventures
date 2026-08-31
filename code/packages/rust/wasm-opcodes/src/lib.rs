@@ -81,6 +81,8 @@
 //! │ 0x11    │ call_indirect        │ control      │ typeidx, tableidx      │  1  │  0   │
 //! │ 0x12    │ return_call          │ control      │ funcidx                │  0  │  0   │
 //! │ 0x13    │ return_call_indirect │ control      │ typeidx, tableidx      │  1  │  0   │
+//! │ 0x14    │ call_ref             │ control      │ typeidx                │  1  │  0   │
+//! │ 0x15    │ return_call_ref      │ control      │ typeidx                │  1  │  0   │
 //! ├─────────┼──────────────────────┼──────────────┼────────────────────────┼─────┼──────┤
 //! │ Parametric instructions                                                              │
 //! │ 0x1A    │ drop                 │ parametric   │ —                      │  1  │  0   │
@@ -263,6 +265,18 @@ pub static OPCODES: &[OpcodeInfo] = &[
     OpcodeInfo { name: "call_indirect", opcode: 0x11, category: "control",     immediates: &["typeidx", "tableidx"],       stack_pop: 1, stack_push: 0 },
     OpcodeInfo { name: "return_call",          opcode: 0x12, category: "control", immediates: &["funcidx"],             stack_pop: 0, stack_push: 0 },
     OpcodeInfo { name: "return_call_indirect", opcode: 0x13, category: "control", immediates: &["typeidx", "tableidx"], stack_pop: 1, stack_push: 0 },
+    // `call_ref`/`return_call_ref` (function-references proposal, W32
+    // second slice: `code/specs/W32-wasm-non-null-concrete-reference-
+    // types.md`) -- opcode bytes and single `typeidx` immediate
+    // independently verified against WebAssembly/function-references's
+    // own `Overview.md` binary-encoding table (`0x14`/`0x15`), not
+    // assumed. `stack_pop: 1` mirrors `call_indirect`'s own convention:
+    // one extra operand (the function reference itself) beyond the
+    // callee's own declared params, which -- like `call`/`call_indirect`
+    // above -- are threaded through the folded/flat instruction encoders
+    // directly rather than driven by this metadata table.
+    OpcodeInfo { name: "call_ref", opcode: 0x14, category: "control", immediates: &["typeidx"], stack_pop: 1, stack_push: 0 },
+    OpcodeInfo { name: "return_call_ref", opcode: 0x15, category: "control", immediates: &["typeidx"], stack_pop: 1, stack_push: 0 },
     // `try_table` (W21 — the exceptions proposal): control-flow-shaped
     // exactly like `block`/`loop`/`if` above (a real blocktype immediate,
     // PLUS a variable-length catch-clause list this table's generic

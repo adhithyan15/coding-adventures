@@ -290,3 +290,150 @@ What's left for a later slice (unchanged from this spec's own scoping):
   `array.wast`'s remaining gaps, `ref_cast.wast`/`ref_test.wast`/
   `br_on_cast*.wast`/`br_on_non_null.wast`) — still blocked, exactly as
   this spec's "Purpose" section described.
+
+## Addendum (2026-08-31): second slice shipped
+
+This spec's second slice — section 1's `NonNullStructRef`/
+`NonNullConcreteFuncRef` and section 2's non-null subtyping rules — has
+SHIPPED. Structural subtyping (`type-subtyping.wast`) remains explicitly
+out of scope, per this spec's own scoping; see below for what's still
+open, including several NEW gaps this slice's own investigation found and
+confirmed (not guessed).
+
+### What landed
+
+- `wasm-types` 0.1.14: `ValueType::NonNullStructRef(u32)`/
+  `NonNullConcreteFuncRef(u32)`, tag byte `0x64`, plus
+  `ValueType::is_non_null_subtype_of` — the section 2 lattice. `0x64` was
+  independently re-verified (not re-asserted from this document) against
+  the real reference interpreter's `interpreter/binary/decode.ml`
+  (`ref_type`'s `-0x1c -> (NoNull, heap_type s)` arm: `-28 mod 128 =
+  0x64`) — it matches this spec's own claimed value exactly, so unlike
+  the first slice's `is_bottom_subtype_of` derivation from `decode.ml`,
+  there was no discrepancy to fix here either.
+- `wasm-validator` 0.2.75: `is_assignable` now checks the non-null
+  lattice; `call_ref`/`return_call_ref` (`0x14`/`0x15`) are real,
+  type-checked opcodes; `ref.func`'s pushed type is now the real spec
+  rule (`[] -> [(ref $t)]`, `$t` = the named function's own type, not a
+  blanket `Funcref`); `decode_blocktype` gained `0x63`/`0x64` arms;
+  untyped `select` now rejects reference-typed operands.
+- `wasm-wast-parser` 0.1.87: `(ref $t)` text parsing (into
+  `NonNullConcreteFuncRef`, same "no struct-type text declarations exist"
+  caveat `(ref null $t)` already had); `call_ref`/`return_call_ref`
+  folded+flat parsing; `(elem declare func ...)` (declarative element
+  segments) parsing; and a fix for a PRE-EXISTING bug (silently
+  misparsing `(type ... (struct/array ...))` into a bogus empty `(func)`
+  type) that this slice's own new parsing surface is what first made
+  observable.
+- `wasm-module-parser` 0.2.12 / `wasm-module-encoder` 0.2.8: binary
+  decode/encode for the new tag byte (encoder needed no code change —
+  universal `ValueType::encode()`; decoder's `read_value_type`, the
+  struct-FIELD-only path, gained the `0x64` arm alongside `0x63`).
+- `wasm-execution` 0.9.78 / `wasm-runtime` 0.6.16: `call_ref`/
+  `return_call_ref` runtime handlers (pop a ref, trap on null, call/
+  tail-call through the function index the ref's `Some(handle)` already
+  IS); `evaluate_const_expr` gained a `ref.func` arm (a real gap: the
+  real spec calls `ref.func` a *constant instruction*, needed for globals
+  like `(global $fac (ref $ll) (ref.func $fac))`); matching `0x63`/`0x64`
+  blocktype arms; exhaustive-match completions for the two new variants.
+- **`call_ref.wast`/`return_call_ref.wast` vendored with real, honest
+  numbers** — investigated per this spec's own "purpose" section (they
+  were listed as blocked on this exact wall) and confirmed NOT to need
+  structural subtyping after all: `call_ref $t`'s real typing rule is
+  `[t1* (ref null $t)] -> [t2*]` (nullable operand, traps on null) —
+  independently verified against WebAssembly/function-references's own
+  `Overview.md`, correcting this spec's OWN original assumption that the
+  operand was non-null-only. `call_ref.wast`: `module` 0/4 → 4/4 (100%),
+  `assert_return` 0/23 → 23/23 (100%), `assert_trap` 0/4 → 4/4 (100%).
+  `return_call_ref.wast`: `module` 0/5 → 4/4 (100%) + 1 `not_yet_supported`,
+  `assert_return` 0/31 → 31/31 (100%), `assert_trap` 0/4 → 4/4 (100%).
+  Getting there also required two things this spec did not anticipate:
+  declarative element segment parsing (`(elem declare func $f)`, needed to
+  make `ref.func $f` legal on a function never otherwise referenced) and
+  `evaluate_const_expr`'s `ref.func` fix above.
+- **`struct.wast`/`array.wast` re-checked, per this spec's own ask** —
+  did NOT improve (both still need real struct/array-type TEXT-format
+  declarations this crate has never had, an unrelated, larger, later
+  slice — see "What's still open" below). Their `module` pass count
+  actually DECREASED (1→0 each), but this is a deliberate correctness fix,
+  not a regression: the one module each previously "passed" only because
+  of the pre-existing `wasm-wast-parser` bug above (a `(type ... (struct/
+  array ...))` silently misparsed as an empty `(func)`) — this slice's
+  `(ref $t)` parsing is what first made that bogus type REFERENCEABLE in
+  a way that validated, so a full-corpus baseline diff caught it. Fixed
+  at the parser (a clean rejection instead), which is what actually
+  causes the pass-count decrease.
+- Full-corpus regression check: diffed the regenerated baseline
+  programmatically against the pre-change one across all 256 files. 9
+  files showed a DECREASED pass count somewhere
+  (`array.wast`/`call_ref.wast`/`func.wast`/`ref.wast`/
+  `return_call_ref.wast`/`struct.wast`/`try_table.wast`/`type-rec.wast`/
+  `unreached-invalid.wast`) — every one individually investigated (not
+  assumed benign) and confirmed to be either the struct/array parse-bug
+  fix above, or an honest `not_yet_supported` reclassification of a case
+  that previously passed ONLY via a lucky module-parse failure (`(ref
+  $t)`/`(ref func)`/`(ref exn)` being entirely unparseable before this
+  slice) and is now correctly gradeable for the first time — never a
+  newly introduced silent misbehavior. Two bounded, in-scope fixes were
+  made specifically to minimize this list: extending
+  `out_of_range_concrete_func_ref`'s bounds check to the new non-null
+  variant (restored 3 of `ref.wast`'s 5 initially-regressed cases), and
+  making untyped `select` reject reference-typed operands per the real
+  spec (restored/improved `select.wast`). 26 directive-kind counts
+  IMPROVED as a side effect (`elem.wast`, `instance.wast`, `ref_func.wast`,
+  `select.wast`, `table.wast`, `table_grow.wast`, `type-equivalence.wast`,
+  `unreached-valid.wast`, plus the four headline files above).
+
+### What's still open for a later slice
+
+- Structural subtyping for `call_indirect`/`ref.cast` against concrete
+  function/struct types — `type-subtyping.wast`'s actual remaining gap,
+  confirmed still open, unchanged from this spec's own original scoping.
+- Real struct/array-type TEXT-format declarations (`(type $t (struct
+  (field ...)))`/`(type $t (array ...))`) — `wasm-wast-parser` has NONE
+  at all; this is the actual remaining blocker for `struct.wast`/
+  `array.wast`, confirmed by this slice's own investigation, not merely
+  restated from before. A real, substantial parser feature (field lists,
+  mutability, `(rec ...)` type-group binding order) — out of scope here.
+- Real recursive type groups' own forward-reference/nominal-identity
+  rules (`(rec (type $a ...) (type $b ...))`) — confirmed, via this
+  slice's own investigation of `type-rec.wast`'s regressed cases, to be
+  more than a bounds check: a type declared inside a LATER position in
+  the flat `module.types` array can spuriously appear "in bounds" to a
+  simple `idx < types.len()` check even when the real spec's rec-group
+  ordering rules would reject it as a forward reference. Unchanged from
+  this spec's original "explicitly out of scope" section, now confirmed
+  by a real failing case rather than assumed.
+- Per-local definite-initialization tracking for non-defaultable
+  non-null locals — the real spec's own rule (WebAssembly/
+  function-references's `Overview.md`: "Track initialisation status of
+  locals during validation and only allow `local.get` after a
+  `local.set`/`tee` in the same or a surrounding block"), confirmed via
+  `func.wast`'s own `type-local-uninitialized` regressed case
+  (`(local $x (ref $t)) (drop (local.get $x))` must be rejected as
+  "uninitialized local", which this crate's validator does not track at
+  all). A genuine control-flow/liveness analysis feature, comparable in
+  scope to structural subtyping — a new, separate slice, not attempted
+  here.
+- `try_table`'s own catch-clause payload-type checking against its
+  destination label's declared types — confirmed via `try_table.wast`'s
+  own regressed case (a `catch` clause pushing a NULLABLE tag-param type
+  into a label expecting the NON-null counterpart currently validates
+  when it should not) to be a pre-existing gap in `try_table`'s own
+  instruction handling, not a defect in this slice's new subtyping rules
+  — `try_table` does not check ANY payload-type compatibility today, per
+  two OTHER already-`not_yet_supported` cases in the same file that
+  predate this slice.
+- `wasm-wast-parser`'s single-value-blocktype dedup (a `(block (result
+  (ref $t)) ...)` gets rewritten into a brand-new anonymous type-section
+  entry, per `parse_func_signature`-shaped logic) can make an
+  intentionally out-of-range index in the ORIGINAL source spuriously
+  land in bounds once that new entry is appended — confirmed via two of
+  `ref.wast`'s regressed cases (`block-result-invalid`/
+  `loop-result-invalid`). Needs the type index validated against the
+  types that existed AT THE POINT OF REFERENCE, before any anonymous
+  dedup — a parser-level fix, not touched here.
+- Everything downstream of full structural subtyping
+  (`ref_cast.wast`/`ref_test.wast`/`br_on_cast*.wast`/
+  `br_on_non_null.wast`) — still blocked, exactly as this spec's
+  "Purpose" section described.

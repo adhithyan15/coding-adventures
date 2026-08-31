@@ -2,6 +2,21 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.12] — 2026-08-31 — W32 second slice: non-null concrete ref decoding
+
+### Added
+
+- `read_value_type` (struct FIELD context) now recognizes `0x64
+  <typeidx>` — the non-null counterpart to the existing `0x63` nullable
+  tag, decoding to `ValueType::NonNullStructRef` — independently verified
+  against the real reference interpreter's own `interpreter/binary/
+  decode.ml` (`ref_type`'s `-0x1c -> (NoNull, heap_type s)` arm: `-28 mod
+  128 = 0x64`). Like `0x63`, only reachable through this struct-field
+  path in this crate — function params/results/locals/globals still
+  decode through the single-byte `decode_value_type`, a pre-existing
+  limitation unrelated to this slice (see `REF_NON_NULL_CONCRETE_TAG`'s
+  own doc comment).
+
 ## [0.2.11] — 2026-08-31 — W32 first slice: bottom reference-type decoding
 
 ### Added

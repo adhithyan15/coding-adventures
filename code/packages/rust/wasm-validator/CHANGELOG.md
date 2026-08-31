@@ -2,6 +2,73 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.75] - 2026-08-31 (W32 second slice — non-null concrete reference types)
+
+### Added
+
+- `is_assignable` now also checks `wasm_types::ValueType::
+  is_non_null_subtype_of` — `NonNullStructRef(i) <: StructRef(i) <:
+  Anyref` and `NonNullConcreteFuncRef(i) <: ConcreteFuncRef(i) <:
+  Funcref`, never the reverse. Per `code/specs/
+  W32-wasm-non-null-concrete-reference-types.md`'s addendum section 2.
+- `call_ref`/`return_call_ref` (`0x14`/`0x15`, function-references
+  proposal) are now real, type-checked opcodes: `call_ref $t : [t1*
+  (ref null $t)] -> [t2*]`, traps on null (independently verified
+  against WebAssembly/function-references's own `Overview.md` — NOT
+  restricted to a non-null-only operand the way this package's own W32
+  spec document first assumed before this slice checked);
+  `return_call_ref` adds the same tail-call result-assignability +
+  dead-code-after rule `return_call`/`return_call_indirect` already have.
+- `ref.func`'s type-check now reflects the real spec rule: `ref.func $f :
+  [] -> [(ref $t)]` where `$t` is `$f`'s own function-type index (real
+  spec text verified directly), a genuinely more precise static type than
+  the pre-existing placeholder of pushing bare `Funcref` for every
+  `ref.func` — every pre-existing use where a plain `funcref`-typed slot
+  was expected keeps validating (`NonNullConcreteFuncRef(i) <:
+  ConcreteFuncRef(i) <: Funcref`), this is strictly more information, not
+  a behavior change for anything that only ever checked assignability.
+  Needed a new `ModuleContext::func_type_indices` (parallel to
+  `func_types`, same combined index space) since the resolved `FuncType`
+  alone can't recover which type-SECTION index a function declared.
+- `out_of_range_concrete_func_ref`'s bounds check now also covers
+  `NonNullConcreteFuncRef` (real corpus regression found and fixed, not
+  hypothetical: `ref.wast`'s own `type-func-param-invalid`/`func-param-
+  invalid`/`func-local-invalid`/etc. `assert_invalid` cases, which
+  `wasm-wast-parser`'s new `(ref $t)` parsing made newly reachable).
+- `type_check::decode_blocktype` and `wasm-execution`'s matching
+  blocktype decoders gained explicit arms for `0x63`/`0x64` (nullable/
+  non-null concrete-ref single-value blocktype results) — the same
+  defensive treatment the four W32-first-slice bottom types and `exnref`
+  already have: both are plausible real type-section indices, and both
+  carry a trailing LEB128 index the generic fallback doesn't know to skip.
+- Untyped `select` (`0x1B`) now rejects a reference-typed operand pair
+  (real corpus regression found and fixed: `select.wast`'s own `type-ref-
+  implicit`/`type-funcref-implicit`/`type-externref-implicit` cases) —
+  the real spec restricts the untyped form to `numtype`/`vectype`
+  operands only; a reference-typed pair needs the explicit `(result t)`
+  form, which this crate does not implement.
+
+### Fixed
+
+- (See "Added" above — every item is a real regression `(ref $t)`'s new
+  parsing surface exposed, found via a full-corpus diff against the
+  pre-change baseline, not a hypothetical gap.)
+
+### Scope note
+
+This is the **second slice** of W32: non-null concrete-ref representation,
+its direct subtyping rules, and the minimum instruction/opcode support
+needed to make it soundly checkable (`call_ref`/`return_call_ref`,
+`ref.func`'s real result type, blocktype/bounds-check parity, `select`'s
+reference-type restriction). Still explicitly open: structural subtyping
+for `call_indirect`/`ref.cast` (`type-subtyping.wast`'s real remaining
+gap), real recursive type groups' own forward-reference/nominal-identity
+rules (`type-rec.wast`), per-local definite-initialization tracking for
+non-defaultable non-null locals (`func.wast`'s `uninitialized local`
+case), and `try_table`'s own catch-clause payload-type checking against
+its destination label — each confirmed, not guessed, via the same
+full-corpus diff. See this package's own addendum to the spec document.
+
 ## [0.2.74] - 2026-08-31 (W32 first slice — bottom reference-type subtyping)
 
 ### Added
