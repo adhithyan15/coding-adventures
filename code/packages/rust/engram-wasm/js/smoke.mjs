@@ -100,13 +100,28 @@ check("demo host deck names", demo.props.deckNames, [
   "Spanish::Latin Roots",
 ]);
 
+// Legacy APKG now runs IN the browser build. These assertions used to expect
+// delegation — `ok: false` with an error mentioning "native hosts" — because the
+// package layer was compiled out of wasm entirely. It no longer is.
+//
+// They kept passing after that changed, because this file runs against the
+// checked-in `pkg/engram_engine.wasm`, which was itself stale. Two stale
+// artifacts agreeing with each other reads exactly like a passing test, which is
+// why the wasm is now rebuilt and compared in CI rather than trusted.
 const exportedApkg = demoEngine.exportAnkiApkg();
-check("apkg export delegated", exportedApkg.ok, false);
-check("apkg export delegated error", exportedApkg.error.includes("native hosts"), true);
+check("apkg export succeeds in the browser build", exportedApkg.ok, true);
+check("apkg export returns bytes", exportedApkg.apkg.length > 0, true);
+
+// A legacy package round-trips back in through the same ABI.
 const mergeEngine = createEngramEngine(wasm, { now: () => 1700000000000 });
-const mergedApkg = mergeEngine.mergeAnkiApkg(new Uint8Array([1, 2, 3]));
-check("apkg merge delegated", mergedApkg.ok, false);
-check("apkg merge delegated error", mergedApkg.error.includes("native hosts"), true);
+const mergedApkg = mergeEngine.mergeAnkiApkg(Uint8Array.from(exportedApkg.apkg));
+check("apkg merge succeeds in the browser build", mergedApkg.ok, true);
+
+// Something that is not a package at all is still refused, so the assertions
+// above cannot be satisfied by an implementation that accepts anything.
+const rejectEngine = createEngramEngine(wasm, { now: () => 1700000000000 });
+const rejected = rejectEngine.mergeAnkiApkg(new Uint8Array([1, 2, 3]));
+check("garbage bytes are rejected", rejected.ok, false);
 
 let readyEvent = null;
 const fakeWindow = {
