@@ -135,6 +135,16 @@ full so omissions, duplicates, and ordering drift can be checked mechanically.
 | 126 | 21 | PA-W05-work-delayed | hide the bank, then fill one work line |
 | 127 | 21 | PA-W05-work-repair | repair one dimension of a work line |
 | 128 | 21 | PA-W05-work-no-model | fill one work line from a nonverbal cue with no model |
+| 129 | 22 | PA-W06-three-field-labels | read and place the three known field labels |
+| 130 | 22 | PA-W06-three-field-cues | select one value from each known closed bank |
+| 131 | 22 | PA-W06-two-field-supported | join language and residence lines with both banks visible |
+| 132 | 22 | PA-W06-three-field-supported | join all three lines with all banks visible |
+| 133 | 23 | PA-W06-selection-repair | repair only a cue-to-value selection |
+| 134 | 23 | PA-W06-spelling-repair | repair only one value's spelling |
+| 135 | 23 | PA-W06-spacing-repair | repair only the label-value boundary |
+| 136 | 23 | PA-W06-placement-repair | move one correct value to its correct field |
+| 137 | 23 | PA-W06-mixed-repair | identify and repair only the first differing dimension |
+| 138 | 23 | PA-W06-three-field-no-model | fill three requested fields from cues with no model |
 
-After session 128, the track continues through the dependency-linked backlog;
+After session 138, the track continues through the dependency-linked backlog;
 this map makes no claim that the current book is yet complete or exam-ready.

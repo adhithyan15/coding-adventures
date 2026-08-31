@@ -1,0 +1,14 @@
+{
+  "language": "punjabi",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:0a6b95dfebdbf07a",
+  "lessonIds": [
+    "PA-W06-selection-repair",
+    "PA-W06-spelling-repair",
+    "PA-W06-spacing-repair",
+    "PA-W06-placement-repair",
+    "PA-W06-mixed-repair",
+    "PA-W06-three-field-no-model"
+  ],
+  "tex": "punjabi/book/chapters/ch23-form-three-checkpoint.tex"
+}

@@ -1,0 +1,555 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 23,
+  "title": "Three-Field No-Model Checkpoint",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:b338f09f5f062892",
+  "lessons": [
+    {
+      "id": "PA-W06-selection-repair",
+      "sequence": 1430,
+      "title": "Repair only selection",
+      "headword": "B — ਭਾਸ਼ਾ: ਹਿੰਦੀ",
+      "romanization": "three-field selection repair",
+      "gloss": "repair only a cue-to-value selection on the combined form",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:3bcdb9c4184b404b",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The language bank still uses A — ਪੰਜਾਬੀ, B — ਹਿੰਦੀ. Read it once, then cover it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — one selection repair",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The cue is B, but the line says ਭਾਸ਼ਾ: ਪੰਜਾਬੀ. Replace only the selected value. The label, colon, space, and placement remain unchanged."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Name the repaired dimension: selection. Do not judge letter shape or spacing in this pass."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The next pass keeps selection fixed and inspects spelling only."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W06-selection-repair-check",
+              "prompt": "For cue B, repair only the selected value in ਭਾਸ਼ਾ: ਪੰਜਾਬੀ.",
+              "assesses": [
+                "PA-FORM-THREE-SELECTION-REPAIR-01"
+              ],
+              "responseSeconds": 22,
+              "acceptedResponses": [
+                "ਭਾਸ਼ਾ: ਹਿੰਦੀ",
+                "ਭਾਸ਼ਾ:ਹਿੰਦੀ"
+              ],
+              "feedback": {
+                "correct": "Only the cue-to-value selection changed.",
+                "incorrect": "Keep the language label and replace the A value with the B value."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W06-spelling-repair",
+      "sequence": 1440,
+      "title": "Repair only spelling",
+      "headword": "ਰਿਹਾਇਸ਼: ਸ਼ਹਿਰ",
+      "romanization": "three-field spelling repair",
+      "gloss": "repair only one selected value's spelling on the combined form",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:e8610a5efe914407",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read ਸ਼ਹਿਰ once. Touch ਸ਼, then ਹਿ, then ਰ. Cover the model."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — one spelling repair",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The selected residence value is correct, but ਰਿਹਾਇਸ਼: ਸ਼ਹਰ is missing one spelling piece. Repair only the value. Keep its selection, line, label, colon, and space."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Reveal ਸ਼ਹਿਰ and compare one piece at a time. Do not change another line."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The next pass ignores spelling and repairs one boundary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W06-spelling-repair-check",
+              "prompt": "Repair only the spelling in ਰਿਹਾਇਸ਼: ਸ਼ਹਰ.",
+              "assesses": [
+                "PA-FORM-THREE-SPELLING-REPAIR-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "ਰਿਹਾਇਸ਼: ਸ਼ਹਿਰ",
+                "ਰਿਹਾਇਸ਼:ਸ਼ਹਿਰ"
+              ],
+              "feedback": {
+                "correct": "The missing spelling piece returned and every other dimension stayed fixed.",
+                "incorrect": "Keep the selected city value and restore the ਿ placement in ਸ਼ਹਿਰ."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W06-spacing-repair",
+      "sequence": 1450,
+      "title": "Repair only spacing",
+      "headword": "ਕੰਮ: ਖੇਤੀ",
+      "romanization": "three-field spacing repair",
+      "gloss": "repair only the label-value boundary on one combined-form line",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:9cbda3972c0d7da7",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Compare ਕੰਮ:ਖੇਤੀ with ਕੰਮ: ਖੇਤੀ (three-field spacing repair). Every letter and the selected value match."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — one boundary repair",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Rewrite ਕੰਮ:ਖੇਤੀ with one clear space after the colon. Change nothing else."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point to the repaired boundary. Ignore selection, spelling, and line order."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The next pass keeps every value intact and repairs its line placement."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W06-spacing-repair-check",
+              "prompt": "Repair only the spacing in ਕੰਮ:ਖੇਤੀ.",
+              "assesses": [
+                "PA-FORM-THREE-SPACING-REPAIR-01"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "ਕੰਮ: ਖੇਤੀ"
+              ],
+              "feedback": {
+                "correct": "Only the label-value boundary changed.",
+                "incorrect": "Keep every letter and add one space after the colon."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W06-placement-repair",
+      "sequence": 1460,
+      "title": "Repair only placement",
+      "headword": "ਭਾਸ਼ਾ: ਪੰਜਾਬੀ · ਕੰਮ: ਖੇਤੀ",
+      "romanization": "three-field placement repair",
+      "gloss": "move known correctly spelled values back to their matching fields",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:ccc09e573919aed7",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Both values are correctly selected and spelled, but these lines are crossed:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਭਾਸ਼ਾ: ਖੇਤੀ ਕੰਮ: ਪੰਜਾਬੀ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — move, do not respell",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Rewrite the two values on their matching fields. Preserve every letter and both spaces."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say “placement” after the repair. Selection and spelling were already correct."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "All four dimensions have now received their own repair pass."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W06-placement-repair-check",
+              "prompt": "Name the dimension that changes when two correct values move back to their matching labels.",
+              "assesses": [
+                "PA-FORM-THREE-PLACEMENT-REPAIR-01"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "placement"
+              ],
+              "feedback": {
+                "correct": "The values stayed intact; only their fields changed.",
+                "incorrect": "No value or letter changed, so inspect where each value sits."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W06-mixed-repair",
+      "sequence": 1470,
+      "title": "Repair one dimension, then stop",
+      "headword": "ਭਾਸ਼ਾ · ਰਿਹਾਇਸ਼ · ਕੰਮ",
+      "romanization": "three-field one-dimension repair",
+      "gloss": "identify and repair only the first differing dimension on three lines",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:51a983215bbcf404",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Name the four passes in order: selection, spelling, spacing, placement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — one mixed repair",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Inspect these otherwise correct lines:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਭਾਸ਼ਾ: ਪੰਜਾਬੀ ਰਿਹਾਇਸ਼:ਸ਼ਹਿਰ ਕੰਮ: ਖੇਤੀ (three-field spacing repair)."
+            },
+            {
+              "kind": "speech",
+              "text": "The cue selections, spellings, and placements are correct. Repair the first differing dimension, then stop."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say which pass found the difference. Do not recopy the two unchanged lines."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The next lesson asks for fresh writing, not correction of a visible answer."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W06-mixed-repair-check",
+              "prompt": "Name the single dimension that differs in the middle line.",
+              "assesses": [
+                "PA-FORM-THREE-MIXED-REPAIR-01"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "spacing"
+              ],
+              "feedback": {
+                "correct": "Only the boundary after the colon needs repair.",
+                "incorrect": "The city value and its field are already correct; inspect the colon boundary."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W06-three-field-no-model",
+      "sequence": 1480,
+      "title": "Three-field no-model checkpoint",
+      "headword": "ਭਾਸ਼ਾ: ______ · ਰਿਹਾਇਸ਼: ______ · ਕੰਮ: ______",
+      "romanization": "three-field no-model checkpoint",
+      "gloss": "fill three known fields from remembered closed-bank cues with no model",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:c29a5c4ed37f78ba",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Close every field lesson. There is no value bank, support-language label, romanization, or copyable answer below."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — independent controlled choice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Complete the three requested fields:"
+            },
+            {
+              "kind": "speech",
+              "text": "A — ਭਾਸ਼ਾ: __________ B — ਰਿਹਾਇਸ਼: __________ A — ਕੰਮ: __________."
+            },
+            {
+              "kind": "speech",
+              "text": "Use the three remembered closed banks. Finish all three attempts before reopening any earlier lesson."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — separate repair passes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "After writing, compare selection, spelling, spacing, then placement. Repair only the first differing dimension and stop."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This checkpoint integrates only language, residence, and work. It does not claim the later six-field form is complete."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W06-three-field-no-model-check",
+              "prompt": "With no bank, romanization, or copyable answer, complete the three fields for cues A, B, A.",
+              "assesses": [
+                "PA-FORM-THREE-NO-MODEL-01"
+              ],
+              "responseSeconds": 55,
+              "acceptedResponses": [
+                "ਭਾਸ਼ਾ: ਪੰਜਾਬੀ ਰਿਹਾਇਸ਼: ਸ਼ਹਿਰ ਕੰਮ: ਖੇਤੀ"
+              ],
+              "feedback": {
+                "correct": "All three remembered cues produced values on their matching fields.",
+                "incorrect": "Finish all three attempts first; then reopen one bank at a time and repair one dimension."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

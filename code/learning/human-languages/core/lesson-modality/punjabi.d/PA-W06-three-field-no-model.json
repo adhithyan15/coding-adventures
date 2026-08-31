@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W06-three-field-no-model",
+    "language": "punjabi",
+    "chapter": 23,
+    "sequence": 1480,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c29a5c4ed37f78ba",
+    "detachableSegments": [
+      "Writing — independent controlled choice"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

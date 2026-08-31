@@ -1,0 +1,21 @@
+{
+  "id": "PA-PATH-022",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "PA-W06-three-field-labels",
+    "PA-W06-three-field-cues",
+    "PA-W06-two-field-supported",
+    "PA-W06-three-field-supported",
+    "PA-W06-selection-repair",
+    "PA-W06-spelling-repair",
+    "PA-W06-spacing-repair",
+    "PA-W06-placement-repair",
+    "PA-W06-mixed-repair",
+    "PA-W06-three-field-no-model"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-027-A1-THREE-FIELD-INTEGRATION"
+  ],
+  "after": []
+}

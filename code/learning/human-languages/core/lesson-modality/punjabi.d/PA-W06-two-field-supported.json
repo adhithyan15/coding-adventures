@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W06-two-field-supported",
+    "language": "punjabi",
+    "chapter": 22,
+    "sequence": 1410,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ba1068cfb95d6563",
+    "detachableSegments": [
+      "Writing — two models remain visible"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
