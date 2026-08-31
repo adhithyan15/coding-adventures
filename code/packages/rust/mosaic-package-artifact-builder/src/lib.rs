@@ -210,10 +210,17 @@ pub struct DegradationReport {
     /// the binding at all, leaving it byte-identical on disk and never built.
     /// Each is one manifest line, and each would have reported an empty list.
     ///
-    /// So this is derived from what the build actually wrote rather than from a
-    /// list someone maintains: any host asset landing on a path the same build
-    /// had already generated. That cannot drift from the emitter, because it *is*
-    /// the emitter's output.
+    /// So this is derived from the backend directory itself, read immediately
+    /// before host assets are installed: any host asset landing on a file the
+    /// build had already emitted.
+    ///
+    /// Deliberately not the accumulated artifact list, which an earlier version
+    /// used on the reasoning that it "is the emitter's output". It is not — it is
+    /// a parallel record every emitter must remember to push to, and two already
+    /// do not (`emit_index_file` writes `index-shell.html` and `pubspec.yaml` but
+    /// returns only one path each). Reading the directory is the only version
+    /// where that claim is literally true, and a future emitter forgetting a
+    /// `push` cannot silently reopen the hole.
     ///
     /// Recorded rather than rejected, and deliberately kept OUT of
     /// `degradations`/`native_complete` for the same reason `style_degradations`
@@ -1680,13 +1687,8 @@ fn build_package_inner(
         // step 5 still lands in `backend_dir`.
     }
 
-    let (host_asset_artifacts, replaced_generated_files) = install_host_assets(
-        &manifest,
-        opts.backend,
-        &opts.package_root,
-        &backend_dir,
-        &artifacts,
-    )?;
+    let (host_asset_artifacts, replaced_generated_files) =
+        install_host_assets(&manifest, opts.backend, &opts.package_root, &backend_dir)?;
     artifacts.extend(host_asset_artifacts);
 
     // The explicitly selected engine is the final write to its conventional
@@ -1724,7 +1726,6 @@ fn install_host_assets(
     backend: Backend,
     package_root: &Path,
     backend_dir: &Path,
-    already_written: &[PathBuf],
 ) -> Result<(Vec<PathBuf>, Vec<String>), BuildError> {
     let backend_name = backend.dir_name();
     // Keyed on the *canonical* path, so the filesystem decides what collides
@@ -1734,22 +1735,20 @@ fn install_host_assets(
     // approximation that would be wrong in one direction on every platform.
     // Generated files exist by now (this runs after emission), so canonicalizing
     // them succeeds; the raw path is a harmless fallback if it ever does not.
-    // Maps a generated file's canonical path back to how it is named relative to
-    // the backend directory. The report names the *generated* file that was
-    // replaced, not the manifest's spelling of it: a consumer checking that the
-    // standard binding survived looks for `MosaicHost.cpp`, and would not
-    // recognise `mosaichost.cpp` as the same thing.
-    let generated: HashMap<PathBuf, String> = already_written
-        .iter()
-        .map(|path| {
-            let canonical = fs::canonicalize(path).unwrap_or_else(|_| path.clone());
-            let relative = path
-                .strip_prefix(backend_dir)
-                .map(path_to_web_src)
-                .unwrap_or_else(|_| path_to_web_src(path));
-            (canonical, relative)
-        })
-        .collect();
+    // Read from disk rather than from the accumulated artifact list.
+    //
+    // An earlier version used the artifacts vector, on the reasoning that it *is*
+    // the emitter's output. It is not: it is a hand-maintained parallel record
+    // that every emitter has to remember to push to, and two already do not —
+    // `emit_index_file` writes `index-shell.html` (HTML) and `pubspec.yaml`
+    // (Flutter) but returns only one path each. Overwriting the HTML app shell,
+    // which inlines every component, reported nothing. That is the same silent
+    // false negative this field exists to prevent, so the fix cannot be another
+    // list someone maintains.
+    //
+    // The directory is the emitter's output, and a future emitter that forgets a
+    // `push` cannot break this.
+    let generated = generated_files_on_disk(backend_dir)?;
     let mut written = Vec::new();
     let mut replaced = Vec::new();
     for asset in &manifest.host_assets.files {
@@ -1783,6 +1782,60 @@ fn install_host_assets(
     replaced.sort();
     replaced.dedup();
     Ok((written, replaced))
+}
+
+/// Every file currently under `backend_dir`, keyed by canonical path and valued
+/// by its name relative to that directory.
+///
+/// Called immediately before host assets are installed, so what it finds is
+/// exactly what the build has emitted so far.
+///
+/// Keyed on the canonical path so the *filesystem* decides what counts as the
+/// same file: `mosaichost.cpp` collides with `MosaicHost.cpp` on macOS and
+/// Windows and does not on Linux, and Win32's own normalisation (trailing spaces
+/// and dots stripped, 8.3 short names expanded) is applied by the same syscall
+/// path the writer goes through. Comparing strings could not model that without
+/// re-implementing it per platform.
+///
+/// The value is the *generated* file's relative name, not the manifest's
+/// spelling: a consumer checking that the standard binding survived looks for
+/// `MosaicHost.cpp` and would not recognise `mosaichost.cpp` as the same thing.
+fn generated_files_on_disk(backend_dir: &Path) -> Result<HashMap<PathBuf, String>, BuildError> {
+    fn walk(
+        dir: &Path,
+        root: &Path,
+        found: &mut HashMap<PathBuf, String>,
+    ) -> Result<(), BuildError> {
+        let entries = match fs::read_dir(dir) {
+            Ok(entries) => entries,
+            // Nothing emitted yet is a normal state, not a failure.
+            Err(_) => return Ok(()),
+        };
+        for entry in entries {
+            let entry =
+                entry.map_err(|e| BuildError::Io(format!("read {}: {e}", dir.display())))?;
+            let path = entry.path();
+            let file_type = entry
+                .file_type()
+                .map_err(|e| BuildError::Io(format!("stat {}: {e}", path.display())))?;
+            if file_type.is_dir() {
+                walk(&path, root, found)?;
+            } else {
+                let relative = path
+                    .strip_prefix(root)
+                    .map(path_to_web_src)
+                    .unwrap_or_else(|_| path_to_web_src(&path));
+                if let Ok(canonical) = fs::canonicalize(&path) {
+                    found.insert(canonical, relative);
+                }
+            }
+        }
+        Ok(())
+    }
+
+    let mut found = HashMap::new();
+    walk(backend_dir, backend_dir, &mut found)?;
+    Ok(found)
 }
 
 fn activate_host_asset(
@@ -7142,6 +7195,71 @@ files = [
                 report["replacedGeneratedFiles"],
                 serde_json::json!([target]),
                 "overwriting `{target}` unhooks the runtime and must be reported"
+            );
+        }
+    }
+
+    /// Files the artifact list forgets are still reported.
+    ///
+    /// `emit_index_file` writes two files in two backends and returns only one,
+    /// so `index-shell.html` (HTML) and `pubspec.yaml` (Flutter, without
+    /// `emit_project`) never reach the artifacts vector. An earlier version of
+    /// this field was derived from that vector and reported nothing when either
+    /// was overwritten — `index-shell.html` being the complete browsable document
+    /// that inlines every component, so one manifest line could replace the whole
+    /// app shell silently.
+    ///
+    /// Reading the directory instead of a maintained list is what closes that,
+    /// and this test is the reason to keep doing so: it fails the moment the
+    /// report goes back to trusting an emitter to remember a `push`.
+    #[test]
+    fn files_missing_from_the_artifact_list_are_still_reported() {
+        for (backend, target, emit_project) in [
+            (Backend::Html, "index-shell.html", true),
+            (Backend::Flutter, "pubspec.yaml", false),
+        ] {
+            let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+            let host_dir = pkg.path().join("host");
+            fs::create_dir_all(&host_dir).unwrap();
+            fs::write(host_dir.join("takeover"), "<!-- replaced -->\n").unwrap();
+            append_host_assets(
+                pkg.path(),
+                &format!(
+                    r#"[host_assets]
+files = [
+  {{ backend = "{}", source = "host/takeover", target = "{target}" }},
+]"#,
+                    backend.dir_name()
+                ),
+            );
+
+            let out = TempDir::new().unwrap();
+            build_package_with_profile(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend,
+                    emit_project,
+                    theme: None,
+                },
+                BuildProfile::Permissive,
+            )
+            .unwrap_or_else(|error| panic!("{:?} build for `{target}`: {error:?}", backend));
+
+            let report: serde_json::Value = serde_json::from_str(
+                &fs::read_to_string(
+                    out.path()
+                        .join(backend.dir_name())
+                        .join("mosaic-degradations.json"),
+                )
+                .unwrap(),
+            )
+            .unwrap();
+            assert_eq!(
+                report["replacedGeneratedFiles"],
+                serde_json::json!([target]),
+                "{:?} overwrote generated `{target}`, which the artifact list omits",
+                backend
             );
         }
     }

@@ -24,9 +24,14 @@ Replacing Qt's `main.cpp` removes the `MosaicHost` construction; replacing
 all, leaving it byte-identical on disk and never built. Each is one manifest line,
 and each reported an empty list.
 
-`install_host_assets` runs after emission, so it already knows what the build
-produced: a target landing on a path this build wrote is a replacement. That
-cannot drift from the emitter, because it *is* the emitter's output.
+`install_host_assets` runs after emission, so the backend directory already holds
+what the build produced: a target landing on a file already there is a
+replacement. The list is read from disk, not from the accumulated artifact vector
+— that vector is a parallel record every emitter must remember to push to, and
+two already do not (`emit_index_file` writes `index-shell.html` and `pubspec.yaml`
+but returns only one path each, so overwriting the HTML app shell that inlines
+every component reported nothing). Reading the directory is the only version that
+cannot be reopened by a future emitter forgetting a push.
 
 Collisions are resolved through `fs::canonicalize`, so the filesystem decides
 what counts as the same file rather than a guess about the platform —
