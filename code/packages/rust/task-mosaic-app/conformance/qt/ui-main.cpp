@@ -108,8 +108,11 @@ void click(QObject *root, const char *name)
 bool hasText(QObject *root, const QString &expected)
 {
     if (root->property("text").toString() == expected) return true;
-    for (auto *child : root->findChildren<QObject *>()) {
+    auto *item = qobject_cast<QQuickItem *>(root);
+    if (item == nullptr) return false;
+    for (auto *child : item->childItems()) {
         if (child->property("text").toString() == expected) return true;
+        if (hasText(child, expected)) return true;
     }
     return false;
 }
