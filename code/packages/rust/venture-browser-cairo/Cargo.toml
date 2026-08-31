@@ -1,6 +1,6 @@
 [package]
 name = "venture-browser-cairo"
-version = "0.9.0"
+version = "0.9.1"
 edition = "2021"
 description = "Backend-neutral Cairo content bridge for Venture's Mosaic-generated native hosts."
 
