@@ -175,5 +175,9 @@ def test_workflow_validates_before_building_and_has_one_publisher() -> None:
     assert "--latest=false" in workflow
     assert 'RUST_VERSION: "1.97.0"' in workflow
     assert "git diff --exit-code" in workflow
-    assert "sudo apt-get install -y libcairo2-dev" in workflow
+    assert workflow.count("sudo apt-get install -y libcairo2-dev") == 2
+    assert "cmp" in workflow
+    assert "code/packages/rust/task-wasm/pkg/task_engine.wasm" in workflow
+    assert "host/web/public/task_engine.wasm" in workflow
+    assert "':(exclude)code/packages/rust/task-wasm/pkg/task_engine.wasm'" in workflow
     assert WEB_LOCK.is_file()
