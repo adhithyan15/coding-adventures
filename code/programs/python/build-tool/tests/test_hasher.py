@@ -451,7 +451,9 @@ class TestHashFile:
             pytest.skip(f"junction creation unavailable: {created.stderr.strip()}")
 
         try:
-            with pytest.raises(OSError, match="opened source escaped its package"):
+            with pytest.raises(
+                OSError, match="source path contains a linked directory"
+            ):
                 _update_file_frame(
                     hashlib.sha256(),
                     "code/packages/python/test/source.py",
@@ -460,6 +462,77 @@ class TestHashFile:
                 )
         finally:
             os.rmdir(nested)
+
+    @pytest.mark.skipif(os.name != "nt", reason="Windows junction semantics")
+    def test_frame_rejects_windows_junction_to_package_sibling(self, tmp_path):
+        package_root = tmp_path / "package"
+        nested = package_root / "nested"
+        nested.mkdir(parents=True)
+        collected_source = nested / "source.py"
+        collected_source.write_bytes(b"inside")
+
+        sibling = package_root / "sibling"
+        sibling.mkdir()
+        (sibling / "source.py").write_bytes(b"different")
+        collected_source.unlink()
+        nested.rmdir()
+        created = subprocess.run(
+            ["cmd", "/c", "mklink", "/J", str(nested), str(sibling)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        if created.returncode != 0:
+            pytest.skip(f"junction creation unavailable: {created.stderr.strip()}")
+
+        try:
+            with pytest.raises(
+                OSError, match="source path contains a linked directory"
+            ):
+                _update_file_frame(
+                    hashlib.sha256(),
+                    "code/packages/python/test/source.py",
+                    collected_source,
+                    package_root,
+                )
+        finally:
+            os.rmdir(nested)
+
+    @pytest.mark.skipif(os.name != "nt", reason="Windows junction semantics")
+    def test_frame_rejects_package_root_replaced_by_windows_junction(
+        self, tmp_path
+    ):
+        package_root = tmp_path / "package"
+        package_root.mkdir()
+        collected_source = package_root / "source.py"
+        collected_source.write_bytes(b"inside")
+
+        external = tmp_path / "external"
+        external.mkdir()
+        (external / "source.py").write_bytes(b"outside")
+        collected_source.unlink()
+        package_root.rmdir()
+        created = subprocess.run(
+            ["cmd", "/c", "mklink", "/J", str(package_root), str(external)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        if created.returncode != 0:
+            pytest.skip(f"junction creation unavailable: {created.stderr.strip()}")
+
+        try:
+            with pytest.raises(
+                OSError, match="source path contains a linked directory"
+            ):
+                _update_file_frame(
+                    hashlib.sha256(),
+                    "code/packages/python/test/source.py",
+                    collected_source,
+                    package_root,
+                )
+        finally:
+            os.rmdir(package_root)
 
     @pytest.mark.skipif(os.name == "nt", reason="POSIX symlink semantics")
     def test_frame_rejects_ancestor_replaced_by_posix_symlink(self, tmp_path):

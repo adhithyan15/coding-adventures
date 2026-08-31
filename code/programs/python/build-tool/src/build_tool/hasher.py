@@ -341,6 +341,97 @@ def _windows_final_handle_path(descriptor: int) -> str:
     return final_path
 
 
+def _windows_lock_unlinked_directories(directory: Path) -> list[int]:
+    """Lock each lexical directory component and reject Windows reparses."""
+    import ctypes
+    from ctypes import wintypes
+
+    class FileAttributeTagInfo(ctypes.Structure):
+        _fields_ = (
+            ("file_attributes", wintypes.DWORD),
+            ("reparse_tag", wintypes.DWORD),
+        )
+
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    create_file = kernel32.CreateFileW
+    create_file.argtypes = (
+        wintypes.LPCWSTR,
+        wintypes.DWORD,
+        wintypes.DWORD,
+        wintypes.LPVOID,
+        wintypes.DWORD,
+        wintypes.DWORD,
+        wintypes.HANDLE,
+    )
+    create_file.restype = wintypes.HANDLE
+    get_file_information = kernel32.GetFileInformationByHandleEx
+    get_file_information.argtypes = (
+        wintypes.HANDLE,
+        ctypes.c_int,
+        wintypes.LPVOID,
+        wintypes.DWORD,
+    )
+    get_file_information.restype = wintypes.BOOL
+    close_handle = kernel32.CloseHandle
+    close_handle.argtypes = (wintypes.HANDLE,)
+    close_handle.restype = wintypes.BOOL
+
+    file_read_attributes = 0x0080
+    file_share_read = 0x00000001
+    file_share_write = 0x00000002
+    open_existing = 3
+    file_attribute_reparse_point = 0x00000400
+    file_flag_backup_semantics = 0x02000000
+    file_flag_open_reparse_point = 0x00200000
+    invalid_handle_value = ctypes.c_void_p(-1).value
+
+    handles: list[int] = []
+    current = Path(directory.absolute().parts[0])
+    try:
+        for component in directory.absolute().parts[1:]:
+            current /= component
+            handle = create_file(
+                str(current),
+                file_read_attributes,
+                file_share_read | file_share_write,
+                None,
+                open_existing,
+                file_flag_backup_semantics | file_flag_open_reparse_point,
+                None,
+            )
+            if handle == invalid_handle_value:
+                raise OSError("cannot lock source directory")
+            handles.append(handle)
+
+            attributes = FileAttributeTagInfo()
+            if not get_file_information(
+                handle,
+                9,
+                ctypes.byref(attributes),
+                ctypes.sizeof(attributes),
+            ):
+                raise OSError("cannot inspect source directory")
+            if attributes.file_attributes & file_attribute_reparse_point:
+                raise OSError("source path contains a linked directory")
+    except BaseException:
+        for handle in reversed(handles):
+            close_handle(handle)
+        raise
+    return handles
+
+
+def _windows_close_handles(handles: list[int]) -> None:
+    """Close Windows directory locks acquired for a source path."""
+    import ctypes
+    from ctypes import wintypes
+
+    close_handle = ctypes.WinDLL("kernel32", use_last_error=True).CloseHandle
+    close_handle.argtypes = (wintypes.HANDLE,)
+    close_handle.restype = wintypes.BOOL
+    for handle in reversed(handles):
+        close_handle(handle)
+
+
 def _open_source_no_follow(package_root: Path, filepath: Path) -> int:
     """Open a source without following a linked component or escaping its root."""
     try:
@@ -349,20 +440,26 @@ def _open_source_no_follow(package_root: Path, filepath: Path) -> int:
         raise OSError("source path is outside its package") from error
 
     if os.name == "nt":
-        descriptor = os.open(filepath, os.O_RDONLY | os.O_BINARY)
+        directory_handles = _windows_lock_unlinked_directories(filepath.parent)
         try:
-            final_path = os.path.normcase(
-                os.path.normpath(_windows_final_handle_path(descriptor))
-            )
-            final_root = os.path.normcase(
-                os.path.normpath(str(package_root.resolve(strict=True)))
-            )
-            if os.path.commonpath((final_root, final_path)) != final_root:
-                raise OSError("opened source escaped its package")
+            descriptor = os.open(filepath, os.O_RDONLY | os.O_BINARY)
+            try:
+                final_path = os.path.normcase(
+                    os.path.normpath(_windows_final_handle_path(descriptor))
+                )
+                final_root = os.path.normcase(
+                    os.path.normpath(str(package_root.absolute()))
+                )
+                if os.path.commonpath((final_root, final_path)) != final_root:
+                    raise OSError("opened source escaped its package")
+            except BaseException:
+                os.close(descriptor)
+                raise
+            return descriptor
         except BaseException:
-            os.close(descriptor)
             raise
-        return descriptor
+        finally:
+            _windows_close_handles(directory_handles)
 
     absolute_path = filepath.absolute()
     parts = absolute_path.parts
