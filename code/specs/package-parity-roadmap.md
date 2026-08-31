@@ -11459,6 +11459,43 @@ selection, the complete 605-owner/916-edge graph is unique,
 dependency-complete, and acyclic at 189 merged, 415 pending, and exactly one
 `in-progress` owner.
 
+Tests-first execution produced four intended failures because both TypeScript
+source-collection modes traversed every exact generated-directory candidate.
+The implementation now keeps a source-hasher-specific 26-component registry
+and prunes exact case-sensitive `Dirent.name` values before recursion through
+the one walker shared by extension and declared-source selection. It does not
+reuse discovery's broader policy: `specs` remains eligible, as do `_Build`,
+`_build-example`, `Dist-newstyle`, and `dist-newstyle-example`. Directory
+symlinks and a real Windows junction remain outside traversal.
+
+The focused hasher suite passes 34 tests. The complete TypeScript package
+passes 345 tests across 14 files with 90.98% statement, 85.04% branch, 95.23%
+function, and 90.90% line coverage; `hasher.ts` reaches 100% statements,
+functions, and lines plus 92.10% branches. Pinned `npm ci`, strict no-emit
+typecheck, exact Prettier 3.6.2 checks, the package coverage front, production
+npm audit, and npm pack dry run pass. The full npm audit retains only the
+already owned development-only `nanoid` advisory.
+
+The neutral schema and runner suites pass 85 tests and 132 subtests, and the
+corpus validates 121 cases and 283 files. Capability, Haskell, OCaml-lock,
+broker, backend, authority, and package-parity suites pass 114 tests and 854
+subtests with 22 expected platform skips. The Go oracle passes module
+verification, all tests, vet, and trimpath build; a real forced TypeScript dry
+plan evaluates 45 Starlark BUILD files, validates five reviewed orphan
+exemptions, discovers 481 TypeScript packages, and reports every package
+WOULD-BUILD. Inventory counts and the 605-owner/916-edge graph remain stable.
+Two independent final reviewers clear correctness, exact fixture coverage,
+scope, documentation, link boundaries, security, and authority. They classify
+the pre-existing unbounded native recursion and stronger race-resistant
+whole-path link handling as separate selection-excluded host/resource
+hardening, not a blocker to this lexical pure-contract owner.
+
+Before publication, `origin/main` advanced only through merged Spanish
+curriculum/data work. The branch rebased cleanly onto exact revision
+`0f4fa0b6716a0cd7acb49ecab5baedc31c6bca8f`; the focused 34-test hashing suite
+and strict typecheck passed again, and a collision-checked schema-3 inventory
+retained every recorded count with zero collisions and zero unknown buckets.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

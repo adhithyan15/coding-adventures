@@ -33,19 +33,19 @@ This is one of several build tool implementations in the monorepo (Python, Ruby,
 
 ## Architecture
 
-| Module | Purpose |
-|---|---|
-| `discovery.ts` | Walks directory tree, finds BUILD files, infers language |
-| `resolver.ts` | Parses dependency metadata, builds directed graph (Kahn's algorithm) |
-| `gitdiff.ts` | Git-based change detection (`git diff --name-only`) |
-| `hasher.ts` | SHA256 hashing of source files for cache-based change detection |
-| `cache.ts` | JSON cache file for fallback change detection |
-| `executor.ts` | Parallel build execution respecting dependency order |
-| `reporter.ts` | Human-readable build report formatting |
-| `validator.ts` | Build-contract checks plus pure orphan-crate and tracked-artifact snapshot validation |
-| `toolchain-detection.ts` | Pure bounded extra-CI toolchain declaration evaluation |
-| `tracked-artifact-unicode17.ts` | Generated, source-pinned Unicode 17 normalization and casing substrate |
-| `index.ts` | CLI entry point tying everything together |
+| Module                          | Purpose                                                                               |
+| ------------------------------- | ------------------------------------------------------------------------------------- |
+| `discovery.ts`                  | Walks directory tree, finds BUILD files, infers language                              |
+| `resolver.ts`                   | Parses dependency metadata, builds directed graph (Kahn's algorithm)                  |
+| `gitdiff.ts`                    | Git-based change detection (`git diff --name-only`)                                   |
+| `hasher.ts`                     | SHA256 hashing of source files for cache-based change detection                       |
+| `cache.ts`                      | JSON cache file for fallback change detection                                         |
+| `executor.ts`                   | Parallel build execution respecting dependency order                                  |
+| `reporter.ts`                   | Human-readable build report formatting                                                |
+| `validator.ts`                  | Build-contract checks plus pure orphan-crate and tracked-artifact snapshot validation |
+| `toolchain-detection.ts`        | Pure bounded extra-CI toolchain declaration evaluation                                |
+| `tracked-artifact-unicode17.ts` | Generated, source-pinned Unicode 17 normalization and casing substrate                |
+| `index.ts`                      | CLI entry point tying everything together                                             |
 
 ## Supported languages
 
@@ -139,11 +139,11 @@ access the network.
 
 The discovery system supports platform-specific BUILD files with the following priority:
 
-| Platform | Priority |
-|---|---|
-| macOS (darwin) | `BUILD_mac` > `BUILD_mac_and_linux` > `BUILD` |
-| Linux | `BUILD_linux` > `BUILD_mac_and_linux` > `BUILD` |
-| Windows (win32) | `BUILD_windows` > `BUILD` |
+| Platform        | Priority                                        |
+| --------------- | ----------------------------------------------- |
+| macOS (darwin)  | `BUILD_mac` > `BUILD_mac_and_linux` > `BUILD`   |
+| Linux           | `BUILD_linux` > `BUILD_mac_and_linux` > `BUILD` |
+| Windows (win32) | `BUILD_windows` > `BUILD`                       |
 
 ## Usage
 
