@@ -3,8 +3,9 @@
 #![forbid(unsafe_code)]
 
 use modbus_protocol::{
-    decode_read_response, encode_read_request, ModbusError, ReadRegistersRequest, RegisterTable,
-    MAX_ADU_BYTES,
+    decode_read_device_identification_response, decode_read_response,
+    encode_read_device_identification_request, encode_read_request, ModbusError,
+    ReadRegistersRequest, RegisterTable, MAX_ADU_BYTES, MAX_BASIC_DEVICE_IDENTIFICATION_PAGES,
 };
 use smart_home_core::{
     AgentId, Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, CapabilityMode, Device,
@@ -14,8 +15,9 @@ use smart_home_core::{
 };
 use smart_home_runtime::{RuntimeError, SmartHomeRuntime};
 use std::fmt;
+use std::net::{IpAddr, Ipv6Addr, SocketAddr};
 use std::time::Duration;
-use tcp_client::{connect, ConnectOptions, TcpError};
+use tcp_client::{connect, ConnectOptions, TcpConnection, TcpError};
 
 pub const VERSION: &str = "0.1.0";
 pub const INTEGRATION_ID: &str = "modbus_tcp";
@@ -29,6 +31,9 @@ pub enum ModbusIntegrationError {
     Protocol(ModbusError),
     Tcp(TcpError),
     InvalidResponseLength(u16),
+    IncompleteDeviceIdentification,
+    DeviceIdentificationPageLimit,
+    DeviceIdentificationConformityChanged { expected: u8, actual: u8 },
     NonFiniteMeasurement { point_id: String },
     Runtime(RuntimeError),
 }
@@ -42,6 +47,17 @@ impl fmt::Display for ModbusIntegrationError {
             Self::InvalidResponseLength(length) => write!(
                 formatter,
                 "Modbus TCP response declares invalid MBAP length {length}"
+            ),
+            Self::IncompleteDeviceIdentification => formatter.write_str(
+                "Modbus basic device identification must contain vendor, product code, and revision",
+            ),
+            Self::DeviceIdentificationPageLimit => write!(
+                formatter,
+                "Modbus basic device identification exceeded the {MAX_BASIC_DEVICE_IDENTIFICATION_PAGES}-page limit"
+            ),
+            Self::DeviceIdentificationConformityChanged { expected, actual } => write!(
+                formatter,
+                "Modbus device identification conformity changed from 0x{expected:02x} to 0x{actual:02x}"
             ),
             Self::NonFiniteMeasurement { point_id } => {
                 write!(
@@ -245,9 +261,14 @@ impl ModbusTcpConfig {
         })
     }
 
-    pub fn with_port(mut self, port: u16) -> Self {
+    pub fn with_port(mut self, port: u16) -> Result<Self, ModbusIntegrationError> {
+        if port == 0 {
+            return Err(ModbusIntegrationError::Validation(
+                "port must be non-zero".to_string(),
+            ));
+        }
         self.port = port;
-        self
+        Ok(self)
     }
 
     pub fn with_display_name(mut self, display_name: impl Into<String>) -> Self {
@@ -280,7 +301,13 @@ impl ModbusTcpConfig {
     }
 
     fn endpoint(&self) -> String {
-        format!("{}:{}", self.host, self.port)
+        SocketAddr::new(
+            self.host
+                .parse::<IpAddr>()
+                .expect("validated Modbus host must remain an IP literal"),
+            self.port,
+        )
+        .to_string()
     }
 }
 
@@ -299,6 +326,36 @@ pub trait ModbusTransport {
         &mut self,
         plan: ModbusReadPlan<'_>,
     ) -> Result<Vec<u16>, ModbusIntegrationError>;
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ModbusDeviceIdentityPlan<'a> {
+    pub host: &'a str,
+    pub port: u16,
+    pub timeout: Duration,
+    pub first_transaction_id: u16,
+    pub unit_id: u8,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ModbusDeviceIdentity {
+    pub vendor_name: String,
+    pub product_code: String,
+    pub revision: String,
+    pub conformity_level: u8,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ModbusDeviceIdentityRead {
+    pub identity: ModbusDeviceIdentity,
+    pub transaction_count: u16,
+}
+
+pub trait ModbusDeviceIdentityTransport {
+    fn read_device_identity(
+        &mut self,
+        plan: ModbusDeviceIdentityPlan<'_>,
+    ) -> Result<ModbusDeviceIdentityRead, ModbusIntegrationError>;
 }
 
 #[derive(Debug, Clone, Copy, Default)]
@@ -323,13 +380,7 @@ impl ModbusTransport for ModbusTcpTransport {
         ))?;
         connection.flush()?;
 
-        let mut response = connection.read_exact(7)?;
-        let declared = u16::from_be_bytes([response[4], response[5]]);
-        let total = 6usize + usize::from(declared);
-        if declared < 3 || total > MAX_ADU_BYTES {
-            return Err(ModbusIntegrationError::InvalidResponseLength(declared));
-        }
-        response.extend_from_slice(&connection.read_exact(usize::from(declared) - 1)?);
+        let response = read_adu(&mut connection)?;
         Ok(decode_read_response(
             &response,
             plan.transaction_id,
@@ -337,6 +388,82 @@ impl ModbusTransport for ModbusTcpTransport {
             plan.request,
         )?)
     }
+}
+
+impl ModbusDeviceIdentityTransport for ModbusTcpTransport {
+    fn read_device_identity(
+        &mut self,
+        plan: ModbusDeviceIdentityPlan<'_>,
+    ) -> Result<ModbusDeviceIdentityRead, ModbusIntegrationError> {
+        let options = ConnectOptions {
+            connect_timeout: plan.timeout,
+            read_timeout: Some(plan.timeout),
+            write_timeout: Some(plan.timeout),
+            ..ConnectOptions::default()
+        };
+        let mut connection = connect(plan.host, plan.port, options)?;
+        let mut starting_object_id = 0;
+        let mut objects = Vec::with_capacity(3);
+        let mut conformity_level = None;
+
+        for page_index in 0..MAX_BASIC_DEVICE_IDENTIFICATION_PAGES {
+            let transaction_id = plan.first_transaction_id.wrapping_add(page_index as u16);
+            connection.write_all(&encode_read_device_identification_request(
+                transaction_id,
+                plan.unit_id,
+                starting_object_id,
+            )?)?;
+            connection.flush()?;
+            let response = read_adu(&mut connection)?;
+            let page = decode_read_device_identification_response(
+                &response,
+                transaction_id,
+                plan.unit_id,
+                starting_object_id,
+            )?;
+            if let Some(expected) = conformity_level {
+                if page.conformity_level != expected {
+                    return Err(
+                        ModbusIntegrationError::DeviceIdentificationConformityChanged {
+                            expected,
+                            actual: page.conformity_level,
+                        },
+                    );
+                }
+            } else {
+                conformity_level = Some(page.conformity_level);
+            }
+            objects.extend(page.objects);
+            if !page.more_follows {
+                if objects.len() != 3 {
+                    return Err(ModbusIntegrationError::IncompleteDeviceIdentification);
+                }
+                return Ok(ModbusDeviceIdentityRead {
+                    identity: ModbusDeviceIdentity {
+                        vendor_name: objects[0].value.clone(),
+                        product_code: objects[1].value.clone(),
+                        revision: objects[2].value.clone(),
+                        conformity_level: conformity_level
+                            .expect("a completed identity has at least one page"),
+                    },
+                    transaction_count: page_index as u16 + 1,
+                });
+            }
+            starting_object_id = page.next_object_id;
+        }
+        Err(ModbusIntegrationError::DeviceIdentificationPageLimit)
+    }
+}
+
+fn read_adu(connection: &mut TcpConnection) -> Result<Vec<u8>, ModbusIntegrationError> {
+    let mut response = connection.read_exact(7)?;
+    let declared = u16::from_be_bytes([response[4], response[5]]);
+    let total = 6usize + usize::from(declared);
+    if declared < 3 || total > MAX_ADU_BYTES {
+        return Err(ModbusIntegrationError::InvalidResponseLength(declared));
+    }
+    response.extend_from_slice(&connection.read_exact(usize::from(declared) - 1)?);
+    Ok(response)
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -356,6 +483,7 @@ pub struct ModbusMeasurement {
 #[derive(Debug, Clone, PartialEq)]
 pub struct ModbusSnapshot {
     pub unit_id: u8,
+    pub device_identity: Option<ModbusDeviceIdentity>,
     pub measurements: Vec<ModbusMeasurement>,
 }
 
@@ -411,8 +539,39 @@ impl<T: ModbusTransport> ModbusClient<T> {
         }
         Ok(ModbusSnapshot {
             unit_id: self.config.unit_id,
+            device_identity: None,
             measurements,
         })
+    }
+}
+
+impl<T: ModbusTransport + ModbusDeviceIdentityTransport> ModbusClient<T> {
+    pub fn inspect_with_device_identity(
+        &mut self,
+    ) -> Result<ModbusSnapshot, ModbusIntegrationError> {
+        let identity_read = self
+            .transport
+            .read_device_identity(ModbusDeviceIdentityPlan {
+                host: &self.config.host,
+                port: self.config.port,
+                timeout: self.config.timeout,
+                first_transaction_id: self.next_transaction_id,
+                unit_id: self.config.unit_id,
+            })?;
+        if identity_read.transaction_count == 0
+            || usize::from(identity_read.transaction_count) > MAX_BASIC_DEVICE_IDENTIFICATION_PAGES
+        {
+            return Err(ModbusIntegrationError::Validation(
+                "device identification transaction count must be between 1 and 3".to_string(),
+            ));
+        }
+        validate_device_identity(&identity_read.identity)?;
+        self.next_transaction_id = self
+            .next_transaction_id
+            .wrapping_add(identity_read.transaction_count);
+        let mut snapshot = self.inspect()?;
+        snapshot.device_identity = Some(identity_read.identity);
+        Ok(snapshot)
     }
 }
 
@@ -459,6 +618,9 @@ impl<T: ModbusTransport> ModbusRuntimeIntegration<T> {
         snapshot: &ModbusSnapshot,
         observed_at_ms: u64,
     ) -> Result<InstalledModbusDevice, ModbusIntegrationError> {
+        if let Some(identity) = &snapshot.device_identity {
+            validate_device_identity(identity)?;
+        }
         let profile_matches = snapshot
             .measurements
             .iter()
@@ -488,7 +650,10 @@ impl<T: ModbusTransport> ModbusRuntimeIntegration<T> {
             BridgeTransport::LanTcp,
         );
         bridge.address = Some(endpoint.clone());
-        bridge.hardware_model = Some("Modbus TCP endpoint".to_string());
+        bridge.hardware_model = Some(snapshot.device_identity.as_ref().map_or_else(
+            || "Modbus TCP endpoint".to_string(),
+            |identity| identity.product_code.clone(),
+        ));
         bridge.health = Health::Online;
         bridge.last_seen_at_ms = Some(observed_at_ms);
         bridge.identifiers = vec![protocol_identifier("tcp_endpoint", &endpoint)?];
@@ -539,14 +704,32 @@ impl<T: ModbusTransport> ModbusRuntimeIntegration<T> {
             .iter()
             .map(|entity| entity.entity_id.clone())
             .collect::<Vec<_>>();
+        let identity = snapshot.device_identity.as_ref();
+        let mut device_metadata = vec![
+            Metadata::new("modbus.endpoint", endpoint.clone()),
+            Metadata::new("modbus.profile_points", entity_ids.len().to_string()),
+        ];
+        if let Some(identity) = identity {
+            device_metadata.push(Metadata::new("modbus.device_identification", "basic"));
+            device_metadata.push(Metadata::new(
+                "modbus.device_identification_conformity",
+                format!("0x{:02x}", identity.conformity_level),
+            ));
+        }
         runtime.upsert_device(Device {
             device_id: device_id.clone(),
             bridge_id: bridge_id.clone(),
-            manufacturer: self.client.config.manufacturer.clone(),
-            model: self.client.config.model.clone(),
+            manufacturer: identity.map_or_else(
+                || self.client.config.manufacturer.clone(),
+                |identity| identity.vendor_name.clone(),
+            ),
+            model: identity.map_or_else(
+                || self.client.config.model.clone(),
+                |identity| identity.product_code.clone(),
+            ),
             name: self.client.config.display_name.clone(),
             serial: None,
-            firmware_version: None,
+            firmware_version: identity.map(|identity| identity.revision.clone()),
             room_id: None,
             entity_ids: entity_ids.clone(),
             identifiers: vec![protocol_identifier(
@@ -554,10 +737,7 @@ impl<T: ModbusTransport> ModbusRuntimeIntegration<T> {
                 &format!("{endpoint}/{}", snapshot.unit_id),
             )?],
             health: Health::Online,
-            metadata: vec![
-                Metadata::new("modbus.endpoint", endpoint),
-                Metadata::new("modbus.profile_points", entity_ids.len().to_string()),
-            ],
+            metadata: device_metadata,
         })?;
         for entity in entities {
             runtime.upsert_entity(entity)?;
@@ -567,6 +747,19 @@ impl<T: ModbusTransport> ModbusRuntimeIntegration<T> {
             device_id,
             entity_ids,
         })
+    }
+}
+
+impl<T: ModbusTransport + ModbusDeviceIdentityTransport> ModbusRuntimeIntegration<T> {
+    pub fn inspect_with_device_identity_and_install_authorized(
+        &mut self,
+        runtime: &mut SmartHomeRuntime,
+        principal_id: AgentId,
+        observed_at_ms: u64,
+    ) -> Result<InstalledModbusDevice, ModbusIntegrationError> {
+        authorize_read(runtime, principal_id, observed_at_ms)?;
+        let snapshot = self.client.inspect_with_device_identity()?;
+        self.install_snapshot(runtime, &snapshot, observed_at_ms)
     }
 }
 
@@ -581,6 +774,29 @@ fn measurement_matches_point(measurement: &ModbusMeasurement, point: &ModbusPoin
         && measurement.offset == point.offset
         && measurement.unit == point.unit
         && measurement.value.is_finite()
+}
+
+fn validate_device_identity(identity: &ModbusDeviceIdentity) -> Result<(), ModbusIntegrationError> {
+    for (label, value) in [
+        ("vendor name", &identity.vendor_name),
+        ("product code", &identity.product_code),
+        ("revision", &identity.revision),
+    ] {
+        if value.is_empty()
+            || value.len() > modbus_protocol::MAX_DEVICE_IDENTIFICATION_VALUE_BYTES
+            || !value.bytes().all(|byte| matches!(byte, 0x20..=0x7e))
+        {
+            return Err(ModbusIntegrationError::Validation(format!(
+                "device identification {label} must contain 1 to 128 printable ASCII bytes"
+            )));
+        }
+    }
+    if !matches!(identity.conformity_level, 0x01..=0x03 | 0x81..=0x83) {
+        return Err(ModbusIntegrationError::Validation(
+            "device identification conformity level is invalid".to_string(),
+        ));
+    }
+    Ok(())
 }
 
 fn authorize_read(
@@ -670,15 +886,33 @@ fn protocol_identifier(
 }
 
 fn validate_host(host: &str) -> Result<(), ModbusIntegrationError> {
-    if host.trim().is_empty()
-        || host != host.trim()
-        || host.contains(['/', '@', '?', '#', '\r', '\n', '\0'])
-    {
-        return Err(ModbusIntegrationError::Validation(
-            "host must be a credential-free hostname or IP address".to_string(),
-        ));
+    let address = host.parse::<IpAddr>().map_err(|_| {
+        ModbusIntegrationError::Validation(
+            "host must be an explicit private, link-local, or loopback IP literal".to_string(),
+        )
+    })?;
+    if is_local_ip(address) {
+        Ok(())
+    } else {
+        Err(ModbusIntegrationError::Validation(
+            "host must be an explicit private, link-local, or loopback IP literal".to_string(),
+        ))
     }
-    Ok(())
+}
+
+fn is_local_ip(address: IpAddr) -> bool {
+    match address {
+        IpAddr::V4(address) => {
+            address.is_private() || address.is_link_local() || address.is_loopback()
+        }
+        IpAddr::V6(address) => {
+            address.is_loopback() || address.is_unique_local() || is_ipv6_link_local(address)
+        }
+    }
+}
+
+fn is_ipv6_link_local(address: Ipv6Addr) -> bool {
+    (address.segments()[0] & 0xffc0) == 0xfe80
 }
 
 fn stable_component(value: &str) -> String {
@@ -742,6 +976,7 @@ mod tests {
         )
         .unwrap()
         .with_port(port)
+        .unwrap()
         .with_display_name("Plant Meter")
         .with_device_identity("Acme", "PM-1")
     }
@@ -771,6 +1006,53 @@ mod tests {
         let requests = Arc::new(Mutex::new(Vec::new()));
         let captured = Arc::clone(&requests);
         let handle = thread::spawn(move || {
+            for register_bytes in [vec![0x08, 0xfc], 123.5f32.to_bits().to_be_bytes().to_vec()] {
+                let (mut stream, _) = listener.accept().unwrap();
+                let mut request = [0u8; 12];
+                stream.read_exact(&mut request).unwrap();
+                captured.lock().unwrap().push(request.to_vec());
+                let mut response = request[..7].to_vec();
+                let length = 3 + register_bytes.len();
+                response[4..6].copy_from_slice(&(length as u16).to_be_bytes());
+                response.push(request[7]);
+                response.push(register_bytes.len() as u8);
+                response.extend_from_slice(&register_bytes);
+                stream.write_all(&response).unwrap();
+            }
+        });
+        TestServer {
+            port,
+            requests,
+            handle,
+        }
+    }
+
+    fn start_identity_server() -> TestServer {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let port = listener.local_addr().unwrap().port();
+        let requests = Arc::new(Mutex::new(Vec::new()));
+        let captured = Arc::clone(&requests);
+        let handle = thread::spawn(move || {
+            let (mut identity_stream, _) = listener.accept().unwrap();
+            for response_pdu in [
+                vec![
+                    0x2b, 0x0e, 0x01, 0x81, 0xff, 2, 2, 0, 4, b'A', b'c', b'm', b'e', 1, 4, b'P',
+                    b'M', b'-', b'1',
+                ],
+                vec![
+                    0x2b, 0x0e, 0x01, 0x81, 0, 0, 1, 2, 5, b'1', b'.', b'2', b'.', b'3',
+                ],
+            ] {
+                let mut request = [0u8; 11];
+                identity_stream.read_exact(&mut request).unwrap();
+                captured.lock().unwrap().push(request.to_vec());
+                let mut response = request[..7].to_vec();
+                response[4..6].copy_from_slice(
+                    &(u16::try_from(response_pdu.len()).unwrap() + 1).to_be_bytes(),
+                );
+                response.extend_from_slice(&response_pdu);
+                identity_stream.write_all(&response).unwrap();
+            }
             for register_bytes in [vec![0x08, 0xfc], 123.5f32.to_bits().to_be_bytes().to_vec()] {
                 let (mut stream, _) = listener.accept().unwrap();
                 let mut request = [0u8; 12];
@@ -832,6 +1114,33 @@ mod tests {
         assert_eq!(&requests[1][8..12], &[0, 20, 0, 2]);
     }
 
+    #[test]
+    fn real_tcp_identity_poll_installs_native_device_identity() {
+        let server = start_identity_server();
+        let client = ModbusClient::new(config(server.port), ModbusTcpTransport);
+        let mut integration = ModbusRuntimeIntegration::new(client);
+        let principal = AgentId::trusted("agent:modbus-identity-read");
+        let mut runtime = SmartHomeRuntime::new();
+        grant(&mut runtime, &principal);
+        let installed = integration
+            .inspect_with_device_identity_and_install_authorized(&mut runtime, principal, 5_000)
+            .unwrap();
+        server.handle.join().unwrap();
+
+        let device = runtime.registry().device(&installed.device_id).unwrap();
+        assert_eq!(device.manufacturer, "Acme");
+        assert_eq!(device.model, "PM-1");
+        assert_eq!(device.firmware_version.as_deref(), Some("1.2.3"));
+        let requests = server.requests.lock().unwrap();
+        assert_eq!(requests.len(), 4);
+        assert_eq!(&requests[0], &[0, 1, 0, 0, 0, 5, 7, 0x2b, 0x0e, 1, 0]);
+        assert_eq!(&requests[1], &[0, 2, 0, 0, 0, 5, 7, 0x2b, 0x0e, 1, 2]);
+        assert_eq!(requests[2][7], RegisterTable::Input.function_code());
+        assert_eq!(requests[3][7], RegisterTable::Holding.function_code());
+        assert_eq!(&requests[2][..2], &[0, 3]);
+        assert_eq!(&requests[3][..2], &[0, 4]);
+    }
+
     #[derive(Debug)]
     struct CountingTransport(Arc<AtomicUsize>);
 
@@ -842,6 +1151,24 @@ mod tests {
         ) -> Result<Vec<u16>, ModbusIntegrationError> {
             self.0.fetch_add(1, Ordering::SeqCst);
             Ok(vec![0])
+        }
+    }
+
+    impl ModbusDeviceIdentityTransport for CountingTransport {
+        fn read_device_identity(
+            &mut self,
+            _plan: ModbusDeviceIdentityPlan<'_>,
+        ) -> Result<ModbusDeviceIdentityRead, ModbusIntegrationError> {
+            self.0.fetch_add(1, Ordering::SeqCst);
+            Ok(ModbusDeviceIdentityRead {
+                identity: ModbusDeviceIdentity {
+                    vendor_name: "Acme".to_string(),
+                    product_code: "PM-1".to_string(),
+                    revision: "1.2.3".to_string(),
+                    conformity_level: 1,
+                },
+                transaction_count: 1,
+            })
         }
     }
 
@@ -862,6 +1189,22 @@ mod tests {
     }
 
     #[test]
+    fn denied_identity_read_reaches_no_transport() {
+        let calls = Arc::new(AtomicUsize::new(0));
+        let client = ModbusClient::new(config(DEFAULT_PORT), CountingTransport(Arc::clone(&calls)));
+        let mut integration = ModbusRuntimeIntegration::new(client);
+        assert!(matches!(
+            integration.inspect_with_device_identity_and_install_authorized(
+                &mut SmartHomeRuntime::new(),
+                AgentId::trusted("agent:identity-denied"),
+                5_000,
+            ),
+            Err(ModbusIntegrationError::Runtime(_))
+        ));
+        assert_eq!(calls.load(Ordering::SeqCst), 0);
+    }
+
+    #[test]
     fn mismatched_snapshot_is_rejected_before_runtime_mutation() {
         let client = ModbusClient::new(
             config(DEFAULT_PORT),
@@ -870,6 +1213,7 @@ mod tests {
         let integration = ModbusRuntimeIntegration::new(client);
         let snapshot = ModbusSnapshot {
             unit_id: 7,
+            device_identity: None,
             measurements: vec![
                 ModbusMeasurement {
                     point_id: "different-point".to_string(),
@@ -939,6 +1283,60 @@ mod tests {
                 duplicate,
             ],
         )
+        .is_err());
+        assert!(ModbusTcpConfig::new(
+            BridgeId::trusted("modbus.dns"),
+            "equipment.example.com",
+            1,
+            vec![point(
+                "value",
+                RegisterTable::Input,
+                0,
+                RegisterEncoding::Unsigned16,
+                "raw",
+            )],
+        )
+        .is_err());
+        assert!(ModbusTcpConfig::new(
+            BridgeId::trusted("modbus.public"),
+            "8.8.8.8",
+            1,
+            vec![point(
+                "value",
+                RegisterTable::Input,
+                0,
+                RegisterEncoding::Unsigned16,
+                "raw",
+            )],
+        )
+        .is_err());
+        assert!(ModbusTcpConfig::new(
+            BridgeId::trusted("modbus.ipv6-loopback"),
+            "::1",
+            1,
+            vec![point(
+                "value",
+                RegisterTable::Input,
+                0,
+                RegisterEncoding::Unsigned16,
+                "raw",
+            )],
+        )
+        .is_ok());
+        assert!(ModbusTcpConfig::new(
+            BridgeId::trusted("modbus.zero-port"),
+            "127.0.0.1",
+            1,
+            vec![point(
+                "value",
+                RegisterTable::Input,
+                0,
+                RegisterEncoding::Unsigned16,
+                "raw",
+            )],
+        )
+        .unwrap()
+        .with_port(0)
         .is_err());
     }
 

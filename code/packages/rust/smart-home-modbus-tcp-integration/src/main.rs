@@ -21,23 +21,27 @@ fn main() -> ExitCode {
 fn run() -> Result<(), String> {
     let arguments = env::args().skip(1).collect::<Vec<_>>();
     match arguments.as_slice() {
-        [command, host, unit, table, address, quantity] if command == "inspect" => inspect(
+        [command, host, unit, table, address, quantity]
+            if command == "inspect" || command == "inspect-identity" => inspect(
             host,
             parse_u8(unit, "unit id")?,
             parse_table(table)?,
             parse_u16(address, "starting address")?,
             parse_quantity(quantity)?,
             DEFAULT_PORT,
+            command == "inspect-identity",
         ),
-        [command, host, unit, table, address, quantity, port] if command == "inspect" => inspect(
+        [command, host, unit, table, address, quantity, port]
+            if command == "inspect" || command == "inspect-identity" => inspect(
             host,
             parse_u8(unit, "unit id")?,
             parse_table(table)?,
             parse_u16(address, "starting address")?,
             parse_quantity(quantity)?,
             parse_u16(port, "port")?,
+            command == "inspect-identity",
         ),
-        _ => Err("usage: smart-home-modbus-tcp-integration inspect <host> <unit-id> <holding|input> <address> <quantity> [port]".to_string()),
+        _ => Err("usage: smart-home-modbus-tcp-integration <inspect|inspect-identity> <local-ip> <unit-id> <holding|input> <address> <quantity> [port]".to_string()),
     }
 }
 
@@ -48,6 +52,7 @@ fn inspect(
     address: u16,
     quantity: u16,
     port: u16,
+    include_device_identity: bool,
 ) -> Result<(), String> {
     let points = (0..quantity)
         .map(|offset| {
@@ -67,15 +72,28 @@ fn inspect(
         .collect::<Result<Vec<_>, _>>()?;
     let config = ModbusTcpConfig::new(BridgeId::trusted("modbus.cli"), host, unit_id, points)
         .map_err(|error| error.to_string())?
-        .with_port(port);
+        .with_port(port)
+        .map_err(|error| error.to_string())?;
     let mut client = ModbusClient::new(config, ModbusTcpTransport);
-    let snapshot = client.inspect().map_err(|error| error.to_string())?;
+    let snapshot = if include_device_identity {
+        client
+            .inspect_with_device_identity()
+            .map_err(|error| error.to_string())?
+    } else {
+        client.inspect().map_err(|error| error.to_string())?
+    };
     println!(
         "{}",
         json!({
             "host": host,
             "port": port,
             "unit_id": snapshot.unit_id,
+            "device_identity": snapshot.device_identity.as_ref().map(|identity| json!({
+                "vendor_name": identity.vendor_name,
+                "product_code": identity.product_code,
+                "revision": identity.revision,
+                "conformity_level": identity.conformity_level,
+            })),
             "table": table.as_str(),
             "measurements": snapshot.measurements.iter().map(|measurement| json!({
                 "address": measurement.address,
