@@ -5,6 +5,7 @@ import hashlib
 import io
 import json
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -130,7 +131,7 @@ class CorpusTests(unittest.TestCase):
         summary = runner.validate_corpus(FIXTURE_ROOT)
 
         self.assertEqual(summary["schema_version"], 1)
-        self.assertEqual(summary["case_count"], 122)
+        self.assertEqual(summary["case_count"], 131)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -140,6 +141,9 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(summary["conformance_status"], "not-run")
         self.assertEqual(summary["source_input_language_count"], 23)
         self.assertEqual(len(summary["source_input_registry_sha256"]), 64)
+        self.assertEqual(summary["repository_source_boundary_count"], 18)
+        self.assertEqual(summary["repository_source_input_count"], 21)
+        self.assertEqual(len(summary["repository_source_boundary_sha256"]), 64)
         self.assertEqual(
             summary["domains"],
             [
@@ -378,6 +382,722 @@ class CorpusTests(unittest.TestCase):
         self.assertIn(
             "grammar-tools.cli.json",
             scoped("typescript", "typescript-program-config-inputs")["exact_basenames"],
+        )
+
+    def test_repository_source_input_boundary_is_closed_and_canonical(self) -> None:
+        source_registry = runner.load_document(
+            FIXTURE_ROOT / "language-source-input-registry.json"
+        )
+        schema = runner.load_document(
+            FIXTURE_ROOT / "repository-source-input-boundary.schema.json"
+        )
+        boundary = runner.load_document(
+            FIXTURE_ROOT / "repository-source-input-boundary.json"
+        )
+        summary = runner._validate_repository_source_input_boundary(
+            boundary,
+            schema,
+            source_registry,
+        )
+
+        self.assertEqual(
+            summary,
+            {
+                "boundary_count": 18,
+                "input_count": 21,
+                "scope_count": 481,
+                "authorization_count": 484,
+            },
+        )
+        self.assertEqual(
+            runner.repository_source_input_boundary_digest(boundary),
+            "b108fed4bde93a44b3dbcadae02b325335e1da0fa49aedd197b5fefa750caa37",
+        )
+        by_id = {entry["id"]: entry for entry in boundary["boundaries"]}
+        self.assertEqual(
+            by_id["rust-root-workspace-manifest"]["applies_to"]["excluded_roots"],
+            [
+                "code/packages/rust/erl-nif-bridge",
+                "code/packages/rust/lua-bridge",
+                "code/packages/rust/node-bridge",
+                "code/packages/rust/os-kernel",
+                "code/packages/rust/perl-bridge",
+                "code/packages/rust/python-bridge",
+                "code/packages/rust/ruby-bridge",
+            ],
+        )
+        self.assertEqual(
+            by_id["typescript-program-workspace-configuration"]["inputs"],
+            [
+                {
+                    "path": "code/packages/typescript/tsconfig.base.json",
+                    "role": "cross_package_exact",
+                }
+            ],
+        )
+        self.assertEqual(
+            [
+                item["path"]
+                for item in by_id["typescript-visicalc-deno-cross-package-inputs"][
+                    "inputs"
+                ]
+            ],
+            [
+                "code/programs/typescript/visicalc-html/index.html",
+                "code/programs/typescript/visicalc-html/vendor/spreadsheet-engine-wasm.js",
+            ],
+        )
+        tracked_paths = {
+            item["path"] for entry in boundary["boundaries"] for item in entry["inputs"]
+        }
+        staged = (
+            subprocess.run(
+                ["git", "ls-files", "--stage", "-z", "--", *sorted(tracked_paths)],
+                cwd=runner.REPO_ROOT,
+                check=True,
+                capture_output=True,
+            )
+            .stdout.rstrip(b"\0")
+            .split(b"\0")
+        )
+        listed: set[str] = set()
+        for record in staged:
+            header, raw_path = record.split(b"\t", 1)
+            mode = header.split(b" ", 1)[0]
+            self.assertIn(mode, {b"100644", b"100755"})
+            listed.add(raw_path.decode("utf-8"))
+        self.assertEqual(listed, tracked_paths)
+        candidate_hex_limit = runner.load_document(
+            FIXTURE_ROOT / "pure-domains.schema.json"
+        )["$defs"]["repository_source_candidate_file"]["properties"]["content_hex"][
+            "maxLength"
+        ]
+        largest_input_bytes = max(
+            (runner.REPO_ROOT / path).stat().st_size for path in tracked_paths
+        )
+        self.assertLessEqual(largest_input_bytes * 2, candidate_hex_limit)
+        self.assertLess(
+            largest_input_bytes * 2,
+            runner.MAX_REPOSITORY_SOURCE_DOCUMENT_BYTES,
+        )
+        for program in ("ircd", "macsyma-browser-repl"):
+            tsconfig = (
+                runner.REPO_ROOT
+                / "code"
+                / "programs"
+                / "typescript"
+                / program
+                / "tsconfig.json"
+            ).read_text(encoding="utf-8")
+            self.assertIn("../../../packages/typescript/tsconfig.base.json", tsconfig)
+        visicalc_deno = (
+            runner.REPO_ROOT
+            / "code"
+            / "programs"
+            / "typescript"
+            / "visicalc-deno"
+            / "main.ts"
+        ).read_text(encoding="utf-8")
+        self.assertIn('from "../visicalc-html/index.html"', visicalc_deno)
+        self.assertIn(
+            'from "../visicalc-html/vendor/spreadsheet-engine-wasm.js"',
+            visicalc_deno,
+        )
+
+        def build_roots(root: Path, needle: str | None = None) -> list[str]:
+            roots: set[str] = set()
+            for build_file in root.rglob("BUILD*"):
+                if not build_file.is_file() or build_file.name not in {
+                    "BUILD",
+                    "BUILD_windows",
+                }:
+                    continue
+                if needle is not None and needle not in build_file.read_text(
+                    encoding="utf-8"
+                ):
+                    continue
+                roots.add(build_file.parent.relative_to(runner.REPO_ROOT).as_posix())
+            return sorted(roots, key=lambda path: path.encode("utf-8"))
+
+        haskell_root = runner.REPO_ROOT / "code/packages/haskell"
+        expected_haskell = [
+            root
+            for root in build_roots(haskell_root)
+            if not (runner.REPO_ROOT / root / "cabal.project").exists()
+        ]
+        self.assertEqual(
+            by_id["haskell-workspace-project"]["applies_to"]["exact_roots"],
+            expected_haskell,
+        )
+        self.assertEqual(
+            by_id["lua-workspace-lint-configuration"]["applies_to"]["exact_roots"],
+            build_roots(runner.REPO_ROOT / "code/packages/lua", "luacheck"),
+        )
+        python_workspace = (
+            runner.REPO_ROOT / "code/packages/python/pyproject.toml"
+        ).read_text(encoding="utf-8")
+        member_block = python_workspace.split("[tool.uv.workspace]", 1)[1].split(
+            "[tool.uv.sources]", 1
+        )[0]
+        project_aware_uv = re.compile(
+            r"\buv\s+(?:add|build|export|lock|remove|run|sync|tree|venv)\b",
+            re.IGNORECASE,
+        )
+        expected_python = []
+        for member in re.findall(r'"([^"]+)"', member_block):
+            root = runner.REPO_ROOT / "code/packages/python" / member
+            lines = [
+                line
+                for build_file in root.glob("BUILD*")
+                for line in build_file.read_text(encoding="utf-8").splitlines()
+                if not line.lstrip().startswith("#")
+            ]
+            if any(
+                project_aware_uv.search(line) and "--no-project" not in line.lower()
+                for line in lines
+            ):
+                expected_python.append(root.relative_to(runner.REPO_ROOT).as_posix())
+        expected_python.sort(key=lambda path: path.encode("utf-8"))
+        self.assertEqual(
+            by_id["python-uv-workspace-manifest"]["applies_to"]["exact_roots"],
+            expected_python,
+        )
+        self.assertEqual(
+            by_id["rust-windows-cargo-launcher"]["applies_to"]["exact_roots"],
+            build_roots(runner.REPO_ROOT / "code/packages/rust", "_windows_cargo.sh"),
+        )
+        external_workspace_cargo_roots: set[str] = set()
+        for search_root in (
+            runner.REPO_ROOT / "code/packages",
+            runner.REPO_ROOT / "code/programs",
+        ):
+            for build_file in search_root.rglob("BUILD*"):
+                if not build_file.is_file() or build_file.name not in {
+                    "BUILD",
+                    "BUILD_windows",
+                }:
+                    continue
+                root = build_file.parent.relative_to(runner.REPO_ROOT).as_posix()
+                if root.startswith("code/packages/rust/"):
+                    continue
+                for line in build_file.read_text(encoding="utf-8").splitlines():
+                    if line.lstrip().startswith("#") or not re.search(
+                        r"\bcargo\b", line, re.IGNORECASE
+                    ):
+                        continue
+                    if re.search(r"(?:^|[/\\])rust(?:[/\\]|$)", line, re.IGNORECASE):
+                        external_workspace_cargo_roots.add(root)
+                        break
+        self.assertEqual(
+            by_id["rust-root-workspace-manifest-cross-consumers"]["applies_to"][
+                "exact_roots"
+            ],
+            sorted(
+                external_workspace_cargo_roots, key=lambda path: path.encode("utf-8")
+            ),
+        )
+        expected_typescript = []
+        for root in build_roots(runner.REPO_ROOT / "code/packages/typescript"):
+            tsconfig = runner.REPO_ROOT / root / "tsconfig.json"
+            if tsconfig.is_file() and "../tsconfig.base.json" in tsconfig.read_text(
+                encoding="utf-8"
+            ):
+                expected_typescript.append(root)
+        self.assertEqual(
+            by_id["typescript-workspace-configuration"]["applies_to"]["exact_roots"],
+            expected_typescript,
+        )
+        for language in ("elixir", "go", "rust", "typescript"):
+            boundary_id = f"starlark-{language}-library-rule-consumers"
+            input_path = f"code/packages/starlark/library-rules/{language}_library.star"
+            self.assertEqual(
+                by_id[boundary_id]["applies_to"]["exact_roots"],
+                build_roots(runner.REPO_ROOT / "code/packages", input_path),
+            )
+        self.assertEqual(
+            by_id["starlark-ruby-library-rule-consumer"]["applies_to"]["exact_roots"],
+            build_roots(
+                runner.REPO_ROOT / "code/packages",
+                "code/packages/starlark/library-rules/ruby_library.star",
+            ),
+        )
+        grammar_build = (
+            runner.REPO_ROOT / "code/packages/typescript/human-language-data/BUILD"
+        ).read_text(encoding="utf-8")
+        self.assertIn("generate_grammar_cells.py", grammar_build)
+        grammar_checker = (
+            runner.REPO_ROOT
+            / "code/learning/human-languages/data/generate_grammar_cells.py"
+        ).read_text(encoding="utf-8")
+        self.assertIn("core/grammar-slots.json", grammar_checker)
+        self.assertIn("spanish/grammar-cells.json", grammar_checker)
+        for language in ("go", "ruby", "rust"):
+            fixture_build = (
+                runner.REPO_ROOT
+                / f"code/programs/{language}/neural-fixture-consumer/BUILD"
+            ).read_text(encoding="utf-8")
+            self.assertIn("00-weighted-neuron.json", fixture_build)
+        required_capabilities_build = (
+            runner.REPO_ROOT / "code/packages/rust/required-capabilities-compiler/BUILD"
+        ).read_text(encoding="utf-8")
+        self.assertIn("required_capabilities.json", required_capabilities_build)
+        exact_roots_without_build = set()
+        for entry in boundary["boundaries"]:
+            for exact_root in entry["applies_to"]["exact_roots"]:
+                root = runner.REPO_ROOT / exact_root
+                if (
+                    not (root / "BUILD").is_file()
+                    and not (root / "BUILD_windows").is_file()
+                ):
+                    exact_roots_without_build.add(exact_root)
+            for excluded_root in entry["applies_to"]["excluded_roots"]:
+                root = runner.REPO_ROOT / excluded_root
+                self.assertTrue(
+                    (root / "BUILD").is_file() or (root / "BUILD_windows").is_file(),
+                    excluded_root,
+                )
+        self.assertEqual(
+            exact_roots_without_build,
+            set(),
+        )
+
+    def test_repository_source_input_boundary_rejects_drift_and_collisions(
+        self,
+    ) -> None:
+        source_registry = runner.load_document(
+            FIXTURE_ROOT / "language-source-input-registry.json"
+        )
+        schema = runner.load_document(
+            FIXTURE_ROOT / "repository-source-input-boundary.schema.json"
+        )
+        canonical = runner.load_document(
+            FIXTURE_ROOT / "repository-source-input-boundary.json"
+        )
+
+        def boundary_by_id(document: dict[str, object], boundary_id: str):
+            return next(
+                entry for entry in document["boundaries"] if entry["id"] == boundary_id
+            )
+
+        mutations: list[tuple[str, dict[str, object], str]] = []
+        wrong_digest = copy.deepcopy(canonical)
+        wrong_digest["language_source_input_registry_sha256"] = "0" * 64
+        mutations.append(
+            (
+                "wrong-language-registry",
+                wrong_digest,
+                "REPOSITORY_SOURCE_REGISTRY_DIGEST_MISMATCH",
+            )
+        )
+        unordered = copy.deepcopy(canonical)
+        unordered["boundaries"][0], unordered["boundaries"][1] = (
+            unordered["boundaries"][1],
+            unordered["boundaries"][0],
+        )
+        mutations.append(
+            ("unordered-boundaries", unordered, "REPOSITORY_SOURCE_NOT_CANONICAL")
+        )
+        duplicate_path = copy.deepcopy(canonical)
+        boundary_by_id(duplicate_path, "rust-root-workspace-manifest")["inputs"].append(
+            {"path": "code/packages/rust/cargo.toml", "role": "shared_ancestor"}
+        )
+        mutations.append(
+            ("casefold-path-alias", duplicate_path, "REPOSITORY_SOURCE_INPUT_COLLISION")
+        )
+        generated_as_shared = copy.deepcopy(canonical)
+        boundary_by_id(generated_as_shared, "rust-cargo-target-configuration")[
+            "inputs"
+        ][0] = {
+            "path": "code/packages/rust/.cargo/config.toml",
+            "role": "shared_ancestor",
+        }
+        mutations.append(
+            (
+                "generated-as-shared",
+                generated_as_shared,
+                "REPOSITORY_SOURCE_ROLE_INVALID",
+            )
+        )
+        package_nested_shared = copy.deepcopy(canonical)
+        boundary_by_id(package_nested_shared, "typescript-workspace-configuration")[
+            "inputs"
+        ][0]["path"] = "code/packages/typescript/hash-functions/private.config"
+        mutations.append(
+            (
+                "package-nested-shared",
+                package_nested_shared,
+                "REPOSITORY_SOURCE_ROLE_INVALID",
+            )
+        )
+        cross_inside_consumer = copy.deepcopy(canonical)
+        boundary_by_id(
+            cross_inside_consumer, "typescript-program-workspace-configuration"
+        )["inputs"][0]["path"] = "code/programs/typescript/ircd/tsconfig.json"
+        mutations.append(
+            (
+                "cross-inside-consumer",
+                cross_inside_consumer,
+                "REPOSITORY_SOURCE_ROLE_INVALID",
+            )
+        )
+        unsorted_roots = copy.deepcopy(canonical)
+        roots = boundary_by_id(unsorted_roots, "haskell-workspace-project")[
+            "applies_to"
+        ]["exact_roots"]
+        roots[0], roots[1] = roots[1], roots[0]
+        mutations.append(
+            ("unsorted-roots", unsorted_roots, "REPOSITORY_SOURCE_NOT_CANONICAL")
+        )
+        casefold_root = copy.deepcopy(canonical)
+        roots = boundary_by_id(casefold_root, "lua-workspace-lint-configuration")[
+            "applies_to"
+        ]["exact_roots"]
+        roots.append("code/packages/lua/ZIP")
+        mutations.append(
+            (
+                "casefold-root-alias",
+                casefold_root,
+                "REPOSITORY_SOURCE_NOT_CANONICAL",
+            )
+        )
+        cross_boundary_root_alias = copy.deepcopy(canonical)
+        boundary_by_id(
+            cross_boundary_root_alias,
+            "repository-human-language-grammar-cell-inputs",
+        )["applies_to"]["exact_roots"] = [
+            "code/packages/lua/ZIP",
+            "code/packages/typescript/human-language-data",
+        ]
+        mutations.append(
+            (
+                "cross-boundary-root-casefold-alias",
+                cross_boundary_root_alias,
+                "REPOSITORY_SOURCE_SCOPE_COLLISION",
+            )
+        )
+        unsorted_descendants = copy.deepcopy(canonical)
+        boundary_by_id(unsorted_descendants, "rust-root-workspace-manifest")[
+            "applies_to"
+        ]["descendant_roots"] = ["code/packages/rust", "code/packages/haskell"]
+        mutations.append(
+            (
+                "unsorted-descendant-roots",
+                unsorted_descendants,
+                "REPOSITORY_SOURCE_NOT_CANONICAL",
+            )
+        )
+        unsorted_exclusions = copy.deepcopy(canonical)
+        exclusions = boundary_by_id(
+            unsorted_exclusions, "rust-root-workspace-manifest"
+        )["applies_to"]["excluded_roots"]
+        exclusions[0], exclusions[1] = exclusions[1], exclusions[0]
+        mutations.append(
+            (
+                "unsorted-excluded-roots",
+                unsorted_exclusions,
+                "REPOSITORY_SOURCE_NOT_CANONICAL",
+            )
+        )
+        excluded_outside = copy.deepcopy(canonical)
+        boundary_by_id(excluded_outside, "rust-root-workspace-manifest")["applies_to"][
+            "excluded_roots"
+        ] = ["code/packages/typescript/os-kernel"]
+        mutations.append(
+            (
+                "excluded-outside-descendant",
+                excluded_outside,
+                "REPOSITORY_SOURCE_SCOPE_INVALID",
+            )
+        )
+        redundant_exact = copy.deepcopy(canonical)
+        boundary_by_id(redundant_exact, "rust-root-workspace-manifest")["applies_to"][
+            "exact_roots"
+        ] = ["code/packages/rust/commonmark"]
+        mutations.append(
+            (
+                "redundant-exact-root",
+                redundant_exact,
+                "REPOSITORY_SOURCE_SCOPE_COLLISION",
+            )
+        )
+        cross_descendants = copy.deepcopy(canonical)
+        applies_to = boundary_by_id(
+            cross_descendants, "rust-root-workspace-manifest-cross-consumers"
+        )["applies_to"]
+        applies_to["exact_roots"] = []
+        applies_to["descendant_roots"] = ["code/packages/go"]
+        mutations.append(
+            (
+                "cross-package-descendants",
+                cross_descendants,
+                "REPOSITORY_SOURCE_ROLE_INVALID",
+            )
+        )
+        wrong_input_origin = copy.deepcopy(canonical)
+        boundary_by_id(wrong_input_origin, "rust-required-capabilities-input")[
+            "input_origin"
+        ] = "typescript"
+        mutations.append(
+            (
+                "registered-input-origin-mismatch",
+                wrong_input_origin,
+                "REPOSITORY_SOURCE_ROLE_INVALID",
+            )
+        )
+        repository_origin_in_lane = copy.deepcopy(canonical)
+        boundary_by_id(repository_origin_in_lane, "rust-required-capabilities-input")[
+            "input_origin"
+        ] = "repository"
+        mutations.append(
+            (
+                "repository-origin-inside-lane",
+                repository_origin_in_lane,
+                "REPOSITORY_SOURCE_ROLE_INVALID",
+            )
+        )
+        repeated_generated_component = copy.deepcopy(canonical)
+        boundary_by_id(repeated_generated_component, "rust-cargo-target-configuration")[
+            "inputs"
+        ][0]["path"] = "code/packages/rust/.cargo/nested/.cargo/config.toml"
+        mutations.append(
+            (
+                "repeated-generated-component",
+                repeated_generated_component,
+                "REPOSITORY_SOURCE_ROLE_INVALID",
+            )
+        )
+        case_variant_generated_component = copy.deepcopy(canonical)
+        boundary_by_id(
+            case_variant_generated_component, "rust-cargo-target-configuration"
+        )["inputs"][0]["path"] = "code/packages/rust/.Cargo/config.toml"
+        mutations.append(
+            (
+                "case-variant-generated-component",
+                case_variant_generated_component,
+                "REPOSITORY_SOURCE_ROLE_INVALID",
+            )
+        )
+        unknown_consumer_lane = copy.deepcopy(canonical)
+        boundary_by_id(
+            unknown_consumer_lane, "typescript-program-workspace-configuration"
+        )["applies_to"]["exact_roots"] = ["code/programs/brain/ircd"]
+        mutations.append(
+            (
+                "unknown-consumer-lane",
+                unknown_consumer_lane,
+                "REPOSITORY_SOURCE_SCOPE_INVALID",
+            )
+        )
+        overlapping_authority = copy.deepcopy(canonical)
+        exact_roots = boundary_by_id(
+            overlapping_authority, "rust-root-workspace-manifest-cross-consumers"
+        )["applies_to"]["exact_roots"]
+        exact_roots.append("code/packages/rust/commonmark")
+        exact_roots.sort(key=lambda path: path.encode("utf-8"))
+        mutations.append(
+            (
+                "overlapping-authority",
+                overlapping_authority,
+                "REPOSITORY_SOURCE_SCOPE_COLLISION",
+            )
+        )
+        sensitive_path = copy.deepcopy(canonical)
+        boundary_by_id(sensitive_path, "haskell-workspace-project")["inputs"][0][
+            "path"
+        ] = "code/packages/haskell/.env"
+        mutations.append(
+            (
+                "sensitive-workspace-input",
+                sensitive_path,
+                "REPOSITORY_SOURCE_SENSITIVE_PATH",
+            )
+        )
+
+        for name, boundary, expected_code in mutations:
+            with (
+                self.subTest(name=name),
+                self.assertRaises(runner.ConformanceError) as raised,
+            ):
+                runner._validate_repository_source_input_boundary(
+                    boundary,
+                    schema,
+                    source_registry,
+                )
+            self.assertEqual(raised.exception.code, expected_code)
+
+        with (
+            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_SCOPES", 480),
+            self.assertRaises(runner.ConformanceError) as raised,
+        ):
+            runner._validate_repository_source_input_boundary(
+                canonical,
+                schema,
+                source_registry,
+            )
+        self.assertEqual(raised.exception.code, "REPOSITORY_SOURCE_SCOPE_LIMIT")
+
+        with (
+            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_AUTHORIZATIONS", 483),
+            self.assertRaises(runner.ConformanceError) as raised,
+        ):
+            runner._validate_repository_source_input_boundary(
+                canonical,
+                schema,
+                source_registry,
+            )
+        self.assertEqual(
+            raised.exception.code,
+            "REPOSITORY_SOURCE_AUTHORIZATION_LIMIT",
+        )
+
+        for path in (
+            "code/packages/typescript/.env.local",
+            "code/packages/typescript/tsconfig.local.json",
+            "code/packages/rust/.cargo/config.local.toml",
+        ):
+            with self.subTest(sensitive_path=path):
+                self.assertTrue(runner._repository_source_sensitive_path(path))
+        self.assertFalse(
+            runner._repository_source_sensitive_path(
+                "code/packages/rust/.cargo/config.toml"
+            )
+        )
+
+    def test_repository_source_boundary_digest_frames_every_authoritative_field(
+        self,
+    ) -> None:
+        canonical = runner.load_document(
+            FIXTURE_ROOT / "repository-source-input-boundary.json"
+        )
+        canonical_digest = runner.repository_source_input_boundary_digest(canonical)
+        reordered_keys = {
+            key: canonical[key] for key in reversed(tuple(canonical.keys()))
+        }
+        self.assertEqual(
+            runner.repository_source_input_boundary_digest(reordered_keys),
+            canonical_digest,
+        )
+
+        mutations = []
+        for name, mutate in (
+            ("schema-version", lambda value: value.__setitem__("schema_version", 2)),
+            (
+                "registry-digest",
+                lambda value: value.__setitem__(
+                    "language_source_input_registry_sha256", "0" * 64
+                ),
+            ),
+            (
+                "boundary-id",
+                lambda value: value["boundaries"][0].__setitem__(
+                    "id", "haskell-workspace-project-v2"
+                ),
+            ),
+            (
+                "input-origin",
+                lambda value: value["boundaries"][0].__setitem__(
+                    "input_origin", "python"
+                ),
+            ),
+            (
+                "exact-root",
+                lambda value: value["boundaries"][0]["applies_to"][
+                    "exact_roots"
+                ].__setitem__(0, "code/packages/haskell/arithmetic-v2"),
+            ),
+            (
+                "input-path",
+                lambda value: value["boundaries"][0]["inputs"][0].__setitem__(
+                    "path", "code/packages/haskell/cabal-v2.project"
+                ),
+            ),
+            (
+                "input-role",
+                lambda value: value["boundaries"][0]["inputs"][0].__setitem__(
+                    "role", "cross_package_exact"
+                ),
+            ),
+            (
+                "generated-component",
+                lambda value: next(
+                    entry
+                    for entry in value["boundaries"]
+                    if entry["id"] == "rust-cargo-target-configuration"
+                )["inputs"][0].__setitem__("generated_component", "vendor"),
+            ),
+            (
+                "owner",
+                lambda value: value["boundaries"][0].__setitem__("owner", "other"),
+            ),
+            (
+                "reason",
+                lambda value: value["boundaries"][0].__setitem__(
+                    "reason", "Different reviewed reason."
+                ),
+            ),
+        ):
+            changed = copy.deepcopy(canonical)
+            mutate(changed)
+            mutations.append((name, changed))
+
+        for name, changed in mutations:
+            with self.subTest(name=name):
+                self.assertNotEqual(
+                    runner.repository_source_input_boundary_digest(changed),
+                    canonical_digest,
+                )
+
+    def test_repository_source_boundary_maximum_input_shape_is_linear(self) -> None:
+        source_registry = runner.load_document(
+            FIXTURE_ROOT / "language-source-input-registry.json"
+        )
+        schema = runner.load_document(
+            FIXTURE_ROOT / "repository-source-input-boundary.schema.json"
+        )
+        boundary = {
+            "schema_version": 1,
+            "language_source_input_registry_sha256": runner.source_input_registry_digest(
+                source_registry
+            ),
+            "boundaries": [
+                {
+                    "id": f"bulk-{boundary_index:03d}",
+                    "input_origin": "rust",
+                    "applies_to": {
+                        "exact_roots": [
+                            f"code/packages/go/bulk-consumer-{boundary_index:03d}"
+                        ],
+                        "descendant_roots": [],
+                        "excluded_roots": [],
+                    },
+                    "inputs": [
+                        {
+                            "path": (
+                                "code/packages/rust/bulk/"
+                                f"{boundary_index:03d}/input-{input_index:03d}.toml"
+                            ),
+                            "role": "cross_package_exact",
+                        }
+                        for input_index in range(64)
+                    ],
+                    "reason": "Maximum-shape linear prefix-collision regression.",
+                    "owner": "build-tool-shared-and-generated-boundary-source-input-contract",
+                }
+                for boundary_index in range(256)
+            ],
+        }
+        self.assertEqual(
+            runner._validate_repository_source_input_boundary(
+                boundary,
+                schema,
+                source_registry,
+            ),
+            {
+                "boundary_count": 256,
+                "input_count": 16384,
+                "scope_count": 256,
+                "authorization_count": 16384,
+            },
         )
 
     def test_language_source_input_registry_covers_reviewed_repository_inputs(
@@ -1872,6 +2592,77 @@ class PureDomainValidationTests(unittest.TestCase):
             after["required_capabilities.json"],
         )
 
+    def test_repository_source_collection_closes_shared_and_pruned_boundaries(
+        self,
+    ) -> None:
+        boundary = runner.load_document(
+            FIXTURE_ROOT / "repository-source-input-boundary.json"
+        )
+        boundary_digest = runner.repository_source_input_boundary_digest(boundary)
+        case_names = [
+            "source-collection-repository-cross-language-workspace.json",
+            "source-collection-repository-direct-build-inputs.json",
+            "source-collection-repository-link-boundaries.json",
+            "source-collection-repository-python-workspace.json",
+            "source-collection-repository-rust-boundary.json",
+            "source-collection-repository-starlark-load.json",
+            "source-collection-repository-typescript-program-shared.json",
+            "source-collection-repository-typescript-shared.json",
+            "source-collection-repository-visicalc-deno-cross-package.json",
+        ]
+        cases = [load_case(name) for name in case_names]
+
+        for case in cases:
+            with self.subTest(case=case["id"]):
+                options = case["input"]["options"]
+                self.assertEqual(case["input"]["operation"], "source_collection")
+                self.assertEqual(options["mode"], "repository_boundary")
+                self.assertEqual(options["boundary_sha256"], boundary_digest)
+                self.assertEqual(
+                    runner._expected_repository_source_collection(options, boundary),
+                    case["expected"]["result"]["files"],
+                )
+                runner.validate_case_document(case, **self._schema_args())
+
+        rust_options = copy.deepcopy(cases[0]["input"]["options"])
+        rust_options["boundary_sha256"] = "0" * 64
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner._expected_repository_source_collection(rust_options, boundary)
+        self.assertEqual(
+            raised.exception.code,
+            "CASE_REPOSITORY_SOURCE_BOUNDARY_DIGEST_MISMATCH",
+        )
+
+        unmatched = copy.deepcopy(cases[1]["input"]["options"])
+        unmatched["package_root"] = "code/programs/typescript/unregistered"
+        self.assertEqual(
+            runner._expected_repository_source_collection(unmatched, boundary),
+            [],
+        )
+
+        excluded = copy.deepcopy(
+            load_case("source-collection-repository-rust-boundary.json")["input"][
+                "options"
+            ]
+        )
+        excluded["package_root"] = "code/packages/rust/os-kernel"
+        self.assertEqual(
+            runner._expected_repository_source_collection(excluded, boundary),
+            [],
+        )
+
+        mismatched_language = copy.deepcopy(cases[1])
+        mismatched_language["input"]["options"]["language"] = "rust"
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(
+                mismatched_language,
+                **self._schema_args(),
+            )
+        self.assertEqual(
+            raised.exception.code,
+            "CASE_REPOSITORY_SOURCE_ROOT_LANGUAGE_MISMATCH",
+        )
+
     def test_dependency_cycles_are_rejected_without_recursion(self) -> None:
         cyclic = load_case("diff-selection-transitive.json")
         cyclic["input"]["options"]["edges"].append(["python/app", "python/base"])
@@ -1898,6 +2689,12 @@ class PureDomainValidationTests(unittest.TestCase):
                 runner.REPO_ROOT / "code/specs/schemas/build-plan-v1.schema.json"
             ),
             "pure_domain_schema": pure_schema,
+            "source_input_registry": runner.load_document(
+                FIXTURE_ROOT / "language-source-input-registry.json"
+            ),
+            "repository_source_input_boundary": runner.load_document(
+                FIXTURE_ROOT / "repository-source-input-boundary.json"
+            ),
         }
 
         unknown_edge = load_case("diff-selection-transitive.json")
@@ -2098,6 +2895,12 @@ class PureDomainValidationTests(unittest.TestCase):
                 runner.REPO_ROOT / "code/specs/schemas/build-plan-v1.schema.json"
             ),
             "pure_domain_schema": pure_schema,
+            "source_input_registry": runner.load_document(
+                FIXTURE_ROOT / "language-source-input-registry.json"
+            ),
+            "repository_source_input_boundary": runner.load_document(
+                FIXTURE_ROOT / "repository-source-input-boundary.json"
+            ),
         }
         cases = [
             runner.load_document(path)
@@ -2144,7 +2947,7 @@ class CommandLineTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
-        self.assertEqual(summary["case_count"], 122)
+        self.assertEqual(summary["case_count"], 131)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "id": "source-collection/repository-visicalc-deno-cross-package-inputs",
+  "domain": "source_collection",
+  "summary": "The Deno VisiCalc build includes only its two exact sibling compile-time text imports.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["source_collection"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "source_collection",
+    "options": {
+      "mode": "repository_boundary",
+      "language": "typescript",
+      "package_root": "code/programs/typescript/visicalc-deno",
+      "boundary_sha256": "b108fed4bde93a44b3dbcadae02b325335e1da0fa49aedd197b5fefa750caa37",
+      "candidates": [
+        {"path": "code/programs/typescript/visicalc-html/index.html", "kind": "file", "tracked": true, "content_hex": "736f757263650a"},
+        {"path": "code/programs/typescript/visicalc-html/vendor/spreadsheet-engine-wasm.js", "kind": "file", "tracked": true, "content_hex": "736f757263650a"},
+        {"path": "code/programs/typescript/visicalc-webcomp/vendor/Grid.js", "kind": "file", "tracked": true, "content_hex": "6f746865720a"}
+      ]
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "source-collection/repository-visicalc-deno-cross-package-inputs",
+    "domain": "source_collection",
+    "outcome": "ok",
+    "result": {
+      "files": [
+        {"path": "code/programs/typescript/visicalc-html/index.html", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "code/programs/typescript/visicalc-html/vendor/spreadsheet-engine-wasm.js", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"}
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

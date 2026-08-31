@@ -706,6 +706,99 @@ reparse, hardlink, handle-race, and real filesystem enforcement remain required
 in each native engine-adoption child and are not inferred from the neutral
 snapshot.
 
+#### Repository source-input boundary v1
+
+The package-relative language registry cannot authorize files above a package
+root, and its generated-component rule intentionally prunes `.cargo` and
+`vendor`. The closed
+`code/specs/fixtures/build-tool-v1/repository-source-input-boundary.json`
+registry is the only v1 authority for exact repository-relative inputs that
+cross either boundary. It pins the language-registry digest it extends; a
+consumer MUST validate both registries and reject a mismatched digest before
+selecting any file.
+
+Each boundary has one canonical id, one `input_origin`, one Cartesian
+applicability record, one or more exact input paths, a durable owner, and a
+reason. `input_origin` is either a registered implementation lane or the
+special `repository` class for language-neutral material outside an
+implementation lane. It classifies the input, never the consumer. A case's
+`language` MUST instead equal the lane encoded by its `package_root`.
+
+Applicability contains three canonical arrays:
+
+- `exact_roots` names exact package or program roots below a registered
+  consumer lane;
+- `descendant_roots` names canonical three-component lane roots and applies
+  only to package roots strictly below them; and
+- `excluded_roots` removes reviewed exact descendants from those broad roots.
+
+At least one exact or descendant root is required. Every listed input applies
+to every selected root in that boundary, so inputs with different consumer
+sets MUST be split into separate boundaries. An exact root already covered by
+an unexcluded descendant root is redundant and invalid. There is no ancestor
+fallback, glob, suffix, regular expression, environment lookup, or implicit
+directory permission. Matching additionally requires the candidate to be
+declared Git-tracked and a regular file. A symlink or reparse record, an
+untracked record, or an exact file outside all applicable roots does not
+select.
+
+Three input roles are closed in v1:
+
+- `shared_ancestor` names a direct tracked child of an implementation
+  workspace root and applies only to exact or descendant consumers inside
+  that same workspace;
+- `generated_pruning_exception` names one tracked input contained by every
+  consumer root whose path contains exactly the declared component from the
+  language registry's generated-directory set; and
+- `cross_package_exact` names one tracked `code/` input outside every exact
+  consumer root. It has exact consumers only and may cross implementation
+  lanes or point to reviewed language-neutral repository data.
+
+A shared input MUST NOT enter any generated component. A pruning exception
+MUST remain contained by every consumer, contain its declared generated
+component, and keep that component present in the pinned language registry.
+Removing a generated component from the language contract therefore
+invalidates a stale exception instead of silently widening collection. A
+cross-package input cannot be paired with a descendant scope or placed inside
+any consumer root.
+
+Input and applicability paths are exact, case-sensitive, NFC repository-
+relative paths. Boundary ids, roots, and input records are unique and sorted
+by raw UTF-8 bytes. Full-casefold aliases, unsafe or reserved paths, redundant
+roots, exact/descendant overlap, input-file path prefixes, and duplicate
+authorization of the same input to overlapping consumers fail closed. The
+registry permits the same exact input in disjoint boundaries when different
+consumer sets require different roles. It is bounded to 256 boundaries, 64
+inputs per boundary, 8,192 aggregate consumer scopes, and 32,768 aggregate
+input-to-scope authorizations.
+
+The reviewed v1 projection has 18 boundaries, 21 input registrations, 19
+unique tracked paths, 481 consumer scopes, and 484 authorizations. It covers
+only real consumers of the Haskell Cabal project, Lua lint config, Python uv
+workspace manifest, Rust workspace manifest, Cargo target config, and Windows
+launcher; exact cross-language Rust-workspace consumers; all direct TypeScript
+base-config consumers; five shared Starlark rule files loaded by 86 BUILD
+roots; exact human-language verifier/data, neural-learning fixture, and
+required-capabilities compiler inputs; and VisiCalc sibling inputs consumed by
+real BUILD fronts. The projection deliberately excludes unconsumed Ruby
+workspace files, Lua `DIRS`, ordinary package dependency inputs, broad
+ambient directories, lockfiles not explicitly listed, user or SDK config,
+machine-local files, signing material, credentials, tokens, environment
+files, and secrets. Every registered path MUST remain a Git-tracked regular
+file with mode `100644` or `100755` in the checked-in projection.
+
+Repository source collection is a process-free `source_collection` operation.
+Its input supplies one language, one package root, the boundary digest, and a
+bounded inert candidate snapshot. Its output is the UTF-8 path-sorted list of
+selected exact repository paths and lowercase SHA-256 content digests. The
+digest uses the same length-framed canonical-JSON construction as the language
+registry with domain separator
+`coding-adventures/build-tool-repository-source-input-boundary/v1`. The
+registry and digest are identity, not filesystem, Git, execution, credential,
+or host authority. Native engine-adoption children still own no-follow file
+opening, repository-root handle retention, regular-file and tracked-state
+proof, race defense, bounded reads, and redacted failures.
+
 ### 6. Starlark
 
 Final parity requires:

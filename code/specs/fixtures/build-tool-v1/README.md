@@ -12,6 +12,8 @@ build-tool-v1/
   pure-domains.schema.json
   language-source-input-registry.schema.json
   language-source-input-registry.json
+  repository-source-input-boundary.schema.json
+  repository-source-input-boundary.json
   execution.schema.json
   execution-authority.schema.json
   execution-preflight-loader-authority.schema.json
@@ -37,7 +39,7 @@ emerging OCaml lane. It records front-door and shared-engine state but contains
 no executable commands. Every adapter is currently marked missing, so a valid
 inventory is not reported as conformance success.
 
-The 122-case bootstrap corpus covers every process-free v1 domain:
+The 131-case bootstrap corpus covers every process-free v1 domain:
 
 - canonical package and program membership, language-registry classification
   with paired C#, F#, Haskell, Java, Kotlin, and OCaml package/program
@@ -70,12 +72,23 @@ The 122-case bootstrap corpus covers every process-free v1 domain:
   inclusion-only path-scoped host resources and native companions, exact
   BUILD-invoked and reviewed package build scripts, shared Unix command
   specifications, conventional test fixtures and package resources, a
-  representative tracked-repository
-  projection, extension and declared-source selection modes, exact near-name
+  representative tracked-repository projection, extension and declared-source
+  selection modes, exact near-name
   retention, inert symlink/reparse boundaries, Android signing/SDK-property
-  exclusion, and per-file SHA-256 digests. Shared ancestor inputs and tracked
-  generated-pruned inputs remain outside this package-root authority and are
-  assigned to a dependent exact-boundary contract;
+  exclusion, and per-file SHA-256 digests. Shared ancestors, tracked generated-
+  pruned inputs, and exact cross-package inputs remain outside this package-
+  root authority. A separate closed repository-relative registry admits 18
+  reviewed boundaries, 21 input registrations over 19 tracked regular files,
+  481 consumer scopes, and 484 input-to-scope authorizations. It covers exact
+  Haskell, Lua, and Python shared inputs; Rust workspace, Cargo, and Windows-
+  launcher inputs; exact TypeScript base-config consumers; five shared Starlark
+  rules; reviewed human-language, neural-learning, required-capability, and
+  cross-language workspace inputs; and bounded VisiCalc sibling inputs. Nine
+  boundary cases prove exact, descendant, exclusion,
+  shared-ancestor, generated-pruning, cross-package, cross-language, direct-
+  BUILD-input, Starlark-load, and inert symlink/reparse behavior without
+  ambient directories, untracked local configuration, credentials, signing
+  material, secrets, suffix selectors, or globs;
 - inline-only Starlark module resolution, bounded evaluation requests,
   structured command extraction, stable missing/outside errors, and adversarial
   fuel, recursion, aggregate, range, scalar-value, load-graph, and output

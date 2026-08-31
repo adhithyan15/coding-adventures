@@ -12193,15 +12193,14 @@ primary-language suffix.
 
 The same audit found exact consumed shared ancestors and exact tracked files
 hidden by generated-component pruning that a package-root registry cannot
-safely express: TypeScript's base config, Rust workspace Cargo/config and
-Windows helper inputs, Python's workspace pyproject, Haskell's cabal project,
-Lua's shared configuration and directory registry, Ruby's Gemfile/Rakefile,
-and tracked TypeScript vendor JavaScript loaded by VisiCalc. The new pending
-`build-tool-shared-and-generated-boundary-source-input-contract` owns a
-repository-relative, collision-checked contract for those inputs and explicit
-pruning exceptions. It excludes ambient directories, untracked local config,
-signing material, credentials, and secrets. All eleven engine-adoption leaves
-depend on that contract; no broad selector was added to this registry.
+safely express. The follow-up contract must audit actual consumers before it
+admits any path: candidate workspace files, broad shared directories, and
+standalone scripts are not evidence by themselves. The new pending
+`build-tool-shared-and-generated-boundary-source-input-contract` owns that
+repository-relative, collision-checked review plus explicit pruning
+exceptions. It excludes ambient directories, untracked local config, signing
+material, credentials, and secrets. All eleven engine-adoption leaves depend
+on that contract; no broad selector was added to this registry.
 
 During final validation, current main advanced through merged PR #13650's
 audited token lifecycle codecs and PR #13657's RFC 8414 metadata trust boundary.
@@ -12252,6 +12251,111 @@ With the five engine-adoption children, shared/generated boundary child, and
 post-rebase classifications wired, the complete state contains 630 unique
 owners and 987 dependency edges: 197 merged, 432 pending, and exactly this
 registry owner in progress. The graph is dependency-complete and acyclic.
+
+### Post-PR #13707 refresh and shared/generated boundary selection
+
+PR #13707 completed all 40 checks on final head
+`46f5022696661b93ca9360cc2429396e265e3393` acceptably: 33 succeeded and seven
+were skipped. GitHub reported the head clean and mergeable, then executed
+guarded squash auto-merge without a manual merge at 2026-08-31T18:22:03Z. The
+merge commit is `26e1527a03e1c89735e90d04d9101d5a5da7eefa`.
+
+After fetching current main, the collision-checked schema-3 inventory at exact
+revision `f5fdd88526315bf32b616b95b5bb76a04e7363bb` reports 15 established
+lanes, 1,395 implementation identities, 4,609 implementation slots, and 1,434
+all-reported identities. Its bands are 175 packages with 265 missing slots,
+123/934, 170/2,139, and 927/12,978. Rust has 738 singletons, OCaml remains at
+zero packages, and canonical collisions and unknown buckets remain zero. The
+intervening TaskApp, human-language, and PR #13710 SPICE changes affect
+existing roots only.
+
+Two Rust-only identities are new since the preceding inventory:
+`dsmr-p1-protocol` and `smart-home-dsmr-p1-integration`, both introduced by
+merged PR #13702. The protocol owner will close the strict CRLF telegram and
+CRC-16/A001 grammar, fixed OBIS allowlist, exact decimal and calendar-valid
+timestamp rules, resource limits, deterministic telemetry, and payload-blind
+error surface across established lanes. The integration is split into a
+portable injected-reader, fixed 115200 8N1 open-plan, supervision, stable-
+identity, deterministic projection, and atomic-commit owner plus a selection-
+blocked native serial-device authority review. That review owns exact device
+binding, alias and reparse defense, exclusivity, cancellation, timeouts,
+serialport FFI, CLI and clock effects, runtime mutation, and a truthful
+nonempty hardware capability declaration; CRC is integrity rather than
+authentication.
+
+The same dependency audit surfaced the pre-existing Rust-only
+`smart-home-event-streams` package as an unowned reusable prerequisite rather
+than DSMR-local behavior. Its portable owner covers injected stream and MQTT
+planning, cursors, checkpoints, resume, heartbeat and freshness schedules,
+reconnect and backoff, restart and fleet summaries, deterministic queries, and
+caller-supplied time without sockets, brokers, cloud, clocks, credentials, or
+native I/O. Focused current Rust tests pass all seven protocol cases and all
+five DSMR integration cases.
+
+The dependency/leverage pass selects
+`build-tool-shared-and-generated-boundary-source-input-contract` on fresh clean
+branch `codex/build-tool-shared-generated-boundary-source-input-contract` from
+the exact current main revision above. Its now-merged registry prerequisite
+exposes a coherent language-neutral boundary for exact shared ancestors and
+tracked files hidden by generated pruning. The contract
+must preserve exact ownership, repository containment, deterministic
+projection, and collision checks while excluding ambient directories,
+untracked local configuration, credentials, signing material, and secrets.
+It directly blocks eleven engine leaves and reaches eighteen unfinished
+descendants. Higher raw ranks are heterogeneous classifiers or native and
+network authority reviews excluded from autonomous selection. After adding
+the four newly classified owners and making this transition, the complete
+state has 634 unique owners and 991 dependency edges: 198 merged, 435 pending,
+and exactly this owner in progress. The graph is dependency-complete and
+acyclic.
+
+Implementation closes the boundary through a checked schema, canonical
+registry, nine neutral source-collection cases, semantic validation, and
+repository projection. The final registry contains 18 reviewed boundaries,
+21 input registrations over 19 tracked regular files, 481 consumer scopes,
+and 484 input-to-scope authorizations. It covers exact Haskell, Lua, and Python
+workspace inputs; Rust workspace, Cargo config, Windows launcher, and external
+Cargo consumers; TypeScript base-config consumers; five Starlark rule files;
+human-language verifier/data, neural-learning fixture, required-capability,
+cross-language workspace, and VisiCalc sibling inputs. Input origin, role,
+exact/descendant scope, exclusions, canonical aliases, sensitive paths,
+generated-component depth, overlap, and maximum shape are all fail-closed.
+The final projection deliberately rejects unconsumed Ruby workspace files,
+Lua `DIRS`, non-BUILD VisiCalc roots, and machine-local configuration.
+
+The complete 8,671-front BUILD literal audit also found ordinary package-owned
+cross-lane dependency inputs that must not be smuggled into repository-boundary
+authority: four Rust IRC manifests, the Rust bitset-c manifest consumed by C#
+and F#, and Rust C headers copied by Swift wrappers. The new pending
+`build-tool-cross-lane-native-dependency-metadata-repair` owns exact dependency
+metadata and neutral resolution/diff/hash regressions for those paths.
+
+The eleven-commit branch finally rebased conflict-free onto exact current main
+`c3903521e56d6b2dc747ef682d21b0861488aed3`. Intervening PRs #13718 through
+#13735 change existing SPICE, HTML, TaskApp, Engram, and human-language roots
+plus one new Rust `oauth-credential-custody` identity. Engram's new web helper
+is package-local and is not invoked by its BUILD front, so it does not widen
+this registry. The new OAuth identity is classified under pending
+`oauth-credential-custody-portable-conformance`; concrete Vault, filesystem,
+database, durable audit, and host composition stay in the blocked broker and
+custody review. PR #13732 separately makes the Engram WASM BUILD execute
+`js/smoke.mjs`, which imports `js/engram-mosaic-host-wasm.mjs` and reads
+`pkg/engram_engine.wasm`; the merged Rust source registry omits all three
+package-local tracked inputs. Pending
+`build-tool-engram-wasm-package-source-input-registry-repair` owns exact scoped
+registration, tracked-byte fixtures, and digest regeneration, and all eleven
+engine adoptions now depend on it. This gap does not widen or invalidate the
+separate repository-boundary registry. The refreshed collision-checked
+schema-3 inventory records the same counts after PR #13737 changed only the
+existing Rust `intel8080-gatelevel` package and its specs, without adding a
+package identity, build-tool input, or tranche overlap. PR #13736 likewise
+changes only existing Rust WASM packages and their specs:
+15 established lanes, 1,396 implementation identities, 4,610 slots, and 1,435
+all-reported identities. Its bands are 175/265, 123/934, 170/2,139, and
+928/12,992; Rust has 739 singletons, OCaml remains at zero packages, and
+canonical collisions and unknown buckets remain zero. The complete
+637-owner/1,006-edge graph remains dependency-complete, unique, and acyclic at
+198 merged, 438 pending, and exactly this owner in progress.
 
 ## Autonomous Loop Protocol
 
