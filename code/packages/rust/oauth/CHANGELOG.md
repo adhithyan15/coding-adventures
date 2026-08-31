@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Added provider-neutral RFC 8414 request preparation and bounded metadata
+  decoding with exact issuer comparison, strict HTTPS endpoints, explicit
+  Authorization Code, public-client `none`, PKCE `S256`, and RFC 9207 response
+  issuer or registry-owned distinct-redirect negotiation,
+  immutable capability retention, provider-config derivation, recursive JSON
+  scrubbing, and mandatory audit publication before either request or response
+  release.
 - Added provider-neutral bounded JSON/form token response decoding, closed
   token-endpoint errors, explicit refresh-token rotation decisions, audited
   public-client refresh and RFC 7009 revocation request preparation, recursive

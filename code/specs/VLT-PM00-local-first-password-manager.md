@@ -2055,11 +2055,14 @@ changelog, focused build, and downstream validation.
     1. **shipped:** reusable provider-neutral OAuth Authorization Code +
        mandatory PKCE core from `code/specs/oauth.md`, with first-class
        privacy-safe audit descriptors and no network/storage authority;
-    2. **active:** bounded OAuth token/error codecs, explicit refresh-token
+    2. **shipped:** bounded OAuth token/error codecs, explicit refresh-token
        rotation, and audit-gated refresh/revocation request preparation;
-    3. RFC 8414 metadata validation as a separate endpoint/issuer trust slice;
-    4. installed-app loopback host, credential custody, and an audit-before-
-       effect/disclosure broker supporting any number of provider configs;
+    3. **shipped:** audited RFC 8414 metadata request/validation as a separate
+       endpoint, exact-issuer, public-client, PKCE, and explicit RFC 9207-or-
+       distinct-redirect trust slice;
+    4. **next:** installed-app loopback host, followed by credential custody
+       and an audit-before-effect/disclosure broker supporting any number of
+       provider configs;
     5. provider-neutral Google Drive file-client seam and `appDataFolder`
        `VaultObjectStore` adapter over opaque names/properties;
     6. real Drive HTTPS transport, rate/quota mapping, full-scan/change-feed

@@ -15,8 +15,10 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::{self, Debug, Display, Formatter};
 use url_parser::Url;
 
+mod metadata;
 mod token;
 
+pub use metadata::*;
 pub use token::*;
 
 const ENTROPY_BYTES: usize = 32;
@@ -30,6 +32,7 @@ const MAX_PARAMETER_BYTES: usize = 1_024;
 const MAX_CALLBACK_BYTES: usize = 16 * 1024;
 const MAX_AUTHORIZATION_CODE_BYTES: usize = 4_096;
 const TRACE_BYTES: usize = 16;
+const MAX_JSON_NESTING: usize = 64;
 
 const RESERVED_AUTHORIZATION_PARAMETERS: [&str; 8] = [
     "client_id",
@@ -408,6 +411,10 @@ impl Debug for TokenExchangeRequest {
 /// Security-relevant OAuth action represented in an audit descriptor.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum OAuthAuditAction {
+    /// An RFC 8414 authorization-server metadata request was prepared.
+    MetadataRequestPrepare,
+    /// Authorization-server metadata was decoded and trust-validated.
+    MetadataResponseValidate,
     /// An authorization URL and transaction were prepared.
     AuthorizationBegin,
     /// An authorization callback was validated and an exchange was prepared.
@@ -740,6 +747,8 @@ pub enum OAuthError {
     ProviderDenied,
     /// Authorization server returned another OAuth error code.
     ProviderError,
+    /// Authorization-server metadata was malformed or failed trust policy.
+    InvalidMetadata(MetadataViolation),
     /// The token endpoint response was malformed or internally inconsistent.
     InvalidTokenResponse(TokenResponseViolation),
     /// The token endpoint returned a bounded, classified OAuth error code.
@@ -756,6 +765,7 @@ impl OAuthError {
             Self::InvalidCallback(_) => OAuthFailureClass::InvalidCallback,
             Self::ProviderDenied
             | Self::ProviderError
+            | Self::InvalidMetadata(_)
             | Self::InvalidTokenResponse(_)
             | Self::TokenEndpoint(_) => OAuthFailureClass::Provider,
             Self::Audit => OAuthFailureClass::Audit,
@@ -777,6 +787,10 @@ impl Debug for OAuthError {
             Self::Entropy => formatter.write_str("Entropy"),
             Self::ProviderDenied => formatter.write_str("ProviderDenied"),
             Self::ProviderError => formatter.write_str("ProviderError"),
+            Self::InvalidMetadata(reason) => formatter
+                .debug_tuple("InvalidMetadata")
+                .field(reason)
+                .finish(),
             Self::InvalidTokenResponse(reason) => formatter
                 .debug_tuple("InvalidTokenResponse")
                 .field(reason)
@@ -797,6 +811,7 @@ impl Display for OAuthError {
             Self::InvalidCallback(_) => "oauth: invalid authorization callback",
             Self::ProviderDenied => "oauth: authorization denied",
             Self::ProviderError => "oauth: provider rejected authorization",
+            Self::InvalidMetadata(_) => "oauth: invalid authorization-server metadata",
             Self::InvalidTokenResponse(_) => "oauth: invalid token response",
             Self::TokenEndpoint(_) => "oauth: token endpoint rejected request",
             Self::Audit => "oauth: audit publication failed",
@@ -807,7 +822,11 @@ impl Display for OAuthError {
 impl std::error::Error for OAuthError {}
 
 fn validate_https_endpoint(value: &str) -> Result<(), OAuthError> {
-    if value.is_empty() || value.len() > MAX_ENDPOINT_BYTES {
+    if value.is_empty()
+        || value.len() > MAX_ENDPOINT_BYTES
+        || value.trim() != value
+        || !valid_uri_text(value)
+    {
         return Err(OAuthError::InvalidConfiguration(
             ConfigurationViolation::Endpoint,
         ));
@@ -828,7 +847,11 @@ fn validate_https_endpoint(value: &str) -> Result<(), OAuthError> {
 }
 
 fn validate_redirect_uri(value: &str) -> Result<(), OAuthError> {
-    if value.is_empty() || value.len() > MAX_ENDPOINT_BYTES {
+    if value.is_empty()
+        || value.len() > MAX_ENDPOINT_BYTES
+        || value.trim() != value
+        || !valid_uri_text(value)
+    {
         return Err(OAuthError::InvalidConfiguration(
             ConfigurationViolation::RedirectUri,
         ));
@@ -852,7 +875,11 @@ fn validate_redirect_uri(value: &str) -> Result<(), OAuthError> {
 }
 
 fn validate_issuer(value: &str) -> Result<(), OAuthError> {
-    if value.is_empty() || value.len() > MAX_ENDPOINT_BYTES {
+    if value.is_empty()
+        || value.len() > MAX_ENDPOINT_BYTES
+        || value.trim() != value
+        || !valid_uri_text(value)
+    {
         return Err(OAuthError::InvalidConfiguration(
             ConfigurationViolation::Issuer,
         ));
@@ -870,6 +897,40 @@ fn validate_issuer(value: &str) -> Result<(), OAuthError> {
         ));
     }
     Ok(())
+}
+
+fn valid_uri_text(value: &str) -> bool {
+    value.bytes().all(|byte| matches!(byte, 0x21..=0x7e))
+}
+
+fn json_nesting_within_limit(input: &[u8]) -> bool {
+    let mut depth = 0_usize;
+    let mut in_string = false;
+    let mut escaped = false;
+    for byte in input {
+        if in_string {
+            if escaped {
+                escaped = false;
+            } else if *byte == b'\\' {
+                escaped = true;
+            } else if *byte == b'"' {
+                in_string = false;
+            }
+            continue;
+        }
+        match *byte {
+            b'"' => in_string = true,
+            b'{' | b'[' => {
+                depth += 1;
+                if depth > MAX_JSON_NESTING {
+                    return false;
+                }
+            }
+            b'}' | b']' => depth = depth.saturating_sub(1),
+            _ => {}
+        }
+    }
+    true
 }
 
 fn validate_client_id(value: &str) -> Result<(), OAuthError> {

@@ -1,9 +1,10 @@
 # OAuth
 
-**Status:** Phase 2 token boundary implemented — provider-neutral installed-app
-Authorization Code + PKCE, token/error codecs, refresh rotation, and revocation
-request preparation; broker, transport, token custody, device flow, and provider
-integrations remain prioritized below.
+**Status:** Phase 2 metadata trust boundary implemented — provider-neutral
+installed-app Authorization Code + PKCE, token/error codecs, refresh rotation,
+revocation request preparation, and RFC 8414 metadata validation; broker,
+transport, token custody, device flow, and provider integrations remain
+prioritized below.
 
 ## Overview
 
@@ -71,14 +72,19 @@ The delivery order is:
    descriptors for successful, denied, and failed begin/completion attempts.
    The result wrapper exposes no bypass around durable
    `publish_then_release`, so audit failure fails closed.
-2. **OAuth token boundary (active):** bounded JSON and form token/error
+2. **Shipped OAuth token boundary:** bounded JSON and form token/error
    responses, refresh grant requests, explicit rotating refresh-token
    semantics, and RFC 7009 revocation preparation. Token or raw provider
    response bytes never enter errors or audit data, and both decoded material
    and secret-bearing requests are audit-gated before release.
-3. **Authorization-server metadata:** bounded RFC 8414 metadata decoding,
-   exact issuer validation, endpoint policy, supported-flow negotiation, and a
-   cache record that never silently widens provider configuration.
+3. **Shipped authorization-server metadata:** audited RFC 8414 well-known
+   request preparation, bounded JSON decoding, exact issuer validation, strict
+   endpoint policy, explicit Authorization Code + public-client `none` + PKCE
+   `S256` negotiation, immutable capability retention, and provider-config
+   derivation that never silently widens metadata-derived behavior. Unverified
+   `signed_metadata` and unknown fields are ignored and scrubbed, not trusted.
+   RFC 9207 response-issuer support is retained exactly; providers that omit it
+   require the existing registry-owned distinct-redirect defense.
 4. **Installed-app host:** external browser launch and a transient listener on
    an IP-literal loopback redirect, with exact request-line/header bounds and
    the listener closed immediately after the one accepted transaction.
@@ -183,10 +189,12 @@ provider-specific midpoints.
    through manifest-gated `secure_net::dial`; every vault read /
    write goes through manifest-gated vault APIs.
 
-7. **Audit every authorization.** Begin-auth, complete-auth,
-   refresh, and revoke events are written to the orchestrator's
-   audit log with provider, account label, and outcome — never
-   token bytes.
+7. **Audit every protocol boundary and credential access.** Metadata request
+   release, metadata validation, begin-auth, complete-auth, token decode,
+   credential disclosure, refresh preparation, and revoke preparation are
+   written to the orchestrator's audit log with provider, trace, and a closed
+   outcome — never endpoint URLs, scopes, callback text, provider prose, or
+   token bytes. Durable audit failure withholds the result or effect.
 
 8. **Refresh-token rotation handled correctly.** Some providers
    issue a fresh refresh token on every refresh (rotating). The
