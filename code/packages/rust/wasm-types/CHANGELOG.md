@@ -2,6 +2,58 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.15] - 2026-08-31 (W33 first slice — GC nominal subtyping + `rec` groups)
+
+Implements the `wasm-types` half of `code/specs/
+W33-wasm-gc-recursive-type-subtyping.md`'s "first slice" scope: function-type
+field-list subtyping rules and `(rec ...)` type-group SYNTAX (parsing +
+within-module nominal `sub`/`final` checking), explicitly deferring the
+spec's own item (3b) (cross-module canonical type-group equivalence) and
+item (4) (dynamic `ref.cast`/`ref.test`/`call_indirect` checks against real
+subtype relationships).
+
+### Added
+
+- **`TypeSubtyping`**: per-type-section-entry metadata for the GC
+  proposal's `(sub [final] $parent (comptype))` declaration syntax —
+  `supertype: Option<u32>` (the declared parent, if any), `is_final: bool`
+  (whether further subtyping is foreclosed — `true` by default, matching
+  the real GC proposal's own "no `sub` clause = final" rule), and
+  `rec_group_size`/`rec_group_position: u32` (which `(rec ...)` group a
+  type belongs to and its position within it — needed only for
+  `wasm-runtime`'s cross-module import/tag type-compatibility check, see
+  the field's own doc comment for why).
+- **`WasmModule::type_subtyping: Vec<TypeSubtyping>`**: a parallel array to
+  `types` (function types only this slice). Deliberately allowed to be
+  shorter than `types` (or empty) — every accessor treats a missing entry
+  as `TypeSubtyping::default()` (final, no supertype, singleton group),
+  the exact semantics every type already had before this field existed.
+  This means adding the field required touching only ONE of this
+  workspace's many existing `WasmModule { .. }` literals (a `#[cfg(test)]`
+  one in this crate itself using the fully-exhaustive form; every other
+  literal in the workspace either uses `..Default::default()` already or
+  is unaffected because `Vec<T>: Default` needs no `T: Default` bound).
+- **`WasmModule::type_subtyping_at`**: safe, panic-free accessor for the
+  above (falls back to `TypeSubtyping::default()` for any out-of-range or
+  never-populated index).
+- **`WasmModule::func_type_is_nominal_subtype(sub_idx, super_idx)`**:
+  reflexive, transitive nominal subtype check by walking the declared
+  `sub $parent` chain via absolute type-section index — correct WITHIN one
+  module (an index is a unique, unambiguous identity there); bounded to
+  `types.len()` hops so a malformed/cyclic chain can't loop forever.
+  Deliberately does NOT attempt structural/canonical equivalence between
+  two independently-declared types with no `sub` relationship, even if
+  byte-identical in shape — that's W33's own explicitly-deferred item
+  (3b).
+- **`WasmModule::type_group_shape(idx)`**: `(rec_group_size,
+  rec_group_position)` for a type — the input `wasm-runtime`'s
+  cross-module comparison ANDs onto its pre-existing structural `FuncType`
+  equality check, a conservative strengthening that can only prevent a
+  false accept (two same-shaped-but-different-position rec-group members
+  wrongly treated as the same type — see `tag.wast`'s own
+  `assert_unlinkable` case), never introduce a new false reject beyond
+  what the pre-existing simpler check already risked.
+
 ## [0.1.14] - 2026-08-31 (W32 second slice — non-null concrete reference types)
 
 ### Added
