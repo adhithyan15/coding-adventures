@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.2.0] — 2026-08-31
+
+### Changed
+
+- Replaced host-backed architectural storage with the exact 526,185-DFF
+  topology, including 64 KiB memory, all 56 physical registers, PC/nPC, Y,
+  PSR, CWP, window depth, and halt.
+- Added the functional simulator's complete state, typed error, trace, result,
+  checked-load, restore, direct-access, atomic-step, and transactional-run
+  contract.
+- Corrected all 16 Bicc predicates and the MULScc/RD `%y` transitions exposed
+  by the full-state differential.
+- Added manual-correct `UDIVcc` and `SDIVcc` paths. Fixed-round gate dividers
+  now saturate and set V on overflow without native host division.
+- Made alignment, range, truncation, illegal instruction, trap, window,
+  divide-by-zero, halted, and bounded-run failures atomic.
+- Added five lifecycle suites and a 248-vector Python/functional full-state
+  differential, plus normative Spec 07r2 and strict quality/coverage gates.
+
 ## [0.1.0] — 2026-06-16
 
 ### Added

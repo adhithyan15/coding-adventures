@@ -80,7 +80,7 @@ according to the current prioritization run.
 | RCPU-025 / RCPU-026 | 1980 | Intel 8051 | Complete: `intel8051-simulator` | Complete: `intel8051-gatelevel` |
 | RCPU-027 / RCPU-028 | 1985 | ARM1 / ARMv1 | Complete: `arm1-simulator` | Complete: `arm1-gatelevel` |
 | RCPU-029 / RCPU-030 | 1985 | MIPS R2000 | Complete: `mips-r2000-simulator` | Complete: `mips-r2000-gatelevel` |
-| RCPU-031 / RCPU-032 | 1987 | SPARC V8 | Complete: `sparc-v8-simulator` | Audit: `sparc-v8-gatelevel` |
+| RCPU-031 / RCPU-032 | 1987 | SPARC V8 | Complete: `sparc-v8-simulator` | Complete: `sparc-v8-gatelevel` |
 | RCPU-033 / RCPU-034 | 1992 | DEC Alpha AXP 21064 | Missing | Missing |
 | RCPU-035 / RCPU-036 | 1992 | PowerPC 601 | Missing | Missing |
 | RCPU-037 / RCPU-038 | 2003 | x86-64 (AMD64) | Audit: `x86-simulator` | Missing |
@@ -91,9 +91,10 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-032**, the SPARC V8 gate-level Rust audit. The
-2026-08-31 prioritization run keeps each architecture pair together while the
-completed Intel 4004 through Intel 8051 functional cells publish one at a time.
+Current selection: **RCPU-033**, the DEC Alpha AXP 21064 functional Rust
+implementation. The 2026-08-31 prioritization run closes the SPARC V8 pair and
+keeps each later architecture pair together while completed earlier cells
+publish one at a time.
 RCPU-005 is complete after its AAU/final-audit slice added separate
 40-bit AX/BX/QX/IX state, all three calculation modes, exact general/arithmetic/
 data-transfer and plug-7 status words, deterministic integer floating-point,
@@ -482,6 +483,22 @@ pass. Strict formatting, Clippy, and rustdoc are green; total Rust line
 coverage is 93.45% (827/885). Publication follows RCPU-030 and advances to the
 SPARC V8 gate-level audit.
 
+RCPU-032 is audit-complete locally atop RCPU-031. The gate simulator now owns
+the exact 526,185-DFF topology: 524,288 memory bits, 1,792 bits across all 56
+physical registers, 64 PC/nPC bits, 32 Y bits, four PSR bits, two CWP bits, two
+window-depth bits, and one halt bit. Packed stable-Q storage clocks all
+simulator-owned writes through the sequential gate primitive. Fixed-round
+gate networks now implement unsigned and signed division without native host
+division. The machine shares the completed functional lifecycle contract;
+all 16 Bicc predicates, MULScc, RD `%y`, trap/fault atomicity, and documented
+UDIVcc/SDIVcc saturation flags match the V8 manual and functional oracle. All
+42 unit tests, six lifecycle suites, and the aggregate 248-vector
+Python/functional full-state differential pass. Strict formatting, Clippy,
+and rustdoc are green; total Rust line coverage is 94.72% (1,650/1,742). New
+normative Spec 07r2 pins the topology, gate networks, lifecycle, and
+conformance boundary. Publication follows RCPU-031 and advances to RCPU-033,
+the DEC Alpha AXP 21064 functional implementation.
+
 ## Cross-language wave
 
 After RCPU-050, freeze the Rust APIs and golden conformance vectors, then port
@@ -508,6 +525,8 @@ queue:
 
 | Date | Item | Priority | Disposition |
 |---|---|---|---|
+| 2026-08-31 | RCPU-032 baseline has 42 passing tests but only 59.60% package line coverage. All 526,185 persistent architectural bits (524,288 memory, 1,792 physical-register, PC/nPC, CWP/depth, PSR, Y, and halt) are host values and nPC is absent. The gate branch-condition table assigns most condition numbers to the wrong predicates; divide-cc is missing; divide-by-zero saturates instead of faulting; loads retain stale memory; misalignment is accepted; halted/illegal/faulting steps mutate PC or state; non-sentinel traps can halt; state/restore/complete traces/results and typed transactional load/step/run are absent; the differential corpus is absent; and strict formatting already fails. | Resolved by RCPU-032; selects RCPU-033 by chronological pair priority | Completed with the exact 526,185-DFF topology, shared functional lifecycle, fixed-round gate division, all 16 corrected Bicc predicates, atomic trap/fault handling, documented UDIVcc/SDIVcc paths, the complete 248-vector differential, normative Spec 07r2, strict checks, and 94.72% line coverage. |
+| 2026-08-31 | RCPU-032's full-state differential exposed two additional legacy gate defects after the baseline audit: MULScc used a different recurrence from the completed functional/manual contract, and RD `%y` rejected valid encodings whenever `rs1` was nonzero. Native host division also remained beneath the existing UDIV/SDIV facade. | Resolved, P0 functional and gate fidelity | Match the functional MULScc recurrence, accept the architecturally ignored RD `%y` source field, and replace native division with fixed 64-step unsigned/signed restoring gate networks. Pin all fixes through the aggregate differential and divide-cc lifecycle edges. |
 | 2026-08-31 | RCPU-031 completion audit closes the full Rust functional boundary with 58 tests, 248 reproducible Python full-state vectors, manual-backed cc multiply/divide corrections, strict checks, green encoder/backend consumers, and 93.45% line coverage. | Completed; selects RCPU-032 by chronological pair priority | Audit the SPARC V8 gate model against the completed functional lifecycle and all vectors; add the manual-defined divide-cc gate paths, preserve the already-correct multiply-cc encodings, and keep publication serialized behind RCPU-031. |
 | 2026-08-31 | Correcting the reachable SPARC divide-cc paths exposed two latent execution defects: `UDIVcc`/`SDIVcc` cleared V even when the saturated quotient overflowed, contrary to the V8 manual, and signed `Y:rs1 = i64::MIN` divided by `-1` could panic in Rust before saturation. | P0, condition-code fidelity and panic safety, blocks RCPU-031 | Track the pre-saturation quotient, set N/Z from the saturated result, set V exactly on divide overflow, clear C, and use checked signed division for the unique host-overflow pair. Pin ordinary, positive-overflow, negative-overflow, and `i64::MIN / -1` transitions. |
 | 2026-08-31 | RCPU-031 ISA audit found that Spec 07r, the Python oracle, and the Rust functional constants assigned `UMULcc`/`SMULcc`/`UDIVcc`/`SDIVcc` op3 values `0x5A`/`0x5B`/`0x5E`/`0x5F`, even though Format 3 op3 is only six bits wide. Those cases are unreachable after decode masking. The SPARC V8 manual encodes them as `0x1A`/`0x1B`/`0x1E`/`0x1F`; the existing Rust gate model already uses the correct multiply-cc pair but omits both divide-cc cases. | P0, unreachable documented instructions, blocks RCPU-031 | Correct the Rust functional constants, encoders, normative table, decode/execution tests, and checked-fault preflight now. Record the Python oracle correction for the later cross-language wave, exclude its invalid cc encodings from the Python differential, and require RCPU-032 to add both documented divide-cc gate paths plus full functional differentials. |

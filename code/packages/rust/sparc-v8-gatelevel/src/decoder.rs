@@ -51,23 +51,51 @@
 #[derive(Debug, Clone, PartialEq)]
 pub enum Instruction {
     // ── Format 1 ─────────────────────────────────────────────────────────────
-    Call { disp30: u32 },
+    Call {
+        disp30: u32,
+    },
 
     // ── Format 2 ─────────────────────────────────────────────────────────────
-    Sethi { rd: u32, imm22: u32 },
+    Sethi {
+        rd: u32,
+        imm22: u32,
+    },
     Nop,
-    Bicc { cond: u8, disp22: u32, annul: bool },
+    Bicc {
+        cond: u8,
+        disp22: u32,
+        annul: bool,
+    },
 
     // ── Format 3 — integer ALU (op=10) ───────────────────────────────────────
     /// Most ALU ops share this shape.
-    Alu { op3: u8, rd: u32, rs1: u32, src2: Src2 },
+    Alu {
+        op3: u8,
+        rd: u32,
+        rs1: u32,
+        src2: Src2,
+    },
 
     // ── Format 3 — load/store (op=11) ────────────────────────────────────────
-    Load  { op3: u8, rd: u32, rs1: u32, src2: Src2 },
-    Store { op3: u8, rd: u32, rs1: u32, src2: Src2 },
+    Load {
+        op3: u8,
+        rd: u32,
+        rs1: u32,
+        src2: Src2,
+    },
+    Store {
+        op3: u8,
+        rd: u32,
+        rs1: u32,
+        src2: Src2,
+    },
 
     // ── Trap ─────────────────────────────────────────────────────────────────
-    Ticc { cond: u8, rs1: u32, src2: Src2 },
+    Ticc {
+        cond: u8,
+        rs1: u32,
+        src2: Src2,
+    },
 
     /// Any word we don't recognise.
     Illegal(u32),
@@ -117,7 +145,11 @@ fn decode_f2(word: u32) -> Instruction {
             let annul = (word >> 29) & 1 == 1;
             let cond = ((word >> 25) & 0xF) as u8;
             let disp22 = word & 0x003F_FFFF;
-            Instruction::Bicc { cond, disp22, annul }
+            Instruction::Bicc {
+                cond,
+                disp22,
+                annul,
+            }
         }
         _ => Instruction::Illegal(word),
     }
@@ -141,8 +173,17 @@ fn decode_f3_alu(word: u32) -> Instruction {
 
     match op3 {
         // Ticc (op3 = 0x3A)
-        0x3A => Instruction::Ticc { cond: ((word >> 25) & 0xF) as u8, rs1, src2: s2 },
-        _ => Instruction::Alu { op3, rd, rs1, src2: s2 },
+        0x3A => Instruction::Ticc {
+            cond: ((word >> 25) & 0xF) as u8,
+            rs1,
+            src2: s2,
+        },
+        _ => Instruction::Alu {
+            op3,
+            rd,
+            rs1,
+            src2: s2,
+        },
     }
 }
 
@@ -154,9 +195,19 @@ fn decode_f3_mem(word: u32) -> Instruction {
 
     // op3 bit 2 set → store; otherwise load.
     if op3 & 0x04 != 0 {
-        Instruction::Store { op3, rd, rs1, src2: s2 }
+        Instruction::Store {
+            op3,
+            rd,
+            rs1,
+            src2: s2,
+        }
     } else {
-        Instruction::Load { op3, rd, rs1, src2: s2 }
+        Instruction::Load {
+            op3,
+            rd,
+            rs1,
+            src2: s2,
+        }
     }
 }
 
@@ -198,7 +249,11 @@ mod tests {
         // BA = cond=1000(8), op2=010, op=00; annul=0, disp22=4
         let word = (0b1000 << 25) | (0b010 << 22) | 4;
         match decode(word) {
-            Instruction::Bicc { cond, disp22, annul } => {
+            Instruction::Bicc {
+                cond,
+                disp22,
+                annul,
+            } => {
                 assert_eq!(cond, 8);
                 assert_eq!(disp22, 4);
                 assert!(!annul);
