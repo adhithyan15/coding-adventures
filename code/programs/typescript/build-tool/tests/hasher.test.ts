@@ -34,11 +34,13 @@ type SourceCollectionFixture = {
         kind: "file" | "symlink" | "reparse_point";
         content_hex?: string;
       }>;
+      mode: "extension" | "declared_sources";
+      declared_srcs: string[];
     };
   };
   expected: {
     result: {
-      files: Array<{ path: string }>;
+      files: Array<{ path: string; digest: string }>;
     };
   };
 };
@@ -94,6 +96,11 @@ function writeFile(filepath: string, content: string): void {
   fs.writeFileSync(filepath, content, "utf-8");
 }
 
+function writeBytes(filepath: string, content: Buffer): void {
+  fs.mkdirSync(path.dirname(filepath), { recursive: true });
+  fs.writeFileSync(filepath, content);
+}
+
 function makePkg(pkgPath: string, language: string, name?: string): Package {
   return {
     name: name ?? `${language}/test-pkg`,
@@ -133,11 +140,49 @@ function materializeProjectedFixture(
   }
 }
 
+function materializeCompleteFixture(
+  root: string,
+  fixture: SourceCollectionFixture,
+): void {
+  for (const candidate of fixture.input.options.candidates) {
+    if (candidate.kind !== "file") continue;
+    if (/^(?:linked|reparse)\//u.test(candidate.path)) continue;
+    writeBytes(
+      path.join(root, ...candidate.path.split("/")),
+      Buffer.from(candidate.content_hex ?? "", "hex"),
+    );
+  }
+}
+
 function projectedExpectedPaths(fixture: SourceCollectionFixture): string[] {
   return fixture.expected.result.files
     .map(({ path: filepath }) => projectFixturePath(filepath))
     .filter((filepath) => /^(?:case\/|near\/)/.test(filepath))
     .sort((a, b) => a.localeCompare(b));
+}
+
+function unsigned64(value: number): Buffer {
+  const encoded = Buffer.alloc(8);
+  encoded.writeBigUInt64BE(BigInt(value));
+  return encoded;
+}
+
+function expectedFramedPackageHash(
+  repositoryRoot: string,
+  includePaths: readonly string[],
+): string {
+  const digest = crypto.createHash("sha256");
+  for (const portablePath of [...includePaths].sort()) {
+    const pathBytes = Buffer.from(portablePath, "utf-8");
+    const content = fs.readFileSync(
+      path.join(repositoryRoot, ...portablePath.split("/")),
+    );
+    digest.update(unsigned64(pathBytes.length));
+    digest.update(pathBytes);
+    digest.update(unsigned64(content.length));
+    digest.update(content);
+  }
+  return digest.digest("hex");
 }
 
 // ---------------------------------------------------------------------------
@@ -252,12 +297,19 @@ describe("collectSourceFiles", () => {
     const files = collectSourceFiles(pkg);
     const names = files.map((f) => path.relative(tmpDir, f));
 
-    // Check they're sorted (localeCompare sorting).
-    // Note: case-sensitive sort means uppercase comes after lowercase
-    // on most systems, but localeCompare may vary. We just verify the
-    // output is deterministic by checking it matches its own sort.
-    const sortedNames = [...names].sort((a, b) => a.localeCompare(b));
-    expect(names).toEqual(sortedNames);
+    // Hashing v1 compares normalized path bytes, not the host locale.
+    expect(names).toEqual(["BUILD", "a.py", "b.py", "c.py"]);
+  });
+
+  it("sorts portable paths by UTF-8 bytes rather than UTF-16 code units", () => {
+    writeFile(path.join(tmpDir, "\u{e000}.ts"), "bmp\n");
+    writeFile(path.join(tmpDir, "\u{10000}.ts"), "astral\n");
+
+    const names = collectSourceFiles(makePkg(tmpDir, "typescript")).map(
+      (filepath) => path.relative(tmpDir, filepath),
+    );
+
+    expect(names).toEqual(["\u{e000}.ts", "\u{10000}.ts"]);
   });
 
   it.each(SOURCE_COLLECTION_FIXTURES)(
@@ -273,6 +325,25 @@ describe("collectSourceFiles", () => {
         .sort((a, b) => a.localeCompare(b));
 
       expect(actual).toEqual(projectedExpectedPaths(fixture));
+    },
+  );
+
+  it.each(SOURCE_COLLECTION_FIXTURES)(
+    "consumes %s as a complete native OCaml source-collection case",
+    (fixtureFilename) => {
+      const fixture = readSourceCollectionFixture(fixtureFilename);
+      materializeCompleteFixture(tmpDir, fixture);
+      const pkg = makePkg(tmpDir, "ocaml");
+      const files =
+        fixture.input.options.mode === "extension"
+          ? collectSourceFiles(pkg)
+          : collectSourceFilesGlob(pkg, fixture.input.options.declared_srcs);
+      const actual = files.map((filepath) => ({
+        path: path.relative(tmpDir, filepath).split(path.sep).join("/"),
+        digest: hashFile(filepath),
+      }));
+
+      expect(actual).toEqual(fixture.expected.result.files);
     },
   );
 
@@ -342,6 +413,55 @@ describe("hashPackage", () => {
     const hash2 = hashPackage(pkg);
 
     expect(hash1).not.toBe(hash2);
+  });
+
+  it("changes when identical raw bytes move to a different portable path", () => {
+    writeBytes(path.join(tmpDir, "source.ts"), Buffer.from([0, 255, 10]));
+    const pkg = makePkg(tmpDir, "typescript");
+    const original = hashPackage(pkg);
+
+    fs.mkdirSync(path.join(tmpDir, "nested"));
+    fs.renameSync(
+      path.join(tmpDir, "source.ts"),
+      path.join(tmpDir, "nested", "renamed.ts"),
+    );
+
+    expect(hashPackage(pkg)).not.toBe(original);
+  });
+
+  it("matches the language-neutral hashing-v1 package digest", () => {
+    const fixtureUrl = new URL(
+      "../../../../specs/fixtures/build-tool-v1/cases/hashing-cache-corrupt.json",
+      import.meta.url,
+    );
+    const fixture = JSON.parse(fs.readFileSync(fixtureUrl, "utf-8")) as {
+      workspace: { files: Array<{ path: string; content_utf8: string }> };
+      input: { options: { package: string; include_paths: string[] } };
+      expected: { result: { package_digest: string } };
+    };
+    const repositoryRoot = path.join(tmpDir, "repository");
+    for (const entry of fixture.workspace.files) {
+      writeFile(
+        path.join(repositoryRoot, ...entry.path.split("/")),
+        entry.content_utf8,
+      );
+    }
+    const packageRoot = path.join(
+      repositoryRoot,
+      "code",
+      "packages",
+      "python",
+      "demo",
+    );
+    const pkg = makePkg(packageRoot, "python", fixture.input.options.package);
+
+    expect(hashPackage(pkg)).toBe(
+      expectedFramedPackageHash(
+        repositoryRoot,
+        fixture.input.options.include_paths,
+      ),
+    );
+    expect(hashPackage(pkg)).toBe(fixture.expected.result.package_digest);
   });
 
   it("should return hash of empty string for package with no source files", () => {
@@ -507,9 +627,8 @@ describe("collectSourceFilesGlob", () => {
     const pkg = makePkg(tmpDir, "python");
     const files = collectSourceFilesGlob(pkg, ["*.py"]);
     const basenames = files.map((f) => path.basename(f));
-    // Sorted by relative path: BUILD (uppercase) sorts after lowercase on
-    // most systems using localeCompare, so verify sorted order.
-    expect(basenames).toEqual(["a.py", "b.py", "BUILD", "c.py"]);
+    // Hashing v1 compares normalized path bytes, not the host locale.
+    expect(basenames).toEqual(["BUILD", "a.py", "b.py", "c.py"]);
   });
 
   it.each(SOURCE_COLLECTION_FIXTURES)(
