@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Changed — declare the Hindi thought-and-worry noun
+
+- Chapter 34 now declares **सोचना / सोच** as its headword instead of naming
+  only the infinitive. The lesson already defines **सोच** as the verb stem and
+  as the standalone noun “thought” or “worry,” then asks learners to recall
+  both meanings; its metadata now matches that assessed target.
+
 ### Changed — declare the full Hindi weather set
 
 - Chapter 20 now declares **मौसम / गर्मी है / ठंड है / बारिश हो रही है** as
