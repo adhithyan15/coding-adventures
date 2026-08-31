@@ -49384,10 +49384,10 @@ fn kodi_entry() -> IntegrationCatalogEntry {
 }
 
 fn modbus_tcp_entry() -> IntegrationCatalogEntry {
-    base_entry(
+    let mut entry = base_entry(
         "modbus_tcp",
         "Modbus TCP",
-        "Read-only local register telemetry for explicitly configured HVAC, energy, and industrial equipment.",
+        "Read-only local register telemetry and basic device identity for explicitly configured HVAC, energy, and industrial equipment.",
         IntegrationCategory::ProtocolStandard,
         ConnectivityClass::LocalPolling,
         ImplementationStatus::FirstPartyRuntime,
@@ -49407,9 +49407,16 @@ fn modbus_tcp_entry() -> IntegrationCatalogEntry {
         PrimitiveFamily::TestSimulator,
     ])
     .with_notes(&[
-        "The first-party runtime supports only read holding-register and read input-register functions.",
+        "The first-party runtime supports read holding registers, read input registers, and the fixed basic Read Device Identification objects.",
+        "Endpoints must be explicit private, link-local, or loopback IP literals; DNS and public addresses are rejected.",
         "Register writes remain unavailable because classic Modbus TCP provides no peer authentication.",
-    ])
+    ]);
+    entry.source_refs.push(SourceReference {
+        label: "MODBUS Application Protocol Specification V1.1b3".to_string(),
+        url: "https://modbus.org/docs/Modbus_Application_Protocol_V1_1b3.pdf".to_string(),
+        external_id: Some("6.21 Read Device Identification (0x2B / 0x0E)".to_string()),
+    });
+    entry
 }
 
 fn coap_entry() -> IntegrationCatalogEntry {
@@ -82569,7 +82576,7 @@ mod tests {
     }
 
     #[test]
-    fn modbus_entry_exposes_bounded_read_only_tcp_telemetry() {
+    fn modbus_entry_exposes_bounded_read_only_tcp_telemetry_and_identity() {
         let catalog = first_party_catalog();
         let modbus = find_entry(&catalog, &IntegrationId::trusted("modbus_tcp")).unwrap();
         assert_eq!(
@@ -82599,6 +82606,9 @@ mod tests {
         assert!(!modbus
             .required_primitives
             .contains(&PrimitiveFamily::LocalHttp));
+        assert!(modbus.source_refs.iter().any(|source| {
+            source.external_id.as_deref() == Some("6.21 Read Device Identification (0x2B / 0x0E)")
+        }));
     }
 
     #[test]
