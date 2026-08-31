@@ -5521,8 +5521,12 @@ impl HtmlParser {
             && !self.current_element_is("frameset")
             && (self.explicit_body_start_seen
                 || self.document_has_non_frameset_compatible_body_content())
-            && self.has_open_element("body")
+            && (self.has_open_element("body")
+                || self.body_has_non_ascii_whitespace_text())
         {
+            if !self.has_open_element("body") && self.document_has_body_element() {
+                self.reopen_document_body();
+            }
             self.diagnostics.push(
                 ParserDiagnostic::new(
                     "unexpected-frameset-start-tag",
@@ -10589,6 +10593,40 @@ impl HtmlParser {
         })
     }
 
+    fn body_has_non_ascii_whitespace_text(&self) -> bool {
+        let has_non_ascii_whitespace = |nodes: &[Node]| {
+            nodes.iter().any(|node| {
+                matches!(
+                    node,
+                    Node::Text(text)
+                        if text.data.chars().any(|character| {
+                            character.is_whitespace() && !is_html_whitespace(character)
+                        })
+                )
+            })
+        };
+        self.document.children.iter().any(|node| match node {
+            Node::Text(text) => text.data.chars().any(|character| {
+                character.is_whitespace() && !is_html_whitespace(character)
+            }),
+            Node::Element(element) if element.name == "body" => {
+                has_non_ascii_whitespace(&element.children)
+            }
+            Node::Element(element) if element.name == "html" => {
+                has_non_ascii_whitespace(&element.children)
+                    || element.children.iter().any(|child| {
+                        matches!(
+                            child,
+                            Node::Element(body)
+                                if body.name == "body"
+                                    && has_non_ascii_whitespace(&body.children)
+                        )
+                    })
+            }
+            _ => false,
+        })
+    }
+
     fn document_has_non_frameset_compatible_body_content(&self) -> bool {
         self.document.children.iter().any(|node| {
             !matches!(
@@ -12363,7 +12401,7 @@ fn is_ignorable_before_frameset_node(node: &Node) -> bool {
                 if text
                     .data
                     .chars()
-                    .all(|character| character.is_whitespace() || character == '\u{FFFD}')
+                    .all(|character| is_html_whitespace(character) || character == '\u{FFFD}')
         )
         || matches!(
             node,
@@ -40209,6 +40247,95 @@ mod tests {
                 })),
             ]
         );
+    }
+
+    #[test]
+    fn non_ascii_whitespace_disables_frameset_replacement() {
+        let source =
+            "<!doctype html><!--é-->\r\n\u{a0}<frameset><!--x-->\r\n\u{2003}<frameset>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let body = body(&output.document);
+        assert_eq!(
+            body.children
+                .iter()
+                .filter_map(|node| match node {
+                    Node::Text(text) => Some(text.data.as_str()),
+                    _ => None,
+                })
+                .collect::<String>(),
+            "\u{a0}\n\u{2003}"
+        );
+        assert!(body
+            .children
+            .iter()
+            .all(|node| !matches!(node, Node::Element(element) if element.name == "frameset")));
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-frameset-start-tag")
+                .collect::<Vec<_>>(),
+            vec![
+                &unexpected_frameset_start_tag(source, 0),
+                &unexpected_frameset_start_tag(source, 1),
+            ]
+        );
+
+        let fragment_source = "\u{3000}<frameset>";
+        let fragment = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        assert!(fragment
+            .nodes
+            .iter()
+            .all(|node| !matches!(node, Node::Element(element) if element.name == "frameset")));
+        assert!(fragment
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic == &unexpected_frameset_start_tag(fragment_source, 0)));
+
+        for allowed in [
+            "<!doctype html> \t\r\n<frameset><frame></frameset>",
+            "<!doctype html>\0<frameset><frame></frameset>",
+        ] {
+            let output = parse_html_with_diagnostics(allowed).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-frameset-start-tag"));
+            assert!(html(&output.document)
+                .children
+                .iter()
+                .any(|node| matches!(node, Node::Element(element) if element.name == "frameset")));
+        }
+
+        let incomplete = parse_html_with_diagnostics("<!doctype html>\u{a0}<frameset").unwrap();
+        assert!(incomplete
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-frameset-start-tag"));
+
+        let mut unpositioned = HtmlParser::new();
+        for token in [
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: None,
+                force_quirks: false,
+            },
+            Token::Text("\u{a0}".to_string()),
+            Token::StartTag {
+                name: "frameset".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-frameset-start-tag")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
