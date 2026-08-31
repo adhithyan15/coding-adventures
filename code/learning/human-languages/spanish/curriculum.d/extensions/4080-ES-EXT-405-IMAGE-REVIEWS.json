@@ -1,0 +1,12 @@
+{
+  "id": "ES-EXT-405-IMAGE-REVIEWS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can retrieve image words in ID and museum contexts.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C405-images-recall-1",
+    "ES-C405-images-recall-2"
+  ]
+}
