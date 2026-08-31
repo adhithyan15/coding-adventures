@@ -11801,6 +11801,15 @@ reports the PR non-draft and mergeable with required CI and CodeQL checks
 queued, so auto-merge remains disabled until every final-head check is terminal
 and acceptable and no merge conflict exists.
 
+The first hosted macOS build reached the selected Rust package after skipping
+5,110 unrelated packages, then Rust 1.98 Clippy denied the new
+`chunks_exact_to_as_chunks` lint in the test-only neutral-fixture hex decoder.
+Actual job `99407591793` logs were inspected before editing. The smallest
+repair uses the compiler-suggested `as_chunks::<2>().0.iter()` form; local Rust
+1.98.0 strict Clippy and the complete 165-unit plus three-CLI suite pass. The
+repair changes no production behavior, dependency, or authority, and
+replacement final-head checks remain required before auto-merge.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

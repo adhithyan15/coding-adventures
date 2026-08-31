@@ -15,17 +15,17 @@
     "number": 13599,
     "url": "https://github.com/adhithyan15/coding-adventures/pull/13599",
     "branch": "codex/build-tool-rust-generated-directory-hashing-exclusion",
-    "implementation_revision": "608765fc6fccedb4ea8aa107b898df774148a764",
-    "status": "checks-pending",
+    "implementation_revision": "5b9fa1451f49e88b7dfced0aa36cc5cf4569e724",
+    "status": "checks-pending-after-fix",
     "opened_at": "2026-08-31T06:42:22Z"
   },
   "last_ci_action": {
-    "observed_at": "2026-08-31T06:42:26Z",
+    "observed_at": "2026-08-31T07:01:16Z",
     "pr_number": 13599,
-    "run_id": null,
-    "attempt": null,
-    "status": "checks-pending",
-    "notes": "Opened ready-for-review PR #13599 from clean validated head 608765fc6fccedb4ea8aa107b898df774148a764 after a normal first push. GitHub reports it non-draft and mergeable; required CI and CodeQL checks are queued, so auto-merge remains disabled until every final-head check is terminal and acceptable and no merge conflict exists."
+    "run_id": 33365347844,
+    "attempt": 1,
+    "status": "checks-pending-after-fix",
+    "notes": "The macOS build job failed after 5,110 skipped packages when hosted Rust 1.98 Clippy denied chunks_exact_to_as_chunks in the test-only neutral-fixture hex decoder. Actual job 99407591793 logs were inspected before editing. The smallest repair uses the compiler-suggested fixed-size slice API; local Rust 1.98.0 strict Clippy plus all 165 unit and three CLI integration tests pass. Repair revision 5b9fa1451f49e88b7dfced0aa36cc5cf4569e724 is ready for a normal same-branch push; replacement checks must be monitored before auto-merge."
   },
   "last_inventory": {
     "revision": "7cbd6e232a1e6fa50d14fe1daf9418cba49e134c",
@@ -554,6 +554,8 @@
       "validation_revision": "841f84abdf49fd31d4ae81baad03e0e7e6c2a626",
       "rebase_revision": "9a5a90f14b1d7f69c42875d2ad0605016e072ec5",
       "rebase_notes": "Rebased without conflict twice before publication, first over the TaskApp Linux release-generation repair and then onto exact origin/main 7cbd6e232a1e6fa50d14fe1daf9418cba49e134c over Marathi A1 practical-form curriculum/data. Those commits remain inside existing TaskApp release and human-language curriculum owners, add no package identity or build-tool contract, and have zero exact overlap with the selected six paths. The final post-rebase schema-3 collision inventory remains structurally unchanged.",
+      "ci_repair_revision": "5b9fa1451f49e88b7dfced0aa36cc5cf4569e724",
+      "ci_repair_notes": "Actual macOS job 99407591793 logs showed the hosted Rust 1.98 Clippy chunks_exact_to_as_chunks lint as the only selected-package failure after 5,110 other packages were skipped. The fixture hex decoder now uses as_chunks::<2>().0.iter(), exactly as the compiler suggested. Rust 1.98.0 strict Clippy and the complete 165-unit plus three-CLI test suite pass locally; the repair is test-only and changes no production behavior, dependency, or authority.",
       "validation_notes": "Both Rust hashing collectors now prune the exact case-sensitive 26-component language-neutral generated-directory registry before matching extension or declared sources, while retaining case variants and near names. DirEntry file types plus lexical symlink metadata keep POSIX links and Windows junction/reparse points outside recursion without adding dependencies or production authority. Native tests independently project both neutral source-collection fixtures through both collectors, pin the registry, and exercise a real platform directory link; the complete Rust package passes 165 unit tests and three CLI integrations, strict Clippy, canonical release build, and the literal BUILD_windows isolated test front. LLVM coverage reports 84.12% lines overall and 95.96% for hasher.rs. Cargo audit 0.22.2 scans 57 dependencies against advisory DB b331df68b3ed0e99594d259040bdcb9de3c7c8a4 with no vulnerability. The neutral corpus validates 121 cases and 283 files; 206 conformance tests pass with 23 expected skips, and 68 package-parity, capability, Haskell, and OCaml-lock tests pass with two expected Windows skips. The Go oracle passes all packages, vet, trimpath compilation, and a real forced Rust dry plan over 1,172 packages. The exact-main schema-3 report remains 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, zero collisions, and zero unknown buckets; the strict 606-owner/917-edge state graph is unique, dependency-complete, and acyclic at 193 merged, 412 pending, and one in progress. Cargo fmt retains only package-wide pre-existing findings; rustfmt reports no finding in the new implementation or tests, and diff check is clean.",
       "publication_notes": "Opened ready-for-review PR #13599 from clean validated head 608765fc6fccedb4ea8aa107b898df774148a764 after a normal first push from exact origin/main 7cbd6e232a1e6fa50d14fe1daf9418cba49e134c. Immediately before publication, the target remote branch and prior PR were absent, all five other live PRs had zero exact overlap across the six changed paths, and independent inventory/publication plus correctness/security reviews were clean. GitHub reports the PR non-draft and mergeable with required CI and CodeQL checks queued; auto-merge remains disabled until every final-head check is terminal and acceptable and no merge conflict exists.",
       "notes": "Discovered during the Rust Dune-discovery reference audit. Both Rust source-hashing walkers recurse through every descendant directory without pruning the conformance registry for generated, dependency, VCS, cache, and temporary components, so exact _build content can still affect hashes even after discovery is corrected. Add bounded exact-component hashing fixtures, preserve case variants and near names, and keep this independent of package discovery and declaration evaluation."
