@@ -157,6 +157,8 @@ full so omissions, duplicates, and ordering drift can be checked mechanically.
 | 148 | 26 | PA-R26-three-repair-r2 | retrieve one three-field no-model form and its bounded repairs at R2 |
 | 149 | 26 | PA-R26-work-build-r3 | rebuild one supported work row and the known au-matra at R3 |
 | 150 | 26 | PA-R26-work-control-r3 | retrieve one delayed work row and its spelling, spacing, and agreement checks at R3 |
+| 151 | 27 | PA-R27-ear-mouth-r4 | retrieve ear and mouth with their false-resemblance and worn-consonant histories at R4 |
+| 152 | 27 | PA-R27-nose-heart-r4 | retrieve nose and heart while contrasting inherited and borrowed routes at R4 |
 
-After session 150, the track continues through the dependency-linked backlog;
+After session 152, the track continues through the dependency-linked backlog;
 this map makes no claim that the current book is yet complete or exam-ready.
