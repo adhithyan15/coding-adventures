@@ -4950,8 +4950,9 @@ the Rust, Python, and TypeScript surfaces together.
    - Status: in progress; threshold, channel-length-modulation, and
      gate-capacitance, flicker-noise, junction-potential, and forward-bias
      depletion, gate saturation-current, and gate-current temperature-exponent
-     bandgap-voltage, noise-equation-level, channel-noise-coefficient, and
-     drain-resistance parameters are completed in the current slices.
+     bandgap-voltage, noise-equation-level, channel-noise-coefficient, drain-
+     resistance, source-resistance, and threshold-temperature-coefficient
+     parameters are completed in the current slices.
    - Live audit found the Rust element lowerer accepts fewer already-supported
      JFET aliases and model-card validations than the Python and TypeScript
      facades. Audit the remaining direct aliases and finite/range validation as
@@ -5015,12 +5016,25 @@ the Rust, Python, and TypeScript surfaces together.
      rejects invalid inputs before element lowering.
 
 14. Rust JFET source-resistance parser parity.
-   - Status: prioritized next after the drain-resistance slice.
+   - Status: completed by the JFET source-resistance slice.
    - The engine and Python/TypeScript facades lower finite non-negative JFET
-     `RS` values into the source-resistance field; audit the Rust element lowerer
-     and implement the smallest compatible correction.
+     `RS` values into the source-resistance field; Rust now does the same and
+     rejects invalid inputs before element lowering.
 
-15. Grammar-backed parser and app facade.
+15. Rust JFET threshold-temperature-coefficient parser parity.
+   - Status: completed by the JFET threshold-temperature slice.
+   - The engine and Python/TypeScript facades lower finite JFET `TCV` values
+     into the threshold-temperature-coefficient field; Rust now does the same
+     and rejects non-finite inputs before element lowering.
+
+16. Rust JFET alternative-threshold-temperature-coefficient parser parity.
+   - Status: prioritized next after the threshold-temperature slice.
+   - The engine and Python/TypeScript facades lower finite JFET `VTOTC` values
+     into the optional alternative-threshold-temperature-coefficient field;
+     audit the Rust element lowerer and implement the smallest compatible
+     correction.
+
+17. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
      syntax facade as the grammar evolves, even if that breaks current
      pre-release parser APIs.
@@ -5028,7 +5042,7 @@ the Rust, Python, and TypeScript surfaces together.
      toward packaging, WebAssembly embedding, and product integration backed by
      the same public parser contract.
 
-16. Deck compatibility follow-up.
+18. Deck compatibility follow-up.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.
@@ -5039,7 +5053,7 @@ the Rust, Python, and TypeScript surfaces together.
      command routing, including control flow, variables, and script execution
      policy.
 
-17. Production solver core follow-up.
+19. Production solver core follow-up.
    - Sparse real/complex matrix paths now have cross-language native coverage,
      and Python real DC solves now use an optional SciPy sparse-LU backend with
      structured native fallback metadata.
@@ -5050,14 +5064,14 @@ the Rust, Python, and TypeScript surfaces together.
      damping, device limiting, tolerance policy, and additional convergence
      diagnostics for difficult transistor decks.
 
-18. Device model depth.
+20. Device model depth.
    - Audit diode, BJT, JFET, and MOS Level 1 behavior against reference decks.
    - Decide whether Level 2/3 MOS is in scope before BSIM; if BSIM lands, make
      Rust the first fast path and port stable semantics outward.
    - Expand temperature behavior, capacitance, noise, charge conservation, model
      card aliases, and error messages.
 
-19. Analysis completion.
+21. Analysis completion.
    - Generalize pole-zero beyond constrained fixture helpers.
    - Expand nonlinear distortion coverage.
    - Expand parsed `.FOUR` / `.MEASURE` integration across output plans and

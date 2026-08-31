@@ -784,7 +784,7 @@ def normalize_diagnostic_set(diagnostics: list[str], test: dict[str, Any]) -> li
 
 
 def normalize_token_data(data: str) -> str:
-    return data.replace("\0", "\uFFFD")
+    return data
 
 
 def normalize_comment_data(data: str, test: dict[str, Any]) -> str:

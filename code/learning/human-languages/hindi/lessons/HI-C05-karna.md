@@ -8,7 +8,7 @@ sequence: 420
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 chapter: 5
 type: word
-headword: करना
+headword: करना / काम करना
 gloss: to do, to make (and काम करना, "to work")
 concept_tag: VERB-DO-MAKE
 prerequisites: [HI-C05-bolna]

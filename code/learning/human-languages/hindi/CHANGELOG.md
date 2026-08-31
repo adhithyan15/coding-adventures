@@ -2,6 +2,20 @@
 
 ## [Unreleased]
 
+### Changed — declare the Hindi work conjunct verb
+
+- Chapter 5 now declares **करना / काम करना** as its headword instead of only
+  **करना**. The lesson already defines **काम** as “work,” explains the full
+  conjunct verb, and assesses learners producing “I work”; its metadata now
+  matches that learner task.
+
+### Changed — declare the full Hindi liking frame
+
+- Chapter 35 now declares **मुझे … पसंद है** as its phrase headword instead of
+  presenting only **पसंद** as a standalone word. The lesson already introduces,
+  practises, and assesses **मुझे** as the required dative experiencer; its type
+  and headword metadata now match that learner task.
+
 ### Changed — declare the evening doublet the lesson already teaches
 
 - Expanded the chapter-32 headword declaration from **शुभ संध्या** to **शुभ

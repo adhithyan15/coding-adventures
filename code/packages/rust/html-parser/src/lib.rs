@@ -6099,13 +6099,25 @@ impl HtmlParser {
             return;
         }
 
-        let text = if text.contains('\u{FFFD}')
-            && (self.current_node_is_svg_html_integration_point()
-                || self.current_node_is_mathml_integration_point()
-                || (self.replacement_text_is_ignorable_in_current_context(&text)
-                    && !self.current_element_is("plaintext")))
-        {
-            text.replace('\u{FFFD}', "")
+        let text = if text.contains('\0') {
+            let replacement = if self.current_namespace().is_some()
+                && !self.current_node_is_svg_html_integration_point()
+                && !self.current_node_is_mathml_integration_point()
+            {
+                "\u{FFFD}"
+            } else {
+                ""
+            };
+            for _ in text.matches('\0') {
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-null-character-in-tree-construction",
+                        "null character data was recovered during tree construction",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
+            }
+            text.replace('\0', replacement)
         } else {
             text
         };
@@ -10811,15 +10823,6 @@ impl HtmlParser {
                                 })))
                 })
             })
-    }
-
-    fn replacement_text_is_ignorable_in_current_context(&self, text: &str) -> bool {
-        text.chars()
-            .all(|character| character.is_whitespace() || character == '\u{FFFD}')
-            && (self.current_element_is("html")
-                || self.current_element_is("body")
-                || self.current_element_is("select")
-                || self.open_elements.is_empty())
     }
 
     fn pop_foreign_elements(&mut self) {
@@ -53668,6 +53671,91 @@ mod tests {
                 .diagnostics()
                 .iter()
                 .find(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                .unwrap()
+                .position,
+            None
+        );
+    }
+
+    #[test]
+    fn preserves_data_state_null_provenance_through_tree_construction() {
+        let ordinary_source = "<!doctype html><body>A\0B\u{FFFD}&#0;C";
+        let ordinary = parse_html_with_diagnostics(ordinary_source).unwrap();
+        assert_eq!(
+            element_text(body(&ordinary.document)),
+            "AB\u{FFFD}\u{FFFD}C"
+        );
+        let ordinary_null = ordinary
+            .parser_diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-null-character-in-tree-construction")
+            .unwrap();
+        assert!(ordinary_null.position.is_some());
+        assert_eq!(
+            ordinary
+                .lexer_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-null-character")
+                .count(),
+            1
+        );
+        assert!(ordinary
+            .lexer_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.code == "null-character-reference"));
+
+        let select =
+            parse_html_with_diagnostics("<!doctype html><select>\0\u{FFFD}&#0;<option>C").unwrap();
+        let select_element =
+            find_first_element_in_nodes(&select.document.children, "select").unwrap();
+        assert_eq!(select_element.children[0], Node::text("\u{FFFD}\u{FFFD}"));
+
+        let foreign =
+            parse_html_with_diagnostics("<!doctype html><svg><g>A\0B\u{FFFD}&#0;C").unwrap();
+        let group = find_first_element_in_nodes(&foreign.document.children, "g").unwrap();
+        assert_eq!(element_text(group), "A\u{FFFD}B\u{FFFD}\u{FFFD}C");
+
+        let integration =
+            parse_html_with_diagnostics("<!doctype html><svg><foreignObject>A\0B\u{FFFD}&#0;C")
+                .unwrap();
+        let foreign_object =
+            find_first_element_in_nodes(&integration.document.children, "foreignObject").unwrap();
+        assert_eq!(element_text(foreign_object), "AB\u{FFFD}\u{FFFD}C");
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("A\0B\u{FFFD}&#0;C", "div").unwrap();
+        assert_eq!(fragment.nodes, vec![Node::text("AB\u{FFFD}\u{FFFD}C")]);
+
+        let tail = parse_html_with_diagnostics("<!doctype html><body>A</body>\0B").unwrap();
+        assert_eq!(element_text(body(&tail.document)), "AB");
+        assert!(tail
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| { diagnostic.code == "unexpected-token-after-body" }));
+
+        let mut direct = HtmlParser::new();
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "html".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "body".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A\0B\u{FFFD}".to_string()),
+            Token::Eof,
+        ]);
+        assert_eq!(element_text(body(&direct_document)), "AB\u{FFFD}");
+        assert_eq!(
+            direct
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| {
+                    diagnostic.code == "unexpected-null-character-in-tree-construction"
+                })
                 .unwrap()
                 .position,
             None

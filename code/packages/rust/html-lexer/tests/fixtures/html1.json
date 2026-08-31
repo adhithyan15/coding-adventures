@@ -62,10 +62,10 @@
     },
     {
       "id": "null-character-replacement",
-      "description": "NULL characters in data and attribute values are replaced with U+FFFD",
+      "description": "NULL characters in data are preserved for tree construction while attribute values use U+FFFD",
       "input": "A\u0000<a title=\"x\u0000y\" data=x\u0000y bare=\u0000>z",
       "tokens": [
-        "Text(data=A\ufffd)",
+        "Text(data=A\u0000)",
         "StartTag(name=a, attributes=[title=x\ufffdy, data=x\ufffdy, bare=\ufffd], self_closing=false)",
         "Text(data=z)",
         "EOF"

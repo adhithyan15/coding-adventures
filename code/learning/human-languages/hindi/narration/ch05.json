@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:19fbb52412c72cda",
+  "sourceHash": "fnv1a64:d30d10c8f0fef5ff",
   "lessons": [
     {
       "id": "HI-C05-bolna",
@@ -297,7 +297,7 @@
       "id": "HI-C05-karna",
       "sequence": 420,
       "title": "करना (karnā) — \"to do,\" the most useful verb in Hindi",
-      "headword": "करना",
+      "headword": "करना / काम करना",
       "romanization": "",
       "gloss": "to do, to make (and काम करना, \"to work\")",
       "script": "devanagari",
@@ -306,7 +306,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:49b8e92a92634d1b",
+      "sourceHash": "fnv1a64:c6b8dae55f7a3d02",
       "notice": {
         "modality": "sight",
         "needs": [

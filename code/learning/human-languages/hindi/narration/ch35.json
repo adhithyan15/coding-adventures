@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Taking, Asking, Helping — and Liking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1ed7a03f95c97e37",
+  "sourceHash": "fnv1a64:c3901b21c9305eaf",
   "lessons": [
     {
       "id": "HI-C35-lena",
@@ -444,7 +444,7 @@
       "id": "HI-C35-pasand",
       "sequence": 930,
       "title": "पसंद (pasand) — Hindi does not like things; things please Hindi",
-      "headword": "पसंद",
+      "headword": "मुझे … पसंद है",
       "romanization": "",
       "gloss": "liked, pleasing — a Persian noun, not a verb, in a sentence where the thing you like is the subject and you are only the person it happens to",
       "script": "devanagari",
@@ -453,7 +453,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8e024dadc878400",
+      "sourceHash": "fnv1a64:58727195d0913ba8",
       "notice": null,
       "blocks": [
         {
