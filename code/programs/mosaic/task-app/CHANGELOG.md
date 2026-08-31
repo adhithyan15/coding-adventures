@@ -4,6 +4,18 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - verified local-data operations and upgrade recovery (#13614)
+
+Every released desktop archive now carries offline backup, restore, upgrade,
+uninstall/purge, corrupt-state quarantine, and manual-recovery guidance under the
+shared `task-app` persistence identity. A committed v0.1.0 snapshot fixture is
+restored by the current Rust adapter and seeded at each platform's normal data
+path by the exact release matrix. The extracted Linux, macOS, and Windows apps
+must accept it without relocation or quarantine; the same jobs then prove that
+invalid bytes are preserved as `mosaic-state.v1.json.corrupt`. Linux retains its
+version/backend pre-upgrade backup, and the operations contract is explicit that
+macOS and Windows backups remain manual in these portable unsigned bundles.
+
 ### Fixed - exact release packaging pull-request gates (#13651)
 
 Release-relevant pull requests now run the same web and five-platform native

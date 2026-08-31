@@ -48,9 +48,10 @@ links existing Mosaic work instead of duplicating it.
 12. **P1 — [#13612](https://github.com/adhithyan15/coding-adventures/issues/13612):**
    package TaskApp as a macOS application bundle. **Done in #13627.**
 13. **P1 — [#13613](https://github.com/adhithyan15/coding-adventures/issues/13613):**
-   package TaskApp for Windows installation and launch.
+   package TaskApp for Windows installation and launch. **Done in #13652.**
 14. **P1 — [#13614](https://github.com/adhithyan15/coding-adventures/issues/13614):**
-   document and verify upgrade, backup, restore, and manual recovery.
+   document and verify upgrade, backup, restore, and manual recovery. **In
+   review in #13679.**
 15. **P1 — [#13523](https://github.com/adhithyan15/coding-adventures/issues/13523):**
    audit and refine the first-run simple-todo experience.
 16. **P2 — [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**

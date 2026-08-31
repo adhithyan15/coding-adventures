@@ -28,6 +28,8 @@ SEMVER = re.compile(
 )
 COMMIT = re.compile(r"^[0-9a-fA-F]{40}$")
 REPOSITORY = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
+UPGRADE_FIXTURE_SCHEMA = "task-app/release-upgrade-fixture"
+TASK_APP_SNAPSHOT_SCHEMA = "task-mosaic-app/state"
 
 NATIVE_TARGETS: dict[str, dict[str, str]] = {
     "qt": {
@@ -77,6 +79,100 @@ LINUX_BUNDLES: dict[str, dict[str, str]] = {
         "prerequisites": "A compatible glibc-based Linux x86_64 system.",
     },
 }
+
+
+def _load_upgrade_fixture(path: Path) -> dict[str, Any]:
+    fixture = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(fixture, dict):
+        raise TypeError("TaskApp upgrade fixture must be a JSON object")
+    if fixture.get("fixtureSchema") != UPGRADE_FIXTURE_SCHEMA:
+        raise ValueError("TaskApp upgrade fixture has an unsupported schema")
+    if fixture.get("fixtureVersion") != 1:
+        raise ValueError("TaskApp upgrade fixture has an unsupported fixture version")
+    source_version = fixture.get("sourceVersion")
+    if not isinstance(source_version, str) or SEMVER.fullmatch(source_version) is None:
+        raise ValueError("TaskApp upgrade fixture sourceVersion must be strict SemVer")
+    if fixture.get("snapshotSchema") != TASK_APP_SNAPSHOT_SCHEMA:
+        raise ValueError("TaskApp upgrade fixture has an unsupported snapshot schema")
+    if fixture.get("snapshotVersion") != 1:
+        raise ValueError("TaskApp upgrade fixture has an unsupported snapshot version")
+    if not isinstance(fixture.get("state"), dict):
+        raise TypeError("TaskApp upgrade fixture state must be a JSON object")
+    expected = fixture.get("expectedTask")
+    if not isinstance(expected, dict) or not isinstance(expected.get("name"), str):
+        raise TypeError("TaskApp upgrade fixture must identify its expected task")
+    return fixture
+
+
+def materialize_upgrade_fixture(fixture_path: Path, output: Path) -> Path:
+    """Write an older semantic fixture in the exact host persistence envelope."""
+
+    fixture = _load_upgrade_fixture(fixture_path)
+    state_bytes = json.dumps(
+        fixture["state"],
+        ensure_ascii=False,
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode("utf-8")
+    snapshot = {
+        "schema": fixture["snapshotSchema"],
+        "version": fixture["snapshotVersion"],
+        "bytes": list(state_bytes),
+    }
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(
+        json.dumps(snapshot, separators=(",", ":"), sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return output
+
+
+def verify_upgrade_state(fixture_path: Path, state_path: Path) -> None:
+    """Prove a host retained the compatible fixture at its selected live path."""
+
+    fixture = _load_upgrade_fixture(fixture_path)
+    if not state_path.is_file():
+        raise ValueError(f"TaskApp upgrade state does not exist: {state_path}")
+    corrupt_path = Path(f"{state_path}.corrupt")
+    if corrupt_path.exists():
+        raise ValueError(f"TaskApp quarantined a compatible upgrade fixture: {corrupt_path}")
+    snapshot = json.loads(state_path.read_text(encoding="utf-8"))
+    if not isinstance(snapshot, dict):
+        raise TypeError("TaskApp live state must be a JSON object")
+    if snapshot.get("schema") != fixture["snapshotSchema"]:
+        raise ValueError("TaskApp live state changed the snapshot schema")
+    if snapshot.get("version") != fixture["snapshotVersion"]:
+        raise ValueError("TaskApp live state changed the snapshot version")
+    encoded = snapshot.get("bytes")
+    if (
+        not isinstance(encoded, list)
+        or any(not isinstance(value, int) or not 0 <= value <= 255 for value in encoded)
+    ):
+        raise ValueError("TaskApp live state has invalid snapshot bytes")
+    state = json.loads(bytes(encoded).decode("utf-8"))
+    if not isinstance(state, dict):
+        raise TypeError("TaskApp snapshot bytes must decode to a JSON object")
+    expected = fixture["expectedTask"]
+    projects = state.get("workspace", {}).get("projects", {})
+    if not isinstance(projects, dict):
+        raise TypeError("TaskApp snapshot projects must be a JSON object")
+    tasks = [
+        task
+        for project in projects.values()
+        if isinstance(project, dict)
+        for task in project.get("tasks", {}).values()
+        if isinstance(task, dict)
+    ]
+    matching = [task for task in tasks if task.get("name") == expected["name"]]
+    if len(matching) != 1:
+        raise ValueError("TaskApp did not restore the expected upgrade-fixture task")
+    deadline = matching[0].get("schedule", {}).get("deadline")
+    if deadline != expected.get("deadline"):
+        raise ValueError("TaskApp upgrade-fixture task deadline changed")
+    active = state.get("activeProject")
+    complexity = projects.get(active, {}).get("settings", {}).get("complexity")
+    if complexity != expected.get("projectComplexity"):
+        raise ValueError("TaskApp upgrade-fixture project complexity changed")
 
 
 def validate_identifiers(version: str, tag: str, commit: str | None = None) -> None:
@@ -205,6 +301,41 @@ exec "$BUNDLE_DIR/{executable}" "$@"
 """
 
 
+def _local_data_instructions(
+    version: str,
+    platform: str,
+    state_path: str,
+    automatic_backup: str,
+) -> str:
+    return f"""Trestle {version} local-data operations — {platform}
+
+Application identifier: task-app
+Live state: {state_path}
+
+Close every running Trestle process before copying, replacing, or deleting the
+live state file. To back up, copy that file to a user-chosen safe location. To
+restore, keep the old file as a second backup, then copy a known-good snapshot
+back to the exact live-state path before launching Trestle.
+
+Upgrade by extracting the new application into a new directory, closing the old
+version, and launching the new version. Do not move the state directory. The
+release gate restores a committed v0.1.0 fixture from this same path.
+
+Uninstall while retaining data by deleting only the extracted application. To
+uninstall and purge, first make any wanted backup, then delete the application
+and the live state file, its `.tmp` sibling, its `.corrupt` sibling, and the
+`backups` directory documented below.
+
+If JSON parsing or the Rust snapshot contract rejects the live file, Trestle
+renames it to `mosaic-state.v1.json.corrupt` and starts with an empty workspace.
+Close Trestle before inspecting that quarantined copy or restoring a known-good
+backup. Never overwrite the only copy of a damaged file while attempting manual
+recovery.
+
+Automatic pre-upgrade backup: {automatic_backup}
+"""
+
+
 def archive_linux_bundle(
     version: str,
     commit: str,
@@ -274,6 +405,15 @@ existing local state file under $XDG_DATA_HOME/task-app/backups (or
 own its live state under the stable application identity `task-app`.
 """
     launcher = _linux_launcher(version, backend, executable_name)
+    operations = _local_data_instructions(
+        version,
+        f"Linux x86_64 / {target['toolkit']}",
+        f"$XDG_DATA_HOME/{target['state_path']} (or ~/.local/share/{target['state_path']})",
+        (
+            "$XDG_DATA_HOME/task-app/backups/"
+            f"pre-v{version}-{backend}.json, created once by launch-trestle."
+        ),
+    )
     with tarfile.open(output, "w:gz", format=tarfile.PAX_FORMAT) as archive:
         archive.add(source, arcname=root_name, recursive=True)
         _add_text_member(archive, f"{root_name}/SOURCE_COMMIT", f"{commit.lower()}\n")
@@ -283,6 +423,7 @@ own its live state under the stable application identity `task-app`.
             json.dumps(metadata, indent=2, sort_keys=True) + "\n",
         )
         _add_text_member(archive, f"{root_name}/INSTALL.txt", instructions)
+        _add_text_member(archive, f"{root_name}/LOCAL-DATA.txt", operations)
         _add_text_member(
             archive,
             f"{root_name}/launch-trestle",
@@ -464,6 +605,7 @@ def archive_macos_app(
         "toolkit": "SwiftUI",
         "executable": "Contents/MacOS/Trestle",
         "rustRuntime": f"{resource_bundle.name}/Runtime/libmosaic_app.dylib",
+        "statePath": "~/Library/Application Support/task-app/mosaic-state.v1.json",
         "signed": False,
         "notarized": False,
         "iosArtifact": False,
@@ -478,6 +620,12 @@ The bundled dylib is the macOS Rust engine selected by the release workflow. The
 SwiftUI source project remains portable to iOS, but this .app and its dylib are
 macOS artifacts and are not presented as an iOS build.
 """
+    operations = _local_data_instructions(
+        version,
+        f"macOS 13+ / {architecture}",
+        "~/Library/Application Support/task-app/mosaic-state.v1.json",
+        "none; make a manual copy before replacing or removing local data.",
+    )
     output = output_dir / f"task-app-swiftui-macos-bundle-v{version}.zip"
     output.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(output, "w") as archive:
@@ -515,6 +663,11 @@ macOS artifacts and are not presented as an iOS build.
             archive,
             "Trestle.app/Contents/Resources/INSTALL.txt",
             instructions.encode(),
+        )
+        _add_zip_member(
+            archive,
+            "Trestle.app/Contents/Resources/LOCAL-DATA.txt",
+            operations.encode(),
         )
     return output
 
@@ -588,6 +741,12 @@ Windows SmartScreen may require an explicit first-run confirmation. Do not disab
 system-wide security controls. Local task state remains under the stable
 %LOCALAPPDATA%\\task-app identity.
 """
+    operations = _local_data_instructions(
+        version,
+        "Windows 10 2004+ / x64",
+        "%LOCALAPPDATA%\\task-app\\mosaic-state.v1.json",
+        "none; make a manual copy before replacing or removing local data.",
+    )
     output = output_dir / f"task-app-xaml-windows-bundle-v{version}.zip"
     output.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED) as archive:
@@ -614,6 +773,11 @@ system-wide security controls. Local task state remains under the stable
             archive,
             f"{root_name}/INSTALL.txt",
             instructions.encode(),
+        )
+        _add_zip_member(
+            archive,
+            f"{root_name}/LOCAL-DATA.txt",
+            operations.encode(),
         )
     return output
 
@@ -669,7 +833,8 @@ def build_manifest(
                 "applicationId": "task-app",
                 "verification": (
                     "release build, byte-identical bundled Rust runtime, "
-                    "unrelated-working-directory launch, and pre-upgrade snapshot contract"
+                    "standard-path v0.1.0 restoration, pre-upgrade copy, "
+                    "and corrupt-state quarantine"
                 ),
                 "backend": backend,
             }
@@ -688,7 +853,8 @@ def build_manifest(
             "bundleIdentifier": "org.codingadventures.trestle",
             "verification": (
                 "release build, byte-identical bundled Rust runtime, unrelated-"
-                "working-directory launch, and upgrade-style state restoration"
+                "working-directory launch, standard-path v0.1.0 restoration, "
+                "replacement-runtime conformance, and corrupt-state quarantine"
             ),
         }
     )
@@ -706,7 +872,8 @@ def build_manifest(
             "applicationIdentity": "org.codingadventures.trestle",
             "verification": (
                 "self-contained publish, byte-identical bundled Rust runtime, "
-                "UI Automation launch, and replacement-state restoration"
+                "standard-path v0.1.0 restoration, UI Automation replacement "
+                "lifecycle, and corrupt-state quarantine"
             ),
         }
     )
@@ -790,6 +957,8 @@ Rust engine.
 - Unzip and run the unsigned SwiftUI `Trestle.app` on the matching macOS 13+
   architecture recorded in its `BUNDLE.json`.
 - Extract and run the self-contained Windows x64 `Trestle.exe` bundle.
+- Follow the bundled `LOCAL-DATA.txt` to back up, restore, upgrade, retain or
+  purge local data, and recover from a quarantined snapshot.
 
 ## Artifact and platform coverage
 
@@ -815,7 +984,7 @@ the manifest.
 
 - Linux payloads are portable archives rather than signed distribution packages.
 - The macOS app is unsigned/not notarized; the Windows app is unsigned and unpackaged.
-- Signing and installer lifecycle remain tracked in [#13522]({issue_root}/13522).
+- Signing and platform-native installers remain tracked in [#13522]({issue_root}/13522).
 - Mobile binaries are not release artifacts in this version.
 
 ## TaskApp GitHub history
@@ -877,6 +1046,14 @@ def _parser() -> argparse.ArgumentParser:
     windows_parser.add_argument("--runtime", type=Path, required=True)
     windows_parser.add_argument("--expected-runtime", type=Path, required=True)
     windows_parser.add_argument("--output-dir", type=Path, required=True)
+
+    fixture_parser = subparsers.add_parser("materialize-upgrade-fixture")
+    fixture_parser.add_argument("--fixture", type=Path, required=True)
+    fixture_parser.add_argument("--output", type=Path, required=True)
+
+    verify_state_parser = subparsers.add_parser("verify-upgrade-state")
+    verify_state_parser.add_argument("--fixture", type=Path, required=True)
+    verify_state_parser.add_argument("--state", type=Path, required=True)
 
     manifest_parser = subparsers.add_parser("write-manifest")
     manifest_parser.add_argument("--version", required=True)
@@ -945,6 +1122,10 @@ def main(argv: list[str] | None = None) -> int:
                 args.expected_runtime,
                 args.output_dir,
             )
+        elif args.command == "materialize-upgrade-fixture":
+            materialize_upgrade_fixture(args.fixture, args.output)
+        elif args.command == "verify-upgrade-state":
+            verify_upgrade_state(args.fixture, args.state)
         elif args.command == "write-manifest":
             manifest = build_manifest(
                 args.version, args.tag, args.commit, args.assets_dir
@@ -966,7 +1147,7 @@ def main(argv: list[str] | None = None) -> int:
                 args.since,
             )
             args.output.write_text(notes, encoding="utf-8")
-    except (OSError, ValueError, json.JSONDecodeError) as error:
+    except (OSError, TypeError, ValueError, json.JSONDecodeError) as error:
         print(f"taskapp-release: {error}", file=sys.stderr)
         return 2
     return 0
