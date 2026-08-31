@@ -108,6 +108,19 @@ full so omissions, duplicates, and ordering drift can be checked mechanically.
 | 99 | 17 | PA-W03-language-supported | fill one language line with the bank visible |
 | 100 | 17 | PA-W03-language-delayed | hide the bank, then fill one language line |
 | 101 | 17 | PA-W03-language-no-model | fill one language line from a nonverbal cue with no model |
+| 102 | 18 | PA-W04-ra | trace ਰ |
+| 103 | 18 | PA-W04-independent-i | trace independent ਇ |
+| 104 | 18 | PA-W04-residence-label | assemble and copy ਰਿਹਾਇਸ਼ |
+| 105 | 18 | PA-W04-dda | trace ਡ |
+| 106 | 18 | PA-W04-village | assemble and guided-copy ਪਿੰਡ |
+| 107 | 18 | PA-W04-city | assemble and guided-copy ਸ਼ਹਿਰ |
+| 108 | 18 | PA-R18-wellbeing-r4 | retrieve the Chapter 3 oral wellbeing exchange at R4 |
+| 109 | 19 | PA-W04-residence-select | select between two known residence values |
+| 110 | 19 | PA-W04-residence-supported | fill one residence line with the bank visible |
+| 111 | 19 | PA-W04-residence-spacing | separate the label and value clearly |
+| 112 | 19 | PA-W04-residence-delayed | hide the bank, then fill one residence line |
+| 113 | 19 | PA-W04-residence-repair | repair one dimension of a residence line |
+| 114 | 19 | PA-W04-residence-no-model | fill one residence line from a nonverbal cue with no model |
 
-After session 101, the track continues through the dependency-linked backlog;
+After session 114, the track continues through the dependency-linked backlog;
 this map makes no claim that the current book is yet complete or exam-ready.

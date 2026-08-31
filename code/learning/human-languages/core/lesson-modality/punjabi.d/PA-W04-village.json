@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W04-village",
+    "language": "punjabi",
+    "chapter": 18,
+    "sequence": 1170,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:18947eeea2e841c7",
+    "detachableSegments": [
+      "Script — one value"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

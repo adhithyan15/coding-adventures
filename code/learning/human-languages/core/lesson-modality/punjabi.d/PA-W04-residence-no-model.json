@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W04-residence-no-model",
+    "language": "punjabi",
+    "chapter": 19,
+    "sequence": 1240,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ac8c7bd9aa6a2e3f",
+    "detachableSegments": [
+      "Writing — independent controlled choice"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

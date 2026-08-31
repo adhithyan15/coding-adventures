@@ -1,0 +1,21 @@
+{
+  "chapter": 19,
+  "title": "The Third Form Line: Residence",
+  "label": "ch:pa-form-residence",
+  "canDo": "I can select between two separately practised values and fill one requested Gurmukhi residence line from a nonverbal cue with no model.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-W04-residence-no-model",
+    "kind": "production",
+    "summary": "The learner fills one residence field from a nonverbal cue after selection, supported entry, spacing, delayed entry, and repair have each received a bounded pass.",
+    "assesses": [
+      "PA-FORM-LABEL-RESIDENCE-01",
+      "PA-FORM-RESIDENCE-VILLAGE-01",
+      "PA-FORM-RESIDENCE-CUE-MAP-01",
+      "PA-FORM-RESIDENCE-REPAIR-01",
+      "PA-FORM-RESIDENCE-NO-MODEL-01"
+    ]
+  }
+}
