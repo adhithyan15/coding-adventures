@@ -84,7 +84,7 @@
 //! }
 //! ```
 
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::fmt::Write as _;
 use std::fs;
 use std::path::{Component, Path, PathBuf};
@@ -185,6 +185,49 @@ pub struct DegradationReport {
     /// Currently populated for the XAML backend only — see
     /// `mosaic_emit_xaml::pipeline::dropped_style_properties`.
     pub style_degradations: Vec<Degradation>,
+    /// Generated files this package's `[host_assets]` overwrote.
+    ///
+    /// Overwriting them is **supported** — the generated Qt README says so
+    /// outright: "Explicit package host assets may replace `MosaicHost.h/.cpp`
+    /// when specialized platform integration is required." A package with its own
+    /// native integration has a legitimate reason to override generated code.
+    ///
+    /// What was missing is that it happened *silently*. Generated code is what
+    /// loads and calls the library `--runtime-library` bundles, so overwriting it
+    /// can leave the selected engine installed and never invoked — while this
+    /// report still said `nativeComplete: true` with no degradations. A CI lane
+    /// that bundles a runtime, byte-compares the installed copy, and launches the
+    /// app could pass every check without executing a line of it.
+    ///
+    /// ## Why this is every generated file, not just the runtime binding
+    ///
+    /// A first attempt listed only the binding files (`MosaicHost.cpp` and
+    /// friends) from a hand-maintained table. That was the wrong shape twice
+    /// over: one entry named a path the builder never emits, and — worse —
+    /// overwriting the binding is not the only way to unhook the runtime.
+    /// Replacing Qt's `main.cpp` removes the `MosaicHost` construction;
+    /// replacing `CMakeLists.txt` drops the `target_sources` line that compiles
+    /// the binding at all, leaving it byte-identical on disk and never built.
+    /// Each is one manifest line, and each would have reported an empty list.
+    ///
+    /// So this is derived from the backend directory itself, read immediately
+    /// before host assets are installed: any host asset landing on a file the
+    /// build had already emitted.
+    ///
+    /// Deliberately not the accumulated artifact list, which an earlier version
+    /// used on the reasoning that it "is the emitter's output". It is not — it is
+    /// a parallel record every emitter must remember to push to, and two already
+    /// do not (`emit_index_file` writes `index-shell.html` and `pubspec.yaml` but
+    /// returns only one path each). Reading the directory is the only version
+    /// where that claim is literally true, and a future emitter forgetting a
+    /// `push` cannot silently reopen the hole.
+    ///
+    /// Recorded rather than rejected, and deliberately kept OUT of
+    /// `degradations`/`native_complete` for the same reason `style_degradations`
+    /// is: this is a supported choice, not a backend failing to express
+    /// something. A consumer that needs generated code intact asserts this is
+    /// empty; one that expects an override asserts it names the file.
+    pub replaced_generated_files: Vec<String>,
 }
 
 impl Backend {
@@ -309,6 +352,13 @@ pub struct BuildResult {
     /// Same as `manifest.components.exports`, but threaded through here so
     /// callers don't have to re-parse the manifest to know what they got.
     pub components_built: Vec<String>,
+    /// Generated files a `[host_assets]` entry overwrote, relative to the
+    /// backend directory, sorted.
+    ///
+    /// Derived from the write order — `install_host_assets` runs after emission,
+    /// so a target that lands on a path this build already produced replaced
+    /// generated code. See `DegradationReport::replaced_generated_files`.
+    pub replaced_generated_files: Vec<String>,
 }
 
 /// Everything that can go wrong while building a package.
@@ -902,6 +952,12 @@ pub fn build_package_with_profile_runtime_and_tokens(
     }
 
     let mut result = build_package_inner(opts, Some(profile), runtime_library, tokens)?;
+    // Filled in after emission, from what the build actually overwrote — the
+    // analysis pass above cannot know, because it writes nothing.
+    let mut report = report;
+    report
+        .replaced_generated_files
+        .clone_from(&result.replaced_generated_files);
     write_degradation_report(&report_path, &report)?;
     result.artifacts.push(report_path);
     Ok(result)
@@ -1118,6 +1174,12 @@ fn analyze_package_degradations_with_runtime_and_tokens(
         native_complete: degradations.is_empty(),
         degradations,
         style_degradations,
+        // Analysis emits nothing, so nothing has been replaced yet. The build
+        // path fills this in from what it actually wrote; a caller using
+        // `analyze_package_degradations` alone gets an empty list rather than a
+        // guess, because predicting it would mean re-deriving the emitter's
+        // behaviour — which is exactly the drift this field is meant to avoid.
+        replaced_generated_files: Vec::new(),
     })
 }
 
@@ -1625,7 +1687,7 @@ fn build_package_inner(
         // step 5 still lands in `backend_dir`.
     }
 
-    let host_asset_artifacts =
+    let (host_asset_artifacts, replaced_generated_files) =
         install_host_assets(&manifest, opts.backend, &opts.package_root, &backend_dir)?;
     artifacts.extend(host_asset_artifacts);
 
@@ -1647,17 +1709,48 @@ fn build_package_inner(
     Ok(BuildResult {
         artifacts,
         components_built,
+        replaced_generated_files,
     })
 }
 
+/// Copy a package's `[host_assets]` into the emitted project.
+///
+/// Returns the files written *and* the subset of those that landed on a path
+/// this build had already generated. That second list is what
+/// `DegradationReport::replaced_generated_files` reports, and deriving it here —
+/// from `already_written`, the artifacts accumulated before this call — is what
+/// keeps it from drifting: it is the emitter's own output, not a table
+/// describing it.
 fn install_host_assets(
     manifest: &MosaicPackage,
     backend: Backend,
     package_root: &Path,
     backend_dir: &Path,
-) -> Result<Vec<PathBuf>, BuildError> {
+) -> Result<(Vec<PathBuf>, Vec<String>), BuildError> {
     let backend_name = backend.dir_name();
+    // Keyed on the *canonical* path, so the filesystem decides what collides
+    // rather than a guess about the platform. `mosaichost.cpp` and
+    // `MosaicHost.cpp` are one file on macOS and Windows and two on Linux, and
+    // `canonicalize` reports exactly that — no `eq_ignore_ascii_case`
+    // approximation that would be wrong in one direction on every platform.
+    // Generated files exist by now (this runs after emission), so canonicalizing
+    // them succeeds; the raw path is a harmless fallback if it ever does not.
+    // Read from disk rather than from the accumulated artifact list.
+    //
+    // An earlier version used the artifacts vector, on the reasoning that it *is*
+    // the emitter's output. It is not: it is a hand-maintained parallel record
+    // that every emitter has to remember to push to, and two already do not —
+    // `emit_index_file` writes `index-shell.html` (HTML) and `pubspec.yaml`
+    // (Flutter) but returns only one path each. Overwriting the HTML app shell,
+    // which inlines every component, reported nothing. That is the same silent
+    // false negative this field exists to prevent, so the fix cannot be another
+    // list someone maintains.
+    //
+    // The directory is the emitter's output, and a future emitter that forgets a
+    // `push` cannot break this.
+    let generated = generated_files_on_disk(backend_dir)?;
     let mut written = Vec::new();
+    let mut replaced = Vec::new();
     for asset in &manifest.host_assets.files {
         if asset.backend != backend_name && asset.backend != "*" {
             continue;
@@ -1669,11 +1762,80 @@ fn install_host_assets(
         let target = backend_dir.join(&target_rel);
         let bytes = fs::read(&source)
             .map_err(|e| BuildError::Io(format!("read {}: {e}", source.display())))?;
+        // Compared on the resolved destination, which is the only thing that
+        // decides what gets clobbered. Whatever spelling the manifest used,
+        // `target` is where the bytes land — so a trailing slash, a doubled
+        // separator, or any other variant that resolves here is caught without
+        // the detection needing to model the writer's normalisation separately.
+        // Canonicalize before the write: afterwards the target exists either way,
+        // so the question "did this land on generated output" would answer itself.
+        if let Some(generated_name) = fs::canonicalize(&target)
+            .ok()
+            .and_then(|resolved| generated.get(&resolved))
+        {
+            replaced.push(generated_name.clone());
+        }
         write_file(&target, &bytes)?;
         activate_host_asset(backend, backend_dir, &target_rel)?;
         written.push(target);
     }
-    Ok(written)
+    replaced.sort();
+    replaced.dedup();
+    Ok((written, replaced))
+}
+
+/// Every file currently under `backend_dir`, keyed by canonical path and valued
+/// by its name relative to that directory.
+///
+/// Called immediately before host assets are installed, so what it finds is
+/// exactly what the build has emitted so far.
+///
+/// Keyed on the canonical path so the *filesystem* decides what counts as the
+/// same file: `mosaichost.cpp` collides with `MosaicHost.cpp` on macOS and
+/// Windows and does not on Linux, and Win32's own normalisation (trailing spaces
+/// and dots stripped, 8.3 short names expanded) is applied by the same syscall
+/// path the writer goes through. Comparing strings could not model that without
+/// re-implementing it per platform.
+///
+/// The value is the *generated* file's relative name, not the manifest's
+/// spelling: a consumer checking that the standard binding survived looks for
+/// `MosaicHost.cpp` and would not recognise `mosaichost.cpp` as the same thing.
+fn generated_files_on_disk(backend_dir: &Path) -> Result<HashMap<PathBuf, String>, BuildError> {
+    fn walk(
+        dir: &Path,
+        root: &Path,
+        found: &mut HashMap<PathBuf, String>,
+    ) -> Result<(), BuildError> {
+        let entries = match fs::read_dir(dir) {
+            Ok(entries) => entries,
+            // Nothing emitted yet is a normal state, not a failure.
+            Err(_) => return Ok(()),
+        };
+        for entry in entries {
+            let entry =
+                entry.map_err(|e| BuildError::Io(format!("read {}: {e}", dir.display())))?;
+            let path = entry.path();
+            let file_type = entry
+                .file_type()
+                .map_err(|e| BuildError::Io(format!("stat {}: {e}", path.display())))?;
+            if file_type.is_dir() {
+                walk(&path, root, found)?;
+            } else {
+                let relative = path
+                    .strip_prefix(root)
+                    .map(path_to_web_src)
+                    .unwrap_or_else(|_| path_to_web_src(&path));
+                if let Ok(canonical) = fs::canonicalize(&path) {
+                    found.insert(canonical, relative);
+                }
+            }
+        }
+        Ok(())
+    }
+
+    let mut found = HashMap::new();
+    walk(backend_dir, backend_dir, &mut found)?;
+    Ok(found)
 }
 
 fn activate_host_asset(
@@ -6876,6 +7038,410 @@ layout NativeEvents {
         assert!(
             result.artifacts.iter().any(|path| path == &lattice),
             "Lattice sidecar should appear in BuildResult.artifacts"
+        );
+    }
+
+    /// Spellings that resolve to the generated file are all detected.
+    ///
+    /// `install_host_assets` writes through `safe_manifest_relative_path`, which
+    /// collapses `//` and a trailing `/` or `/.`. Comparing the raw manifest
+    /// string would let every spelling below overwrite the binding while
+    /// reporting nothing — and a false negative defeats the field entirely, since
+    /// consumers assert it is empty.
+    ///
+    /// Note what is deliberately absent: `./MosaicHost.cpp` and `sub/../X` are
+    /// *rejected* outright by that validation, so they never reach disk and there
+    /// is nothing to report. The companion test below pins that.
+    #[test]
+    fn alternate_spellings_of_the_generated_host_are_still_detected() {
+        // `mosaichost.cpp` overwrites `MosaicHost.cpp` only where the filesystem
+        // is case-insensitive (macOS, Windows) — it is a genuinely different file
+        // on Linux. Ask, rather than assume: this test runs on all three.
+        let probe = TempDir::new().unwrap();
+        fs::write(probe.path().join("Probe"), b"x").unwrap();
+        let case_insensitive = probe.path().join("probe").exists();
+
+        let mut spellings = vec!["MosaicHost.cpp", "MosaicHost.cpp/", "MosaicHost.cpp/."];
+        if case_insensitive {
+            spellings.push("mosaichost.cpp");
+        }
+
+        for spelling in spellings {
+            let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+            let host_dir = pkg.path().join("host").join("qt");
+            fs::create_dir_all(&host_dir).unwrap();
+            fs::write(host_dir.join("MosaicHost.cpp"), "// bespoke\n").unwrap();
+            append_host_assets(
+                pkg.path(),
+                &format!(
+                    r#"[host_assets]
+files = [
+  {{ backend = "qt", source = "host/qt/MosaicHost.cpp", target = "{spelling}" }},
+]"#
+                ),
+            );
+
+            let out = TempDir::new().unwrap();
+            build_package_with_profile(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend: Backend::Qt,
+                    emit_project: true,
+                    theme: None,
+                },
+                BuildProfile::Permissive,
+            )
+            .unwrap_or_else(|error| panic!("qt build for `{spelling}`: {error:?}"));
+
+            let report: serde_json::Value = serde_json::from_str(
+                &fs::read_to_string(out.path().join("qt/mosaic-degradations.json")).unwrap(),
+            )
+            .unwrap();
+            assert_eq!(
+                report["replacedGeneratedFiles"],
+                serde_json::json!(["MosaicHost.cpp"]),
+                "target `{spelling}` resolves onto the generated binding and must be reported"
+            );
+        }
+    }
+
+    /// Targets the writer refuses never reach disk, so they replace nothing.
+    ///
+    /// This is the other half of the spelling story: detection deliberately skips
+    /// a target `safe_manifest_relative_path` rejects, and that is only correct
+    /// because such a target also fails the build outright rather than being
+    /// silently written somewhere.
+    #[test]
+    fn targets_the_writer_rejects_fail_the_build() {
+        for rejected in ["./MosaicHost.cpp", "sub/../MosaicHost.cpp", "/MosaicHost.cpp"] {
+            let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+            let host_dir = pkg.path().join("host").join("qt");
+            fs::create_dir_all(&host_dir).unwrap();
+            fs::write(host_dir.join("MosaicHost.cpp"), "// bespoke\n").unwrap();
+            append_host_assets(
+                pkg.path(),
+                &format!(
+                    r#"[host_assets]
+files = [
+  {{ backend = "qt", source = "host/qt/MosaicHost.cpp", target = "{rejected}" }},
+]"#
+                ),
+            );
+
+            let out = TempDir::new().unwrap();
+            let result = build_package_with_profile(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend: Backend::Qt,
+                    emit_project: true,
+                    theme: None,
+                },
+                BuildProfile::Permissive,
+            );
+            assert!(
+                matches!(result, Err(BuildError::UnsafePath { .. })),
+                "target `{rejected}` should be refused outright, got {result:?}"
+            );
+        }
+    }
+
+    /// Overwriting the shell or the build file is reported too, not just the
+    /// binding.
+    ///
+    /// This is why the report is derived from what the build wrote rather than
+    /// from a list of binding filenames. Replacing Qt's `main.cpp` removes the
+    /// `MosaicHost` construction; replacing `CMakeLists.txt` drops the
+    /// `target_sources` line that compiles the binding at all, leaving it
+    /// byte-identical on disk and never built. Either unhooks the runtime as
+    /// thoroughly as overwriting `MosaicHost.cpp`, in one manifest line — and a
+    /// hand-maintained table of binding filenames reported neither.
+    #[test]
+    fn replacing_the_shell_or_build_file_is_reported() {
+        for target in ["main.cpp", "CMakeLists.txt"] {
+            let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+            let host_dir = pkg.path().join("host").join("qt");
+            fs::create_dir_all(&host_dir).unwrap();
+            fs::write(host_dir.join("takeover"), "// no MosaicHost here\n").unwrap();
+            append_host_assets(
+                pkg.path(),
+                &format!(
+                    r#"[host_assets]
+files = [
+  {{ backend = "qt", source = "host/qt/takeover", target = "{target}" }},
+]"#
+                ),
+            );
+
+            let out = TempDir::new().unwrap();
+            build_package_with_profile(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend: Backend::Qt,
+                    emit_project: true,
+                    theme: None,
+                },
+                BuildProfile::Permissive,
+            )
+            .unwrap_or_else(|error| panic!("qt build for `{target}`: {error:?}"));
+
+            let report: serde_json::Value = serde_json::from_str(
+                &fs::read_to_string(out.path().join("qt/mosaic-degradations.json")).unwrap(),
+            )
+            .unwrap();
+            assert_eq!(
+                report["replacedGeneratedFiles"],
+                serde_json::json!([target]),
+                "overwriting `{target}` unhooks the runtime and must be reported"
+            );
+        }
+    }
+
+    /// Files the artifact list forgets are still reported.
+    ///
+    /// `emit_index_file` writes two files in two backends and returns only one,
+    /// so `index-shell.html` (HTML) and `pubspec.yaml` (Flutter, without
+    /// `emit_project`) never reach the artifacts vector. An earlier version of
+    /// this field was derived from that vector and reported nothing when either
+    /// was overwritten — `index-shell.html` being the complete browsable document
+    /// that inlines every component, so one manifest line could replace the whole
+    /// app shell silently.
+    ///
+    /// Reading the directory instead of a maintained list is what closes that,
+    /// and this test is the reason to keep doing so: it fails the moment the
+    /// report goes back to trusting an emitter to remember a `push`.
+    #[test]
+    fn files_missing_from_the_artifact_list_are_still_reported() {
+        for (backend, target, emit_project) in [
+            (Backend::Html, "index-shell.html", true),
+            (Backend::Flutter, "pubspec.yaml", false),
+        ] {
+            let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+            let host_dir = pkg.path().join("host");
+            fs::create_dir_all(&host_dir).unwrap();
+            fs::write(host_dir.join("takeover"), "<!-- replaced -->\n").unwrap();
+            append_host_assets(
+                pkg.path(),
+                &format!(
+                    r#"[host_assets]
+files = [
+  {{ backend = "{}", source = "host/takeover", target = "{target}" }},
+]"#,
+                    backend.dir_name()
+                ),
+            );
+
+            let out = TempDir::new().unwrap();
+            build_package_with_profile(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend,
+                    emit_project,
+                    theme: None,
+                },
+                BuildProfile::Permissive,
+            )
+            .unwrap_or_else(|error| panic!("{:?} build for `{target}`: {error:?}", backend));
+
+            let report: serde_json::Value = serde_json::from_str(
+                &fs::read_to_string(
+                    out.path()
+                        .join(backend.dir_name())
+                        .join("mosaic-degradations.json"),
+                )
+                .unwrap(),
+            )
+            .unwrap();
+            assert_eq!(
+                report["replacedGeneratedFiles"],
+                serde_json::json!([target]),
+                "{:?} overwrote generated `{target}`, which the artifact list omits",
+                backend
+            );
+        }
+    }
+
+    /// A same-named file at project root does not count as replacing a generated
+    /// one that lives in a subdirectory.
+    ///
+    /// `install_host_assets` joins the target to `backend_dir` verbatim and does
+    /// no subdirectory resolution, so a root-level `MosaicRuntimeHost.swift`
+    /// leaves `Sources/App/MosaicRuntimeHost.swift` untouched. An earlier draft
+    /// matched on basename and reported it anyway, which would fail a downstream
+    /// "list is empty" gate for a package that had replaced nothing.
+    #[test]
+    fn a_same_named_file_elsewhere_is_not_a_replacement() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let host_dir = pkg.path().join("host").join("swiftui");
+        fs::create_dir_all(&host_dir).unwrap();
+        fs::write(host_dir.join("MosaicRuntimeHost.swift"), "// unrelated\n").unwrap();
+        append_host_assets(
+            pkg.path(),
+            r#"[host_assets]
+files = [
+  { backend = "swiftui", source = "host/swiftui/MosaicRuntimeHost.swift", target = "MosaicRuntimeHost.swift" },
+]"#,
+        );
+
+        let out = TempDir::new().unwrap();
+        build_package_with_profile(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::SwiftUI,
+                emit_project: true,
+                theme: None,
+            },
+            BuildProfile::Permissive,
+        )
+        .expect("swiftui build");
+
+        let report: serde_json::Value = serde_json::from_str(
+            &fs::read_to_string(out.path().join("swiftui/mosaic-degradations.json")).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(
+            report["replacedGeneratedFiles"],
+            serde_json::json!([]),
+            "a root-level file must not be reported as replacing one in Sources/App"
+        );
+
+        // And the generated binding really is untouched.
+        let generated = out
+            .path()
+            .join("swiftui/Sources/App/MosaicRuntimeHost.swift");
+        assert!(generated.exists());
+        assert_ne!(fs::read_to_string(&generated).unwrap(), "// unrelated\n");
+    }
+
+
+
+
+
+    /// A `host_asset` that overwrites the generated Qt runtime host is recorded.
+    ///
+    /// This is the case Engram hits: it ships its own `MosaicHost.cpp` bound to
+    /// `engram-capi`, which lands on the same filename the standard Qt binding is
+    /// generated into. Replacing it is supported — the generated README says so —
+    /// but before this it happened silently, so an artifact whose selected runtime
+    /// was never reachable still reported `nativeComplete: true` with no
+    /// degradations. A CI lane could bundle a runtime, byte-compare it, launch the
+    /// app, and pass every check without executing a line of the standard runtime.
+    #[test]
+    fn replacing_the_generated_runtime_host_is_recorded_in_the_report() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let host_dir = pkg.path().join("host").join("qt");
+        fs::create_dir_all(&host_dir).unwrap();
+        fs::write(host_dir.join("MosaicHost.cpp"), "// bespoke binding\n").unwrap();
+        fs::write(host_dir.join("MosaicHost.h"), "// bespoke header\n").unwrap();
+        append_host_assets(
+            pkg.path(),
+            r#"[host_assets]
+files = [
+  { backend = "qt", source = "host/qt/MosaicHost.cpp", target = "MosaicHost.cpp" },
+  { backend = "qt", source = "host/qt/MosaicHost.h", target = "MosaicHost.h" },
+]"#,
+        );
+
+        let out = TempDir::new().unwrap();
+        build_package_with_profile(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Qt,
+                emit_project: true,
+                theme: None,
+            },
+            BuildProfile::Permissive,
+        )
+        .expect("qt build");
+
+        let report: serde_json::Value = serde_json::from_str(
+            &fs::read_to_string(out.path().join("qt/mosaic-degradations.json")).unwrap(),
+        )
+        .unwrap();
+
+        assert_eq!(
+            report["replacedGeneratedFiles"],
+            serde_json::json!(["MosaicHost.cpp", "MosaicHost.h"]),
+            "both replaced binding files should be named in the report"
+        );
+
+        // The override is supported, so it must not be treated as a backend gap.
+        // (This fixture has unrelated Qt degradations of its own, so the claim is
+        // that *none of them is about the replacement* — not that the package is
+        // native-complete.)
+        let degradation_codes: Vec<&str> = report["degradations"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|entry| entry["code"].as_str().unwrap())
+            .collect();
+        assert!(
+            !degradation_codes
+                .iter()
+                .any(|code| code.contains("runtime-host") || code.contains("host-asset")),
+            "replacing the binding is a supported choice, not a degradation; got {degradation_codes:?}"
+        );
+
+        // And the replacement really did happen — the assertion above would be
+        // worth little if the generated file had survived.
+        let host = fs::read_to_string(out.path().join("qt/MosaicHost.cpp")).unwrap();
+        assert_eq!(host, "// bespoke binding\n");
+        assert!(
+            !host.contains("mosaic_app_create"),
+            "the package's file should have replaced the standard binding"
+        );
+    }
+
+    /// A package with no colliding assets reports an empty list.
+    ///
+    /// Without this, the assertion above could pass while the detection matched
+    /// everything.
+    #[test]
+    fn packages_that_keep_the_generated_runtime_host_report_no_replacement() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let host_dir = pkg.path().join("host").join("qt");
+        fs::create_dir_all(&host_dir).unwrap();
+        fs::write(host_dir.join("extra.cpp"), "// unrelated\n").unwrap();
+        append_host_assets(
+            pkg.path(),
+            r#"[host_assets]
+files = [
+  { backend = "qt", source = "host/qt/extra.cpp", target = "extra.cpp" },
+]"#,
+        );
+
+        let out = TempDir::new().unwrap();
+        build_package_with_profile(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Qt,
+                emit_project: true,
+                theme: None,
+            },
+            BuildProfile::Permissive,
+        )
+        .expect("qt build");
+
+        let report: serde_json::Value = serde_json::from_str(
+            &fs::read_to_string(out.path().join("qt/mosaic-degradations.json")).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(
+            report["replacedGeneratedFiles"],
+            serde_json::json!([]),
+            "an unrelated host asset must not be reported as replacing the binding"
+        );
+
+        let host = fs::read_to_string(out.path().join("qt/MosaicHost.cpp")).unwrap();
+        assert!(
+            host.contains("mosaic_app_create"),
+            "the standard binding should survive when nothing overwrites it"
         );
     }
 

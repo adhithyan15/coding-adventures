@@ -2552,6 +2552,11 @@ fn parse_element(
                     "JFET IS must be finite and positive",
                 ));
             }
+            let gate_saturation_current_temperature_exponent =
+                *model.params.get("XTI").unwrap_or(&3.0);
+            if !gate_saturation_current_temperature_exponent.is_finite() {
+                return Err(NetlistParseError::new("JFET XTI must be finite"));
+            }
             let mut jfet = Jfet::with_model_and_capacitance(
                 name,
                 &fields[1],
@@ -2569,6 +2574,8 @@ fn parse_element(
             jfet.junction_potential = junction_potential;
             jfet.forward_bias_depletion_coefficient = forward_bias_depletion_coefficient;
             jfet.gate_saturation_current = gate_saturation_current;
+            jfet.gate_saturation_current_temperature_exponent =
+                gate_saturation_current_temperature_exponent;
             jfet.doping_tail_parameter = doping_tail_parameter;
             Ok(Element::Jfet(jfet))
         }
