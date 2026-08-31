@@ -4,6 +4,9 @@
 
 ### Added
 
+- Native discovery tests now project the shared language-registry fixture's
+  OCaml package and exact Dune `_build` decoy, with direct case-variant and
+  near-name coverage.
 - A pure bounded toolchain-detection adapter now independently consumes all 11
   language-neutral snapshots, including exact extra-CI declarations,
   platform BUILD precedence, affected and forced scheduling, complete
@@ -24,6 +27,9 @@
 
 ### Fixed
 
+- Package discovery now classifies the emerging `ocaml` bucket while continuing
+  to prune only exact case-sensitive `_build` output; `_Build` and
+  `_build-example` remain discoverable source paths.
 - The emitted-Lua Unicode verifier now requires an explicit pinned Lua 5.4.7
   executable, ignores Lua initialization and module-path environment state,
   bounds retained child output, and terminates the isolated process tree after

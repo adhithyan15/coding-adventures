@@ -42,6 +42,16 @@ The build tool follows a pipeline:
    byte-exact CRLF grammar, scheduled and forced toolchain unions, and the
    shared byte, line, and aggregate resource ceilings.
 
+## OCaml and Dune Discovery
+
+Lua discovery independently projects the shared language-registry fixture's
+OCaml package records. The `ocaml` bucket is classified as the emerging OCaml
+lane, while Dune's exact, case-sensitive `_build` output component is pruned
+before BUILD-file membership is tested. Similarly named source components such
+as `_Build` and `_build-example` remain discoverable. The fixture projection is
+deliberately limited to this OCaml/Dune contract; broader package/program
+identity-registry completion remains separate work.
+
 ## Usage
 
 ```bash
