@@ -2,7 +2,7 @@
 schema_version: 2
 id: PA-R25-kin-eye-r4
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 1560
+sequence: 1570
 chapter: 25
 type: practice
 headword: ਭਰਾ · ਭੈਣ · ਅੱਖ

@@ -1,0 +1,15 @@
+{
+  "id": "PA-EXT-032-A1-FORM-R2-R3",
+  "stage": "A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can retrieve the known three-field and work-field writing tasks at R2 and R3 distance without adding a new field, value, or script shape.",
+  "prerequisites": [
+    "PA-EXT-031-A1-KIN-BODY-R4"
+  ],
+  "lessons": [
+    "PA-R26-three-repair-r2",
+    "PA-R26-work-build-r3",
+    "PA-R26-work-control-r3"
+  ]
+}

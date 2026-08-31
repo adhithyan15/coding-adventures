@@ -4,11 +4,11 @@
   "chapter": 25,
   "title": "Requests, People, and Body Words at R4",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:9598d80ed7a88725",
+  "sourceHash": "fnv1a64:b7ad49fae0031d22",
   "lessons": [
     {
       "id": "PA-R25-drink-request-r4",
-      "sequence": 1530,
+      "sequence": 1540,
       "title": "Water and tea requests return at R4",
       "headword": "ਪਾਣੀ, ਕਿਰਪਾ ਕਰਕੇ · ਚਾਹ, ਕਿਰਪਾ ਕਰਕੇ",
       "romanization": "pāṇī, kirpā karke · cāh, kirpā karke",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0ea3dbb2142021e1",
+      "sourceHash": "fnv1a64:c8e890b104f4dd78",
       "notice": null,
       "blocks": [
         {
@@ -115,7 +115,7 @@
     },
     {
       "id": "PA-R25-milk-bread-r4",
-      "sequence": 1540,
+      "sequence": 1550,
       "title": "Milk and bread return at R4",
       "headword": "ਦੁੱਧ · ਰੋਟੀ",
       "romanization": "dudh · roṭī",
@@ -126,7 +126,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:afe4c2e3cef6ea67",
+      "sourceHash": "fnv1a64:79be6ea517d4a1f2",
       "notice": null,
       "blocks": [
         {
@@ -216,7 +216,7 @@
     },
     {
       "id": "PA-R25-friend-family-r4",
-      "sequence": 1550,
+      "sequence": 1560,
       "title": "Friend and family return at R4",
       "headword": "ਦੋਸਤ · ਪਰਿਵਾਰ",
       "romanization": "dost · parivār",
@@ -227,7 +227,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b750ae91e848a061",
+      "sourceHash": "fnv1a64:644d67f354fc8404",
       "notice": null,
       "blocks": [
         {
@@ -317,7 +317,7 @@
     },
     {
       "id": "PA-R25-kin-eye-r4",
-      "sequence": 1560,
+      "sequence": 1570,
       "title": "Brother, sister, and eye return at R4",
       "headword": "ਭਰਾ · ਭੈਣ · ਅੱਖ",
       "romanization": "bharā · bhaiṇ · akkh",
@@ -328,7 +328,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e6751a6c6d799600",
+      "sourceHash": "fnv1a64:3d00abcf3ffb03e3",
       "notice": null,
       "blocks": [
         {

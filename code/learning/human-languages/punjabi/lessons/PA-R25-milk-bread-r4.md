@@ -2,7 +2,7 @@
 schema_version: 2
 id: PA-R25-milk-bread-r4
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1540
+sequence: 1550
 chapter: 25
 type: practice
 headword: ਦੁੱਧ · ਰੋਟੀ

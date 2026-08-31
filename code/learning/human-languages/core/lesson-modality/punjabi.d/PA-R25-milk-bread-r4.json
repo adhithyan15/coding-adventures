@@ -3,7 +3,7 @@
     "id": "PA-R25-milk-bread-r4",
     "language": "punjabi",
     "chapter": 25,
-    "sequence": 1540,
+    "sequence": 1550,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:afe4c2e3cef6ea67"
+    "sourceHash": "fnv1a64:79be6ea517d4a1f2"
   },
   "findings": []
 }

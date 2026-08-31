@@ -3,7 +3,7 @@
     "id": "PA-R24-understand-read-r4",
     "language": "punjabi",
     "chapter": 24,
-    "sequence": 1500,
+    "sequence": 1510,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:c16b142d006b0b86"
+    "sourceHash": "fnv1a64:34919e006ae5268b"
   },
   "findings": []
 }

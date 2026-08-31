@@ -2,7 +2,7 @@
 schema_version: 2
 id: PA-R25-drink-request-r4
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1530
+sequence: 1540
 chapter: 25
 type: practice
 headword: ਪਾਣੀ, ਕਿਰਪਾ ਕਰਕੇ · ਚਾਹ, ਕਿਰਪਾ ਕਰਕੇ

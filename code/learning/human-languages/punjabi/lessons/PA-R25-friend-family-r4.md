@@ -2,7 +2,7 @@
 schema_version: 2
 id: PA-R25-friend-family-r4
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 1550
+sequence: 1560
 chapter: 25
 type: practice
 headword: ਦੋਸਤ · ਪਰਿਵਾਰ

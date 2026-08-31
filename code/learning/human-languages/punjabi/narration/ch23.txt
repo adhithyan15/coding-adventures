@@ -1,8 +1,8 @@
 Punjabi, chapter 23: Three-Field No-Model Checkpoint.
-6 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+7 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 6.
+Lesson 1 of 7.
 Repair only selection — repair only a cue-to-value selection on the combined form.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -22,7 +22,7 @@ The next pass keeps selection fixed and inspects spelling only.
 For cue B, repair only the selected value in ਭਾਸ਼ਾ: ਪੰਜਾਬੀ.
 
 
-Lesson 2 of 6.
+Lesson 2 of 7.
 Repair only spelling — repair only one selected value's spelling on the combined form.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -42,7 +42,7 @@ The next pass ignores spelling and repairs one boundary.
 Repair only the spelling in ਰਿਹਾਇਸ਼: ਸ਼ਹਰ.
 
 
-Lesson 3 of 6.
+Lesson 3 of 7.
 Repair only spacing — repair only the label-value boundary on one combined-form line.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -62,7 +62,7 @@ The next pass keeps every value intact and repairs its line placement.
 Repair only the spacing in ਕੰਮ:ਖੇਤੀ.
 
 
-Lesson 4 of 6.
+Lesson 4 of 7.
 Repair only placement — move known correctly spelled values back to their matching fields.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -83,7 +83,7 @@ All four dimensions have now received their own repair pass.
 Name the dimension that changes when two correct values move back to their matching labels.
 
 
-Lesson 5 of 6.
+Lesson 5 of 7.
 Repair one dimension, then stop — identify and repair only the first differing dimension on three lines.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -105,7 +105,7 @@ The next lesson asks for fresh writing, not correction of a visible answer.
 Name the single dimension that differs in the middle line.
 
 
-Lesson 6 of 6.
+Lesson 6 of 7.
 Three-field no-model checkpoint — fill three known fields from remembered closed-bank cues with no model.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -125,3 +125,21 @@ Wrap-up recall.
 This checkpoint integrates only language, residence, and work. It does not claim the later six-field form is complete.
 [question — say your answer, then pause 55 seconds]
 With no bank, romanization, or copyable answer, complete the three fields for cues A, B, A.
+
+
+Lesson 7 of 7.
+One immediate three-field recall — retrieve the just-completed three-field no-model task once before it decays.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Keep the value banks closed. Say the field order once: language, residence, work.
+
+Writing — one independent controlled recall.
+For cues A, B, A, complete these three fields without romanization or a copyable answer:
+ਭਾਸ਼ਾ: __________ ਰਿਹਾਇਸ਼: __________ ਕੰਮ: __________.
+
+Wrap-up recall.
+One clean recall is enough. The next chapter changes topic instead of adding another form demand.
+[question — say your answer, then pause 55 seconds]
+With every bank closed, complete the three fields for cues A, B, A.

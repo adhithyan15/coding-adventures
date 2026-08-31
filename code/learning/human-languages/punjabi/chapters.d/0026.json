@@ -1,0 +1,21 @@
+{
+  "chapter": 26,
+  "title": "Form Retrieval at R2 and R3",
+  "label": "ch:pa-form-r2-r3-retrieval",
+  "canDo": "I can retrieve the known three-field and work-field writing tasks at R2 and R3 without adding a new field, value, or script shape.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-R26-work-control-r3",
+    "kind": "production",
+    "summary": "The learner selects a known work value, hides the bank, writes one row after a short delay, and checks spelling, spacing, and field agreement.",
+    "assesses": [
+      "PA-FORM-WORK-SPELLING-CHECK-01",
+      "PA-FORM-WORK-SPACING-01",
+      "PA-FORM-WORK-AGREEMENT-01",
+      "PA-FORM-WORK-DELAYED-ENTRY-01",
+      "PA-FORM-THREE-CUE-SELECTION-01"
+    ]
+  }
+}

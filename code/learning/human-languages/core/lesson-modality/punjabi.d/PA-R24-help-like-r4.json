@@ -3,7 +3,7 @@
     "id": "PA-R24-help-like-r4",
     "language": "punjabi",
     "chapter": 24,
-    "sequence": 1520,
+    "sequence": 1530,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:3b4065de32018c32"
+    "sourceHash": "fnv1a64:c09e6a057b28c5d7"
   },
   "findings": []
 }

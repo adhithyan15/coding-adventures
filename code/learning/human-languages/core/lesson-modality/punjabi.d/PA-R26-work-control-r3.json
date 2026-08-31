@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-R26-work-control-r3",
+    "language": "punjabi",
+    "chapter": 26,
+    "sequence": 1600,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b43dcf7b7523313e",
+    "detachableSegments": [
+      "Writing — one delayed row"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

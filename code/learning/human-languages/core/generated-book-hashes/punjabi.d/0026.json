@@ -1,0 +1,11 @@
+{
+  "language": "punjabi",
+  "chapter": 26,
+  "sourceHash": "fnv1a64:fd629449397f6fbe",
+  "lessonIds": [
+    "PA-R26-three-repair-r2",
+    "PA-R26-work-build-r3",
+    "PA-R26-work-control-r3"
+  ],
+  "tex": "punjabi/book/chapters/ch26-form-r2-r3-retrieval.tex"
+}

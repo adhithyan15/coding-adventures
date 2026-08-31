@@ -3,7 +3,7 @@
     "id": "PA-R24-write-take-ask-r4",
     "language": "punjabi",
     "chapter": 24,
-    "sequence": 1510,
+    "sequence": 1520,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:9052e8d298e02ae2"
+    "sourceHash": "fnv1a64:0e3808732790d4f5"
   },
   "findings": []
 }

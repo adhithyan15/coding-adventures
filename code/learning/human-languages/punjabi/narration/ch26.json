@@ -1,0 +1,294 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 26,
+  "title": "Form Retrieval at R2 and R3",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:e3ea6cdbaff92aeb",
+  "lessons": [
+    {
+      "id": "PA-R26-three-repair-r2",
+      "sequence": 1580,
+      "title": "Three fields return at R2",
+      "headword": "ਭਾਸ਼ਾ · ਰਿਹਾਇਸ਼ · ਕੰਮ",
+      "romanization": "three-field no-model and repair retrieval",
+      "gloss": "retrieve the three-field no-model task and its bounded repair passes at R2",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:e727ed427fec631c",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "No new labels or values appear. Keep every bank closed and recall the order language, residence, work."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — one no-model form",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Complete the three fields for cues B, A, B. Finish the whole attempt before checking anything."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — one bounded repair pass",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Compare selection, spelling, spacing, then placement. Repair only the first differing dimension. If the work row differs, repair that row only."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one form. This is retrieval, not a longer writing test."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-R26-three-repair-r2-check",
+              "prompt": "With every bank closed, complete language, residence, and work for cues B, A, B; then repair only the first differing dimension.",
+              "assesses": [
+                "PA-FORM-WORK-REPAIR-01",
+                "PA-FORM-WORK-NO-MODEL-01",
+                "PA-FORM-THREE-SPELLING-REPAIR-01",
+                "PA-FORM-THREE-SPACING-REPAIR-01",
+                "PA-FORM-THREE-PLACEMENT-REPAIR-01",
+                "PA-FORM-THREE-MIXED-REPAIR-01",
+                "PA-FORM-THREE-NO-MODEL-01"
+              ],
+              "responseSeconds": 65,
+              "acceptedResponses": [
+                "ਭਾਸ਼ਾ: ਹਿੰਦੀ ਰਿਹਾਇਸ਼: ਪਿੰਡ ਕੰਮ: ਨੌਕਰੀ",
+                "ਭਾਸ਼ਾ:ਹਿੰਦੀ ਰਿਹਾਇਸ਼:ਪਿੰਡ ਕੰਮ:ਨੌਕਰੀ"
+              ],
+              "feedback": {
+                "correct": "The no-model form returned and the repair stayed bounded.",
+                "incorrect": "Check selection, spelling, spacing, then placement; stop after the first repair."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R26-work-build-r3",
+      "sequence": 1590,
+      "title": "Rebuild one work row at R3",
+      "headword": "ਕੰਮ: ਨੌਕਰੀ",
+      "romanization": "work field supported build at R3",
+      "gloss": "rebuild the known job value and its work-field mapping at R3",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:fc085d19807a31f2",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script and value recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script and value recall until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the three labels in order: ਭਾਸ਼ਾ, ਰਿਹਾਇਸ਼, ਕੰਮ. Point to the work label and stop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script and value recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace ੌ once above ਨ, making ਨੌ. Then read the known value ਨੌਕਰੀ once."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — one supported work row",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The old bank is A — ਖੇਤੀ, B — ਨੌਕਰੀ. For B, complete ਕੰਮ: __________. Keep the bank visible for this one attempt."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One supported row is enough. The next lesson removes the bank after a short delay."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-R26-work-build-r3-check",
+              "prompt": "After naming the third field as work, use visible-bank cue B to complete ਕੰਮ: ______.",
+              "assesses": [
+                "PA-SCRIPT-AU-MATRA-01",
+                "PA-FORM-WORK-JOB-01",
+                "PA-FORM-WORK-CUE-MAP-01",
+                "PA-FORM-WORK-SUPPORTED-ENTRY-01",
+                "PA-FORM-THREE-LABEL-ORDER-01"
+              ],
+              "responseSeconds": 35,
+              "acceptedResponses": [
+                "ਕੰਮ: ਨੌਕਰੀ",
+                "ਕੰਮ:ਨੌਕਰੀ",
+                "ਨੌਕਰੀ"
+              ],
+              "feedback": {
+                "correct": "Cue B rebuilt the known job value on the work field.",
+                "incorrect": "Point to ਕੰਮ, find B — ਨੌਕਰੀ, and copy only that known value."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R26-work-control-r3",
+      "sequence": 1600,
+      "title": "Hide, write, and check one work row at R3",
+      "headword": "ਕੰਮ: ਨੌਕਰੀ",
+      "romanization": "work field delayed control at R3",
+      "gloss": "retrieve one work value after a delay and check its four known controls at R3",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:b43dcf7b7523313e",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the old work bank A — ਖੇਤੀ, B — ਨੌਕਰੀ. Select B, hide the bank, and count slowly to ten."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — one delayed row",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "With the bank hidden, complete ਕੰਮ: __________ for B."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — four checks, no rewrite",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Reveal the model. Check the value piece by piece, the one space after the colon, and that the job value stayed on the work field. Repair only the first difference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one delayed row. This closes the bounded R3 retrieval pass without adding a new form field."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-R26-work-control-r3-check",
+              "prompt": "Select B from the work bank, hide it for ten seconds, write the work row, then name the three checks.",
+              "assesses": [
+                "PA-FORM-WORK-SPELLING-CHECK-01",
+                "PA-FORM-WORK-SPACING-01",
+                "PA-FORM-WORK-AGREEMENT-01",
+                "PA-FORM-WORK-DELAYED-ENTRY-01",
+                "PA-FORM-THREE-CUE-SELECTION-01"
+              ],
+              "responseSeconds": 45,
+              "acceptedResponses": [
+                "ਕੰਮ: ਨੌਕਰੀ; spelling, spacing, field agreement",
+                "ਕੰਮ:ਨੌਕਰੀ; spelling, spacing, agreement"
+              ],
+              "feedback": {
+                "correct": "The delayed value returned with all three controls intact.",
+                "incorrect": "Repair in order: spelling, one space after the colon, then the matching work field."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
