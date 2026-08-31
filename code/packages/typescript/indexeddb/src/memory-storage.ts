@@ -20,7 +20,7 @@
  * pulling in the sql chain.
  */
 
-import type { KVStorage, StoreSchema } from "./types.js";
+import type { KVStorage, StoreSchema } from "./browser-types.js";
 
 export class MemoryStorage implements KVStorage {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -35,7 +35,7 @@
  *   request.onerror.
  */
 
-import type { KVStorage, StorageConfig } from "./types.js";
+import type { KVStorage, StorageConfig } from "./browser-types.js";
 
 export class IndexedDBStorage implements KVStorage {
   private db: IDBDatabase | null = null;
