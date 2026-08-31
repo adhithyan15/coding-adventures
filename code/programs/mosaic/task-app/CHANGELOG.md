@@ -4,6 +4,18 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - incremental SemVer GitHub releases (#13543)
+
+TaskApp now has a manual, main-only release lane using immutable product-scoped
+`task-app-vMAJOR.MINOR.PATCH` tags. It validates the version/tag pair and checks
+for existing tags or releases before artifact work, rebuilds and tests the web
+bundle, and strictly generates five platform-native projects with their real Rust
+runtime and emitted-control contracts. A single publisher creates the release,
+SHA-256 checksums, a source-commit manifest, an explicit platform/installer matrix,
+and product-scoped notes from merged TaskApp pull-request history. The initial
+artifacts are an immediately serveable web bundle plus generated native projects;
+installer packages remain explicitly tracked by #13522.
+
 ### Added - native emitted-control scheduling acceptance (#13520)
 
 CI now exercises the simple TaskApp lifecycle through generated Qt, Flutter,

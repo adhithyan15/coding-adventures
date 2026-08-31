@@ -19,10 +19,12 @@ links existing Mosaic work instead of duplicating it.
    retain typed `For` row payloads in emitted XAML button handlers.
    **Discovered and fixed while validating #13520.**
 4. **P0 — [#13520](https://github.com/adhithyan15/coding-adventures/issues/13520):**
-   prove the native simple-todo scheduling flow end to end. **In progress.**
+   prove the native simple-todo scheduling flow end to end. **Done in #13575.**
 5. **P1 — [#13543](https://github.com/adhithyan15/coding-adventures/issues/13543):**
    publish incremental SemVer TaskApp GitHub releases, beginning at
-   `task-app-v0.1.0` with only the artifacts that are actually verified.
+   `task-app-v0.1.0` with only the artifacts that are actually verified. The
+   release lane builds a tested web bundle and strict generated native projects;
+   installer packaging remains #13522.
 6. **P1 — [#13565](https://github.com/adhithyan15/coding-adventures/issues/13565):**
    keep native completion progress visible in the generated Compose viewport.
 7. **P1 — [#13521](https://github.com/adhithyan15/coding-adventures/issues/13521):**

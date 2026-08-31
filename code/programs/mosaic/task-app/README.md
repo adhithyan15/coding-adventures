@@ -83,6 +83,47 @@ scripts/build-web.sh                            # build wasm + emit TaskApp.tsx 
 cd host/web && npm install && npm run dev       # http://localhost:5173
 ```
 
+## Incremental releases
+
+TaskApp uses product-scoped [Semantic Versioning](https://semver.org/):
+`task-app-vMAJOR.MINOR.PATCH`. Compatible fixes and packaging improvements bump
+the patch version, new usable capabilities bump the minor version, and breaking
+compatibility changes bump the major version. Tags and releases are immutable;
+an existing version is never reused or overwritten.
+
+From the repository's **Actions** tab, run **Release TaskApp** from `main` and
+provide both the bare version and its matching product tag. The equivalent CLI
+command for the first release is:
+
+```bash
+gh workflow run release-task-app.yml --ref main \
+  -f version=0.1.0 \
+  -f tag=task-app-v0.1.0
+```
+
+The workflow rejects invalid, mismatched, or previously published identifiers
+before it builds artifacts. It tests the Rust/WASM web inputs and production Vite
+bundle, generates every native project under the strict `native-complete` profile
+with the platform's real `task-mosaic-app` runtime, and checks each emitted-control
+contract. One publisher job then creates checksums, a source-commit manifest,
+product-scoped notes from merged `task-app` pull requests, and one GitHub Release.
+
+Initial releases deliberately contain generated projects rather than installers:
+
+| Artifact | Platform | What it is |
+| --- | --- | --- |
+| Web ZIP | Modern browsers | Tested, ready-to-serve production bundle |
+| Qt, Flutter, Compose ZIPs | Linux x86_64 | Native-complete generated projects with the Rust runtime |
+| SwiftUI ZIP | macOS | Native-complete generated project with the Rust runtime |
+| XAML ZIP | Windows | Native-complete generated WinUI project with the Rust runtime |
+
+Installer packaging is tracked separately in
+[#13522](https://github.com/adhithyan15/coding-adventures/issues/13522), so release
+notes never imply that these project archives install themselves. To cut the next
+release, first move the relevant entries into this changelog's version section,
+choose the SemVer bump from the policy above, and dispatch the workflow with a new
+matching version and tag.
+
 ## Files
 
 - `src/TaskApp.{mil,mll,light.msl}` — the Mosaic UI (interface, layout, style).
