@@ -42,22 +42,38 @@ pub struct Decoded {
     pub opcode: u8,
 }
 
-fn read_pc(mem: &Memory, pc: &mut u16) -> u8 {
-    let b = mem.read_byte(*pc as usize);
+fn read_byte(mem: &Memory, input_ports: Option<&[u8; 240]>, address: u16) -> u8 {
+    if let Some(ports) = input_ports {
+        if (0xFF00..=0xFFEF).contains(&address) {
+            return ports[(address - 0xFF00) as usize];
+        }
+    }
+    mem.read_byte(address as usize)
+}
+
+fn read_pc(mem: &Memory, input_ports: Option<&[u8; 240]>, pc: &mut u16) -> u8 {
+    let b = read_byte(mem, input_ports, *pc);
     *pc = pc.wrapping_add(1);
     b
 }
 
-fn read_pc16(mem: &Memory, pc: &mut u16) -> u16 {
-    let lo = read_pc(mem, pc) as u16;
-    let hi = read_pc(mem, pc) as u16;
+fn read_pc16(mem: &Memory, input_ports: Option<&[u8; 240]>, pc: &mut u16) -> u16 {
+    let lo = read_pc(mem, input_ports, pc) as u16;
+    let hi = read_pc(mem, input_ports, pc) as u16;
     (hi << 8) | lo
 }
 
 /// Resolve the effective address for `mode`, consuming whatever operand
 /// bytes that mode requires from `*pc` (advancing it in place).  `x`/`y`
 /// are the *current* index-register values (needed by the indexed modes).
-fn resolve_address(mem: &Memory, pc: &mut u16, mode: AddrMode, x: u8, y: u8) -> Option<u16> {
+fn resolve_address(
+    mem: &Memory,
+    input_ports: Option<&[u8; 240]>,
+    pc: &mut u16,
+    mode: AddrMode,
+    x: u8,
+    y: u8,
+) -> Option<u16> {
     match mode {
         AddrMode::Imp | AddrMode::Acc => None,
         AddrMode::Imm => {
@@ -65,38 +81,38 @@ fn resolve_address(mem: &Memory, pc: &mut u16, mode: AddrMode, x: u8, y: u8) -> 
             *pc = pc.wrapping_add(1);
             Some(addr)
         }
-        AddrMode::Zp => Some(read_pc(mem, pc) as u16),
-        AddrMode::Zpx => Some(read_pc(mem, pc).wrapping_add(x) as u16),
-        AddrMode::Zpy => Some(read_pc(mem, pc).wrapping_add(y) as u16),
-        AddrMode::Abs => Some(read_pc16(mem, pc)),
-        AddrMode::Abx => Some(read_pc16(mem, pc).wrapping_add(x as u16)),
-        AddrMode::Aby => Some(read_pc16(mem, pc).wrapping_add(y as u16)),
+        AddrMode::Zp => Some(read_pc(mem, input_ports, pc) as u16),
+        AddrMode::Zpx => Some(read_pc(mem, input_ports, pc).wrapping_add(x) as u16),
+        AddrMode::Zpy => Some(read_pc(mem, input_ports, pc).wrapping_add(y) as u16),
+        AddrMode::Abs => Some(read_pc16(mem, input_ports, pc)),
+        AddrMode::Abx => Some(read_pc16(mem, input_ports, pc).wrapping_add(x as u16)),
+        AddrMode::Aby => Some(read_pc16(mem, input_ports, pc).wrapping_add(y as u16)),
         AddrMode::Inx => {
-            let zp = read_pc(mem, pc).wrapping_add(x);
-            let lo = mem.read_byte(zp as usize) as u16;
-            let hi = mem.read_byte(zp.wrapping_add(1) as usize) as u16;
+            let zp = read_pc(mem, input_ports, pc).wrapping_add(x);
+            let lo = read_byte(mem, input_ports, zp as u16) as u16;
+            let hi = read_byte(mem, input_ports, zp.wrapping_add(1) as u16) as u16;
             Some((hi << 8) | lo)
         }
         AddrMode::Iny => {
-            let zp = read_pc(mem, pc);
-            let lo = mem.read_byte(zp as usize) as u16;
-            let hi = mem.read_byte(zp.wrapping_add(1) as usize) as u16;
+            let zp = read_pc(mem, input_ports, pc);
+            let lo = read_byte(mem, input_ports, zp as u16) as u16;
+            let hi = read_byte(mem, input_ports, zp.wrapping_add(1) as u16) as u16;
             Some(((hi << 8) | lo).wrapping_add(y as u16))
         }
         AddrMode::Ind => {
             // Absolute Indirect — JMP only.  The 6502 bug: if the low byte
             // of the pointer is 0xFF, the high byte wraps within the same
             // page instead of crossing into the next page.
-            let ptr = read_pc16(mem, pc);
-            let lo = mem.read_byte(ptr as usize) as u16;
+            let ptr = read_pc16(mem, input_ports, pc);
+            let lo = read_byte(mem, input_ports, ptr) as u16;
             let hi_addr = (ptr & 0xFF00) | (ptr.wrapping_add(1) & 0x00FF);
-            let hi = mem.read_byte(hi_addr as usize) as u16;
+            let hi = read_byte(mem, input_ports, hi_addr) as u16;
             Some((hi << 8) | lo)
         }
         AddrMode::Rel => {
             // Branch: read a signed 8-bit offset, return the *target* PC
             // (relative to the PC *after* the offset byte has been consumed).
-            let raw = read_pc(mem, pc);
+            let raw = read_pc(mem, input_ports, pc);
             let offset = raw as i8;
             Some((*pc as i32 + offset as i32) as u16)
         }
@@ -110,11 +126,35 @@ fn resolve_address(mem: &Memory, pc: &mut u16, mode: AddrMode, x: u8, y: u8) -> 
 /// Returns `Err` for an illegal/undocumented opcode byte (mirrors the
 /// Python original's `ValueError("Illegal opcode ...")`).
 pub fn fetch_decode(mem: &Memory, pc: &mut u16, x: u8, y: u8) -> Result<Decoded, String> {
-    let opcode = read_pc(mem, pc);
-    let (mnemonic, mode) = lookup(opcode)
-        .ok_or_else(|| format!("Illegal opcode {opcode:#04x}"))?;
-    let addr = resolve_address(mem, pc, mode, x, y);
-    Ok(Decoded { mnemonic, mode, addr, opcode })
+    fetch_decode_inner(mem, None, pc, x, y)
+}
+
+pub(crate) fn fetch_decode_with_io(
+    mem: &Memory,
+    input_ports: &[u8; 240],
+    pc: &mut u16,
+    x: u8,
+    y: u8,
+) -> Result<Decoded, String> {
+    fetch_decode_inner(mem, Some(input_ports), pc, x, y)
+}
+
+fn fetch_decode_inner(
+    mem: &Memory,
+    input_ports: Option<&[u8; 240]>,
+    pc: &mut u16,
+    x: u8,
+    y: u8,
+) -> Result<Decoded, String> {
+    let opcode = read_pc(mem, input_ports, pc);
+    let (mnemonic, mode) = lookup(opcode).ok_or_else(|| format!("Illegal opcode {opcode:#04x}"))?;
+    let addr = resolve_address(mem, input_ports, pc, mode, x, y);
+    Ok(Decoded {
+        mnemonic,
+        mode,
+        addr,
+        opcode,
+    })
 }
 
 #[cfg(test)]

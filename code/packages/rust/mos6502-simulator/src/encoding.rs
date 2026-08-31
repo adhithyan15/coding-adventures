@@ -89,7 +89,10 @@ pub fn encode_brk() -> Vec<u8> {
 /// `mips_r2000_simulator::encoding::assemble` / consistency with how
 /// `mos6502-backend` builds its output.
 pub fn assemble(instructions: &[Vec<u8>]) -> Vec<u8> {
-    instructions.iter().flat_map(|i| i.iter().copied()).collect()
+    instructions
+        .iter()
+        .flat_map(|i| i.iter().copied())
+        .collect()
 }
 
 #[cfg(test)]
@@ -117,7 +120,7 @@ mod tests {
         use crate::simulator::Mos6502Simulator;
         let bytes = assemble(&[encode_lda_imm(7), encode_adc_imm(5), encode_brk()]);
         let mut sim = Mos6502Simulator::new(65536);
-        sim.run(&bytes);
+        sim.run(&bytes).unwrap();
         assert_eq!(sim.a, 12);
         assert!(sim.halted);
     }

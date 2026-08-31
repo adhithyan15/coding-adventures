@@ -194,7 +194,10 @@ mod tests {
     #[test]
     fn unpack_reset_value() {
         // 0x24 = 0b00100100 = bit5=1, I=1
-        assert_eq!(unpack_p(0x24), (false, false, false, false, true, false, false));
+        assert_eq!(
+            unpack_p(0x24),
+            (false, false, false, false, true, false, false)
+        );
     }
 
     #[test]

@@ -57,6 +57,17 @@ pub enum AddrMode {
     Ind,
 }
 
+impl AddrMode {
+    /// Total encoded instruction length, including the opcode byte.
+    pub const fn instruction_len(self) -> usize {
+        match self {
+            Self::Imp | Self::Acc => 1,
+            Self::Imm | Self::Zp | Self::Zpx | Self::Zpy | Self::Inx | Self::Iny | Self::Rel => 2,
+            Self::Abs | Self::Abx | Self::Aby | Self::Ind => 3,
+        }
+    }
+}
+
 // ===========================================================================
 // HALT sentinel
 // ===========================================================================

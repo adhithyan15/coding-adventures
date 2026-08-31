@@ -1,5 +1,21 @@
 # Changelog — mos6502-simulator
 
+## Unreleased
+
+### Changed
+
+- Added typed atomic load, step, port, and halted failures plus transactional
+  bounded runs.
+- Added complete owned snapshots, restore support, full before/after traces,
+  and traced execution results.
+- Restored the Python reference's 240 memory-mapped input/output latches at
+  `$FF00-$FFEF` and fixed memory to the architectural 64 KiB address space.
+- Added an exhaustive 256-byte classification and full-state hashes generated
+  from the Python oracle for all 151 official opcodes.
+- Updated the backend consumer for the checked lifecycle; 60 unit, 3
+  integration, and 1 documentation test now pass.
+- Raised core line coverage to 93.87% (704/750) and repaired strict rustdoc.
+
 ## [0.1.0] - 2026-08-17
 
 ### Added

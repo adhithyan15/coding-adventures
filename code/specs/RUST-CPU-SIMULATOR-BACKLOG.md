@@ -73,7 +73,7 @@ according to the current prioritization run.
 | RCPU-011 / RCPU-012 | 1971 | Intel 4004 | Complete: `intel4004-simulator` | Complete: `intel4004-gatelevel` |
 | RCPU-013 / RCPU-014 | 1972 | Intel 8008 | Complete: `intel8008-simulator` | Complete: `intel8008-gatelevel` |
 | RCPU-015 / RCPU-016 | 1974 | Intel 8080 | Complete: `intel8080-simulator` | Complete: `intel8080-gatelevel` |
-| RCPU-017 / RCPU-018 | 1975 | MOS 6502 | Audit: `mos6502-simulator` | Audit: `mos6502-gatelevel` |
+| RCPU-017 / RCPU-018 | 1975 | MOS 6502 | Complete: `mos6502-simulator` | Audit: `mos6502-gatelevel` |
 | RCPU-019 / RCPU-020 | 1976 | Zilog Z80 | Audit: `z80-simulator` | Audit: `z80-gatelevel` |
 | RCPU-021 / RCPU-022 | 1978 | Intel 8086 | Audit: `intel8086-simulator` | Audit: `intel8086-gatelevel` |
 | RCPU-023 / RCPU-024 | 1979 | Motorola 68000 | Audit: `m68k-simulator` | Audit: `motorola68k-gatelevel` |
@@ -91,7 +91,7 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-017**, the MOS 6502 functional Rust audit, ordered
+Current selection: **RCPU-018**, the MOS 6502 gate-level Rust audit, ordered
 behind publication of the completed PDP-11, Intel 4004, Intel 8008, and Intel
 8080 work. Intel 8080 functional merged green through PR #13467 as
 `95120cf8f7`; Intel 8080 gate-level is the current publication cell.
@@ -274,6 +274,19 @@ pin the exact topology, all failure boundaries, multi-instruction workloads,
 and full-state equivalence for all 244 defined opcodes. Publication closes the
 Intel 8080 pair and advances to the MOS 6502 functional audit. Core line
 coverage is 95.53% (855/895), above the completion floor.
+
+RCPU-017 is audit-complete locally atop RCPU-016. The legacy package already
+implemented all 151 official NMOS 6502 opcodes and 13 addressing modes, but
+converted undefined opcodes into halt, exposed no full owned snapshot or
+before/after trace, silently accepted unchecked lifecycle boundaries, omitted
+the Python reference's memory-mapped I/O, and failed strict rustdoc. The audit
+adds typed atomic failures, transactional bounded runs, complete register/flag/
+memory/control/I/O state, 240 input and output latches, and full traces. Sixty
+unit, three integration, and one documentation test classify all 256 first
+bytes and pin the complete post-state of all 151 official opcodes to hashes
+generated from the repository's Python oracle. Strict formatting, Clippy, and
+rustdoc pass; core line coverage is 93.87% (704/750), above the completion
+floor. Publication advances to the MOS 6502 gate audit.
 
 ## Cross-language wave
 
