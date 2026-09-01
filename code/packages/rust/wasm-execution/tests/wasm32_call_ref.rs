@@ -12,6 +12,8 @@
 //! `wasm16_tail_calls.rs` precedent; `wasm-validator`-level coverage of
 //! the same instructions lives in `wasm-validator/tests/type_check.rs`).
 
+use std::cell::RefCell;
+use std::rc::Rc;
 use wasm_execution::{evaluate_const_expr, HostFunction, WasmEngineConfig, WasmExecutionEngine, WasmValue};
 use wasm_types::{FuncType, FunctionBody, WasmModule};
 
@@ -25,11 +27,17 @@ fn engine_from_wat(wat: &str) -> (WasmExecutionEngine, WasmModule) {
     // takes already-computed globals, not raw init-expr bytes) -- exercises
     // this slice's `evaluate_const_expr` fix directly: `(ref.func
     // $count-down)` as a global init expression.
-    let mut globals = Vec::new();
+    // Real cross-instance global sharing (W-next): `WasmEngineConfig::
+    // globals` is `Vec<Rc<RefCell<WasmValue>>>` now, not `Vec<WasmValue>`
+    // -- `evaluate_const_expr` itself is unchanged (still takes a plain
+    // `&[WasmValue]` snapshot), so each iteration derives one from the
+    // globals defined so far before wrapping the newly computed value.
+    let mut globals: Vec<Rc<RefCell<WasmValue>>> = Vec::new();
     let mut v128_heap = Vec::new();
     for g in &module.globals {
-        let value = evaluate_const_expr(&g.init_expr, &globals, &mut v128_heap).expect("global init expr should evaluate");
-        globals.push(value);
+        let snapshot: Vec<WasmValue> = globals.iter().map(|g| *g.borrow()).collect();
+        let value = evaluate_const_expr(&g.init_expr, &snapshot, &mut v128_heap).expect("global init expr should evaluate");
+        globals.push(Rc::new(RefCell::new(value)));
     }
     let global_types = module.globals.iter().map(|g| g.global_type.clone()).collect();
     let engine = WasmExecutionEngine::new(WasmEngineConfig {

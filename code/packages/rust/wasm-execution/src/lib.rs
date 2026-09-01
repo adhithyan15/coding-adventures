@@ -1871,8 +1871,25 @@ pub trait HostInterface {
     /// Resolve an imported function.
     fn resolve_function(&self, module_name: &str, name: &str) -> Option<Box<dyn HostFunction>>;
 
-    /// Resolve an imported global.
-    fn resolve_global(&self, module_name: &str, name: &str) -> Option<(GlobalType, WasmValue)>;
+    /// Resolve an imported global, returning a SHARED, live handle to the
+    /// exporting instance's own storage cell -- `Rc<RefCell<WasmValue>>`,
+    /// not a plain `WasmValue` copy (real corpus vendoring pass,
+    /// `instance.wast`'s own "Import is not generative" tests /
+    /// `linking.wast`'s `mut_glob` tests). Mirrors `resolve_memory`/
+    /// `resolve_table`'s own W28 fix exactly: when module A exports a
+    /// MUTABLE global and module B imports it (directly, or twice under
+    /// two different local names, or via a THIRD module that re-exports
+    /// its own import of it), a `global.set` through any one of those
+    /// aliases must be visible through every other -- they are the SAME
+    /// global cell, not independent copies that happen to start out
+    /// equal. Before this fix, every implementor returned a plain
+    /// `WasmValue` here, which `wasm-runtime::instantiate()` copied
+    /// straight into the IMPORTING instance's own `globals` Vec --
+    /// correct for an IMMUTABLE global (whose value never changes again
+    /// anyway) but silently wrong for a mutable one, since the importing
+    /// instance's copy and the exporting instance's original then
+    /// diverge independently the moment either side calls `global.set`.
+    fn resolve_global(&self, module_name: &str, name: &str) -> Option<(GlobalType, Rc<RefCell<WasmValue>>)>;
 
     /// Resolve an imported memory.
     fn resolve_memory(&self, module_name: &str, name: &str) -> Option<LinearMemory>;
@@ -3620,7 +3637,7 @@ pub struct WasmExecutionContext {
     /// implicitly targets -- see `get_memory()` below.
     pub memories: Vec<*mut LinearMemory>,
     pub tables: Vec<*mut Table>,
-    pub globals: Vec<WasmValue>,
+    pub globals: Vec<Rc<RefCell<WasmValue>>>,
     pub global_types: Vec<GlobalType>,
     pub func_types: Vec<FuncType>,
     /// The module's raw type section, indexed by type index — see
@@ -6624,7 +6641,14 @@ fn register_variable(vm: &mut GenericVM) {
     vm.register_context_opcode(0x23, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
         let index = operand_int(instr) as usize;
-        push_wasm(vm, ctx.globals[index]);
+        // Real cross-instance global sharing (real corpus vendoring pass,
+        // `instance.wast`/`linking.wast`): `ctx.globals[index]` is a
+        // shared `Rc<RefCell<WasmValue>>` handle now, not an owned value
+        // -- `.borrow()` reads whatever the CURRENT value is, which may
+        // have been written through a DIFFERENT alias/instance's own
+        // `global.set` (see `HostInterface::resolve_global`'s own doc
+        // comment for the full rationale).
+        push_wasm(vm, *ctx.globals[index].borrow());
         vm.advance_pc();
         Ok(None)
     });
@@ -6633,7 +6657,10 @@ fn register_variable(vm: &mut GenericVM) {
     vm.register_context_opcode(0x24, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
         let index = operand_int(instr) as usize;
-        ctx.globals[index] = pop_wasm(vm)?;
+        // Writing through the SHARED cell (not replacing `ctx.globals[index]`
+        // itself) is what makes the mutation visible to every other alias
+        // of this same global -- see `global.get`'s own comment just above.
+        *ctx.globals[index].borrow_mut() = pop_wasm(vm)?;
         vm.advance_pc();
         Ok(None)
     });
@@ -11904,7 +11931,7 @@ pub struct WasmEngineConfig {
     /// (multi-memory proposal, W16, task #85).
     pub memories: Vec<LinearMemory>,
     pub tables: Vec<Table>,
-    pub globals: Vec<WasmValue>,
+    pub globals: Vec<Rc<RefCell<WasmValue>>>,
     pub global_types: Vec<GlobalType>,
     pub func_types: Vec<FuncType>,
     pub func_bodies: Vec<Option<FunctionBody>>,
@@ -11915,7 +11942,7 @@ pub struct WasmEngineConfig {
 pub struct WasmEngineState {
     pub memories: Vec<LinearMemory>,
     pub tables: Vec<Table>,
-    pub globals: Vec<WasmValue>,
+    pub globals: Vec<Rc<RefCell<WasmValue>>>,
     pub host_functions: Vec<Option<Box<dyn HostFunction>>>,
     /// The instance's persistent v128 heap after this call (see
     /// `code/specs/W15-wasm-v128-persistent-storage.md`) -- set via
@@ -11957,7 +11984,7 @@ pub struct WasmExecutionEngine {
     memories: Vec<Box<LinearMemory>>,
     #[allow(clippy::vec_box)]
     tables: Vec<Box<Table>>,
-    globals: Vec<WasmValue>,
+    globals: Vec<Rc<RefCell<WasmValue>>>,
     global_types: Vec<GlobalType>,
     func_types: Vec<FuncType>,
     func_bodies: Vec<Option<FunctionBody>>,
@@ -21775,7 +21802,7 @@ mod tests {
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
             memories: Vec::new(),
             tables: vec![],
-            globals: vec![WasmValue::I32(10)],
+            globals: vec![Rc::new(RefCell::new(WasmValue::I32(10)))],
             global_types: vec![GlobalType {
                 value_type: ValueType::I32,
                 mutable: true,

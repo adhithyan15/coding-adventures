@@ -38,7 +38,7 @@ impl HostInterface for SharedExportHost {
         None
     }
 
-    fn resolve_global(&self, _module_name: &str, _name: &str) -> Option<(GlobalType, WasmValue)> {
+    fn resolve_global(&self, _module_name: &str, _name: &str) -> Option<(GlobalType, Rc<RefCell<WasmValue>>)> {
         None
     }
 

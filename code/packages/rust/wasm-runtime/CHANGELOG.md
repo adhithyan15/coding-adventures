@@ -2,6 +2,139 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.22] — 2026-09-01 (W-next — cross-module linking value-corruption bug-hunt: two real, distinct bugs)
+
+A fresh prioritization pass over the conformance corpus's module-linking
+cluster (`elem.wast`/`instance.wast`/`linking.wast`/`linking0.wast`/
+`linking3.wast`) surfaced a set of wrong-VALUE `assert_return` failures —
+not `NotYetSupported` gaps — and one spurious trap. Investigated from
+first principles (per this session's own working discipline: verify, do
+not assume it's the same shape as a prior bug just because the symptom
+looks similar). Two genuinely distinct, real bugs were found and fixed;
+a third, pre-existing, already-documented gap was confirmed (not fixed)
+as the sole remaining cause of everything else in this cluster.
+
+### Fixed
+
+- **Mutable globals were never made cross-instance-shared the way W28
+  already made memory/table.** `instantiate()`'s `ImportTypeInfo::Global`
+  arm pushed whatever `HostInterface::resolve_global` returned straight
+  into `globals: Vec<WasmValue>` — correct when that was a plain value
+  copy of an IMMUTABLE global, silently wrong for a MUTABLE one (see
+  `wasm-execution`'s own CHANGELOG for the full field-level fix:
+  `WasmInstance::globals` is `Vec<Rc<RefCell<WasmValue>>>` now). No
+  change was needed at this exact push site — once `resolve_global`
+  itself hands back a shared cell, pushing it as-is is already correct —
+  but the global-initializer loop (`evaluate_const_expr_gc`) and the
+  element/data segment offset-expression evaluation both needed a fresh
+  `Vec<WasmValue>` SNAPSHOT derived from the (now cell-backed) `globals`
+  at each point they read "the globals defined so far," since
+  `evaluate_const_expr`/`_gc` themselves still take a plain `&[WasmValue]`
+  slice (unchanged, deliberately — see that function's own doc comment).
+- **Active element segments were applied AFTER active data segments, not
+  before** — the exact opposite of the official spec's own instantiation
+  algorithm order (element-segment initializers execute strictly before
+  data-segment initializers; verified against the spec text directly, not
+  assumed). Invisible until a module combines an in-bounds active element
+  segment with a data segment that traps: the elem write, which must
+  already be applied and PERSIST past the later data-segment trap (the
+  same "earlier segments persist past a later trap" rule this crate's own
+  per-segment atomicity fix — W28, CHANGELOG 0.6.13 — already established
+  WITHIN one kind, here needed ACROSS kinds), was silently lost because
+  the wrongly-ordered data loop's `?` returned before the elem loop ever
+  ran. Fixed by swapping the two loops in `instantiate()` — no change to
+  either loop's own internal per-segment-atomicity/bounds-checking logic,
+  only their relative order. See `code/specs/
+  W10-wasm-real-linking-and-unlinkable.md`'s second addendum for the full
+  writeup.
+
+### Confirmed, not fixed (pre-existing, already-documented gap)
+
+`elem.wast`, `linking.wast`, and `linking3.wast` each still have wrong-
+value `assert_return` failures after both fixes above — traced
+individually (not assumed) to the SAME already-documented, deliberately
+out-of-scope gap: a table entry is a bare `u32` function index, resolved
+against whichever instance's OWN function-index space is CURRENTLY
+executing `call_indirect`/`table.get`, regardless of which instance's
+active elem segment (or `table.set`) originally wrote it. A funcref
+written into a genuinely-SHARED table (W28) by one module and read back
+through a DIFFERENT module's own function-index space resolves to
+whichever LOCAL function happens to sit at that same raw index in the
+READING instance — sometimes numerically identical by coincidence
+(explaining `linking.wast`'s "4 and -4 swapped" symptom this bug-hunt
+started from: two functions at colliding raw indices in two different
+instances' own local function tables). Needs real cross-instance function
+IDENTITY for table entries (the same class of problem `WasmInstance::
+tag_identities`, W23, already solves for exception tags, but requiring
+genuine cross-instance CALL DISPATCH, not just equality comparison) — see
+`Table`'s own doc comment in `wasm-execution` and this crate's own W10
+spec addendum for the full design gap. Not designed or implemented here,
+consistent with this repo's standing "no broad rewrites" discipline: it
+would touch `WasmValue::Ref`'s representation and every table/`ref.func`/
+`call_indirect` consumer, not just the specific wrong-clone/wrong-index
+site this pass was scoped to fix.
+
+`linking0.wast`'s own one remaining failure, by contrast, was fully
+explained and fixed by the elem/data ordering bug above — it no longer
+exhibits the table-identity gap at all after this fix.
+
+### Tests
+
+- `tests/shared_global_import.rs` (new): pins the mutable-global-sharing
+  fix directly (bypassing the `.wast` harness, same style as `tests/
+  shared_memory_table_import.rs`) — a cross-instance import case
+  (`global_set_through_an_imported_mutable_global_is_visible_in_the_
+  exporting_instance`) and a same-instance double-import case
+  (`two_imports_of_the_same_mutable_global_are_the_same_cell_not_
+  independent_copies`, `instance.wast`'s own "Import is not generative"
+  shape reduced to its essence — no cross-instance re-export chain even
+  needed to reproduce it).
+- `tests/elem_before_data_ordering.rs` (new): pins the elem/data ordering
+  fix directly — an in-bounds active element segment into a shared,
+  imported table must persist even though a separately-declared,
+  out-of-bounds active data segment traps the rest of that same
+  `instantiate()` call. Deliberately asserts on the table's raw entry
+  (`Table::get`) rather than `call_indirect`-ing through it: WHICH
+  function ends up at that slot is the separate, still-open
+  cross-instance identity gap above, not this fix's own concern.
+
+### Corpus impact — real, measured, programmatically diffed, not asserted
+
+`--write-baseline` was re-run and diffed programmatically (Python,
+comparing the `files` dict in `tests/fixtures/testsuite-status.json`
+keyed by filename) against the pre-fix baseline across all 257 files.
+Exactly 2 files changed, both strict improvements, zero regressions
+anywhere in the corpus:
+
+- **`instance.wast`**: `assert_return` 10/12 (2 fail) → 12/12 (0 fail).
+  Both previously-failing cases are the "Import is not generative" tests
+  (two imports of the same mutable global under different local names)
+  — the global-sharing fix above.
+- **`linking.wast`**: `assert_return` 54/65 (11 fail) → 55/65 (10 fail).
+  The one newly-passing case is the `mut_glob` re-export chain
+  (`$Mg`/`$Ng`, `(assert_return (get $Ng "Mg.mut_glob") (i32.const
+  241))`) — the SAME global-sharing fix, this time through an actual
+  cross-instance re-export rather than a same-instance double import.
+  `linking.wast`'s remaining 10 `assert_return` failures are every one
+  the confirmed, not-fixed table-identity gap above (verified
+  individually by tracing each one's own module/elem-segment shape, not
+  assumed from the tally alone).
+- **`elem.wast`, `linking0.wast`, `linking3.wast`**: tallies UNCHANGED.
+  `elem.wast`/`linking3.wast`'s failures were already, and remain, the
+  table-identity gap (confirmed unaffected by either fix — direct
+  `wasm_conformance::run_wast_source()` probing of each specific failing
+  directive, not just the aggregate count, before AND after). `linking0.
+  wast`'s tally is ALSO unchanged (`assert_return` stays 0/1) despite its
+  underlying bug being genuinely fixed — before this fix its one failing
+  case was a spurious `TrapError` ("uninitialized table element"); after,
+  it fails differently, now on a WRONG VALUE from the confirmed
+  table-identity gap (traced directly: the failing module's own elem
+  write is a raw local-function index that happens to collide with an
+  unrelated local function's index in the READING instance) — the tally
+  bucket (`fail`) doesn't distinguish "why" it failed, only "did it
+  fail," so this is invisible in the JSON diff and was caught only by
+  re-probing the specific directive's error message before/after.
+
 ## [0.6.21] — 2026-09-01 (W34 fourth slice — cross-module canonical equivalence, epic closed)
 
 `instantiate`'s function-import compatibility check (`ImportTypeInfo::

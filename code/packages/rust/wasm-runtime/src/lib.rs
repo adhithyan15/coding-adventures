@@ -287,7 +287,7 @@ impl HostInterface for WasiStub {
         }
     }
 
-    fn resolve_global(&self, _module_name: &str, _name: &str) -> Option<(GlobalType, WasmValue)> {
+    fn resolve_global(&self, _module_name: &str, _name: &str) -> Option<(GlobalType, Rc<RefCell<WasmValue>>)> {
         None
     }
 
@@ -532,7 +532,7 @@ impl HostInterface for WasiEnv {
         }
     }
 
-    fn resolve_global(&self, _: &str, _: &str) -> Option<(GlobalType, WasmValue)> {
+    fn resolve_global(&self, _: &str, _: &str) -> Option<(GlobalType, Rc<RefCell<WasmValue>>)> {
         None
     }
 
@@ -1113,8 +1113,15 @@ pub struct WasmInstance {
     pub memories: Vec<LinearMemory>,
     /// Allocated tables.
     pub tables: Vec<Table>,
-    /// Global variable values.
-    pub globals: Vec<WasmValue>,
+    /// Global variable values. `Rc<RefCell<WasmValue>>`, not a plain
+    /// `WasmValue` (real corpus vendoring pass, `instance.wast`'s own
+    /// "Import is not generative" tests / `linking.wast`'s `mut_glob`
+    /// tests) -- see `HostInterface::resolve_global`'s own doc comment
+    /// in `wasm-execution` for the full cross-instance-sharing
+    /// rationale, which mirrors `memories`/`tables` above exactly (W28),
+    /// just for the one remaining piece of instance state that hadn't
+    /// gotten the same treatment yet.
+    pub globals: Vec<Rc<RefCell<WasmValue>>>,
     /// Global type descriptors.
     pub global_types: Vec<GlobalType>,
     /// All function type signatures.
@@ -1411,7 +1418,7 @@ impl WasmRuntime {
         let mut func_bodies: Vec<Option<FunctionBody>> = Vec::new();
         let mut host_functions: Vec<Option<Box<dyn HostFunction>>> = Vec::new();
         let mut global_types: Vec<GlobalType> = Vec::new();
-        let mut globals: Vec<WasmValue> = Vec::new();
+        let mut globals: Vec<Rc<RefCell<WasmValue>>> = Vec::new();
         let mut memories: Vec<LinearMemory> = Vec::new();
         let mut tables: Vec<Table> = Vec::new();
         // Combined imported + module-defined tag index space (W-next),
@@ -1587,6 +1594,12 @@ impl WasmRuntime {
                     tables.push(imported_table);
                 }
                 ImportTypeInfo::Global(gt) => {
+                    // `gval` is the exporting instance's own SHARED
+                    // `Rc<RefCell<WasmValue>>` cell (see `HostInterface::
+                    // resolve_global`'s own doc comment) -- pushed here
+                    // as-is, not dereferenced/copied, so a `global.set`
+                    // through EITHER this importing instance or the
+                    // exporting one is visible through the other.
                     let (gtype, gval) = self
                         .host
                         .as_ref()
@@ -1782,67 +1795,76 @@ impl WasmRuntime {
         let mut gc_heap: Vec<Option<GcObject>> = Vec::new();
         let (struct_field_counts, struct_field_storage, array_element_storage) = struct_array_runtime_tables(module);
 
-        // Initialize globals.
+        // Initialize globals. `evaluate_const_expr_gc` itself is
+        // unchanged -- it still takes a plain `&[WasmValue]` snapshot --
+        // but `globals` is now `Vec<Rc<RefCell<WasmValue>>>` (real
+        // cross-instance sharing, see `WasmInstance::globals`'s own doc
+        // comment), so each iteration derives a fresh snapshot of
+        // whatever globals are already defined (imports, plus every
+        // earlier module-defined global processed so far in this same
+        // loop -- a later global's own init expr can `global.get` an
+        // earlier one) before wrapping the newly computed value in its
+        // own shared cell.
         for global in &module.globals {
             global_types.push(global.global_type.clone());
+            let globals_so_far: Vec<WasmValue> = globals.iter().map(|g| *g.borrow()).collect();
             let value = evaluate_const_expr_gc(
                 &global.init_expr,
-                &globals,
+                &globals_so_far,
                 &mut v128_heap,
                 &mut gc_heap,
                 &struct_field_counts,
                 &struct_field_storage,
                 &array_element_storage,
             )?;
-            globals.push(value);
+            globals.push(Rc::new(RefCell::new(value)));
         }
 
-        // Apply data segments. Widened (real corpus vendoring pass, see
-        // `wasm-conformance`'s CHANGELOG) to target each active segment's
-        // OWN `seg.memory_index`, not unconditionally memory 0 -- the prior
-        // "memory 0 only" restriction was `wasm-validator`'s own Check 8
-        // rejecting any other index at validation time, not a real
-        // multi-memory limitation; a module past validation here is
-        // guaranteed `seg.memory_index` is in bounds (Check 8 bounds-checks
-        // it against the real memory count), so `memories.get_mut` below
-        // always succeeds for a well-formed caller -- the `continue`
-        // fallback is defensive only, never reachable through the normal
-        // validate-then-instantiate path this crate's own callers use.
+        // A fixed, post-initialization snapshot of every global's value,
+        // for the element/data segment offset expressions below --
+        // active segment offsets are evaluated ONCE, after every global
+        // is already in its final initial value, and never observe a
+        // LATER `global.set` (there isn't one yet at this point in
+        // instantiation), so one shared snapshot is exact for both loops
+        // -- no need to re-snapshot per segment.
+        let global_values: Vec<WasmValue> = globals.iter().map(|g| *g.borrow()).collect();
+
+        // Apply element segments BEFORE data segments -- the order the
+        // official spec's own instantiation algorithm mandates (step 27,
+        // "Execute the sequence instr*_e" for active element segments,
+        // strictly before step 28, "Execute the sequence instr*_d" for
+        // active data segments -- see `code/specs/
+        // W10-wasm-real-linking-and-unlinkable.md`'s addendum for this
+        // fix). This is a fixed TWO-PHASE order (all elem, then all
+        // data), not a per-segment interleaving by declaration order --
+        // it holds regardless of which kind of segment a module's own
+        // text happens to declare first.
         //
-        // A PASSIVE segment (`is_passive`, task #95) is deliberately
-        // skipped here -- applying it automatically would defeat the
-        // entire point of `memory.init`/`data.drop`: a passive segment's
-        // bytes stay resident, untouched, until an explicit `memory.init`
-        // copies from it (any number of times, on demand), which is a
-        // completely separate code path from this one-time instantiation-
-        // time copy.
-        for seg in &module.data {
-            if seg.is_passive {
-                continue;
-            }
-            let Some(mem) = memories.get_mut(seg.memory_index as usize) else {
-                continue;
-            };
-            // W25 (memory64): the TARGET memory's own `is64`-ness
-            // determines whether this active data segment's offset
-            // expression is an `i32.const` or `i64.const` -- now resolved
-            // per-segment (each segment can target a different memory),
-            // not fixed to memory 0's.
-            let is64 = mem.is64();
-            let offset = evaluate_const_expr(&seg.offset_expr, &globals, &mut v128_heap)?;
-            let offset_num = if is64 {
-                offset.as_i64().map_err(|e| TrapError::new(e.message))? as usize
-            } else {
-                offset.as_i32().map_err(|e| TrapError::new(e.message))? as usize
-            };
-            mem.write_bytes(offset_num, &seg.data)?;
-        }
-
-        // Apply element segments. A passive segment (task #97) is never
-        // applied automatically -- same "applying one automatically would
-        // defeat the entire point" reasoning task #95 established for
-        // `memory.init`'s passive data segments -- it stays resident for
-        // an explicit `table.init` to copy from later.
+        // This block and the data-segment block below it USED to run in
+        // the opposite order (data first, then elem) -- a real,
+        // spec-violating bug found vendoring `linking0.wast`: when a
+        // module declares an in-bounds ACTIVE ELEMENT segment together
+        // with a data segment that traps (e.g. an out-of-bounds write),
+        // the elem segment's own effect must already be applied and must
+        // PERSIST past that later data-segment trap -- the same "earlier
+        // segments persist past a later trap" rule this crate's own
+        // per-segment-atomicity fix below already established WITHIN one
+        // kind, applied ACROSS kinds. With data applied first, a
+        // data-segment trap returned via `?` before this elem loop ever
+        // ran, so the elem write was silently lost entirely --
+        // `linking0.wast`'s own `(assert_return (invoke $Mt "call"
+        // (i32.const 7)) (i32.const 0))` (after an earlier, separately
+        // instantiated module writes an in-bounds `(elem (i32.const 7)
+        // $f)` into `$Mt`'s already-exported, shared table, then traps on
+        // an out-of-bounds data write) caught this directly: instead of
+        // returning the already-applied elem write's value, it trapped
+        // with "uninitialized table element", proving the elem write
+        // never happened. Confirmed via this crate's own baseline diff
+        // (see `wasm-conformance`'s CHANGELOG) that swapping these two
+        // blocks fixes exactly that case with zero regressions elsewhere
+        // in the 257-file corpus -- each block's OWN internal
+        // per-segment-atomicity/bounds-checking logic is unchanged, only
+        // their RELATIVE order moved.
         for elem in &module.elements {
             if elem.is_passive {
                 continue;
@@ -1852,7 +1874,7 @@ impl WasmRuntime {
                 // expression must match its TARGET table's own address
                 // width -- `i64.const` for an `is64` table, `i32.const`
                 // otherwise -- mirroring the active data segment's
-                // identical `is64`-aware branch just above (W25). Kept in
+                // identical `is64`-aware branch below (W25). Kept in
                 // `u64` throughout (not narrowed to `u32` until AFTER the
                 // upfront bounds check below): an is64 table's real spec
                 // ceiling is `u64::MAX` (see `code/specs/
@@ -1863,7 +1885,7 @@ impl WasmRuntime {
                 // before" discipline `pop_table_operand`'s own doc comment
                 // establishes in `wasm-execution`).
                 let is64 = table.is64();
-                let offset = evaluate_const_expr(&elem.offset_expr, &globals, &mut v128_heap)?;
+                let offset = evaluate_const_expr(&elem.offset_expr, &global_values, &mut v128_heap)?;
                 let offset_num: u64 = if is64 {
                     offset.as_i64().map_err(|e| TrapError::new(e.message))? as u64
                 } else {
@@ -1913,6 +1935,47 @@ impl WasmRuntime {
                     table.set((offset_num + j as u64) as u32, func_idx)?;
                 }
             }
+        }
+
+        // Apply data segments. Widened (real corpus vendoring pass, see
+        // `wasm-conformance`'s CHANGELOG) to target each active segment's
+        // OWN `seg.memory_index`, not unconditionally memory 0 -- the prior
+        // "memory 0 only" restriction was `wasm-validator`'s own Check 8
+        // rejecting any other index at validation time, not a real
+        // multi-memory limitation; a module past validation here is
+        // guaranteed `seg.memory_index` is in bounds (Check 8 bounds-checks
+        // it against the real memory count), so `memories.get_mut` below
+        // always succeeds for a well-formed caller -- the `continue`
+        // fallback is defensive only, never reachable through the normal
+        // validate-then-instantiate path this crate's own callers use.
+        //
+        // A PASSIVE segment (`is_passive`, task #95) is deliberately
+        // skipped here -- applying it automatically would defeat the
+        // entire point of `memory.init`/`data.drop`: a passive segment's
+        // bytes stay resident, untouched, until an explicit `memory.init`
+        // copies from it (any number of times, on demand), which is a
+        // completely separate code path from this one-time instantiation-
+        // time copy.
+        for seg in &module.data {
+            if seg.is_passive {
+                continue;
+            }
+            let Some(mem) = memories.get_mut(seg.memory_index as usize) else {
+                continue;
+            };
+            // W25 (memory64): the TARGET memory's own `is64`-ness
+            // determines whether this active data segment's offset
+            // expression is an `i32.const` or `i64.const` -- now resolved
+            // per-segment (each segment can target a different memory),
+            // not fixed to memory 0's.
+            let is64 = mem.is64();
+            let offset = evaluate_const_expr(&seg.offset_expr, &global_values, &mut v128_heap)?;
+            let offset_num = if is64 {
+                offset.as_i64().map_err(|e| TrapError::new(e.message))? as usize
+            } else {
+                offset.as_i32().map_err(|e| TrapError::new(e.message))? as usize
+            };
+            mem.write_bytes(offset_num, &seg.data)?;
         }
 
         // Build export list.
@@ -2444,7 +2507,7 @@ mod tests {
             &self,
             _module_name: &str,
             _name: &str,
-        ) -> Option<(GlobalType, WasmValue)> {
+        ) -> Option<(GlobalType, Rc<RefCell<WasmValue>>)> {
             None
         }
 
@@ -2497,7 +2560,7 @@ mod tests {
                 None
             }
         }
-        fn resolve_global(&self, _module_name: &str, _name: &str) -> Option<(GlobalType, WasmValue)> {
+        fn resolve_global(&self, _module_name: &str, _name: &str) -> Option<(GlobalType, Rc<RefCell<WasmValue>>)> {
             None
         }
         fn resolve_memory(&self, _module_name: &str, _name: &str) -> Option<LinearMemory> {
@@ -2625,7 +2688,7 @@ mod tests {
                 None
             }
         }
-        fn resolve_global(&self, _module_name: &str, _name: &str) -> Option<(GlobalType, WasmValue)> {
+        fn resolve_global(&self, _module_name: &str, _name: &str) -> Option<(GlobalType, Rc<RefCell<WasmValue>>)> {
             None
         }
         fn resolve_memory(&self, _module_name: &str, _name: &str) -> Option<LinearMemory> {
@@ -3312,7 +3375,7 @@ mod tests {
         fn resolve_function(&self, _module_name: &str, _name: &str) -> Option<Box<dyn HostFunction>> {
             None
         }
-        fn resolve_global(&self, _module_name: &str, _name: &str) -> Option<(GlobalType, WasmValue)> {
+        fn resolve_global(&self, _module_name: &str, _name: &str) -> Option<(GlobalType, Rc<RefCell<WasmValue>>)> {
             None
         }
         fn resolve_memory(&self, _module_name: &str, _name: &str) -> Option<LinearMemory> {
@@ -3440,9 +3503,9 @@ mod tests {
             None
         }
 
-        fn resolve_global(&self, module_name: &str, name: &str) -> Option<(GlobalType, WasmValue)> {
+        fn resolve_global(&self, module_name: &str, name: &str) -> Option<(GlobalType, Rc<RefCell<WasmValue>>)> {
             if module_name == "env" && name == "g" {
-                Some((GlobalType { value_type: ValueType::I32, mutable: false }, WasmValue::I32(42)))
+                Some((GlobalType { value_type: ValueType::I32, mutable: false }, Rc::new(RefCell::new(WasmValue::I32(42)))))
             } else {
                 None
             }
@@ -3859,7 +3922,7 @@ mod tests {
         };
         let validated = runtime.validate(&module).unwrap();
         let instance = runtime.instantiate(&validated).unwrap();
-        assert_eq!(instance.globals, vec![WasmValue::I32(42)]);
+        assert_eq!(*instance.globals[0].borrow(), WasmValue::I32(42));
     }
 
     #[test]
