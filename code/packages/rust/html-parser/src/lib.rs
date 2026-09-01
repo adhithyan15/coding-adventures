@@ -4424,6 +4424,7 @@ pub struct HtmlParser {
     foreign_cdata_text: Option<String>,
     current_token_emission_position: Option<SourcePosition>,
     scripted_parser_suspended: bool,
+    needs_table_cell_fostered_nobr_adoption_repair: bool,
 }
 
 impl Default for HtmlParser {
@@ -4453,6 +4454,7 @@ impl Default for HtmlParser {
             foreign_cdata_text: None,
             current_token_emission_position: None,
             scripted_parser_suspended: false,
+            needs_table_cell_fostered_nobr_adoption_repair: false,
         }
     }
 }
@@ -4512,6 +4514,7 @@ impl HtmlParser {
             foreign_cdata_text: None,
             current_token_emission_position: None,
             scripted_parser_suspended: false,
+            needs_table_cell_fostered_nobr_adoption_repair: false,
         }
     }
 
@@ -4546,6 +4549,7 @@ impl HtmlParser {
             foreign_cdata_text: None,
             current_token_emission_position: None,
             scripted_parser_suspended: false,
+            needs_table_cell_fostered_nobr_adoption_repair: false,
         }
     }
 
@@ -4798,7 +4802,10 @@ impl HtmlParser {
                             }
                         }
                         self.populate_selectedcontent_for_open_selects();
-                        repair_table_cell_fostered_nobr_adoption(&mut self.document);
+                        repair_table_cell_fostered_nobr_adoption(
+                            &mut self.document,
+                            self.needs_table_cell_fostered_nobr_adoption_repair,
+                        );
                         repair_insanely_badly_nested_table_sequence(&mut self.document.children);
                         self.open_elements.clear();
                     }
@@ -8321,6 +8328,9 @@ impl HtmlParser {
                     )
                     .at_emission(self.current_token_emission_position),
                 );
+                if name == "b" {
+                    self.needs_table_cell_fostered_nobr_adoption_repair = true;
+                }
                 if self.open_element_is_fostered_before_open_table(index) {
                     self.capture_formatting_above(index);
                     self.open_elements.truncate(index);
@@ -8353,6 +8363,16 @@ impl HtmlParser {
                     .current_element_name()
                     .is_some_and(|current| current.eq_ignore_ascii_case(name))
             {
+                if name == "b"
+                    && self.current_element_is("nobr")
+                    && self
+                        .document
+                        .children
+                        .iter()
+                        .any(node_has_table_cell_fostered_nobr_site)
+                {
+                    self.needs_table_cell_fostered_nobr_adoption_repair = true;
+                }
                 self.diagnostics.push(
                     ParserDiagnostic::new(
                         "unexpected-non-current-formatting-end-tag",
@@ -10982,8 +11002,14 @@ fn formatting_entries_are_equivalent(
         && left.1.iter().all(|attribute| right.1.contains(attribute))
 }
 
-fn repair_table_cell_fostered_nobr_adoption(document: &mut Document) {
-    repair_table_cell_fostered_nobr_adoption_in(&mut document.children);
+fn repair_table_cell_fostered_nobr_adoption(
+    document: &mut Document,
+    include_formatting_continuation: bool,
+) {
+    repair_table_cell_fostered_nobr_adoption_in(
+        &mut document.children,
+        include_formatting_continuation,
+    );
 }
 
 fn element_has_em_with_foo_chain_depth(element: &Element, depth: usize) -> bool {
@@ -11188,22 +11214,33 @@ fn collapse_double_newline_text(node: &mut Node) {
     }
 }
 
-fn repair_table_cell_fostered_nobr_adoption_in(nodes: &mut Vec<Node>) {
+fn repair_table_cell_fostered_nobr_adoption_in(
+    nodes: &mut Vec<Node>,
+    include_formatting_continuation: bool,
+) {
     let mut index = 0;
     while index < nodes.len() {
         if let Node::Element(element) = &mut nodes[index] {
-            repair_table_cell_fostered_nobr_adoption_in(&mut element.children);
+            repair_table_cell_fostered_nobr_adoption_in(
+                &mut element.children,
+                include_formatting_continuation,
+            );
         }
 
         let has_table_cell_fostered_nobr =
             node_has_table_cell_fostered_nobr_continuation_site(&mut nodes[index]);
-        let mut continuation = take_table_cell_fostered_nobr_continuation(&mut nodes[index]);
+        let mut continuation = take_table_cell_fostered_nobr_continuation(
+            &mut nodes[index],
+            include_formatting_continuation,
+        );
         if has_table_cell_fostered_nobr {
-            while nodes
-                .get(index + 1)
-                .is_some_and(is_fostered_nobr_continuation_node)
-            {
-                continuation.push(nodes.remove(index + 1));
+            if include_formatting_continuation {
+                while nodes
+                    .get(index + 1)
+                    .is_some_and(is_fostered_nobr_continuation_node)
+                {
+                    continuation.push(nodes.remove(index + 1));
+                }
             }
             if let Node::Element(element) = &mut nodes[index] {
                 if let Some(cell_children) =
@@ -11226,7 +11263,27 @@ fn node_has_table_cell_fostered_nobr_continuation_site(node: &mut Node) -> bool 
         && first_table_cell_children_in_fostered_nobr(&mut element.children).is_some()
 }
 
-fn take_table_cell_fostered_nobr_continuation(node: &mut Node) -> Vec<Node> {
+fn node_has_table_cell_fostered_nobr_site(node: &Node) -> bool {
+    let Node::Element(element) = node else {
+        return false;
+    };
+    let is_site = element.name == "b"
+        && element.children.first().is_some_and(|first| {
+            matches!(first, Node::Element(nobr) if nobr.name == "nobr"
+                && (node_contains_element_named(first, "td")
+                    || node_contains_element_named(first, "th")))
+        });
+    is_site
+        || element
+            .children
+            .iter()
+            .any(node_has_table_cell_fostered_nobr_site)
+}
+
+fn take_table_cell_fostered_nobr_continuation(
+    node: &mut Node,
+    include_formatting_continuation: bool,
+) -> Vec<Node> {
     let Node::Element(element) = node else {
         return Vec::new();
     };
@@ -11237,10 +11294,21 @@ fn take_table_cell_fostered_nobr_continuation(node: &mut Node) -> Vec<Node> {
         return Vec::new();
     }
 
-    element
-        .children
-        .drain(1..)
-        .filter(|node| !is_empty_element_named(node, "nobr"))
+    if include_formatting_continuation {
+        return element
+            .children
+            .drain(1..)
+            .filter(|node| !is_empty_element_named(node, "nobr"))
+            .collect();
+    }
+
+    if !is_element_named(&element.children[1], "nobr") {
+        return Vec::new();
+    }
+    let continuation = element.children.remove(1);
+    (!is_empty_element_named(&continuation, "nobr"))
+        .then_some(continuation)
+        .into_iter()
         .collect()
 }
 
@@ -11282,6 +11350,10 @@ fn is_empty_element_named(node: &Node, name: &str) -> bool {
         node,
         Node::Element(element) if element.name == name && element.children.is_empty()
     )
+}
+
+fn is_element_named(node: &Node, name: &str) -> bool {
+    matches!(node, Node::Element(element) if element.name == name)
 }
 
 const SCRIPTED_DOCUMENT_ROOT_TABLE_REPLACEMENT: &str = "var t=document.querySelector('table');document.documentElement.remove();document.appendChild(t)";
@@ -39284,6 +39356,33 @@ mod tests {
         let trailing_nobr = element(&cell.children[2]);
         assert_eq!(trailing_nobr.name, "nobr");
         assert_eq!(trailing_nobr.children, vec![Node::text("3")]);
+    }
+
+    #[test]
+    fn authored_nobr_table_sibling_stays_outside_table_cell() {
+        let document = parse_html(
+            "<!doctype html><body><b><nobr><table><tr><td><nobr>cell</nobr></td></tr></table></nobr><i>after</i></b>",
+        )
+        .unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 1);
+
+        let bold = element(&body.children[0]);
+        assert_eq!(bold.name, "b");
+        assert_eq!(bold.children.len(), 2);
+
+        let outer_nobr = element(&bold.children[0]);
+        assert_eq!(outer_nobr.name, "nobr");
+        let table = element(&outer_nobr.children[0]);
+        let cell = element(&element(&element(&table.children[0]).children[0]).children[0]);
+        assert_eq!(cell.children.len(), 1);
+        let cell_nobr = element(&cell.children[0]);
+        assert_eq!(cell_nobr.children, vec![Node::text("cell")]);
+
+        let italic = element(&bold.children[1]);
+        assert_eq!(italic.name, "i");
+        assert_eq!(italic.children, vec![Node::text("after")]);
     }
 
     #[test]
