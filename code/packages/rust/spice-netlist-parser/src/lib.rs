@@ -2427,6 +2427,10 @@ fn parse_element(
             if !saturation_current_temperature_exponent.is_finite() {
                 return Err(NetlistParseError::new("BJT XTI must be finite"));
             }
+            let energy_gap_electron_volts = *model.params.get("EG").unwrap_or(&1.11);
+            if !energy_gap_electron_volts.is_finite() || energy_gap_electron_volts <= 0.0 {
+                return Err(NetlistParseError::new("BJT EG must be finite and positive"));
+            }
             let mut bjt = Bjt::with_model(
                 name,
                 &fields[1],
@@ -2450,6 +2454,7 @@ fn parse_element(
                 *model.params.get("TR").unwrap_or(&0.0),
             );
             bjt.saturation_current_temperature_exponent = saturation_current_temperature_exponent;
+            bjt.energy_gap_electron_volts = energy_gap_electron_volts;
             Ok(Element::Bjt(bjt))
         }
         'J' => {

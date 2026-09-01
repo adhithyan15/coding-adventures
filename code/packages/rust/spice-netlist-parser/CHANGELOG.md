@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Lower positive finite BJT `EG` model-card values into the engine energy-gap
+  field and reject invalid values before element lowering.
 - Lower finite BJT `XTI` model-card values into the engine saturation-current
   temperature exponent and reject non-finite values before element lowering.
 - Validate JFET `BETA` / `BET` transconductance before lowering.
