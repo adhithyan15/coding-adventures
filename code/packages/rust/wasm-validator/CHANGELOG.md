@@ -2,6 +2,92 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.77] - 2026-08-31 (const-expr type-checker — the W33 addendum's "third gap")
+
+Fills a real, pre-existing, general gap this crate had for its entire
+history and independently of W33's own `sub`/`final`/`rec` scope: **no
+const-expression type-checker existed at all**. `crate::validate`'s
+"Check 4c" bounds-checks a global's own DECLARED `ConcreteFuncRef`/
+`NonNullConcreteFuncRef` type INDEX, but nothing ever compared what a
+global's `init_expr` (or an element-/data-segment's `offset_expr`)
+actually EVALUATES TO against that declared type — confirmed directly by
+grepping this crate for any production read of `globals[..].init_expr`/
+`elements[..].offset_expr`/`data[..].offset_expr` outside test fixtures:
+there were none. Surfaced by `code/specs/
+W33-wasm-gc-recursive-type-subtyping.md`'s "A newly-discovered, THIRD
+gap" addendum while tracing two honest reclassifications in
+`type-rec.wast`/`type-subtyping.wast`; this predates W33 entirely and
+would affect even a plain MVP `(global i32 (i64.const 0))` mismatch.
+
+### Added
+
+- **`type_check::const_expr_type`**: determines the static result TYPE of
+  a constant expression — the same opcode set `wasm_execution::
+  evaluate_const_expr` interprets at runtime (`i32.const`/`i64.const`/
+  `f32.const`/`f64.const`, `global.get`, the extended-const proposal's six
+  arithmetic ops, `v128.const`, `ref.i31`, `ref.null <heap_type>`,
+  `ref.func`) — without executing any arithmetic. Falls back to the exact
+  same permissive `Unknown` the function-body checker's own `ref.null`
+  `0x63`-tagged-concrete-index handler already uses for an out-of-range
+  index, so this never introduces a false reject for a shape the rest of
+  the crate already treats as "not fully typed."
+- **`type_check::check_const_exprs`**: applies `const_expr_type` (checked
+  via `is_assignable`, so it inherits every W32/W33 non-null/bottom/
+  nominal-subtype rule already in this crate — not bare equality) to
+  every global initializer, and every ACTIVE element-/data-segment offset
+  expression (expected type `i64` for an `is64` table/memory per the
+  table64/memory64 work, `i32` otherwise). Wired into `type_check_module`,
+  so it runs for every module unconditionally.
+- **`global.get` real spec rules, neither previously checked anywhere**:
+  (1) the referenced global must be IMMUTABLE; (2) within a GLOBAL's own
+  initializer, the reference must be to a STRICTLY EARLIER global in the
+  combined (imports-first) index space — forward references, including
+  self-reference, are invalid (element-/data-segment offsets have no such
+  restriction: the entire global section is already fully declared by the
+  time either runs).
+- **`ref.func`'s funcidx**, previously entirely unchecked inside a
+  const-expr (only bounds-checked inside a function body): now bounds-
+  checked via `decode_unsigned_bounded(.., 32)`, the same truncation-safe
+  decoder a prior security review already required for this exact opcode
+  in `wasm_execution::evaluate_const_expr`'s own `0xD2` arm — reused here
+  rather than the plain `decode_idx` this file's `ref.null` arm uses, so
+  this new code doesn't reintroduce the identical silent-truncation bug
+  class in a second place.
+- **A constant expression must leave EXACTLY one value on the stack**:
+  `global.wast`'s own `(global i32 (i32.const 0) (i32.const 0))` and
+  `(global i32 (global.get 0) (global.get 0))` `assert_invalid "type
+  mismatch"` cases (an extra value left over after `end` pops the first)
+  are real corpus evidence this rule matters, not merely a theoretical
+  nicety.
+
+### Real corpus impact (`wasm-conformance` 0.1.107 regenerated the
+### baseline; see that crate's own changelog for the full per-file
+### accounting)
+
+52 `assert_invalid` directives, across 7 files, flip `NotYetSupported`
+→ `Pass` (zero new `fail`/`trap` anywhere, in any directive kind, in any
+file): `data.wast` (+14), `elem.wast` (+14), `global.wast` (+17),
+`func_ptrs.wast` (+3), `type-subtyping.wast` (+2), `type-rec.wast` (+1),
+`ref_func.wast` (+1, an out-of-range `ref.func` funcidx inside a global
+initializer). This is exactly the class of case `type-rec.wast`'s
+`(global (ref $ft) (ref.func $f))` and `type-subtyping.wast`'s two
+unrelated-`rec`-group variants of the same shape needed — both now
+correctly rejected via real nominal-subtype checking, not bare equality.
+
+### Added — unit tests
+
+At minimum (see `tests/type_check.rs`'s new "Const-expr type-checking"
+section): a valid `(global i32 (i32.const 0))`; an invalid `(global i32
+(i64.const 0))`; a valid `(global (ref $t) (ref.func $f))` where `$f`'s
+type is a real NOMINAL SUBTYPE of `$t` (not equal to it, so this
+genuinely exercises `is_assignable`'s nominal-subtype arm, not bare
+equality); an invalid version with an unrelated type; a `global.get`
+against a valid prior immutable global (accept); a `global.get` against a
+mutable global (reject) and against a later-declared global (reject,
+real corpus shape); an element-/data-segment offset type mismatch
+(reject); and `is64` table/memory offset variants (accept `i64`, reject
+`i32`, and vice versa).
+
 ## [0.2.76] - 2026-08-31 (W33 first slice — GC nominal subtyping validation)
 
 Implements the `wasm-validator` half of `code/specs/

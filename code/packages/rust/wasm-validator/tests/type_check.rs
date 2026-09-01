@@ -4234,3 +4234,112 @@ fn valid_untyped_select_still_accepts_matching_numeric_operands() {
     // the new reference-type rejection.
     assert_valid("(module (func (result i32) (select (i32.const 1) (i32.const 2) (i32.const 1))))");
 }
+
+// ── Const-expr type-checking (global initializers, element/data-segment
+// offsets) -- the third, independent gap `code/specs/
+// W33-wasm-gc-recursive-type-subtyping.md`'s addendum recorded: this crate
+// previously had NO const-expr type-checker at all, only a bounds check on
+// a global's own declared type index. See `wasm_validator::type_check`'s
+// own "Const-expression type-checking" section for the implementation;
+// these tests are the "at minimum" set that section's own module doc
+// comment promises, each verified directly against the real corpus's
+// `global.wast`/`data.wast`/`elem.wast`/`type-subtyping.wast`.
+
+#[test]
+fn valid_global_i32_initialized_with_i32_const() {
+    assert_valid("(module (global i32 (i32.const 0)))");
+}
+
+#[test]
+fn invalid_global_i32_initialized_with_i64_const_is_rejected() {
+    // The plain MVP mismatch the spec addendum called out explicitly:
+    // declared i32, initialized with an i64 constant.
+    assert_invalid("(module (global i32 (i64.const 0)))");
+}
+
+#[test]
+fn valid_global_ref_t_initialized_with_ref_func_using_real_nominal_subtyping() {
+    // `$f`'s own declared type ($b) is a nominal SUBTYPE of the global's
+    // declared type ($a), not equal to it -- this only validates because
+    // `check_const_expr_result` reuses the real `is_assignable` lattice
+    // (`NonNullConcreteFuncRef(i) <: NonNullConcreteFuncRef(j)` whenever
+    // `func_type_is_nominal_subtype(i, j)`), not bare type-index equality.
+    assert_valid(
+        "(module
+           (type $a (sub (func)))
+           (type $b (sub $a (func)))
+           (func $f (type $b))
+           (global (ref $a) (ref.func $f)))",
+    );
+}
+
+#[test]
+fn invalid_global_ref_t_initialized_with_ref_func_of_an_unrelated_type_is_rejected() {
+    // Same shape as the valid case above, but `$f`'s declared type ($b)
+    // has no `sub` relationship to the global's declared type ($a) at
+    // all -- real corpus shape, `type-rec.wast`'s own `(global (ref $ft)
+    // (ref.func $f))` "type mismatch" case.
+    assert_invalid(
+        "(module
+           (type $a (func))
+           (type $b (func))
+           (func $f (type $b))
+           (global (ref $a) (ref.func $f)))",
+    );
+}
+
+#[test]
+fn valid_global_get_references_a_prior_immutable_global() {
+    assert_valid("(module (global $g i32 (i32.const 0)) (global i32 (global.get $g)))");
+}
+
+#[test]
+fn invalid_global_get_references_a_mutable_global_is_rejected() {
+    // Real spec rule, verified directly against `global.wast`'s own
+    // `(global (import "test" "global-mut-i32") (mut i32)) (global i32
+    // (global.get 0))` `assert_invalid "constant expression required"`
+    // case: a constant expression may only reference an IMMUTABLE global,
+    // imported or not.
+    assert_invalid("(module (global $g (mut i32) (i32.const 0)) (global i32 (global.get $g)))");
+}
+
+#[test]
+fn invalid_global_get_references_a_later_declared_global_is_rejected() {
+    // Forward reference within the global section -- real corpus shape,
+    // `global.wast`'s own `(global $g1 i32 (global.get $g2)) (global $g2
+    // i32 (i32.const 0))` `assert_invalid "unknown global"` case. A
+    // global's own initializer may only reference a STRICTLY EARLIER
+    // global (imports always count as earlier); referencing itself or a
+    // later one is invalid.
+    assert_invalid("(module (global $g1 i32 (global.get $g2)) (global $g2 i32 (i32.const 0)))");
+}
+
+#[test]
+fn invalid_element_segment_offset_type_mismatch_is_rejected() {
+    assert_invalid("(module (table 1 funcref) (elem (i64.const 0)))");
+}
+
+#[test]
+fn invalid_data_segment_offset_type_mismatch_is_rejected() {
+    assert_invalid("(module (memory 1) (data (i64.const 0)))");
+}
+
+#[test]
+fn valid_element_segment_offset_uses_i64_on_an_is64_table() {
+    assert_valid("(module (table i64 1 funcref) (elem (i64.const 0)))");
+}
+
+#[test]
+fn invalid_element_segment_offset_uses_i32_on_an_is64_table() {
+    assert_invalid("(module (table i64 1 funcref) (elem (i32.const 0)))");
+}
+
+#[test]
+fn valid_data_segment_offset_uses_i64_on_an_is64_memory() {
+    assert_valid(r#"(module (memory i64 1) (data (i64.const 0) "x"))"#);
+}
+
+#[test]
+fn invalid_data_segment_offset_uses_i32_on_an_is64_memory() {
+    assert_invalid(r#"(module (memory i64 1) (data (i32.const 0) "x"))"#);
+}
