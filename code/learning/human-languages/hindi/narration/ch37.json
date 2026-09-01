@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "One Tea, Please",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:0bf774a20595d279",
+  "sourceHash": "fnv1a64:c5ab96ccffd4a293",
   "lessons": [
     {
       "id": "HI-C37-chai",
@@ -482,16 +482,16 @@
       "id": "HI-C37-kitaab",
       "sequence": 1010,
       "title": "किताब (kitāb) — a book, and the root it is cut from",
-      "headword": "किताब",
+      "headword": "किताब / पुस्तक / पोथा",
       "romanization": "",
-      "gloss": "book — feminine, built on the Arabic root for writing, and one of three Hindi words for a book that differ by register",
+      "gloss": "book — ordinary किताब, formal पुस्तक, and old or homely पोथा form a three-register set",
       "script": "devanagari",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:176faf8db23a42ce",
+      "sourceHash": "fnv1a64:e3099103d95ed47c",
       "notice": {
         "modality": "sight",
         "needs": [

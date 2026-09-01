@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Changed — declare the complete Hindi book-register set
+
+- Chapter 37 now declares **किताब / पुस्तक / पोथा** as its headword instead of
+  naming only the ordinary **किताब**. The lesson already defines all three as
+  the ordinary, formal, and old or homely words for “book,” respectively, and
+  assesses the register contrast; its metadata now exposes the complete set.
+
 ### Changed — declare both everyday Hindi words for foot
 
 - Chapter 38 now declares **पैर / पाँव** as its headword instead of naming only
