@@ -2,6 +2,30 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.80] - 2026-09-01 (W34 first slice — canonical type-group equivalence caching)
+
+`ValidatedModule` gains a private `canonical_types` field, computed by
+`validate()` right after `check_type_subtyping_is_acyclic` (part of Check
+11) confirms the module's `sub`/`rec` reference ordering is well-founded —
+the ordering guarantee `wasm_types::canonicalize_types`'s own termination
+argument depends on. Exposed via two new `ValidatedModule` methods:
+
+- `canonical_type_at(idx) -> Option<(Rc<CanonicalGroup>, u32)>`
+- `canonically_equivalent(i, j) -> bool` (conservatively `false` whenever
+  either side isn't canonicalized yet — this slice only canonicalizes
+  `rec_group_size == 1` groups, see `wasm-types`'s own CHANGELOG)
+
+`ValidatedModule::module`'s existing privacy (the W33-era security fix: the
+only way to construct a `ValidatedModule` at all is a successful
+`validate()` call) extends for free to this new field too — there is no
+code path that can produce a `canonical_types` value without going through
+real validation first. Nothing in this slice wires canonical equivalence
+into any validation DECISION yet (`is_assignable`, `check_type_subtyping`,
+etc. are all unchanged) — that's a later slice's job, per `code/specs/
+W34-wasm-gc-canonical-type-equivalence.md`'s own "Recommended slice
+decomposition." Full workspace-adjacent conformance baseline (all 257
+files) is byte-for-byte unchanged by this release.
+
 ## [0.2.79] - 2026-09-01 (W33 fourth slice — static struct/array instruction checks)
 
 Adds real static type-checking for `struct.new_default`/`struct.get_s`/

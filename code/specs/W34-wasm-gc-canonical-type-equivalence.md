@@ -832,3 +832,179 @@ W33's own "Recommended scope" used.
   `type_group_shape`'s own tests, `wasm-runtime`'s own `incompatible
   import type` assertions) that a careless reflexive-base-case change
   could silently break.
+
+## Addendum — first slice shipped (singleton-group canonicalization)
+
+Re-verified this spec's own citations fresh against the pinned SHA
+(`28864811cf03bdbf880733786148feaba339582d`) before writing any code:
+`type-rec.wast`, `type-equivalence.wast`, `type-subtyping.wast`, and
+`type-canon.wast` all matched this document's line-number claims exactly
+(line 4's flat self-reference and line 14's explicit-singleton
+self-reference in `type-rec.wast`; `type-equivalence.wast`'s "Simple
+types"/"Indirect types"/"Recursive types"/"Isomorphic recursive types"
+modules at the cited lines; `type-canon.wast`'s two modules, both
+genuinely multi-member-only with zero assertions). The crate-version
+grounding ("What already exists," `wasm-execution` 0.9.82) had already
+drifted to 0.9.83 by the time this slice started (one unrelated patch
+landed in between) — re-checked directly: `HostFunction`'s definition is
+still at the exact cited line 1757, so nothing in the design section
+needed correcting for that drift. `ValidatedModule`'s `module` field was
+re-confirmed private with `validate()` as the sole constructor (the
+W33-era security fix) — exactly the property this slice's own
+`canonical_types` caching leans on, confirming §2's "natural,
+non-disruptive caching point" claim.
+
+**What shipped** (`wasm_types` 0.1.17 → 0.1.18, `wasm-validator` 0.2.79 →
+0.2.80):
+
+- `wasm_types`: `CanonicalGroup`, `CanonicalSubtype`, `CanonicalCompType`,
+  `CanonicalFieldType`, `CanonicalStorageType`, `CanonicalValType`,
+  `CanonicalHeapRef`, `AbstractHeapKind`, and the `canonicalize_types(
+  &WasmModule) -> Vec<Option<(Rc<CanonicalGroup>, u32)>>` free function —
+  exactly the representation this document's own "Design §1" sketched,
+  scoped to `rec_group_size == 1` groups only (both the implicit,
+  non-`rec`-wrapped kind and an explicit `(rec (type ...))` with exactly
+  one member). A self-reference ties to `Rec(0)`; a reference to an
+  earlier singleton group embeds that group's already-computed form via
+  `Outer`; a reference into an unsupported `rec_group_size > 1` group (or
+  any other unresolvable index) makes the REFERRING type's own canonical
+  form `None` too, never a partial or wrong tree. `canonicalize_types`
+  itself contains no recursion of any kind — it walks flat indices in
+  increasing order and only ever reads already-computed entries — so a
+  cyclic or self-referential type structure, even from a hand-built
+  `WasmModule` that never went through validation, cannot make it loop,
+  panic, or overflow the stack; the worst case is an honest `None`.
+- `wasm-validator`: `ValidatedModule` gains a private `canonical_types`
+  field (computed in `validate()` right after Check 11's
+  `check_type_subtyping_is_acyclic` succeeds) and two new public methods,
+  `canonical_type_at` and `canonically_equivalent`. Nothing wires this
+  into any actual validation DECISION yet — `is_assignable`,
+  `check_type_subtyping`, `nominal_subtype_chain`, and every
+  `wasm-execution`/`wasm-runtime` dispatch/import-check site are
+  byte-for-byte unchanged. That wiring is slice 3 (and slice 4 for
+  cross-module linking), both still gated on slice 2's real multi-member
+  De Bruijn numbering landing first, per this document's own decomposition.
+- 22 new unit tests across the two crates: the `Rec(0)` self-reference
+  case (both implicit and explicit-singleton spellings, proven to tie
+  identically); cross-module comparability with NO shared numbering (two
+  independently-built `WasmModule`s, isomorphic shape at different flat
+  indices, proven equal — both directly via `canonicalize_types` and
+  end-to-end through `validate()`); a genuine shape mismatch proven NOT
+  equal; parameter-name-irrelevance (`type-equivalence.wast` lines 6-7's
+  own point); chained (non-self-referencing) singleton `Outer` embedding
+  across modules; multi-member groups correctly producing `None`
+  everywhere including through a referring singleton; finality/declared-
+  supertype as part of canonical identity; struct/array bodies (not just
+  func ones); every abstract heap-type variant; and two defensive/security
+  cases (an out-of-range supertype index, and a self-referential declared
+  supertype) proven to produce a safe `None`/`Rec(0)` rather than a panic
+  or a loop.
+
+**One correction to this document's own design section, found by
+re-verification, not by assumption**: §1's `AbstractHeapKind` sketch
+listed only the ten kinds the WasmGC proposal's own lattice names
+(`Any`/`Eq`/`I31`/`Struct`/`Array`/`Func`/`None`/`Extern`/`NoExtern`/
+`NoFunc`). Re-checking it against this crate's ACTUAL `ValueType` (not
+the design sketch's own memory of it) found two more variants already
+shipped and needing somewhere to tie to: `ValueType::Exnref`/`ValueType::
+NullExnref` (W24, the separate exceptions proposal — not part of WasmGC's
+own MVP.md lattice at all, but real, existing, and reachable through any
+func/struct/array field). Added `Exn`/`NoExn` to `AbstractHeapKind` to
+close this gap; every one of this crate's 21 `ValueType` variants now has
+an exhaustive, panic-free mapping (`every_abstract_heap_type_
+canonicalizes_deterministically` covers all ten abstract, non-index-
+carrying variants directly; the concrete/index-carrying ones are covered
+by the `Rec`/`Outer` tests above).
+
+**One deliberate deviation from the design sketch's literal types,
+recorded and justified, not silently substituted**: `CanonicalHeapRef::
+Outer` uses `Rc<CanonicalGroup>` where §1's sketch wrote `Box<
+CanonicalGroup>`. A `Box` would deep-clone the entire referenced group's
+tree at every embed site, which — unlike the sketch's own reasoning for
+why a fully-inlined tree (rather than interning) is fine for THIS crate's
+small corpus — would still duplicate a shared subtree once per reference
+site within a single canonicalization pass (`type-rec.wast`'s own
+"Static matching" module references `$f1`/`$f2` several times each from
+sibling groups). `Rc` shares the one already-computed allocation instead;
+`derive(PartialEq, Eq, Hash)` on a type containing an `Rc<T>` already
+compares/hashes through to `T`'s contents, never the pointer, so this
+costs nothing for the cross-module-comparability property the whole
+mechanism exists for. `wasm-validator::ValidatedModule`'s own top-level
+`canonical_types` cache already used `Rc` for the identical reason
+(cheap-to-clone caching); this makes the choice consistent at every level
+of the tree, not just the outermost one.
+
+**Corpus impact: none, confirmed by a full 257-file baseline diff, not
+just asserted.** `--write-baseline` was re-run and diffed programmatically
+against the pre-slice baseline: every one of the 257 files' `module`/
+`register`/`action`/`assert_return`/`assert_trap`/`assert_exhaustion`/
+`assert_invalid`/`assert_malformed`/`assert_unlinkable`/`assert_exception`
+tallies is byte-for-byte identical, including all four of this slice's
+own cited files (`type-rec.wast`, `type-equivalence.wast`,
+`type-subtyping.wast`, `type-canon.wast`). This matches this document's
+own honest prediction in "Recommended slice decomposition" #1 ("this
+slice does not yet wire anything into `is_assignable`/`call_indirect`, so
+the corpus's own `assert_return`/`assert_invalid` directives for these
+modules won't move yet — that's slice 3") — confirmed by measurement, not
+just re-stated: nothing in this slice is reachable from any validation or
+execution DECISION path, only from the two new public accessor methods
+and this slice's own unit tests, so a zero-movement diff is exactly the
+expected, correctly-predicted outcome, not a sign the slice did nothing
+real.
+
+**Security review finding, fixed before push**: a dedicated security-review
+sub-agent, briefed specifically on this document's own two named concerns
+(cyclic/self-referential-structure recursion, and whether `ValidatedModule`
+caching could be bypassed), confirmed the SECOND concern was already fully
+closed by `ValidatedModule::module`'s pre-existing W33-era privacy (no
+construction path exists outside `validate()`; no staleness is possible
+since nothing ever mutates `module` after construction). On the FIRST
+concern, it confirmed `canonicalize_types` and everything it calls
+genuinely never recurses while BUILDING a tree (verified by reading the
+whole call graph) — but it went further than the question as posed and
+empirically built a throwaway reproduction against this exact code,
+finding that a long, entirely acyclic CHAIN of singleton groups (each
+referencing only the type immediately before it — ordinary, not
+pathological, WASM shape) builds a genuinely nested `Outer`-embedding tree
+that the compiler-DERIVED `Drop`/`PartialEq`/`Hash` implementations (all
+necessary for this mechanism's own correctness — structural, not pointer,
+comparison is the entire point) walk RECURSIVELY, reliably crashing the
+process via stack overflow at tens of thousands of chained links — a
+small, realistic module size. Fixed by capping how deep `canonicalize_
+types` will ever let an `Outer` chain nest (`MAX_CANONICAL_OUTER_DEPTH =
+1,000`, mirroring this crate's own pre-existing `MAX_SUBTYPE_CHAIN_HOPS`
+convention exactly) at `resolve_heap_index`, the one place new depth is
+introduced — this closes the `Drop` crash the review reproduced AND the
+parallel (not separately reproduced, but architecturally identical)
+`PartialEq`/`Hash` recursion-depth risk in the same stroke, since all
+three traversals share the same root cause (the depth of the value tree
+itself) rather than needing three separate hand-rewritten iterative
+implementations. A new regression test (`outer_embedding_depth_is_capped_
+and_a_long_chain_does_not_crash`) builds a chain past the cap and confirms
+both that in-bounds entries still canonicalize normally and that the
+whole result drops cleanly at the end of the test. This is a real,
+permanent limitation worth flagging for whoever builds slice 2/3: an
+adversarial module with an extremely long reference chain will now
+canonicalize to `None` past 1,000 links rather than being treated as
+equivalent to anything — a conservative, safe direction (a missed
+optimization opportunity, never a false accept) consistent with every
+other "unresolvable falls back to `None`" case this slice already
+established.
+
+**Slice 2 plan: confirmed unchanged.** Nothing this slice's investigation
+found requires revising the "multi-member `rec`-group canonicalization —
+the real De Bruijn numbering" scope or its `type-canon.wast`/`type-rec.
+wast`/`type-equivalence.wast` test-target list. One implementation note
+for whoever picks up slice 2: the `total_type_count`/`comp_type_at`
+helpers and the `resolve_heap_index`/`canonicalize_value_type`/
+`canonicalize_field_type`/`canonicalize_comp_type` functions this slice
+added in `wasm_types::lib` are already written generically enough (they
+take a `self_idx`/group-relative reference-resolution shape, not a
+singleton-specific one) that slice 2 should be able to reuse them
+directly for each multi-member group's per-member body construction —
+the only genuinely NEW logic slice 2 needs is the group-relative `Rec(i)`
+numbering itself (mapping `[group_start, group_start+size)` to `0..size`,
+not just the singleton case's trivial `self_idx == group_start`), and the
+top-level `canonicalize_types` loop's own "process one flat index at a
+time" structure will need to become "process one GROUP (a contiguous
+range of flat indices) at a time" instead.

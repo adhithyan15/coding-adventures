@@ -29,7 +29,8 @@
 //! implementation of the computing stack from transistors to operating systems.
 
 use std::collections::HashSet;
-use wasm_types::{ExternalKind, ImportTypeInfo, ValueType, WasmModule};
+use std::rc::Rc;
+use wasm_types::{CanonicalGroup, ExternalKind, ImportTypeInfo, ValueType, WasmModule, canonicalize_types};
 
 mod type_check;
 
@@ -126,12 +127,59 @@ impl std::error::Error for ValidationError {}
 #[derive(Debug, Clone)]
 pub struct ValidatedModule {
     module: WasmModule,
+    /// This module's own canonical type-group forms (W34 first slice:
+    /// `code/specs/W34-wasm-gc-canonical-type-equivalence.md`) -- one
+    /// entry per flat type-section index, `None` for a type this slice
+    /// does not yet canonicalize (any type belonging to a
+    /// `rec_group_size > 1` group -- multi-member De Bruijn numbering is a
+    /// later slice's job, see the spec's own "Recommended slice
+    /// decomposition"). See [`wasm_types::canonicalize_types`]'s own doc
+    /// comment for the algorithm and its termination argument.
+    ///
+    /// Computed exactly once, here in [`validate`], immediately after
+    /// `type_check::type_check_module` confirms (among everything else)
+    /// that the module's declared `sub` chains are acyclic --
+    /// canonicalization's own termination argument depends on that
+    /// ordering guarantee already holding (see `canonicalize_types`'s doc
+    /// comment). `ValidatedModule`'s `module` field is already private,
+    /// with [`validate`] the only constructor (a struct-literal bypass is
+    /// a compile error -- see this struct's own doc comment above); this
+    /// field inherits that exact same guarantee for free, by construction
+    /// -- there is no code path that can produce a `ValidatedModule`
+    /// (and therefore no path that can produce a `canonical_types` value)
+    /// without going through `validate()` first.
+    canonical_types: Vec<Option<(Rc<CanonicalGroup>, u32)>>,
 }
 
 impl ValidatedModule {
     /// The underlying parsed module, proven to have passed [`validate`].
     pub fn module(&self) -> &WasmModule {
         &self.module
+    }
+
+    /// This flat type-section index's own canonical type-group form (W34
+    /// first slice), or `None` if this slice doesn't canonicalize it yet
+    /// (out of range, or a `rec_group_size > 1` member -- see
+    /// [`wasm_types::canonicalize_types`]'s own doc comment).
+    pub fn canonical_type_at(&self, idx: u32) -> Option<(Rc<CanonicalGroup>, u32)> {
+        self.canonical_types.get(idx as usize).cloned().flatten()
+    }
+
+    /// Whether flat type-section indices `i` and `j` are canonically
+    /// equivalent per this slice's own (singleton-groups-only) algorithm --
+    /// `false`, conservatively, whenever EITHER side isn't canonicalized
+    /// yet (out of range, or a `rec_group_size > 1` member), never a wrong
+    /// `true`. This slice does not wire this into any validator/execution
+    /// call site itself (that's a later slice, per the spec's own "Wiring
+    /// into within-module checks" section) -- it exists here purely so the
+    /// mechanism is directly testable end-to-end through the real
+    /// `validate()` entry point, not just through the lower-level
+    /// `wasm_types::canonicalize_types` free function.
+    pub fn canonically_equivalent(&self, i: u32, j: u32) -> bool {
+        match (self.canonical_type_at(i), self.canonical_type_at(j)) {
+            (Some(a), Some(b)) => a == b,
+            _ => false,
+        }
     }
 }
 
@@ -771,8 +819,19 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
     // ── Check 11: Instruction-level type checking (WASM06/W02 Phase 2) ──
     type_check::type_check_module(module)?;
 
+    // W34 first slice (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`):
+    // canonicalize singleton `rec` groups now that Check 11 (which runs
+    // `check_type_subtyping_is_acyclic`) has confirmed the module's
+    // `sub`/`rec` reference ordering is well-founded -- see
+    // `ValidatedModule::canonical_types`'s own doc comment for why this is
+    // the right place, and `wasm_types::canonicalize_types`'s own doc
+    // comment for why the ordering guarantee matters even though this
+    // function itself never recurses.
+    let canonical_types = canonicalize_types(module);
+
     Ok(ValidatedModule {
         module: module.clone(),
+        canonical_types,
     })
 }
 
@@ -1946,5 +2005,84 @@ mod tests {
         };
         let err = validate(&module).unwrap_err();
         assert!(matches!(err, ValidationError::Other(_)), "{err:?}");
+    }
+
+    // ────────────────────────────────────────────────────────────────────
+    // W34 first slice: canonical type-group equivalence, wired through the
+    // real `validate()` entry point (not just `wasm_types::canonicalize_
+    // types` directly -- see that crate's own extensive unit tests for the
+    // mechanism in isolation).
+    // ────────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn validate_computes_canonical_type_for_a_self_referencing_singleton() {
+        // `type-rec.wast` line 4 shape: `(type (func (param (ref 0))
+        // (result (ref 0))))`.
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![ValueType::ConcreteFuncRef(0)], results: vec![ValueType::ConcreteFuncRef(0)] }],
+            type_subtyping: vec![TypeSubtyping::default()],
+            ..Default::default()
+        };
+        let validated = validate(&module).unwrap();
+        assert!(validated.canonical_type_at(0).is_some());
+        assert!(validated.canonically_equivalent(0, 0));
+        // Out of range never panics, just reports "not canonicalized."
+        assert_eq!(validated.canonical_type_at(99), None);
+    }
+
+    #[test]
+    fn validate_canonical_types_compare_equal_across_two_independently_validated_modules() {
+        // Cross-module comparability, exercised through the real
+        // `validate()` path this time -- two SEPARATE modules, isomorphic
+        // shape at different flat indices, no shared numbering.
+        let module_a = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![ValueType::I32] }],
+            type_subtyping: vec![TypeSubtyping::default()],
+            ..Default::default()
+        };
+        let padding = FuncType { params: vec![], results: vec![] };
+        let module_b = WasmModule {
+            types: vec![padding.clone(), padding, FuncType { params: vec![], results: vec![ValueType::I32] }],
+            type_subtyping: vec![TypeSubtyping::default(); 3],
+            ..Default::default()
+        };
+        let validated_a = validate(&module_a).unwrap();
+        let validated_b = validate(&module_b).unwrap();
+        assert_eq!(validated_a.canonical_type_at(0), validated_b.canonical_type_at(2));
+        assert_ne!(validated_a.canonical_type_at(0), validated_b.canonical_type_at(0));
+    }
+
+    #[test]
+    fn validate_leaves_multi_member_rec_groups_uncanonicalized_but_still_accepts_the_module() {
+        // Slice 1's own explicit boundary: a real multi-member `rec` group
+        // must still VALIDATE fine (nothing about this slice should make a
+        // previously-valid module invalid), but its members canonicalize
+        // to `None` -- deferred to a later slice.
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }, FuncType { params: vec![], results: vec![] }],
+            type_subtyping: vec![
+                TypeSubtyping { rec_group_size: 2, rec_group_position: 0, ..Default::default() },
+                TypeSubtyping { rec_group_size: 2, rec_group_position: 1, ..Default::default() },
+            ],
+            ..Default::default()
+        };
+        let validated = validate(&module).unwrap();
+        assert_eq!(validated.canonical_type_at(0), None);
+        assert_eq!(validated.canonical_type_at(1), None);
+        assert!(!validated.canonically_equivalent(0, 1));
+    }
+
+    #[test]
+    fn validate_canonically_equivalent_is_false_for_genuinely_different_shapes() {
+        let module = WasmModule {
+            types: vec![
+                FuncType { params: vec![], results: vec![ValueType::I32] },
+                FuncType { params: vec![], results: vec![ValueType::I64] },
+            ],
+            type_subtyping: vec![TypeSubtyping::default(); 2],
+            ..Default::default()
+        };
+        let validated = validate(&module).unwrap();
+        assert!(!validated.canonically_equivalent(0, 1));
     }
 }
