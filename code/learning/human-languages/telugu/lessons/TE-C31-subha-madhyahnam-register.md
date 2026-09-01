@@ -7,6 +7,7 @@ chapter: 31
 type: culture
 headword: శుభ మధ్యాహ్నం — register
 gloss: a real formal or workplace greeting, less secure as an everyday default
+romanization: "śubha madhyāhnam"
 concept_tag: TE-GREETING-AFTERNOON-REGISTER
 prerequisites: [TE-C31-subha-madhyahnam]
 sounds: []

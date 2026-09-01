@@ -7,6 +7,7 @@ chapter: 9
 type: word
 headword: క్షమించండి
 gloss: please forgive / sorry (kṣamin̄caṇḍi — from kṣamin̄cu "to forgive," Sanskrit kṣamā + respectful -aṇḍi)
+romanization: "kṣamin̄caṇḍi"
 concept_tag: COURTESY-SORRY
 prerequisites: [TE-C08-dayachesi]
 sounds: [telugu-conjunct-kssa, telugu-anusvara]

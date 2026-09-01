@@ -7,6 +7,7 @@ chapter: 15
 type: word
 headword: నీళ్ళు బియ్యం అన్నం
 gloss: water (matching Tamil/Kannada's neer/niiru), and rice raw/cooked — completing the family's water and rice pattern
+romanization: "nīḷḷu biyyam annam"
 concept_tag: TE-FOOD-BASIC
 prerequisites: [TE-C14-rutuvulu]
 sounds: [telugu-geminate-lla, telugu-anusvara]
