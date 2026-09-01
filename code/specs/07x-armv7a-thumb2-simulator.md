@@ -311,6 +311,31 @@ The simulator does **not** implement:
 - Coprocessor instructions (MCR, MRC)
 - LDRD/STRD double-word loads/stores
 
+### Rust completion contract
+
+The Rust `armv7a-simulator` package is the normative checked implementation of
+this educational Thumb-only machine. Its complete state is exactly 64 KiB of
+little-endian wrapping memory, R0-R15 with a coherent authoritative PC/R15,
+CPSR NZCV/T, halt, and the installed program origin/length. Restore and
+origin-aware loading validate before commit; unsupported or truncated
+instructions return typed errors; a failing step commits nothing; and a
+bounded run either returns complete before/after traces or restores its entry
+state.
+
+The completed Rust decode surface covers the documented 16-bit shift,
+arithmetic, data-register, high-register, memory, stack, multiple-transfer and
+branch families, all fourteen Thumb conditional predicates, and the selected
+32-bit BL, MOVW/MOVT, modified-immediate arithmetic/logic, and wide byte,
+halfword and word memory forms. The architectural `ADD Rd, SP, #imm` form is
+implemented directly; the Python reference incorrectly treats it as ADR and
+is intentionally excluded from the otherwise common-surface corpus.
+Unsupported encodings, SVC, invalid condition encodings, and truncated wide
+instructions fail closed rather than executing as NOPs.
+
+Verification includes strict Rust formatting, Clippy and rustdoc, lifecycle
+and manual Spec 07x suites, and a reproducible 417-vector Python common-surface
+full-state corpus. Rust package line coverage is 92.08% (616/669 lines).
+
 ---
 
 ## Package Layout
