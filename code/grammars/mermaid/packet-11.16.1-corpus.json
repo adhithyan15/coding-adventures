@@ -1,0 +1,9 @@
+{
+  "upstream": "mermaid@11.16.1",
+  "family": "packet",
+  "level": "partial",
+  "fixtures": [
+    { "id": "single-row", "source": "packet-beta\n0-7: \"Version\"\n8-31: \"Payload length\"" },
+    { "id": "multi-row", "source": "packet\ntitle Native packet\n0-15: \"Source port\"\n16-31: \"Destination port\"\n32-63: \"Sequence number\"" }
+  ]
+}

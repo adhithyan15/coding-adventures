@@ -6,6 +6,7 @@ sequence: 180
 chapter: 9
 type: word
 headword: હું
+romanization: "hũ"
 gloss: I
 concept_tag: PRONOUN-I
 prerequisites: [GU-C02-maarun, GU-W02-ya]

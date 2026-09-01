@@ -7,6 +7,7 @@ chapter: 11
 type: word
 headword: കറുപ്പ് വെള്ള ചുവപ്പ് നീല
 gloss: black, white, red, blue — Malayalam shares Tamil's native colors, and its Sanskrit blue too
+romanization: "karuppŭ veḷḷa cuvappŭ nīla"
 concept_tag: ML-COLOUR-BASIC
 prerequisites: [ML-C10-azhcha]
 sounds: [malayalam-virama-final, malayalam-cha]

@@ -1119,6 +1119,19 @@ pub struct WasmInstance {
     pub global_types: Vec<GlobalType>,
     /// All function type signatures.
     pub func_types: Vec<FuncType>,
+    /// Each function's own declared type-SECTION index (W33 second slice,
+    /// item 4), parallel to `func_types` above (which holds the resolved
+    /// `FuncType` SHAPE instead of the index that declared it) -- same
+    /// "imports first, then module-defined" combined index space. Needed
+    /// to recover a `funcref` value's real nominal type identity: `wasm-
+    /// execution`'s `WasmValue::Ref(Some(i))` funcref payload IS the
+    /// function index directly, so `func_type_indices[i]` is the only way
+    /// to learn which type-section entry that function was declared
+    /// with -- see `wasm-execution::WasmExecutionEngine::
+    /// set_func_type_indices`'s own doc comment for the runtime consumer
+    /// (`call_indirect`'s real subtype check, `ref.cast`/`ref.test`'s
+    /// dynamic type check).
+    pub func_type_indices: Vec<u32>,
     /// Function bodies (None for imports).
     pub func_bodies: Vec<Option<FunctionBody>>,
     /// Resolved imported host functions.
@@ -1295,6 +1308,10 @@ impl WasmRuntime {
     pub fn instantiate(&self, validated: &ValidatedModule) -> Result<WasmInstance, TrapError> {
         let module = validated.module();
         let mut func_types: Vec<FuncType> = Vec::new();
+        // Combined imported + module-defined func_index -> TYPE-SECTION-index
+        // space (W33 second slice), index-aligned with `func_types` above --
+        // see `WasmInstance::func_type_indices`'s own doc comment.
+        let mut func_type_indices: Vec<u32> = Vec::new();
         let mut func_bodies: Vec<Option<FunctionBody>> = Vec::new();
         let mut host_functions: Vec<Option<Box<dyn HostFunction>>> = Vec::new();
         let mut global_types: Vec<GlobalType> = Vec::new();
@@ -1362,6 +1379,7 @@ impl WasmRuntime {
                     }
 
                     func_types.push(ft);
+                    func_type_indices.push(*type_idx);
                     func_bodies.push(None);
                     host_functions.push(Some(host_func));
                 }
@@ -1492,6 +1510,7 @@ impl WasmRuntime {
         // Add module-defined functions.
         for (i, &type_idx) in module.functions.iter().enumerate() {
             func_types.push(module.types[type_idx as usize].clone());
+            func_type_indices.push(type_idx);
             func_bodies.push(module.code.get(i).cloned());
             host_functions.push(None);
         }
@@ -1757,6 +1776,7 @@ impl WasmRuntime {
             globals,
             global_types,
             func_types,
+            func_type_indices,
             func_bodies,
             host_functions,
             tags,
@@ -2000,6 +2020,18 @@ impl WasmRuntime {
         // `call_indirect $type` checks the callee against what the call
         // site actually declared instead of skipping the check.
         engine.set_type_section(instance.module.types.clone());
+
+        // Thread the module's GC-proposal nominal-subtyping metadata (W33
+        // second slice, item 4) and the combined func_index -> declared
+        // type-index space, so `call_indirect`'s real subtype check and
+        // `ref.cast`/`ref.test`'s dynamic type check have what they need —
+        // same optional-setter pattern as `set_type_section` immediately
+        // above. Left unset, both fall back to their pre-W33 behavior (see
+        // `wasm-execution`'s own `call_indirect_type_matches`/`ref_matches_
+        // concrete_type` doc comments for why that fallback is exactly
+        // right for a module that never declares `sub`).
+        engine.set_type_subtyping(instance.module.type_subtyping.clone());
+        engine.set_func_type_indices(instance.func_type_indices.clone());
 
         // Thread the module's tag section (W-next: real catch-clause
         // matching) so `throw`/`catch` know each tag's declared param

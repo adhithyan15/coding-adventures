@@ -1667,6 +1667,41 @@ jobs:
           env -u MOSAIC_APP_LIBRARY QT_QPA_PLATFORM=offscreen MOSAIC_APP_STATE_PATH="$task_state_path" \
             MOSAIC_EXPECT_RESTORED=1 "$task_ui_binary"
 
+          # ---- Engram: prove the Qt emission COMPILES. ------------------------
+          #
+          # Nothing compiled Engram's Qt output before this. Its own suite is
+          # substring assertions over emitted text, so a project that could not
+          # build would have looked entirely healthy.
+          #
+          # Deliberately NOT --profile native-complete and NOT --runtime-library,
+          # which is a correction: both switch the generated main.cpp to the
+          # strict standard-binding shape, calling registerTypes/requireRuntime/
+          # configureRequiredProps/attach. Engram replaces MosaicHost.h/.cpp via
+          # [host_assets] with its own engram-capi binding, which exposes
+          # props/handleEvent/ensureLoaded instead — a different API. Combining
+          # them emits a project that does not compile at all:
+          #
+          #   main.cpp:26: error: 'registerTypes' is not a member of 'MosaicHost'
+          #
+          # So Engram cannot reach native-complete until its adapters move onto
+          # the standard runtime (#13728). Emitting the way build-all.ps1 does is
+          # the configuration Engram actually ships, and compiling THAT is a real
+          # gate rather than a green check on an incoherent combination.
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p engram-mosaic-app
+
+          engram_output="$RUNNER_TEMP/mosaic-qt-engram"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/engram-app --backend qt --output "$engram_output" --emit-project
+
+          # The override is pinned, not merely allowed: replacing main.cpp or
+          # CMakeLists.txt would also unhook the runtime, so a third entry here
+          # must fail rather than widen the gap silently. This assertion is also
+          # what #13728 has to update, so the migration cannot be forgotten.
+          jq -e '.replacedGeneratedFiles == ["MosaicHost.cpp", "MosaicHost.h"]' "$engram_output/qt/mosaic-degradations.json"
+
+          # The gate: it builds.
+          cmake -S "$engram_output/qt" -B "$engram_output/qt/build" -DCMAKE_BUILD_TYPE=Release
+          cmake --build "$engram_output/qt/build" --config Release --parallel
+
           toolkit_output="$RUNNER_TEMP/mosaic-qt-toolkit"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend qt --output "$toolkit_output" --emit-project
           cmake -S "$toolkit_output/qt" -B "$toolkit_output/qt/build" -DCMAKE_BUILD_TYPE=Release
@@ -1803,6 +1838,16 @@ jobs:
           (
             cd "$slider_output/flutter"
             cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-emit-flutter/fixtures/host-slider-test/widget_test.dart" test/widget_test.dart
+            flutter pub get
+            flutter analyze
+            flutter test test/widget_test.dart
+          )
+
+          nested_conditional_output="$RUNNER_TEMP/mosaic-flutter-nested-row-conditional"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-flutter/fixtures/nested-row-conditional --backend flutter --output "$nested_conditional_output" --emit-project
+          (
+            cd "$nested_conditional_output/flutter"
+            cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-emit-flutter/fixtures/nested-row-conditional-test/widget_test.dart" test/widget_test.dart
             flutter pub get
             flutter analyze
             flutter test test/widget_test.dart

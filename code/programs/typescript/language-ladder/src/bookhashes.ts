@@ -112,6 +112,25 @@ async function loadCapabilities(): Promise<void> {
 
 export type BookHashStatus = "not-generated" | "synced" | "stale";
 
+/**
+ * Every (language, chapter) the generated-book manifest knows about.
+ *
+ * Exported so the conformance test can ENUMERATE chapters instead of carrying a
+ * hand-maintained list of them. That list used to be 388 pinned
+ * `[chapter, lessonCount]` pairs across 23 tracks in one shared file, so adding
+ * a single lesson to a single chapter of a single language moved a pin that
+ * every other track's branch also had to move -- and it pushed authors into
+ * placing lessons where the pins were absent rather than where the teaching
+ * belonged. Enumerating restores the real invariant (the app's AST agrees with
+ * the manifest) without the write-lock.
+ */
+export function bookHashEntries(): { language: string; chapter: number }[] {
+  return ENTRIES.map((entry) => ({
+    language: entry.language,
+    chapter: entry.chapter,
+  }));
+}
+
 export function expectedBookHash(
   language: string,
   chapter: number,

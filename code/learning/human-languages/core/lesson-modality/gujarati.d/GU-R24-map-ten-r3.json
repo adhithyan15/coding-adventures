@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "GU-R24-map-ten-r3",
+    "language": "gujarati",
+    "chapter": 28,
+    "sequence": 1290,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd2e5ece7f5bd010",
+    "detachableSegments": [
+      "Writing — from meaning, with every model covered"
+    ]
+  },
+  "findings": []
+}

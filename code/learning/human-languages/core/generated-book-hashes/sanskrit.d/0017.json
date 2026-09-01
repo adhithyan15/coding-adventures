@@ -1,14 +1,15 @@
 {
   "language": "sanskrit",
   "chapter": 17,
-  "sourceHash": "fnv1a64:e08d41398f876799",
+  "sourceHash": "fnv1a64:35131c7334e4d918",
   "lessonIds": [
     "SA-C17-day",
     "SA-C17-night",
     "SA-C17-today",
     "SA-C17-yesterday",
     "SA-C17-always",
-    "SA-C17-time-words"
+    "SA-C17-time-words",
+    "SA-S118-letter-ssa"
   ],
   "tex": "sanskrit/book/chapters/ch17-time.tex"
 }

@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Noon and Midnight",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:610a0729798efa47",
+  "sourceHash": "fnv1a64:8d24c834af6e602e",
   "lessons": [
     {
       "id": "ML-C17-ucha-paathira",
@@ -114,9 +114,9 @@
     {
       "id": "ML-C17-paathira",
       "sequence": 460,
-      "title": "പാതിരാ — midnight as “half-night”",
+      "title": "പാതിരാ (pāthirā) — midnight as “half-night”",
       "headword": "പാതിരാ",
-      "romanization": "",
+      "romanization": "pāthirā",
       "gloss": "midnight, built on Malayalam paathi \"half\" rather than Sanskrit ardha",
       "script": "malayalam",
       "modality": "voice",
@@ -124,7 +124,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d7efb9f6cdc7e7e2",
+      "sourceHash": "fnv1a64:a2ea46269c3d834c",
       "notice": null,
       "blocks": [
         {
@@ -151,7 +151,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "പാതിരാ (paathira) means “midnight.” It is built on പാതി (paathi), the everyday Malayalam word for “half”—as in paathi vila, “half price”—fused with a shortened form of “night.”"
+              "text": "പാതിരാ (pāthirā) (paathira) means “midnight.” It is built on പാതി (paathi), the everyday Malayalam word for “half”—as in paathi vila, “half price”—fused with a shortened form of “night.”"
             },
             {
               "kind": "speech",
@@ -216,7 +216,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does പാതിരാ build on? (പാതി, “half,” plus a shortened night-word.) Is paathi the same root as Telugu ardha? (No. The two languages share the “half-night” logic but use unrelated half-words.)"
+              "text": "What does പാതിരാ (pāthirā) build on? (പാതി, “half,” plus a shortened night-word.) Is paathi the same root as Telugu ardha? (No. The two languages share the “half-night” logic but use unrelated half-words.)"
             }
           ]
         }

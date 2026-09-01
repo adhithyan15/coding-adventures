@@ -1,5 +1,18 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## [0.40.0] — 2026-08-31 (portable deterministic RND)
+
+`RND` now uses a documented Park–Miller generator with multiplier 48,271 and
+modulus 2,147,483,647. `RND(x < 0)` clamps `floor(abs(x))` into the valid seed
+range, reseeds, and advances; `RND(0)` repeats the current sample; `RND(x > 0)`
+advances. `main` starts from seed 1, so identical programs are reproducible.
+
+The generator is a sibling IIR function and its `i64` state occupies one typed
+module-global slot shared with `DEF FN` calls. It uses only existing portable
+integer arithmetic, global load/store, conversion, and division operations—no
+host entropy or backend-specific callback. Unit and JIT tests pin the sequence
+as integer buckets `22, 85032, 85032, 601352`.
+
 ## [0.39.0] — 2026-08-28 (mixed numeric/string DATA)
 
 `DATA`, `READ`, and `RESTORE` now preserve one source-ordered stream containing

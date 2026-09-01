@@ -1,10 +1,11 @@
 {
   "language": "malayalam",
   "chapter": 38,
-  "sourceHash": "fnv1a64:297db3049a142438",
+  "sourceHash": "fnv1a64:4bd42306072517f3",
   "lessonIds": [
     "ML-C38-hrudayam",
-    "ML-C38-nenchu"
+    "ML-C38-nenchu",
+    "ML-S131-chillu-nn"
   ],
   "tex": "malayalam/book/chapters/ch38-two-hearts.tex"
 }

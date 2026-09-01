@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C24-hear-divas",
+    "language": "gujarati",
+    "chapter": 28,
+    "sequence": 1220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a046fa2f1701c186"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C20-hear-chaay",
+    "language": "marwadi",
+    "chapter": 25,
+    "sequence": 1920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e16e95ed525b311b"
+  },
+  "findings": []
+}

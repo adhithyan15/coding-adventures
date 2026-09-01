@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C19-hear-roti",
+    "language": "marwadi",
+    "chapter": 24,
+    "sequence": 1820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b819235ce15a521"
+  },
+  "findings": []
+}

@@ -4,14 +4,14 @@
   "chapter": 10,
   "title": "Days of the Week",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b609bf2dd03a50c7",
+  "sourceHash": "fnv1a64:92a5fd037595ca06",
   "lessons": [
     {
       "id": "ML-C10-azhcha",
       "sequence": 380,
       "title": "തിങ്കൾ to ഞായർ — the week Malayalam shares with Tamil",
       "headword": "തിങ്കൾ ചൊവ്വ ബുധൻ വ്യാഴം വെള്ളി ശനി ഞായർ",
-      "romanization": "",
+      "romanization": "thiṅkaḷ covva budhan vyāzham veḷḷi śani ñāyar",
       "gloss": "the seven weekdays — Malayalam shares Tamil's native planet-words, being its closest cousin",
       "script": "malayalam",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:52b95d56c392c026",
+      "sourceHash": "fnv1a64:ddea7d343b0585c7",
       "notice": {
         "modality": "sight",
         "needs": [

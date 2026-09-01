@@ -24,6 +24,14 @@ The current native pipeline supports documented subsets of:
 - `timeline`
 - `mindmap`
 - `block` / `block-beta`
+- `packet` / `packet-beta`
+
+The initial `packet` subset uses dedicated line-preserving token and parser
+grammars. Contiguous absolute inclusive bit ranges with quoted labels, titles,
+and accessibility metadata lower into typed packet IR. `diagram-layout-packet`
+places fields on deterministic 32-bit rows before dedicated backend-neutral
+PaintScene lowering. Relative ranges, row-spanning fields, configuration, and
+styling remain outside the partial compatibility claim.
 
 The initial `block` subset uses dedicated line-preserving token and parser
 grammars. Column counts, flat node grids, explicit spaces, core node shapes,

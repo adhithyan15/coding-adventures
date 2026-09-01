@@ -1,0 +1,22 @@
+{
+  "chapter": 25,
+  "title": "The Sweet and the Tea: One New Consonant",
+  "label": "ch:mw-food-seven",
+  "canDo": "I can add the sweet crumbled wheat dessert and tea to the food map after learning only य.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "MW-C20-food-seven",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "The last two source-attested food words begin by ear, add only य, and complete a seven-word non-compensatory four-skill payoff.",
+    "assesses": [
+      "MW-LEX-CHURMA-01",
+      "MW-SCRIPT-CHURMA-01",
+      "MW-LEX-CHAAY-01",
+      "MW-SCRIPT-YA-01",
+      "MW-SCRIPT-CHAAY-01",
+      "MW-PERFORMANCE-FOOD-SEVEN-FOUR-SKILL-01"
+    ]
+  }
+}

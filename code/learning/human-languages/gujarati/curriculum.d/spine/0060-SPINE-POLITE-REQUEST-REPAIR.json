@@ -1,7 +1,8 @@
 {
   "segments": [
     "GU-PATH-013",
-    "GU-PATH-022"
+    "GU-PATH-022",
+    "GU-PATH-023"
   ],
   "omits": [
     "COURTESY-PLEASE",

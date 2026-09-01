@@ -1,10 +1,11 @@
 {
   "language": "malayalam",
   "chapter": 35,
-  "sourceHash": "fnv1a64:9d835263eb6a2448",
+  "sourceHash": "fnv1a64:929c1e08e9f2b7f6",
   "lessonIds": [
     "ML-C35-kudumbam",
-    "ML-C35-suhruthu"
+    "ML-C35-suhruthu",
+    "ML-S128-vowel-sign-r"
   ],
   "tex": "malayalam/book/chapters/ch35-family-and-friend.tex"
 }

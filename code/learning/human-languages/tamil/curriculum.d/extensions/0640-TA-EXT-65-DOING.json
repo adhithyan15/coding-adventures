@@ -1,0 +1,17 @@
+{
+  "id": "TA-EXT-65-DOING",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five everyday actions in Tamil, each beside the action that undoes it.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C65-drink",
+    "TA-C65-walk",
+    "TA-W21-read-kudi",
+    "TA-C65-stop",
+    "TA-C65-open",
+    "TA-C65-close",
+    "TA-C65-doing-recall"
+  ]
+}

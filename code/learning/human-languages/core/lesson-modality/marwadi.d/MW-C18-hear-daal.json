@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C18-hear-daal",
+    "language": "marwadi",
+    "chapter": 23,
+    "sequence": 1730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1244e01a31c4c2d8"
+  },
+  "findings": []
+}

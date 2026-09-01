@@ -7,6 +7,7 @@ chapter: 17
 type: word
 headword: പാതിരാ
 gloss: midnight, built on Malayalam paathi "half" rather than Sanskrit ardha
+romanization: "pāthirā"
 concept_tag: ML-TIME-MIDNIGHT
 prerequisites: [ML-C17-ucha-paathira]
 sounds: [malayalam-vowel-sign-aa]

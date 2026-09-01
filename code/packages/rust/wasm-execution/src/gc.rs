@@ -274,6 +274,8 @@ mod tests {
             global_types: Vec::new(),
             func_types: Vec::new(),
             types: Vec::new(),
+            type_subtyping: Vec::new(),
+            func_type_indices: Vec::new(),
             func_bodies: Vec::new(),
             host_functions: Vec::new(),
             typed_locals: Vec::new(),

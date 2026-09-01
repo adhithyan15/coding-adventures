@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.2.0] — 2026-08-28
+
+### Completed
+
+- Modelled the exact 134,218,289-DFF persistent topology with packed stable-Q
+  memory and explicit register, PC, SR, and halt latch banks.
+- Replaced host multiply/divide with fixed partial-product and restoring gate
+  networks, including signed overflow and remainder edges.
+- Added shared complete `M68kState`, `StepTrace`, `ExecutionResult`, and typed
+  atomic load/restore/step/run failures through the functional Rust oracle.
+- Added exact topology and lifecycle tests plus all 82 reproducible Python
+  full-state differential vectors.
+- Replaced the stale Python-oriented Spec 07n2 with this normative Rust gate
+  contract and corrected package documentation.
+
 ## [0.1.0] — 2026-06-15
 
 Initial release: gate-level Motorola 68000 (1979) simulator.
@@ -44,8 +59,7 @@ Initial release: gate-level Motorola 68000 (1979) simulator.
 - ADDX/SUBX/NEGX Z-flag: AND(old_Z, result_Z) so Z is only cleared, never
   set by these instructions.
 - NEG carry: `OR-reduction(result bits)` — C=1 iff result ≠ 0.
-- Memory: 16 MB `Vec<u8>` (not a boxed array, to avoid stack overflow
-  during construction).
-- MUL/DIV: host arithmetic (gate-level ×16 booth multiplier out of scope).
+- Memory: 16 MB packed stable-Q DFF memory.
+- MUL/DIV: fixed gate networks as of 0.2.0.
 - TRAP #15 used as soft halt; preserves SR so CCR flags remain readable
   after halting.

@@ -6,6 +6,7 @@ sequence: 270
 chapter: 10
 type: phrase
 headword: પાછા મળીશું
+romanization: "pāchhā maḷīshũ"
 gloss: we'll meet again (goodbye)
 concept_tag: FAREWELL-LATER
 prerequisites: [GU-C04-pachha, GU-C04-malishun, GU-C01-aavjo]

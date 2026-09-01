@@ -6,6 +6,7 @@ sequence: 290
 chapter: 11
 type: word
 headword: બોલવું
+romanization: "bolvũ"
 gloss: to speak
 concept_tag: GU-VERB-BOLVU
 prerequisites: [GU-C03-hun]

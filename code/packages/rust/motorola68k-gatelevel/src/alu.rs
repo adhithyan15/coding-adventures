@@ -89,7 +89,14 @@ pub fn add32(a: u32, b: u32, carry_in: u8) -> AluResult68K {
     let flag_v = compute_v_from_carries(&carries);
     let flag_n = compute_n32(result);
     let flag_z = compute_z32(result);
-    AluResult68K { result, flag_c, flag_v, flag_n, flag_z, flag_x: flag_c }
+    AluResult68K {
+        result,
+        flag_c,
+        flag_v,
+        flag_n,
+        flag_z,
+        flag_x: flag_c,
+    }
 }
 
 /// 32-bit SUB: `result = a - b`.
@@ -115,7 +122,14 @@ pub fn sub32(a: u32, b: u32, borrow_in: u8) -> AluResult68K {
     let flag_v = compute_v_from_carries(&carries);
     let flag_n = compute_n32(result);
     let flag_z = compute_z32(result);
-    AluResult68K { result, flag_c, flag_v, flag_n, flag_z, flag_x: flag_c }
+    AluResult68K {
+        result,
+        flag_c,
+        flag_v,
+        flag_n,
+        flag_z,
+        flag_x: flag_c,
+    }
 }
 
 /// 32-bit NEG: `result = 0 - src` (two's complement negation).
@@ -134,7 +148,14 @@ pub fn neg32(src: u32) -> AluResult68K {
     let flag_v = compute_v_neg(&src_bits, 32);
     let flag_n = compute_n32(result);
     let flag_z = compute_z(&res_bits);
-    AluResult68K { result, flag_c, flag_v, flag_n, flag_z, flag_x: flag_c }
+    AluResult68K {
+        result,
+        flag_c,
+        flag_v,
+        flag_n,
+        flag_z,
+        flag_x: flag_c,
+    }
 }
 
 /// 32-bit NEGX: `result = 0 - src - x`.
@@ -163,7 +184,14 @@ pub fn negx32(src: u32, x_flag: u8) -> AluResult68K {
     };
     let flag_n = compute_n32(result);
     let flag_z = compute_z(&res_bits);
-    AluResult68K { result, flag_c, flag_v, flag_n, flag_z, flag_x: flag_c }
+    AluResult68K {
+        result,
+        flag_c,
+        flag_v,
+        flag_n,
+        flag_z,
+        flag_x: flag_c,
+    }
 }
 
 // ── 32-bit logic ──────────────────────────────────────────────────────────────
@@ -176,7 +204,14 @@ pub fn and32(a: u32, b: u32) -> AluResult68K {
     let result = crate::bits::bits_to_u32(&res_bits);
     let flag_n = compute_n32(result);
     let flag_z = compute_z(&res_bits);
-    AluResult68K { result, flag_c: 0, flag_v: 0, flag_n, flag_z, flag_x: 0 }
+    AluResult68K {
+        result,
+        flag_c: 0,
+        flag_v: 0,
+        flag_n,
+        flag_z,
+        flag_x: 0,
+    }
 }
 
 /// 32-bit OR: `result = a | b`.  V=0, C=0; X unchanged.
@@ -187,7 +222,14 @@ pub fn or32(a: u32, b: u32) -> AluResult68K {
     let result = crate::bits::bits_to_u32(&res_bits);
     let flag_n = compute_n32(result);
     let flag_z = compute_z(&res_bits);
-    AluResult68K { result, flag_c: 0, flag_v: 0, flag_n, flag_z, flag_x: 0 }
+    AluResult68K {
+        result,
+        flag_c: 0,
+        flag_v: 0,
+        flag_n,
+        flag_z,
+        flag_x: 0,
+    }
 }
 
 /// 32-bit XOR: `result = a ^ b`.  V=0, C=0; X unchanged.
@@ -198,7 +240,14 @@ pub fn xor32(a: u32, b: u32) -> AluResult68K {
     let result = crate::bits::bits_to_u32(&res_bits);
     let flag_n = compute_n32(result);
     let flag_z = compute_z(&res_bits);
-    AluResult68K { result, flag_c: 0, flag_v: 0, flag_n, flag_z, flag_x: 0 }
+    AluResult68K {
+        result,
+        flag_c: 0,
+        flag_v: 0,
+        flag_n,
+        flag_z,
+        flag_x: 0,
+    }
 }
 
 /// 32-bit NOT: bitwise complement via NOT gates.  Returns plain `u32`.
@@ -209,7 +258,14 @@ pub fn not32_flags(val: u32) -> AluResult68K {
     let result = crate::bits::bits_to_u32(&res_bits);
     let flag_n = compute_n32(result);
     let flag_z = compute_z(&res_bits);
-    AluResult68K { result, flag_c: 0, flag_v: 0, flag_n, flag_z, flag_x: 0 }
+    AluResult68K {
+        result,
+        flag_c: 0,
+        flag_v: 0,
+        flag_n,
+        flag_z,
+        flag_x: 0,
+    }
 }
 
 // ── 16-bit operations ─────────────────────────────────────────────────────────
@@ -221,7 +277,14 @@ pub fn add16(a: u16, b: u16, carry_in: u8) -> AluResult68K {
     let flag_v = compute_v_from_carries(&carries);
     let flag_n = compute_n16(result);
     let flag_z = compute_z16(result);
-    AluResult68K { result: result as u32, flag_c, flag_v, flag_n, flag_z, flag_x: flag_c }
+    AluResult68K {
+        result: result as u32,
+        flag_c,
+        flag_v,
+        flag_n,
+        flag_z,
+        flag_x: flag_c,
+    }
 }
 
 /// 16-bit SUB: `a - b`.
@@ -233,7 +296,14 @@ pub fn sub16(a: u16, b: u16, borrow_in: u8) -> AluResult68K {
     let flag_v = compute_v_from_carries(&carries);
     let flag_n = compute_n16(result);
     let flag_z = compute_z16(result);
-    AluResult68K { result: result as u32, flag_c, flag_v, flag_n, flag_z, flag_x: flag_c }
+    AluResult68K {
+        result: result as u32,
+        flag_c,
+        flag_v,
+        flag_n,
+        flag_z,
+        flag_x: flag_c,
+    }
 }
 
 /// 16-bit NEG.
@@ -246,7 +316,14 @@ pub fn neg16(src: u16) -> AluResult68K {
     let flag_v = compute_v_neg(&src_bits, 16);
     let flag_n = compute_n16(result);
     let flag_z = compute_z(&res_bits);
-    AluResult68K { result: result as u32, flag_c, flag_v, flag_n, flag_z, flag_x: flag_c }
+    AluResult68K {
+        result: result as u32,
+        flag_c,
+        flag_v,
+        flag_n,
+        flag_z,
+        flag_x: flag_c,
+    }
 }
 
 /// 16-bit NEGX.
@@ -259,7 +336,14 @@ pub fn negx16(src: u16, x_flag: u8) -> AluResult68K {
     let flag_v = compute_v_neg(&int_to_bits16(result), 16);
     let flag_n = compute_n16(result);
     let flag_z = compute_z(&res_bits);
-    AluResult68K { result: result as u32, flag_c, flag_v, flag_n, flag_z, flag_x: flag_c }
+    AluResult68K {
+        result: result as u32,
+        flag_c,
+        flag_v,
+        flag_n,
+        flag_z,
+        flag_x: flag_c,
+    }
 }
 
 /// 16-bit AND.
@@ -270,7 +354,14 @@ pub fn and16(a: u16, b: u16) -> AluResult68K {
     let result = crate::bits::bits_to_u16(&res_bits) as u32;
     let flag_n = compute_n16(result as u16);
     let flag_z = compute_z(&res_bits);
-    AluResult68K { result, flag_c: 0, flag_v: 0, flag_n, flag_z, flag_x: 0 }
+    AluResult68K {
+        result,
+        flag_c: 0,
+        flag_v: 0,
+        flag_n,
+        flag_z,
+        flag_x: 0,
+    }
 }
 
 /// 16-bit OR.
@@ -281,7 +372,14 @@ pub fn or16(a: u16, b: u16) -> AluResult68K {
     let result = crate::bits::bits_to_u16(&res_bits) as u32;
     let flag_n = compute_n16(result as u16);
     let flag_z = compute_z(&res_bits);
-    AluResult68K { result, flag_c: 0, flag_v: 0, flag_n, flag_z, flag_x: 0 }
+    AluResult68K {
+        result,
+        flag_c: 0,
+        flag_v: 0,
+        flag_n,
+        flag_z,
+        flag_x: 0,
+    }
 }
 
 /// 16-bit XOR.
@@ -292,7 +390,14 @@ pub fn xor16(a: u16, b: u16) -> AluResult68K {
     let result = crate::bits::bits_to_u16(&res_bits) as u32;
     let flag_n = compute_n16(result as u16);
     let flag_z = compute_z(&res_bits);
-    AluResult68K { result, flag_c: 0, flag_v: 0, flag_n, flag_z, flag_x: 0 }
+    AluResult68K {
+        result,
+        flag_c: 0,
+        flag_v: 0,
+        flag_n,
+        flag_z,
+        flag_x: 0,
+    }
 }
 
 /// 16-bit NOT (with flags).
@@ -302,7 +407,14 @@ pub fn not16_flags(val: u16) -> AluResult68K {
     let result = crate::bits::bits_to_u16(&res_bits) as u32;
     let flag_n = compute_n16(result as u16);
     let flag_z = compute_z(&res_bits);
-    AluResult68K { result, flag_c: 0, flag_v: 0, flag_n, flag_z, flag_x: 0 }
+    AluResult68K {
+        result,
+        flag_c: 0,
+        flag_v: 0,
+        flag_n,
+        flag_z,
+        flag_x: 0,
+    }
 }
 
 // ── 8-bit operations ──────────────────────────────────────────────────────────
@@ -314,7 +426,14 @@ pub fn add8(a: u8, b: u8, carry_in: u8) -> AluResult68K {
     let flag_v = compute_v_from_carries(&carries);
     let flag_n = compute_n8(result);
     let flag_z = compute_z8(result);
-    AluResult68K { result: result as u32, flag_c, flag_v, flag_n, flag_z, flag_x: flag_c }
+    AluResult68K {
+        result: result as u32,
+        flag_c,
+        flag_v,
+        flag_n,
+        flag_z,
+        flag_x: flag_c,
+    }
 }
 
 /// 8-bit SUB: `a - b`.
@@ -326,7 +445,14 @@ pub fn sub8(a: u8, b: u8, borrow_in: u8) -> AluResult68K {
     let flag_v = compute_v_from_carries(&carries);
     let flag_n = compute_n8(result);
     let flag_z = compute_z8(result);
-    AluResult68K { result: result as u32, flag_c, flag_v, flag_n, flag_z, flag_x: flag_c }
+    AluResult68K {
+        result: result as u32,
+        flag_c,
+        flag_v,
+        flag_n,
+        flag_z,
+        flag_x: flag_c,
+    }
 }
 
 /// 8-bit NEG.
@@ -339,7 +465,14 @@ pub fn neg8(src: u8) -> AluResult68K {
     let flag_v = compute_v_neg(&src_bits, 8);
     let flag_n = compute_n8(result);
     let flag_z = compute_z(&res_bits);
-    AluResult68K { result: result as u32, flag_c, flag_v, flag_n, flag_z, flag_x: flag_c }
+    AluResult68K {
+        result: result as u32,
+        flag_c,
+        flag_v,
+        flag_n,
+        flag_z,
+        flag_x: flag_c,
+    }
 }
 
 /// 8-bit NEGX.
@@ -352,7 +485,14 @@ pub fn negx8(src: u8, x_flag: u8) -> AluResult68K {
     let flag_v = compute_v_neg(&int_to_bits8(result), 8);
     let flag_n = compute_n8(result);
     let flag_z = compute_z(&res_bits);
-    AluResult68K { result: result as u32, flag_c, flag_v, flag_n, flag_z, flag_x: flag_c }
+    AluResult68K {
+        result: result as u32,
+        flag_c,
+        flag_v,
+        flag_n,
+        flag_z,
+        flag_x: flag_c,
+    }
 }
 
 /// 8-bit AND.
@@ -363,7 +503,14 @@ pub fn and8(a: u8, b: u8) -> AluResult68K {
     let result = crate::bits::bits_to_u8(&res_bits);
     let flag_n = compute_n8(result);
     let flag_z = compute_z(&res_bits);
-    AluResult68K { result: result as u32, flag_c: 0, flag_v: 0, flag_n, flag_z, flag_x: 0 }
+    AluResult68K {
+        result: result as u32,
+        flag_c: 0,
+        flag_v: 0,
+        flag_n,
+        flag_z,
+        flag_x: 0,
+    }
 }
 
 /// 8-bit OR.
@@ -374,7 +521,14 @@ pub fn or8(a: u8, b: u8) -> AluResult68K {
     let result = crate::bits::bits_to_u8(&res_bits);
     let flag_n = compute_n8(result);
     let flag_z = compute_z(&res_bits);
-    AluResult68K { result: result as u32, flag_c: 0, flag_v: 0, flag_n, flag_z, flag_x: 0 }
+    AluResult68K {
+        result: result as u32,
+        flag_c: 0,
+        flag_v: 0,
+        flag_n,
+        flag_z,
+        flag_x: 0,
+    }
 }
 
 /// 8-bit XOR.
@@ -385,7 +539,14 @@ pub fn xor8(a: u8, b: u8) -> AluResult68K {
     let result = crate::bits::bits_to_u8(&res_bits);
     let flag_n = compute_n8(result);
     let flag_z = compute_z(&res_bits);
-    AluResult68K { result: result as u32, flag_c: 0, flag_v: 0, flag_n, flag_z, flag_x: 0 }
+    AluResult68K {
+        result: result as u32,
+        flag_c: 0,
+        flag_v: 0,
+        flag_n,
+        flag_z,
+        flag_x: 0,
+    }
 }
 
 /// 8-bit NOT (with flags).
@@ -395,7 +556,14 @@ pub fn not8_flags(val: u8) -> AluResult68K {
     let result = crate::bits::bits_to_u8(&res_bits);
     let flag_n = compute_n8(result);
     let flag_z = compute_z(&res_bits);
-    AluResult68K { result: result as u32, flag_c: 0, flag_v: 0, flag_n, flag_z, flag_x: 0 }
+    AluResult68K {
+        result: result as u32,
+        flag_c: 0,
+        flag_v: 0,
+        flag_n,
+        flag_z,
+        flag_x: 0,
+    }
 }
 
 // ── Shift / Rotate ────────────────────────────────────────────────────────────
@@ -418,7 +586,140 @@ pub fn not8_flags(val: u8) -> AluResult68K {
 // multiplexer (AND/OR tree).  The loop below steps one bit at a time,
 // tracking the last bit out.
 //
-// MUL/DIV: host arithmetic (gate-level 16×16 multiplier is out of scope).
+// MUL/DIV use fixed partial-product and restoring gate networks below.
+
+fn width_mask(width: usize) -> u64 {
+    if width == 64 {
+        u64::MAX
+    } else {
+        (1u64 << width) - 1
+    }
+}
+
+fn gate_add_width(a: u64, b: u64, carry_in: u8, width: usize) -> (u64, u8) {
+    let mut result = 0u64;
+    let mut carry = carry_in;
+    for bit in 0..width {
+        let (sum, next) =
+            arithmetic::adders::full_adder(((a >> bit) & 1) as u8, ((b >> bit) & 1) as u8, carry);
+        result |= u64::from(sum) << bit;
+        carry = next;
+    }
+    (result & width_mask(width), carry)
+}
+
+fn gate_negate_width(value: u64, width: usize) -> u64 {
+    let mut inverted = 0u64;
+    for bit in 0..width {
+        inverted |= u64::from(not_gate(((value >> bit) & 1) as u8)) << bit;
+    }
+    gate_add_width(inverted, 0, 1, width).0
+}
+
+fn gate_unsigned_multiply(left: u64, right: u64, width: usize) -> u64 {
+    let product_width = width * 2;
+    let mut product = 0u64;
+    for right_bit in 0..width {
+        let selector = ((right >> right_bit) & 1) as u8;
+        let mut partial = 0u64;
+        for left_bit in 0..width {
+            let bit = and_gate(((left >> left_bit) & 1) as u8, selector);
+            partial |= u64::from(bit) << (left_bit + right_bit);
+        }
+        product = gate_add_width(product, partial, 0, product_width).0;
+    }
+    product
+}
+
+fn gate_unsigned_divide(dividend: u64, divisor: u64, width: usize) -> Option<(u64, u64)> {
+    if divisor == 0 {
+        return None;
+    }
+    let remainder_width = width + 1;
+    let mut quotient = 0u64;
+    let mut remainder = 0u64;
+    for bit in (0..width).rev() {
+        remainder = ((remainder << 1) | ((dividend >> bit) & 1)) & width_mask(remainder_width);
+        let inverted = gate_negate_width(divisor, remainder_width);
+        let (difference, no_borrow) = gate_add_width(remainder, inverted, 0, remainder_width);
+        if no_borrow == 1 {
+            remainder = difference;
+            quotient |= 1u64 << bit;
+        }
+    }
+    Some((quotient, remainder))
+}
+
+/// Fixed 16×16 unsigned partial-product multiplier.
+pub fn gate_mulu16(left: u16, right: u16) -> u32 {
+    gate_unsigned_multiply(u64::from(left), u64::from(right), 16) as u32
+}
+
+/// Fixed 16×16 signed partial-product multiplier.
+pub fn gate_muls16(left: u16, right: u16) -> u32 {
+    let left_sign = ((left >> 15) & 1) as u8;
+    let right_sign = ((right >> 15) & 1) as u8;
+    let left_magnitude = if left_sign == 1 {
+        gate_negate_width(u64::from(left), 16)
+    } else {
+        u64::from(left)
+    };
+    let right_magnitude = if right_sign == 1 {
+        gate_negate_width(u64::from(right), 16)
+    } else {
+        u64::from(right)
+    };
+    let product = gate_unsigned_multiply(left_magnitude, right_magnitude, 16);
+    if xor_gate(left_sign, right_sign) == 1 {
+        gate_negate_width(product, 32) as u32
+    } else {
+        product as u32
+    }
+}
+
+/// Fixed restoring unsigned 32÷16 divider returning full quotient and remainder.
+pub fn gate_divu32_16(dividend: u32, divisor: u16) -> Option<(u32, u16)> {
+    gate_unsigned_divide(u64::from(dividend), u64::from(divisor), 32)
+        .map(|(quotient, remainder)| (quotient as u32, remainder as u16))
+}
+
+/// Fixed restoring signed 32÷16 divider.
+///
+/// Returns the low 16-bit quotient, signed remainder, and the architectural
+/// quotient-overflow flag. Division by zero returns `None`.
+pub fn gate_divs32_16(dividend: u32, divisor: u16) -> Option<(u16, u16, bool)> {
+    if divisor == 0 {
+        return None;
+    }
+    let dividend_sign = ((dividend >> 31) & 1) as u8;
+    let divisor_sign = ((divisor >> 15) & 1) as u8;
+    let dividend_magnitude = if dividend_sign == 1 {
+        gate_negate_width(u64::from(dividend), 32)
+    } else {
+        u64::from(dividend)
+    };
+    let divisor_magnitude = if divisor_sign == 1 {
+        gate_negate_width(u64::from(divisor), 16)
+    } else {
+        u64::from(divisor)
+    };
+    let (quotient_magnitude, remainder_magnitude) =
+        gate_unsigned_divide(dividend_magnitude, divisor_magnitude, 32)?;
+    let negative_quotient = xor_gate(dividend_sign, divisor_sign) == 1;
+    let limit = if negative_quotient { 32_768 } else { 32_767 };
+    let overflow = quotient_magnitude > limit;
+    let quotient = if negative_quotient {
+        gate_negate_width(quotient_magnitude, 16)
+    } else {
+        quotient_magnitude
+    } as u16;
+    let remainder = if dividend_sign == 1 {
+        gate_negate_width(remainder_magnitude, 16)
+    } else {
+        remainder_magnitude
+    } as u16;
+    Some((quotient, remainder, overflow))
+}
 
 /// Shift/rotate result: `(new_val, flag_n, flag_z, flag_v, flag_c, flag_x)`.
 pub struct ShiftResult {
@@ -452,7 +753,11 @@ pub fn shift_op(
     bits: u32,
     x_in: u8,
 ) -> ShiftResult {
-    let mask: u32 = if bits == 32 { 0xFFFF_FFFF } else { (1u32 << bits) - 1 };
+    let mask: u32 = if bits == 32 {
+        0xFFFF_FFFF
+    } else {
+        (1u32 << bits) - 1
+    };
     let msb_mask: u32 = 1u32 << (bits - 1);
     let count = count & mask; // safety clamp (count already validated by caller)
 
@@ -545,9 +850,20 @@ pub fn shift_op(
     // X unchanged for circular rotate (ROL/ROR); X = C for all others.
     let flag_x = if shift_type == 3 { x_in } else { flag_c };
     // For ROL/ROR with count=0: C is cleared.
-    let flag_c = if shift_type == 3 && count == 0 { 0 } else { flag_c };
+    let flag_c = if shift_type == 3 && count == 0 {
+        0
+    } else {
+        flag_c
+    };
 
-    ShiftResult { result, flag_n, flag_z, flag_v: v_flag, flag_c, flag_x }
+    ShiftResult {
+        result,
+        flag_n,
+        flag_z,
+        flag_v: v_flag,
+        flag_c,
+        flag_x,
+    }
 }
 
 // ── CMP helper ────────────────────────────────────────────────────────────────
@@ -758,5 +1074,39 @@ mod tests {
         let r = negx32(1, 0);
         assert_eq!(r.result, 0xFFFF_FFFF);
         assert_eq!(r.flag_c, 1); // result != 0 → borrow
+    }
+
+    #[test]
+    fn fixed_gate_multiply_and_divide_seeded_vectors() {
+        let mut seed = 0x68_0000u32;
+        for _ in 0..512 {
+            seed = seed.wrapping_mul(1_664_525).wrapping_add(1_013_904_223);
+            let left = seed as u16;
+            seed = seed.wrapping_mul(1_664_525).wrapping_add(1_013_904_223);
+            let right = seed as u16;
+            assert_eq!(gate_mulu16(left, right), u32::from(left) * u32::from(right));
+            assert_eq!(
+                gate_muls16(left, right),
+                ((left as i16 as i32) * (right as i16 as i32)) as u32
+            );
+
+            let divisor = right | 1;
+            let (quotient, remainder) = gate_divu32_16(seed, divisor).unwrap();
+            assert_eq!(quotient, seed / u32::from(divisor));
+            assert_eq!(remainder, (seed % u32::from(divisor)) as u16);
+        }
+    }
+
+    #[test]
+    fn fixed_signed_divider_handles_signs_and_overflow() {
+        assert_eq!(
+            gate_divs32_16((-100i32) as u32, (-7i16) as u16),
+            Some((14, (-2i16) as u16, false))
+        );
+        assert_eq!(
+            gate_divs32_16(i32::MIN as u32, (-1i16) as u16),
+            Some((0, 0, true))
+        );
+        assert_eq!(gate_divs32_16(1, 0), None);
     }
 }

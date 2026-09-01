@@ -2,7 +2,8 @@
 //!
 //! Every arithmetic and logical operation routes through real gate functions:
 //! `AND → OR → XOR → NOT → full_adder → ripple-carry adder → ALU`.
-//! Registers are modelled as 32-bit D flip-flop arrays.
+//! Registers and all 16 MiB of memory form an exact
+//! 134,218,289-D-flip-flop persistent topology.
 //!
 //! ## Why gate-level?
 //!
@@ -21,15 +22,17 @@
 //! alu.rs       — AluResult68K: all ALU operations through gate primitives
 //!                add/sub/neg/negx (8/16/32-bit); and/or/xor/not (8/16/32-bit)
 //!                cmp, shift_op (ASL/LSL/ASR/LSR/ROXL/ROXR/ROL/ROR)
+//!                fixed partial-product multiply and restoring divide
 //! registers.rs — RegisterFile68K: D0–D7, A0–A7, PC, SR
 //!                read/write Dn with size (byte/word/long, upper bits preserved)
 //!                write_an with word sign-extension
 //!                set_ccr / set_nz_clear_vc / negx_z for flag updates
 //!                test_cc: all 16 condition codes (T/F/HI/LS/CC/CS/…)
+//! state.rs     — packed stable-Q memory DFFs and explicit state registers
 //! cpu.rs       — Cpu68K: full fetch-decode-execute loop
 //!                big-endian memory helpers (16 MB flat)
 //!                EA resolution (all 14 addressing modes)
-//!                ~100 opcodes across all instruction groups
+//!                ~100 opcodes plus typed atomic state/traces/runs
 //! ```
 //!
 //! ## Design constraints
@@ -37,9 +40,9 @@
 //! | Area           | Constraint |
 //! |----------------|-----------|
 //! | Data path      | Every +/–/AND/OR/XOR goes through `full_adder` / gate functions |
-//! | MUL/DIV        | Host arithmetic — gate-level ×16 multiplier is out of scope |
+//! | MUL/DIV        | Fixed partial-product multiplier and restoring divider |
 //! | Address space  | 24-bit flat (16 MB) via `& 0x00FF_FFFF` |
-//! | Memory         | 16 MB flat `Box<[u8; 0x100_0000]>`, big-endian byte order |
+//! | Memory         | 16 MB packed stable-Q DFF memory, big-endian byte order |
 //!
 //! ## Example
 //!
@@ -63,5 +66,8 @@ pub mod alu;
 pub mod bits;
 pub mod cpu;
 pub mod registers;
+mod state;
 
-pub use cpu::Cpu68K;
+pub use cpu::{Cpu68K, FLIP_FLOP_COUNT};
+pub use m68k_simulator::{ExecutionResult, M68kError, M68kState, StepTrace};
+pub use state::DffMemory;

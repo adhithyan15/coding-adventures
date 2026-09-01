@@ -1,0 +1,16 @@
+{
+  "language": "marwadi",
+  "chapter": 25,
+  "sourceHash": "fnv1a64:0141ba0c8b15112a",
+  "lessonIds": [
+    "MW-C20-hear-churma",
+    "MW-C20-churma",
+    "MW-C20-hear-chaay",
+    "MW-W20-ya",
+    "MW-C20-chaay",
+    "MW-R20-food-new-two",
+    "MW-C20-food-seven",
+    "MW-R20-script-close"
+  ],
+  "tex": "marwadi/book/chapters/ch25-food-seven.tex"
+}

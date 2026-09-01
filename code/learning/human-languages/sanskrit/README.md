@@ -78,6 +78,18 @@ Chapters 1–13 are in the book. Core verb coverage: **14 of the canonical 40**,
 including all eight verbs the other fifteen verb-bearing tracks share. All
 seven pre-A1 spine nodes are now realized.
 
+- **The script ladder** ([`lessons/SA-S*`](./lessons/)): 23 one-character
+  lessons, riding the ends of chapters 8–24 so that every word containing a
+  character is met **glossed** before the character itself is taught. Each
+  lesson introduces exactly one Devanagari character and nothing else, and its
+  pen path, pen-lift count and citation are read from
+  [`data/scripts/devanagari.json`](../data/scripts/devanagari.json) rather than
+  written by hand — where that file records no source (the vowel signs), the
+  lesson asks the reader to copy the printed shape and says plainly that the
+  stroke direction is not written down here yet. **44 of the 53 characters the
+  track shows are now taught**; the remaining nine are accounted for in backlog
+  `HL-C217`.
+
 ---
 
 ## For contributors

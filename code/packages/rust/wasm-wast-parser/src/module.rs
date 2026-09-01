@@ -3530,6 +3530,63 @@ fn encode_flat_instr(
         out.push(0x1E);
         return Ok(());
     }
+    // `ref.test` / `ref.cast` (GC proposal, W33 second slice item 4: `code/
+    // specs/W33-wasm-gc-recursive-type-subtyping.md`'s second addendum).
+    // Unlike every GC instruction above, the TEXT-format immediate here is a
+    // full reftype descriptor -- `(ref $t)` (non-null) or `(ref null $t)`
+    // (nullable) -- so this reuses `parse_value_type` (the SAME parser
+    // `local`/`global`/`param`/`result` value-type declarations already
+    // use), not `ref.null`'s own bare-heaptype-keyword parser (`parse_ref_
+    // null_heap_type`): `ref.test`/`ref.cast` spell nullability via the
+    // `ref [null]` wrapper itself, encoded into WHICH of the two sub-opcodes
+    // is emitted, exactly like `ref.null $ht`'s own binary encoding has no
+    // separate nullability bit (a `ref.null`-produced value is always
+    // nullable) -- see the real GC proposal's binary-format table:
+    // `ref.test (ref ht)`/`(ref null ht)` = `0xFB 0x14`/`0x15 <ht>`;
+    // `ref.cast (ref ht)`/`(ref null ht)` = `0xFB 0x16`/`0x17 <ht>`.
+    //
+    // Only the CONCRETE-type cases this crate's `ValueType` can represent
+    // (`ConcreteFuncRef`/`NonNullConcreteFuncRef`, W11/W32) are supported —
+    // an abstract heap type (`(ref any)`, `(ref func)`, `(ref i31)`, ...) is
+    // explicitly out of scope: this crate's struct/array TEXT-format type
+    // declarations don't exist yet either (W33's own "Recommended scope"
+    // step 2, still open), and no vendored corpus case needs an abstract
+    // heap type for `ref.test`/`ref.cast` specifically (every real use in
+    // `type-subtyping.wast`'s "Runtime types" section names a concrete `$t`).
+    // Rejecting cleanly here (a parse error, same as an unrecognized
+    // instruction) rather than silently mis-encoding is deliberate.
+    //
+    // Only the FOLDED form is supported (no bare/flat-atom-stream
+    // counterpart, unlike `ref.i31`/`ref.null` above) — every real corpus
+    // use folds both the type descriptor and the value operand
+    // (`(ref.cast (ref $t0) (table.get ...))`), and this crate's own
+    // "support both forms symmetrically" convention (see `throw`'s own
+    // comment) is a nice-to-have, not exercised by anything vendored, so
+    // left undone here rather than adding untested surface.
+    if name == "ref.test" || name == "ref.cast" {
+        let ty_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
+        let (type_idx, nullable) = match parse_value_type(ty_expr, &icx.module.type_names)? {
+            ValueType::NonNullConcreteFuncRef(idx) => (idx, false),
+            ValueType::ConcreteFuncRef(idx) => (idx, true),
+            _ => {
+                return Err(WastParseError::UnexpectedToken {
+                    pos: ty_expr.pos(),
+                    found: "abstract heap type".to_string(),
+                    expected: "a concrete (ref $t) / (ref null $t) heap type",
+                });
+            }
+        };
+        encode_instr_list(&args[1..], icx, out)?;
+        out.push(0xFB);
+        out.push(match (name, nullable) {
+            ("ref.test", false) => 0x14,
+            ("ref.test", true) => 0x15,
+            ("ref.cast", false) => 0x16,
+            (_, _) => 0x17, // "ref.cast", nullable
+        });
+        out.extend(wasm_leb128::encode_unsigned(type_idx as u64));
+        return Ok(());
+    }
     // Atomic memory operations (WASM18): see the matching comment in
     // `encode_stream_instr`. `atomic.fence` takes no operands at all
     // (like `ref.null`, nothing to recurse into); every other atomic op

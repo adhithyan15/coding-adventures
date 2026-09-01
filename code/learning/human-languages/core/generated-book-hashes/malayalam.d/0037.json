@@ -1,12 +1,13 @@
 {
   "language": "malayalam",
   "chapter": 37,
-  "sourceHash": "fnv1a64:45b6c76dbbb62f67",
+  "sourceHash": "fnv1a64:6f206b2e523b1c89",
   "lessonIds": [
     "ML-C37-kannu",
     "ML-C37-chevi",
     "ML-C37-mookku",
-    "ML-C37-vaay"
+    "ML-C37-vaay",
+    "ML-S130-letter-tha"
   ],
   "tex": "malayalam/book/chapters/ch37-face-words.tex"
 }

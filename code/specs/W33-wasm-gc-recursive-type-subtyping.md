@@ -489,3 +489,128 @@ W33 entirely"). Zero new `fail`/`trap` anywhere in the 257-file baseline.
 Items (3b) and (4) from this spec's own "Recommended scope" remain exactly
 as open as the first slice's addendum left them — this second slice did
 not touch either.
+
+## Addendum (third slice, 2026-08-31): item (4) shipped for every single-module case; (3b) re-confirmed as the real remaining boundary
+
+Picked up item (4), "Dynamic type checks" — the first slice's own analysis
+(re-verified here directly against the real corpus text, not re-assumed)
+found that `type-subtyping.wast`'s entire "Runtime types" section (lines
+283-534) is single-module: every `call_indirect`/`ref.cast`/`ref.test`
+directive there compares a value's real dynamic type against a target type
+declared IN THE SAME MODULE's own type-section index space, which never
+needs (3b)'s cross-module canonical equivalence — only the (1)-first-slice
+nominal-chain walk, reflexively and transitively applied. Only the
+"Linking" section (lines 538-774, `register`/`assert_unlinkable` — a
+genuinely separate, cross-module section) needs (3b), confirmed unchanged
+from the first slice's own accounting.
+
+### What shipped, across four crates
+
+- **`wasm-wast-parser` 0.1.90**: `ref.test`/`ref.test null`/`ref.cast`/
+  `ref.cast null` TEXT-format parsing (folded form only) — previously
+  recognized NOWHERE in this crate at all (a repo-wide grep for either
+  name returned zero hits before this slice), so every module using them
+  failed to parse regardless of whether the underlying `sub`/`rec`
+  machinery existed. Reuses `parse_value_type` (the same `(ref $t)`/`(ref
+  null $t)` parser `local`/`global`/`param`/`result` already use) for the
+  type immediate; only concrete heap types are supported (an abstract
+  heap type like `(ref any)` is a clean parse error, matching this
+  crate's still-open struct/array scope boundary — no vendored case needs
+  one here).
+- **`wasm-execution` 0.9.81**: a real, non-stub `ref.cast`/`ref.test`
+  runtime implementation (`ref.cast` didn't exist in this engine's
+  dispatch table at all before this slice — `0xFB 0x16`/`0x17` fell
+  through to "unsupported WasmGC opcode"; `ref.test`'s existing 0x14/0x15
+  handler was a stub that matched "any non-null ref", ignoring the
+  type-index immediate entirely), PLUS a real fix to `call_indirect`/
+  `return_call_indirect`'s dynamic dispatch check, which the first slice's
+  own addendum had already traced as "a PRE-EXISTING simplification:
+  plain `FuncType` structural equality, no type-identity or
+  nominal-subtype awareness at all." All three now share one gated rule
+  (`call_indirect_type_matches`/`ref_matches_concrete_type`, both backed
+  by `wasm_types::nominal_subtype_chain`): a module that never declares
+  `sub` anywhere gets this engine's ORIGINAL pre-W33 structural-equality
+  behavior, byte-for-byte unchanged; a module that uses `sub` anywhere
+  switches to the real nominal (reflexive index equality OR a genuine
+  declared subtype relationship) rule. This gate was not a design
+  afterthought — the naive "always use nominal" version regressed
+  `call_indirect.wast`/`func.wast`/`func_ptrs.wast` in the full 257-file
+  baseline during development (13, 1, and 7 new `assert_return` fails
+  respectively), traced to `wasm-wast-parser`'s own `dedup_type` pushing a
+  default `TypeSubtyping` entry for EVERY type it declares (`sub`-declared
+  or not), which meant `type_subtyping.is_empty()` was never actually a
+  reliable "this module never uses `sub`" signal — fixed by gating on
+  `wasm_types::any_declares_subtyping` (a new function added specifically
+  for this) instead, which checks whether any entry is genuinely
+  non-default. Re-running the full baseline after the fix confirmed zero
+  files changed other than `type-subtyping.wast` itself.
+- **`wasm-validator` 0.2.78**: a narrow but real fix — the static
+  function-body checker never consumed `ref.cast`/`ref.cast null`'s LEB128
+  heap-type immediate (fell into the existing `_ => {}` no-immediate
+  catch-all for unrecognized `0xFB` sub-opcodes), which would have
+  silently desynced its byte offset from every real instruction after it
+  the moment the parser could emit the bytes.
+- **`wasm-runtime` 0.6.18**: threads the two new pieces of state
+  (`instance.module.type_subtyping`, and a new `WasmInstance::
+  func_type_indices: Vec<u32>` — each function's own declared type-section
+  index, the combined imported+module-defined space `wasm-execution` needs
+  to recover a funcref value's real nominal identity) into the engine via
+  the new `set_type_subtyping`/`set_func_type_indices` optional setters,
+  alongside the pre-existing `set_type_section` call.
+
+### Funcref-only, by design and by corpus necessity — not a shortcut
+
+`ref.cast`/`ref.test`'s real dynamic check is wired for FUNCREF values
+only. This is not an arbitrary scope cut: `type-subtyping.wast`'s entire
+"Runtime types" section exercises casts/tests exclusively against
+`ref.func`/`table.get`-produced funcref values — never a struct or array —
+confirmed directly (every module in lines 283-534 that would exercise a
+struct-shaped cast/test also declares an anonymous `(type (struct ...))`
+member inside the SAME `rec` group as its func types, and this crate's
+struct/array TEXT-format type-declaration parsing remains the separate,
+still-fully-open gap this spec's own "Recommended scope" step 2 named from
+the start — confirmed via a direct parse-error probe: `UnexpectedToken {
+found: "struct", expected: "a func type body ... struct/array type
+declarations are not yet supported by this parser" }`). The struct/array
+path in `ref_matches_concrete_type` deliberately preserves this engine's
+OLD permissive stub ("any live struct-heap object matches any concrete
+struct type") rather than attempting real per-struct-type nominal
+identity, which needs step 2 first. This costs nothing today: this
+engine's value model only ever allocates one struct shape ($LispyPair, for
+McCarthy `pair?`), so the stub and a real check would agree on every value
+this crate can currently construct.
+
+### Real pass-number impact (full 257-file baseline, programmatically diffed)
+
+Exactly ONE file's tally changed — `type-subtyping.wast` — every other
+file byte-for-byte identical before and after:
+
+- `module`: 8/46 → 12/46 (+4 real passes; all 34 remaining `not_yet_
+  supported` modules are the struct/array-in-`rec`-group parsing gap
+  above, confirmed via the parse-error probe, not a new gap this slice
+  introduced or left unexamined).
+- `assert_return`: 7/17 → 10/17 (+3).
+- `assert_trap`: 2 fail + 10 not-yet-supported (0 real passes) → 12/12,
+  zero fail, zero not-yet-supported.
+- `assert_unlinkable`: unchanged, 6/8 — the 2 remaining fails are the
+  genuine `M10`/`M11` `rec`-group topology mismatch the first slice's
+  addendum already identified as needing real (3b) canonical
+  equivalence; nothing in this slice touches or changes that boundary.
+- `assert_invalid`: unchanged, 36/36 (already fully passing).
+
+### What's confirmed still deferred to (3b), unchanged by this slice
+
+- **Cross-module canonical type-group equivalence** — necessary and
+  sufficient (per the first slice's own tracing, re-confirmed still
+  accurate here) for all 6 `type-equivalence.wast` fails and the 2
+  remaining `type-subtyping.wast` `assert_unlinkable` fails (`M10`/`M11`).
+  Not attempted this slice, exactly as scoped.
+- **Struct/array TEXT-format type declarations** (this spec's own step
+  2): still fully open, still the reason `type-subtyping.wast`'s `M3`-
+  `M11` `rec`-group modules (and `struct.wast`/`array.wast` generally)
+  remain `not_yet_supported` — confirmed via direct probe this slice, not
+  assumed. A future slice picking this up should expect it to also
+  unblock most of `type-subtyping.wast`'s remaining 34 `not_yet_supported`
+  modules, since — per this slice's own investigation — none of them are
+  additionally blocked on (3b) or on anything (4) covers; they parse-fail
+  on the struct member alone.
