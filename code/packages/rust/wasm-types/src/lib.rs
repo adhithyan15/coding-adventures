@@ -2014,84 +2014,177 @@ fn total_type_count(module: &WasmModule) -> usize {
 ///   a malformed index can only ever produce `None` (an honest "can't
 ///   canonicalize this"), never a panic, an infinite loop, or a stack
 ///   overflow.
-fn resolve_heap_index(target_idx: u32, self_idx: u32, canonical_so_far: &[Option<(Rc<CanonicalGroup>, u32)>]) -> Option<CanonicalHeapRef> {
+///
+/// **Security review finding (W34 first slice)**: constructing the tree is
+/// not the only place depth matters. `CanonicalHeapRef::Outer` embeds an
+/// EARLIER group's `Rc<CanonicalGroup>` wholesale (shared, never deep-
+/// cloned -- see that variant's own doc comment), so a module containing a
+/// long CHAIN of singleton groups, each referencing the immediately
+/// preceding one (`type[i] = func(param (ref i-1))`, no cycle at all,
+/// just many links), builds a genuinely nested value tree `N` links deep.
+/// The compiler-derived `Drop`/`PartialEq`/`Hash` implementations
+/// `CanonicalGroup` and friends need for correctness (structural, not
+/// pointer, comparison is the whole point of canonical equivalence) all
+/// walk that nesting RECURSIVELY -- a security review of this slice
+/// empirically confirmed a real process-aborting stack overflow when
+/// dropping such a chain (reliably by ~50,000 links, comfortably reachable
+/// from a small, realistic module). Returning `None` once `depth` would
+/// exceed [`MAX_CANONICAL_OUTER_DEPTH`] -- checked HERE, the one place new
+/// depth is ever introduced -- bounds all three derived traversals at
+/// their common root cause, with a huge safety margin below the depth
+/// that was shown to matter (this crate's own real corpus never nests
+/// more than a handful of groups deep in the first place).
+fn resolve_heap_index(target_idx: u32, self_idx: u32, canonical_so_far: &[Option<(Rc<CanonicalGroup>, u32)>], depths: &[u32]) -> Option<(CanonicalHeapRef, u32)> {
     if target_idx == self_idx {
-        return Some(CanonicalHeapRef::Rec(0));
+        return Some((CanonicalHeapRef::Rec(0), 0));
     }
     let (group, position) = canonical_so_far.get(target_idx as usize)?.as_ref()?;
-    Some(CanonicalHeapRef::Outer(Rc::clone(group), *position))
+    let depth = depths.get(target_idx as usize).copied().unwrap_or(0) + 1;
+    if depth > MAX_CANONICAL_OUTER_DEPTH {
+        return None;
+    }
+    Some((CanonicalHeapRef::Outer(Rc::clone(group), *position), depth))
 }
+
+/// The hop cap [`resolve_heap_index`] enforces -- see that function's own
+/// doc comment for the `Drop`/`PartialEq`/`Hash` stack-overflow finding
+/// this bounds, and this crate's own pre-existing [`MAX_SUBTYPE_CHAIN_HOPS`]
+/// for the established "1,000 hops is this codebase's own accepted safe
+/// magnitude for a chain-shaped bound" precedent this mirrors.
+const MAX_CANONICAL_OUTER_DEPTH: u32 = 1_000;
 
 /// Ties one [`ValueType`] -- the full, exhaustive per-variant mapping this
 /// slice's `CanonicalValType`/`CanonicalHeapRef`/`AbstractHeapKind` design
 /// exists for. `None` propagates a [`resolve_heap_index`] failure (an
-/// unresolvable concrete reference) up to the caller unchanged.
-fn canonicalize_value_type(vt: ValueType, self_idx: u32, canonical_so_far: &[Option<(Rc<CanonicalGroup>, u32)>]) -> Option<CanonicalValType> {
+/// unresolvable concrete reference, or the depth cap) up to the caller
+/// unchanged. Returns the tied value alongside the max `Outer`-embedding
+/// depth reached anywhere inside it (`0` for every scalar/abstract variant
+/// and for `Rec`, since neither embeds another group).
+fn canonicalize_value_type(vt: ValueType, self_idx: u32, canonical_so_far: &[Option<(Rc<CanonicalGroup>, u32)>], depths: &[u32]) -> Option<(CanonicalValType, u32)> {
     use AbstractHeapKind as A;
     use CanonicalHeapRef::Abstract;
+    let resolve = |i: u32| resolve_heap_index(i, self_idx, canonical_so_far, depths);
     Some(match vt {
-        ValueType::I32 => CanonicalValType::I32,
-        ValueType::I64 => CanonicalValType::I64,
-        ValueType::F32 => CanonicalValType::F32,
-        ValueType::F64 => CanonicalValType::F64,
-        ValueType::V128 => CanonicalValType::V128,
-        ValueType::Anyref => CanonicalValType::Ref(true, Abstract(A::Any)),
+        ValueType::I32 => (CanonicalValType::I32, 0),
+        ValueType::I64 => (CanonicalValType::I64, 0),
+        ValueType::F32 => (CanonicalValType::F32, 0),
+        ValueType::F64 => (CanonicalValType::F64, 0),
+        ValueType::V128 => (CanonicalValType::V128, 0),
+        ValueType::Anyref => (CanonicalValType::Ref(true, Abstract(A::Any)), 0),
         // Non-null in this crate -- see `ValueType::I31ref`'s own doc
         // comment ("(ref i31)", not "(ref null i31)").
-        ValueType::I31ref => CanonicalValType::Ref(false, Abstract(A::I31)),
-        ValueType::Funcref => CanonicalValType::Ref(true, Abstract(A::Func)),
-        ValueType::Externref => CanonicalValType::Ref(true, Abstract(A::Extern)),
-        ValueType::Exnref => CanonicalValType::Ref(true, Abstract(A::Exn)),
-        ValueType::NullFuncref => CanonicalValType::Ref(true, Abstract(A::NoFunc)),
-        ValueType::NullExternref => CanonicalValType::Ref(true, Abstract(A::NoExtern)),
-        ValueType::NullExnref => CanonicalValType::Ref(true, Abstract(A::NoExn)),
-        ValueType::NullRef => CanonicalValType::Ref(true, Abstract(A::None)),
-        ValueType::NonNullArrayAny => CanonicalValType::Ref(false, Abstract(A::Array)),
-        ValueType::StructRef(i) => CanonicalValType::Ref(true, resolve_heap_index(i, self_idx, canonical_so_far)?),
-        ValueType::ConcreteFuncRef(i) => CanonicalValType::Ref(true, resolve_heap_index(i, self_idx, canonical_so_far)?),
-        ValueType::ArrayRef(i) => CanonicalValType::Ref(true, resolve_heap_index(i, self_idx, canonical_so_far)?),
-        ValueType::NonNullStructRef(i) => CanonicalValType::Ref(false, resolve_heap_index(i, self_idx, canonical_so_far)?),
-        ValueType::NonNullConcreteFuncRef(i) => CanonicalValType::Ref(false, resolve_heap_index(i, self_idx, canonical_so_far)?),
-        ValueType::NonNullArrayRef(i) => CanonicalValType::Ref(false, resolve_heap_index(i, self_idx, canonical_so_far)?),
+        ValueType::I31ref => (CanonicalValType::Ref(false, Abstract(A::I31)), 0),
+        ValueType::Funcref => (CanonicalValType::Ref(true, Abstract(A::Func)), 0),
+        ValueType::Externref => (CanonicalValType::Ref(true, Abstract(A::Extern)), 0),
+        ValueType::Exnref => (CanonicalValType::Ref(true, Abstract(A::Exn)), 0),
+        ValueType::NullFuncref => (CanonicalValType::Ref(true, Abstract(A::NoFunc)), 0),
+        ValueType::NullExternref => (CanonicalValType::Ref(true, Abstract(A::NoExtern)), 0),
+        ValueType::NullExnref => (CanonicalValType::Ref(true, Abstract(A::NoExn)), 0),
+        ValueType::NullRef => (CanonicalValType::Ref(true, Abstract(A::None)), 0),
+        ValueType::NonNullArrayAny => (CanonicalValType::Ref(false, Abstract(A::Array)), 0),
+        ValueType::StructRef(i) => {
+            let (r, d) = resolve(i)?;
+            (CanonicalValType::Ref(true, r), d)
+        }
+        ValueType::ConcreteFuncRef(i) => {
+            let (r, d) = resolve(i)?;
+            (CanonicalValType::Ref(true, r), d)
+        }
+        ValueType::ArrayRef(i) => {
+            let (r, d) = resolve(i)?;
+            (CanonicalValType::Ref(true, r), d)
+        }
+        ValueType::NonNullStructRef(i) => {
+            let (r, d) = resolve(i)?;
+            (CanonicalValType::Ref(false, r), d)
+        }
+        ValueType::NonNullConcreteFuncRef(i) => {
+            let (r, d) = resolve(i)?;
+            (CanonicalValType::Ref(false, r), d)
+        }
+        ValueType::NonNullArrayRef(i) => {
+            let (r, d) = resolve(i)?;
+            (CanonicalValType::Ref(false, r), d)
+        }
     })
 }
 
-fn canonicalize_field_type(f: FieldType, self_idx: u32, canonical_so_far: &[Option<(Rc<CanonicalGroup>, u32)>]) -> Option<CanonicalFieldType> {
-    let storage = match f.storage {
-        StorageType::I8 => CanonicalStorageType::I8,
-        StorageType::I16 => CanonicalStorageType::I16,
-        StorageType::Val(vt) => CanonicalStorageType::Val(canonicalize_value_type(vt, self_idx, canonical_so_far)?),
+fn canonicalize_field_type(f: FieldType, self_idx: u32, canonical_so_far: &[Option<(Rc<CanonicalGroup>, u32)>], depths: &[u32]) -> Option<(CanonicalFieldType, u32)> {
+    let (storage, depth) = match f.storage {
+        StorageType::I8 => (CanonicalStorageType::I8, 0),
+        StorageType::I16 => (CanonicalStorageType::I16, 0),
+        StorageType::Val(vt) => {
+            let (cvt, d) = canonicalize_value_type(vt, self_idx, canonical_so_far, depths)?;
+            (CanonicalStorageType::Val(cvt), d)
+        }
     };
-    Some(CanonicalFieldType { storage, mutable: f.mutable })
+    Some((CanonicalFieldType { storage, mutable: f.mutable }, depth))
 }
 
-fn canonicalize_comp_type(module: &WasmModule, idx: u32, canonical_so_far: &[Option<(Rc<CanonicalGroup>, u32)>]) -> Option<CanonicalCompType> {
+fn canonicalize_comp_type(module: &WasmModule, idx: u32, canonical_so_far: &[Option<(Rc<CanonicalGroup>, u32)>], depths: &[u32]) -> Option<(CanonicalCompType, u32)> {
     match comp_type_at(module, idx)? {
         CompTypeRef::Func(ft) => {
-            let params = ft.params.iter().map(|vt| canonicalize_value_type(*vt, idx, canonical_so_far)).collect::<Option<Vec<_>>>()?;
-            let results = ft.results.iter().map(|vt| canonicalize_value_type(*vt, idx, canonical_so_far)).collect::<Option<Vec<_>>>()?;
-            Some(CanonicalCompType::Func(params, results))
+            let mut depth = 0u32;
+            let params = ft
+                .params
+                .iter()
+                .map(|vt| {
+                    let (cvt, d) = canonicalize_value_type(*vt, idx, canonical_so_far, depths)?;
+                    depth = depth.max(d);
+                    Some(cvt)
+                })
+                .collect::<Option<Vec<_>>>()?;
+            let results = ft
+                .results
+                .iter()
+                .map(|vt| {
+                    let (cvt, d) = canonicalize_value_type(*vt, idx, canonical_so_far, depths)?;
+                    depth = depth.max(d);
+                    Some(cvt)
+                })
+                .collect::<Option<Vec<_>>>()?;
+            Some((CanonicalCompType::Func(params, results), depth))
         }
         CompTypeRef::Struct(st) => {
-            let fields = st.fields.iter().map(|f| canonicalize_field_type(*f, idx, canonical_so_far)).collect::<Option<Vec<_>>>()?;
-            Some(CanonicalCompType::Struct(fields))
+            let mut depth = 0u32;
+            let fields = st
+                .fields
+                .iter()
+                .map(|f| {
+                    let (cf, d) = canonicalize_field_type(*f, idx, canonical_so_far, depths)?;
+                    depth = depth.max(d);
+                    Some(cf)
+                })
+                .collect::<Option<Vec<_>>>()?;
+            Some((CanonicalCompType::Struct(fields), depth))
         }
-        CompTypeRef::Array(at) => Some(CanonicalCompType::Array(canonicalize_field_type(at.element, idx, canonical_so_far)?)),
+        CompTypeRef::Array(at) => {
+            let (field, depth) = canonicalize_field_type(at.element, idx, canonical_so_far, depths)?;
+            Some((CanonicalCompType::Array(field), depth))
+        }
     }
 }
 
 /// Builds the one-member [`CanonicalGroup`] for the singleton group
 /// starting (and ending) at flat type-section index `idx`, or `None` if any
 /// reference inside it can't yet be resolved (see [`resolve_heap_index`]'s
-/// own doc comment for the only two ways that happens).
-fn build_singleton_canonical(module: &WasmModule, idx: u32, canonical_so_far: &[Option<(Rc<CanonicalGroup>, u32)>]) -> Option<CanonicalGroup> {
+/// own doc comment for the ways that happens, including the depth cap).
+/// Returns the group alongside its own max `Outer`-embedding depth, for
+/// [`canonicalize_types`] to record in its parallel `depths` table.
+fn build_singleton_canonical(module: &WasmModule, idx: u32, canonical_so_far: &[Option<(Rc<CanonicalGroup>, u32)>], depths: &[u32]) -> Option<(CanonicalGroup, u32)> {
     let ts = module.type_subtyping_at(idx);
+    let mut depth = 0u32;
     let supertype = match ts.supertype {
-        Some(sup_idx) => Some(resolve_heap_index(sup_idx, idx, canonical_so_far)?),
+        Some(sup_idx) => {
+            let (r, d) = resolve_heap_index(sup_idx, idx, canonical_so_far, depths)?;
+            depth = depth.max(d);
+            Some(r)
+        }
         None => None,
     };
-    let comp = canonicalize_comp_type(module, idx, canonical_so_far)?;
-    Some(CanonicalGroup { members: vec![CanonicalSubtype { is_final: ts.is_final, supertype, comp }] })
+    let (comp, comp_depth) = canonicalize_comp_type(module, idx, canonical_so_far, depths)?;
+    depth = depth.max(comp_depth);
+    Some((CanonicalGroup { members: vec![CanonicalSubtype { is_final: ts.is_final, supertype, comp }] }, depth))
 }
 
 /// Computes this module's own canonical type-group forms -- W34 first
@@ -2128,6 +2221,15 @@ fn build_singleton_canonical(module: &WasmModule, idx: u32, canonical_so_far: &[
 pub fn canonicalize_types(module: &WasmModule) -> Vec<Option<(Rc<CanonicalGroup>, u32)>> {
     let n = total_type_count(module);
     let mut out: Vec<Option<(Rc<CanonicalGroup>, u32)>> = Vec::with_capacity(n);
+    // Parallel to `out`: `depths[idx]` is `out[idx]`'s own max `Outer`-
+    // embedding depth (`0` for a leaf group referencing no earlier one, or
+    // for a `None` entry -- never read in that case, since `resolve_heap_
+    // index` already rejects an unresolvable target before it would
+    // consult this table). See `resolve_heap_index`'s own doc comment for
+    // why this bound exists (a real, security-review-confirmed stack-
+    // overflow finding in the derived `Drop`/`PartialEq`/`Hash` traversals
+    // a long, unbounded `Outer` chain would otherwise require).
+    let mut depths: Vec<u32> = Vec::with_capacity(n);
     for idx in 0..n as u32 {
         let ts = module.type_subtyping_at(idx);
         if ts.rec_group_size != 1 || ts.rec_group_position != 0 {
@@ -2135,10 +2237,19 @@ pub fn canonicalize_types(module: &WasmModule) -> Vec<Option<(Rc<CanonicalGroup>
             // one while disagreeing about its own position) -- out of
             // scope for this slice, or simply unrepresentable.
             out.push(None);
+            depths.push(0);
             continue;
         }
-        let canonical = build_singleton_canonical(module, idx, &out).map(|g| (Rc::new(g), 0u32));
-        out.push(canonical);
+        match build_singleton_canonical(module, idx, &out, &depths) {
+            Some((group, depth)) => {
+                out.push(Some((Rc::new(group), 0u32)));
+                depths.push(depth);
+            }
+            None => {
+                out.push(None);
+                depths.push(0);
+            }
+        }
     }
     out
 }
@@ -3459,6 +3570,53 @@ mod tests {
             array_group.members[0].comp,
             CanonicalCompType::Array(CanonicalFieldType { storage: CanonicalStorageType::Val(CanonicalValType::F64), mutable: false })
         );
+    }
+
+    /// Security review finding (W34 first slice): a long CHAIN of singleton
+    /// groups, each referencing only the immediately preceding one (no
+    /// cycle at all -- indices strictly decrease), builds a genuinely
+    /// nested `Outer`-embedding tree `N` links deep. An empirical repro
+    /// during review confirmed a real process-aborting stack overflow in
+    /// the compiler-derived `Drop` glue for such a tree at tens of
+    /// thousands of links -- comfortably reachable from a small, realistic
+    /// module. `MAX_CANONICAL_OUTER_DEPTH` must cut this off FAR below
+    /// that threshold: this test builds a chain well past the cap and
+    /// confirms (a) entries within the cap still canonicalize normally,
+    /// (b) every entry beyond the cap is `None` rather than an
+    /// ever-deeper tree, and (c) dropping the whole result (implicitly, at
+    /// the end of this test) does not crash -- if the cap regressed to
+    /// "unbounded" this test would be the one to catch it, and its own
+    /// chain length (a few thousand) is deliberately far short of the
+    /// tens-of-thousands threshold that actually crashes an unbounded
+    /// build, so it stays fast and reliable as a regression guard rather
+    /// than a slow stress test.
+    #[test]
+    fn outer_embedding_depth_is_capped_and_a_long_chain_does_not_crash() {
+        let chain_len = (MAX_CANONICAL_OUTER_DEPTH as usize) + 50;
+        let mut types = Vec::with_capacity(chain_len);
+        types.push(FuncType { params: vec![], results: vec![] });
+        for i in 1..chain_len {
+            types.push(FuncType { params: vec![ValueType::ConcreteFuncRef((i - 1) as u32)], results: vec![] });
+        }
+        let type_subtyping = vec![TypeSubtyping::default(); chain_len];
+        let m = WasmModule { types, type_subtyping, ..Default::default() };
+
+        let canonical = canonicalize_types(&m); // must not crash to reach this line at all
+        assert_eq!(canonical.len(), chain_len);
+
+        // The root of the chain (depth 0) and everything within the cap
+        // must still canonicalize -- the cap must not be so aggressive it
+        // rejects ordinary, well-within-bounds chains.
+        assert!(canonical[0].is_some());
+        assert!(canonical[MAX_CANONICAL_OUTER_DEPTH as usize - 1].is_some());
+        // Somewhere past the cap, entries must start reporting `None`
+        // rather than building an ever-deeper tree.
+        assert!(canonical[chain_len - 1].is_none(), "a chain past the depth cap must stop canonicalizing, not keep nesting forever");
+        // `canonical` (holding potentially-deep `Rc<CanonicalGroup>` chains
+        // up to the cap) is dropped here, at the end of the test -- if the
+        // cap regressed to "unbounded" and this chain were long enough to
+        // matter, THIS is where a stack overflow would abort the test
+        // process rather than report a normal failure.
     }
 
     /// Every abstract (non-index-carrying) `ValueType` variant this crate

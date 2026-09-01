@@ -952,6 +952,45 @@ and this slice's own unit tests, so a zero-movement diff is exactly the
 expected, correctly-predicted outcome, not a sign the slice did nothing
 real.
 
+**Security review finding, fixed before push**: a dedicated security-review
+sub-agent, briefed specifically on this document's own two named concerns
+(cyclic/self-referential-structure recursion, and whether `ValidatedModule`
+caching could be bypassed), confirmed the SECOND concern was already fully
+closed by `ValidatedModule::module`'s pre-existing W33-era privacy (no
+construction path exists outside `validate()`; no staleness is possible
+since nothing ever mutates `module` after construction). On the FIRST
+concern, it confirmed `canonicalize_types` and everything it calls
+genuinely never recurses while BUILDING a tree (verified by reading the
+whole call graph) — but it went further than the question as posed and
+empirically built a throwaway reproduction against this exact code,
+finding that a long, entirely acyclic CHAIN of singleton groups (each
+referencing only the type immediately before it — ordinary, not
+pathological, WASM shape) builds a genuinely nested `Outer`-embedding tree
+that the compiler-DERIVED `Drop`/`PartialEq`/`Hash` implementations (all
+necessary for this mechanism's own correctness — structural, not pointer,
+comparison is the entire point) walk RECURSIVELY, reliably crashing the
+process via stack overflow at tens of thousands of chained links — a
+small, realistic module size. Fixed by capping how deep `canonicalize_
+types` will ever let an `Outer` chain nest (`MAX_CANONICAL_OUTER_DEPTH =
+1,000`, mirroring this crate's own pre-existing `MAX_SUBTYPE_CHAIN_HOPS`
+convention exactly) at `resolve_heap_index`, the one place new depth is
+introduced — this closes the `Drop` crash the review reproduced AND the
+parallel (not separately reproduced, but architecturally identical)
+`PartialEq`/`Hash` recursion-depth risk in the same stroke, since all
+three traversals share the same root cause (the depth of the value tree
+itself) rather than needing three separate hand-rewritten iterative
+implementations. A new regression test (`outer_embedding_depth_is_capped_
+and_a_long_chain_does_not_crash`) builds a chain past the cap and confirms
+both that in-bounds entries still canonicalize normally and that the
+whole result drops cleanly at the end of the test. This is a real,
+permanent limitation worth flagging for whoever builds slice 2/3: an
+adversarial module with an extremely long reference chain will now
+canonicalize to `None` past 1,000 links rather than being treated as
+equivalent to anything — a conservative, safe direction (a missed
+optimization opportunity, never a false accept) consistent with every
+other "unresolvable falls back to `None`" case this slice already
+established.
+
 **Slice 2 plan: confirmed unchanged.** Nothing this slice's investigation
 found requires revising the "multi-member `rec`-group canonicalization —
 the real De Bruijn numbering" scope or its `type-canon.wast`/`type-rec.

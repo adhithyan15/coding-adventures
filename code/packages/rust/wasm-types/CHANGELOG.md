@@ -31,6 +31,19 @@ first slice of the real WasmGC canonical type-group equivalence algorithm
   cyclic or self-referential type structure (even one from a hand-built
   `WasmModule` that skipped validation entirely) can only ever produce a
   `None` entry, never a panic, infinite loop, or stack overflow.
+- **Security fix (found in review, before push): `MAX_CANONICAL_OUTER_DEPTH`
+  (1,000, mirroring this crate's own pre-existing `MAX_SUBTYPE_CHAIN_HOPS`
+  convention)** — a security review empirically confirmed that while
+  *building* a `CanonicalGroup` tree never recurses (see above), a long
+  CHAIN of singleton groups each referencing only the immediately
+  preceding one (no cycle needed) builds a genuinely nested `Outer`-
+  embedding tree whose compiler-derived `Drop`/`PartialEq`/`Hash` DO
+  recurse to tear down or compare — reliably crashing the process (real
+  stack overflow) at tens of thousands of chained links, reachable from a
+  small, realistic module. `resolve_heap_index` now refuses (`None`) to
+  extend a chain past 1,000 links, the one place new depth is introduced,
+  closing this for all three derived traversals at once with a wide
+  safety margin below the depth that was shown to matter.
 - **Cross-module comparability, proven directly**: two independently-built
   `WasmModule`s with isomorphic singleton-group shapes at completely
   different flat indices canonicalize to structurally-equal
