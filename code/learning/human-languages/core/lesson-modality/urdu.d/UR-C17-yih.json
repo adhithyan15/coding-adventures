@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C17-yih",
+    "language": "urdu",
+    "chapter": 17,
+    "sequence": 820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:77b61ee0472d500d"
+  },
+  "findings": []
+}
