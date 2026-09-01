@@ -4705,6 +4705,27 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("0\n1\n0\n1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — portable deterministic RND semantics (VM-018). The
+    // frontend emits one Park–Miller helper whose i64 state lives in the shared
+    // module-global substrate. `FNR(-1)` reseeds and advances inside a DEF FN,
+    // main's `RND(1)` advances the same state, `FNR(0)` repeats it, and the final
+    // main call advances again. Multiplying by one million and applying INT
+    // exposes stable integer buckets rather than relying on backend decimal
+    // formatting of the raw fractions. The four outputs distinguish seeding,
+    // cross-function state progression, and exact repeatability across every
+    // standard backend without host entropy or runtime callbacks.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 DEF FNR(X) = RND(X)\n\
+              20 PRINT INT(FNR(-1) * 1000000)\n\
+              30 PRINT INT(RND(1) * 1000000)\n\
+              40 PRINT INT(FNR(0) * 1000000)\n\
+              50 PRINT INT(RND(1) * 1000000)\n\
+              60 END\n",
+        expect: Expect::Stdout("22\n85032\n85032\n601352"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Dartmouth BASIC — `INT` (floor) built-in (LANG-FULL BA-builtins).
     // INT(X) = ⌊X⌋, returned as a real.  Lowers to real_to_int_floor +
     // int_to_real (both E8 ops).  INT(3.7) → 3.0, printed as `3`.
