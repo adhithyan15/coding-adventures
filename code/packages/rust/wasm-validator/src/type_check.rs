@@ -1646,9 +1646,17 @@ pub(crate) fn type_check_module(module: &WasmModule) -> Result<Vec<Option<(Rc<Ca
     // check further down via `ModuleContext`/`TypeContext` (see those
     // types' own doc comments) -- computed once here, never recomputed at
     // a per-instruction call site, so `is_assignable` and friends only ever
-    // pay the O(1) `Rc`-backed comparison cost, never canonicalization's
-    // own. Returned to `crate::validate` so IT doesn't need to compute this
-    // a second time for `ValidatedModule`'s own cache.
+    // pay `canonical_types_equivalent`'s own comparison cost, never
+    // canonicalization's. Security review (W34 third slice): that
+    // comparison cost is NOT unconditionally O(1) -- `wasm_types::
+    // canonicalize_types`'s own interning makes it O(1) for the common,
+    // actually-reachable case (two groups this SAME call produced), via an
+    // `Rc::ptr_eq` fast path, but still falls back to a real structural
+    // walk (bounded by `CanonicalCost`'s own caps, per group) whenever it
+    // doesn't -- see that function's own doc comment and CHANGELOG entry
+    // for the real DoS this closes and how. Returned to `crate::validate`
+    // so IT doesn't need to compute this a second time for `ValidatedModule`'s
+    // own cache.
     let canonical_types = wasm_types::canonicalize_types(module);
     check_type_subtyping(module, &canonical_types)?;
     let ctx = build_module_context(module, &canonical_types)?;
