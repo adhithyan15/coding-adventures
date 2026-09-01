@@ -1008,3 +1008,232 @@ not just the singleton case's trivial `self_idx == group_start`), and the
 top-level `canonicalize_types` loop's own "process one flat index at a
 time" structure will need to become "process one GROUP (a contiguous
 range of flat indices) at a time" instead.
+
+## Addendum — second slice shipped (real multi-member `rec`-group canonicalization)
+
+Re-verified this spec's/first addendum's own citations fresh before
+writing any code, per this campaign's "re-verify directly, don't trust the
+summary" discipline: `type-rec.wast` (lines 15-18's `$h`/`$k` 2-member
+mutual pair), `type-canon.wast` (both modules, a 3-member and a 5-member
+group, still zero assertions), and `type-subtyping.wast`'s "Subsumption"
+3-cycle example (lines 68-87) all matched this document's line-number and
+content claims exactly against the vendored corpus files. The reference
+interpreter citations were re-checked against `WebAssembly/gc`'s CURRENT
+`main` branch (the exact pinned SHA `28864811cf03bdbf880733786148feaba339582d`
+this spec originally cited no longer resolves via GitHub's API — the
+proposal repo's history has moved on since — so `main`'s current HEAD was
+used instead, on the reasoning that the tying/rolling algorithm itself is
+long-settled proposal machinery, not something likely to have changed
+underneath; this is flagged here rather than silently substituted):
+`interpreter/syntax/types.ml`'s `roll_rec_type`/`subst_of`/`subst_def_type`
+and `interpreter/valid/match.ml`'s `match_def_type` are byte-for-byte
+identical to what this spec and its first addendum already quote — no
+correction needed. The "What already exists" section's own crate-version
+grounding had drifted further (`wasm-types` 0.1.18, `wasm-validator`
+0.2.80 at slice 2's start, `wasm-execution` 0.9.83) — re-checked directly:
+nothing in `wasm-execution`, `wasm-runtime`, or `wasm-conformance`
+references `CanonicalGroup`/`canonicalize_types`/`canonical_type_at`/
+`canonically_equivalent` anywhere (confirmed by a direct grep of all
+three), exactly as the first slice's addendum described and as this
+slice's own scope (§2 above, "confirmed unchanged") expected — so no
+correction to the design section was needed for that drift either.
+
+**What shipped** (`wasm-types` 0.1.18 → 0.1.19, `wasm-validator` 0.2.80 →
+0.2.81):
+
+- `wasm_types::canonicalize_types` now correctly canonicalizes real
+  `rec_group_size > 1` groups with group-relative De Bruijn numbering, per
+  this document's own "Rolling" section and `roll_rec_type`'s exact
+  `Int32.sub x' x` shape. `resolve_heap_index` was generalized from a
+  `self_idx`-based self-reference check to a `[group_start, group_end)`
+  half-open-range check (`group_start <= target_idx < group_end` ties to
+  `Rec(target_idx - group_start)`; `target_idx < group_start` embeds an
+  earlier group via `Outer`, exactly as slice 1 already did; `target_idx
+  >= group_end` is an invalid forward reference, `None`) — a strict
+  generalization that reduces to slice 1's exact singleton behavior when
+  `group_end - group_start == 1`, confirmed by every one of slice 1's own
+  22 tests still passing unmodified against the generalized function.
+  Every other helper (`canonicalize_value_type`, `canonicalize_field_
+  type`, `canonicalize_comp_type`) needed NO shape change at all — exactly
+  as the first slice's own addendum predicted — only new plumbing to pass
+  `(group_start, group_end)` through instead of a single `self_idx`.
+  `canonicalize_types`'s own top-level loop now processes GROUPS (a
+  contiguous run of flat indices sharing one internally-consistent
+  `rec_group_size`/`rec_group_position` shape, checked by a new
+  `group_bounds_are_consistent` helper) rather than individual flat
+  indices; a real `rec` group's `Rc<CanonicalGroup>` is built ONCE
+  (containing every member's tied `CanonicalSubtype` together, per MVP.md's
+  own `tie($t) = tie_$t(<ctxtype>)`) and shared via `Rc::clone` across
+  every one of that group's flat indices, differing only in the `u32`
+  position half of each entry. If ANY member of a group fails to
+  canonicalize, the WHOLE group's every member becomes `None` — never a
+  partial group that could let a later `Outer` embed silently omit one
+  member's tied form.
+- Two separately-declared multi-member groups with the SAME shape and the
+  SAME internal reference wiring now canonicalize to structurally-equal
+  forms, proven directly (not just asserted) by
+  `two_independently_indexed_isomorphic_multi_member_groups_canonicalize_identically`,
+  with padding types at a different flat-index offset in each module —
+  the same cross-module-comparability proof slice 1 established for
+  singletons, now proven for a real multi-member group. Two groups with
+  the SAME member count but a DIFFERENT internal reference pattern do
+  NOT canonicalize equal, proven by
+  `same_member_count_but_different_wiring_does_not_canonicalize_equal` (an
+  alternating 2-cycle `$h -> $k, $k -> $h` versus both members pointing at
+  the SAME sibling `$p -> $p, $q -> $p` — same size, same total reference
+  count, genuinely different wiring, correctly NOT equal). Composition of
+  slice 1's `Outer` (cross-group embedding) with the new multi-member
+  `Rec` numbering is proven in both directions: a later (singleton OR
+  multi-member) type referencing an earlier multi-member group's specific
+  member correctly embeds the WHOLE earlier group wholesale at the right
+  position (`a_later_type_referencing_an_earlier_multi_member_group_
+  composes_outer_with_multi_rec`), and a later multi-member group can mix
+  an `Outer` reference to an earlier group with an in-group `Rec`
+  reference WITHIN THE SAME member
+  (`a_later_multi_member_group_mixes_outer_and_rec_within_one_member`).
+  The W33/W34 addenda's own worked "3-cycle" example (`type-subtyping.
+  wast` lines 68-87 — `$t1 (sub (func (ref $t3)))`, `$t2 (sub $t1 (func
+  (ref $t2)))`, `$t3 (sub $t2 (func (ref $t1)))`) canonicalizes exactly as
+  hand-derived (`the_three_cycle_worked_example_canonicalizes_correctly`):
+  `$t1`'s body ties to `Rec(2)`, `$t2`'s declared supertype ties to
+  `Rec(0)` and its body to `Rec(1)`, `$t3`'s declared supertype ties to
+  `Rec(1)` and its body to `Rec(0)`, all three sharing one `Rc<
+  CanonicalGroup>` allocation at positions `0`/`1`/`2` respectively. Per
+  this slice's own explicit scope boundary (this document's own
+  decomposition #3, unchanged), wiring this composition into `nominal_
+  subtype_chain`'s termination check is NOT done here — that test
+  confirms only that the canonical forms themselves, including the
+  declared-supertype links, are computed correctly for this exact corpus
+  example, which is what a future slice 3 will need to already be true
+  before it can lean on it.
+- **A new DoS finding, investigated and closed proactively in this same
+  slice** (not deferred to the security-review pass, though that pass —
+  see below — independently confirmed it and confirmed no further issue):
+  slice 1's own `MAX_CANONICAL_OUTER_DEPTH` bounds the STACK depth the
+  derived `Drop`/`PartialEq`/`Hash` traversals recurse to (the longest
+  SINGLE reference chain). It does NOT bound the TOTAL WORK those same
+  traversals do when a reference chain also BRANCHES — several sibling
+  positions (now much more natural with real multi-member groups: a
+  member referencing the same earlier group from two different param
+  positions, or two different members of one group both referencing the
+  same earlier group) all embedding the same earlier group. `Rc` sharing
+  keeps MEMORY linear in that case, but a full structural comparison that
+  doesn't special-case pointer identity still visits the referenced
+  subtree once per reference SITE, and that multiplies (not adds) across
+  levels: a chain of `L` groups each referencing the prior one from
+  exactly two sibling positions has `depth == L` (fine, well under the
+  1,000-hop cap) but `weight` (a new, second cost dimension this slice
+  adds, `CanonicalCost::weight`, summed rather than maxed across sibling
+  references) doubling at every level — `2^L`, astronomically past any
+  sane bound by `L` in the low tens. Closed by capping `weight` at
+  `MAX_CANONICAL_TREE_WEIGHT = 1_000_000`, checked at every partial sum
+  (not only once at the end) so a pathological group is rejected before
+  its tree could grow any larger; `outer_embedding_weight_is_capped_for_
+  branching_reference_chains` builds a 40-level doubling chain (`2^40`,
+  astronomically past the cap well before the last level) and confirms it
+  completes fast and drops cleanly rather than hanging or exhausting
+  memory.
+- 11 new unit tests in `wasm-types` (2-member mutual group numbering;
+  cross-module multi-member comparability; different-wiring non-
+  equivalence; both directions of `Outer`+multi-`Rec` composition; the
+  3-cycle worked example; `type-canon.wast`'s real 5-member fixture,
+  parsed as a genuine corpus smoke test rather than a hand-simplified
+  substitute; inconsistent multi-member metadata still safely `None`
+  rather than guessing which sibling's claim to trust; a referrer to a
+  failed multi-member group also `None`; the branching-weight DoS
+  regression above) plus 2 new `wasm-validator` tests exercising a real
+  multi-member group and an inconsistent one through the actual
+  `validate()` entry point, not just `wasm_types::canonicalize_types`
+  directly. All of slice 1's own 22 tests continue to pass unmodified
+  except the two whose very premise ("multi-member groups are always
+  `None`") this slice deliberately overturned — both rewritten to assert
+  the new, correct behavior (a consistent multi-member group now
+  canonicalizes; only a genuinely metadata-inconsistent one still can't),
+  with the "safely `None`, never a panic, for malformed input" spirit of
+  the originals preserved in the rewrite.
+
+**Corpus impact: none, confirmed by a full 257-file baseline diff, not
+just asserted** — every one of the 257 files' tallies (`module`/
+`register`/`action`/`assert_return`/`assert_trap`/`assert_exhaustion`/
+`assert_invalid`/`assert_malformed`/`assert_unlinkable`/`assert_exception`)
+is byte-for-byte identical before and after this slice, including the
+regenerated `testsuite-status.json` producing a literally empty `git diff`
+against the committed baseline. This is exactly the expected, correctly-
+predicted outcome (this document's own "Recommended slice decomposition"
+#2 and "Verification plan" both said slice 2 "does not yet wire anything
+into `is_assignable`/`call_indirect`, so the corpus's own `assert_return`/
+`assert_invalid` directives... won't move yet"), not a sign this slice did
+nothing real: `canonicalize_types` now genuinely canonicalizes real
+multi-member groups it previously always rejected, reachable today only
+from the two `ValidatedModule` accessor methods and this slice's own
+extensive unit tests. Investigated whether any corpus value could be
+unlocked by a single, low-risk wiring call site within this slice's own
+scope (per the task's own standing invitation to look for exactly this):
+found none — every actual consumer of canonical equivalence
+(`is_assignable`'s reflexive base case, `nominal_subtype_chain`'s
+termination check, `wasm-execution`'s two runtime-dispatch functions) is
+untouched by this slice by design, and none of them currently have ANY
+call path that reaches `canonical_type_at`/`canonically_equivalent` even
+optionally — wiring even one of them in is a real, three-crate-touching
+change (per this document's own "Design §3" footprint warning), not a
+one-line addition, so forcing it into this slice would blur slice
+boundaries for no corpus gain THIS slice could safely claim credit for.
+
+**Security review**: a dedicated security-review sub-agent was briefed
+specifically on this slice's diff (`git diff origin/main...HEAD`) and
+asked, per the task's own explicit brief, about (a) recursion depth in
+the new multi-member numbering logic and in the `Drop`/`PartialEq`/`Hash`
+paths touching its output, and (b) whether a maliciously-crafted module
+with many large mutually-referencing `rec` groups could cause
+quadratic-or-worse blowup distinct from stack depth — and, specifically,
+to verify the `CanonicalCost{depth, weight}` mitigation this slice already
+added proactively is actually sound and complete, not merely present.
+**Result: SECURITY REVIEW PASSED, no vulnerabilities found.** Confirmed by
+direct call-graph tracing: `resolve_heap_index`/`canonicalize_value_type`/
+`canonicalize_field_type`/`canonicalize_comp_type`/`build_member_
+canonical`/`canonicalize_types`/`group_bounds_are_consistent` contain
+genuinely NO recursive descent (only the compiler-derived `Drop`/
+`PartialEq`/`Hash` walking the `Rc`-embedded tree recurse, exactly as
+documented, and `depth`'s 1,000-hop cap bounds their worst-case stack
+depth regardless of branching, since sibling subtrees are walked
+sequentially by that derived code, never concurrently on the stack — only
+sequential WORK grows with branching, which is `weight`'s job). The
+`weight` cap was independently confirmed sound on all four axes the review
+was asked to check: it is a true SUM (never a max) across every sibling
+reference (params, results, struct fields, the supertype-vs-comp pair,
+and member-vs-member within a group), confirmed both by direct code
+reading and by the passing `outer_embedding_weight_is_capped_for_
+branching_reference_chains` regression test; `within_caps()` is invoked
+after every partial sum (inside each param/result/field fold, after the
+supertype resolve, after the member fold), not only once at the end;
+there is no second, uncapped construction path for a `CanonicalGroup` --
+the only two `Rc::new`/`Rc::clone` sites for one are both gated by a
+`within_caps()` check immediately upstream, and every `wasm-validator`
+consumer only ever reads already-capped output; and there is no exploitable
+integer-overflow path (`weight` is `u64` with `saturating_add`
+throughout; `depth`'s plain `u32 + 1` can only ever be applied to a value
+already proven `<= 1,000`, so it can reach at most `1,001`, nowhere near
+overflow). The review also independently confirmed no `unsafe` blocks
+exist anywhere in the diff, no `.unwrap()`/`.expect()`/`panic!` in any
+non-test code path, and that the new index arithmetic (`group_start +
+offset`, `target_idx - group_start`, `group_start + size`) is guarded by
+`group_bounds_are_consistent`'s own `u64`-saturating bounds check before
+any `u32` arithmetic runs, making a `WasmModule` with underlying `Vec`
+lengths anywhere near `u32::MAX` (the only way the arithmetic could even
+theoretically wrap) an infeasible memory-allocation precondition rather
+than a practical concern. No fixes were needed as a result of this
+review — the mitigation this slice designed in before requesting review
+held up under adversarial scrutiny of exactly the class of bug the first
+slice's own review had found.
+
+**Slice 3 plan: confirmed unchanged**, with one refinement this slice's
+own investigation surfaced concretely rather than abstractly: slice 3's
+`is_assignable`/`nominal_subtype_chain` reflexive-base-case upgrade can
+now lean on canonical equivalence being correctly computed for BOTH
+singleton and real multi-member groups (this slice closes that gap), so
+slice 3 no longer needs any special-casing for "what if the two indices
+being compared belong to differently-shaped groups" — `canonically_
+equivalent`'s existing `(Some, Some) => a == b, _ => false` shape already
+handles that correctly today, confirmed by this slice's own different-
+wiring non-equivalence test. No other correction to slice 3's or slice
+4's own scope was found necessary.
