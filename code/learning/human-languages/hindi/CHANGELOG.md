@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Changed — declare the Hindi location postposition
+
+- Chapter 5 now declares **रहना / में** as its headword instead of naming only
+  the infinitive. The lesson already defines **में** as “in,” contrasts its
+  post-noun position with English, practises that placement, and asks learners
+  to recall it in the complete Delhi sentence; its metadata now matches that
+  assessed grammar target.
+
 ### Changed — declare the Hindi thought-and-worry noun
 
 - Chapter 34 now declares **सोचना / सोच** as its headword instead of naming
