@@ -1,0 +1,22 @@
+% ============================================================================
+% electoral-college-count.query.adj — worked recall over the
+% electoral-college-count library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how many electoral
+% votes do you need to win?" (direct — an exact number that should come
+% from a citation, not from recollection), "what does 538 count?"
+% (reverse), or "how many electors does Maine assign proportionally?"
+% (abstain — that is a method, not a count) — it states no fact of its own
+% — it only `import`s the grounded table and asks binding queries.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli electoral-college-count.query.adj
+% ============================================================================
+
+import "electoral-college-count.adj"
+
+? electoral_college_count(electors_needed_to_win, $N)   % expect 270
+? electoral_college_count(total_electors, $N)           % expect 538 -- and the citation carries the source's own "currently"
+? electoral_college_count($Q, 538)                      % expect total_electors (reverse -- what does this number count?)
+? electoral_college_count(proportional_states, $N)      % expect abstain -- Maine and Nebraska use a proportional METHOD; the page states no count for them
+? electoral_college_count($Q, 2)                        % expect abstain -- "this has happened twice" counts HISTORICAL OCCURRENCES, a different subject from the size of the College
