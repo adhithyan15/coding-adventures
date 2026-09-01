@@ -1,0 +1,18 @@
+{
+  "id": "TA-PATH-65-DOING",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "TA-C65-drink",
+    "TA-C65-walk",
+    "TA-W21-read-kudi",
+    "TA-C65-stop",
+    "TA-C65-open",
+    "TA-C65-close",
+    "TA-C65-doing-recall"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-65-DOING"
+  ],
+  "after": []
+}
