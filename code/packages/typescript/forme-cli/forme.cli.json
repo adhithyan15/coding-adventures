@@ -3,7 +3,7 @@
   "name": "forme",
   "display_name": "Forme",
   "description": "Build, validate, preview, and clean a headless Forme project.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "parsing_mode": "gnu",
   "builtin_flags": {
     "help": true,

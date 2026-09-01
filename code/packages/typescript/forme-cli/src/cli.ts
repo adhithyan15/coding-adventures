@@ -13,6 +13,7 @@ import {
   startDevServer,
   type DevServer,
 } from "@coding-adventures/forme-dev-server";
+import { filesystemCache } from "@coding-adventures/forme-cache";
 import {
   createOrchestrator,
   type Orchestrator,
@@ -57,7 +58,7 @@ export interface CliIO {
 
 export interface CliServices {
   loadConfig(path: string): Promise<PipelineConfig>;
-  createOrchestrator(): Orchestrator;
+  createOrchestrator(cacheRoot: string | null): Orchestrator;
   startDevServer(options: { readonly port: number }): Promise<DevServer>;
   watchProject(root: string, ignoredPaths: readonly string[]): AsyncIterable<unknown>;
 }
@@ -90,7 +91,10 @@ const defaultIO: CliIO = {
 
 const defaultServices: CliServices = {
   loadConfig: path => loadTsConfig(path),
-  createOrchestrator: () => createOrchestrator({ logger: silentLogger() }),
+  createOrchestrator: cacheRoot => createOrchestrator({
+    logger: silentLogger(),
+    ...(cacheRoot === null ? {} : { cache: filesystemCache(cacheRoot) }),
+  }),
   startDevServer: options => startDevServer(options),
   watchProject: (root, ignoredPaths) => watchProject(root, ignoredPaths),
 };
@@ -147,7 +151,7 @@ export async function run(
       };
     }
 
-    orchestrator = services.createOrchestrator();
+    orchestrator = services.createOrchestrator(projectCacheRoot(config, projectRoot));
     const pipeline = await orchestrator.buildPipeline(config);
 
     if (args.command === "watch") {
@@ -311,6 +315,16 @@ function buildReport(config: PipelineConfig, result: Awaited<ReturnType<Orchestr
     outcome: result.outcome,
     buildId: result.buildId,
     reproducible: config.settings.reproducibleBuild,
+    stages: result.stages.map(stage => ({
+      instanceId: stage.instanceId,
+      stageName: stage.stageName,
+      outcome: stage.outcome,
+      itemsConsumed: stage.itemsConsumed,
+      itemsProduced: stage.itemsProduced,
+      cacheHits: stage.cacheHits,
+      cacheMisses: stage.cacheMisses,
+      errorCount: stage.errorCount,
+    })),
     outputs,
   }, null, 2)}\n`;
 }
@@ -393,6 +407,20 @@ function cleanTargets(config: PipelineConfig, projectRoot: string): readonly str
     unique.add(target);
   }
   return [...unique].sort();
+}
+
+function projectCacheRoot(config: PipelineConfig, projectRoot: string): string | null {
+  const candidate = config.settings.cacheDir;
+  if (candidate === null) return null;
+  const target = resolve(projectRoot, candidate);
+  const rel = relative(projectRoot, target);
+  if (
+    rel === "" || rel === "." || rel === ".." ||
+    rel.startsWith("../") || rel.startsWith("..\\") || isAbsolute(rel)
+  ) {
+    throw new Error(`refusing to use unsafe cache path ${JSON.stringify(candidate)} outside the project`);
+  }
+  return target;
 }
 
 function diagnostic(io: CliIO, code: string, value: string): void {
