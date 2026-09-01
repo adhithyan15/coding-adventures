@@ -1,0 +1,23 @@
+% ============================================================================
+% voting-requirement-exception.query.adj — worked recall over the
+% voting-requirement-exception library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "do you always have to
+% register to vote?" (direct — and the answer is the carve-out a summary
+% would have dropped), "which requirement does homelessness not disqualify
+% you from?" (reverse), or "what is the exception for a felony conviction?"
+% (abstain — that is a disqualification, not an exception to a requirement)
+% — it states no fact of its own — it only `import`s the grounded table and
+% asks binding queries.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli voting-requirement-exception.query.adj
+% ============================================================================
+
+import "voting-requirement-exception.adj"
+
+? voting_requirement_exception(voter_registration_by_state_deadline, $E)   % expect north_dakota_does_not_require_registration -- the detail a confident summary drops
+? voting_requirement_exception(age_eighteen_by_election_day, $E)           % expect some_states_allow_seventeen_year_olds_in_primaries
+? voting_requirement_exception($R, experiencing_homelessness_still_meets_it)  % expect state_residency (reverse)
+? voting_requirement_exception(felony_conviction, $E)                      % expect abstain -- a DISQUALIFICATION from the page's separate "Who cannot vote?" section, not an exception to a requirement
+? voting_requirement_exception($R, cannot_vote_for_president)              % expect abstain -- likewise a territorial disqualification, the opposite kind of claim
