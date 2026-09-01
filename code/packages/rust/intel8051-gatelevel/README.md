@@ -1,8 +1,8 @@
 # intel8051-gatelevel
 
-Gate-level Intel 8051 (1980) simulator in Rust. Every arithmetic and
-logical operation routes through AND, OR, XOR, NOT gates and a ripple-carry
-adder — no native integer arithmetic in the data path.
+Complete gate-level Intel 8051 (1980) simulator in Rust. Every persistent
+architectural bit is D-flip-flop-backed, and every arithmetic or logical data
+path routes through AND, OR, XOR, NOT gates and ripple-carry adders.
 
 ## Architecture
 
@@ -97,24 +97,28 @@ alu.rs
   subb8(a, b, borrow)   — A + NOT(B) + NOT(borrow); CY=NOT(carry_out)
   anl8/orl8/xrl8(a, b)  — 8 AND/OR/XOR gates; cy=ac=ov=0
   inc8/dec8(a)           — gate-level ±1; cy=ac=ov=0 (never set by INC/DEC)
-  rl8/rr8(a)             — circular rotate without carry; CY=exiting bit
+  rl8/rr8(a)             — circular rotate without carry; CY unchanged
   rlc8/rrc8(a, cy)       — 9-bit rotate through carry
   swap8(a)               — wire swap of nibbles; no flags at all
   da8(a, cy, ac)         — BCD adjust; nibble comparators + conditional adds
-  mul8(a, b)             — shift-and-add loop (8 iterations)
-  div8(a, b)             — repeated-subtraction loop
+  mul8(a, b)             — fixed eight-row partial-product network
+  div8(a, b)             — fixed eight-stage restoring divider
 
 registers.rs
-  RegisterFile8051: iram[256] + pc: u16
+  RegisterFile8051: 2,048 IRAM/SFR DFFs + 16 PC DFFs
   read/write_iram8, read/write_pc, increment_pc (via gate-level adder)
   resolve_bit_addr, read_bit, write_bit
 
 cpu.rs
-  Cpu8051: rf + code[64KB] + xdata[64KB] + halted
+  Cpu8051: rf + DFF code[64KB] + DFF xdata[64KB] + halt DFF
   Harvard fetch, direct/indirect/bit addressing
-  Full instruction dispatch: ~100 opcodes
+  Complete 256-byte opcode dispatch, including the HALT sentinel
+  Shared full state, traces, typed errors, and transactional checked runs
   HALT sentinel: opcode 0xA5 (undefined on real 8051)
 ```
+
+The exact persistent topology is **1,050,641 D flip-flops**: 524,288 code
+bits, 524,288 XDATA bits, 2,048 IRAM/SFR bits, 16 PC bits, and one halt bit.
 
 ### SUBB model
 
@@ -136,11 +140,12 @@ must not disturb the carry from a previous addition.
 
 ### MUL / DIV
 
-MUL AB multiplies A × B using a shift-and-add loop over 8 iterations,
-placing the low byte in A and the high byte in B.  OV=1 if result > 255.
+MUL AB multiplies A × B using eight fixed partial-product rows, placing the low
+byte in A and the high byte in B. OV=1 if result > 255.
 
-DIV AB divides A by B using repeated subtraction, placing the quotient in A
-and the remainder in B.  OV=1 for divide-by-zero; CY=0 always.
+DIV AB divides A by B using a fixed restoring network, placing the quotient in
+A and the remainder in B. OV=1 for divide-by-zero; CY=0 always. MUL AB uses all
+eight partial-product rows regardless of input values.
 
 ## Usage
 
@@ -149,15 +154,30 @@ use coding_adventures_intel8051_gatelevel::cpu::Cpu8051;
 
 let mut cpu = Cpu8051::new();
 // MOV A, #10; MOV R0, #5; ADD A, R0; HALT
-cpu.execute(&[0x74, 10, 0x78, 5, 0x28, 0xA5], 0, 100);
+let result = cpu.run_checked(&[0x74, 10, 0x78, 5, 0x28, 0xA5], 100)?;
 assert_eq!(cpu.rf.read_iram8(0xE0), 15); // ACC = 15
-assert!(cpu.halted);
+assert!(result.halted);
 
 // Loop: count from 3 down to 0 via DJNZ, incrementing B each iteration
 // MOV R0, #3; MOV B, #0; loop: INC B; DJNZ R0, loop(-3); HALT
 cpu.execute(&[0x78, 3, 0x75, 0xF0, 0, 0x05, 0xF0, 0xD8, 0xFD, 0xA5], 0, 100);
 assert_eq!(cpu.rf.read_iram8(0xF0), 3); // B = 3
+# Ok::<(), coding_adventures_intel8051_gatelevel::Intel8051Error>(())
 ```
+
+## Checked lifecycle and conformance
+
+`get_state` and `restore` use the same complete `Intel8051State` as the
+functional crate: PC, all IRAM/SFR bytes, both 64 KiB Harvard spaces, halt, and
+the installed-program boundary. `load_checked`, `step_checked`,
+`run_loaded_checked`, and `run_checked` reject invalid input without partially
+changing the machine and return complete before/after traces.
+
+The differential suite restores deterministic full Harvard states and checks
+one complete transition for every opcode byte against `intel8051-simulator`.
+The package has 70 unit tests, six lifecycle tests, one exhaustive differential
+test, and 23 doctests. Core line coverage is 97.51% overall and 97.01% in the
+CPU engine.
 
 ## Covered instructions
 
@@ -208,9 +228,9 @@ assert_eq!(cpu.rf.read_iram8(0xF0), 3); // B = 3
 - **Serial port**: not simulated.
 - **Port I/O**: port latches (P0-P3 at SFR 0x80/0x90/0xA0/0xB0) are
   readable and writable as SFRs, but no physical pin simulation.
-- **Indirect addressing into SFR space**: `@Ri` with addr ≥ 0x80 is
-  undefined on base 8051 — the simulator silently reads/writes IRAM at
-  that address (no bounds check or exception).
+- **Indirect addressing into SFR space**: `@Ri` with addr ≥ 0x80 is undefined
+  on the base 8051. Checked execution rejects it atomically; the legacy
+  unchecked `step` surface remains available for compatibility.
 - **AJMP/ACALL page boundary**: the PC high-5-bits source is the PC
   after the opcode fetch (before the operand fetch), consistent with
   real 8051 behaviour.
