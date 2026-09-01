@@ -96,6 +96,12 @@ the checked-in schema.
       "items": {
         "$ref": "#/$defs/shard_entry"
       }
+    },
+    "ci_jobs": {
+      "type": "object",
+      "description": "Optional. Maps each gate id in code/specs/data/ci-gates.json to whether this change requires that CI job. Absent when no gate registry was consulted. See ci-gate-registry.md.",
+      "additionalProperties": { "type": "boolean" },
+      "propertyNames": { "pattern": "^[a-z0-9][a-z0-9_-]*$" }
     }
   },
   "$defs": {
@@ -236,6 +242,7 @@ the checked-in schema.
 | Add optional `build_timeout` to package_entry | No | Additive — v1 readers ignore it |
 | Add optional `platform_overrides` top-level field | No | Additive |
 | Add optional `shards` top-level field | No | Additive |
+| Add optional `ci_jobs` top-level field | No | Additive |
 | Add `"zig"` to the language enum | No | Additive |
 | Rename `rel_path` → `path` | **Yes → v2** | Breaking — v1 readers expect `rel_path` |
 | Change edges from `[[a,b]]` to `[{from:a, to:b}]` | **Yes → v2** | Breaking — structural change |
