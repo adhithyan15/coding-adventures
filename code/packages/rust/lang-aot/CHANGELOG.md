@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.284.0 - 2026-08-31 (ALGOL exact tracked `sqrt` real-power exponents)
+
+The ALGOL matrix now proves on all seven standard backends that an exact
+integral built-in square root over a tracked integer may retain bounded real
+multiplication lowering and runtime result checks.
+
 ## 0.283.0 - 2026-08-31 (Dartmouth BASIC mixed DATA parity)
 
 The unified matrix now executes a Dartmouth BASIC program whose one DATA stream

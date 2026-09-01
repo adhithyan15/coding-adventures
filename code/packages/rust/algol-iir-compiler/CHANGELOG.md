@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.232.0 — 2026-08-31 — exact tracked `sqrt` exponents
+
+Real-base power unrolling now accepts built-in `sqrt` over exact tracked
+integer arithmetic when binary64 evaluation round-trips exactly to a bounded
+integral result. Inexact roots, invalid or inexactly widened operands, user
+overrides, and oversized results retain `f64_pow`.
+
 ## 0.231.0 — 2026-08-29 — path-independent conditional exponent unrolling
 
 Real-base power unrolling now accepts pure conditional exponent expressions
