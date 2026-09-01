@@ -3101,6 +3101,21 @@
       "source_cas_hashes": [],
       "benchmark_paths": [],
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
+      "id": "adj.civics.3to5.chamber_branch",
+      "title": "Derive which branch of the U.S. federal government a named chamber of Congress belongs to, by composing the chamber/body and branch/member relations",
+      "band": "3-5",
+      "domain": "civics",
+      "competency": "infer",
+      "coverage_roots": ["c3.socialstudies"],
+      "standards": [],
+      "prerequisites": ["adj.civics.3to5.congress_chamber", "adj.civics.3to5.government_branch_member"],
+      "libraries": ["code/specs/data/adj-facts-stdlib/civics/chamber-branch.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     }
   ]
 }
