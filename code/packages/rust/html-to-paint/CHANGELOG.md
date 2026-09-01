@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Exercise computed CSS table geometry and decorated cells through the shared
+  HTML-to-layout-to-paint pipeline without introducing host-specific behavior.
+
+## Unreleased
+
 - Bound scene scroll extents to positioned overflow, intersect link regions
   with ancestor clips, and preserve fixed-link viewport hit testing.
 - Add composition through a pre-parsed `HtmlStyleContext`, preserving the

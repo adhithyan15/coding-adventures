@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add a table fixture covering section ordering, fixed columns, captions,
+  row/column spans, spacing, recursive paint, and shared host loading.
 - Add a positioned fixture covering out-of-flow geometry, clipping, fixed
   hit testing, and sticky/fixed viewport paint behavior.
 - Add a named-area grid fixture that ratchets shared track geometry, ordering,

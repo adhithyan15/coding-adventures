@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Dispatch `table` and `inline-table` containers through the reusable
+  `layout-table` formatting context while retaining recursive cell content.
+
+## Unreleased
+
 - Dispatch relative and out-of-flow positioned descendants through the shared
   positioning contract without coupling flex, grid, or block flow to CSS.
 

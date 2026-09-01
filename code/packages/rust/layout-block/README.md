@@ -16,6 +16,8 @@ Handles:
   between adjacent siblings.
 - Inline flow delegates to `layout-inline` for word fragmentation, semantic
   wrapper splitting, measured baseline alignment, and explicit line breaks.
+- Flex, grid, and table containers delegate through reusable formatting
+  contexts while preserving the same recursive child-layout boundary.
 - Nested containers with padding on both outer and inner sides.
 - Text leaves — width/height resolved by the supplied measurer with
   wrap-at-max-width semantics.
@@ -27,7 +29,7 @@ Handles:
 Out of scope for v1 (per UI07):
 - Unicode UAX #14 line-breaking and bidirectional text.
 - Full CSS inline edge-decoration continuation across fragments.
-- `float` / `clear` / absolute positioning.
+- `float` / `clear`.
 - RTL / bidirectional text.
 - CSS columns.
 - Parent-child margin collapse.

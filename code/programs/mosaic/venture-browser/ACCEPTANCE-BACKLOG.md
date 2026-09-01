@@ -129,6 +129,14 @@ cross-platform proving application. Items are ordered by risk and dependency.
   testing. Completed with host-neutral diagnostics and geometry, paint-group
   projection for fixed/sticky scrolling, and a deterministic fixture shared by
   the Venture browser pipeline and available native/web hosts.
+- [x] **P2 CSS convergence — table formatting context.** Add a reusable table
+  container/cell contract with anonymous row and cell repair, ordered
+  header/body/footer groups, captions, fixed and automatic intrinsic column
+  sizing, column hints, row/column spans, separate and collapsed border
+  geometry, vertical alignment, and minimum-content overflow. Completed with
+  host-neutral diagnostics, computed CSS and HTML attribute mapping, recursive
+  shared layout/paint dispatch, and a deterministic fixture used by every
+  available Venture host pipeline.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a

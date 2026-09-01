@@ -848,6 +848,7 @@ members = [
     "layout-inline",
     "layout-flexbox",
     "layout-grid",
+    "layout-table",
     "layout-block",
     "layout-positioned",
     "layout-text-measure-native",
