@@ -1,4 +1,4 @@
-import BuildToolCore
+@testable import BuildToolCore
 import Foundation
 import Testing
 #if os(Windows)
@@ -22,11 +22,17 @@ struct HasherTests {
                 }
 
                 let mode: String
+                let language: String
+                let packageRoot: String
+                let registrySHA256: String
                 let declaredSrcs: [String]
                 let candidates: [Candidate]
 
                 enum CodingKeys: String, CodingKey {
                     case mode
+                    case language
+                    case packageRoot = "package_root"
+                    case registrySHA256 = "registry_sha256"
                     case declaredSrcs = "declared_srcs"
                     case candidates
                 }
@@ -108,6 +114,14 @@ struct HasherTests {
             .standardizedFileURL
     }
 
+    private func registryURL() -> URL {
+        fixtureURL("unused")
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("language-source-input-registry.json")
+            .standardizedFileURL
+    }
+
     private func decodeHex(_ value: String) throws -> Data {
         guard value.count.isMultiple(of: 2) else {
             throw CocoaError(.fileReadCorruptFile)
@@ -137,16 +151,22 @@ struct HasherTests {
     @Test(arguments: [
         "source-collection-extension.json",
         "source-collection-declared.json",
+        "source-collection-registry-roles.json",
+        "source-collection-engram-wasm-exact-inputs.json",
     ])
     func consumesNeutralSourceCollectionFixture(_ name: String) throws {
         let fixture = try JSONDecoder().decode(
             SourceCollectionFixture.self,
             from: Data(contentsOf: fixtureURL(name))
         )
+        #expect(
+            fixture.input.options.registrySHA256
+                == Hasher.languageSourceInputRegistryDigest
+        )
         let root = try makeTempDirectory(label: "hasher_fixture")
         defer { try? FileManager.default.removeItem(atPath: root) }
         let packageRoot = (root as NSString).appendingPathComponent(
-            "code/packages/ocaml/demo"
+            fixture.input.options.packageRoot
         )
 
         for candidate in fixture.input.options.candidates
@@ -161,18 +181,338 @@ struct HasherTests {
 
         let declared = fixture.input.options.mode == "declared_sources"
         let package = BuildPackage(
-            name: "ocaml/demo",
+            name: fixture.input.options.packageRoot,
             path: packageRoot,
-            language: "ocaml",
+            language: fixture.input.options.language,
             isStarlark: declared,
             declaredSrcs: fixture.input.options.declaredSrcs
         )
         let actual = relativePaths(
-            try Hasher.collectSourceFiles(package),
+            try Hasher.collectSourceFiles(package, repositoryRoot: root),
             root: packageRoot
         )
 
         #expect(actual == fixture.expected.result.files.map(\.path))
+    }
+
+    @Test
+    func productionRegistryExactlyEqualsCheckedNeutralRegistry() throws {
+        let checkedData = try Data(contentsOf: registryURL())
+        let checked = try JSONDecoder().decode(
+            LanguageSourceInputRegistry.self,
+            from: checkedData
+        )
+        let checkedObject = try #require(
+            JSONSerialization.jsonObject(with: checkedData) as? NSDictionary
+        )
+        let productionObject = try #require(
+            JSONSerialization.jsonObject(
+                with: JSONEncoder().encode(Hasher.languageSourceInputRegistry)
+            ) as? NSDictionary
+        )
+        let checkedText = try #require(String(data: checkedData, encoding: .utf8))
+        let missingSelectorData = Data(
+            checkedText.replacingOccurrences(
+                of: "required_capabilities.json",
+                with: "required_capabilities.missing"
+            ).utf8
+        )
+        let missingSelector = try #require(
+            JSONSerialization.jsonObject(with: missingSelectorData) as? NSDictionary
+        )
+        var extraFields = try #require(checkedObject as? [String: Any])
+        extraFields["undeclared_selector_role"] = [".extra"]
+        let extraSelector = extraFields as NSDictionary
+
+        #expect(checkedObject.isEqual(productionObject))
+        #expect(!missingSelector.isEqual(productionObject))
+        #expect(!extraSelector.isEqual(productionObject))
+        #expect(checked.languages.count == 23)
+        #expect(Set(checked.languages.map(\.language)).count == 23)
+        #expect(
+            Hasher.languageSourceInputRegistryDigest
+                == "f49bfe8c7c9c0fb9b534ecc9ca4a614f3684abe32bdb0edac82d99bdc806fb70"
+        )
+        #expect(
+            try Hasher.canonicalLanguageSourceInputRegistryDigest(from: checkedData)
+                == Hasher.languageSourceInputRegistryDigest
+        )
+    }
+
+    @Test
+    func canonicalJSONUnescapesSlashesWithoutDroppingLiteralBackslashes() {
+        let escaped = Data(#"["a\/b","a\\\/b"]"#.utf8)
+        let canonical = Hasher.jsonDataWithoutEscapedSlashes(escaped)
+
+        #expect(String(decoding: canonical, as: UTF8.self) == #"["a/b","a\\/b"]"#)
+    }
+
+    @Test
+    func swiftRegistryKeepsExactScopesInBothCollectionModes() throws {
+        let root = try makeTempDirectory(label: "hasher_swift_registry")
+        defer { try? FileManager.default.removeItem(atPath: root) }
+        let packageRoot = (root as NSString).appendingPathComponent(
+            "code/packages/swift/demo"
+        )
+        let candidates = [
+            "BUILD",
+            "required_capabilities.json",
+            "nested/required_capabilities.json",
+            "regen-embedded-grammars.sh",
+            "nested/regen-embedded-grammars.sh",
+            "Sources/Demo.swift",
+            "Sources/Native/bridge.c",
+            "Sources/Native/include/bridge.h",
+            "Sources/Native/module.modulemap",
+            "Other/bridge.h",
+        ]
+        for path in candidates {
+            try writeFile(
+                (packageRoot as NSString).appendingPathComponent(path),
+                "input\n"
+            )
+        }
+
+        let extensionPackage = BuildPackage(
+            name: "swift/demo",
+            path: packageRoot,
+            language: "swift"
+        )
+        #expect(
+            relativePaths(
+                try Hasher.collectSourceFiles(extensionPackage),
+                root: packageRoot
+            ) == [
+                "BUILD",
+                "Sources/Demo.swift",
+                "Sources/Native/bridge.c",
+                "Sources/Native/include/bridge.h",
+                "Sources/Native/module.modulemap",
+                "regen-embedded-grammars.sh",
+                "required_capabilities.json",
+            ]
+        )
+
+        let declaredPackage = BuildPackage(
+            name: "swift/demo",
+            path: packageRoot,
+            language: "swift",
+            isStarlark: true,
+            declaredSrcs: ["Sources/**/*.swift"]
+        )
+        #expect(
+            relativePaths(
+                try Hasher.collectSourceFiles(declaredPackage),
+                root: packageRoot
+            ) == [
+                "BUILD",
+                "Sources/Demo.swift",
+                "regen-embedded-grammars.sh",
+                "required_capabilities.json",
+            ]
+        )
+    }
+
+    @Test
+    func unknownSourceLanguageFailsBeforeCollectingUniversalInputs() throws {
+        let root = try makeTempDirectory(label: "hasher_unknown_registry")
+        defer { try? FileManager.default.removeItem(atPath: root) }
+        let packageRoot = (root as NSString).appendingPathComponent(
+            "code/packages/unknown/demo"
+        )
+        try writeFile(
+            (packageRoot as NSString).appendingPathComponent("BUILD"),
+            "echo inert\n"
+        )
+        let package = BuildPackage(
+            name: "unknown/demo",
+            path: packageRoot,
+            language: "unknown"
+        )
+
+        #expect(throws: (any Error).self) {
+            _ = try Hasher.collectSourceFiles(package)
+        }
+    }
+
+    @Test
+    func packageExactInputsUseRepositoryPathInsteadOfPackageName() throws {
+        let root = try makeTempDirectory(label: "hasher_package_exact_scope")
+        defer { try? FileManager.default.removeItem(atPath: root) }
+        let packageRoot = (root as NSString).appendingPathComponent(
+            "code/packages/rust/engram-wasm-copy"
+        )
+        for path in [
+            "BUILD",
+            "js/engram-mosaic-host-wasm.mjs",
+            "js/smoke.mjs",
+            "pkg/engram_engine.wasm",
+        ] {
+            try writeFile(
+                (packageRoot as NSString).appendingPathComponent(path),
+                "input\n"
+            )
+        }
+        let package = BuildPackage(
+            name: "rust/engram-wasm",
+            path: packageRoot,
+            language: "rust"
+        )
+
+        #expect(
+            relativePaths(
+                try Hasher.collectSourceFiles(package, repositoryRoot: root),
+                root: packageRoot
+            ) == ["BUILD"]
+        )
+    }
+
+    @Test
+    func repositoryPackageRootMustMatchLanguageAndContainAName() throws {
+        let root = try makeTempDirectory(label: "hasher_package_root_authority")
+        defer { try? FileManager.default.removeItem(atPath: root) }
+        let mismatchedRoot = (root as NSString).appendingPathComponent(
+            "code/packages/rust/demo"
+        )
+        try writeFile(
+            (mismatchedRoot as NSString).appendingPathComponent("BUILD"),
+            "echo inert\n"
+        )
+        let mismatched = BuildPackage(
+            name: "swift/demo",
+            path: mismatchedRoot,
+            language: "swift"
+        )
+        #expect(throws: (any Error).self) {
+            _ = try Hasher.collectSourceFiles(mismatched, repositoryRoot: root)
+        }
+
+        let laneRoot = (root as NSString).appendingPathComponent(
+            "code/packages/swift"
+        )
+        try FileManager.default.createDirectory(
+            atPath: laneRoot,
+            withIntermediateDirectories: true
+        )
+        let wholeLane = BuildPackage(
+            name: "swift",
+            path: laneRoot,
+            language: "swift"
+        )
+        #expect(throws: (any Error).self) {
+            _ = try Hasher.collectSourceFiles(wholeLane, repositoryRoot: root)
+        }
+    }
+
+    @Test
+    func candidateSelectionAndByteLimitsFailBeforeWidening() throws {
+        let root = try makeTempDirectory(label: "hasher_input_limits")
+        defer { try? FileManager.default.removeItem(atPath: root) }
+        for name in ["c.swift", "a.swift", "b.swift"] {
+            try writeFile((root as NSString).appendingPathComponent(name), "x\n")
+        }
+
+        #expect(throws: (any Error).self) {
+            _ = try Hasher.boundedDirectoryEntries(root, maximumEntries: 2)
+        }
+        #expect(
+            try Hasher.boundedDirectoryEntries(root, maximumEntries: 3)
+                == ["a.swift", "b.swift", "c.swift"]
+        )
+
+        var selected: [String] = []
+        try Hasher.appendSelectedInput("a.swift", to: &selected, maximumInputs: 1)
+        #expect(throws: (any Error).self) {
+            try Hasher.appendSelectedInput(
+                "b.swift",
+                to: &selected,
+                maximumInputs: 1
+            )
+        }
+        #expect(
+            try Hasher.checkedPackageByteTotal(
+                current: 6,
+                fileBytes: 4,
+                maximumFile: 4,
+                maximumPackage: 10
+            ) == 10
+        )
+        #expect(throws: (any Error).self) {
+            _ = try Hasher.checkedPackageByteTotal(
+                current: 0,
+                fileBytes: 5,
+                maximumFile: 4,
+                maximumPackage: 10
+            )
+        }
+        #expect(throws: (any Error).self) {
+            _ = try Hasher.checkedPackageByteTotal(
+                current: 7,
+                fileBytes: 4,
+                maximumFile: 4,
+                maximumPackage: 10
+            )
+        }
+        #expect(throws: (any Error).self) {
+            _ = try Hasher.checkedPackageByteTotal(
+                current: UInt64.max,
+                fileBytes: 1,
+                maximumFile: 1,
+                maximumPackage: UInt64.max
+            )
+        }
+    }
+
+    #if !os(Windows)
+    @Test
+    func posixSnapshotRejectsConcurrentGrowthBeforeAppendingExtraBytes() throws {
+        let root = try makeTempDirectory(label: "hasher_posix_growth")
+        defer { try? FileManager.default.removeItem(atPath: root) }
+        let path = (root as NSString).appendingPathComponent(
+            "code/packages/swift/demo/Sources/Demo.swift"
+        )
+        try writeData(path, Data([0x61]))
+
+        #expect(throws: (any Error).self) {
+            _ = try Hasher.readSecurePOSIXFileForGrowthTest(
+                path,
+                repositoryRoot: root
+            ) {
+                let writer = try #require(FileHandle(forWritingAtPath: path))
+                try writer.seekToEnd()
+                try writer.write(contentsOf: Data([0x62]))
+                try writer.close()
+            }
+        }
+    }
+    #endif
+
+    @Test
+    func portablePathsRejectUnsafeUnicodeWindowsNamesAndFoldCollisions() throws {
+        try Hasher.validatePortablePath("Sources/safe.swift")
+        for path in [
+            "Sources/e\u{0301}.swift",
+            "Sources/CON.swift",
+            "Sources/bad:name.swift",
+            "Sources/trailing. ",
+            "Sources/hidden\u{202E}.swift",
+        ] {
+            #expect(throws: (any Error).self) {
+                try Hasher.validatePortablePath(path)
+            }
+        }
+
+        var identities: [String: String] = [:]
+        try Hasher.registerPortableIdentity(
+            "Sources/straße.swift",
+            in: &identities
+        )
+        #expect(throws: (any Error).self) {
+            try Hasher.registerPortableIdentity(
+                "Sources/strasse.swift",
+                in: &identities
+            )
+        }
     }
 
     @Test
@@ -262,7 +602,7 @@ struct HasherTests {
             "code/packages/swift/bytes"
         )
         try writeData(
-            (packageRoot as NSString).appendingPathComponent("Sources/é.swift"),
+            (packageRoot as NSString).appendingPathComponent("Sources/β.swift"),
             Data([0x00, 0x0D, 0x0A, 0xFF])
         )
         try writeData(
@@ -279,7 +619,7 @@ struct HasherTests {
         #expect(first.count == 64)
         #expect(try Hasher.hashPackage(package, repositoryRoot: root) == first)
         try writeData(
-            (packageRoot as NSString).appendingPathComponent("Sources/é.swift"),
+            (packageRoot as NSString).appendingPathComponent("Sources/β.swift"),
             Data([0x00, 0x0A, 0xFF])
         )
         #expect(try Hasher.hashPackage(package, repositoryRoot: root) != first)

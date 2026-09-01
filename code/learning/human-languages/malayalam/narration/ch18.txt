@@ -3,7 +3,7 @@ Malayalam, chapter 18: Telling Time.
 
 
 Lesson 1 of 2.
-മണി — one word in Malayalam's dictionaries, two in Tamil's.
+മണി (maṇi) — one word in Malayalam's dictionaries, two in Tamil's.
 
 Warm-up.
 [pause 2 seconds]
@@ -16,7 +16,7 @@ Why it's said this way.
 Here's what makes this genuinely interesting rather than settled: Tamil's closely related cognate மணி is analyzed very differently by Tamil's own reference dictionaries — as two separate, unrelated words that happen to be spelled and pronounced identically: a native Dravidian "bell, gong" word (which extends to "hour"), and a completely separate Sanskrit loan meaning "gem." The broader comparative Dravidian dictionary (DEDR) does list Malayalam among the languages sharing that native "bell" word too — but even DEDR flags a possible Sanskrit connection for the whole word-family as unresolved. So: two closest-cousin languages, and even the specialists don't fully agree on whether this is one Sanskrit word wearing three meanings, or a native word and a Sanskrit word that just happen to sound alike.
 
 Grammar Lens: telling the time.
-ഒരു മണി. — "One o'clock." (oru mani, "one hour/bell") രണ്ട് മണി. — "Two o'clock." (raṇṭŭ mani, "two hour/bell").
+ഒരു മണി (maṇi). — "One o'clock." (oru mani, "one hour/bell") രണ്ട് മണി (maṇi). — "Two o'clock." (raṇṭŭ mani, "two hour/bell").
 
 Guided Practice.
 [pause 1 second]

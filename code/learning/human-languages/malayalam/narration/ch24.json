@@ -4,14 +4,14 @@
   "chapter": 24,
   "title": "Night",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:0d0c4eff0a873076",
+  "sourceHash": "fnv1a64:fc55961f988dd256",
   "lessons": [
     {
       "id": "ML-C24-rathri",
       "sequence": 550,
       "title": "രാത്രി (rāthri) — night, already hiding inside midnight",
       "headword": "രാത്രി",
-      "romanization": "",
+      "romanization": "rāthri",
       "gloss": "\"night\" — the Sanskrit tatsama already shortened inside paathira, with a different PIE root from Latin nox",
       "script": "malayalam",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3aa52d9e621d242e",
+      "sourceHash": "fnv1a64:b1d7ead4c17e2697",
       "notice": null,
       "blocks": [
         {
@@ -114,9 +114,9 @@
     {
       "id": "ML-C24-native-night-words",
       "sequence": 560,
-      "title": "ഇരവ് / ഇരുൾ — two native words, two jobs",
+      "title": "ഇരവ് / ഇരുൾ (iravŭ / iruḷ) — two native words, two jobs",
       "headword": "ഇരവ് / ഇരുൾ",
-      "romanization": "",
+      "romanization": "iravŭ / iruḷ",
       "gloss": "native literary night and everyday darkness — related ideas with different modern jobs",
       "script": "malayalam",
       "modality": "voice",
@@ -124,7 +124,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4fe755af3ecd5b81",
+      "sourceHash": "fnv1a64:5bcf38f3085ecbf3",
       "notice": null,
       "blocks": [
         {
@@ -140,7 +140,7 @@
             },
             {
               "kind": "speech",
-              "text": "രാത്രി is the ordinary Sanskrit night-word. Malayalam also kept two native Dravidian words, but they do not compete with it in the same way."
+              "text": "രാത്രി (rāthri) is the ordinary Sanskrit night-word. Malayalam also kept two native Dravidian words, but they do not compete with it in the same way."
             }
           ]
         },
@@ -159,7 +159,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is not one native night-word simply pushed into archaism. It is two native words carrying different pieces of രാത്രി’s semantic space: one formal and poetic, the other common but narrower."
+              "text": "This is not one native night-word simply pushed into archaism. It is two native words carrying different pieces of രാത്രി (rāthri)’s semantic space: one formal and poetic, the other common but narrower."
             }
           ]
         },

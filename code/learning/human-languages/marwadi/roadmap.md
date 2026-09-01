@@ -58,10 +58,26 @@ The transport set closes in separately scored listening, speaking, reading,
 and independent writing without claiming untaught ticket, timetable, location,
 or problem-report language. The strict report remains all-zero at 172 lessons.
 
-This completes the issue's 35-word vocabulary expansion, bringing the track
-from 11 to 46 distinct taught headwords. The next dependency-unblocking slice
-should turn the secured shopping and transport nouns into tiny source-backed
-interactions, one function at a time, while continuing to reuse the current
-script inventory. The contrasting no response before a complete yes/no
-exchange, okay, casual gratitude, a you're-welcome response, and a full request
-for water also remain explicit debt.
+That completed the issue's 35-word vocabulary expansion, bringing the track
+from 11 to 46 distinct taught headwords.
+
+Chapters 23--25 add twenty-five meaning-first lessons for **दाल, घी, सबजी,
+रोटी, बाटी, चूरमा, चाय**, taking the track to 197 lessons and 53 distinct
+taught headwords against the 300-word pre-A1 target. Chapter 23 adds no
+Devanagari sign at all; Chapter 24 isolates only **ट** and Chapter 25 only
+**य**, each against the neighbour it is confusable with and each one lesson
+before the word that needs it. Three-word, five-word, and seven-word food maps
+close in separately scored listening, speaking, reading, and independent
+writing. The strict report remains all-zero at 197 lessons.
+
+The track now carries nineteen everyday nouns across food, shopping, and
+transport and not one transaction, which makes the next dependency-unblocking
+slice a function rather than a fourth noun domain: one source-backed
+interaction, taught once and reused across all three noun sets. Offering,
+accepting, refusing, and asking for more join the earlier debt list -- the
+contrasting no response before a complete yes/no exchange, okay, casual
+gratitude, a you're-welcome response, and a full request for water. The binding
+constraint on that slice is now the script rather than the vocabulary: **ख, झ,
+ञ, ढ, ध, फ, ष, ळ**, the independent vowels other than **आ** and **ई**, and
+**ृ** are still untaught, so candidate sentences have to be checked against the
+taught set before they are scheduled.

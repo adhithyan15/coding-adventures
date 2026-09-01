@@ -21,7 +21,9 @@ writing **पाणी**. Chapters 5–9 add a name exchange, a wellbeing exchan
 twelve family and relationship labels by ear before their spelling, add only
 **ब**, **द**, **व**, **त**, and **च**, and end in independent listening, speaking,
 reading, and writing. Chapters 14--22 extend the same meaning-first pattern
-through places, weather, shopping, and transport vocabulary. Every lesson is
+through places, weather, shopping, and transport vocabulary. Chapters 23--25
+carry it into food and drink, adding no new sign at all in the first of the
+three and only **ट** and **य** in the other two. Every lesson is
 at most five minutes.
 
 ## What this starter edition can honestly claim
@@ -47,7 +49,14 @@ the nukta that turns familiar **ड** into **ड़**. Chapters 21--22 then add 
 **श** is new. The words form seven-part shopping and five-part transport maps
 in all four skills, while a complete price question, bargaining exchange,
 ticket purchase, timetable question, and transport problem report remain
-untaught. The track now contains 172 canonical lessons and 46 distinct taught
+untaught. Chapters 23--25 then add **दाल, घी, सबजी, रोटी, बाटी, चूरमा, चाय**
+as lentils, clarified butter, vegetables, flatbread, hard wheat rolls, the
+sweet crumbled wheat dessert, and tea. The first three need no sign the hand
+has not already made; **ट** is isolated against the **ठ** of **ठेला** before
+the two bread words, and **य** against the **भ** of **भाई** before tea. The
+seven form a food map in all four skills, while offering food, accepting or
+refusing it, asking for more, and naming a meal stay untaught.
+The track now contains 197 canonical lessons and 53 distinct taught
 headwords. That is still a small pre-A1
 capability, not completion of pre-A1 and not exam readiness. The curriculum map
 records every untouched spine concept explicitly so the remaining work stays
@@ -95,6 +104,12 @@ bargaining exchange. The same lesson supplies **कपड़ा, महंगो
 Marwari Pathshala Lesson 10 supplies **बस, गाड़ी, ठेला, रिक्शा, घोड़ो** for
 Chapters 21--22; the book teaches a transport vocabulary map without claiming
 the still-untaught ticket, timetable, location, or problem-report exchanges.
+Marwari Pathshala Lesson 6 supplies **दाल, घी, सबजी, रोटी, बाटी, चूरमा, चाय**
+for Chapters 23--25, and independently prints **पाणी** with the same spelling
+Chapter 4 already teaches. That source writes vegetables as **सबजी**, without a
+vowel-killer; other Rajasthani writing prints a clustered spelling for the same
+word, so the lesson teaches the attested form and names the variation rather
+than declaring one universal spelling.
 
 - [Rajasthan Foundation: Rajasthani Language](https://foundation.rajasthan.gov.in/RajasthaniLanguage.aspx)
 - [Rajasthan State Archives: learning Rajasthani (Marwari)](https://rsad.artandculture.rajasthan.gov.in/content/raj/art-and-culture/rajasthan-state-archives-bikaner/en/download.html)
@@ -104,6 +119,7 @@ the still-untaught ticket, timetable, location, or problem-report exchanges.
 - [Rajasthan Sahitya Akademi, *Jāgtī Jot*, April–May 2019](https://rbssa.artandculture.rajasthan.gov.in/content/dam/doitassets/art-and-culture/Rajasthani-Bhasha-Sahitya-Avm-Sanskriti-Academy-Bikaner/pdf/JJ_All_Pdf/JJ_47_01_02_April_to_May_2019.pdf)
 - [SIL International, *Marwari–English Dictionary* (2015)](https://nepal.sil.org/resources/archives/63768)
 - [Marwari Pathshala, Lesson 4: relations](https://www.marwaripathshala.com/marwari-lesson-4-english)
+- [Marwari Pathshala, Lesson 6: food and dining](https://www.marwaripathshala.com/marwari-lesson-6-english)
 - [Marwari Pathshala, Lesson 7: weather and seasons](https://www.marwaripathshala.com/marwari-lesson-7-english)
 - [Marwari Pathshala, Lesson 9: shopping and bargaining](https://www.marwaripathshala.com/marwari-lesson-9-english)
 - [Marwari Pathshala, Lesson 10: transportation](https://www.marwaripathshala.com/marwari-lesson-10-english)

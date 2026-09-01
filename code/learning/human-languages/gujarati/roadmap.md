@@ -20,13 +20,15 @@ steps; later-level labels are not readiness evidence by themselves.
 - **Chapters 11-18:** first verbs, numbers one to five, thought and literacy,
   requests, food and drink, family, and body words.
 - **Chapters 19-23:** real R3/R4 retrieval for early forms and conversations.
-- **Chapters 24-25:** a first concrete place/hand/money vocabulary runway.
+- **Chapters 24-27:** a first concrete place/hand/money/map vocabulary runway.
+- **Chapter 28:** eight everyday time words acquired ear-first, with only two of
+  them written, plus a distant return of the map words.
 
-The authored boundary is **25 chapters / 150 lessons**. It has zero duration
-violations and zero never-taught Gujarati glyphs, but it remains pre-A1 work in
-progress. The current gentle-ramp snapshot also records 260 missed retrieval
-windows, six atoms never revisited, three atom spikes, two script-closure
-findings, and one measurement-blind lesson.
+The authored boundary is **28 chapters / 179 lessons**. It has zero duration
+violations, zero never-taught Gujarati glyphs, zero script-closure findings, and
+zero headwords without a romanization, but it remains pre-A1 work in progress.
+The current gentle-ramp snapshot records 339 missed retrieval windows, five
+atoms never revisited, three atom spikes, and one measurement-blind lesson.
 
 ## Dependency-ordered backlog
 
@@ -35,8 +37,10 @@ findings, and one measurement-blind lesson.
 1. Service the earliest R1-R4 misses without creating chapter atom spikes.
 2. Revisit the six orphan atoms and migrate the measurement-blind lesson.
 3. Split the two lesson spikes and one chapter spike into smaller lessons.
-4. Resolve the two remaining script-closure findings while keeping the opening
-   meaning-first and every writing action gentle.
+4. Service the core-verb chapters (13-16) at R4. Thirty-six of their atoms
+   became R4-measurable when the track passed 165 lessons and none of them is
+   retrieved at that distance; this is the next fifth-return slab, and it is the
+   single largest item in the reinforcement figure.
 
 These items unblock trustworthy expansion because new chapters should not pile
 onto known continuity debt.

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C24-hear-mahino",
+    "language": "gujarati",
+    "chapter": 28,
+    "sequence": 1230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3dc15cffbbf8c40d"
+  },
+  "findings": []
+}

@@ -6,6 +6,7 @@ sequence: 140
 chapter: 8
 type: word
 headword: તું / તમે
+romanization: "tũ / tame"
 gloss: you (familiar / respectful)
 concept_tag: PRONOUN-YOU
 prerequisites: [GU-C02-naam, GU-W02-ra]

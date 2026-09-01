@@ -49,6 +49,7 @@ class MosaicQtRuntimeCIAcceptanceTests(unittest.TestCase):
             "rust/mosaic-app-conformance",
             "rust/mosaic-app-runtime",
             "rust/task-mosaic-app",
+            "rust/engram-mosaic-app",
         ):
             with self.subTest(package=package):
                 self.assertTrue(
@@ -165,6 +166,35 @@ class MosaicQtRuntimeCIAcceptanceTests(unittest.TestCase):
             '! grep -E "missing required MIL prop|ReferenceError|TypeError" "$taskapp_log"',
             workflow,
         )
+        # Engram's Qt step proves the emission COMPILES. It deliberately does
+        # NOT pass --profile native-complete or --runtime-library: both switch
+        # the generated main.cpp to the strict standard-binding shape, which
+        # collides with Engram's own [host_assets] MosaicHost and produces a
+        # project that does not compile. These assertions pin that, so the flags
+        # cannot be reintroduced without the migration (#13728) landing first.
+        self.assertIn("mosaic-qt-engram", workflow)
+        self.assertIn(
+            "cargo build --manifest-path code/packages/rust/Cargo.toml -p engram-mosaic-app",
+            workflow,
+        )
+        self.assertIn(
+            "pkg code/programs/mosaic/engram-app --backend qt --output \"$engram_output\" --emit-project",
+            workflow,
+        )
+        engram_step = qt_runtime_step[qt_runtime_step.index("mosaic-qt-engram"):]
+        self.assertNotIn("--runtime-library \"$engram", engram_step)
+        self.assertNotIn("$engram_output/qt --profile native-complete", engram_step)
+        # The override is pinned to exactly two files.
+        self.assertIn(
+            "'.replacedGeneratedFiles == [\"MosaicHost.cpp\", \"MosaicHost.h\"]'",
+            workflow,
+        )
+        # The gate is that it builds.
+        self.assertIn('cmake --build "$engram_output/qt/build"', workflow)
+        # No launch: with its own host binding, running it proves nothing about
+        # the standard runtime.
+        self.assertNotIn('"$installed_engram"', workflow)
+
         self.assertIn("mosaic-qt-toolkit", workflow)
         self.assertIn(
             "pkg code/packages/mosaic/mosaic-pkg-toolkit --backend qt",

@@ -1723,6 +1723,26 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         pop_val(&mut stack, frame!())?;
                         push_val(&mut stack, ValueType::I32);
                     }
+                    0x16 | 0x17 => {
+                        // ref.cast / ref.cast null <heap_type> (W33 second
+                        // slice, item 4): pops a ref, pushes a ref back --
+                        // real dynamic-type checking happens at runtime
+                        // (`wasm-execution`'s handler traps "cast failure"
+                        // on a genuine mismatch), so this static pass only
+                        // needs to keep the abstract stack's byte layout
+                        // and height accurate, same as every other GC op
+                        // here. MUST consume the heap-type immediate's LEB
+                        // bytes (previously fell into the `_ => {}` no-
+                        // immediate default below, which would silently
+                        // desync `offset` from every REAL instruction
+                        // after it in the same function body -- confirmed
+                        // via this slice's own `type-subtyping.wast`
+                        // diagnostic trace, not assumed).
+                        let (_, size) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad ref.cast heap type: {e}")))?;
+                        offset += size;
+                        pop_val(&mut stack, frame!())?;
+                        stack.push(StackType::Unknown);
+                    }
                     0x1C => {
                         // ref.i31 (W20; this crate previously called it
                         // i31.new): pops I32, pushes i31ref.

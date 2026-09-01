@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 9,
-  "sourceHash": "fnv1a64:ce5d6decdf91c66f",
+  "sourceHash": "fnv1a64:47f68170d0a95a35",
   "lessonIds": [
     "GU-C03-hun",
     "GU-C03-kem",
@@ -14,7 +14,7 @@
   "drivablePrefix": 0,
   "text": "gujarati/narration/ch09.txt",
   "json": "gujarati/narration/ch09.json",
-  "textHash": "fnv1a64:66735779570eb633",
-  "jsonHash": "fnv1a64:b087d87f08c8a4d7",
+  "textHash": "fnv1a64:9d84c237eacacd4a",
+  "jsonHash": "fnv1a64:15b4b9ea619837ec",
   "findings": []
 }

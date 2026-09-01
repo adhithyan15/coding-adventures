@@ -7,6 +7,7 @@ chapter: 24
 type: word
 headword: രാത്രി
 gloss: "night" — the Sanskrit tatsama already shortened inside paathira, with a different PIE root from Latin nox
+romanization: "rāthri"
 concept_tag: TIME-NIGHT
 prerequisites: [ML-C17-paathira, ML-C23-naal]
 sounds: [malayalam-virama-ta, malayalam-vowel-sign-i]

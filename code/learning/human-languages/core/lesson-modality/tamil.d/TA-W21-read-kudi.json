@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "TA-W21-read-kudi",
+    "language": "tamil",
+    "chapter": 65,
+    "sequence": 2480,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b2d4463673013ddd",
+    "detachableSegments": [
+      "Script you'll notice: nothing new",
+      "Script you'll notice: the letter you can hear moving"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

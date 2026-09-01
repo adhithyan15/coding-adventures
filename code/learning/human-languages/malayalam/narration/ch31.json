@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "Good Afternoon",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:97c5927d8f18a212",
+  "sourceHash": "fnv1a64:ba6db78dc861ae0f",
   "lessons": [
     {
       "id": "ML-C31-shubha-madhyaahnam",
@@ -105,7 +105,7 @@
       "sequence": 640,
       "title": "One greeting, three afternoon strategies",
       "headword": "ശുഭ മധ്യാഹ്നം — three-way convergence",
-      "romanization": "",
+      "romanization": "śubha madhyāhnaṁ — three-way convergence",
       "gloss": "Malayalam, Kannada, and Telugu converge on one formal greeting after building everyday afternoon words three different ways",
       "script": "malayalam",
       "modality": "voice",
@@ -113,7 +113,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:245c8bd9a2c2896c",
+      "sourceHash": "fnv1a64:82bab263b89d1a92",
       "notice": null,
       "blocks": [
         {

@@ -52,7 +52,7 @@ The letters in this word.
 ગુજરાતી (gujarātī): ગુ (gu) + જ (ja) + રા (rā) + તી (tī).
 
 The sentence, taken apart.
-હું ગુજરાતી બોલું છું = હું (hũ, "I") + ગુજરાતી (gujarātī, the object) + બોલું છું (bolũ chhũ, "speak") — "I Gujarati speak," verb last. The name ગુજરાત (Gujarāt) comes from the Gurjar — a people who entered western India around the 6th–8th centuries and gave their name to the land (Gurjara-deśa becomes Gujarāt); gujarātī is "[the language] of Gujarat." So the language is named after a people, and the region after them in turn.
+હું ગુજરાતી બોલું છું (hũ gujarātī bolũ chhũ) = હું (hũ, "I") + ગુજરાતી (gujarātī, the object) + બોલું છું (bolũ chhũ, "speak") — "I Gujarati speak," verb last. The name ગુજરાત (Gujarāt) comes from the Gurjar — a people who entered western India around the 6th–8th centuries and gave their name to the land (Gurjara-deśa becomes Gujarāt); gujarātī is "[the language] of Gujarat." So the language is named after a people, and the region after them in turn.
 
 Grammar Lens: no gender in the plain present.
 Bolũ chhũ is the same whether a man or a woman says it — Gujarati's three genders live in its adjectives (sāro/sārī/sārũ) and its past tense, but the simple present "I speak" is gender-free. And because chhũ already carries "I," you could drop hũ: gujarātī bolũ chhũ.

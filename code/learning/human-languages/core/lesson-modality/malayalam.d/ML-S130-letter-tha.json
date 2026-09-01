@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "ML-S130-letter-tha",
+    "language": "malayalam",
+    "chapter": 37,
+    "sequence": 875,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:12e06ab15e70d20f",
+    "detachableSegments": [
+      "Script you'll notice: ഥ",
+      "Writing: ഥ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

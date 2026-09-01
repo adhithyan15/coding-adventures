@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Lower BJT `IKR` into the engine reverse-beta-rolloff current field and
+  reject invalid values before element lowering.
 - Lower BJT `IKF` with `IK` fallback into the engine forward-beta-rolloff
   current field and reject invalid values before element lowering.
 - Lower BJT `VAR` with `VB` fallback into the engine reverse-Early-voltage

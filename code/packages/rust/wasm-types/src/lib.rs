@@ -1323,6 +1323,86 @@ pub struct WasmModule {
     pub tags: Vec<u32>,
 }
 
+/// The hop cap [`nominal_subtype_chain`] enforces -- see that function's
+/// own doc comment for why a bounded walk (rather than one scaled to a
+/// module's `types.len()`) matters for algorithmic complexity, not just
+/// termination.
+const MAX_SUBTYPE_CHAIN_HOPS: u32 = 1_000;
+
+/// Whether `sub_idx` is a reflexive, transitive NOMINAL subtype of
+/// `super_idx`, per each type's own declared `sub $parent` chain (W33
+/// first slice), walking `type_subtyping` by absolute type-section index.
+/// Correct WITHIN one module (an index is a unique, unambiguous identity
+/// there) -- NOT across modules, which need a different, more
+/// conservative check (`WasmModule::type_group_shape`).
+///
+/// A free function taking a bare `&[TypeSubtyping]` slice (rather than a
+/// method on `WasmModule`) so callers that only carry a flat, per-type
+/// subtyping table -- e.g. `wasm-execution::WasmExecutionContext`, which
+/// deliberately doesn't hold a full `WasmModule` (see that struct's own
+/// doc comments on `types`/`func_types`) -- can reuse the exact same,
+/// security-reviewed walk at a new runtime call site (`call_indirect`,
+/// `ref.cast`, `ref.test`) instead of re-implementing it and risking the
+/// two copies drifting apart. [`WasmModule::func_type_is_nominal_subtype`]
+/// is now a thin wrapper around this.
+///
+/// Bounded to [`MAX_SUBTYPE_CHAIN_HOPS`] hops so a malformed/cyclic chain
+/// can never loop forever -- see that constant's own doc comment for why
+/// the bound matters for algorithmic complexity too, not just
+/// termination. This is also this function's own answer to the "what if
+/// a caller invokes this against an UNVALIDATED module" security
+/// question (W33 addendum): `wasm-validator`'s `check_type_subtyping_is_
+/// acyclic` runs at module-validation time and rejects a cyclic chain
+/// before it can reach any caller that only validates first, but a
+/// caller that skips validation entirely (documented as a real
+/// possibility for `wasm-execution`'s own test suite, and for any
+/// embedder that constructs an engine by hand) gets a SAFE outcome here
+/// regardless: the hop cap still terminates, and a chain that loops
+/// within the cap simply reports "not a nominal subtype" past the
+/// cutoff -- a false negative, never a false positive, and never an
+/// unbounded walk.
+pub fn nominal_subtype_chain(type_subtyping: &[TypeSubtyping], sub_idx: u32, super_idx: u32) -> bool {
+    if sub_idx == super_idx {
+        return true;
+    }
+    let mut cur = sub_idx;
+    let at = |idx: u32| type_subtyping.get(idx as usize).copied().unwrap_or_default();
+    for _ in 0..MAX_SUBTYPE_CHAIN_HOPS {
+        match at(cur).supertype {
+            Some(parent) if parent == super_idx => return true,
+            Some(parent) => cur = parent,
+            None => return false,
+        }
+    }
+    false
+}
+
+/// Whether ANY entry in `type_subtyping` declares real GC-proposal nominal
+/// info -- a non-default supertype, non-final, or a real (>1-member) `rec`
+/// group -- as opposed to every entry being `TypeSubtyping::default()` (no
+/// `sub` clause, final, singleton group: the pre-GC/MVP shape every type
+/// gets by construction, see `dedup_type`'s own doc comment in `wasm-wast-
+/// parser`, which pushes exactly this default for every type it declares,
+/// `sub`-declared or not -- so `type_subtyping.is_empty()` is NOT a
+/// reliable "this module never uses `sub`" signal, since the vector is
+/// fully populated, one entry per type, regardless).
+///
+/// `wasm-execution`'s runtime dispatch checks (`call_indirect`, `ref.cast`,
+/// `ref.test` -- W33 second slice, item 4) use this to decide which of two
+/// rules applies: `false` means fall back to the engine's original, pre-W33
+/// plain structural-equality check (safe and correct for every module that
+/// never uses `sub` -- the overwhelming majority of the conformance
+/// corpus); `true` means switch to the real nominal (reflexive index
+/// equality OR declared `sub`-chain) check GC-proposal type identity
+/// requires, since once ANY type in the module is nominal, coincidental
+/// structural equality between two OTHER, unrelated types is no longer a
+/// reliable equivalence signal (`type-subtyping.wast` lines 373-401 is the
+/// corpus proof: three distinct nominal `(func)`-shaped types related only
+/// by a `sub` chain).
+pub fn any_declares_subtyping(type_subtyping: &[TypeSubtyping]) -> bool {
+    type_subtyping.iter().any(|t| *t != TypeSubtyping::default())
+}
+
 impl WasmModule {
     /// Returns `idx`'s own [`TypeSubtyping`] metadata, or the default
     /// (final, no supertype, singleton group) if `idx` is out of range or
@@ -1346,46 +1426,8 @@ impl WasmModule {
     /// module's function bodies are ever type-checked against it) can
     /// never loop forever.
     pub fn func_type_is_nominal_subtype(&self, sub_idx: u32, super_idx: u32) -> bool {
-        if sub_idx == super_idx {
-            return true;
-        }
-        let mut cur = sub_idx;
-        // Security review finding (W33 first slice): this used to bound
-        // the walk to `self.types.len()` hops -- correct for
-        // TERMINATION (paired with `wasm-validator`'s own
-        // `check_type_subtyping_is_acyclic`, a cyclic chain can no
-        // longer reach here at all), but NOT for algorithmic complexity.
-        // This method is called from `wasm-validator::is_assignable`,
-        // which runs at every `pop_expect` call site -- i.e. roughly once
-        // per instruction operand, across every function body in a
-        // module. A module declaring one very long, entirely spec-legal
-        // `sub` chain (N types) plus M call sites checking assignability
-        // against a type near the chain's root forces O(N*M) total
-        // validation work -- confirmed to scale linearly per query,
-        // verified directly rather than assumed. `MAX_SUBTYPE_CHAIN_HOPS`
-        // caps the PER-QUERY cost to a constant instead: a chain longer
-        // than this bound simply reports "not a nominal subtype" beyond
-        // the cutoff (a false negative -- SAFE, since it can only make
-        // this method reject something a deeper walk might have
-        // accepted, never wrongly accept). The real corpus's own longest
-        // chain is a handful of hops; this bound is generous by several
-        // orders of magnitude while keeping worst-case per-query cost
-        // bounded.
-        for _ in 0..Self::MAX_SUBTYPE_CHAIN_HOPS {
-            match self.type_subtyping_at(cur).supertype {
-                Some(parent) if parent == super_idx => return true,
-                Some(parent) => cur = parent,
-                None => return false,
-            }
-        }
-        false
+        nominal_subtype_chain(&self.type_subtyping, sub_idx, super_idx)
     }
-
-    /// The hop cap [`Self::func_type_is_nominal_subtype`] enforces -- see
-    /// that method's own doc comment for why a bounded walk (rather than
-    /// one scaled to `types.len()`) matters for algorithmic complexity,
-    /// not just termination.
-    const MAX_SUBTYPE_CHAIN_HOPS: u32 = 1_000;
 
     /// `(rec_group_size, rec_group_position)` for type `idx` -- see
     /// [`TypeSubtyping::rec_group_position`]'s own doc comment for why
@@ -2251,7 +2293,7 @@ mod tests {
         // types a (potentially adversarial) module declares. Build a
         // chain one hop longer than the cap: types[i] sub types[i-1] for
         // i in 1..=N, with N > MAX_SUBTYPE_CHAIN_HOPS.
-        let n = (WasmModule::MAX_SUBTYPE_CHAIN_HOPS + 10) as usize;
+        let n = (MAX_SUBTYPE_CHAIN_HOPS + 10) as usize;
         let types = vec![FuncType { params: vec![], results: vec![] }; n + 1];
         let mut type_subtyping = vec![TypeSubtyping::default()];
         for i in 1..=n {

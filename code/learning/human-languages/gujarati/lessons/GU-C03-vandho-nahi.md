@@ -6,6 +6,7 @@ sequence: 220
 chapter: 9
 type: phrase
 headword: વાંધો નહીં
+romanization: "vāndho nahĩ"
 gloss: no problem / it's okay / you're welcome
 concept_tag: COURTESY-YOUREWELCOME
 prerequisites: [GU-C01-haa-naa, GU-C01-aabhaar]

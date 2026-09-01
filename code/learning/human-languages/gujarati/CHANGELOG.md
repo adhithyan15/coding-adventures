@@ -2,6 +2,59 @@
 
 ## [Unreleased]
 
+### Added — Gujarati chapter 28 acquires eight time words by ear (HL-C271)
+
+- Add chapter 28, "The Day and Its Times": fourteen lessons that teach eight new
+  pre-A1 headwords — *savār*, *bapor*, *sānj*, *rāt*, *divas*, *mahino*, *āj*,
+  and *atyāre* — one word per lesson, each glossed on first meeting and each
+  usable by ear before anything is shown. Pre-A1 headwords move **44 -> 52**
+  against the 300-word floor.
+- Keep the chapter ear-first on purpose. Nine of the fourteen lessons are pure
+  voice, and the five that need a hand confine the handwriting to a detachable
+  `Writing —` block, so all fourteen have a voice core. The track's ear-drivable
+  share moves **52% -> 56%**, and its drivable chapter prefixes **74 -> 88**.
+- Write only two of the eight. *rāt* and *āj* reach the page because every sign
+  in them was taught before chapter 8; the other six stay oral, which is the
+  gloss-first-then-glyph order rather than an omission. No new glyph lesson was
+  needed or added.
+- Close the chapter on a four-skill payoff whose listening, speaking, reading,
+  and writing scores stand separately, then return all eight one lesson later at
+  R1. Every atom the chapter introduces is serviced inside the chapter.
+- Add one distant return of the map words at R3. It closes the school and road
+  meaning and script windows that the longer track newly made eligible, and it
+  gives `GU-PERFORMANCE-MAP-TEN-FOUR-SKILL-01` its first revisit in the track's
+  history — atoms never revisited fall **6 -> 5**.
+
+### Fixed — every Gujarati headword is now sayable before it is readable (HL-C271)
+
+- Declare `romanization` on the twenty-five native-script headwords that had
+  none, from *ābhār* in chapter 2 to *rahevũ* in chapter 11. Under HL11 a
+  headword with a romanization is exposure and one without it is something the
+  reader has to decode, so this is not cosmetic: Gujarati headwords carrying no
+  romanization move **25 -> 0**, and the corpus figure moves 283 -> 258. The
+  romanization taken is the one each lesson's own title already printed, so no
+  new claim about pronunciation is introduced.
+- Move the three gender endings in *sārũ* out of Gujarati script and into
+  romanization. The lesson sits in chapter 2 and was printing **-ો** and **-ી**,
+  neither of which the book teaches until chapter 3; the reader was being asked
+  to decode two signs nobody had taught. With that repaired and the headwords
+  exempted, Gujarati script-closure findings move **2 -> 0**, and the track now
+  has zero never-taught glyphs, zero closure findings, and zero unromanized
+  headwords at once.
+- The same edit replaced a "Look at that ending" with "Listen to that ending",
+  which is both truer to a lesson about a sound and enough to make the lesson's
+  core drivable.
+
+### Changed — measured continuity debt rose while the track improved
+
+- Whole-track reinforcement misses move **299 -> 339**, and the cause is
+  eligibility rather than a skipped return. R4 opens 80 lessons after an atom
+  appears, so a 165-lesson track could not measure past position 84; at 179 it
+  reaches 98, and the thirty-six atoms of the core-verb chapters (13-16) became
+  measurable in the same breath as they were found wanting. The pin in
+  `tests/corpus/gujarati.test.ts` records the number and the reason; the
+  fifth-return slab that clears it is filed as HL-C271 in `BACKLOG.d`.
+
 ### Added — Gujarati runway B closes measured R1/R2 windows (#13079)
 
 - Return city writing inside the existing school lesson, two positions after

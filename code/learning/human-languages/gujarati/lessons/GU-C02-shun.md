@@ -6,6 +6,7 @@ sequence: 150
 chapter: 8
 type: word
 headword: શું
+romanization: "shũ"
 gloss: what
 concept_tag: QUESTION-WHAT
 prerequisites: [GU-C02-naam, GU-W02-da]

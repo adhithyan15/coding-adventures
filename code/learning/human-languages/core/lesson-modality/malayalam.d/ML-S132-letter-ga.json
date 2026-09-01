@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "ML-S132-letter-ga",
+    "language": "malayalam",
+    "chapter": 39,
+    "sequence": 925,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4580e12f1121a981",
+    "detachableSegments": [
+      "Script you'll notice: ഗ",
+      "Writing: ഗ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

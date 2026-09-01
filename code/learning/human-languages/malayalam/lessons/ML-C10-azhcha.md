@@ -7,6 +7,7 @@ chapter: 10
 type: word
 headword: തിങ്കൾ ചൊവ്വ ബുധൻ വ്യാഴം വെള്ളി ശനി ഞായർ
 gloss: the seven weekdays — Malayalam shares Tamil's native planet-words, being its closest cousin
+romanization: "thiṅkaḷ covva budhan vyāzham veḷḷi śani ñāyar"
 concept_tag: ML-DAYS-WEEK
 prerequisites: [ML-C09-kshamikkanam]
 sounds: [malayalam-zha, malayalam-nya]

@@ -7,6 +7,7 @@ chapter: 24
 type: etymology
 headword: ഇരവ് / ഇരുൾ
 gloss: native literary night and everyday darkness — related ideas with different modern jobs
+romanization: "iravŭ / iruḷ"
 concept_tag: ML-TIME-NIGHT-NATIVE
 prerequisites: [ML-C24-rathri]
 sounds: [malayalam-vowel-sign-i]

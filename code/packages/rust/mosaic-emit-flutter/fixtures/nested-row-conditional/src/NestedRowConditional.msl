@@ -1,0 +1,15 @@
+style NestedRowConditional {
+  part composer {
+    width: 480px;
+  }
+
+  part focused-input {
+    width: 100%;
+    flex-grow: 1;
+  }
+
+  part unfocused-input {
+    width: 100%;
+    flex-grow: 1;
+  }
+}

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 3,
-  "sourceHash": "fnv1a64:c73a9560fa68161c",
+  "sourceHash": "fnv1a64:56ff1ca7562bfcd4",
   "lessonIds": [
     "ML-C03-engane",
     "ML-C03-sukhamaano",
@@ -15,7 +15,7 @@
   "drivablePrefix": 0,
   "text": "malayalam/narration/ch03.txt",
   "json": "malayalam/narration/ch03.json",
-  "textHash": "fnv1a64:b762a40c6767a192",
-  "jsonHash": "fnv1a64:ec60b51d1ced9e15",
+  "textHash": "fnv1a64:09b1ef0704724c55",
+  "jsonHash": "fnv1a64:cbf4d1413cae558c",
   "findings": []
 }

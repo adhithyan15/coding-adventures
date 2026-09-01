@@ -48,8 +48,12 @@ keeps its deterministic repeated-`f64`-multiplication fast path; variable,
 fractional, negative, nested, and large exponent shapes lower to the shared
 `f64_pow` operation. Both paths run on all seven backends. The implemented
 numeric builtins are `SQR`, `INT`, `ABS`, `SGN`, `TAN`, `ATN`, `SIN`, `COS`,
-`LOG` (natural logarithm), and `EXP`; `RND` remains separate pending a portable
-seed and repeatability contract. String literal `PRINT`, literal-backed string
+`LOG` (natural logarithm), `EXP`, and `RND`. `RND` has a deterministic portable
+contract: the program starts from seed 1; a negative argument clamps
+`floor(abs(x))` into `1..=2147483646`, reseeds, and advances; zero repeats the
+current sample; and a positive argument advances. The Park–Miller state is an
+`i64` module global shared with `DEF FN` calls, and every result is strictly
+between 0 and 1. No backend reads host entropy. String literal `PRINT`, literal-backed string
 variables
 (`LET A$ = "HI"` / `PRINT A$`), literal reassignment
 (`LET A$ = "NO"; LET A$ = "OK"; PRINT A$`), and `IF A$ = "Y"` / `IF A$ <> "Y"`

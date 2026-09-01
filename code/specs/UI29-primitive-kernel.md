@@ -452,6 +452,18 @@ Once both skeletons have full kernel coverage, the `--backend swiftui`
 and `--backend qt` flags wire into `mosaic-compile` (was WB6;
 renumbers to U29-CLI).
 
+### 5.5 Flutter conditional layout context
+
+The Flutter backend represents a conditional branch with multiple widgets as a
+`Column`. Those widgets are direct children of the introduced `Column`, so
+their lowering must reset any direct-`Row` or direct-`Stack` context inherited
+by the `If` node. When such a multi-widget conditional is itself a direct child
+of a `Row` and has no explicit branch `flex-grow`, the emitted ternary is
+wrapped in `Flexible` so the branch `Column` receives a finite horizontal
+constraint, provided that the containing `Row` is not itself being
+shrink-wrapped as a non-flex child of another `Row`. An explicit branch
+`flex-grow` continues to emit `Expanded` with the authored flex value.
+
 ---
 
 ## 6. Implementation roadmap

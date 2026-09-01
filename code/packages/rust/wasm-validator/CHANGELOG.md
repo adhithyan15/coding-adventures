@@ -2,6 +2,25 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.78] - 2026-08-31 (W33 second slice — `ref.cast` byte-layout fix, item 4)
+
+### Fixed
+
+- **The static function-body type-checker never consumed `ref.cast`/
+  `ref.cast null`'s (`0xFB 0x16`/`0x17`) LEB128 heap-type immediate** —
+  they fell into the existing `_ => {}` "no immediates" catch-all for
+  unrecognized `0xFB` sub-opcodes, which would silently desync this
+  checker's `offset` from every REAL instruction after it in the same
+  function body the moment `wasm-wast-parser` could emit the bytes (which
+  it now can, see that crate's own changelog). Added an explicit `0x16 |
+  0x17` arm mirroring `0x14`/`0x15`'s (`ref.test`/`ref.test null`)
+  existing shape: consume the heap-type LEB, pop one ref, push
+  `StackType::Unknown` back (real dynamic-type checking is a `wasm-
+  execution` runtime concern — see that crate's own changelog — this pass
+  only needs to keep the abstract stack's byte layout and height
+  accurate, exactly like every other GC op this checker already handles
+  this way).
+
 ## [0.2.77] - 2026-08-31 (const-expr type-checker — the W33 addendum's "third gap")
 
 Fills a real, pre-existing, general gap this crate had for its entire

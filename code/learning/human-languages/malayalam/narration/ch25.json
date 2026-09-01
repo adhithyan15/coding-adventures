@@ -4,14 +4,14 @@
   "chapter": 25,
   "title": "Good Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:642fa2c7b3998717",
+  "sourceHash": "fnv1a64:7305d43f16cfe4cc",
   "lessons": [
     {
       "id": "ML-C25-shubha-rathri",
       "sequence": 570,
       "title": "ശുഭ രാത്രി (śubha rāthri) — \"good night,\" and a pattern seen before",
       "headword": "ശുഭ രാത്രി",
-      "romanization": "",
+      "romanization": "śubha rāthri",
       "gloss": "\"good night\" — the standard Sanskrit-tatsama phrase (rāthri already met, śubha new); some sources describe modern Malayalam speakers often code-switching to English \"good night\" instead — the same claim, similarly thinly sourced, is also made about Telugu",
       "script": "malayalam",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9697f21d8b9e03c2",
+      "sourceHash": "fnv1a64:8b6ab38c5bbc21eb",
       "notice": null,
       "blocks": [
         {
