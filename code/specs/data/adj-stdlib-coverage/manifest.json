@@ -3377,6 +3377,21 @@
       "source_cas_hashes": [],
       "benchmark_paths": [],
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
+      "id": "adj.socialstudies.k2.sign_shape",
+      "title": "Recall the shape the federal standard specifies for a named traffic sign, resolve a shape back to its sign, and abstain on shapes inferred from a defeasible default",
+      "band": "K-2",
+      "domain": "social_studies",
+      "competency": "recall",
+      "coverage_roots": ["c3.socialstudies"],
+      "standards": [],
+      "prerequisites": [],
+      "libraries": ["code/specs/data/adj-facts-stdlib/transportation/sign-shape.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     }
   ]
 }
