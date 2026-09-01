@@ -12438,7 +12438,7 @@ schema-3 inventory also pass. RustSec reports no vulnerability among 1,537
 locked dependencies and retains two existing allowed unmaintained warnings.
 
 After the final rebase onto exact `origin/main`
-`d039473e118521292c8bdc4ba720621b32fd1142`, the refreshed inventory has 15
+`e6bf3ea70ac6b34ba45fa76d6119a8ff627f7169`, the refreshed inventory has 15
 established lanes, 1,398 implementation identities, 4,614 implementation
 slots, and 1,437 all-reported identities. Its bands are 175/265, 123/934,
 172/2,165, and 928/12,992; Rust has 739 singletons, OCaml remains at zero,
@@ -12452,7 +12452,8 @@ without duplicating unrelated Forme work. Merged PR #13765 adds TypeScript-only
 Engram branch absorbs its boundary registration and digest cascade without
 duplicating that package root. Intervening Mermaid timeline, SPICE JFET,
 Dartmouth parser, Hindi curriculum, and HTML recovery work add no newly unowned
-identity. Merged PR #13761 adds Rust `layout-grid` beside TypeScript,
+identity. Later ALGOL tracked-exponent work changes existing Rust packages only.
+Merged PR #13761 adds Rust `layout-grid` beside TypeScript,
 moving the identity into the two-to-four band. New pending owner
 `layout-grid-two-lane-classification` now owns its pure UI08 conformance,
 dependency order, and missing applicable-lane review. The resulting state has
