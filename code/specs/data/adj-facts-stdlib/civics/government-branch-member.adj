@@ -1,0 +1,103 @@
+% ============================================================================
+% government-branch-member — which named officer or institution makes up
+% each branch of the U.S. federal government (adj-facts-stdlib, CIVICS).
+% ============================================================================
+% "Which branch is the Supreme Court part of?" is the single most-asked
+% elementary civics question, and until this file the stdlib could not
+% answer it at all: `civics/` is a BRAND-NEW domain here, the first entry
+% against the "Social knowledge → Civics" Major Gap that
+% ADJ-STDLIB-COVERAGE.md §5.1 has carried unaddressed since the coverage
+% baseline was measured. Recall is a binding query:
+%
+%     ? government_branch_member(legislative, $M)
+%       % congress
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `government_branch_member(branch, member)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the member WITH its source, on the CPU, with zero model
+% calls, and abstains on any officer or institution not one of these five
+% source-cited members. The query also runs BACKWARD — bind a member and
+% recall which branch it belongs to, which is the direction an actual
+% learner is usually quizzed in:
+%
+%     ? government_branch_member($B, supreme_court)
+%       % judicial
+%
+% The relation is deliberately MULTI-VALUED on `branch`: the executive
+% branch has three named members, so `? government_branch_member(executive,
+% $M)` yields three solutions rather than one, the same shape
+% `nutrition/food-group-alternative-form.adj` already ships for `dairy`.
+% A learner asking "who is in the executive branch?" gets the whole
+% enumerated set, each row independently grounded in the same cited
+% sentence.
+%
+% NAMING — why `government_branch_member` and not `government_branch`: the
+% predicate names the MEMBERSHIP relation (branch → who is in it), not the
+% branches themselves. A future sibling table stating what each branch
+% DOES to laws is a different axis and gets its own predicate rather than a
+% second column here; a full-tree grep for `legislative`, `judicial`,
+% `executive_branch`, `branch_of_government`, `congress`, and
+% `supreme_court` across every shipped `.adj` in this stdlib returned
+% nothing before this file, so there is no existing table for this content
+% to collide with or duplicate.
+%
+% Provenance: quoted verbatim from USA.gov's "Branches of the U.S.
+% government" page, which states each branch's membership directly:
+%
+%     branch (this table's atom label)   member (this table's atom label)   membership quote (verbatim)
+%     ---------------------------------  ---------------------------------  ------------------------------------------------------------------
+%     legislative                        congress                           "The legislative branch is made up of Congress"
+%     judicial                           supreme_court                      "The judicial branch includes the Supreme Court and other federal
+%                                                                              courts."
+%     executive                          president                          "The president, the vice president, and the president's cabinet are
+%     executive                          vice_president                        the members of the executive branch."
+%     executive                          president_cabinet                     (one sentence; it names all three executive members at once)
+%
+% curl-fetched the raw page directly and read it byte-for-byte before
+% writing this file (not just an AI-summarized WebFetch) — confirmed all
+% three quoted sentences appear verbatim in the page's own "Legislative
+% branch" / "Judicial branch" / "Executive branch" sections. `trust
+% authoritative` — USA.gov is the U.S. General Services Administration's
+% official guide to government information, a first-party .gov publisher
+% of exactly the fact being recalled, the same tier this stdlib already
+% reserves for NASA/NOAA/USGS/NPS/NIST sources.
+%
+% ROW-INCLUSION RULE, applied uniformly to all three branches: a row is
+% shipped only for a NAMED officer or NAMED institution the page states a
+% branch is made up of or includes. Every open-ended CATEGORY phrase the
+% same page attaches to a branch is deliberately NOT a row, so a recall
+% ABSTAINS on it rather than inventing a member:
+%
+%   - `other federal courts` (judicial), `special agencies and offices that
+%     provide support services to Congress` (legislative), and
+%     `Executive departments` / `Independent agencies` / `Other boards,
+%     commissions, and committees` (executive) are all open-ended category
+%     phrases naming no specific body — there is nothing here to bind a
+%     stable atom to.
+%   - `senate` and `house_of_representatives` are genuinely named
+%     institutions, and the page does name them — but it nests them UNDER
+%     Congress in a colon-introduced sub-list ("made up of Congress: The
+%     U.S. Senate, The U.S. House of Representatives"), making them
+%     CHAMBERS OF CONGRESS rather than direct members of the branch. Their
+%     correct home is a separate `congress_chamber` table decoding that
+%     same sub-list, not a flattened row here that would silently discard
+%     the nesting the source actually states.
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table government_branch_member {
+    columns branch, member
+
+    row (legislative, congress)
+    row (judicial, supreme_court)
+    row (executive, president)
+    row (executive, vice_president)
+    row (executive, president_cabinet)
+
+    source "The president, the vice president, and the president's cabinet are the members of the executive branch."
+    locator "https://www.usa.gov/branches-of-government"
+    trust authoritative
+}

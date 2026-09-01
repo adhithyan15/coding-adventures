@@ -371,6 +371,16 @@ rectangles and shaped text. A native Metal-to-PNG fixture gates this slice;
 relative ranges, fields spanning row boundaries, packet configuration, and
 style controls remain explicitly unsupported at the partial level.
 
+### Kanban Native Slice
+
+The initial Mermaid 11.16.1 Kanban slice uses dedicated portable grammars and
+preserves indentation-defined columns and cards, with plain labels and explicit
+`id[label]` forms, in typed board semantic IR. `diagram-layout-board` resolves
+deterministic column/card geometry and dedicated PaintScene lowering emits
+backend-neutral rectangles and shaped text. A native Metal-to-PNG fixture gates
+this slice; icons, classes, shape-data metadata, styles, links, assignments,
+priorities, and configurable fields remain unsupported at the partial level.
+
 ### Structural Groups
 
 Nested containers such as C4 boundaries are semantic structural groups, not
