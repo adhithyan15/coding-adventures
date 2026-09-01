@@ -12543,13 +12543,14 @@ registry owner in progress.
 ### Pre-publication rebase and UI42 layout-table classification
 
 The Swift implementation rebased conflict-free onto exact current
-`origin/main` `59b5a5ae202415d0c0c045cc2d3ee3bde157ed32`. The refreshed
+`origin/main` `7a5cf02e7dafcad6b857f5e66c7204a66e809d63`. The refreshed
 collision-checked schema-3 inventory now has 15 established lanes, 1,400
 implementation identities, 4,616 slots, and 1,439 all-reported identities.
 Its bands are 175/265, 123/934, 172/2,165, and 930/13,020; Rust has 741
 singletons, OCaml remains at zero, and canonical collisions and unknown buckets
-remain zero. Intel 8086, Hindi register, and SPICE BJT changes touch existing
-identities only and do not overlap this Swift registry slice.
+remain zero. Intel 8086, Hindi register, SPICE BJT, Nib BCD, and HTML table
+repair changes touch existing identities only and do not overlap this Swift
+registry slice.
 
 Merged PR #13786 adds the sole new identity, Rust-only `layout-table`, with the
 host-neutral UI42 table-formatting contract over `layout-ir`. New pending owner
