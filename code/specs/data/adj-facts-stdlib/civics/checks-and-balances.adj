@@ -1,0 +1,115 @@
+% ============================================================================
+% checks-and-balances — which act each part of the U.S. federal government
+% can take against the others (adj-facts-stdlib, CIVICS).
+% ============================================================================
+% The THIRD library in the `civics/` domain, and the first one here that is
+% genuinely RELATIONAL rather than a lookup: its rows are not "X is a kind
+% of Y" but "actor A can do action B to object C". Recall is a binding
+% query:
+%
+%     ? checks_and_balances(president, $A, $O)
+%       % veto      legislation_created_by_congress
+%       % nominate  federal_agency_heads_and_high_court_appointees
+%
+% A native `table` (ADJ-TABLES RS-5) with THREE columns — the same arity
+% `physics/energy-conversion-example.adj` already ships — so each `row`
+% lowers to a ground relation `checks_and_balances(actor, action, object)`
+% carrying the source citation. The lookup above is the ordinary SLD
+% binding query: the engine returns the act WITH its source, on the CPU,
+% with zero model calls, and abstains on any act not one of these five
+% source-cited rows. Every column can be the bound one, which is what
+% makes this table answer questions the two sibling civics libraries
+% cannot:
+%
+%     ? checks_and_balances($A, veto, $O)          % who can veto?  -> president
+%     ? checks_and_balances($A, $Act, president)   % who acts on the president?
+%       % congress  remove_from_office
+%
+% ROW SHAPE — each row is a subject-verb-object decomposition of exactly
+% one `<li>` in the page's "How each branch of government provides checks
+% and balances" list. Nothing is merged across bullets, and nothing the
+% source states as a single act is split:
+%
+%     actor          action              object
+%     -------------  ------------------  ----------------------------------------------
+%     president      veto                legislation_created_by_congress
+%     president      nominate            federal_agency_heads_and_high_court_appointees
+%     congress       confirm_or_reject   presidential_nominees
+%     congress       remove_from_office  president
+%     supreme_court  overturn            unconstitutional_laws
+%
+% Each row's own grounding sentence is carried verbatim in the `source`/
+% `cites` tail below, so every row is auditable back to one sentence.
+%
+% WHY THE THIRD COLUMN IS THE OBJECT ACTED UPON, NOT THE BRANCH ACTED
+% UPON. The obvious design for a checks-and-balances table is
+% branch -> action -> branch, and it is WRONG for this source. Three of
+% the five sentences do name another part of government as their object
+% (Congress, the president's nominees, the president), but the Supreme
+% Court's does not: it names LAWS. Typing the column as a branch would
+% force one of two bad outcomes — abstain on the Supreme Court row, which
+% leaves the JUDICIAL branch unrepresented in a table whose whole subject
+% is the balance BETWEEN the three branches; or infer "unconstitutional
+% laws" -> "Congress", which this sentence never states (it does not say
+% whose laws, and courts also review state law and executive action).
+% Typing the column as the OBJECT ACTED UPON keeps all three branches
+% represented, with every row verbatim-grounded and nothing inferred. A
+% learner who wants the branch-to-branch graph can still get it where the
+% source actually supports it, by composing this table with the sibling
+% `government-branch-member.adj` — the same composition-over-assertion
+% principle `congress-chamber.adj` was split out for.
+%
+% Provenance: quoted verbatim from USA.gov's "Branches of the U.S.
+% government" page, "How each branch of government provides checks and
+% balances" section. The raw markup was curl-fetched and read
+% byte-for-byte before writing this file (not just an AI-summarized
+% WebFetch) — confirmed the section is an `<h2>` followed by a lead-in
+% `<p>`, a second `<p>` reading "Each branch of government can change acts
+% of the other branches:", and a `<ul>` of exactly three `<li>` items,
+% which between them state the five acts tabled above. `trust
+% authoritative` — USA.gov is the U.S. General Services Administration's
+% official guide to government information, a first-party .gov publisher
+% of exactly the fact being recalled, the same tier and the SAME page the
+% two sibling civics libraries already cite.
+%
+% Honest abstention:
+%
+%   - "These justices are nominated by the president and confirmed by the
+%     Senate." — a real sentence in the same `<li>`, but a PASSIVE
+%     restatement of acts this table already holds in the active voice
+%     (`president nominate ...` and `congress confirm_or_reject ...`).
+%     Tabling it again would double-count the same two checks under
+%     swapped subjects, so a recall on a `justices`-shaped actor abstains.
+%   - "The ability of each branch to respond to the actions of the other
+%     branches is the system of checks and balances." — the section's
+%     lead-in. It DEFINES the system; it is not an act by a branch, so it
+%     has no actor/action/object to decompose into a row.
+%   - Any act not among these five — including every power named in the
+%     page's separate per-branch "key roles" lists (drafting proposed
+%     laws, surveying the budget, declaring war, ...), which describe what
+%     a branch does in its OWN right rather than what it does to ANOTHER
+%     branch — is deliberately NOT a row, so a recall ABSTAINS rather than
+%     inventing a check.
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table checks_and_balances {
+    columns actor, action, object
+
+    row (president, veto, legislation_created_by_congress)
+    row (president, nominate, federal_agency_heads_and_high_court_appointees)
+    row (congress, confirm_or_reject, presidential_nominees)
+    row (congress, remove_from_office, president)
+    row (supreme_court, overturn, unconstitutional_laws)
+
+    source "The president can veto legislation created by Congress."
+    locator "https://www.usa.gov/branches-of-government"
+    trust authoritative
+
+    cites "He or she also nominates heads of federal agencies and high court appointees." locator "https://www.usa.gov/branches-of-government"
+    cites "Congress confirms or rejects the president's nominees." locator "https://www.usa.gov/branches-of-government"
+    cites "It can also remove the president from office in exceptional circumstances." locator "https://www.usa.gov/branches-of-government"
+    cites "The Justices of the Supreme Court can overturn unconstitutional laws." locator "https://www.usa.gov/branches-of-government"
+}
