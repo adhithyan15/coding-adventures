@@ -1,0 +1,37 @@
+% ============================================================================
+% water-share.query.adj — worked recall over the water-share library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to answer "what share of fresh
+% water is locked up in ice?" (direct, returning the share AND what it is a
+% share of), "what shares are given for surface freshwater?" (reverse by
+% BASE — lakes and rivers, nothing else), or "what share of all Earth's
+% water is in the ground?" (abstain — the source gives ground water as 30%
+% OF FRESHWATER, and converting bases is arithmetic it does not perform).
+%
+% It states no fact of its own — it only `import`s the grounded table and
+% asks binding queries.
+%
+% THE THIRD COLUMN IS THE POINT. No query can retrieve a share without also
+% retrieving its denominator, so "over 96 percent" and "over 68 percent"
+% can never be read as comparable: the first is of all Earth's water, the
+% second of the 2.5% of it that is fresh. Confusing those two is the
+% commonest error made with these figures.
+%
+% NOTE ON THE ABSTAIN QUERIES: they are written in VARIABLE form. A
+% fully-bound query that matches nothing produces NO recall entry at all
+% rather than an abstention, so the ground form would silently prove
+% nothing.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli water-share.query.adj
+% ============================================================================
+
+import "water-share.adj"
+
+? water_share(ice_and_glaciers, $S, $B)          % expect share_over_68_percent OF all_freshwater -- the base comes back WITH the share
+? water_share(rivers, $S, $B)                    % expect share_0_49_percent OF surface_freshwater
+? water_share($P, $S, surface_freshwater)        % expect lakes AND rivers, nothing else (reverse by base)
+? water_share($P, $S, all_earths_water)          % expect saline_water AND freshwater only
+? water_share(ground, $S, all_earths_water)      % expect abstain -- stated as 30% OF FRESHWATER; converting bases is arithmetic this source never performs
+? water_share($P, share_96_percent, $B)          % expect abstain -- the source says "over 96 percent"; the bare exact figure is not a value
+? water_share(atmosphere, $S, $B)                % expect abstain -- appears in the page's TABLES, which tag-stripping cannot quote byte-faithfully

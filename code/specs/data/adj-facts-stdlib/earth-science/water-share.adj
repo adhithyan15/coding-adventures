@@ -1,0 +1,126 @@
+% ============================================================================
+% water-share — what share of a stated body of water sits in each place,
+% AND WHAT THAT SHARE IS A SHARE OF (adj-facts-stdlib, EARTH-SCIENCE).
+% ============================================================================
+% Recall is a binding query:
+%
+%     ? water_share(ice_and_glaciers, $Share, $Base)
+%       % share_over_68_percent, all_freshwater
+%
+% A native `table` (ADJ-TABLES RS-5) with THREE columns, so each row lowers
+% to `water_share(place, share, base)` carrying the source citation. The
+% third column is the entire point of the library.
+%
+% *** THE DENOMINATOR IS PART OF THE FACT, NOT CONTEXT. ***
+%
+% This page states seven shares, and they are NOT all shares of the same
+% thing. They use three different denominators:
+%
+%     base                 shares stated against it
+%     ------------------   ------------------------------------------
+%     all_earths_water     saline water (over 96%), freshwater (2.5%)
+%     all_freshwater       ice and glaciers (over 68%), ground (30%),
+%                          surface water (a little more than 1.2%)
+%     surface_freshwater   lakes (20.9%), rivers (0.49%)
+%
+% A two-column `water_share(place, share)` table would put "over 96
+% percent" and "over 68 percent" in one column as though they were
+% comparable quantities. THEY ARE NOT: 96% is of all water on Earth, 68% is
+% of the 2.5% of it that is fresh. Reading them as commensurable is the
+% single most common error made with these statistics, and a table that
+% invited it would be actively harmful — worse than no table, because it
+% would carry a citation.
+%
+% So the base is a column. `? water_share($P, $S, surface_freshwater)`
+% returns lakes and rivers and nothing else, and no query can retrieve a
+% share without also retrieving what it is a share of.
+%
+% Provenance: two contiguous passages from the U.S. Geological Survey's
+% Water Science School, "Where is Earth's Water?".
+%
+% THE SECOND CITATION QUOTES THREE CONTIGUOUS SENTENCES, DELIBERATELY. The
+% lakes figure appears as "Most of this water is locked up in ice, and
+% another 20.9% is found in lakes." — whose base is a PRONOUN. "This
+% water" is surface freshwater only because the preceding sentence says
+% "The right bar shows the breakdown of surface freshwater." Cited alone,
+% the 20.9% has no denominator at all, which is precisely the failure this
+% library exists to prevent. The sentences are adjacent in the article, so
+% quoting the run is still verbatim and makes the base recoverable from the
+% citation itself.
+%
+% NORMALISING THE BASE, AND WHY THAT IS NOT THE SAME AS NORMALISING A
+% HEDGE. The source words the same quantity several ways — "the world's
+% total water supply" and "Earth's water"; "the total freshwater", "all
+% freshwater" and bare "freshwater". These are REFERENTS: different
+% phrasings pointing at one physical quantity, so collapsing them to
+% `all_earths_water` and `all_freshwater` loses nothing and keeps the
+% reverse query from fragmenting across synonyms.
+%
+% That is deliberately different from the rule this stdlib applies to
+% HEDGES. `speleothem-substrate.adj` keeps frostwork's "less occasionally"
+% distinct from helictite's "less often" even though they plainly mean the
+% same thing, because those words are the SOURCE'S OWN EPISTEMIC
+% QUALIFICATION and normalising them would edit a claim. A referent names
+% the same thing twice; a hedge states how confident the source is.
+% NORMALISE REFERENTS, NEVER NORMALISE HEDGES.
+%
+% The shares themselves are NOT normalised: every hedge the source attaches
+% rides inside the atom, per the placement rule `veto-override.adj` and
+% `karst-process-zone.adj` apply. `share_over_96_percent` and
+% `share_a_little_more_than_1_2_percent` carry the source's own qualifiers,
+% and a query for a bare exact figure finds nothing. Atoms must begin with
+% a letter (a digit-initial atom is a parse error), hence the uniform
+% `share_` prefix rather than a bare number.
+%
+% `trust authoritative` — the USGS is a first-party .gov publisher. The
+% page was CONTENT-verified by RAW TEXT EXTRACTION (HTTP 200, 300
+% substantive sentences, zero soft-404 markers), never from a fetch
+% summary, and the sentences were checked against the raw HTML.
+%
+% Provenance is TABLE-level: both passages cover every row, so an answer
+% about rivers also carries the saline sentence. In `--explain`, which
+% drops corroborations, every row displays under the FIRST passage. Issue
+% #13898; the JSON output is the authoritative view.
+%
+% Honest abstention:
+%
+%   - A BARE, UNHEDGED FIGURE IS NEVER A VALUE. The source says "over 96
+%     percent", not "96 percent", so `share_96_percent` is not in this
+%     table and a query for it abstains.
+%   - GROUNDWATER AS A SHARE OF ALL EARTH'S WATER is not a row. The page
+%     gives ground water as 30% OF FRESHWATER; converting that to a share
+%     of all water would be arithmetic this source does not perform, and
+%     this library reports what is stated rather than what follows from it.
+%     The same applies to every other cross-base conversion.
+%   - The page also gives absolute volumes ("about 332.5 million cubic
+%     miles", "about 22,300 cubic miles"). Those are a different relation —
+%     a volume, not a share — and are not values of this one.
+%   - ATMOSPHERIC water, soil moisture, swamps and living things appear in
+%     the page's tables rather than in these prose passages. Table cells do
+%     not survive tag-stripping reliably, so they are not quoted here; a
+%     figure this library cannot cite byte-faithfully is a figure it does
+%     not state.
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table water_share {
+    columns place, share, base
+
+    row (saline_water, share_over_96_percent, all_earths_water)
+    row (freshwater, share_2_5_percent, all_earths_water)
+
+    row (ice_and_glaciers, share_over_68_percent, all_freshwater)
+    row (ground, share_30_percent, all_freshwater)
+    row (surface_water, share_a_little_more_than_1_2_percent, all_freshwater)
+
+    row (lakes, share_20_9_percent, surface_freshwater)
+    row (rivers, share_0_49_percent, surface_freshwater)
+
+    source "Notice how of the world's total water supply of about 332.5 million cubic miles of water, over 96 percent is saline. And, of the total freshwater, over 68 percent is locked up in ice and glaciers. Another 30 percent of freshwater is in the ground."
+    locator "https://www.usgs.gov/special-topics/water-science-school/science/where-earths-water"
+    trust authoritative
+    cites "In the first bar, notice how only 2.5% of Earth's water is freshwater - the amount needed for life to survive." locator "https://www.usgs.gov/special-topics/water-science-school/science/where-earths-water"
+    cites "Only a little more than 1.2% of all freshwater is surface water, which serves most of life's needs. The right bar shows the breakdown of surface freshwater. Most of this water is locked up in ice, and another 20.9% is found in lakes. Rivers make up 0.49% of surface freshwater." locator "https://www.usgs.gov/special-topics/water-science-school/science/where-earths-water"
+}
