@@ -980,41 +980,32 @@ fn build_module_context<'a>(module: &'a WasmModule, canonical_types: &'a [Option
 /// relationship between two DIFFERENT composite-type kinds (e.g. a struct
 /// declaring a func parent) is always rejected -- the GC proposal has no
 /// such cross-kind subtyping relation at all.
-fn check_type_subtyping(module: &WasmModule) -> Result<(), ValidationError> {
-    // Security review finding (W33 first slice): a cyclic `sub` chain
-    // (`(rec (type $t1 (sub $t2 (func))) (type $t2 (sub $t1 (func))))`)
-    // used to slip past the per-type loop below entirely -- each type's
-    // OWN immediate parent link structurally checks out fine in
-    // isolation, so nothing ever rejected the cycle as a whole. The real
-    // GC proposal requires the `sub` relation to be well-founded
-    // (acyclic); without this check, two independently-declared,
-    // differently-indexed types become mutually interchangeable via
-    // `WasmModule::func_type_is_nominal_subtype` (confirmed directly: a
-    // 2-cycle makes `func_type_is_nominal_subtype(0, 1)` AND `(1, 0)`
-    // both return `true`) -- exactly the "canonical equivalence between
-    // unrelated types" this slice's own `is_assignable` doc comment says
-    // must stay unimplemented, since a wrong ACCEPT here is a real
-    // soundness risk, not just a missed capability. Must run BEFORE the
-    // structural per-link check below: a cyclic declaration is invalid
-    // regardless of whether its individual links happen to check out
-    // pairwise.
-    check_type_subtyping_is_acyclic(module)?;
-
-    // W34 third slice: this whole function runs BEFORE `canonical_types`
-    // exists (canonicalization's own termination argument depends on the
-    // acyclicity check just above already having succeeded -- see
-    // `wasm_types::canonicalize_types`'s own doc comment), so every
-    // `is_assignable` call reachable from here (via `func_is_structural_
-    // subtype`/`field_is_structural_subtype`) gets an EMPTY canonical
-    // table -- exactly `nominal_subtype_chain`'s own documented "no
-    // canonical data available" fallback, and correct here regardless:
-    // composite-type structural-subtype variance (this function's own
-    // job) is about whether a DECLARED `sub` relationship is LEGAL, which
-    // is orthogonal to canonical equivalence (see the W34 spec's own
-    // "Composite-type subtyping... already implemented, cited for
-    // completeness" section) -- not a corner this slice is cutting.
-    let no_canonical = TypeContext { module, canonical_types: &[] };
-
+fn check_type_subtyping(module: &WasmModule, canonical_types: &[Option<(Rc<CanonicalGroup>, u32)>]) -> Result<(), ValidationError> {
+    // W34 third slice -- CORRECTION found by re-verifying against the real
+    // corpus, not by assumption (this campaign's own discipline): an
+    // EARLIER version of this function's own doc comment claimed composite-
+    // type structural-subtype variance (this function's own job) is
+    // "orthogonal to canonical equivalence," and ran this whole check
+    // BEFORE `canonical_types` existed, passing an EMPTY table into every
+    // `is_assignable` call reachable from here. That claim is WRONG:
+    // `type-subtyping.wast`'s own "Static matching of recursive types"
+    // module (a plain `module` directive, no `assert_invalid` -- MUST
+    // validate) declares `$f1`/`$f2` as two SEPARATE, differently-indexed,
+    // multi-member `rec` groups with NO shared `sub` relationship at all,
+    // yet structurally IDENTICAL shapes -- canonically the SAME type. A
+    // later struct's declared `sub $s2 (struct (field (ref $f1) ...))`
+    // relationship requires `(ref $f1) <: (ref $s2)`'s own first field
+    // `(ref $f2)` to hold via CANONICAL equivalence (`$f1 == $f2`, no
+    // nominal chain exists between them) -- exactly the case an empty
+    // canonical table cannot satisfy. `canonical_types` is threaded in as
+    // a real parameter now (computed by the caller right after `check_
+    // type_subtyping_is_acyclic` -- hoisted OUT of this function, since its
+    // own ordering guarantee is what canonicalization's termination
+    // argument depends on -- succeeds), so this function's own struct/array
+    // field-covariance checks (via `func_is_structural_subtype`/
+    // `field_is_structural_subtype`) get the SAME real canonical data
+    // `is_assignable`'s other callers do.
+    let tc = TypeContext { module, canonical_types };
     for i in 0..module.types.len() as u32 {
         let Some(parent_idx) = module.type_subtyping_at(i).supertype else {
             continue;
@@ -1031,13 +1022,13 @@ fn check_type_subtyping(module: &WasmModule) -> Result<(), ValidationError> {
         let child_kind = module.type_kinds.get(i as usize).copied().unwrap_or(TypeKind::Func);
         let parent_kind = module.type_kinds.get(parent_idx as usize).copied().unwrap_or(TypeKind::Func);
         let ok = match (child_kind, parent_kind) {
-            (TypeKind::Func, TypeKind::Func) => func_is_structural_subtype(&module.types[i as usize], &module.types[parent_idx as usize], no_canonical),
+            (TypeKind::Func, TypeKind::Func) => func_is_structural_subtype(&module.types[i as usize], &module.types[parent_idx as usize], tc),
             (TypeKind::Struct(ck), TypeKind::Struct(pk)) => match (module.struct_types.get(ck as usize), module.struct_types.get(pk as usize)) {
-                (Some(c), Some(p)) => struct_is_structural_subtype(c, p, no_canonical),
+                (Some(c), Some(p)) => struct_is_structural_subtype(c, p, tc),
                 _ => false,
             },
             (TypeKind::Array(ck), TypeKind::Array(pk)) => match (module.array_types.get(ck as usize), module.array_types.get(pk as usize)) {
-                (Some(c), Some(p)) => array_is_structural_subtype(c, p, no_canonical),
+                (Some(c), Some(p)) => array_is_structural_subtype(c, p, tc),
                 _ => false,
             },
             // A struct declaring a func/array parent (or any other
@@ -1635,21 +1626,30 @@ fn check_const_exprs(ctx: &ModuleContext) -> Result<(), ValidationError> {
 /// all: every instruction-level check below reaches them via `ModuleContext`/
 /// `TypeContext`, never by calling `canonicalize_types` again).
 pub(crate) fn type_check_module(module: &WasmModule) -> Result<Vec<Option<(Rc<CanonicalGroup>, u32)>>, ValidationError> {
-    check_type_subtyping(module)?;
-    // W34 third slice: computed exactly ONCE per module, right here --
-    // `check_type_subtyping` just above already ran `check_type_subtyping_
-    // is_acyclic` as its own first step, establishing the ordering
-    // guarantee `canonicalize_types`'s own termination argument depends
-    // on. Threaded into every instruction-level check below via
-    // `ModuleContext`/`TypeContext` (see those types' own doc comments)
-    // rather than recomputed at each call site -- the whole point of
-    // computing it once here is that `is_assignable` and friends, called
-    // per-instruction, never pay canonicalization's own cost again, only
-    // the O(1) `Rc`-backed comparison `canonically_equivalent`/
-    // `nominal_subtype_chain` does. Returned to `crate::validate` so IT
-    // doesn't need to compute this a second time for `ValidatedModule`'s
-    // own cache.
+    // Security review finding (W33 first slice): a cyclic `sub` chain must
+    // be rejected before ANYTHING downstream leans on the `sub` graph
+    // being well-founded -- see `check_type_subtyping_is_acyclic`'s own
+    // doc comment. Hoisted out of `check_type_subtyping` itself (W34 third
+    // slice) precisely BECAUSE `canonicalize_types` right below also
+    // depends on this exact guarantee, and needs to run BEFORE `check_
+    // type_subtyping`'s own struct/array field-covariance checks now (see
+    // that function's own doc comment for why: those checks turned out to
+    // need real canonical data too, not just the nominal `sub` chain).
+    check_type_subtyping_is_acyclic(module)?;
+    // W34 third slice: computed exactly ONCE per module, right here, now
+    // that acyclicity is confirmed -- `wasm_types::canonicalize_types`'s
+    // own doc comment explains why that ordering guarantee matters even
+    // though canonicalization itself never recurses. Threaded into EVERY
+    // downstream check that needs it: `check_type_subtyping`'s own struct/
+    // array field-covariance checks just below, AND every instruction-level
+    // check further down via `ModuleContext`/`TypeContext` (see those
+    // types' own doc comments) -- computed once here, never recomputed at
+    // a per-instruction call site, so `is_assignable` and friends only ever
+    // pay the O(1) `Rc`-backed comparison cost, never canonicalization's
+    // own. Returned to `crate::validate` so IT doesn't need to compute this
+    // a second time for `ValidatedModule`'s own cache.
     let canonical_types = wasm_types::canonicalize_types(module);
+    check_type_subtyping(module, &canonical_types)?;
     let ctx = build_module_context(module, &canonical_types)?;
     check_const_exprs(&ctx)?;
     let imported_function_count = ctx.func_types.len() - module.functions.len();
