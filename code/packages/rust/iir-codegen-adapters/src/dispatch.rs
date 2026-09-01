@@ -137,7 +137,7 @@ pub fn compile_iir(
                 });
             }
             let artifact = gen.generate(module);
-            Ok(IIRBackendArtifact::Wasm(artifact))
+            Ok(IIRBackendArtifact::Wasm(Box::new(artifact)))
         }
 
         "iir-jvm" => {
