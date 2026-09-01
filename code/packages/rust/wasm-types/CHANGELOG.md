@@ -2,6 +2,44 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.20] - 2026-09-01 (W34 third slice — wire canonical equivalence into within-module subtyping)
+
+`nominal_subtype_chain` (the shared, security-reviewed `sub`-chain walk
+`wasm-validator`'s static `is_assignable` and `wasm-execution`'s runtime
+`call_indirect`/`ref.cast`/`ref.test` dispatch both call) now upgrades its
+reflexive base case AND every hop's own termination check from raw type-
+index equality to real canonical equivalence, per the GC proposal's own
+rule: "subtyping is nominal modulo type canonicalisation" — exactly the
+one line of `MVP.md` this whole spec has been building toward.
+
+- **Breaking change to `nominal_subtype_chain`'s signature**: gains a new
+  `canonical_types: &[Option<(Rc<CanonicalGroup>, u32)>]` parameter
+  (second position, matching `ValidatedModule::canonical_types`'/
+  `WasmExecutionContext::canonical_types`'s own shape). Every existing
+  caller either already has real canonical data to pass (`wasm-validator`,
+  `wasm-execution` — see their own CHANGELOGs) or passes `&[]` (`WasmModule::
+  func_type_is_nominal_subtype`, which never carried canonical data and
+  stays nominal-only by design — see that method's own doc comment). An
+  empty slice is a strict, zero-behavior-change superset of the pre-W34
+  nominal-only rule: `canonical_types_equivalent` on an empty/too-short
+  slice always reports `false`, proven by a new regression test
+  (`nominal_subtype_chain_with_empty_canonical_table_matches_old_nominal_
+  only_behavior`).
+- **New `canonical_types_equivalent` free function** — the one shared
+  comparison both `nominal_subtype_chain` and `wasm-validator::
+  ValidatedModule::canonically_equivalent` now use, so the two copies of
+  this comparison (chain-walk termination, public post-validation
+  accessor) can never drift apart. `false`, conservatively, whenever
+  either side is out of range or uncanonicalized (`None`) — never a wrong
+  `true`.
+- **3 new unit tests**: a positive case (two independently-declared,
+  nominally-unrelated but canonically-equivalent types, accepted in both
+  directions once real canonical data is supplied, correctly REJECTED by
+  the nominal-only `func_type_is_nominal_subtype` on the same pair); a
+  negative case (genuinely different shapes, still rejected even with
+  real canonical data present); and the empty-table backward-compatibility
+  proof above.
+
 ## [0.1.19] - 2026-09-01 (W34 second slice — canonical type-group equivalence, real multi-member `rec` groups)
 
 Lifts the first slice's `rec_group_size == 1` restriction: `canonicalize_

@@ -2,6 +2,22 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.20] — 2026-09-01 (W34 third slice — thread canonical equivalence into wasm-execution)
+
+- `WasmInstance` gains a `canonical_types` field, cloned once at
+  `instantiate()` time from the new `ValidatedModule::canonical_types()`
+  accessor (`wasm-validator`'s own already-computed cache — nothing new
+  computed here). Threaded into `wasm-execution` by `build_engine` via
+  `WasmExecutionEngine::set_canonical_types`, the same optional-setter
+  pattern `type_subtyping`/`set_type_subtyping` already use, so `call_
+  indirect`/`ref.cast`/`ref.test`'s real runtime dispatch (see
+  `wasm-execution`'s own CHANGELOG for the dispatch-side fix this unlocks)
+  has real canonical data to work with for every module this crate
+  instantiates.
+- One test fixture (`tests/call_typed_with_v128.rs`, which hand-builds a
+  `WasmInstance` directly rather than parsing WAT) updated for the new
+  field.
+
 ## [0.6.19] — 2026-09-01 (W33 fourth slice — struct/array runtime wiring + persistent GC heap)
 
 - `struct_array_runtime_tables` (a new shared helper) rebuilds

@@ -2,6 +2,49 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.84] - 2026-09-01 (W34 third slice — canonical equivalence in runtime dispatch)
+
+`WasmExecutionContext`/`WasmExecutionEngine` gain a `canonical_types`
+field (`Vec<Option<(Rc<CanonicalGroup>, u32)>>`) and `set_canonical_types`
+setter, threaded the SAME "parallel slice, not a whole `WasmModule`" way
+`type_subtyping`/`set_type_subtyping` already are — this crate still never
+holds a full `WasmModule`.
+
+### Fixed
+
+- **`call_indirect_type_matches`**: a module that never declares `sub`
+  anywhere used to check ONLY plain structural equality of `params`/
+  `results`, with no fallback — correct for the overwhelming majority of
+  the corpus, but wrong for `type-equivalence.wast`'s own "Indirect
+  types"/"Recursive types" modules, which reference OTHER separately-
+  declared, canonically-(but not raw-index-)identical types inside a
+  signature (e.g. two params `(ref $s1)`/`(ref $s2)` where `$s1`/`$s2` are
+  byte-identical singleton types at different indices) — plain `FuncType`
+  equality compares those inner indices RAW, so it wrongly rejected a
+  legal call. Now falls through to the nominal/canonical chain check
+  (`nominal_subtype_chain`) whenever plain structural equality fails, even
+  in the "no `sub` anywhere" branch — safe precisely because that branch
+  is only reached when there is no nominal `sub` chain anywhere in the
+  module for canonical equivalence to wrongly conflate with (see
+  `type-subtyping.wast` lines 373-401's own three-distinct-nominal-types
+  proof for the case this WOULD be unsafe, which only applies in the
+  OTHER branch, unaffected by this change).
+- Both `call_indirect_type_matches` and `ref_matches_concrete_type`'s
+  funcref path now pass the module's real `canonical_types` into
+  `nominal_subtype_chain`, closing the loop this slice's own `wasm_types`
+  signature change opened — see that crate's own CHANGELOG.
+
+### Added
+
+- `wasm34_canonical_call_indirect.rs`: real end-to-end
+  (`WasmExecutionEngine::call_function`, not a hand-built context) proof
+  of the fix above — a positive case (canonically-equivalent-but-
+  differently-indexed referenced types, accepted, and its result value
+  round-tripped to confirm a REAL dispatch, not a permissive accident) and
+  a negative case (genuinely different referenced types, still rejected).
+  Confirmed these tests fail against the pre-fix code by temporarily
+  reverting the fallthrough and re-running, not merely passing vacuously.
+
 ## [0.9.83] - 2026-09-01 (security review follow-up to W33 fourth slice)
 
 ### Fixed

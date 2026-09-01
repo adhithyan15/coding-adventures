@@ -1,5 +1,44 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.92 — 2026-09-01 — W34 third slice: allow struct/array bodies inside `sub`
+
+Found and fixed while implementing `code/specs/
+W34-wasm-gc-canonical-type-equivalence.md`'s third slice (wiring canonical
+equivalence into `wasm-validator`): a real, previously-undiscovered
+parser-level gap, not merely the "explicitly out of scope, deferred"
+limitation W33's fourth slice's own doc comment described it as.
+`parse_composite_body`'s `(sub ...)` branch unconditionally rejected any
+composite body that wasn't `(func ...)` (`reject_non_func_body`'s old,
+hardcoded message: "'struct'/'array' bodies are not supported inside
+'sub'"). The vendored `type-subtyping.wast`'s own "Definitions"/"Invalid
+subtyping definitions" sections declare struct/array `sub` relationships
+extensively (`(type $e0 (sub (array i32)))`, `(type $s0 (sub (struct)))`)
+— every one of those modules failed to PARSE AT ALL before this fix, never
+even reaching `wasm-validator`'s own struct/array structural-subtype
+checker (see that crate's own CHANGELOG for the matching fix this would
+have made unreachable).
+
+- `parse_composite_body`'s `sub` branch now dispatches on the wrapped
+  body's own head keyword (`struct`/`array`/`func`), exactly like the
+  bare (non-`sub`) branch already did — producing a real `ParsedComposite::
+  Struct`/`Array` with the declared supertype/finality preserved.
+  `peek_member_kind` (phase A) already anticipated this correctly (it
+  already looks INSIDE a `sub` wrapper to find `struct`/`array`/`func`),
+  so `MemberKind`/`TypeKind` were already right even before this fix —
+  only `parse_composite_body`'s own body-parsing branch was hardcoded.
+- **Companion bug fixed in the same pass**: the phase-B "write" step's
+  `ParsedComposite::Struct`/`Array` arms silently discarded the parsed
+  `supertype`/`is_final` entirely (harmless before this fix, since a
+  struct/array `ParsedComposite` could never carry anything but the
+  phase-A default `(None, true)` — `sub` was func-only). Now that a
+  `(sub $parent (struct/array ...))` can produce a REAL declared
+  supertype/finality, this write is load-bearing — both arms now set
+  `type_subtyping[idx].supertype`/`.is_final`, matching the `Func` arm's
+  pre-existing behavior.
+- 3 new unit tests: a `sub`-wrapped struct with a declared supertype, a
+  `sub`-wrapped array with a declared supertype, and `sub final` marking
+  a struct final.
+
 ## 0.1.91 — 2026-09-01 — W33 fourth slice: struct/array TEXT-format grammar + instructions
 
 Closes the gap every prior W33 slice's addendum independently confirmed

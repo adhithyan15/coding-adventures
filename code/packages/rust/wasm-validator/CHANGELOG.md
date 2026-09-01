@@ -2,6 +2,78 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.82] - 2026-09-01 (W34 third slice — wire canonical equivalence into within-module checks)
+
+Canonicalization (built by the first two slices, consumed by nothing)
+is now wired into real validation decisions.
+
+- **`is_assignable` (`type_check.rs`)** gains six new arms —
+  `StructRef`/`NonNullStructRef`/`ArrayRef`/`NonNullArrayRef`, in the
+  same three-shape pattern (`(i,i)`, `(NonNull i, NonNull j)`, `(NonNull
+  i, j)`) the three existing `ConcreteFuncRef` arms already used. This
+  function had ZERO struct/array arms before this slice at all — a real,
+  previously-open gap this spec's own research flagged. All nine arms
+  (three func, six new) now terminate via a new `TypeContext::
+  nominal_or_canonical_subtype` helper — nominal `sub`-chain OR canonical
+  equivalence, whichever holds.
+- **New `TypeContext<'a>` wrapper** — a `Copy`, `Deref<Target = WasmModule>`
+  bundle of `&'a WasmModule` plus this module's own canonicalized
+  type-group table, threaded through this file's ~150 existing internal
+  call sites (`is_assignable`, `pop_expect`, `pop_expect_many`,
+  `push_ctrl`, `pop_ctrl`, `results_assignable`, `func_is_structural_
+  subtype`, `check_const_operand`, `check_const_expr_result`,
+  `decode_blocktype`, `struct_field_count`, `array_element_field`,
+  `struct_field`, `type_check_numeric`) with ZERO call-site syntax
+  changes — `Deref` keeps every existing `module.<field/method>` access
+  compiling unchanged, and `Copy` keeps every existing `ctx.module`
+  argument-passing site compiling unchanged, since only the FIELD's type
+  (`ModuleContext.module`) changed. `array_element_field`/`struct_field`
+  reach through the wrapper's own `.module` field explicitly rather than
+  via `Deref`, to avoid a real lifetime trap: a `Deref`-based auto-ref
+  through a by-value wrapper parameter ties the returned reference's
+  lifetime to the wrapper's own ephemeral borrow, not the wrapper's
+  underlying `'a` — see that function's own doc comment.
+- **`check_type_subtyping`'s structural checker is no longer func-only**
+  — dispatches on each side's real `TypeKind` (`Func`/`Struct`/`Array`)
+  instead of always reading `module.types[i]` (an unused dummy `FuncType`
+  for a struct/array-kind index). New `field_is_structural_subtype`/
+  `struct_is_structural_subtype`/`array_is_structural_subtype` implement
+  the real GC-proposal rule: struct width subtyping (child may have MORE
+  fields), per-field covariance-if-immutable/invariance-if-mutable, and a
+  declared `sub` relationship between two DIFFERENT composite-type kinds
+  is always rejected. Verified directly against `type-subtyping.wast`'s
+  own "Definitions"/"Invalid subtyping definitions" sections (re-fetched
+  fresh, not paraphrased) — every corpus case there now passes for the
+  right reason. **Correction found mid-slice, not assumed**: this
+  function's struct/array field-covariance checks turned out to need REAL
+  canonical data too (not the empty table this slice first tried), since
+  `type-subtyping.wast`'s own "Static matching of recursive types" module
+  requires canonical equivalence between two separate, unrelated
+  multi-member `rec` groups to satisfy a declared struct `sub`'s own field
+  covariance — `check_type_subtyping_is_acyclic` was hoisted out of
+  `check_type_subtyping` and into `type_check_module` so canonicalization
+  can run BEFORE (not after) `check_type_subtyping`'s own checks.
+- **`ValidatedModule::canonical_types()`** — a new public accessor
+  exposing the whole per-flat-index canonical-type table as a slice (not
+  just the existing single-index `canonical_type_at`), so `wasm-runtime`
+  can clone it once for threading into `wasm-execution`'s runtime
+  dispatch. `canonically_equivalent` now delegates to `wasm_types::
+  canonical_types_equivalent` (the same helper `nominal_subtype_chain`
+  uses) instead of its own inline match, so the two can never drift apart.
+- **Two pre-existing tests' own premise deliberately overturned, rewritten
+  not deleted**: `call_argument_rejects_an_unrelated_concrete_func_ref`
+  and `invalid_global_ref_t_initialized_with_ref_func_of_an_unrelated_
+  type_is_rejected` both used two byte-identical, `sub`-less types as
+  their "unrelated" negative case — exactly the case canonical equivalence
+  now correctly ACCEPTS. Both reshaped to use genuinely different types
+  instead, with a new sibling test each proving the overturned case is now
+  correctly accepted.
+- **New tests**: struct/array positive+negative canonical-equivalence
+  cases at a real `call` site (mirroring the func-type ones above);
+  struct/array `sub`-declaration structural tests (width subtyping,
+  covariant immutable fields, mutable-field invariance, cross-kind
+  rejection) grounded directly in `type-subtyping.wast`'s own corpus text.
+
 ## [0.2.81] - 2026-09-01 (W34 second slice — real multi-member `rec`-group canonicalization)
 
 No code changes to this crate's own logic — `ValidatedModule::canonical_
