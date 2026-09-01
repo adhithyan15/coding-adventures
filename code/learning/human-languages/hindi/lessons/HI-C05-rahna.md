@@ -8,8 +8,8 @@ sequence: 410
 spine_node: SPINE-SAY-WHAT-I-DO
 chapter: 5
 type: word
-headword: रहना
-gloss: to live, to stay
+headword: रहना / में
+gloss: to live, to stay; में = in
 concept_tag: VERB-LIVE
 prerequisites: [HI-C05-bolna]
 sounds: [matra-a]
