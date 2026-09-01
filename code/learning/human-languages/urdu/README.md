@@ -73,8 +73,32 @@ small set. Chapter 15 closes with weather — **بارش** *bārish*, **دھوپ
 by how far its root reaches, from honest Persian and inherited dead ends to
 **گرمی**'s real if disputed cousin in Greek **thermós**.
 
+Chapters 16 through 18 turn the reader's eye into a reader's hand. Chapter 16
+teaches seven letters in a block and buys eight words back off the page.
+Chapters 17 and 18 change the method: **one** letter every two or three
+lessons, always arriving after a word has already put it in the ear, and always
+taught in the positional faces that chapter's own words need rather than as an
+isolated shape a later lesson silently joins. Chapter 17 adds **ہ** *gol he* in
+all four of its faces, **ے** *baṛī ye* and **ں** *nūn ghunna* as word-final
+letters with no middle form to learn, and lands on **ہے** — with it, **میرا نام
+... ہے**, the first sentence this track ever gave, becomes readable. Chapter 18
+adds **آ** *alif madda*, **پ** *pe* and **و** *vāʾo*, and closes with the whole
+opening meeting — **آپ کا نام کیا ہے؟**, **میرا نام ... ہے۔**, **آپ کیسے ہیں؟**,
+**میں ... ہوں۔** — read and written from dictation.
+
+The vocabulary those two chapters carry is chosen to feed the ladder. **یہ**
+*yih* and **وہ** *voh* arrive as an inherited near-and-far pair; **کام** *kām*
+and English **karma** are one Sanskrit word by two roads; **کہاں** *kahāṅ*
+shares its opening **ک** with the entire English *wh-* family; **آسمان**
+*āsmān* comes from a root that meant *stone* and is a genuine cousin of English
+**hammer**; and **آم** *ām* is set deliberately against English **mango**,
+which came to Europe from Dravidian *māṅkāy* and is not related to it at all.
+The pair is the point: a resemblance settles nothing in either direction, and
+only the trail decides.
+
 Later chapters will add wider agreement, postpositions, oblique forms, compound
-verbs, and more letters introduced through familiar Nastaliq words.
+verbs, and the twenty-two glyphs this track shows but has not yet taught —
+**ھ** and **ٹ** first, because together they finish **ٹھیک**.
 
 Urdu and Hindi share a large grammatical core, while the formal lexicon and
 writing systems make their histories visible. Both the shared structure and the

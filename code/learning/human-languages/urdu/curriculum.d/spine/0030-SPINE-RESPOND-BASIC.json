@@ -1,7 +1,9 @@
 {
   "segments": [
     "UR-PATH-003",
-    "UR-PATH-017"
+    "UR-PATH-017",
+    "UR-PATH-018",
+    "UR-PATH-019"
   ],
   "omits": [
     "RESPONSE-YESNO",

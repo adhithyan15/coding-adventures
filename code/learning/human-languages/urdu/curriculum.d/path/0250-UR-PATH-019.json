@@ -1,0 +1,21 @@
+{
+  "id": "UR-PATH-019",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "UR-C18-aam",
+    "UR-C18-aasmaan",
+    "UR-W18-alif-madda",
+    "UR-C18-purana",
+    "UR-C18-review-madda",
+    "UR-W18-pe",
+    "UR-C18-voh",
+    "UR-C18-review-aap",
+    "UR-W18-vao",
+    "UR-C18-practice"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "UR-EXT-029-SCRIPT-MEETING"
+  ]
+}
