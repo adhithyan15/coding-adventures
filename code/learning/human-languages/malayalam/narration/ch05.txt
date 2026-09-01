@@ -27,7 +27,7 @@ avan saṁsārikkunnu — "he speaks".
 One form, all persons. Malayalam threw away person-agreement entirely — which is exactly why (Chapter 3) it can never drop the pronoun: the verb won't tell you who. Of all its Dravidian sisters, Malayalam went the furthest here.
 
 Sounds you'll need.
-സം (saṃ) + സാ (sā) + രി (ri) + ക്കുക (kkuka) becomes സംസാരിക്കുക.
+സം (saṃ) + സാ (sā) + രി (ri) + ക്കുക (kkuka) becomes സംസാരിക്കുക (saṁsārikkuka).
 
 Guided Practice.
 [pause 1 second]
@@ -56,7 +56,7 @@ The letters in this word.
 മലയാളം (malayāḷaṁ): മ (ma) + ല (la) + യാ (yā) + ള (retroflex ḷa) + ം (ṁ).
 
 The sentence, taken apart.
-ഞാൻ മലയാളം സംസാരിക്കുന്നു = ഞാൻ (ñān, "I") + മലയാളം (malayāḷaṁ, the object) + സംസാരിക്കുന്നു (saṁsārikkunnu, "speak") — "I Malayalam speak," the verb last. The name മലയാളം (malayāḷaṁ) is native Dravidian: മല (mala, "mountain") + ആളം (āḷaṁ, "place, region") — "the mountain land," named for the Western Ghats along the coast where it is spoken. Its signature retroflex ള (ḷ) sits right in the middle of the word.
+ഞാൻ മലയാളം സംസാരിക്കുന്നു (ñān malayāḷaṁ saṁsārikkunnu) = ഞാൻ (ñān, "I") + മലയാളം (malayāḷaṁ, the object) + സംസാരിക്കുന്നു (saṁsārikkunnu, "speak") — "I Malayalam speak," the verb last. The name മലയാളം (malayāḷaṁ) is native Dravidian: മല (mala, "mountain") + ആളം (āḷaṁ, "place, region") — "the mountain land," named for the Western Ghats along the coast where it is spoken. Its signature retroflex ള (ḷ) sits right in the middle of the word.
 
 Grammar Lens: the pronoun stays.
 Because saṁsārikkunnu is the same for every person (Chapter 5's big surprise), the pronoun ഞാൻ (ñān) cannot be dropped — it is the only thing marking "I." Where Tamil would happily say just pēsugiṟēṉ, Malayalam must keep the ñān.

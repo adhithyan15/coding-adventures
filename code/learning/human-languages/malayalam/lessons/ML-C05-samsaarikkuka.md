@@ -5,6 +5,7 @@ chapter: 5
 type: word
 headword: സംസാരിക്കുക
 gloss: to speak, to converse
+romanization: "saṁsārikkuka"
 concept_tag: ML-VERB-SAMSARIKKUKA
 prerequisites: [ML-C03-njaan, ML-C04-pokuka]
 sounds: [anusvara, double-kk]

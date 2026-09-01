@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 19,
-  "sourceHash": "fnv1a64:b368a65361afa6f1",
+  "sourceHash": "fnv1a64:83035b2a50aeabce",
   "lessonIds": [
     "ML-C19-vayassu",
     "ML-S122-letter-ya"
@@ -10,7 +10,7 @@
   "drivablePrefix": 1,
   "text": "malayalam/narration/ch19.txt",
   "json": "malayalam/narration/ch19.json",
-  "textHash": "fnv1a64:78fdb7c9510f6225",
-  "jsonHash": "fnv1a64:4c749702d9364cca",
+  "textHash": "fnv1a64:f3273616e3917ef5",
+  "jsonHash": "fnv1a64:84343d6579daa408",
   "findings": []
 }

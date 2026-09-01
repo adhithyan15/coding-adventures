@@ -4,14 +4,14 @@
   "chapter": 18,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:561691b70f9472e3",
+  "sourceHash": "fnv1a64:1ce99ce7fec5887c",
   "lessons": [
     {
       "id": "ML-C18-mani",
       "sequence": 470,
-      "title": "മണി — one word in Malayalam's dictionaries, two in Tamil's",
+      "title": "മണി (maṇi) — one word in Malayalam's dictionaries, two in Tamil's",
       "headword": "മണി",
-      "romanization": "",
+      "romanization": "maṇi",
       "gloss": "hour — Malayalam's OWN dictionary tradition treats bell/hour/gem as ONE Sanskrit word, unlike Tamil's closely related mani, which its own dictionaries split into two unrelated homophones",
       "script": "malayalam",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:27f91cf7f0a0d28f",
+      "sourceHash": "fnv1a64:dcc5f068136ba4be",
       "notice": null,
       "blocks": [
         {
@@ -68,7 +68,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഒരു മണി. — \"One o'clock.\" (oru mani, \"one hour/bell\") രണ്ട് മണി. — \"Two o'clock.\" (raṇṭŭ mani, \"two hour/bell\")."
+              "text": "ഒരു മണി (maṇi). — \"One o'clock.\" (oru mani, \"one hour/bell\") രണ്ട് മണി (maṇi). — \"Two o'clock.\" (raṇṭŭ mani, \"two hour/bell\")."
             }
           ]
         },

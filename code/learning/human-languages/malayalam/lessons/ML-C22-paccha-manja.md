@@ -7,6 +7,7 @@ chapter: 22
 type: word
 headword: പച്ച, മഞ്ഞ
 gloss: green and yellow — paccha matches Tamil's paccai almost exactly (the same pan-Dravidian *pac- root already seen in Kannada and Telugu); manja is a completely separate native Dravidian root, a doublet of manjal ("turmeric"), matching Tamil's own mañcaḷ — a third, independent solution to this arc's recurring green/yellow puzzle
+romanization: "pacca, mañña"
 concept_tag: ML-COLOUR-GREEN-YELLOW
 prerequisites: [ML-C11-nirangal, ML-C21-naaya-poocha]
 sounds: [malayalam-chillu-l, malayalam-virama-geminate]

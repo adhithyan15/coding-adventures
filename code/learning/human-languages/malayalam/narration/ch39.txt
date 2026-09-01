@@ -1,8 +1,8 @@
 Malayalam, chapter 39: Tea, Coffee, Milk.
-3 lessons. All 3 can be done entirely by ear.
+4 lessons. You can do the first 3 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 3.
+Lesson 1 of 4.
 ചായ (chaaya) (chāya) — "tea," which walked to Kerala rather than sailed.
 
 Warm-up.
@@ -38,7 +38,7 @@ Wrap-up Recall.
 Ask for tea, politely. (Dayavāyi oru chāya.) Name the three languages chāya passed through, in order. (Chinese, then Persian, then Hindi-Urdu, into Malayalam.) Why does English say "tea" instead of "chai"? (It arrived by sea, carrying a different Chinese form.) Which dative suffix does dayavāyi... enikku share with Tamil, Telugu and Kannada? (The dative — ‑ikku/‑ukku/‑ku/‑ge.) What is the repair half of this spine node's word pair? (ക്ഷമിക്കണം, sorry.)
 
 
-Lesson 2 of 3.
+Lesson 2 of 4.
 കാപ്പി (kaapi) (kāppi) — "coffee," which sailed while tea walked.
 
 Warm-up.
@@ -69,7 +69,7 @@ Wrap-up Recall.
 Ask for coffee, politely. (Dayavāyi oru kāppi.) Which language did Malayalam borrow kāppi directly from? (English.) Name the four languages the word passed through before that. (Arabic, Turkish, Italian, English.) Which of this chapter's two drinks travelled by land, and which by sea? (Chāya by land; kāppi by sea.)
 
 
-Lesson 3 of 3.
+Lesson 3 of 4.
 പാൽ (paal) (pāl) — "milk," where Tamil agrees completely.
 
 Warm-up.
@@ -100,3 +100,41 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Ask for milk, politely. (Dayavāyi oru pāl.) Does Tamil's word for milk match Malayalam's? (Yes — exactly, pāl both.) What does Kannada's hālu show? (The regular p-to-h law.) Which earlier liquid word broke from Tamil entirely, unlike this one? (വെള്ളം, water.)
+
+
+Lesson 4 of 4.
+ഗ (ga) — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ഗ and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one: ൺ — what does it do?
+[pause 2 seconds]
+One character this time. One only — and it has been sitting in front of you on pages you have already read.
+
+Script you'll notice: ഗ.
+ഗ — ga.
+It is a consonant carrying its own a — the voiced partner of ക ka. Put your fingers on your throat and say ka, then ga: the second one hums.
+This one is different from the seven before it: no word you have met so far is written with it. It is being put into your hand early, so that the day a word like anugrahaṁ (a blessing) arrives, the shape is already familiar and only the meaning is new.
+Two shapes stand close to it, and both are ones you can already read:
+ക ka — the very first letter of this book's script ladder; ഗ (ga) is what it sounds like with the voice switched on.
+ങ്ങ — the humming pair inside നിങ്ങൾ niṅṅaḷ, a different letter and a different sound.
+Say ka, ga twice over, then look at the two shapes again.
+
+Writing: ഗ — copy what you see.
+Put your pen on ഗ (ga) and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
+This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these words, and find ഗ (ga) in the ones that have it]
+[pause 8 seconds for the answer]
+ക, ഗ (ga), നിങ്ങൾ.
+[once you have stopped driving — trace: ഗ three times, saying ga as you finish each one]
+[your turn — look: back at any page of this chapter and find ഗ (ga) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — ഗ? What sound does it carry? (ga.) Which of ക and ഗ hums in the throat?

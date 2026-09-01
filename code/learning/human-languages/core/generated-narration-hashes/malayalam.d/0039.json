@@ -1,17 +1,18 @@
 {
   "language": "malayalam",
   "chapter": 39,
-  "sourceHash": "fnv1a64:acc57fe426087d5b",
+  "sourceHash": "fnv1a64:69ff1388b0351478",
   "lessonIds": [
     "ML-C39-chaaya",
     "ML-C39-kaapi",
-    "ML-C39-paal"
+    "ML-C39-paal",
+    "ML-S132-letter-ga"
   ],
   "voiceLessons": 3,
   "drivablePrefix": 3,
   "text": "malayalam/narration/ch39.txt",
   "json": "malayalam/narration/ch39.json",
-  "textHash": "fnv1a64:45f17c73c62d5bdb",
-  "jsonHash": "fnv1a64:c1375f1c0df913ce",
+  "textHash": "fnv1a64:7f2559ed4e45ee6b",
+  "jsonHash": "fnv1a64:999e1f1ec5713a52",
   "findings": []
 }
