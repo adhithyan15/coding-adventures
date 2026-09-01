@@ -1806,6 +1806,17 @@ fn emit_host_input(
     let pad = " ".repeat(indent);
     let mut attrs = String::new();
 
+    // Portable input name -> native HTML accessible-name attribute.
+    match find_prop(node, "a11y-label") {
+        Some(LayoutPropValue::String(label)) => {
+            write!(attrs, " aria-label=\"{}\"", escape_html_attr(label)).unwrap();
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            write!(attrs, " aria-label=\"{{{{{}}}}}\"", camel(slot)).unwrap();
+        }
+        _ => {}
+    }
+
     // value: slot ref or string literal
     match find_prop(node, "value") {
         Some(LayoutPropValue::SlotRef(s)) => {
@@ -4212,6 +4223,26 @@ mod tests {
             out.contains("<input type=\"text\" value=\"{{value}}\">"),
             "expected handlebars value placeholder, got:\n{out}"
         );
+    }
+
+    #[test]
+    fn host_input_accessible_name_lowers_literal_and_slot_values() {
+        for (prop, expected) in [
+            (
+                prop_string("a11y-label", "Task name"),
+                "aria-label=\"Task name\"",
+            ),
+            (
+                prop_slot("a11y-label", "spoken-title"),
+                "aria-label=\"{{spokenTitle}}\"",
+            ),
+        ] {
+            let l = layout("F", node_with_props("HostInput", vec![prop]));
+            let out = from_pipeline(&component("F", vec![]), &l, &empty_style("F"))
+                .unwrap()
+                .output;
+            assert!(out.contains(expected), "expected {expected} in:\n{out}");
+        }
     }
 
     // -------------------------------------------------------------------

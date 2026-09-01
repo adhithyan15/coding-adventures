@@ -1,5 +1,10 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — preserve HostInput accessible names (#13717)
+
+WinUI text boxes now lower literal, slot-backed, and bindable expression
+`HostInput.a11y-label` values to `AutomationProperties.Name`.
+
 ## [Unreleased] — preserve WinUI application resources in publish output (#13658)
 
 Emitted unpackaged WinUI projects now copy their application PRI and generated

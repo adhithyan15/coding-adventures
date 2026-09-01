@@ -96,6 +96,13 @@ trap: normal keyboard and pointer traversal remain platform-native. Web emitters
 use the corresponding `autofocus`/`autoFocus` surface, while SwiftUI, XAML,
 Compose, Flutter, and Qt use their native focus APIs.
 
+`HostInput`'s portable `a11y-label` is its explicit accessible name. Literal
+and slot-backed values must reach each backend's native naming surface:
+`aria-label` on web inputs, `Accessible.name` on Qt, `Semantics.label` on
+Flutter, Compose `contentDescription`, SwiftUI `.accessibilityLabel`, and
+WinUI `AutomationProperties.Name`. A backend must report a native-complete
+degradation rather than silently discard an authored name it cannot lower.
+
 ### 2.2 Inclusion criteria
 
 A primitive belongs in the kernel iff:

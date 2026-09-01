@@ -4061,6 +4061,9 @@ fn emit_host_input(
             escape_swift_string(part_name)
         ));
     }
+    if let Some(label) = swift_accessibility_label(node) {
+        line.push_str(&format!(".accessibilityLabel({label})"));
+    }
 
     // Modifier chain. We deliberately keep each modifier on the same
     // line — Swift accepts chained modifiers without line breaks, and
@@ -7616,6 +7619,34 @@ mod tests {
             out.contains(r#"TextField("Search…", text: .constant(query))"#),
             "expected TextField with .constant binding, got:\n{out}"
         );
+    }
+
+    #[test]
+    fn host_input_accessible_name_lowers_literal_and_slot_values() {
+        let component = component(
+            "Form",
+            vec![slot("spoken-title", SlotType::Text, true)],
+            vec![],
+        );
+        for (prop, expected) in [
+            (
+                prop_string("a11y-label", "Task name"),
+                ".accessibilityLabel(Text(verbatim: \"Task name\"))",
+            ),
+            (
+                prop_slot_ref("a11y-label", "spoken-title"),
+                ".accessibilityLabel(_mosaicText(spokenTitle))",
+            ),
+        ] {
+            let layout = layout_with(
+                "Form",
+                container_node("Box", vec![leaf("HostInput", vec![prop])]),
+            );
+            let out = from_pipeline(&component, &layout, &empty_style("Form"))
+                .unwrap()
+                .output;
+            assert!(out.contains(expected), "expected {expected} in:\n{out}");
+        }
     }
 
     #[test]

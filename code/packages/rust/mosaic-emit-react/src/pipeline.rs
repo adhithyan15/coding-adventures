@@ -1828,6 +1828,31 @@ fn emit_host_input_jsx(
         attrs.push_str(&format!(" style={{{{ {part_style_str} }}}}"));
     }
 
+    // Preserve the portable accessible name on the native text field.
+    if let Some(prop) = node.props.iter().find(|p| p.name == "a11y-label") {
+        match &prop.value {
+            LayoutPropValue::String(value) => {
+                attrs.push_str(&jsx_string_attr("aria-label", value));
+            }
+            LayoutPropValue::SlotRef(slot) => {
+                let camel = to_camel_case_first_lower(slot);
+                validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+                attrs.push_str(&format!(" aria-label={{{camel}}}"));
+            }
+            LayoutPropValue::Keyword(value) => {
+                validate_slot_or_field_name(value).map_err(PipelineEmitError::UnsafeSlotName)?;
+                attrs.push_str(&format!(" aria-label={{{value}}}"));
+            }
+            LayoutPropValue::Expr(value) => {
+                attrs.push_str(&format!(" aria-label={{{value}}}"));
+            }
+            LayoutPropValue::Number(value) => {
+                attrs.push_str(&format!(" aria-label={{{value}}}"));
+            }
+            LayoutPropValue::EmitRef(_) => {}
+        }
+    }
+
     // value={slotName} OR value={<expr>} (parenthesised For-bound
     // identifiers like `value: ( v )`, used by mosaic-pkg-grid v0.2.0
     // Cell.mll and the VisiCalc Grid.{desktop,touch}.mll inlined copy).
@@ -7000,6 +7025,32 @@ mod tests {
             out.contains("<input type=\"text\" value={formulaText} />"),
             "expected `<input type=\"text\" value={{formulaText}} />`, got:\n{out}"
         );
+    }
+
+    #[test]
+    fn host_input_accessible_name_lowers_literal_and_slot_values() {
+        let m = component(
+            "X",
+            vec![slot("spoken-title", SlotType::Text, true)],
+            vec![],
+        );
+        for (value, expected) in [
+            (
+                LayoutPropValue::String("Task name".into()),
+                "aria-label=\"Task name\"",
+            ),
+            (
+                LayoutPropValue::SlotRef("spoken-title".into()),
+                "aria-label={spokenTitle}",
+            ),
+        ] {
+            let l = host_input_layout(vec![LayoutProp {
+                name: "a11y-label".into(),
+                value,
+            }]);
+            let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+            assert!(out.contains(expected), "expected {expected} in:\n{out}");
+        }
     }
 
     /// UI29 §2.1 test 2 — `read-only` as a slot ref binds to the camelCased

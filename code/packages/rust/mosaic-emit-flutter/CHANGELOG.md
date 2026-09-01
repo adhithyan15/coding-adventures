@@ -5,6 +5,11 @@ this file.
 
 ## [Unreleased]
 
+### Fixed - preserve HostInput accessible names (#13717)
+
+Flutter text fields now retain `HostInput.a11y-label` through a native
+`Semantics` wrapper with the editable-text role.
+
 ### Fixed - strict shells rejected nested Rust list props (#13545)
 
 Native-complete Flutter shells now rebuild nested JSON lists at every declared

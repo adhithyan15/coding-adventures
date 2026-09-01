@@ -19,6 +19,7 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
     "qt": {
         "TaskApp.qml": (
             'objectName: "name-input"',
+            'Accessible.name: "Task name"',
             "Component.onCompleted: forceActiveFocus()",
             "onTextChanged: newTaskNameChange(text)",
             "onAccepted: addTask()",
@@ -52,6 +53,7 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
     "flutter": {
         "lib/TaskApp.dart": (
             "autofocus: true,",
+            'label: "Task name"',
             "onChanged: (value) => dispatch(TaskAppEventNewTaskNameChange(value: value))",
             "onChanged: (value) => dispatch(TaskAppEventNewTaskDueChange(value: value))",
             "Text(newTaskNameError)",
@@ -83,6 +85,7 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
             "private fun _MosaicAutoFocus(content: @Composable (Modifier) -> Unit)",
             "_MosaicAutoFocus { _mosaicAutoFocusModifier ->",
             '.testTag("name-input")',
+            'contentDescription = "Task name"',
             "onValueChange = { v -> dispatch(TaskAppEvent.NewTaskNameChange(v)) }",
             '.testTag("name-input-error")',
             '.testTag("name-input-corrected")',
@@ -120,6 +123,7 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
         "Sources/App/TaskApp.swift": (
             "_MosaicFocusState(autoFocus: true, content: _mosaicFocusContent)",
             '.accessibilityIdentifier("name-input")',
+            '.accessibilityLabel(Text(verbatim: "Task name"))',
             "dispatch(.newTaskNameChange(value: $0))",
             '.accessibilityIdentifier("name-input-error")',
             '.accessibilityIdentifier("name-input-corrected")',
@@ -156,6 +160,7 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
     "xaml": {
         "TaskApp.xaml": (
             'AutomationProperties.AutomationId="name-input"',
+            'AutomationProperties.Name="Task name"',
             'Loaded="NameInput_Loaded"',
             "TextChanged=\"NameInput_TextChanged\"",
             'AutomationProperties.AutomationId="name-input-error"',

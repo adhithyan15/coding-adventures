@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - preserve HostInput accessible names (#13717)
+
+The pipeline emitter now lowers literal, slot-backed, and expression-backed
+`HostInput.a11y-label` values to the input's native `aria-label` attribute.
+
 ### Fixed - preserve HostButton accessible names in pipeline output (#13691)
 
 The React pipeline emitter now lowers literal, slot-bound, and expression-bound

@@ -7,6 +7,9 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- `HostInput.a11y-label` now lowers to native Compose content-description
+  semantics for literal, slot-backed, and expression-backed names (#13717).
+
 - `HostButton.a11y-label` now lowers to native Compose semantics, including
   expression-bound labels inside repeated rows (#13691).
 

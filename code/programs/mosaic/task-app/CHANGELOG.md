@@ -4,6 +4,14 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Fixed - portable native input names (#13717)
+
+TaskApp's authored task-name and due-date labels now survive Mosaic lowering in
+React, static HTML, Web Components, Qt, Flutter, Compose Desktop, SwiftUI, and
+WinUI/XAML. Focused emitter regressions cover literal and slot-backed names, and
+the generated-native control contract now requires TaskApp's task-name field to
+retain its descriptive accessible name on every strict native backend.
+
 ### Fixed - descriptive completion controls (#13691)
 
 The compact List completion button retains its circle/check visual while its

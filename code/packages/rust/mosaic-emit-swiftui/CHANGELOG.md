@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - preserve HostInput accessible names (#13717)
+
+SwiftUI text fields now retain literal and slot-backed `HostInput.a11y-label`
+values through `.accessibilityLabel(...)`.
+
 ### Added - native indeterminate checkbox state (#13006)
 
 `emit_host_checkbox` previously had no code path for `indeterminate:`

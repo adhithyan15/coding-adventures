@@ -1574,6 +1574,27 @@ fn emit_host_input(node: &LayoutNode, part_styles: &HashMap<String, String>) -> 
     let mut attrs = String::from(r#"<input type="text""#);
     attrs.push_str(&build_style_attr(node, "", part_styles));
 
+    if let Some(prop) = node.props.iter().find(|prop| prop.name == "a11y-label") {
+        match &prop.value {
+            LayoutPropValue::String(label) => attrs.push_str(&format!(
+                r#" aria-label="{}""#,
+                escape_html_attribute(label)
+            )),
+            LayoutPropValue::SlotRef(slot) => {
+                let camel = to_camel_case_first_lower(slot);
+                if is_safe_identifier(&camel) {
+                    attrs.push_str(&format!(
+                        r#" aria-label="${{escapeHtmlAttribute({camel})}}""#
+                    ));
+                }
+            }
+            LayoutPropValue::Expr(expr) => attrs.push_str(&format!(
+                r#" aria-label="${{escapeHtmlAttribute({expr})}}""#
+            )),
+            _ => {}
+        }
+    }
+
     // value="${slot}"
     if let Some(slot) = find_slot_ref(node, "value") {
         let camel = to_camel_case_first_lower(slot);
@@ -4140,6 +4161,38 @@ mod tests {
             "missing commit dispatch, got:\n{}",
             r.output
         );
+    }
+
+    #[test]
+    fn host_input_accessible_name_lowers_literal_and_slot_values() {
+        let m = component(
+            "Edit",
+            vec![slot("spoken-title", SlotType::Text, true)],
+            vec![],
+        );
+        for (value, expected) in [
+            (
+                LayoutPropValue::String("Task name".into()),
+                r#"aria-label="Task name""#,
+            ),
+            (
+                LayoutPropValue::SlotRef("spoken-title".into()),
+                r#"aria-label="${escapeHtmlAttribute(spokenTitle)}""#,
+            ),
+        ] {
+            let l = root_layout(
+                "Edit",
+                leaf_with_props(
+                    "HostInput",
+                    vec![LayoutProp {
+                        name: "a11y-label".into(),
+                        value,
+                    }],
+                ),
+            );
+            let out = from_pipeline(&m, &l, &empty_style("Edit")).unwrap().output;
+            assert!(out.contains(expected), "expected {expected} in:\n{out}");
+        }
     }
 
     // -------- K4: HostButton with literal label + onTap → onclick --------
