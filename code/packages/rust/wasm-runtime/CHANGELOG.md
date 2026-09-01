@@ -2,6 +2,36 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.25] — 2026-09-01 (W35 second slice — mechanical `TableElement` fallout)
+
+Mechanical ripple from `wasm-execution` 0.9.88 (slice 2 of 4 for
+`code/specs/W35-wasm-cross-instance-function-identity.md` — see that
+crate's own CHANGELOG for the full rationale, including the deliberate
+deviations this slice's design needed). No NEW cross-instance logic in
+this crate — this slice's own scope explicitly excludes `WasmInstance::
+func_identities`, `LocalFunctionRef`, `WasmRuntime::call_by_index`,
+`GlobalStorage`, and active-elem-segment application's real declaring-
+instance resolution (all W35 third slice).
+
+- **`instantiate()`'s active-elem-segment application loop**: the one
+  real call site in this crate that calls `Table::set` directly (applying
+  an active elem segment's `Element.function_indices` entries) now wraps
+  each entry as `TableElement::Raw(func_idx)` instead of passing the raw
+  `Option<u32>` straight through — `Table::set`'s signature changed to
+  `Option<TableElement>` (`wasm-execution`'s own §6 design, adapted for
+  this codebase's genuine externref-table support — see that crate's
+  CHANGELOG). Purely mechanical: the entry is stored UNRESOLVED
+  (`Raw`), exactly matching this slice's own `table.init` opcode
+  handler's identical choice — real resolution happens lazily, at
+  `call_indirect`'s own read site, once a real `WasmExecutionContext`
+  exists (it doesn't yet, here in `instantiate()`).
+
+### Verification
+
+See `wasm-execution`'s own CHANGELOG entry for this slice — `cargo test`/
+`cargo clippy`/conformance-baseline verification covers both crates
+together.
+
 ## [0.6.24] — 2026-09-01 (W35 first slice — `host_functions` moves from `Box` to `Rc`)
 
 Mechanical ripple from `wasm-execution` 0.9.87 (slice 1 of 4 for

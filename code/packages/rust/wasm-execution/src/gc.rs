@@ -317,6 +317,8 @@ mod tests {
             instance_id: 0,
             exception_heap: Vec::new(),
             func_ref_heap: Vec::new(),
+            self_resolver: None,
+            func_identities: Vec::new(),
         }
     }
 

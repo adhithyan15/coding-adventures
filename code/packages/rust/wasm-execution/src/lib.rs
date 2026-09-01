@@ -1456,9 +1456,68 @@ impl LinearMemory {
 /// `MemoryStorage`/`LinearMemory` use, and for the identical reason: this
 /// is exactly the part that must be SHARED, not cloned, when a table is
 /// imported across a module boundary.
+/// One table slot's real content (W35 slice 2) -- `TableStorage::
+/// elements`' element type, `Option<TableElement>` (the `Option` layer,
+/// unchanged, still means "uninitialized").
+///
+/// **Deviation from the spec's literal §6 design**: the spec's own
+/// pseudocode makes `TableStorage::elements` bluntly `Vec<Option<
+/// FuncRefTarget>>`. That's only correct for a FUNCREF-typed table.
+/// `Table` in this codebase is NOT funcref-specific at the storage layer
+/// -- it doesn't track its own declared element type at runtime at all
+/// (see the import-compatibility check's own comment on this: "`Table`
+/// doesn't track its declared element type at runtime... only limits...
+/// are checked"), and the real corpus vendors genuine EXTERNREF-typed
+/// tables through this exact same `Table`/`TableStorage` (`table_get64.
+/// wast`/`table_set64.wast`/`table_fill64.wast`, among others) -- an
+/// externref table entry is a `ctx.gc_heap` handle, not a function
+/// reference, and wrapping one in a `FuncRefTarget` (which REQUIRES a
+/// real `Rc<dyn HostFunction>` callable) is meaningless. Since neither
+/// `Table` nor its own opcode handlers (`table.get`/`set`/`fill`/...)
+/// have any static type information telling them "this specific table is
+/// funcref, that one is externref," `TableElement` stays a plain enum
+/// that can hold EITHER shape, letting every table (regardless of
+/// declared element type) keep round-tripping its raw `u32` payload
+/// byte-for-byte exactly as it always did.
+#[derive(Clone, Debug, PartialEq)]
+pub enum TableElement {
+    /// A raw, unresolved `u32` payload -- exactly `Table`'s own PRE-W35
+    /// `Option<u32>` element, preserved verbatim. This is the ONLY
+    /// variant a non-funcref (externref/GC-typed) table entry ever uses,
+    /// and it's also what a funcref entry is stored as whenever nothing
+    /// has resolved it to a real `FuncRefTarget` yet (e.g. every entry
+    /// `table.init` copies from a passive elem segment, or a raw legacy
+    /// value `table.set`/`table.fill`/`table.grow` receives untagged --
+    /// see `resolve_ref_operand`'s own doc comment). `call_indirect`/
+    /// `return_call_indirect` resolve this lazily, on read, via
+    /// `WasmExecutionContext::resolve_function_ref_for_dispatch` --
+    /// `wasm-validator` already guarantees `call_indirect` only ever
+    /// targets an ACTUAL funcref-typed table, so treating a `Raw` entry
+    /// as a plain local function index at that ONE call site is always
+    /// safe.
+    Raw(u32),
+    /// A real, already-resolved, cross-instance-safe function reference
+    /// (W35) -- what `table.set`/`table.fill`/`table.grow` write when
+    /// the popped operand was a real `func_ref_heap` handle (tagged with
+    /// `FUNC_REF_HANDLE_TAG`), minted by an earlier `ref.func`/`table.get`
+    /// in the SAME execution. `table.get`'s own read side mints a FRESH
+    /// `func_ref_heap` handle for this (never re-exposes the original
+    /// one), matching `FuncRefTarget`'s own "per-call scratch, always
+    /// re-mintable" contract.
+    Func(FuncRefTarget),
+}
+
+/// The mutable part of a [`Table`]'s state: just the element Vec. Lives
+/// behind an `Rc<RefCell<..>>` on `Table` itself (see that struct's own
+/// `inner` field doc comment) -- the same shared-storage shape
+/// `MemoryStorage`/`LinearMemory` use, and for the identical reason: this
+/// is exactly the part that must be SHARED, not cloned, when a table is
+/// imported across a module boundary.
 struct TableStorage {
-    /// Elements: `Some(func_index)` or `None` (uninitialized).
-    elements: Vec<Option<u32>>,
+    /// Elements: `Some(TableElement::Raw(..) | Func(..))`, or `None`
+    /// (uninitialized) -- see [`TableElement`]'s own doc comment for why
+    /// this isn't bluntly `Option<FuncRefTarget>` (W35 slice 2).
+    elements: Vec<Option<TableElement>>,
 }
 
 /// A table of function references for indirect calls.
@@ -1586,8 +1645,13 @@ impl Table {
         self.is64
     }
 
-    /// Get the function index at the given table index.
-    pub fn get(&self, index: u32) -> Result<Option<u32>, TrapError> {
+    /// Get the element at the given table index (W35 slice 2: a real
+    /// [`TableElement`], not a bare `u32` -- see that type's own doc
+    /// comment). Cloned out (`TableElement` isn't `Copy` -- a `Func`
+    /// variant holds an `Rc<dyn HostFunction>`), same "immutable payload,
+    /// cheap `Rc`-clone" cost every other non-`Copy` shared-storage read
+    /// in this crate already pays.
+    pub fn get(&self, index: u32) -> Result<Option<TableElement>, TrapError> {
         let inner = self.inner.borrow();
         if index as usize >= inner.elements.len() {
             return Err(TrapError::new(format!(
@@ -1596,11 +1660,12 @@ impl Table {
                 inner.elements.len()
             )));
         }
-        Ok(inner.elements[index as usize])
+        Ok(inner.elements[index as usize].clone())
     }
 
-    /// Set the function index at the given table index.
-    pub fn set(&mut self, index: u32, func_index: Option<u32>) -> Result<(), TrapError> {
+    /// Set the element at the given table index (W35 slice 2: a real
+    /// [`TableElement`], not a bare `u32`).
+    pub fn set(&mut self, index: u32, element: Option<TableElement>) -> Result<(), TrapError> {
         let mut inner = self.inner.borrow_mut();
         if index as usize >= inner.elements.len() {
             return Err(TrapError::new(format!(
@@ -1609,7 +1674,7 @@ impl Table {
                 inner.elements.len()
             )));
         }
-        inner.elements[index as usize] = func_index;
+        inner.elements[index as usize] = element;
         Ok(())
     }
 
@@ -1646,7 +1711,7 @@ impl Table {
     /// invariant rather than relying on the constant never changing).
     /// `u64` arithmetic throughout so a huge `delta` can't wrap `usize`/
     /// `u32` addition and slip past any of the three checks.
-    pub fn grow(&mut self, delta: u32, init: Option<u32>) -> i32 {
+    pub fn grow(&mut self, delta: u32, init: Option<TableElement>) -> i32 {
         let mut inner = self.inner.borrow_mut();
         let old_size = inner.elements.len() as u32;
         let new_size = old_size as u64 + delta as u64;
@@ -1672,7 +1737,7 @@ impl Table {
     /// must be `<= size()` even when `len == 0`, so `checked_add` runs
     /// before any indexing rather than being skipped for a zero-length
     /// call.
-    pub fn fill(&mut self, dest: u32, value: Option<u32>, len: u32) -> Result<(), TrapError> {
+    pub fn fill(&mut self, dest: u32, value: Option<TableElement>, len: u32) -> Result<(), TrapError> {
         let dest = dest as usize;
         let len = len as usize;
         let mut inner = self.inner.borrow_mut();
@@ -1735,7 +1800,7 @@ impl Table {
                 // underlying `Rc<RefCell<..>>` (self-copy, or a shared
                 // cross-instance import; see `LinearMemory::copy_between`'s
                 // identical note).
-                let entries: Vec<Option<u32>> = unsafe { (*src_table).inner.borrow().elements[src..se].to_vec() };
+                let entries: Vec<Option<TableElement>> = unsafe { (*src_table).inner.borrow().elements[src..se].to_vec() };
                 unsafe { (*dst_table).inner.borrow_mut().elements[dest..de].clone_from_slice(&entries) };
                 Ok(())
             }
@@ -1790,6 +1855,113 @@ pub struct FuncRefTarget {
     /// `FuncRefTarget` can cheaply CLONE an existing import's callable
     /// instead of needing to rebuild it.
     pub callable: Rc<dyn HostFunction>,
+    /// W35 **slice 2 addition, not in the spec's own §4 literal code
+    /// block** — see this field's own extended rationale in
+    /// `resolve_function_ref_for_dispatch`'s doc comment, and the slice-2
+    /// PR's own description, for the concrete failing-test evidence that
+    /// motivated it. `Some(idx)`: this target is dispatchable through
+    /// `idx` in the CURRENTLY EXECUTING `WasmExecutionContext`'s own
+    /// combined index space, via the pre-existing `call_function`/
+    /// `pending_tail_call` mechanism — true for both an import
+    /// (`host_functions[idx]`) and a local function resolved WITHOUT a
+    /// real `self_resolver` (this slice's only two reachable cases; see
+    /// `resolve_function_ref`). `None`: `callable` is the ONLY way to
+    /// invoke this target — a genuinely self-contained, cross-instance
+    /// reference (unreachable until W35's third slice installs a real
+    /// [`SelfFunctionResolver`], whose `resolve_local_function` impl
+    /// constructs a target with this field `None`). Dispatch sites
+    /// (`call_indirect`/`call_ref`/etc.) MUST check this before ever
+    /// calling `callable.call(..)` directly — see
+    /// `dispatch_resolved_func_ref`'s own doc comment.
+    pub local_index: Option<u32>,
+}
+
+/// Manual `Debug` (W35 slice 2): `callable: Rc<dyn HostFunction>` has no
+/// `Debug` impl of its own (`HostFunction` doesn't require one -- adding
+/// that bound would ripple into every existing implementor, WASI shims
+/// included, for a capability only tests need). Prints the two fields
+/// that actually matter for a test failure message; `callable` is
+/// represented structurally (its pointer identity isn't useful in a
+/// diff), not its contents.
+impl std::fmt::Debug for FuncRefTarget {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("FuncRefTarget")
+            .field("identity", &self.identity)
+            .field("local_index", &self.local_index)
+            .field("callable", &"<dyn HostFunction>")
+            .finish()
+    }
+}
+
+/// Manual `PartialEq` (W35 slice 2): compares ONLY `identity`, exactly
+/// the rule the spec's own "Call-site audit" table mandates for any
+/// future funcref equality check ("any future funcref equality check
+/// MUST compare `FuncRefTarget::identity`, never the raw `func_ref_heap`
+/// handle or the `Rc` pointer") -- `local_index` is a same-execution
+/// dispatch-routing detail, not part of a funcref's real identity, and
+/// `callable` has no `PartialEq` of its own to compare anyway.
+impl PartialEq for FuncRefTarget {
+    fn eq(&self, other: &Self) -> bool {
+        self.identity == other.identity
+    }
+}
+
+/// A `FuncRefTarget` minted for a LOCAL (non-imported) function when no
+/// real [`SelfFunctionResolver`] is installed (W35 slice 2) — i.e. every
+/// hand-built `WasmExecutionContext` in this crate's own test suite
+/// (`self_resolver` is never set outside a hypothetical future slice-3
+/// test), and `wasm-runtime::instantiate()`'s own active-elem-segment
+/// application (which has no execution context, let alone a resolver, at
+/// all, at the point it runs).
+///
+/// **Why this exists at all (deviation from the spec's literal §4
+/// pseudocode)**: the spec's own slice-2 description claims
+/// `resolve_function_ref` returning a clean error for every LOCAL
+/// function with no `self_resolver` installed is "acceptable because
+/// nothing in `wasm-execution`'s own test suite constructs that case."
+/// That claim is directly contradicted by this crate's own
+/// `tests/wasm32_call_ref.rs` (`call_ref_calls_the_referenced_function`,
+/// `return_call_ref_tail_calls_through_a_reference`), both of which
+/// `ref.func` a purely LOCAL function and dispatch it via `call_ref`/
+/// `return_call_ref` with no `self_resolver` ever installed, and both of
+/// which passed before this slice. Making `resolve_function_ref` alone
+/// govern every call site, per the spec's literal pseudocode, would
+/// regress both. This placeholder — combined with `FuncRefTarget::
+/// local_index` — lets a LOCAL function still round-trip through
+/// `ref.func`/`table.get`/`table.set`/`call_indirect`/`call_ref` exactly
+/// as it always did (dispatched via the pre-existing `call_function`
+/// mechanism, keyed on `local_index`), while `resolve_function_ref`
+/// itself stays byte-for-byte faithful to the spec's own §4 code block
+/// (and is covered directly by this slice's own new "no self-resolver
+/// installed" unit test — see verification plan item (b) — which calls
+/// `resolve_function_ref` directly rather than through the lenient
+/// call-site wrapper).
+///
+/// This placeholder's own `call` is never meant to be invoked in
+/// practice — every real dispatch site checks `local_index` FIRST and
+/// only ever calls `callable.call(..)` when it's `None`. If `call` ever
+/// IS reached directly (a bug in some future call site, not reachable
+/// WASM behavior), it fails loudly and cleanly rather than silently
+/// doing the wrong thing — this repo's own "never trade loud for silent"
+/// convention.
+struct LocalFunctionPlaceholder {
+    func_type: FuncType,
+}
+
+impl HostFunction for LocalFunctionPlaceholder {
+    fn func_type(&self) -> &FuncType {
+        &self.func_type
+    }
+
+    fn call(&self, _args: &[WasmValue], _memory: Option<&mut LinearMemory>) -> Result<Vec<WasmValue>, TrapError> {
+        Err(TrapError::new(
+            "internal engine error: a LOCAL function reference was dispatched via \
+             HostFunction::call directly instead of through its FuncRefTarget::local_index \
+             fallback -- this indicates a bug in a call site's dispatch logic, not reachable \
+             WASM behavior"
+                .to_string(),
+        ))
+    }
 }
 
 /// A host function — callable from WASM via imports.
@@ -3992,11 +4164,140 @@ pub struct WasmExecutionContext {
     /// raw handle into this Vec. Reset (cleared) at the start of every
     /// call, same as the operand stack itself.
     ///
-    /// **W35 slice 1 note**: purely additive at this point — nothing
-    /// pushes to or reads from this Vec yet. `ref.func`/`table.get`/
-    /// `call_indirect`/etc. still operate exactly as they did before this
-    /// field existed; wiring them to use it is W35's second slice.
+    /// **W35 slice 2**: now actually populated by `ref.func`/`table.get`
+    /// (via [`push_func_ref`]) and consumed by `table.set`/`table.fill`/
+    /// `table.grow`/`call_ref`/`return_call_ref` (via
+    /// [`resolve_ref_operand`]). A handle minted here is tagged with
+    /// [`FUNC_REF_HANDLE_TAG`] so it's never confused with a raw,
+    /// untagged legacy value (a funcref-typed GLOBAL's raw stored index,
+    /// still evaluated via the unchanged `evaluate_const_expr` — globals
+    /// are explicitly out of this slice's scope, see `code/specs/
+    /// W35-wasm-cross-instance-function-identity.md` §7 — or a genuine
+    /// EXTERNREF/GC-typed table entry, which is never a funcref at all).
     pub func_ref_heap: Vec<FuncRefTarget>,
+    /// W35 slice 2: `self.self_resolver.as_ref()`'s target in
+    /// `resolve_function_ref` — see [`SelfFunctionResolver`]'s own doc
+    /// comment. Always `None` in this slice (nothing implements or
+    /// installs one yet; that's W35's third slice, `wasm-runtime::
+    /// build_engine`). Defaulted to `None` at the one place a
+    /// `WasmExecutionContext` is constructed, matching every other
+    /// optional-capability field this crate already threads (`type_
+    /// subtyping`, `tag_identities`, ...).
+    pub self_resolver: Option<Box<dyn SelfFunctionResolver>>,
+    /// W35 slice 2: canonical, cross-instance-safe function identity per
+    /// combined func-index-space entry — see `code/specs/
+    /// W35-wasm-cross-instance-function-identity.md` design §2
+    /// (`WasmInstance::func_identities`, mirroring `tag_identities`
+    /// exactly). Always empty in this slice: `WasmInstance::
+    /// func_identities` doesn't exist yet (W35's third slice populates
+    /// and threads it via a future `set_func_identities`, mirroring
+    /// `set_tag_identities`'s exact shape). `resolve_function_ref`'s own
+    /// `.get(idx).copied().unwrap_or(0)` lookup already treats an empty
+    /// Vec correctly (every function's identity is `0`, "no stable
+    /// identity yet minted" -- exactly `HostFunction::identity`'s own
+    /// default), so this field just needs to EXIST for that lookup to
+    /// compile; no setter is wired in this slice.
+    pub func_identities: Vec<u64>,
+}
+
+impl WasmExecutionContext {
+    /// The spec's own `resolve_function_ref` primitive (W35 design §4,
+    /// reproduced here byte-for-byte in shape): turn a raw, combined-
+    /// index-space function index into a real, self-contained
+    /// [`FuncRefTarget`]. An import (`host_functions[idx]` is `Some`) is
+    /// already cross-instance-safe -- clone its `Rc` and reuse its own
+    /// `identity()` verbatim, no new identity minted. Anything else
+    /// (a LOCAL, module-defined function) requires a real
+    /// [`SelfFunctionResolver`] to build a self-contained target -- with
+    /// none installed (true of every hand-built `WasmExecutionContext` in
+    /// this crate's own test suite in this slice), this returns a clean,
+    /// descriptive, non-panicking error rather than a silent wrong
+    /// answer. See this slice's own verification-plan test (b) -- it
+    /// calls THIS method directly to prove that error path.
+    ///
+    /// Real opcode call sites (`ref.func`/`table.set`/`call_ref`/...) do
+    /// NOT call this directly -- they call
+    /// [`Self::resolve_function_ref_for_dispatch`], which wraps this with
+    /// a same-execution-context fallback so a LOCAL function's `ref.func`/
+    /// `call_ref` keeps working exactly as it always did when no real
+    /// resolver is installed. See that method's own doc comment for the
+    /// full rationale (a real, currently-passing test in this crate's own
+    /// suite requires it).
+    fn resolve_function_ref(&self, idx: u32) -> Result<FuncRefTarget, VMError> {
+        if let Some(Some(hf)) = self.host_functions.get(idx as usize) {
+            return Ok(FuncRefTarget {
+                identity: hf.identity(),
+                callable: hf.clone(),
+                local_index: Some(idx),
+            });
+        }
+        let identity = self.func_identities.get(idx as usize).copied().unwrap_or(0);
+        let resolver = self.self_resolver.as_ref().ok_or_else(|| {
+            VMError::GenericError("funcref crossed an instance boundary with no self-resolver installed".into())
+        })?;
+        let mut target = resolver.resolve_local_function(idx)?;
+        target.identity = identity; // keep ctx's own view of identity authoritative
+        Ok(target)
+    }
+
+    /// **W35 slice 2, not in the spec's own literal design**: the
+    /// call-site-facing wrapper every real opcode handler
+    /// (`ref.func`/`table.init`/`table.set`/`table.fill`/`table.grow`/
+    /// `call_ref`/`return_call_ref`/`resolve_ref_operand`) actually uses,
+    /// instead of [`Self::resolve_function_ref`] directly.
+    ///
+    /// **Why this exists**: the spec's own slice-2 description assumes
+    /// `resolve_function_ref` alone is fine for every opcode call site,
+    /// because (per its own words) "nothing in `wasm-execution`'s own
+    /// test suite constructs" a LOCAL function's `ref.func`/`call_ref`
+    /// with no `self_resolver` installed. That assumption is false:
+    /// `tests/wasm32_call_ref.rs`'s `call_ref_calls_the_referenced_
+    /// function` and `return_call_ref_tail_calls_through_a_reference`
+    /// both do exactly that, and both passed before this slice landed.
+    /// Making every opcode route through the strict, spec-literal
+    /// `resolve_function_ref` alone would regress both (and, by the same
+    /// logic, almost certainly regress real `call_ref.wast`/
+    /// `return_call_ref.wast` corpus cases too, which routinely `ref.func`
+    /// a module's own local helper functions).
+    ///
+    /// This method tries the real, strict resolution first; if it fails
+    /// SPECIFICALLY because no `self_resolver` is installed at all (as
+    /// opposed to a real resolver failing for its own reason, which is
+    /// surfaced unchanged), it falls back to a [`LocalFunctionPlaceholder`]
+    /// -backed [`FuncRefTarget`] with `local_index: Some(idx)` -- a marker
+    /// telling every dispatch site to keep using the pre-existing
+    /// `call_function`/`pending_tail_call` mechanism for this target,
+    /// exactly as it always has, rather than ever calling
+    /// `target.callable.call(..)` (which cannot express a same-context
+    /// local call at all -- see `LocalFunctionPlaceholder`'s own doc
+    /// comment). Returns a genuine "undefined function" error (not a
+    /// fabricated local target) when `idx` doesn't even exist in
+    /// `func_types` -- an out-of-range index is a real error, never a
+    /// silently-accepted placeholder.
+    fn resolve_function_ref_for_dispatch(&self, idx: u32) -> Result<FuncRefTarget, VMError> {
+        match self.resolve_function_ref(idx) {
+            Ok(target) => Ok(target),
+            Err(e) => {
+                if self.self_resolver.is_some() {
+                    // A real resolver was installed and it failed for its
+                    // own reason (e.g. `idx` doesn't exist even in the
+                    // resolver's view) -- surface that error verbatim,
+                    // don't paper over it with a placeholder.
+                    return Err(e);
+                }
+                let func_type = self
+                    .func_types
+                    .get(idx as usize)
+                    .ok_or_else(|| VMError::GenericError(format!("undefined function {idx}")))?;
+                let identity = self.func_identities.get(idx as usize).copied().unwrap_or(0);
+                Ok(FuncRefTarget {
+                    identity,
+                    callable: Rc::new(LocalFunctionPlaceholder { func_type: func_type.clone() }),
+                    local_index: Some(idx),
+                })
+            }
+        }
+    }
 }
 
 /// Process-wide counter minting a fresh, never-repeating
@@ -4161,6 +4462,39 @@ pub const MAX_V128_HEAP_LEN: usize = 1_000_000;
 /// `throw_ref.wast`/`try_table.wast` conformance case (a handful of
 /// exceptions per test function) while still bounding worst-case memory.
 pub const MAX_EXCEPTION_HEAP_LEN: usize = 1_000_000;
+
+/// Caps `WasmExecutionContext::func_ref_heap`'s growth (W35 slice 2,
+/// security review — same threat model and shape as
+/// [`MAX_EXCEPTION_HEAP_LEN`] just above: a WASM `loop` whose body is a
+/// bare `ref.func`/`table.get`, with no recursion at all, would otherwise
+/// grow this heap without bound). A `FuncRefTarget` is minted at most
+/// once per `ref.func`/`table.get` execution, so this bounds "how many
+/// funcrefs can be minted in one top-level call" the same way
+/// `MAX_EXCEPTION_HEAP_LEN` bounds caught exceptions — 1,000,000
+/// comfortably exceeds any real conformance case (a handful of funcrefs
+/// per test function) while still bounding worst-case memory. Well below
+/// [`FUNC_REF_HANDLE_TAG`]'s own reserved bit, so a real handle's plain
+/// index component never collides with that tag.
+pub const MAX_FUNC_REF_HEAP_LEN: usize = 1_000_000;
+
+/// Tag bit (W35 slice 2, deviation from the spec's literal §5 design —
+/// see [`resolve_ref_operand`]'s own doc comment for the full rationale)
+/// marking a `WasmValue::Ref(Some(raw))` payload as a real
+/// `func_ref_heap` HANDLE (minted by [`push_func_ref`]), as opposed to a
+/// raw, untagged legacy value that predates this slice's handle scheme --
+/// a funcref-typed GLOBAL's raw stored function index (globals are
+/// explicitly out of this slice's scope, still evaluated via the
+/// unchanged `evaluate_const_expr`/`global.get`), or a genuine
+/// EXTERNREF/GC-typed reference (`ctx.gc_heap`'s own index space, which
+/// `Table`/`WasmValue::Ref` already share with funcref -- see
+/// `WasmValue::Ref`'s own doc comment). `func_ref_heap` is capped at
+/// [`MAX_FUNC_REF_HEAP_LEN`] (1,000,000), and every real function/table
+/// count in this crate is bounded far below `2^31` by existing caps
+/// (`MAX_TABLE_ELEMENTS`, `wasm-validator`'s function-count checks), so a
+/// legitimate raw index or GC handle can never coincidentally carry this
+/// bit -- only a value this crate itself tagged via `push_func_ref` ever
+/// has it set.
+const FUNC_REF_HANDLE_TAG: u32 = 0x8000_0000;
 
 /// Caps how many linear memories a single module may declare + import
 /// (multi-memory proposal, W16, task #85). Real WASM has no spec-mandated
@@ -4672,7 +5006,27 @@ fn ref_matches_concrete_type(ctx: &WasmExecutionContext, type_idx: u32, payload:
         return true;
     }
     if (type_idx as usize) < ctx.types.len() {
-        match ctx.func_type_indices.get(payload as usize) {
+        // W35 slice 2: `payload` may be a `func_ref_heap`-tagged HANDLE
+        // now (minted by `ref.func`'s own runtime opcode via
+        // `push_func_ref`), not the raw local function index directly --
+        // resolve it back to that index first, same "tagged vs. untagged"
+        // split `resolve_ref_operand` uses. An out-of-range/stale handle,
+        // or a hypothetical future cross-instance target with no local
+        // index (`local_index: None`, unreachable until W35's third
+        // slice), can't match any LOCAL type-section entry -- `false`,
+        // the same safe default this function already gives an
+        // out-of-range plain index via `func_type_indices.get`'s own
+        // `None` arm below.
+        let effective_payload = if payload & FUNC_REF_HANDLE_TAG != 0 {
+            let index = (payload & !FUNC_REF_HANDLE_TAG) as usize;
+            match ctx.func_ref_heap.get(index).and_then(|t| t.local_index) {
+                Some(idx) => idx,
+                None => return false,
+            }
+        } else {
+            payload
+        };
+        match ctx.func_type_indices.get(effective_payload as usize) {
             Some(&actual_type_idx) => wasm_types::nominal_subtype_chain(&ctx.type_subtyping, &ctx.canonical_types, actual_type_idx, type_idx),
             None => false,
         }
@@ -5273,7 +5627,17 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 // on top: pop into the tail of the Vec, then it reads correctly.
                 let mut fields = vec![WasmValue::I32(0); n];
                 for slot in fields.iter_mut().rev() {
-                    *slot = pop_wasm(vm)?;
+                    // W35 slice 2 (security review): `gc_heap` -- unlike
+                    // `func_ref_heap` -- persists ACROSS separate top-level
+                    // calls (see `gc_heap`'s own field doc comment), so a
+                    // funcref-typed field must be flattened to a durable,
+                    // untagged representation here, exactly like
+                    // `global.set` already does -- otherwise a struct
+                    // built in one call and read back in a LATER call
+                    // could silently resolve a stale handle to whatever
+                    // UNRELATED function that later call's own
+                    // `func_ref_heap` happens to hold at that index.
+                    *slot = flatten_ref_for_durable_storage(ctx, pop_wasm(vm)?)?;
                 }
                 let handle = gc::alloc(ctx, GcObject::Struct(GcStruct { type_idx: op.type_idx, fields }))?;
                 push_wasm(vm, WasmValue::Ref(Some(handle)));
@@ -5345,7 +5709,10 @@ fn register_numeric_i64(vm: &mut GenericVM) {
             // comment on this arm above.
             0x04 => {
                 // Stack order: ... ref, value (value on top).
-                let val = pop_wasm(vm)?;
+                // W35 slice 2 (security review): see struct.new's (0x00)
+                // identical comment -- `gc_heap` persists across calls,
+                // `func_ref_heap` doesn't.
+                let val = flatten_ref_for_durable_storage(ctx, pop_wasm(vm)?)?;
                 let handle = pop_struct_ref(vm, "struct.set")?;
                 let obj = ctx.gc_heap.get_mut(handle as usize).and_then(|slot| slot.as_mut()).ok_or_else(|| {
                     VMError::GenericError(format!("struct.set: dangling handle {handle}"))
@@ -5366,7 +5733,9 @@ fn register_numeric_i64(vm: &mut GenericVM) {
             // length], allocate an array of `length` copies of `value`.
             0x06 => {
                 let len = pop_array_length(vm, "array.new")?;
-                let val = pop_wasm(vm)?;
+                // W35 slice 2 (security review): see struct.new's (0x00)
+                // identical comment.
+                let val = flatten_ref_for_durable_storage(ctx, pop_wasm(vm)?)?;
                 let elements = vec![val; len];
                 let handle = gc::alloc(ctx, GcObject::Array(GcArray { type_idx: op.type_idx, elements }))?;
                 push_wasm(vm, WasmValue::Ref(Some(handle)));
@@ -5401,7 +5770,9 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 }
                 let mut elements = vec![WasmValue::I32(0); n];
                 for slot in elements.iter_mut().rev() {
-                    *slot = pop_wasm(vm)?;
+                    // W35 slice 2 (security review): see struct.new's
+                    // (0x00) identical comment.
+                    *slot = flatten_ref_for_durable_storage(ctx, pop_wasm(vm)?)?;
                 }
                 let handle = gc::alloc(ctx, GcObject::Array(GcArray { type_idx: op.type_idx, elements }))?;
                 push_wasm(vm, WasmValue::Ref(Some(handle)));
@@ -5435,7 +5806,9 @@ fn register_numeric_i64(vm: &mut GenericVM) {
             // index, value], write the element. No truncation needed at
             // write time -- see struct.get's own doc comment.
             0x0E => {
-                let val = pop_wasm(vm)?;
+                // W35 slice 2 (security review): see struct.new's (0x00)
+                // identical comment.
+                let val = flatten_ref_for_durable_storage(ctx, pop_wasm(vm)?)?;
                 let idx = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
                 let handle = pop_array_ref(vm, "array.set")?;
                 let obj = ctx.gc_heap.get_mut(handle as usize).and_then(|slot| slot.as_mut()).ok_or_else(|| {
@@ -5775,8 +6148,36 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 let dest_end = dest.checked_add(len);
                 match (src_end, dest_end) {
                     (Some(se), Some(de)) if se <= segment.len() && de <= table.size() as usize => {
+                        // W35 slice 2 (deviation from the spec's literal
+                        // §"Call-site audit" row for this opcode, which
+                        // calls for EAGER `resolve_function_ref` on every
+                        // entry "using the segment's OWN declaring-
+                        // instance context" before this copy): stored as
+                        // `TableElement::Raw` here, unresolved, and
+                        // resolved LAZILY at `call_indirect`'s own read
+                        // site instead. For this slice (single-instance
+                        // only -- no cross-instance elem application
+                        // exists yet, that's slice 3/4), "the currently
+                        // executing context" and "the segment's declaring
+                        // instance" are the SAME context, so eager vs.
+                        // lazy resolution is behaviorally IDENTICAL here;
+                        // deferring avoids forcing every entry to be a
+                        // real, already-existing function at `table.init`
+                        // time (this crate's own `table_init_copy_elem_
+                        // drop_end_to_end` unit test intentionally copies
+                        // SYNTHETIC placeholder indices with no
+                        // corresponding function at all, to test pure
+                        // bulk-copy mechanics -- eager resolution would
+                        // regress it) and sidesteps `TableElement`'s own
+                        // externref-vs-funcref ambiguity entirely (an
+                        // elem segment's `function_indices` is ALWAYS
+                        // `None` for a non-funcref segment in this
+                        // codebase's data model -- see `wasm_types::
+                        // Element::function_indices`'s own doc comment --
+                        // so this loop never mis-resolves a genuine
+                        // externref entry either way).
                         for i in 0..len {
-                            table.set((dest + i) as u32, segment[src + i]).map_err(VMError::from)?;
+                            table.set((dest + i) as u32, segment[src + i].map(TableElement::Raw)).map_err(VMError::from)?;
                         }
                     }
                     _ => {
@@ -5870,7 +6271,8 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 let is64 = get_table(ctx, target_idx)?.is64();
                 let delta = pop_table_operand(vm, is64)?;
                 let init = match pop_wasm(vm)? {
-                    WasmValue::Ref(v) => v,
+                    WasmValue::Ref(None) => None,
+                    WasmValue::Ref(Some(raw)) => Some(resolve_table_write_value(ctx, raw)?),
                     other => return Err(VMError::GenericError(format!("type mismatch: table.grow expected a reference, got {other:?}"))),
                 };
                 // Security review (task #98, round 2): `Table::grow`'s own
@@ -5923,7 +6325,8 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 let is64 = get_table(ctx, target_idx)?.is64();
                 let len = pop_table_operand(vm, is64)?;
                 let value = match pop_wasm(vm)? {
-                    WasmValue::Ref(v) => v,
+                    WasmValue::Ref(None) => None,
+                    WasmValue::Ref(Some(raw)) => Some(resolve_table_write_value(ctx, raw)?),
                     other => return Err(VMError::GenericError(format!("type mismatch: table.fill expected a reference, got {other:?}"))),
                 };
                 let dest = pop_table_operand(vm, is64)?;
@@ -5959,20 +6362,24 @@ fn register_numeric_i64(vm: &mut GenericVM) {
     });
 
     // ref.func (0xD2 <funcidx>) — push a non-null funcref referring to a
-    // function by index (WASM17). The wrapped `u32` is a function index
-    // into `ctx.func_types`/`ctx.func_bodies`, reusing the same uniform
-    // `Ref(Option<u32>)` handle `ref.null`/`ref.is_null` already carry —
-    // only the *static* type (tracked by `wasm-validator`) distinguishes a
-    // funcref from any other reference kind, see `code/specs/
-    // W08-wasm-funcref-externref.md`. Bounds-checked against the same
-    // `func_types` table `call_function_inner`'s own bounds check uses.
+    // function by index (WASM17). W35 slice 2: the wrapped `u32` is now a
+    // `func_ref_heap` HANDLE (tagged, see `FUNC_REF_HANDLE_TAG`), not the
+    // raw function index directly -- `resolve_function_ref_for_dispatch`
+    // mints a real, self-contained `FuncRefTarget` first (reusing an
+    // import's own identity/callable verbatim, or a same-context local
+    // fallback -- see that method's own doc comment), then
+    // `push_func_ref` stashes it and returns the handle. Bounds-checked
+    // against the same `func_types` table `call_function_inner`'s own
+    // bounds check uses, same as before this slice.
     vm.register_context_opcode(0xD2, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
         let func_index = operand_int(instr) as usize;
         if func_index >= ctx.func_types.len() {
             return Err(VMError::GenericError(format!("undefined function {func_index}")));
         }
-        push_wasm(vm, WasmValue::Ref(Some(func_index as u32)));
+        let target = ctx.resolve_function_ref_for_dispatch(func_index as u32)?;
+        let handle = push_func_ref(ctx, target)?;
+        push_wasm(vm, WasmValue::Ref(Some(handle)));
         vm.advance_pc();
         Ok(None)
     });
@@ -6763,7 +7170,19 @@ fn register_variable(vm: &mut GenericVM) {
         // Writing through the SHARED cell (not replacing `ctx.globals[index]`
         // itself) is what makes the mutation visible to every other alias
         // of this same global -- see `global.get`'s own comment just above.
-        *ctx.globals[index].borrow_mut() = pop_wasm(vm)?;
+        //
+        // W35 slice 2 (deviation from the spec's literal design, forced by
+        // a real corpus regression -- see `flatten_ref_for_durable_
+        // storage`'s own doc comment): a `func_ref_heap` HANDLE is only
+        // valid for the REST of the CURRENT top-level call, but a global
+        // is durable ACROSS calls (globals are explicitly untouched by
+        // this slice -- see `code/specs/
+        // W35-wasm-cross-instance-function-identity.md` §7). Flatten any
+        // tagged handle back to a plain raw index before it's written
+        // through, so a LATER, separate call's `global.get` sees the
+        // SAME pre-W35 representation it always did.
+        let value = flatten_ref_for_durable_storage(ctx, pop_wasm(vm)?)?;
+        *ctx.globals[index].borrow_mut() = value;
         vm.advance_pc();
         Ok(None)
     });
@@ -6775,6 +7194,13 @@ fn register_variable(vm: &mut GenericVM) {
     // 1.0 has exactly one table either way, but the text form can name it
     // explicitly, so this resolves whichever index `wasm-wast-parser`
     // actually emitted).
+    // W35 slice 2: reads a real `TableElement` back out of the table.
+    // `Raw(raw)` (an externref/GC entry, or a funcref entry nothing has
+    // resolved yet) round-trips byte-for-byte, exactly as before this
+    // slice. `Func(target)` (a real, already-resolved funcref) mints a
+    // FRESH `func_ref_heap` handle for it via `push_func_ref` -- see
+    // `TableElement`'s own doc comment for why this crate can't just
+    // always assume `Func` here (a genuine externref table).
     vm.register_context_opcode(0x25, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
         let table_idx = operand_int(instr) as usize;
@@ -6785,21 +7211,31 @@ fn register_variable(vm: &mut GenericVM) {
         let is64 = get_table(ctx, table_idx)?.is64();
         let elem_index = pop_table_operand(vm, is64)?;
         let table = get_table(ctx, table_idx)?;
-        let func_index = table.get(elem_index).map_err(VMError::from)?;
-        push_wasm(vm, WasmValue::Ref(func_index));
+        let element = table.get(elem_index).map_err(VMError::from)?;
+        let value = match element {
+            Some(TableElement::Raw(raw)) => Some(raw),
+            Some(TableElement::Func(target)) => Some(push_func_ref(ctx, target)?),
+            None => None,
+        };
+        push_wasm(vm, WasmValue::Ref(value));
         vm.advance_pc();
         Ok(None)
     });
 
     // table.set (0x26 <tableidx>) — pop a funcref and an index (i64 for an
     // `is64` table, i32 otherwise -- table64 proposal, W26), store into
-    // table[tableidx][index] (WASM17). Thin wrapper around `Table::set`.
+    // table[tableidx][index] (WASM17). W35 slice 2: the popped raw `u32`
+    // is resolved via `resolve_ref_operand` before storing -- a real
+    // `func_ref_heap` handle becomes `TableElement::Func`, anything else
+    // (a legacy raw funcidx, or a genuine externref/GC handle) stays
+    // `TableElement::Raw`, byte-for-byte as before this slice.
     vm.register_context_opcode(0x26, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
         let table_idx = operand_int(instr) as usize;
         let is64 = get_table(ctx, table_idx)?.is64();
         let value = match pop_wasm(vm)? {
-            WasmValue::Ref(v) => v,
+            WasmValue::Ref(None) => None,
+            WasmValue::Ref(Some(raw)) => Some(resolve_table_write_value(ctx, raw)?),
             other => return Err(VMError::GenericError(format!("type mismatch: expected funcref, got {other:?}"))),
         };
         let elem_index = pop_table_operand(vm, is64)?;
@@ -7444,6 +7880,235 @@ fn push_caught_exception(ctx: &mut WasmExecutionContext, payload: ExceptionPaylo
     let handle = ctx.exception_heap.len() as u32;
     ctx.exception_heap.push(payload);
     Ok(handle)
+}
+
+/// Push a newly-resolved [`FuncRefTarget`] onto `ctx.func_ref_heap`,
+/// enforcing [`MAX_FUNC_REF_HEAP_LEN`] (W35 slice 2, security review —
+/// mirrors [`push_v128`]/[`push_caught_exception`]'s own enforcement
+/// shape exactly). Every opcode handler that mints a NEW funcref value
+/// (`ref.func`, `table.get`) must go through this, not
+/// `ctx.func_ref_heap.push(...)` directly. Returns the handle already
+/// tagged with [`FUNC_REF_HANDLE_TAG`] -- callers push this tagged value
+/// directly into `WasmValue::Ref(Some(..))`, never the bare untagged
+/// index.
+fn push_func_ref(ctx: &mut WasmExecutionContext, target: FuncRefTarget) -> Result<u32, VMError> {
+    if ctx.func_ref_heap.len() >= MAX_FUNC_REF_HEAP_LEN {
+        return Err(VMError::GenericError(
+            "func_ref heap limit exceeded (too many funcrefs minted in one call)".into(),
+        ));
+    }
+    let handle = ctx.func_ref_heap.len() as u32;
+    ctx.func_ref_heap.push(target);
+    Ok(handle | FUNC_REF_HANDLE_TAG)
+}
+
+/// Resolve a popped `WasmValue::Ref(Some(raw))` operand into a real
+/// [`FuncRefTarget`] (W35 slice 2) -- the shared entry point
+/// `table.set`/`table.fill`/`table.grow`/`call_ref`/`return_call_ref` all
+/// use for a funcref value coming off the OPERAND STACK (as opposed to
+/// already-resolved storage inside a `Table`, which reads a
+/// [`TableElement`] directly instead -- see that type's own doc comment).
+///
+/// **Deviation from the spec's literal §5 design**: the spec's own
+/// pseudocode treats every such operand as unconditionally a
+/// `func_ref_heap` handle. That can't be right in general: `WasmValue::
+/// Ref(Some(u32))` is ALSO how a funcref-typed GLOBAL's raw stored value
+/// flows (globals are untouched in this slice -- still evaluated via the
+/// unchanged `evaluate_const_expr`/`global.get`, see `code/specs/
+/// W35-wasm-cross-instance-function-identity.md` §7) and how a genuine
+/// EXTERNREF/GC-typed reference flows (`ctx.gc_heap`'s own index space,
+/// which `WasmValue::Ref` already shares with funcref by this crate's own
+/// pre-existing convention). Blindly treating either as a `func_ref_heap`
+/// index would either be a hard bounds error (the common case, since
+/// `func_ref_heap` is usually much smaller or empty) or, worse, a
+/// coincidental in-bounds HIT that silently resolves to the WRONG
+/// function (a real correctness/security hazard this crate's own
+/// "never trade loud for silent" convention forbids). [`FUNC_REF_HANDLE_
+/// TAG`] disambiguates structurally: tagged means "definitely a real
+/// `func_ref_heap` handle, look it up, clean error if out of range";
+/// untagged means "a legacy/foreign raw value -- treat it as a plain
+/// local function index and resolve it the same way `ref.func`'s own
+/// handler would" (harmless for a genuine externref/GC value too, since
+/// `wasm-validator` already guarantees these consumers are only ever
+/// reached against an ACTUAL funcref-typed value).
+fn resolve_ref_operand(ctx: &WasmExecutionContext, raw: u32) -> Result<FuncRefTarget, VMError> {
+    if raw & FUNC_REF_HANDLE_TAG != 0 {
+        let index = (raw & !FUNC_REF_HANDLE_TAG) as usize;
+        ctx.func_ref_heap.get(index).cloned().ok_or_else(|| {
+            VMError::GenericError(format!(
+                "invalid func_ref handle {index} (out of range, or a stale handle from a previous call)"
+            ))
+        })
+    } else {
+        ctx.resolve_function_ref_for_dispatch(raw)
+    }
+}
+
+/// Resolve a popped `WasmValue::Ref(Some(raw))` operand into a
+/// [`TableElement`] for a TABLE WRITE (`table.set`/`table.fill`/
+/// `table.grow`) -- deliberately NOT the same as [`resolve_ref_operand`]
+/// (used for `call_ref`/`return_call_ref` DISPATCH, where the operand is
+/// validator-guaranteed to be an actual funcref). A table write has no
+/// such guarantee: the TARGET TABLE could just as easily be
+/// externref-typed (`Table` doesn't track its own declared element type
+/// at runtime -- see `TableElement`'s own doc comment), so an UNTAGGED
+/// value here must NEVER be treated as "a raw local function index to
+/// resolve" -- that would corrupt a genuine externref/GC handle into a
+/// bogus (or, worse, a coincidentally-valid but WRONG) function
+/// reference. Only a TAGGED value (definitely minted by this crate's own
+/// `push_func_ref`) is ever eagerly resolved, into `TableElement::Func`;
+/// anything else is stored as `TableElement::Raw(raw)` completely
+/// unexamined, byte-for-byte matching this crate's pre-W35 behavior for
+/// every non-funcref table, and for a funcref table entry nothing has
+/// pushed through `func_ref_heap` yet (e.g. a value popped straight from
+/// a funcref-typed GLOBAL, still untouched raw per this slice's scope --
+/// resolved lazily later, at `call_indirect`'s own read site, exactly
+/// like `TableElement::Raw`'s own doc comment describes).
+fn resolve_table_write_value(ctx: &WasmExecutionContext, raw: u32) -> Result<TableElement, VMError> {
+    if raw & FUNC_REF_HANDLE_TAG != 0 {
+        let index = (raw & !FUNC_REF_HANDLE_TAG) as usize;
+        let target = ctx.func_ref_heap.get(index).cloned().ok_or_else(|| {
+            VMError::GenericError(format!(
+                "invalid func_ref handle {index} (out of range, or a stale handle from a previous call)"
+            ))
+        })?;
+        Ok(TableElement::Func(target))
+    } else {
+        Ok(TableElement::Raw(raw))
+    }
+}
+
+/// Flatten a `func_ref_heap`-tagged handle back to a plain, untagged raw
+/// value before it is written into DURABLE, cross-top-level-call storage
+/// that cannot hold a real [`FuncRefTarget`] directly (W35 slice 2,
+/// forced by a real corpus regression -- `ref_func.wast`'s `set-f`/
+/// `set-g`/`call-v` sequence writes a `ref.func` result into a `(mut
+/// funcref)` GLOBAL in one top-level call via `global.set`, then reads it
+/// back via `global.get` and dispatches it through a table in a LATER,
+/// completely separate `invoke`). `func_ref_heap` is deliberately
+/// per-top-level-call scratch (reset to empty at the start of every call,
+/// same as `exception_heap`) -- exactly right for a handle CONSUMED
+/// within the same call (table.set/table.fill/table.grow immediately
+/// dereference it into a real, self-contained `TableElement::Func`, which
+/// has no further dependency on `func_ref_heap` once constructed; a
+/// `call_ref`/`call_indirect` dispatch consumes it immediately too), but
+/// WRONG for a value that ESCAPES into storage the CALL ITSELF doesn't
+/// own -- `WasmValue`-typed global cells, unlike `TableStorage`, cannot
+/// hold a `FuncRefTarget` inline (the same `Copy`-preserving constraint
+/// this whole design works around elsewhere), so a global can only ever
+/// hold the plain, untagged representation -- exactly what `global.set`/
+/// `global.get`/`evaluate_const_expr` already used before this slice,
+/// and still do (globals are explicitly untouched in this slice, see
+/// `code/specs/W35-wasm-cross-instance-function-identity.md` §7).
+///
+/// **Security review (W35 slice 2, round 1)**: `ctx.gc_heap` is the
+/// SAME class of durable, cross-top-level-call storage as a global
+/// (see that field's own doc comment: a global initializer's own
+/// `struct.new`/`array.new` must survive into a LATER, separate call) --
+/// so every write of a popped `WasmValue` into `gc_heap`-backed storage
+/// (a struct/array field: `struct.new`/`struct.new_default`'s fields,
+/// `struct.set`, `array.new`/`array.new_fixed`'s elements, `array.set`)
+/// goes through this SAME function, for the identical reason. Missing
+/// this on even one such write site would let a funcref-typed GC field
+/// hold a stale, tagged `func_ref_heap` handle that a LATER, unrelated
+/// call could silently (and non-deterministically, depending on THAT
+/// call's own funcref traffic) resolve to the WRONG function -- a real
+/// type-confusion / silent-wrong-dispatch hazard, not merely a clean
+/// error. `struct.new_default`/`array.new_default` need no such call
+/// (they never pop a value at all -- every field/element is a fresh
+/// `WasmValue::default_for(..)`, never funcref-tagged).
+///
+/// Non-`Ref` values, and a `Ref` that's already untagged (never went
+/// through [`push_func_ref`] -- the common case for any value NOT
+/// produced by `ref.func`/`table.get` in the CURRENT call), pass through
+/// completely unchanged. A tagged handle resolves via `func_ref_heap`
+/// (a clean, non-panicking error if it's already out of range -- the
+/// same defensive bounds check every other heap lookup in this crate
+/// uses) and is replaced with its `FuncRefTarget::local_index` (always
+/// `Some` in this slice, since `self_resolver` is never installed --
+/// see `resolve_function_ref`'s own doc comment). A hypothetical future
+/// `local_index: None` target (unreachable until W35's third slice)
+/// has no raw index to fall back to; flattening it into a global is
+/// correctly rejected with a clean error rather than silently storing
+/// `None` (null) in its place, which would be a silent correctness
+/// regression, not a graceful degradation.
+fn flatten_ref_for_durable_storage(ctx: &WasmExecutionContext, value: WasmValue) -> Result<WasmValue, VMError> {
+    match value {
+        WasmValue::Ref(Some(raw)) if raw & FUNC_REF_HANDLE_TAG != 0 => {
+            let index = (raw & !FUNC_REF_HANDLE_TAG) as usize;
+            let target = ctx.func_ref_heap.get(index).cloned().ok_or_else(|| {
+                VMError::GenericError(format!(
+                    "invalid func_ref handle {index} (out of range, or a stale handle from a previous call)"
+                ))
+            })?;
+            let raw_index = target.local_index.ok_or_else(|| {
+                VMError::GenericError(
+                    "cannot store a genuinely cross-instance funcref into a global in this slice \
+                     (needs W35's third-slice GlobalStorage support)"
+                        .into(),
+                )
+            })?;
+            Ok(WasmValue::Ref(Some(raw_index)))
+        }
+        other => Ok(other),
+    }
+}
+
+/// Dispatch a resolved [`FuncRefTarget`] for `call_indirect`/`call_ref`
+/// (`tail = false`) or `return_call_indirect`/`return_call_ref`
+/// (`tail = true`) -- W35 slice 2. See `FuncRefTarget::local_index`'s own
+/// doc comment: `Some(idx)` reuses the pre-existing dispatch mechanism
+/// verbatim (`call_function` for a regular call, `ctx.pending_tail_call`
+/// for a tail one), covering every case actually reachable in this slice
+/// (imports and local functions alike -- `call_function_inner`'s own loop
+/// already branches on `ctx.host_functions`/`ctx.func_bodies` internally
+/// using this SAME combined-index-space `idx`, so this is a fully
+/// transparent, behavior-preserving refactor of the single-instance
+/// case). `None` is a genuinely self-contained, cross-instance target --
+/// unreachable until W35's third slice installs a real
+/// `SelfFunctionResolver` (nothing in this slice's own test suite, or any
+/// call site, can construct one) -- dispatched directly via
+/// `target.callable.call(..)`. For `tail = true` this is CORRECT (the
+/// callee's results become this function's own results, `vm.halted`
+/// ends the current function exactly as an ordinary `return` would) but
+/// NOT a true O(1)-stack tail call, since no `ctx.pending_tail_call`
+/// -shaped trampoline exists for a target outside this ctx's own combined
+/// index space -- flagged here rather than silently pretending otherwise;
+/// revisit if/when a future slice makes this branch reachable.
+fn dispatch_resolved_func_ref(vm: &mut GenericVM, ctx: &mut WasmExecutionContext, target: &FuncRefTarget, tail: bool) -> VMResult<()> {
+    if let Some(idx) = target.local_index {
+        if tail {
+            let func_type = ctx.func_types.get(idx as usize).cloned().ok_or_else(|| {
+                VMError::GenericError("indirect call: table entry references an undefined function".into())
+            })?;
+            let mut args = Vec::with_capacity(func_type.params.len());
+            for _ in 0..func_type.params.len() {
+                args.push(pop_wasm(vm)?);
+            }
+            args.reverse();
+            ctx.pending_tail_call = Some((idx as usize, args));
+            vm.halted = true;
+            Ok(())
+        } else {
+            call_function(vm, ctx, idx as usize)
+        }
+    } else {
+        let func_type = target.callable.func_type().clone();
+        let mut args = Vec::with_capacity(func_type.params.len());
+        for _ in 0..func_type.params.len() {
+            args.push(pop_wasm(vm)?);
+        }
+        args.reverse();
+        let memory = ctx.memories.first().map(|&ptr| unsafe { &mut *ptr });
+        let results = target.callable.call(&args, memory).map_err(VMError::from)?;
+        for r in results {
+            push_wasm(vm, r);
+        }
+        if tail {
+            vm.halted = true;
+        }
+        Ok(())
+    }
 }
 
 fn register_simd(vm: &mut GenericVM) {
@@ -11488,19 +12153,36 @@ fn register_control(vm: &mut GenericVM) {
     /// `wasm-runtime` always sets both together, so this is an
     /// inconsistent hand-built setup, not a real caller) fails closed
     /// (`false`) in both branches.
-    fn call_indirect_type_matches(ctx: &WasmExecutionContext, type_idx: usize, func_index: usize, actual: &FuncType) -> bool {
+    // W35 slice 2: `func_index: Option<usize>` (was `func_index: usize`) --
+    // `None` when the resolved target has no meaningful index in THIS
+    // ctx's own combined index space (`FuncRefTarget::local_index` was
+    // `None` -- a genuinely cross-instance target, unreachable until W35's
+    // third slice). Fails closed (`false`) in that case, same as the
+    // pre-existing "func_type_indices doesn't cover this index" fallback
+    // just below -- conservative, safe default for a case this slice's
+    // own test suite can't construct or verify either way.
+    fn call_indirect_type_matches(ctx: &WasmExecutionContext, type_idx: usize, func_index: Option<usize>, actual: &FuncType) -> bool {
         let Some(expected) = ctx.types.get(type_idx) else {
             return true; // no type info at all: permissive, matches pre-W33 behavior.
         };
         if !wasm_types::any_declares_subtyping(&ctx.type_subtyping) && expected.params == actual.params && expected.results == actual.results {
             return true;
         }
-        match ctx.func_type_indices.get(func_index) {
+        match func_index.and_then(|fi| ctx.func_type_indices.get(fi)) {
             Some(&actual_type_idx) => wasm_types::nominal_subtype_chain(&ctx.type_subtyping, &ctx.canonical_types, actual_type_idx, type_idx as u32),
             None => false,
         }
     }
 
+    // W35 slice 2: reads a real `TableElement` from the table -- `Raw(raw)`
+    // is resolved lazily, right here, via `resolve_function_ref_for_
+    // dispatch` (safe: `wasm-validator` already guarantees `call_indirect`
+    // only ever targets an actual funcref-typed table); `Func(target)` is
+    // already resolved, used directly. Dispatch goes through
+    // `dispatch_resolved_func_ref`, which reuses the pre-existing
+    // `call_function` mechanism whenever `target.local_index` is `Some`
+    // (every case reachable in this slice) -- a fully transparent
+    // refactor of the single-instance case, per this slice's own scope.
     vm.register_context_opcode(0x11, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
         let (type_idx, table_idx) = unpack_call_indirect_operand(instr);
@@ -11510,10 +12192,14 @@ fn register_control(vm: &mut GenericVM) {
         let is64 = get_table(ctx, table_idx as usize)?.is64();
         let elem_index = pop_table_operand(vm, is64)?;
         let table = get_table(ctx, table_idx as usize)?;
-        let func_index = table
+        let element = table
             .get(elem_index)
             .map_err(VMError::from)?
             .ok_or_else(|| VMError::GenericError("uninitialized table element".into()))?;
+        let target = match element {
+            TableElement::Func(t) => t,
+            TableElement::Raw(raw) => ctx.resolve_function_ref_for_dispatch(raw)?,
+        };
 
         // Type check: `type_idx` indexes the module's TYPE SECTION (what the
         // call site declared), which is a different index space from
@@ -11526,27 +12212,14 @@ fn register_control(vm: &mut GenericVM) {
         // embedder never set it, there's nothing to check against; skip
         // rather than fail closed on missing type info the caller never
         // promised to provide.
-        //
-        // Security review (WASM16, follow-up): `func_index` comes from
-        // `table.get(elem_index)` -- DATA, not a static part of the
-        // bytecode a validator necessarily already checked (this crate's
-        // own tests construct engines that skip `wasm-validator`
-        // entirely). A direct `ctx.func_types[func_index]` index here
-        // panicked on an out-of-range table entry whenever a type section
-        // was set (the common case); `.get()` makes it a clean trap
-        // instead, matching `return_call_indirect` (0x13)'s identical fix.
         if ctx.types.get(type_idx).is_some() {
-            let actual = ctx.func_types.get(func_index as usize).ok_or_else(|| {
-                VMError::GenericError(
-                    "indirect call: table entry references an undefined function".into(),
-                )
-            })?;
-            if !call_indirect_type_matches(ctx, type_idx, func_index as usize, actual) {
+            let actual = target.callable.func_type();
+            if !call_indirect_type_matches(ctx, type_idx, target.local_index.map(|i| i as usize), actual) {
                 return Err(VMError::GenericError("indirect call type mismatch".into()));
             }
         }
 
-        call_function(vm, ctx, func_index as usize)?;
+        dispatch_resolved_func_ref(vm, ctx, &target, false)?;
         Ok(None)
     });
 
@@ -11586,39 +12259,32 @@ fn register_control(vm: &mut GenericVM) {
         let is64 = get_table(ctx, table_idx as usize)?.is64();
         let elem_index = pop_table_operand(vm, is64)?;
         let table = get_table(ctx, table_idx as usize)?;
-        let func_index = table
+        let element = table
             .get(elem_index)
             .map_err(VMError::from)?
             .ok_or_else(|| VMError::GenericError("uninitialized table element".into()))?;
-
-        let func_index = func_index as usize;
         // Security review (WASM16): a table entry -- unlike the
         // instruction's own `funcidx` immediate `return_call`'s (0x12)
         // handler bounds-checks via `.get()` -- is DATA, not a static
         // part of the bytecode a validator necessarily already checked
         // (this crate's own tests construct engines that skip
         // `wasm-validator` entirely, e.g. `wasm16_tail_calls.rs`'s
-        // `engine_from_wat`). `.get()` here -- this call site is
-        // unconditional, so it must never panic on an out-of-range table
-        // entry. `call_indirect` (0x11) has the identical `.get()` fix on
-        // its own equivalent lookup.
-        let func_type = ctx
-            .func_types
-            .get(func_index)
-            .ok_or_else(|| VMError::GenericError("indirect call: table entry references an undefined function".into()))?
-            .clone();
+        // `engine_from_wat`). `resolve_function_ref_for_dispatch` (for a
+        // `Raw` entry) never panics on an out-of-range index -- clean
+        // error instead, matching `call_indirect` (0x11)'s identical fix.
+        let target = match element {
+            TableElement::Func(t) => t,
+            TableElement::Raw(raw) => ctx.resolve_function_ref_for_dispatch(raw)?,
+        };
 
-        if !call_indirect_type_matches(ctx, type_idx, func_index, &func_type) {
-            return Err(VMError::GenericError("indirect call type mismatch".into()));
+        if ctx.types.get(type_idx).is_some() {
+            let actual = target.callable.func_type();
+            if !call_indirect_type_matches(ctx, type_idx, target.local_index.map(|i| i as usize), actual) {
+                return Err(VMError::GenericError("indirect call type mismatch".into()));
+            }
         }
 
-        let mut args = Vec::with_capacity(func_type.params.len());
-        for _ in 0..func_type.params.len() {
-            args.push(pop_wasm(vm)?);
-        }
-        args.reverse();
-        ctx.pending_tail_call = Some((func_index, args));
-        vm.halted = true;
+        dispatch_resolved_func_ref(vm, ctx, &target, true)?;
         Ok(None)
     });
 
@@ -11636,8 +12302,14 @@ fn register_control(vm: &mut GenericVM) {
     vm.register_context_opcode(0x14, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
         let type_idx = operand_int(instr) as usize;
-        let func_index = match pop_wasm(vm)? {
-            WasmValue::Ref(Some(idx)) => idx as usize,
+        // W35 slice 2: the popped `WasmValue::Ref(Some(raw))` is resolved
+        // via `resolve_ref_operand` -- a real `func_ref_heap` handle (tagged)
+        // is looked up directly; anything else (a legacy raw local index,
+        // e.g. from a funcref-typed GLOBAL -- untouched by this slice, see
+        // `resolve_ref_operand`'s own doc comment) is resolved on the fly
+        // the same way `ref.func`'s own handler would.
+        let target = match pop_wasm(vm)? {
+            WasmValue::Ref(Some(raw)) => resolve_ref_operand(ctx, raw)?,
             WasmValue::Ref(None) => return Err(VMError::GenericError("call_ref: null function reference".into())),
             other => return Err(VMError::GenericError(format!("call_ref: expected a function reference, found {other:?}"))),
         };
@@ -11647,29 +12319,19 @@ fn register_control(vm: &mut GenericVM) {
         // own tests (and any embedder) can construct a context that skips
         // validation entirely, so the runtime value is still DATA, not
         // something this handler may assume matches `type_idx` unchecked.
-        //
-        // SECURITY REVIEW FIX (W32 second slice): this callee-existence
-        // check used to live INSIDE the `if let Some(expected) = ...`
-        // block below, so an unresolvable `type_idx` (out of range, or an
-        // engine built with no type section at all -- exactly what the
-        // sibling `return_call_ref` (0x15) and this crate's own
-        // `engine_from_wat` test helper construct) silently skipped BOTH
-        // the existence check and the signature comparison, falling
-        // through to `call_function` with a stack-derived index that had
-        // never been validated at all. `return_call_ref` already ran this
-        // exact check unconditionally; `call_ref` is now consistent with
-        // it -- hoisted out so it always runs regardless of whether
-        // `type_idx` resolves.
-        let actual = ctx
-            .func_types
-            .get(func_index)
-            .ok_or_else(|| VMError::GenericError("call_ref: reference names an undefined function".into()))?;
+        // The callee-existence check is now implicit: `target` only ever
+        // exists here because resolution already succeeded (a genuinely
+        // undefined function is rejected inside `resolve_function_ref_
+        // for_dispatch` itself), so there's no separate "does this
+        // function exist" check left to hoist -- see `resolve_ref_
+        // operand`'s own doc comment for the resolution shape.
+        let actual = target.callable.func_type();
         if let Some(expected) = ctx.types.get(type_idx) {
             if expected.params != actual.params || expected.results != actual.results {
                 return Err(VMError::GenericError("call_ref type mismatch".into()));
             }
         }
-        call_function(vm, ctx, func_index)?;
+        dispatch_resolved_func_ref(vm, ctx, &target, false)?;
         Ok(None)
     });
 
@@ -11681,28 +12343,18 @@ fn register_control(vm: &mut GenericVM) {
     vm.register_context_opcode(0x15, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
         let type_idx = operand_int(instr) as usize;
-        let func_index = match pop_wasm(vm)? {
-            WasmValue::Ref(Some(idx)) => idx as usize,
+        let target = match pop_wasm(vm)? {
+            WasmValue::Ref(Some(raw)) => resolve_ref_operand(ctx, raw)?,
             WasmValue::Ref(None) => return Err(VMError::GenericError("return_call_ref: null function reference".into())),
             other => return Err(VMError::GenericError(format!("return_call_ref: expected a function reference, found {other:?}"))),
         };
-        let func_type = ctx
-            .func_types
-            .get(func_index)
-            .ok_or_else(|| VMError::GenericError("return_call_ref: reference names an undefined function".into()))?
-            .clone();
+        let func_type = target.callable.func_type().clone();
         if let Some(expected) = ctx.types.get(type_idx) {
             if expected.params != func_type.params || expected.results != func_type.results {
                 return Err(VMError::GenericError("return_call_ref type mismatch".into()));
             }
         }
-        let mut args = Vec::with_capacity(func_type.params.len());
-        for _ in 0..func_type.params.len() {
-            args.push(pop_wasm(vm)?);
-        }
-        args.reverse();
-        ctx.pending_tail_call = Some((func_index, args));
-        vm.halted = true;
+        dispatch_resolved_func_ref(vm, ctx, &target, true)?;
         Ok(None)
     });
 }
@@ -12604,13 +13256,24 @@ impl WasmExecutionEngine {
             // across SEPARATE top-level calls isn't needed here, unlike
             // `v128_heap`).
             exception_heap: Vec::new(),
-            // W35 slice 1: purely additive scratch space, not wired into
-            // any opcode handler yet -- see `func_ref_heap`'s own doc
-            // comment. Reset per top-level call, exactly like
-            // `exception_heap` above, since (once wired in slice 2) a
-            // handle here is always consumed within the same execution
-            // that produced it.
+            // W35 slice 2: reset per top-level call, exactly like
+            // `exception_heap` above -- a handle here is always consumed
+            // within the same execution that produced it. See
+            // `func_ref_heap`'s own doc comment.
             func_ref_heap: Vec::new(),
+            // W35 slice 2: no `WasmExecutionEngine`/`WasmEngineConfig`
+            // field backs this yet (that's W35's third slice, mirroring
+            // `set_tag_identities`) -- every engine this crate constructs
+            // gets `None`, matching the spec's own "left unset... the
+            // default for every pre-existing hand-built
+            // `WasmExecutionContext`" language for this exact field.
+            self_resolver: None,
+            // W35 slice 2: no `WasmExecutionEngine` field backs this yet
+            // either (W35's third slice, mirroring `set_tag_identities`'s
+            // exact shape) -- every engine gets an empty Vec, which
+            // `resolve_function_ref`'s own `.unwrap_or(0)` fallback
+            // already treats correctly.
+            func_identities: Vec::new(),
         };
 
         // Reset and execute.
@@ -13224,16 +13887,16 @@ mod tests {
         assert_eq!(table.size(), 5);
         assert_eq!(table.get(0).unwrap(), None);
 
-        table.set(2, Some(42)).unwrap();
-        assert_eq!(table.get(2).unwrap(), Some(42));
+        table.set(2, Some(TableElement::Raw(42))).unwrap();
+        assert_eq!(table.get(2).unwrap(), Some(TableElement::Raw(42)));
     }
 
     #[test]
     fn test_table_grow() {
         let mut table = Table::new(1, Some(3));
-        assert_eq!(table.grow(1, Some(7)), 1); // old size was 1
+        assert_eq!(table.grow(1, Some(TableElement::Raw(7))), 1); // old size was 1
         assert_eq!(table.size(), 2);
-        assert_eq!(table.get(1).unwrap(), Some(7));
+        assert_eq!(table.get(1).unwrap(), Some(TableElement::Raw(7)));
         assert_eq!(table.grow(2, None), -1); // would exceed max of 3
         assert_eq!(table.size(), 2); // unchanged on failure
     }
@@ -13280,11 +13943,11 @@ mod tests {
     #[test]
     fn test_table_fill() {
         let mut table = Table::new(10, None);
-        table.fill(2, Some(1), 3).unwrap();
+        table.fill(2, Some(TableElement::Raw(1)), 3).unwrap();
         assert_eq!(table.get(1).unwrap(), None);
-        assert_eq!(table.get(2).unwrap(), Some(1));
-        assert_eq!(table.get(3).unwrap(), Some(1));
-        assert_eq!(table.get(4).unwrap(), Some(1));
+        assert_eq!(table.get(2).unwrap(), Some(TableElement::Raw(1)));
+        assert_eq!(table.get(3).unwrap(), Some(TableElement::Raw(1)));
+        assert_eq!(table.get(4).unwrap(), Some(TableElement::Raw(1)));
         assert_eq!(table.get(5).unwrap(), None);
     }
 
@@ -13294,13 +13957,13 @@ mod tests {
         // size()` with `len == 0` is the one boundary case that's valid,
         // not an off-by-one trap.
         let mut table = Table::new(5, None);
-        table.fill(5, Some(1), 0).unwrap();
+        table.fill(5, Some(TableElement::Raw(1)), 0).unwrap();
     }
 
     #[test]
     fn test_table_fill_out_of_bounds_traps_cleanly_not_a_panic() {
         let mut table = Table::new(5, None);
-        assert!(table.fill(3, Some(1), 3).is_err());
+        assert!(table.fill(3, Some(TableElement::Raw(1)), 3).is_err());
         assert!(table.fill(6, None, 0).is_err());
     }
 
@@ -15247,18 +15910,18 @@ mod tests {
     #[test]
     fn test_table_set_and_get() {
         let mut table = Table::new(10, Some(20));
-        table.set(0, Some(5)).unwrap();
-        table.set(9, Some(99)).unwrap();
-        assert_eq!(table.get(0).unwrap(), Some(5));
-        assert_eq!(table.get(9).unwrap(), Some(99));
+        table.set(0, Some(TableElement::Raw(5))).unwrap();
+        table.set(9, Some(TableElement::Raw(99))).unwrap();
+        assert_eq!(table.get(0).unwrap(), Some(TableElement::Raw(5)));
+        assert_eq!(table.get(9).unwrap(), Some(TableElement::Raw(99)));
         assert_eq!(table.get(1).unwrap(), None);
     }
 
     #[test]
     fn test_table_set_oob() {
         let mut table = Table::new(3, None);
-        assert!(table.set(3, Some(1)).is_err());
-        assert!(table.set(100, Some(1)).is_err());
+        assert!(table.set(3, Some(TableElement::Raw(1))).is_err());
+        assert!(table.set(100, Some(TableElement::Raw(1))).is_err());
     }
 
     #[test]
@@ -15271,8 +15934,8 @@ mod tests {
     #[test]
     fn test_table_set_none() {
         let mut table = Table::new(5, None);
-        table.set(2, Some(42)).unwrap();
-        assert_eq!(table.get(2).unwrap(), Some(42));
+        table.set(2, Some(TableElement::Raw(42))).unwrap();
+        assert_eq!(table.get(2).unwrap(), Some(TableElement::Raw(42)));
         table.set(2, None).unwrap();
         assert_eq!(table.get(2).unwrap(), None);
     }
@@ -15297,7 +15960,11 @@ mod tests {
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
         });
-        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::Ref(Some(0))]);
+        // W35 slice 2: `ref.func` now pushes a `func_ref_heap` HANDLE, not
+        // the raw function index directly -- the FIRST handle minted in a
+        // call is always `FUNC_REF_HANDLE_TAG | 0` (tagged index 0), not
+        // the bare function index `0` this test predates.
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::Ref(Some(FUNC_REF_HANDLE_TAG))]);
     }
 
     #[test]
@@ -15315,6 +15982,178 @@ mod tests {
             host_functions: vec![None],
         });
         assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    // ══════════════════════════════════════════════════════════════════════
+    // W35 slice 2 — direct `WasmExecutionContext::resolve_function_ref`/
+    // `resolve_function_ref_for_dispatch` unit tests, per this slice's own
+    // verification plan (`code/specs/
+    // W35-wasm-cross-instance-function-identity.md`): (a) an import reuses
+    // its existing identity/callable, (b) a local function with no
+    // self_resolver installed produces a clean error from the STRICT,
+    // spec-literal method, (c) `func_ref_heap` handles are intra-call-
+    // scoped (two mints of the SAME function differ as handles, agree as
+    // identities).
+    // ══════════════════════════════════════════════════════════════════════
+
+    /// A minimal, hand-built `WasmExecutionContext` for testing
+    /// `resolve_function_ref`/`resolve_function_ref_for_dispatch` directly
+    /// -- every field not under test is trivially empty, mirroring
+    /// `gc.rs`'s own `empty_ctx()` test helper (same type, same "every
+    /// non-heap field trivially empty" shape).
+    fn minimal_ctx(func_types: Vec<FuncType>, host_functions: Vec<Option<Rc<dyn HostFunction>>>) -> WasmExecutionContext {
+        WasmExecutionContext {
+            memories: Vec::new(),
+            tables: Vec::new(),
+            globals: Vec::new(),
+            global_types: Vec::new(),
+            func_types,
+            types: Vec::new(),
+            type_subtyping: Vec::new(),
+            canonical_types: Vec::new(),
+            func_type_indices: Vec::new(),
+            func_bodies: Vec::new(),
+            host_functions,
+            typed_locals: Vec::new(),
+            label_stack: Vec::new(),
+            control_flow_map: HashMap::new(),
+            saved_frames: Vec::new(),
+            returned: false,
+            br_table_targets: Vec::new(),
+            gc_ops: Vec::new(),
+            gc_heap: Vec::new(),
+            v128_heap: vec![[0u8; 16]],
+            simd_consts: Vec::new(),
+            struct_field_counts: Vec::new(),
+            struct_field_storage: Vec::new(),
+            array_element_storage: Vec::new(),
+            gc_state: gc::GcState::default(),
+            call_depth: 0,
+            pending_tail_call: None,
+            data_segments: Vec::new(),
+            dropped_data_segments: Vec::new(),
+            elements: Vec::new(),
+            dropped_elements: Vec::new(),
+            tags: Vec::new(),
+            tag_identities: Vec::new(),
+            try_table_infos: Vec::new(),
+            instance_id: 0,
+            exception_heap: Vec::new(),
+            func_ref_heap: Vec::new(),
+            self_resolver: None,
+            func_identities: Vec::new(),
+        }
+    }
+
+    /// A trivial test `HostFunction` double with a caller-chosen fixed
+    /// identity -- stands in for a real cross-instance import.
+    struct FixedIdentityHostFunction {
+        func_type: FuncType,
+        identity: u64,
+    }
+
+    impl HostFunction for FixedIdentityHostFunction {
+        fn func_type(&self) -> &FuncType {
+            &self.func_type
+        }
+        fn call(&self, _args: &[WasmValue], _memory: Option<&mut LinearMemory>) -> Result<Vec<WasmValue>, TrapError> {
+            Ok(vec![])
+        }
+        fn identity(&self) -> u64 {
+            self.identity
+        }
+    }
+
+    /// Verification plan (a): a `ref.func` of an IMPORTED function reuses
+    /// that import's existing identity/callable -- no fresh mint.
+    /// `resolve_function_ref` (called directly, the same primitive
+    /// `ref.func`'s own handler uses via `resolve_function_ref_for_
+    /// dispatch`) must return a `FuncRefTarget` whose `identity` is
+    /// EXACTLY the import's own `identity()` (not `0`, not a freshly
+    /// minted value) and whose `callable` is the SAME `Rc` (a clone,
+    /// `Rc::ptr_eq` true) -- not a rebuilt/different callable.
+    #[test]
+    fn ref_func_of_an_imported_function_reuses_its_existing_identity_and_callable() {
+        let func_type = FuncType { params: vec![], results: vec![] };
+        let imported: Rc<dyn HostFunction> = Rc::new(FixedIdentityHostFunction { func_type: func_type.clone(), identity: 424_242 });
+        let ctx = minimal_ctx(vec![func_type], vec![Some(imported.clone())]);
+
+        let target = ctx.resolve_function_ref(0).expect("resolving an imported function must succeed with no self_resolver at all");
+        assert_eq!(target.identity, 424_242, "identity must be the import's own, not a fresh mint");
+        assert!(Rc::ptr_eq(&target.callable, &imported), "callable must be the SAME Rc as the import, not a rebuilt one");
+        // `local_index` is a W35 slice 2 addition (not in the spec's own
+        // literal design -- see its own doc comment): an import IS still
+        // dispatchable via this ctx's own combined index space in this
+        // slice, so it's `Some(0)`, not `None`.
+        assert_eq!(target.local_index, Some(0));
+    }
+
+    /// Verification plan (b): a `ref.func` of a LOCAL function with no
+    /// `self_resolver` installed produces a clean, non-panicking error --
+    /// not a silent wrong answer. This calls the STRICT, spec-literal
+    /// `resolve_function_ref` directly (not the lenient `..._for_
+    /// dispatch` wrapper real opcode handlers use -- see that wrapper's
+    /// own doc comment for why it exists and why THIS is still the right
+    /// method to prove this specific contract against).
+    #[test]
+    fn resolve_function_ref_of_a_local_function_with_no_self_resolver_is_a_clean_error() {
+        let func_type = FuncType { params: vec![], results: vec![] };
+        // `host_functions[0] = None` -- function 0 is LOCAL (module-
+        // defined), not imported.
+        let ctx = minimal_ctx(vec![func_type], vec![None]);
+
+        let result = ctx.resolve_function_ref(0);
+        assert!(result.is_err(), "a local function with no self_resolver must error, not silently succeed");
+        let message = result.unwrap_err().to_string();
+        assert!(
+            message.contains("self-resolver"),
+            "error message should clearly name the missing self-resolver, got: {message}"
+        );
+    }
+
+    /// Verification plan (c): `func_ref_heap` handles are correctly
+    /// intra-call-scoped -- two sequential `ref.func`s of the SAME
+    /// function produce two DIFFERENT handles but IDENTICAL `identity`
+    /// values once resolved. Run via the real opcode (`ref.func 0` twice
+    /// in one function body), not a direct `resolve_function_ref` call,
+    /// since the handle-DIFFERENCE half of this claim is specifically
+    /// about `push_func_ref`'s own per-call-scratch minting, not
+    /// resolution.
+    #[test]
+    fn func_ref_heap_handles_are_intra_call_scoped_same_function_different_handles_same_identity() {
+        // ref.func 0; ref.func 0; end -- pushes TWO funcref values for the
+        // SAME function, left on the stack (both are this function's own
+        // results).
+        let code = vec![0xD2, 0x00, 0xD2, 0x00, 0x0B];
+        let func_type = FuncType { params: vec![], results: vec![ValueType::Funcref, ValueType::Funcref] };
+        let body = FunctionBody { locals: vec![], code };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        let results = engine.call_function(0, &[]).unwrap();
+        let (first, second) = match &results[..] {
+            [WasmValue::Ref(Some(a)), WasmValue::Ref(Some(b))] => (*a, *b),
+            other => panic!("expected two non-null funcrefs, got {other:?}"),
+        };
+        assert_ne!(first, second, "two separate ref.func mints must produce DIFFERENT func_ref_heap handles");
+        assert_eq!(first & FUNC_REF_HANDLE_TAG, FUNC_REF_HANDLE_TAG, "each handle must be tagged");
+        assert_eq!(second & FUNC_REF_HANDLE_TAG, FUNC_REF_HANDLE_TAG, "each handle must be tagged");
+
+        // Both handles named function 0 -- resolving each via a fresh ctx
+        // (mirroring `resolve_function_ref_for_dispatch`'s own local
+        // fallback, no self_resolver installed here either) must agree on
+        // identity, even though they were minted as DIFFERENT handles.
+        let func_type2 = FuncType { params: vec![], results: vec![] };
+        let ctx2 = minimal_ctx(vec![func_type2], vec![None]);
+        let target_a = ctx2.resolve_function_ref_for_dispatch(0).unwrap();
+        let target_b = ctx2.resolve_function_ref_for_dispatch(0).unwrap();
+        assert_eq!(target_a.identity, target_b.identity, "resolving the SAME function index twice must agree on identity");
     }
 
     #[test]
@@ -15339,7 +16178,13 @@ mod tests {
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
         });
-        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::Ref(Some(0))]);
+        // W35 slice 2: `table.set`'s `ref.func 0` mints handle
+        // `FUNC_REF_HANDLE_TAG | 0` (the call's first funcref); `table.get`
+        // reads the now-`TableElement::Func`-holding slot back and mints a
+        // FRESH handle for it (`func_ref_heap` never re-exposes an
+        // existing handle, see `TableElement`'s own doc comment) --
+        // `FUNC_REF_HANDLE_TAG | 1`, the call's SECOND funcref.
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::Ref(Some(FUNC_REF_HANDLE_TAG | 1))]);
     }
 
     #[test]
@@ -15390,7 +16235,7 @@ mod tests {
         let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
         let body = FunctionBody { locals: vec![], code };
         let mut table = Table::new(1, None);
-        table.set(0, Some(99)).unwrap(); // function index 99 doesn't exist -- only index 0 (this function itself) does
+        table.set(0, Some(TableElement::Raw(99))).unwrap(); // function index 99 doesn't exist -- only index 0 (this function itself) does
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
             memories: Vec::new(),
             tables: vec![table],
@@ -15417,7 +16262,7 @@ mod tests {
         let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
         let body = FunctionBody { locals: vec![], code };
         let mut table = Table::new(1, None);
-        table.set(0, Some(99)).unwrap(); // function index 99 doesn't exist -- only index 0 (this function itself) does
+        table.set(0, Some(TableElement::Raw(99))).unwrap(); // function index 99 doesn't exist -- only index 0 (this function itself) does
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
             memories: Vec::new(),
             tables: vec![table],
@@ -15449,9 +16294,9 @@ mod tests {
         let table0_target = FunctionBody { locals: vec![], code: vec![0x41, 11, 0x0B] }; // func 1: i32.const 11
         let table1_target = FunctionBody { locals: vec![], code: vec![0x41, 22, 0x0B] }; // func 2: i32.const 22
         let mut table0 = Table::new(1, None);
-        table0.set(0, Some(1)).unwrap();
+        table0.set(0, Some(TableElement::Raw(1))).unwrap();
         let mut table1 = Table::new(1, None);
-        table1.set(0, Some(2)).unwrap();
+        table1.set(0, Some(TableElement::Raw(2))).unwrap();
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
             memories: Vec::new(),
             tables: vec![table0, table1],
@@ -22459,12 +23304,12 @@ mod tests {
 
         engine.call_function(0, &[]).unwrap();
         let state = engine.into_state();
-        assert_eq!(state.tables[0].get(0).unwrap(), Some(7), "table.init must copy the real funcref entry");
+        assert_eq!(state.tables[0].get(0).unwrap(), Some(TableElement::Raw(7)), "table.init must copy the real funcref entry");
         assert_eq!(state.tables[0].get(1).unwrap(), None, "table.init must copy the ref.null entry as None");
-        assert_eq!(state.tables[0].get(2).unwrap(), Some(9));
-        assert_eq!(state.tables[1].get(0).unwrap(), Some(7), "table.copy must have copied table 0 into table 1");
+        assert_eq!(state.tables[0].get(2).unwrap(), Some(TableElement::Raw(9)));
+        assert_eq!(state.tables[1].get(0).unwrap(), Some(TableElement::Raw(7)), "table.copy must have copied table 0 into table 1");
         assert_eq!(state.tables[1].get(1).unwrap(), None);
-        assert_eq!(state.tables[1].get(2).unwrap(), Some(9));
+        assert_eq!(state.tables[1].get(2).unwrap(), Some(TableElement::Raw(9)));
     }
 
     #[test]
@@ -22573,7 +23418,11 @@ mod tests {
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
         });
-        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::Ref(Some(0))]);
+        // W35 slice 2: see `test_table_get_set_opcodes_round_trip_
+        // through_a_real_table`'s identical comment -- `ref.func`'s own
+        // handle is `FUNC_REF_HANDLE_TAG | 0`, `table.get`'s re-mint is
+        // `FUNC_REF_HANDLE_TAG | 1`.
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::Ref(Some(FUNC_REF_HANDLE_TAG | 1))]);
     }
 
     #[test]
@@ -22672,8 +23521,8 @@ mod tests {
             ],
         };
         let mut src_table = Table::new_with_is64(5, None, true).unwrap();
-        src_table.set(0, Some(7)).unwrap();
-        src_table.set(1, Some(8)).unwrap();
+        src_table.set(0, Some(TableElement::Raw(7))).unwrap();
+        src_table.set(1, Some(TableElement::Raw(8))).unwrap();
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
             memories: Vec::new(),
             tables: vec![Table::new(5, None), src_table],
@@ -22685,8 +23534,8 @@ mod tests {
         });
         engine.call_function(0, &[]).expect("mixed is32/is64 table.copy should succeed");
         let state = engine.into_state();
-        assert_eq!(state.tables[0].get(0).unwrap(), Some(7));
-        assert_eq!(state.tables[0].get(1).unwrap(), Some(8));
+        assert_eq!(state.tables[0].get(0).unwrap(), Some(TableElement::Raw(7)));
+        assert_eq!(state.tables[0].get(1).unwrap(), Some(TableElement::Raw(8)));
     }
 
     #[test]
@@ -22719,8 +23568,8 @@ mod tests {
         engine.set_dropped_elements(vec![false]);
         engine.call_function(0, &[]).expect("table.init against an is64 table should succeed");
         let state = engine.into_state();
-        assert_eq!(state.tables[0].get(1).unwrap(), Some(3));
-        assert_eq!(state.tables[0].get(2).unwrap(), Some(4));
+        assert_eq!(state.tables[0].get(1).unwrap(), Some(TableElement::Raw(3)));
+        assert_eq!(state.tables[0].get(2).unwrap(), Some(TableElement::Raw(4)));
     }
 
     #[test]
@@ -22730,7 +23579,7 @@ mod tests {
         let caller_body = FunctionBody { locals: vec![], code };
         let target_body = FunctionBody { locals: vec![], code: vec![0x41, 42, 0x0B] };
         let mut table = Table::new_with_is64(1, None, true).unwrap();
-        table.set(0, Some(1)).unwrap();
+        table.set(0, Some(TableElement::Raw(1))).unwrap();
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
             memories: Vec::new(),
             tables: vec![table],
