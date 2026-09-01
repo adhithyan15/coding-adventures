@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.290.0 - 2026-09-01 (ALGOL tracked `sqrt` standard-function exponents)
+
+The ALGOL matrix now proves on all seven standard backends that an exact
+integral tracked square root may feed pure built-in `abs`, `sign`, and `entier`
+calls before bounded real-power multiplication.
+
 ## 0.289.0 - 2026-09-01 (ALGOL nested tracked `sqrt` exponents)
 
 The ALGOL matrix now proves on all seven standard backends that nested exact
