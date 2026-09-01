@@ -8,8 +8,8 @@ spine_node: SPINE-CHECK-WELLBEING
 sequence: 1040
 chapter: 38
 type: word
-headword: पैर
-gloss: foot — masculine, and NOT the descendant of Sanskrit pāda; that honour belongs to पाँव
+headword: पैर / पाँव
+gloss: foot — the two everyday forms descend from different Sanskrit stems, पैर from pad- and पाँव from pāda
 concept_tag: HI-BODY-FOOT
 prerequisites: [HI-C38-daant, HI-C13-haath, HI-C07-nahin]
 sounds: [matra-ai, spineless-ra]
