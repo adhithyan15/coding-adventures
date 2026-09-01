@@ -72,6 +72,16 @@
       "items": {
         "$ref": "#/$defs/shard_entry"
       }
+    },
+    "ci_jobs": {
+      "type": "object",
+      "description": "Optional. Maps each gate id in code/specs/data/ci-gates.json to whether this change requires that CI job. Absent when no gate registry was consulted. See code/specs/ci-gate-registry.md.",
+      "additionalProperties": {
+        "type": "boolean"
+      },
+      "propertyNames": {
+        "pattern": "^[a-z0-9][a-z0-9_-]*$"
+      }
     }
   },
   "$defs": {

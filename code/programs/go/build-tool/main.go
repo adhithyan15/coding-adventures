@@ -37,11 +37,13 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"sort"
 	"strings"
 
 	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
 	progress "github.com/adhithyan15/coding-adventures/code/packages/go/progress-bar"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/cache"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/cigates"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/executor"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/gitdiff"
@@ -322,6 +324,7 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	shardCount := flag.Int("shard-count", 0, "Split emitted build plans into this many CI shards")
 	shardIndex := flag.Int("shard-index", -1, "Run only the selected shard from a build plan")
 	emitShardMatrix := flag.Bool("emit-shard-matrix", false, "Output build_shards JSON for GitHub Actions matrix expansion")
+	ciGates := flag.String("ci-gates", cigates.DefaultRegistryPath, "CI gate registry (repo-relative) used to decide which Actions jobs this change needs; empty disables gating")
 	validateBuildFiles := flag.Bool("validate-build-files", true, "Validate BUILD files against inferred dependency metadata and fail on mismatches")
 	clippy := flag.Bool("clippy", false, "For Rust packages, run `cargo clippy --all-targets -- -D warnings` before the BUILD commands and fail the package on any clippy warning")
 
@@ -707,6 +710,7 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 			*detectLanguages,
 			*shardCount,
 			*emitShardMatrix,
+			*ciGates,
 		)
 	}
 
@@ -942,6 +946,7 @@ func emitBuildPlan(
 	alsoDetectLanguages bool,
 	shardCount int,
 	alsoEmitShardMatrix bool,
+	ciGatesPath string,
 ) int {
 	// Build package entries with repo-root-relative paths.
 	entries := make([]plan.PackageEntry, len(packages))
@@ -1021,12 +1026,37 @@ func emitBuildPlan(
 		bp.Shards = plan.ComputePlatformShards(bp, shardCount)
 	}
 
+	// Decide which CI jobs this change actually needs. A missing or malformed
+	// registry is a hard error rather than a silent all-false: a gate that never
+	// fires is indistinguishable from a gate that always passes, and CI would
+	// go quietly dark. See code/specs/ci-gate-registry.md.
+	var gateVerdicts map[string]bool
+	if ciGatesPath != "" {
+		registryPath := ciGatesPath
+		if !filepath.IsAbs(registryPath) {
+			registryPath = filepath.Join(repoRoot, filepath.FromSlash(ciGatesPath))
+		}
+		registry, err := cigates.Load(registryPath)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error loading CI gate registry: %v\n", err)
+			return 1
+		}
+		gateVerdicts = cigates.Evaluate(registry, affectedSet, changedFiles, force)
+		bp.CIJobs = gateVerdicts
+	}
+
 	if err := plan.Write(bp, outputPath); err != nil {
 		fmt.Fprintf(os.Stderr, "Error writing build plan: %v\n", err)
 		return 1
 	}
 
 	fmt.Printf("Build plan written to %s (%d packages)\n", outputPath, len(packages))
+
+	if gateVerdicts != nil {
+		if code := outputCIGateFlags(gateVerdicts); code != 0 {
+			return code
+		}
+	}
 
 	if alsoEmitShardMatrix {
 		if len(bp.Shards) == 0 {
@@ -1063,6 +1093,39 @@ func outputLanguageFlags(needed map[string]bool) int {
 	for _, lang := range allToolchains {
 		value := needed[lang]
 		line := fmt.Sprintf("needs_%s=%t", lang, value)
+		fmt.Println(line)
+		if ghFile != nil {
+			fmt.Fprintln(ghFile, line)
+		}
+	}
+
+	return 0
+}
+
+// outputCIGateFlags publishes one "run_<gate>=true|false" line per registry gate
+// to stdout and $GITHUB_OUTPUT, so ci.yml can use them as job-level `if:`
+// conditions. Emitted in sorted order so run logs diff cleanly.
+func outputCIGateFlags(verdicts map[string]bool) int {
+	ghOutput := os.Getenv("GITHUB_OUTPUT")
+	var ghFile *os.File
+	if ghOutput != "" {
+		var err error
+		ghFile, err = os.OpenFile(ghOutput, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Warning: could not open $GITHUB_OUTPUT: %v\n", err)
+		} else {
+			defer ghFile.Close()
+		}
+	}
+
+	ids := make([]string, 0, len(verdicts))
+	for id := range verdicts {
+		ids = append(ids, id)
+	}
+	sort.Strings(ids)
+
+	for _, id := range ids {
+		line := fmt.Sprintf("%s=%t", cigates.OutputName(id), verdicts[id])
 		fmt.Println(line)
 		if ghFile != nil {
 			fmt.Fprintln(ghFile, line)
