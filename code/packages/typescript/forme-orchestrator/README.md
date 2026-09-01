@@ -44,8 +44,9 @@ These are deferred to follow-up packages:
 - **No exact affected-stage scheduler yet.** Watch conservatively visits the
   complete DAG. Sources and capability-bearing stages rerun, while unchanged
   capability-free downstream invocations are restored from the injected cache.
-  External-state revisions and exact changed-and-downstream scheduling remain
-  FM-B032 (FM03 §6).
+  Sources now publish validated external-state revisions and every successful
+  run persists the per-instance revision ledger; using that ledger to restore
+  untouched graph branches remains FM-B036 (FM03 §6).
 - **Partial reproducible-build mode.** Stages receive a frozen wall clock, but input-mtime derivation, deterministic randomness, and telemetry policy remain (FM03 §8).
 - **No OpenTelemetry traces.** Telemetry surface is no-op by default.
 
@@ -61,6 +62,9 @@ These are deferred to follow-up packages:
 - Fail-fast and best-effort error handling
 - Cancellation propagation (composes a fresh token if caller doesn't supply one)
 - Per-stage timing + error counts + outcome in `StageRunSummary`
+- Per-instance input/output revision summaries, validated source-state
+  manifests, cross-process `inputChanged` comparisons, and a fail-open
+  topology-keyed persistent revision ledger
 - Deterministic tagged cache encoding for plain Forme values and bytes;
   per-invocation cache hits/misses for safe pure stages, with `useCache: false`
   bypass and fail-open behavior for unsupported/corrupt entries
@@ -69,7 +73,8 @@ These are deferred to follow-up packages:
 - Host-driven watch sessions with an initial run, debounced change coalescing,
   one queued follow-up during an active build, manual rebuild, watcher-error
   propagation, and cancellation-safe teardown
-- `buildId` derived from `computeRevisionId` over pipeline source/sink ids
+- `buildId` derived from the observed external state (or materialized output)
+  of every source plus the pipeline sink set
 
 ## Coverage
 

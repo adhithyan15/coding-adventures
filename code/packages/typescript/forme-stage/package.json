@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-stage",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Forme kernel: Stage<In, Out> interface, defineStage helper, StageContext + every capability-gated API surface, plus default in-memory implementations of the un-gated facilities (logger, clock, cache, event bus, telemetry). FM01 §3-4.",
   "type": "module",
   "main": "src/index.ts",

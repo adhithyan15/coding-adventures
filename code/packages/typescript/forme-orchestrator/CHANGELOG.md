@@ -1,6 +1,28 @@
 # Changelog — @coding-adventures/forme-orchestrator
 
-## Unreleased
+## 0.5.0 — 2026-09-01
+
+### Added — external revisions and persistent ledger
+
+- Source `externalState` manifests are structurally validated, checked for
+  unique sorted locators, and verified against their canonical digest before
+  the source is allowed to run.
+- Every stage summary now reports materialized input/output revisions, a source
+  external-state revision when present, and whether its input changed from the
+  prior successful run.
+- A topology-keyed revision ledger persists through the injected cache backend
+  and fails open on missing, malformed, or unavailable state. Fresh CLI
+  processes can therefore compare the same project across runs.
+- `buildId` now hashes observed source state (or the materialized legacy-source
+  output) instead of static source instance names.
+
+### Tests
+
+- Fresh-orchestrator filesystem-cache coverage proves unchanged and edited
+  source/downstream comparisons, stable/changed build IDs, cache reuse, and
+  rejection of a dishonest external-state digest.
+
+## 0.4.0 — 2026-09-01
 
 ### Added
 

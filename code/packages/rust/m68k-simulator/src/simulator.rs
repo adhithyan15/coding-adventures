@@ -1,17 +1,12 @@
 //! Top-level Motorola 68000 simulator combining decode + execute.
 //!
-//! Public API shape mirrors every other Rust ISA simulator in this repo
-//! (`mos6502_simulator::Mos6502Simulator`, `arm1_simulator::ARM1`):
-//! `new(memory_size)`, public register/memory/flag fields,
-//! `load_program(&[u8])`, `run(&[u8])`, `run_loaded_with_limit(max_steps)`,
-//! `step() -> String`.  Like `mos6502-simulator`, this crate also exposes
-//! `load_program_at`/`run_at` for the Python original's own convention
-//! (programs load at `0x001000`, stack starts at `0x00F000`) as a
-//! secondary convenience API — the zero-origin variants are primary,
-//! matching every other Rust simulator in this repo (and what
-//! `m68k-backend`'s emitted bytes expect to be loaded at).
+//! [`M68kSimulator::architectural`] and the checked lifecycle model the exact
+//! Spec 07n 16 MiB machine with typed atomic failures, owned state, and full
+//! traces. Caller-sized zero-origin legacy methods remain for existing backend
+//! and encoder consumers.
 
 use cpu_simulator::Memory;
+use std::fmt;
 
 use crate::execute;
 
@@ -50,13 +45,90 @@ pub struct M68kSimulator {
     pub mem: Memory,
 }
 
-/// Observable outcome of a bounded simulator run.  Mirrors every other
-/// Rust ISA simulator's `ExecutionResult { halted, steps, pc }` shape.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+/// Architectural 24-bit address-space size.
+pub const MEMORY_SIZE: usize = 16 * 1024 * 1024;
+/// Spec 07n program origin.
+pub const LOAD_ADDRESS: u32 = 0x001000;
+/// Spec 07n reset supervisor stack pointer.
+pub const INITIAL_SP: u32 = 0x00F000;
+
+/// Immutable owned snapshot of every observable architectural bit.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct M68kState {
+    pub d: [u32; 8],
+    pub a: [u32; 8],
+    pub pc: u32,
+    pub sr: u16,
+    pub halted: bool,
+    pub memory: Vec<u8>,
+}
+
+impl M68kState {
+    pub fn x(&self) -> bool {
+        self.sr & 0x10 != 0
+    }
+    pub fn n(&self) -> bool {
+        self.sr & 0x08 != 0
+    }
+    pub fn z(&self) -> bool {
+        self.sr & 0x04 != 0
+    }
+    pub fn v(&self) -> bool {
+        self.sr & 0x02 != 0
+    }
+    pub fn c(&self) -> bool {
+        self.sr & 0x01 != 0
+    }
+}
+
+/// One checked fetch/decode/execute transition.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct StepTrace {
+    pub pc_before: u32,
+    pub pc_after: u32,
+    pub raw: u16,
+    pub mnemonic: String,
+    pub state_before: M68kState,
+    pub state_after: M68kState,
+}
+
+/// Typed fail-closed lifecycle error.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum M68kError {
+    Halted,
+    NonArchitecturalMemory { actual: usize },
+    ProgramTooLarge { origin: u32, size: usize },
+    InvalidState(String),
+    Execution(String),
+}
+
+impl fmt::Display for M68kError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Halted => write!(f, "CPU is halted"),
+            Self::NonArchitecturalMemory { actual } => write!(
+                f,
+                "checked lifecycle requires {MEMORY_SIZE} bytes, found {actual}"
+            ),
+            Self::ProgramTooLarge { origin, size } => write!(
+                f,
+                "program of {size} bytes at {origin:#08x} exceeds the 24-bit address space"
+            ),
+            Self::InvalidState(message) | Self::Execution(message) => f.write_str(message),
+        }
+    }
+}
+
+impl std::error::Error for M68kError {}
+
+/// Observable outcome of a bounded simulator run.
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ExecutionResult {
     pub halted: bool,
     pub steps: usize,
     pub pc: u32,
+    pub final_state: M68kState,
+    pub traces: Vec<StepTrace>,
 }
 
 /// Power-on status register: supervisor mode set, interrupt-priority
@@ -64,6 +136,15 @@ pub struct ExecutionResult {
 const RESET_SR: u16 = 0x2700;
 
 impl M68kSimulator {
+    /// Construct the exact 16 MiB Spec 07n machine at its architectural
+    /// reset PC and supervisor stack pointer.
+    pub fn architectural() -> Self {
+        let mut simulator = Self::new(MEMORY_SIZE);
+        simulator.pc = LOAD_ADDRESS;
+        simulator.a[7] = INITIAL_SP;
+        simulator
+    }
+
     /// Create a new simulator with `memory_size` bytes of backing store
     /// (pass `0x100_0000` — 16 MiB — for the full 68000 address space;
     /// tests routinely use far less).  The stack pointer (`A7`) starts
@@ -78,6 +159,175 @@ impl M68kSimulator {
             sr: RESET_SR,
             halted: false,
             mem: Memory::new(memory_size),
+        }
+    }
+
+    /// Restore power-on state and clear all memory while retaining the
+    /// configured backing size. Architectural machines reset to Spec 07n's
+    /// PC/SP; legacy smaller machines retain their zero-origin convention.
+    pub fn reset(&mut self) {
+        let size = self.mem.size();
+        self.d = [0; 8];
+        self.a = [0; 8];
+        self.pc = 0;
+        self.sr = RESET_SR;
+        self.halted = false;
+        self.mem = Memory::new(size);
+        if size == MEMORY_SIZE {
+            self.pc = LOAD_ADDRESS;
+            self.a[7] = INITIAL_SP;
+        } else {
+            self.a[7] = size as u32;
+        }
+    }
+
+    /// Return a complete owned state snapshot.
+    pub fn get_state(&self) -> M68kState {
+        M68kState {
+            d: self.d,
+            a: self.a,
+            pc: self.pc,
+            sr: self.sr,
+            halted: self.halted,
+            memory: (0..self.mem.size())
+                .map(|address| self.mem.read_byte(address))
+                .collect(),
+        }
+    }
+
+    /// Atomically restore a complete state snapshot.
+    pub fn restore(&mut self, state: &M68kState) -> Result<(), M68kError> {
+        if state.memory.len() != self.mem.size() {
+            return Err(M68kError::InvalidState(format!(
+                "state memory has {} bytes; simulator has {}",
+                state.memory.len(),
+                self.mem.size()
+            )));
+        }
+        if state.pc > crate::opcodes::ADDR_MASK {
+            return Err(M68kError::InvalidState(format!(
+                "PC {:#010x} exceeds the 24-bit address bus",
+                state.pc
+            )));
+        }
+        let mut memory = Memory::new(state.memory.len());
+        memory.load_bytes(0, &state.memory);
+        self.d = state.d;
+        self.a = state.a;
+        self.pc = state.pc;
+        self.sr = state.sr;
+        self.halted = state.halted;
+        self.mem = memory;
+        Ok(())
+    }
+
+    fn require_architectural_memory(&self) -> Result<(), M68kError> {
+        if self.mem.size() == MEMORY_SIZE {
+            Ok(())
+        } else {
+            Err(M68kError::NonArchitecturalMemory {
+                actual: self.mem.size(),
+            })
+        }
+    }
+
+    /// Reset and atomically load at the Spec 07n origin.
+    pub fn load_checked(&mut self, program: &[u8]) -> Result<(), M68kError> {
+        self.load_at_checked(program, LOAD_ADDRESS)
+    }
+
+    /// Reset and atomically load at an explicit 24-bit origin.
+    pub fn load_at_checked(&mut self, program: &[u8], origin: u32) -> Result<(), M68kError> {
+        self.require_architectural_memory()?;
+        let end = usize::try_from(origin)
+            .ok()
+            .and_then(|start| start.checked_add(program.len()));
+        if origin > crate::opcodes::ADDR_MASK || end.is_none_or(|value| value > MEMORY_SIZE) {
+            return Err(M68kError::ProgramTooLarge {
+                origin,
+                size: program.len(),
+            });
+        }
+        self.reset();
+        self.mem.load_bytes(origin as usize, program);
+        self.pc = origin;
+        Ok(())
+    }
+
+    /// Execute one instruction atomically with complete before/after state.
+    pub fn step_checked(&mut self) -> Result<StepTrace, M68kError> {
+        self.require_architectural_memory()?;
+        if self.halted {
+            return Err(M68kError::Halted);
+        }
+        if self.pc & 1 != 0 {
+            return Err(M68kError::Execution(format!(
+                "misaligned instruction fetch at {:#08x}",
+                self.pc
+            )));
+        }
+        let state_before = self.get_state();
+        let pc_before = self.pc;
+        let raw = (u16::from(self.mem.read_byte(pc_before as usize)) << 8)
+            | u16::from(self.mem.read_byte(pc_before as usize + 1));
+        match execute::decode_and_execute(self) {
+            Ok(mnemonic) => {
+                let state_after = self.get_state();
+                Ok(StepTrace {
+                    pc_before,
+                    pc_after: self.pc,
+                    raw,
+                    mnemonic,
+                    state_before,
+                    state_after,
+                })
+            }
+            Err(message) => {
+                self.restore(&state_before)
+                    .expect("validated local snapshot");
+                Err(M68kError::Execution(message))
+            }
+        }
+    }
+
+    /// Execute the currently loaded machine for at most `max_steps`.
+    /// Any execution failure restores the whole pre-run machine.
+    pub fn run_loaded_checked(&mut self, max_steps: usize) -> Result<ExecutionResult, M68kError> {
+        self.require_architectural_memory()?;
+        let original = self.get_state();
+        let mut traces = Vec::new();
+        while traces.len() < max_steps && !self.halted {
+            match self.step_checked() {
+                Ok(trace) => traces.push(trace),
+                Err(error) => {
+                    self.restore(&original).expect("validated local snapshot");
+                    return Err(error);
+                }
+            }
+        }
+        Ok(ExecutionResult {
+            halted: self.halted,
+            steps: traces.len(),
+            pc: self.pc,
+            final_state: self.get_state(),
+            traces,
+        })
+    }
+
+    /// Reset, load, and execute a program through the checked lifecycle.
+    pub fn run_checked(
+        &mut self,
+        program: &[u8],
+        max_steps: usize,
+    ) -> Result<ExecutionResult, M68kError> {
+        let original = self.get_state();
+        self.load_checked(program)?;
+        match self.run_loaded_checked(max_steps) {
+            Ok(result) => Ok(result),
+            Err(error) => {
+                self.restore(&original).expect("validated local snapshot");
+                Err(error)
+            }
         }
     }
 
@@ -130,14 +380,15 @@ impl M68kSimulator {
             halted: self.halted,
             steps,
             pc: self.pc,
+            final_state: self.get_state(),
+            traces: Vec::new(),
         }
     }
 
     /// Execute a single instruction and return its mnemonic (or an
     /// error description, or `"halted"` if already halted).
     ///
-    /// A decode/execute failure (illegal opword, a deferred addressing
-    /// mode or instruction family, a misaligned access) is a
+    /// A decode/execute failure (illegal opword or misaligned access) is a
     /// **fail-closed halt** — mirrors how `mos6502-simulator` handles
     /// illegal opcodes: no exception channel exists through
     /// `step() -> String`, so the simulator stops rather than silently
@@ -240,7 +491,7 @@ mod tests {
     #[test]
     fn illegal_line0_opcode_halts_fail_closed() {
         let mut sim = M68kSimulator::new(65536);
-        sim.run(&[0x00, 0x00, 0x00, 0x01]); // line-0 immediate group, deferred
+        sim.run(&[0x0E, 0x00, 0x00, 0x01]); // reserved line-0 immediate family
         assert!(sim.halted);
     }
 
