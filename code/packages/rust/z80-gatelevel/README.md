@@ -2,9 +2,11 @@
 
 Gate-level simulator for the **Zilog Z80** (1976) microprocessor.
 
-Every arithmetic and logic operation routes through real gate primitives from the
-`logic-gates` and `arithmetic` crates — no host integer arithmetic in the execution
-path. Registers are modelled as D flip-flop arrays.
+The data path routes arithmetic, logic, flag calculation, shifts, rotates, bit
+operations, and decimal adjustment through primitives from the `logic-gates`
+and `arithmetic` crates. Host control values remain limited to decoding,
+addresses, and trace bookkeeping. Every persistent architectural bit is stored
+in a D flip-flop.
 
 ## Architecture
 
@@ -13,6 +15,7 @@ bits.rs        — integer ↔ LSB-first bit-vector helpers; 8/16-bit adders wit
 alu.rs         — ALUZ80: all 8-bit and 16-bit operations through gate chains
 registers.rs   — RegisterFile with main/alternate banks; IX, IY; flag pack/unpack
 cpu.rs         — GateLevelCpuZ80: full Z80 instruction set including CB/ED/DD/FD prefixes
+state.rs       — 528,597-DFF memory, register, interrupt, halt, and port storage
 ```
 
 ## Quick start
@@ -22,9 +25,10 @@ use coding_adventures_z80_gatelevel::GateLevelCpuZ80;
 
 let mut cpu = GateLevelCpuZ80::new();
 // LD A, 5; LD B, 3; ADD A, B; HALT
-let (traces, state) = cpu.run(&[0x3E, 0x05, 0x06, 0x03, 0x80, 0x76], 100);
-assert_eq!(state.a, 8);
-assert!(!state.flag_c);
+let result = cpu.run(&[0x3E, 0x05, 0x06, 0x03, 0x80, 0x76], 100)?;
+assert_eq!(result.final_state.regs.a, 8);
+assert!(!result.final_state.flags.c);
+# Ok::<(), coding_adventures_z80_gatelevel::Z80Error>(())
 ```
 
 ## Z80 Flag register
@@ -76,8 +80,10 @@ Bit 0  C   Carry / Borrow
 - **16-bit arithmetic**: ADC HL,rp; SBC HL,rp (all flags updated)
 - **16-bit indirect**: LD rp,(nn); LD (nn),rp
 - **NEG**: negate accumulator
-- **Block**: LDI, LDD, LDIR, LDDR; CPI, CPD, CPIR, CPDR
+- **Block**: LDI, LDD, LDIR, LDDR; CPI, CPD, CPIR, CPDR; INI, IND,
+  INIR, INDR; OUTI, OUTD, OTIR, OTDR
 - **I/O**: IN r,(C); OUT (C),r
+- **Nibble rotate**: RLD, RRD
 - **Special**: LD A,I; LD A,R; LD I,A; LD R,A
 - **Interrupt**: IM 0/1/2; RETI; RETN
 
@@ -90,21 +96,25 @@ Bit 0  C   Carry / Borrow
 ### DDCB/FDCB prefix
 - BIT/SET/RES/rotation ops on (IX+d) / (IY+d)
 
-## Gate count estimate
+## Exact persistent topology
 
-| Component                      | Gates |
-|-------------------------------|-------|
-| 8-bit ALU (add/sub/log/rot)   | ~145  |
-| 16-bit adder (HL/IX ops)      | ~80   |
-| Main registers (8×8-bit)      | ~512  |
-| Alternate bank (8×8-bit)      | ~512  |
-| IX, IY (2×16-bit)             | ~256  |
-| SP, PC (2×16-bit)             | ~256  |
-| Instruction decoder           | ~60   |
-| Control + wiring              | ~200  |
-| **Total**                     | **~2,021** |
+| Component | D flip-flops |
+|---|---:|
+| Memory | 524,288 |
+| Main/alternate A/F/B/C/D/E/H/L banks | 128 |
+| IX and IY | 32 |
+| SP and PC | 32 |
+| I and R | 16 |
+| IFF1, IFF2, IM, halt | 5 |
+| Input and output port latches | 4,096 |
+| **Total** | **528,597** |
 
-Real Z80: ~8,500 transistors (~2,125 gate equivalents).
+The shared typed lifecycle provides checked atomic load/step/ports, complete
+snapshot/restore and before/after traces, transactional bounded runs, and
+maskable interrupt modes 0/1/2 plus NMI. The completion differential covers
+all 1,160 defined base/CB/ED/DD/FD/DDCB/FDCB vectors against the Python oracle.
+The completion suite has 58 unit, 4 integration, and 8 documentation tests;
+core line coverage is 97.64% (1,489/1,525).
 
 ## Package layout
 

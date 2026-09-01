@@ -35,8 +35,8 @@
 use logic_gates::gates::{and_gate, not_gate, or_gate, xor_gate};
 
 use crate::bits::{
-    add_8bit_full, add_16bit, bits_to_u8, compute_parity, compute_zero,
-    int_to_bits8, int_to_bits16, invert_8bit, invert_16bit,
+    add_16bit, add_8bit_full, bits_to_u8, compute_parity, compute_zero, int_to_bits16,
+    int_to_bits8, invert_16bit, invert_8bit,
 };
 
 /// Result of a Z80 ALU operation.
@@ -46,13 +46,13 @@ use crate::bits::{
 /// ADD HL,rp preserves S/Z/PV).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct AluResultZ80 {
-    pub result: u16,   // 8-bit ops fill only low byte; 16-bit ops use full u16
-    pub flag_s: u8,    // Sign (bit 7 of result)
-    pub flag_z: u8,    // Zero
-    pub flag_h: u8,    // Half-carry
-    pub flag_pv: u8,   // Parity / Overflow
-    pub flag_n: u8,    // Subtract indicator
-    pub flag_c: u8,    // Carry / Borrow
+    pub result: u16, // 8-bit ops fill only low byte; 16-bit ops use full u16
+    pub flag_s: u8,  // Sign (bit 7 of result)
+    pub flag_z: u8,  // Zero
+    pub flag_h: u8,  // Half-carry
+    pub flag_pv: u8, // Parity / Overflow
+    pub flag_n: u8,  // Subtract indicator
+    pub flag_c: u8,  // Carry / Borrow
 }
 
 // ─── 8-bit operations ────────────────────────────────────────────────────────
@@ -119,10 +119,10 @@ pub fn sub8(a: u8, b: u8, borrow_in: u8) -> AluResultZ80 {
         result: result as u16,
         flag_s: result_bits[7],
         flag_z: compute_zero(&result_bits),
-        flag_h: not_gate(carries[3]),  // inverted for subtraction
+        flag_h: not_gate(carries[3]), // inverted for subtraction
         flag_pv: overflow,
-        flag_n: 1,                      // subtraction
-        flag_c: not_gate(carries[7]),  // borrow = NOT(carry)
+        flag_n: 1,                    // subtraction
+        flag_c: not_gate(carries[7]), // borrow = NOT(carry)
     }
 }
 
@@ -151,7 +151,7 @@ pub fn and8(a: u8, b: u8) -> AluResultZ80 {
         result: result as u16,
         flag_s: result_bits[7],
         flag_z: compute_zero(&result_bits),
-        flag_h: 1,  // Z80 AND: H always 1
+        flag_h: 1, // Z80 AND: H always 1
         flag_pv: compute_parity(&result_bits),
         flag_n: 0,
         flag_c: 0,
@@ -238,12 +238,12 @@ pub fn cpl8(a: u8) -> AluResultZ80 {
 
     AluResultZ80 {
         result: result as u16,
-        flag_s: 0,   // caller preserves
-        flag_z: 0,   // caller preserves
-        flag_h: 1,   // CPL sets H
-        flag_pv: 0,  // caller preserves
-        flag_n: 1,   // CPL sets N
-        flag_c: 0,   // caller preserves
+        flag_s: 0,  // caller preserves
+        flag_z: 0,  // caller preserves
+        flag_h: 1,  // CPL sets H
+        flag_pv: 0, // caller preserves
+        flag_n: 1,  // CPL sets N
+        flag_c: 0,  // caller preserves
     }
 }
 
@@ -308,7 +308,7 @@ pub fn daa8(a: u8, flag_n: u8, flag_h: u8, flag_c: u8) -> AluResultZ80 {
         flag_z: compute_zero(&result_bits),
         flag_h: new_h,
         flag_pv: compute_parity(&result_bits),
-        flag_n,  // preserved from previous operation
+        flag_n, // preserved from previous operation
         flag_c: new_c,
     }
 }
@@ -442,7 +442,7 @@ pub fn sra8(a: u8) -> AluResultZ80 {
     let lsb = bits[0];
     let msb = bits[7];
     let mut new_bits = bits[1..].to_vec();
-    new_bits.push(msb);  // sign extension
+    new_bits.push(msb); // sign extension
     let result = bits_to_u8(&new_bits);
     AluResultZ80 {
         result: result as u16,
@@ -464,7 +464,7 @@ pub fn srl8(a: u8) -> AluResultZ80 {
     let result = bits_to_u8(&new_bits);
     AluResultZ80 {
         result: result as u16,
-        flag_s: new_bits[7],  // always 0 (SRL clears sign)
+        flag_s: new_bits[7], // always 0 (SRL clears sign)
         flag_z: compute_zero(&new_bits),
         flag_h: 0,
         flag_pv: compute_parity(&new_bits),
@@ -485,7 +485,11 @@ pub fn rlca8(a: u8) -> AluResultZ80 {
     let result = bits_to_u8(&new_bits);
     AluResultZ80 {
         result: result as u16,
-        flag_s: 0, flag_z: 0, flag_h: 0, flag_pv: 0, flag_n: 0,
+        flag_s: 0,
+        flag_z: 0,
+        flag_h: 0,
+        flag_pv: 0,
+        flag_n: 0,
         flag_c: msb,
     }
 }
@@ -499,7 +503,11 @@ pub fn rrca8(a: u8) -> AluResultZ80 {
     let result = bits_to_u8(&new_bits);
     AluResultZ80 {
         result: result as u16,
-        flag_s: 0, flag_z: 0, flag_h: 0, flag_pv: 0, flag_n: 0,
+        flag_s: 0,
+        flag_z: 0,
+        flag_h: 0,
+        flag_pv: 0,
+        flag_n: 0,
         flag_c: lsb,
     }
 }
@@ -513,7 +521,11 @@ pub fn rla8(a: u8, carry_in: u8) -> AluResultZ80 {
     let result = bits_to_u8(&new_bits);
     AluResultZ80 {
         result: result as u16,
-        flag_s: 0, flag_z: 0, flag_h: 0, flag_pv: 0, flag_n: 0,
+        flag_s: 0,
+        flag_z: 0,
+        flag_h: 0,
+        flag_pv: 0,
+        flag_n: 0,
         flag_c: msb,
     }
 }
@@ -527,7 +539,11 @@ pub fn rra8(a: u8, carry_in: u8) -> AluResultZ80 {
     let result = bits_to_u8(&new_bits);
     AluResultZ80 {
         result: result as u16,
-        flag_s: 0, flag_z: 0, flag_h: 0, flag_pv: 0, flag_n: 0,
+        flag_s: 0,
+        flag_z: 0,
+        flag_h: 0,
+        flag_pv: 0,
+        flag_n: 0,
         flag_c: lsb,
     }
 }
@@ -536,7 +552,7 @@ pub fn rra8(a: u8, carry_in: u8) -> AluResultZ80 {
 
 /// BIT b, r — test bit n of A via AND gate.
 ///
-/// Z = NOT(A[n]) — Z=1 means the bit is 0.
+/// Z = `NOT(A[n])` — Z=1 means the bit is 0.
 /// H=1, N=0 always. S/PV/C caller-preserved.
 /// The register value is NOT changed (result=0 indicates read-only).
 pub fn bit_test(a: u8, bit_n: u8) -> AluResultZ80 {
@@ -544,13 +560,13 @@ pub fn bit_test(a: u8, bit_n: u8) -> AluResultZ80 {
     let tested = and_gate(bits_a[bit_n as usize], 1);
     let z = not_gate(tested);
     AluResultZ80 {
-        result: 0,  // BIT doesn't write back
+        result: 0, // BIT doesn't write back
         flag_s: if bit_n == 7 { tested } else { 0 },
         flag_z: z,
         flag_h: 1,
         flag_pv: compute_parity(&bits_a),
         flag_n: 0,
-        flag_c: 0,  // caller preserves
+        flag_c: 0, // caller preserves
     }
 }
 
@@ -626,19 +642,16 @@ pub fn sbc16(hl: u16, rp: u16, borrow_in: u8) -> AluResultZ80 {
     let rp_sign = ((rp >> 15) & 1) as u8;
     let res_sign = result_bits[15];
     // Subtraction overflow: opposite signs of inputs, result differs from hl
-    let overflow = and_gate(
-        xor_gate(hl_sign, rp_sign),
-        xor_gate(hl_sign, res_sign),
-    );
+    let overflow = and_gate(xor_gate(hl_sign, rp_sign), xor_gate(hl_sign, res_sign));
 
     AluResultZ80 {
         result,
         flag_s: result_bits[15],
         flag_z: compute_zero(&result_bits),
-        flag_h: not_gate(hc16),  // inverted for subtraction
+        flag_h: not_gate(hc16), // inverted for subtraction
         flag_pv: overflow,
         flag_n: 1,
-        flag_c: not_gate(cout),  // borrow = NOT(carry)
+        flag_c: not_gate(cout), // borrow = NOT(carry)
     }
 }
 
@@ -820,8 +833,8 @@ mod tests {
         // ADD HL,rp: S/Z/PV not changed
         let r = add16(0x1234, 0xABCD);
         assert_eq!(r.result, 0xBE01);
-        assert_eq!(r.flag_s, 0);   // not updated
-        assert_eq!(r.flag_z, 0);   // not updated
+        assert_eq!(r.flag_s, 0); // not updated
+        assert_eq!(r.flag_z, 0); // not updated
         assert_eq!(r.flag_n, 0);
     }
 

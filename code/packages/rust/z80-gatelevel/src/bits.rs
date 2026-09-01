@@ -151,7 +151,7 @@ pub fn add_8bit(a: u8, b: u8, carry_in: u8) -> (u8, u8, u8) {
 /// - `carries[6]` = carry into bit 7
 /// - `carries[7]` = carry out of bit 7
 ///
-/// Overflow = XOR(carries[6], carries[7]).
+/// Overflow = `XOR(carries[6], carries[7])`.
 pub fn add_8bit_full(a: u8, b: u8, carry_in: u8) -> (u8, Vec<u8>) {
     let a_bits = int_to_bits8(a);
     let b_bits = int_to_bits8(b);
@@ -240,7 +240,7 @@ mod tests {
         assert_eq!(compute_parity(&[1, 0, 0, 0, 0, 0, 0, 0]), 0); // 1 one → odd
         assert_eq!(compute_parity(&[1, 1, 0, 0, 0, 0, 0, 0]), 1); // 2 ones → even
         assert_eq!(compute_parity(&[1, 1, 1, 0, 0, 0, 0, 0]), 0); // 3 ones → odd
-        // 0b10110110 = 0xB6: bits 1,2,4,5,7 → 5 ones → odd parity → P=0
+                                                                  // 0b10110110 = 0xB6: bits 1,2,4,5,7 → 5 ones → odd parity → P=0
         let bits = int_to_bits8(0xB6);
         assert_eq!(compute_parity(&bits), 0);
     }

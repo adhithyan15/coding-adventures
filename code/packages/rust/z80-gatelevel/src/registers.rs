@@ -58,7 +58,7 @@ pub const REG_D: usize = 2;
 pub const REG_E: usize = 3;
 pub const REG_H: usize = 4;
 pub const REG_L: usize = 5;
-pub const REG_MEM: usize = 6;  // (HL) pseudo-register
+pub const REG_MEM: usize = 6; // (HL) pseudo-register
 pub const REG_A: usize = 7;
 
 /// Pack Z80 flag bits into the F register byte.
@@ -69,69 +69,107 @@ pub const REG_A: usize = 7;
 /// Bits 5 (Y) and 3 (X) are undocumented; we keep them 0.
 #[inline]
 pub fn pack_f(s: u8, z: u8, h: u8, pv: u8, n: u8, c: u8) -> u8 {
-    ((s & 1) << 7)
-        | ((z & 1) << 6)
-        | ((h & 1) << 4)
-        | ((pv & 1) << 2)
-        | ((n & 1) << 1)
-        | (c & 1)
+    ((s & 1) << 7) | ((z & 1) << 6) | ((h & 1) << 4) | ((pv & 1) << 2) | ((n & 1) << 1) | (c & 1)
 }
 
 /// Unpack an F register byte into individual flag bits.
 /// Returns (s, z, h, pv, n, c).
 #[inline]
 pub fn unpack_f(byte: u8) -> (u8, u8, u8, u8, u8, u8) {
-    let s  = (byte >> 7) & 1;
-    let z  = (byte >> 6) & 1;
-    let h  = (byte >> 4) & 1;
+    let s = (byte >> 7) & 1;
+    let z = (byte >> 6) & 1;
+    let h = (byte >> 4) & 1;
     let pv = (byte >> 2) & 1;
-    let n  = (byte >> 1) & 1;
-    let c  = byte & 1;
+    let n = (byte >> 1) & 1;
+    let c = byte & 1;
     (s, z, h, pv, n, c)
 }
 
-/// Z80 register file: main bank + alternate bank + index registers.
-///
-/// Main bank: `regs[0..8]` (indices match 3-bit codes; index 6 unused).
-/// Alternate bank: `alt[0..8]` (same layout).
-/// F and F' stored separately as packed bytes for flag operations.
+use crate::state::StateRegister;
+
+#[derive(Debug, Clone)]
+struct Register8 {
+    state: StateRegister,
+}
+
+impl Register8 {
+    fn new(initial: u8) -> Self {
+        let mut state = StateRegister::new(8);
+        state.write(u16::from(initial));
+        Self { state }
+    }
+
+    fn read(&self) -> u8 {
+        self.state.read() as u8
+    }
+
+    fn write(&mut self, value: u8) {
+        self.state.write(u16::from(value));
+    }
+}
+
+/// A 16-bit register implemented as sixteen D flip-flops.
+#[derive(Debug, Clone)]
+pub struct Register16 {
+    state: StateRegister,
+}
+
+impl Register16 {
+    fn new(initial: u16) -> Self {
+        let mut state = StateRegister::new(16);
+        state.write(initial);
+        Self { state }
+    }
+
+    /// Read the latched output.
+    pub fn read(&self) -> u16 {
+        self.state.read()
+    }
+
+    /// Clock a new value into the register.
+    pub fn write(&mut self, value: u16) {
+        self.state.write(value);
+    }
+}
+
+fn slot(reg_id: usize) -> usize {
+    assert_ne!(reg_id, REG_MEM, "REG_MEM is a pseudo-register");
+    if reg_id == REG_A {
+        6
+    } else {
+        reg_id
+    }
+}
+
+/// Z80 register file backed by exactly 160 D flip-flops.
 #[derive(Debug, Clone)]
 pub struct RegisterFile {
-    /// Main registers: B=0, C=1, D=2, E=3, H=4, L=5, _=6, A=7
-    regs: [u8; 8],
-    /// Alternate registers (same layout)
-    alt: [u8; 8],
-    /// Flags register (packed byte)
-    f: u8,
-    /// Alternate flags register
-    f_prime: u8,
-    /// Index register X
-    pub ix: u16,
-    /// Index register Y
-    pub iy: u16,
+    regs: [Register8; 7],
+    alt: [Register8; 7],
+    f: Register8,
+    f_prime: Register8,
+    /// Index register X.
+    pub ix: Register16,
+    /// Index register Y.
+    pub iy: Register16,
 }
 
 impl RegisterFile {
     /// Initialize all registers to zero.
     pub fn new() -> Self {
         Self {
-            regs: [0u8; 8],
-            alt: [0u8; 8],
-            f: 0,
-            f_prime: 0,
-            ix: 0,
-            iy: 0,
+            regs: std::array::from_fn(|_| Register8::new(0)),
+            alt: std::array::from_fn(|_| Register8::new(0)),
+            f: Register8::new(0xD7),
+            f_prime: Register8::new(0xFF),
+            ix: Register16::new(0),
+            iy: Register16::new(0),
         }
     }
 
     /// Reset all registers to zero (power-on state).
     pub fn reset(&mut self) {
-        self.regs = [0u8; 8];
-        self.alt = [0u8; 8];
-        self.f = 0;
-        self.f_prime = 0;
-        self.ix = 0;
-        self.iy = 0;
+        *self = Self::new();
     }
 
     // ── 8-bit register access ────────────────────────────────────────────────
@@ -141,15 +179,13 @@ impl RegisterFile {
     /// Panics if code is REG_MEM (6) — that requires a memory access.
     #[inline]
     pub fn read8(&self, reg_id: usize) -> u8 {
-        debug_assert_ne!(reg_id, REG_MEM, "REG_MEM is a pseudo-register");
-        self.regs[reg_id]
+        self.regs[slot(reg_id)].read()
     }
 
     /// Write an 8-bit value to a register by 3-bit code.
     #[inline]
     pub fn write8(&mut self, reg_id: usize, value: u8) {
-        debug_assert_ne!(reg_id, REG_MEM, "REG_MEM is a pseudo-register");
-        self.regs[reg_id] = value;
+        self.regs[slot(reg_id)].write(value);
     }
 
     // ── 16-bit register pair access ──────────────────────────────────────────
@@ -157,9 +193,9 @@ impl RegisterFile {
     /// Read a 16-bit register pair (0=BC, 1=DE, 2=HL, 3=SP via sp arg).
     pub fn read16_pair(&self, pair_id: u8, sp: u16) -> u16 {
         match pair_id {
-            0 => ((self.regs[REG_B] as u16) << 8) | (self.regs[REG_C] as u16),
-            1 => ((self.regs[REG_D] as u16) << 8) | (self.regs[REG_E] as u16),
-            2 => ((self.regs[REG_H] as u16) << 8) | (self.regs[REG_L] as u16),
+            0 => ((self.read8(REG_B) as u16) << 8) | self.read8(REG_C) as u16,
+            1 => ((self.read8(REG_D) as u16) << 8) | self.read8(REG_E) as u16,
+            2 => ((self.read8(REG_H) as u16) << 8) | self.read8(REG_L) as u16,
             3 => sp,
             _ => panic!("invalid pair_id {}", pair_id),
         }
@@ -171,9 +207,21 @@ impl RegisterFile {
         let hi = ((value >> 8) & 0xFF) as u8;
         let lo = (value & 0xFF) as u8;
         match pair_id {
-            0 => { self.regs[REG_B] = hi; self.regs[REG_C] = lo; None }
-            1 => { self.regs[REG_D] = hi; self.regs[REG_E] = lo; None }
-            2 => { self.regs[REG_H] = hi; self.regs[REG_L] = lo; None }
+            0 => {
+                self.write8(REG_B, hi);
+                self.write8(REG_C, lo);
+                None
+            }
+            1 => {
+                self.write8(REG_D, hi);
+                self.write8(REG_E, lo);
+                None
+            }
+            2 => {
+                self.write8(REG_H, hi);
+                self.write8(REG_L, lo);
+                None
+            }
             3 => Some(value), // SP: caller sets it
             _ => panic!("invalid pair_id {}", pair_id),
         }
@@ -185,48 +233,60 @@ impl RegisterFile {
     /// Returns (s, z, h, pv, n, c).
     #[inline]
     pub fn read_flags(&self) -> (u8, u8, u8, u8, u8, u8) {
-        unpack_f(self.f)
+        unpack_f(self.f.read())
     }
 
     /// Write all flags to the F register.
     #[inline]
     pub fn write_flags(&mut self, s: u8, z: u8, h: u8, pv: u8, n: u8, c: u8) {
-        self.f = pack_f(s, z, h, pv, n, c);
+        self.f.write(pack_f(s, z, h, pv, n, c));
     }
 
     /// Read the raw F byte.
     #[inline]
-    pub fn read_f(&self) -> u8 { self.f }
+    pub fn read_f(&self) -> u8 {
+        self.f.read()
+    }
 
     /// Write raw F byte.
     #[inline]
-    pub fn write_f(&mut self, byte: u8) { self.f = byte; }
+    pub fn write_f(&mut self, byte: u8) {
+        self.f.write(byte);
+    }
 
     /// Read raw F' byte.
     #[inline]
-    pub fn read_f_prime(&self) -> u8 { self.f_prime }
+    pub fn read_f_prime(&self) -> u8 {
+        self.f_prime.read()
+    }
+
+    /// Write raw F' byte.
+    #[inline]
+    pub fn write_f_prime(&mut self, byte: u8) {
+        self.f_prime.write(byte);
+    }
 
     // ── Bank exchange operations ──────────────────────────────────────────────
 
     /// EX AF, AF' — swap main A/F with alternate A'/F'.
     pub fn exchange_af(&mut self) {
-        let a_main = self.regs[REG_A];
-        let a_alt  = self.alt[REG_A];
-        let f_main = self.f;
-        let f_alt  = self.f_prime;
-        self.regs[REG_A] = a_alt;
-        self.alt[REG_A]  = a_main;
-        self.f           = f_alt;
-        self.f_prime     = f_main;
+        let a_main = self.read8(REG_A);
+        let a_alt = self.read_alt8(REG_A);
+        let f_main = self.read_f();
+        let f_alt = self.read_f_prime();
+        self.write8(REG_A, a_alt);
+        self.write_alt8(REG_A, a_main);
+        self.write_f(f_alt);
+        self.write_f_prime(f_main);
     }
 
     /// EXX — swap BC, DE, HL with B'C', D'E', H'L' (AF not affected).
     pub fn exchange_bank(&mut self) {
         for reg_id in [REG_B, REG_C, REG_D, REG_E, REG_H, REG_L] {
-            let main = self.regs[reg_id];
-            let alt  = self.alt[reg_id];
-            self.regs[reg_id] = alt;
-            self.alt[reg_id]  = main;
+            let main = self.read8(reg_id);
+            let alt = self.read_alt8(reg_id);
+            self.write8(reg_id, alt);
+            self.write_alt8(reg_id, main);
         }
     }
 
@@ -235,12 +295,20 @@ impl RegisterFile {
     /// Read an alternate register by code.
     #[inline]
     pub fn read_alt8(&self, reg_id: usize) -> u8 {
-        self.alt[reg_id]
+        self.alt[slot(reg_id)].read()
+    }
+
+    /// Write an alternate-bank register by code.
+    #[inline]
+    pub fn write_alt8(&mut self, reg_id: usize, value: u8) {
+        self.alt[slot(reg_id)].write(value);
     }
 }
 
 impl Default for RegisterFile {
-    fn default() -> Self { Self::new() }
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 // ─── Tests ───────────────────────────────────────────────────────────────────
@@ -287,7 +355,7 @@ mod tests {
         rf.write_f(0b10000001); // S=1, C=1
         rf.exchange_af();
         assert_eq!(rf.read8(REG_A), 0x00); // now holds A' (was 0)
-        assert_eq!(rf.read_f(), 0x00);     // now holds F' (was 0)
+        assert_eq!(rf.read_f(), 0xFF); // now holds power-on F'
         assert_eq!(rf.read_alt8(REG_A), 0x42); // A' holds old A
         assert_eq!(rf.read_f_prime(), 0b10000001); // F' holds old F
 
@@ -315,7 +383,11 @@ mod tests {
     fn pack_unpack_f() {
         let f = pack_f(1, 0, 1, 0, 1, 1);
         let (s, z, h, pv, n, c) = unpack_f(f);
-        assert_eq!(s, 1); assert_eq!(z, 0); assert_eq!(h, 1);
-        assert_eq!(pv, 0); assert_eq!(n, 1); assert_eq!(c, 1);
+        assert_eq!(s, 1);
+        assert_eq!(z, 0);
+        assert_eq!(h, 1);
+        assert_eq!(pv, 0);
+        assert_eq!(n, 1);
+        assert_eq!(c, 1);
     }
 }
