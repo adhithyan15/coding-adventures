@@ -443,3 +443,26 @@ The simulator implements `Simulator[PowerPC601State]`:
    alignment boundary instead of faulting).
 9. **64-bit memory model** — the real 601 has a 32-bit address bus; the simulator's
    65 536-byte address space is a behavioral subset.
+
+---
+
+## Normative Rust Completion Boundary
+
+The Rust package `powerpc601-simulator` is the complete functional
+implementation for RCPU-035. It preserves the instruction surface above while
+strengthening the legacy SIM00 lifecycle:
+
+- exact 64 KiB memory, all 32 GPRs, LR/CTR/XER/CR/CIA, halt, and the installed
+  program range belong to the restorable state;
+- deterministic origin-aware loading, checked big-endian direct access, typed
+  errors, complete before/after traces, and transactional bounded runs are
+  required;
+- instruction fetches and halfword/word transfers are alignment checked rather
+  than silently rounded down as in the Python implementation;
+- illegal instructions, truncated fetches, out-of-range or misaligned memory,
+  and signed/unsigned zero divisors fail atomically;
+- public structured I/B/D/X/XO/XFX/XL encoders are part of the conformance API;
+- the reproducible Python full-state corpus must exercise every defined decode
+  family, while lifecycle tests pin Rust's stricter fault boundary;
+- formatting, Clippy with warnings denied, rustdoc with warnings denied, all
+  tests, and at least 80% Rust line coverage must pass.
