@@ -7,6 +7,7 @@ chapter: 11
 type: word
 headword: నలుపు తెలుపు ఎరుపు నీలం
 gloss: black, white, red, blue — Telugu's own basic colors, completing the whole family's shared blue
+romanization: "nalupu telupu erupu nīlam"
 concept_tag: TE-COLOUR-BASIC
 prerequisites: [TE-C10-vaaram]
 sounds: [telugu-anusvara, telugu-short-vowels]

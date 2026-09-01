@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 5,
-  "sourceHash": "fnv1a64:c7c3f39e8c0c6490",
+  "sourceHash": "fnv1a64:17a95d01a2d69cd1",
   "lessonIds": [
     "TE-C05-maatlaadu",
     "TE-C05-nenu-telugu-maatlaadataanu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "telugu/narration/ch05.txt",
   "json": "telugu/narration/ch05.json",
-  "textHash": "fnv1a64:b284f76a02a6d365",
-  "jsonHash": "fnv1a64:098eea1c09765079",
+  "textHash": "fnv1a64:5a29195239205a1d",
+  "jsonHash": "fnv1a64:dd2d77b6f28d9e31",
   "findings": []
 }
