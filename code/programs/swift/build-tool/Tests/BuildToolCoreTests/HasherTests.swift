@@ -602,7 +602,7 @@ struct HasherTests {
             "code/packages/swift/bytes"
         )
         try writeData(
-            (packageRoot as NSString).appendingPathComponent("Sources/é.swift"),
+            (packageRoot as NSString).appendingPathComponent("Sources/β.swift"),
             Data([0x00, 0x0D, 0x0A, 0xFF])
         )
         try writeData(
@@ -619,7 +619,7 @@ struct HasherTests {
         #expect(first.count == 64)
         #expect(try Hasher.hashPackage(package, repositoryRoot: root) == first)
         try writeData(
-            (packageRoot as NSString).appendingPathComponent("Sources/é.swift"),
+            (packageRoot as NSString).appendingPathComponent("Sources/β.swift"),
             Data([0x00, 0x0A, 0xFF])
         )
         #expect(try Hasher.hashPackage(package, repositoryRoot: root) != first)
