@@ -1,5 +1,51 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.93 — 2026-09-01 — fix: `(table $t reftype (elem ...))` no longer discards its reftype
+
+Root-caused while prioritizing the vendored testsuite corpus: the whole
+`br_table.wast` file (a foundational MVP-level control-flow test, no
+GC-proposal syntax at all) was failing every directive — `module 0/1`,
+`assert_return 0/161` — with `ValidationError: TypeMismatch: expected
+ConcreteFuncRef(1), found Funcref` on `(table $t (ref null $t) (elem
+$tf))`, about as ordinary a construct as the corpus has. See
+`wasm-validator`'s and `wasm-conformance`'s own CHANGELOGs for the full
+two-part root cause and the corpus-impact diff; this is the parser-side
+half.
+
+`build_table_limits_and_elements`'s `[reftype, (elem e*)]` shorthand
+branch (the `(table funcref (elem $f))`/`(table $t (ref null $t) (elem
+$tf))` form every table-with-inline-elements declaration in the corpus
+uses) never even LOOKED at the reftype token — it sliced straight to
+`rest[1]` for the `(elem ...)` list, per the comment this fix removed:
+"this crate only tracks FUNCREF tables". True for the plain-keyword case,
+but silently wrong for a function-references-proposal `(ref null $t)`/
+`(ref $t)` reftype: the table's element type stayed the `TableType::
+default()`-style `FUNCREF` placeholder no matter what the source
+actually declared, indistinguishable from an ordinary generic-funcref
+table to every downstream consumer.
+
+- The reftype token (`rest[0]`) is now actually read: `funcref`/
+  `externref` atoms keep their existing byte-tag-only handling, and
+  anything else is parsed via the SAME `parse_value_type` this crate
+  already uses for func params/results/globals/locals (`(ref null $t)`/
+  `(ref $t)`/`(ref null func)`/`(ref null extern)` — no new grammar, just
+  reuse). A resulting `ConcreteFuncRef`/`NonNullConcreteFuncRef` is
+  recorded in the new `WasmModule::table_concrete_element_types[storage_idx]`
+  (see `wasm-types`'s own CHANGELOG for that field) — `element_type`
+  itself stays `FUNCREF`, so nothing that only reads the byte tag changes
+  behavior.
+- The pass-1 placeholder push (`collect_symbols`'s `"table"` arm) now
+  pushes a matching `None` into `table_concrete_element_types` in
+  lockstep with its existing `tables.push(...)`, so index alignment holds
+  even before pass 2 (`build_table_limits_and_elements`) runs.
+- The numeric-limits form (`(table $t N M reftype)`) is UNCHANGED and
+  still only accepts the `funcref`/`externref` atoms — no corpus file
+  combines a concrete reftype with that form, and the real regression
+  only ever used the inline-`elem` shorthand, so this fix stayed scoped
+  to the branch that actually needed it (confirmed via the full
+  programmatic baseline diff in `wasm-conformance`'s CHANGELOG: exactly
+  one file's tally changed).
+
 ## 0.1.92 — 2026-09-01 — W34 third slice: allow struct/array bodies inside `sub`
 
 Found and fixed while implementing `code/specs/
