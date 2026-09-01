@@ -3835,14 +3835,26 @@ fn swift_text_expression(node: &LayoutNode, for_payload: Option<ForPayloadScope<
 /// Lower the portable Text accessible-name subset. String labels stay
 /// verbatim and slot labels use the same Any-to-Text helper as content.
 fn swift_accessibility_label(node: &LayoutNode) -> Option<String> {
+    swift_accessibility_label_for(node, None)
+}
+
+fn swift_accessibility_label_for(
+    node: &LayoutNode,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Option<String> {
     match find_prop_value(node, "a11y-label")? {
         LayoutPropValue::String(label) => Some(format!(
             "Text(verbatim: \"{}\")",
             escape_swift_string(label)
         )),
-        LayoutPropValue::SlotRef(slot) => {
-            Some(format!("_mosaicText({})", to_camel_case_first_lower(slot)))
+        LayoutPropValue::SlotRef(name) | LayoutPropValue::Keyword(name) => {
+            Some(format!("_mosaicText({})", to_camel_case_first_lower(name)))
         }
+        LayoutPropValue::Expr(expression) => Some(format!(
+            "_mosaicText({})",
+            swift_collection_index_expr(expression.trim(), for_payload)
+        )),
+        LayoutPropValue::Number(number) => Some(format!("Text(verbatim: \"{number}\")")),
         _ => None,
     }
 }
@@ -4221,6 +4233,9 @@ fn emit_host_button(
             ".accessibilityIdentifier(\"{}\")",
             escape_swift_string(part_name)
         ));
+    }
+    if let Some(label) = swift_accessibility_label_for(node, for_payload) {
+        closing.push_str(&format!(".accessibilityLabel({label})"));
     }
     if let Some(slot) = find_slot_ref_prop(node, "disabled") {
         let camel = to_camel_case_first_lower(slot);
@@ -8084,6 +8099,7 @@ mod tests {
                         "HostButton",
                         vec![
                             prop_keyword("label", "item"),
+                            prop_expr("a11y-label", "item"),
                             prop_emit_ref("onClick", "onSelect"),
                         ],
                     )],
@@ -8119,6 +8135,10 @@ mod tests {
         assert!(
             out.contains("_mosaicButton(item, action:"),
             "expected HostButton label to use For item binding, got:\n{out}"
+        );
+        assert!(
+            out.contains(".accessibilityLabel(_mosaicText(item))"),
+            "expected HostButton accessible name to use the For expression, got:\n{out}"
         );
     }
 

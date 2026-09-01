@@ -70,11 +70,12 @@ links existing Mosaic work instead of duplicating it.
    lower authored `HostInput.a11y-label` values across every Mosaic backend.
    Discovered while validating #13689; adjacent semantic error text keeps the
    current correction accessible without overstating input-label coverage.
-   **In progress.**
+   **Done in #13769.**
 21. **P1 — [#13754](https://github.com/adhithyan15/coding-adventures/issues/13754):**
    preserve dynamic `HostButton.a11y-label` values in Qt, Flutter, SwiftUI,
    and XAML. Discovered while validating #13691; React and Compose are covered
    by that product fix, while the other native emitters need focused repairs.
+   **In progress.**
 22. **P1 — [#13725](https://github.com/adhithyan15/coding-adventures/issues/13725):**
    make Flutter preserve the correct flex context through nested Mosaic
    `If`/`Else` branches. Discovered by the #13689 native widget lifecycle; the

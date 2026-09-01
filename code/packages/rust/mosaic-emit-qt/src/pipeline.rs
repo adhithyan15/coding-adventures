@@ -3824,6 +3824,34 @@ fn emit_host_button_qml(
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
 
+    // Keep the authored accessible name independent from the compact visual
+    // label. TaskApp uses an expression here so each repeated completion
+    // button announces the action and task name instead of only "○" / "✓".
+    match node
+        .props
+        .iter()
+        .find(|prop| prop.name == "a11y-label")
+        .map(|prop| &prop.value)
+    {
+        Some(LayoutPropValue::String(label)) => {
+            writeln!(
+                out,
+                "{inner_pad}Accessible.name: \"{}\"",
+                escape_qml_string(label)
+            )
+            .unwrap();
+        }
+        Some(LayoutPropValue::SlotRef(name)) | Some(LayoutPropValue::Keyword(name)) => {
+            let camel = to_camel_case_first_lower(name);
+            validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            writeln!(out, "{inner_pad}Accessible.name: {camel}").unwrap();
+        }
+        Some(LayoutPropValue::Expr(expr)) => {
+            writeln!(out, "{inner_pad}Accessible.name: {expr}").unwrap();
+        }
+        _ => {}
+    }
+
     // enabled: !<slot or literal> — inverted from `disabled`.
     if let Some(line) = build_disabled_to_enabled_attribute(node) {
         writeln!(out, "{inner_pad}{line}").unwrap();
@@ -8158,6 +8186,7 @@ mod tests {
                         part_name: None,
                         props: vec![
                             lp("label", LayoutPropValue::Keyword("item".to_string())),
+                            lp("a11y-label", LayoutPropValue::Expr("item".to_string())),
                             lp("onClick", LayoutPropValue::EmitRef("onSelect".to_string())),
                         ],
                         children: Vec::new(),
@@ -8175,6 +8204,11 @@ mod tests {
         assert!(
             r.output.contains("text: item"),
             "expected HostButton label to use For item binding, got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output.contains("Accessible.name: item"),
+            "expected HostButton accessible name to use the For expression, got:\n{}",
             r.output
         );
     }

@@ -4,6 +4,12 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Fixed - native completion-button accessible names (#13754)
+
+The List completion control's task-specific action name now reaches the native
+accessibility surfaces in Qt, Flutter, SwiftUI, and WinUI, matching React and
+Compose while retaining the compact circle/check visual.
+
 ### Fixed - portable native input names (#13717)
 
 TaskApp's authored task-name and due-date labels now survive Mosaic lowering in

@@ -8367,6 +8367,45 @@ fn emit_host_button(
         ));
     }
 
+    match find_prop_value(node, "a11y-label") {
+        Some(LayoutPropValue::String(label)) => {
+            attrs.push_str(&format!(
+                " AutomationProperties.Name=\"{}\"",
+                escape_xaml_attr(label)
+            ));
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            attrs.push_str(&format!(
+                " AutomationProperties.Name=\"{{x:Bind {}, Mode=OneWay}}\"",
+                ctx.slot_xbind_path(slot)
+            ));
+        }
+        Some(LayoutPropValue::Keyword(name)) => {
+            let path = if ctx.lookup_for_index(name).is_some() {
+                "Index".to_string()
+            } else if ctx.lookup_for_binding(name).is_some() {
+                kebab_to_pascal_case(name)
+            } else {
+                ctx.slot_xbind_path(name)
+            };
+            attrs.push_str(&format!(
+                " AutomationProperties.Name=\"{{x:Bind {path}, Mode=OneWay}}\""
+            ));
+        }
+        Some(LayoutPropValue::Expr(source)) => match lower_expr_for_xbind(source, ctx) {
+            ExprLowering::Bindable(path) => attrs.push_str(&format!(
+                " AutomationProperties.Name=\"{{x:Bind {path}, Mode=OneWay}}\""
+            )),
+            ExprLowering::Helper(call) => attrs.push_str(&format!(
+                " AutomationProperties.Name=\"{{x:Bind {call}, Mode=OneWay}}\""
+            )),
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        _ => {}
+    }
+
     // label: slot/string
     match find_prop_value(node, "label") {
         Some(LayoutPropValue::SlotRef(slot)) => {
@@ -14383,6 +14422,10 @@ mod tests {
                             value: LayoutPropValue::Keyword("item".to_string()),
                         },
                         LayoutProp {
+                            name: "a11y-label".to_string(),
+                            value: LayoutPropValue::Expr("item".to_string()),
+                        },
+                        LayoutProp {
                             name: "onClick".to_string(),
                             value: LayoutPropValue::EmitRef("onSelect".to_string()),
                         },
@@ -14394,6 +14437,12 @@ mod tests {
         assert!(
             r.xaml.contains("Content=\"{x:Bind Item, Mode=OneWay}\""),
             "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml
+                .contains("AutomationProperties.Name=\"{x:Bind Item, Mode=OneWay}\""),
+            "expected HostButton accessible name to use the For expression, got:\n{}",
             r.xaml
         );
         assert!(
