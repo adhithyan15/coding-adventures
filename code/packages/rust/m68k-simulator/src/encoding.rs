@@ -71,7 +71,10 @@ pub fn encode_rts() -> Vec<u8> {
 /// with `mips_r2000_simulator::encoding::assemble` /
 /// `mos6502_simulator::encoding::assemble`.
 pub fn assemble(instructions: &[Vec<u8>]) -> Vec<u8> {
-    instructions.iter().flat_map(|i| i.iter().copied()).collect()
+    instructions
+        .iter()
+        .flat_map(|i| i.iter().copied())
+        .collect()
 }
 
 #[cfg(test)]
@@ -89,9 +92,10 @@ mod tests {
     #[test]
     fn move_l_imm_to_d1_uses_0x223c_opword() {
         // Matches the Python test suite's `_w(0x223C)` for MOVE.L #imm,D1.
-        assert_eq!(encode_move_l_imm_to_dn(1, 0x1234), vec![
-            0x22, 0x3C, 0x00, 0x00, 0x12, 0x34
-        ]);
+        assert_eq!(
+            encode_move_l_imm_to_dn(1, 0x1234),
+            vec![0x22, 0x3C, 0x00, 0x00, 0x12, 0x34]
+        );
     }
 
     #[test]
