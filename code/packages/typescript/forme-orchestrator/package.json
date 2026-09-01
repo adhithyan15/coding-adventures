@@ -1,7 +1,7 @@
 {
   "name": "@coding-adventures/forme-orchestrator",
-  "version": "0.4.0",
-  "description": "Forme orchestrator runtime: typed DAG execution, safe incremental cache reuse, watch lifecycle, cancellation, and reproducible builds (FM03).",
+  "version": "0.5.0",
+  "description": "Forme orchestrator runtime: typed DAG execution, external revision ledgers, safe cache reuse, watch, cancellation, and reproducible builds (FM03).",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {

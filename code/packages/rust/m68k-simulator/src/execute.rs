@@ -2,29 +2,27 @@
 //! bits), direct transcription of the Python original's
 //! `_exec_line0`..`_exec_lineE` dispatch methods.
 //!
-//! # Scope: which lines/instructions are ported
+//! # Complete Spec 07n decode surface
 //!
 //! | Line | Python group | This port |
 //! |------|--------------|-----------|
-//! | 0 | ORI/ANDI/SUBI/ADDI/EORI/CMPI, BTST/BCHG/BCLR/BSET | ❌ deferred entirely |
-//! | 1/2/3 | MOVE.B/W/L, MOVEA | ✅ [`exec_move`] |
-//! | 4 | NOP/RTS/RTR/STOP/TRAP/LINK/UNLK/SWAP/EXT/CLR/NEG/NOT/TST/LEA/JSR/JMP | ✅ [`exec_line4`] (NEGX, PEA, `MOVE SR/CCR` deferred) |
-//! | 5 | ADDQ/SUBQ/Scc/DBcc | ✅ [`exec_line5`] |
-//! | 6 | BRA/BSR/Bcc | ✅ [`exec_line6`] |
-//! | 7 | MOVEQ | ✅ [`exec_moveq`] |
-//! | 8 | OR/DIVU/DIVS | ✅ OR only, [`exec_line8`] (DIVU/DIVS deferred) |
-//! | 9 | SUB/SUBA/SUBX | ✅ SUB/SUBA, [`exec_line9`] (SUBX deferred) |
+//! | 0 | ORI/ANDI/SUBI/ADDI/EORI/CMPI, BTST/BCHG/BCLR/BSET | ✅ `exec_line0` |
+//! | 1/2/3 | MOVE.B/W/L, MOVEA | ✅ `exec_move` |
+//! | 4 | NOP/RTS/RTR/STOP/TRAP/LINK/UNLK/SWAP/EXT/CLR/NEG/NEGX/NOT/TST/LEA/PEA/JSR/JMP/SR/CCR | ✅ `exec_line4` |
+//! | 5 | ADDQ/SUBQ/Scc/DBcc | ✅ `exec_line5` |
+//! | 6 | BRA/BSR/Bcc | ✅ `exec_line6` |
+//! | 7 | MOVEQ | ✅ `exec_moveq` |
+//! | 8 | OR/DIVU/DIVS | ✅ `exec_line8` |
+//! | 9 | SUB/SUBA/SUBX | ✅ `exec_line9` |
 //! | A | line-A trap (unimplemented on real silicon too) | ❌ (matches real hardware: reserved) |
-//! | B | CMP/CMPA/EOR | ✅ [`exec_line_b`] |
-//! | C | AND/MULU/MULS/EXG | ✅ AND/EXG, [`exec_line_c`] (MULU/MULS deferred) |
-//! | D | ADD/ADDA/ADDX | ✅ ADD/ADDA, [`exec_line_d`] (ADDX deferred) |
-//! | E | shift/rotate | ✅ register form only, [`exec_line_e`] (memory-operand form deferred) |
+//! | B | CMP/CMPA/EOR | ✅ `exec_line_b` |
+//! | C | AND/MULU/MULS/EXG | ✅ `exec_line_c` |
+//! | D | ADD/ADDA/ADDX | ✅ `exec_line_d` |
+//! | E | register and memory shift/rotate | ✅ `exec_line_e` |
 //! | F | line-F trap (co-processor, unimplemented on real silicon too) | ❌ (reserved) |
 //!
-//! Every deferred instruction/line returns `Err` (never silently
-//! mis-executes), so a program that hits one halts the simulator with a
-//! descriptive message rather than corrupting state — the same
-//! fail-closed policy `mos6502-simulator` uses for illegal opcodes.
+//! Undefined and reserved encodings return `Err`; the checked lifecycle
+//! restores the complete pre-step state.
 //!
 //! # Why free functions over `&mut M68kSimulator`, not a decomposed
 //! parameter list
@@ -35,9 +33,15 @@
 //! parameter list would just mean re-deriving `&mut M68kSimulator`'s
 //! field set at every call site.
 
-use crate::decode::{decode_ea, ea_address, ea_read, ea_write, fetch_word, fetch_word_signed};
-use crate::flags::{compute_n, compute_nzvc_add, compute_nzvc_neg, compute_nzvc_sub, compute_v_sub};
-use crate::opcodes::{cc_taken, mask_for, msb_for, sext16, sext8, sz_arith, sz_move, ADDR_MASK, CC_NAMES};
+use crate::decode::{
+    decode_ea, ea_address, ea_read, ea_write, fetch_imm, fetch_word, fetch_word_signed,
+};
+use crate::flags::{
+    compute_n, compute_nzvc_add, compute_nzvc_neg, compute_nzvc_sub, compute_v_add, compute_v_sub,
+};
+use crate::opcodes::{
+    cc_taken, mask_for, msb_for, sext16, sext8, sz_arith, sz_move, ADDR_MASK, CC_NAMES,
+};
 use crate::simulator::M68kSimulator;
 
 // ===========================================================================
@@ -121,8 +125,8 @@ fn set_ccr_cmp(sim: &mut M68kSimulator, a: u32, b: u32, raw: i64, sz: u8) {
 
 /// Fetch and execute one instruction.  Returns the mnemonic on success,
 /// or `Err` describing why decode/execute failed (illegal opcode,
-/// deferred addressing mode, misaligned access, deferred instruction
-/// family).  Callers (`M68kSimulator::step`) treat `Err` as a fail-closed
+/// misaligned access, or undefined instruction family). Callers
+/// (`M68kSimulator::step`) treat `Err` as a fail-closed
 /// halt.
 pub fn decode_and_execute(sim: &mut M68kSimulator) -> Result<String, String> {
     let op = fetch_word(sim);
@@ -139,13 +143,139 @@ pub fn decode_and_execute(sim: &mut M68kSimulator) -> Result<String, String> {
         0xC => exec_line_c(sim, op),
         0xD => exec_line_d(sim, op),
         0xE => exec_line_e(sim, op),
-        0x0 => Err(format!(
-            "line-0 (immediate/bit-ops group: ORI/ANDI/SUBI/ADDI/EORI/CMPI, \
-             BTST/BCHG/BCLR/BSET) is not supported by m68k-simulator v0.1.0: {op:#06x}"
-        )),
+        0x0 => exec_line0(sim, op),
         _ => Err(format!(
             "line-{hi:X} is reserved/unimplemented on real 68000 silicon too: {op:#06x}"
         )),
+    }
+}
+
+// ===========================================================================
+// Line 0 -- immediate arithmetic/logical and bit operations
+// ===========================================================================
+
+fn exec_bit(sim: &mut M68kSimulator, op: u16, immediate: bool) -> Result<String, String> {
+    let dn = ((op >> 9) & 7) as usize;
+    let kind = ((op >> 6) & 3) as usize;
+    let mode = ((op >> 3) & 7) as u8;
+    let reg = (op & 7) as u8;
+    let mut bit = if immediate {
+        u32::from(fetch_word(sim) & 0x1f)
+    } else {
+        sim.d[dn]
+    };
+    let names = ["BTST", "BCHG", "BCLR", "BSET"];
+
+    let tested_set = if mode == 0 {
+        bit &= 31;
+        let value = sim.d[reg as usize];
+        let mask = 1u32 << bit;
+        sim.d[reg as usize] = match kind {
+            1 => value ^ mask,
+            2 => value & !mask,
+            3 => value | mask,
+            _ => value,
+        };
+        value & mask != 0
+    } else {
+        bit &= 7;
+        let ea = decode_ea(mode, reg)?;
+        let address = ea_address(sim, ea, 1)?;
+        let value = crate::decode::mem_read(&sim.mem, address, 1)?;
+        let mask = 1u32 << bit;
+        let result = match kind {
+            1 => value ^ mask,
+            2 => value & !mask,
+            3 => value | mask,
+            _ => value,
+        };
+        if kind != 0 {
+            crate::decode::mem_write(&mut sim.mem, address, 1, result)?;
+        }
+        value & mask != 0
+    };
+    sim.sr = (sim.sr & !4) | if tested_set { 0 } else { 4 };
+    Ok(names[kind].to_string())
+}
+
+fn exec_line0(sim: &mut M68kSimulator, op: u16) -> Result<String, String> {
+    let sz_code = ((op >> 6) & 3) as u8;
+    let mode = ((op >> 3) & 7) as u8;
+    let reg = (op & 7) as u8;
+
+    if op & 0xff00 == 0x0800 {
+        return exec_bit(sim, op, true);
+    }
+    if op & 0x0138 == 0x0100 {
+        return exec_bit(sim, op, false);
+    }
+
+    let family = ((op >> 8) & 0xff) as u8;
+    let sz = sz_arith(sz_code).ok_or_else(|| format!("line-0 bad size {op:#06x}"))?;
+    let immediate = fetch_imm(sim, sz);
+
+    if mode == 7 && reg == 4 && matches!(family, 0x00 | 0x02 | 0x0a) {
+        let old = sim.sr & 0x1f;
+        let value = match family {
+            0x00 => old | immediate as u16 & 0x1f,
+            0x02 => old & immediate as u16 & 0x1f,
+            _ => old ^ immediate as u16 & 0x1f,
+        };
+        sim.sr = (sim.sr & 0xffe0) | value;
+        return Ok(match family {
+            0x00 => "ORI CCR",
+            0x02 => "ANDI CCR",
+            _ => "EORI CCR",
+        }
+        .to_string());
+    }
+    if mode == 7 && reg == 5 && matches!(family, 0x00 | 0x02) {
+        sim.sr = if family == 0x00 {
+            sim.sr | immediate as u16
+        } else {
+            sim.sr & (immediate as u16 | 0xff00)
+        };
+        return Ok(if family == 0x00 { "ORI SR" } else { "ANDI SR" }.to_string());
+    }
+
+    let ea = decode_ea(mode, reg)?;
+    let value = ea_read(sim, ea, sz)?;
+    match family {
+        0x00 | 0x02 | 0x0a => {
+            let result = match family {
+                0x00 => value | immediate,
+                0x02 => value & immediate,
+                _ => value ^ immediate,
+            } & mask_for(sz);
+            ea_write(sim, ea, sz, result)?;
+            set_ccr_logic(sim, result, sz);
+            Ok(match family {
+                0x00 => "ORI",
+                0x02 => "ANDI",
+                _ => "EORI",
+            }
+            .to_string())
+        }
+        0x04 => {
+            let raw = i64::from(value) - i64::from(immediate);
+            let result = raw as u32 & mask_for(sz);
+            ea_write(sim, ea, sz, result)?;
+            set_ccr_nzvc_sub(sim, value, immediate, raw, sz);
+            Ok("SUBI".to_string())
+        }
+        0x06 => {
+            let raw = i64::from(value) + i64::from(immediate);
+            let result = raw as u32 & mask_for(sz);
+            ea_write(sim, ea, sz, result)?;
+            set_ccr_nzvc_add(sim, value, immediate, raw, sz);
+            Ok("ADDI".to_string())
+        }
+        0x0c => {
+            let raw = i64::from(value) - i64::from(immediate);
+            set_ccr_cmp(sim, value, immediate, raw, sz);
+            Ok("CMPI".to_string())
+        }
+        _ => Err(format!("unimplemented line-0 opcode {op:#06x}")),
     }
 }
 
@@ -167,7 +297,11 @@ fn exec_move(sim: &mut M68kSimulator, op: u16) -> Result<String, String> {
     if dst_mode == 1 {
         // MOVEA -- move to address register, no flags, word source
         // sign-extends to 32 bits.
-        let v = if sz == 2 { sext16(val as u16) as u32 } else { val };
+        let v = if sz == 2 {
+            sext16(val as u16) as u32
+        } else {
+            val
+        };
         sim.a[dst_reg as usize] = v;
         return Ok("MOVEA".to_string());
     }
@@ -259,11 +393,44 @@ fn exec_line4(sim: &mut M68kSimulator, op: u16) -> Result<String, String> {
         set_ccr_logic(sim, lw, 4);
         return Ok(format!("EXT.L D{n}"));
     }
+    if (0x40C0..=0x40C7).contains(&op) {
+        let n = (op & 7) as u8;
+        set_dn(sim, n, u32::from(sim.sr), 2);
+        return Ok(format!("MOVE SR,D{n}"));
+    }
+    if (0x42C0..=0x42C7).contains(&op) {
+        let n = (op & 7) as u8;
+        set_dn(sim, n, u32::from(sim.sr & 0x1f), 2);
+        return Ok(format!("MOVE CCR,D{n}"));
+    }
+    if op == 0x44FC {
+        let immediate = fetch_word(sim);
+        sim.sr = (sim.sr & 0xffe0) | (immediate & 0x1f);
+        return Ok("MOVE #imm,CCR".to_string());
+    }
+    if op == 0x46FC {
+        sim.sr = fetch_word(sim);
+        return Ok("MOVE #imm,SR".to_string());
+    }
 
     let sz_code = ((op >> 6) & 3) as u8;
     let mode = ((op >> 3) & 7) as u8;
     let reg = (op & 7) as u8;
 
+    if (op & 0xFF00) == 0x4000 && sz_code <= 2 {
+        let sz = sz_arith(sz_code).ok_or_else(|| format!("NEGX bad size {op:#06x}"))?;
+        let ea = decode_ea(mode, reg)?;
+        let source = ea_read(sim, ea, sz)?;
+        let extend = u32::from(sim.sr & 0x10 != 0);
+        let result = 0u32.wrapping_sub(source).wrapping_sub(extend) & mask_for(sz);
+        ea_write(sim, ea, sz, result)?;
+        let n = compute_n(result, sz);
+        let z = sim.sr & 4 != 0 && result == 0;
+        let v = result == msb_for(sz);
+        let c = result != 0;
+        set_ccr(sim, n, z, v, c, Some(c));
+        return Ok("NEGX".to_string());
+    }
     if (op & 0xFF00) == 0x4200 && sz_code <= 2 {
         // CLR.sz <ea>
         let sz = sz_arith(sz_code).ok_or_else(|| format!("CLR bad size {op:#06x}"))?;
@@ -301,6 +468,12 @@ fn exec_line4(sim: &mut M68kSimulator, op: u16) -> Result<String, String> {
         set_ccr_logic(sim, val, sz);
         return Ok("TST".to_string());
     }
+    if (op & 0xFFC0) == 0x4840 && mode >= 2 {
+        let ea = decode_ea(mode, reg)?;
+        let address = ea_address(sim, ea, 4)?;
+        push_long(sim, address)?;
+        return Ok("PEA".to_string());
+    }
     if (op & 0x01C0) == 0x01C0 && (op & 0xF000) == 0x4000 {
         // LEA <ea>, An
         let an = ((op >> 9) & 7) as usize;
@@ -327,10 +500,7 @@ fn exec_line4(sim: &mut M68kSimulator, op: u16) -> Result<String, String> {
         return Ok("JMP".to_string());
     }
 
-    Err(format!(
-        "unimplemented/deferred line-4 opcode {op:#06x} (NEGX, PEA, MOVE SR/CCR \
-         are not ported by m68k-simulator v0.1.0)"
-    ))
+    Err(format!("unimplemented line-4 opcode {op:#06x}"))
 }
 
 // ===========================================================================
@@ -449,7 +619,7 @@ fn exec_moveq(sim: &mut M68kSimulator, op: u16) -> Result<String, String> {
 }
 
 // ===========================================================================
-// Line 8 -- OR (DIVU/DIVS deferred)
+// Line 8 -- OR, DIVU, DIVS
 // ===========================================================================
 
 fn exec_line8(sim: &mut M68kSimulator, op: u16) -> Result<String, String> {
@@ -459,10 +629,39 @@ fn exec_line8(sim: &mut M68kSimulator, op: u16) -> Result<String, String> {
     let mode = ((op >> 3) & 7) as u8;
     let reg = (op & 7) as u8;
 
-    if sz_code == 3 {
-        return Err(format!(
-            "DIVU/DIVS are not supported by m68k-simulator v0.1.0: {op:#06x}"
-        ));
+    if sz_code == 3 && !dir_bit {
+        let ea = decode_ea(mode, reg)?;
+        let divisor = ea_read(sim, ea, 2)? & 0xffff;
+        if divisor == 0 {
+            return Err("DIVU: division by zero".to_string());
+        }
+        let dividend = sim.d[dn];
+        let quotient = dividend / divisor;
+        let remainder = dividend % divisor;
+        if quotient > 0xffff {
+            set_ccr(sim, false, false, true, false, None);
+        } else {
+            sim.d[dn] = (remainder << 16) | quotient;
+            set_ccr_logic(sim, quotient, 2);
+        }
+        return Ok("DIVU".to_string());
+    }
+    if sz_code == 3 && dir_bit {
+        let ea = decode_ea(mode, reg)?;
+        let divisor = i64::from(ea_read(sim, ea, 2)? as u16 as i16);
+        if divisor == 0 {
+            return Err("DIVS: division by zero".to_string());
+        }
+        let dividend = i64::from(sim.d[dn] as i32);
+        let quotient = dividend / divisor;
+        let remainder = dividend - quotient * divisor;
+        if !(-32768..=32767).contains(&quotient) {
+            set_ccr(sim, false, false, true, false, None);
+        } else {
+            sim.d[dn] = ((remainder as u32 & 0xffff) << 16) | (quotient as u32 & 0xffff);
+            set_ccr_logic(sim, quotient as u32 & 0xffff, 2);
+        }
+        return Ok("DIVS".to_string());
     }
     let sz = sz_arith(sz_code).ok_or_else(|| format!("OR bad size {op:#06x}"))?;
 
@@ -489,7 +688,7 @@ fn exec_line8(sim: &mut M68kSimulator, op: u16) -> Result<String, String> {
 }
 
 // ===========================================================================
-// Line 9 -- SUB, SUBA (SUBX deferred)
+// Line 9 -- SUB, SUBA, SUBX
 // ===========================================================================
 
 fn exec_line9(sim: &mut M68kSimulator, op: u16) -> Result<String, String> {
@@ -517,9 +716,18 @@ fn exec_line9(sim: &mut M68kSimulator, op: u16) -> Result<String, String> {
 
     let sz = sz_arith(sz_code).ok_or_else(|| format!("SUB bad size {op:#06x}"))?;
     if dir_bit && mode == 0 {
-        return Err(format!(
-            "SUBX is not supported by m68k-simulator v0.1.0: {op:#06x}"
-        ));
+        let extend = u32::from(sim.sr & 0x10 != 0);
+        let a = sim.d[dn] & mask_for(sz);
+        let b = sim.d[reg as usize] & mask_for(sz);
+        let raw = i64::from(a) - i64::from(b) - i64::from(extend);
+        let result = raw as u32 & mask_for(sz);
+        set_dn(sim, dn as u8, result, sz);
+        let n = compute_n(result, sz);
+        let z = sim.sr & 4 != 0 && result == 0;
+        let v = compute_v_sub(a, b, result, sz);
+        let c = u64::from(a) < u64::from(b) + u64::from(extend);
+        set_ccr(sim, n, z, v, c, Some(c));
+        return Ok("SUBX".to_string());
     }
 
     if !dir_bit {
@@ -609,7 +817,7 @@ fn exec_line_b(sim: &mut M68kSimulator, op: u16) -> Result<String, String> {
 }
 
 // ===========================================================================
-// Line C -- AND, EXG (MULU/MULS deferred)
+// Line C -- AND, EXG, MULU, MULS
 // ===========================================================================
 
 fn exec_line_c(sim: &mut M68kSimulator, op: u16) -> Result<String, String> {
@@ -632,10 +840,22 @@ fn exec_line_c(sim: &mut M68kSimulator, op: u16) -> Result<String, String> {
         return Ok(format!("EXG D{dn},A{reg}"));
     }
 
-    if sz_code == 3 {
-        return Err(format!(
-            "MULU/MULS are not supported by m68k-simulator v0.1.0: {op:#06x}"
-        ));
+    if sz_code == 3 && !dir_bit {
+        let ea = decode_ea(mode, reg)?;
+        let source = ea_read(sim, ea, 2)? & 0xffff;
+        let result = (sim.d[dn] & 0xffff).wrapping_mul(source);
+        sim.d[dn] = result;
+        set_ccr_logic(sim, result, 4);
+        return Ok("MULU".to_string());
+    }
+    if sz_code == 3 && dir_bit {
+        let ea = decode_ea(mode, reg)?;
+        let source = i32::from(ea_read(sim, ea, 2)? as u16 as i16);
+        let target = i32::from(sim.d[dn] as u16 as i16);
+        let result = target.wrapping_mul(source) as u32;
+        sim.d[dn] = result;
+        set_ccr_logic(sim, result, 4);
+        return Ok("MULS".to_string());
     }
     let sz = sz_arith(sz_code).ok_or_else(|| format!("AND bad size {op:#06x}"))?;
 
@@ -660,7 +880,7 @@ fn exec_line_c(sim: &mut M68kSimulator, op: u16) -> Result<String, String> {
 }
 
 // ===========================================================================
-// Line D -- ADD, ADDA (ADDX deferred)
+// Line D -- ADD, ADDA, ADDX
 // ===========================================================================
 
 fn exec_line_d(sim: &mut M68kSimulator, op: u16) -> Result<String, String> {
@@ -688,9 +908,18 @@ fn exec_line_d(sim: &mut M68kSimulator, op: u16) -> Result<String, String> {
 
     let sz = sz_arith(sz_code).ok_or_else(|| format!("ADD bad size {op:#06x}"))?;
     if dir_bit && mode == 0 {
-        return Err(format!(
-            "ADDX is not supported by m68k-simulator v0.1.0: {op:#06x}"
-        ));
+        let extend = u32::from(sim.sr & 0x10 != 0);
+        let a = sim.d[dn] & mask_for(sz);
+        let b = sim.d[reg as usize] & mask_for(sz);
+        let raw = i64::from(a) + i64::from(b) + i64::from(extend);
+        let result = raw as u32 & mask_for(sz);
+        set_dn(sim, dn as u8, result, sz);
+        let n = compute_n(result, sz);
+        let z = sim.sr & 4 != 0 && result == 0;
+        let v = compute_v_add(a, b, result, sz);
+        let c = raw > i64::from(mask_for(sz));
+        set_ccr(sim, n, z, v, c, Some(c));
+        return Ok("ADDX".to_string());
     }
 
     if !dir_bit {
@@ -718,16 +947,35 @@ fn exec_line_d(sim: &mut M68kSimulator, op: u16) -> Result<String, String> {
 }
 
 // ===========================================================================
-// Line E -- shift/rotate (register form only; memory-operand form deferred)
+// Line E -- register and memory shift/rotate
 // ===========================================================================
 
 fn exec_line_e(sim: &mut M68kSimulator, op: u16) -> Result<String, String> {
     let sz_code = ((op >> 6) & 3) as u8;
     if sz_code == 3 {
-        return Err(format!(
-            "memory-operand shift/rotate is not supported by m68k-simulator \
-             v0.1.0: {op:#06x}"
-        ));
+        let direction = ((op >> 11) & 1) as u8;
+        let shift_type = ((op >> 9) & 3) as u8;
+        let mode = ((op >> 3) & 7) as u8;
+        let reg = (op & 7) as u8;
+        let ea = decode_ea(mode, reg)?;
+        let address = ea_address(sim, ea, 2)?;
+        let value = crate::decode::mem_read(&sim.mem, address, 2)?;
+        let (result, n, z, v, c, x) = shift_value(
+            value,
+            1,
+            direction,
+            shift_type,
+            16,
+            0xffff,
+            0x8000,
+            sim.sr & 0x10 != 0,
+            sim.sr,
+        );
+        crate::decode::mem_write(&mut sim.mem, address, 2, result)?;
+        set_ccr(sim, n, z, v, c, Some(x));
+        let names = ["AS", "LS", "ROX", "RO"];
+        let suffix = if direction == 1 { "L" } else { "R" };
+        return Ok(format!("{}{suffix}.W", names[shift_type as usize]));
     }
     let sz = sz_arith(sz_code).ok_or_else(|| format!("shift bad size {op:#06x}"))?;
     let direction = ((op >> 8) & 1) as u8; // 1=left, 0=right
@@ -750,8 +998,9 @@ fn exec_line_e(sim: &mut M68kSimulator, op: u16) -> Result<String, String> {
     let bits = u32::from(sz) * 8;
     let x_in = sim.sr & 0x10 != 0;
 
-    let (new_val, n, z, v, c, x) =
-        shift_value(val, count, direction, shift_type, bits, mask, msb, x_in, sim.sr);
+    let (new_val, n, z, v, c, x) = shift_value(
+        val, count, direction, shift_type, bits, mask, msb, x_in, sim.sr,
+    );
     set_dn(sim, dn as u8, new_val, sz);
     set_ccr(sim, n, z, v, c, Some(x));
 
@@ -840,7 +1089,11 @@ fn shift_value(
         _ => {
             // Circular rotate
             if count == 0 {
-                last_out = if direction == 1 { false } else { result & 1 != 0 };
+                last_out = if direction == 1 {
+                    false
+                } else {
+                    result & 1 != 0
+                };
             } else if direction == 1 {
                 let n = count % bits;
                 if n != 0 {
@@ -938,16 +1191,17 @@ mod tests {
     }
 
     #[test]
-    fn line0_is_deferred() {
+    fn line0_ori_executes() {
         let mut sim = sim_with(&[0x00, 0x00, 0x00, 0x01]); // ORI-family opword
-        assert!(decode_and_execute(&mut sim).is_err());
+        sim.d[0] = 2;
+        assert_eq!(decode_and_execute(&mut sim).unwrap(), "ORI");
+        assert_eq!(sim.d[0], 3);
     }
 
     #[test]
     fn shift_asl_sets_carry_and_overflow() {
         // ASL.B #1,D0 with D0=0x40 (bit6 set) -> overflow (sign changes)
-        let (result, n, z, v, c, _x) =
-            shift_value(0x40, 1, 1, 0, 8, 0xFF, 0x80, false, 0);
+        let (result, n, z, v, c, _x) = shift_value(0x40, 1, 1, 0, 8, 0xFF, 0x80, false, 0);
         assert_eq!(result, 0x80);
         assert!(n);
         assert!(!z);
@@ -958,8 +1212,17 @@ mod tests {
     #[test]
     fn rotate_full_circle_is_identity() {
         // ROL.L by 32 positions is a no-op (bits % 32 == 0).
-        let (result, _n, _z, _v, c, _x) =
-            shift_value(0x1234_5678, 32, 1, 3, 32, 0xFFFF_FFFF, 0x8000_0000, false, 0);
+        let (result, _n, _z, _v, c, _x) = shift_value(
+            0x1234_5678,
+            32,
+            1,
+            3,
+            32,
+            0xFFFF_FFFF,
+            0x8000_0000,
+            false,
+            0,
+        );
         assert_eq!(result, 0x1234_5678);
         assert!(!c, "count==0 after modulo clears carry");
     }

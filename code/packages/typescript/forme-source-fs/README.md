@@ -34,6 +34,13 @@ interface SourceFsConfig {
 - **Each invocation is a one-shot scan.** The product CLI owns `forme watch`
   and reruns the pipeline when project files change.
 
+Before `run`, the orchestrator calls the stage's `externalState` hook. The hook
+publishes a canonical manifest sorted by portable `/`-separated locator. Each
+entry carries the source's stable `LogicalId` and binary content `RevisionId`;
+the manifest revision hashes the complete entry list. The hook and `run` share
+one `ctx.cache` snapshot, so files are read once and the observation cannot
+describe different bytes from the values emitted in that invocation.
+
 ## Capability discipline
 
 Source stages have a chicken-and-egg problem with `ctx.storage`: the storage API is supposed to be the orchestrator-supplied implementation, but **for the source-fs stage to read disk, *something* has to be that implementation**. We are.

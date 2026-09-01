@@ -392,6 +392,10 @@ describe("build and check", () => {
         cacheMisses: 0,
         outcome: "success",
         errorCount: 0,
+        inputRevision: "blake2b:input" as never,
+        outputRevision: "blake2b:output" as never,
+        externalStateRevision: null,
+        inputChanged: false,
       }],
       outputs: {
         site: {
@@ -410,6 +414,8 @@ describe("build and check", () => {
     const report = io.written.get("/project/dist/report.json");
     expect(report).toContain('"schemaVersion": 1');
     expect(report).toContain('"cacheHits": 1');
+    expect(report).toContain('"inputRevision": "blake2b:input"');
+    expect(report).toContain('"inputChanged": false');
     expect(report).not.toContain('"elapsedMs"');
     expect(report).toContain('"path": "index.html"');
     expect(report).toContain('"sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"');

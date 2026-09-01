@@ -8,10 +8,10 @@
  *   - Maps scheduler outputs (keyed by sink instance id) to the public
  *     `outputs` map (keyed by `OutputSpec.name` when one exists, else
  *     by instance id).
- *   - Computes a `buildId` from the input revisions of every source
- *     stage.  For v0 we hash the joined source instance ids — the
- *     full revision-tracking story lands when sources start emitting
- *     real revisions.
+ *   - Computes a `buildId` from every source's validated external-state
+ *     revision, falling back to a revision of a legacy source's materialized
+ *     output.
+ *   - Loads and persists the topology-keyed per-instance revision ledger.
  *   - Times the wall-clock end-to-end.
  */
 
@@ -24,7 +24,17 @@ import {
 } from "@coding-adventures/forme-stage";
 import type { Logger } from "@coding-adventures/forme-stage";
 import { executeDag } from "./scheduler.js";
-import type { Pipeline, RunOptions, RunResult } from "./types.js";
+import type {
+  Pipeline,
+  RunOptions,
+  RunResult,
+  StageRunSummary,
+} from "./types.js";
+import {
+  compareWithRevisionLedger,
+  loadRevisionLedger,
+  persistRevisionLedger,
+} from "./revision-ledger.js";
 
 export interface RunOnceContext {
   readonly logger?: Logger;
@@ -52,7 +62,9 @@ export async function runOnce(
   const ownedCache = ctx.cache === undefined ? memoryCache() : null;
   const cache = ctx.cache ?? ownedCache!;
   let result;
+  let stages: readonly StageRunSummary[];
   try {
+    const previousLedger = await loadRevisionLedger(cache, pipeline, logger);
     result = await executeDag(pipeline.dag, {
       cancellation,
       bestEffort,
@@ -62,6 +74,10 @@ export async function runOnce(
       // Honour the pipeline's reproducible-build setting (FM03 §8).
       reproducibleBuild: pipeline.config.settings.reproducibleBuild,
     });
+    stages = compareWithRevisionLedger(result.summaries, previousLedger);
+    if (result.outcome === "success") {
+      await persistRevisionLedger(cache, pipeline, stages, logger);
+    }
   } finally {
     if (ownedCache !== null) await ownedCache.dispose();
   }
@@ -77,15 +93,22 @@ export async function runOnce(
     outputs[key] = value;
   }
 
+  const sourceRevisions = pipeline.dag.sources.map(instanceId => {
+    const summary = stages.find(stage => stage.instanceId === instanceId)!;
+    return {
+      instanceId,
+      revision: summary.externalStateRevision ?? summary.outputRevision,
+    };
+  });
   const buildId = computeRevisionId({
     pipeline: pipeline.config.name,
-    sources: pipeline.dag.sources,
+    sources: sourceRevisions,
     sinks: pipeline.dag.sinks,
   });
 
   return {
     outcome: result.outcome,
-    stages: result.summaries,
+    stages,
     outputs,
     errors: result.errors,
     elapsedMs: Date.now() - start,

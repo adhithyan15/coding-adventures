@@ -1,6 +1,6 @@
 # Changelog — @coding-adventures/forme-stage
 
-## Unreleased
+## 0.2.0 — 2026-09-01
 
 ### Added
 
@@ -10,6 +10,11 @@
   `run` input object (`default` plus each named port) without weakening legacy
   single-input inference.
 - `defineStage` preserves the named-port generic and infers every payload.
+- Source stages may implement `externalState(config, ctx)` to publish a
+  versioned, revision-addressed manifest immediately before `run`. The hook
+  shares the run context so providers can memoize one coherent observation.
+- `ExternalStateManifest` and `ExternalStateEntry` define the portable
+  locator/identity/content-revision contract used by incremental scheduling.
 
 ## 0.1.0 — 2026-05-15
 

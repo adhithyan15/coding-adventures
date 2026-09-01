@@ -41,6 +41,14 @@ export interface StageRunSummary {
   readonly cacheMisses: number;
   readonly outcome: "success" | "skipped" | "failed";
   readonly errorCount: number;
+  /** Revision of this instance's complete materialized input, or null when unavailable. */
+  readonly inputRevision: RevisionId | null;
+  /** Revision of this instance's complete materialized output, or null when unavailable. */
+  readonly outputRevision: RevisionId | null;
+  /** Source observation revision published before run, or null for non-sources/legacy sources. */
+  readonly externalStateRevision: RevisionId | null;
+  /** Whether input changed from the last persisted successful run; null on first observation. */
+  readonly inputChanged: boolean | null;
 }
 
 /** Error surface in `RunResult.errors`. */

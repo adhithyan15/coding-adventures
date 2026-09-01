@@ -1,5 +1,12 @@
 # Changelog — @coding-adventures/forme-cli
 
+## 0.4.0 — 2026-09-01
+
+- Added per-instance input/output revision, external source-state revision, and
+  prior-run `inputChanged` fields to the deterministic `--report` output.
+- The report now exposes the project-persistent revision ledger comparisons
+  needed to audit upcoming exact affected-set scheduling.
+
 ## 0.3.0 — 2026-09-01
 
 - Wired `settings.cacheDir` to the filesystem cache backend so safe pure-stage

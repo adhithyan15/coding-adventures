@@ -4,8 +4,9 @@
  * Holds the persistent cache backend, default logger, and any other
  * cross-call state the orchestrator needs.  The returned `Orchestrator`
  * exposes the FM03 §3.1 lifecycle methods, including a host-driven watch
- * session. Pure stage invocations reuse the injected cache; exact external-
- * state revisions and affected-stage scheduling remain a follow-up.
+ * session. Pure stage invocations reuse the injected cache; successful runs
+ * persist source observations and per-instance revision state. Exact affected-
+ * stage scheduling and side-effect replay remain follow-ups.
  */
 
 import { memoryCache } from "@coding-adventures/forme-cache";

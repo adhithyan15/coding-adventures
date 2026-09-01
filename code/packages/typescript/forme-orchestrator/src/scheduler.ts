@@ -17,8 +17,10 @@
  *   - **Safe cache reuse, not yet an exact affected scheduler.** Sources and
  *     capability-bearing stages still execute on every run because they may
  *     observe or replay external state. Pure downstream invocations reuse
- *     deterministic cached outputs per materialized input. Exact external
- *     revisions and changed-and-downstream scheduling remain FM-B032.
+ *     deterministic cached outputs per materialized input. Sources publish
+ *     validated external-state revisions and every materialized instance gets
+ *     input/output revisions; changed-and-downstream scheduling remains
+ *     FM-B036 and side-effect replay remains FM-B037.
  *
  *   - **Reproducible-build mode is wired through.**  When
  *     `settings.reproducibleBuild = true`, every StageContext receives
@@ -60,15 +62,21 @@ import {
 import type {
   CancellationToken,
   Clock,
+  ExternalStateManifest,
   InputPortMap,
   Logger,
   StageContext,
   StageInitContext,
 } from "@coding-adventures/forme-stage";
-import type { JsonValue } from "@coding-adventures/forme-types";
+import type { JsonValue, RevisionId } from "@coding-adventures/forme-types";
 import type { CacheBackend, CacheEntry } from "@coding-adventures/forme-cache";
 import { cacheKey, makeEntry } from "@coding-adventures/forme-cache";
-import { computeBinaryRevisionId } from "@coding-adventures/forme-identity";
+import {
+  computeBinaryRevisionId,
+  computeRevisionId,
+  isLogicalIdShape,
+  isRevisionIdShape,
+} from "@coding-adventures/forme-identity";
 import type { ResolvedInstance, PipelineDag } from "./dag.js";
 import type { RunError, RunOutcome, StageRunSummary } from "./types.js";
 import {
@@ -97,6 +105,10 @@ interface RunState {
     cacheMisses: number;
     outcome: "success" | "skipped" | "failed";
     errorCount: number;
+    inputRevision: RevisionId | null;
+    outputRevision: RevisionId | null;
+    externalStateRevision: RevisionId | null;
+    inputChanged: boolean | null;
   };
 }
 
@@ -221,6 +233,18 @@ export async function executeDag(
         ? collectPortInputs(inst, states)
         : collectInputs(inst, states);
       const ctx: StageContext = makeRunContext(inst, options, newClock);
+      if (typeof inst.stage.externalState === "function") {
+        if (inst.producer !== null || inst.inputProducers.size !== 0) {
+          throw new Error(
+            `scheduler: externalState is only valid on source instances; ${JSON.stringify(inst.id)} has producers`,
+          );
+        }
+        const manifest = await inst.stage.externalState(inst.config, ctx);
+        validateExternalStateManifest(manifest, inst.id);
+        state.summary.externalStateRevision = manifest.revision;
+      }
+      state.summary.inputRevision = state.summary.externalStateRevision
+        ?? revisionForValue(cacheInputValue(inst, states));
 
       if (hasNamedInputs(inst)) {
         // Named fan-in is a join boundary: every producer has already been
@@ -275,6 +299,7 @@ export async function executeDag(
         state.summary.itemsConsumed = list.length;
         state.summary.itemsProduced = collected.length;
       }
+      state.summary.outputRevision = revisionForValue(state.output);
       state.summary.outcome = "success";
     } catch (err) {
       if (err instanceof CancellationError) {
@@ -345,8 +370,61 @@ function makeState(inst: ResolvedInstance): RunState {
       cacheMisses: 0,
       outcome: "success", // mutated below
       errorCount: 0,
+      inputRevision: null,
+      outputRevision: null,
+      externalStateRevision: null,
+      inputChanged: null,
     },
   };
+}
+
+function revisionForValue(value: unknown): RevisionId | null {
+  if (value === undefined) return null;
+  try {
+    return computeBinaryRevisionId(encodeCacheValue(value));
+  } catch {
+    return null;
+  }
+}
+
+function validateExternalStateManifest(
+  manifest: ExternalStateManifest,
+  instanceId: string,
+): void {
+  const prefix = `scheduler: invalid external state from ${JSON.stringify(instanceId)}`;
+  if (manifest?.version !== 1 || !Array.isArray(manifest.entries)) {
+    throw new Error(`${prefix}: expected a version 1 manifest with entries`);
+  }
+  if (!isRevisionIdShape(manifest.revision)) {
+    throw new Error(`${prefix}: revision is malformed`);
+  }
+  let previousLocator: string | null = null;
+  for (const [index, entry] of manifest.entries.entries()) {
+    if (typeof entry?.locator !== "string" || entry.locator.length === 0) {
+      throw new Error(`${prefix}: entries[${index}].locator must be non-empty`);
+    }
+    if (previousLocator !== null && entry.locator <= previousLocator) {
+      throw new Error(`${prefix}: entries must have unique locators in ascending order`);
+    }
+    if (!isRevisionIdShape(entry.revision)) {
+      throw new Error(`${prefix}: entries[${index}].revision is malformed`);
+    }
+    if (entry.identity !== undefined && !isLogicalIdShape(entry.identity)) {
+      throw new Error(`${prefix}: entries[${index}].identity is malformed`);
+    }
+    previousLocator = entry.locator;
+  }
+  const expected = computeRevisionId({
+    version: manifest.version,
+    entries: manifest.entries.map(entry => ({
+      locator: entry.locator,
+      ...(entry.identity === undefined ? {} : { identity: entry.identity }),
+      revision: entry.revision,
+    })),
+  });
+  if (manifest.revision !== expected) {
+    throw new Error(`${prefix}: revision does not match canonical entries`);
+  }
 }
 
 function isSingleProducer(
@@ -476,8 +554,9 @@ async function runCached(
   execute: () => Promise<CachedStageOutput>,
 ): Promise<CacheRunResult> {
   // Sources observe external state, and capability-bearing stages may read or
-  // replay side effects. Until FM-B032 threads explicit external revisions and
-  // replay contracts, only pure non-source invocations are safe to skip.
+  // replay side effects. Even with revision ledgers, only pure non-source
+  // invocations are safe to skip until FM-B036/F037 schedule affected branches
+  // and replay external effects.
   const hasInput = inst.producer !== null || inst.inputProducers.size !== 0;
   if (!options.useCache || !hasInput || inst.capabilities.length !== 0) {
     return { ...(await execute()), cacheHit: false, cacheMiss: false };

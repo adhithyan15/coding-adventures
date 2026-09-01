@@ -58,6 +58,11 @@ event bus or ambient filesystem state as a data channel.
 
 The orchestrator builds a `StageContext` per invocation by composing the in-memory facilities (logger, cancellation, clock, cache, telemetry, event bus) with capability-gated APIs (`StorageApi`, `NetworkApi`, `EnvApi`, `FilesystemApi`, `ShellApi`). For each capability the stage **didn't** declare, the orchestrator plugs in the matching `denied*Api()` so a method call throws `CapabilityError` with the missing capability embedded.
 
+A source may also implement `externalState(config, ctx)`. It returns a sorted,
+versioned manifest of provider locators plus stable logical/content revisions.
+The orchestrator calls the hook immediately before `run` with the same context;
+using `ctx.cache` lets the hook and emitted stream share one coherent snapshot.
+
 ```typescript
 import {
   consoleLogger, createCancellationTokenSource, systemClock, inMemoryCache,
@@ -88,7 +93,7 @@ const ctx: StageContext = {
 | Group              | Exports                                                                                                       |
 | ------------------ | ------------------------------------------------------------------------------------------------------------- |
 | Stage contract     | `Stage`, `defineStage`, `StageInput`, `PortInputs`, `InputPortMap`, `StageOutput`, `JsonSchema`              |
-| Context shapes     | `StageContext`, `StageInitContext`                                                                            |
+| Context shapes     | `StageContext`, `StageInitContext`, `ExternalStateManifest`, `ExternalStateEntry`                             |
 | Logger             | `Logger`, `LogLevel`, `LOG_LEVELS`, `consoleLogger()`, `silentLogger()`                                       |
 | Cancellation       | `CancellationToken`, `CancellationTokenSource`, `createCancellationTokenSource()`, `neverCancelledToken()`     |
 | Clock              | `Clock`, `systemClock()`, `frozenClock({timestamp, monotonicStart?, monotonicTickMs?})`                       |
