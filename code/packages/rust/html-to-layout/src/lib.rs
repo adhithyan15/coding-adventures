@@ -2299,9 +2299,7 @@ fn parse_aspect_ratio(value: &[String]) -> Option<f64> {
         .filter(|token| token.as_str() != "auto")
         .cloned()
         .collect::<String>();
-    let (numerator, denominator) = authored
-        .split_once('/')
-        .map_or((authored.as_str(), "1"), |parts| parts);
+    let (numerator, denominator) = authored.split_once('/').unwrap_or((authored.as_str(), "1"));
     let numerator = numerator.parse::<f64>().ok()?;
     let denominator = denominator.parse::<f64>().ok()?;
     let ratio = numerator / denominator;
