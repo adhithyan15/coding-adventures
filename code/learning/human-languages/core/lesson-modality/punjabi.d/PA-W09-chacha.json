@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W09-chacha",
+    "language": "punjabi",
+    "chapter": 32,
+    "sequence": 1990,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1af2b5877883167e",
+    "detachableSegments": [
+      "Script — one letter"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

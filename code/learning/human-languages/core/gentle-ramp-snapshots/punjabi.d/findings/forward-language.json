@@ -1,5 +1,11 @@
 {
   "language": "punjabi",
   "kind": "forward-language",
-  "finding": null
+  "finding": {
+    "language": "punjabi",
+    "kind": "forward-language",
+    "count": 4,
+    "unit": "use(s)",
+    "detail": "teach target-language material before load-bearing use"
+  }
 }

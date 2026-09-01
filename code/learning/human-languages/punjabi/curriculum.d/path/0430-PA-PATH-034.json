@@ -1,0 +1,15 @@
+{
+  "id": "PA-PATH-034",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "PA-C32-changa",
+    "PA-W09-chacha",
+    "PA-C32-thik-thak",
+    "PA-W09-gagga"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-039-PREA1-GOOD-AND-SOSO"
+  ],
+  "after": []
+}
