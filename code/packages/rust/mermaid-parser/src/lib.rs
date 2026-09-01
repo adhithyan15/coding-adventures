@@ -21,7 +21,8 @@ use mermaid_lexer::{
     tokenize_mermaid, tokenize_mermaid_c4, tokenize_mermaid_er, tokenize_mermaid_gitgraph,
     tokenize_mermaid_pie, tokenize_mermaid_sankey, tokenize_mermaid_sequence,
     tokenize_mermaid_state, try_tokenize_mermaid_gantt, try_tokenize_mermaid_journey,
-    try_tokenize_mermaid_quadrant, try_tokenize_mermaid_requirement, try_tokenize_mermaid_xychart,
+    try_tokenize_mermaid_quadrant, try_tokenize_mermaid_requirement,
+    try_tokenize_mermaid_timeline, try_tokenize_mermaid_xychart,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
@@ -41,6 +42,8 @@ const QUADRANT_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/quadrant.grammar");
 const JOURNEY_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/journey.grammar");
+const TIMELINE_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/timeline.grammar");
 const REQUIREMENT_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.grammar");
 const XYCHART_PARSER_GRAMMAR_SOURCE: &str =
@@ -538,8 +541,8 @@ use diagram_ir::{
     SequenceParticipantGroup, SequenceParticipantKind, SequenceProperty, SequenceTextWrap,
     SeriesKind, StructuralDiagram, StructuralGroup, StructuralKind, StructuralNode,
     GanttTaskTags, StructuralNodeKind, StructuralNodeMetadata, StructuralRelationship, TaskEnd,
-    TaskStart,
-    TemporalBody, TemporalDiagram, TemporalKind, XyAxisConfig, XyChartConfig,
+    TaskStart, TemporalBody, TemporalDiagram, TemporalKind, TimelineDiagram, TimelineDirection,
+    TimelinePeriod, TimelineSection, XyAxisConfig, XyChartConfig,
 };
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -626,6 +629,7 @@ impl MermaidDiagramType {
                 | Self::Gantt
                 | Self::GitGraph
                 | Self::Journey
+                | Self::Timeline
                 | Self::Requirement
                 | Self::Pie
                 | Self::Quadrant
@@ -755,6 +759,13 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
                 kind: TemporalKind::Journey,
                 title,
                 body: TemporalBody::Journey(Box::new(journey)),
+            })
+        }),
+        MermaidDiagramType::Timeline => parse_timeline(source).map(|(title, timeline)| {
+            MermaidDiagram::Temporal(TemporalDiagram {
+                kind: TemporalKind::Timeline,
+                title,
+                body: TemporalBody::Timeline(timeline),
             })
         }),
         unsupported => Err(ParseError {
@@ -1465,6 +1476,93 @@ pub fn parse_journey(source: &str) -> Result<(Option<String>, JourneyDiagram), P
             sections,
         },
     ))
+}
+
+/// Parse Mermaid 11.16.1 timeline statements into temporal semantic IR.
+pub fn parse_timeline(source: &str) -> Result<(Option<String>, TimelineDiagram), ParseError> {
+    let preprocessed = preprocess_mermaid_source(source)?;
+    let tokens = try_tokenize_mermaid_timeline(&preprocessed.source).map_err(|message| ParseError {
+        message,
+        line: 1,
+        col: 1,
+    })?;
+    let grammar = parse_parser_grammar(TIMELINE_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|error| panic!("Failed to parse timeline.grammar: {error}"));
+    let mut grammar_parser =
+        GrammarParser::new(tokens.clone(), grammar).with_max_depth(MAX_RULE_DEPTH);
+    grammar_parser.parse().map_err(|error| ParseError {
+        message: error.message,
+        line: error.token.line,
+        col: error.token.column,
+    })?;
+
+    let mut title = None;
+    let mut accessibility_title = None;
+    let mut accessibility_description = None;
+    let mut direction = TimelineDirection::TopDown;
+    let mut sections = Vec::<TimelineSection>::new();
+    for token in tokens {
+        match token.type_name.as_deref() {
+            Some("HEADER_LR") => direction = TimelineDirection::LeftRight,
+            Some("HEADER_TD" | "HEADER") => direction = TimelineDirection::TopDown,
+            Some("TITLE_STATEMENT") => {
+                title = Some(normalize_mermaid_line_breaks(token.value["title".len()..].trim()));
+            }
+            Some("ACC_TITLE_STATEMENT") => {
+                accessibility_title = token.value.split_once(':')
+                    .map(|(_, value)| value.trim().to_string());
+            }
+            Some("ACC_DESCR_STATEMENT") => {
+                accessibility_description = token.value.split_once(':')
+                    .map(|(_, value)| value.trim().to_string());
+            }
+            Some("ACC_DESCR_BLOCK") => {
+                let open = token.value.find('{').expect("timeline token requires '{'");
+                let close = token.value.rfind('}').expect("timeline token requires '}'");
+                accessibility_description = Some(
+                    token.value[open + 1..close]
+                        .lines()
+                        .map(str::trim)
+                        .filter(|line| !line.is_empty())
+                        .collect::<Vec<_>>()
+                        .join("\n"),
+                );
+            }
+            Some("SECTION_STATEMENT") => sections.push(TimelineSection {
+                label: Some(normalize_mermaid_line_breaks(
+                    token.value["section".len()..].trim(),
+                )),
+                periods: Vec::new(),
+            }),
+            Some("PERIOD_STATEMENT") => {
+                if sections.is_empty() {
+                    sections.push(TimelineSection { label: None, periods: Vec::new() });
+                }
+                sections.last_mut().expect("timeline section exists").periods.push(
+                    TimelinePeriod {
+                        label: normalize_mermaid_line_breaks(token.value.trim()),
+                        events: Vec::new(),
+                    },
+                );
+            }
+            Some("EVENT_STATEMENT") => {
+                let period = sections.last_mut()
+                    .and_then(|section| section.periods.last_mut())
+                    .ok_or_else(|| token_error(&token, "timeline event requires a preceding period"))?;
+                period.events.push(normalize_mermaid_line_breaks(
+                    token.value.trim_start_matches(':').trim(),
+                ));
+            }
+            _ => {}
+        }
+    }
+
+    Ok((title, TimelineDiagram {
+        accessibility_title,
+        accessibility_description,
+        direction,
+        sections,
+    }))
 }
 
 fn parse_mermaid_font_size(value: String) -> Option<f64> {

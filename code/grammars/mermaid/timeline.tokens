@@ -1,0 +1,22 @@
+# @version 1
+# Mermaid 11.16.1 timeline token grammar.
+# Upstream: packages/mermaid/src/diagrams/timeline/parser/timeline.jison
+
+case_sensitive: false
+
+skip:
+  WHITESPACE        = /[ \t]+/
+  COMMENT           = /(?:%%|#)[^\r\n]*/
+
+NEWLINE             = /\r?\n/
+SEMICOLON           = ";"
+HEADER_LR           = /timeline[ \t]+LR/
+HEADER_TD           = /timeline[ \t]+TD/
+HEADER              = /timeline/
+ACC_DESCR_BLOCK     = /accDescr[ \t]*\{[^}]*\}/
+ACC_TITLE_STATEMENT = /accTitle[ \t]*:[^#\r\n;]+/
+ACC_DESCR_STATEMENT = /accDescr[ \t]*:[^#\r\n;]+/
+TITLE_STATEMENT     = /title[ \t]+[^#\r\n;]+/
+SECTION_STATEMENT   = /section[ \t]+[^#:\r\n;]+/
+EVENT_STATEMENT     = /:[ \t]*[^#\r\n;]+/
+PERIOD_STATEMENT    = /[^#:\r\n;]+/
