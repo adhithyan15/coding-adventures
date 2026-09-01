@@ -34,8 +34,9 @@ project.
 - `build` validates the config and DAG, runs the pipeline once, and prints the
   stable output names and build ID. `--reproducible` overrides the config for
   that invocation without mutating the imported value. `--report` writes a
-  deterministic JSON summary of per-stage cache statistics, output manifests,
-  and per-file hashes without duplicating artifact bytes. When
+  deterministic JSON summary of per-stage cache statistics and revisions,
+  prior-run input changes, output manifests, and per-file hashes without
+  duplicating artifact bytes. When
   `settings.cacheDir` is configured, unchanged capability-free downstream
   invocations are restored across separate CLI processes from a
   containment-checked filesystem cache beneath the project root.
@@ -50,9 +51,10 @@ project.
   rebuilds. Browsers reconnect to the live-reload event stream automatically.
   A failed rebuild reports diagnostics while the server keeps the last good
   output available. Generated output, cache, `node_modules`, and `.git` trees
-  are excluded from filesystem notifications. Sources and capability-bearing
-  stages remain conservative until FM-B032 adds explicit external-state
-  revisions and side-effect replay contracts.
+  are excluded from filesystem notifications. Filesystem sources publish
+  explicit external-state revisions into the cross-process revision ledger,
+  but sources and capability-bearing stages still execute conservatively until
+  FM-B036/F037 add exact affected scheduling and side-effect replay.
 
 `--config` is a global option and can be written before or after a command.
 `build` also accepts the `run` alias. Help and version output are generated

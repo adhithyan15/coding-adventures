@@ -324,6 +324,10 @@ function buildReport(config: PipelineConfig, result: Awaited<ReturnType<Orchestr
       cacheHits: stage.cacheHits,
       cacheMisses: stage.cacheMisses,
       errorCount: stage.errorCount,
+      inputRevision: stage.inputRevision,
+      outputRevision: stage.outputRevision,
+      externalStateRevision: stage.externalStateRevision,
+      inputChanged: stage.inputChanged,
     })),
     outputs,
   }, null, 2)}\n`;
