@@ -3191,6 +3191,21 @@
       "source_cas_hashes": [],
       "benchmark_paths": [],
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
+      "id": "adj.civics.3to5.elector_allocation_method",
+      "title": "Recall how a jurisdiction assigns its presidential electors, and which two states are the exception to winner-take-all",
+      "band": "3-5",
+      "domain": "civics",
+      "competency": "recall",
+      "coverage_roots": ["c3.socialstudies"],
+      "standards": [],
+      "prerequisites": [],
+      "libraries": ["code/specs/data/adj-facts-stdlib/civics/elector-allocation-method.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     }
   ]
 }

@@ -1,0 +1,100 @@
+% ============================================================================
+% elector-allocation-method — how a jurisdiction assigns its presidential
+% electors (adj-facts-stdlib, CIVICS).
+% ============================================================================
+% "Do all states award their electoral votes the same way?" is the question
+% behind one of the most-cited exceptions in U.S. civics, and the answer is
+% no. Recall is a binding query:
+%
+%     ? elector_allocation_method(maine, $M)
+%       % proportional
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `elector_allocation_method(jurisdiction, method)` carrying the
+% source citation, so the lookup above is the ordinary SLD binding query —
+% the engine returns the method WITH its source, on the CPU, with zero
+% model calls, and abstains on any jurisdiction the source does not place.
+% The query also runs BACKWARD, which is how a learner is usually quizzed
+% ("which states are the exception?") and returns BOTH named states:
+%
+%     ? elector_allocation_method($J, proportional)
+%       % maine
+%       % nebraska
+%
+% THIS FILE CLOSES A DOCUMENTED ABSTENTION. `electoral-college-count.adj`
+% holds `winner_take_all_states -> 48` and deliberately declined the
+% Maine/Nebraska fact, its header recording that a proportional system is
+% "a METHOD, not a count ... Different axis, its own future table". This is
+% that table. The two compose rather than overlap: the count table says HOW
+% MANY jurisdictions are winner-take-all, this one says WHICH METHOD a
+% named jurisdiction uses — and the 48 is exactly the set this table's
+% first row names, which is why the group row is kept rather than tabling
+% only the two exceptions. Shipping the exception without the rule it is an
+% exception TO would leave a learner able to recall that Maine is
+% proportional without being able to recall that almost nowhere else is.
+%
+% Provenance: quoted verbatim from USA.gov's "Electoral College" page, two
+% consecutive sentences:
+%
+%     jurisdiction (this table's atom)   method (this table's atom)   quote (verbatim)
+%     ---------------------------------  ---------------------------  -----------------------------------------------
+%     forty_eight_states_and_dc          winner_take_all              "In 48 states and Washington, D.C., the winner
+%                                                                        gets all the electoral votes for that state."
+%     maine                              proportional                 "Maine and Nebraska assign their electors using
+%     nebraska                           proportional                    a proportional system." (one sentence names
+%                                                                        both states)
+%
+% curl-fetched the raw page and read it byte-for-byte before writing this
+% file (not just an AI-summarized WebFetch). `trust authoritative` —
+% USA.gov is the U.S. General Services Administration's official guide to
+% government information, a first-party .gov publisher of exactly the fact
+% being recalled, the same tier and the SAME page
+% `electoral-college-count.adj` already cites.
+%
+% ON NAMING THE GROUP ROW. The first atom is `forty_eight_states_and_dc`
+% because that is how the source itself delimits the group — "In 48 states
+% and Washington, D.C.". A vaguer atom like `most_states` would have been a
+% paraphrase, since the page never says "most"; a bare `other_states` would
+% have hidden the fact that the source states a specific count. The count
+% is the source's own and it also travels, with its citation, in
+% `electoral-college-count.adj`'s `winner_take_all_states` row, so if a
+% future apportionment changes the number, both rows are re-derived from
+% the same re-fetched sentence rather than one silently disagreeing with
+% the other.
+%
+% Honest abstention:
+%
+%   - The page states that the winner "gets all the electoral votes for
+%     that state" and that Maine and Nebraska use "a proportional system",
+%     but it does NOT explain HOW the proportional system apportions them
+%     (by congressional district, statewide, or otherwise). A recall for
+%     the mechanism abstains rather than filling in the well-known details
+%     from outside the source.
+%   - Individual states other than Maine and Nebraska are not rows. The
+%     source describes the other 48 only as a group, so binding a specific
+%     state name would require deciding it is one of the 48 — an inference
+%     the page does not license for any particular state.
+%   - The faithless-elector penalties the same page lists (fined,
+%     disqualified, replaced by a substitute elector, prosecuted by their
+%     state) are consequences for an INDIVIDUAL elector's vote, not a
+%     jurisdiction's allocation method, and the list states no second axis
+%     uniformly — only one of the four names who imposes it — so it is not
+%     tabled here or anywhere yet.
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table elector_allocation_method {
+    columns jurisdiction, method
+
+    row (forty_eight_states_and_dc, winner_take_all)
+    row (maine, proportional)
+    row (nebraska, proportional)
+
+    source "In 48 states and Washington, D.C., the winner gets all the electoral votes for that state."
+    locator "https://www.usa.gov/electoral-college"
+    trust authoritative
+
+    cites "Maine and Nebraska assign their electors using a proportional system." locator "https://www.usa.gov/electoral-college"
+}
