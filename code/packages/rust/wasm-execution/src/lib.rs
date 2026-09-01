@@ -297,6 +297,11 @@ impl WasmValue {
             | ValueType::ConcreteFuncRef(_)
             | ValueType::NonNullStructRef(_)
             | ValueType::NonNullConcreteFuncRef(_)
+            // W33 fourth slice: `ArrayRef`/`NonNullArrayRef` are nullable
+            // references at the runtime-value level too -- same "non-null is
+            // purely static" reasoning as `NonNullStructRef` right above.
+            | ValueType::ArrayRef(_)
+            | ValueType::NonNullArrayRef(_)
             | ValueType::Funcref
             | ValueType::Externref
             | ValueType::Exnref

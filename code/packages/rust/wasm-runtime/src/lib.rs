@@ -1870,12 +1870,19 @@ impl WasmRuntime {
                 // `return_call_ref.wast`, exercise non-null concrete refs
                 // only as PARAMS/LOCALS/GLOBALS inside a function body,
                 // never as a top-level `call()` boundary argument).
+                // W33 fourth slice: `ArrayRef`/`NonNullArrayRef` join this
+                // same lossy-legacy-path placeholder group -- no vendored
+                // corpus directive passes one as a top-level `invoke`
+                // argument (arrays only ever appear as params/locals/globals
+                // inside a function body in `array.wast`).
                 ValueType::Anyref
                 | ValueType::I31ref
                 | ValueType::StructRef(_)
                 | ValueType::ConcreteFuncRef(_)
                 | ValueType::NonNullStructRef(_)
                 | ValueType::NonNullConcreteFuncRef(_)
+                | ValueType::ArrayRef(_)
+                | ValueType::NonNullArrayRef(_)
                 | ValueType::Funcref
                 | ValueType::Externref
                 | ValueType::Exnref

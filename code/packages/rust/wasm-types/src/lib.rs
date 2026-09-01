@@ -353,6 +353,30 @@ pub enum ValueType {
     /// `NonNullConcreteFuncRef` value flows into that nullable slot fine
     /// via the direct subtyping rule above, it is simply never REQUIRED.
     NonNullConcreteFuncRef(u32),
+
+    /// `(ref null $t)` where `$t` names a concrete WasmGC **array** type
+    /// (W33 fourth slice: `code/specs/W33-wasm-gc-recursive-type-subtyping.md`)
+    /// -- the array-hierarchy analogue of [`ValueType::StructRef`].
+    ///
+    /// The `u32` payload is a **flat type-section index** (the same shared
+    /// index space every other concrete reference variant here uses), NOT
+    /// an index directly into [`WasmModule::array_types`] -- resolve it via
+    /// [`WasmModule::array_type_at`], which knows how to map a flat index to
+    /// the right `array_types` entry for both this crate's own TEXT-format
+    /// parser (`WasmModule::type_kinds`-aware) and any hand-built module
+    /// that never populates `type_kinds` at all.
+    ///
+    /// Binary encoding: `0x63 <LEB128(idx)>`, the identical two-byte shape
+    /// `StructRef`/`ConcreteFuncRef` already share -- disambiguated purely
+    /// by which index space `idx` falls in, exactly like those two
+    /// disambiguate from each other.
+    ArrayRef(u32),
+
+    /// `(ref $t)` -- the NON-NULL counterpart of [`ValueType::ArrayRef`],
+    /// same relationship [`ValueType::NonNullStructRef`] has to
+    /// `StructRef`. Binary encoding: `0x64 <LEB128(idx)>`, same tag byte as
+    /// `NonNullStructRef`/`NonNullConcreteFuncRef`.
+    NonNullArrayRef(u32),
 }
 
 impl ValueType {
@@ -388,6 +412,10 @@ impl ValueType {
             // W32 second slice: multi-byte, like `StructRef`/`ConcreteFuncRef`.
             ValueType::NonNullStructRef(_) => None,
             ValueType::NonNullConcreteFuncRef(_) => None,
+            // W33 fourth slice: multi-byte, same shape as the struct/func
+            // concrete-reference variants above.
+            ValueType::ArrayRef(_) => None,
+            ValueType::NonNullArrayRef(_) => None,
         }
     }
 
@@ -451,6 +479,20 @@ impl ValueType {
                 bytes.extend(encode_unsigned(*idx as u64));
                 bytes
             }
+            // W33 fourth slice: same two tag bytes as the struct/func
+            // concrete-reference variants -- see `ArrayRef`/`NonNullArrayRef`'s
+            // own doc comments for why they never collide (different index
+            // space, not a different byte).
+            ValueType::ArrayRef(idx) => {
+                let mut bytes = vec![0x63u8];
+                bytes.extend(encode_unsigned(*idx as u64));
+                bytes
+            }
+            ValueType::NonNullArrayRef(idx) => {
+                let mut bytes = vec![0x64u8];
+                bytes.extend(encode_unsigned(*idx as u64));
+                bytes
+            }
         }
     }
 
@@ -487,6 +529,10 @@ impl ValueType {
                 | (ValueType::NullRef, ValueType::Anyref)
                 | (ValueType::NullRef, ValueType::I31ref)
                 | (ValueType::NullRef, ValueType::StructRef(_))
+                // W33 fourth slice: `none` is the bottom of the WHOLE `any`
+                // hierarchy, so it sits below `ArrayRef(_)` too, exactly
+                // like it already does below `StructRef(_)` above.
+                | (ValueType::NullRef, ValueType::ArrayRef(_))
         )
     }
 
@@ -530,7 +576,11 @@ impl ValueType {
             (ValueType::NonNullStructRef(i), ValueType::StructRef(j)) if i == j
         ) || matches!(
             (self, other),
+            (ValueType::NonNullArrayRef(i), ValueType::ArrayRef(j)) if i == j
+        ) || matches!(
+            (self, other),
             (ValueType::NonNullStructRef(_), ValueType::Anyref)
+                | (ValueType::NonNullArrayRef(_), ValueType::Anyref)
                 | (ValueType::NonNullConcreteFuncRef(_), ValueType::Funcref)
         ) || matches!(
             (self, other),
@@ -562,14 +612,89 @@ impl ValueType {
 /// field $head: [0x6E, 0x01]   ;; anyref, mutable
 /// field $tail: [0x6E, 0x01]   ;; anyref, mutable
 /// ```
-#[derive(Debug, Clone, PartialEq, Eq)]
+/// A field/element's declared **storage type** (WasmGC's `storagetype`
+/// grammar: `storagetype ::= valtype | packedtype`, W33 fourth slice).
+///
+/// Most fields just hold an ordinary [`ValueType`] (`i32`, `anyref`, a
+/// concrete reference, ...). The GC proposal ALSO allows two **packed**
+/// storage types that exist only inside a struct field or array element —
+/// never as a local, param, result, or global type — because they're a
+/// storage-density optimization, not a real value type: `struct.get`/
+/// `array.get` always sign- or zero-EXTEND a packed field back out to a
+/// full `i32` the moment it's read (hence the mandatory `_s`/`_u` suffix
+/// on those two ops specifically — see `struct.wast`'s own "Packed field
+/// instructions" section), and `struct.set`/`array.set` TRUNCATE an `i32`
+/// down to the field's real width on write.
+///
+/// ```text
+/// (field i8)              -- StorageType::I8
+/// (field (mut i16))       -- StorageType::I16, FieldType::mutable = true
+/// (field i32)             -- StorageType::Val(ValueType::I32)
+/// (field (ref $vec))      -- StorageType::Val(ValueType::NonNullStructRef/ArrayRef(_))
+/// ```
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum StorageType {
+    /// An ordinary value type — the overwhelming majority of fields.
+    Val(ValueType),
+    /// `i8` — packed 8-bit storage, sign/zero-extended to `i32` on read.
+    I8,
+    /// `i16` — packed 16-bit storage, sign/zero-extended to `i32` on read.
+    I16,
+}
+
+impl StorageType {
+    /// The `i32`-or-wider type a `struct.get`/`array.get` of this storage
+    /// actually pushes onto the stack (packed storage always widens to a
+    /// full `i32`; an ordinary [`ValueType`] round-trips unchanged). This is
+    /// the type `wasm-validator`'s static stack-effect checker needs, NOT
+    /// the on-disk/in-memory width.
+    pub fn widened_type(&self) -> ValueType {
+        match self {
+            StorageType::Val(vt) => *vt,
+            StorageType::I8 | StorageType::I16 => ValueType::I32,
+        }
+    }
+
+    /// Whether this storage type is packed (`i8`/`i16`) — packed fields are
+    /// the only ones that need a signed-vs-unsigned read distinction
+    /// (`struct.get_s`/`struct.get_u`, `array.get_s`/`array.get_u`); an
+    /// ordinary [`ValueType`] field only ever has a single `struct.get`/
+    /// `array.get` reading it.
+    pub fn is_packed(&self) -> bool {
+        matches!(self, StorageType::I8 | StorageType::I16)
+    }
+
+    /// The storage width in bits, for packed storage only (`None` for an
+    /// ordinary [`ValueType`], which has no truncation to perform).
+    pub fn packed_bits(&self) -> Option<u32> {
+        match self {
+            StorageType::I8 => Some(8),
+            StorageType::I16 => Some(16),
+            StorageType::Val(_) => None,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct FieldType {
-    /// The type stored in this field.
-    pub val_type: ValueType,
+    /// The storage type of this field (W33 fourth slice: widened from a
+    /// plain [`ValueType`] to [`StorageType`] so packed `i8`/`i16` fields
+    /// — real WasmGC vocabulary this crate had no representation for at
+    /// all before — have somewhere to live).
+    pub storage: StorageType,
     /// Whether this field can be modified after the struct is created.
     /// `true` → mutable (heap write is legal via `struct.set`).
     /// `false` → immutable (write-once, set during `struct.new`).
     pub mutable: bool,
+}
+
+impl FieldType {
+    /// Build a field/element with an ordinary (non-packed) value type —
+    /// the common case, and a drop-in replacement for the pre-W33-fourth-
+    /// slice `FieldType { val_type, mutable }` literal shape.
+    pub fn plain(val_type: ValueType, mutable: bool) -> Self {
+        FieldType { storage: StorageType::Val(val_type), mutable }
+    }
 }
 
 /// A WasmGC struct type definition — an ordered list of fields.
@@ -601,6 +726,31 @@ pub struct StructType {
     /// The fields of this struct, in declaration order.
     /// Field index 0 is the first field, 1 the second, and so on.
     pub fields: Vec<FieldType>,
+}
+
+/// A WasmGC array type definition — a single, homogeneous, dynamically-sized
+/// element type (W33 fourth slice: `code/specs/
+/// W33-wasm-gc-recursive-type-subtyping.md`).
+///
+/// ```wat
+/// (type $vec (array f32))            ;; immutable f32 elements
+/// (type $mvec (array (mut f32)))     ;; mutable f32 elements
+/// (type $bytes (array (mut i8)))     ;; packed, mutable
+/// ```
+///
+/// Unlike [`StructType`] (a fixed-size, heterogeneous field LIST), an array
+/// has exactly ONE element type/mutability pair — reusing [`FieldType`] for
+/// it (rather than a bespoke `(StorageType, bool)` tuple) keeps the "storage
+/// type + mutable flag" shape defined in exactly one place, and lines up
+/// with the real GC proposal's own grammar, which defines `arraytype ::=
+/// fieldtype` verbatim (an array type IS a single field type, structurally).
+///
+/// See [`WasmModule::array_types`]/[`WasmModule::array_type_at`] for how an
+/// array type's own flat type-section index is resolved.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ArrayType {
+    /// This array's element storage type and mutability.
+    pub element: FieldType,
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -805,6 +955,73 @@ impl Default for TypeSubtyping {
     fn default() -> Self {
         Self { supertype: None, is_final: true, rec_group_size: 1, rec_group_position: 0 }
     }
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// W33 fourth slice: `type_kinds`, the flat-type-index -> {func,struct,array}
+// composite-kind ledger struct/array TEXT-format parsing needs.
+// ──────────────────────────────────────────────────────────────────────────────
+
+/// What kind of composite type lives at one flat type-section index, and
+/// (for struct/array) which real slot in [`WasmModule::struct_types`]/
+/// [`WasmModule::array_types`] holds its actual data.
+///
+/// ## Why this exists
+///
+/// Before W33's fourth slice, `WasmModule` assumed every struct type is
+/// encoded at type-section index `types.len() + k` (see `StructType`'s own
+/// doc comment) — true for the BINARY format (whose type section is a fixed,
+/// already-fully-decoded sequence: all func types, then all struct types,
+/// exactly matching that formula) and for `wasm-wast-parser`'s pre-existing
+/// func-only `(rec ...)`/`(sub ...)` machinery (which only ever grows
+/// `types`, never `struct_types`).
+///
+/// Real WAT text, however, freely INTERLEAVES `(type $t (struct ...))`
+/// declarations among `(type $t (func ...))` ones (`struct.wast`/
+/// `array.wast`'s own "Binding structure" modules both do this), AND
+/// `wasm-wast-parser`'s own two-pass design (`collect_symbols` then `build`)
+/// can append MORE func types to `types` — via `dedup_type`, for a
+/// function's inline-only signature — in the SECOND pass, strictly AFTER
+/// every struct/array type has already been assigned its flat index in the
+/// first pass. Both facts together break the `types.len() + k` formula: a
+/// struct declared when `types.len() == 0` gets flat index `0`, but if pass
+/// 2 later grows `types` to length 5, `struct_field_count`-style code
+/// re-deriving the struct's index as `flat_idx - types.len()` would compute
+/// `0 - 5`, an underflow, for a struct that parsed and validated perfectly
+/// well.
+///
+/// `type_kinds[flat_idx]` sidesteps this entirely by recording each type's
+/// real location DIRECTLY, at declaration time, rather than re-deriving it
+/// from vector lengths that can still change later. It is a parallel array
+/// to `types` (same length, same append-only growth, ALWAYS pushed in
+/// lockstep by every code path that pushes to `types` — see `dedup_type`'s
+/// updated doc comment) — a func-kind entry at index `i` names its real
+/// payload's position within `types` itself (`types[i]` IS that payload,
+/// unchanged from every pre-W33-fourth-slice consumer's assumption); a
+/// struct/array-kind entry's `types[i]` slot instead holds an unused, never-
+/// read dummy `FuncType` (kept only to preserve the "one slot per flat
+/// index" length invariant `dedup_type`'s dedup-search relies on skipping).
+///
+/// Left EMPTY (or shorter than `types`) for every module built without this
+/// bookkeeping — the binary decoder, every hand-built `WasmModule` literal
+/// in this workspace's existing tests, and any OLDER text-format module —
+/// exactly [`TypeSubtyping`]'s own "missing means legacy default" contract.
+/// [`WasmModule::struct_type_at`]/[`WasmModule::array_type_at`] fall back to
+/// the pre-existing `types.len() + k` offset formula whenever `type_kinds`
+/// doesn't cover the index in question, so every pre-existing binary/LANG77
+/// struct consumer is completely unaffected by this field's existence.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum TypeKind {
+    /// `types[flat_idx]` (the SAME index, since a func-kind entry never
+    /// needs the struct/array indirection) holds this flat index's real
+    /// `FuncType` directly.
+    Func,
+    /// `struct_types[.0]` holds this flat index's real `StructType`;
+    /// `types[_]` (same flat index) holds an unused dummy `FuncType`.
+    Struct(u32),
+    /// `array_types[.0]` holds this flat index's real `ArrayType`;
+    /// `types[_]` (same flat index) holds an unused dummy `FuncType`.
+    Array(u32),
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -1280,10 +1497,26 @@ pub struct WasmModule {
 
     /// WasmGC struct type definitions (also in the type section, after `types`).
     ///
-    /// Struct type `k` is at type-section index `types.len() + k`.
+    /// Struct type `k` is at type-section index `types.len() + k` — this
+    /// LEGACY formula only, still, when `type_kinds` is empty/doesn't cover
+    /// the index (the binary decoder's own convention, unchanged); a
+    /// `type_kinds`-aware module resolves a struct's real index via
+    /// [`WasmModule::struct_type_at`] instead — see [`TypeKind`]'s own doc
+    /// comment for why the two need to differ.
     /// When this vec is empty, the type section contains only function types
     /// and the encoding is identical to WASM 1.0.
     pub struct_types: Vec<StructType>,
+
+    /// WasmGC array type definitions (W33 fourth slice) — the array
+    /// counterpart of `struct_types`, resolved the same `type_kinds`-aware
+    /// way via [`WasmModule::array_type_at`].
+    pub array_types: Vec<ArrayType>,
+
+    /// Per-flat-type-index composite-kind ledger (W33 fourth slice) — see
+    /// [`TypeKind`]'s own doc comment for why this exists and what it means
+    /// for a `WasmModule` (the overwhelming majority of this workspace's
+    /// existing ones, all func-only or binary-decoded) that leaves it empty.
+    pub type_kinds: Vec<TypeKind>,
 
     /// Import section (§2): things the module needs from the host.
     pub imports: Vec<Import>,
@@ -1436,6 +1669,54 @@ impl WasmModule {
     pub fn type_group_shape(&self, idx: u32) -> (u32, u32) {
         let st = self.type_subtyping_at(idx);
         (st.rec_group_size, st.rec_group_position)
+    }
+
+    /// This flat type-section index's real [`TypeKind`], if `type_kinds`
+    /// covers it — `None` when `type_kinds` is empty/shorter (a legacy
+    /// module; see [`TypeKind`]'s own doc comment), in which case callers
+    /// fall back to the pre-W33-fourth-slice offset formulas directly.
+    fn type_kind_at(&self, idx: u32) -> Option<TypeKind> {
+        self.type_kinds.get(idx as usize).copied()
+    }
+
+    /// Resolve flat type-section index `type_idx` to its [`StructType`], if
+    /// any — `type_kinds`-aware first (correct for any module built by this
+    /// crate's own text-format parser, which may interleave struct/func/array
+    /// declarations in arbitrary source order), falling back to the LEGACY
+    /// `types.len() + k` offset convention when `type_kinds` doesn't cover
+    /// this index at all (the binary decoder's own modules, and any
+    /// hand-built `WasmModule` literal that never populates `type_kinds`).
+    ///
+    /// Returns `None` (never panics or underflows) for an out-of-range
+    /// index, or one that names a func/array type instead of a struct.
+    pub fn struct_type_at(&self, type_idx: u32) -> Option<&StructType> {
+        match self.type_kind_at(type_idx) {
+            Some(TypeKind::Struct(k)) => self.struct_types.get(k as usize),
+            Some(_) => None,
+            None if self.type_kinds.is_empty() => {
+                let k = (type_idx as usize).checked_sub(self.types.len())?;
+                self.struct_types.get(k)
+            }
+            None => None,
+        }
+    }
+
+    /// The array-type analogue of [`Self::struct_type_at`] — see that
+    /// method's own doc comment for the `type_kinds`-aware-first, legacy-
+    /// offset-fallback strategy. The legacy offset accounts for
+    /// `struct_types` too (arrays are conventionally encoded after every
+    /// func type AND every struct type), matching [`StructType`]'s own doc
+    /// comment on where structs sit relative to `types`.
+    pub fn array_type_at(&self, type_idx: u32) -> Option<&ArrayType> {
+        match self.type_kind_at(type_idx) {
+            Some(TypeKind::Array(k)) => self.array_types.get(k as usize),
+            Some(_) => None,
+            None if self.type_kinds.is_empty() => {
+                let k = (type_idx as usize).checked_sub(self.types.len() + self.struct_types.len())?;
+                self.array_types.get(k)
+            }
+            None => None,
+        }
     }
 }
 
@@ -1811,6 +2092,8 @@ mod tests {
             types: vec![FuncType { params: vec![], results: vec![ValueType::I32] }],
             type_subtyping: vec![],
             struct_types: vec![],
+            array_types: vec![],
+            type_kinds: vec![],
             imports: vec![],
             functions: vec![0],
             tables: vec![],
@@ -1858,12 +2141,12 @@ mod tests {
     // Test 21: FieldType construction
     #[test]
     fn field_type_construction() {
-        let f = FieldType { val_type: ValueType::Anyref, mutable: true };
-        assert_eq!(f.val_type, ValueType::Anyref);
+        let f = FieldType::plain(ValueType::Anyref, true);
+        assert_eq!(f.storage, StorageType::Val(ValueType::Anyref));
         assert!(f.mutable);
 
-        let g = FieldType { val_type: ValueType::I32, mutable: false };
-        assert_eq!(g.val_type, ValueType::I32);
+        let g = FieldType::plain(ValueType::I32, false);
+        assert_eq!(g.storage, StorageType::Val(ValueType::I32));
         assert!(!g.mutable);
     }
 
@@ -1872,14 +2155,14 @@ mod tests {
     fn struct_type_lispy_pair() {
         let lispy_pair = StructType {
             fields: vec![
-                FieldType { val_type: ValueType::Anyref, mutable: true }, // $head
-                FieldType { val_type: ValueType::Anyref, mutable: true }, // $tail
+                FieldType::plain(ValueType::Anyref, true), // $head
+                FieldType::plain(ValueType::Anyref, true), // $tail
             ],
         };
         assert_eq!(lispy_pair.fields.len(), 2);
-        assert_eq!(lispy_pair.fields[0].val_type, ValueType::Anyref);
+        assert_eq!(lispy_pair.fields[0].storage, StorageType::Val(ValueType::Anyref));
         assert!(lispy_pair.fields[0].mutable);
-        assert_eq!(lispy_pair.fields[1].val_type, ValueType::Anyref);
+        assert_eq!(lispy_pair.fields[1].storage, StorageType::Val(ValueType::Anyref));
         assert!(lispy_pair.fields[1].mutable);
     }
 
@@ -1890,8 +2173,8 @@ mod tests {
             types: vec![FuncType { params: vec![], results: vec![] }],
             struct_types: vec![StructType {
                 fields: vec![
-                    FieldType { val_type: ValueType::Anyref, mutable: true },
-                    FieldType { val_type: ValueType::Anyref, mutable: true },
+                    FieldType::plain(ValueType::Anyref, true),
+                    FieldType::plain(ValueType::Anyref, true),
                 ],
             }],
             ..Default::default()
@@ -1900,6 +2183,103 @@ mod tests {
         assert_eq!(m.struct_types.len(), 1);
         // The struct type index in the type section is types.len() + 0 = 1.
         assert_eq!(m.types.len(), 1);
+    }
+
+    // ── W33 fourth slice: StorageType / ArrayType / TypeKind ───────────────────
+
+    #[test]
+    fn storage_type_widened_type_extends_packed_to_i32_and_passes_through_val() {
+        assert_eq!(StorageType::I8.widened_type(), ValueType::I32);
+        assert_eq!(StorageType::I16.widened_type(), ValueType::I32);
+        assert_eq!(StorageType::Val(ValueType::F64).widened_type(), ValueType::F64);
+    }
+
+    #[test]
+    fn storage_type_is_packed_and_packed_bits() {
+        assert!(StorageType::I8.is_packed());
+        assert!(StorageType::I16.is_packed());
+        assert!(!StorageType::Val(ValueType::I32).is_packed());
+        assert_eq!(StorageType::I8.packed_bits(), Some(8));
+        assert_eq!(StorageType::I16.packed_bits(), Some(16));
+        assert_eq!(StorageType::Val(ValueType::I32).packed_bits(), None);
+    }
+
+    #[test]
+    fn field_type_plain_matches_the_old_val_type_shape() {
+        let f = FieldType::plain(ValueType::I32, true);
+        assert_eq!(f.storage, StorageType::Val(ValueType::I32));
+        assert!(f.mutable);
+    }
+
+    #[test]
+    fn array_type_carries_its_element_field() {
+        let at = ArrayType { element: FieldType::plain(ValueType::F32, false) };
+        assert_eq!(at.element.storage, StorageType::Val(ValueType::F32));
+        assert!(!at.element.mutable);
+    }
+
+    #[test]
+    fn struct_type_at_uses_type_kinds_when_present() {
+        // Two func types, then a struct DECLARED BETWEEN them in flat index
+        // space (index 1) -- exactly the interleaving the legacy
+        // `types.len() + k` formula cannot represent, since the struct isn't
+        // "after all func types."
+        let m = WasmModule {
+            types: vec![
+                FuncType { params: vec![], results: vec![] },
+                FuncType { params: vec![], results: vec![] }, // dummy at struct's flat index
+                FuncType { params: vec![ValueType::I32], results: vec![] },
+            ],
+            type_kinds: vec![TypeKind::Func, TypeKind::Struct(0), TypeKind::Func],
+            struct_types: vec![StructType { fields: vec![FieldType::plain(ValueType::I64, false)] }],
+            ..Default::default()
+        };
+        assert!(m.struct_type_at(0).is_none(), "index 0 is a func, not a struct");
+        let st = m.struct_type_at(1).expect("index 1 is the struct");
+        assert_eq!(st.fields.len(), 1);
+        assert!(m.struct_type_at(2).is_none(), "index 2 is a func, not a struct");
+        assert!(m.struct_type_at(99).is_none(), "out of range");
+    }
+
+    #[test]
+    fn struct_type_at_falls_back_to_legacy_offset_when_type_kinds_is_empty() {
+        // The pre-W33-fourth-slice shape: type_kinds never populated at all
+        // (binary decoder, or any older hand-built WasmModule).
+        let m = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }],
+            struct_types: vec![StructType { fields: vec![FieldType::plain(ValueType::Anyref, true)] }],
+            ..Default::default()
+        };
+        assert!(m.type_kinds.is_empty());
+        let st = m.struct_type_at(1).expect("legacy offset: struct 0 is at types.len() + 0 = 1");
+        assert_eq!(st.fields.len(), 1);
+        assert!(m.struct_type_at(0).is_none(), "index 0 is the func type, not the struct");
+    }
+
+    #[test]
+    fn array_type_at_uses_type_kinds_when_present() {
+        let m = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }],
+            type_kinds: vec![TypeKind::Array(0)],
+            array_types: vec![ArrayType { element: FieldType::plain(ValueType::I32, true) }],
+            ..Default::default()
+        };
+        let at = m.array_type_at(0).expect("index 0 is the array");
+        assert!(at.element.mutable);
+        assert!(m.struct_type_at(0).is_none(), "an array is not a struct");
+    }
+
+    #[test]
+    fn array_type_at_falls_back_to_legacy_offset_past_struct_types() {
+        let m = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }],
+            struct_types: vec![StructType { fields: vec![] }],
+            array_types: vec![ArrayType { element: FieldType::plain(ValueType::F32, false) }],
+            ..Default::default()
+        };
+        // Legacy offset: array 0 is at types.len() + struct_types.len() + 0 = 2.
+        assert!(m.array_type_at(2).is_some());
+        assert!(m.array_type_at(1).is_none(), "index 1 is the struct, not the array");
     }
 
     // Test 24: StructRef(idx) encodes correctly
@@ -2033,6 +2413,29 @@ mod tests {
         assert!(ValueType::NullRef.is_bottom_subtype_of(&ValueType::I31ref));
         assert!(ValueType::NullRef.is_bottom_subtype_of(&ValueType::StructRef(0)));
         assert!(ValueType::NullRef.is_bottom_subtype_of(&ValueType::StructRef(42)), "any struct-type index");
+    }
+
+    #[test]
+    fn nullref_is_a_bottom_subtype_of_every_arrayref() {
+        assert!(ValueType::NullRef.is_bottom_subtype_of(&ValueType::ArrayRef(0)));
+        assert!(ValueType::NullRef.is_bottom_subtype_of(&ValueType::ArrayRef(7)), "any array-type index");
+    }
+
+    #[test]
+    fn array_ref_and_non_null_array_ref_encode_like_struct_ref() {
+        assert_eq!(ValueType::ArrayRef(0).encode(), vec![0x63, 0x00]);
+        assert_eq!(ValueType::ArrayRef(5).encode(), vec![0x63, 0x05]);
+        assert_eq!(ValueType::NonNullArrayRef(0).encode(), vec![0x64, 0x00]);
+        assert!(ValueType::ArrayRef(0).byte_tag().is_none());
+        assert!(ValueType::NonNullArrayRef(0).byte_tag().is_none());
+    }
+
+    #[test]
+    fn non_null_arrayref_is_a_subtype_of_arrayref_same_index_and_of_anyref() {
+        assert!(ValueType::NonNullArrayRef(3).is_non_null_subtype_of(&ValueType::ArrayRef(3)));
+        assert!(!ValueType::NonNullArrayRef(3).is_non_null_subtype_of(&ValueType::ArrayRef(4)), "index must match");
+        assert!(ValueType::NonNullArrayRef(3).is_non_null_subtype_of(&ValueType::Anyref));
+        assert!(!ValueType::ArrayRef(3).is_non_null_subtype_of(&ValueType::NonNullArrayRef(3)), "never reverses");
     }
 
     // ── W32 §2: bottom-type subtyping lattice -- NEGATIVE directions ─────────
