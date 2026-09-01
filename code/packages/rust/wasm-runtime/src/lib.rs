@@ -1883,6 +1883,7 @@ impl WasmRuntime {
                 | ValueType::NonNullConcreteFuncRef(_)
                 | ValueType::ArrayRef(_)
                 | ValueType::NonNullArrayRef(_)
+                | ValueType::NonNullArrayAny
                 | ValueType::Funcref
                 | ValueType::Externref
                 | ValueType::Exnref

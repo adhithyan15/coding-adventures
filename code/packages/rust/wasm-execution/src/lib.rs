@@ -302,6 +302,7 @@ impl WasmValue {
             // purely static" reasoning as `NonNullStructRef` right above.
             | ValueType::ArrayRef(_)
             | ValueType::NonNullArrayRef(_)
+            | ValueType::NonNullArrayAny
             | ValueType::Funcref
             | ValueType::Externref
             | ValueType::Exnref

@@ -377,6 +377,30 @@ pub enum ValueType {
     /// `StructRef`. Binary encoding: `0x64 <LEB128(idx)>`, same tag byte as
     /// `NonNullStructRef`/`NonNullConcreteFuncRef`.
     NonNullArrayRef(u32),
+
+    /// `(ref array)` -- non-null reference to ANY array type (the abstract
+    /// TOP of the array hierarchy, W33 fourth slice), distinct from
+    /// [`ValueType::NonNullArrayRef`] (a SPECIFIC array type). Needed
+    /// because `array.wast`'s own vendored corpus text declares its
+    /// `array.len` helper's param this way FOUR separate times (`(func
+    /// $len (param $v (ref array)) (result i32) (array.len (local.get
+    /// $v)))`) -- matching the real GC proposal's own `array.len` typing
+    /// rule, whose operand type is the abstract `array` heap type, not a
+    /// concrete one (an array's length is a property of the heap object
+    /// itself, independent of which specific array type declared it).
+    ///
+    /// No nullable counterpart is modeled (`(ref null array)`) -- the real
+    /// corpus never spells it, and every existing abstract-heap-type
+    /// variant in this crate (`Anyref`, `Funcref`, `Externref`, ...) is
+    /// ALREADY the nullable one, so adding only the non-null top type here
+    /// mirrors that established "model what the corpus actually uses"
+    /// discipline rather than adding an unused variant preemptively.
+    ///
+    /// Binary encoding: `0x64 0x66` (non-null reftype prefix + the `array`
+    /// abstract heap-type byte) -- this crate's own internal choice, never
+    /// round-tripped through a real binary decoder in this pipeline (see
+    /// `ArrayRef`'s own doc comment on why that's safe).
+    NonNullArrayAny,
 }
 
 impl ValueType {
@@ -416,6 +440,7 @@ impl ValueType {
             // concrete-reference variants above.
             ValueType::ArrayRef(_) => None,
             ValueType::NonNullArrayRef(_) => None,
+            ValueType::NonNullArrayAny => None,
         }
     }
 
@@ -493,6 +518,7 @@ impl ValueType {
                 bytes.extend(encode_unsigned(*idx as u64));
                 bytes
             }
+            ValueType::NonNullArrayAny => vec![0x64, 0x66],
         }
     }
 
@@ -582,6 +608,15 @@ impl ValueType {
             (ValueType::NonNullStructRef(_), ValueType::Anyref)
                 | (ValueType::NonNullArrayRef(_), ValueType::Anyref)
                 | (ValueType::NonNullConcreteFuncRef(_), ValueType::Funcref)
+                // W33 fourth slice: a SPECIFIC array type's non-null ref
+                // flows wherever the abstract non-null array top type is
+                // expected (`array.wast`'s own `array.len` helper, whose
+                // param is bare `(ref array)`) -- and that abstract top
+                // type is itself, transitively, `<: anyref` (both listed
+                // directly rather than derived, matching this method's own
+                // documented "no transitive closure" contract).
+                | (ValueType::NonNullArrayRef(_), ValueType::NonNullArrayAny)
+                | (ValueType::NonNullArrayAny, ValueType::Anyref)
         ) || matches!(
             (self, other),
             (ValueType::NonNullConcreteFuncRef(i), ValueType::ConcreteFuncRef(j)) if i == j

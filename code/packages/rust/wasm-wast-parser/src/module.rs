@@ -362,11 +362,22 @@ fn parse_value_type(expr: &SExpr, type_names: &HashMap<String, u32>, module: &Wa
         if items.len() == 2 && items[0].as_atom() == Some("ref") && items[1].as_atom() == Some("i31") {
             return Ok(ValueType::I31ref);
         }
+        // `(ref array)` -- non-null reference to the ABSTRACT top of the
+        // array hierarchy (W33 fourth slice), needed for `array.wast`'s own
+        // `array.len` helper param (`(param $v (ref array))`, four times in
+        // the real vendored text) -- see `ValueType::NonNullArrayAny`'s own
+        // doc comment for why only the non-null spelling is modeled. Must
+        // come before the generic `(ref $t)` concrete-reference branch
+        // below (same reasoning as the `i31` special case just above:
+        // `array` is a bare keyword here, not a type name to resolve).
+        if items.len() == 2 && items[0].as_atom() == Some("ref") && items[1].as_atom() == Some("array") {
+            return Ok(ValueType::NonNullArrayAny);
+        }
         // W32 second slice: `(ref $t)` -- non-null concrete reference, no
-        // `null` keyword. Must come AFTER the `(ref i31)` check above (i31
-        // stays unified into `I31ref` regardless of nullability, see that
-        // branch's own doc comment) so it only ever catches a real
-        // named/numeric type reference here.
+        // `null` keyword. Must come AFTER the `(ref i31)`/`(ref array)`
+        // checks above (both stay their own dedicated variant regardless
+        // of nullability spelling, see those branches' own doc comments)
+        // so it only ever catches a real named/numeric type reference here.
         if items.len() == 2 && items[0].as_atom() == Some("ref") {
             return Ok(concrete_ref_value_type(module, resolve_idx(type_names, &items[1], "type")?, false));
         }
@@ -3713,6 +3724,237 @@ fn encode_elem_drop_flat(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) 
     Ok(())
 }
 
+/// `struct.new`/`struct.new_default`/`struct.get`/`struct.get_s`/
+/// `struct.get_u`/`struct.set` and `array.new`/`array.new_default`/
+/// `array.new_fixed`/`array.get`/`array.get_s`/`array.get_u`/`array.set`/
+/// `array.len` (GC proposal, W33 fourth slice: `code/specs/
+/// W33-wasm-gc-recursive-type-subtyping.md`) -- FOLDED form only, the same
+/// scoping precedent `ref.test`/`ref.cast` set (see that arm's own doc
+/// comment): every real corpus use in `struct.wast`/`array.wast` folds both
+/// the type immediate and the value operand(s).
+///
+/// Factored into its own function, called from a single `if` in
+/// [`encode_flat_instr`], rather than inlined as a run of `if name == ...`
+/// arms directly in that function's body -- purely for stack-frame-size
+/// reasons: in a debug build a function's stack frame is sized for the
+/// union of every branch's own locals (`type_idx`/`field_idx`/`count`
+/// here), and `encode_flat_instr` recurses up to `MAX_INSTR_NESTING_DEPTH`
+/// times through deeply folded instructions -- adding these locals
+/// directly inline there once measurably overflowed the real OS stack
+/// under that recursion, before the depth counter itself ever tripped
+/// (the exact failure `resolve_leading_memidx_token`'s own doc comment
+/// already documents for the SAME reason). Returns `Ok(true)` if `name`
+/// names one of these instructions (its bytes are already pushed to
+/// `out`); `Ok(false)` if `name` isn't recognized here at all, so the
+/// caller's own dispatch continues.
+///
+/// ## Sub-opcode numbering: intentionally NOT byte-identical to the real
+/// GC proposal's own table
+///
+/// `struct.new` (`0x00`)/`struct.get` (`0x02`)/`struct.set` (`0x04`)
+/// already had REAL runtime semantics in `wasm-execution` before this
+/// slice (the McCarthy Lisp/LANG77 backend's own binary-format-only GC
+/// support, see `wasm-execution::gc`'s module doc comment) -- but the
+/// real spec's own numbering places `struct.get_u` at `0x04` and
+/// `struct.set` at `0x05`, one slot later than this repo's pre-existing,
+/// already-shipped `struct.set = 0x04`. Renumbering `struct.set` to
+/// match the spec would silently reinterpret every byte sequence
+/// `iir-to-wasm`'s `wasm-module-encoder::GcInstruction::StructSet`
+/// already emits (LANG77's own cons-cell mutation) as `struct.get_u`
+/// instead -- a real, silent behavior change to a shipped feature this
+/// slice's own scope has no business touching. Instead, `struct.get_s`/
+/// `struct.get_u` claim the two sub-opcode bytes (`0x03`/`0x05`) this
+/// repo's OWN pre-existing scheme left unused, preserving
+/// `struct.new`/`struct.get`/`struct.set`'s bytes byte-for-byte. Array
+/// sub-opcodes (`0x06`-`0x0F`) had no pre-existing use in this repo at
+/// all, so they DO match the real spec's own numbering exactly -- there
+/// was nothing to preserve compatibility with.
+///
+/// ```text
+///   sub   instruction          repo-internal, this slice   real GC spec
+///   0x00  struct.new           (pre-existing, unchanged)   0x00 (matches)
+///   0x01  struct.new_default   NEW                         0x01 (matches)
+///   0x02  struct.get           (pre-existing, unchanged)   0x02 (matches)
+///   0x03  struct.get_s         NEW                         0x03 (matches)
+///   0x04  struct.set           (pre-existing, unchanged)   0x04 is get_u in spec
+///   0x05  struct.get_u         NEW                         0x05 is set in spec
+///   0x06  array.new            NEW                         0x06 (matches)
+///   0x07  array.new_default    NEW                         0x07 (matches)
+///   0x08  array.new_fixed      NEW                         0x08 (matches)
+///   0x0B  array.get            NEW                         0x0B (matches)
+///   0x0C  array.get_s          NEW                         0x0C (matches)
+///   0x0D  array.get_u          NEW                         0x0D (matches)
+///   0x0E  array.set            NEW                         0x0E (matches)
+///   0x0F  array.len            NEW                         0x0F (matches)
+/// ```
+///
+/// This is safe PURELY because this repo's `0xFB`-prefixed bytecode never
+/// round-trips through anything OUTSIDE this crate's own text parser +
+/// `wasm-execution`'s own decoder (the WASM conformance pipeline never
+/// encodes to real binary for a plain `(module ...)` script directive --
+/// see `wasm-conformance`'s own pipeline doc comment) -- there is no
+/// external tool this byte-level deviation could ever desync from.
+/// `array.new_data`/`array.new_elem`/`array.copy`/`array.fill`/
+/// `array.init_data`/`array.init_elem` are deliberately NOT wired here --
+/// they need real data-/elem-segment integration this slice does not
+/// attempt (see the accompanying spec addendum) -- any module using them
+/// stays an honest parse error at this crate's boundary, `NotYetSupported`
+/// at the conformance-harness level, never a silent misencoding.
+fn encode_gc_struct_array_instr(name: &str, args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<bool, WastParseError> {
+    if matches!(name, "struct.new" | "struct.new_default") {
+        encode_struct_new(name, args, icx, out)?;
+        return Ok(true);
+    }
+    if matches!(name, "struct.get" | "struct.get_s" | "struct.get_u" | "struct.set") {
+        encode_struct_get_set(name, args, icx, out)?;
+        return Ok(true);
+    }
+    if matches!(name, "array.new" | "array.new_default") {
+        encode_array_new(name, args, icx, out)?;
+        return Ok(true);
+    }
+    if name == "array.new_fixed" {
+        encode_array_new_fixed(args, icx, out)?;
+        return Ok(true);
+    }
+    if matches!(name, "array.get" | "array.get_s" | "array.get_u" | "array.set") {
+        encode_array_get_set(name, args, icx, out)?;
+        return Ok(true);
+    }
+    if name == "array.len" {
+        encode_array_len(args, icx, out)?;
+        return Ok(true);
+    }
+    Ok(false)
+}
+
+/// `struct.new $t`/`struct.new_default $t` (W33 fourth slice). Split out of
+/// [`encode_gc_struct_array_instr`] into its OWN function -- not merely
+/// inlined there -- for the identical stack-frame-size reason that
+/// function's own doc comment explains: `struct.get`/`array.new_fixed`
+/// etc.'s recursion re-enters `encode_gc_struct_array_instr` itself (their
+/// own operands are encoded from INSIDE it, via `encode_instr_list`), so
+/// keeping every instruction's locals in ONE big function would size that
+/// function's frame for the union of ALL of them, defeating the whole
+/// point of factoring struct/array logic out of `encode_flat_instr` in the
+/// first place. Each GC instruction group gets its own minimally-sized
+/// function instead.
+fn encode_struct_new(name: &str, args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
+    let ty_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
+    let type_idx = resolve_idx(&icx.module.type_names, ty_expr, "type")?;
+    encode_instr_list(&args[1..], icx, out)?;
+    out.push(0xFB);
+    out.push(if name == "struct.new" { 0x00 } else { 0x01 });
+    out.extend(wasm_leb128::encode_unsigned(type_idx as u64));
+    Ok(())
+}
+
+/// `struct.get`/`struct.get_s`/`struct.get_u`/`struct.set` (W33 fourth
+/// slice) -- see [`encode_struct_new`]'s doc comment for why this is its
+/// own function rather than inlined.
+fn encode_struct_get_set(name: &str, args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
+    let ty_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
+    let type_idx = resolve_idx(&icx.module.type_names, ty_expr, "type")?;
+    let field_expr = args.get(1).ok_or(WastParseError::UnexpectedEof)?;
+    let field_idx = match field_expr {
+        SExpr::Atom(s, pos) if s.starts_with('$') => icx
+            .module
+            .struct_field_names
+            .get(&type_idx)
+            .and_then(|m| m.get(s))
+            .copied()
+            .ok_or_else(|| WastParseError::UnknownIdentifier { pos: *pos, name: s.clone(), space: "field" })?,
+        SExpr::Atom(s, pos) => {
+            s.parse::<u32>().map_err(|_| WastParseError::UnexpectedToken { pos: *pos, found: s.clone(), expected: "a field index" })?
+        }
+        other => {
+            return Err(WastParseError::UnexpectedToken {
+                pos: other.pos(),
+                found: "list".to_string(),
+                expected: "a field index or $identifier",
+            });
+        }
+    };
+    encode_instr_list(&args[2..], icx, out)?;
+    out.push(0xFB);
+    out.push(match name {
+        "struct.get" => 0x02,
+        "struct.get_s" => 0x03,
+        "struct.get_u" => 0x05,
+        _ => 0x04, // struct.set
+    });
+    out.extend(wasm_leb128::encode_unsigned(type_idx as u64));
+    out.extend(wasm_leb128::encode_unsigned(field_idx as u64));
+    Ok(())
+}
+
+/// `array.new $t`/`array.new_default $t` (W33 fourth slice) -- see
+/// [`encode_struct_new`]'s doc comment for why this is its own function.
+fn encode_array_new(name: &str, args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
+    let ty_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
+    let type_idx = resolve_idx(&icx.module.type_names, ty_expr, "type")?;
+    encode_instr_list(&args[1..], icx, out)?;
+    out.push(0xFB);
+    out.push(if name == "array.new" { 0x06 } else { 0x07 });
+    out.extend(wasm_leb128::encode_unsigned(type_idx as u64));
+    Ok(())
+}
+
+/// `array.new_fixed $t N <elem>...` (W33 fourth slice) -- see
+/// [`encode_struct_new`]'s doc comment for why this is its own function.
+/// `N` is a LITERAL element count (unlike every other immediate here, not
+/// an index resolved via a name table) -- it must equal `args[2..].len()`
+/// for the module to be well-formed, but that arity check is left to
+/// `wasm-validator` (this parser's established division of responsibility
+/// for exactly this class of mismatch, e.g. `build_func`'s own doc comment
+/// on `(type $sig)` param-count mismatches), not duplicated here.
+fn encode_array_new_fixed(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
+    let ty_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
+    let type_idx = resolve_idx(&icx.module.type_names, ty_expr, "type")?;
+    let count_expr = args.get(1).ok_or(WastParseError::UnexpectedEof)?;
+    let count: u32 = count_expr
+        .as_atom()
+        .and_then(|s| s.parse().ok())
+        .ok_or_else(|| WastParseError::UnexpectedToken { pos: count_expr.pos(), found: "".to_string(), expected: "a literal element count" })?;
+    encode_instr_list(&args[2..], icx, out)?;
+    out.push(0xFB);
+    out.push(0x08);
+    out.extend(wasm_leb128::encode_unsigned(type_idx as u64));
+    out.extend(wasm_leb128::encode_unsigned(count as u64));
+    Ok(())
+}
+
+/// `array.get`/`array.get_s`/`array.get_u`/`array.set` (W33 fourth slice)
+/// -- see [`encode_struct_new`]'s doc comment for why this is its own
+/// function.
+fn encode_array_get_set(name: &str, args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
+    let ty_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
+    let type_idx = resolve_idx(&icx.module.type_names, ty_expr, "type")?;
+    encode_instr_list(&args[1..], icx, out)?;
+    out.push(0xFB);
+    out.push(match name {
+        "array.get" => 0x0B,
+        "array.get_s" => 0x0C,
+        "array.get_u" => 0x0D,
+        _ => 0x0E, // array.set
+    });
+    out.extend(wasm_leb128::encode_unsigned(type_idx as u64));
+    Ok(())
+}
+
+/// `array.len` (W33 fourth slice) -- see [`encode_struct_new`]'s doc
+/// comment for why this is its own function. No type immediate -- an
+/// array's length is a property of the heap object itself, not of its
+/// static type (see the real GC proposal's own `array.len` typing rule:
+/// `[(ref null array)] -> [i32]`, the abstract `array` heap type, not a
+/// concrete one).
+fn encode_array_len(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
+    encode_instr_list(args, icx, out)?;
+    out.push(0xFB);
+    out.push(0x0F);
+    Ok(())
+}
+
 /// Encode a **folded** instruction (`(name args...)`) — `args` mixes zero
 /// or more operand sub-expressions (encoded first, recursively) with this
 /// instruction's own trailing immediate atoms, per instruction kind. See
@@ -3936,6 +4178,13 @@ fn encode_flat_instr(
             (_, _) => 0x17, // "ref.cast", nullable
         });
         out.extend(wasm_leb128::encode_unsigned(type_idx as u64));
+        return Ok(());
+    }
+    // `struct.new`/`struct.new_default`/.../`array.len` (GC proposal, W33
+    // fourth slice) -- factored into a separate function purely to keep
+    // THIS function's own per-call stack frame small; see
+    // `encode_gc_struct_array_instr`'s own doc comment for why.
+    if encode_gc_struct_array_instr(name, args, icx, out)? {
         return Ok(());
     }
     // Atomic memory operations (WASM18): see the matching comment in
@@ -6991,6 +7240,125 @@ mod tests {
         assert_eq!(m.array_types.len(), 3);
         assert_eq!(m.array_types[0].element.storage, StorageType::Val(ValueType::NonNullArrayRef(1)));
         assert_eq!(m.array_types[1].element.storage, StorageType::Val(ValueType::NonNullArrayRef(0)));
+    }
+
+    // ── W33 fourth slice: struct/array instruction folded-form encoding ────────
+
+    #[test]
+    fn struct_new_and_new_default_encode_the_type_index_immediate() {
+        let m = parse_module(
+            r#"(module
+                 (type $vec (struct (field f32) (field $y (mut f32)) (field f32)))
+                 (func (export "new") (result anyref) (struct.new_default $vec))
+                 (func (export "mk") (result anyref) (struct.new $vec (f32.const 1) (f32.const 2) (f32.const 3)))
+               )"#,
+        )
+        .unwrap();
+        assert_eq!(code_of(&m, 0), &[0xFB, 0x01, 0x00, 0x0B], "struct.new_default $vec (type 0)");
+        assert_eq!(
+            code_of(&m, 1),
+            &[0x43, 0, 0, 128, 63, 0x43, 0, 0, 0, 64, 0x43, 0, 0, 64, 64, 0xFB, 0x00, 0x00, 0x0B],
+            "operands pushed before struct.new's own opcode+type-index"
+        );
+    }
+
+    #[test]
+    fn struct_get_get_s_get_u_set_resolve_field_by_name_and_by_number() {
+        let m = parse_module(
+            r#"(module
+                 (type $vec (struct (field f32) (field $y (mut f32))))
+                 (func (param $v (ref $vec)) (result f32) (struct.get 0 0 (local.get $v)))
+                 (func (param $v (ref $vec)) (result f32) (struct.get $vec $y (local.get $v)))
+                 (func (param $v (ref $vec)) (result f32) (struct.get_s $vec 0 (local.get $v)))
+                 (func (param $v (ref $vec)) (result f32) (struct.get_u $vec 0 (local.get $v)))
+                 (func (param $v (ref $vec)) (param $y f32) (struct.set $vec $y (local.get $v) (local.get $y)))
+               )"#,
+        )
+        .unwrap();
+        assert_eq!(code_of(&m, 0), &[0x20, 0x00, 0xFB, 0x02, 0x00, 0x00, 0x0B], "struct.get by numeric type+field");
+        assert_eq!(code_of(&m, 1), &[0x20, 0x00, 0xFB, 0x02, 0x00, 0x01, 0x0B], "struct.get by $name resolves 'y' to field 1");
+        assert_eq!(code_of(&m, 2), &[0x20, 0x00, 0xFB, 0x03, 0x00, 0x00, 0x0B], "struct.get_s -> sub-opcode 0x03");
+        assert_eq!(code_of(&m, 3), &[0x20, 0x00, 0xFB, 0x05, 0x00, 0x00, 0x0B], "struct.get_u -> sub-opcode 0x05 (this repo's own numbering, see the encoder's doc comment)");
+        assert_eq!(code_of(&m, 4), &[0x20, 0x00, 0x20, 0x01, 0xFB, 0x04, 0x00, 0x01, 0x0B], "struct.set stays at its pre-existing 0x04, unchanged");
+    }
+
+    #[test]
+    fn struct_get_unknown_field_name_is_a_clean_error() {
+        let err = parse_module(
+            r#"(module
+                 (type $vec (struct (field $x f32)))
+                 (func (param $v (ref $vec)) (result f32) (struct.get $vec $bogus (local.get $v)))
+               )"#,
+        )
+        .unwrap_err();
+        assert!(matches!(err, WastParseError::UnknownIdentifier { .. }), "{err:?}");
+    }
+
+    #[test]
+    fn array_new_new_default_new_fixed_encode_correctly() {
+        let m = parse_module(
+            r#"(module
+                 (type $vec (array f32))
+                 (func (result anyref) (array.new $vec (f32.const 1) (i32.const 3)))
+                 (func (result anyref) (array.new_default $vec (i32.const 3)))
+                 (func (result anyref) (array.new_fixed $vec 2 (f32.const 1) (f32.const 2)))
+               )"#,
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&m, 0),
+            &[0x43, 0, 0, 128, 63, 0x41, 3, 0xFB, 0x06, 0x00, 0x0B],
+            "array.new: value then length, then 0xFB 0x06 <type_idx>"
+        );
+        assert_eq!(code_of(&m, 1), &[0x41, 3, 0xFB, 0x07, 0x00, 0x0B], "array.new_default: length, then 0xFB 0x07 <type_idx>");
+        assert_eq!(
+            code_of(&m, 2),
+            &[0x43, 0, 0, 128, 63, 0x43, 0, 0, 0, 64, 0xFB, 0x08, 0x00, 0x02, 0x0B],
+            "array.new_fixed: N operands, then 0xFB 0x08 <type_idx> <count>"
+        );
+    }
+
+    #[test]
+    fn array_get_get_s_get_u_set_len_encode_correctly() {
+        let m = parse_module(
+            r#"(module
+                 (type $vec (array f32))
+                 (type $bvec (array i8))
+                 (type $mvec (array (mut f32)))
+                 (func (param $v (ref $vec)) (param $i i32) (result f32) (array.get $vec (local.get $v) (local.get $i)))
+                 (func (param $v (ref $bvec)) (param $i i32) (result i32) (array.get_s $bvec (local.get $v) (local.get $i)))
+                 (func (param $v (ref $bvec)) (param $i i32) (result i32) (array.get_u $bvec (local.get $v) (local.get $i)))
+                 (func (param $v (ref $mvec)) (param $i i32) (param $y f32) (array.set $mvec (local.get $v) (local.get $i) (local.get $y)))
+                 (func (param $v (ref array)) (result i32) (array.len (local.get $v)))
+               )"#,
+        )
+        .unwrap();
+        assert_eq!(code_of(&m, 0), &[0x20, 0x00, 0x20, 0x01, 0xFB, 0x0B, 0x00, 0x0B], "array.get");
+        assert_eq!(code_of(&m, 1), &[0x20, 0x00, 0x20, 0x01, 0xFB, 0x0C, 0x01, 0x0B], "array.get_s (type 1 = $bvec)");
+        assert_eq!(code_of(&m, 2), &[0x20, 0x00, 0x20, 0x01, 0xFB, 0x0D, 0x01, 0x0B], "array.get_u");
+        assert_eq!(code_of(&m, 3), &[0x20, 0x00, 0x20, 0x01, 0x20, 0x02, 0xFB, 0x0E, 0x02, 0x0B], "array.set (type 2 = $mvec)");
+        assert_eq!(code_of(&m, 4), &[0x20, 0x00, 0xFB, 0x0F, 0x0B], "array.len takes NO type immediate");
+    }
+
+    #[test]
+    fn deeply_folded_struct_instructions_do_not_overflow_the_real_stack() {
+        // Regression guard for the stack-frame-size hazard this slice's own
+        // `encode_gc_struct_array_instr` factoring exists to avoid (see its
+        // doc comment) -- mirrors `deeply_nested_folded_arithmetic_errors_
+        // cleanly_not_stack_overflow`'s own shape, but built entirely out of
+        // struct instructions so a regression in THIS code path specifically
+        // would be caught here even if the arithmetic-only test stayed green.
+        let mut src = String::from("(module (type $s (struct (field $x f32))) (func (result f32) ");
+        for _ in 0..MAX_INSTR_NESTING_DEPTH + 1 {
+            src.push_str("(struct.get $s $x ");
+        }
+        src.push_str("(struct.new $s (f32.const 0))");
+        for _ in 0..MAX_INSTR_NESTING_DEPTH + 1 {
+            src.push(')');
+        }
+        src.push_str("))");
+        let err = parse_module(&src).unwrap_err();
+        assert!(matches!(err, WastParseError::TooDeeplyNested { .. }), "{err:?}");
     }
 
     #[test]
