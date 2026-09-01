@@ -1,0 +1,83 @@
+% ============================================================================
+% chamber-branch — DERIVED, not looked up: which BRANCH of the U.S. federal
+% government a named CHAMBER of Congress belongs to (adj-facts-stdlib,
+% CIVICS).
+% ============================================================================
+% "Is the Senate part of the legislative branch?" is a question no shipped
+% civics table answers on its own, and — importantly — it is a question no
+% sentence on the cited source answers directly either. USA.gov's
+% "Branches of the U.S. government" page never writes "the Senate is part
+% of the legislative branch". What it writes is two SEPARATE facts, one
+% level apart:
+%
+%     "The legislative branch is made up of Congress:"   -> the branch's member is Congress
+%     "The U.S. Senate" (nested under that stem)         -> the Senate is a chamber OF Congress
+%
+% This file is the FIRST `rule` in the `civics/` domain, and it derives the
+% answer by composing those two already-shipped, already-grounded tables
+% rather than asserting a third row nobody could trace back to a sentence:
+%
+%     ? chamber_branch(senate, $B)
+%       % legislative
+%
+% The derivation is a two-hop join through the `congress` atom that both
+% sibling libraries independently bind:
+%
+%     congress_chamber(senate, congress)                 [congress-chamber.adj]
+%     government_branch_member(legislative, congress)    [government-branch-member.adj]
+%     -----------------------------------------------------------------------
+%     chamber_branch(senate, legislative)                [derived here]
+%
+% Every answer therefore carries BOTH premises' citations in its `steps`
+% trail — the provenance of the conclusion is the composition of the
+% provenance of its premises, which is exactly the property that makes a
+% derived answer auditable rather than merely plausible. This is the shape
+% `biology/abo-genotype-antigen.adj` already established for heredity,
+% applied here to the civics graph.
+%
+% WHY THIS IS THE RIGHT WAY TO ANSWER IT. `government-branch-member.adj`
+% deliberately ABSTAINS on `senate`/`house_of_representatives`, because the
+% source nests them under Congress rather than naming them as direct
+% members of the branch; `congress-chamber.adj` was then split out as its
+% own predicate specifically so the nesting the source states would not be
+% flattened away. Both of those decisions were made so that this rule
+% could exist. Deriving the fact here — instead of quietly adding
+% `government_branch_member(legislative, senate)` back as a row — keeps the
+% source's own two-level structure intact AND still answers the learner's
+% question. The abstention was never a gap to be papered over; it was the
+% seam the derivation joins on.
+%
+% The rule also runs BACKWARD, which enumerates the chambers of a branch:
+%
+%     ? chamber_branch($C, legislative)
+%       % senate
+%       % house_of_representatives
+%
+% ABSTENTION IS INHERITED, NOT RESTATED. This rule adds no facts of its
+% own, so it abstains exactly where its premises do. `supreme_court` and
+% `president` are named institutions of the other two branches, and
+% `congress_chamber` abstains on both (they are not chambers of Congress);
+% the derivation therefore finds no premise to join and abstains too,
+% rather than inventing a chamber-of relationship. The same holds for the
+% open-ended category phrases both sibling tables exclude.
+%
+% Provenance: the `source` below is the branch-membership stem that
+% grounds the SECOND hop; the first hop's grounding (the chamber sub-list)
+% is carried by `congress-chamber.adj` itself and rides along in the proof
+% trail. Both were curl-fetched and read byte-for-byte from the raw markup
+% when those libraries were written. `trust authoritative` — USA.gov is
+% the U.S. General Services Administration's official guide to government
+% information, the same tier and the SAME page both premises cite.
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+import "congress-chamber.adj"
+import "government-branch-member.adj"
+
+rule { head: chamber_branch($Chamber, $Branch)
+       when: congress_chamber($Chamber, $Body), government_branch_member($Branch, $Body)
+       source "The legislative branch is made up of Congress:"
+       locator "https://www.usa.gov/branches-of-government"
+       trust authoritative }
