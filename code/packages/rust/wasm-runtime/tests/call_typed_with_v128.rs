@@ -11,6 +11,7 @@
 //! works through this crate's real instance-state-management layer, not
 //! just at the bare `wasm-execution` layer its own tests already cover.
 
+use std::rc::Rc;
 use wasm_execution::{HostFunction, LinearMemory, TrapError, V128Bytes, WasmValue};
 use wasm_runtime::WasmRuntime;
 use wasm_types::{ExternalKind, FuncType, FunctionBody, ValueType, WasmModule};
@@ -23,7 +24,7 @@ fn instance_with_v128_const(lanes: [i32; 4]) -> wasm_runtime::WasmInstance {
     code.push(0x0B); // end
 
     let func_type = FuncType { params: vec![], results: vec![ValueType::V128] };
-    let host_functions: Vec<Option<Box<dyn HostFunction>>> = vec![None];
+    let host_functions: Vec<Option<Rc<dyn HostFunction>>> = vec![None];
 
     wasm_runtime::WasmInstance {
         module: WasmModule::default(),
@@ -79,8 +80,9 @@ fn call_typed_with_v128_reports_missing_export_the_same_way_call_typed_does() {
 }
 
 /// `TrapError`/`LinearMemory` imports above are only needed for the
-/// `Box<dyn HostFunction>` type annotation on `host_functions` -- this
-/// silences an otherwise-unused-import warning if that ever changes
-/// without anyone noticing this file needs updating too.
+/// `Rc<dyn HostFunction>` type annotation on `host_functions` (W35 first
+/// slice changed this from `Box<dyn HostFunction>`) -- this silences an
+/// otherwise-unused-import warning if that ever changes without anyone
+/// noticing this file needs updating too.
 #[allow(dead_code)]
 fn _keep_imports_alive(_: TrapError, _: LinearMemory) {}

@@ -1158,8 +1158,14 @@ pub struct WasmInstance {
     pub canonical_types: Vec<Option<(Rc<CanonicalGroup>, u32)>>,
     /// Function bodies (None for imports).
     pub func_bodies: Vec<Option<FunctionBody>>,
-    /// Resolved imported host functions.
-    pub host_functions: Vec<Option<Box<dyn HostFunction>>>,
+    /// Resolved imported host functions. `Rc`, not `Box` (W35 first slice:
+    /// `code/specs/W35-wasm-cross-instance-function-identity.md`) — mirrors
+    /// `wasm-execution`'s own `host_functions` field, so a `FuncRefTarget`
+    /// can eventually clone an existing import's callable cheaply instead
+    /// of rebuilding it. `HostInterface::resolve_function` itself still
+    /// returns `Box<dyn HostFunction>` (unchanged); `Rc::from(..)` converts
+    /// at the one call site that resolves an import (below).
+    pub host_functions: Vec<Option<Rc<dyn HostFunction>>>,
     /// Combined imported + module-defined tag index space (W-next), each
     /// entry a TYPE index into `func_types`... no -- into THIS instance's
     /// own `module.types` (the tag's declared param/result signature).
@@ -1416,7 +1422,7 @@ impl WasmRuntime {
         // see `WasmInstance::func_type_indices`'s own doc comment.
         let mut func_type_indices: Vec<u32> = Vec::new();
         let mut func_bodies: Vec<Option<FunctionBody>> = Vec::new();
-        let mut host_functions: Vec<Option<Box<dyn HostFunction>>> = Vec::new();
+        let mut host_functions: Vec<Option<Rc<dyn HostFunction>>> = Vec::new();
         let mut global_types: Vec<GlobalType> = Vec::new();
         let mut globals: Vec<Rc<RefCell<WasmValue>>> = Vec::new();
         let mut memories: Vec<LinearMemory> = Vec::new();
@@ -1533,7 +1539,13 @@ impl WasmRuntime {
                     func_types.push(ft);
                     func_type_indices.push(*type_idx);
                     func_bodies.push(None);
-                    host_functions.push(Some(host_func));
+                    // `resolve_function` returns `Box<dyn HostFunction>`
+                    // (unchanged, per W35 first slice's scope -- only
+                    // `host_functions`' own storage moved to `Rc`);
+                    // `Rc::from` converts the owned `Box` into an `Rc`
+                    // with no behavior change (`HostFunction`'s methods
+                    // are all `&self`).
+                    host_functions.push(Some(Rc::from(host_func)));
                 }
                 ImportTypeInfo::Memory(mem_type) => {
                     let imported_mem = self

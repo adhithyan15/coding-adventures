@@ -2,6 +2,92 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.87] - 2026-09-01 (W35 first slice — cross-instance function identity, representation only)
+
+**Purely additive types and a mechanical `Box`→`Rc` swap, no opcode
+behavior change** — slice 1 of 4 for `code/specs/
+W35-wasm-cross-instance-function-identity.md`, which fixes the confirmed
+root cause of every real (non-"not yet supported") failure in
+`elem.wast`/`linking.wast`/`linking0.wast`/`linking3.wast`: table entries
+and funcref-typed globals store bare `u32` function indices with no
+instance identity attached, so `call_indirect`/`table.get`/`call_ref`
+resolve that index against whichever instance happens to be EXECUTING
+right now, not whichever instance actually wrote it (`Table`'s own W28
+doc comment already named this exact gap as deliberately out of scope at
+the time). This slice lands only the representation the fix needs;
+nothing is wired into any opcode handler yet.
+
+- **`FuncRefTarget`** (new): `{ identity: u64, callable: Rc<dyn
+  HostFunction> }` — a funcref value's real, self-contained,
+  cross-instance-safe identity, `#[derive(Clone)]`. Not yet stored
+  anywhere or read back from anywhere; exists so the shape compiles and
+  derives correctly before any call site depends on it (the same
+  "prove the representation first" discipline W34's own first slice
+  used).
+- **`HostFunction::identity(&self) -> u64`** (new default method,
+  returns `0`) — mirrors `wasm_runtime::WasmInstance::tag_identities`'s
+  (W23) "imported adopts the exporter's identity verbatim" contract, for
+  functions instead of tags. Every pre-existing implementor (WASI shims,
+  `wasm-conformance::CrossModuleFunction`, every test-double `HostFunction`
+  across this workspace) gets this default unchanged — real `identity()`
+  overrides for `CrossModuleFunction` and a new `LocalFunctionRef` are W35
+  third-slice work.
+- **`SelfFunctionResolver`** (new trait, declared only): `fn
+  resolve_local_function(&self, func_index: u32) -> Result<FuncRefTarget,
+  VMError>`. Not implemented by anything in this slice — `wasm-runtime`'s
+  implementation, and the actual `self_resolver` field/threading through
+  `WasmExecutionContext`/`WasmExecutionEngine`, are W35 third-slice work.
+  Deliberately deviates from nothing in the spec's own slice-1 scope: the
+  spec names only the trait declaration, not a field to hold it, as
+  slice-1 work.
+- **`host_functions: Vec<Option<Box<dyn HostFunction>>>` → `Vec<Option<
+  Rc<dyn HostFunction>>>`**, everywhere it appears in this crate
+  (`WasmExecutionContext`, `WasmEngineConfig`, `WasmEngineState`,
+  `WasmExecutionEngine`'s own private field) — a `FuncRefTarget` (once
+  wired in slice 2+) needs to cheaply CLONE an existing import's callable
+  rather than rebuild it, which `Box` can't do. Every existing call site
+  only ever calls `&self` methods through it, so this is
+  behavior-preserving; the one non-mechanical spot is a test
+  (`CrossEngineCall` in this crate's own `try_table`/exception unit tests)
+  that constructed a `Box::new(..) as Box<dyn HostFunction>` literal,
+  updated to `Rc::new(..) as Rc<dyn HostFunction>`.
+- **`WasmExecutionContext::func_ref_heap: Vec<FuncRefTarget>`** (new
+  field) — the `Copy`-preserving handle scratch space `ref.func`/
+  `table.get`/`call_indirect`/etc. will use starting in slice 2 (mirrors
+  `gc_heap`/`v128_heap`'s own "index, not embedded value" shape, but reset
+  every call rather than persisted). Initialized empty everywhere a
+  `WasmExecutionContext` is built (`WasmExecutionEngine::call_function_impl`,
+  and `gc.rs`'s own test-only `empty_ctx()` helper).
+
+### Downstream ripple (mechanical, same reasoning)
+
+- `wasm-runtime::WasmInstance::host_functions` and `WasmRuntime::instantiate`'s
+  local `host_functions` builder Vec also became `Vec<Option<Rc<dyn
+  HostFunction>>>` (round-trips through this crate's own `WasmEngineState`,
+  which is now `Rc`-based) — see that crate's own CHANGELOG.
+- Every `wasm-execution` test file that hand-builds a `host_functions`
+  Vec or constructs a `Box::new(..) as Box<dyn HostFunction>` literal was
+  updated to `Rc` (`call_depth_guard.rs`, `wasm04/07/10/11/16/32/33/34_*.rs`)
+  — purely mechanical, no test assertions changed.
+
+### Verification
+
+- `cargo build --workspace` succeeds (one pre-existing, unrelated failure:
+  `paint-vm-direct2d` requires Windows and fails by design on macOS —
+  unaffected by this change).
+- `cargo test -p wasm-execution -p wasm-validator -p wasm-runtime -p
+  wasm-conformance`: byte-for-byte identical pass/fail counts and test
+  names before and after this change (verified by running the full suite,
+  `git stash`-ing this change, re-running, and diffing — every crate's
+  `test result:` line matches exactly; all passing, none failing).
+- `cargo run --release --bin wasm_conformance_report -p wasm-conformance
+  -- --write-baseline`: regenerated `tests/fixtures/testsuite-status.json`
+  is byte-for-byte identical to the committed baseline (`git diff` on that
+  file is empty) — exactly the "no corpus tally change expected" this
+  slice's own spec section promises.
+- `cargo clippy -p wasm-execution -p wasm-runtime -p wasm-validator -p
+  wasm-conformance -p lang-aot --all-targets -- -D warnings`: clean.
+
 ## [0.9.86] - 2026-09-01 (W-next — cross-instance mutable global sharing)
 
 **Real correctness bug, found bug-hunting the module-linking corner of the

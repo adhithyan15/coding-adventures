@@ -23,7 +23,7 @@ fn engine_from_wat(wat: &str) -> (WasmExecutionEngine, WasmModule) {
     let module = wasm_wast_parser::parse_module(wat).expect("module should parse");
     let func_types: Vec<FuncType> = module.functions.iter().map(|&t| module.types[t as usize].clone()).collect();
     let func_bodies: Vec<Option<FunctionBody>> = module.code.iter().cloned().map(Some).collect();
-    let host_functions: Vec<Option<Box<dyn HostFunction>>> = module.functions.iter().map(|_| None).collect();
+    let host_functions: Vec<Option<Rc<dyn HostFunction>>> = module.functions.iter().map(|_| None).collect();
     let engine = WasmExecutionEngine::new(WasmEngineConfig {
         memories: Vec::new(),
         tables: vec![],
@@ -175,8 +175,8 @@ fn a_panic_inside_the_dedicated_thread_restores_engine_state_before_propagating(
         func_types: vec![boom_type.clone(), echo_type.clone(), panics_type],
         func_bodies: vec![None, None, Some(FunctionBody { locals: vec![], code: vec![0x10, 0x00, 0x0B] })],
         host_functions: vec![
-            Some(Box::new(PanickingHostFunction { func_type: boom_type }) as Box<dyn HostFunction>),
-            Some(Box::new(EchoHostFunction { func_type: echo_type }) as Box<dyn HostFunction>),
+            Some(Rc::new(PanickingHostFunction { func_type: boom_type }) as Rc<dyn HostFunction>),
+            Some(Rc::new(EchoHostFunction { func_type: echo_type }) as Rc<dyn HostFunction>),
             None,
         ],
     });
@@ -221,8 +221,8 @@ impl HostFunction for ChainHostFunction {
 }
 
 fn make_chain_link(next: Option<Rc<RefCell<WasmExecutionEngine>>>, loop_type: FuncType) -> Rc<RefCell<WasmExecutionEngine>> {
-    let host_functions: Vec<Option<Box<dyn HostFunction>>> =
-        vec![Some(Box::new(ChainHostFunction { next, func_type: loop_type.clone() }) as Box<dyn HostFunction>), None];
+    let host_functions: Vec<Option<Rc<dyn HostFunction>>> =
+        vec![Some(Rc::new(ChainHostFunction { next, func_type: loop_type.clone() }) as Rc<dyn HostFunction>), None];
     Rc::new(RefCell::new(WasmExecutionEngine::new(WasmEngineConfig {
         memories: Vec::new(),
         tables: vec![],
