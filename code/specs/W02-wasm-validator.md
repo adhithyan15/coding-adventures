@@ -350,6 +350,22 @@ value of the declared type.
     validate_const_expr(global.init_expr, global.global_type.value_type, index_spaces)
 ```
 
+**Implementation note (2026-08-31, `wasm-validator` 0.2.77):** this section's own
+`validate_const_expr` design sat undocumented-as-unimplemented for this crate's
+entire history until now — `crate::validate` bounds-checked a global's own
+DECLARED type index (e.g. a `ConcreteFuncRef`'s type-section index), but nothing
+ever compared what `init_expr`/`offset_expr` actually EVALUATES TO against that
+declared type. Found via `code/specs/W33-wasm-gc-recursive-type-subtyping.md`'s
+"A newly-discovered, THIRD gap" addendum while tracing two real corpus
+reclassifications; would have affected even a plain `(global i32 (i64.const 0))`
+mismatch. Now implemented as `wasm_validator::type_check::const_expr_type` /
+`check_const_exprs` — see that module's own doc comment for the algorithm
+(determine the expression's static type via a small abstract stack, then check
+assignability via the SAME `is_assignable` lattice every other check in this
+crate uses, including non-null/bottom/nominal-subtype rules). Applied to global
+initializers AND element-/data-segment offset expressions alike (this section's
+own text undersold the scope: see §1.11 below, which already named all three).
+
 ### 1.11 Constant Expressions
 
 Constant expressions appear in global initializers, element offsets, and data offsets.
@@ -362,13 +378,43 @@ Permitted constant expression instructions:
   i64.const <i64>         → pushes an i64 constant
   f32.const <f32>         → pushes an f32 constant
   f64.const <f64>         → pushes an f64 constant
-  global.get <globalidx>  → pushes the value of an imported global
-                            (only imports; not locally defined globals)
+  global.get <globalidx>  → pushes the value of a PRIOR, IMMUTABLE global
   end                     → terminates the expression
 ```
 
+**Correction (2026-08-31, verified directly against the real corpus rather than
+carried forward from this section's original MVP-era text):** the `global.get`
+rule above previously read "only imports; not locally defined globals" — that
+was WASM 1.0's original restriction, since superseded by the extended-const /
+GC-era spec this repo otherwise already targets throughout. The real, current
+rule (confirmed against `global.wast`'s own accepted "Definition order" module,
+which has a module-defined global's initializer reference an EARLIER
+module-defined global via `global.get`, not just an import) is: any global at a
+STRICTLY EARLIER index in the combined (imports-first) index space, whether
+imported or module-defined, as long as it is IMMUTABLE. Forward references
+(including a global referencing itself) are invalid — the global section
+initializes in order. Element-/data-segment offset expressions have no such
+ordering restriction at all (bounds alone): both sections come after the
+ENTIRE global section in a module's binary layout, so every declared global
+already exists by the time either runs.
+
+This crate additionally implements the **extended-const proposal**'s six
+arithmetic ops (`i32.add`/`i32.sub`/`i32.mul`/`i64.add`/`i64.sub`/`i64.mul`),
+`v128.const` (SIMD), `ref.i31` and `ref.null`/`ref.func` (WasmGC / function-
+references) as legal constant-expression opcodes — the same set
+`wasm_execution::evaluate_const_expr` interprets at runtime; see that
+function's own doc comment for the authoritative list. An active element-
+segment offset must be `i64` for an `is64` table (table64 proposal) and `i32`
+otherwise; an active data-segment offset must be `i64` for an `is64` memory
+(memory64 proposal) and `i32` otherwise — mirroring `wasm-runtime::
+instantiate()`'s own is64-aware offset evaluation, which previously only
+caught a mismatch here as a runtime TRAP, not a validation-time reject.
+
 A constant expression must end with exactly one value of the expected type on the
-conceptual stack.
+conceptual stack — real corpus evidence for the "exactly one" half of that rule:
+`global.wast`'s own `(global i32 (i32.const 0) (i32.const 0))` is `assert_invalid
+"type mismatch"` specifically because a SECOND value is left over after `end`
+pops the first.
 
 ```python
 def validate_const_expr(
@@ -380,7 +426,9 @@ def validate_const_expr(
 
     Checks that:
     - Every instruction is in the permitted constant set
-    - global.get only references imported globals (not local ones)
+    - global.get only references a PRIOR, IMMUTABLE global (see the ordering
+      rule above for the exact "prior" definition, which differs between a
+      global's own initializer and an element-/data-segment offset)
     - The expression produces exactly one value of expected_type
     - The expression ends with 'end' (0x0B)
 

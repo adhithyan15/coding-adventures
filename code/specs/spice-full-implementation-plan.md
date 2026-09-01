@@ -5072,12 +5072,19 @@ the Rust, Python, and TypeScript surfaces together.
      `VAF` precedence; invalid input is rejected before element lowering.
 
 24. Rust BJT reverse-Early-voltage parser parity.
-   - Status: prioritized next after the BJT forward-Early-voltage slice.
-   - The engine and Python/TypeScript facades lower finite non-negative BJT
-     `VAR` values, with `VB` as a fallback alias, into the reverse-Early-voltage
-     field; the Rust element lowerer still leaves the engine default in place.
+   - Status: completed by the Rust BJT reverse-Early-voltage slice.
+   - Finite non-negative BJT `VAR` values now lower into the engine
+     reverse-Early-voltage field, with `VB` as a fallback alias and canonical
+     `VAR` precedence; invalid input is rejected before element lowering.
 
-25. Grammar-backed parser and app facade.
+25. Rust BJT forward-beta-rolloff-current parser parity.
+   - Status: prioritized next after the BJT reverse-Early-voltage slice.
+   - The engine and Python/TypeScript facades lower finite non-negative BJT
+     `IKF` values, with `IK` as a fallback alias, into the forward-beta-rolloff
+     current field; the Rust element lowerer still leaves the engine default in
+     place.
+
+26. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
      syntax facade as the grammar evolves, even if that breaks current
      pre-release parser APIs.
@@ -5085,7 +5092,7 @@ the Rust, Python, and TypeScript surfaces together.
      toward packaging, WebAssembly embedding, and product integration backed by
      the same public parser contract.
 
-26. Deck compatibility follow-up.
+27. Deck compatibility follow-up.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.

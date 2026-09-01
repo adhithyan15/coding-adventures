@@ -45,7 +45,7 @@
 //! implement and is the reading that makes that example type-check. See
 //! `pop_val` below.
 
-use wasm_leb128::{decode_signed, decode_unsigned};
+use wasm_leb128::{decode_signed, decode_unsigned, decode_unsigned_bounded};
 use wasm_opcodes::get_opcode;
 use wasm_types::{FuncType, FunctionBody, GlobalType, ValueType, WasmModule};
 
@@ -957,9 +957,359 @@ fn func_is_structural_subtype(child: &FuncType, parent: &FuncType, module: &Wasm
         && child.results.iter().zip(parent.results.iter()).all(|(&c, &p)| is_assignable(c, p, module))
 }
 
+// ──────────────────────────────────────────────────────────────────────────────
+// Const-expression type-checking (global initializers, element/data-segment
+// offsets) -- a real, pre-existing, previously-unfilled gap
+// ──────────────────────────────────────────────────────────────────────────────
+//
+// This crate had NO const-expr type-checker at all before this section:
+// `crate::validate`'s "Check 4c" bounds-checks a global's OWN declared
+// `ConcreteFuncRef`/`NonNullConcreteFuncRef` type INDEX, but nothing ever
+// compared the VALUE an `init_expr`/`offset_expr` actually produces against
+// that declared type. Surfaced by `code/specs/
+// W33-wasm-gc-recursive-type-subtyping.md`'s "A newly-discovered, THIRD
+// gap" addendum while tracing two honest reclassifications in
+// `type-rec.wast`/`type-subtyping.wast` -- confirmed independently here
+// (not just trusted from that doc): grepping this crate for any production
+// read of `globals[..].init_expr`/`elements[..].offset_expr`/
+// `data[..].offset_expr` outside test fixtures found none before this
+// section existed. This predates W33 entirely and would affect even a
+// plain MVP `(global i32 (i64.const 0))` mismatch (declared `i32`,
+// initialized with an `i64` constant) -- confirmed via the real corpus:
+// `global.wast` alone has 16 `assert_invalid` directives probing exactly
+// this class of gap (type mismatch, an illegal non-const opcode, a
+// forward/self/out-of-range `global.get`, and a `global.get` onto a
+// mutable global), every one of which structurally validated fine before
+// this section existed (graded `NotYetSupported`, not `Fail` -- see
+// `wasm-conformance`'s own `grade_assert_invalid` doc comment for why).
+
+/// Determine the static result type of a WASM constant expression --
+/// the same opcode set `wasm_execution::evaluate_const_expr` interprets
+/// at runtime (see that function's own doc comment for the authoritative
+/// allowed-opcode list), computing a TYPE instead of executing arithmetic.
+///
+/// `global_limit` bounds which `global.get` indices are legal here, per
+/// the real spec's two distinct visibility rules for constant expressions:
+/// - `Some(n)`: this expression IS a global's own initializer, at
+///   combined (imports-first) index `n` -- only indices strictly less
+///   than `n` are "prior" (forward references, including a global
+///   referencing itself, are invalid: the global section initializes in
+///   order, so a later/self index names a global that doesn't exist yet).
+/// - `None`: this expression is an element- or data-segment offset. Both
+///   sections come after the ENTIRE global section in a module's binary
+///   layout, so by the time either runs every declared global (import or
+///   module-defined) already exists -- eligibility is bounds alone, via
+///   `ctx.global_types.len()`.
+///
+/// A referenced global must also be IMMUTABLE regardless of context
+/// (real spec rule, verified directly against `global.wast`'s own
+/// `(global (import "test" "global-mut-i32") (mut i32)) (global i32
+/// (global.get 0))` `assert_invalid "constant expression required"`
+/// case) -- a mutable global's value isn't a compile-time constant.
+///
+/// Returns `StackType::Unknown` for the one heap-type/struct-index shape
+/// the rest of this crate's function-body checker ALSO doesn't fully
+/// model yet (`ref.null`'s `0x63`-tagged concrete index at or past
+/// `module.types.len()` -- the identical permissive fallback that
+/// handler's own doc comment explains, reused here verbatim), so this
+/// never introduces a false reject for a shape the rest of the crate
+/// already treats as "not fully typed" -- only for shapes it can
+/// concretely resolve to a real, wrong type.
+fn const_expr_type(expr: &[u8], ctx: &ModuleContext, global_limit: Option<u32>) -> Result<StackType, ValidationError> {
+    let mut stack: Vec<StackType> = Vec::new();
+    let mut offset = 0usize;
+
+    while offset < expr.len() {
+        let opcode = expr[offset];
+        offset += 1;
+
+        match opcode {
+            // i32.const
+            0x41 => {
+                let (_, consumed) =
+                    decode_signed(expr, offset).map_err(|e| ValidationError::Other(format!("i32.const: {e}")))?;
+                offset += consumed;
+                stack.push(StackType::Known(ValueType::I32));
+            }
+            // i64.const
+            0x42 => {
+                let (_, consumed) =
+                    decode_signed(expr, offset).map_err(|e| ValidationError::Other(format!("i64.const: {e}")))?;
+                offset += consumed;
+                stack.push(StackType::Known(ValueType::I64));
+            }
+            // f32.const -- 4 raw (non-LEB128) bytes.
+            0x43 => {
+                if offset + 4 > expr.len() {
+                    return Err(ValidationError::Other("f32.const: not enough bytes in constant expression".to_string()));
+                }
+                offset += 4;
+                stack.push(StackType::Known(ValueType::F32));
+            }
+            // f64.const -- 8 raw bytes.
+            0x44 => {
+                if offset + 8 > expr.len() {
+                    return Err(ValidationError::Other("f64.const: not enough bytes in constant expression".to_string()));
+                }
+                offset += 8;
+                stack.push(StackType::Known(ValueType::F64));
+            }
+            // global.get -- see this function's own doc comment for the
+            // `global_limit`/immutability rules.
+            0x23 => {
+                let (idx, consumed) = decode_unsigned_bounded(expr, offset, 32)
+                    .map_err(|e| ValidationError::Other(format!("global.get: {e}")))?;
+                offset += consumed;
+                let idx = idx as u32;
+                let limit = global_limit.unwrap_or(ctx.global_types.len() as u32);
+                if idx >= limit {
+                    return Err(ValidationError::Other(format!(
+                        "unknown global: constant expression references global index {idx}, but only {limit} prior global(s) are visible here"
+                    )));
+                }
+                let gt = &ctx.global_types[idx as usize];
+                if gt.mutable {
+                    return Err(ValidationError::Other(format!(
+                        "constant expression required: global.get references global index {idx}, which is mutable"
+                    )));
+                }
+                stack.push(StackType::Known(gt.value_type));
+            }
+            // Extended-const proposal: i32.add/i32.sub/i32.mul -- pop two
+            // i32 operands, push one i32 result.
+            0x6A..=0x6C => {
+                let b = pop_const(&mut stack)?;
+                let a = pop_const(&mut stack)?;
+                check_const_operand(a, ValueType::I32, ctx.module)?;
+                check_const_operand(b, ValueType::I32, ctx.module)?;
+                stack.push(StackType::Known(ValueType::I32));
+            }
+            // Extended-const proposal: i64.add/i64.sub/i64.mul -- same
+            // pop-two-push-one shape as the i32 trio just above.
+            0x7C..=0x7E => {
+                let b = pop_const(&mut stack)?;
+                let a = pop_const(&mut stack)?;
+                check_const_operand(a, ValueType::I64, ctx.module)?;
+                check_const_operand(b, ValueType::I64, ctx.module)?;
+                stack.push(StackType::Known(ValueType::I64));
+            }
+            // v128.const (SIMD, 0xFD-prefixed): sub-opcode is a LEB128 u32,
+            // must be 0x0C (the only SIMD sub-opcode legal in a constant
+            // expression), followed by 16 RAW lane bytes.
+            0xFD => {
+                let (sub_opcode, consumed) = decode_unsigned_bounded(expr, offset, 32)
+                    .map_err(|e| ValidationError::Other(format!("v128.const: {e}")))?;
+                offset += consumed;
+                if sub_opcode != 0x0C {
+                    return Err(ValidationError::Other(format!(
+                        "illegal SIMD sub-opcode 0x{sub_opcode:02X} in constant expression"
+                    )));
+                }
+                if offset + 16 > expr.len() {
+                    return Err(ValidationError::Other("v128.const: not enough bytes in constant expression".to_string()));
+                }
+                offset += 16;
+                stack.push(StackType::Known(ValueType::V128));
+            }
+            // WasmGC prefix (0xFB): `ref.i31` (sub-opcode 0x1C) is the one
+            // GC instruction the real spec allows in a constant expression.
+            // Pops the i32 payload, pushes `(ref i31)` (always non-null).
+            0xFB => {
+                let sub = *expr
+                    .get(offset)
+                    .ok_or_else(|| ValidationError::Other("truncated WasmGC opcode in constant expression".to_string()))?;
+                offset += 1;
+                if sub != 0x1C {
+                    return Err(ValidationError::Other(format!(
+                        "illegal WasmGC sub-opcode 0x{sub:02X} in constant expression"
+                    )));
+                }
+                let v = pop_const(&mut stack)?;
+                check_const_operand(v, ValueType::I32, ctx.module)?;
+                stack.push(StackType::Known(ValueType::I31ref));
+            }
+            // `ref.null <heap_type>` -- same heap-type byte -> `ValueType`
+            // mapping the function-body checker's own `0xD0` handler uses
+            // (see that handler's doc comment for the derivation of every
+            // byte value below, including why an out-of-range `0x63`
+            // concrete index falls back to `Unknown` rather than erroring).
+            0xD0 => {
+                let heap_type = *expr
+                    .get(offset)
+                    .ok_or_else(|| ValidationError::Other("truncated ref.null heap-type immediate in constant expression".to_string()))?;
+                offset += 1;
+                let result = match heap_type {
+                    0x70 => StackType::Known(ValueType::Funcref),
+                    0x6F => StackType::Known(ValueType::Externref),
+                    0x0F => StackType::Known(ValueType::Anyref),
+                    0x73 => StackType::Known(ValueType::NullFuncref),
+                    0x72 => StackType::Known(ValueType::NullExternref),
+                    0x74 => StackType::Known(ValueType::NullExnref),
+                    0x71 => StackType::Known(ValueType::NullRef),
+                    0x63 => {
+                        let (idx, size) = decode_idx(expr, offset)?;
+                        offset += size;
+                        if (idx as usize) < ctx.module.types.len() {
+                            StackType::Known(ValueType::ConcreteFuncRef(idx))
+                        } else {
+                            StackType::Unknown
+                        }
+                    }
+                    _ => StackType::Unknown,
+                };
+                stack.push(result);
+            }
+            // `ref.func <funcidx>` -- a real, spec-legal constant
+            // instruction (function-references proposal). Real result
+            // type: `(ref $t)` where `$t` is the referenced function's OWN
+            // declared type-section index -- see `ctx.func_type_indices`'s
+            // own doc comment (the identical rule the function-body
+            // checker's `0xD2` handler already implements). Bounds-checked
+            // with `decode_unsigned_bounded(.., 32)`, not the plain
+            // `decode_idx` the `0xD0` arm above uses -- security review
+            // finding (`wasm-execution::evaluate_const_expr`'s own `0xD2`
+            // arm doc comment) established that a raw `u64` LEB128 decode
+            // narrowed with `as u32` SILENTLY TRUNCATES a huge index into a
+            // small in-range one instead of being rejected; using the
+            // bounded decoder here closes the identical class of bug in
+            // this new code rather than reintroducing it.
+            0xD2 => {
+                let (idx, consumed) = decode_unsigned_bounded(expr, offset, 32)
+                    .map_err(|e| ValidationError::Other(format!("ref.func: {e}")))?;
+                offset += consumed;
+                let idx = idx as usize;
+                match ctx.func_type_indices.get(idx) {
+                    Some(&type_idx) => stack.push(StackType::Known(ValueType::NonNullConcreteFuncRef(type_idx))),
+                    None => {
+                        return Err(ValidationError::FuncIndexOutOfBounds(format!(
+                            "ref.func: constant expression references function index {idx}, but only {} functions exist",
+                            ctx.func_type_indices.len()
+                        )));
+                    }
+                }
+            }
+            // end -- the expression must leave EXACTLY one value on the
+            // stack (an empty stack is `(;empty instruction sequence;)`,
+            // real spec `assert_invalid "type mismatch"`; more than one
+            // remaining value is `global.wast`'s own `(global i32
+            // (i32.const 0) (i32.const 0))`/`(global i32 (global.get 0)
+            // (global.get 0))` shape, ALSO a real `"type mismatch"` --
+            // both verified directly against that file's own corpus
+            // cases, not assumed).
+            0x0B => {
+                let result = pop_const(&mut stack)?;
+                if !stack.is_empty() {
+                    return Err(ValidationError::Other(
+                        "type mismatch: constant expression leaves more than one value on the stack".to_string(),
+                    ));
+                }
+                return Ok(result);
+            }
+            _ => {
+                return Err(ValidationError::Other(format!(
+                    "illegal opcode 0x{opcode:02X} in constant expression"
+                )));
+            }
+        }
+    }
+
+    Err(ValidationError::Other("constant expression missing end opcode".to_string()))
+}
+
+/// Pop one value from a constant expression's abstract type stack, or a
+/// real underflow error (an empty/too-short constant expression, e.g.
+/// `(global f32 (f32.neg (f32.const 0)))`'s illegal-opcode case never
+/// reaches this, but a hand-crafted or fuzzed `init_expr` -- untrusted
+/// module bytecode -- reasonably could).
+fn pop_const(stack: &mut Vec<StackType>) -> Result<StackType, ValidationError> {
+    stack
+        .pop()
+        .ok_or_else(|| ValidationError::Other("constant expression: stack underflow".to_string()))
+}
+
+/// Require a constant-expression operand to be assignable to `expected`
+/// (an `Unknown` actual always matches, mirroring `pop_expect`'s identical
+/// dead-code-polymorphism rule for ordinary instructions).
+fn check_const_operand(actual: StackType, expected: ValueType, module: &WasmModule) -> Result<(), ValidationError> {
+    match actual {
+        StackType::Unknown => Ok(()),
+        StackType::Known(t) if is_assignable(t, expected, module) => Ok(()),
+        StackType::Known(t) => Err(ValidationError::Other(format!(
+            "type mismatch: constant expression expected {expected:?}, found {t:?}"
+        ))),
+    }
+}
+
+/// Check a fully-evaluated constant expression's static result (`actual`)
+/// against what its context requires (`expected`), reusing the exact same
+/// `is_assignable` lattice -- including the W32/W33 non-null/bottom/
+/// nominal-subtype rules -- every other check in this crate already uses,
+/// per this section's own design goal: a const-expr type-checker that
+/// respects real subtyping (`(global (ref $t) (ref.func $f))` needs the
+/// real subtype check, not bare equality), not a narrower one-off rule.
+fn check_const_expr_result(actual: StackType, expected: ValueType, module: &WasmModule, what: &str) -> Result<(), ValidationError> {
+    match actual {
+        StackType::Unknown => Ok(()),
+        StackType::Known(t) if is_assignable(t, expected, module) => Ok(()),
+        StackType::Known(t) => Err(ValidationError::Other(format!("{what}: type mismatch, expected {expected:?}, found {t:?}"))),
+    }
+}
+
+/// Type-check every module-level constant expression -- global
+/// initializers, and active element-/data-segment offset expressions --
+/// against their declared/required type (see this section's own module
+/// doc comment for the gap this closes).
+///
+/// Runs AFTER `crate::validate`'s own Check 8/Check 9 (data/element
+/// segment memory/table-index bounds): by the time this runs, every
+/// ACTIVE segment's `memory_index`/`table_index` is already known
+/// in-bounds, so indexing `ctx.memory_is64`/`ctx.table_is64` by them is
+/// safe -- still guarded defensively (`.get(..).unwrap_or(false)`) rather
+/// than a bare index, since this function's own correctness should not
+/// depend on exactly which checks ran before it in `crate::validate`.
+///
+/// A PASSIVE segment (bulk-memory/bulk-table proposals) has no offset
+/// expression at all (`offset_expr` is always empty for one, per
+/// `Element`/`DataSegment`'s own doc comments) and is never applied at
+/// instantiation time -- skipped here, matching every other check in this
+/// crate that special-cases passive segments the same way.
+fn check_const_exprs(ctx: &ModuleContext) -> Result<(), ValidationError> {
+    let module = ctx.module;
+    let imported_global_count = (ctx.global_types.len() - module.globals.len()) as u32;
+
+    for (i, g) in module.globals.iter().enumerate() {
+        let abs_idx = imported_global_count + i as u32;
+        let result = const_expr_type(&g.init_expr, ctx, Some(abs_idx))?;
+        check_const_expr_result(result, g.global_type.value_type, module, &format!("global #{abs_idx} initializer"))?;
+    }
+
+    for (i, elem) in module.elements.iter().enumerate() {
+        if elem.is_passive {
+            continue;
+        }
+        let is64 = ctx.table_is64.get(elem.table_index as usize).copied().unwrap_or(false);
+        let expected = if is64 { ValueType::I64 } else { ValueType::I32 };
+        let result = const_expr_type(&elem.offset_expr, ctx, None)?;
+        check_const_expr_result(result, expected, module, &format!("element segment #{i} offset"))?;
+    }
+
+    for (i, seg) in module.data.iter().enumerate() {
+        if seg.is_passive {
+            continue;
+        }
+        let is64 = ctx.memory_is64.get(seg.memory_index as usize).copied().unwrap_or(false);
+        let expected = if is64 { ValueType::I64 } else { ValueType::I32 };
+        let result = const_expr_type(&seg.offset_expr, ctx, None)?;
+        check_const_expr_result(result, expected, module, &format!("data segment #{i} offset"))?;
+    }
+
+    Ok(())
+}
+
 pub(crate) fn type_check_module(module: &WasmModule) -> Result<(), ValidationError> {
     check_type_subtyping(module)?;
     let ctx = build_module_context(module)?;
+    check_const_exprs(&ctx)?;
     let imported_function_count = ctx.func_types.len() - module.functions.len();
 
     for (i, &type_idx) in module.functions.iter().enumerate() {

@@ -455,3 +455,37 @@ Worth its own future slice; not attempted here.
   gap (above) — not part of this spec's own scope, not previously
   tracked anywhere in this repo's specs, recorded here for whichever
   future slice picks it up.
+
+## Addendum (second slice, 2026-08-31): the THIRD gap closed — a real const-expr type-checker
+
+Picked up exactly the item the first slice's addendum recorded as "worth
+its own future slice; not attempted here": a real const-expression
+type-checker for `wasm-validator`, applied to global initializers AND
+(beyond what the first slice's addendum named) active element-/data-
+segment offset expressions too, since those carry the identical
+previously-unchecked shape. Landed as `wasm-validator` 0.2.77
+(`type_check::const_expr_type`/`check_const_exprs`) — full design and
+rationale now lives in `code/specs/W02-wasm-validator.md` §§1.10-1.11
+(the const-expr-checker's real, natural home; it predates W33 and isn't
+`sub`/`final`/`rec`-specific), not repeated here. `wasm-conformance`
+0.1.107's own changelog has the complete per-file, per-directive
+accounting.
+
+This closes the loop the first slice's addendum opened: the two "honest
+reclassification" cases it traced (`type-rec.wast`/`type-subtyping.wast`'s
+`assert_invalid "type mismatch"` `not_yet_supported` counts) are now real
+passes, verified via real nominal-subtype checking (`is_assignable`'s
+`NonNullConcreteFuncRef` arm, unchanged by this slice) rather than a new,
+separate equality-only rule — confirming the const-expr checker and W33's
+own nominal-subtyping machinery compose correctly without either needing
+to special-case the other. 52 `assert_invalid` directives across 7 files
+flip `NotYetSupported` → `Pass` in total (16 of the 52 are `type-rec.wast`/
+`type-subtyping.wast`/`ref_func.wast` — the rest, `global.wast`/
+`data.wast`/`elem.wast`/`func_ptrs.wast`, are the SAME class of gap
+reached through plain MVP globals/segments, no `sub`/`rec` involved at
+all — confirming the spec addendum's own claim that this gap "predates
+W33 entirely"). Zero new `fail`/`trap` anywhere in the 257-file baseline.
+
+Items (3b) and (4) from this spec's own "Recommended scope" remain exactly
+as open as the first slice's addendum left them — this second slice did
+not touch either.

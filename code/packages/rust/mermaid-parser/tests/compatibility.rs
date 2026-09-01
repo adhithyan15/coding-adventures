@@ -1,7 +1,7 @@
 use std::collections::BTreeSet;
 
 use mermaid_parser::{
-    detect_mermaid_type, parse_any_mermaid, parse_gantt, parse_gitgraph, parse_journey, parse_pie,
+    detect_mermaid_type, parse_any_mermaid, parse_block, parse_gantt, parse_gitgraph, parse_journey, parse_pie,
     parse_mindmap, parse_quadrant_chart, parse_requirement_diagram, parse_sankey,
     parse_sequence_diagram, parse_timeline, parse_xychart,
     MERMAID_COMPATIBILITY_BASELINE,
@@ -28,6 +28,23 @@ const MINDMAP_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/mindmap-11.16.1-corpus.json"
 ));
+const BLOCK_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/block-11.16.1-corpus.json"
+));
+
+#[test]
+fn pinned_block_subset_corpus_parses_to_grid_ir() {
+    let corpus: Value = serde_json::from_str(BLOCK_CORPUS).expect("block corpus must be JSON");
+    assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
+    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        let source = fixture["source"].as_str().expect("fixture source");
+        let diagram = parse_block(source)
+            .unwrap_or_else(|error| panic!("block fixture {id} failed: {error}"));
+        assert!(diagram.cells.iter().any(|cell| cell.visible));
+    }
+}
 
 #[test]
 fn pinned_mindmap_subset_corpus_parses_to_tree_edges() {
@@ -537,9 +554,9 @@ Alice->>Bob: Hello
 
 #[test]
 fn recognized_but_unimplemented_family_is_not_reported_as_unknown() {
-    let error = parse_any_mermaid("block-beta\ncolumns 2\nA B")
+    let error = parse_any_mermaid("packet-beta\n0-7: \"Header\"")
         .err()
-        .expect("block support is not implemented yet");
+        .expect("packet support is not implemented yet");
     assert!(error.message.contains("recognized but not implemented"));
     assert!(error.message.contains(MERMAID_COMPATIBILITY_BASELINE));
 }

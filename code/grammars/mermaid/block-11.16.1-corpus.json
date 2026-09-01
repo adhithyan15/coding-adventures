@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "upstream": "mermaid@11.16.1",
+  "family": "block",
+  "supported_subset": "Flat grids with columns, spaces, labeled nodes, core shapes, and directed connections",
+  "fixtures": [
+    { "id": "basic-grid", "source": "block-beta\ncolumns 3\nA[Parser] B(IR) C((Paint))" },
+    { "id": "spaces-and-edges", "source": "block\ncolumns 2\nA[Source] space\nB[Output]\nA --> B" }
+  ]
+}

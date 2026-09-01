@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Lower BJT `VAR` with `VB` fallback into the engine reverse-Early-voltage
+  field and reject invalid values before element lowering.
 - Lower BJT `VAF` with `VA` fallback into the engine forward-Early-voltage
   field and reject invalid values before element lowering.
 - Lower positive finite BJT `EG` model-card values into the engine energy-gap
