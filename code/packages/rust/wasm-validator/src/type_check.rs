@@ -293,18 +293,29 @@ fn is_assignable(actual: ValueType, expected: ValueType, module: TypeContext) ->
         || matches!((actual, expected), (ValueType::NonNullArrayRef(i), ValueType::ArrayRef(j)) if module.nominal_or_canonical_subtype(i, j))
 }
 
-/// Pop one value and require it to be assignable to `expected` (an
-/// `Unknown` actual or expected always matches -- see [`pop_val`]; a
+/// Require an already-popped [`StackType`] to be assignable to `expected`
+/// (an `Unknown` actual or expected always matches -- see [`pop_val`]; a
 /// `Known` actual must satisfy [`is_assignable`], not bare equality, so a
 /// concrete function-type ref can flow wherever `funcref` is expected).
-fn pop_expect(stack: &mut Vec<StackType>, frame: &ControlFrame, expected: ValueType, module: TypeContext<'_>) -> Result<(), ValidationError> {
-    match pop_val(stack, frame)? {
+/// Factored out of [`pop_expect`] so a caller that already HAS a
+/// `StackType` in hand (`br_table`'s multi-target check below: the SAME
+/// small, already-popped operand values must be checked against several
+/// DIFFERENT targets) can reuse this exact assignability logic without
+/// re-popping from -- or cloning -- the real stack for every target.
+fn check_stacktype_assignable(actual: StackType, expected: ValueType, module: TypeContext<'_>) -> Result<(), ValidationError> {
+    match actual {
         StackType::Unknown => Ok(()),
         StackType::Known(actual) if is_assignable(actual, expected, module) => Ok(()),
         StackType::Known(actual) => Err(ValidationError::Other(format!(
             "TypeMismatch: expected {expected:?}, found {actual:?}"
         ))),
     }
+}
+
+/// Pop one value and require it to be assignable to `expected`.
+fn pop_expect(stack: &mut Vec<StackType>, frame: &ControlFrame, expected: ValueType, module: TypeContext<'_>) -> Result<(), ValidationError> {
+    let actual = pop_val(stack, frame)?;
+    check_stacktype_assignable(actual, expected, module)
 }
 
 /// Pop and verify a whole type list, in reverse (the last-listed type is
@@ -814,14 +825,25 @@ struct ModuleContext<'a> {
     /// bounds-checked against the actual table count, not just "is there
     /// at least one".
     table_count: u32,
-    /// Each table's raw element-type byte (`0x70` funcref / `0x6F`
-    /// externref), same index-space/ordering convention as `table_count`
+    /// Each table's fully-resolved element type -- `Funcref`/`Externref`
+    /// for an ordinary table, or the table's own concrete
+    /// `ConcreteFuncRef`/`NonNullConcreteFuncRef` when the source declared
+    /// one via `(table $t (ref null $t) ...)` (function-references
+    /// proposal; see `WasmModule::table_concrete_element_types`'s own doc
+    /// comment) -- same index-space/ordering convention as `table_count`
     /// (task #96): `table.get $t3 ...`/`table.set $t3 ...` must type-check
     /// against table `$t3`'s OWN declared element type, not unconditionally
     /// assume funcref -- WASM 1.0's single implicit table is always
     /// funcref, but a module with more than one table (multi-table) can
-    /// mix funcref and externref tables freely.
-    table_element_types: Vec<u8>,
+    /// mix funcref and externref tables freely, and a function-references
+    /// table narrows funcref further still. This used to be just the raw
+    /// `u8` tag (`0x70`/`0x6F`) with a `0x6F => Externref, _ => Funcref`
+    /// match at every use site, which silently discarded any concrete
+    /// type and is exactly what let `br_table.wast`'s own `meet-funcref-*`/
+    /// `meet-multi-ref` tests regress (`table.get` on a `(ref null $t)`
+    /// table pushed generic `Funcref`, then a `br_table` label requiring
+    /// the narrower `$t` failed with a spurious `TypeMismatch`).
+    table_element_types: Vec<ValueType>,
     /// Each table's `is64`-ness (table64 proposal, W26), same combined
     /// imports-first-then-declared index-space/ordering convention as
     /// `table_element_types`/`memory_is64` -- `table.get`/`table.set`/
@@ -902,15 +924,34 @@ fn build_module_context<'a>(module: &'a WasmModule, canonical_types: &'a [Option
         })
         .collect();
     memory_is64.extend(module.memories.iter().map(|m| m.is64));
-    let mut table_element_types: Vec<u8> = module
+    // Import tables can only ever be generic funcref/externref in this
+    // crate's text format (no concrete-typed table IMPORT syntax exists --
+    // see `WasmModule::table_concrete_element_types`'s own doc comment),
+    // so each one resolves from its raw byte tag alone.
+    let byte_to_generic_reftype = |b: u8| if b == wasm_types::EXTERNREF { ValueType::Externref } else { ValueType::Funcref };
+    let mut table_element_types: Vec<ValueType> = module
         .imports
         .iter()
         .filter_map(|i| match &i.type_info {
-            ImportTypeInfo::Table(tt) => Some(tt.element_type),
+            ImportTypeInfo::Table(tt) => Some(byte_to_generic_reftype(tt.element_type)),
             _ => None,
         })
         .collect();
-    table_element_types.extend(module.tables.iter().map(|t| t.element_type));
+    // Module-defined tables: prefer the real concrete type
+    // (`table_concrete_element_types[i]`) when the source declared one,
+    // falling back to the generic byte tag otherwise -- exactly the
+    // `Some`/`None` split `table_concrete_element_types`'s own doc comment
+    // describes. `.get(i)` (not indexing) because that vec is allowed to
+    // be shorter than `module.tables`, same convention `type_kinds`/
+    // `type_subtyping` already established elsewhere in this module.
+    table_element_types.extend(module.tables.iter().enumerate().map(|(i, t)| {
+        module
+            .table_concrete_element_types
+            .get(i)
+            .copied()
+            .flatten()
+            .unwrap_or_else(|| byte_to_generic_reftype(t.element_type))
+    }));
     let table_count = table_element_types.len() as u32;
     let mut table_is64: Vec<bool> = module
         .imports
@@ -1889,10 +1930,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         if table_idx >= ctx.table_count {
                             err!("table.grow references table index {table_idx}, but only {} tables exist", ctx.table_count);
                         }
-                        let elem_type = match ctx.table_element_types[table_idx as usize] {
-                            0x6F => ValueType::Externref,
-                            _ => ValueType::Funcref,
-                        };
+                        let elem_type = ctx.table_element_types[table_idx as usize];
                         let idx_type = if ctx.table_is64.get(table_idx as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
                         pop_expect(&mut stack, frame!(), idx_type, ctx.module)?; // delta
                         pop_expect(&mut stack, frame!(), elem_type, ctx.module)?; // init value
@@ -1923,10 +1961,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         if table_idx >= ctx.table_count {
                             err!("table.fill references table index {table_idx}, but only {} tables exist", ctx.table_count);
                         }
-                        let elem_type = match ctx.table_element_types[table_idx as usize] {
-                            0x6F => ValueType::Externref,
-                            _ => ValueType::Funcref,
-                        };
+                        let elem_type = ctx.table_element_types[table_idx as usize];
                         let idx_type = if ctx.table_is64.get(table_idx as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
                         pop_expect(&mut stack, frame!(), idx_type, ctx.module)?; // length
                         pop_expect(&mut stack, frame!(), elem_type, ctx.module)?; // value
@@ -2566,6 +2601,47 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 let default_target = resolve_label_target(control_stack.len(), default_label)
                     .ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: br_table default target {default_label} out of range")))?;
                 let default_types = label_types(&control_stack[default_target]).to_vec();
+                // Every target (each of `labels`, plus the default) must
+                // independently accept the SAME original operand value(s)
+                // -- WASM's br_table typing rule is a "meet" over all
+                // targets, not a left-to-right chain, so source ORDER must
+                // not affect validity. This used to check target `i`
+                // against whatever `push_vals` had just put back from
+                // target `i-1` (narrowing the value's apparent type on
+                // each pass), which broke as soon as an EARLIER-checked
+                // target needed a WIDER type than a LATER one -- e.g. a
+                // concrete `(ref $t)`-typed value is genuinely assignable
+                // to both a `(ref null $t)` target AND a generic `(ref
+                // null func)` target, but the old chain rejected it
+                // whenever the generic target was checked (and thus
+                // widened away) before the concrete one. Real corpus
+                // regression this closes: `br_table.wast`'s own
+                // `meet-funcref-1`/`meet-multi-ref` etc., which deliberately
+                // list their targets in every possible order specifically
+                // to catch an order-dependent implementation like this.
+                //
+                // The default target's OWN arity worth of values is
+                // popped from the real stack exactly ONCE, into a small
+                // `operands` vec (size = arity, not stack depth) -- every
+                // OTHER target is then checked against this SAME fixed
+                // snapshot via `check_stacktype_assignable` alone, never
+                // touching (or cloning) the real stack again. This
+                // matters for more than tidiness: a `br_table` can list
+                // an attacker-controlled number of targets, and the
+                // operand stack can independently be attacker-driven
+                // deep -- cloning the WHOLE stack once per target (an
+                // earlier version of this fix did exactly that) is
+                // O(target_count * stack_depth), quadratic in a single
+                // instruction's own two independently-controllable
+                // dimensions. Checking a fixed arity-sized snapshot
+                // instead keeps this O(target_count * arity), the same
+                // asymptotic cost the old (order-DEPENDENT, but not
+                // DoS-prone) implementation already had.
+                let mut operands = Vec::with_capacity(default_types.len());
+                for _ in 0..default_types.len() {
+                    operands.push(pop_val(&mut stack, frame!())?);
+                }
+                operands.reverse(); // popped top-to-bottom; restore left-to-right to match `default_types`' own order
                 for &label in &labels {
                     let target = resolve_label_target(control_stack.len(), label)
                         .ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: br_table target {label} out of range")))?;
@@ -2573,12 +2649,13 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     if types.len() != default_types.len() {
                         err!("br_table targets have mismatched arities ({} vs default's {})", types.len(), default_types.len());
                     }
-                    // Verify without permanently consuming (every target
-                    // must type-check against the SAME current stack).
-                    pop_expect_many(&mut stack, frame!(), &types, ctx.module)?;
-                    push_vals(&mut stack, &types);
+                    for (&actual, &expected) in operands.iter().zip(types.iter()) {
+                        check_stacktype_assignable(actual, expected, ctx.module)?;
+                    }
                 }
-                pop_expect_many(&mut stack, frame!(), &default_types, ctx.module)?;
+                for (&actual, &expected) in operands.iter().zip(default_types.iter()) {
+                    check_stacktype_assignable(actual, expected, ctx.module)?;
+                }
                 mark_unreachable(&mut stack, frame_mut!());
             }
             0x0F => {
@@ -2839,10 +2916,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 if table_idx >= ctx.table_count {
                     err!("table.get references table index {table_idx}, but only {} tables exist", ctx.table_count);
                 }
-                let elem_type = match ctx.table_element_types[table_idx as usize] {
-                    0x6F => ValueType::Externref,
-                    _ => ValueType::Funcref,
-                };
+                let elem_type = ctx.table_element_types[table_idx as usize];
                 // W26 (table64): the index operand is i64 for an `is64`
                 // table, i32 otherwise.
                 let idx_type = if ctx.table_is64.get(table_idx as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
@@ -2859,10 +2933,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 if table_idx >= ctx.table_count {
                     err!("table.set references table index {table_idx}, but only {} tables exist", ctx.table_count);
                 }
-                let elem_type = match ctx.table_element_types[table_idx as usize] {
-                    0x6F => ValueType::Externref,
-                    _ => ValueType::Funcref,
-                };
+                let elem_type = ctx.table_element_types[table_idx as usize];
                 let idx_type = if ctx.table_is64.get(table_idx as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
                 pop_expect(&mut stack, frame!(), elem_type, ctx.module)?;
                 pop_expect(&mut stack, frame!(), idx_type, ctx.module)?;

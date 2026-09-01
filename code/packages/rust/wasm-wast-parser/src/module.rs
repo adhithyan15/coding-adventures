@@ -1219,6 +1219,14 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
                 }
             }
             ctx.module.tables.push(TableType { element_type: FUNCREF, limits: Limits { min: 0, max: None }, is64: false }); // fixed in pass 2
+            // Placeholder kept in lockstep with the `tables` push just
+            // above -- see `WasmModule::table_concrete_element_types`'s
+            // own doc comment for why this parallel vec exists at all.
+            // `None` here (no concrete type) is pass 2's default; the
+            // `(table $t (ref null $t) (elem ...))` shorthand branch in
+            // `build_table_limits_and_elements` overwrites this SAME
+            // index with `Some(vt)` when the source actually names one.
+            ctx.module.table_concrete_element_types.push(None);
         } else if f.is_keyword_list("memory") {
             let items = f.as_list().unwrap();
             if let Some(name) = items.get(1).and_then(|e| e.as_atom()) {
@@ -2053,12 +2061,65 @@ fn build_table_limits_and_elements(rest: &[SExpr], table_idx: u32, storage_idx: 
         return Ok(());
     }
 
-    // `[reftype, (elem e*)]` -- skip the reftype keyword (this crate only
-    // tracks FUNCREF tables, matching every MVP-era table declaration),
-    // then resolve the elem list's own function references. `(table
-    // funcref ())` -- a syntactically valid but EMPTY inner list -- has no
-    // "elem" head atom at all, so this must confirm one is actually
-    // present before slicing `[1..]`, not just that the list is non-empty.
+    // `[reftype, (elem e*)]`. The reftype is either the plain `funcref`/
+    // `externref` keyword (every MVP-era table declaration -- the ONLY
+    // two atoms this branch recognized before), or a function-references-
+    // proposal `(ref null $t)`/`(ref $t)`/`(ref null func)`/`(ref null
+    // extern)` list naming a CONCRETE function type -- `parse_value_type`
+    // already parses that exact grammar for func params/results/globals/
+    // locals, so it's reused here rather than duplicated.
+    //
+    // Real corpus regression this closes: `br_table.wast`'s own
+    // `(table $t (ref null $t) (elem $tf))` -- before this branch parsed
+    // the reftype at all, it was silently discarded (see the removed
+    // comment this replaced, "this crate only tracks FUNCREF tables"),
+    // leaving `$t`'s table looking exactly like a generic `funcref` table
+    // to every downstream consumer. `table.get $t` then pushed
+    // `ValueType::Funcref` unconditionally, and the file's own
+    // `meet-funcref-*`/`meet-multi-ref` tests -- which `br_table` across
+    // labels typed `(ref null func)` AND the narrower `(ref null $t)`/
+    // `(ref $t)` -- failed validation with `TypeMismatch: expected
+    // ConcreteFuncRef(1), found Funcref` on an entirely ordinary,
+    // MVP-adjacent construct (no GC-proposal struct/array syntax
+    // involved). See `WasmModule::table_concrete_element_types`'s own doc
+    // comment for the field this now populates, and `wasm-validator`'s
+    // `table.get`/`table.set` opcode arms for the consuming side.
+    //
+    // `(table funcref ())` -- a syntactically valid but EMPTY inner list
+    // -- has no "elem" head atom at all, so this must confirm one is
+    // actually present before slicing `[1..]`, not just that the list is
+    // non-empty.
+    let reftype = expect_get(rest, 0)?;
+    match reftype.as_atom() {
+        Some("funcref") => {}
+        Some("externref") => ctx.module.tables[storage_idx as usize].element_type = wasm_types::EXTERNREF,
+        _ => match parse_value_type(reftype, &ctx.type_names, &ctx.module) {
+            Ok(ValueType::Funcref) => {}
+            Ok(ValueType::Externref) => ctx.module.tables[storage_idx as usize].element_type = wasm_types::EXTERNREF,
+            Ok(vt @ (ValueType::ConcreteFuncRef(_) | ValueType::NonNullConcreteFuncRef(_))) => {
+                // Every concrete function reference is still funcref-
+                // family -- `element_type` (the byte every pre-existing
+                // consumer reads) stays FUNCREF; only the richer parallel
+                // vec records which concrete type it actually is.
+                ctx.module.tables[storage_idx as usize].element_type = wasm_types::FUNCREF;
+                ctx.module.table_concrete_element_types[storage_idx as usize] = Some(vt);
+            }
+            Ok(other) => {
+                return Err(WastParseError::UnexpectedToken {
+                    pos: reftype.pos(),
+                    found: format!("{other:?}"),
+                    expected: "funcref, externref, or a concrete function reference type",
+                })
+            }
+            Err(_) => {
+                return Err(WastParseError::UnexpectedToken {
+                    pos: reftype.pos(),
+                    found: reftype.as_atom().unwrap_or("list").to_string(),
+                    expected: "funcref or externref",
+                })
+            }
+        },
+    }
     let elem_items = expect_get(rest, 1)?
         .as_list()
         .ok_or(WastParseError::UnexpectedEof)?;

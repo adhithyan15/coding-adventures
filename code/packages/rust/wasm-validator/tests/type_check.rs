@@ -336,6 +336,57 @@ fn valid_br_table_with_matching_arities() {
     );
 }
 
+/// Regression test for a real bug found while prioritizing the vendored
+/// testsuite corpus: `br_table.wast` (a foundational MVP-level file, no
+/// GC-proposal syntax involved) was TOTALLY failing -- `module 0/1`,
+/// `assert_return 0/161` -- because `br_table`'s multi-target type check
+/// was ORDER-DEPENDENT, which the real WASM typing rule is not.
+///
+/// `br_table` requires that the SAME operand value(s) be simultaneously
+/// assignable to every listed target AND the default target -- a "meet"
+/// over all of them. The old implementation instead re-pushed each
+/// target's OWN declared type after checking it (a left-to-right chain),
+/// so checking a WIDER target ($a, generic `(ref null func)`) before a
+/// NARROWER one ($b, the concrete `(ref $tf)`, default) irreversibly
+/// widened the value away, and $b's check then failed spuriously even
+/// though `(ref.func $f)` is perfectly assignable to both. This is
+/// `br_table.wast`'s own `meet-multi-ref` (vendored unchanged): its label
+/// list `$c $b $a` checks progressively WIDER types in order, which is
+/// exactly the direction the old chain-based algorithm got wrong.
+#[test]
+fn valid_br_table_targets_type_check_regardless_of_listed_order() {
+    assert_valid(
+        r#"(module
+             (type $tf (func))
+             (func $f (type $tf))
+             (func (param i32) (result (ref null func))
+               (block $a (result (ref null func))
+                 (block $b (result (ref null $tf))
+                   (block $c (result (ref $tf))
+                     (br_table $c $b $a (ref.func $f) (local.get 0)))))))"#,
+    );
+}
+
+/// The narrow, literal shape this session's regression report described:
+/// a table declared as GENERIC `funcref` (not a concrete type) with an
+/// active element segment naming a concrete function -- must validate,
+/// since a concrete function reference is always assignable to a plain
+/// `funcref` slot (`funcref` is the top type of the func hierarchy).
+/// `wasm-validator::lib`'s own `valid_element_segment` unit test already
+/// covers this exact shape at the `WasmModule`-struct level; this is the
+/// same claim from real `.wat` TEXT, going through `wasm-wast-parser` end
+/// to end (the layer the vendored corpus itself actually exercises).
+#[test]
+fn valid_generic_funcref_table_with_an_elem_segment_naming_a_concrete_function() {
+    assert_valid(
+        r#"(module
+             (func $f (param i32) (result i32) (local.get 0))
+             (table funcref (elem $f))
+             (func (export "get") (result funcref)
+               (table.get 0 (i32.const 0))))"#,
+    );
+}
+
 #[test]
 fn valid_return_matches_function_result_types() {
     assert_valid("(module (func (param i32) (result i32) (return (local.get 0))))");
@@ -403,6 +454,30 @@ fn valid_table_get_set_type_checks_against_each_tables_own_element_type() {
                (table.set $te (i32.const 0) (local.get $e))
                (drop (table.get $tf (i32.const 0)))
                (drop (table.get $te (i32.const 0)))))"#,
+    );
+}
+
+/// The other half of the `br_table.wast` regression
+/// (`valid_br_table_targets_type_check_regardless_of_listed_order` above
+/// covers the first half): `(table $t (ref null $t) (elem $tf))` declares
+/// a table whose element type is the CONCRETE function type `$t`, not
+/// generic `funcref` -- `wasm-wast-parser` used to silently discard that
+/// reftype entirely, leaving `table.get $t` with no way to know the table
+/// was anything but generic `funcref`. Proven here the same way the real
+/// regression surfaced: the exported function's declared result is the
+/// concrete `(ref null $t)`, so its implicit-return check only passes if
+/// `table.get $t` really pushed `$t`'s concrete type -- generic `Funcref`
+/// is not assignable to a concrete-typed result slot (the opposite
+/// direction from `ConcreteFuncRef <: Funcref`).
+#[test]
+fn valid_table_get_on_a_concrete_funcref_table_keeps_its_concrete_type() {
+    assert_valid(
+        r#"(module
+             (type $t (func))
+             (func $tf)
+             (table $t (ref null $t) (elem $tf))
+             (func (export "get-as-concrete") (result (ref null $t))
+               (table.get $t (i32.const 0))))"#,
     );
 }
 
