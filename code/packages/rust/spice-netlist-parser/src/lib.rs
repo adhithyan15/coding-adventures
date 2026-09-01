@@ -2422,7 +2422,12 @@ fn parse_element(
                 .or_else(|| model.params.get("BETA_F"))
                 .copied()
                 .unwrap_or(100.0);
-            Ok(Element::Bjt(Bjt::with_model(
+            let saturation_current_temperature_exponent =
+                *model.params.get("XTI").unwrap_or(&3.0);
+            if !saturation_current_temperature_exponent.is_finite() {
+                return Err(NetlistParseError::new("BJT XTI must be finite"));
+            }
+            let mut bjt = Bjt::with_model(
                 name,
                 &fields[1],
                 &fields[2],
@@ -2443,7 +2448,9 @@ fn parse_element(
                     .unwrap_or(&0.0),
                 *model.params.get("TF").unwrap_or(&0.0),
                 *model.params.get("TR").unwrap_or(&0.0),
-            )))
+            );
+            bjt.saturation_current_temperature_exponent = saturation_current_temperature_exponent;
+            Ok(Element::Bjt(bjt))
         }
         'J' => {
             require_fields(fields, 5, "JFET")?;
