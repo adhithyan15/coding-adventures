@@ -3131,6 +3131,21 @@
       "source_cas_hashes": [],
       "benchmark_paths": [],
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
+      "id": "adj.civics.3to5.veto_override",
+      "title": "Recall whether Congress can override each kind of presidential veto, keeping the source's own qualifier on the ordinary veto",
+      "band": "3-5",
+      "domain": "civics",
+      "competency": "recall",
+      "coverage_roots": ["c3.socialstudies"],
+      "standards": [],
+      "prerequisites": ["adj.civics.3to5.checks_and_balances"],
+      "libraries": ["code/specs/data/adj-facts-stdlib/civics/veto-override.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     }
   ]
 }
