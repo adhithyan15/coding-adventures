@@ -4,6 +4,22 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - emitted projects are relocatable
+
+`vite.config.ts` now sets `base: "./"`. Vite defaults to `"/"`, so an emitted
+project built for production referenced `/assets/index-HASH.js` — resolvable
+only when the app is served from the root of a domain. Served from a
+subdirectory (a GitHub Pages project site, a staging path, an unzipped bundle
+served one level up), `index.html` returns 200 and its script 404s, so the page
+renders blank. That reads as a working deploy with no content rather than as a
+failure, which is why it survived.
+
+Engram's v0.3.0 web release shipped with this defect and is what surfaced it.
+`task-app` had already hit it and worked around it locally, overriding the
+generated config through `[host_assets]` with a comment explaining the exact
+failure — so the emitter default stayed wrong and the next app to come along
+inherited it. Fixed at the emitter, where it stops being every app's problem.
+
 ### Fixed - preserve HostInput accessible names (#13717)
 
 The pipeline emitter now lowers literal, slot-backed, and expression-backed

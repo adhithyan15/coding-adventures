@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- **Fixed: the web bundle only worked when served from a domain root.** The
+  React host's `WASM_URL` was `"/engram_engine.wasm"` — root-absolute — while
+  its sibling `engram-host.mjs` had always used the relative form. The `.ts`
+  copy is the one the Vite bundle ships. Combined with Vite's default
+  `base: "/"`, the published v0.3.0 bundle returned 200 for `index.html` and
+  404 for both its script and its engine when served from any subdirectory,
+  rendering a blank page that looks like a working deploy.
+
+  Verified by serving the corrected bundle from `/deep/nested/engram/`: entry
+  point, hashed chunk, and wasm all 200, with the engine's magic bytes intact.
+  The base fix is in the Mosaic React emitter rather than another local
+  override.
+
 - Added `scripts/build-web.sh`, a cross-platform build for the web host:
   compiles the engine to wasm, emits the app as a complete React/Vite project,
   and installs the wasm runtime into it. `--build` also produces `dist/`;
