@@ -4,6 +4,7 @@ sequence: 115
 chapter: 6
 type: word
 headword: मी
+romanization: "mī"
 gloss: I (mī)
 concept_tag: PRONOUN-I
 prerequisites: [MR-C03-tumhi-kase-aahat]

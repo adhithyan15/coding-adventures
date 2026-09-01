@@ -4,6 +4,7 @@ sequence: 90
 chapter: 5
 type: phrase
 headword: तुमचं नाव काय आहे?
+romanization: "tumchaṁ nāv kāy āhe?"
 gloss: what's your name? (tumchaṁ nāv kāy āhe?)
 concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [MR-C02-tu-tumhi, MR-C02-kaay, MR-C02-aahe, MR-C02-naav]

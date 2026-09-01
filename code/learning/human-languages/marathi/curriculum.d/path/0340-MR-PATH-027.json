@@ -1,0 +1,15 @@
+{
+  "id": "MR-PATH-027",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "MR-R25-twelve-verbs",
+    "MR-R25-dative-frame",
+    "MR-R25-recognition-script",
+    "MR-R25-recognition-words"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-030-VERB-CONSOLIDATION"
+  ],
+  "after": []
+}

@@ -4,14 +4,14 @@
   "chapter": 6,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3f6b2f85a35f306a",
+  "sourceHash": "fnv1a64:22a90b76fa956f06",
   "lessons": [
     {
       "id": "MR-C03-kasa",
       "sequence": 105,
       "title": "कसा / कशी / कसं (kasā / kaśī / kasaṁ) — \"how\"",
       "headword": "कसा / कशी / कसं",
-      "romanization": "",
+      "romanization": "kasā / kaśī / kasaṁ",
       "gloss": "how (kasā m. / kaśī f. / kasaṁ n.)",
       "script": "devanagari",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2e135139f6173a97",
+      "sourceHash": "fnv1a64:553a7f5d272f1f60",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -152,7 +152,7 @@
       "sequence": 110,
       "title": "तुम्ही कसे आहात? (tumhī kase āhāt?) — \"how are you?\"",
       "headword": "तुम्ही कसे आहात?",
-      "romanization": "",
+      "romanization": "tumhī kase āhāt?",
       "gloss": "how are you? (tumhī kase āhāt?)",
       "script": "devanagari",
       "modality": "voice",
@@ -160,7 +160,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3ea1329fb07f3519",
+      "sourceHash": "fnv1a64:4b48e1b17aa5182e",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
             },
             {
               "kind": "speech",
-              "text": "आहात (āhāt, \"are,\" respectful) becomes तुम्ही कसे आहात? — \"you how are?\", verb last."
+              "text": "आहात (āhāt, \"are,\" respectful) becomes तुम्ही कसे आहात? (tumhī kase āhāt?) — \"you how are?\", verb last."
             },
             {
               "kind": "speech",
@@ -273,7 +273,7 @@
       "sequence": 115,
       "title": "मी (mī) — \"I\"",
       "headword": "मी",
-      "romanization": "",
+      "romanization": "mī",
       "gloss": "I (mī)",
       "script": "devanagari",
       "modality": "sight",
@@ -281,7 +281,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7b04bcb61ad79616",
+      "sourceHash": "fnv1a64:33b70801bfebebf7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -398,7 +398,7 @@
       "sequence": 120,
       "title": "मी बरा आहे (mī barā āhe) — \"I'm well, thank you\"",
       "headword": "मी बरा आहे",
-      "romanization": "",
+      "romanization": "mī barā āhe",
       "gloss": "I'm well, thank you (mī barā āhe)",
       "script": "devanagari",
       "modality": "voice",
@@ -406,7 +406,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c98bb7e4f9909f0c",
+      "sourceHash": "fnv1a64:3f82328b82bcc151",
       "notice": null,
       "blocks": [
         {
@@ -519,7 +519,7 @@
       "sequence": 125,
       "title": "काही हरकत नाही (kāhī harkat nāhī) — \"no problem / you're welcome\"",
       "headword": "काही हरकत नाही",
-      "romanization": "",
+      "romanization": "kāhī harkat nāhī",
       "gloss": "no problem / you're welcome (kāhī harkat nāhī)",
       "script": "devanagari",
       "modality": "voice",
@@ -527,7 +527,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c9efa97bd223e569",
+      "sourceHash": "fnv1a64:f8535b2e56477b98",
       "notice": null,
       "blocks": [
         {
@@ -704,7 +704,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "कसा / कशी / कसं (kasā/kaśī/kasaṁ) — how; the k- question family, gender-agreeing."
+              "text": "कसा / कशी / कसं (kasā / kaśī / kasaṁ) (kasā/kaśī/kasaṁ) — how; the k- question family, gender-agreeing."
             },
             {
               "kind": "speech",

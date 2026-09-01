@@ -86,14 +86,33 @@ Chapters 8 and 9 carry a `## The letters in this word` section each, which
 derives as `sight` at full modality — but that section is detachable, so every
 lesson is `coreVoice` and both chapters stay fully drivable.
 
+- **Ch. 22-25 — The pre-A1 verb tranche** (`MR-C22-*` → `MR-C23-*` →
+  `MR-C24-*` → `MR-R25-*`): twelve verbs on four pre-A1 spine nodes, authored
+  because the track had 149 lessons standing behind 36 pre-A1 headwords. Asking
+  (**देणे, पिणे, आणणे, ठेवणे**), a visit (**बसणे, वाटणे, झोपणे, चालणे**), and
+  what passes between two people (**सांगणे, म्हणणे, शिकणे, मिळणे**), then a
+  wider-spaced consolidation. Pre-A1 vocabulary 36 → 48; the HL09 §3.1
+  **verb-vocabulary** and **reinforcement** criteria both close, leaving
+  vocabulary as the track's only pre-A1 blocker.
+
+  Two things about the shape are deliberate. The chapters sit **after** the A1
+  writing runways in book order while realizing **pre-A1** nodes — a node's
+  level is a property of the node, not of where the chapter falls — which is the
+  same arrangement Hindi, Telugu, Malayalam and Kannada already use. And
+  **सांगणे** is authored **gloss-first**: its **ग** has never been taught, so the
+  word is usable by ear before it is writable, its Devanagari stays in the
+  headword where the romanization exemption makes it exposure, and **म्हणणे**
+  arrives in the same chapter as the fully readable partner. **Authored.**
+
 ## Planned
 
 | Chapter | Theme |
 |---|---|
+| next script tranche | **ग, घ, ख** — the three consonants the book shows and never teaches, which would make **सांगणे**, **घेणे** and **खाणे** readable (HL-C217) |
 | 6 continuation | Numbers 6–10 (native words + Devanagari digits १२३), counting, age |
 | 10 | Family (*āī*, *bābā*, *bhāū*, *bahīṇ*) and the honorific *-jī* / *-rāv* |
 | 11 | Food and the market — where the Perso-Arabic and Portuguese loans cluster |
-| 12+ | The rest of `SPINE-SAY-WHAT-I-DO` (*deṇe*, *sāṅgṇe*, *aikṇe*, *shikṇe*), then negation and questions, past and future tenses (where gender returns on the verb) — always with the Hindi/Dravidian contrast thread |
+| 12+ | The rest of `SPINE-SAY-WHAT-I-DO` — *aikṇe* and the remaining core verbs now that *deṇe*, *sāṅgṇe* and *shikṇe* are authored — then negation and questions, past and future tenses (where gender returns on the verb), always with the Hindi/Dravidian contrast thread |
 
 Note: Marathi marks "you" by **register** (*tū* familiar / *tumhī* respectful,
 also plural) — like the other Indo-Aryan and Romance tracks. Its signature is

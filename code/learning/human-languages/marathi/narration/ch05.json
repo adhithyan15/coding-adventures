@@ -4,14 +4,14 @@
   "chapter": 5,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:91cac9f01782b313",
+  "sourceHash": "fnv1a64:282a074d89905a32",
   "lessons": [
     {
       "id": "MR-C02-naav",
       "sequence": 60,
       "title": "नाव (nāv) — \"name\"",
       "headword": "नाव",
-      "romanization": "",
+      "romanization": "nāv",
       "gloss": "name (nāv)",
       "script": "devanagari",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:476e95c5a9d2fdd4",
+      "sourceHash": "fnv1a64:db23a434cda0d9da",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -136,7 +136,7 @@
       "sequence": 65,
       "title": "माझं (mājhaṁ) — \"my\"",
       "headword": "माझं",
-      "romanization": "",
+      "romanization": "mājhaṁ",
       "gloss": "my (mājhaṁ, neuter)",
       "script": "devanagari",
       "modality": "sight",
@@ -144,7 +144,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:512f9b79e8094637",
+      "sourceHash": "fnv1a64:20c8d7e235685462",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -261,7 +261,7 @@
       "sequence": 70,
       "title": "आहे (āhe) — \"is\"",
       "headword": "आहे",
-      "romanization": "",
+      "romanization": "āhe",
       "gloss": "is (āhe)",
       "script": "devanagari",
       "modality": "sight",
@@ -269,7 +269,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:121161f4d6e48ee4",
+      "sourceHash": "fnv1a64:0dbd4cfc67926d9d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -386,7 +386,7 @@
       "sequence": 75,
       "title": "माझं नाव … आहे (mājhaṁ nāv … āhe) — \"my name is…\"",
       "headword": "माझं नाव … आहे",
-      "romanization": "",
+      "romanization": "mājhaṁ nāv … āhe",
       "gloss": "my name is… (mājhaṁ nāv … āhe)",
       "script": "devanagari",
       "modality": "voice",
@@ -394,7 +394,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f64dd8b1d7a1678b",
+      "sourceHash": "fnv1a64:4de6f129d1b999b1",
       "notice": null,
       "blocks": [
         {
@@ -429,11 +429,11 @@
             },
             {
               "kind": "speech",
-              "text": "माझं is neuter, agreeing with the neuter नाव."
+              "text": "माझं (mājhaṁ) is neuter, agreeing with the neuter नाव (nāv)."
             },
             {
               "kind": "speech",
-              "text": "The verb आहे comes last — \"my name Mira is.\""
+              "text": "The verb आहे (āhe) comes last — \"my name Mira is.\""
             },
             {
               "kind": "speech",
@@ -507,7 +507,7 @@
       "sequence": 80,
       "title": "तू / तुम्ही (tū / tumhī) — \"you\"",
       "headword": "तू / तुम्ही",
-      "romanization": "",
+      "romanization": "tū / tumhī",
       "gloss": "you (tū familiar / tumhī respectful)",
       "script": "devanagari",
       "modality": "sight",
@@ -515,7 +515,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2ab2d25b9c2a695f",
+      "sourceHash": "fnv1a64:18005e3a83fa1f26",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -640,7 +640,7 @@
       "sequence": 85,
       "title": "काय (kāy) — \"what\"",
       "headword": "काय",
-      "romanization": "",
+      "romanization": "kāy",
       "gloss": "what (kāy)",
       "script": "devanagari",
       "modality": "sight",
@@ -648,7 +648,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ee3bcb2a21f4cb89",
+      "sourceHash": "fnv1a64:339cb60b56ab3b5f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -765,7 +765,7 @@
       "sequence": 90,
       "title": "तुमचं नाव काय आहे? (tumchaṁ nāv kāy āhe?) — \"what's your name?\"",
       "headword": "तुमचं नाव काय आहे?",
-      "romanization": "",
+      "romanization": "tumchaṁ nāv kāy āhe?",
       "gloss": "what's your name? (tumchaṁ nāv kāy āhe?)",
       "script": "devanagari",
       "modality": "voice",
@@ -773,7 +773,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea7939a9386d6cba",
+      "sourceHash": "fnv1a64:f1e3d88a96734a0f",
       "notice": null,
       "blocks": [
         {
@@ -800,7 +800,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "तुमचं (tumchaṁ, \"your,\" neuter to match nāv) + नाव (nāv, name) + काय (kāy, what) + आहे (āhe, is) becomes तुमचं नाव काय आहे? — literally \"your name what is?\", verb last."
+              "text": "तुमचं (tumchaṁ, \"your,\" neuter to match nāv) + नाव (nāv, name) + काय (kāy, what) + आहे (āhe, is) becomes तुमचं नाव काय आहे? (tumchaṁ nāv kāy āhe?) — literally \"your name what is?\", verb last."
             },
             {
               "kind": "speech",
@@ -890,7 +890,7 @@
       "sequence": 95,
       "title": "भेटून आनंद झाला (bheṭūn ānand jhālā) — \"pleased to meet you\"",
       "headword": "भेटून आनंद झाला",
-      "romanization": "",
+      "romanization": "bheṭūn ānand jhālā",
       "gloss": "pleased to meet you (bheṭūn ānand jhālā)",
       "script": "devanagari",
       "modality": "voice",
@@ -898,7 +898,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:15b70c478bebe8f9",
+      "sourceHash": "fnv1a64:40ede817cdce0522",
       "notice": null,
       "blocks": [
         {

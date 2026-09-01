@@ -4,6 +4,7 @@ sequence: 170
 chapter: 8
 type: phrase
 headword: मी मराठी बोलतो
+romanization: "mī marāṭhī bolto"
 gloss: I speak Marathi (gendered)
 concept_tag: MR-WORD-MARATHI
 prerequisites: [MR-C05-bolne, MR-C03-mi]

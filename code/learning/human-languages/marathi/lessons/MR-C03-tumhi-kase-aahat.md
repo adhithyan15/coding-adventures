@@ -4,6 +4,7 @@ sequence: 110
 chapter: 6
 type: phrase
 headword: तुम्ही कसे आहात?
+romanization: "tumhī kase āhāt?"
 gloss: how are you? (tumhī kase āhāt?)
 concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [MR-C03-kasa, MR-C02-tu-tumhi, MR-C02-aahe]

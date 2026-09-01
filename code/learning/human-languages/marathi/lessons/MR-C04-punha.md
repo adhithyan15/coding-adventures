@@ -4,6 +4,7 @@ sequence: 135
 chapter: 7
 type: word
 headword: पुन्हा
+romanization: "punhā"
 gloss: again (punhā)
 concept_tag: MR-WORD-PUNHA
 prerequisites: [MR-C01-yeto]

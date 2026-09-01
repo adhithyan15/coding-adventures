@@ -4,6 +4,7 @@ sequence: 70
 chapter: 5
 type: word
 headword: आहे
+romanization: "āhe"
 gloss: is (āhe)
 concept_tag: WORD-IS
 prerequisites: [MR-C02-naav, MR-C02-majhe]

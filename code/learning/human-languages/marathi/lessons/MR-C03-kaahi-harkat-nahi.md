@@ -4,6 +4,7 @@ sequence: 125
 chapter: 6
 type: phrase
 headword: काही हरकत नाही
+romanization: "kāhī harkat nāhī"
 gloss: no problem / you're welcome (kāhī harkat nāhī)
 concept_tag: COURTESY-YOUREWELCOME
 prerequisites: [MR-C03-mi-bara-aahe, MR-C01-nahi]

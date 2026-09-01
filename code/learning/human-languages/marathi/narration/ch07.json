@@ -4,14 +4,14 @@
   "chapter": 7,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:4f49dcb297120106",
+  "sourceHash": "fnv1a64:a8c172a79e230b16",
   "lessons": [
     {
       "id": "MR-C04-punha",
       "sequence": 135,
       "title": "पुन्हा (punhā) — \"again\"",
       "headword": "पुन्हा",
-      "romanization": "",
+      "romanization": "punhā",
       "gloss": "again (punhā)",
       "script": "devanagari",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fdee625a2e4bafa3",
+      "sourceHash": "fnv1a64:2b0f4574dd50b248",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -136,7 +136,7 @@
       "sequence": 140,
       "title": "भेटू (bheṭū) — \"(let's / we'll) meet\"",
       "headword": "भेटू",
-      "romanization": "",
+      "romanization": "bheṭū",
       "gloss": "(we'll) meet (bheṭū)",
       "script": "devanagari",
       "modality": "sight",
@@ -144,7 +144,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:01d7b19e3d9ed293",
+      "sourceHash": "fnv1a64:385a4bedf6637a10",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -261,7 +261,7 @@
       "sequence": 145,
       "title": "पुन्हा भेटू (punhā bheṭū) — \"see you again\"",
       "headword": "पुन्हा भेटू",
-      "romanization": "",
+      "romanization": "punhā bheṭū",
       "gloss": "see you again (punhā bheṭū)",
       "script": "devanagari",
       "modality": "voice",
@@ -269,7 +269,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:98a77fb7594e6782",
+      "sourceHash": "fnv1a64:d7f272f6a1de2075",
       "notice": null,
       "blocks": [
         {
@@ -296,7 +296,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "पुन्हा (punhā, again) + भेटू (bheṭū, we'll meet) becomes पुन्हा भेटू — \"we'll meet again.\" Two words, and the whole promise of return is spoken."
+              "text": "पुन्हा (punhā, again) + भेटू (bheṭū, we'll meet) becomes पुन्हा भेटू (punhā bheṭū) — \"we'll meet again.\" Two words, and the whole promise of return is spoken."
             },
             {
               "kind": "speech",
@@ -370,7 +370,7 @@
       "sequence": 150,
       "title": "उद्या भेटू (udyā bheṭū) — \"see you tomorrow\"",
       "headword": "उद्या भेटू",
-      "romanization": "",
+      "romanization": "udyā bheṭū",
       "gloss": "see you tomorrow (udyā bheṭū)",
       "script": "devanagari",
       "modality": "sight",
@@ -378,7 +378,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bfadb080898fa44b",
+      "sourceHash": "fnv1a64:cdddd85bd37ccdf7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -425,7 +425,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "उद्या (udyā, \"tomorrow\") + भेटू (bheṭū, we'll meet) becomes उद्या भेटू — \"we'll meet tomorrow.\""
+              "text": "उद्या (udyā, \"tomorrow\") + भेटू (bheṭū, we'll meet) becomes उद्या भेटू (udyā bheṭū) — \"we'll meet tomorrow.\""
             },
             {
               "kind": "speech",
@@ -499,7 +499,7 @@
       "sequence": 155,
       "title": "काळजी घ्या (kāḷjī ghyā) — \"take care\"",
       "headword": "काळजी घ्या",
-      "romanization": "",
+      "romanization": "kāḷjī ghyā",
       "gloss": "take care (kāḷjī ghyā)",
       "script": "devanagari",
       "modality": "sight",
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7222c61c1dc86b53",
+      "sourceHash": "fnv1a64:3622ff5c0bd34cd0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -554,7 +554,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "काळजी (kāḷjī, \"care, concern\") + घ्या (ghyā, \"take,\" the respectful imperative) becomes काळजी घ्या — \"take care.\" To a friend, the familiar imperative: काळजी घे (kāḷjī ghe)."
+              "text": "काळजी (kāḷjī, \"care, concern\") + घ्या (ghyā, \"take,\" the respectful imperative) becomes काळजी घ्या (kāḷjī ghyā) — \"take care.\" To a friend, the familiar imperative: काळजी घे (kāḷjī ghe)."
             }
           ]
         },

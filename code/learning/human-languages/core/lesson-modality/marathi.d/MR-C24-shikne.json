@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "MR-C24-shikne",
+    "language": "marathi",
+    "chapter": 24,
+    "sequence": 990,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0e52536be84846e",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

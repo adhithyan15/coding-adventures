@@ -1,0 +1,18 @@
+{
+  "language": "marathi",
+  "chapter": 25,
+  "sourceHash": "fnv1a64:365719e1c936be1c",
+  "lessonIds": [
+    "MR-R25-twelve-verbs",
+    "MR-R25-dative-frame",
+    "MR-R25-recognition-script",
+    "MR-R25-recognition-words"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "marathi/narration/ch25.txt",
+  "json": "marathi/narration/ch25.json",
+  "textHash": "fnv1a64:b9004e070b7bdcc1",
+  "jsonHash": "fnv1a64:fa438d3ff3417e7b",
+  "findings": []
+}
