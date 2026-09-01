@@ -1843,6 +1843,16 @@ jobs:
             flutter test test/widget_test.dart
           )
 
+          nested_conditional_output="$RUNNER_TEMP/mosaic-flutter-nested-row-conditional"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-flutter/fixtures/nested-row-conditional --backend flutter --output "$nested_conditional_output" --emit-project
+          (
+            cd "$nested_conditional_output/flutter"
+            cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-emit-flutter/fixtures/nested-row-conditional-test/widget_test.dart" test/widget_test.dart
+            flutter pub get
+            flutter analyze
+            flutter test test/widget_test.dart
+          )
+
           toolkit_output="$RUNNER_TEMP/mosaic-flutter-toolkit"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend flutter --output "$toolkit_output" --emit-project
           (
