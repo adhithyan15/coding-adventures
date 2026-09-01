@@ -50,11 +50,16 @@ The implementation is substantial but not yet an end-to-end product:
   serves only successful in-memory artifacts, coalesces project changes,
   reloads browsers over SSE, and retains the last good site across failures.
   There is no plugin host, runtime sandbox, authoring shell, or deploy runner.
+- The orchestrator now reuses unchanged capability-free, non-source stage
+  invocations through a deterministic tagged cache codec. Sources and
+  capability-bearing stages still rerun until their external-state revisions
+  and side-effect replay contracts are explicit.
 - Interactivity IR has no numbered spec or package. The AOT implementation
   refers to a missing FM06 spec, and the existing FM05 deploy-runner spec
   collides with older FM01–FM04 references that use FM05 for Interactivity IR.
-- The remaining headless-product gap is persistent incremental scheduling and
-  the deploy runner. Both live sites now use the same product CLI, watch server,
+- The remaining headless-product gap is project-persistent affected-set
+  scheduling, bounded concurrent streaming, and the deploy runner. Both live
+  sites now use the same product CLI, watch server,
   and centralized local-dependency bootstrap; site-local code is limited to
   content adapters and post-build artifact assertions.
 
@@ -99,16 +104,18 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 17 | FM-B007 | done | Generate the repository landing page with Forme | Depends on FM-B005 and FM-B006. Declarative Forme source and a seven-stage configuration reproduce the approved responsive design; generated output replaces the hand-maintained HTML, fingerprints the social image, and deploys through the existing Pages workflow. |
 | 18 | FM-B008 | done | Implement the general headless CLI | `forme build`/`run`, `forme check`, and containment-checked `forme clean` load a project config, produce stable diagnostics and exit codes, expose reproducible mode, handle SIGINT, and pass subprocess acceptance from a project outside the repository tree. Both live sites use the CLI and shared bootstrap instead of duplicated drivers. |
 | 19 | FM-B009 | done | Implement watch mode and a dev server | Depends on FM-B008. An initial build and coalesced project changes run the complete pipeline, successful in-memory artifacts are served with reliable browser refresh, failed rebuilds preserve the last good output, and cancellation closes the watcher and server cleanly. FM-B010 owns affected-stage incrementality. |
-| 20 | FM-B010 | ready | Finish orchestrator incrementality and scheduling | Persistent cache hits skip unchanged stages; bounded streaming, backpressure, and `maxConcurrency` avoid draining every stream into memory; deterministic tests cover cancellation and reproducibility. |
-| 21 | FM-B011 | ready | Reconcile the FM spec map | Resolve the FM05 numbering collision, publish the missing Interactivity IR/AOT/CLI spec locations, repair stale cross-links, and add an implementation-status ledger to every FM spec. |
-| 22 | FM-B012 | ready | Implement the deploy runner | Build the FM05 core, filesystem adapter, GitHub Pages adapter, dry-run/reporting path, rollback/idempotency tests, and `forme deploy` composition. |
-| 23 | FM-B013 | ready | Specify and implement Interactivity IR | Define the behavior/event/state schema and validator, integrate per-page island tracking, and prove a progressively enhanced interactive component with a no-JS fallback. |
-| 24 | FM-B014 | blocked | Implement the plugin host and wire protocol | Depends on FM-B011 and the existing manifest parser. Stage discovery, handshake, typed streaming, capability mediation, diagnostics, cancellation, and crash isolation pass cross-process contract tests. |
-| 25 | FM-B015 | blocked | Ship plugin installation, runtimes, and sandboxes | Depends on FM-B014. Signed/trusted install flow, grants persistence, TypeScript/Python/Rust runners, and macOS/Linux/Windows sandbox profiles pass adversarial filesystem/network/process tests. |
-| 26 | FM-B016 | blocked | Build the authoring shell | Depends on FM-B009, FM-B013, and FM-B015. A non-developer can create, edit, preview, configure, and publish a site without hand-editing source or config files. |
-| 27 | FM-B017 | blocked | Prove the backend boundary | Depends on FM-B005 and FM-B013. The same content and theme compile through HTML plus at least one of terminal, PDF/print, or email with explicit degradation tests. |
-| 28 | FM-B018 | blocked | Close release-quality gates | Depends on the v1 product path. Add 1,000-page clean/incremental benchmarks, Lighthouse/accessibility budgets, package/API versioning, migration docs, security review, and supported-platform CI. |
-| 29 | FM-B029 | later | Make duplicate PR CI cancellation and merge state unambiguous | One commit has one authoritative required CI suite; branch updates cancel obsolete runs completely; cancelling a redundant push suite cannot leave a stale final gate or misleading failed rollup; babysitting tooling identifies required checks and the current head. |
+| 20 | FM-B031 | done | Add safe per-invocation stage cache reuse | Capability-free non-source invocations derive deterministic keys from canonical materialized inputs, round-trip Forme values and bytes through the injected cache, report per-item hits/misses, invalidate on input/version/config changes, honor `useCache: false`, and fail open on unsupported or corrupt payloads. Sources and capability-bearing stages are deliberately never skipped. |
+| 21 | FM-B032 | ready | Persist project caches and schedule the exact affected set | Depends on FM-B031. The CLI opens the configured project filesystem cache; sources publish external-state revisions; unchanged instances restore outputs across processes; changed instances plus their downstream closure rerun; clean and side-effect replay remain correct. |
+| 22 | FM-B010 | ready | Finish bounded streaming and parallel scheduling | Depends on FM-B032. Lazy fan-out, bounded buffers, backpressure, and pipeline-wide `maxConcurrency` avoid draining every stream into memory; deterministic tests cover cancellation and reproducibility. |
+| 23 | FM-B011 | ready | Reconcile the FM spec map | Resolve the FM05 numbering collision, publish the missing Interactivity IR/AOT/CLI spec locations, repair stale cross-links, and add an implementation-status ledger to every FM spec. |
+| 24 | FM-B012 | ready | Implement the deploy runner | Build the FM05 core, filesystem adapter, GitHub Pages adapter, dry-run/reporting path, rollback/idempotency tests, and `forme deploy` composition. |
+| 25 | FM-B013 | ready | Specify and implement Interactivity IR | Define the behavior/event/state schema and validator, integrate per-page island tracking, and prove a progressively enhanced interactive component with a no-JS fallback. |
+| 26 | FM-B014 | blocked | Implement the plugin host and wire protocol | Depends on FM-B011 and the existing manifest parser. Stage discovery, handshake, typed streaming, capability mediation, diagnostics, cancellation, and crash isolation pass cross-process contract tests. |
+| 27 | FM-B015 | blocked | Ship plugin installation, runtimes, and sandboxes | Depends on FM-B014. Signed/trusted install flow, grants persistence, TypeScript/Python/Rust runners, and macOS/Linux/Windows sandbox profiles pass adversarial filesystem/network/process tests. |
+| 28 | FM-B016 | blocked | Build the authoring shell | Depends on FM-B009, FM-B013, and FM-B015. A non-developer can create, edit, preview, configure, and publish a site without hand-editing source or config files. |
+| 29 | FM-B017 | blocked | Prove the backend boundary | Depends on FM-B005 and FM-B013. The same content and theme compile through HTML plus at least one of terminal, PDF/print, or email with explicit degradation tests. |
+| 30 | FM-B018 | blocked | Close release-quality gates | Depends on the v1 product path. Add 1,000-page clean/incremental benchmarks, Lighthouse/accessibility budgets, package/API versioning, migration docs, security review, and supported-platform CI. |
+| 31 | FM-B029 | later | Make duplicate PR CI cancellation and merge state unambiguous | One commit has one authoritative required CI suite; branch updates cancel obsolete runs completely; cancelling a redundant push suite cannot leave a stale final gate or misleading failed rollup; babysitting tooling identifies required checks and the current head. |
 
 ## Dependency path
 
@@ -116,7 +123,7 @@ The shortest path to the current release target is:
 
 `FM-B002 → FM-B019 → FM-B003 → FM-B004`, alongside `FM-B005` and
 `FM-B025 → FM-B026 → FM-B027 → FM-B030 → FM-B028 → FM-B006`, then
-`FM-B007 → FM-B008 → FM-B009/FM-B010 → FM-B012`.
+`FM-B007 → FM-B008 → FM-B009 → FM-B031 → FM-B032 → FM-B010 → FM-B012`.
 FM-B020 retires the temporary compatibility path after the routed product DAG
 is proven, but it does not block FM-B004.
 
@@ -180,6 +187,7 @@ work.
 | 2026-08-28 | FM03 documents `forme run`, while the completion backlog and common static-site vocabulary use `forme build`. | Resolved in FM-B008 by making `build` canonical in product diagnostics and retaining `run` as an exact compatibility alias; FM-B011 should update the spec examples. |
 | 2026-08-28 | `PipelineConfig` has no explicit cleanup target contract, and arbitrary stage configs may contain fields named `outDir`. | Resolved safely for the current headless product in FM-B008: `clean` considers `outDir` only on direct stages whose declared output kind is `DeployArtifact`, adds `settings.cacheDir`, deduplicates targets, and refuses the project root or outside paths. A future config-shape migration belongs in FM-B011 if non-filesystem emitters need a broader lifecycle hook. |
 | 2026-08-31 | FM-B009's original “affected set” wording duplicated FM-B010, while FM04 explicitly says watch mode re-runs the full pipeline until incremental scheduling lands. | FM-B009 now owns conservative full-pipeline rebuilds, coalescing, live preview, and last-good-output behavior. FM-B010 retains persistent cache hits and exact affected-stage scheduling. |
+| 2026-09-01 | FM-B010 combined three independently risky changes: output serialization/cache reuse, external-state affected-set scheduling, and lazy concurrent streaming. Caching filesystem readers or emitters before explicit external revisions/replay would make clean builds silently incomplete. | Split FM-B031 (safe pure-stage cache reuse), FM-B032 (project persistence + exact affected set), and a narrowed FM-B010 (bounded streaming + parallelism). |
 
 ## Loop protocol
 

@@ -4,7 +4,8 @@
  * Holds the persistent cache backend, default logger, and any other
  * cross-call state the orchestrator needs.  The returned `Orchestrator`
  * exposes the FM03 §3.1 lifecycle methods, including a host-driven watch
- * session. Exact affected-stage incrementality remains a follow-up.
+ * session. Pure stage invocations reuse the injected cache; exact external-
+ * state revisions and affected-stage scheduling remain a follow-up.
  */
 
 import { memoryCache } from "@coding-adventures/forme-cache";
@@ -34,7 +35,10 @@ class OrchestratorImpl implements Orchestrator {
 
   async runOnce(pipeline: Pipeline, options?: RunOptions): Promise<RunResult> {
     this.assertNotDisposed();
-    return runOnce(pipeline, options, { logger: this.options.logger });
+    return runOnce(pipeline, options, {
+      logger: this.options.logger,
+      cache: this.options.cache,
+    });
   }
 
   watch(pipeline: Pipeline, options: WatchOptions): WatchSession {

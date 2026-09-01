@@ -41,9 +41,11 @@ These are deferred to follow-up packages:
 
 - **No parallelism.** Stages execute sequentially in topological order. `settings.maxConcurrency` is honoured at `1`.
 - **No streaming pipelining.** A `Stream<X>` producer is fully drained into memory before downstream consumers see values. Lazy streaming lands in v1 alongside parallelism.
-- **No affected-stage incremental rebuild.** Watch conservatively executes the
-  complete pipeline; cache hits and exact changed-and-downstream scheduling
-  remain FM-B010 (FM03 §6).
+- **No exact affected-stage scheduler yet.** Watch conservatively visits the
+  complete DAG. Sources and capability-bearing stages rerun, while unchanged
+  capability-free downstream invocations are restored from the injected cache.
+  External-state revisions and exact changed-and-downstream scheduling remain
+  FM-B032 (FM03 §6).
 - **Partial reproducible-build mode.** Stages receive a frozen wall clock, but input-mtime derivation, deterministic randomness, and telemetry policy remain (FM03 §8).
 - **No OpenTelemetry traces.** Telemetry surface is no-op by default.
 
@@ -59,6 +61,9 @@ These are deferred to follow-up packages:
 - Fail-fast and best-effort error handling
 - Cancellation propagation (composes a fresh token if caller doesn't supply one)
 - Per-stage timing + error counts + outcome in `StageRunSummary`
+- Deterministic tagged cache encoding for plain Forme values and bytes;
+  per-invocation cache hits/misses for safe pure stages, with `useCache: false`
+  bypass and fail-open behavior for unsupported/corrupt entries
 - Named outputs from `OutputSpec` overriding sink instance ids
 - Reproducible-build frozen clocks shared across stage lifecycles
 - Host-driven watch sessions with an initial run, debounced change coalescing,

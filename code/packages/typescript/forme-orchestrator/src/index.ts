@@ -9,7 +9,7 @@
  * long-lived conservative rebuild loop. Explicit wires,
  * deterministic fan-out, stable topological execution, and partial
  * reproducible-build mode and watch lifecycle work; parallelism,
- * affected-stage incremental rebuilds, and OpenTelemetry traces are deferred.
+ * exact affected-stage scheduling, bounded streaming, and OpenTelemetry traces are deferred.
  *
  * See FM03 §3 for the lifecycle, §9 for error handling, §10 for
  * cancellation.  See `scheduler.ts` for the v0 simplifications listed

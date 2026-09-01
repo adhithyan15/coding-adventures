@@ -4,6 +4,16 @@
 
 ### Added
 
+- Added deterministic tagged encoding for materialized stage outputs, including
+  binary `Uint8Array` values, canonical object ordering, and a versioned cache
+  envelope.
+- The scheduler now uses its injected `CacheBackend` for capability-free,
+  non-source invocations. Cache hits skip `stage.run`, per-item transforms count
+  hits and misses accurately, changed inputs invalidate naturally, and
+  `RunOptions.useCache = false` bypasses reuse.
+- Sources and capability-bearing stages deliberately rerun until FM-B032 adds
+  explicit external-state revisions and side-effect replay contracts.
+
 - Added the FM03 `watch` lifecycle: initial build, host-provided change stream,
   configurable debouncing, coalesced follow-up builds, manual rebuild, result
   streaming, watcher-error propagation, and cooperative stop/dispose behavior.
