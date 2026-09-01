@@ -11056,9 +11056,7 @@ fn foo_chain_depth(element: &Element) -> usize {
 }
 
 fn populate_select_selectedcontent(select: &mut Element) {
-    if select.attribute("multiple").is_some()
-        || html_positive_integer_attribute(select, "size") > 1
-    {
+    if select.attribute("multiple").is_some() {
         return;
     }
 
@@ -11085,7 +11083,13 @@ fn populate_select_selectedcontent(select: &mut Element) {
     let mut first = None;
     let mut selected = None;
     collect_option_children(&select.children, &mut first, &mut selected);
-    let option_children = selected.or(first);
+    let option_children = selected.or_else(|| {
+        if select_display_size(select) == 1 {
+            first
+        } else {
+            None
+        }
+    });
     let Some(option_children) = option_children else {
         return;
     };
@@ -11102,6 +11106,32 @@ fn populate_select_selectedcontent(select: &mut Element) {
             continue;
         };
         selectedcontent.children = option_children.clone();
+    }
+}
+
+fn select_display_size(select: &Element) -> usize {
+    let Some(value) = select.attribute("size") else {
+        return 1;
+    };
+    let mut characters = value.trim_start_matches(is_html_whitespace).chars();
+    if characters.clone().next() == Some('+') {
+        characters.next();
+    }
+    let mut saw_digit = false;
+    let mut parsed = 0usize;
+    for character in characters {
+        let Some(digit) = character.to_digit(10) else {
+            break;
+        };
+        saw_digit = true;
+        parsed = parsed
+            .saturating_mul(10)
+            .saturating_add(digit as usize);
+    }
+    if saw_digit && parsed > 0 {
+        parsed
+    } else {
+        1
     }
 }
 
@@ -46693,14 +46723,12 @@ mod tests {
             ),
             "old"
         );
-        for attributes in [" multiple", " size=2"] {
-            assert_eq!(
-                selectedcontent_text(&format!(
-                    "<!doctype html><select{attributes}><button><selectedcontent>old</selectedcontent></button><option selected>new</option></select>"
-                )),
-                "old"
-            );
-        }
+        assert_eq!(
+            selectedcontent_text(
+                "<!doctype html><select multiple><button><selectedcontent>old</selectedcontent></button><option selected>new</option></select>"
+            ),
+            "old"
+        );
         assert_eq!(
             selectedcontent_text(
                 "<!doctype html><select size=1><button><selectedcontent>old</selectedcontent></button><option selected>new</option></select>"
@@ -46783,6 +46811,103 @@ mod tests {
                 find_first_element_in_nodes(&direct_document.children, "selectedcontent").unwrap()
             ),
             "last"
+        );
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn selected_content_honors_explicit_listbox_selection() {
+        let selectedcontent_text = |source: &str| {
+            let document = parse_html(source).unwrap();
+            element_text_content(
+                find_first_element_in_nodes(&document.children, "selectedcontent").unwrap(),
+            )
+        };
+
+        for size in ["2", " 2", "+2", "2x"] {
+            let source = format!(
+                "<!doctype html><select size=\"{size}\"><button><selectedcontent>old é\r\n</selectedcontent></button><option selected><b>new</b></option></select>"
+            );
+            assert_eq!(selectedcontent_text(&source), "new");
+            assert!(source.len() > source.chars().count());
+
+            assert_eq!(
+                selectedcontent_text(&format!(
+                    "<!doctype html><select size=\"{size}\"><button><selectedcontent>old</selectedcontent></button><option>new</option></select>"
+                )),
+                "old"
+            );
+        }
+
+        let fragment = parse_html_fragment_for_context(
+            "<select size=2><button><selectedcontent>old</selectedcontent></button><option selected>new</option></select>",
+            "body",
+        )
+        .unwrap();
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&fragment, "selectedcontent").unwrap()
+            ),
+            "new"
+        );
+
+        let integration = parse_html(
+            "<!doctype html><svg><foreignObject><select size=2><button><selectedcontent>old</selectedcontent></button><option selected>new</option></select></foreignObject></svg>",
+        )
+        .unwrap();
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&integration.children, "selectedcontent").unwrap()
+            ),
+            "new"
+        );
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "select".to_string(),
+                attributes: vec![LexerAttribute {
+                    name: "size".to_string(),
+                    value: "2".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "button".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "selectedcontent".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("old".to_string()),
+            Token::EndTag {
+                name: "selectedcontent".to_string(),
+            },
+            Token::EndTag {
+                name: "button".to_string(),
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: vec![LexerAttribute {
+                    name: "selected".to_string(),
+                    value: String::new(),
+                }],
+                self_closing: false,
+            },
+            Token::Text("new".to_string()),
+            Token::Eof,
+        ]);
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&direct_document.children, "selectedcontent").unwrap()
+            ),
+            "new"
         );
         assert!(direct
             .diagnostics()
