@@ -240,6 +240,14 @@ struct HasherTests {
     }
 
     @Test
+    func canonicalJSONUnescapesSlashesWithoutDroppingLiteralBackslashes() {
+        let escaped = Data(#"["a\/b","a\\\/b"]"#.utf8)
+        let canonical = Hasher.jsonDataWithoutEscapedSlashes(escaped)
+
+        #expect(String(decoding: canonical, as: UTF8.self) == #"["a/b","a\\/b"]"#)
+    }
+
+    @Test
     func swiftRegistryKeepsExactScopesInBothCollectionModes() throws {
         let root = try makeTempDirectory(label: "hasher_swift_registry")
         defer { try? FileManager.default.removeItem(atPath: root) }

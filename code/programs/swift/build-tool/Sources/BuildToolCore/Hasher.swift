@@ -472,10 +472,11 @@ public enum Hasher {
         from data: Data
     ) throws -> String {
         let object = try JSONSerialization.jsonObject(with: data)
-        let canonical = try JSONSerialization.data(
+        let escapedCanonical = try JSONSerialization.data(
             withJSONObject: object,
-            options: [.sortedKeys, .withoutEscapingSlashes]
+            options: [.sortedKeys]
         )
+        let canonical = jsonDataWithoutEscapedSlashes(escapedCanonical)
         var framed = Data(
             "coding-adventures/build-tool-language-source-input-registry/v1\0".utf8
         )
@@ -485,6 +486,30 @@ public enum Hasher {
         }
         framed.append(canonical)
         return hash(data: framed)
+    }
+
+    /// Match JSONSerialization.WritingOptions.withoutEscapingSlashes without
+    /// raising the package's macOS deployment target to 10.15. A slash is
+    /// escaped only when it follows an odd-length run of backslashes; removing
+    /// the final one preserves any literal backslashes in the JSON string.
+    static func jsonDataWithoutEscapedSlashes(_ data: Data) -> Data {
+        var output = Data()
+        output.reserveCapacity(data.count)
+        for byte in data {
+            if byte == 0x2F {
+                var backslashCount = 0
+                var index = output.count
+                while index > 0, output[index - 1] == 0x5C {
+                    backslashCount += 1
+                    index -= 1
+                }
+                if backslashCount % 2 == 1 {
+                    output.removeLast()
+                }
+            }
+            output.append(byte)
+        }
+        return output
     }
 
     static func validatePortablePath(_ path: String) throws {
