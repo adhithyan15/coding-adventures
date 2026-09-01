@@ -453,17 +453,17 @@ describe("generated book source hashes", () => {
     [18, 2],
     [19, 2],
     [20, 3],
-    [21, 1],
+    [21, 2],
     [22, 1],
-    [23, 1],
+    [23, 2],
     [24, 1],
-    [25, 1],
+    [25, 2],
     [26, 1],
     [27, 1],
-    [28, 1],
+    [28, 2],
     [29, 1],
     [30, 1],
-    [31, 1],
+    [31, 2],
   ])("matches the browser-loaded Kannada Chapter %i AST across %i lessons", (chapter, count) => {
     const lessons = loadLessons();
     const expected = expectedBookHash("kannada", chapter);
