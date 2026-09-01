@@ -859,7 +859,7 @@ fn parse_array_body(pos: usize, sig: &[SExpr], type_names: &HashMap<String, u32>
 /// ...)` list, if any) -- shared by phase A's cheap [`peek_member_kind`]
 /// pre-scan and phase B's real [`parse_composite_body`] call, so the two
 /// can never disagree about which s-expression IS the body.
-fn member_sig_form<'a>(items: &'a [SExpr]) -> Option<&'a [SExpr]> {
+fn member_sig_form(items: &[SExpr]) -> Option<&[SExpr]> {
     let mut rest = &items[1..];
     if rest.first().and_then(|e| e.as_atom()).is_some_and(|s| s.starts_with('$')) {
         rest = &rest[1..];
@@ -1028,7 +1028,7 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
             let max_allowed = group_start + group_size;
             let referenced: Vec<u32> = match &composite {
                 ParsedComposite::Func(ft) => ft.params.iter().chain(ft.results.iter()).filter_map(referenced_type_idx).collect(),
-                ParsedComposite::Struct(st, _) => st.fields.iter().filter_map(|f| field_referenced_type_idx(f)).collect(),
+                ParsedComposite::Struct(st, _) => st.fields.iter().filter_map(field_referenced_type_idx).collect(),
                 ParsedComposite::Array(at) => field_referenced_type_idx(&at.element).into_iter().collect(),
             };
             let out_of_group = referenced.into_iter().chain(supertype).find(|idx| *idx >= max_allowed);

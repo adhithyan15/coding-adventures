@@ -1902,7 +1902,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         }
                         stack.push(StackType::Unknown);
                     }
-                    0x0B | 0x0C | 0x0D => {
+                    0x0B..=0x0D => {
                         // array.get / array.get_s / array.get_u <type_idx>
                         // (W33 fourth slice): pops [arrayref, i32 index],
                         // pushes the element's -- possibly sign/zero-

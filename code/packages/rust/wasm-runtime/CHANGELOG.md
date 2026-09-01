@@ -2,6 +2,28 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.19] — 2026-09-01 (W33 fourth slice — struct/array runtime wiring + persistent GC heap)
+
+- `struct_array_runtime_tables` (a new shared helper) rebuilds
+  `struct_field_counts`/`struct_field_storage`/`array_element_storage`
+  on top of `WasmModule::struct_type_at`/`array_type_at`
+  (`type_kinds`-aware) instead of the old "pad `func_type_count` zeros,
+  then append every struct's field count in `struct_types` order"
+  scheme, which assumed struct types always follow ALL function types —
+  exactly what a TEXT-format module (via `wasm-wast-parser`'s now-real
+  struct/array declarations) is free to violate.
+- `WasmInstance` gains a persistent `gc_heap` field, threaded through
+  instantiation/`build_engine`/post-call writeback exactly like
+  `v128_heap` already is — needed because a GLOBAL initializer's
+  `struct.new`/`array.new` (evaluated via the new
+  `evaluate_const_expr_gc`) must survive past the instantiation call
+  that created it, into a later, separate `call()` that reads it back
+  via `global.get` (`struct.wast`'s own "Packed field instructions"
+  module does exactly this).
+
+All existing tests pass; one test fixture (`call_typed_with_v128.rs`)
+updated for the new `WasmInstance` field.
+
 ## [0.6.18] — 2026-08-31 (W33 second slice — thread subtyping info into the engine)
 
 ### Added

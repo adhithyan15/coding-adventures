@@ -1700,7 +1700,7 @@ impl WasmRuntime {
         // the GC-capable evaluator; data/elem offsets keep using the plain
         // `evaluate_const_expr`, unaffected.
         let mut gc_heap: Vec<Option<GcObject>> = Vec::new();
-        let (struct_field_counts, struct_field_storage, array_element_storage) = struct_array_runtime_tables(&module);
+        let (struct_field_counts, struct_field_storage, array_element_storage) = struct_array_runtime_tables(module);
 
         // Initialize globals.
         for global in &module.globals {

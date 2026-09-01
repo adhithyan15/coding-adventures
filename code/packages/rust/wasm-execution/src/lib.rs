@@ -2605,7 +2605,7 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                 }
                 // struct.get / struct.get_s / struct.get_u / struct.set: two
                 // index immediates (type, field).
-                0x02 | 0x03 | 0x04 | 0x05 => {
+                0x02..=0x05 => {
                     let (t, sz1) = decode_leb_u32(code, offset);
                     let (f, sz2) = decode_leb_u32(code, offset + sz1);
                     offset += sz1 + sz2;
@@ -5210,7 +5210,7 @@ fn register_numeric_i64(vm: &mut GenericVM) {
             // doesn't string-match trap text, see `wasm-conformance`'s own
             // `assert_trap` doc comment, but the real, precise message
             // still belongs here for anyone reading a real trap).
-            0x0B | 0x0C | 0x0D => {
+            0x0B..=0x0D => {
                 let idx = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
                 let handle = pop_array_ref(vm, "array.get")?;
                 let obj = ctx.gc_heap.get(handle as usize).and_then(|slot| slot.as_ref()).ok_or_else(|| {

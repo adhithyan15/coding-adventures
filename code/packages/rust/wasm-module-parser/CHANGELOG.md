@@ -2,6 +2,17 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.14] — 2026-09-01 — W33 fourth slice: `FieldType.val_type` → `FieldType.storage` rename fallout
+
+No functional change in this crate — `wasm-types` 0.1.17 renamed
+`FieldType.val_type: ValueType` to `FieldType.storage: StorageType`
+(adding packed `i8`/`i16` field storage support); `parse_struct_type`'s
+one `FieldType` construction site updated to `FieldType::plain(...)`.
+Binary-format struct field decoding still only ever produces
+`StorageType::Val(_)` (packed `i8`/`i16` binary tags are not decoded by
+this crate — out of scope for this slice, see the accompanying spec
+addendum). All 67 tests in this crate pass.
+
 ## [0.2.13] — 2026-08-31 — security review follow-up: `read_expr` byte-stream desync fix
 
 ### Fixed
