@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Emit overflow clips plus fixed and sticky paint groups from positioned
+  extension data while preserving the iterative hostile-tree-safe traversal.
+
 - Paint independent top/right/bottom/left border widths and colors from the
   backend-neutral paint extension while retaining the uniform stroke contract.
 

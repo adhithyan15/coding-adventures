@@ -10,6 +10,7 @@ use image_codec_gif::decode_gif;
 use image_codec_jpeg::decode_jpeg;
 use layout_block::layout_block;
 use layout_ir::{Constraints, Content, ExtValue, PositionedNode, TextMeasurer};
+use layout_positioned::{scroll_extent, PositionedStyle};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
 use paint_instructions::{
     ImageSrc, PaintBase, PaintClip, PaintImage, PaintInstruction, PaintRect, PaintScene, PaintText,
@@ -156,6 +157,8 @@ pub struct LinkRegion {
     pub width: f64,
     pub height: f64,
     pub url: String,
+    /// Fixed regions stay in viewport coordinates and ignore document scroll.
+    pub fixed: bool,
 }
 
 impl LinkRegion {
@@ -398,11 +401,11 @@ where
             min_width: 0.0,
             max_width: width,
             min_height: 0.0,
-            max_height: f64::MAX,
+            max_height: viewport_height,
         },
         measurer,
     );
-    let scene_height = positioned.height.max(viewport_height);
+    let scene_height = scroll_extent(&positioned).1.max(viewport_height);
     let options = LayoutToPaintOptions {
         width,
         height: scene_height,
@@ -431,29 +434,44 @@ fn never_visited(_url: &str) -> bool {
 /// coordinates into absolute logical document coordinates.
 pub fn extract_link_regions(root: &PositionedNode) -> Vec<LinkRegion> {
     let mut regions = Vec::new();
-    let mut stack = vec![(root, 0.0, 0.0)];
+    let mut stack = vec![(root, 0.0, 0.0, None, false)];
 
-    while let Some((node, parent_x, parent_y)) = stack.pop() {
+    while let Some((node, parent_x, parent_y, inherited_clip, inherited_fixed)) = stack.pop() {
         let absolute_x = parent_x + node.x;
         let absolute_y = parent_y + node.y;
+        let style = PositionedStyle::from_positioned(node);
+        let fixed = inherited_fixed || style.position == layout_positioned::Position::Fixed;
         if positioned_html_string(node, "role") == Some("link") {
             if let Some(url) = positioned_html_string(node, "href") {
-                if valid_link_box(absolute_x, absolute_y, node.width, node.height)
-                    && !url.is_empty()
-                {
+                let region = clipped_box(
+                    (absolute_x, absolute_y, node.width, node.height),
+                    inherited_clip,
+                );
+                if let Some((x, y, width, height)) = region.filter(|(x, y, width, height)| {
+                    valid_link_box(*x, *y, *width, *height) && !url.is_empty()
+                }) {
                     regions.push(LinkRegion {
-                        x: absolute_x,
-                        y: absolute_y,
-                        width: node.width,
-                        height: node.height,
+                        x,
+                        y,
+                        width,
+                        height,
                         url: url.to_string(),
+                        fixed,
                     });
                 }
             }
         }
 
+        let child_clip = if style.clips_x() || style.clips_y() {
+            clipped_box(
+                (absolute_x, absolute_y, node.width, node.height),
+                inherited_clip,
+            )
+        } else {
+            inherited_clip
+        };
         for child in node.children.iter().rev() {
-            stack.push((child, absolute_x, absolute_y));
+            stack.push((child, absolute_x, absolute_y, child_clip, fixed));
         }
     }
 
@@ -472,10 +490,28 @@ pub fn hit_test_link(
     scroll_y: f64,
 ) -> Option<&LinkRegion> {
     let scroll_y = finite_non_negative(scroll_y);
-    let content_y = viewport_y + scroll_y;
-    regions
-        .iter()
-        .find(|region| region.contains(viewport_x, content_y))
+    regions.iter().rev().find(|region| {
+        let y = if region.fixed {
+            viewport_y
+        } else {
+            viewport_y + scroll_y
+        };
+        region.contains(viewport_x, y)
+    })
+}
+
+fn clipped_box(
+    rect: (f64, f64, f64, f64),
+    clip: Option<(f64, f64, f64, f64)>,
+) -> Option<(f64, f64, f64, f64)> {
+    let Some((clip_x, clip_y, clip_width, clip_height)) = clip else {
+        return Some(rect);
+    };
+    let x = rect.0.max(clip_x);
+    let y = rect.1.max(clip_y);
+    let right = (rect.0 + rect.2).min(clip_x + clip_width);
+    let bottom = (rect.1 + rect.3).min(clip_y + clip_height);
+    (right > x && bottom > y).then_some((x, y, right - x, bottom - y))
 }
 
 fn finite_non_negative(value: f64) -> f64 {
@@ -1161,6 +1197,7 @@ mod tests {
                 width: 20.0,
                 height: 10.0,
                 url: "https://example.test/visible".into(),
+                fixed: false,
             }]
         );
     }
@@ -1173,6 +1210,7 @@ mod tests {
             width: 30.0,
             height: 12.0,
             url: "https://example.test/next".into(),
+            fixed: false,
         };
 
         assert_eq!(

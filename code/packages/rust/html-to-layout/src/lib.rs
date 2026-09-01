@@ -23,6 +23,7 @@ use layout_ir::{
     ExtValue, FontSpec, ImageContent, ImageFit, LayoutNode, SizeValue, TextAlign, TextContent,
     TextDecoration,
 };
+use layout_positioned::{positioned_ext, Overflow, Position, PositionedStyle};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
 pub const VERSION: &str = "0.4.0";
@@ -147,6 +148,7 @@ pub struct HtmlComputedStyle {
     pub flex_item: FlexItemStyle,
     pub grid_container: GridContainerStyle,
     pub grid_item: GridItemStyle,
+    pub positioned: PositionedStyle,
     pub custom_properties: HashMap<String, Vec<String>>,
 }
 
@@ -265,6 +267,7 @@ where
         .with_width(SizeValue::Fill)
         .with_height(SizeValue::Wrap)
         .with_ext("block", display_ext("block"))
+        .with_ext("positioned", positioned_ext(style.positioned))
         .with_ext("html", root_html_ext());
     root.ext.insert(
         "paint".into(),
@@ -322,6 +325,9 @@ where
         "grid".into(),
         grid_ext(&style.grid_container, &style.grid_item),
     );
+    layout
+        .ext
+        .insert("positioned".into(), positioned_ext(style.positioned));
     Some(layout)
 }
 
@@ -439,6 +445,7 @@ where
     style.flex_item = FlexItemStyle::default();
     style.grid_container = GridContainerStyle::default();
     style.grid_item = GridItemStyle::default();
+    style.positioned = PositionedStyle::default();
     if node.role == "heading" {
         let level = node.heading_level.unwrap_or(1).clamp(1, 6);
         style.font = theme.heading_fonts[usize::from(level - 1)].clone();
@@ -580,6 +587,7 @@ fn root_computed_style(context: &HtmlStyleContext) -> HtmlComputedStyle {
         flex_item: FlexItemStyle::default(),
         grid_container: GridContainerStyle::default(),
         grid_item: GridItemStyle::default(),
+        positioned: PositionedStyle::default(),
         custom_properties: HashMap::new(),
     };
     let mut winners = HashMap::new();
@@ -743,6 +751,36 @@ fn apply_declaration_winners(
                     .then(TextDecoration::underline);
             }
             "display" => style.display = value.first().cloned(),
+            "position" => {
+                style.positioned.position = match value.first().map(String::as_str) {
+                    Some("relative") => Position::Relative,
+                    Some("absolute") => Position::Absolute,
+                    Some("fixed") => Position::Fixed,
+                    Some("sticky") => Position::Sticky,
+                    _ => Position::Static,
+                }
+            }
+            "top" => style.positioned.insets.top = parse_inset(&value, style, context, false),
+            "right" => style.positioned.insets.right = parse_inset(&value, style, context, true),
+            "bottom" => style.positioned.insets.bottom = parse_inset(&value, style, context, false),
+            "left" => style.positioned.insets.left = parse_inset(&value, style, context, true),
+            "inset" => apply_inset_shorthand(style, &value, context),
+            "z-index" => {
+                style.positioned.z_index = value
+                    .first()
+                    .filter(|value| value.as_str() != "auto")
+                    .and_then(|value| value.parse().ok())
+            }
+            "overflow" => {
+                let first = parse_overflow(&value);
+                style.positioned.overflow_x = first;
+                style.positioned.overflow_y = value
+                    .get(1)
+                    .map(|value| parse_overflow(std::slice::from_ref(value)))
+                    .unwrap_or(first);
+            }
+            "overflow-x" => style.positioned.overflow_x = parse_overflow(&value),
+            "overflow-y" => style.positioned.overflow_y = parse_overflow(&value),
             "flex-direction" => {
                 style.flex_container.direction = match value.first().map(String::as_str) {
                     Some("row-reverse") => FlexDirection::RowReverse,
@@ -955,6 +993,58 @@ fn apply_layout_gap(style: &mut HtmlComputedStyle, value: &[String], context: &H
         style.flex_container.column_gap = column_gap;
         style.grid_container.row_gap = row_gap;
         style.grid_container.column_gap = column_gap;
+    }
+}
+
+fn parse_inset(
+    value: &[String],
+    style: &HtmlComputedStyle,
+    context: &HtmlStyleContext,
+    horizontal: bool,
+) -> Option<f64> {
+    if value.first().is_some_and(|value| value == "auto") {
+        return None;
+    }
+    parse_box_length(
+        value,
+        style,
+        context,
+        if horizontal {
+            context.viewport_width
+        } else {
+            context.viewport_height
+        },
+    )
+}
+
+fn apply_inset_shorthand(
+    style: &mut HtmlComputedStyle,
+    value: &[String],
+    context: &HtmlStyleContext,
+) {
+    let expanded = match value {
+        [all] => [all, all, all, all],
+        [vertical, horizontal] => [vertical, horizontal, vertical, horizontal],
+        [top, horizontal, bottom] => [top, horizontal, bottom, horizontal],
+        [top, right, bottom, left, ..] => [top, right, bottom, left],
+        _ => return,
+    };
+    style.positioned.insets.top =
+        parse_inset(std::slice::from_ref(expanded[0]), style, context, false);
+    style.positioned.insets.right =
+        parse_inset(std::slice::from_ref(expanded[1]), style, context, true);
+    style.positioned.insets.bottom =
+        parse_inset(std::slice::from_ref(expanded[2]), style, context, false);
+    style.positioned.insets.left =
+        parse_inset(std::slice::from_ref(expanded[3]), style, context, true);
+}
+
+fn parse_overflow(value: &[String]) -> Overflow {
+    match value.first().map(String::as_str) {
+        Some("hidden") => Overflow::Hidden,
+        Some("auto") => Overflow::Auto,
+        Some("scroll") => Overflow::Scroll,
+        _ => Overflow::Visible,
     }
 }
 
@@ -2523,6 +2613,41 @@ mod tests {
         let positioned_box = find_positioned_by_id(&positioned, "box").unwrap();
         assert_eq!(positioned_box.width, 184.0);
         assert_eq!(positioned_box.x, 92.0);
+    }
+
+    #[test]
+    fn computed_positioning_removes_items_from_flow_and_orders_stacking() {
+        let render = parse_browser_render_tree(
+            "<main id='stage'><div id='normal'>N</div><div id='front'>F</div>\
+             <div id='back'>B</div><div id='shifted'>R</div></main>",
+        )
+        .unwrap();
+        let context = HtmlStyleContext::with_author_stylesheets(
+            mosaic_html_theme(),
+            ["#stage { position: relative; width: 200px; height: 100px; overflow: hidden; } \
+              #normal { height: 20px; } \
+              #front { position: absolute; inset: 10px auto auto 30px; width: 40px; height: 20px; z-index: 4; } \
+              #back { position: absolute; left: 5px; top: 2px; width: 20px; height: 10px; z-index: -1; } \
+              #shifted { position: relative; left: 5px; top: 3px; height: 10px; }"],
+        )
+        .unwrap()
+        .with_viewport(240.0, 160.0);
+        let layout =
+            html_render_tree_to_layout_with_style_context(&render, &context, &never_visited);
+        let stage = find_by_id(&layout, "stage").unwrap();
+        let stage_style = PositionedStyle::from_layout(stage);
+        assert_eq!(stage_style.position, Position::Relative);
+        assert_eq!(stage_style.overflow_x, Overflow::Hidden);
+
+        let positioned = layout_block(&layout, constraints_width(240.0), &TestMeasurer);
+        let stage = find_positioned_by_id(&positioned, "stage").unwrap();
+        assert_eq!(stage.height, 100.0);
+        assert_eq!(find_positioned_by_id(stage, "normal").unwrap().y, 0.0);
+        assert_eq!(find_positioned_by_id(stage, "shifted").unwrap().y, 23.0);
+        assert_eq!(find_positioned_by_id(stage, "front").unwrap().x, 30.0);
+        assert_eq!(find_positioned_by_id(stage, "front").unwrap().y, 10.0);
+        assert_eq!(stage.children.first().unwrap().id.as_deref(), Some("back"));
+        assert_eq!(stage.children.last().unwrap().id.as_deref(), Some("front"));
     }
 
     #[test]

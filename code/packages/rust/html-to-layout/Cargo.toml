@@ -10,6 +10,7 @@ coding-adventures-html-parser = { path = "../html-parser" }
 layout-ir = { path = "../layout-ir" }
 layout-flexbox = { path = "../layout-flexbox" }
 layout-grid = { path = "../layout-grid" }
+layout-positioned = { path = "../layout-positioned" }
 parser = { path = "../parser" }
 
 [dev-dependencies]

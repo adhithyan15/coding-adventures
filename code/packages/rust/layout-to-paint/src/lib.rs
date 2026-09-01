@@ -59,9 +59,10 @@ use std::collections::HashMap;
 use layout_ir::{
     Color, Content, ExtValue, FontSpec, PositionedNode, TextAlign, TextContent, TextDecorationLines,
 };
+use layout_positioned::{Position, PositionedStyle};
 use paint_instructions::{
-    GlyphPosition, ImageSrc, PaintBase, PaintGlyphRun, PaintImage, PaintInstruction, PaintRect,
-    PaintScene,
+    GlyphPosition, ImageSrc, PaintBase, PaintClip, PaintGlyphRun, PaintGroup, PaintImage,
+    PaintInstruction, PaintRect, PaintScene,
 };
 use text_flow::{BaseDirection, Direction as FlowDirection, TextFlow};
 use text_interfaces::{
@@ -126,18 +127,63 @@ where
     // thousands of nested containers from an untrusted document
     // source). An explicit stack is bounded by heap, not thread
     // stack.
-    let mut stack: Vec<WalkFrame<'_>> = vec![WalkFrame {
+    let mut stack: Vec<WalkAction<'_>> = vec![WalkAction::Enter(WalkFrame {
         node: root,
         parent_abs_x: 0.0,
         parent_abs_y: 0.0,
         inherited_direction: BaseDirection::Auto,
-    }];
-    while let Some(frame) = stack.pop() {
+    })];
+    while let Some(action) = stack.pop() {
+        let frame = match action {
+            WalkAction::Enter(frame) => frame,
+            WalkAction::ExitClip { start, clip } => {
+                let children = out.drain(start..).collect();
+                out.push(PaintInstruction::Clip(PaintClip { children, ..clip }));
+                continue;
+            }
+            WalkAction::ExitFixed { start } => {
+                let children = out.drain(start..).collect();
+                out.push(PaintInstruction::Group(PaintGroup {
+                    base: PaintBase {
+                        id: None,
+                        metadata: Some(HashMap::from([("layout.position".into(), "fixed".into())])),
+                    },
+                    children,
+                    transform: None,
+                    opacity: None,
+                }));
+                continue;
+            }
+            WalkAction::ExitSticky {
+                start,
+                top,
+                original_y,
+            } => {
+                let children = out.drain(start..).collect();
+                out.push(PaintInstruction::Group(PaintGroup {
+                    base: PaintBase {
+                        id: None,
+                        metadata: Some(HashMap::from([
+                            ("layout.position".into(), "sticky".into()),
+                            ("layout.sticky.top".into(), top.to_string()),
+                            ("layout.sticky.y".into(), original_y.to_string()),
+                        ])),
+                    },
+                    children,
+                    transform: None,
+                    opacity: None,
+                }));
+                continue;
+            }
+        };
         let abs_x = frame.parent_abs_x + frame.node.x;
         let abs_y = frame.parent_abs_y + frame.node.y;
         let box_w = frame.node.width;
         let box_h = frame.node.height;
         let direction = node_direction(frame.node).unwrap_or(frame.inherited_direction);
+        let positioned = PositionedStyle::from_positioned(frame.node);
+        let fixed_start = (positioned.position == Position::Fixed).then_some(out.len());
+        let sticky_start = (positioned.position == Position::Sticky).then_some(out.len());
 
         // Decorations before content (painter's algorithm).
         emit_box_decorations(frame.node, abs_x, abs_y, box_w, box_h, dpr, &mut out);
@@ -170,15 +216,39 @@ where
             None => {}
         }
 
+        if let Some(start) = fixed_start {
+            stack.push(WalkAction::ExitFixed { start });
+        }
+        if let Some(start) = sticky_start {
+            stack.push(WalkAction::ExitSticky {
+                start,
+                top: positioned.insets.top.unwrap_or(0.0),
+                original_y: abs_y,
+            });
+        }
+        if positioned.clips_x() || positioned.clips_y() {
+            stack.push(WalkAction::ExitClip {
+                start: out.len(),
+                clip: PaintClip {
+                    base: PaintBase::default(),
+                    x: abs_x * dpr,
+                    y: abs_y * dpr,
+                    width: box_w.max(0.0) * dpr,
+                    height: box_h.max(0.0) * dpr,
+                    children: Vec::new(),
+                },
+            });
+        }
+
         // Push children in reverse so that popping preserves source
         // order (pre-order traversal).
         for child in frame.node.children.iter().rev() {
-            stack.push(WalkFrame {
+            stack.push(WalkAction::Enter(WalkFrame {
                 node: child,
                 parent_abs_x: abs_x,
                 parent_abs_y: abs_y,
                 inherited_direction: direction,
-            });
+            }));
         }
     }
 
@@ -198,6 +268,22 @@ struct WalkFrame<'a> {
     parent_abs_x: f64,
     parent_abs_y: f64,
     inherited_direction: BaseDirection,
+}
+
+enum WalkAction<'a> {
+    Enter(WalkFrame<'a>),
+    ExitClip {
+        start: usize,
+        clip: PaintClip,
+    },
+    ExitFixed {
+        start: usize,
+    },
+    ExitSticky {
+        start: usize,
+        top: f64,
+        original_y: f64,
+    },
 }
 
 fn node_direction(node: &PositionedNode) -> Option<BaseDirection> {
@@ -818,6 +904,7 @@ mod tests {
     use layout_ir::{
         color_black, color_white, font_spec, rgb, TextAlign, TextContent, TextDecoration,
     };
+    use layout_positioned::{Overflow, PositionedStyle};
     use text_interfaces::{
         Direction, FontResolutionError, Glyph, ShapedRun, ShapedText, ShapingError,
     };
@@ -1317,6 +1404,43 @@ mod tests {
             }
             _ => panic!("expected GlyphRun"),
         }
+    }
+
+    #[test]
+    fn overflow_and_viewport_positioning_emit_backend_neutral_groups() {
+        let leaf = positioned_leaf(text_content("clipped"), 80.0, 0.0, 80.0, 16.0);
+        let mut root = PositionedNode {
+            x: 0.0,
+            y: 0.0,
+            width: 100.0,
+            height: 30.0,
+            id: None,
+            content: None,
+            children: vec![leaf],
+            ext: HashMap::new(),
+        };
+        root.ext.insert(
+            "positioned".into(),
+            PositionedStyle {
+                overflow_x: Overflow::Hidden,
+                overflow_y: Overflow::Hidden,
+                ..Default::default()
+            }
+            .to_ext(),
+        );
+
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let scene = layout_to_paint(&root, &make_options(&shaper, &metrics, &resolver));
+        let PaintInstruction::Clip(clip) = &scene.instructions[0] else {
+            panic!("expected overflow clip");
+        };
+        assert_eq!(
+            (clip.x, clip.y, clip.width, clip.height),
+            (0.0, 0.0, 100.0, 30.0)
+        );
+        assert!(matches!(clip.children[0], PaintInstruction::GlyphRun(_)));
     }
 
     #[test]

@@ -10,6 +10,7 @@ html-to-layout = { path = "../html-to-layout" }
 image-codec-gif = { path = "../image-codec-gif" }
 image-codec-jpeg = { path = "../image-codec-jpeg" }
 layout-block = { path = "../layout-block" }
+layout-positioned = { path = "../layout-positioned" }
 layout-ir = { path = "../layout-ir" }
 layout-to-paint = { path = "../layout-to-paint" }
 paint-instructions = { path = "../paint-instructions" }

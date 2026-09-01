@@ -849,6 +849,7 @@ members = [
     "layout-flexbox",
     "layout-grid",
     "layout-block",
+    "layout-positioned",
     "layout-text-measure-native",
     "layout-to-paint",
     "document-ast-to-layout",

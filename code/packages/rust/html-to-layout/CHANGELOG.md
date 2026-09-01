@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Project computed position, inset, z-index, and overflow values into the
+  reusable `layout-positioned` extension contract.
+
+## Unreleased
+
 ### Added
 
 - Compute CSS grid container and item values into a typed `ext["grid"]`
