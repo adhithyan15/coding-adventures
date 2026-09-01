@@ -33,8 +33,8 @@ use std::sync::Arc;
 use std::time::{Instant, SystemTime, UNIX_EPOCH};
 
 use wasm_execution::{
-    evaluate_const_expr, HostFunction, HostInterface, LinearMemory, Table, TrapError,
-    WasmEngineConfig, WasmExecutionEngine, WasmValue,
+    evaluate_const_expr, evaluate_const_expr_gc, GcObject, HostFunction, HostInterface,
+    LinearMemory, Table, TrapError, WasmEngineConfig, WasmExecutionEngine, WasmValue,
 };
 use wasm_module_parser::WasmModuleParser;
 use wasm_types::{
@@ -1181,6 +1181,14 @@ pub struct WasmInstance {
     /// convention. `build_engine`/`call_engine`/`call_engine_with_v128`
     /// clone/restore it exactly like `globals`.
     pub v128_heap: Vec<[u8; 16]>,
+    /// Persistent GC object (struct/array) heap for this instance's whole
+    /// lifetime (W33 fourth slice) -- same "must survive past the call
+    /// that created it" reasoning as `v128_heap` above, for a GLOBAL
+    /// initializer that itself allocates a struct/array (`struct.wast`'s
+    /// own `(global (ref $s) (struct.new $s ...))`, later read back via
+    /// `global.get` from a SEPARATE, later `call()`). `build_engine`/
+    /// `call_engine` clone/restore it exactly like `v128_heap`.
+    pub gc_heap: Vec<Option<GcObject>>,
     /// Per-data-segment "already dropped" flags for this instance's whole
     /// lifetime (task #95) -- same index space as `module.data`, same
     /// persistent-across-calls shape as `v128_heap` above (`data.drop`'s
@@ -1234,6 +1242,63 @@ fn limits_compatible(actual: &Limits, declared: &Limits) -> bool {
         None => true,
         Some(declared_max) => matches!(actual.max, Some(actual_max) if actual_max <= declared_max),
     }
+}
+
+/// Build the three flat-type-index-keyed tables `wasm-execution` needs for
+/// real struct/array runtime semantics (W33 fourth slice): field counts,
+/// per-field storage types, and per-array-type element storage. Shared by
+/// `instantiate()` (for `evaluate_const_expr_gc`, evaluating a GLOBAL
+/// initializer that itself allocates) and `build_engine` (for the engine's
+/// own `struct.new`/`array.new` handlers) so the two never drift apart.
+///
+/// Built on `WasmModule::struct_type_at`/`array_type_at` (`type_kinds`-aware,
+/// see those methods' own doc comments) rather than the OLD "pad
+/// `func_type_count` zeros, then append every struct's field count in
+/// `struct_types` order" scheme this function replaces — that old scheme's
+/// own assumption, "struct types follow ALL function types," is exactly
+/// what a TEXT-format module (via `wasm-wast-parser`'s real struct/array
+/// declarations) is free to violate: `struct.wast`'s/`array.wast`'s own
+/// "Binding structure" modules declare a struct/array type, THEN a function
+/// whose inline-only signature gets dedup'd into `types` AFTER it — see
+/// `wasm_types::TypeKind`'s own doc comment for the full mechanism.
+/// Iterating every flat index directly is correct regardless of declaration
+/// order — the LANG77/Twig binary-only modules the old scheme targeted
+/// (which never populate `type_kinds` at all) still resolve identically via
+/// `struct_type_at`'s legacy-offset fallback, so this is a strict
+/// generalization, not a behavior change for any pre-existing caller.
+///
+/// Returns three EMPTY vectors when the module declares no struct/array
+/// type at all — callers should treat that as "leave `wasm-execution`'s own
+/// tables unset," not "call the setters with empty vectors," since an empty
+/// table changes what an out-of-range `struct.new`/`array.new` does (see
+/// `build_engine`'s own call site for why that distinction matters).
+fn struct_array_runtime_tables(
+    module: &WasmModule,
+) -> (Vec<u32>, Vec<Vec<wasm_types::StorageType>>, Vec<Option<wasm_types::StorageType>>) {
+    if module.struct_types.is_empty() && module.array_types.is_empty() {
+        return (Vec::new(), Vec::new(), Vec::new());
+    }
+    let total_type_count = module
+        .type_kinds
+        .len()
+        .max(module.types.len() + module.struct_types.len() + module.array_types.len());
+    let mut struct_field_counts = Vec::with_capacity(total_type_count);
+    let mut struct_field_storage = Vec::with_capacity(total_type_count);
+    let mut array_element_storage = Vec::with_capacity(total_type_count);
+    for idx in 0..total_type_count as u32 {
+        match module.struct_type_at(idx) {
+            Some(st) => {
+                struct_field_counts.push(st.fields.len() as u32);
+                struct_field_storage.push(st.fields.iter().map(|f| f.storage).collect());
+            }
+            None => {
+                struct_field_counts.push(0);
+                struct_field_storage.push(Vec::new());
+            }
+        }
+        array_element_storage.push(module.array_type_at(idx).map(|at| at.element.storage));
+    }
+    (struct_field_counts, struct_field_storage, array_element_storage)
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -1627,10 +1692,28 @@ impl WasmRuntime {
         // `wasm_execution::WasmExecutionContext::v128_heap`'s convention.
         let mut v128_heap: Vec<[u8; 16]> = vec![[0u8; 16]];
 
+        // The instance's persistent GC object heap (W33 fourth slice) --
+        // see `WasmInstance::gc_heap`'s own doc comment. Only a GLOBAL
+        // initializer can allocate into it (data/elem segment offset
+        // expressions are always plain integers in the real corpus, never
+        // `struct.new`/`array.new`), so only the globals loop below uses
+        // the GC-capable evaluator; data/elem offsets keep using the plain
+        // `evaluate_const_expr`, unaffected.
+        let mut gc_heap: Vec<Option<GcObject>> = Vec::new();
+        let (struct_field_counts, struct_field_storage, array_element_storage) = struct_array_runtime_tables(&module);
+
         // Initialize globals.
         for global in &module.globals {
             global_types.push(global.global_type.clone());
-            let value = evaluate_const_expr(&global.init_expr, &globals, &mut v128_heap)?;
+            let value = evaluate_const_expr_gc(
+                &global.init_expr,
+                &globals,
+                &mut v128_heap,
+                &mut gc_heap,
+                &struct_field_counts,
+                &struct_field_storage,
+                &array_element_storage,
+            )?;
             globals.push(value);
         }
 
@@ -1783,6 +1866,7 @@ impl WasmRuntime {
             tag_identities,
             exports,
             v128_heap,
+            gc_heap,
             dropped_data_segments,
             dropped_elements,
         };
@@ -2096,42 +2180,36 @@ impl WasmRuntime {
         // registered". Previously the embedder had to call this by hand; now it
         // flows automatically from the parsed module's `struct_types`.
         //
-        // `set_struct_field_counts` is indexed by the **wasm type index**, and
-        // function and struct types share one index space. The encoder emits all
-        // function types first, then the struct types, so a struct's wasm index
-        // is `func_type_count + its position in struct_types`. We therefore pad
-        // the front with filler slots for the function types (which are never
-        // the target of a `struct.new`) and append the struct field counts.
-        //
-        // `func_type_count` MUST be the number of entries in the **type section**
-        // (`module.types` — the encoder's *deduplicated* function types), NOT
-        // `instance.func_types.len()`, which is populated one-per-function and so
-        // over-counts whenever two functions share a signature. A Twig `record`
-        // emits a constructor + N same-shape accessors + a predicate, so several
-        // functions collapse to one function type: using the per-function count
-        // then padded the struct's field-count entry to the wrong (too-high) index,
-        // leaving the real `struct.new`/`struct.set` type index registered as a
-        // zero-field filler — the "struct.set: field 0 out of range" trap. Modules
-        // whose functions all have distinct types (e.g. a single-function cons
-        // program, or the list-op helpers) were unaffected because the two counts
-        // coincided there.
-        //
-        // (This assumes struct types follow *all* function types — true for the
-        // cons modules we emit today, which declare no host imports. A module
-        // that interleaved imported-function types after the struct types would
-        // need order-preserving type parsing; not yet emitted or consumed.)
-        if !instance.module.struct_types.is_empty() {
-            let func_type_count = instance.module.types.len();
-            let mut struct_field_counts = vec![0u32; func_type_count];
-            struct_field_counts.extend(
-                instance
-                    .module
-                    .struct_types
-                    .iter()
-                    .map(|st| st.fields.len() as u32),
-            );
+        // W33 fourth slice: rebuilt on top of `WasmModule::struct_type_at`/
+        // `array_type_at` (`type_kinds`-aware, see those methods' own doc
+        // comments) instead of the OLD "pad `func_type_count` zeros, then
+        // append every struct's field count in `struct_types` order" scheme
+        // this comment used to describe. That old scheme's own documented
+        // assumption — "struct types follow ALL function types" — is exactly
+        // what a TEXT-format module (via `wasm-wast-parser`'s now-real struct/
+        // array declarations) is free to violate: `struct.wast`'s/
+        // `array.wast`'s own "Binding structure" modules declare a struct/array
+        // type, THEN a function whose inline-only signature gets dedup'd into
+        // `types` AFTER it — see `wasm_types::TypeKind`'s own doc comment for
+        // the full mechanism. Iterating every flat index up to the total type
+        // count and asking each one directly "are you a struct/array, and if
+        // so what's your shape" is correct regardless of declaration order —
+        // the LANG77/Twig binary-only modules this comment used to describe
+        // (which never populate `type_kinds` at all) still resolve identically
+        // via `struct_type_at`'s legacy-offset fallback, so this is a strict
+        // generalization, not a behavior change for any pre-existing caller.
+        let (struct_field_counts, struct_field_storage, array_element_storage) = struct_array_runtime_tables(&instance.module);
+        if !struct_field_counts.is_empty() {
             engine.set_struct_field_counts(struct_field_counts);
+            engine.set_struct_field_storage(struct_field_storage);
+            engine.set_array_element_storage(array_element_storage);
         }
+
+        // Seed the engine's persistent GC object heap from the instance's
+        // own (W33 fourth slice) -- see `WasmInstance::gc_heap`'s own doc
+        // comment for why a global initializer's struct/array must survive
+        // into this call, not just the instantiation call that created it.
+        engine.set_gc_heap(instance.gc_heap.clone());
 
         engine
     }
@@ -2168,6 +2246,7 @@ impl WasmRuntime {
         instance.globals = state.globals;
         instance.host_functions = state.host_functions;
         instance.v128_heap = state.v128_heap;
+        instance.gc_heap = state.gc_heap;
         instance.dropped_data_segments = state.dropped_data_segments;
         instance.dropped_elements = state.dropped_elements;
 
@@ -2194,6 +2273,7 @@ impl WasmRuntime {
         instance.globals = state.globals;
         instance.host_functions = state.host_functions;
         instance.v128_heap = state.v128_heap;
+        instance.gc_heap = state.gc_heap;
         instance.dropped_data_segments = state.dropped_data_segments;
         instance.dropped_elements = state.dropped_elements;
 

@@ -550,7 +550,21 @@ fn parse_func_signature(fields: &[&SExpr], type_names: &HashMap<String, u32>, mo
 /// own index, and the caller gets a "func type" that is actually a struct).
 fn dedup_type(module: &mut WasmModule, ty: FuncType) -> u32 {
     let is_real_func_slot = |p: usize| !matches!(module.type_kinds.get(p), Some(TypeKind::Struct(_)) | Some(TypeKind::Array(_)));
-    if let Some(idx) = module.types.iter().position(|t| *t == ty).filter(|&p| is_real_func_slot(p)) {
+    // Security/correctness review finding: `Iterator::position` stops at
+    // the FIRST value-match regardless of `is_real_func_slot`, so a
+    // trailing `.filter(...)` on its result can only accept or reject
+    // THAT ONE candidate -- it can never continue searching past a
+    // value-matching dummy struct/array placeholder to find a LATER real
+    // func entry that also matches. Whenever an empty `(func)` (the most
+    // common signature, and exactly what every struct/array dummy
+    // placeholder itself is) appears BEFORE its real, legitimate match
+    // in `types`, that combination silently returned "no match" and
+    // inserted a REDUNDANT duplicate type instead of reusing the real
+    // one -- corrupting every later index-identity comparison built on
+    // top of it (nominal subtyping, `ref.func`'s own type index). Finding
+    // the first index satisfying BOTH conditions TOGETHER, in one pass,
+    // fixes this.
+    if let Some(idx) = module.types.iter().enumerate().position(|(p, t)| *t == ty && is_real_func_slot(p)) {
         idx as u32
     } else {
         module.types.push(ty);

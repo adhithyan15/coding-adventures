@@ -1912,6 +1912,50 @@ pub fn evaluate_const_expr(
     globals: &[WasmValue],
     v128_heap: &mut Vec<[u8; 16]>,
 ) -> Result<WasmValue, TrapError> {
+    // W33 fourth slice: delegates to the GC-capable version with empty GC
+    // tables, matching this crate's established "don't widen a ~28-call-site
+    // signature, add a new function instead" precedent (see `ref.func`'s
+    // own `0xD2` arm doc comment above, which cites this exact concern for
+    // a DIFFERENT parameter). Every one of THIS function's existing callers
+    // that never evaluates a `struct.new`/`array.new`-shaped constant
+    // expression is completely unaffected -- an empty `gc_heap`/table set
+    // only matters the moment one of those opcodes is actually reached,
+    // which none of them do.
+    evaluate_const_expr_gc(expr, globals, v128_heap, &mut Vec::new(), &[], &[], &[])
+}
+
+/// GC-capable superset of [`evaluate_const_expr`] (W33 fourth slice):
+/// additionally allows `struct.new`/`struct.new_default`/`array.new`/
+/// `array.new_default`/`array.new_fixed` as constant instructions, per the
+/// real GC proposal's own extension to constant expressions -- confirmed
+/// directly against the vendored corpus, not assumed: `struct.wast`'s own
+/// `(global (export "g0") (ref $s) (struct.new $s ...))` (later read back
+/// via `global.get` from a SEPARATE, later top-level call in the SAME
+/// corpus file's "Packed field instructions" module) is the real, concrete
+/// reason this needs a REAL, persistent `gc_heap` (see
+/// `WasmExecutionEngine::gc_heap`'s own doc comment), not a throwaway one
+/// discarded after this single evaluation.
+///
+/// `array.new_data`/`array.new_elem` are deliberately NOT accepted here --
+/// `array.wast`'s own `assert_invalid "constant expression required"`
+/// cases probe exactly this, and `wasm-wast-parser` doesn't parse either
+/// instruction at all yet regardless (see `encode_gc_struct_array_instr`'s
+/// own doc comment), so a global using one fails to PARSE long before
+/// reaching this evaluator.
+///
+/// Allocation here is a plain, unconditional `gc_heap.push` (never a
+/// free-list reuse the way `gc::alloc`'s hot-path allocator is) -- this
+/// function runs at most once per global/segment, during instantiation,
+/// long before any real GC cycle could have tombstoned a slot to reuse.
+pub fn evaluate_const_expr_gc(
+    expr: &[u8],
+    globals: &[WasmValue],
+    v128_heap: &mut Vec<[u8; 16]>,
+    gc_heap: &mut Vec<Option<GcObject>>,
+    struct_field_counts: &[u32],
+    struct_field_storage: &[Vec<wasm_types::StorageType>],
+    array_element_storage: &[Option<wasm_types::StorageType>],
+) -> Result<WasmValue, TrapError> {
     let mut stack: Vec<WasmValue> = Vec::new();
     let mut pos: usize = 0;
 
@@ -2057,17 +2101,94 @@ pub fn evaluate_const_expr(
                 }
                 let sub = expr[pos];
                 pos += 1;
-                if sub != 0x1C {
-                    return Err(TrapError::new(format!(
-                        "illegal WasmGC sub-opcode 0x{:02X} in constant expression",
-                        sub
-                    )));
+                match sub {
+                    0x1C => {
+                        let v = match stack.pop() {
+                            Some(WasmValue::I32(v)) => v,
+                            _ => return Err(TrapError::new("ref.i31: expected an i32 operand")),
+                        };
+                        stack.push(WasmValue::I32(v & 0x7FFF_FFFF));
+                    }
+                    // struct.new / struct.new_default <type_idx> (W33
+                    // fourth slice) -- see this function's own doc comment
+                    // for why constant-expression allocation is real and
+                    // persistent, not a throwaway.
+                    0x00 | 0x01 => {
+                        let (type_idx, consumed) = decode_unsigned(expr, pos).map_err(|e| TrapError::new(e.message))?;
+                        pos += consumed;
+                        let fields = if sub == 0x00 {
+                            let n = *struct_field_counts.get(type_idx as usize).ok_or_else(|| {
+                                TrapError::new(format!("struct.new: no field count registered for struct type {type_idx}"))
+                            })? as usize;
+                            let mut fields = vec![WasmValue::I32(0); n];
+                            for slot in fields.iter_mut().rev() {
+                                *slot = stack.pop().ok_or_else(|| TrapError::new("struct.new: constant expression stack underflow"))?;
+                            }
+                            fields
+                        } else {
+                            let storage = struct_field_storage.get(type_idx as usize).ok_or_else(|| {
+                                TrapError::new(format!("struct.new_default: no field storage registered for struct type {type_idx}"))
+                            })?;
+                            storage.iter().map(|s| WasmValue::default_for(s.widened_type())).collect()
+                        };
+                        let handle = u32::try_from(gc_heap.len())
+                            .map_err(|_| TrapError::new("gc_heap exceeded u32::MAX live objects"))?;
+                        gc_heap.push(Some(GcObject::Struct(GcStruct { type_idx: type_idx as u32, fields })));
+                        stack.push(WasmValue::Ref(Some(handle)));
+                    }
+                    // array.new / array.new_default <type_idx> (W33 fourth
+                    // slice): pop [value?, i32 length].
+                    0x06 | 0x07 => {
+                        let (type_idx, consumed) = decode_unsigned(expr, pos).map_err(|e| TrapError::new(e.message))?;
+                        pos += consumed;
+                        let len = match stack.pop() {
+                            Some(WasmValue::I32(v)) => v as u32 as usize,
+                            _ => return Err(TrapError::new("array.new: expected an i32 length operand")),
+                        };
+                        if len > MAX_ARRAY_ALLOC {
+                            return Err(TrapError::new(format!("array.new: requested length {len} exceeds the maximum of {MAX_ARRAY_ALLOC}")));
+                        }
+                        let elements = if sub == 0x06 {
+                            let val = stack.pop().ok_or_else(|| TrapError::new("array.new: constant expression stack underflow"))?;
+                            vec![val; len]
+                        } else {
+                            let storage = array_element_storage.get(type_idx as usize).copied().flatten().ok_or_else(|| {
+                                TrapError::new(format!("array.new_default: no element storage registered for array type {type_idx}"))
+                            })?;
+                            vec![WasmValue::default_for(storage.widened_type()); len]
+                        };
+                        let handle = u32::try_from(gc_heap.len())
+                            .map_err(|_| TrapError::new("gc_heap exceeded u32::MAX live objects"))?;
+                        gc_heap.push(Some(GcObject::Array(GcArray { type_idx: type_idx as u32, elements })));
+                        stack.push(WasmValue::Ref(Some(handle)));
+                    }
+                    // array.new_fixed <type_idx> <count> (W33 fourth
+                    // slice): pop exactly `count` element values.
+                    0x08 => {
+                        let (type_idx, sz1) = decode_unsigned(expr, pos).map_err(|e| TrapError::new(e.message))?;
+                        pos += sz1;
+                        let (count, sz2) = decode_unsigned(expr, pos).map_err(|e| TrapError::new(e.message))?;
+                        pos += sz2;
+                        let n = count as usize;
+                        if n > MAX_ARRAY_ALLOC {
+                            return Err(TrapError::new(format!("array.new_fixed: element count {n} exceeds the maximum of {MAX_ARRAY_ALLOC}")));
+                        }
+                        let mut elements = vec![WasmValue::I32(0); n];
+                        for slot in elements.iter_mut().rev() {
+                            *slot = stack.pop().ok_or_else(|| TrapError::new("array.new_fixed: constant expression stack underflow"))?;
+                        }
+                        let handle = u32::try_from(gc_heap.len())
+                            .map_err(|_| TrapError::new("gc_heap exceeded u32::MAX live objects"))?;
+                        gc_heap.push(Some(GcObject::Array(GcArray { type_idx: type_idx as u32, elements })));
+                        stack.push(WasmValue::Ref(Some(handle)));
+                    }
+                    _ => {
+                        return Err(TrapError::new(format!(
+                            "illegal WasmGC sub-opcode 0x{:02X} in constant expression",
+                            sub
+                        )));
+                    }
                 }
-                let v = match stack.pop() {
-                    Some(WasmValue::I32(v)) => v,
-                    _ => return Err(TrapError::new("ref.i31: expected an i32 operand")),
-                };
-                stack.push(WasmValue::I32(v & 0x7FFF_FFFF));
             }
             // `ref.null <heap_type>` (`0xD0`, reference-types proposal --
             // real corpus vendoring pass, `ref_null.wast`'s own `(global
@@ -11709,6 +11830,12 @@ pub struct WasmEngineState {
     /// all need updating), written back here so the caller can restore it
     /// onto the owning `WasmInstance`.
     pub v128_heap: Vec<[u8; 16]>,
+    /// The instance's persistent GC object heap after this call (W33 fourth
+    /// slice) -- same round-trip shape as `v128_heap` above, for the same
+    /// "a global initializer's own struct/array must survive into a later
+    /// call" reason. Set via [`WasmExecutionEngine::set_gc_heap`] before
+    /// the call.
+    pub gc_heap: Vec<Option<GcObject>>,
     /// Each data segment's "already dropped" state after this call (task
     /// #95) -- set via [`WasmExecutionEngine::set_dropped_data_segments`]
     /// before the call, written back here so the caller can restore it
@@ -11796,6 +11923,17 @@ pub struct WasmExecutionEngine {
     /// `type_section`) when the embedder has a persistent instance to
     /// thread it from.
     v128_heap: Vec<[u8; 16]>,
+    /// The instance's persistent GC object heap (W33 fourth slice) --
+    /// needed because a GLOBAL initializer can itself allocate a struct/
+    /// array (`struct.wast`'s own `(global (ref $s) (struct.new $s ...))`,
+    /// later read back via `global.get` from a SEPARATE, later top-level
+    /// call), so the object it creates must survive past the instantiation
+    /// call that created it -- exactly the same "persists across calls"
+    /// requirement `v128_heap` already has, for the identical reason
+    /// (`v128.const` in a global initializer). Defaults empty; set for
+    /// real via [`Self::set_gc_heap`] (same optional-setter pattern as
+    /// `v128_heap`/`struct_field_counts`).
+    gc_heap: Vec<Option<GcObject>>,
     /// The module's data segments' raw bytes (task #95) -- see
     /// `WasmExecutionContext::data_segments`'s own doc comment. Immutable
     /// content, so unlike `dropped_data_segments` below there is no
@@ -11844,6 +11982,7 @@ impl WasmExecutionEngine {
             tag_identities: Vec::new(),
             last_gc_state: gc::GcState::default(),
             v128_heap: vec![[0u8; 16]],
+            gc_heap: Vec::new(),
             data_segments: Vec::new(),
             dropped_data_segments: Vec::new(),
             elements: Vec::new(),
@@ -11979,6 +12118,16 @@ impl WasmExecutionEngine {
         self
     }
 
+    /// Seed the engine's persistent GC object heap (W33 fourth slice) --
+    /// same optional-setter/persistence shape as [`Self::set_v128_heap`],
+    /// for the identical "a global initializer's own allocation must
+    /// survive into a later, separate top-level call" reason. Returns
+    /// `&mut self` for chaining.
+    pub fn set_gc_heap(&mut self, heap: Vec<Option<GcObject>>) -> &mut Self {
+        self.gc_heap = heap;
+        self
+    }
+
     /// Register the module's data segments' raw bytes, indexed by data-
     /// segment index (task #95) -- `memory.init`'s source. Same optional-
     /// setter pattern as `set_struct_field_counts`/`set_type_section`:
@@ -12046,6 +12195,7 @@ impl WasmExecutionEngine {
             globals: self.globals,
             host_functions: self.host_functions,
             v128_heap: self.v128_heap,
+            gc_heap: self.gc_heap,
             dropped_data_segments: self.dropped_data_segments,
             dropped_elements: self.dropped_elements,
         }
@@ -12161,12 +12311,19 @@ impl WasmExecutionEngine {
             br_table_targets: Vec::new(),
             gc_ops: Vec::new(),
             simd_consts: Vec::new(),
-            // The GC heap starts empty and grows as `struct.new` allocates; it
-            // lives for the whole call so a cons built in a callee survives.
-            // Real mark-sweep collection now runs against it (W04) at loop
-            // back-edges and calls, so a long call no longer grows it
-            // without bound.
-            gc_heap: Vec::new(),
+            // W33 fourth slice: cloned from `self.gc_heap`, NOT reseeded to
+            // `Vec::new()` -- the identical `v128_heap` fix just below
+            // applies here for the identical reason: a struct/array a
+            // GLOBAL initializer allocated (`struct.wast`'s own `(global
+            // (ref $s) (struct.new $s ...))`, later read via `global.get`
+            // from a SEPARATE top-level call) would otherwise become a
+            // dangling handle the moment this heap was thrown away and
+            // rebuilt empty on the very next call. Real mark-sweep
+            // collection (W04) still runs against it at loop back-edges and
+            // calls within THIS call, so a long call still doesn't grow it
+            // without bound; cross-call growth is bounded by however many
+            // distinct GC objects the module's globals/data ever need.
+            gc_heap: self.gc_heap.clone(),
             // Cloned from `self.v128_heap`, NOT reseeded to
             // `vec![[0u8; 16]]` -- see `code/specs/
             // W15-wasm-v128-persistent-storage.md`. Reseeding here was
@@ -12504,6 +12661,11 @@ impl WasmExecutionEngine {
         // `ctx.v128_heap` after this point -- moving it out now would be
         // a use-after-move compile error.
         self.v128_heap = ctx.v128_heap.clone();
+        // Same unconditional-writeback reasoning as `v128_heap` just above
+        // (W33 fourth slice): a struct/array allocated before a later trap
+        // must not vanish either -- cloned (not moved) for the identical
+        // "still borrowed below" reason `v128_heap` is.
+        self.gc_heap = ctx.gc_heap.clone();
         // Same unconditional-writeback reasoning as `v128_heap` just above
         // (task #95): a `data.drop` from a call that later traps must
         // still stick -- the drop already happened before the trap, and a
