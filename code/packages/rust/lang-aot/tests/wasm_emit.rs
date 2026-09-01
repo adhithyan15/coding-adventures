@@ -96,7 +96,10 @@ impl wasm_execution::HostInterface for PrintStrHost {
         &self,
         _module_name: &str,
         _name: &str,
-    ) -> Option<(wasm_types::GlobalType, wasm_execution::WasmValue)> {
+    ) -> Option<(
+        wasm_types::GlobalType,
+        std::rc::Rc<std::cell::RefCell<wasm_execution::WasmValue>>,
+    )> {
         None
     }
 
