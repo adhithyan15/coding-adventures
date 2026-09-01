@@ -1,0 +1,104 @@
+% ============================================================================
+% voting-requirement-exception — the carve-out USA.gov states for each U.S.
+% voting requirement (adj-facts-stdlib, CIVICS).
+% ============================================================================
+% "You must be registered to vote" is the kind of sentence a summary
+% produces and a source rarely says without qualification. USA.gov lists
+% four requirements for voting in U.S. federal, state, and local
+% elections — and attaches to EACH one a stated exception that a summary
+% would flatten away. This table holds the exceptions, which is the half
+% that gets lost. Recall is a binding query:
+%
+%     ? voting_requirement_exception(voter_registration_by_state_deadline, $E)
+%       % north_dakota_does_not_require_registration
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `voting_requirement_exception(requirement, exception)` carrying
+% the source citation, so the lookup above is the ordinary SLD binding
+% query — the engine returns the carve-out WITH its source, on the CPU,
+% with zero model calls, and abstains on any requirement not one of these
+% four. The query also runs BACKWARD:
+%
+%     ? voting_requirement_exception($R, experiencing_homelessness_still_meets_it)
+%       % state_residency
+%
+% WHY THIS AXIS AND NOT THE REQUIREMENTS THEMSELVES. The four requirements
+% are a flat bulleted list — citizenship, residency, age, registration —
+% with no second column the source states, and this stdlib's own rule is
+% to match the shape of the SOURCE rather than force a familiar table
+% shape onto it (see `bill-stage-successor.adj`'s header for the case that
+% established it). A `requirement -> description` table would have had to
+% paraphrase each bullet into a description the page never separately
+% states. The EXCEPTIONS are different: the page attaches exactly one
+% stated carve-out to each of the four bullets, so requirement -> exception
+% is a relation the source genuinely supplies on both sides, uniformly,
+% with nothing invented.
+%
+% It is also the more useful half. An LLM asked "do you have to register
+% to vote?" will confidently say yes; the fact that North Dakota does not
+% require registration at all is precisely the sort of detail that
+% disappears into a confident summary. Recalling the exception WITH its
+% citation is the behaviour this stdlib exists to make possible.
+%
+% Provenance: quoted verbatim from USA.gov's "Who can and cannot vote"
+% page. Each row decodes the carve-out the page attaches to one bullet of
+% its own "You can vote in U.S. federal, state, and local elections if
+% you:" list:
+%
+%     requirement (this table's atom)             exception (this table's atom)                          quote (verbatim)
+%     -----------------------------------------   ----------------------------------------------------   ----------------------------------------------
+%     us_citizenship                              non_citizens_may_vote_in_some_local_elections_only     "some areas allow non-citizens to vote in
+%                                                                                                           local elections only"
+%     state_residency                             experiencing_homelessness_still_meets_it               "You can be experiencing homelessness and
+%                                                                                                           still meet these requirements."
+%     age_eighteen_by_election_day                some_states_allow_seventeen_year_olds_in_primaries     "Some states allow 17-year-olds who will be
+%                                                                                                           18 by Election Day to vote in primaries."
+%     voter_registration_by_state_deadline        north_dakota_does_not_require_registration             "North Dakota does not require voter
+%                                                                                                           registration."
+%
+% curl-fetched the raw page and read it byte-for-byte before writing this
+% file (not just an AI-summarized WebFetch); the URL was reachability-
+% checked from this machine before any scoping work. `trust authoritative`
+% — USA.gov is the U.S. General Services Administration's official guide to
+% government information, a first-party .gov publisher of exactly the fact
+% being recalled, the same tier the seven sibling civics libraries cite.
+%
+% Honest abstention:
+%
+%   - The page's separate "Who cannot vote?" section — non-citizens
+%     including permanent legal residents, some people convicted of a
+%     felony, some people with a mental disability, and U.S. citizens
+%     residing in U.S. territories (who cannot vote for president in the
+%     general election) — states DISQUALIFICATIONS, not exceptions to a
+%     requirement. That is a different relation entirely and belongs in its
+%     own table; folding it in here would blur "you still qualify despite
+%     X" together with "you do not qualify because of X", which are
+%     opposite claims.
+%   - The registration bullet's own "In almost every state, you can
+%     register to vote before you turn 18 if you will be 18 by Election
+%     Day" is about WHEN you may register, not an exception to whether
+%     registration is required, and the age bullet's primaries carve-out is
+%     the one this table records for age.
+%   - A requirement not one of these four — and there are none others in
+%     the source's list — abstains rather than being invented.
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table voting_requirement_exception {
+    columns requirement, exception
+
+    row (us_citizenship, non_citizens_may_vote_in_some_local_elections_only)
+    row (state_residency, experiencing_homelessness_still_meets_it)
+    row (age_eighteen_by_election_day, some_states_allow_seventeen_year_olds_in_primaries)
+    row (voter_registration_by_state_deadline, north_dakota_does_not_require_registration)
+
+    source "North Dakota does not require voter registration."
+    locator "https://www.usa.gov/who-can-vote"
+    trust authoritative
+
+    cites "some areas allow non-citizens to vote in local elections only" locator "https://www.usa.gov/who-can-vote"
+    cites "You can be experiencing homelessness and still meet these requirements." locator "https://www.usa.gov/who-can-vote"
+    cites "Some states allow 17-year-olds who will be 18 by Election Day to vote in primaries." locator "https://www.usa.gov/who-can-vote"
+}
