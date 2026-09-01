@@ -7,7 +7,8 @@
 //! 9-architecture expansion documented in
 //! [`HISTORICAL-ARCH-BACKEND-MIGRATION.md`](../../../specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md).
 //!
-//! Module split mirrors [`mips_r2000_simulator`] / [`intel8080_simulator`]:
+//! The implementation is split into opcode, encoding, decode, execute, and
+//! lifecycle modules:
 //!
 //! ```text
 //! opcodes.rs   -- opcode / register / condition-code constant tables
@@ -36,10 +37,8 @@
 //!
 //! - **Alternate register bank** (`A'/F'/B'/C'/D'/E'/H'/L'`) — swapped in
 //!   via `EX AF,AF'` / `EXX`.
-//! - **Index registers** `IX`/`IY` — this v0.1.0 ports only `LD IX/IY,nn`
-//!   and `INC IX/IY` (the "IX/IY basics" the migration guidance calls
-//!   for); full displacement addressing (`LD r,(IX+d)`, ALU-via-`(IX+d)`,
-//!   …) is not ported.
+//! - **Index registers** `IX`/`IY` — direct, displacement-addressed,
+//!   arithmetic, stack, and control-flow forms, including `DDCB`/`FDCB`.
 //! - **`CB`-prefix** — bit manipulation (`BIT`/`SET`/`RES`) and extended
 //!   rotate/shift (`RLC`/`RRC`/`RL`/`RR`/`SLA`/`SRA`/`SLL`/`SRL`) against
 //!   any of the 8 `r`-coded operands.  Fully ported.
@@ -49,12 +48,12 @@
 //!   behaviour; the `P/V` flag is dual-purpose (parity after logical ops,
 //!   signed overflow after arithmetic ops) rather than 8080's
 //!   parity-only `P`.
-//! - **`ED`-prefix is NOT ported** in this v0.1.0 — see the module docs
-//!   on `decode::decode_ed` for the deliberate scope cut (16-bit
-//!   `ADC`/`SBC HL,rp`, the block-transfer/compare/I-O instruction
-//!   families, `LD A,I`/`LD A,R`, `NEG`, interrupt-mode selection).  Every
-//!   `ED`-prefixed opcode decodes to `"undefined"`, which `execute.rs`
-//!   treats as a fail-closed halt.
+//! - **`ED`-prefix** — 16-bit arithmetic and loads, special-register
+//!   moves, nibble rotates, interrupt control, and all transfer/compare/
+//!   input/output block families.
+//! - **Checked lifecycle** — fixed 64 KiB memory, complete snapshot/
+//!   restore and traces, typed atomic errors, transactional bounded runs,
+//!   checked ports, maskable interrupts, and NMI.
 //!
 //! ## Usage
 //!
@@ -69,8 +68,9 @@
 //!     encode_ld_a_n(2),          // A = 2
 //!     vec![encode_alu_reg(ALU_ADD, REG_B)], // A = A + B = 3
 //!     vec![HALT],
-//! ]);
+//! ], 10)?;
 //! assert_eq!(sim.regs.a, 3);
+//! # Ok::<(), z80_simulator::Z80Error>(())
 //! ```
 
 pub mod decode;
@@ -79,4 +79,4 @@ pub mod execute;
 pub mod opcodes;
 pub mod simulator;
 
-pub use simulator::{ExecutionResult, Z80Simulator};
+pub use simulator::{ExecutionResult, StepTrace, Z80Error, Z80Simulator, Z80State};

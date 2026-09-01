@@ -29,10 +29,9 @@
 //!   `0x20`, `0x28`, `0x30`, `0x38`); all five bytes are UNDEFINED on a
 //!   stock 8080.
 //! - **Four prefix bytes** — `CB` (bit manipulation + extended
-//!   rotate/shift), `ED` (extended: 16-bit ADC/SBC, block ops, I/R
-//!   register moves — **not ported**, see `decode::decode_ed`), `DD`/`FD`
-//!   (index registers IX/IY, replacing HL in most HL-using
-//!   instructions).  All four prefix bytes are themselves UNDEFINED
+//!   rotate/shift), `ED` (16-bit ADC/SBC, block ops, I/R register moves),
+//!   and `DD`/`FD` (index registers IX/IY, replacing HL in most HL-using
+//!   instructions). All four prefix bytes are themselves UNDEFINED
 //!   opcodes on a stock 8080.
 
 // ===========================================================================
@@ -155,23 +154,23 @@ pub const CPL: u8 = 0x2F;
 pub const SCF: u8 = 0x37;
 /// `CCF` — complement carry flag (Zilog's `CMC`).  Byte-identical.
 pub const CCF: u8 = 0x3F;
-/// `LD (BC),A` — memory[BC] ← A (Zilog's `STAX B`).  Byte-identical.
+/// `LD (BC),A` — `memory[BC]` ← A (Zilog's `STAX B`).  Byte-identical.
 pub const LD_BC_A: u8 = 0x02;
-/// `LD (DE),A` — memory[DE] ← A (Zilog's `STAX D`).  Byte-identical.
+/// `LD (DE),A` — `memory[DE]` ← A (Zilog's `STAX D`).  Byte-identical.
 pub const LD_DE_A: u8 = 0x12;
-/// `LD A,(BC)` — A ← memory[BC] (Zilog's `LDAX B`).  Byte-identical.
+/// `LD A,(BC)` — A ← `memory[BC]` (Zilog's `LDAX B`).  Byte-identical.
 pub const LD_A_BC: u8 = 0x0A;
-/// `LD A,(DE)` — A ← memory[DE] (Zilog's `LDAX D`).  Byte-identical.
+/// `LD A,(DE)` — A ← `memory[DE]` (Zilog's `LDAX D`).  Byte-identical.
 pub const LD_A_DE: u8 = 0x1A;
-/// `LD (nn),HL` — memory[nn] ← L; memory[nn+1] ← H (Zilog's `SHLD`).
+/// `LD (nn),HL` — `memory[nn]` ← L; `memory[nn+1]` ← H (Zilog's `SHLD`).
 /// Byte-identical.
 pub const LD_NN_HL: u8 = 0x22;
-/// `LD HL,(nn)` — L ← memory[nn]; H ← memory[nn+1] (Zilog's `LHLD`).
+/// `LD HL,(nn)` — L ← `memory[nn]`; H ← `memory[nn+1]` (Zilog's `LHLD`).
 /// Byte-identical.
 pub const LD_HL_NN: u8 = 0x2A;
-/// `LD (nn),A` — memory[nn] ← A (Zilog's `STA`).  Byte-identical.
+/// `LD (nn),A` — `memory[nn]` ← A (Zilog's `STA`).  Byte-identical.
 pub const LD_NN_A: u8 = 0x32;
-/// `LD A,(nn)` — A ← memory[nn] (Zilog's `LDA`).  Byte-identical.
+/// `LD A,(nn)` — A ← `memory[nn]` (Zilog's `LDA`).  Byte-identical.
 pub const LD_A_NN: u8 = 0x3A;
 /// `EX (SP),HL` — swap top-of-stack with HL (Zilog's name for 8080's
 /// `XTHL`; identical semantics).  Byte-identical.
@@ -184,9 +183,9 @@ pub const EX_DE_HL: u8 = 0xEB;
 /// *in* HL, not to `(HL)`'s memory contents — the mnemonic is
 /// historically confusing on both chips).  Byte-identical.
 pub const JP_HL: u8 = 0xE9;
-/// `IN A,(n)` — A ← input_port[n].  Byte-identical to 8080.
+/// `IN A,(n)` — A ← `input_port[n]`.  Byte-identical to 8080.
 pub const IN: u8 = 0xDB;
-/// `OUT (n),A` — output_port[n] ← A.  Byte-identical to 8080.
+/// `OUT (n),A` — `output_port[n]` ← A.  Byte-identical to 8080.
 pub const OUT: u8 = 0xD3;
 /// `EI` — enable interrupts.  Byte-identical to 8080.
 pub const EI: u8 = 0xFB;
@@ -229,14 +228,11 @@ pub const JR_C: u8 = 0x38;
 pub const CB_PREFIX: u8 = 0xCB;
 /// `ED` prefix — extended instructions (16-bit `ADC`/`SBC HL,rp`, block
 /// transfer/compare/I-O `LDIR`/`CPIR`/`INIR`/…, `LD A,I`/`LD A,R`, `NEG`,
-/// interrupt-mode selection, …).  **Not ported** in this v0.1.0 — see the
-/// module docs on `decode::decode_ed` for the deliberate scope cut.
+/// interrupt-mode selection, …).
 pub const ED_PREFIX: u8 = 0xED;
 /// `DD` prefix — replaces `HL` with `IX` throughout most instructions
-/// that follow.  Only `LD IX,nn` and `INC IX` are ported in this
-/// v0.1.0 — see `decode::decode_ddfd`.
+/// that follow, including displacement and `DDCB` forms.
 pub const DD_PREFIX: u8 = 0xDD;
 /// `FD` prefix — replaces `HL` with `IY` throughout most instructions
-/// that follow.  Only `LD IY,nn` and `INC IY` are ported in this
-/// v0.1.0 — see `decode::decode_ddfd`.
+/// that follow, including displacement and `FDCB` forms.
 pub const FD_PREFIX: u8 = 0xFD;

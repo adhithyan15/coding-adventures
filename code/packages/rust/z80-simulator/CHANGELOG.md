@@ -1,5 +1,22 @@
 # Changelog — z80-simulator
 
+## [Unreleased]
+
+### Changed
+
+- Completed all ED operations represented by the Python reference:
+  16-bit arithmetic/load families, special-register transfers, nibble
+  rotates, interrupt control, and repeating/non-repeating transfer,
+  compare, input, and output blocks.
+- Completed DD/FD displacement, arithmetic, stack, branch, and direct
+  forms plus every DDCB/FDCB rotate/shift/bit/set/reset form.
+- Replaced the variable-memory/string lifecycle with an architectural
+  64 KiB model, complete typed state/snapshots/traces, atomic checked
+  loading and stepping, transactional bounded runs, checked ports, and
+  maskable/NMI interrupt entry.
+- Added a deterministic full-state differential against the Python
+  simulator for 1,160 defined prefixed and unprefixed opcode vectors.
+
 ## [0.1.0] - 2026-08-17
 
 ### Added
@@ -26,15 +43,8 @@
 - Variable-length decode (`decode::decode(first_byte, fetch)`) supporting
   1-4 byte instructions, with a 4-way prefix dispatch (`CB`/`ED`/`DD`/
   `FD`) on top of the 8080-style unprefixed decode.
-- **`ED`-prefix deliberately NOT ported** — 16-bit `ADC`/`SBC HL,rp`, the
-  block-transfer/compare/I-O families (`LDIR`/`LDDR`/`CPIR`/`CPDR`/
-  `INIR`/`INDR`/`OTIR`/`OTDR` + non-repeating siblings), `LD A,I`/
-  `LD A,R`/`LD I,A`/`LD R,A`, `NEG`, `RETN`/`RETI`, interrupt-mode
-  selection. Every `ED`-prefixed opcode decodes to `"undefined"`, which
-  fails closed (halts) rather than executing garbage. Full IX/IY
-  displacement addressing (`LD r,(IX+d)`, ALU-via-`(IX+d)`,
-  `LD (IX+d),n`) is also not ported — only the "IX/IY basics"
-  (`LD IX/IY,nn`, `INC IX/IY`) the migration guidance called for.
+- Initial scope intentionally left ED and most IX/IY displacement forms
+  for a later completion audit; those are now covered under Unreleased.
 - 35+ unit tests: ALU ops (including the Z80's dual-purpose P/V and the
   new N flag), INC/DEC wrap + signed-overflow detection, load/store via
   direct address and `(HL)`, unconditional/conditional `JP`, `JR`

@@ -22,12 +22,10 @@
 //! module's *flag semantics* are Z80-specific from the ALU group onward
 //! even where the *bytes* are shared with 8080.
 //!
-//! # `undefined` opcodes (including all `ED`-prefixed ones) fail closed
+//! # Undefined opcodes fail closed
 //!
-//! No exception-propagation channel exists through `step() -> String`
-//! (mirrors every other simulator in this workspace), so an undefined
-//! opcode — or any `ED`-prefixed opcode, since that space is not ported —
-//! halts the simulator rather than executing garbage or panicking.
+//! The checked simulator lifecycle rejects genuinely undefined opcodes
+//! atomically with a typed error before this executor is invoked.
 
 use cpu_simulator::Memory;
 
@@ -47,7 +45,7 @@ use crate::opcodes::*;
 /// (not unpacked flags) since it is entirely opaque to every instruction
 /// except `EX AF,AF'`/`EXX`, which swap it wholesale with the live bank —
 /// exactly how `Z80State`'s Python original models it.
-#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Registers {
     // ── Main bank ──
     pub a: u8,
@@ -72,6 +70,33 @@ pub struct Registers {
     pub sp: u16,
     pub i: u8,
     pub r: u8,
+}
+
+impl Default for Registers {
+    fn default() -> Self {
+        Self {
+            a: 0,
+            b: 0,
+            c: 0,
+            d: 0,
+            e: 0,
+            h: 0,
+            l: 0,
+            a2: 0,
+            f2: 0xFF,
+            b2: 0,
+            c2: 0,
+            d2: 0,
+            e2: 0,
+            h2: 0,
+            l2: 0,
+            ix: 0,
+            iy: 0,
+            sp: 0,
+            i: 0,
+            r: 0,
+        }
+    }
 }
 
 impl Registers {
@@ -172,7 +197,7 @@ impl Registers {
 /// The six named Z80 condition flags (S, Z, H, P/V, N, C).  The two
 /// undocumented bits (Y = bit 5, X = bit 3) are always packed/unpacked as
 /// 0 — same simplification `z80_simulator.flags.pack_f`/`unpack_f` makes.
-#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Flags {
     pub s: bool,
     pub z: bool,
@@ -180,6 +205,19 @@ pub struct Flags {
     pub pv: bool,
     pub n: bool,
     pub c: bool,
+}
+
+impl Default for Flags {
+    fn default() -> Self {
+        Self {
+            s: true,
+            z: true,
+            h: true,
+            pv: true,
+            n: true,
+            c: true,
+        }
+    }
 }
 
 impl Flags {
@@ -386,6 +424,131 @@ fn condition_met(cond: u8, f: &Flags) -> bool {
     }
 }
 
+fn read16(mem: &Memory, address: u16) -> u16 {
+    let lo = mem.read_byte(address as usize) as u16;
+    let hi = mem.read_byte(address.wrapping_add(1) as usize) as u16;
+    (hi << 8) | lo
+}
+
+fn write16(mem: &mut Memory, address: u16, value: u16) {
+    mem.write_byte(address as usize, value as u8);
+    mem.write_byte(address.wrapping_add(1) as usize, (value >> 8) as u8);
+}
+
+fn advance(value: u16, decrement: bool) -> u16 {
+    if decrement {
+        value.wrapping_sub(1)
+    } else {
+        value.wrapping_add(1)
+    }
+}
+
+fn block_ld(regs: &mut Registers, flags: &mut Flags, mem: &mut Memory, decrement: bool) {
+    let source = regs.hl();
+    let destination = regs.de();
+    mem.write_byte(destination as usize, mem.read_byte(source as usize));
+    regs.set_hl(advance(source, decrement));
+    let de = advance(destination, decrement);
+    regs.d = (de >> 8) as u8;
+    regs.e = de as u8;
+    let bc = regs.bc().wrapping_sub(1);
+    regs.b = (bc >> 8) as u8;
+    regs.c = bc as u8;
+    flags.h = false;
+    flags.n = false;
+    flags.pv = bc != 0;
+}
+
+fn block_cp(regs: &mut Registers, flags: &mut Flags, mem: &Memory, decrement: bool) {
+    let address = regs.hl();
+    let operand = mem.read_byte(address as usize);
+    let result = regs.a.wrapping_sub(operand);
+    regs.set_hl(advance(address, decrement));
+    let bc = regs.bc().wrapping_sub(1);
+    regs.b = (bc >> 8) as u8;
+    regs.c = bc as u8;
+    flags.h = half_carry_sub(regs.a, operand, 0);
+    flags.n = true;
+    flags.pv = bc != 0;
+    flags.s = s_flag(result);
+    flags.z = z_flag(result);
+}
+
+fn block_in(
+    regs: &mut Registers,
+    flags: &mut Flags,
+    mem: &mut Memory,
+    input_ports: &[u8; 256],
+    decrement: bool,
+) {
+    let address = regs.hl();
+    mem.write_byte(address as usize, input_ports[regs.c as usize]);
+    regs.set_hl(advance(address, decrement));
+    regs.b = regs.b.wrapping_sub(1);
+    flags.n = true;
+    flags.z = regs.b == 0;
+}
+
+fn block_out(
+    regs: &mut Registers,
+    flags: &mut Flags,
+    mem: &Memory,
+    output_ports: &mut [u8; 256],
+    decrement: bool,
+) {
+    let address = regs.hl();
+    output_ports[regs.c as usize] = mem.read_byte(address as usize);
+    regs.set_hl(advance(address, decrement));
+    regs.b = regs.b.wrapping_sub(1);
+    flags.n = true;
+    flags.z = regs.b == 0;
+}
+
+fn index_value(regs: &Registers, use_ix: bool) -> u16 {
+    if use_ix {
+        regs.ix
+    } else {
+        regs.iy
+    }
+}
+
+fn set_index_value(regs: &mut Registers, use_ix: bool, value: u16) {
+    if use_ix {
+        regs.ix = value;
+    } else {
+        regs.iy = value;
+    }
+}
+
+fn indexed_address(regs: &Registers, use_ix: bool, displacement: i32) -> u16 {
+    index_value(regs, use_ix).wrapping_add(displacement as i16 as u16)
+}
+
+fn rotate_shift(value: u8, operation: u8, carry: bool) -> (u8, bool) {
+    match operation {
+        0 => {
+            let outgoing = (value >> 7) & 1;
+            ((value << 1) | outgoing, outgoing != 0)
+        }
+        1 => {
+            let outgoing = value & 1;
+            ((outgoing << 7) | (value >> 1), outgoing != 0)
+        }
+        2 => {
+            let outgoing = (value >> 7) & 1;
+            ((value << 1) | carry as u8, outgoing != 0)
+        }
+        3 => {
+            let outgoing = value & 1;
+            (((carry as u8) << 7) | (value >> 1), outgoing != 0)
+        }
+        4 => (value << 1, value & 0x80 != 0),
+        5 => ((value & 0x80) | (value >> 1), value & 1 != 0),
+        6 => ((value << 1) | 1, value & 0x80 != 0),
+        _ => (value >> 1, value & 1 != 0),
+    }
+}
+
 // ===========================================================================
 // Dispatch
 // ===========================================================================
@@ -404,12 +567,19 @@ pub fn execute(
     output_ports: &mut [u8; 256],
     iff1: &mut bool,
     iff2: &mut bool,
+    im: &mut u8,
     pc: u16,
 ) -> ExecuteResult {
-    let fallthrough = ExecuteResult { next_pc: pc, halted: false };
+    let fallthrough = ExecuteResult {
+        next_pc: pc,
+        halted: false,
+    };
 
     match decoded.mnemonic.as_str() {
-        "halt" => ExecuteResult { next_pc: pc, halted: true },
+        "halt" => ExecuteResult {
+            next_pc: pc,
+            halted: true,
+        },
         "nop" => fallthrough,
 
         // ── 8080-legacy data movement ──
@@ -483,13 +653,21 @@ pub fn execute(
 
         "ld_rp_a" => {
             let pair = get(decoded, "pair") as u8;
-            let addr = if pair == PAIR_DE { regs.de() } else { regs.bc() };
+            let addr = if pair == PAIR_DE {
+                regs.de()
+            } else {
+                regs.bc()
+            };
             mem.write_byte(addr as usize, regs.a);
             fallthrough
         }
         "ld_a_rp" => {
             let pair = get(decoded, "pair") as u8;
-            let addr = if pair == PAIR_DE { regs.de() } else { regs.bc() };
+            let addr = if pair == PAIR_DE {
+                regs.de()
+            } else {
+                regs.bc()
+            };
             regs.a = mem.read_byte(addr as usize);
             fallthrough
         }
@@ -604,34 +782,55 @@ pub fn execute(
             fallthrough
         }
 
-        "jp" => ExecuteResult { next_pc: get(decoded, "addr") as u16, halted: false },
+        "jp" => ExecuteResult {
+            next_pc: get(decoded, "addr") as u16,
+            halted: false,
+        },
         "jp_cond" => {
             let cond = get(decoded, "cond") as u8;
             let addr = get(decoded, "addr") as u16;
             let next_pc = if condition_met(cond, flags) { addr } else { pc };
-            ExecuteResult { next_pc, halted: false }
+            ExecuteResult {
+                next_pc,
+                halted: false,
+            }
         }
-        "jp_hl" => ExecuteResult { next_pc: regs.hl(), halted: false },
+        "jp_hl" => ExecuteResult {
+            next_pc: regs.hl(),
+            halted: false,
+        },
         "call" => {
             let addr = get(decoded, "addr") as u16;
             push16(mem, &mut regs.sp, pc);
-            ExecuteResult { next_pc: addr, halted: false }
+            ExecuteResult {
+                next_pc: addr,
+                halted: false,
+            }
         }
         "call_cond" => {
             let cond = get(decoded, "cond") as u8;
             let addr = get(decoded, "addr") as u16;
             if condition_met(cond, flags) {
                 push16(mem, &mut regs.sp, pc);
-                ExecuteResult { next_pc: addr, halted: false }
+                ExecuteResult {
+                    next_pc: addr,
+                    halted: false,
+                }
             } else {
                 fallthrough
             }
         }
-        "ret" => ExecuteResult { next_pc: pop16(mem, &mut regs.sp), halted: false },
+        "ret" => ExecuteResult {
+            next_pc: pop16(mem, &mut regs.sp),
+            halted: false,
+        },
         "ret_cond" => {
             let cond = get(decoded, "cond") as u8;
             if condition_met(cond, flags) {
-                ExecuteResult { next_pc: pop16(mem, &mut regs.sp), halted: false }
+                ExecuteResult {
+                    next_pc: pop16(mem, &mut regs.sp),
+                    halted: false,
+                }
             } else {
                 fallthrough
             }
@@ -639,7 +838,10 @@ pub fn execute(
         "rst" => {
             let n = get(decoded, "n") as u16;
             push16(mem, &mut regs.sp, pc);
-            ExecuteResult { next_pc: n * 8, halted: false }
+            ExecuteResult {
+                next_pc: n * 8,
+                halted: false,
+            }
         }
 
         "push" => {
@@ -711,7 +913,10 @@ pub fn execute(
         // ── Z80-only: relative jumps ──
         "jr" => {
             let e = get(decoded, "e");
-            ExecuteResult { next_pc: pc.wrapping_add(e as i16 as u16), halted: false }
+            ExecuteResult {
+                next_pc: pc.wrapping_add(e as i16 as u16),
+                halted: false,
+            }
         }
         "jr_cond" => {
             let cond = get(decoded, "cond") as u8;
@@ -721,13 +926,203 @@ pub fn execute(
             } else {
                 pc
             };
-            ExecuteResult { next_pc, halted: false }
+            ExecuteResult {
+                next_pc,
+                halted: false,
+            }
         }
         "djnz" => {
             let e = get(decoded, "e");
             regs.b = regs.b.wrapping_sub(1);
-            let next_pc = if regs.b != 0 { pc.wrapping_add(e as i16 as u16) } else { pc };
-            ExecuteResult { next_pc, halted: false }
+            let next_pc = if regs.b != 0 {
+                pc.wrapping_add(e as i16 as u16)
+            } else {
+                pc
+            };
+            ExecuteResult {
+                next_pc,
+                halted: false,
+            }
+        }
+
+        // ── ED-prefixed extended instructions ──
+        "ed_ld_a_i" | "ed_ld_a_r" => {
+            regs.a = if decoded.mnemonic == "ed_ld_a_i" {
+                regs.i
+            } else {
+                regs.r
+            };
+            flags.s = s_flag(regs.a);
+            flags.z = z_flag(regs.a);
+            flags.h = false;
+            flags.n = false;
+            flags.pv = *iff2;
+            fallthrough
+        }
+        "ed_ld_i_a" => {
+            regs.i = regs.a;
+            fallthrough
+        }
+        "ed_ld_r_a" => {
+            regs.r = regs.a;
+            fallthrough
+        }
+        "ed_ld_rp_mem" => {
+            let pair = get(decoded, "pair") as u8;
+            let address = get(decoded, "addr") as u16;
+            regs.write_pair(pair, read16(mem, address));
+            fallthrough
+        }
+        "ed_ld_mem_rp" => {
+            let pair = get(decoded, "pair") as u8;
+            let address = get(decoded, "addr") as u16;
+            write16(mem, address, regs.read_pair(pair));
+            fallthrough
+        }
+        "ed_adc_hl_rp" => {
+            let hl = regs.hl();
+            let operand = regs.read_pair(get(decoded, "pair") as u8);
+            let carry = flags.c as u32;
+            let total = u32::from(hl) + u32::from(operand) + carry;
+            let result = total as u16;
+            flags.c = total > 0xFFFF;
+            flags.h = (u32::from(hl & 0x0FFF) + u32::from(operand & 0x0FFF) + carry) > 0x0FFF;
+            flags.pv = overflow_add((hl >> 8) as u8, (operand >> 8) as u8, (result >> 8) as u8);
+            flags.n = false;
+            flags.s = result & 0x8000 != 0;
+            flags.z = result == 0;
+            regs.set_hl(result);
+            fallthrough
+        }
+        "ed_sbc_hl_rp" => {
+            let hl = regs.hl();
+            let operand = regs.read_pair(get(decoded, "pair") as u8);
+            let borrow = flags.c as i32;
+            let total = i32::from(hl) - i32::from(operand) - borrow;
+            let result = total as u16;
+            flags.c = total < 0;
+            flags.h = i32::from(hl & 0x0FFF) < i32::from(operand & 0x0FFF) + borrow;
+            flags.pv = overflow_sub((hl >> 8) as u8, (operand >> 8) as u8, (result >> 8) as u8);
+            flags.n = true;
+            flags.s = result & 0x8000 != 0;
+            flags.z = result == 0;
+            regs.set_hl(result);
+            fallthrough
+        }
+        "ed_neg" => {
+            let operand = regs.a;
+            regs.a = 0u8.wrapping_sub(operand);
+            flags.c = operand != 0;
+            flags.h = operand & 0x0F != 0;
+            flags.pv = operand == 0x80;
+            flags.n = true;
+            flags.s = s_flag(regs.a);
+            flags.z = z_flag(regs.a);
+            fallthrough
+        }
+        "ed_im0" | "ed_im1" | "ed_im2" => {
+            *im = match decoded.mnemonic.as_str() {
+                "ed_im0" => 0,
+                "ed_im1" => 1,
+                _ => 2,
+            };
+            fallthrough
+        }
+        "ed_reti" | "ed_retn" => {
+            *iff1 = *iff2;
+            ExecuteResult {
+                next_pc: pop16(mem, &mut regs.sp),
+                halted: false,
+            }
+        }
+        "ed_rld" => {
+            let address = regs.hl();
+            let operand = mem.read_byte(address as usize);
+            mem.write_byte(address as usize, (operand << 4) | (regs.a & 0x0F));
+            regs.a = (regs.a & 0xF0) | (operand >> 4);
+            flags.h = false;
+            flags.n = false;
+            flags.s = s_flag(regs.a);
+            flags.z = z_flag(regs.a);
+            flags.pv = parity(regs.a);
+            fallthrough
+        }
+        "ed_rrd" => {
+            let address = regs.hl();
+            let operand = mem.read_byte(address as usize);
+            mem.write_byte(address as usize, ((regs.a & 0x0F) << 4) | (operand >> 4));
+            regs.a = (regs.a & 0xF0) | (operand & 0x0F);
+            flags.h = false;
+            flags.n = false;
+            flags.s = s_flag(regs.a);
+            flags.z = z_flag(regs.a);
+            flags.pv = parity(regs.a);
+            fallthrough
+        }
+        "ed_in_r_c" => {
+            let register = get(decoded, "reg") as u8;
+            let value = input_ports[regs.c as usize];
+            if register != REG_M {
+                regs.write(register, value, mem);
+            }
+            flags.h = false;
+            flags.n = false;
+            flags.s = s_flag(value);
+            flags.z = z_flag(value);
+            flags.pv = parity(value);
+            fallthrough
+        }
+        "ed_out_c_r" => {
+            let register = get(decoded, "reg") as u8;
+            output_ports[regs.c as usize] = if register == REG_M {
+                0
+            } else {
+                regs.read(register, mem)
+            };
+            fallthrough
+        }
+        "ed_ldi" | "ed_ldd" | "ed_ldir" | "ed_lddr" => {
+            let decrement = matches!(decoded.mnemonic.as_str(), "ed_ldd" | "ed_lddr");
+            loop {
+                block_ld(regs, flags, mem, decrement);
+                if !matches!(decoded.mnemonic.as_str(), "ed_ldir" | "ed_lddr") || regs.bc() == 0 {
+                    break;
+                }
+            }
+            fallthrough
+        }
+        "ed_cpi" | "ed_cpd" | "ed_cpir" | "ed_cpdr" => {
+            let decrement = matches!(decoded.mnemonic.as_str(), "ed_cpd" | "ed_cpdr");
+            loop {
+                block_cp(regs, flags, mem, decrement);
+                if !matches!(decoded.mnemonic.as_str(), "ed_cpir" | "ed_cpdr")
+                    || flags.z
+                    || regs.bc() == 0
+                {
+                    break;
+                }
+            }
+            fallthrough
+        }
+        "ed_ini" | "ed_ind" | "ed_inir" | "ed_indr" => {
+            let decrement = matches!(decoded.mnemonic.as_str(), "ed_ind" | "ed_indr");
+            loop {
+                block_in(regs, flags, mem, input_ports, decrement);
+                if !matches!(decoded.mnemonic.as_str(), "ed_inir" | "ed_indr") || regs.b == 0 {
+                    break;
+                }
+            }
+            fallthrough
+        }
+        "ed_outi" | "ed_outd" | "ed_otir" | "ed_otdr" => {
+            let decrement = matches!(decoded.mnemonic.as_str(), "ed_outd" | "ed_otdr");
+            loop {
+                block_out(regs, flags, mem, output_ports, decrement);
+                if !matches!(decoded.mnemonic.as_str(), "ed_otir" | "ed_otdr") || regs.b == 0 {
+                    break;
+                }
+            }
+            fallthrough
         }
 
         // ── Z80-only: CB-prefixed bit manipulation / extended rotate-shift ──
@@ -816,28 +1211,174 @@ pub fn execute(
             fallthrough
         }
 
-        // ── Z80-only: IX/IY basics (v0.1.0 scope) ──
-        "ld_ix_nn" => {
-            regs.ix = get(decoded, "imm") as u16;
+        // ── DD/FD-prefixed IX/IY operations ──
+        "index_ld_nn" => {
+            set_index_value(regs, get(decoded, "index") != 0, get(decoded, "imm") as u16);
             fallthrough
         }
-        "ld_iy_nn" => {
-            regs.iy = get(decoded, "imm") as u16;
+        "index_ld_from_mem" => {
+            let value = read16(mem, get(decoded, "addr") as u16);
+            set_index_value(regs, get(decoded, "index") != 0, value);
             fallthrough
         }
-        "inc_ix" => {
-            regs.ix = regs.ix.wrapping_add(1);
+        "index_ld_to_mem" => {
+            let use_ix = get(decoded, "index") != 0;
+            write16(mem, get(decoded, "addr") as u16, index_value(regs, use_ix));
             fallthrough
         }
-        "inc_iy" => {
-            regs.iy = regs.iy.wrapping_add(1);
+        "index_ld_mem_n" => {
+            let use_ix = get(decoded, "index") != 0;
+            let address = indexed_address(regs, use_ix, get(decoded, "d"));
+            mem.write_byte(address as usize, get(decoded, "imm") as u8);
+            fallthrough
+        }
+        "index_ld_r_mem" => {
+            let use_ix = get(decoded, "index") != 0;
+            let address = indexed_address(regs, use_ix, get(decoded, "d"));
+            let value = mem.read_byte(address as usize);
+            regs.write(get(decoded, "dst") as u8, value, mem);
+            fallthrough
+        }
+        "index_ld_mem_r" => {
+            let use_ix = get(decoded, "index") != 0;
+            let address = indexed_address(regs, use_ix, get(decoded, "d"));
+            let value = regs.read(get(decoded, "src") as u8, mem);
+            mem.write_byte(address as usize, value);
+            fallthrough
+        }
+        "index_ld_sp" => {
+            regs.sp = index_value(regs, get(decoded, "index") != 0);
+            fallthrough
+        }
+        "index_push" => {
+            let value = index_value(regs, get(decoded, "index") != 0);
+            push16(mem, &mut regs.sp, value);
+            fallthrough
+        }
+        "index_pop" => {
+            let value = pop16(mem, &mut regs.sp);
+            set_index_value(regs, get(decoded, "index") != 0, value);
+            fallthrough
+        }
+        "index_add_rp" => {
+            let use_ix = get(decoded, "index") != 0;
+            let current = index_value(regs, use_ix);
+            let pair = get(decoded, "pair") as u8;
+            let operand = if pair == PAIR_HL {
+                current
+            } else {
+                regs.read_pair(pair)
+            };
+            let total = u32::from(current) + u32::from(operand);
+            flags.c = total > 0xFFFF;
+            flags.h = u32::from(current & 0x0FFF) + u32::from(operand & 0x0FFF) > 0x0FFF;
+            flags.n = false;
+            set_index_value(regs, use_ix, total as u16);
+            fallthrough
+        }
+        "index_inc" | "index_dec" => {
+            let use_ix = get(decoded, "index") != 0;
+            let current = index_value(regs, use_ix);
+            let value = if decoded.mnemonic == "index_inc" {
+                current.wrapping_add(1)
+            } else {
+                current.wrapping_sub(1)
+            };
+            set_index_value(regs, use_ix, value);
+            fallthrough
+        }
+        "index_inc_mem" | "index_dec_mem" => {
+            let use_ix = get(decoded, "index") != 0;
+            let address = indexed_address(regs, use_ix, get(decoded, "d"));
+            let value = mem.read_byte(address as usize);
+            let result = if decoded.mnemonic == "index_inc_mem" {
+                flags.h = half_carry_add(value, 1, 0);
+                flags.pv = value == 0x7F;
+                flags.n = false;
+                value.wrapping_add(1)
+            } else {
+                flags.h = half_carry_sub(value, 1, 0);
+                flags.pv = value == 0x80;
+                flags.n = true;
+                value.wrapping_sub(1)
+            };
+            flags.s = s_flag(result);
+            flags.z = z_flag(result);
+            mem.write_byte(address as usize, result);
+            fallthrough
+        }
+        "index_alu_mem" => {
+            let use_ix = get(decoded, "index") != 0;
+            let address = indexed_address(regs, use_ix, get(decoded, "d"));
+            let operand = mem.read_byte(address as usize);
+            let operation = get(decoded, "op") as u8;
+            let result = alu8(operation, regs.a, operand, flags);
+            if operation != ALU_CP {
+                regs.a = result;
+            }
+            fallthrough
+        }
+        "index_jp" => ExecuteResult {
+            next_pc: index_value(regs, get(decoded, "index") != 0),
+            halted: false,
+        },
+        "index_ex_sp" => {
+            let use_ix = get(decoded, "index") != 0;
+            let current = index_value(regs, use_ix);
+            let stacked = read16(mem, regs.sp);
+            write16(mem, regs.sp, current);
+            set_index_value(regs, use_ix, stacked);
+            fallthrough
+        }
+        "index_cb_rot" | "index_cb_bit" | "index_cb_res" | "index_cb_set" => {
+            let use_ix = get(decoded, "index") != 0;
+            let address = indexed_address(regs, use_ix, get(decoded, "d"));
+            let value = mem.read_byte(address as usize);
+            let register = get(decoded, "reg") as u8;
+            let bit = get(decoded, "bit") as u8;
+            match decoded.mnemonic.as_str() {
+                "index_cb_rot" => {
+                    let (result, carry) = rotate_shift(value, get(decoded, "op") as u8, flags.c);
+                    mem.write_byte(address as usize, result);
+                    if register != REG_M {
+                        regs.write(register, result, mem);
+                    }
+                    flags.c = carry;
+                    flags.h = false;
+                    flags.n = false;
+                    flags.s = s_flag(result);
+                    flags.z = z_flag(result);
+                    flags.pv = parity(result);
+                }
+                "index_cb_bit" => {
+                    flags.z = value & (1 << bit) == 0;
+                    flags.h = true;
+                    flags.n = false;
+                }
+                "index_cb_res" => {
+                    let result = value & !(1 << bit);
+                    mem.write_byte(address as usize, result);
+                    if register != REG_M {
+                        regs.write(register, result, mem);
+                    }
+                }
+                _ => {
+                    let result = value | (1 << bit);
+                    mem.write_byte(address as usize, result);
+                    if register != REG_M {
+                        regs.write(register, result, mem);
+                    }
+                }
+            }
             fallthrough
         }
 
-        // Undefined opcode (including every `ED`-prefixed opcode, since
-        // that space is not ported — see `decode.rs` module docs) — fail
-        // closed: halt rather than silently executing garbage.
-        _ => ExecuteResult { next_pc: pc, halted: true },
+        // Defense in depth: the checked simulator rejects undefined
+        // decodes before execution, but keep the executor fail-closed.
+        _ => ExecuteResult {
+            next_pc: pc,
+            halted: true,
+        },
     }
 }
 
