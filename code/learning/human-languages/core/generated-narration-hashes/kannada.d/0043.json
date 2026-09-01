@@ -1,18 +1,19 @@
 {
   "language": "kannada",
   "chapter": 43,
-  "sourceHash": "fnv1a64:6a2f6cb5132d84c8",
+  "sourceHash": "fnv1a64:079e4dde167a3e69",
   "lessonIds": [
     "KA-C43-come",
     "KA-C43-sit",
     "KA-C43-stand",
-    "KA-C43-give"
+    "KA-C43-give",
+    "KA-S132-sign-visarga"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 4,
   "text": "kannada/narration/ch43.txt",
   "json": "kannada/narration/ch43.json",
-  "textHash": "fnv1a64:75a7d6816d4f7380",
-  "jsonHash": "fnv1a64:f77683c4198aa7bf",
+  "textHash": "fnv1a64:dd7fe702b2146093",
+  "jsonHash": "fnv1a64:749fd199d95696c1",
   "findings": []
 }
