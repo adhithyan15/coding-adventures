@@ -43,8 +43,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Build-tool repository source-input boundary
 
 - Added a closed, versioned repository-relative registry for 18 reviewed source
-  boundaries, 21 input registrations over 19 tracked inputs, 482 consumer
-  scopes, and 485 authorizations that package-local selectors cannot represent.
+  boundaries, 21 input registrations over 19 tracked inputs, 483 consumer
+  scopes, and 486 authorizations that package-local selectors cannot represent.
   It covers exact Haskell, Lua, Python, Rust, TypeScript, Starlark, human-language,
   neural-learning, required-capability, and cross-language consumers plus
   bounded VisiCalc sibling and generated-pruning inputs.
@@ -58,6 +58,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   cross-package, cross-language workspace, direct BUILD input, Starlark load,
   exact/descendant/exclusion, and inert registered-path symlink/reparse behavior
   without granting process or filesystem-discovery authority.
+- Adopted the complete boundary projection in the Swift build tool. Swift now
+  proves applicable inputs once per hash batch with bounded stage-zero regular-
+  mode Git records, rechecks the index after hashing, securely hashes the exact
+  registered files beside package-local inputs, consumes all nine neutral
+  cases, and reverse-indexes boundary-only diffs to registered consumers.
+  Generated-pruning exceptions remain exact paths rather than directory-wide
+  traversal authority.
 
 ### Build-tool language source-input registry
 
@@ -70,8 +77,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   neutral cases.
   Retained-handle reads now stop at the snapshotted byte count and reject an
   additional probe byte, closing concurrent POSIX growth before allocation.
-  Repository-relative boundary adoption remains explicitly separate and
-  pending rather than being approximated with broader package authority.
+  Repository-relative boundary adoption remains an exact separate projection
+  rather than being approximated with broader package authority.
 - Registered the exact Engram WASM BUILD inputs for that package root only: the
   smoke script, its imported host module, and the checked-in WebAssembly bytes.
   Added a language-neutral exact-path fixture and tracked Git-blob projection

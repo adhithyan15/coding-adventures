@@ -12565,6 +12565,49 @@ identity remains unowned. The graph is now 642 unique owners and 1,008 edges:
 200 merged, 441 pending, and exactly the Swift package-local registry owner in
 progress.
 
+### Post-PR #13799 refresh and Swift repository-boundary selection
+
+PR #13799 completed all 45 reported checks on final head
+`2b991cffd982c359935d38017103f3b673c22534` acceptably after two focused
+same-branch macOS portability repairs. GitHub reported the branch clean and
+mergeable, then executed guarded squash auto-merge without a plain manual merge
+command as `bbba51a7d4a7a3d2a3338bc6c15458eba39db82f`.
+
+The collision-checked schema-3 inventory at exact current `origin/main`
+`80efccb4d0bb3acdfab9ea2db7c96810a8d60e3a` now has 15 established lanes,
+1,404 implementation identities, 4,620 implementation slots, and 1,443
+all-reported identities. Its bands are 175/265, 123/934, 172/2,165, and
+934/13,076; Rust has 745 singletons, OCaml remains at zero packages, and
+canonical collisions and unknown buckets remain zero.
+
+Four new Rust-only identities are classified before selecting another delivery
+slice. `mermaid-block-grid-language-neutral-conformance` owns the deterministic
+typed-grid-to-shared-geometry contract in `diagram-layout-grid` while keeping
+Mermaid parsing and paint hosts outside. `mermaid-packet-layout-language-neutral-
+conformance` owns absolute inclusive range validation and deterministic 32-bit
+row geometry in `diagram-layout-packet` while keeping parser and renderer hosts
+outside. `layout-float-portable-core-classification` owns float placement,
+clearance, shrink-to-fit, exclusion, containment, defaults, diagnostics, and
+finite geometry. `layout-inline-box-portable-core-classification` owns UI44
+fragment-edge continuation, decoration geometry, descendant shifts, border
+metadata, and hit testing. The layout owners exclude HTML/CSS parsing, DOM and
+window authority, text-measurement and paint hosts, native toolkits, and device
+capture. No eligible identity remains unowned.
+
+Both prerequisites of
+`build-tool-swift-repository-source-input-boundary-adoption` are now merged.
+The boundedness and leverage pass selects that finite process-free continuation
+on fresh clean branch
+`codex/build-tool-swift-repository-source-input-boundary-adoption`. It consumes
+the exact neutral repository-relative rule and registration projection, secure
+tracked-file hashing, generated-pruning exceptions, and boundary-only reverse-
+diff closure deliberately kept outside package-local registry equality. This
+owner has one direct unfinished aggregate descendant and completes the Swift
+engine's source-boundary contract without ambient ancestor, credential, secret,
+vendor, or generated-directory authority. Reconciliation and selection leave
+646 unique owners and 1,008 dependency edges: 201 merged, 444 pending, and
+exactly this Swift repository-boundary owner in progress.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

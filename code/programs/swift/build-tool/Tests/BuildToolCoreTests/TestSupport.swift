@@ -1,5 +1,6 @@
 import BuildToolCore
 import Foundation
+import Testing
 
 func makeTempDirectory(label: String = "build_tool_swift") throws -> String {
     let base = FileManager.default.temporaryDirectory
@@ -24,6 +25,40 @@ func writeData(_ path: String, _ contents: Data) throws {
         withIntermediateDirectories: true
     )
     try contents.write(to: url)
+}
+
+func runGitCommand(_ arguments: [String], in directory: String) throws {
+    let process = Process()
+    #if os(Windows)
+    let environment = ProcessInfo.processInfo.environment
+    let pathValue = try #require(environment.first {
+        $0.key.caseInsensitiveCompare("PATH") == .orderedSame
+    }?.value)
+    let executable = try #require(
+        pathValue
+            .split(separator: ";", omittingEmptySubsequences: true)
+            .map { URL(fileURLWithPath: String($0)).appendingPathComponent("git.exe") }
+            .first { FileManager.default.isExecutableFile(atPath: $0.path) }
+    )
+    process.executableURL = executable
+    process.arguments = arguments
+    #else
+    process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
+    process.arguments = ["git"] + arguments
+    #endif
+    process.currentDirectoryURL = URL(fileURLWithPath: directory)
+    let output = Pipe()
+    process.standardOutput = output
+    process.standardError = output
+    try process.run()
+    let data = output.fileHandleForReading.readDataToEndOfFile()
+    process.waitUntilExit()
+    guard process.terminationStatus == 0 else {
+        throw CocoaError(
+            .fileWriteUnknown,
+            userInfo: [NSLocalizedDescriptionKey: String(decoding: data, as: UTF8.self)]
+        )
+    }
 }
 
 struct SharedResolutionFixture: Decodable {

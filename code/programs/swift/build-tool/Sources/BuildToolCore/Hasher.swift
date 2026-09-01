@@ -66,6 +66,18 @@ private enum SourceHashInputError: Error {
     case limitExceeded
 }
 
+struct RepositoryBoundaryCandidate: Equatable, Sendable {
+    let path: String
+    let kind: String
+    let tracked: Bool
+    let content: Data
+}
+
+struct RepositoryBoundarySelectedFile: Equatable, Sendable {
+    let path: String
+    let digest: String
+}
+
 public enum Hasher {
     /// This is the production selector, not a test copy. The checked JSON is
     /// embedded into generated Swift source, decoded without filesystem or
@@ -73,6 +85,34 @@ public enum Hasher {
     static let languageSourceInputRegistry = LanguageSourceInputRegistryProjection.value
     static let languageSourceInputRegistryDigest =
         "f49bfe8c7c9c0fb9b534ecc9ca4a614f3684abe32bdb0edac82d99bdc806fb70"
+    static let repositorySourceInputBoundaryRegistry = RepositorySourceInputBoundaryProjection.value
+    static let repositorySourceInputBoundaryDigest =
+        "963cc4090e165752fd3a62921b699dfff8f0677b49d7236812398a8abed0a25f"
+    static var repositoryBoundaryRegisteredPaths: [String] {
+        repositorySourceInputBoundaryRegistry.registeredInputPaths
+    }
+
+    static func repositoryBoundaryPaths(
+        for packages: [BuildPackage],
+        repositoryRoot: String
+    ) -> [String] {
+        var paths = Set<String>()
+        for package in packages {
+            guard let packageRoot = try? repositoryPackagePath(
+                package.path,
+                repositoryRoot: repositoryRoot,
+                expectedLanguage: package.language
+            ) else {
+                continue
+            }
+            paths.formUnion(
+                repositorySourceInputBoundaryRegistry.inputPaths(
+                    packageRoot: packageRoot
+                )
+            )
+        }
+        return paths.sorted(by: utf8LessThan)
+    }
 
     private static let maximumCandidateCount = 100_000
     private static let maximumSelectedInputCount = 50_000
@@ -88,7 +128,8 @@ public enum Hasher {
 
     public static func hashPackage(
         _ package: BuildPackage,
-        repositoryRoot: String
+        repositoryRoot: String,
+        trackedRepositoryPaths: Set<String>? = nil
     ) throws -> String {
         do {
             let packageRoot = try repositoryPackagePath(
@@ -104,7 +145,16 @@ public enum Hasher {
                 package,
                 repositoryRoot: repositoryRoot
             )
-            let files = inputs.files
+            let boundaryPaths = repositorySourceInputBoundaryRegistry.inputPaths(
+                packageRoot: packageRoot
+            )
+            guard repositorySourceInputBoundaryRegistry.languageSourceInputRegistrySHA256
+                    == languageSourceInputRegistryDigest else {
+                throw SourceHashInputError.unsafePath
+            }
+            if !boundaryPaths.isEmpty, trackedRepositoryPaths == nil {
+                throw SourceHashInputError.unavailable
+            }
             guard try secureDirectoryState(
                 package.path,
                 repositoryRoot: repositoryRoot
@@ -114,10 +164,35 @@ public enum Hasher {
             var digest = SHA256Hasher()
             var fileStates: [(String, SecureObjectState)] = []
             var packageBytes: UInt64 = 0
-            for file in files {
+            var repositoryInputs: [String: String] = [:]
+            for file in inputs.files {
                 let relative = try portableRelativePath(file, root: package.path)
                 let repositoryPath = packageRoot + "/" + relative
                 try validatePortablePath(repositoryPath)
+                guard repositoryInputs.updateValue(file, forKey: repositoryPath) == nil else {
+                    throw SourceHashInputError.unsafePath
+                }
+            }
+            for repositoryPath in boundaryPaths
+                where trackedRepositoryPaths?.contains(repositoryPath) == true {
+                try validatePortablePath(repositoryPath)
+                let file = (repositoryRoot as NSString).appendingPathComponent(repositoryPath)
+                if let existing = repositoryInputs[repositoryPath], existing != file {
+                    throw SourceHashInputError.unsafePath
+                }
+                repositoryInputs[repositoryPath] = file
+            }
+            guard repositoryInputs.count <= maximumSelectedInputCount else {
+                throw SourceHashInputError.limitExceeded
+            }
+            var portableIdentities: [String: String] = [:]
+            for repositoryPath in repositoryInputs.keys {
+                try registerPortableIdentity(repositoryPath, in: &portableIdentities)
+            }
+            for repositoryPath in repositoryInputs.keys.sorted(by: utf8LessThan) {
+                guard let file = repositoryInputs[repositoryPath] else {
+                    throw SourceHashInputError.unavailable
+                }
                 let snapshot = try secureFileSnapshot(
                     file,
                     repositoryRoot: repositoryRoot
@@ -392,6 +467,15 @@ public enum Hasher {
         expectedLanguage: String
     ) throws -> String {
         let relative = try portableRelativePath(path, root: repositoryRoot)
+        try validateRepositoryPackageRoot(relative, expectedLanguage: expectedLanguage)
+        return relative
+    }
+
+    private static func validateRepositoryPackageRoot(
+        _ relative: String,
+        expectedLanguage: String
+    ) throws {
+        try validatePortablePath(relative)
         let components = relative.split(separator: "/").map(String.init)
         guard components.count >= 4,
               components[0] == "code",
@@ -399,8 +483,6 @@ public enum Hasher {
               components[2] == expectedLanguage else {
             throw SourceHashInputError.unsafePath
         }
-        try validatePortablePath(relative)
-        return relative
     }
 
     /// Incremental immediate-child enumeration applies the candidate ceiling
@@ -471,21 +553,81 @@ public enum Hasher {
     static func canonicalLanguageSourceInputRegistryDigest(
         from data: Data
     ) throws -> String {
+        try canonicalRegistryDigest(
+            from: data,
+            domain: "coding-adventures/build-tool-language-source-input-registry/v1"
+        )
+    }
+
+    static func canonicalRepositorySourceInputBoundaryDigest(
+        from data: Data
+    ) throws -> String {
+        try canonicalRegistryDigest(
+            from: data,
+            domain: "coding-adventures/build-tool-repository-source-input-boundary/v1"
+        )
+    }
+
+    private static func canonicalRegistryDigest(
+        from data: Data,
+        domain: String
+    ) throws -> String {
         let object = try JSONSerialization.jsonObject(with: data)
         let escapedCanonical = try JSONSerialization.data(
             withJSONObject: object,
             options: [.sortedKeys]
         )
         let canonical = jsonDataWithoutEscapedSlashes(escapedCanonical)
-        var framed = Data(
-            "coding-adventures/build-tool-language-source-input-registry/v1\0".utf8
-        )
+        var framed = Data((domain + "\0").utf8)
         var length = UInt64(canonical.count).bigEndian
         withUnsafeBytes(of: &length) { bytes in
             framed.append(contentsOf: bytes)
         }
         framed.append(canonical)
         return hash(data: framed)
+    }
+
+    static func selectRepositoryBoundaryCandidates(
+        language: String,
+        packageRoot: String,
+        boundaryDigest: String,
+        candidates: [RepositoryBoundaryCandidate]
+    ) throws -> [RepositoryBoundarySelectedFile] {
+        guard boundaryDigest == repositorySourceInputBoundaryDigest,
+              repositorySourceInputBoundaryRegistry.languageSourceInputRegistrySHA256
+                == languageSourceInputRegistryDigest,
+              candidates.count <= maximumCandidateCount else {
+            throw SourceHashInputError.unsafePath
+        }
+        try validateRepositoryPackageRoot(packageRoot, expectedLanguage: language)
+        let allowedPaths = Set(
+            repositorySourceInputBoundaryRegistry.inputPaths(packageRoot: packageRoot)
+        )
+        var identities: [String: String] = [:]
+        var exactPaths = Set<String>()
+        var selected: [RepositoryBoundarySelectedFile] = []
+        for candidate in candidates {
+            try validatePortablePath(candidate.path)
+            try registerPortableIdentity(candidate.path, in: &identities)
+            guard exactPaths.insert(candidate.path).inserted,
+                  ["file", "symlink", "reparse_point"].contains(candidate.kind) else {
+                throw SourceHashInputError.unsafePath
+            }
+            if candidate.kind == "file",
+               candidate.tracked,
+               allowedPaths.contains(candidate.path) {
+                selected.append(
+                    RepositoryBoundarySelectedFile(
+                        path: candidate.path,
+                        digest: hash(data: candidate.content)
+                    )
+                )
+            }
+        }
+        guard selected.count <= maximumSelectedInputCount else {
+            throw SourceHashInputError.limitExceeded
+        }
+        return selected.sorted { utf8LessThan($0.path, $1.path) }
     }
 
     /// Match JSONSerialization.WritingOptions.withoutEscapingSlashes without
