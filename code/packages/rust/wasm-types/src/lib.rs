@@ -45,6 +45,11 @@
 //! A ground-up implementation of the computing stack from transistors to
 //! operating systems, written in multiple languages for learning purposes.
 
+// W34 first slice (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`):
+// `CanonicalGroup`'s own `Rc`-backed sharing (see that type's doc comment
+// for why `Rc`, not an owned/boxed copy, at every embed site).
+use std::rc::Rc;
+
 // ──────────────────────────────────────────────────────────────────────────────
 // ValueType
 // ──────────────────────────────────────────────────────────────────────────────
@@ -1756,6 +1761,389 @@ impl WasmModule {
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
+// W34 first slice: canonical type-group equivalence -- singleton groups only
+// ──────────────────────────────────────────────────────────────────────────────
+//
+// `code/specs/W34-wasm-gc-canonical-type-equivalence.md` (grounded in the
+// real WasmGC proposal's `MVP.md` and the reference interpreter's actual
+// `interpreter/syntax/types.ml`/`interpreter/valid/match.ml`) is the real
+// canonicalization algorithm: recognizing two separately-declared `(rec
+// ...)` groups as "the same type" whenever their SHAPES match, even across
+// modules that share no numbering at all. This slice implements exactly the
+// narrowest non-trivial piece of it -- `rec_group_size == 1` groups only
+// (every plain, non-`rec`-wrapped `(type ...)` field, AND every explicit
+// `(rec (type ...))` with exactly one member) -- proving the De Bruijn
+// "rolling"/`Rec` marker mechanism (a self-reference becomes `Rec(0)`, not
+// an absolute index) and the cross-module comparability property it exists
+// for, before attempting real multi-member De Bruijn numbering (deferred to
+// a later slice; see the spec's own "Recommended slice decomposition").
+
+/// A self-contained, De-Bruijn-tied value tree for one `rec` group's worth
+/// of composite types -- comparable via ordinary structural equality
+/// (`PartialEq`/`Eq`/`Hash` all derived, exactly like OCaml's polymorphic
+/// `=` in the reference interpreter's own `match_def_type`) across TWO
+/// DIFFERENT [`WasmModule`]s with no shared numbering at all, per the real
+/// WasmGC proposal's canonicalization algorithm (MVP.md's own Note 2:
+/// "type equivalence checks can be implemented in constant-time by
+/// representing all types as trees in tied form and canonicalising them
+/// bottom-up in linear time upfront").
+///
+/// This slice (W34 first slice) only ever constructs a `CanonicalGroup`
+/// with exactly one member -- `members.len() == 1` always holds for every
+/// value this slice produces -- since only `rec_group_size == 1` groups are
+/// in scope; a future slice's real multi-member De Bruijn numbering will
+/// populate `members` with more than one [`CanonicalSubtype`] without this
+/// type itself needing to change shape.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct CanonicalGroup {
+    pub members: Vec<CanonicalSubtype>,
+}
+
+/// One member of a [`CanonicalGroup`] -- the tied form of a single `(sub
+/// final? $parent? (comptype))` declaration (MVP.md, `#### Equivalence`:
+/// "two subtypes are equivalent if their structure is equivalent, they
+/// have equivalent supertypes, and their finality flag matches").
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct CanonicalSubtype {
+    pub is_final: bool,
+    /// The declared `sub $parent` supertype, tied the same way the body
+    /// is: [`CanonicalHeapRef::Rec`] for an (extremely unusual, and
+    /// rejected elsewhere by `wasm-validator`'s own acyclicity check
+    /// before this ever runs) in-group self-supertype, [`CanonicalHeapRef::
+    /// Outer`] for a reference to an earlier, already-canonicalized group.
+    /// `None` for no declared supertype.
+    pub supertype: Option<CanonicalHeapRef>,
+    pub comp: CanonicalCompType,
+}
+
+/// The tied form of a `comptype` body -- mirrors [`FuncType`]/
+/// [`StructType`]/[`ArrayType`], but every concrete/self/group reference
+/// inside has been resolved to a [`CanonicalHeapRef`] instead of a raw flat
+/// type-section index.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub enum CanonicalCompType {
+    Func(Vec<CanonicalValType>, Vec<CanonicalValType>),
+    Struct(Vec<CanonicalFieldType>),
+    Array(CanonicalFieldType),
+}
+
+/// Mirrors [`FieldType`], with `storage`'s own index (if any) tied.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct CanonicalFieldType {
+    pub storage: CanonicalStorageType,
+    pub mutable: bool,
+}
+
+/// Mirrors [`StorageType`] -- `I8`/`I16` carry no index to tie, so only the
+/// `Val` arm's inner [`CanonicalValType`] differs from its untied source.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub enum CanonicalStorageType {
+    Val(CanonicalValType),
+    I8,
+    I16,
+}
+
+/// Mirrors [`ValueType`], with every concrete/self/group reference resolved
+/// to a [`CanonicalHeapRef`] and every abstract heap type folded into
+/// [`AbstractHeapKind`] -- so two [`ValueType`] values that spell the same
+/// real type differently (e.g. `Anyref` is always exactly one shape, but a
+/// concrete `StructRef(3)` in one module and `StructRef(9)` in an unrelated
+/// one can still tie to the identical `CanonicalValType`) compare equal
+/// once tied.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub enum CanonicalValType {
+    I32,
+    I64,
+    F32,
+    F64,
+    V128,
+    /// `true` = nullable (`StructRef`-shaped source variants); `false` =
+    /// non-null (`NonNullStructRef`-shaped ones) -- see
+    /// [`canonicalize_value_type`]'s own exhaustive match for the full
+    /// per-[`ValueType`]-variant mapping.
+    Ref(bool, CanonicalHeapRef),
+}
+
+/// The abstract (non-index-carrying) WasmGC heap-type kinds this crate's
+/// [`ValueType`] can express. `Eq` and `Struct` (the abstract top of the
+/// struct hierarchy) have no corresponding [`ValueType`] variant in this
+/// crate today (no bare `eqref`/`(ref struct)` support yet) but are
+/// included for the same "model the real GC proposal's full lattice, not
+/// just what's reachable today" reason [`ValueType::NonNullArrayAny`]'s own
+/// doc comment gives for the `array` top type it already models -- adding
+/// them now costs nothing and avoids a second enum-widening pass later.
+/// `Exn`/`NoExn` are NOT in the WasmGC proposal's own MVP.md lattice at all
+/// (they're the separate exception-handling proposal's own heap types,
+/// W24: `code/specs/W24-wasm-exceptions-exnref-catch-ref.md`) -- included
+/// here because this crate's own [`ValueType::Exnref`]/[`ValueType::
+/// NullExnref`] already exist and a canonicalizer that panics or silently
+/// mismodels them on first contact would be a real, not merely
+/// theoretical, gap (this spec's own design section's `AbstractHeapKind`
+/// sketch predates `Exnref` being re-checked against the current code and
+/// listed only the ten proposal-native kinds; the addendum records this
+/// as the one place re-verification found the design section itself needed
+/// correcting, not just re-confirming).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum AbstractHeapKind {
+    Any,
+    Eq,
+    I31,
+    Struct,
+    Array,
+    Func,
+    None,
+    Extern,
+    NoExtern,
+    NoFunc,
+    Exn,
+    NoExn,
+}
+
+/// A resolved heap-type reference within a tied [`CanonicalGroup`] --
+/// either an abstract kind, a De Bruijn self/in-group reference, or a
+/// wholesale-embedded earlier group.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub enum CanonicalHeapRef {
+    Abstract(AbstractHeapKind),
+    /// A reference within the SAME group being tied (MVP.md's "rolling"/
+    /// "tying" -- `interpreter/syntax/types.ml`'s `roll_rec_type`). This
+    /// slice only ever produces `Rec(0)`, the only value a singleton group
+    /// can exercise; a future multi-member slice's own numbering will
+    /// produce every `0..N-1`.
+    Rec(u32),
+    /// A reference to an EARLIER group, embedded wholesale (already fully
+    /// tied/closed when it was computed -- `match.ml`'s `subst_of`: "embed
+    /// that earlier group's already-rolled `def_type` value wholesale, one
+    /// level, and stops"), plus this reference's own position within that
+    /// group (always `0` for anything this slice produces, since every
+    /// group this slice can even SEE is itself a singleton).
+    ///
+    /// `Rc`, not the design sketch's `Box` -- `Rc` (not an owned clone) is
+    /// the right choice at every embed site, not just the top-level
+    /// per-index one (`wasm-validator::ValidatedModule`'s own cache, added
+    /// alongside this crate by this same slice): a `Box` here would
+    /// deep-clone the entire referenced group's tree every time it's
+    /// embedded, so a module with
+    /// several singleton groups each referencing the SAME earlier one
+    /// (`type-rec.wast`'s "Static matching" module references `$f1`/`$f2`
+    /// several times each) would duplicate that shared subtree once per
+    /// reference; `Rc` shares the one already-computed allocation instead,
+    /// while `derive(PartialEq, Eq, Hash)` still compares/hashes through
+    /// to the pointee's CONTENTS (never the pointer), so equivalence
+    /// across two independently-`Rc`-allocated but structurally-identical
+    /// groups (the whole point of a cross-module comparison) is
+    /// unaffected by this choice.
+    Outer(Rc<CanonicalGroup>, u32),
+}
+
+/// One flat type-section index's real composite-type payload, resolved the
+/// same `type_kinds`-aware-first, legacy-offset-fallback way
+/// [`WasmModule::struct_type_at`]/[`WasmModule::array_type_at`] already do
+/// -- a small local enum so [`canonicalize_types`] can build a
+/// [`CanonicalCompType`] from whichever of `types`/`struct_types`/
+/// `array_types` actually holds this index's data, without three separate
+/// near-identical call sites.
+enum CompTypeRef<'a> {
+    Func(&'a FuncType),
+    Struct(&'a StructType),
+    Array(&'a ArrayType),
+}
+
+fn comp_type_at(module: &WasmModule, idx: u32) -> Option<CompTypeRef<'_>> {
+    match module.type_kind_at(idx) {
+        Some(TypeKind::Func) => module.types.get(idx as usize).map(CompTypeRef::Func),
+        Some(TypeKind::Struct(_)) => module.struct_type_at(idx).map(CompTypeRef::Struct),
+        Some(TypeKind::Array(_)) => module.array_type_at(idx).map(CompTypeRef::Array),
+        None if module.type_kinds.is_empty() => {
+            let types_len = module.types.len();
+            let struct_len = module.struct_types.len();
+            if (idx as usize) < types_len {
+                module.types.get(idx as usize).map(CompTypeRef::Func)
+            } else if (idx as usize) < types_len + struct_len {
+                module.struct_type_at(idx).map(CompTypeRef::Struct)
+            } else {
+                module.array_type_at(idx).map(CompTypeRef::Array)
+            }
+        }
+        None => None,
+    }
+}
+
+/// The total number of flat type-section indices this module declares --
+/// `types.len()` when `type_kinds` covers the whole type section (every
+/// struct/array-kind entry already occupies a dummy `FuncType` slot in
+/// `types` too, per [`TypeKind`]'s own doc comment, so `types.len()` IS the
+/// true flat count in that case), or the legacy `types.len() +
+/// struct_types.len() + array_types.len()` sum when `type_kinds` is empty
+/// (the binary decoder's convention, and every hand-built `WasmModule`
+/// literal that predates `type_kinds`).
+fn total_type_count(module: &WasmModule) -> usize {
+    if module.type_kinds.is_empty() {
+        module.types.len() + module.struct_types.len() + module.array_types.len()
+    } else {
+        module.types.len()
+    }
+}
+
+/// Resolves a single reference (by flat type-section index) into a
+/// [`CanonicalHeapRef`], given the OWN index of the type doing the
+/// referencing (`self_idx`) and every EARLIER index's already-computed
+/// canonical form (`canonical_so_far`, indexed the same way the final
+/// result of [`canonicalize_types`] is).
+///
+/// - `target_idx == self_idx` -- a self-reference, the only in-group
+///   reference a singleton group can express -- ties to `Rec(0)`.
+/// - Otherwise, `canonical_so_far[target_idx]` must already hold a computed
+///   `Some((group, position))` (guaranteed for any in-range, EARLIER
+///   singleton group, since [`canonicalize_types`] processes flat indices
+///   in strictly increasing order and a validated module's own `sub`/`rec`
+///   forward-reference rule -- already enforced by `wasm-wast-parser`/
+///   `wasm-validator` before this ever runs -- means a type can only
+///   reference an index in `[0, self_idx]`) -- embeds that group wholesale
+///   via [`CanonicalHeapRef::Outer`].
+/// - Anything else (out of range, or a reference into a `rec_group_size >
+///   1` group this slice does not canonicalize) returns `None` -- this
+///   type's own canonical form is therefore ALSO `None` (see
+///   [`canonicalize_types`]'s use of `?`), never a wrong or partial value:
+///   a caller sees "not yet canonicalized," never a silently-incomplete
+///   tree. This is also this function's whole answer to "what if a
+///   caller hands in indices that don't actually satisfy the ordering
+///   invariant" (an unvalidated, hand-built `WasmModule`, say, with a
+///   forward or out-of-bounds reference): there is no recursion here at
+///   all -- only a single array index into ALREADY-COMPUTED entries -- so
+///   a malformed index can only ever produce `None` (an honest "can't
+///   canonicalize this"), never a panic, an infinite loop, or a stack
+///   overflow.
+fn resolve_heap_index(target_idx: u32, self_idx: u32, canonical_so_far: &[Option<(Rc<CanonicalGroup>, u32)>]) -> Option<CanonicalHeapRef> {
+    if target_idx == self_idx {
+        return Some(CanonicalHeapRef::Rec(0));
+    }
+    let (group, position) = canonical_so_far.get(target_idx as usize)?.as_ref()?;
+    Some(CanonicalHeapRef::Outer(Rc::clone(group), *position))
+}
+
+/// Ties one [`ValueType`] -- the full, exhaustive per-variant mapping this
+/// slice's `CanonicalValType`/`CanonicalHeapRef`/`AbstractHeapKind` design
+/// exists for. `None` propagates a [`resolve_heap_index`] failure (an
+/// unresolvable concrete reference) up to the caller unchanged.
+fn canonicalize_value_type(vt: ValueType, self_idx: u32, canonical_so_far: &[Option<(Rc<CanonicalGroup>, u32)>]) -> Option<CanonicalValType> {
+    use AbstractHeapKind as A;
+    use CanonicalHeapRef::Abstract;
+    Some(match vt {
+        ValueType::I32 => CanonicalValType::I32,
+        ValueType::I64 => CanonicalValType::I64,
+        ValueType::F32 => CanonicalValType::F32,
+        ValueType::F64 => CanonicalValType::F64,
+        ValueType::V128 => CanonicalValType::V128,
+        ValueType::Anyref => CanonicalValType::Ref(true, Abstract(A::Any)),
+        // Non-null in this crate -- see `ValueType::I31ref`'s own doc
+        // comment ("(ref i31)", not "(ref null i31)").
+        ValueType::I31ref => CanonicalValType::Ref(false, Abstract(A::I31)),
+        ValueType::Funcref => CanonicalValType::Ref(true, Abstract(A::Func)),
+        ValueType::Externref => CanonicalValType::Ref(true, Abstract(A::Extern)),
+        ValueType::Exnref => CanonicalValType::Ref(true, Abstract(A::Exn)),
+        ValueType::NullFuncref => CanonicalValType::Ref(true, Abstract(A::NoFunc)),
+        ValueType::NullExternref => CanonicalValType::Ref(true, Abstract(A::NoExtern)),
+        ValueType::NullExnref => CanonicalValType::Ref(true, Abstract(A::NoExn)),
+        ValueType::NullRef => CanonicalValType::Ref(true, Abstract(A::None)),
+        ValueType::NonNullArrayAny => CanonicalValType::Ref(false, Abstract(A::Array)),
+        ValueType::StructRef(i) => CanonicalValType::Ref(true, resolve_heap_index(i, self_idx, canonical_so_far)?),
+        ValueType::ConcreteFuncRef(i) => CanonicalValType::Ref(true, resolve_heap_index(i, self_idx, canonical_so_far)?),
+        ValueType::ArrayRef(i) => CanonicalValType::Ref(true, resolve_heap_index(i, self_idx, canonical_so_far)?),
+        ValueType::NonNullStructRef(i) => CanonicalValType::Ref(false, resolve_heap_index(i, self_idx, canonical_so_far)?),
+        ValueType::NonNullConcreteFuncRef(i) => CanonicalValType::Ref(false, resolve_heap_index(i, self_idx, canonical_so_far)?),
+        ValueType::NonNullArrayRef(i) => CanonicalValType::Ref(false, resolve_heap_index(i, self_idx, canonical_so_far)?),
+    })
+}
+
+fn canonicalize_field_type(f: FieldType, self_idx: u32, canonical_so_far: &[Option<(Rc<CanonicalGroup>, u32)>]) -> Option<CanonicalFieldType> {
+    let storage = match f.storage {
+        StorageType::I8 => CanonicalStorageType::I8,
+        StorageType::I16 => CanonicalStorageType::I16,
+        StorageType::Val(vt) => CanonicalStorageType::Val(canonicalize_value_type(vt, self_idx, canonical_so_far)?),
+    };
+    Some(CanonicalFieldType { storage, mutable: f.mutable })
+}
+
+fn canonicalize_comp_type(module: &WasmModule, idx: u32, canonical_so_far: &[Option<(Rc<CanonicalGroup>, u32)>]) -> Option<CanonicalCompType> {
+    match comp_type_at(module, idx)? {
+        CompTypeRef::Func(ft) => {
+            let params = ft.params.iter().map(|vt| canonicalize_value_type(*vt, idx, canonical_so_far)).collect::<Option<Vec<_>>>()?;
+            let results = ft.results.iter().map(|vt| canonicalize_value_type(*vt, idx, canonical_so_far)).collect::<Option<Vec<_>>>()?;
+            Some(CanonicalCompType::Func(params, results))
+        }
+        CompTypeRef::Struct(st) => {
+            let fields = st.fields.iter().map(|f| canonicalize_field_type(*f, idx, canonical_so_far)).collect::<Option<Vec<_>>>()?;
+            Some(CanonicalCompType::Struct(fields))
+        }
+        CompTypeRef::Array(at) => Some(CanonicalCompType::Array(canonicalize_field_type(at.element, idx, canonical_so_far)?)),
+    }
+}
+
+/// Builds the one-member [`CanonicalGroup`] for the singleton group
+/// starting (and ending) at flat type-section index `idx`, or `None` if any
+/// reference inside it can't yet be resolved (see [`resolve_heap_index`]'s
+/// own doc comment for the only two ways that happens).
+fn build_singleton_canonical(module: &WasmModule, idx: u32, canonical_so_far: &[Option<(Rc<CanonicalGroup>, u32)>]) -> Option<CanonicalGroup> {
+    let ts = module.type_subtyping_at(idx);
+    let supertype = match ts.supertype {
+        Some(sup_idx) => Some(resolve_heap_index(sup_idx, idx, canonical_so_far)?),
+        None => None,
+    };
+    let comp = canonicalize_comp_type(module, idx, canonical_so_far)?;
+    Some(CanonicalGroup { members: vec![CanonicalSubtype { is_final: ts.is_final, supertype, comp }] })
+}
+
+/// Computes this module's own canonical type-group forms -- W34 first
+/// slice: singleton (`rec_group_size == 1`) groups only. One entry per flat
+/// type-section index (`total_type_count` long); `None` at any index that
+/// belongs to a `rec_group_size > 1` group (multi-member De Bruijn
+/// numbering is a later slice's job -- see the spec's own "Recommended
+/// slice decomposition"), or whose body/supertype couldn't be resolved
+/// (see [`resolve_heap_index`]).
+///
+/// Processes flat indices in strictly increasing order, and -- critically
+/// for both correctness and termination -- NEVER recurses into an earlier
+/// group's own computation while computing a later one: each singleton's
+/// canonical form is built by looking up already-finished entries in
+/// `out` (the reference interpreter's own incremental, group-ordered
+/// design -- `interpreter/valid/valid.ml`'s `check_rec_type`, called once
+/// per group with the running context so far). A self-reference inside the
+/// group being built ties to `Rec(0)` (checked BEFORE the "look up an
+/// earlier entry" path, so it never even attempts to index `out` at its
+/// own not-yet-pushed position). There is therefore no recursive descent
+/// of any kind in this function or anything it calls -- no cyclic or
+/// self-referential type structure can make this loop, panic, or overflow
+/// the stack, regardless of whether the module was ever validated (see
+/// [`resolve_heap_index`]'s own doc comment for the full argument).
+///
+/// The natural, non-disruptive caching point for this is `wasm-validator`'s
+/// `ValidatedModule` (see that crate's own `validate()`, called right after
+/// `check_type_subtyping_is_acyclic` succeeds -- canonicalization's
+/// termination argument above already assumes references only ever point
+/// at an earlier-or-same index, exactly what that acyclicity/ordering
+/// check establishes) -- NOT a field on `WasmModule` itself, so an
+/// unvalidated module can never carry a stale or attacker-supplied
+/// `canonical_types` value.
+pub fn canonicalize_types(module: &WasmModule) -> Vec<Option<(Rc<CanonicalGroup>, u32)>> {
+    let n = total_type_count(module);
+    let mut out: Vec<Option<(Rc<CanonicalGroup>, u32)>> = Vec::with_capacity(n);
+    for idx in 0..n as u32 {
+        let ts = module.type_subtyping_at(idx);
+        if ts.rec_group_size != 1 || ts.rec_group_position != 0 {
+            // Not a singleton group (or malformed metadata claiming to be
+            // one while disagreeing about its own position) -- out of
+            // scope for this slice, or simply unrepresentable.
+            out.push(None);
+            continue;
+        }
+        let canonical = build_singleton_canonical(module, idx, &out).map(|g| (Rc::new(g), 0u32));
+        out.push(canonical);
+    }
+    out
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
 // Tests
 // ──────────────────────────────────────────────────────────────────────────────
 
@@ -2761,5 +3149,348 @@ mod tests {
         assert_eq!(m.type_group_shape(1), (2, 1));
         // Out of range falls back to the singleton default.
         assert_eq!(m.type_group_shape(5), (1, 0));
+    }
+
+    // ────────────────────────────────────────────────────────────────────
+    // W34 first slice: canonical type-group equivalence, singleton groups
+    // ────────────────────────────────────────────────────────────────────
+
+    /// `type-rec.wast` line 4: `(type (func (param (ref 0)) (result (ref
+    /// 0))))` -- a flat, non-`rec`-wrapped self-referencing type. The ONLY
+    /// in-group reference a singleton group can express must tie to
+    /// `Rec(0)`, never a raw absolute index.
+    #[test]
+    fn self_referencing_singleton_ties_to_rec_zero() {
+        let m = WasmModule {
+            types: vec![FuncType { params: vec![ValueType::ConcreteFuncRef(0)], results: vec![ValueType::ConcreteFuncRef(0)] }],
+            type_subtyping: vec![TypeSubtyping::default()],
+            ..Default::default()
+        };
+        let canonical = canonicalize_types(&m);
+        assert_eq!(canonical.len(), 1);
+        let (group, pos) = canonical[0].as_ref().expect("singleton self-reference must canonicalize");
+        assert_eq!(*pos, 0);
+        assert_eq!(
+            group.members,
+            vec![CanonicalSubtype {
+                is_final: true,
+                supertype: None,
+                comp: CanonicalCompType::Func(
+                    vec![CanonicalValType::Ref(true, CanonicalHeapRef::Rec(0))],
+                    vec![CanonicalValType::Ref(true, CanonicalHeapRef::Rec(0))],
+                ),
+            }]
+        );
+    }
+
+    /// `type-rec.wast` line 14: `(rec (type $g (func (param (ref $g))
+    /// (result (ref $g)))))` -- an EXPLICIT singleton `rec` group
+    /// self-referencing. Must tie identically to the implicit-singleton
+    /// case above (same `Rec(0)` marker) -- the whole point of "singleton
+    /// group" being one concept regardless of `rec`-wrapping syntax.
+    #[test]
+    fn explicit_singleton_rec_group_self_reference_ties_the_same_as_implicit() {
+        let explicit = WasmModule {
+            types: vec![FuncType { params: vec![ValueType::ConcreteFuncRef(0)], results: vec![ValueType::ConcreteFuncRef(0)] }],
+            type_subtyping: vec![TypeSubtyping { rec_group_size: 1, rec_group_position: 0, ..Default::default() }],
+            ..Default::default()
+        };
+        let implicit = WasmModule {
+            types: vec![FuncType { params: vec![ValueType::ConcreteFuncRef(0)], results: vec![ValueType::ConcreteFuncRef(0)] }],
+            type_subtyping: vec![TypeSubtyping::default()],
+            ..Default::default()
+        };
+        assert_eq!(canonicalize_types(&explicit), canonicalize_types(&implicit));
+    }
+
+    /// Cross-module comparability -- the whole point of canonicalization
+    /// (MVP.md's own "no shared numbering needed" promise). Two
+    /// INDEPENDENTLY-constructed `WasmModule`s, with the self-referencing
+    /// type sitting at completely different flat indices (padded with
+    /// unrelated leading types in the second module), must still tie to
+    /// byte-identical `CanonicalGroup` values.
+    #[test]
+    fn two_independently_indexed_isomorphic_singletons_canonicalize_identically() {
+        let module_a = WasmModule {
+            types: vec![FuncType { params: vec![ValueType::ConcreteFuncRef(0)], results: vec![] }],
+            type_subtyping: vec![TypeSubtyping::default()],
+            ..Default::default()
+        };
+        // module_b: the SAME self-referencing shape, but at flat index 3,
+        // preceded by three unrelated plain `i32 -> i32` singleton types --
+        // no shared numbering with module_a at all.
+        let padding = FuncType { params: vec![ValueType::I32], results: vec![ValueType::I32] };
+        let module_b = WasmModule {
+            types: vec![
+                padding.clone(),
+                padding.clone(),
+                padding,
+                FuncType { params: vec![ValueType::ConcreteFuncRef(3)], results: vec![] },
+            ],
+            type_subtyping: vec![TypeSubtyping::default(); 4],
+            ..Default::default()
+        };
+        let canonical_a = canonicalize_types(&module_a);
+        let canonical_b = canonicalize_types(&module_b);
+        assert_eq!(canonical_a[0], canonical_b[3]);
+        // Sanity: the padding types (plain i32->i32, no self-reference) are
+        // themselves canonicalized too, and are NOT equal to the
+        // self-referencing shape.
+        assert_ne!(canonical_b[0], canonical_b[3]);
+    }
+
+    /// Two singleton groups with genuinely different shapes (one
+    /// self-referencing, one a plain `i32 -> i32`) must NOT canonicalize
+    /// equal -- a canonicalizer that's too permissive (e.g. one that
+    /// ignores the operand entirely) would silently defeat the whole
+    /// mechanism's purpose.
+    #[test]
+    fn genuinely_different_shapes_do_not_canonicalize_equal() {
+        let self_ref = WasmModule {
+            types: vec![FuncType { params: vec![ValueType::ConcreteFuncRef(0)], results: vec![] }],
+            type_subtyping: vec![TypeSubtyping::default()],
+            ..Default::default()
+        };
+        let plain = WasmModule {
+            types: vec![FuncType { params: vec![ValueType::I32], results: vec![] }],
+            type_subtyping: vec![TypeSubtyping::default()],
+            ..Default::default()
+        };
+        assert_ne!(canonicalize_types(&self_ref)[0], canonicalize_types(&plain)[0]);
+    }
+
+    /// `type-equivalence.wast` lines 6-7: `$t1 (func (param f32 f32)
+    /// (result f32))` vs `$t2 (func (param $x f32) (param $y f32) (result
+    /// f32))` -- identical bodies, differing only in whether params carry a
+    /// (this crate doesn't even model) name. `ValueType` never carries
+    /// parameter names to begin with, so this is a direct proof that the
+    /// representation "throws away irrelevant syntax" the spec's own
+    /// slice-1 corpus citation calls for.
+    #[test]
+    fn identical_bodies_canonicalize_equal_regardless_of_declared_param_names() {
+        // Both `$t1`/`$t2` collapse to the same `FuncType { params: [F32,
+        // F32], results: [F32] }` by the time they reach `wasm_types` --
+        // parameter names are a `wasm-wast-parser`-only, symbol-table-only
+        // concept. Two SEPARATE singleton types with that identical body
+        // must canonicalize equal.
+        let m = WasmModule {
+            types: vec![
+                FuncType { params: vec![ValueType::F32, ValueType::F32], results: vec![ValueType::F32] },
+                FuncType { params: vec![ValueType::F32, ValueType::F32], results: vec![ValueType::F32] },
+            ],
+            type_subtyping: vec![TypeSubtyping::default(); 2],
+            ..Default::default()
+        };
+        let canonical = canonicalize_types(&m);
+        assert_eq!(canonical[0], canonical[1]);
+    }
+
+    /// `type-equivalence.wast`'s "Indirect types" module: a chain of
+    /// non-self-referencing singleton groups (`$s0`, `$s1` referencing
+    /// `$s0`). Two independently-built chains with isomorphic shapes but
+    /// no shared numbering must canonicalize equal at every step of the
+    /// chain, proving `Outer` embedding (not just `Rec` self-reference)
+    /// works across modules too.
+    #[test]
+    fn chained_non_self_referencing_singletons_canonicalize_equal_across_modules() {
+        fn build(offset: u32) -> WasmModule {
+            // `offset` leading unrelated padding types, then:
+            //   s0 = (func (param i32) (result f32))
+            //   s1 = (func (param i32 (ref s0)) (result (ref s0)))
+            let padding = FuncType { params: vec![], results: vec![] };
+            let mut types = vec![padding; offset as usize];
+            types.push(FuncType { params: vec![ValueType::I32], results: vec![ValueType::F32] });
+            let s0 = offset;
+            types.push(FuncType {
+                params: vec![ValueType::I32, ValueType::ConcreteFuncRef(s0)],
+                results: vec![ValueType::ConcreteFuncRef(s0)],
+            });
+            WasmModule { type_subtyping: vec![TypeSubtyping::default(); types.len()], types, ..Default::default() }
+        }
+        let module_a = build(0);
+        let module_b = build(5);
+        let canonical_a = canonicalize_types(&module_a);
+        let canonical_b = canonicalize_types(&module_b);
+        assert_eq!(canonical_a[0], canonical_b[5]); // s0 == s0
+        assert_eq!(canonical_a[1], canonical_b[6]); // s1 == s1
+    }
+
+    /// Multi-member `rec` groups are explicitly OUT OF SCOPE for this
+    /// slice (deferred to a later one) -- every member of a
+    /// `rec_group_size > 1` group must canonicalize to `None`, never a
+    /// wrong/partial value.
+    #[test]
+    fn multi_member_rec_groups_are_not_canonicalized_by_this_slice() {
+        let m = WasmModule {
+            types: vec![
+                FuncType { params: vec![], results: vec![] },
+                FuncType { params: vec![], results: vec![] },
+            ],
+            type_subtyping: vec![
+                TypeSubtyping { rec_group_size: 2, rec_group_position: 0, ..Default::default() },
+                TypeSubtyping { rec_group_size: 2, rec_group_position: 1, ..Default::default() },
+            ],
+            ..Default::default()
+        };
+        let canonical = canonicalize_types(&m);
+        assert_eq!(canonical, vec![None, None]);
+    }
+
+    /// A singleton type referencing a MULTI-MEMBER group's member: that
+    /// reference can't be tied (the target's own canonical form doesn't
+    /// exist in this slice), so the REFERRING singleton also canonicalizes
+    /// to `None` -- never a tree with a dangling/wrong reference baked in.
+    #[test]
+    fn a_singleton_referencing_an_uncanonicalized_multi_member_group_is_also_none() {
+        let m = WasmModule {
+            types: vec![
+                FuncType { params: vec![], results: vec![] },
+                FuncType { params: vec![], results: vec![] },
+                FuncType { params: vec![ValueType::ConcreteFuncRef(0)], results: vec![] },
+            ],
+            type_subtyping: vec![
+                TypeSubtyping { rec_group_size: 2, rec_group_position: 0, ..Default::default() },
+                TypeSubtyping { rec_group_size: 2, rec_group_position: 1, ..Default::default() },
+                TypeSubtyping::default(),
+            ],
+            ..Default::default()
+        };
+        let canonical = canonicalize_types(&m);
+        assert_eq!(canonical[0], None);
+        assert_eq!(canonical[1], None);
+        assert_eq!(canonical[2], None);
+    }
+
+    /// Declared `sub`/finality metadata is part of a type's real canonical
+    /// identity (MVP.md: "their finality flag matches") -- two otherwise
+    /// byte-identical bodies with different `is_final` must NOT
+    /// canonicalize equal, and a declared supertype must tie the same way
+    /// the body does.
+    #[test]
+    fn finality_and_declared_supertype_are_part_of_canonical_identity() {
+        let base = FuncType { params: vec![], results: vec![] };
+        let child = FuncType { params: vec![ValueType::NonNullConcreteFuncRef(0)], results: vec![] };
+        let open = WasmModule {
+            types: vec![base.clone(), child.clone()],
+            type_subtyping: vec![
+                TypeSubtyping { is_final: false, ..Default::default() },
+                TypeSubtyping { supertype: Some(0), is_final: true, ..Default::default() },
+            ],
+            ..Default::default()
+        };
+        let mut final_base = open.clone();
+        final_base.type_subtyping[0].is_final = true;
+
+        let canonical_open = canonicalize_types(&open);
+        let canonical_final = canonicalize_types(&final_base);
+        // The supertype (index 0) differs only in `is_final` -- must not
+        // canonicalize equal.
+        assert_ne!(canonical_open[0], canonical_final[0]);
+        // The child (index 1) embeds index 0 wholesale via `Outer` -- since
+        // index 0's OWN canonical form differs between the two modules,
+        // the child's canonical form (which contains it) must differ too.
+        assert_ne!(canonical_open[1], canonical_final[1]);
+        // The child's own declared supertype really did tie to an `Outer`
+        // reference, not get dropped.
+        let (child_group, _) = canonical_open[1].as_ref().unwrap();
+        assert!(matches!(child_group.members[0].supertype, Some(CanonicalHeapRef::Outer(_, 0))));
+    }
+
+    /// Defensive/security: a malformed module (out-of-range supertype
+    /// index) canonicalizes that one entry to `None` rather than panicking
+    /// -- `canonicalize_types` never assumes its input was validated.
+    #[test]
+    fn out_of_range_supertype_canonicalizes_to_none_without_panicking() {
+        let m = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }],
+            type_subtyping: vec![TypeSubtyping { supertype: Some(999), is_final: false, ..Default::default() }],
+            ..Default::default()
+        };
+        assert_eq!(canonicalize_types(&m), vec![None]);
+    }
+
+    /// Defensive/security: a self-referential declared supertype (`(sub
+    /// $self (func))`, nonsensical and rejected elsewhere by
+    /// `wasm-validator`'s acyclicity check, but `canonicalize_types` itself
+    /// must never assume that check already ran) ties to `Rec(0)` rather
+    /// than looping or panicking -- there is no recursion in this
+    /// function at all, so this can't loop regardless.
+    #[test]
+    fn self_referential_supertype_ties_to_rec_zero_without_looping() {
+        let m = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }],
+            type_subtyping: vec![TypeSubtyping { supertype: Some(0), is_final: false, ..Default::default() }],
+            ..Default::default()
+        };
+        let canonical = canonicalize_types(&m);
+        let (group, _) = canonical[0].as_ref().expect("self-referential supertype still resolves");
+        assert_eq!(group.members[0].supertype, Some(CanonicalHeapRef::Rec(0)));
+    }
+
+    /// A module with struct/array composite kinds (W33 fourth slice)
+    /// canonicalizes those bodies too, not just `FuncType` ones --
+    /// canonical equivalence is not a func-only concept.
+    #[test]
+    fn struct_and_array_bodies_canonicalize_and_compare_by_content() {
+        let struct_ty = StructType { fields: vec![FieldType::plain(ValueType::I32, true), FieldType { storage: StorageType::I8, mutable: false }] };
+        let array_ty = ArrayType { element: FieldType::plain(ValueType::F64, false) };
+        let m = WasmModule {
+            types: vec![
+                FuncType { params: vec![], results: vec![] }, // dummy slot for the struct
+                FuncType { params: vec![], results: vec![] }, // dummy slot for the array
+            ],
+            type_kinds: vec![TypeKind::Struct(0), TypeKind::Array(0)],
+            struct_types: vec![struct_ty.clone()],
+            array_types: vec![array_ty.clone()],
+            type_subtyping: vec![TypeSubtyping::default(); 2],
+            ..Default::default()
+        };
+        let canonical = canonicalize_types(&m);
+        let (struct_group, _) = canonical[0].as_ref().expect("struct body canonicalizes");
+        assert_eq!(
+            struct_group.members[0].comp,
+            CanonicalCompType::Struct(vec![
+                CanonicalFieldType { storage: CanonicalStorageType::Val(CanonicalValType::I32), mutable: true },
+                CanonicalFieldType { storage: CanonicalStorageType::I8, mutable: false },
+            ])
+        );
+        let (array_group, _) = canonical[1].as_ref().expect("array body canonicalizes");
+        assert_eq!(
+            array_group.members[0].comp,
+            CanonicalCompType::Array(CanonicalFieldType { storage: CanonicalStorageType::Val(CanonicalValType::F64), mutable: false })
+        );
+    }
+
+    /// Every abstract (non-index-carrying) `ValueType` variant this crate
+    /// has must canonicalize without panicking and must roundtrip through
+    /// the SAME `AbstractHeapKind`/nullability pair every time (no
+    /// `resolve_heap_index` call involved at all for these, so this also
+    /// exercises the exhaustive match in isolation from the `Rec`/`Outer`
+    /// machinery above).
+    #[test]
+    fn every_abstract_heap_type_canonicalizes_deterministically() {
+        let abstracts = [
+            ValueType::Anyref,
+            ValueType::I31ref,
+            ValueType::Funcref,
+            ValueType::Externref,
+            ValueType::Exnref,
+            ValueType::NullFuncref,
+            ValueType::NullExternref,
+            ValueType::NullExnref,
+            ValueType::NullRef,
+            ValueType::NonNullArrayAny,
+        ];
+        for vt in abstracts {
+            let m = WasmModule {
+                types: vec![FuncType { params: vec![vt], results: vec![] }],
+                type_subtyping: vec![TypeSubtyping::default()],
+                ..Default::default()
+            };
+            let once = canonicalize_types(&m);
+            let twice = canonicalize_types(&m);
+            assert_eq!(once, twice, "canonicalization must be deterministic for {vt:?}");
+            assert!(once[0].is_some(), "{vt:?} must canonicalize to Some");
+        }
     }
 }

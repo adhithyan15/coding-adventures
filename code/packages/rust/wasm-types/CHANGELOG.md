@@ -2,6 +2,54 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.18] - 2026-09-01 (W34 first slice — canonical type-group equivalence, singleton groups)
+
+Adds `CanonicalGroup`/`CanonicalSubtype`/`CanonicalCompType`/
+`CanonicalFieldType`/`CanonicalStorageType`/`CanonicalValType`/
+`CanonicalHeapRef`/`AbstractHeapKind` and the `canonicalize_types` free
+function (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`) — the
+first slice of the real WasmGC canonical type-group equivalence algorithm
+(MVP.md's own "tying"/"rolling" mechanism, and the reference interpreter's
+`roll_rec_type`/`match_def_type`), grounded directly in both sources.
+
+- **Scope: `rec_group_size == 1` groups only** — every plain,
+  non-`rec`-wrapped `(type ...)` field, and every explicit
+  `(rec (type ...))` with exactly one member. A self-reference inside such
+  a group ties to `CanonicalHeapRef::Rec(0)` (the only in-group reference a
+  singleton can express); a reference to an EARLIER singleton group embeds
+  that group's already-computed canonical form wholesale via
+  `CanonicalHeapRef::Outer` (an `Rc<CanonicalGroup>`, not the design
+  sketch's `Box` — sharing, not deep-cloning, the referenced subtree at
+  every embed site, matching the "cheap to clone" contract `wasm-validator::
+  ValidatedModule`'s own new `canonical_types` cache field needs).
+  Multi-member `rec` groups (real De Bruijn numbering across MORE than one
+  member) are explicitly deferred to a later slice — every member of such a
+  group canonicalizes to `None`, never a wrong or partial value.
+- **`canonicalize_types` never recurses** — it processes flat type-section
+  indices in strictly increasing order and only ever looks up
+  ALREADY-COMPUTED entries for anything outside the group being built, so a
+  cyclic or self-referential type structure (even one from a hand-built
+  `WasmModule` that skipped validation entirely) can only ever produce a
+  `None` entry, never a panic, infinite loop, or stack overflow.
+- **Cross-module comparability, proven directly**: two independently-built
+  `WasmModule`s with isomorphic singleton-group shapes at completely
+  different flat indices canonicalize to structurally-equal
+  `CanonicalGroup` values (`derive(PartialEq, Eq, Hash)` all the way down,
+  comparing contents through every `Rc`, never pointers) — see the new
+  cross-module unit tests in `src/lib.rs`.
+- **`AbstractHeapKind` correction vs. the spec's own design sketch**: the
+  spec document's `AbstractHeapKind` sketch (written before re-verifying
+  against current code) listed only the ten WasmGC-proposal-native kinds
+  (`Any`/`Eq`/`I31`/`Struct`/`Array`/`Func`/`None`/`Extern`/`NoExtern`/
+  `NoFunc`) and omitted `Exn`/`NoExn` — but `ValueType::Exnref`/
+  `ValueType::NullExnref` (W24, the separate exceptions proposal) already
+  exist in this crate and need somewhere to tie to. Added both; see the
+  spec's own addendum for the full account.
+- No corpus pass-count impact expected or observed from this slice alone
+  (nothing wires `canonical_types` into any validator/execution decision
+  point yet — that starts at a later slice); the full 257-file conformance
+  baseline diff is byte-for-byte identical before/after this change.
+
 ## [0.1.17] - 2026-09-01 (W33 fourth slice — struct/array TEXT-format representation)
 
 Adds the type-system vocabulary `wasm-wast-parser`'s struct/array TEXT-format
