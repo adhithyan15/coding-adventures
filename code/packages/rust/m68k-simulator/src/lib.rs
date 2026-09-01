@@ -15,7 +15,7 @@
 //! Apple Macintosh (1984), Commodore Amiga (1985), Atari ST (1985), early
 //! Sun-1/Sun-2 workstations, and the Sega Genesis/Mega Drive (1988).
 //!
-//! Module split mirrors [`mos6502_simulator`] (this repo's most recent
+//! Module split mirrors `mos6502_simulator` (this repo's most recent
 //! from-scratch simulator port, and the closer structural template —
 //! `mips-r2000-simulator` has not landed in this branch at the time this
 //! crate was written):
@@ -43,24 +43,19 @@
 //!   and each line further branches on its own bit sub-fields.  There is
 //!   no single table to port; `decode.rs`/`execute.rs` mirror the
 //!   Python original's per-line dispatch methods directly.
-//! - **Orthogonal addressing modes.**  Almost any instruction that reads
-//!   an operand can read it from *any* of 11 effective-address variants
-//!   (register direct, 6 memory-indirect flavours, 2 absolute forms, 2
-//!   PC-relative forms) plus immediate — this crate ports 8 of them (see
-//!   `decode.rs`'s module doc for exactly which, and why the 3
-//!   indexed/PC-relative modes are deferred).
+//! - **Orthogonal addressing modes.** Almost any instruction can use register
+//!   direct, the complete indirect family, absolute, PC-relative, indexed,
+//!   or immediate forms. All Spec 07n effective-address encodings are present.
 //! - **Big-endian, unlike every other simulator in this repo.**  MIPS
 //!   R2000/ARM1/RV32I/MOS 6502 are all little-endian (or byte-oriented,
 //!   for the 6502).  The 68000 stores the most-significant byte at the
 //!   lowest address — `decode.rs`'s `mem_read`/`mem_write` and
 //!   `fetch_word`/`fetch_long` all assemble bytes big-endian, matching
 //!   the Python original exactly.
-//! - **A real 24-bit address bus (16 MiB).**  Every computed effective
-//!   address is masked to `0x00FFFFFF`
-//!   ([`opcodes::ADDR_MASK`](crate::opcodes::ADDR_MASK)) — the backing
-//!   `Memory` a caller constructs may be smaller (tests routinely use a
-//!   few KiB), same convention every other Rust ISA simulator in this
-//!   repo uses.
+//! - **A real 24-bit address bus (16 MiB).** Every computed effective address
+//!   is masked to `0x00FFFFFF`. Checked execution requires the exact
+//!   architectural memory; the legacy constructor retains caller-sized
+//!   storage for existing consumers.
 //! - **`TRAP #15` is the HALT sentinel**, not a MIPS-style `SYSCALL`, an
 //!   ARM1-style pseudo-`SWI`, or a MOS-6502-style `BRK`.  See the "Halt
 //!   convention" section below for the full derivation.
@@ -90,7 +85,7 @@
 //! doctest example, and nowhere else — a curiosity, not the
 //! established idiom.  `TRAP #15` is therefore the dominant,
 //! already-established halt convention this port mirrors; see
-//! [`opcodes::TRAP_15_WORD`](crate::opcodes::TRAP_15_WORD) for the
+//! [`opcodes::TRAP_15_WORD`] for the
 //! encoding and `m68k-backend`'s crate doc for how `ret_*`/`ret_void`
 //! lower to it.
 //!
@@ -104,13 +99,14 @@
 //! use m68k_simulator::M68kSimulator;
 //! use m68k_simulator::encoding::{assemble, encode_move_l_imm_to_dn, encode_trap15};
 //!
-//! let mut sim = M68kSimulator::new(65536);
-//! sim.run(&assemble(&[
+//! let mut sim = M68kSimulator::architectural();
+//! sim.run_checked(&assemble(&[
 //!     encode_move_l_imm_to_dn(0, 42), // MOVE.L #42, D0
 //!     encode_trap15(),                 // TRAP #15 (halt)
-//! ]));
+//! ]), 10)?;
 //! assert_eq!(sim.d[0], 42);
 //! assert!(sim.halted);
+//! # Ok::<(), m68k_simulator::M68kError>(())
 //! ```
 
 pub mod decode;
@@ -120,4 +116,7 @@ pub mod flags;
 pub mod opcodes;
 pub mod simulator;
 
-pub use simulator::{ExecutionResult, M68kSimulator};
+pub use simulator::{
+    ExecutionResult, M68kError, M68kSimulator, M68kState, StepTrace, INITIAL_SP, LOAD_ADDRESS,
+    MEMORY_SIZE,
+};
