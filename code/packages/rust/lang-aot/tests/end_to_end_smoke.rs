@@ -1508,6 +1508,38 @@ fn end_to_end_twig_5_emits_intel4004_bin_via_lang_aot() {
         "Twig `5` should produce `LDM 5; JUN 0x000` (0xD5 0x40 0x00); got: {bytes:02x?}");
 }
 
+#[test]
+fn end_to_end_nib_bcd_static_runs_from_intel4004_ram() {
+    use intel4004_simulator::Intel4004Simulator;
+
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("bcd_static.nib");
+    let bin = dir.path().join("bcd_static.bin");
+    std::fs::write(
+        &src,
+        b"static digit: bcd = 9; fn main() -> bcd { return digit; }\n",
+    )
+    .unwrap();
+
+    lang_aot::compile_file_to_intel4004_bin(&src, &bin, lang_aot::Language::Nib)
+        .expect("Nib BCD static must lower to Intel 4004 RAM operations");
+    let mut bytes = std::fs::read(&bin).expect("read .bin");
+    assert!(bytes.contains(&intel4004_encoder::WRM_OPCODE));
+    assert!(bytes.contains(&intel4004_encoder::RDM_OPCODE));
+
+    // The production backend uses the architecture-faithful JUN 0 halt loop.
+    // Replace its final two bytes with the simulator's testing-only HLT so the
+    // run stops with the returned digit still visible in ACC.
+    assert_eq!(bytes.split_off(bytes.len() - 2), [0x40, 0x00]);
+    bytes.push(0x01);
+    let mut simulator = Intel4004Simulator::new(4096);
+    simulator
+        .run(&bytes, 100)
+        .expect("execute 4004 BCD program");
+    assert_eq!(simulator.accumulator, 9);
+    assert_eq!(simulator.ram[0][0][0], 9);
+}
+
 // ===========================================================================
 // A5++++ — source -> IIR -> GE-225 machine code (.bin) via lang-aot
 // ===========================================================================

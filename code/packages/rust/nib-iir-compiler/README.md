@@ -48,5 +48,6 @@ Narrow `u4`/`u8` arithmetic wraps mod-2ⁿ (N6, via the E2 backend masks), and t
 explicit-overflow operators **`+%` (wrapping)** and **`+?` (saturating)** are
 supported (N7): `+%` is the narrow-typed `add` (`15u4 +% 1 = 0`), `+?` is a wide
 add + a `min(sum, MAX)` clamp branch (`15u4 +? 1 = 15`, `200u8 +? 100 = 255`).
-All run on every backend. BCD storage semantics and 4004 RAM mapping for statics
-are deferred — see CHANGELOG and `code/specs/LANG-FULL-IMPLEMENTATION.md`.
+All run on every standard backend. One-nibble `bcd` static storage also runs
+through the Intel 4004 backend's complete 320-nibble main/status RAM map and is
+executed on the in-tree 4004 simulator.

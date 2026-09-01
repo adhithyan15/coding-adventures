@@ -14,7 +14,7 @@ language**, and each frontend was a **deliberate subset**:
 | Language | What the matrix actually runs end-to-end on the code-gen backends | The subset gap |
 |---|---|---|
 | Twig | Scalars, variadic and boxed dynamic arithmetic, typed and forward-referenced globals, cons/list operations, records, unions/`match`, closures (including capture), and typed E4 string literal/named/local/function-call proofs run on the five code generators; lists, records, unions, and closures also run on VM/JIT | VM/JIT still lack the executed symbol/quote and forward-referenced-global cells; boxed dynamic-global arithmetic and captured/reassigned or otherwise untyped strings remain |
-| Nib | typed calls, `*`/`/`, `for`, bitwise, short-circuit logic, logical `!`, consts, const/static-expression folding, wrap/sat arithmetic, and module `static`s all run on all 7 backends | BCD semantics and Intel-4004 RAM mapping remain |
+| Nib | typed calls, arithmetic/control flow, consts/statics, and one-nibble BCD storage run on all 7 standard backends; BCD statics also execute through the complete Intel-4004 RAM map | Full Intel-4004 arithmetic/control-flow parity remains |
 | Brainfuck | 1-loop "print A", nested-loop multiply (`"HA"`), two sequential loops (`"OK"`), stdin echo/transform, and canonical cat all run on all 7 backends | all 8 ops are cross-backend-proven by B1/B1-stdin/B1-eof; no current BF subset gap remains beyond adding more regression programs |
 | Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | scalar and array strings, runtime input and concat, mixed numeric/string `DATA`/`READ`/`RESTORE`, general `^`, deterministic math builtins, `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN`, multi-dimensional real arrays, `GOSUB`/`RETURN`, and BA7 `f64` arithmetic/formatting all run on every backend; portable `RND` remains |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3), logical `!` ✅ (O-!); intrinsics remain |
@@ -503,8 +503,10 @@ backend immediately) come before the enabler-dependent items.
   entry (`const` + `global_store`), and unshadowed reads/writes lower to
   `global_load`/`global_store` (the E6 substrate). Verified by RUNNING
   `static counter: u8 = 40; bump(1); bump(1); return counter` → 42 across
-  native/LLVM/WASM/JVM/CLR/VM/JIT. Const/static-expression folding is covered by N10;
-  BCD storage semantics and Intel-4004 RAM mapping remain follow-ups.
+  native/LLVM/WASM/JVM/CLR/VM/JIT. Const/static-expression folding is covered by N10.
+  **VM-012:** a `static digit: bcd = 9` now preserves its one-nibble value on all
+  seven standard backends and through real Intel-4004 `WRM`/`RDM` execution. The
+  backend maps module globals across all 320 RAM nibbles (256 main + 64 status).
 - ✅ **N9** — logical `!` (nib-type-checker 0.5.0, nib-iir-compiler 0.18.0).
   `unary_expr` now types leading `!` as `bool` and lowers it through the existing
   truthiness branch contract to a 0/1 scalar. Verified by RUNNING

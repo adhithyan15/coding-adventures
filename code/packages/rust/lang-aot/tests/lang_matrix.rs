@@ -1127,6 +1127,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Nib — BCD storage (VM-012). `bcd` is a single decimal digit, so the
+    // value must survive a module-static store/load without widening or
+    // representation drift. The same source is also executed on the real
+    // Intel 4004 RAM simulator in `end_to_end_smoke`.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "static digit: bcd = 9; fn main() -> bcd { return digit; }",
+        expect: Expect::Exit(9),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Oct — `let` + `if` + comparison; `main` is void so the process exits 0.
     Prog {
         lang: Language::Oct,
