@@ -6360,7 +6360,7 @@ impl wasm_execution::HostInterface for PrintHost {
         _name: &str,
     ) -> Option<(
         wasm_types::GlobalType,
-        std::rc::Rc<std::cell::RefCell<wasm_execution::WasmValue>>,
+        std::rc::Rc<std::cell::RefCell<wasm_execution::GlobalStorage>>,
     )> {
         None
     }

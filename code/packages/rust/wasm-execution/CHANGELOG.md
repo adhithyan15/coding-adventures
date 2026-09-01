@@ -2,6 +2,164 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.89] - 2026-09-01 (W35 third slice — `GlobalStorage`, `owner_instance_identity`, `SelfFunctionResolver` setters)
+
+Slice 3 of 4 for `code/specs/W35-wasm-cross-instance-function-identity.md`
+(`wasm-runtime`'s own instantiation/import-wiring is this slice's main
+subject — see that crate's CHANGELOG for the bulk of the work; this
+crate's own changes are the `wasm-execution`-side plumbing that slice
+needs, plus a real, previously-latent dispatch bug this slice's own new
+tests were the first to reach and expose).
+
+**Two deliberate deviations from the spec's own literal design, both
+forced by concrete, reproduced evidence — not discretionary choices:**
+
+1. **`FuncRefTarget::owner_instance_identity: Option<u64>`** (new field)
+   and **`WasmExecutionContext::instance_identity: u64`** (new field,
+   threaded via new `WasmExecutionEngine::set_instance_identity`,
+   mirroring `set_tag_identities`'s exact optional-setter shape). The
+   spec's own §4 design says a real `SelfFunctionResolver`-produced
+   `FuncRefTarget` should have `local_index: None`, forcing every
+   dispatch through `callable.call(..)`. That is CORRECT for genuine
+   cross-instance dispatch, but this slice's own verification found a
+   real, measured regression it causes for the (far more common)
+   same-instance case: `call_indirect.wast`'s `even`/`odd` mutual-
+   recursion test (and any other same-instance recursion through a table
+   an active elem segment populates) would recurse through a brand-new
+   `WasmExecutionEngine`/dedicated OS thread on every level — `wasm-
+   runtime`'s own `MAX_DEDICATED_THREAD_DEPTH` (64, sized for cross-module
+   host-call nesting) is far smaller than `MAX_CALL_DEPTH` (1200, sized
+   for genuine same-context recursion), so this recursion would exhaust
+   the wrong budget almost immediately. `owner_instance_identity` lets
+   `effective_local_index` (new, private) keep trusting `local_index`
+   (the cheap, pre-existing `call_function`/`pending_tail_call` dispatch
+   path, unchanged performance/depth characteristics) whenever the
+   CURRENTLY EXECUTING ctx's own `instance_identity` matches the target's
+   recorded owner (or the owner is unrecorded — an import, or a same-ctx
+   placeholder) — falling through to `target.callable.call(..)` ONLY when
+   a genuinely different instance's ctx is dispatching a stored target,
+   which is exactly the cross-instance scenario `elem.wast`/`linking*.wast`
+   need fixed. `local_index` is therefore `Some(func_index)` in EVERY
+   branch of `resolve_function_ref`/`resolve_func_ref_for_instance` now
+   (not `None` for the self-resolver branch, contrary to the spec's own
+   §4 text) — `owner_instance_identity` is what actually governs dispatch
+   safety. `effective_local_index` is used everywhere `local_index` used
+   to be read directly for a dispatch/type-check/flatten decision
+   (`dispatch_resolved_func_ref`, `call_indirect`/`return_call_indirect`'s
+   own type-check call, `ref_matches_concrete_type`,
+   `flatten_ref_for_durable_storage`).
+2. **`GlobalStorage` (new, `pub struct { value: WasmValue, func_ref:
+   Option<FuncRefTarget> }`)** lives in `wasm-execution`, not `wasm-types`
+   or a new trait-injection point in `wasm-runtime` (design §7 flagged
+   this as an open question) — because both of `GlobalStorage`'s own
+   fields (`WasmValue`, `FuncRefTarget`) are ALREADY defined in this
+   crate, `wasm-execution`'s own `global.get`/`global.set` opcode handlers
+   can read/write it directly with no new trait needed at all, mirroring
+   why `FuncRefTarget` itself lives here rather than `wasm-types`.
+   `WasmExecutionContext::globals`/`WasmEngineConfig::globals`/
+   `WasmEngineState::globals`/`HostInterface::resolve_global`'s return
+   type all become `Rc<RefCell<GlobalStorage>>` (were `Rc<RefCell<
+   WasmValue>>`). `global.get`/`global.set` now translate at the SAME
+   `func_ref_heap` boundary `table.get`/`table.set` already do (a real
+   `func_ref` mints a fresh handle on read; a tagged handle resolves into
+   a real, durable `FuncRefTarget` on write) — this SUPERSEDES slice 2's
+   own `flatten_ref_for_durable_storage`-based workaround for globals
+   specifically (that helper is now used ONLY for GC struct/array field
+   writes, unaffected, still on the pre-existing raw-index
+   representation, deliberately out of this slice's own scope per spec
+   §7).
+
+### A real, previously-latent bug this slice's own tests were the first to reach
+
+`dispatch_resolved_func_ref`'s `target.local_index: None` branch (the
+"genuinely self-contained, cross-instance target" dispatch path,
+"unreachable until W35's third slice" per slice 2's own doc comment) was
+MISSING a `vm.advance_pc()` call for the non-tail case. Slice 2 never hit
+this because nothing could construct a `local_index: None` target;
+`effective_local_index` (this slice's own new mechanism) is the first
+thing to actually route dispatch through this branch. Without the fix,
+`vm.pc` stayed pointed at the SAME `call_indirect`/`call_ref` instruction
+after a `callable.call(..)` dispatch, and the decode loop re-executed it
+on the very next iteration — popping whatever the just-completed call's
+own RESULT happened to leave on the operand stack as a brand-new (garbage)
+elem_index/ref operand. Found by this slice's own new
+`call_indirect_dispatches_via_callable_not_local_index_when_the_targets_
+owner_mismatches_this_ctx` test (a MarkerFunction's own return value was
+being reinterpreted as a table index on the very next loop iteration,
+producing a wildly-out-of-range "out of bounds table access" trap instead
+of the expected result) — fixed by adding the same `vm.advance_pc()`
+every other non-control-transferring opcode handler in this crate already
+calls, gated on `!tail` (a tail call is unaffected: `vm.halted = true`
+already fully owns control flow from there, matching `call_function`'s
+own tail path).
+
+### New types / fields
+
+- **`GlobalStorage`** (new, `pub`) — see deviation 2 above.
+- **`FuncRefTarget::owner_instance_identity: Option<u64>`** (new field) —
+  see deviation 1 above. Manual `Debug` impl updated to include it;
+  `PartialEq` unaffected (still identity-only).
+- **`WasmExecutionContext::instance_identity: u64`** / **`WasmExecutionEngine::
+  set_instance_identity`** (new, mirrors `set_tag_identities`'s exact
+  optional-setter shape) — see deviation 1 above.
+- **`WasmExecutionEngine::func_identities: Vec<u64>`** / **`set_func_identities`**
+  (new, mirrors `set_tag_identities`'s exact shape) — threaded from
+  `wasm-runtime::WasmInstance::func_identities` (see that crate's own
+  CHANGELOG) into `WasmExecutionContext::func_identities`, which slice 2
+  already declared but nothing populated until now.
+- **`WasmExecutionEngine::self_resolver: Option<Box<dyn
+  SelfFunctionResolver>>`** / **`set_self_resolver`** (new) — real,
+  functional plumbing threading a resolver into `WasmExecutionContext::
+  self_resolver` (moved in/out via `mem::take`, the same shape
+  `host_functions` already uses, since `Box<dyn SelfFunctionResolver>`
+  isn't `Clone`). **Never actually called by `wasm-runtime::build_engine`
+  in this slice** — see that crate's own CHANGELOG for the concrete
+  reason (no live `Rc<RefCell<WasmInstance>>` reachable there without an
+  out-of-scope API change or out-of-scope `wasm-conformance` wiring).
+  Exercised directly by this crate's own new
+  `instance_self_resolver_installed_on_a_hand_built_engine_...`-style
+  coverage lives in `wasm-runtime`'s own test suite (needs a
+  `WasmInstance` to construct a real resolver against).
+- **`effective_local_index`** (new, private helper) — see deviation 1
+  above.
+- **`resolve_global_write_value`** (new, private helper) — the global
+  counterpart of `resolve_table_write_value`, see deviation 2 above.
+
+### Downstream ripple (mechanical)
+
+- `wasm-runtime`'s own `WasmInstance::globals`, every `HostInterface`
+  impl's `resolve_global` (its own test doubles, `WasiStub`, `WasiEnv`),
+  and `wasm-conformance`'s `RegistryHost::resolve_global` all follow this
+  crate's `GlobalStorage` type change mechanically — see each crate's own
+  CHANGELOG. `lang-aot`'s own test-only `HostInterface` doubles
+  (`tests/lang_matrix.rs`, `tests/wasm_emit.rs`) needed the identical
+  mechanical fix to keep compiling.
+
+### Verification
+
+- `cargo build --workspace`: clean (every downstream consumer of
+  `wasm-execution`/`wasm-runtime`/`wasm-conformance` checked explicitly,
+  including `lang-aot`'s own test binaries, which briefly broke on the
+  `resolve_global` signature change until fixed).
+- `cargo test -p wasm-execution`: 578 lib tests + 31 integration tests,
+  all passing, including 4 NEW targeted tests this slice adds:
+  `effective_local_index_trusts_local_index_only_when_no_owner_or_the_
+  owner_matches_this_ctx`, `call_indirect_dispatches_via_callable_not_
+  local_index_when_the_targets_owner_mismatches_this_ctx` (the test that
+  found the latent `vm.advance_pc()` bug above),
+  `global_set_then_get_of_a_ref_func_result_stores_a_real_func_ref_and_
+  dispatches_correctly`. Verified via `git stash` A/B (matching slices
+  1/2's own methodology): every test that existed before this slice still
+  passes, unchanged.
+- `cargo run --release --bin wasm_conformance_report -p wasm-conformance
+  -- --write-baseline`: regenerated baseline is byte-for-byte identical
+  to the pre-slice-3 committed one (verified TWICE — once before, once
+  after the `vm.advance_pc()` fix, confirming that latent bug was never
+  actually reachable by any corpus case either, since nothing in
+  production code installs a real `self_resolver` yet).
+- `cargo clippy -p wasm-execution -p wasm-runtime -p wasm-validator -p
+  wasm-conformance --all-targets -- -D warnings`: clean.
+
 ## [0.9.88] - 2026-09-01 (W35 second slice — opcode call sites wired to `FuncRefTarget`/`func_ref_heap`)
 
 Slice 2 of 4 for `code/specs/W35-wasm-cross-instance-function-identity.md`:

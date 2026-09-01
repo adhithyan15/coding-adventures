@@ -24,7 +24,7 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use wasm_execution::{HostFunction, HostInterface, LinearMemory, Table, WasmValue};
+use wasm_execution::{GlobalStorage, HostFunction, HostInterface, LinearMemory, Table};
 use wasm_runtime::{WasmInstance, WasmRuntime};
 use wasm_types::GlobalType;
 
@@ -42,7 +42,7 @@ impl HostInterface for SharedGlobalHost {
         None
     }
 
-    fn resolve_global(&self, module_name: &str, name: &str) -> Option<(GlobalType, Rc<RefCell<WasmValue>>)> {
+    fn resolve_global(&self, module_name: &str, name: &str) -> Option<(GlobalType, Rc<RefCell<GlobalStorage>>)> {
         if module_name == "env" && name == "g" {
             let instance = self.exporter.borrow();
             let (_, _, index) = instance.exports.iter().find(|(n, kind, _)| n == name && *kind == wasm_types::ExternalKind::Global)?;

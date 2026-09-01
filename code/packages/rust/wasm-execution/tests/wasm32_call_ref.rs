@@ -14,7 +14,7 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use wasm_execution::{evaluate_const_expr, HostFunction, WasmEngineConfig, WasmExecutionEngine, WasmValue};
+use wasm_execution::{evaluate_const_expr, GlobalStorage, HostFunction, WasmEngineConfig, WasmExecutionEngine, WasmValue};
 use wasm_types::{FuncType, FunctionBody, WasmModule};
 
 fn engine_from_wat(wat: &str) -> (WasmExecutionEngine, WasmModule) {
@@ -27,17 +27,35 @@ fn engine_from_wat(wat: &str) -> (WasmExecutionEngine, WasmModule) {
     // takes already-computed globals, not raw init-expr bytes) -- exercises
     // this slice's `evaluate_const_expr` fix directly: `(ref.func
     // $count-down)` as a global init expression.
-    // Real cross-instance global sharing (W-next): `WasmEngineConfig::
-    // globals` is `Vec<Rc<RefCell<WasmValue>>>` now, not `Vec<WasmValue>`
-    // -- `evaluate_const_expr` itself is unchanged (still takes a plain
+    // Real cross-instance global sharing (W28)/real funcref-typed-global
+    // storage (W35 third slice): `WasmEngineConfig::globals` is
+    // `Vec<Rc<RefCell<GlobalStorage>>>` now, not `Vec<WasmValue>` --
+    // `evaluate_const_expr` itself is unchanged (still takes a plain
     // `&[WasmValue]` snapshot), so each iteration derives one from the
     // globals defined so far before wrapping the newly computed value.
-    let mut globals: Vec<Rc<RefCell<WasmValue>>> = Vec::new();
+    // This test's own `$self (ref $count) (ref.func $count-down)` global
+    // init expression IS a funcref -- but `func_ref: None` here is still
+    // correct: `evaluate_const_expr`'s `ref.func` arm produces an
+    // UNRESOLVED raw index (it has no access to `host_functions`/a
+    // resolver at all -- see that function's own `0xD2` arm doc comment),
+    // exactly matching every OTHER untagged funcref value this crate's
+    // `resolve_ref_operand`/`resolve_table_write_value` already handle by
+    // resolving lazily, on read, within the SAME ctx (this test never
+    // installs a `self_resolver`, so that's the only resolution path
+    // available or needed here) -- see `GlobalStorage`'s own doc comment.
+    // `wasm-runtime::instantiate()` (a full, real embedder) is what
+    // eagerly resolves a funcref-typed global's initial value into a real
+    // `func_ref` -- this test bypasses `instantiate()` entirely and talks
+    // to the lower-level `WasmEngineConfig` API directly, so it never
+    // exercises that eager path (nor does it need to: `global.get`
+    // followed by `call_ref` in the SAME ctx round-trips correctly either
+    // way, per `resolve_ref_operand`'s own untagged-fallback contract).
+    let mut globals: Vec<Rc<RefCell<GlobalStorage>>> = Vec::new();
     let mut v128_heap = Vec::new();
     for g in &module.globals {
-        let snapshot: Vec<WasmValue> = globals.iter().map(|g| *g.borrow()).collect();
+        let snapshot: Vec<WasmValue> = globals.iter().map(|g| g.borrow().value).collect();
         let value = evaluate_const_expr(&g.init_expr, &snapshot, &mut v128_heap).expect("global init expr should evaluate");
-        globals.push(Rc::new(RefCell::new(value)));
+        globals.push(Rc::new(RefCell::new(GlobalStorage { value, func_ref: None })));
     }
     let global_types = module.globals.iter().map(|g| g.global_type.clone()).collect();
     let engine = WasmExecutionEngine::new(WasmEngineConfig {

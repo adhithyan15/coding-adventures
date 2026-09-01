@@ -135,10 +135,16 @@ fn mark(vm: &GenericVM, ctx: &WasmExecutionContext) -> Vec<bool> {
 
     // Real cross-instance global sharing (see `WasmExecutionContext::
     // globals`'s own doc comment): each entry is a shared `Rc<RefCell<
-    // WasmValue>>` handle now, not an owned value, so GC root-scanning
+    // GlobalStorage>>` handle now, not an owned value, so GC root-scanning
     // dereferences a snapshot of the CURRENT values rather than reading
-    // `WasmValue`s directly out of the Vec.
-    let global_values: Vec<WasmValue> = ctx.globals.iter().map(|g| *g.borrow()).collect();
+    // `WasmValue`s directly out of the Vec. Only `GlobalStorage::value`
+    // participates in `gc_heap` root-scanning (W35 third slice) -- a
+    // funcref value's real identity lives in `GlobalStorage::func_ref`
+    // (a `FuncRefTarget`, never a `gc_heap` reference) once resolved, and
+    // even the un-resolved sentinel `WasmValue::Ref(Some(0))` `value` a
+    // real `func_ref` global carries is never a genuine `gc_heap` handle
+    // either.
+    let global_values: Vec<WasmValue> = ctx.globals.iter().map(|g| g.borrow().value).collect();
     push_roots_from_values(&global_values, &mut work);
     push_roots_from_values(&ctx.typed_locals, &mut work);
     for frame in &ctx.saved_frames {
@@ -266,7 +272,7 @@ pub(crate) fn alloc(ctx: &mut WasmExecutionContext, obj: GcObject) -> Result<u32
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{GcStruct, SavedFrame, WasmExecutionContext};
+    use crate::{GcStruct, GlobalStorage, SavedFrame, WasmExecutionContext};
     use std::cell::RefCell;
     use std::collections::HashMap;
     use std::rc::Rc;
@@ -319,6 +325,7 @@ mod tests {
             func_ref_heap: Vec::new(),
             self_resolver: None,
             func_identities: Vec::new(),
+            instance_identity: 0,
         }
     }
 
@@ -394,7 +401,7 @@ mod tests {
         let c = alloc_ok(&mut ctx, obj(vec![WasmValue::I32(42)]));
         let b = alloc_ok(&mut ctx, obj(vec![WasmValue::Ref(Some(c))]));
         let a = alloc_ok(&mut ctx, obj(vec![WasmValue::Ref(Some(b))]));
-        ctx.globals.push(Rc::new(RefCell::new(WasmValue::Ref(Some(a)))));
+        ctx.globals.push(Rc::new(RefCell::new(GlobalStorage { value: WasmValue::Ref(Some(a)), func_ref: None })));
 
         let marked = mark(&vm, &ctx);
         assert!(marked[a as usize] && marked[b as usize] && marked[c as usize]);
@@ -409,7 +416,7 @@ mod tests {
         let c = alloc_ok(&mut ctx, obj(vec![WasmValue::I32(42)]));
         let b = alloc_ok(&mut ctx, obj(vec![WasmValue::Ref(Some(c))]));
         let a = alloc_ok(&mut ctx, obj(vec![WasmValue::Ref(Some(b))]));
-        ctx.globals.push(Rc::new(RefCell::new(WasmValue::Ref(Some(a)))));
+        ctx.globals.push(Rc::new(RefCell::new(GlobalStorage { value: WasmValue::Ref(Some(a)), func_ref: None })));
         // Pure garbage: unreachable from anything.
         let garbage = alloc_ok(&mut ctx, obj(vec![WasmValue::I32(999)]));
 
@@ -527,7 +534,7 @@ mod tests {
         let garbage_before = alloc_ok(&mut ctx, obj(vec![WasmValue::I32(1)]));
         let kept = alloc_ok(&mut ctx, obj(vec![WasmValue::I32(2)]));
         let garbage_after = alloc_ok(&mut ctx, obj(vec![WasmValue::I32(3)]));
-        ctx.globals.push(Rc::new(RefCell::new(WasmValue::Ref(Some(kept)))));
+        ctx.globals.push(Rc::new(RefCell::new(GlobalStorage { value: WasmValue::Ref(Some(kept)), func_ref: None })));
 
         maybe_collect(&vm, &mut ctx);
 
