@@ -1850,8 +1850,19 @@ pub trait HostFunction {
     /// `sub` chain to walk. Only `wasm-conformance`'s `CrossModuleFunction`
     /// overrides this, to also climb the exporting module's own declared
     /// chain via `canonical_chain_reaches`.
-    fn canonically_matches(&self, target: &(Rc<CanonicalGroup>, u32)) -> bool {
-        self.canonical_type().is_some_and(|ct| wasm_types::canonical_type_entries_equivalent(Some(&ct), Some(target)))
+    ///
+    /// Security-review finding (W34 fourth slice): takes a `&mut
+    /// wasm_types::CrossModuleComparisonBudget` -- `wasm-runtime::
+    /// instantiate` creates ONE budget per `instantiate()` call and passes
+    /// the SAME one into every import's `canonically_matches` call, so the
+    /// total comparison work across an entire module's whole import list
+    /// is bounded, not just each individual comparison. See that type's
+    /// own doc comment: an attacker who controls both the importing and
+    /// exporting module could otherwise multiply one expensive-but-capped
+    /// comparison by an arbitrary, byte-cheap import count (declaring many
+    /// imports is far cheaper than declaring many expensive types).
+    fn canonically_matches(&self, target: &(Rc<CanonicalGroup>, u32), budget: &mut wasm_types::CrossModuleComparisonBudget) -> bool {
+        self.canonical_type().is_some_and(|ct| wasm_types::canonical_type_entries_equivalent_budgeted(Some(&ct), Some(target), budget))
     }
 }
 

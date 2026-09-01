@@ -1394,6 +1394,15 @@ impl WasmRuntime {
         // canonical_types`'s own doc comment for why this is the ONLY
         // place this crate ever needs to reach for it).
         let canonical_types = validated.canonical_types().to_vec();
+        // W34 fourth slice, security-review finding: ONE budget for this
+        // WHOLE `instantiate()` call's import-resolution loop below, not
+        // one per import -- see `wasm_types::CrossModuleComparisonBudget`'s
+        // own doc comment. Without this, a module could declare an
+        // arbitrary, byte-cheap number of function imports all targeting
+        // one expensive-but-individually-capped canonical comparison,
+        // multiplying a bounded per-comparison cost by an attacker-chosen
+        // import count with no aggregate limit.
+        let mut canonical_comparison_budget = wasm_types::CrossModuleComparisonBudget::new();
         let mut func_types: Vec<FuncType> = Vec::new();
         // Combined imported + module-defined func_index -> TYPE-SECTION-index
         // space (W33 second slice), index-aligned with `func_types` above --
@@ -1472,7 +1481,7 @@ impl WasmRuntime {
                             // method's own doc comment; `type-subtyping.
                             // wast`'s `M6`/`M7` "Linking" cases need
                             // exactly this).
-                            if !host_func.canonically_matches(module_ct) {
+                            if !host_func.canonically_matches(module_ct, &mut canonical_comparison_budget) {
                                 return Err(link_error("incompatible import type", imp));
                             }
                         }

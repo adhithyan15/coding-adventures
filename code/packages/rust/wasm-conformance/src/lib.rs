@@ -375,12 +375,12 @@ impl HostFunction for CrossModuleFunction {
         self.canonical_type.clone()
     }
 
-    fn canonically_matches(&self, target: &(Rc<CanonicalGroup>, u32)) -> bool {
+    fn canonically_matches(&self, target: &(Rc<CanonicalGroup>, u32), budget: &mut wasm_types::CrossModuleComparisonBudget) -> bool {
         let Some(type_idx) = self.type_idx else {
             return false;
         };
         let instance = self.instance.borrow();
-        wasm_types::canonical_chain_reaches(&instance.module.type_subtyping, &instance.canonical_types, type_idx, Some(target))
+        wasm_types::canonical_chain_reaches(&instance.module.type_subtyping, &instance.canonical_types, type_idx, Some(target), budget)
     }
 }
 
