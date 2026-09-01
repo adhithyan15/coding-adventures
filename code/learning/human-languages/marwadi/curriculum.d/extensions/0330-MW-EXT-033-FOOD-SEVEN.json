@@ -1,0 +1,20 @@
+{
+  "id": "MW-EXT-033-FOOD-SEVEN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can add the sweet crumbled wheat dessert and tea to a seven-word food map in four separately scored skills after learning only य.",
+  "prerequisites": [
+    "MW-EXT-032-FOOD-FIVE"
+  ],
+  "lessons": [
+    "MW-C20-hear-churma",
+    "MW-C20-churma",
+    "MW-C20-hear-chaay",
+    "MW-W20-ya",
+    "MW-C20-chaay",
+    "MW-R20-food-new-two",
+    "MW-C20-food-seven",
+    "MW-R20-script-close"
+  ]
+}

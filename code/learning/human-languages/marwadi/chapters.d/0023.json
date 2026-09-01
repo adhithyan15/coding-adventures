@@ -1,0 +1,23 @@
+{
+  "chapter": 23,
+  "title": "First Food Words: No New Signs",
+  "label": "ch:mw-food-three",
+  "canDo": "I can retrieve lentils, clarified butter, and vegetables in listening, speaking, reading, and writing using only previously taught Devanagari signs.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "MW-C18-food-three",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Three source-attested food words begin by ear, add no new sign at all, and close in a non-compensatory four-skill payoff.",
+    "assesses": [
+      "MW-LEX-DAAL-01",
+      "MW-SCRIPT-DAAL-01",
+      "MW-LEX-GHEE-01",
+      "MW-SCRIPT-GHEE-01",
+      "MW-LEX-SABJI-01",
+      "MW-SCRIPT-SABJI-01",
+      "MW-PERFORMANCE-FOOD-THREE-FOUR-SKILL-01"
+    ]
+  }
+}

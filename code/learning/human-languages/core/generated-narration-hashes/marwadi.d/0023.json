@@ -1,0 +1,23 @@
+{
+  "language": "marwadi",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:fd96dfe522531686",
+  "lessonIds": [
+    "MW-C18-hear-daal",
+    "MW-C18-daal",
+    "MW-C18-hear-ghee",
+    "MW-C18-ghee",
+    "MW-C18-hear-sabji",
+    "MW-C18-sabji",
+    "MW-R18-food-three",
+    "MW-C18-food-three",
+    "MW-R18-food-close"
+  ],
+  "voiceLessons": 9,
+  "drivablePrefix": 9,
+  "text": "marwadi/narration/ch23.txt",
+  "json": "marwadi/narration/ch23.json",
+  "textHash": "fnv1a64:73284b98327706fe",
+  "jsonHash": "fnv1a64:14d3dc8b3fd308d5",
+  "findings": []
+}

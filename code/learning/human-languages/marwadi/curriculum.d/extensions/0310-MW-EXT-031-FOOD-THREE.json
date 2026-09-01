@@ -1,0 +1,21 @@
+{
+  "id": "MW-EXT-031-FOOD-THREE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can retrieve lentils, clarified butter, and vegetables in listening, speaking, reading, and writing using only previously taught Devanagari signs.",
+  "prerequisites": [
+    "MW-EXT-030-TRANSPORT-FIVE"
+  ],
+  "lessons": [
+    "MW-C18-hear-daal",
+    "MW-C18-daal",
+    "MW-C18-hear-ghee",
+    "MW-C18-ghee",
+    "MW-C18-hear-sabji",
+    "MW-C18-sabji",
+    "MW-R18-food-three",
+    "MW-C18-food-three",
+    "MW-R18-food-close"
+  ]
+}
