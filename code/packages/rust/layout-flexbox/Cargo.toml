@@ -6,3 +6,4 @@ description = "Reusable CSS flex formatting context for the shared Layout IR"
 
 [dependencies]
 layout-ir = { path = "../layout-ir" }
+layout-replaced = { path = "../layout-replaced" }

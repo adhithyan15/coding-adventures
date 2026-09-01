@@ -9,6 +9,7 @@ use std::collections::{HashMap, HashSet};
 use layout_ir::{
     Constraints, Content, ExtValue, LayoutNode, PositionedNode, SizeValue, TextMeasurer,
 };
+use layout_replaced::intrinsic_inline_size;
 
 pub const VERSION: &str = "0.1.0";
 
@@ -1066,6 +1067,9 @@ fn min_content_width<M: TextMeasurer>(node: &LayoutNode, measurer: &M) -> f64 {
             .map(|word| measurer.measure(word, &text.font, None).width)
             .fold(0.0, f64::max);
     }
+    if matches!(node.content, Some(Content::Image(_))) {
+        return intrinsic_inline_size(node);
+    }
     node.min_width.unwrap_or_else(|| {
         node.children
             .iter()
@@ -1081,6 +1085,9 @@ fn intrinsic_item_width<M: TextMeasurer>(node: &LayoutNode, measurer: &M) -> Opt
     }
     if let Some(Content::Text(text)) = &node.content {
         return Some(measurer.measure(&text.value, &text.font, None).width);
+    }
+    if matches!(node.content, Some(Content::Image(_))) {
+        return Some(intrinsic_inline_size(node));
     }
     node.children
         .iter()
@@ -1304,7 +1311,9 @@ fn auto_flow_name(value: GridAutoFlow) -> &'static str {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use layout_ir::{color_black, font_spec, size_fixed, MeasureResult, TextContent};
+    use layout_ir::{
+        color_black, font_spec, size_fixed, ImageContent, ImageFit, MeasureResult, TextContent,
+    };
 
     struct Mono;
     impl TextMeasurer for Mono {
@@ -1366,6 +1375,43 @@ mod tests {
         assert_eq!(tracks.len(), 4);
         assert!(matches!(tracks[1], GridTrack::MinMax(_, _)));
         assert_eq!(tracks[3], GridTrack::Percent(0.25));
+    }
+
+    #[test]
+    fn auto_track_uses_replaced_intrinsic_width() {
+        let image = LayoutNode::leaf_image(ImageContent {
+            src: "fixture.gif".into(),
+            fit: ImageFit::Contain,
+        })
+        .with_ext(
+            "replaced",
+            layout_replaced::replaced_ext(Some(80.0), Some(40.0), None),
+        );
+        let mut root = LayoutNode::container(vec![image]).with_width(SizeValue::Wrap);
+        root.ext.insert(
+            "grid".into(),
+            grid_ext(
+                &GridContainerStyle {
+                    template_columns: vec![GridTrack::Auto],
+                    template_rows: vec![GridTrack::Auto],
+                    justify_content: GridContentAlignment::Start,
+                    ..Default::default()
+                },
+                &Default::default(),
+            ),
+        );
+        let result = layout_grid_with(
+            &root,
+            Constraints {
+                min_width: 0.0,
+                max_width: f64::MAX,
+                min_height: 0.0,
+                max_height: f64::MAX,
+            },
+            &Mono,
+            simple_layout,
+        );
+        assert_eq!((result.width, result.children[0].width), (80.0, 80.0));
     }
 
     #[test]
