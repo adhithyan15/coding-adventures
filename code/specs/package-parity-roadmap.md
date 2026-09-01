@@ -12438,7 +12438,7 @@ schema-3 inventory also pass. RustSec reports no vulnerability among 1,537
 locked dependencies and retains two existing allowed unmaintained warnings.
 
 After the final rebase onto exact `origin/main`
-`4cc3bf419f76c03e5380626ca334a3faaf2264ab`, the refreshed inventory has 15
+`b2a8f90f2a789967d9dc0f45886fc9569e9ec983`, the refreshed inventory has 15
 established lanes, 1,397 implementation identities, 4,612 implementation
 slots, and 1,436 all-reported identities. Its bands are 175/265, 123/934,
 171/2,152, and 928/12,992; Rust has 739 singletons, OCaml remains at zero,
@@ -12447,8 +12447,9 @@ TypeScript-only `forme-cli` identity stays under
 `forme-portable-core-family-classification`. Dedicated PR #13768 has merged
 the corresponding shared TypeScript base-config boundary correction, so that
 owner is unblocked and this Engram branch absorbs the correction from `main`
-without duplicating unrelated Forme work. Intervening Mermaid timeline work
-changes existing package roots only and adds no newly unowned identity.
+without duplicating unrelated Forme work. Intervening Mermaid timeline and
+SPICE JFET validation work change existing package roots only and add no newly
+unowned identity.
 
 ## Autonomous Loop Protocol
 
