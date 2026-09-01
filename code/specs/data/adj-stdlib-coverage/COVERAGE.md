@@ -10,7 +10,7 @@ exists. Semantic coverage is tracked in `code/specs/ADJ-STDLIB-COVERAGE.md`.
 
 | Collection | Content libraries | Clauses | Query companions | Test references | Source envelopes | Byte-verified |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| facts | 359 | 362 | 358 (99.7%) | 359 (100.0%) | 359 (100.0%) | 0 (0.0%) |
+| facts | 360 | 363 | 359 (99.7%) | 360 (100.0%) | 360 (100.0%) | 0 (0.0%) |
 | formulas | 163 | 404 | 163 (100.0%) | 163 (100.0%) | 163 (100.0%) | 4 (2.5%) |
 | medical-recall | 63 | 634 | 63 (100.0%) | 63 (100.0%) | 60 (95.2%) | 0 (0.0%) |
 
@@ -48,7 +48,7 @@ provenance bundle whose CAS graph proves all cited source bytes.
 | `facts/optics` | 1 | 1 | 1 | 1 | 1 | 0 |
 | `facts/physics` | 32 | 33 | 32 | 32 | 32 | 0 |
 | `facts/science` | 2 | 2 | 2 | 2 | 2 | 0 |
-| `facts/transportation` | 2 | 2 | 2 | 2 | 2 | 0 |
+| `facts/transportation` | 3 | 3 | 3 | 3 | 3 | 0 |
 | `formulas/arithmetic` | 10 | 20 | 10 | 10 | 10 | 4 |
 | `formulas/chemistry` | 7 | 26 | 7 | 7 | 7 | 0 |
 | `formulas/clinical` | 84 | 263 | 84 | 84 | 84 | 0 |
@@ -74,7 +74,7 @@ None.
 - `code/specs/data/mycin-2026/recall/endocrine-edges.adj`
 - `code/specs/data/mycin-2026/recall/iem-edges.adj`
 
-### Missing pinned source bytes (581)
+### Missing pinned source bytes (582)
 
 See the JSON form of this report for the complete machine-readable list.
 

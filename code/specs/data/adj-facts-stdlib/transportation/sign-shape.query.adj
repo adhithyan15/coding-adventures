@@ -1,0 +1,39 @@
+% ============================================================================
+% sign-shape.query.adj — worked recall over the sign-shape library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to answer "what shape is a stop
+% sign?" (direct), "which sign is the eight-sided one?" (REVERSE, and the
+% question a child actually asks), or "which signs are rectangular?"
+% (abstain — the MUTCD says regulatory signs are rectangular UNLESS
+% SPECIFICALLY DESIGNATED OTHERWISE, and STOP and YIELD are two such
+% designations, so the unqualified claim is one the manual never makes).
+%
+% It states no fact of its own — it only `import`s the grounded table and
+% asks binding queries.
+%
+% THE TABLE HOLDS A DEFAULT AND ITS OWN COUNTEREXAMPLES. STOP and YIELD are
+% both REGULATORY signs and neither is rectangular; NO PASSING ZONE is a
+% WARNING sign and is not a diamond. The rows only coexist because each
+% default carries its defeasibility inside its atom. The bare-shape queries
+% below are what prove that has not been quietly dropped.
+%
+% NOTE ON THE ABSTAIN QUERIES: they are written in VARIABLE form. A
+% fully-bound query that matches nothing produces NO recall entry at all
+% rather than an abstention, so the ground form would silently prove
+% nothing.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli sign-shape.query.adj
+% ============================================================================
+
+import "sign-shape.adj"
+
+? sign_shape(stop_sign, $S)              % expect octagon
+? sign_shape(yield_sign, $S)             % expect downward_pointing_equilateral_triangle
+? sign_shape($Sign, octagon)             % expect stop_sign (REVERSE -- "which one is the eight-sided sign?")
+? sign_shape(regulatory_sign, $S)        % expect rectangular_unless_specifically_designated_otherwise -- the hedge rides in the atom
+? sign_shape(warning_sign, $S)           % expect diamond_shaped_unless_specifically_designated_otherwise
+? sign_shape(no_passing_zone_sign, $S)   % expect pennant_shaped_isosceles_triangle -- a WARNING sign that is not a diamond
+? sign_shape($Sign, rectangular)         % expect abstain -- the UNQUALIFIED claim, which the manual never makes
+? sign_shape($Sign, diamond_shaped)      % expect abstain -- same, for warning signs
+? sign_shape(speed_limit_sign, $S)       % expect abstain -- governed by the default, but the default is DEFEASIBLE; inferring its shape is reasoning, not recall
