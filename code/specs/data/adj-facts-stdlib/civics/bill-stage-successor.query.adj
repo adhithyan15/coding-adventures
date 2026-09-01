@@ -1,0 +1,22 @@
+% ============================================================================
+% bill-stage-successor.query.adj — worked recall over the
+% bill-stage-successor library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what happens after a
+% bill clears committee?" (direct), "what has to happen before it reaches
+% the president?" (reverse — the direction a learner is often quizzed in),
+% or "what comes after the president considers it?" (abstain, because the
+% source stops being linear there) — it states no fact of its own — it only
+% `import`s the grounded table and asks binding queries.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli bill-stage-successor.query.adj
+% ============================================================================
+
+import "bill-stage-successor.adj"
+
+? bill_stage_successor(committee_review, $N)          % expect first_chamber_vote (direct)
+? bill_stage_successor(introduced, $N)                % expect committee_review (the first transition the prose states)
+? bill_stage_successor($P, presented_to_president)    % expect vote_on_same_version (reverse -- "what has to happen first?")
+? bill_stage_successor(president_considers, $N)       % expect abstain -- the process BRANCHES here (sign / veto / pocket veto); a successor relation cannot honestly pick one, so the chain stops where the source stops being linear
+? bill_stage_successor(citizen_petition, $N)          % expect abstain -- an idea ORIGIN the same page lists, not a stage in the journey
