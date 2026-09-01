@@ -61,7 +61,7 @@ use virtual_machine::{
 };
 use wasm_leb128::{decode_signed, decode_unsigned, decode_unsigned_bounded};
 use wasm_opcodes::get_opcode;
-use wasm_types::{FuncType, FunctionBody, GlobalType, ValueType};
+use wasm_types::{FuncType, FunctionBody, GlobalType, TypeSubtyping, ValueType};
 
 // ══════════════════════════════════════════════════════════════════════════════
 // Section 1: WasmValue — Typed WASM values
@@ -2428,12 +2428,18 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                     offset += sz;
                     (t, 0)
                 }
-                // ref.test (0x14) / ref.test null (0x15): one heap-type immediate
-                // (LANG77 L3b-3a-4). For McCarthy `pair?` the heap type is the
-                // concrete `$LispyPair` struct type, whose small typeidx encodes
-                // identically as a signed or unsigned LEB, so we read it as a
-                // typeidx. (Abstract heap types — negative sLEB — are not used.)
-                0x14 | 0x15 => {
+                // ref.test (0x14) / ref.test null (0x15) / ref.cast (0x16) /
+                // ref.cast null (0x17): one heap-type immediate each (LANG77
+                // L3b-3a-4; W33 second slice added 0x16/0x17's decoding —
+                // previously unhandled, falling into the `_ => (0, 0)` catch-
+                // all below and silently NOT consuming the immediate's LEB
+                // bytes, which would have corrupted decoding of whatever
+                // followed). For McCarthy `pair?` the heap type is the
+                // concrete `$LispyPair` struct type, whose small typeidx
+                // encodes identically as a signed or unsigned LEB, so we read
+                // it as a typeidx. (Abstract heap types — negative sLEB — are
+                // not used.)
+                0x14..=0x17 => {
                     let (t, sz) = decode_leb_u32(code, offset);
                     offset += sz;
                     (t, 0)
@@ -3328,6 +3334,27 @@ pub struct WasmExecutionContext {
     /// unless the embedder set it; `call_indirect` treats empty as
     /// "no type info available", not "the type section is empty".
     pub types: Vec<FuncType>,
+    /// Per-`types`-entry GC-proposal nominal-subtyping metadata (W33
+    /// second slice, item 4) — see [`WasmExecutionEngine::
+    /// set_type_subtyping`]'s doc comment. Empty unless the embedder set
+    /// it (or the module never uses `sub`/`rec`), in which case
+    /// `call_indirect`/`ref.cast`/`ref.test` fall back to their
+    /// pre-W33 structural-equality-only checks — see
+    /// `call_indirect_type_matches`'s own doc comment for why that
+    /// fallback, rather than an empty-means-"no nominal relation exists"
+    /// reading, is the SAFE default for every pre-GC module.
+    pub type_subtyping: Vec<TypeSubtyping>,
+    /// Each FUNCTION's own declared type-SECTION index (parallel to
+    /// `func_types`, which holds the resolved `FuncType` shape instead) —
+    /// see [`WasmExecutionEngine::set_func_type_indices`]'s doc comment.
+    /// Empty unless the embedder set it. Needed to recover a `funcref`
+    /// value's real nominal type identity: a `WasmValue::Ref(Some(i))`
+    /// funcref's payload IS the function index directly (see `ref.func`'s
+    /// own handler), so `func_type_indices[i]` is the only way to learn
+    /// which TYPE-section entry that function was declared with, which
+    /// `call_indirect`'s real subtype check and `ref.cast`/`ref.test`'s
+    /// dynamic type check both need.
+    pub func_type_indices: Vec<u32>,
     pub func_bodies: Vec<Option<FunctionBody>>,
     pub host_functions: Vec<Option<Box<dyn HostFunction>>>,
     pub typed_locals: Vec<WasmValue>,
@@ -4063,6 +4090,60 @@ fn pop_struct_ref(vm: &mut GenericVM, op: &str) -> Result<u32, VMError> {
     }
 }
 
+// ── Helper: real dynamic type check for ref.test/ref.cast (W33 second slice) ──
+//
+// Whether a NON-NULL reference whose raw payload is `payload` is a genuine
+// runtime instance of concrete type `type_idx` — the dynamic check `ref.test`/
+// `ref.cast` need (null itself is handled by each opcode's own caller via the
+// nullable-sub-opcode flag, not here).
+//
+// Same "no `sub` anywhere → preserve the pre-W33 behavior untouched" gating
+// as `call_indirect_type_matches` above, for the identical reason: this
+// engine's value model long predates real per-type dynamic checks (the one
+// existing consumer, McCarthy `pair?`, relies on the old "any live struct
+// matches" stub), so a module that never declares `sub` gets EXACTLY its old
+// behavior, zero regression risk.
+//
+// Once `sub` is in play, `type_idx` itself disambiguates which of this
+// crate's two disjoint reference representations `payload` is meant to be
+// interpreted as — the fundamental ambiguity `WasmValue::Ref(Option<u32>)`
+// has: for a FUNCREF, `payload` IS the function index directly (see
+// `ref.func`'s handler); for a STRUCTREF, it's a `gc_heap` handle. There is
+// no per-value tag to tell these apart; this crate's own `wasm_types::
+// WasmModule` doc comment gives the disambiguating convention instead —
+// "struct type k is at type-section index `types.len() + k`" — so a
+// `type_idx` inside `[0, ctx.types.len())` names a FUNCTION type (the funcref
+// path), and anything at or past `ctx.types.len()` names a struct/array type.
+//
+// The funcref path is real (item 4's actual scope, verified against `type-
+// subtyping.wast`'s "Runtime types" section, which exercises ONLY funcref
+// casts/tests): recover the function's own declared type index via
+// `func_type_indices`, then run the exact same nominal reflexive/subtype-
+// chain walk `call_indirect_type_matches` uses.
+//
+// The struct/array path deliberately stays a stub: this crate's struct/array
+// TEXT-format type declarations (and therefore real per-struct-type nominal
+// identity) remain the separate, still-open gap `code/specs/
+// W33-wasm-gc-recursive-type-subtyping.md`'s own "Recommended scope" step 2
+// names — not attempted here. Preserving "any live struct-heap object
+// matches any concrete struct type" is not a loss of real coverage: this
+// engine's value model only ever allocates ONE struct shape ($LispyPair, for
+// McCarthy pairs), so "is it a live struct ref" already equals "is it that
+// type" for every struct value this crate can currently construct.
+fn ref_matches_concrete_type(ctx: &WasmExecutionContext, type_idx: u32, payload: u32) -> bool {
+    if !wasm_types::any_declares_subtyping(&ctx.type_subtyping) {
+        return true;
+    }
+    if (type_idx as usize) < ctx.types.len() {
+        match ctx.func_type_indices.get(payload as usize) {
+            Some(&actual_type_idx) => wasm_types::nominal_subtype_chain(&ctx.type_subtyping, actual_type_idx, type_idx),
+            None => false,
+        }
+    } else {
+        ctx.gc_heap.get(payload as usize).and_then(|slot| slot.as_ref()).is_some()
+    }
+}
+
 // ── Helper: pop a *non-null* i31ref payload (W20) ─────────────────────────
 //
 // Used by `i31.get_s`/`i31.get_u`. An `i31ref` is carried on the value stack
@@ -4706,24 +4787,34 @@ fn register_numeric_i64(vm: &mut GenericVM) {
             }
 
             // ref.test (0x14) / ref.test null (0x15): pop a reference, push i32
-            // 1 if it is an instance of the heap type, else 0 (LANG77 L3b-3a-4).
-            // This is what McCarthy `pair?` lowers to: "is this value a cons
-            // cell?" — i.e. a (non-null) `$LispyPair` struct reference.
-            //
-            // Our value model has exactly one struct type ($LispyPair), so a
-            // `struct.new` result — the only way to make a `Ref(Some(_))` — is
-            // always that type. A test against any concrete struct type is
-            // therefore "is it a struct ref": `Ref(Some(_))` → 1; an `i31`
-            // payload (`I32`) or the null reference → 0. The `0x15` (nullable)
-            // variant additionally accepts the null reference.
+            // 1 if it is an instance of the heap type, else 0. ref.cast
+            // (0x16) / ref.cast null (0x17): pop a reference, push it back
+            // unchanged if it's an instance, else trap "cast failure" (W33
+            // second slice, item 4 — see `ref_matches_concrete_type`'s own
+            // doc comment for the real dynamic-type check, and `code/specs/
+            // W33-wasm-gc-recursive-type-subtyping.md`'s second addendum for
+            // why this is scoped to funcref-family casts/tests only).
             0x14 | 0x15 => {
                 let nullable = op.sub == 0x15;
                 let matches = match pop_wasm(vm)? {
-                    WasmValue::Ref(Some(_)) => true,
+                    WasmValue::Ref(Some(payload)) => ref_matches_concrete_type(ctx, op.type_idx, payload),
                     WasmValue::Ref(None) => nullable,
-                    _ => false, // an i31 payload / numeric value is not a struct ref
+                    _ => false, // an i31 payload / numeric value is not a ref at all
                 };
                 push_wasm(vm, WasmValue::I32(if matches { 1 } else { 0 }));
+            }
+            0x16 | 0x17 => {
+                let nullable = op.sub == 0x17;
+                let value = pop_wasm(vm)?;
+                let matches = match value {
+                    WasmValue::Ref(Some(payload)) => ref_matches_concrete_type(ctx, op.type_idx, payload),
+                    WasmValue::Ref(None) => nullable,
+                    _ => false,
+                };
+                if !matches {
+                    return Err(VMError::GenericError("cast failure".into()));
+                }
+                push_wasm(vm, value);
             }
 
             other => {
@@ -10659,6 +10750,61 @@ fn register_control(vm: &mut GenericVM) {
     });
 
     // call_indirect (0x11)
+    /// Whether calling through declared type `type_idx` against a callee
+    /// whose OWN declared type index is `actual_type_idx` (with resolved
+    /// shape `actual`) is a real match, per `call_indirect`/`return_call_
+    /// indirect`'s dynamic dispatch check (W33 second slice, item 4).
+    ///
+    /// Two DIFFERENT rules apply depending on whether this module uses
+    /// the GC proposal's `sub`/`rec` nominal typing at all:
+    ///
+    /// - **No `sub`/`rec` anywhere** (`!wasm_types::any_declares_subtyping
+    ///   (&ctx.type_subtyping)` — NOT the same thing as `ctx.type_subtyping.
+    ///   is_empty()`: `wasm-wast-parser`'s `dedup_type` pushes a `TypeSubtyping::
+    ///   default()` placeholder for EVERY type it declares, `sub`-declared or
+    ///   not, so the vector is fully populated for nearly every real module;
+    ///   `any_declares_subtyping` checks whether any entry is non-default,
+    ///   the real signal — true for every pre-GC module and the overwhelming
+    ///   majority of the conformance corpus): this engine's original, pre-W33 rule —
+    ///   plain structural equality of `params`/`results`. Pre-GC WASM has
+    ///   no nominal type identity at all; two separately-declared type-
+    ///   section entries with identical shape ARE the same type. Keeping
+    ///   this path byte-for-byte the same as before this slice is a
+    ///   deliberate choice, not an oversight: it's the only way to
+    ///   guarantee zero risk of regressing any of the other 256 vendored
+    ///   corpus files that never touch `sub`.
+    /// - **This module uses `sub`/`rec` somewhere**: type identity is
+    ///   NOMINAL, per the real GC proposal — `type-subtyping.wast` lines
+    ///   373-401 is the corpus proof: `$t1`/`$t2`/`$t3` are three
+    ///   DISTINCT types related only by a `sub` chain, all with the
+    ///   IDENTICAL structural shape `(func)`. Structural equality alone
+    ///   would (wrongly) accept every cross-type call among them; the
+    ///   real rule is reflexive index equality OR a genuine declared
+    ///   subtype relationship (`actual_type_idx <: type_idx`), nothing
+    ///   else — `nominal_subtype_chain` (shared with `wasm-validator`'s
+    ///   static `is_assignable` check and originally security-reviewed
+    ///   there for cycle-safety, W33 first slice) does exactly this walk.
+    ///
+    /// `func_type_indices` not covering `func_index` (an embedder that
+    /// set `type_subtyping` without also setting `func_type_indices` —
+    /// `wasm-runtime` always sets both together, so this is an
+    /// inconsistent hand-built setup, not a real caller) fails closed
+    /// (`false`) rather than silently falling back to the structural
+    /// check, which would be WRONG once this module is known to use
+    /// `sub`.
+    fn call_indirect_type_matches(ctx: &WasmExecutionContext, type_idx: usize, func_index: usize, actual: &FuncType) -> bool {
+        let Some(expected) = ctx.types.get(type_idx) else {
+            return true; // no type info at all: permissive, matches pre-W33 behavior.
+        };
+        if !wasm_types::any_declares_subtyping(&ctx.type_subtyping) {
+            return expected.params == actual.params && expected.results == actual.results;
+        }
+        match ctx.func_type_indices.get(func_index) {
+            Some(&actual_type_idx) => wasm_types::nominal_subtype_chain(&ctx.type_subtyping, actual_type_idx, type_idx as u32),
+            None => false,
+        }
+    }
+
     vm.register_context_opcode(0x11, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
         let (type_idx, table_idx) = unpack_call_indirect_operand(instr);
@@ -10693,13 +10839,13 @@ fn register_control(vm: &mut GenericVM) {
         // panicked on an out-of-range table entry whenever a type section
         // was set (the common case); `.get()` makes it a clean trap
         // instead, matching `return_call_indirect` (0x13)'s identical fix.
-        if let Some(expected) = ctx.types.get(type_idx) {
+        if ctx.types.get(type_idx).is_some() {
             let actual = ctx.func_types.get(func_index as usize).ok_or_else(|| {
                 VMError::GenericError(
                     "indirect call: table entry references an undefined function".into(),
                 )
             })?;
-            if expected.params != actual.params || expected.results != actual.results {
+            if !call_indirect_type_matches(ctx, type_idx, func_index as usize, actual) {
                 return Err(VMError::GenericError("indirect call type mismatch".into()));
             }
         }
@@ -10766,10 +10912,8 @@ fn register_control(vm: &mut GenericVM) {
             .ok_or_else(|| VMError::GenericError("indirect call: table entry references an undefined function".into()))?
             .clone();
 
-        if let Some(expected) = ctx.types.get(type_idx) {
-            if expected.params != func_type.params || expected.results != func_type.results {
-                return Err(VMError::GenericError("indirect call type mismatch".into()));
-            }
+        if !call_indirect_type_matches(ctx, type_idx, func_index, &func_type) {
+            return Err(VMError::GenericError("indirect call type mismatch".into()));
         }
 
         let mut args = Vec::with_capacity(func_type.params.len());
@@ -11259,6 +11403,14 @@ pub struct WasmExecutionEngine {
     /// `call_indirect`'s handler); set with
     /// [`WasmExecutionEngine::set_type_section`].
     type_section: Vec<FuncType>,
+    /// Per-`type_section`-entry GC-proposal nominal-subtyping metadata
+    /// (W33 second slice) — see [`Self::set_type_subtyping`]'s doc
+    /// comment. Empty by default.
+    type_subtyping: Vec<TypeSubtyping>,
+    /// Each FUNCTION's own declared type-section index, parallel to
+    /// `func_types` — see [`Self::set_func_type_indices`]'s doc comment.
+    /// Empty by default.
+    func_type_indices: Vec<u32>,
     /// The module's tag section (W-next: real catch-clause matching),
     /// indexed by the combined imported+defined tag index space —
     /// mirrors `type_section`'s own optional-setter pattern exactly, for
@@ -11327,6 +11479,8 @@ impl WasmExecutionEngine {
             host_functions: config.host_functions,
             struct_field_counts: Vec::new(),
             type_section: Vec::new(),
+            type_subtyping: Vec::new(),
+            func_type_indices: Vec::new(),
             tags: Vec::new(),
             tag_identities: Vec::new(),
             last_gc_state: gc::GcState::default(),
@@ -11362,6 +11516,41 @@ impl WasmExecutionEngine {
     /// (see its handler). Returns `&mut self` for chaining.
     pub fn set_type_section(&mut self, types: Vec<FuncType>) -> &mut Self {
         self.type_section = types;
+        self
+    }
+
+    /// Register the module's per-type-section-entry GC-proposal nominal-
+    /// subtyping metadata (W33 second slice, item 4: wiring real subtype
+    /// checks into `call_indirect`/`ref.cast`/`ref.test`'s dynamic
+    /// dispatch — see `code/specs/W33-wasm-gc-recursive-type-subtyping.md`'s
+    /// second addendum). Same optional-setter pattern, and same index
+    /// space, as [`Self::set_type_section`] (`type_subtyping[N]` describes
+    /// `type_section[N]`). Left unset (empty), every consumer of this
+    /// falls back to its pre-W33 structural-equality-only behavior — see
+    /// `call_indirect_type_matches`'s own doc comment for why that
+    /// fallback is exactly right for a module that never declares `sub`,
+    /// not merely a lesser-effort default. Returns `&mut self` for
+    /// chaining.
+    pub fn set_type_subtyping(&mut self, type_subtyping: Vec<TypeSubtyping>) -> &mut Self {
+        self.type_subtyping = type_subtyping;
+        self
+    }
+
+    /// Register each FUNCTION's own declared type-section index (W33
+    /// second slice), parallel to `func_types` (the combined imported +
+    /// module-defined function index space `wasm-runtime`'s
+    /// `WasmInstance::func_types` already uses) but carrying the type
+    /// INDEX rather than the resolved `FuncType` shape. Needed to recover
+    /// a `funcref` value's real nominal type identity at a `call_indirect`/
+    /// `ref.cast`/`ref.test` call site: a `WasmValue::Ref(Some(i))`
+    /// funcref's payload IS the function index directly (this crate's own
+    /// uniform representation, see `ref.func`'s handler), so
+    /// `func_type_indices[i]` is the only way to learn which type-section
+    /// entry that function was declared with. Same optional-setter
+    /// pattern as [`Self::set_type_subtyping`]/[`Self::set_type_section`].
+    /// Returns `&mut self` for chaining.
+    pub fn set_func_type_indices(&mut self, func_type_indices: Vec<u32>) -> &mut Self {
+        self.func_type_indices = func_type_indices;
         self
     }
 
@@ -11580,6 +11769,8 @@ impl WasmExecutionEngine {
             global_types: self.global_types.clone(),
             func_types: self.func_types.clone(),
             types: self.type_section.clone(),
+            type_subtyping: self.type_subtyping.clone(),
+            func_type_indices: self.func_type_indices.clone(),
             func_bodies: self.func_bodies.clone(),
             host_functions,
             typed_locals: Vec::new(),

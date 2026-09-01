@@ -1,5 +1,36 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.90 — 2026-08-31 — W33 second slice: `ref.test`/`ref.cast` TEXT-format parsing (item 4)
+
+Adds `ref.test`/`ref.test null`/`ref.cast`/`ref.cast null` (GC proposal)
+to the folded-instruction encoder (`encode_flat_instr`) — previously
+recognized NOWHERE in this crate (zero matches for either name, confirmed
+by direct grep before this slice), so every corpus module using them
+(`type-subtyping.wast`'s entire "Runtime types" section, lines 283-534)
+failed to parse at all, regardless of whether the underlying type/`sub`
+machinery existed. Only the CONCRETE-type case is supported — `(ref $t)`
+(non-null) / `(ref null $t)` (nullable), reusing `parse_value_type` (the
+same parser `local`/`global`/`param`/`result` declarations already use);
+an abstract heap type (`(ref any)`, `(ref func)`, ...) is rejected with a
+clear parse error, matching this crate's existing struct/array TEXT-format
+scope boundary (still open, unrelated to this change) rather than
+silently mis-encoding. Only the FOLDED form is implemented — no
+bare/flat-atom-stream counterpart, since every real corpus use folds both
+the type descriptor and the value operand; see `code/specs/
+W33-wasm-gc-recursive-type-subtyping.md`'s second addendum for the full
+item-4 accounting across all four touched crates.
+
+### Fixed
+
+- `wasm-execution`'s binary decoder never consumed `ref.cast`'s (`0xFB
+  0x16`/`0x17`) LEB128 heap-type immediate at all (fell into a no-
+  immediate default), which would have corrupted decoding of every
+  instruction after it in the same function body the moment any producer
+  emitted the bytes — moot until this slice, since nothing could parse
+  `ref.cast` from text before now, but fixed alongside this parser change
+  since the two are the same bug from opposite ends. See `wasm-execution`'s
+  own CHANGELOG for the runtime-side fix.
+
 ## 0.1.89 — 2026-08-31 — W33 first slice: `(rec ...)` group parsing + `(sub [final] ...)` nominal subtyping
 
 Implements items (3a) and half of (1)/(2) of `code/specs/
