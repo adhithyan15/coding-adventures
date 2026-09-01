@@ -218,21 +218,23 @@ try {
     $toggle = Find-ByAutomationId $root 'toggle' ([System.Windows.Automation.ControlType]::Button)
     if (-not $toggle) { throw "Could not find the task completion control." }
     $toggle.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+    $reopenLabel = "Reopen task: $taskName"
     $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
     while ((Get-Date) -lt $deadline) {
         Start-Sleep -Milliseconds 500
-        if ((Get-ButtonNames $root) -contains '✓') { break }
+        if ((Get-ButtonNames $root) -contains $reopenLabel) { break }
     }
-    if ((Get-ButtonNames $root) -notcontains '✓') {
+    if ((Get-ButtonNames $root) -notcontains $reopenLabel) {
         $failures += "Completing the task did not render the completed state."
     }
     $toggle.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+    $completeLabel = "Complete task: $taskName"
     $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
     while ((Get-Date) -lt $deadline) {
         Start-Sleep -Milliseconds 500
-        if ((Get-ButtonNames $root) -contains '○') { break }
+        if ((Get-ButtonNames $root) -contains $completeLabel) { break }
     }
-    if ((Get-ButtonNames $root) -notcontains '○') {
+    if ((Get-ButtonNames $root) -notcontains $completeLabel) {
         $failures += "Reopening the task did not render the open state."
     }
 
