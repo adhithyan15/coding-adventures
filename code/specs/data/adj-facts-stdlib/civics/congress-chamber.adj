@@ -1,0 +1,92 @@
+% ============================================================================
+% congress-chamber — the two chambers the U.S. Congress is divided into
+% (adj-facts-stdlib, CIVICS).
+% ============================================================================
+% This file exists to CLOSE an abstention its own sibling deliberately
+% opened. `government-branch-member.adj` ships
+% `government_branch_member(legislative, congress)` and abstains on
+% `senate`/`house_of_representatives`, because USA.gov's "Branches of the
+% U.S. government" page nests those two UNDER Congress in a
+% colon-introduced sub-list rather than naming them as direct members of
+% the branch. That sibling's header names THIS table as the intended home
+% for them; here it is. Recall is a binding query:
+%
+%     ? congress_chamber(senate, $P)
+%       % congress
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `congress_chamber(chamber, parent)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the parent body WITH its source, on the CPU, with zero
+% model calls, and abstains on any body that is not one of these two
+% source-cited chambers.
+%
+% The relation is MULTI-VALUED on `parent`, which is the direction that
+% answers the question a learner is actually asked — "what are the two
+% chambers of Congress?" is one query returning two solutions:
+%
+%     ? congress_chamber($C, congress)
+%       % senate
+%       % house_of_representatives
+%
+% WHY A SEPARATE TABLE, not two more rows on `government_branch_member`:
+% the sub-list states a DIFFERENT relation from the one that table holds.
+% `government_branch_member` answers "who makes up this BRANCH"; this
+% answers "what are the chambers of this BODY". Flattening the chambers
+% into branch members would have silently discarded one level of the
+% nesting the source itself states. Keeping them apart means the two
+% compose instead: `congress_chamber(senate, congress)` and
+% `government_branch_member(legislative, congress)` together ground "the
+% Senate is part of the legislative branch" as a two-hop DERIVATION whose
+% provenance is the composition of its premises, rather than a third
+% asserted row nobody can audit back to a sentence. (That derived
+% `rule` is a natural next slice; it is deliberately NOT part of this one.)
+%
+% Provenance: quoted verbatim from USA.gov's "Branches of the U.S.
+% government" page. The page's own markup is a sentence stem followed by a
+% two-item list, and this table decodes exactly that structure:
+%
+%     source markup (verbatim)                              this table's row
+%     ----------------------------------------------------  ------------------------------------------
+%     "The legislative branch is made up of Congress:"       (the stem naming the parent body)
+%     "The U.S. Senate"                                      (senate, congress)
+%     "The U.S. House of Representatives"                    (house_of_representatives, congress)
+%
+% curl-fetched the raw page and read the markup byte-for-byte before
+% writing this file (not just an AI-summarized WebFetch) — confirmed the
+% stem is a single `<p>` reading "The legislative branch is made up of
+% Congress:" (the linked anchor text inlined) and that the two chambers
+% are its immediately-following `<ul>`'s only two `<li>` items, with no
+% third. `trust authoritative` — USA.gov is the U.S. General Services
+% Administration's official guide to government information, a
+% first-party .gov publisher of exactly the fact being recalled, the same
+% tier and the SAME page `government-branch-member.adj` already cites.
+%
+% Honest abstention. The list has exactly two items, so the two-chamber
+% domain is covered with no gaps — but a body that is NOT one of them
+% ABSTAINS rather than being invented into a chamber:
+%
+%   - `supreme_court` and `president` are genuinely named institutions of
+%     the U.S. federal government, and the SAME page names both — but of
+%     the judicial and executive branches, not as chambers of Congress.
+%     They are already correctly tabled in `government-branch-member.adj`
+%     against their own branches.
+%   - `special agencies and offices that provide support services to
+%     Congress` — the open-ended category phrase the same paragraph
+%     attaches to the legislative branch — names no specific body, and is
+%     not part of the chamber sub-list at all.
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table congress_chamber {
+    columns chamber, parent
+
+    row (senate, congress)
+    row (house_of_representatives, congress)
+
+    source "The legislative branch is made up of Congress:"
+    locator "https://www.usa.gov/branches-of-government"
+    trust authoritative
+}
