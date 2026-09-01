@@ -1,0 +1,11 @@
+[package]
+name = "armv7a-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "Exact 524,833-DFF gate-level ARMv7-A Thumb-2 simulator"
+license = "MIT"
+
+[dependencies]
+armv7a-simulator = { path = "../armv7a-simulator" }
+arithmetic = { path = "../arithmetic" }
+logic-gates = { path = "../logic-gates" }
