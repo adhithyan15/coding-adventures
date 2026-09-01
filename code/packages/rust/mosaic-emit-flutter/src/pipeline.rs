@@ -3764,6 +3764,16 @@ fn emit_host_button(
     ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
+    let accessibility_label = match find_prop_value(node, "a11y-label") {
+        Some(LayoutPropValue::String(label)) => Some(format!("\"{}\"", escape_dart_string(label))),
+        Some(LayoutPropValue::SlotRef(name)) | Some(LayoutPropValue::Keyword(name)) => {
+            let field = to_camel_case_first_lower(name);
+            validate_slot_or_field_name(&field)?;
+            Some(field)
+        }
+        Some(LayoutPropValue::Expr(expr)) => Some(expr.trim().to_string()),
+        _ => None,
+    };
     let label_expr: String = match find_prop_value(node, "label") {
         Some(LayoutPropValue::String(s)) => format!("Text(\"{}\")", escape_dart_string(s)),
         Some(LayoutPropValue::SlotRef(slot)) => {
@@ -3805,16 +3815,27 @@ fn emit_host_button(
     } else {
         "() {}".to_string()
     };
-    let on_pressed_expr = match bool_prop_expression(node, "disabled")?.as_deref() {
+    let disabled_expr = bool_prop_expression(node, "disabled")?;
+    let semantics_enabled_expr = match disabled_expr.as_deref() {
+        Some("true") => "false".to_string(),
+        Some("false") | None => "true".to_string(),
+        Some(disabled) => format!("!({disabled})"),
+    };
+    let on_pressed_expr = match disabled_expr.as_deref() {
         Some("true") => "null".to_string(),
         Some("false") | None => callback,
         Some(disabled) => format!("{disabled} ? null : {callback}"),
     };
 
     let style_arg = host_button_style_arg(node, part_styles);
-    Ok(format!(
-        "{pad}ElevatedButton(onPressed: {on_pressed_expr}{style_arg}, child: {label_expr})\n"
-    ))
+    let button =
+        format!("ElevatedButton(onPressed: {on_pressed_expr}{style_arg}, child: {label_expr})");
+    Ok(match accessibility_label {
+        Some(label) => format!(
+            "{pad}Semantics(label: {label}, button: true, enabled: {semantics_enabled_expr}, onTap: {on_pressed_expr}, excludeSemantics: true, child: {button})\n"
+        ),
+        None => format!("{pad}{button}\n"),
+    })
 }
 
 fn host_button_event_args(emit: &EmitDecl, ctx: TableCtx) -> Result<String, PipelineEmitError> {
@@ -6737,6 +6758,10 @@ mod tests {
                                 value: LayoutPropValue::Keyword("item".into()),
                             },
                             LayoutProp {
+                                name: "a11y-label".into(),
+                                value: LayoutPropValue::Expr("item".into()),
+                            },
+                            LayoutProp {
                                 name: "onClick".into(),
                                 value: LayoutPropValue::EmitRef("onSelect".into()),
                             },
@@ -6760,6 +6785,10 @@ mod tests {
         assert!(
             out.contains("Text(item)"),
             "expected HostButton label to use For item binding, got:\n{out}"
+        );
+        assert!(
+            out.contains("Semantics(label: item, button: true, enabled:"),
+            "expected HostButton accessible name to use the For expression, got:\n{out}"
         );
     }
 

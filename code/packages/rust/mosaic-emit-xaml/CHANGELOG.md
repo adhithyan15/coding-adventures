@@ -1,5 +1,11 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — preserve dynamic HostButton accessible names (#13754)
+
+WinUI buttons now lower literal, slot-bound, keyword-bound, and bindable
+expression `HostButton.a11y-label` values to `AutomationProperties.Name`,
+including generated row-view-model bindings.
+
 ## [Unreleased] — preserve HostInput accessible names (#13717)
 
 WinUI text boxes now lower literal, slot-backed, and bindable expression

@@ -4,6 +4,12 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - preserve dynamic HostButton accessible names (#13754)
+
+SwiftUI buttons now lower literal, slot-bound, keyword-bound, and
+expression-bound `HostButton.a11y-label` values through
+`.accessibilityLabel(...)`, including repeated rows.
+
 ### Fixed - preserve HostInput accessible names (#13717)
 
 SwiftUI text fields now retain literal and slot-backed `HostInput.a11y-label`

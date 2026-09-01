@@ -103,6 +103,13 @@ Flutter, Compose `contentDescription`, SwiftUI `.accessibilityLabel`, and
 WinUI `AutomationProperties.Name`. A backend must report a native-complete
 degradation rather than silently discard an authored name it cannot lower.
 
+`HostButton.a11y-label` follows the same rule without replacing the authored
+visual `label` or the platform button role. Literal, slot-bound, keyword-bound,
+and expression-bound names must remain live in repeated rows and lower to
+`aria-label`, Qt `Accessible.name`, Flutter `Semantics.label`, Compose
+`contentDescription`, SwiftUI `.accessibilityLabel`, or WinUI
+`AutomationProperties.Name` as appropriate.
+
 ### 2.2 Inclusion criteria
 
 A primitive belongs in the kernel iff:

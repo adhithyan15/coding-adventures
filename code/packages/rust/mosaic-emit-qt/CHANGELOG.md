@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - preserve dynamic HostButton accessible names (#13754)
+
+Qt buttons now lower literal, slot-bound, keyword-bound, and expression-bound
+`HostButton.a11y-label` values to `Accessible.name`, including repeated rows.
+
 ### Fixed - preserve HostInput accessible names (#13717)
 
 Qt text inputs now lower authored accessible names to `Accessible.name`,
