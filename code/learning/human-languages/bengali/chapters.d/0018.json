@@ -1,0 +1,28 @@
+{
+  "chapter": 18,
+  "title": "The Breath That Is a Letter",
+  "label": "ch:bn-breath-is-a-letter",
+  "canDo": "I can read six more Bengali words I already say — কালো, আবার, ভালো, মুখ, সাদা and দুধ — tell a plain consonant from its breathy partner on the page and in the mouth, and say why the o-sign is two signs I already write rather than a new shape.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "BN-W03-dudh-read",
+    "kind": "reading",
+    "summary": "Milk puts the plain dental and its breathy partner side by side in one three-piece word, then the chapter's six words are read back in one pass with nothing new introduced.",
+    "assesses": [
+      "BN-SCRIPT-O-MATRA-01",
+      "BN-SCRIPT-KALO-READ-01",
+      "BN-SCRIPT-BA-01",
+      "BN-SCRIPT-ABAR-READ-01",
+      "BN-SCRIPT-BHA-01",
+      "BN-SCRIPT-BHALO-READ-01",
+      "BN-SCRIPT-KHA-01",
+      "BN-SCRIPT-MUKH-READ-01",
+      "BN-SCRIPT-DA-01",
+      "BN-SCRIPT-SHADA-READ-01",
+      "BN-SCRIPT-DHA-01",
+      "BN-SCRIPT-DUDH-READ-01"
+    ]
+  }
+}

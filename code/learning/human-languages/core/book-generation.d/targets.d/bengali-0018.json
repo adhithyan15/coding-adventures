@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 18,
+  "output": "bengali/book/chapters/ch18-breath-is-a-letter.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

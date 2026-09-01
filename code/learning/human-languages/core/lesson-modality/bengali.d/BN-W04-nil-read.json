@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "BN-W04-nil-read",
+    "language": "bengali",
+    "chapter": 19,
+    "sequence": 2000,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8da7fde40534e04f",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

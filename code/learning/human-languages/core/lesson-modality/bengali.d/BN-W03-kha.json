@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "BN-W03-kha",
+    "language": "bengali",
+    "chapter": 18,
+    "sequence": 1870,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d8aa2b24036110b9",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
