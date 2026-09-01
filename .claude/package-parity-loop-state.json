@@ -11,22 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 13783,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13783",
-    "branch": "codex/build-tool-engram-wasm-source-input-registry-repair",
-    "item_id": "build-tool-engram-wasm-package-source-input-registry-repair",
-    "opened_at": "2026-09-01T01:37:43Z",
-    "opened_revision": "060150218fac3914a565e76da44a0496ce14ec09"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-09-01T01:37:47Z",
+    "observed_at": "2026-09-01T02:15:07Z",
     "pr_number": 13783,
-    "status": "pending",
-    "notes": "Ready-for-review PR #13783 is open at exact initial head 060150218fac3914a565e76da44a0496ce14ec09. GitHub reports the branch mergeable and conflict-free while CI, CodeQL, and book checks are queued; guarded auto-merge remains disabled until every required check is terminal and acceptable."
+    "status": "merged",
+    "notes": "All 40 final-head checks completed acceptably on 2b6e58cf8343ea6199d1c7593d6ea05678fe4254: 33 succeeded and seven were expected skips. GitHub reported the PR clean and mergeable before guarded squash auto-merge completed as 44d635713e8be552539539a0012852afc35f39b7 without a plain manual merge command."
   },
   "last_inventory": {
-    "revision": "8e2b2933797acda0bfa166ecb4794377e9518521",
+    "revision": "44d635713e8be552539539a0012852afc35f39b7",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1399,
@@ -915,13 +908,17 @@
     {
       "id": "build-tool-engram-wasm-package-source-input-registry-repair",
       "title": "Register exact Engram WASM BUILD inputs",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit"],
       "branch": "codex/build-tool-engram-wasm-source-input-registry-repair",
       "pr_number": 13783,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13783",
       "opened_at": "2026-09-01T01:37:43Z",
       "opened_revision": "060150218fac3914a565e76da44a0496ce14ec09",
+      "merged_head_revision": "2b6e58cf8343ea6199d1c7593d6ea05678fe4254",
+      "merged_at": "2026-09-01T02:15:07Z",
+      "merge_revision": "44d635713e8be552539539a0012852afc35f39b7",
+      "merge_notes": "All 40 final-head checks reached terminal acceptable conclusions: 33 successes and seven expected skips. GitHub reported exact head 2b6e58cf8343ea6199d1c7593d6ea05678fe4254 clean and mergeable; guarded squash auto-merge completed without a plain manual merge command.",
       "selection_revision": "d5f6d1c950d0e817bea77c2a73aa6ca36a593758",
       "selection_notes": "Selected after PR #13748 completed 40 acceptable final-head checks and merged through guarded squash auto-merge as 0db04dd61fbfeccf674c677eefe71dd60d63ed6c, followed by package-neutral MOS 6502 audit PR #13747 on exact current origin/main d5f6d1c950d0e817bea77c2a73aa6ca36a593758. The refreshed collision-checked schema-3 inventory records 15 established lanes, 1,396 implementation identities, 4,611 slots, 1,435 all-reported identities, bands 175/265, 123/934, 171/2,152, and 927/12,978, 739 Rust singletons, zero OCaml packages, zero canonical collisions, and zero unknown buckets. Merged PR #13744 adds Rust layout-flexbox beside TypeScript, moving that identity from singleton to the two-to-four band; layout-flexbox-two-lane-classification now owns its deterministic UI03 contract and missing applicable-lane review. The resulting 638-owner/1,006-edge graph is unique, dependency-complete, and acyclic. This bounded registry repair is the highest-leverage ready eligible item: it directly unblocks eleven engine adoptions and reaches eighteen unfinished descendants, while higher raw ranks are heterogeneous classifiers or selection-blocked native/network authority reviews. The target local branch, remote branch, prior PR, and fresh worktree path were absent before creating this clean exact-main branch, and all twelve live PRs have zero exact overlap with its expected registry, fixture, test, documentation, state, roadmap, and changelog surfaces. Reconciliation, classification, and selection leave 199 merged, 438 pending, and exactly this owner in progress.",
       "implementation_revision": "245dfa9fc9ce1995a79645a4af9c72f5a4be1799",
@@ -963,10 +960,12 @@
     {
       "id": "build-tool-swift-language-source-input-registry-adoption",
       "title": "Adopt the exact language source-input registry in the Swift build tool",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-swift-portable-source-hashing-conformance"],
-      "branch": null,
+      "branch": "codex/build-tool-swift-language-source-input-registry-adoption",
       "pr_number": null,
+      "selection_revision": "44d635713e8be552539539a0012852afc35f39b7",
+      "selection_notes": "Selected after PR #13783 completed all 40 final-head checks acceptably and merged through guarded squash auto-merge as 44d635713e8be552539539a0012852afc35f39b7. The exact-main collision-checked schema-3 inventory remains 15 established lanes, 1,399 implementation identities, 4,615 slots, 1,438 all-reported identities, bands 175/265, 123/934, 172/2,165, and 929/13,006, 740 Rust singletons, zero OCaml packages, zero canonical collisions, and zero unknown buckets. Intervening W33 Wasm, SPICE, Z80, ALGOL, HTML, Hindi, and Forme cache merges change existing identities only; W33 and Forme remain covered by their existing portable-conformance and Forme-family owners, and no eligible identity is unowned. Engram's merge makes the Go, Python, Ruby, Swift, and TypeScript exact-registry adoptions simultaneously ready with equal one-edge leverage into the remaining-engine aggregate. Swift wins the boundedness pass because its merged portable hasher already has the strongest 23-language production registry, leaving a finite projection-equality repair for reviewed hybrid companions, path-scoped resources, module maps, headers, and universal capability metadata. The target local branch, remote branch, prior PR, and fresh worktree path were absent before creating this clean exact-main branch. Reconciliation and selection leave the complete 640-owner/1,006-edge graph unique, dependency-complete, and acyclic at 200 merged, 439 pending, and exactly this owner in progress.",
       "notes": "Production Swift has the strongest existing 23-language registry but still omits reviewed Rust companions in several hybrid lanes, Swift C-family headers and module maps, path-scoped resources, and universal required_capabilities.json. Project the complete neutral registry into production and preserve its checked filesystem boundaries."
     },
     {

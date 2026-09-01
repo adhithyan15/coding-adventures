@@ -12481,6 +12481,36 @@ lockfiles. It remains covered by `forme-portable-core-family-classification`
 and adds no package identity, source-input boundary, ownership gap, or Engram
 overlap.
 
+### Post-PR #13783 refresh and Swift registry-adoption selection
+
+PR #13783 completed all 40 checks on final head
+`2b6e58cf8343ea6199d1c7593d6ea05678fe4254` acceptably: 33 succeeded and
+seven were expected skips. GitHub reported the head clean and mergeable, then
+executed guarded squash auto-merge without a plain manual merge command as
+`44d635713e8be552539539a0012852afc35f39b7`.
+
+The collision-checked schema-3 inventory at that exact main remains 15
+established lanes, 1,399 implementation identities, 4,615 implementation
+slots, and 1,438 all-reported identities. Its bands remain 175/265, 123/934,
+172/2,165, and 929/13,006; Rust has 740 singletons, OCaml remains at zero,
+and canonical collisions and unknown buckets remain zero. Intervening W33
+Wasm, SPICE, Z80, ALGOL, HTML, Hindi, and Forme-cache merges change existing
+identities only. Their portable behavior remains covered by existing owners,
+so the refresh exposes no eligible unowned identity.
+
+Engram's merge makes the Go, Python, Ruby, Swift, and TypeScript exact-registry
+adoptions simultaneously ready. Each has one unfinished aggregate descendant.
+The boundedness pass selects
+`build-tool-swift-language-source-input-registry-adoption` on fresh clean
+branch `codex/build-tool-swift-language-source-input-registry-adoption` because
+Swift's merged portable hasher already owns the strongest 23-language
+production registry. The remaining slice is a finite equality repair for
+reviewed hybrid companions, path-scoped resources, Swift C-family headers and
+module maps, and universal capability metadata while preserving the existing
+checked filesystem boundary. Reconciliation and selection leave 640 unique
+owners and 1,006 dependency edges: 200 merged, 439 pending, and exactly this
+Swift owner in progress.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
