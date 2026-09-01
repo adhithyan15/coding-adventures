@@ -455,6 +455,30 @@ struct HasherTests {
         }
     }
 
+    #if !os(Windows)
+    @Test
+    func posixSnapshotRejectsConcurrentGrowthBeforeAppendingExtraBytes() throws {
+        let root = try makeTempDirectory(label: "hasher_posix_growth")
+        defer { try? FileManager.default.removeItem(atPath: root) }
+        let path = (root as NSString).appendingPathComponent(
+            "code/packages/swift/demo/Sources/Demo.swift"
+        )
+        try writeData(path, Data([0x61]))
+
+        #expect(throws: (any Error).self) {
+            _ = try Hasher.readSecurePOSIXFileForGrowthTest(
+                path,
+                repositoryRoot: root
+            ) {
+                let writer = try #require(FileHandle(forWritingAtPath: path))
+                try writer.seekToEnd()
+                try writer.write(contentsOf: Data([0x62]))
+                try writer.close()
+            }
+        }
+    }
+    #endif
+
     @Test
     func portablePathsRejectUnsafeUnicodeWindowsNamesAndFoldCollisions() throws {
         try Hasher.validatePortablePath("Sources/safe.swift")

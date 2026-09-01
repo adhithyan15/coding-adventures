@@ -53,6 +53,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   validation, pre-sort candidate limits, canonical registry-digest evidence,
   and finite source bounds through the same production matcher consumed by four
   neutral cases.
+  Retained-handle reads now stop at the snapshotted byte count and reject an
+  additional probe byte, closing concurrent POSIX growth before allocation.
   Repository-relative boundary adoption remains explicitly separate and
   pending rather than being approximated with broader package authority.
 - Registered the exact Engram WASM BUILD inputs for that package root only: the

@@ -634,25 +634,10 @@ public enum Hasher {
             guard before.size <= maximumFileBytes else {
                 throw SourceHashInputError.limitExceeded
             }
-            var data = Data()
-            data.reserveCapacity(Int(before.size))
-            var buffer = [UInt8](repeating: 0, count: 64 * 1024)
-            while true {
-                var count = DWORD(0)
-                let succeeded = buffer.withUnsafeMutableBytes { bytes in
-                    ReadFile(handle, bytes.baseAddress, DWORD(bytes.count), &count, nil)
-                }
-                guard succeeded else {
-                    throw SourceHashInputError.unavailable
-                }
-                if count == 0 {
-                    break
-                }
-                data.append(contentsOf: buffer.prefix(Int(count)))
-            }
-            guard UInt64(data.count) == before.size else {
-                throw SourceHashInputError.unstable
-            }
+            let data = try readWindowsSnapshotData(
+                handle,
+                expectedSize: before.size
+            )
             return SecureFileSnapshot(data: data, state: before)
         }
         #else
@@ -664,31 +649,112 @@ public enum Hasher {
             guard before.size <= maximumFileBytes else {
                 throw SourceHashInputError.limitExceeded
             }
-            var data = Data()
-            data.reserveCapacity(Int(before.size))
-            var buffer = [UInt8](repeating: 0, count: 64 * 1024)
-            while true {
-                let count = buffer.withUnsafeMutableBytes { bytes in
-                    read(descriptor, bytes.baseAddress, bytes.count)
-                }
-                if count < 0 {
-                    if errno == EINTR {
-                        continue
-                    }
-                    throw SourceHashInputError.unavailable
-                }
-                if count == 0 {
-                    break
-                }
-                data.append(contentsOf: buffer.prefix(Int(count)))
-            }
-            guard UInt64(data.count) == before.size else {
-                throw SourceHashInputError.unstable
-            }
+            let data = try readPOSIXSnapshotData(
+                descriptor,
+                expectedSize: before.size
+            )
             return SecureFileSnapshot(data: data, state: before)
         }
         #endif
     }
+
+    #if os(Windows)
+    private static func readWindowsSnapshotData(
+        _ handle: HANDLE,
+        expectedSize: UInt64
+    ) throws -> Data {
+        var data = Data()
+        data.reserveCapacity(Int(expectedSize))
+        var buffer = [UInt8](repeating: 0, count: 64 * 1024)
+        var remaining = expectedSize
+        while remaining > 0 {
+            var count = DWORD(0)
+            let requested = DWORD(min(UInt64(buffer.count), remaining))
+            let succeeded = buffer.withUnsafeMutableBytes { bytes in
+                ReadFile(handle, bytes.baseAddress, requested, &count, nil)
+            }
+            guard succeeded, count > 0 else {
+                throw SourceHashInputError.unstable
+            }
+            data.append(contentsOf: buffer.prefix(Int(count)))
+            remaining -= UInt64(count)
+        }
+        var probe: UInt8 = 0
+        var probeCount = DWORD(0)
+        let succeeded = withUnsafeMutableBytes(of: &probe) { bytes in
+            ReadFile(handle, bytes.baseAddress, 1, &probeCount, nil)
+        }
+        guard succeeded, probeCount == 0 else {
+            throw SourceHashInputError.unstable
+        }
+        return data
+    }
+    #else
+    private static func readPOSIXSnapshotData(
+        _ descriptor: Int32,
+        expectedSize: UInt64
+    ) throws -> Data {
+        var data = Data()
+        data.reserveCapacity(Int(expectedSize))
+        var buffer = [UInt8](repeating: 0, count: 64 * 1024)
+        var remaining = expectedSize
+        while remaining > 0 {
+            let requested = min(UInt64(buffer.count), remaining)
+            let count = buffer.withUnsafeMutableBytes { bytes in
+                read(descriptor, bytes.baseAddress, Int(requested))
+            }
+            if count < 0 {
+                if errno == EINTR {
+                    continue
+                }
+                throw SourceHashInputError.unavailable
+            }
+            guard count > 0 else {
+                throw SourceHashInputError.unstable
+            }
+            data.append(contentsOf: buffer.prefix(count))
+            remaining -= UInt64(count)
+        }
+        var probe: UInt8 = 0
+        while true {
+            let count = withUnsafeMutableBytes(of: &probe) { bytes in
+                read(descriptor, bytes.baseAddress, 1)
+            }
+            if count < 0, errno == EINTR {
+                continue
+            }
+            if count < 0 {
+                throw SourceHashInputError.unavailable
+            }
+            guard count == 0 else {
+                throw SourceHashInputError.unstable
+            }
+            break
+        }
+        return data
+    }
+
+    static func readSecurePOSIXFileForGrowthTest(
+        _ path: String,
+        repositoryRoot: String,
+        afterSnapshot: () throws -> Void
+    ) throws -> Data {
+        try withSecurePOSIXObject(
+            path,
+            repositoryRoot: repositoryRoot,
+            expectDirectory: false
+        ) { descriptor, before in
+            guard before.size <= maximumFileBytes else {
+                throw SourceHashInputError.limitExceeded
+            }
+            try afterSnapshot()
+            return try readPOSIXSnapshotData(
+                descriptor,
+                expectedSize: before.size
+            )
+        }
+    }
+    #endif
 
     #if os(Windows)
     private static func windowsState(

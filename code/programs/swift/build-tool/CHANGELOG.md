@@ -15,6 +15,9 @@
   checking every fixture pin. Repository-relative boundary inputs remain a
   separate explicitly owned follow-up rather than being widened into package
   authority.
+- Bound retained-handle file reads to the exact snapshotted size and probe one
+  byte past it without appending, so a concurrent POSIX writer cannot grow a
+  source beyond the per-file ceiling before the mutation check.
 - Complete portable source hashing with every established lane's primary
   sources and package metadata, the shared 26-component exact pruning registry, OCaml
   coverage, strict declared-source selection, and both neutral collection

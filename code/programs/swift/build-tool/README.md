@@ -164,7 +164,9 @@ Absolute checkout paths, timestamps, ownership, locale, and directory order
 never enter the digest. Every read walks down from the trusted repository root
 through retained no-follow handles; symbolic links, Windows reparse points,
 ancestor identity changes, and file identity/size/timestamp changes fail
-closed. Missing, unreadable, or unstable inputs produce CLI exit `2` and one
+closed. Reads stop at the snapshotted finite byte count and probe one byte past
+it without appending, so concurrent file growth fails before it can widen
+memory use. Missing, unreadable, or unstable inputs produce CLI exit `2` and one
 quoted, root-redacted diagnostic whose control and format characters are
 escaped:
 
