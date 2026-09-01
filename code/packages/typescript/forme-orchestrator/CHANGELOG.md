@@ -4,6 +4,12 @@
 
 ### Added
 
+- Added the FM03 `watch` lifecycle: initial build, host-provided change stream,
+  configurable debouncing, coalesced follow-up builds, manual rebuild, result
+  streaming, watcher-error propagation, and cooperative stop/dispose behavior.
+- Watch deliberately re-runs the complete pipeline; persistent cache hits and
+  exact affected-stage scheduling remain owned by FM-B010.
+
 - `buildDag` now honors explicit `PipelineConfig.wires`. Explicit edges may
   point forward in declaration order and override inferred producers.
 - One producer may feed multiple consumers. A stable topological sort executes

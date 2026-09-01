@@ -63,6 +63,12 @@ keep the same URL.
 The installed `forme` launcher registers `tsx` for TypeScript-first packages;
 the site uses `tsx` directly only for its post-build verifier and unit tests.
 
+For live preview, run `npm run bootstrap` once and then `npm run dev`. The
+preview server serves both deploy outputs as one in-memory site at
+`http://127.0.0.1:3000`, accepts the production `/coding-adventures/` URL
+prefix locally, reloads browsers after successful rebuilds, and preserves the
+last good blog when an edit produces a build error.
+
 ## Layout
 
 - `data/` — Markdown posts. Frontmatter is `key: value` only (the v0

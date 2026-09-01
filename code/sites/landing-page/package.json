@@ -10,6 +10,7 @@
     "check": "forme check",
     "build:clean": "npm run bootstrap && npm run clean && npm run build",
     "clean": "forme clean",
+    "dev": "forme watch",
     "test": "vitest run landing.test.ts"
   },
   "author": "Adhithya Rajasekaran",
