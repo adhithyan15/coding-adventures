@@ -55,6 +55,9 @@
 
 use layout_flexbox::layout_flexbox_with;
 use layout_float::{shrink_to_fit, ExclusionSpace, FloatStyle};
+use layout_generated::{
+    generated_kind, marker_gap, marker_position, GeneratedKind, MarkerPosition,
+};
 use layout_grid::layout_grid_with;
 use layout_inline::{layout_inline_run_in_regions_with_options, InlineOptions, InlineRegion};
 use layout_ir::{
@@ -375,7 +378,28 @@ fn lay_out_container<M: TextMeasurer>(
     let mut max_inline_right = padding.left;
     let mut prev_margin_bottom: f64 = 0.0;
     let mut have_placed_block = false;
-    let mut index = 0;
+    let outside_marker = node.children.first().filter(|child| {
+        generated_kind(child) == Some(GeneratedKind::Marker)
+            && marker_position(child) == MarkerPosition::Outside
+    });
+    if let Some(marker) = outside_marker {
+        let gutter_width = padding.left.max(0.0);
+        let mut positioned = lay_out_any(
+            marker,
+            unconstrained_height(gutter_width),
+            measurer,
+            0.0,
+            padding.top,
+            LayoutContext {
+                parent_abs_x: context.parent_abs_x + x,
+                parent_abs_y: context.parent_abs_y + y,
+                ..context
+            },
+        );
+        positioned.x = (padding.left - positioned.width - marker_gap(marker)).max(0.0);
+        children_positioned.push(positioned);
+    }
+    let mut index = usize::from(outside_marker.is_some());
     let mut exclusions = ExclusionSpace::new(inner_max_width);
 
     while index < node.children.len() {
@@ -894,6 +918,23 @@ mod tests {
         assert_eq!(p.children[0].y, p.children[1].y);
         assert_eq!(p.children[1].y, p.children[2].y);
         assert_eq!(p.height, 12.0);
+    }
+
+    #[test]
+    fn outside_generated_marker_uses_padding_gutter_without_narrowing_inline_content() {
+        let marker = inline_text("C.", 10.0).with_ext(
+            "generated",
+            layout_generated::generated_ext(GeneratedKind::Marker, MarkerPosition::Outside),
+        );
+        let content = inline_text("Content", 10.0);
+        let node = LayoutNode::container(vec![marker, content]).with_padding(Edges {
+            left: 30.0,
+            ..Edges::default()
+        });
+        let positioned = layout_block(&node, constraints_fixed(120.0, 500.0), &MonoMeasurer::new());
+        assert_eq!(positioned.children.len(), 2);
+        assert!(positioned.children[0].x < positioned.children[1].x);
+        assert_eq!(positioned.children[1].x, 30.0);
     }
 
     #[test]

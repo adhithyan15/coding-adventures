@@ -15,6 +15,10 @@ use layout_flexbox::{
     FlexItemStyle, FlexWrap, JustifyContent,
 };
 use layout_float::{float_ext, Clear, FloatSide, FloatStyle};
+use layout_generated::{
+    evaluate_content, format_marker, generated_ext, ContentPart, CounterChange, CounterContext,
+    CounterStyle, GeneratedKind, MarkerPosition,
+};
 use layout_grid::{
     grid_ext, GridAlignment, GridAutoFlow, GridContainerStyle, GridContentAlignment, GridItemStyle,
     GridSelfAlignment, GridTrack,
@@ -31,6 +35,7 @@ use layout_table::{
     table_ext, BorderCollapse, CaptionSide, TableContainerStyle, TableItemStyle, TableLayout,
     VerticalAlign,
 };
+use lexer::token::TokenType;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
 pub const VERSION: &str = "0.4.0";
@@ -179,6 +184,12 @@ pub struct HtmlComputedStyle {
     pub table_container: TableContainerStyle,
     pub table_item: TableItemStyle,
     pub positioned: PositionedStyle,
+    pub generated_content: Option<Vec<ContentPart>>,
+    pub list_style_type: Option<CounterStyle>,
+    pub list_style_position: MarkerPosition,
+    pub counter_reset: Vec<CounterChange>,
+    pub counter_set: Vec<CounterChange>,
+    pub counter_increment: Vec<CounterChange>,
     pub custom_properties: HashMap<String, Vec<String>>,
 }
 
@@ -280,11 +291,15 @@ where
     let theme = &context.theme;
     let style = root_computed_style(context);
     let ancestors = Vec::new();
+    let mut counters = CounterContext::default();
+    let _root_counter_scope = counters.enter(&style.counter_reset, &style.counter_set);
+    counters.increment(&style.counter_increment);
     let children = convert_children(
         &render_tree.children,
         context,
         &style,
         &ancestors,
+        &mut counters,
         is_visited,
     );
 
@@ -312,6 +327,7 @@ fn convert_node<F>(
     inherited: &HtmlComputedStyle,
     ancestors: &[&BrowserRenderNode],
     position: Option<NodePosition>,
+    counters: &mut CounterContext,
     is_visited: &F,
 ) -> Option<LayoutNode>
 where
@@ -323,14 +339,71 @@ where
         return None;
     }
 
+    let counter_scope = counters.enter(&style.counter_reset, &style.counter_set);
+    counters.increment(&style.counter_increment);
+
+    let supports_generated =
+        node.name.is_some() && !matches!(display, "inline-text" | "line-break" | "inline-replaced");
+    let mut generated = Vec::new();
+    if supports_generated {
+        if display == "list-item" {
+            counters.set("list-item", list_item_ordinal(node, ancestors));
+            if let Some(marker) = marker_box(
+                node, context, &style, ancestors, position, counters, is_visited,
+            ) {
+                generated.push(marker);
+            }
+        }
+        if let Some(before) = pseudo_box(
+            node,
+            PseudoElement::Before,
+            GeneratedKind::Before,
+            context,
+            &style,
+            ancestors,
+            position,
+            counters,
+            is_visited,
+        ) {
+            generated.push(before);
+        }
+    }
+
     let mut next_ancestors = ancestors.to_vec();
     next_ancestors.push(node);
     let mut layout = match display {
         "inline-text" => text_leaf(node.text.as_deref().unwrap_or_default(), &style),
         "line-break" => text_leaf("\n", &style),
         "inline-replaced" if node.role == "image" => image_leaf(node, &style, context),
-        _ => container_or_fallback(node, context, &style, &next_ancestors, is_visited),
+        _ => container_or_fallback(node, context, &style, &next_ancestors, counters, is_visited),
     };
+
+    if supports_generated {
+        if display == "list-item" {
+            counters.set("list-item", list_item_ordinal(node, ancestors));
+        }
+        let after = pseudo_box(
+            node,
+            PseudoElement::After,
+            GeneratedKind::After,
+            context,
+            &style,
+            ancestors,
+            position,
+            counters,
+            is_visited,
+        );
+        if !generated.is_empty() || after.is_some() {
+            if layout.content.is_some() {
+                layout = LayoutNode::container(vec![layout]);
+            }
+            generated.append(&mut layout.children);
+            if let Some(after) = after {
+                generated.push(after);
+            }
+            layout.children = generated;
+        }
+    }
 
     if let Some(id) = &node.id {
         layout = layout.with_id(id);
@@ -339,6 +412,11 @@ where
     apply_spacing(&mut layout, node, &context.theme, &style);
     if let Some(padding) = style.padding {
         layout.padding = Some(padding);
+    } else if display == "list-item" && style.list_style_position == MarkerPosition::Outside {
+        layout.padding = Some(Edges {
+            left: style.font.size * 1.75,
+            ..Edges::default()
+        });
     }
     if style.background.is_some() || style.border_width != Edges::default() {
         layout.ext.insert("paint".into(), box_paint_ext(&style));
@@ -367,6 +445,7 @@ where
     layout
         .ext
         .insert("positioned".into(), positioned_ext(style.positioned));
+    counters.exit(counter_scope);
     Some(layout)
 }
 
@@ -375,6 +454,7 @@ fn convert_children<F>(
     context: &HtmlStyleContext,
     inherited: &HtmlComputedStyle,
     ancestors: &[&BrowserRenderNode],
+    counters: &mut CounterContext,
     is_visited: &F,
 ) -> Vec<LayoutNode>
 where
@@ -392,7 +472,9 @@ where
                     count: element_count,
                 }
             });
-            convert_node(node, context, inherited, ancestors, position, is_visited)
+            convert_node(
+                node, context, inherited, ancestors, position, counters, is_visited,
+            )
         })
         .collect()
 }
@@ -402,12 +484,20 @@ fn container_or_fallback<F>(
     context: &HtmlStyleContext,
     style: &HtmlComputedStyle,
     ancestors: &[&BrowserRenderNode],
+    counters: &mut CounterContext,
     is_visited: &F,
 ) -> LayoutNode
 where
     F: Fn(&str) -> bool + ?Sized,
 {
-    let children = convert_children(&node.children, context, style, ancestors, is_visited);
+    let children = convert_children(
+        &node.children,
+        context,
+        style,
+        ancestors,
+        counters,
+        is_visited,
+    );
 
     if !children.is_empty() {
         return LayoutNode::container(children);
@@ -437,6 +527,168 @@ fn text_leaf(value: &str, style: &HtmlComputedStyle) -> LayoutNode {
     })
     .with_width(SizeValue::Wrap)
     .with_height(SizeValue::Wrap)
+}
+
+#[allow(clippy::too_many_arguments)]
+fn pseudo_box<F>(
+    node: &BrowserRenderNode,
+    pseudo: PseudoElement,
+    kind: GeneratedKind,
+    context: &HtmlStyleContext,
+    inherited: &HtmlComputedStyle,
+    ancestors: &[&BrowserRenderNode],
+    position: Option<NodePosition>,
+    counters: &CounterContext,
+    is_visited: &F,
+) -> Option<LayoutNode>
+where
+    F: Fn(&str) -> bool + ?Sized,
+{
+    let style = style_for_pseudo(
+        node, pseudo, inherited, ancestors, position, context, is_visited,
+    );
+    let content = style.generated_content.as_ref()?;
+    if style.display.as_deref() == Some("none") {
+        return None;
+    }
+    let value = evaluate_content(content, counters, |name| node_attribute(node, name));
+    if value.is_empty() {
+        return None;
+    }
+    Some(generated_text_box(
+        &value,
+        &style,
+        kind,
+        MarkerPosition::Inside,
+    ))
+}
+
+#[allow(clippy::too_many_arguments)]
+fn marker_box<F>(
+    node: &BrowserRenderNode,
+    context: &HtmlStyleContext,
+    inherited: &HtmlComputedStyle,
+    ancestors: &[&BrowserRenderNode],
+    position: Option<NodePosition>,
+    counters: &CounterContext,
+    is_visited: &F,
+) -> Option<LayoutNode>
+where
+    F: Fn(&str) -> bool + ?Sized,
+{
+    let mut style = style_for_pseudo(
+        node,
+        PseudoElement::Marker,
+        inherited,
+        ancestors,
+        position,
+        context,
+        is_visited,
+    );
+    if style.display.as_deref() == Some("none") {
+        return None;
+    }
+    style.white_space = "nowrap".into();
+    let marker_style = inherited
+        .list_style_type
+        .or_else(|| html_marker_style(node, ancestors))
+        .unwrap_or(CounterStyle::Disc);
+    let value = if let Some(content) = style.generated_content.as_ref() {
+        evaluate_content(content, counters, |name| node_attribute(node, name))
+    } else {
+        format_marker(list_item_ordinal(node, ancestors), marker_style)
+    };
+    if value.is_empty() {
+        return None;
+    }
+    let value = if inherited.list_style_position == MarkerPosition::Inside {
+        format!("{value} ")
+    } else {
+        value
+    };
+    Some(generated_text_box(
+        &value,
+        &style,
+        GeneratedKind::Marker,
+        inherited.list_style_position,
+    ))
+}
+
+fn generated_text_box(
+    value: &str,
+    style: &HtmlComputedStyle,
+    kind: GeneratedKind,
+    position: MarkerPosition,
+) -> LayoutNode {
+    let mut node = text_leaf(value, style);
+    node.ext
+        .insert("generated".into(), generated_ext(kind, position));
+    node.ext.insert("block".into(), display_ext("inline-text"));
+    node
+}
+
+fn html_marker_style(
+    node: &BrowserRenderNode,
+    ancestors: &[&BrowserRenderNode],
+) -> Option<CounterStyle> {
+    node.list_marker_type
+        .as_deref()
+        .and_then(CounterStyle::parse)
+        .or_else(|| {
+            ancestors
+                .iter()
+                .rev()
+                .find(|ancestor| ancestor.role == "list")
+                .and_then(|list| {
+                    list.list_marker_type
+                        .as_deref()
+                        .and_then(CounterStyle::parse)
+                        .or(match list.list_kind.as_deref() {
+                            Some("ordered") => Some(CounterStyle::Decimal),
+                            Some("unordered" | "menu" | "directory") => Some(CounterStyle::Disc),
+                            _ => None,
+                        })
+                })
+        })
+}
+
+fn list_item_ordinal(node: &BrowserRenderNode, ancestors: &[&BrowserRenderNode]) -> i64 {
+    let Some(list) = ancestors
+        .iter()
+        .rev()
+        .find(|ancestor| ancestor.role == "list")
+    else {
+        return 1;
+    };
+    let item_count = list
+        .children
+        .iter()
+        .filter(|child| child.role == "list_item")
+        .count() as i64;
+    let reversed = list.list_reversed;
+    let mut value = list
+        .list_start
+        .as_deref()
+        .and_then(|value| value.parse::<i64>().ok())
+        .unwrap_or(if reversed { item_count } else { 1 });
+    let step = if reversed { -1 } else { 1 };
+    for child in &list.children {
+        if child.role != "list_item" {
+            continue;
+        }
+        if let Some(authored) = child
+            .list_item_value
+            .as_deref()
+            .and_then(|value| value.parse::<i64>().ok())
+        {
+            value = authored;
+        }
+        if std::ptr::eq(child, node) {
+            return value;
+        }
+        value = value.saturating_add(step);
+    }
+    value
 }
 
 fn image_leaf(
@@ -505,6 +757,10 @@ where
     style.table_container = TableContainerStyle::default();
     style.table_item = TableItemStyle::default();
     style.positioned = PositionedStyle::default();
+    style.generated_content = None;
+    style.counter_reset.clear();
+    style.counter_set.clear();
+    style.counter_increment.clear();
     if node.role == "heading" {
         let level = node.heading_level.unwrap_or(1).clamp(1, 6);
         style.font = theme.heading_fonts[usize::from(level - 1)].clone();
@@ -567,6 +823,14 @@ struct CompoundSelector {
     attributes: Vec<AttributeSelector>,
     link_state: Option<LinkState>,
     structural: Vec<StructuralPseudo>,
+    pseudo_element: Option<PseudoElement>,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum PseudoElement {
+    Before,
+    After,
+    Marker,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -653,6 +917,12 @@ fn root_computed_style(context: &HtmlStyleContext) -> HtmlComputedStyle {
         table_container: TableContainerStyle::default(),
         table_item: TableItemStyle::default(),
         positioned: PositionedStyle::default(),
+        generated_content: None,
+        list_style_type: None,
+        list_style_position: MarkerPosition::Outside,
+        counter_reset: Vec::new(),
+        counter_set: Vec::new(),
+        counter_increment: Vec::new(),
         custom_properties: HashMap::new(),
     };
     let mut winners = HashMap::new();
@@ -696,7 +966,9 @@ fn apply_author_cascade<F>(
                 continue;
             }
             for selector in &rule.selectors {
-                if selector.matches(node, ancestors, position, is_visited) {
+                if selector.pseudo_element().is_none()
+                    && selector.matches(node, ancestors, position, is_visited)
+                {
                     record_declarations(
                         &mut winners,
                         &rule.declarations,
@@ -713,6 +985,50 @@ fn apply_author_cascade<F>(
         }
     }
     apply_declaration_winners(style, winners, context);
+}
+
+fn style_for_pseudo<F>(
+    node: &BrowserRenderNode,
+    pseudo: PseudoElement,
+    inherited: &HtmlComputedStyle,
+    ancestors: &[&BrowserRenderNode],
+    position: Option<NodePosition>,
+    context: &HtmlStyleContext,
+    is_visited: &F,
+) -> HtmlComputedStyle
+where
+    F: Fn(&str) -> bool + ?Sized,
+{
+    let mut style = inherited.clone();
+    style.display = Some("inline-text".into());
+    style.background = None;
+    style.generated_content = None;
+    style.counter_reset.clear();
+    style.counter_set.clear();
+    style.counter_increment.clear();
+    let mut winners = HashMap::new();
+    let mut order = 0;
+    for stylesheet in &context.author_stylesheets {
+        for rule in &stylesheet.rules {
+            if !rule_media_applies(rule, context) {
+                continue;
+            }
+            for selector in &rule.selectors {
+                if selector.pseudo_element() == Some(pseudo)
+                    && selector.matches(node, ancestors, position, is_visited)
+                {
+                    record_declarations(
+                        &mut winners,
+                        &rule.declarations,
+                        selector.specificity,
+                        &mut order,
+                    );
+                }
+            }
+        }
+    }
+    apply_declaration_winners(&mut style, winners, context);
+    style
 }
 
 fn record_declarations(
@@ -816,6 +1132,22 @@ fn apply_declaration_winners(
                     .then(TextDecoration::underline);
             }
             "display" => style.display = value.first().cloned(),
+            "content" => style.generated_content = parse_generated_content(&value),
+            "list-style-type" => {
+                style.list_style_type = value.first().and_then(|value| CounterStyle::parse(value))
+            }
+            "list-style-position" => {
+                style.list_style_position = if value.first().is_some_and(|value| value == "inside")
+                {
+                    MarkerPosition::Inside
+                } else {
+                    MarkerPosition::Outside
+                }
+            }
+            "list-style" => apply_list_style(style, &value),
+            "counter-reset" => style.counter_reset = parse_counter_changes(&value, 0),
+            "counter-set" => style.counter_set = parse_counter_changes(&value, 0),
+            "counter-increment" => style.counter_increment = parse_counter_changes(&value, 1),
             "box-decoration-break" => {
                 style.box_decoration_break = if value.first().is_some_and(|value| value == "clone")
                 {
@@ -1100,6 +1432,178 @@ fn apply_flex_flow(style: &mut HtmlComputedStyle, value: &[String]) {
             _ => {}
         }
     }
+}
+
+fn apply_list_style(style: &mut HtmlComputedStyle, value: &[String]) {
+    for token in value {
+        if token == "inside" {
+            style.list_style_position = MarkerPosition::Inside;
+        } else if token == "outside" {
+            style.list_style_position = MarkerPosition::Outside;
+        } else if let Some(counter_style) = CounterStyle::parse(token) {
+            style.list_style_type = Some(counter_style);
+        }
+    }
+}
+
+fn parse_counter_changes(value: &[String], default_value: i64) -> Vec<CounterChange> {
+    if value.first().is_some_and(|token| token == "none") {
+        return Vec::new();
+    }
+    let tokens = value
+        .iter()
+        .filter(|token| !matches!(token.as_str(), "," | "(" | ")"))
+        .collect::<Vec<_>>();
+    let mut changes = Vec::new();
+    let mut index = 0;
+    while index < tokens.len() {
+        let name = tokens[index];
+        if name.parse::<i64>().is_ok() {
+            index += 1;
+            continue;
+        }
+        let authored = tokens
+            .get(index + 1)
+            .and_then(|token| token.parse::<i64>().ok());
+        changes.push(CounterChange {
+            name: name.to_string(),
+            value: authored.unwrap_or(default_value),
+        });
+        index += usize::from(authored.is_some()) + 1;
+    }
+    changes
+}
+
+fn parse_generated_content(value: &[String]) -> Option<Vec<ContentPart>> {
+    if value
+        .first()
+        .is_some_and(|token| matches!(token.as_str(), "none" | "normal"))
+    {
+        return None;
+    }
+    let source = value.join(" ");
+    let mut parts = Vec::new();
+    let mut index = 0;
+    let bytes = source.as_bytes();
+    while index < bytes.len() {
+        if bytes[index].is_ascii_whitespace() || bytes[index] == b',' {
+            index += 1;
+            continue;
+        }
+        if matches!(bytes[index], b'\'' | b'"') {
+            let quote = bytes[index];
+            index += 1;
+            let start = index;
+            while index < bytes.len() && bytes[index] != quote {
+                if bytes[index] == b'\\' && index + 1 < bytes.len() {
+                    index += 1;
+                }
+                index += 1;
+            }
+            let text = String::from_utf8_lossy(&bytes[start..index])
+                .replace("\\\"", "\"")
+                .replace("\\'", "'")
+                .replace("\\\\", "\\");
+            index += usize::from(index < bytes.len());
+            parts.push(ContentPart::Text(text));
+            continue;
+        }
+        let start = index;
+        while index < bytes.len()
+            && (bytes[index].is_ascii_alphanumeric() || matches!(bytes[index], b'-' | b'_'))
+        {
+            index += 1;
+        }
+        if start == index {
+            index += 1;
+            continue;
+        }
+        let name = source[start..index].to_ascii_lowercase();
+        while index < bytes.len() && bytes[index].is_ascii_whitespace() {
+            index += 1;
+        }
+        if index >= bytes.len() || bytes[index] != b'(' {
+            continue;
+        }
+        index += 1;
+        let arguments_start = index;
+        let mut depth = 1;
+        let mut quote = None;
+        while index < bytes.len() && depth > 0 {
+            let byte = bytes[index];
+            if let Some(active) = quote {
+                if byte == active && bytes.get(index.wrapping_sub(1)) != Some(&b'\\') {
+                    quote = None;
+                }
+            } else if matches!(byte, b'\'' | b'"') {
+                quote = Some(byte);
+            } else if byte == b'(' {
+                depth += 1;
+            } else if byte == b')' {
+                depth -= 1;
+            }
+            index += 1;
+        }
+        let arguments_end = index.saturating_sub(1);
+        let arguments = split_css_arguments(&source[arguments_start..arguments_end]);
+        match name.as_str() {
+            "attr" => {
+                if let Some(attribute) = arguments.first() {
+                    parts.push(ContentPart::Attribute(
+                        attribute.trim().to_ascii_lowercase(),
+                    ));
+                }
+            }
+            "counter" => {
+                if let Some(counter) = arguments.first() {
+                    parts.push(ContentPart::Counter {
+                        name: counter.trim().to_string(),
+                        style: arguments
+                            .get(1)
+                            .and_then(|style| CounterStyle::parse(style.trim()))
+                            .unwrap_or_default(),
+                    });
+                }
+            }
+            "counters" => {
+                if let Some(counter) = arguments.first() {
+                    parts.push(ContentPart::Counters {
+                        name: counter.trim().to_string(),
+                        separator: arguments
+                            .get(1)
+                            .map(|separator| trim_css_string(separator.trim()))
+                            .unwrap_or_default(),
+                        style: arguments
+                            .get(2)
+                            .and_then(|style| CounterStyle::parse(style.trim()))
+                            .unwrap_or_default(),
+                    });
+                }
+            }
+            _ => {}
+        }
+    }
+    (!parts.is_empty()).then_some(parts)
+}
+
+fn split_css_arguments(value: &str) -> Vec<String> {
+    let mut values = Vec::new();
+    let mut start = 0;
+    let mut quote = None;
+    for (index, character) in value.char_indices() {
+        if let Some(active) = quote {
+            if character == active {
+                quote = None;
+            }
+        } else if matches!(character, '\'' | '"') {
+            quote = Some(character);
+        } else if character == ',' {
+            values.push(value[start..index].trim().to_string());
+            start = index + 1;
+        }
+    }
+    values.push(value[start..].trim().to_string());
+    values
 }
 
 fn apply_layout_gap(style: &mut HtmlComputedStyle, value: &[String], context: &HtmlStyleContext) {
@@ -1560,6 +2064,12 @@ fn apply_flex_shorthand(
 }
 
 impl Selector {
+    fn pseudo_element(&self) -> Option<PseudoElement> {
+        self.compounds
+            .last()
+            .and_then(|compound| compound.pseudo_element)
+    }
+
     fn matches<F>(
         &self,
         node: &BrowserRenderNode,
@@ -1613,6 +2123,7 @@ impl Selector {
             && self.compounds[0].attributes.is_empty()
             && self.compounds[0].link_state.is_none()
             && self.compounds[0].structural.is_empty()
+            && self.compounds[0].pseudo_element.is_none()
     }
 }
 
@@ -1847,7 +2358,7 @@ fn collect_direct_declarations(node: &GrammarASTNode, declarations: &mut Vec<Dec
     if node.rule_name == "declaration" {
         let property = descendant_named_node(node, "property")
             .and_then(|property| descendant_tokens(property).first().cloned());
-        let value = descendant_named_node(node, "value_list").map(descendant_tokens);
+        let value = descendant_named_node(node, "value_list").map(descendant_css_value_tokens);
         if let (Some(property), Some(value)) = (property, value) {
             declarations.push(Declaration {
                 property: property.to_ascii_lowercase(),
@@ -1902,6 +2413,7 @@ fn parse_selector(node: &GrammarASTNode) -> Option<Selector> {
             + compound.structural.len() as u16
             + u16::from(compound.link_state.is_some());
         total.2 += u16::from(compound.tag.as_deref().is_some_and(|tag| tag != "*"));
+        total.2 += u16::from(compound.pseudo_element.is_some());
         total
     });
     Some(Selector {
@@ -1956,6 +2468,16 @@ fn collect_compound_parts(node: &GrammarASTNode, compound: &mut CompoundSelector
                     }
                 }
             }
+            "pseudo_element" => {
+                compound.pseudo_element = descendant_tokens(child).iter().find_map(|token| {
+                    match token.trim_start_matches(':') {
+                        "before" => Some(PseudoElement::Before),
+                        "after" => Some(PseudoElement::After),
+                        "marker" => Some(PseudoElement::Marker),
+                        _ => None,
+                    }
+                });
+            }
             _ => collect_compound_parts(child, compound),
         }
     }
@@ -2008,6 +2530,24 @@ fn descendant_tokens(node: &GrammarASTNode) -> Vec<String> {
     let mut tokens = Vec::new();
     collect_tokens(node, &mut tokens);
     tokens
+}
+
+fn descendant_css_value_tokens(node: &GrammarASTNode) -> Vec<String> {
+    let mut tokens = Vec::new();
+    collect_css_value_tokens(node, &mut tokens);
+    tokens
+}
+
+fn collect_css_value_tokens(node: &GrammarASTNode, tokens: &mut Vec<String>) {
+    for child in &node.children {
+        match child {
+            ASTNodeOrToken::Node(node) => collect_css_value_tokens(node, tokens),
+            ASTNodeOrToken::Token(token) if token.type_ == TokenType::String => {
+                tokens.push(format!("{:?}", token.value));
+            }
+            ASTNodeOrToken::Token(token) => tokens.push(token.value.clone()),
+        }
+    }
 }
 
 fn collect_tokens(node: &GrammarASTNode, tokens: &mut Vec<String>) {
@@ -2434,6 +2974,7 @@ fn apply_size_hints(
         };
         layout.width = Some(SizeValue::Fixed(width));
     } else if display == "block"
+        || display == "list-item"
         || display == "flex"
         || display == "grid"
         || display.starts_with("table")
@@ -3074,6 +3615,80 @@ mod tests {
         assert_eq!(head.children[0].width, 80.0);
         assert_eq!(head.children[1].x, 88.0);
         assert_eq!(table.children[2].children[0].width, 232.0);
+    }
+
+    #[test]
+    fn list_markers_resolve_html_ordinals_authored_style_and_outside_gutters() {
+        let render = parse_browser_render_tree(
+            "<ol start='3' reversed><li id='first'>Tea</li><li id='second' value='7'>Cake</li></ol>",
+        )
+        .unwrap();
+        let context = HtmlStyleContext::with_author_stylesheets(
+            mosaic_html_theme(),
+            ["ol { list-style: upper-alpha outside; } li::marker { color: blue; }"],
+        )
+        .unwrap();
+        let layout =
+            html_render_tree_to_layout_with_style_context(&render, &context, &never_visited);
+        let first = find_by_id(&layout, "first").unwrap();
+        let second = find_by_id(&layout, "second").unwrap();
+        assert!(matches!(
+            &first.children[0].content,
+            Some(Content::Text(text)) if text.value == "C." && text.color == rgb(0, 0, 255)
+        ));
+        assert!(matches!(
+            &second.children[0].content,
+            Some(Content::Text(text)) if text.value == "G."
+        ));
+        assert_eq!(
+            layout_generated::generated_kind(&first.children[0]),
+            Some(GeneratedKind::Marker)
+        );
+
+        let positioned = layout_block(&layout, constraints_width(240.0), &TestMeasurer);
+        let first = find_positioned_by_id(&positioned, "first").unwrap();
+        assert!(first.children[0].x < first.children[1].x);
+        assert_eq!(first.children[0].y, first.children[1].y);
+    }
+
+    #[test]
+    fn pseudo_content_evaluates_scoped_counters_attributes_and_source_order() {
+        let render = parse_browser_render_tree(
+            "<section><h2 id='one' title='Intro'>Alpha</h2><h2 id='two' title='Next'>Beta</h2></section>",
+        )
+        .unwrap();
+        let context = HtmlStyleContext::with_author_stylesheets(
+            mosaic_html_theme(),
+            ["section { counter-reset: chapter 0; } h2 { counter-increment: chapter; } \
+              h2::before { content: 'Chapter ' counter(chapter, upper-roman) ': ' attr(title) ' — '; } \
+              h2::after { content: '!'; color: red; }"],
+        )
+        .unwrap();
+        let layout =
+            html_render_tree_to_layout_with_style_context(&render, &context, &never_visited);
+        let one = find_by_id(&layout, "one").unwrap();
+        let two = find_by_id(&layout, "two").unwrap();
+        let Some(Content::Text(one_before)) = &one.children[0].content else {
+            panic!("expected generated text");
+        };
+        let Some(Content::Text(two_before)) = &two.children[0].content else {
+            panic!("expected generated text");
+        };
+        assert_eq!(one_before.value, "Chapter I: Intro — ");
+        assert_eq!(two_before.value, "Chapter II: Next — ");
+        assert!(matches!(
+            &one.children[2].content,
+            Some(Content::Text(text)) if text.value == "!" && text.color == rgb(255, 0, 0)
+        ));
+        assert_eq!(
+            layout_generated::generated_kind(&one.children[0]),
+            Some(GeneratedKind::Before)
+        );
+        assert_eq!(
+            layout_generated::generated_kind(&one.children[2]),
+            Some(GeneratedKind::After)
+        );
+        assert!(one.children[0].id.is_none() && one.children[2].id.is_none());
     }
 
     #[test]
