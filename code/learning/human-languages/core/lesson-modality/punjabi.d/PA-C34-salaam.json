@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C34-salaam",
+    "language": "punjabi",
+    "chapter": 34,
+    "sequence": 2050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5768457533971525"
+  },
+  "findings": []
+}

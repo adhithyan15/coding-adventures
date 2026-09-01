@@ -1,0 +1,12 @@
+{
+  "language": "punjabi",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:33f54616766d656c",
+  "lessonIds": [
+    "PA-C34-salaam",
+    "PA-W09-lalla",
+    "PA-C34-ji-aaian-nu",
+    "PA-W09-aara"
+  ],
+  "tex": "punjabi/book/chapters/ch34-peace-and-welcome.tex"
+}

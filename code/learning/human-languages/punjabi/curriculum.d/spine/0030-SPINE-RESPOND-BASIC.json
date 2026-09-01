@@ -1,12 +1,9 @@
 {
   "segments": [
     "PA-PATH-003",
-    "PA-PATH-C1P"
+    "PA-PATH-C1P",
+    "PA-PATH-033"
   ],
-  "omits": [
-    "RESPONSE-YES",
-    "RESPONSE-NO",
-    "RESPONSE-OKAY"
-  ],
+  "omits": [],
   "relocates": {}
 }

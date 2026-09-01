@@ -1,0 +1,17 @@
+{
+  "id": "PA-EXT-043-PREA1-FOUR-FAREWELLS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can take my leave four ways and say which of them names a time and which does not.",
+  "prerequisites": [
+    "PA-EXT-042-PREA1-OBJECT-PRONOUN"
+  ],
+  "lessons": [
+    "PA-C35-changa-ji",
+    "PA-C35-jaldi-milaange",
+    "PA-C36-kall-milaange",
+    "PA-W09-aunkar",
+    "PA-C36-shubh-raat"
+  ]
+}

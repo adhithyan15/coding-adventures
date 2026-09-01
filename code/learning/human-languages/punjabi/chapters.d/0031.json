@@ -1,0 +1,22 @@
+{
+  "chapter": 31,
+  "title": "Yes, No, and I See",
+  "label": "ch:pa-three-answers",
+  "canDo": "I can answer someone respectfully with ji, receive news with achchha, refuse with the bare na that hides inside nahin, and write achchha in Gurmukhi from its four pieces.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PA-C31-na",
+    "kind": "production",
+    "summary": "The reader gives the plain no, separates it from the strengthened nahin it lives inside, runs all four replies of the chapter by ear, names three English words descended from the same Proto-Indo-European particle, and assembles achchha in Gurmukhi now that its missing letter has been traced.",
+    "assesses": [
+      "PA-LEX-NA",
+      "PA-ETYMON-NA-NE",
+      "PA-LEX-JI",
+      "PA-LEX-ACHCHHA",
+      "PA-SCRIPT-CHHA-01",
+      "PA-SCRIPT-ACHCHHA-01"
+    ]
+  }
+}

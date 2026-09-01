@@ -1,0 +1,15 @@
+{
+  "id": "PA-PATH-036",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "PA-C34-salaam",
+    "PA-W09-lalla",
+    "PA-C34-ji-aaian-nu",
+    "PA-W09-aara"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-041-PREA1-PEACE-AND-WELCOME"
+  ],
+  "after": []
+}

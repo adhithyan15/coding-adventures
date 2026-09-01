@@ -1,0 +1,7 @@
+{
+  "language": "punjabi",
+  "chapter": 32,
+  "output": "punjabi/book/chapters/ch32-good-and-soso.tex",
+  "unicodeScript": "Gurmukhi",
+  "scriptCommand": "pa"
+}
