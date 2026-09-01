@@ -83,7 +83,7 @@ links existing Mosaic work instead of duplicating it.
    focused regression so another app cannot recreate it. **Done in #13803.**
 23. **P1 — [#13690](https://github.com/adhithyan15/coding-adventures/issues/13690):**
    expose durable-storage fallback, recovery, and backup information in the UI.
-   **In progress.**
+   **Done in #13837.**
 24. **P1 — [#13695](https://github.com/adhithyan15/coding-adventures/issues/13695):**
    replace blank startup with loading and failure states.
 25. **P1 — [#13692](https://github.com/adhithyan15/coding-adventures/issues/13692):**
