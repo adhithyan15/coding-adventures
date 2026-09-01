@@ -159,6 +159,10 @@ struct HasherTests {
             SourceCollectionFixture.self,
             from: Data(contentsOf: fixtureURL(name))
         )
+        #expect(
+            fixture.input.options.registrySHA256
+                == Hasher.languageSourceInputRegistryDigest
+        )
         let root = try makeTempDirectory(label: "hasher_fixture")
         defer { try? FileManager.default.removeItem(atPath: root) }
         let packageRoot = (root as NSString).appendingPathComponent(
@@ -228,6 +232,10 @@ struct HasherTests {
         #expect(
             Hasher.languageSourceInputRegistryDigest
                 == "f49bfe8c7c9c0fb9b534ecc9ca4a614f3684abe32bdb0edac82d99bdc806fb70"
+        )
+        #expect(
+            try Hasher.canonicalLanguageSourceInputRegistryDigest(from: checkedData)
+                == Hasher.languageSourceInputRegistryDigest
         )
     }
 
@@ -349,6 +357,130 @@ struct HasherTests {
                 root: packageRoot
             ) == ["BUILD"]
         )
+    }
+
+    @Test
+    func repositoryPackageRootMustMatchLanguageAndContainAName() throws {
+        let root = try makeTempDirectory(label: "hasher_package_root_authority")
+        defer { try? FileManager.default.removeItem(atPath: root) }
+        let mismatchedRoot = (root as NSString).appendingPathComponent(
+            "code/packages/rust/demo"
+        )
+        try writeFile(
+            (mismatchedRoot as NSString).appendingPathComponent("BUILD"),
+            "echo inert\n"
+        )
+        let mismatched = BuildPackage(
+            name: "swift/demo",
+            path: mismatchedRoot,
+            language: "swift"
+        )
+        #expect(throws: (any Error).self) {
+            _ = try Hasher.collectSourceFiles(mismatched, repositoryRoot: root)
+        }
+
+        let laneRoot = (root as NSString).appendingPathComponent(
+            "code/packages/swift"
+        )
+        try FileManager.default.createDirectory(
+            atPath: laneRoot,
+            withIntermediateDirectories: true
+        )
+        let wholeLane = BuildPackage(
+            name: "swift",
+            path: laneRoot,
+            language: "swift"
+        )
+        #expect(throws: (any Error).self) {
+            _ = try Hasher.collectSourceFiles(wholeLane, repositoryRoot: root)
+        }
+    }
+
+    @Test
+    func candidateSelectionAndByteLimitsFailBeforeWidening() throws {
+        let root = try makeTempDirectory(label: "hasher_input_limits")
+        defer { try? FileManager.default.removeItem(atPath: root) }
+        for name in ["c.swift", "a.swift", "b.swift"] {
+            try writeFile((root as NSString).appendingPathComponent(name), "x\n")
+        }
+
+        #expect(throws: (any Error).self) {
+            _ = try Hasher.boundedDirectoryEntries(root, maximumEntries: 2)
+        }
+        #expect(
+            try Hasher.boundedDirectoryEntries(root, maximumEntries: 3)
+                == ["a.swift", "b.swift", "c.swift"]
+        )
+
+        var selected: [String] = []
+        try Hasher.appendSelectedInput("a.swift", to: &selected, maximumInputs: 1)
+        #expect(throws: (any Error).self) {
+            try Hasher.appendSelectedInput(
+                "b.swift",
+                to: &selected,
+                maximumInputs: 1
+            )
+        }
+        #expect(
+            try Hasher.checkedPackageByteTotal(
+                current: 6,
+                fileBytes: 4,
+                maximumFile: 4,
+                maximumPackage: 10
+            ) == 10
+        )
+        #expect(throws: (any Error).self) {
+            _ = try Hasher.checkedPackageByteTotal(
+                current: 0,
+                fileBytes: 5,
+                maximumFile: 4,
+                maximumPackage: 10
+            )
+        }
+        #expect(throws: (any Error).self) {
+            _ = try Hasher.checkedPackageByteTotal(
+                current: 7,
+                fileBytes: 4,
+                maximumFile: 4,
+                maximumPackage: 10
+            )
+        }
+        #expect(throws: (any Error).self) {
+            _ = try Hasher.checkedPackageByteTotal(
+                current: UInt64.max,
+                fileBytes: 1,
+                maximumFile: 1,
+                maximumPackage: UInt64.max
+            )
+        }
+    }
+
+    @Test
+    func portablePathsRejectUnsafeUnicodeWindowsNamesAndFoldCollisions() throws {
+        try Hasher.validatePortablePath("Sources/safe.swift")
+        for path in [
+            "Sources/e\u{0301}.swift",
+            "Sources/CON.swift",
+            "Sources/bad:name.swift",
+            "Sources/trailing. ",
+            "Sources/hidden\u{202E}.swift",
+        ] {
+            #expect(throws: (any Error).self) {
+                try Hasher.validatePortablePath(path)
+            }
+        }
+
+        var identities: [String: String] = [:]
+        try Hasher.registerPortableIdentity(
+            "Sources/straße.swift",
+            in: &identities
+        )
+        #expect(throws: (any Error).self) {
+            try Hasher.registerPortableIdentity(
+                "Sources/strasse.swift",
+                in: &identities
+            )
+        }
     }
 
     @Test

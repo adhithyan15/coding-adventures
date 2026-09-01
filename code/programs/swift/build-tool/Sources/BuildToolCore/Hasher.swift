@@ -93,7 +93,8 @@ public enum Hasher {
         do {
             let packageRoot = try repositoryPackagePath(
                 package.path,
-                repositoryRoot: repositoryRoot
+                repositoryRoot: repositoryRoot,
+                expectedLanguage: package.language
             )
             let rootBefore = try secureDirectoryState(
                 package.path,
@@ -121,13 +122,10 @@ public enum Hasher {
                     file,
                     repositoryRoot: repositoryRoot
                 )
-                let (nextPackageBytes, overflow) = packageBytes.addingReportingOverflow(
-                    UInt64(snapshot.data.count)
+                packageBytes = try checkedPackageByteTotal(
+                    current: packageBytes,
+                    fileBytes: UInt64(snapshot.data.count)
                 )
-                guard !overflow, nextPackageBytes <= maximumPackageBytes else {
-                    throw SourceHashInputError.limitExceeded
-                }
-                packageBytes = nextPackageBytes
                 appendFrame(Data(repositoryPath.utf8), to: &digest)
                 appendFrame(snapshot.data, to: &digest)
                 fileStates.append((file, snapshot.state))
@@ -192,7 +190,6 @@ public enum Hasher {
         directoryStates: [(String, SecureObjectState)]
     ) {
         let root = package.path
-        let fm = FileManager.default
         var files: [String] = []
         var directoryStates: [(String, SecureObjectState)] = []
         var candidateCount = 0
@@ -206,7 +203,11 @@ public enum Hasher {
         let universal = languageSourceInputRegistry.universalInputs
         let generatedDirectories = Set(universal.generatedDirectoryComponents)
         let repositoryPackageRoot = try repositoryRoot.map {
-            try repositoryPackagePath(package.path, repositoryRoot: $0)
+            try repositoryPackagePath(
+                package.path,
+                repositoryRoot: $0,
+                expectedLanguage: package.language
+            )
         }
         let packageExactPaths = Set(
             languageInputs.packageExactInputs
@@ -223,9 +224,12 @@ public enum Hasher {
             let before = try repositoryRoot.map {
                 try secureDirectoryState(directory, repositoryRoot: $0)
             }
-            let entries = try fm.contentsOfDirectory(atPath: directory)
+            let entries = try boundedDirectoryEntries(
+                directory,
+                maximumEntries: maximumCandidateCount - candidateCount
+            )
 
-            for entry in entries.sorted(by: utf8LessThan) {
+            for entry in entries {
                 candidateCount += 1
                 guard candidateCount <= maximumCandidateCount else {
                     throw SourceHashInputError.limitExceeded
@@ -235,11 +239,7 @@ public enum Hasher {
                     : "\(relativeDirectory)/\(entry)"
                 let fullPath = (directory as NSString).appendingPathComponent(entry)
                 let normalized = try portableCandidatePath(relativePath)
-                let identity = TrackedArtifactUnicode17.casefold(normalized)
-                if let existing = portableIdentities[identity], existing != normalized {
-                    throw SourceHashInputError.unsafePath
-                }
-                portableIdentities[identity] = normalized
+                try registerPortableIdentity(normalized, in: &portableIdentities)
                 switch try entryKind(fullPath) {
                 case .linked:
                     continue
@@ -290,10 +290,7 @@ public enum Hasher {
                 }
 
                 if included {
-                    guard files.count < maximumSelectedInputCount else {
-                        throw SourceHashInputError.limitExceeded
-                    }
-                    files.append(fullPath)
+                    try appendSelectedInput(fullPath, to: &files)
                 }
             }
 
@@ -391,20 +388,106 @@ public enum Hasher {
 
     private static func repositoryPackagePath(
         _ path: String,
-        repositoryRoot: String
+        repositoryRoot: String,
+        expectedLanguage: String
     ) throws -> String {
         let relative = try portableRelativePath(path, root: repositoryRoot)
         let components = relative.split(separator: "/").map(String.init)
-        guard components.count >= 3,
+        guard components.count >= 4,
               components[0] == "code",
-              components[1] == "packages" || components[1] == "programs" else {
+              components[1] == "packages" || components[1] == "programs",
+              components[2] == expectedLanguage else {
             throw SourceHashInputError.unsafePath
         }
         try validatePortablePath(relative)
         return relative
     }
 
-    private static func validatePortablePath(_ path: String) throws {
+    /// Incremental immediate-child enumeration applies the candidate ceiling
+    /// before a directory can be materialized and sorted in memory.
+    static func boundedDirectoryEntries(
+        _ directory: String,
+        maximumEntries: Int
+    ) throws -> [String] {
+        guard maximumEntries >= 0 else {
+            throw SourceHashInputError.limitExceeded
+        }
+        var enumerationFailed = false
+        guard let enumerator = FileManager.default.enumerator(
+            at: URL(fileURLWithPath: directory),
+            includingPropertiesForKeys: nil,
+            options: [.skipsSubdirectoryDescendants],
+            errorHandler: { _, _ in
+                enumerationFailed = true
+                return false
+            }
+        ) else {
+            throw SourceHashInputError.unavailable
+        }
+        var entries: [String] = []
+        entries.reserveCapacity(min(maximumEntries, 1_024))
+        while let value = enumerator.nextObject() {
+            guard !enumerationFailed, let url = value as? URL else {
+                throw SourceHashInputError.unavailable
+            }
+            guard entries.count < maximumEntries else {
+                throw SourceHashInputError.limitExceeded
+            }
+            entries.append(url.lastPathComponent)
+        }
+        guard !enumerationFailed else {
+            throw SourceHashInputError.unavailable
+        }
+        return entries.sorted(by: utf8LessThan)
+    }
+
+    static func appendSelectedInput(
+        _ path: String,
+        to files: inout [String],
+        maximumInputs: Int = maximumSelectedInputCount
+    ) throws {
+        guard files.count < maximumInputs else {
+            throw SourceHashInputError.limitExceeded
+        }
+        files.append(path)
+    }
+
+    static func checkedPackageByteTotal(
+        current: UInt64,
+        fileBytes: UInt64,
+        maximumFile: UInt64 = maximumFileBytes,
+        maximumPackage: UInt64 = maximumPackageBytes
+    ) throws -> UInt64 {
+        guard fileBytes <= maximumFile else {
+            throw SourceHashInputError.limitExceeded
+        }
+        let (next, overflow) = current.addingReportingOverflow(fileBytes)
+        guard !overflow, next <= maximumPackage else {
+            throw SourceHashInputError.limitExceeded
+        }
+        return next
+    }
+
+    static func canonicalLanguageSourceInputRegistryDigest(
+        from data: Data
+    ) throws -> String {
+        let object = try JSONSerialization.jsonObject(with: data)
+        let canonical = try JSONSerialization.data(
+            withJSONObject: object,
+            options: [.sortedKeys, .withoutEscapingSlashes]
+        )
+        var framed = Data(
+            "coding-adventures/build-tool-language-source-input-registry/v1\0".utf8
+        )
+        var length = UInt64(canonical.count).bigEndian
+        withUnsafeBytes(of: &length) { bytes in
+            framed.append(contentsOf: bytes)
+        }
+        framed.append(canonical)
+        return hash(data: framed)
+    }
+
+    static func validatePortablePath(_ path: String) throws {
         guard !path.isEmpty,
               path.unicodeScalars.count <= 512,
               !path.hasPrefix("/"),
@@ -442,6 +525,17 @@ public enum Hasher {
                 throw SourceHashInputError.unsafePath
             }
         }
+    }
+
+    static func registerPortableIdentity(
+        _ normalizedPath: String,
+        in identities: inout [String: String]
+    ) throws {
+        let identity = TrackedArtifactUnicode17.casefold(normalizedPath)
+        if let existing = identities[identity], existing != normalizedPath {
+            throw SourceHashInputError.unsafePath
+        }
+        identities[identity] = normalizedPath
     }
 
     private static func asciiAlpha(_ scalar: UInt32) -> Bool {

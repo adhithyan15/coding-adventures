@@ -19,21 +19,21 @@
     "notes": "All 40 final-head checks completed acceptably on 2b6e58cf8343ea6199d1c7593d6ea05678fe4254: 33 succeeded and seven were expected skips. GitHub reported the PR clean and mergeable before guarded squash auto-merge completed as 44d635713e8be552539539a0012852afc35f39b7 without a plain manual merge command."
   },
   "last_inventory": {
-    "revision": "44d635713e8be552539539a0012852afc35f39b7",
+    "revision": "59b5a5ae202415d0c0c045cc2d3ee3bde157ed32",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1399,
-    "implementation_package_slots": 4615,
-    "all_reported_identities": 1438,
+    "implementation_identities": 1400,
+    "implementation_package_slots": 4616,
+    "all_reported_identities": 1439,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 265,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 172,
     "two_to_four_missing_slots": 2165,
-    "singleton_packages": 929,
-    "singleton_missing_slots": 13006,
-    "rust_singletons": 740,
+    "singleton_packages": 930,
+    "singleton_missing_slots": 13020,
+    "rust_singletons": 741,
     "ocaml_packages": 0,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -966,6 +966,7 @@
       "pr_number": null,
       "selection_revision": "44d635713e8be552539539a0012852afc35f39b7",
       "selection_notes": "Selected after PR #13783 completed all 40 final-head checks acceptably and merged through guarded squash auto-merge as 44d635713e8be552539539a0012852afc35f39b7. The exact-main collision-checked schema-3 inventory remains 15 established lanes, 1,399 implementation identities, 4,615 slots, 1,438 all-reported identities, bands 175/265, 123/934, 172/2,165, and 929/13,006, 740 Rust singletons, zero OCaml packages, zero canonical collisions, and zero unknown buckets. Intervening W33 Wasm, SPICE, Z80, ALGOL, HTML, Hindi, and Forme cache merges change existing identities only; W33 and Forme remain covered by their existing portable-conformance and Forme-family owners, and no eligible identity is unowned. Engram's merge makes the Go, Python, Ruby, Swift, and TypeScript exact-registry adoptions simultaneously ready with equal one-edge leverage into the remaining-engine aggregate. Swift wins the boundedness pass because its merged portable hasher already has the strongest 23-language production registry, leaving a finite projection-equality repair for reviewed hybrid companions, path-scoped resources, module maps, headers, and universal capability metadata. The target local branch, remote branch, prior PR, and fresh worktree path were absent before creating this clean exact-main branch. Reconciliation and selection leave the complete 640-owner/1,006-edge graph unique, dependency-complete, and acyclic at 200 merged, 439 pending, and exactly this owner in progress.",
+      "rebase_notes": "Before publication the implementation rebased conflict-free onto exact origin/main 59b5a5ae202415d0c0c045cc2d3ee3bde157ed32. Intervening Intel 8086, Hindi register, Venture table-layout, and SPICE BJT changes do not overlap the Swift registry implementation. The refreshed schema-3 inventory adds only the Rust layout-table identity and now records 15 established lanes, 1,400 implementation identities, 4,616 slots, 1,439 all-reported identities, bands 175/265, 123/934, 172/2,165, and 930/13,020, 741 Rust singletons, zero OCaml packages, zero canonical collisions, and zero unknown buckets. New pending owner layout-table-portable-core-classification owns that UI42 portable contract, so no eligible identity remains unowned. The complete graph now has 642 unique owners and 1,008 dependency edges: 200 merged, 441 pending, and exactly this owner in progress.",
       "notes": "Production Swift has the strongest existing 23-language package-local registry but still omits reviewed Rust companions in several hybrid lanes, Swift C-family headers and module maps, path-scoped resources, and universal required_capabilities.json. Project the complete neutral language registry into production and preserve its checked package-root filesystem boundaries. Read-only conformance and security audits discovered that the separate repository-relative boundary registry also needs native hashing and reverse-diff integration; that newly classified behavior belongs to the dependent build-tool-swift-repository-source-input-boundary-adoption owner rather than widening this finite package-local slice."
     },
     {
@@ -7760,6 +7761,15 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the collision-clean e5d7e1aae inventory after merged PR #13774 added the Rust-only layout-positioned identity. Separate the host-neutral UI10 contract from browser and rendering hosts; pin tolerant positioned-extension decoding, diagnostics, static/relative/absolute/fixed/sticky insets, normal-flow participation, stable z-order, overflow policy, scroll extents, rectangular paint clips, hit-region intersection, fixed viewport coordinates, sticky clamping, malformed inputs, numeric behavior, and resource limits in language-neutral fixtures. Then decompose applicable-lane rollout or record narrow reviewed exceptions. Keep HTML parsing, CSS computation, DOM and window authority, toolkit rendering, transformed containing blocks, writing modes, nested interactive scrolling, full stacking contexts, floats, and fragmentation outside this portable core."
+    },
+    {
+      "id": "layout-table-portable-core-classification",
+      "title": "Classify the portable layout-table core across applicable lanes",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean 59b5a5ae20 inventory after merged PR #13786 added the Rust-only layout-table identity and UI42 contract. Separate the host-neutral table formatting core from HTML, CSS, paint, and rendering hosts; pin tolerant table metadata decoding, diagnostics, anonymous row and cell normalization, header/body/footer ordering, row and column spans, slot occupancy, automatic and fixed track sizing, definite and intrinsic widths, separate and collapsed border geometry, caption placement, cell vertical alignment, malformed inputs, numeric behavior, overflow, and resource limits in language-neutral fixtures. Then decompose applicable-lane rollout or record narrow reviewed exceptions. Keep HTML and CSS parsing, DOM and window authority, border painting and conflict colors/styles, text measurement hosts, writing modes, fragmentation, incremental invalidation, toolkit rendering, and device capture outside the portable core."
     }
   ]
 }

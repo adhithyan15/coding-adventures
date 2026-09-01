@@ -733,6 +733,12 @@ languages fail before enumeration. This equality test is adoption evidence,
 not runtime authority: the Swift executable does not locate or decode a
 repository fixture when it hashes a package.
 
+The adoption evidence also recomputes the domain-separated canonical JSON
+digest, checks every consumed case pin, binds `code/packages|programs/<lane>`
+to the selected language, requires a package-name component, and applies the
+candidate ceiling during incremental immediate-child enumeration before
+bounded sorting.
+
 That package-local projection does not by itself complete Swift's native
 source-input adoption. A separate dependent Swift owner integrates the
 repository-relative boundary registry, tracked-regular-file evidence, and its

@@ -130,7 +130,8 @@ complete checked 23-language registry. It does not read a fixture, environment
 variable, or command-line registry path at runtime. Tests decode the canonical
 JSON and compare its complete raw object with the production serialization, so
 missing selectors, undeclared extras, scoped-rule metadata, and ownership drift
-all fail together.
+all fail together. They also recompute the canonical domain-separated registry
+digest and require every consumed source-collection case to pin that digest.
 
 Extension mode resolves recursive sources and exact metadata plus bounded
 native-companion and resource scopes. Declared mode instead applies strict
@@ -140,7 +141,10 @@ manifests, fixed relative inputs, and exact package-specific inputs. This
 includes SwiftPM C-family targets below `Sources`, reviewed Rust companions,
 resources and scripts, and only the three exact Engram WASM BUILD inputs for
 the canonical Engram package root. Unknown languages, non-portable paths,
-NFC/full-casefold aliases, oversized inputs, and selector widening fail closed.
+NFC/full-casefold aliases, lane/root mismatches, lane roots without a package
+name, oversized inputs, and selector widening fail closed. Immediate directory
+entries are enumerated incrementally into the candidate ceiling before bounded
+sorting, so a single large directory cannot bypass the package-wide limit.
 
 Package collection deliberately remains below the package root. The separate
 repository-relative boundary registry, tracked-file proof, and reverse diff

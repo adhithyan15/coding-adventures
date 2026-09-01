@@ -12540,6 +12540,30 @@ the active implementation slice. The graph now has 641 unique owners and 1,008
 dependency edges: 200 merged, 440 pending, and exactly the Swift package-local
 registry owner in progress.
 
+### Pre-publication rebase and UI42 layout-table classification
+
+The Swift implementation rebased conflict-free onto exact current
+`origin/main` `59b5a5ae202415d0c0c045cc2d3ee3bde157ed32`. The refreshed
+collision-checked schema-3 inventory now has 15 established lanes, 1,400
+implementation identities, 4,616 slots, and 1,439 all-reported identities.
+Its bands are 175/265, 123/934, 172/2,165, and 930/13,020; Rust has 741
+singletons, OCaml remains at zero, and canonical collisions and unknown buckets
+remain zero. Intel 8086, Hindi register, and SPICE BJT changes touch existing
+identities only and do not overlap this Swift registry slice.
+
+Merged PR #13786 adds the sole new identity, Rust-only `layout-table`, with the
+host-neutral UI42 table-formatting contract over `layout-ir`. New pending owner
+`layout-table-portable-core-classification` owns language-neutral fixtures and
+applicable-lane review for tolerant table metadata, anonymous structure,
+section ordering, spans and occupancy, automatic/fixed sizing, border geometry,
+captions, alignment, malformed inputs, numeric behavior, overflow, and resource
+ceilings. HTML/CSS parsing, DOM and windows, border painting, text-measurement
+hosts, writing modes, fragmentation, incremental invalidation, toolkit
+rendering, and device capture remain outside that portable core. No eligible
+identity remains unowned. The graph is now 642 unique owners and 1,008 edges:
+200 merged, 441 pending, and exactly the Swift package-local registry owner in
+progress.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
