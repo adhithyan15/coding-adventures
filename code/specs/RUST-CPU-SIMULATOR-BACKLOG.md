@@ -75,7 +75,7 @@ according to the current prioritization run.
 | RCPU-015 / RCPU-016 | 1974 | Intel 8080 | Complete: `intel8080-simulator` | Complete: `intel8080-gatelevel` |
 | RCPU-017 / RCPU-018 | 1975 | MOS 6502 | Complete: `mos6502-simulator` | Complete: `mos6502-gatelevel` |
 | RCPU-019 / RCPU-020 | 1976 | Zilog Z80 | Complete: `z80-simulator` | Complete: `z80-gatelevel` |
-| RCPU-021 / RCPU-022 | 1978 | Intel 8086 | Audit: `intel8086-simulator` | Audit: `intel8086-gatelevel` |
+| RCPU-021 / RCPU-022 | 1978 | Intel 8086 | Complete: `intel8086-simulator` | Audit: `intel8086-gatelevel` |
 | RCPU-023 / RCPU-024 | 1979 | Motorola 68000 | Audit: `m68k-simulator` | Audit: `motorola68k-gatelevel` |
 | RCPU-025 / RCPU-026 | 1980 | Intel 8051 | Audit: `intel8051-simulator` | Audit: `intel8051-gatelevel` |
 | RCPU-027 / RCPU-028 | 1985 | ARM1 / ARMv1 | Audit: `arm1-simulator` | Audit: `arm1-gatelevel` |
@@ -91,7 +91,7 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-021**, the Intel 8086 functional Rust audit, ordered
+Current selection: **RCPU-022**, the Intel 8086 gate-level Rust audit, ordered
 behind publication of the completed PDP-11, Intel 4004, Intel 8008, Intel 8080,
 MOS 6502, and Z80 work.
 RCPU-005 is complete after its AAU/final-audit slice added separate
@@ -330,6 +330,24 @@ documentation tests pass. Strict formatting, Clippy, and rustdoc pass; core
 line coverage is 97.64% (1,489/1,525), above the completion floor. Publication
 closes the Z80 pair and advances to the Intel 8086 functional audit.
 
+RCPU-021 is audit-complete locally atop RCPU-020. The legacy Rust package had
+61 passing tests but deliberately implemented only register-immediate and
+register-only ModRM data/ALU operations, INC/DEC, NOP, and HLT. It rejected all
+memory operands and omitted prefixes, stack/control flow, strings, interrupts,
+shifts, multiply/divide, BCD adjustment, segment-register operations, and I/O;
+memory size was caller-selected and lifecycle failures were unchecked. The
+audit completes the Python oracle's specified instruction surface and all 24
+ModRM effective-address forms; fixes memory at the architectural 1 MiB; adds
+complete state, traces, port banks, typed atomic failures, and transactional
+runs; and retains the legacy API for consumers. A reproducible 461-vector
+Python differential classifies every first byte, all dense group extensions,
+all memory-addressing modes, and focused prefix/string/control/stack/I/O cases,
+comparing every register/flag and hashes of full memory and both port banks.
+Sixty-one unit, seven lifecycle, one aggregate differential, and documentation
+tests pass with strict formatting, Clippy, and rustdoc. Core line coverage is
+95.17% (1,340/1,408), above the completion target. Publication advances to the
+Intel 8086 gate audit.
+
 ## Cross-language wave
 
 After RCPU-050, freeze the Rust APIs and golden conformance vectors, then port
@@ -356,6 +374,7 @@ queue:
 
 | Date | Item | Priority | Disposition |
 |---|---|---|---|
+| 2026-08-28 | RCPU-021 audit found 61 passing tests but a deliberately curated Rust implementation: no memory ModRM forms, prefixes, stack/control flow, strings, interrupt return/halt behavior, shifts/rotates, multiply/divide, BCD adjustment, segment-register transfers, or I/O; caller-variable memory; unchecked lifecycle; incomplete state/results; and stale subset documentation. | P0, functional completion contract, follows RCPU-020 | Resolved locally with complete Python-oracle execution, architectural 1 MiB memory, typed transactional lifecycle, full state/traces/ports, 461 full-state differential vectors, consumer compatibility, strict checks, and 95.17% core coverage. Publish as one cell after its predecessors, then audit RCPU-022. |
 | 2026-08-28 | RCPU-020 audit found 58 passing unit tests and broad gate-ALU instruction coverage, but every claimed register and all memory/port/interrupt/halt state were host-backed, runs were unchecked and non-transactional, snapshots omitted ports, undefined instructions silently consumed bytes, interrupt modes could be selected but interrupts could not be delivered, ED omitted RLD/RRD and all eight block-I/O operations, no normative 07k2 gate spec existed, and strict rustdoc failed. | P0, gate completion contract, follows RCPU-019 | Resolved locally with exact 528,597-DFF storage, shared typed transactional state/lifecycle, complete ED and interrupt entry, Spec 07k2, all 1,160 Python-oracle vectors, 70 tests, strict checks, and 97.64% core coverage. |
 | 2026-08-28 | RCPU-019 audit found 60 passing unit tests and substantial 8080-compatible/CB behavior, but the Rust package deliberately omits the entire ED-prefixed space and nearly all IX/IY displacement, stack, arithmetic, load, jump, and indexed-bit forms required by Spec 07k. Undefined instructions silently halt, load/fetch/stack/memory boundaries can panic, runs swallow faults, snapshots and traces are incomplete, interrupts are absent, memory size is caller-variable rather than architectural, and strict rustdoc has 23 failures. | P0, functional completion contract, follows RCPU-018 | Resolved locally through RCPU-019A/B/C: fixed 64 KiB typed transactional lifecycle and interrupts; complete ED and DD/FD/DDCB/FDCB execution; 1,160-vector Python full-state oracle; 66 simulator and 16 consumer tests; strict checks; and 98.49% core coverage. Publish as one cell after its predecessors. |
 | 2026-08-28 | RCPU-014 full audit found host-backed memory/flags/halt/I/O/depth, a fictitious stored M slot, host INR/DCR and zero detection, port clamping, truncating/panicking loads, wrapping operands, swallowed run failures, trace-only differentials, no owned full state, stale Python/bytearray documentation, inconsistent gate counts, and 34 strict-rustdoc failures. | P0, gate completion contract, follows RCPU-013 | Resolved locally with exact 131,504-DFF persistent topology, gate datapaths, shared typed transactional APIs/state, exhaustive 256-encoding and workload full-state differentials, normative Rust documentation, strict checks, and 99.82% core coverage. |
