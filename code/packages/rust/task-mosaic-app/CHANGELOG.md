@@ -1,5 +1,12 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — name completion controls by action and task (#13691)
+
+Every List row now publishes a state-aware accessible name for its compact
+completion control. The name includes both the current action and task name and
+switches between `Complete task: …` and `Reopen task: …` after each Rust-owned
+completion mutation.
+
 ## [Unreleased] — edit List tasks atomically (#13688)
 
 The native adapter now owns a transient one-row edit session and commits valid

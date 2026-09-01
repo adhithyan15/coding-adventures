@@ -4,6 +4,12 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - preserve HostButton accessible names in pipeline output (#13691)
+
+The React pipeline emitter now lowers literal, slot-bound, and expression-bound
+`HostButton.a11y-label` values to `aria-label`, allowing compact glyph controls
+to retain a descriptive name inside repeated rows.
+
 ### Fixed - keep native `elevation` intent out of React CSS (#13518)
 
 React emission now omits Mosaic's platform-neutral `elevation` token while

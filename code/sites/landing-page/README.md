@@ -29,6 +29,11 @@ project prefix, and writes `dist/index.html` plus `dist/assets/`.
 Run `npm test` for the content-schema and renderer contracts, or `npm run check`
 to validate the imported config and typed DAG without invoking any stage.
 
+For live preview, run `npm run bootstrap` once and then `npm run dev`. Forme
+serves the successful in-memory artifact at `http://127.0.0.1:3000`, rebuilds
+after coalesced authored-file changes, reloads connected browsers, and keeps
+the last good page visible if a rebuild fails.
+
 ## Editing the page
 
 - `data/index.landing` owns copy, navigation, cards, repository statistics,

@@ -773,7 +773,7 @@ inputs per boundary, 8,192 aggregate consumer scopes, and 32,768 aggregate
 input-to-scope authorizations.
 
 The reviewed v1 projection has 18 boundaries, 21 input registrations, 19
-unique tracked paths, 481 consumer scopes, and 484 authorizations. It covers
+unique tracked paths, 482 consumer scopes, and 485 authorizations. It covers
 only real consumers of the Haskell Cabal project, Lua lint config, Python uv
 workspace manifest, Rust workspace manifest, Cargo target config, and Windows
 launcher; exact cross-language Rust-workspace consumers; all direct TypeScript

@@ -2700,8 +2700,9 @@ impl Compiler {
 
     /// Admit tracked exponent expressions for a real base only when every
     /// dependency is an exact local integer snapshot and evaluation is checked
-    /// and side-effect-free. This retains the real multiplication path without
-    /// erasing user calls or conditionals from IIR.
+    /// and side-effect-free. Exact built-in square roots may cross the real
+    /// domain only when their result is integral. This retains the real
+    /// multiplication path without erasing user calls or conditionals from IIR.
     fn static_nonnegative_tracked_integer_expression_power_chain(
         &self,
         nodes: &[&GrammarASTNode],
@@ -2711,7 +2712,7 @@ impl Compiler {
             if dependencies.is_empty() {
                 return None;
             }
-            if !self.exact_tracked_integer_expression(node) {
+            if !self.exact_tracked_integral_exponent_expression(node) {
                 return None;
             }
             for name in dependencies {
@@ -2725,9 +2726,53 @@ impl Compiler {
                     return None;
                 }
             }
-            let value = self.static_integer_scalar_value(node)?;
-            (value >= 0 && value <= MAX_POW_UNROLL_EXPONENT as i64).then_some(value as u32)
+            if let Some(value) = self.static_integer_scalar_value(node) {
+                return (value >= 0 && value <= MAX_POW_UNROLL_EXPONENT as i64)
+                    .then_some(value as u32);
+            }
+            let value = self.static_real_arithmetic_value_with_widen(node, true)?;
+            (value >= 0.0
+                && value <= MAX_POW_UNROLL_EXPONENT as f64
+                && value.fract() == 0.0)
+                .then_some(value as u32)
         })
+    }
+
+    /// Recognize the existing exact integer exponent language plus one bounded
+    /// real-valued form: built-in `sqrt` over exact tracked integer arithmetic.
+    fn exact_tracked_integral_exponent_expression(&self, node: &GrammarASTNode) -> bool {
+        if self.exact_tracked_integer_expression(node) {
+            return true;
+        }
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.exact_tracked_integral_exponent_expression(child);
+        }
+        if let Some((_, child)) = single_signed_child(node) {
+            return self.exact_tracked_integral_exponent_expression(child);
+        }
+        if node.rule_name != "proc_call" {
+            let children = direct_nodes(node);
+            return direct_tokens(node).is_empty()
+                && children.len() == 1
+                && self.exact_tracked_integral_exponent_expression(children[0]);
+        }
+        let Some(name) = direct_tokens(node)
+            .into_iter()
+            .find(|token| token.effective_type_name() == "NAME")
+            .map(|token| token.value.clone())
+        else {
+            return false;
+        };
+        let target_name = self.resolve_procedure_identity(&name);
+        if target_name != "sqrt" || self.proc_sigs.contains_key(&target_name) {
+            return false;
+        }
+        let actuals = self.standard_fn_actuals(node);
+        if actuals.len() != 1 || !self.exact_tracked_integer_expression(actuals[0]) {
+            return false;
+        }
+        self.static_real_arithmetic_value_with_widen(node, true)
+            .is_some_and(|value| value.fract() == 0.0)
     }
 
     /// Recognize checked integer arithmetic whose leaves are literals, exact
@@ -10664,6 +10709,36 @@ mod tests {
             let main = module.get_function("main").expect("has main");
             assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"));
             if source.contains("integer procedure entier") {
+                assert!(main.instructions.iter().any(|instr| instr.op == "call"));
+            }
+        }
+    }
+
+    #[test]
+    fn al4_exact_tracked_sqrt_exponents_unroll_real_powers() {
+        let module = compile_source(
+            "begin integer exponent; real saved; exponent := 4; saved := 6.0 ^ sqrt(exponent) + 6.0; exponent := 9; if saved = 42.0 then output(42) else output(1) end",
+            "test",
+        )
+        .expect("an exact integral tracked square root should unroll");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+        assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
+    }
+
+    #[test]
+    fn al4_tracked_sqrt_exponents_fail_closed_when_not_exact_integral_or_builtin() {
+        for source in [
+            "begin integer exponent; real saved; exponent := 2; saved := 6.0 ^ sqrt(exponent) end",
+            "begin integer exponent; real saved; exponent := -1; saved := 6.0 ^ sqrt(exponent) end",
+            "begin integer exponent; real saved; exponent := 9007199254740993; saved := 6.0 ^ sqrt(exponent) end",
+            "begin real procedure sqrt(x); value x; integer x; sqrt := 2.0; integer exponent; real saved; exponent := 4; saved := 6.0 ^ sqrt(exponent) end",
+        ] {
+            let module = compile_source(source, "test")
+                .expect("an unsafe tracked square root must retain runtime power lowering");
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"));
+            if source.contains("real procedure sqrt") {
                 assert!(main.instructions.iter().any(|instr| instr.op == "call"));
             }
         }

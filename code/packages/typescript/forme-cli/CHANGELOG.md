@@ -1,5 +1,14 @@
 # Changelog — @coding-adventures/forme-cli
 
+## 0.2.0 — 2026-08-31
+
+- Added `forme watch` with declarative `--port` and `--debounce` options.
+- Added recursive project watching with generated output, cache, dependency,
+  and VCS trees excluded from rebuild notifications.
+- Wired the orchestrator watch session to the in-memory Forme dev server so
+  successful builds reload browsers and failed builds retain the last good site.
+- Added CLI and project-watcher tests plus live landing/blog dogfood coverage.
+
 ## 0.1.0 — 2026-08-28
 
 - Added `forme build` (`forme run` alias), `forme check`, and

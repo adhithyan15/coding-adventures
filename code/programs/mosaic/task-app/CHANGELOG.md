@@ -4,6 +4,13 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Fixed - descriptive completion controls (#13691)
+
+The compact List completion button retains its circle/check visual while its
+accessible name now states `Complete task: <name>` or `Reopen task: <name>`.
+Generated React exposes that value through `aria-label`; generated Compose
+exposes it through native `contentDescription` semantics.
+
 ### Added - direct List task editing (#13688)
 
 Each List row now exposes a plain-language Edit action for changing its task

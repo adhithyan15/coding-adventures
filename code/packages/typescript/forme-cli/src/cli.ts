@@ -8,7 +8,17 @@ import {
   SpecError,
   type ParseResult,
 } from "@coding-adventures/cli-builder";
-import { createOrchestrator, type Orchestrator } from "@coding-adventures/forme-orchestrator";
+import {
+  snapshotFromOutputs,
+  startDevServer,
+  type DevServer,
+} from "@coding-adventures/forme-dev-server";
+import {
+  createOrchestrator,
+  type Orchestrator,
+  type Pipeline,
+  type RunResult,
+} from "@coding-adventures/forme-orchestrator";
 import {
   ConfigError,
   isStageRef,
@@ -19,6 +29,7 @@ import {
   silentLogger,
   type CancellationToken,
 } from "@coding-adventures/forme-stage";
+import { watchProject } from "./project-watcher.js";
 
 export const EXIT_OK = 0;
 export const EXIT_BUILD_FAILED = 1;
@@ -47,6 +58,8 @@ export interface CliIO {
 export interface CliServices {
   loadConfig(path: string): Promise<PipelineConfig>;
   createOrchestrator(): Orchestrator;
+  startDevServer(options: { readonly port: number }): Promise<DevServer>;
+  watchProject(root: string, ignoredPaths: readonly string[]): AsyncIterable<unknown>;
 }
 
 export interface RunCliOptions {
@@ -54,10 +67,12 @@ export interface RunCliOptions {
 }
 
 interface ParsedArgs {
-  readonly command: "build" | "check" | "clean";
+  readonly command: "build" | "check" | "clean" | "watch";
   readonly configPath: string | null;
   readonly reproducible: boolean;
   readonly reportPath: string | null;
+  readonly port: number;
+  readonly debounceMs: number;
 }
 
 const defaultIO: CliIO = {
@@ -76,6 +91,8 @@ const defaultIO: CliIO = {
 const defaultServices: CliServices = {
   loadConfig: path => loadTsConfig(path),
   createOrchestrator: () => createOrchestrator({ logger: silentLogger() }),
+  startDevServer: options => startDevServer(options),
+  watchProject: (root, ignoredPaths) => watchProject(root, ignoredPaths),
 };
 
 export async function run(
@@ -133,6 +150,19 @@ export async function run(
     orchestrator = services.createOrchestrator();
     const pipeline = await orchestrator.buildPipeline(config);
 
+    if (args.command === "watch") {
+      return await runWatch(
+        config,
+        pipeline,
+        orchestrator,
+        projectRoot,
+        args,
+        io,
+        options,
+        services,
+      );
+    }
+
     if (args.command === "check") {
       const count = pipeline.dag.topoOrder.length;
       io.stdout.write(
@@ -189,17 +219,85 @@ export async function run(
 
 function invocation(parsed: ParseResult): ParsedArgs {
   const command = parsed.commandPath[1];
-  if (command !== "build" && command !== "check" && command !== "clean") {
-    throw new Error("a build, check, or clean command is required");
+  if (command !== "build" && command !== "check" && command !== "clean" && command !== "watch") {
+    throw new Error("a build, check, clean, or watch command is required");
   }
   const config = parsed.flags["config"];
   const report = parsed.flags["report"];
+  const port = parsed.flags["port"] ?? 3000;
+  const debounceMs = parsed.flags["debounce"] ?? 200;
+  if (typeof port !== "number" || !Number.isInteger(port) || port < 1 || port > 65535) {
+    throw new Error("--port must be an integer from 1 through 65535");
+  }
+  if (typeof debounceMs !== "number" || !Number.isInteger(debounceMs) || debounceMs < 0 || debounceMs > 60_000) {
+    throw new Error("--debounce must be an integer from 0 through 60000");
+  }
   return {
     command,
     configPath: typeof config === "string" ? config : null,
     reproducible: parsed.flags["reproducible"] === true,
     reportPath: typeof report === "string" ? report : null,
+    port,
+    debounceMs,
   };
+}
+
+async function runWatch(
+  config: PipelineConfig,
+  pipeline: Pipeline,
+  orchestrator: Orchestrator,
+  projectRoot: string,
+  args: ParsedArgs,
+  io: CliIO,
+  options: RunCliOptions,
+  services: CliServices,
+): Promise<number> {
+  let server: DevServer | null = null;
+  let session: ReturnType<Orchestrator["watch"]> | null = null;
+  try {
+    server = await services.startDevServer({ port: args.port });
+    const ignored = [
+      resolve(projectRoot, ".git"),
+      resolve(projectRoot, "node_modules"),
+      ...cleanTargets(config, projectRoot),
+    ];
+    session = orchestrator.watch(pipeline, {
+      changes: services.watchProject(projectRoot, ignored),
+      debounceMs: args.debounceMs,
+      cancellation: options.cancellation,
+    });
+    io.stdout.write(`forme watch: ${server.address.url} (${config.name}; debounce: ${args.debounceMs}ms)\n`);
+
+    for await (const result of session.results()) {
+      if (result.outcome === "success") {
+        try {
+          const snapshot = snapshotFromOutputs(String(result.buildId), result.outputs);
+          server.publish(snapshot);
+          io.stdout.write(`forme watch: ${config.name} ready (build: ${result.buildId})\n`);
+        } catch (error) {
+          const detail = message(error);
+          server.publishFailure({ message: detail });
+          diagnostic(io, "E_PREVIEW", detail);
+        }
+        continue;
+      }
+      if (result.outcome === "cancelled" && options.cancellation?.cancelled) break;
+      const detail = watchFailure(result);
+      server.publishFailure({ message: detail });
+      for (const error of result.errors) {
+        diagnostic(io, error.code, `${error.instanceId} (${error.stageName}): ${error.message}`);
+      }
+    }
+    return options.cancellation?.cancelled ? EXIT_CANCELLED : EXIT_OK;
+  } finally {
+    if (session !== null) await session.stop();
+    if (server !== null) await server.close();
+  }
+}
+
+function watchFailure(result: RunResult): string {
+  if (result.errors.length === 0) return `build ${result.outcome}`;
+  return result.errors.map(error => `${error.code}: ${error.message}`).join("\n");
 }
 
 function buildReport(config: PipelineConfig, result: Awaited<ReturnType<Orchestrator["runOnce"]>>): string {

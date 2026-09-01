@@ -22,7 +22,7 @@
 //! Stage 1: OR pairs → Stage 2: OR pairs → Stage 3: NOR.
 
 use arithmetic::adders::full_adder;
-use logic_gates::gates::not_gate;
+use logic_gates::gates::{not_gate, or_gate};
 
 // ─── 8-bit helpers ──────────────────────────────────────────────────────────
 
@@ -68,7 +68,7 @@ pub fn bits_to_u16(bits: &[u8]) -> u16 {
 
 /// Zero detection: returns 1 when all bits are 0 (NOR tree).
 pub fn compute_zero(bits: &[u8]) -> u8 {
-    u8::from(bits.iter().all(|&b| b == 0))
+    not_gate(bits.iter().copied().fold(0, or_gate))
 }
 
 /// Bitwise NOT of an 8-bit value (8 NOT gates in parallel).
@@ -88,7 +88,7 @@ pub fn not8(value: u8) -> u8 {
 /// - `carries[7]` = carry out of bit 7 (C flag for addition)
 /// - `carries[6]` = carry into bit 7 (used for overflow detection)
 ///
-/// Overflow = XOR(carries[6], carries[7]) — one XOR gate.
+/// Overflow = XOR(carries\[6\], carries\[7\]) — one XOR gate.
 ///
 /// # Example
 /// ```
@@ -186,7 +186,7 @@ mod tests {
     fn add_8bit_basic() {
         assert_eq!(add_8bit(10, 5, 0), (15, 0));
         assert_eq!(add_8bit(0xFF, 1, 0), (0, 1)); // overflow + carry
-        assert_eq!(add_8bit(0, 0, 1), (1, 0));    // carry_in propagates
+        assert_eq!(add_8bit(0, 0, 1), (1, 0)); // carry_in propagates
     }
 
     #[test]
@@ -197,7 +197,7 @@ mod tests {
         assert_eq!(r, 0x80);
         assert_eq!(carries[6], 1); // carry INTO bit 7
         assert_eq!(carries[7], 0); // carry OUT of bit 7
-        // overflow = XOR(1, 0) = 1
+                                   // overflow = XOR(1, 0) = 1
 
         // 0xFF + 0xFF = 0xFE + carry: both negative, result negative → no overflow
         let (r2, carries2) = add_8bit_full(0xFF, 0xFF, 0);

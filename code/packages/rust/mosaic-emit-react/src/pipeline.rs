@@ -675,8 +675,7 @@ fn emit_event_union(component: &str, emits: &[EmitDecl]) -> Result<String, Pipel
         let mut variant = format!("  | {{ type: \"{type_field}\"");
         for p in &e.params {
             let field = to_camel_case_first_lower(&p.name);
-            validate_slot_or_field_name(&field)
-                .map_err(PipelineEmitError::UnsafeSlotName)?;
+            validate_slot_or_field_name(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
             let ts = emit_payload_to_ts(&p.r#type);
             variant.push_str(&format!("; {field}: {ts}"));
         }
@@ -1937,6 +1936,7 @@ fn emit_host_input_jsx(
 /// |---|---|
 /// | `label: "..."`      | string literal becomes the button's text child            |
 /// | `label: slot: x`    | `{x}` (camelCased) becomes the button's expression child  |
+/// | `a11y-label: (...)` | `aria-label={...}` keeps compact visual labels descriptive |
 /// | `disabled: slot: x` | `disabled={x}` (camelCased)                               |
 /// | `disabled: true`/`false` | `disabled={true}` / `disabled={false}` literal       |
 /// | `onTap: emit: onE`  | `onClick={() => dispatch({ type: "e" })}` (renamed from onTap to onClick because that is the DOM event name) |
@@ -1967,6 +1967,33 @@ fn emit_host_button_jsx(
         .unwrap_or("");
     if !part_style_str.is_empty() {
         attrs.push_str(&format!(" style={{{{ {part_style_str} }}}}"));
+    }
+
+    // An accessible name may differ from the compact visual label. This is
+    // especially important for per-row glyph buttons, whose For-bound task
+    // name and current action arrive as an expression such as `row[16]`.
+    if let Some(prop) = node.props.iter().find(|p| p.name == "a11y-label") {
+        match &prop.value {
+            LayoutPropValue::String(value) => {
+                attrs.push_str(&jsx_string_attr("aria-label", value));
+            }
+            LayoutPropValue::SlotRef(slot) => {
+                let camel = to_camel_case_first_lower(slot);
+                validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+                attrs.push_str(&format!(" aria-label={{{camel}}}"));
+            }
+            LayoutPropValue::Keyword(value) => {
+                validate_slot_or_field_name(value).map_err(PipelineEmitError::UnsafeSlotName)?;
+                attrs.push_str(&format!(" aria-label={{{value}}}"));
+            }
+            LayoutPropValue::Expr(value) => {
+                attrs.push_str(&format!(" aria-label={{{value}}}"));
+            }
+            LayoutPropValue::Number(value) => {
+                attrs.push_str(&format!(" aria-label={{{value}}}"));
+            }
+            _ => {}
+        }
     }
 
     // disabled={slotName} OR disabled={true|false} literal.
@@ -2289,11 +2316,7 @@ fn emit_drag_controller_hooks(usage: DragUsage) -> String {
     // state value would read the same stale key several times in a row and the
     // cursor would stall while an arrow key is held. The state copy exists only
     // to trigger the re-render that hover styling needs.
-    writeln!(
-        out,
-        "  const mosaic$over = useRef<string | null>(null);"
-    )
-    .unwrap();
+    writeln!(out, "  const mosaic$over = useRef<string | null>(null);").unwrap();
     writeln!(
         out,
         "  const [, mosaic$setOverState] = useState<string | null>(null);"
@@ -2429,11 +2452,7 @@ fn emit_drag_controller_hooks(usage: DragUsage) -> String {
         .unwrap();
         writeln!(out, "    const rect = el.getBoundingClientRect();").unwrap();
         writeln!(out, "    if (rect.height <= 0) {{ return \"into\"; }}").unwrap();
-        writeln!(
-            out,
-            "    const ratio = (clientY - rect.top) / rect.height;"
-        )
-        .unwrap();
+        writeln!(out, "    const ratio = (clientY - rect.top) / rect.height;").unwrap();
         writeln!(
             out,
             "    return ratio < 1 / 3 ? \"before\" : ratio > 2 / 3 ? \"after\" : \"into\";"
@@ -2643,10 +2662,7 @@ fn emit_host_drop_target_jsx(
 
 /// Resolve a drag slot that may be written either as a literal string or bound to
 /// a slot, returning a JSX *expression* (already quoted / already an identifier).
-fn drag_value_expr(
-    node: &LayoutNode,
-    prop: &str,
-) -> Result<Option<String>, PipelineEmitError> {
+fn drag_value_expr(node: &LayoutNode, prop: &str) -> Result<Option<String>, PipelineEmitError> {
     if let Some(s) = find_string_prop(node, prop) {
         // A bare JS literal (not `jsx_string_expr`, which wraps in `{}`) — these
         // land inside expression positions like `mosaic$grab(<here>, …)`.
@@ -4886,7 +4902,9 @@ fn translate_layout_alias(name: &str, value: &str) -> Option<String> {
     match (name, value) {
         ("align", "center-vertical") => Some("alignItems: \"center\"".to_string()),
         ("align", "center-horizontal") => Some("justifyContent: \"center\"".to_string()),
-        ("align", "center") => Some("alignItems: \"center\", justifyContent: \"center\"".to_string()),
+        ("align", "center") => {
+            Some("alignItems: \"center\", justifyContent: \"center\"".to_string())
+        }
         ("align", "start") => Some("alignItems: \"flex-start\"".to_string()),
         ("align", "end") => Some("alignItems: \"flex-end\"".to_string()),
         ("align", "space-between") => Some("justifyContent: \"space-between\"".to_string()),
@@ -5850,7 +5868,10 @@ mod tests {
         let m = component(
             "Cell",
             vec![],
-            vec![emit("onNavigate", vec![param("row", EmitPayloadType::Number)])],
+            vec![emit(
+                "onNavigate",
+                vec![param("row", EmitPayloadType::Number)],
+            )],
         );
         let l = LayoutDef {
             component_name: "Cell".to_string(),
@@ -5892,7 +5913,10 @@ mod tests {
         let m = component(
             "Cell",
             vec![],
-            vec![emit("onNavigate", vec![param("type", EmitPayloadType::Text)])],
+            vec![emit(
+                "onNavigate",
+                vec![param("type", EmitPayloadType::Text)],
+            )],
         );
         let l = LayoutDef {
             component_name: "Cell".to_string(),
@@ -7077,7 +7101,14 @@ mod tests {
     /// untested against a real app until then).
     #[test]
     fn host_input_on_commit_with_declared_payload_carries_the_value() {
-        let m = component("X", vec![], vec![emit("onEditCommit", vec![param("value", EmitPayloadType::Text)])]);
+        let m = component(
+            "X",
+            vec![],
+            vec![emit(
+                "onEditCommit",
+                vec![param("value", EmitPayloadType::Text)],
+            )],
+        );
         let l = host_input_layout(vec![LayoutProp {
             name: "onCommit".to_string(),
             value: LayoutPropValue::EmitRef("onEditCommit".to_string()),
@@ -7206,6 +7237,28 @@ mod tests {
         assert!(
             result.output.contains("disabled={isDisabled}"),
             "expected `disabled={{isDisabled}}`, got:\n{}",
+            result.output
+        );
+    }
+
+    #[test]
+    fn host_button_expression_accessible_label_binds_to_aria_label() {
+        let m = component("X", vec![], vec![]);
+        let l = host_button_layout(vec![
+            LayoutProp {
+                name: "label".to_string(),
+                value: LayoutPropValue::Expr("row[0]".to_string()),
+            },
+            LayoutProp {
+                name: "a11y-label".to_string(),
+                value: LayoutPropValue::Expr("row[16]".to_string()),
+            },
+        ]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("aria-label={row[16]}")
+                && result.output.contains(">{row[0]}</button>"),
+            "expected separate accessible and visual labels, got:\n{}",
             result.output
         );
     }
@@ -7999,10 +8052,14 @@ mod tests {
     /// to compile with a thoroughly confusing error.
     #[test]
     fn ui35_controller_names_cannot_collide_with_slot_names() {
-        let m = component("Board", vec![
+        let m = component(
+            "Board",
+            vec![
                 slot("mosaic-drag", SlotType::Text, false),
                 slot("mosaic-live", SlotType::Text, false),
-            ], vec![]);
+            ],
+            vec![],
+        );
         let out = from_pipeline(&m, &drag_board_layout(), &empty_style("Board"))
             .unwrap()
             .output;
@@ -8111,10 +8168,16 @@ mod tests {
         )
         .unwrap()
         .output;
-        assert!(out.contains("Projects"), "literal label missing:
-{out}");
-        assert!(!out.contains("<span></span>"), "rendered an empty span:
-{out}");
+        assert!(
+            out.contains("Projects"),
+            "literal label missing:
+{out}"
+        );
+        assert!(
+            !out.contains("<span></span>"),
+            "rendered an empty span:
+{out}"
+        );
     }
 
     /// ...and it is escaped, not pasted into JSX as markup.
@@ -8131,8 +8194,11 @@ mod tests {
         .unwrap()
         .output;
         // A JS string expression, so the braces are data rather than a JSX hole.
-        assert!(out.contains("{\"a{b}<c>\"}"), "not emitted as a string:
-{out}");
+        assert!(
+            out.contains("{\"a{b}<c>\"}"),
+            "not emitted as a string:
+{out}"
+        );
     }
 
     fn aligned(value: &str) -> String {
@@ -8168,8 +8234,11 @@ mod tests {
     fn align_center_vertical_becomes_align_items() {
         let out = aligned("center-vertical");
         assert!(out.contains("alignItems: \"center\""), "{out}");
-        assert!(!out.contains("align: \"center-vertical\""), "alias leaked:
-{out}");
+        assert!(
+            !out.contains("align: \"center-vertical\""),
+            "alias leaked:
+{out}"
+        );
     }
 
     /// An unrecognised value must still fall through to the escaped generic path
@@ -8219,7 +8288,10 @@ mod tests {
             out.contains("boxShadow: \"0 4px 14px rgba(0,0,0,.2)\""),
             "{out}"
         );
-        assert!(!out.contains("elevation"), "native intent leaked into React:\n{out}");
+        assert!(
+            !out.contains("elevation"),
+            "native intent leaked into React:\n{out}"
+        );
     }
 
     // ===================================================================
@@ -8263,7 +8335,10 @@ mod tests {
             "width",
             LayoutPropValue::SlotRef("bar-width".to_string()),
         )]);
-        assert!(out.contains("width: barWidth"), "slot width missing:\n{out}");
+        assert!(
+            out.contains("width: barWidth"),
+            "slot width missing:\n{out}"
+        );
     }
 
     /// An expression works too, so a size can be computed from a loop binding —
@@ -8282,7 +8357,10 @@ mod tests {
     fn ui36_numeric_width_is_pixels_without_a_decimal_tail() {
         let out = sized(vec![size_prop("width", LayoutPropValue::Number(120.0))]);
         assert!(out.contains("width: 120"), "{out}");
-        assert!(!out.contains("120.0"), "numeric width printed a float tail:\n{out}");
+        assert!(
+            !out.contains("120.0"),
+            "numeric width printed a float tail:\n{out}"
+        );
     }
 
     /// A string literal is a legitimate CSS size ("50%") and must be quoted, not
@@ -8307,7 +8385,14 @@ mod tests {
             size_prop("min-height", LayoutPropValue::Number(5.0)),
             size_prop("max-height", LayoutPropValue::Number(6.0)),
         ]);
-        for key in ["width: 1", "height: 2", "minWidth: 3", "maxWidth: 4", "minHeight: 5", "maxHeight: 6"] {
+        for key in [
+            "width: 1",
+            "height: 2",
+            "minWidth: 3",
+            "maxWidth: 4",
+            "minHeight: 5",
+            "maxHeight: 6",
+        ] {
             assert!(out.contains(key), "missing {key}:\n{out}");
         }
     }
@@ -8356,8 +8441,12 @@ mod tests {
             }],
         };
         let out = from_pipeline(&m, &layout, &style).unwrap().output;
-        let at_static = out.find("background: \"#f7f2ea\"").expect("static background missing");
-        let at_bound = out.find("background: ringGradient").expect("bound background missing");
+        let at_static = out
+            .find("background: \"#f7f2ea\"")
+            .expect("static background missing");
+        let at_bound = out
+            .find("background: ringGradient")
+            .expect("bound background missing");
         assert!(
             at_bound > at_static,
             "the bound background must come last so it wins:\n{out}"
@@ -8479,8 +8568,11 @@ mod tests {
         let out = from_pipeline(&m, &layout, &style).unwrap().output;
         let at_state = out.find("width: 99").expect("state width missing");
         let at_bound = out.find("width: barWidth").expect("bound width missing");
-        assert!(at_bound > at_state, "the bound width must come last:
-{out}");
+        assert!(
+            at_bound > at_state,
+            "the bound width must come last:
+{out}"
+        );
     }
 
     /// A layout that binds no size emits exactly what it did before.

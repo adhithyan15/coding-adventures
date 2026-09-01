@@ -13,6 +13,10 @@ const o = createOrchestrator();
 const pipeline = await o.buildPipeline(config);
 const result = await o.runOnce(pipeline);
 console.log(result.outcome, result.outputs);
+
+const session = o.watch(pipeline, { changes, debounceMs: 200 });
+for await (const next of session.results()) console.log(next.outcome);
+await session.stop();
 await o.dispose();
 ```
 
@@ -21,6 +25,8 @@ await o.dispose();
 | `createOrchestrator()`    | Build a runtime handle (cache + logger + pipeline lifecycle).          |
 | `buildPipeline(config)`   | Validate config + construct typed DAG.                                 |
 | `runOnce(pipeline, opts?)`| Execute the DAG; return a structured `RunResult`.                       |
+| `watch(pipeline, opts)`   | Run initially and coalesce host change events into rebuilds.           |
+| `WatchSession`            | Result stream, manual rebuild, and cooperative stop lifecycle.         |
 | `Orchestrator`            | The runtime handle interface.                                          |
 | `Pipeline`                | The built pipeline (config + DAG).                                     |
 | `RunResult`               | Outcome, per-stage summaries, outputs, errors, timing, buildId.         |
@@ -35,9 +41,10 @@ These are deferred to follow-up packages:
 
 - **No parallelism.** Stages execute sequentially in topological order. `settings.maxConcurrency` is honoured at `1`.
 - **No streaming pipelining.** A `Stream<X>` producer is fully drained into memory before downstream consumers see values. Lazy streaming lands in v1 alongside parallelism.
-- **No incremental rebuild.** Every run executes every stage; the cache backend exists but isn't hit yet (FM03 §6).
+- **No affected-stage incremental rebuild.** Watch conservatively executes the
+  complete pipeline; cache hits and exact changed-and-downstream scheduling
+  remain FM-B010 (FM03 §6).
 - **Partial reproducible-build mode.** Stages receive a frozen wall clock, but input-mtime derivation, deterministic randomness, and telemetry policy remain (FM03 §8).
-- **No watch mode.** `forme watch` lives in a future companion package (FM03 §7).
 - **No OpenTelemetry traces.** Telemetry surface is no-op by default.
 
 ## What v0 *does* implement
@@ -54,6 +61,9 @@ These are deferred to follow-up packages:
 - Per-stage timing + error counts + outcome in `StageRunSummary`
 - Named outputs from `OutputSpec` overriding sink instance ids
 - Reproducible-build frozen clocks shared across stage lifecycles
+- Host-driven watch sessions with an initial run, debounced change coalescing,
+  one queued follow-up during an active build, manual rebuild, watcher-error
+  propagation, and cancellation-safe teardown
 - `buildId` derived from `computeRevisionId` over pipeline source/sink ids
 
 ## Coverage

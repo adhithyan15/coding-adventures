@@ -616,6 +616,11 @@ impl TaskMosaicApp {
                         ""
                     }
                     .to_string(),
+                    format!(
+                        "{} task: {}",
+                        if task.completed { "Reopen" } else { "Complete" },
+                        task.name
+                    ),
                 ]
             })
             .collect()
@@ -1754,6 +1759,10 @@ mod tests {
         assert_eq!(added.props["task-rows"][0][1], "Ship native TaskApp");
         assert_eq!(added.props["task-rows"][0][2], "due 2026-01-09");
         assert_eq!(added.props["task-rows"][0][3], "");
+        assert_eq!(
+            added.props["task-rows"][0][16],
+            "Complete task: Ship native TaskApp"
+        );
         let scheduled = runtime
             .dispatch(event(4, "toggleProjectComplexity", json!({})))
             .unwrap();
@@ -1765,6 +1774,10 @@ mod tests {
             .dispatch(event(5, "toggleTask", json!({"index":0.0})))
             .unwrap();
         assert_eq!(completed.props["task-rows"][0][0], "✓");
+        assert_eq!(
+            completed.props["task-rows"][0][16],
+            "Reopen task: Ship native TaskApp"
+        );
         assert_eq!(completed.props["ring-percent"], "100%");
         // #12028 item 2: the same percent as typed data, not just the
         // pre-formatted caption string — this is what a future native
@@ -1774,6 +1787,10 @@ mod tests {
             .dispatch(event(6, "toggleTask", json!({"index":0})))
             .unwrap();
         assert_eq!(reopened.props["task-rows"][0][0], "○");
+        assert_eq!(
+            reopened.props["task-rows"][0][16],
+            "Complete task: Ship native TaskApp"
+        );
         assert_eq!(reopened.props["ring-percent"], "0%");
         let deleted = runtime
             .dispatch(event(7, "deleteTask", json!({"index":0.0})))

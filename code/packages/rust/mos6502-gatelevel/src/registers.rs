@@ -31,28 +31,31 @@
 //! array). Write operations model the clock edge latching new data in.
 
 use crate::bits::{add_16bit, add_8bit};
+use crate::state::{DffMemory, StateRegister};
 
 /// 8-bit register modeled as 8 D flip-flops.
 ///
 /// Power-on value: 0x00. Stack pointer (`S`) is initialized to 0xFD.
 #[derive(Debug, Clone)]
 pub struct Register8 {
-    value: u8,
+    state: StateRegister,
 }
 
 impl Register8 {
     pub fn new(initial: u8) -> Self {
-        Self { value: initial }
+        let mut state = StateRegister::new(8);
+        state.write(u16::from(initial));
+        Self { state }
     }
 
     /// Clock a new value into the register (rising clock edge).
     pub fn write(&mut self, value: u8) {
-        self.value = value;
+        self.state.write(u16::from(value));
     }
 
     /// Read the current Q output.
     pub fn read(&self) -> u8 {
-        self.value
+        self.state.read() as u8
     }
 }
 
@@ -61,30 +64,32 @@ impl Register8 {
 /// Used for the program counter (PC).
 #[derive(Debug, Clone)]
 pub struct Register16 {
-    value: u16,
+    state: StateRegister,
 }
 
 impl Register16 {
     pub fn new(initial: u16) -> Self {
-        Self { value: initial }
+        let mut state = StateRegister::new(16);
+        state.write(initial);
+        Self { state }
     }
 
     /// Clock a new 16-bit value into the register.
     pub fn write(&mut self, value: u16) {
-        self.value = value;
+        self.state.write(value);
     }
 
     /// Read the current value.
     pub fn read(&self) -> u16 {
-        self.value
+        self.state.read()
     }
 
     /// Increment by `amount` via the 16-bit ripple-carry adder.
     ///
     /// Used for PC advancement during instruction fetch.
     pub fn inc(&mut self, amount: u16) {
-        let (new_val, _carry) = add_16bit(self.value, amount, 0);
-        self.value = new_val;
+        let (new_val, _carry) = add_16bit(self.read(), amount, 0);
+        self.write(new_val);
     }
 }
 
@@ -101,12 +106,24 @@ pub struct FlagRegister {
     pub i: u8, // Interrupt disable
     pub z: u8, // Zero
     pub c: u8, // Carry
+    state: StateRegister,
 }
 
 impl FlagRegister {
     /// Power-on state: I=1, all others 0.
     pub fn new() -> Self {
-        Self { n: 0, v: 0, b: 0, d: 0, i: 1, z: 0, c: 0 }
+        let mut flags = Self {
+            n: 0,
+            v: 0,
+            b: 0,
+            d: 0,
+            i: 1,
+            z: 0,
+            c: 0,
+            state: StateRegister::new(7),
+        };
+        flags.clock();
+        flags
     }
 
     /// Pack all flags into the P status byte.
@@ -119,8 +136,14 @@ impl FlagRegister {
     /// - Pass `None` to use the stored B value.
     pub fn pack(&self, with_b: Option<u8>) -> u8 {
         let b_bit = with_b.unwrap_or(self.b) & 1;
-        (self.n << 7) | (self.v << 6) | 0x20 | (b_bit << 4)
-            | (self.d << 3) | (self.i << 2) | (self.z << 1) | self.c
+        (self.n << 7)
+            | (self.v << 6)
+            | 0x20
+            | (b_bit << 4)
+            | (self.d << 3)
+            | (self.i << 2)
+            | (self.z << 1)
+            | self.c
     }
 
     /// Unpack a P byte into individual flag flip-flops.
@@ -137,10 +160,37 @@ impl FlagRegister {
         self.c = p & 1;
     }
 
+    pub(crate) fn load_wires(&mut self) {
+        let value = self.state.read() as u8;
+        self.n = value & 1;
+        self.v = (value >> 1) & 1;
+        self.b = (value >> 2) & 1;
+        self.d = (value >> 3) & 1;
+        self.i = (value >> 4) & 1;
+        self.z = (value >> 5) & 1;
+        self.c = (value >> 6) & 1;
+    }
+
+    pub(crate) fn clock(&mut self) {
+        let value = self.n
+            | (self.v << 1)
+            | (self.b << 2)
+            | (self.d << 3)
+            | (self.i << 4)
+            | (self.z << 5)
+            | (self.c << 6);
+        self.state.write(u16::from(value));
+    }
+
     pub fn reset(&mut self) {
-        self.n = 0; self.v = 0; self.b = 0; self.d = 0;
+        self.n = 0;
+        self.v = 0;
+        self.b = 0;
+        self.d = 0;
         self.i = 1; // I=1 at power-on
-        self.z = 0; self.c = 0;
+        self.z = 0;
+        self.c = 0;
+        self.clock();
     }
 }
 
@@ -186,22 +236,18 @@ impl RegisterFile6502 {
         self.flags.reset();
     }
 
-    /// Push a byte to the stack (0x0100 page, pre-decrement S).
-    ///
-    /// S is decremented via the 8-bit adder (S + 0xFF = S - 1 mod 256).
-    pub fn stack_push(&mut self, memory: &mut [u8; 65536], value: u8) {
+    pub(crate) fn stack_push(&mut self, memory: &mut DffMemory, value: u8) {
         let s = self.s.read();
-        memory[0x0100 | s as usize] = value;
-        let (new_s, _carry) = add_8bit(s, 0xFF, 0); // S - 1 via adder
+        memory.write(0x0100 | s as usize, value);
+        let (new_s, _carry) = add_8bit(s, 0xFF, 0);
         self.s.write(new_s);
     }
 
-    /// Pull a byte from the stack (post-increment S).
-    pub fn stack_pull(&mut self, memory: &[u8; 65536]) -> u8 {
+    pub(crate) fn stack_pull(&mut self, memory: &DffMemory) -> u8 {
         let s = self.s.read();
-        let (new_s, _carry) = add_8bit(s, 1, 0); // S + 1
+        let (new_s, _carry) = add_8bit(s, 1, 0);
         self.s.write(new_s);
-        memory[0x0100 | new_s as usize]
+        memory.read(0x0100 | new_s as usize)
     }
 }
 
@@ -263,13 +309,19 @@ mod tests {
         let mut f = FlagRegister::new();
         f.b = 0;
         assert_ne!(f.pack(Some(1)) & 0x10, 0); // B forced to 1
-        assert_eq!(f.pack(Some(0)) & 0x10, 0);  // B forced to 0
+        assert_eq!(f.pack(Some(0)) & 0x10, 0); // B forced to 0
     }
 
     #[test]
     fn flag_register_pack_unpack_roundtrip() {
         let mut f = FlagRegister::new();
-        f.n = 1; f.v = 0; f.b = 1; f.d = 0; f.i = 1; f.z = 1; f.c = 0;
+        f.n = 1;
+        f.v = 0;
+        f.b = 1;
+        f.d = 0;
+        f.i = 1;
+        f.z = 1;
+        f.c = 0;
         let p = f.pack(None);
         let mut f2 = FlagRegister::new();
         f2.unpack(p);
@@ -283,7 +335,7 @@ mod tests {
     #[test]
     fn stack_push_pull() {
         let mut rf = RegisterFile6502::new();
-        let mut mem = [0u8; 65536];
+        let mut mem = DffMemory::new();
         rf.stack_push(&mut mem, 0xAB);
         let v = rf.stack_pull(&mem);
         assert_eq!(v, 0xAB);
@@ -292,7 +344,7 @@ mod tests {
     #[test]
     fn stack_sp_decrements_on_push() {
         let mut rf = RegisterFile6502::new();
-        let mut mem = [0u8; 65536];
+        let mut mem = DffMemory::new();
         let s_before = rf.s.read();
         rf.stack_push(&mut mem, 0x42);
         assert_eq!(rf.s.read(), s_before.wrapping_sub(1));
@@ -301,7 +353,7 @@ mod tests {
     #[test]
     fn stack_sp_increments_on_pull() {
         let mut rf = RegisterFile6502::new();
-        let mut mem = [0u8; 65536];
+        let mut mem = DffMemory::new();
         rf.stack_push(&mut mem, 0x42);
         let s_after_push = rf.s.read();
         rf.stack_pull(&mem);

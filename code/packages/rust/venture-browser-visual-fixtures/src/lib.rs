@@ -28,6 +28,7 @@ pub const STYLESHEET_PATH: &str = "/fixture.css";
 pub const IMPORTED_STYLESHEET_PATH: &str = "/fixture-base.css";
 pub const INTERNATIONAL_FIXTURE_PATH: &str = "/international.html";
 pub const FLEX_FIXTURE_PATH: &str = "/flex.html";
+pub const GRID_FIXTURE_PATH: &str = "/grid.html";
 pub const VIEWPORT_WIDTH: f64 = 240.0;
 pub const VIEWPORT_HEIGHT: f64 = 120.0;
 pub const GPU_LAYER_FIXTURE_WIDTH: u32 = 16;
@@ -81,6 +82,9 @@ pub const INTERNATIONAL_FIXTURE_HTML: &str = r#"<!doctype html>
 /// Compact flex geometry shared by every Venture host through the normal
 /// HTML-to-layout-to-paint pipeline.
 pub const FLEX_FIXTURE_HTML: &str = r#"<!doctype html><html><body><div id="flex-deck" style="display:flex;width:240px;height:100px;flex-flow:row wrap;gap:10px;align-content:space-between"><div id="flex-a" style="flex:0 0 100px;height:20px;order:2;background:red">A</div><div id="flex-b" style="flex:0 0 100px;height:20px;order:0;background:green">B</div><div id="flex-c" style="flex:0 0 100px;height:20px;order:1;background:blue">C</div></div></body></html>"#;
+
+/// Compact named-track grid geometry shared by every Venture host.
+pub const GRID_FIXTURE_HTML: &str = r#"<!doctype html><html><body><div id="grid-deck" style="display:grid;width:240px;height:100px;grid-template-columns:60px 1fr 1fr;grid-template-rows:30px 1fr;grid-template-areas:'head head side' 'main main side';gap:10px"><div id="grid-head" style="grid-area:head;background:red">H</div><div id="grid-main" style="grid-area:main;background:green">M</div><div id="grid-side" style="grid-area:side;order:-1;background:blue">S</div></div></body></html>"#;
 
 /// A compact backend-neutral oracle for isolated GPU composition.
 ///
@@ -473,6 +477,7 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
     let imported_stylesheet_url = format!("{origin}{IMPORTED_STYLESHEET_PATH}");
     let international_url = format!("{origin}{INTERNATIONAL_FIXTURE_PATH}");
     let flex_url = format!("{origin}{FLEX_FIXTURE_PATH}");
+    let grid_url = format!("{origin}{GRID_FIXTURE_PATH}");
     match requested_url {
         url if url == page_url => Ok(BrowserFetchResponse::new(
             url,
@@ -509,6 +514,12 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
             200,
             Some("text/html; charset=utf-8".into()),
             FLEX_FIXTURE_HTML.as_bytes().to_vec(),
+        )),
+        url if url == grid_url => Ok(BrowserFetchResponse::new(
+            url,
+            200,
+            Some("text/html; charset=utf-8".into()),
+            GRID_FIXTURE_HTML.as_bytes().to_vec(),
         )),
         url if url == format!("{origin}{MISSING_IMAGE_PATH}") => {
             Err("intentional visual fixture image failure".into())
@@ -551,6 +562,23 @@ pub fn load_flex_page(origin: &str) -> Result<BrowserPage, String> {
         &text,
     );
     let url = format!("{}{FLEX_FIXTURE_PATH}", origin.trim_end_matches('/'));
+    pipeline
+        .load(&url, &|requested: &str| fixture_response(origin, requested))
+        .map_err(|error| error.to_string())
+}
+
+pub fn load_grid_page(origin: &str) -> Result<BrowserPage, String> {
+    let theme = mosaic_html_theme();
+    let text = DeterministicText;
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, 1.0),
+        &text,
+        &text,
+        &text,
+        &text,
+    );
+    let url = format!("{}{GRID_FIXTURE_PATH}", origin.trim_end_matches('/'));
     pipeline
         .load(&url, &|requested: &str| fixture_response(origin, requested))
         .map_err(|error| error.to_string())
@@ -1067,6 +1095,28 @@ mod tests {
         assert_eq!((deck.children[0].x, deck.children[0].y), (0.0, 0.0));
         assert_eq!((deck.children[1].x, deck.children[1].y), (110.0, 0.0));
         assert_eq!((deck.children[2].x, deck.children[2].y), (0.0, 80.0));
+        assert!(!page.paint.scene.instructions.is_empty());
+    }
+
+    #[test]
+    fn grid_fixture_converges_geometry_and_paint_for_every_host() {
+        let page = load_grid_page("http://venture.test").expect("grid fixture page");
+        let deck = find_positioned_id(&page.paint.positioned, "grid-deck").expect("grid deck");
+        assert_eq!(deck.children.len(), 3);
+        assert_eq!(deck.children[0].id.as_deref(), Some("grid-side"));
+        assert_eq!(deck.children[1].id.as_deref(), Some("grid-head"));
+        assert_eq!(deck.children[2].id.as_deref(), Some("grid-main"));
+        assert_eq!((deck.children[0].x, deck.children[0].y), (160.0, 0.0));
+        assert_eq!((deck.children[1].x, deck.children[1].y), (0.0, 0.0));
+        assert_eq!((deck.children[2].x, deck.children[2].y), (0.0, 40.0));
+        assert_eq!(
+            (deck.children[0].width, deck.children[0].height),
+            (80.0, 100.0)
+        );
+        assert_eq!(
+            (deck.children[2].width, deck.children[2].height),
+            (150.0, 60.0)
+        );
         assert!(!page.paint.scene.instructions.is_empty());
     }
 

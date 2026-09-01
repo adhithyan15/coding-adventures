@@ -35,7 +35,7 @@
 //! ```
 //! Two numbers of the same sign producing a result of opposite sign.
 
-use logic_gates::gates::{and_gate, or_gate, xor_gate};
+use logic_gates::gates::{and_gate, not_gate, or_gate, xor_gate};
 
 use crate::bits::{add_8bit, add_8bit_full, bits_to_u8, compute_zero, int_to_bits8, not8};
 
@@ -104,7 +104,11 @@ pub fn sub8(a: u8, m: u8, carry_in: u8) -> AluResult6502 {
 pub fn and8(a: u8, m: u8) -> AluResult6502 {
     let a_bits = int_to_bits8(a);
     let m_bits = int_to_bits8(m);
-    let result_bits: Vec<u8> = a_bits.iter().zip(m_bits.iter()).map(|(&ab, &mb)| and_gate(ab, mb)).collect();
+    let result_bits: Vec<u8> = a_bits
+        .iter()
+        .zip(m_bits.iter())
+        .map(|(&ab, &mb)| and_gate(ab, mb))
+        .collect();
     let result = bits_to_u8(&result_bits);
     AluResult6502 {
         result,
@@ -121,7 +125,11 @@ pub fn and8(a: u8, m: u8) -> AluResult6502 {
 pub fn or8(a: u8, m: u8) -> AluResult6502 {
     let a_bits = int_to_bits8(a);
     let m_bits = int_to_bits8(m);
-    let result_bits: Vec<u8> = a_bits.iter().zip(m_bits.iter()).map(|(&ab, &mb)| or_gate(ab, mb)).collect();
+    let result_bits: Vec<u8> = a_bits
+        .iter()
+        .zip(m_bits.iter())
+        .map(|(&ab, &mb)| or_gate(ab, mb))
+        .collect();
     let result = bits_to_u8(&result_bits);
     AluResult6502 {
         result,
@@ -138,7 +146,11 @@ pub fn or8(a: u8, m: u8) -> AluResult6502 {
 pub fn xor8(a: u8, m: u8) -> AluResult6502 {
     let a_bits = int_to_bits8(a);
     let m_bits = int_to_bits8(m);
-    let result_bits: Vec<u8> = a_bits.iter().zip(m_bits.iter()).map(|(&ab, &mb)| xor_gate(ab, mb)).collect();
+    let result_bits: Vec<u8> = a_bits
+        .iter()
+        .zip(m_bits.iter())
+        .map(|(&ab, &mb)| xor_gate(ab, mb))
+        .collect();
     let result = bits_to_u8(&result_bits);
     AluResult6502 {
         result,
@@ -149,7 +161,7 @@ pub fn xor8(a: u8, m: u8) -> AluResult6502 {
     }
 }
 
-/// BIT test: sets N=M[7], V=M[6], Z=(A & M)==0.
+/// BIT test: sets N=M\[7\], V=M\[6\], Z=(A & M)==0.
 ///
 /// Does NOT store result in A. Used to test memory bits without modifying A.
 ///
@@ -190,7 +202,7 @@ pub fn compare8(reg: u8, m: u8) -> (u8, u8, u8) {
 pub fn asl8(value: u8) -> (u8, u8) {
     let bits = int_to_bits8(value);
     let carry = bits[7]; // old MSB exits via carry
-    // Shift: new bit[i] = old bit[i-1]; new bit[0] = 0
+                         // Shift: new bit[i] = old bit[i-1]; new bit[0] = 0
     let mut result_bits = vec![0u8; 8];
     result_bits[1..8].copy_from_slice(&bits[0..7]);
     result_bits[0] = 0;
@@ -213,7 +225,7 @@ pub fn lsr8(value: u8) -> (u8, u8) {
     (bits_to_u8(&result_bits), carry)
 }
 
-/// Rotate Left through carry: C → [0], [7] → C.
+/// Rotate Left through carry: C → \[0\], \[7\] → C.
 ///
 /// ```text
 /// C → [7] ← [6] ← ... ← [0] ← old_C
@@ -229,7 +241,7 @@ pub fn rol8(value: u8, carry_in: u8) -> (u8, u8) {
     (bits_to_u8(&result_bits), new_carry)
 }
 
-/// Rotate Right through carry: C → [7], [0] → C.
+/// Rotate Right through carry: C → \[7\], \[0\] → C.
 ///
 /// ```text
 /// old_C → [7] → [6] → ... → [0] → C
@@ -290,51 +302,24 @@ pub fn dec8(value: u8) -> AluResult6502 {
 /// assert_eq!(r.flag_c, 0);
 /// ```
 pub fn adc_bcd(a: u8, m: u8, carry_in: u8) -> AluResult6502 {
-    // Step 1: binary result (N/V/Z from this)
     let bin = add8(a, m, carry_in);
+    let (low_sum, _) = add_8bit(a & 0x0F, m & 0x0F, carry_in);
+    let low_adjust = decimal_adjust_needed(low_sum);
+    let (low_plus_six, _) = add_8bit(low_sum, 6, 0);
+    let low = select_byte(low_sum, low_plus_six, low_adjust) & 0x0F;
 
-    // Step 2: BCD correction on low nibble
-    let lo_nib = bin.result & 0x0F;
-    // Nibble > 9 OR binary carry into high nibble
-    let lo_carry = and_gate(
-        or_gate(
-            u8::from(lo_nib > 9),
-            // carry_into_high_nibble: binary carry at stage 3 (bit 4 input carry)
-            // We detect this by checking if low nibble > 9 (already caught)
-            // or if the low-nibble add produced carry (use lo_nib > 9 check)
-            0, // simplification: check lo_nib
-        ),
-        1,
-    );
-    let lo_overflow = u8::from(lo_nib > 9);
+    let (high_sum, _) = add_8bit(a >> 4, m >> 4, low_adjust);
+    let high_adjust = decimal_adjust_needed(high_sum);
+    let (high_plus_six, _) = add_8bit(high_sum, 6, 0);
+    let high = select_byte(high_sum, high_plus_six, high_adjust) & 0x0F;
+    let bcd_result = (high << 4) | low;
 
-    // Add 6 to low nibble if needed
-    let (bcd_lo_result, lo_bcd_carry) = if lo_overflow == 1 {
-        let (r, c) = add_8bit(bin.result, 0x06, 0);
-        (r, c)
-    } else {
-        (bin.result, 0u8)
-    };
-
-    // Step 3: BCD correction on high nibble
-    let hi_nib = (bcd_lo_result >> 4) & 0x0F;
-    let hi_overflow = u8::from(hi_nib > 9 || lo_bcd_carry == 1 || bin.flag_c == 1);
-
-    let (bcd_result, bcd_carry) = if hi_overflow == 1 {
-        let (r, c) = add_8bit(bcd_lo_result, 0x60, 0);
-        (r, or_gate(c, 1)) // carry always set when high-nibble correction fires
-    } else {
-        (bcd_lo_result, bin.flag_c)
-    };
-
-    // NMOS quirk: N/V/Z from binary result, C from BCD result
-    let _ = lo_carry; // not needed — lo_overflow is the detector
     AluResult6502 {
         result: bcd_result,
         flag_n: bin.flag_n,
         flag_v: bin.flag_v,
         flag_z: bin.flag_z,
-        flag_c: bcd_carry,
+        flag_c: high_adjust,
     }
 }
 
@@ -343,44 +328,40 @@ pub fn adc_bcd(a: u8, m: u8, carry_in: u8) -> AluResult6502 {
 /// SBC in BCD mode: A - M - (1-C). BCD correction applied after binary subtract.
 /// NMOS quirk: N/V/Z from binary; C from BCD result.
 pub fn sbc_bcd(a: u8, m: u8, carry_in: u8) -> AluResult6502 {
-    // Step 1: binary subtract
     let bin = sub8(a, m, carry_in);
+    let low_sub = sub8(a & 0x0F, m & 0x0F, carry_in);
+    let low_borrow = not_gate(low_sub.flag_c);
+    let low_corrected = sub8(low_sub.result, 6, 1).result;
+    let low = select_byte(low_sub.result, low_corrected, low_borrow) & 0x0F;
 
-    if bin.flag_c == 0 {
-        // Borrow occurred — result is negative in BCD sense
-        // Apply correction: subtract 0x60 from high nibble, 0x06 from low
-        let lo_nib = bin.result & 0x0F;
-        let bcd1 = if lo_nib > 9 {
-            let (r, _) = add_8bit(bin.result, not8(0x05), 1); // subtract 6
-            r
-        } else {
-            bin.result
-        };
-        let (bcd_result, _) = add_8bit(bcd1, not8(0x5F), 1); // subtract 0x60
-        AluResult6502 {
-            result: bcd_result,
-            flag_n: bin.flag_n,
-            flag_v: bin.flag_v,
-            flag_z: bin.flag_z,
-            flag_c: 0, // borrow
-        }
-    } else {
-        // No borrow — apply standard BCD correction
-        let lo_nib = bin.result & 0x0F;
-        let bcd1 = if lo_nib > 9 {
-            let (r, _) = add_8bit(bin.result, not8(0x05), 1);
-            r
-        } else {
-            bin.result
-        };
-        AluResult6502 {
-            result: bcd1,
-            flag_n: bin.flag_n,
-            flag_v: bin.flag_v,
-            flag_z: bin.flag_z,
-            flag_c: 1, // no borrow
-        }
+    let high_sub = sub8(a >> 4, m >> 4, not_gate(low_borrow));
+    let high_borrow = not_gate(high_sub.flag_c);
+    let high_corrected = sub8(high_sub.result, 6, 1).result;
+    let high = select_byte(high_sub.result, high_corrected, high_borrow) & 0x0F;
+
+    AluResult6502 {
+        result: (high << 4) | low,
+        flag_n: bin.flag_n,
+        flag_v: bin.flag_v,
+        flag_z: bin.flag_z,
+        flag_c: not_gate(high_borrow),
     }
+}
+
+fn decimal_adjust_needed(value: u8) -> u8 {
+    let bits = int_to_bits8(value);
+    or_gate(bits[4], and_gate(bits[3], or_gate(bits[2], bits[1])))
+}
+
+fn select_byte(zero: u8, one: u8, select: u8) -> u8 {
+    let zero_bits = int_to_bits8(zero);
+    let one_bits = int_to_bits8(one);
+    let selected: Vec<u8> = zero_bits
+        .iter()
+        .zip(one_bits.iter())
+        .map(|(&a, &b)| or_gate(and_gate(a, not_gate(select)), and_gate(b, select)))
+        .collect();
+    bits_to_u8(&selected)
 }
 
 // ─── Tests ───────────────────────────────────────────────────────────────────

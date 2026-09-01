@@ -2,6 +2,16 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.2] — 2026-08-31
+
+### Fixed
+
+- Kept dependency installs in subshells in both build scripts and added an
+  explicit package-directory guard, so the final install and Vitest command
+  run in `dartmouth-basic-parser` rather than the generic `parser` dependency.
+- Added package-local coverage for mixed numeric/string Dartmouth BASIC
+  `DATA` statements.
+
 ## [0.1.1] — 2026-08-17
 
 ### Fixed

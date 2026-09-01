@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { afterEach, describe, expect, it } from "vitest";
 import { ConfigError, type PipelineConfig } from "@coding-adventures/forme-pipeline-config";
+import { createCancellationTokenSource } from "@coding-adventures/forme-stage";
 import type {
   Orchestrator,
   Pipeline,
@@ -94,8 +95,11 @@ function services(
         return pipeline(value);
       },
       runOnce: async () => result,
+      watch: () => { throw new Error("watch not expected"); },
       dispose: async () => {},
     } satisfies Orchestrator),
+    startDevServer: async () => { throw new Error("dev server not expected"); },
+    watchProject: () => { throw new Error("project watcher not expected"); },
   };
 }
 
@@ -124,9 +128,15 @@ describe("argument and diagnostic contracts", () => {
     expect(buildHelp.stdoutText).toContain("--reproducible");
     expect(buildHelp.stdoutText).toContain("--report <PATH>");
 
+    const watchHelp = makeIO();
+    expect(await run(["watch", "--help"], watchHelp)).toBe(EXIT_OK);
+    expect(watchHelp.stdoutText).toContain("forme watch [OPTIONS]");
+    expect(watchHelp.stdoutText).toContain("--port <PORT>");
+    expect(watchHelp.stdoutText).toContain("--debounce <MS>");
+
     const version = makeIO();
     expect(await run(["--version"], version)).toBe(EXIT_OK);
-    expect(version.stdoutText).toBe("0.1.0\n");
+    expect(version.stdoutText).toBe("0.2.0\n");
   });
 
   it("rejects unknown commands, missing flag values, and invalid clean options", async () => {
@@ -151,6 +161,7 @@ describe("argument and diagnostic contracts", () => {
   it("formats every ConfigError entry with its machine-readable code", async () => {
     const io = makeIO();
     const custom: CliServices = {
+      ...services(config()),
       loadConfig: async () => config(),
       createOrchestrator: () => ({
         buildPipeline: async () => { throw new ConfigError([
@@ -158,6 +169,7 @@ describe("argument and diagnostic contracts", () => {
           { path: "stages[1]", code: "BROKEN_TWO", message: "second" },
         ]); },
         runOnce: async () => successfulResult(),
+        watch: () => { throw new Error("watch not expected"); },
         dispose: async () => {},
       }),
     };
@@ -165,6 +177,171 @@ describe("argument and diagnostic contracts", () => {
     expect(io.stderrText).toBe(
       "forme: BROKEN_ONE: stages[0]: first\nforme: BROKEN_TWO: stages[1]: second\n",
     );
+  });
+});
+
+describe("watch preview", () => {
+  it("serves successful artifacts, forwards options, and closes cleanly on SIGINT", async () => {
+    const io = makeIO();
+    const cancellation = createCancellationTokenSource();
+    const bytes = new TextEncoder().encode("<!doctype html><body>preview</body>");
+    const built: RunResult = {
+      ...successfulResult(),
+      outputs: {
+        site: {
+          variant: { kind: "dist-tree" },
+          files: { "index.html": bytes },
+          manifest: { routes: [], assets: [], buildTime: "fixed", buildId: "blake2b:preview" },
+        },
+      },
+    };
+    let publishedBuild: string | null = null;
+    let serverClosed = false;
+    let sessionStopped = false;
+    let observedDebounce: number | undefined;
+    let ignoredPaths: readonly string[] = [];
+    let releasePublished: (() => void) | undefined;
+    const published = new Promise<void>(resolve => { releasePublished = resolve; });
+    const base = services(config());
+    const custom: CliServices = {
+      ...base,
+      createOrchestrator: () => ({
+        buildPipeline: async value => ({
+          config: value,
+          dag: { instances: new Map(), topoOrder: [], sinks: [], sources: [] },
+        }) as never,
+        runOnce: async () => built,
+        watch: (_pipeline, options) => {
+          observedDebounce = options.debounceMs;
+          return {
+            results: async function* () {
+              yield built;
+              await new Promise<void>(resolve => options.cancellation?.onCancel(resolve));
+            },
+            rebuild: async () => built,
+            stop: async () => { sessionStopped = true; },
+          };
+        },
+        dispose: async () => {},
+      }),
+      startDevServer: async options => {
+        expect(options).toEqual({ port: 4321 });
+        return {
+          address: { host: "127.0.0.1", port: 4321, url: "http://127.0.0.1:4321" },
+          publish: snapshot => {
+            publishedBuild = snapshot.buildId;
+            releasePublished?.();
+          },
+          publishFailure: () => {},
+          close: async () => { serverClosed = true; },
+        };
+      },
+      watchProject: (_root, ignored) => {
+        ignoredPaths = ignored;
+        return { async *[Symbol.asyncIterator]() { /* host mock stays idle */ } };
+      },
+    };
+
+    const running = run(
+      ["watch", "--port", "4321", "--debounce", "10"],
+      io,
+      { cancellation: cancellation.token },
+      custom,
+    );
+    await published;
+    cancellation.cancel("test SIGINT");
+    expect(await running).toBe(130);
+    expect(publishedBuild).toBe("blake2b:fixture");
+    expect(observedDebounce).toBe(10);
+    expect(ignoredPaths).toContain("/project/.git");
+    expect(ignoredPaths).toContain("/project/node_modules");
+    expect(serverClosed).toBe(true);
+    expect(sessionStopped).toBe(true);
+    expect(io.stdoutText).toContain("forme watch: http://127.0.0.1:4321");
+    expect(io.stdoutText).toContain("forme watch: fixture ready");
+  });
+
+  it("validates bounded port and debounce values through the shared parser result", async () => {
+    for (const argv of [
+      ["watch", "--port", "0"],
+      ["watch", "--port", "65536"],
+      ["watch", "--debounce", "-1"],
+      ["watch", "--debounce", "60001"],
+    ]) {
+      const io = makeIO();
+      expect(await run(argv, io, {}, services(config()))).toBe(EXIT_USAGE_OR_CONFIG);
+      expect(io.stderrText).toMatch(/^forme: E_USAGE:/);
+    }
+  });
+
+  it("reports failed rebuilds, continues watching, and publishes the next good build", async () => {
+    const io = makeIO();
+    const cancellation = createCancellationTokenSource();
+    const failed: RunResult = {
+      ...successfulResult(),
+      outcome: "failed",
+      errors: [{
+        stageName: "@fixture/parse",
+        instanceId: "parse",
+        code: "PARSE_BAD",
+        message: "draft is invalid",
+        recoverable: false,
+        fields: {},
+      }],
+    };
+    const good: RunResult = {
+      ...successfulResult(),
+      outputs: {
+        site: {
+          variant: { kind: "dist-tree" },
+          files: { "index.html": new TextEncoder().encode("good") },
+          manifest: { routes: [], assets: [], buildTime: "fixed", buildId: "blake2b:good" },
+        },
+      },
+    };
+    let publishedFailure = "";
+    let publishedGood = false;
+    let releaseGood: (() => void) | undefined;
+    const goodPublished = new Promise<void>(resolve => { releaseGood = resolve; });
+    const base = services(config());
+    const custom: CliServices = {
+      ...base,
+      createOrchestrator: () => ({
+        buildPipeline: async value => ({
+          config: value,
+          dag: { instances: new Map(), topoOrder: [], sinks: [], sources: [] },
+        }) as never,
+        runOnce: async () => good,
+        watch: (_pipeline, options) => ({
+          results: async function* () {
+            yield failed;
+            yield good;
+            await new Promise<void>(resolve => options.cancellation?.onCancel(resolve));
+          },
+          rebuild: async () => good,
+          stop: async () => {},
+        }),
+        dispose: async () => {},
+      }),
+      startDevServer: async () => ({
+        address: { host: "127.0.0.1", port: 3000, url: "http://127.0.0.1:3000" },
+        publish: () => {
+          publishedGood = true;
+          releaseGood?.();
+        },
+        publishFailure: failure => { publishedFailure = failure.message; },
+        close: async () => {},
+      }),
+      watchProject: () => ({ async *[Symbol.asyncIterator]() { /* idle */ } }),
+    };
+
+    const running = run(["watch"], io, { cancellation: cancellation.token }, custom);
+    await goodPublished;
+    cancellation.cancel("test complete");
+    expect(await running).toBe(130);
+    expect(publishedFailure).toContain("PARSE_BAD: draft is invalid");
+    expect(publishedGood).toBe(true);
+    expect(io.stderrText).toContain("forme: PARSE_BAD: parse (@fixture/parse): draft is invalid");
   });
 });
 

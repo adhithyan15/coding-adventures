@@ -8,3 +8,4 @@ license = "MIT"
 [dependencies]
 logic-gates = { path = "../logic-gates" }
 arithmetic = { path = "../arithmetic" }
+mos6502-simulator = { path = "../mos6502-simulator" }

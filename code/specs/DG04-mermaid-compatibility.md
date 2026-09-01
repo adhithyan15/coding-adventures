@@ -217,6 +217,7 @@ arrows, open/filled/cross/point arrowheads, bidirectional messages, notes,
 activation/deactivation, titles, and automatic numbering. It lowers through
 `diagram-layout-sequence` to existing path, rectangle, dashed-stroke, and glyph
 PaintInstructions and is exercised by a Mermaid-to-Metal-to-PNG fixture.
+
 Grammar-backed `actor` declarations retain their semantic kind through layout
 and lower to backend-neutral ellipse/path instructions for UML stick figures.
 Sequence layout mirrors participant and actor headers below the interaction,
@@ -327,6 +328,17 @@ colors remain backend-neutral Paint values.
 Sequence headers, statement keywords, placements, and control words match
 case-insensitively as required by Mermaid 11.16.1's Jison lexer, while actor IDs
 and user-authored text retain their original case through semantic IR and Paint.
+
+### Timeline Native Slice
+
+The initial Mermaid 11.16.1 timeline slice is grammar-backed and covers
+`timeline`, `timeline LR`, and `timeline TD` headers, titles, accessibility
+metadata, sections, periods, and ordered events attached to their preceding
+period. These statements lower into timeline-specific temporal semantic IR.
+Deterministic layout emits dedicated section, spine, and period-card geometry,
+which lowers to backend-neutral PaintScene rectangles, paths, and shaped text
+and is exercised by a Metal-to-PNG fixture. The family remains partial until
+the complete pinned syntax and tolerant visual corpus passes.
 
 ### Structural Groups
 

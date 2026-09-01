@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Dispatch `grid` and atomic `inline-grid` nodes through the reusable
+  `layout-grid` formatting context while preserving recursive child layout.
 - Dispatch `flex` and atomic `inline-flex` containers through the reusable
   flex formatting context while preserving recursive block/inline children.
 - Resolve percentage widths against the containing block and distribute

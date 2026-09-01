@@ -1,6 +1,6 @@
 # Forme Completion Roadmap
 
-> **Status:** Living delivery backlog, last prioritized 2026-08-28.
+> **Status:** Living delivery backlog, last prioritized 2026-08-31.
 > This roadmap turns the north-star in [FM00](FM00-forme-vision.md) into
 > merge-sized work. Update it whenever implementation work discovers a new
 > gap, and reprioritize it after every merged Forme pull request.
@@ -29,7 +29,7 @@ visible so a local optimization cannot quietly close the project early.
 
 The implementation is substantial but not yet an end-to-end product:
 
-- 62 TypeScript `forme-*` packages and 182 package test files cover the kernel,
+- 63 TypeScript `forme-*` packages and 185 package test files cover the kernel,
   stage contracts, a sequential orchestrator, Style IR, AOT emitters, document
   transforms, collections, feeds, routing, and static output.
 - The blog proves a ten-stage routed DAG: source → parse → asset resolution →
@@ -44,17 +44,19 @@ The implementation is substantial but not yet an end-to-end product:
   plus web-specific layout CSS, joined with its social image, and emitted as a
   fingerprinted root artifact. Pull requests run the same clean build that the
   existing Pages workflow publishes.
-- A general `forme` CLI now loads project configs for build/run, check, and
-  containment-checked clean commands, exposes reproducible mode, formats stable
-  diagnostics and exits, and cooperatively handles SIGINT. There is no watch
-  server, plugin host, runtime sandbox, authoring shell, or deploy runner.
+- A general `forme` CLI now loads project configs for build/run, check,
+  containment-checked clean, and watch commands, exposes reproducible mode,
+  formats stable diagnostics and exits, and cooperatively handles SIGINT. Watch
+  serves only successful in-memory artifacts, coalesces project changes,
+  reloads browsers over SSE, and retains the last good site across failures.
+  There is no plugin host, runtime sandbox, authoring shell, or deploy runner.
 - Interactivity IR has no numbered spec or package. The AOT implementation
   refers to a missing FM06 spec, and the existing FM05 deploy-runner spec
   collides with older FM01–FM04 references that use FM05 for Interactivity IR.
-- The remaining headless-product gap is the preview/watch path, persistent
-  incremental scheduling, and deploy runner. Both live sites now use the same
-  product CLI and centralized local-dependency bootstrap; site-local code is
-  limited to content adapters and post-build artifact assertions.
+- The remaining headless-product gap is persistent incremental scheduling and
+  the deploy runner. Both live sites now use the same product CLI, watch server,
+  and centralized local-dependency bootstrap; site-local code is limited to
+  content adapters and post-build artifact assertions.
 
 ## Prioritization method
 
@@ -96,7 +98,7 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 16 | FM-B006 | done | Add a first-class asset pipeline | Depends on FM-B026–FM-B028. Referenced local assets are discovered, fingerprinted, copied, rewritten to cache-safe URLs, and included in the deploy manifest; the clean blog build verifies exact artifact and on-disk bytes. |
 | 17 | FM-B007 | done | Generate the repository landing page with Forme | Depends on FM-B005 and FM-B006. Declarative Forme source and a seven-stage configuration reproduce the approved responsive design; generated output replaces the hand-maintained HTML, fingerprints the social image, and deploys through the existing Pages workflow. |
 | 18 | FM-B008 | done | Implement the general headless CLI | `forme build`/`run`, `forme check`, and containment-checked `forme clean` load a project config, produce stable diagnostics and exit codes, expose reproducible mode, handle SIGINT, and pass subprocess acceptance from a project outside the repository tree. Both live sites use the CLI and shared bootstrap instead of duplicated drivers. |
-| 19 | FM-B009 | ready | Implement watch mode and a dev server | Depends on FM-B008. File changes rebuild the correct affected set, browser refresh is reliable, cancellation is clean, and error pages preserve the last good output. |
+| 19 | FM-B009 | done | Implement watch mode and a dev server | Depends on FM-B008. An initial build and coalesced project changes run the complete pipeline, successful in-memory artifacts are served with reliable browser refresh, failed rebuilds preserve the last good output, and cancellation closes the watcher and server cleanly. FM-B010 owns affected-stage incrementality. |
 | 20 | FM-B010 | ready | Finish orchestrator incrementality and scheduling | Persistent cache hits skip unchanged stages; bounded streaming, backpressure, and `maxConcurrency` avoid draining every stream into memory; deterministic tests cover cancellation and reproducibility. |
 | 21 | FM-B011 | ready | Reconcile the FM spec map | Resolve the FM05 numbering collision, publish the missing Interactivity IR/AOT/CLI spec locations, repair stale cross-links, and add an implementation-status ledger to every FM spec. |
 | 22 | FM-B012 | ready | Implement the deploy runner | Build the FM05 core, filesystem adapter, GitHub Pages adapter, dry-run/reporting path, rollback/idempotency tests, and `forme deploy` composition. |
@@ -177,6 +179,7 @@ work.
 | 2026-08-28 | Both live Forme sites need nearly identical local dependency bootstrap and build-driver plumbing because no general product CLI exists yet. | Folded into FM-B008: the CLI must replace site-local bootstrap/driver ceremony rather than merely wrap it. |
 | 2026-08-28 | FM03 documents `forme run`, while the completion backlog and common static-site vocabulary use `forme build`. | Resolved in FM-B008 by making `build` canonical in product diagnostics and retaining `run` as an exact compatibility alias; FM-B011 should update the spec examples. |
 | 2026-08-28 | `PipelineConfig` has no explicit cleanup target contract, and arbitrary stage configs may contain fields named `outDir`. | Resolved safely for the current headless product in FM-B008: `clean` considers `outDir` only on direct stages whose declared output kind is `DeployArtifact`, adds `settings.cacheDir`, deduplicates targets, and refuses the project root or outside paths. A future config-shape migration belongs in FM-B011 if non-filesystem emitters need a broader lifecycle hook. |
+| 2026-08-31 | FM-B009's original “affected set” wording duplicated FM-B010, while FM04 explicitly says watch mode re-runs the full pipeline until incremental scheduling lands. | FM-B009 now owns conservative full-pipeline rebuilds, coalescing, live preview, and last-good-output behavior. FM-B010 retains persistent cache hits and exact affected-stage scheduling. |
 
 ## Loop protocol
 

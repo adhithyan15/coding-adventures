@@ -778,6 +778,7 @@ export function makeController(engine: any, init: ControllerInit = {}) {
           // doc comment on task-rows documents this pairing.
           heading ? String(groupSizes.get(group)) : "",
           id === editingTask ? "editing" : "",
+          `${c.value[DONE]?.value === true ? "Reopen" : "Complete"} task: ${c.display[NAME]}`,
         ];
       });
       const doneCount = ids.filter((id) => byTask.get(id)!.value[DONE]?.value === true).length;

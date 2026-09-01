@@ -14,7 +14,7 @@
 use diagram_ir::{
     DiagramDirection, GanttDateFormat, GanttDateFormatPart, GanttDisplayMode, GitCommitSymbol, GitCommitType, GitDiagram, GitEvent, JourneyDiagram,
     LayoutedTemporalDiagram, LayoutedTemporalInteraction, LayoutedTemporalItem, TaskEnd, TaskStart,
-    TemporalBody, TemporalDiagram,
+    TemporalBody, TemporalDiagram, TimelineDiagram, TimelineDirection,
 };
 use std::collections::{BTreeSet, HashMap};
 
@@ -52,6 +52,101 @@ pub fn layout_temporal_diagram(d: &TemporalDiagram, cw: f64) -> LayoutedTemporal
         TemporalBody::Gantt(g) => layout_gantt(&d.title, g, cw),
         TemporalBody::Git(g)   => layout_git(g, cw),
         TemporalBody::Journey(j) => layout_journey(&d.title, j, cw),
+        TemporalBody::Timeline(t) => layout_timeline(&d.title, t, cw),
+    }
+}
+
+fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -> LayoutedTemporalDiagram {
+    let mut items = Vec::new();
+    let width = cw.max(560.0);
+    let mut y = 20.0;
+    if let Some(label) = title {
+        items.push(LayoutedTemporalItem::TemporalTitle {
+            x: 16.0, y, width: width - 32.0, height: 40.0, label: label.clone(),
+        });
+        y += 52.0;
+    }
+
+    match diagram.direction {
+        TimelineDirection::TopDown => {
+            let spine_x = 176.0;
+            let start_y = y;
+            let mut color_index = 0usize;
+            for section in &diagram.sections {
+                if let Some(label) = &section.label {
+                    items.push(LayoutedTemporalItem::TimelineSection {
+                        x: 16.0, y, width: 136.0, height: 30.0, label: label.clone(),
+                    });
+                    y += 38.0;
+                }
+                for period in &section.periods {
+                    let card_height = 48.0 + period.events.len() as f64 * 18.0;
+                    items.push(LayoutedTemporalItem::TimelinePeriod {
+                        x: spine_x + 28.0, y, width: width - spine_x - 52.0,
+                        height: card_height, label: period.label.clone(),
+                        events: period.events.clone(), color_index,
+                    });
+                    y += card_height + 18.0;
+                    color_index += 1;
+                }
+                y += 10.0;
+            }
+            if color_index > 0 {
+                items.insert(usize::from(title.is_some()), LayoutedTemporalItem::TimelineSpine {
+                    x1: spine_x, y1: start_y + 16.0, x2: spine_x, y2: y - 36.0,
+                });
+            }
+        }
+        TimelineDirection::LeftRight => {
+            let card_width = 190.0;
+            let gap = 24.0;
+            let mut max_width = width;
+            let mut color_index = 0usize;
+            for section in &diagram.sections {
+                if let Some(label) = &section.label {
+                    items.push(LayoutedTemporalItem::TimelineSection {
+                        x: 16.0, y, width: 136.0, height: 30.0, label: label.clone(),
+                    });
+                }
+                let card_y = y + 44.0;
+                let spine_y = card_y + 12.0;
+                let start_x = 176.0;
+                let mut row_height: f64 = 48.0;
+                for (index, period) in section.periods.iter().enumerate() {
+                    let x = start_x + index as f64 * (card_width + gap);
+                    let card_height = 48.0 + period.events.len() as f64 * 18.0;
+                    row_height = row_height.max(card_height);
+                    items.push(LayoutedTemporalItem::TimelinePeriod {
+                        x, y: card_y + 24.0, width: card_width, height: card_height,
+                        label: period.label.clone(), events: period.events.clone(), color_index,
+                    });
+                    color_index += 1;
+                }
+                if !section.periods.is_empty() {
+                    let end_x = start_x
+                        + section.periods.len().saturating_sub(1) as f64 * (card_width + gap)
+                        + card_width / 2.0;
+                    items.push(LayoutedTemporalItem::TimelineSpine {
+                        x1: start_x + card_width / 2.0, y1: spine_y, x2: end_x, y2: spine_y,
+                    });
+                    max_width = max_width.max(end_x + card_width / 2.0 + 24.0);
+                }
+                y = card_y + row_height + 42.0;
+            }
+            return LayoutedTemporalDiagram {
+                width: max_width, height: y + 16.0,
+                accessibility_title: diagram.accessibility_title.clone(),
+                accessibility_description: diagram.accessibility_description.clone(),
+                interactions: Vec::new(), items,
+            };
+        }
+    }
+
+    LayoutedTemporalDiagram {
+        width, height: y + 16.0,
+        accessibility_title: diagram.accessibility_title.clone(),
+        accessibility_description: diagram.accessibility_description.clone(),
+        interactions: Vec::new(), items,
     }
 }
 
@@ -2179,6 +2274,39 @@ mod tests {
         assert!(layout.items.iter().any(|item| matches!(item,
             LayoutedTemporalItem::JourneySection { fill, text_color, .. }
                 if fill == "#112233" && text_color == "#fefefe"
+        )));
+    }
+
+    #[test]
+    fn timeline_layout_preserves_sections_periods_and_events() {
+        let diagram = TemporalDiagram {
+            kind: TemporalKind::Timeline,
+            title: Some("Product history".into()),
+            body: TemporalBody::Timeline(TimelineDiagram {
+                accessibility_title: Some("Release history".into()),
+                accessibility_description: Some("Milestones by year".into()),
+                direction: TimelineDirection::TopDown,
+                sections: vec![TimelineSection {
+                    label: Some("Foundation".into()),
+                    periods: vec![TimelinePeriod {
+                        label: "2024".into(),
+                        events: vec!["Prototype".into(), "First customer".into()],
+                    }],
+                }],
+            }),
+        };
+        let layout = layout_temporal_diagram(&diagram, 640.0);
+        assert_eq!(layout.accessibility_title.as_deref(), Some("Release history"));
+        assert!(layout.items.iter().any(|item| matches!(item,
+            LayoutedTemporalItem::TimelineSection { label, .. } if label == "Foundation"
+        )));
+        assert!(layout.items.iter().any(|item| matches!(item,
+            LayoutedTemporalItem::TimelinePeriod { label, events, .. }
+                if label == "2024" && events == &["Prototype", "First customer"]
+        )));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedTemporalItem::TimelineSpine { .. }
         )));
     }
 }

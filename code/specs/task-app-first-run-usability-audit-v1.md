@@ -47,7 +47,7 @@ and authored layout/style inspection.
 | Requirement | Result | Evidence and follow-up |
 | --- | --- | --- |
 | Clear List-first launch with one task-name field and optional due date | Partial | Inbox/List, `What needs doing?`, `Due (optional)`, and `Add task` are present. The task area is blank and the name field does not receive initial focus: #13687. |
-| Create, complete, reopen, edit, and delete without project-management terminology | Partial | Create/complete/reopen/delete and direct name/due-date edits are engine-backed from List. The completion control still exposes only `○`/`✓` as its name (#13691). |
+| Create, complete, reopen, edit, and delete without project-management terminology | Pass | Create/complete/reopen/delete and direct name/due-date edits are engine-backed from List. The compact completion control now exposes a state-aware name such as `Complete task: Draft release`, verified in generated React and Compose semantics (#13691). |
 | Scheduling is progressively disclosed | Pass | New projects start in Board complexity; List details omit CPM fields until Full CPM is selected. A person can keep using name, due date, completion, and deletion without opening Timeline or Sheet. |
 | Useful empty, loading, validation, overdue, and persistence-recovery states | Partial | Overdue is a plain-language row chip. Empty guidance/focus shipped in #13706. Composer validation is now visible, atomic, accessible, and focus-safe (#13689). Blank startup/failure remains #13695; persistence fallback and recovery remain console-only (#13690). |
 | Local-only storage and backup location are discoverable | Fail | The release archives carry `LOCAL-DATA.txt` and the repository has an exact operations contract, but the running UI does not link or summarize it: #13690. |
@@ -63,7 +63,7 @@ The next implementation work should preserve one focused issue per pull request:
 2. [#13689](https://github.com/adhithyan15/coding-adventures/issues/13689) —
    visible, focus-safe composer validation.
 3. [#13691](https://github.com/adhithyan15/coding-adventures/issues/13691) —
-   descriptive completion-control names.
+   descriptive completion-control names. **Implemented; pending review.**
 4. [#13690](https://github.com/adhithyan15/coding-adventures/issues/13690) —
    local-storage, fallback, recovery, and backup discoverability.
 5. [#13695](https://github.com/adhithyan15/coding-adventures/issues/13695) —

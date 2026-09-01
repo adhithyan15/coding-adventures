@@ -1,4 +1,5 @@
 import androidx.compose.ui.test.assertCountEquals
+import androidx.compose.ui.test.assertContentDescriptionEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.junit4.v2.createComposeRule
@@ -77,15 +78,21 @@ class TaskAppUiTest {
         compose.onNodeWithText(UI_EDITED_TASK_NAME).assertIsDisplayed()
         compose.onNodeWithText("due $UI_EDITED_DUE").assertIsDisplayed()
 
+        compose.onNodeWithTag("toggle")
+            .assertContentDescriptionEquals("Complete task: $UI_EDITED_TASK_NAME")
         compose.onNodeWithTag("toggle").performClick()
         compose.waitForIdle()
         compose.onNodeWithTag("toggle").assertTextContains("✓")
+        compose.onNodeWithTag("toggle")
+            .assertContentDescriptionEquals("Reopen task: $UI_EDITED_TASK_NAME")
         // The Rust-owned completion value must be visible, not merely present
         // in the semantics tree beyond the measured desktop viewport.
         compose.onNodeWithText("100%").assertIsDisplayed()
         compose.onNodeWithTag("toggle").performClick()
         compose.waitForIdle()
         compose.onNodeWithTag("toggle").assertTextContains("○")
+        compose.onNodeWithTag("toggle")
+            .assertContentDescriptionEquals("Complete task: $UI_EDITED_TASK_NAME")
 
         compose.onNodeWithTag("del-btn").performClick()
         compose.waitForIdle()

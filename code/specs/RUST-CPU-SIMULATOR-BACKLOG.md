@@ -73,7 +73,7 @@ according to the current prioritization run.
 | RCPU-011 / RCPU-012 | 1971 | Intel 4004 | Complete: `intel4004-simulator` | Complete: `intel4004-gatelevel` |
 | RCPU-013 / RCPU-014 | 1972 | Intel 8008 | Complete: `intel8008-simulator` | Complete: `intel8008-gatelevel` |
 | RCPU-015 / RCPU-016 | 1974 | Intel 8080 | Complete: `intel8080-simulator` | Complete: `intel8080-gatelevel` |
-| RCPU-017 / RCPU-018 | 1975 | MOS 6502 | Complete: `mos6502-simulator` | Audit: `mos6502-gatelevel` |
+| RCPU-017 / RCPU-018 | 1975 | MOS 6502 | Complete: `mos6502-simulator` | Complete: `mos6502-gatelevel` |
 | RCPU-019 / RCPU-020 | 1976 | Zilog Z80 | Audit: `z80-simulator` | Audit: `z80-gatelevel` |
 | RCPU-021 / RCPU-022 | 1978 | Intel 8086 | Audit: `intel8086-simulator` | Audit: `intel8086-gatelevel` |
 | RCPU-023 / RCPU-024 | 1979 | Motorola 68000 | Audit: `m68k-simulator` | Audit: `motorola68k-gatelevel` |
@@ -91,10 +91,9 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-018**, the MOS 6502 gate-level Rust audit, ordered
-behind publication of the completed PDP-11, Intel 4004, Intel 8008, and Intel
-8080 work. Intel 8080 functional merged green through PR #13467 as
-`95120cf8f7`; Intel 8080 gate-level is the current publication cell.
+Current selection: **RCPU-019**, the Zilog Z80 functional Rust audit, ordered
+behind publication of the completed PDP-11, Intel 4004, Intel 8008, Intel 8080,
+and MOS 6502 work.
 RCPU-005 is complete after its AAU/final-audit slice added separate
 40-bit AX/BX/QX/IX state, all three calculation modes, exact general/arithmetic/
 data-transfer and plug-7 status words, deterministic integer floating-point,
@@ -287,6 +286,22 @@ bytes and pin the complete post-state of all 151 official opcodes to hashes
 generated from the repository's Python oracle. Strict formatting, Clippy, and
 rustdoc pass; core line coverage is 93.87% (704/750), above the completion
 floor. Publication advances to the MOS 6502 gate audit.
+
+RCPU-018 is audit-complete locally atop RCPU-017. The legacy package decoded
+all 151 official opcodes, but most persistent state used host values, lifecycle
+boundaries were unchecked, snapshots were incomplete, zero detection used host
+iteration, decimal subtraction disagreed with the functional oracle, and
+strict rustdoc failed. The audit backs all 528,184 persistent memory, register,
+flag, halt, and I/O bits with D flip-flops; shares the functional simulator's
+typed transactional lifecycle, full owned state, traces, and results; and
+routes corrected decimal adjustment and zero detection through gates.
+Eighty-one unit, five integration, and seven documentation tests pin the exact
+topology, every failure boundary, IRQ/NMI entry, multi-instruction workloads,
+memory-mapped I/O, full-state equivalence for all 151 official opcodes, and
+atomic rejection of all 105 undefined bytes. Strict formatting, Clippy, and
+rustdoc pass; core line coverage is 96.60% (994/1,029), above the completion
+floor. Publication closes the MOS 6502 pair and advances to the Zilog Z80
+functional audit.
 
 ## Cross-language wave
 
