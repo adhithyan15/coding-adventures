@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C19-food-five",
+    "language": "marwadi",
+    "chapter": 24,
+    "sequence": 1880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:678469b13feaa2fa"
+  },
+  "findings": []
+}
