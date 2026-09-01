@@ -1,0 +1,107 @@
+% ============================================================================
+% well-aquifer-type — which kind of aquifer each kind of well is drilled
+% into (adj-facts-stdlib, EARTH-SCIENCE).
+% ============================================================================
+% Recall is a binding query:
+%
+%     ? well_aquifer_type(artesian_well, $A)
+%       % confined_aquifer
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `well_aquifer_type(well, aquifer_type)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the aquifer kind WITH its source, on the CPU, with zero
+% model calls.
+%
+% The BACKWARD query is the one a reader actually has: "which wells reach a
+% confined aquifer?" returns both artesian kinds and not the water table
+% well.
+%
+% THIRD USGS-sourced library, and the first from the Water Science School's
+% aquifers page.
+%
+% Provenance: ONE sentence grounds all three rows.
+%
+%     "The illustration shows an artesian well and a flowing artesian well,
+%      which are drilled into a confined aquifer, and a water table well,
+%      which is drilled into an unconfined aquifer."
+%
+%     well                     aquifer_type
+%     ----------------------   ------------------
+%     artesian_well            confined_aquifer
+%     flowing_artesian_well    confined_aquifer
+%     water_table_well         unconfined_aquifer
+%
+% *** THAT SENTENCE IS A FIGURE CAPTION, NOT BODY PROSE, AND THIS HEADER
+% SAYS SO. *** It is preceded on the page by "Media Sources/Usage: Public
+% Domain. View Media Details", so a reader checking the citation should
+% look under the illustration rather than scanning the article text. A
+% citation that sends a reader hunting in the wrong part of a page is a
+% worse citation, and the fix is to say where it lives.
+%
+% AND THE FIGURE CARRIES A THIRD-PARTY CREDIT. The caption block closes
+% with "Credit: Environment and Climate Change Canada", so the
+% illustration is republished by the USGS as Public Domain rather than
+% drawn by it. The quoted text appears verbatim on a USGS page and that is
+% what `locator` points at, but this header does NOT claim the USGS wrote
+% the sentence, because that cannot be verified from the page. `trust
+% authoritative` rests on the USGS being the first-party PUBLISHER of the
+% material it serves, which is the claim actually supported.
+%
+% TWO WELLS, NOT ONE, ON THE CONFINED SIDE. The sentence names "an
+% artesian well AND a flowing artesian well" as distinct things, so both
+% are rows. Collapsing them into one atom would assert that the source
+% treats them as the same well, which it does not.
+%
+% CONTEXT THE PAGE SUPPLIES BUT WHICH IS NOT A CITATION HERE. The article
+% also says "Groundwater in aquifers between layers of poorly permeable
+% rock, such as clay or shale, may be confined under pressure." That
+% explains what CONFINED means, and it is genuinely useful to a reader —
+% but it grounds no row of this relation, because it never says which
+% wells reach which aquifer. Attaching it as a `cites` would dress up
+% background as corroboration. A corroboration should support the rows, or
+% it should not be in the envelope.
+%
+% `trust authoritative` — the USGS is a first-party .gov publisher. The
+% page was CONTENT-verified by RAW TEXT EXTRACTION (HTTP 200, 285
+% substantive sentences, zero soft-404 markers), never from a fetch
+% summary, and the quoted sentence was confirmed to appear verbatim in
+% that extraction.
+%
+% A NOTE ON AGREEMENT ACROSS PUBLISHERS, recorded because it is reassuring
+% rather than because it is a row. This page says "The upper surface of
+% this zone of saturation is called the water table", which is consistent
+% with `zone-water-table-position.adj` — a table built from a National Park
+% Service page — placing `zone_of_saturation` below the water table. Two
+% independent .gov publishers using the same vocabulary the same way is
+% worth knowing, but it is a definition rather than a new axis, so nothing
+% here depends on it.
+%
+% Honest abstention:
+%
+%   - DUG WELLS, DRILLED WELLS and DRIVEN WELLS get no rows. Those are
+%     standard well types and a reader may well ask for them, but this
+%     sentence names three wells and those are not among them. Answering
+%     from general hydrology knowledge is exactly what a grounded recall
+%     library must not do.
+%   - `spring` is not a well and gets no row.
+%   - The relation says which aquifer a well is DRILLED INTO. It does not
+%     say how deep, how much water, or whether the well flows without
+%     pumping — the last of which the page discusses for artesian wells but
+%     which is a different relation.
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table well_aquifer_type {
+    columns well, aquifer_type
+
+    row (artesian_well, confined_aquifer)
+    row (flowing_artesian_well, confined_aquifer)
+    row (water_table_well, unconfined_aquifer)
+
+    source "The illustration shows an artesian well and a flowing artesian well, which are drilled into a confined aquifer, and a water table well, which is drilled into an unconfined aquifer."
+    locator "https://www.usgs.gov/special-topics/water-science-school/science/aquifers-and-groundwater"
+    trust authoritative
+}
