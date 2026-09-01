@@ -33,7 +33,7 @@
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use wasm_execution::{HostFunction, HostInterface, LinearMemory, Table, WasmValue};
+use wasm_execution::{GlobalStorage, HostFunction, HostInterface, LinearMemory, Table};
 use wasm_runtime::{WasmInstance, WasmRuntime};
 use wasm_types::GlobalType;
 
@@ -49,7 +49,7 @@ impl HostInterface for SharedTableHost {
         None
     }
 
-    fn resolve_global(&self, _module_name: &str, _name: &str) -> Option<(GlobalType, Rc<RefCell<WasmValue>>)> {
+    fn resolve_global(&self, _module_name: &str, _name: &str) -> Option<(GlobalType, Rc<RefCell<GlobalStorage>>)> {
         None
     }
 

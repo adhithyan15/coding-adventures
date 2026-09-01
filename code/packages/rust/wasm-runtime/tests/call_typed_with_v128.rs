@@ -44,6 +44,8 @@ fn instance_with_v128_const(lanes: [i32; 4]) -> wasm_runtime::WasmInstance {
         gc_heap: vec![],
         dropped_data_segments: vec![],
         dropped_elements: vec![],
+        func_identities: vec![0],
+        instance_identity: 0,
     }
 }
 

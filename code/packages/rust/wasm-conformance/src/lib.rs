@@ -53,7 +53,7 @@ use report::{DirectiveKind, DirectiveOutcome};
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
-use wasm_execution::{HostFunction, HostInterface, LinearMemory, Table, TrapError, V128Bytes, WasmValue};
+use wasm_execution::{GlobalStorage, HostFunction, HostInterface, LinearMemory, Table, TrapError, V128Bytes, WasmValue};
 use wasm_module_parser::WasmModuleParser;
 use wasm_runtime::{WasmInstance, WasmRuntime};
 use wasm_types::{CanonicalGroup, ExternalKind, FuncType, GlobalType, WasmModule};
@@ -173,7 +173,7 @@ impl HostInterface for RegistryHost {
         Some(Box::new(CrossModuleFunction { instance: instance_rc, export_name: name.to_string(), func_type, group_shape, is_final, canonical_type, type_idx }))
     }
 
-    fn resolve_global(&self, module_name: &str, name: &str) -> Option<(GlobalType, Rc<RefCell<WasmValue>>)> {
+    fn resolve_global(&self, module_name: &str, name: &str) -> Option<(GlobalType, Rc<RefCell<GlobalStorage>>)> {
         let (instance_rc, index) = self.find_export(module_name, name, ExternalKind::Global)?;
         let instance = instance_rc.borrow();
         let gtype = instance.global_types.get(index as usize)?.clone();
@@ -970,7 +970,15 @@ impl Executor {
                     .exports
                     .iter()
                     .find(|(n, kind, _)| n == name && *kind == ExternalKind::Global)
-                    .and_then(|(_, _, idx)| instance.globals.get(*idx as usize).map(|g| *g.borrow()))
+                    // W35 third slice: `GlobalStorage::value`, not the
+                    // whole `GlobalStorage` -- a real funcref global's
+                    // `value` here is the reserved `WasmValue::Ref(Some(0))`
+                    // sentinel (see that struct's own doc comment); its
+                    // real identity lives in `func_ref`, unused by this
+                    // action (mechanical fallout only, per this slice's
+                    // own scope -- `wasm-conformance`'s own funcref-
+                    // equality/cross-module propagation is slice 4's job).
+                    .and_then(|(_, _, idx)| instance.globals.get(*idx as usize).map(|g| g.borrow().value))
                     // A global read is not a call -- there's no engine
                     // `ctx` involved at all -- but UNLIKE at the time this
                     // comment was first written (SIMD PR1b-3), a
