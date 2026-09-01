@@ -2169,10 +2169,18 @@ pub fn evaluate_const_expr_gc(
                         pos += sz1;
                         let (count, sz2) = decode_unsigned(expr, pos).map_err(|e| TrapError::new(e.message))?;
                         pos += sz2;
-                        let n = count as usize;
-                        if n > MAX_ARRAY_ALLOC {
-                            return Err(TrapError::new(format!("array.new_fixed: element count {n} exceeds the maximum of {MAX_ARRAY_ALLOC}")));
+                        // Security review (W33 fourth slice): compare the
+                        // full-width u64 BEFORE narrowing to usize, mirroring
+                        // wasm-validator's equivalent check. Narrowing first
+                        // (`count as usize` then comparing) would let a
+                        // crafted count like `2^32 + 5` silently wrap to `5`
+                        // on a 32-bit target, defeating this guard's purpose
+                        // as a real defense-in-depth check independent of
+                        // the validator's own compile-time one.
+                        if count > MAX_ARRAY_ALLOC as u64 {
+                            return Err(TrapError::new(format!("array.new_fixed: element count {count} exceeds the maximum of {MAX_ARRAY_ALLOC}")));
                         }
+                        let n = count as usize;
                         let mut elements = vec![WasmValue::I32(0); n];
                         for slot in elements.iter_mut().rev() {
                             *slot = stack.pop().ok_or_else(|| TrapError::new("array.new_fixed: constant expression stack underflow"))?;

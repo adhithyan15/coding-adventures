@@ -2,6 +2,22 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.83] - 2026-09-01 (security review follow-up to W33 fourth slice)
+
+### Fixed
+
+- `evaluate_const_expr_gc`'s `array.new_fixed` (`0x08`) arm narrowed the
+  decoded `count` (a `u64`) to `usize` BEFORE comparing it against
+  `MAX_ARRAY_ALLOC`, instead of after. On a 64-bit host this is
+  lossless and harmless, but on a 32-bit host a crafted count like
+  `2^32 + 5` would silently wrap to `5` when narrowed, passing the
+  bounds check with a value the attacker didn't intend to be bounded —
+  defeating this guard's purpose as a real defense-in-depth check
+  independent of `wasm-validator`'s own compile-time one (which already
+  correctly compares on the full-width value). Fixed by comparing
+  `count > MAX_ARRAY_ALLOC as u64` before narrowing, matching the
+  validator's existing pattern.
+
 ## [0.9.82] - 2026-09-01 (W33 fourth slice — real struct/array runtime semantics)
 
 Implements actual execution for every new struct/array opcode
