@@ -99,6 +99,22 @@ order; `HL-B24` tracks publishing Chapters 6–31 from the same source.
   (native *bēku*, answering Tamil *vēṇṭum* by the same *v* → *b* law) even
   though the word filling it is Sanskrit. **Authored.**
 
+- **The letter ladder (KA-S\*)** — one character per lesson, drizzled through
+  the word chapters rather than gated in front of them, and each one placed at
+  the last chapter that still precedes its first consumer, because closure is
+  measured in reading order. Thirty-two authored. The most recent eight close
+  every untaught **letter** in the track: ಉ (ch. 21), ಊ (23), ಝ (25), ಥ (28),
+  ಈ (31), ◌ೃ (36), ◌ಃ (43), ಞ (47). None is taught as a bare shape — each is
+  introduced as the other half of a sign, mark or pair the reader already reads.
+  **Authored.**
+
+  Remaining script debt is of two kinds, and they need different fixes. The ten
+  **digits** ೦–೯ are still untaught (HL-C194): both consumers sit in chapter 7,
+  so teaching them without batching means splitting that chapter into ten
+  word-plus-digit lessons. The other thirty violations are **ordering**, not
+  absence — chapters 1–17 show letters the ಚ, ಪ and virama lessons do not reach
+  until chapters 18–20 — and that is a resequencing job.
+
 ## Planned
 
 | Chapter | Theme |
