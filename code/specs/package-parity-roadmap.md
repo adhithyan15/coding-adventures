@@ -12427,7 +12427,7 @@ does not inherit Engram authority. The complete 132-case, 283-file corpus is
 valid with registry digest
 `f49bfe8c7c9c0fb9b534ecc9ca4a614f3684abe32bdb0edac82d99bdc806fb70`
 and boundary digest
-`cb721c2652d45a97fad300c85699ea440aa9f9b3bbe015e1e44dca3856d0b7e8`.
+`963cc4090e165752fd3a62921b699dfff8f0677b49d7236812398a8abed0a25f`.
 The conformance family passes 192 tests and 355 subtests with 23 expected
 platform skips; the final semantic runner passes 72 tests and 233 subtests.
 Branch-aware coverage is 90% for the runner, 99% for its direct tests, and 93%
@@ -12438,18 +12438,21 @@ schema-3 inventory also pass. RustSec reports no vulnerability among 1,537
 locked dependencies and retains two existing allowed unmaintained warnings.
 
 After the final rebase onto exact `origin/main`
-`ae1a2c1cf54e43decd4e81bfe1bd1c503107a369`, the refreshed inventory has 15
-established lanes, 1,397 implementation identities, 4,613 implementation
-slots, and 1,436 all-reported identities. Its bands are 175/265, 123/934,
-172/2,165, and 927/12,978; Rust has 739 singletons, OCaml remains at zero,
+`d039473e118521292c8bdc4ba720621b32fd1142`, the refreshed inventory has 15
+established lanes, 1,398 implementation identities, 4,614 implementation
+slots, and 1,437 all-reported identities. Its bands are 175/265, 123/934,
+172/2,165, and 928/12,992; Rust has 739 singletons, OCaml remains at zero,
 and canonical collisions and unknown buckets remain zero. The merged
 TypeScript-only `forme-cli` identity stays under
 `forme-portable-core-family-classification`. Dedicated PR #13768 has merged
 the corresponding shared TypeScript base-config boundary correction, so that
 owner is unblocked and this Engram branch absorbs the correction from `main`
-without duplicating unrelated Forme work. Intervening Mermaid timeline and
-SPICE JFET validation and Hindi curriculum work change existing roots only and
-add no newly unowned identity. Merged PR #13761 adds Rust `layout-grid` beside TypeScript,
+without duplicating unrelated Forme work. Merged PR #13765 adds TypeScript-only
+`forme-dev-server`, which remains inside the same Forme family owner; the
+Engram branch absorbs its boundary registration and digest cascade without
+duplicating that package root. Intervening Mermaid timeline, SPICE JFET,
+Dartmouth parser, Hindi curriculum, and HTML recovery work add no newly unowned
+identity. Merged PR #13761 adds Rust `layout-grid` beside TypeScript,
 moving the identity into the two-to-four band. New pending owner
 `layout-grid-two-lane-classification` now owns its pure UI08 conformance,
 dependency order, and missing applicable-lane review. The resulting state has
