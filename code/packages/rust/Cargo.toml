@@ -847,6 +847,7 @@ members = [
     "text-native-coretext",
     "layout-ir",
     "layout-inline",
+    "layout-inline-box",
     "layout-float",
     "layout-flexbox",
     "layout-grid",

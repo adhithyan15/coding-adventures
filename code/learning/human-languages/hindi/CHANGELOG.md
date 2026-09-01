@@ -65,6 +65,14 @@ gloss. Both were repaired at the source rather than by loosening the field:
 The 164-page figure in this track's README was also stale: the book now
 compiles at **454 pages**, still with zero missing characters and zero errors.
 
+### Changed — declare the complete Hindi woman-register set
+
+- Chapter 39 now declares **औरत / महिला / स्त्री** as its headword instead of
+  naming only everyday **औरत**. The lesson already defines **महिला** as the
+  respectful public form and **स्त्री** as the older literary form, contrasts
+  all three registers, and assesses which word belongs on a public sign; its
+  metadata now exposes the complete set.
+
 ### Changed — declare both Hindi parent-register pairs
 
 - Chapter 12 now declares **पिता / माता / बाप / माँ** as its headword instead

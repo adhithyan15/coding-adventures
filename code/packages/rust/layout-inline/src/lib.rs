@@ -5,8 +5,9 @@
 //! HTML links or document annotations: producer metadata remains in `ext` and
 //! naturally follows each wrapper fragment.
 
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
+use layout_inline_box::{decorate_fragment, InlineBoxStyle};
 use layout_ir::{Content, ExtValue, LayoutNode, PositionedNode, SizeValue, TextMeasurer};
 use text_flow::{BaseDirection, BreakKind, TextFlow};
 
@@ -31,6 +32,7 @@ pub struct InlineRegion {
 struct Wrapper {
     key: usize,
     node: LayoutNode,
+    style: InlineBoxStyle,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -105,6 +107,8 @@ struct Atom {
     height: f64,
     baseline: f64,
     align: VerticalAlign,
+    before: f64,
+    content_offset_y: f64,
 }
 
 struct PlacedAtom {
@@ -124,11 +128,12 @@ struct Line {
     x: f64,
     y: f64,
     available_width: f64,
+    open_wrappers: Vec<Wrapper>,
 }
 
 impl Line {
     fn push(&mut self, atom: Atom) {
-        self.width += atom.width;
+        self.width += atom.before + atom.width;
         self.max_height = self.max_height.max(atom.height);
         if atom.align == VerticalAlign::Baseline {
             self.max_ascent = self.max_ascent.max(atom.baseline);
@@ -222,6 +227,7 @@ where
     let mut line = Line::default();
     let mut pending_space = false;
     let mut next_y = 0.0;
+    let mut opened_wrappers = HashSet::new();
 
     for source in sources {
         match source {
@@ -248,6 +254,7 @@ where
                                 measurer,
                                 &mut next_y,
                                 &mut region_for_line,
+                                &mut opened_wrappers,
                             );
                         }
                         if index + 1 < segments.len() {
@@ -259,7 +266,9 @@ where
                                 false,
                                 &mut next_y,
                                 &mut region_for_line,
+                                &mut opened_wrappers,
                             );
+                            close_line(&mut line, &wrappers, false);
                             flush_line(&mut line, &mut lines, false, &mut next_y);
                         }
                     }
@@ -288,6 +297,7 @@ where
                             measurer,
                             &mut next_y,
                             &mut region_for_line,
+                            &mut opened_wrappers,
                         );
                         pending_space = false;
                     }
@@ -308,6 +318,7 @@ where
                         measurer,
                         &mut next_y,
                         &mut region_for_line,
+                        &mut opened_wrappers,
                     );
                     pending_space = piece.trailing_space;
                 }
@@ -322,14 +333,17 @@ where
             } => {
                 pending_space = false;
                 let positioned = layout_atomic(&node, max_width);
+                let (edge_top, edge_bottom) = vertical_edges(&wrappers);
                 let atom = Atom {
                     leaf_key: None,
                     width: positioned.width,
-                    height: positioned.height,
-                    baseline: positioned.height,
+                    height: positioned.height + edge_top + edge_bottom,
+                    baseline: positioned.height + edge_top,
                     node: positioned,
                     wrappers,
                     align,
+                    before: 0.0,
+                    content_offset_y: edge_top,
                 };
                 push_atom_into_line(
                     &mut line,
@@ -338,10 +352,12 @@ where
                     true,
                     &mut next_y,
                     &mut region_for_line,
+                    &mut opened_wrappers,
                 );
             }
             SourceItem::Break { node, wrappers } => {
                 pending_space = false;
+                let continuation = wrappers.clone();
                 let atom = break_atom(node, wrappers, measurer);
                 push_atom_into_line(
                     &mut line,
@@ -350,11 +366,14 @@ where
                     false,
                     &mut next_y,
                     &mut region_for_line,
+                    &mut opened_wrappers,
                 );
+                close_line(&mut line, &continuation, false);
                 flush_line(&mut line, &mut lines, true, &mut next_y);
             }
         }
     }
+    close_line(&mut line, &[], true);
     flush_line(&mut line, &mut lines, false, &mut next_y);
 
     position_lines(lines)
@@ -465,6 +484,7 @@ fn flatten(
     }
 
     let mut template = node.clone();
+    let style = InlineBoxStyle::from_layout(node);
     template.children.clear();
     template.content = None;
     template.width = None;
@@ -473,6 +493,7 @@ fn flatten(
     let wrapper = Wrapper {
         key: *next_key,
         node: template,
+        style,
     };
     *next_key += 1;
     let mut nested = wrappers.to_vec();
@@ -495,6 +516,7 @@ fn push_text_atom<M: TextMeasurer, R>(
     measurer: &M,
     next_y: &mut f64,
     region_for_line: &mut R,
+    opened_wrappers: &mut HashSet<usize>,
 ) where
     R: FnMut(f64, f64, f64) -> InlineRegion,
 {
@@ -504,24 +526,21 @@ fn push_text_atom<M: TextMeasurer, R>(
         word.to_string()
     };
     let mut measured = measure_text(source, &value, measurer);
-    prepare_line_region(
+    let (edge_top, edge_bottom) = vertical_edges(wrappers);
+    let (before, wrapped) = prepare_atom_placement(
         line,
-        *next_y,
-        measured.height,
+        lines,
+        wrappers,
         measured.width,
+        measured.height + edge_top + edge_bottom,
+        allow_wrap,
+        next_y,
         region_for_line,
+        opened_wrappers,
     );
-    if allow_wrap && !line.atoms.is_empty() && line.width + measured.width > line.available_width {
-        flush_line(line, lines, false, next_y);
+    if wrapped {
         value = word.to_string();
         measured = measure_text(source, &value, measurer);
-        prepare_line_region(
-            line,
-            *next_y,
-            measured.height,
-            measured.width,
-            region_for_line,
-        );
     }
 
     let mut fragment = source.clone();
@@ -544,30 +563,130 @@ fn push_text_atom<M: TextMeasurer, R>(
     line.push(Atom {
         leaf_key: Some(source_key),
         width: measured.width,
-        height: measured.height,
-        baseline: measured.baseline.min(measured.height),
+        height: measured.height + edge_top + edge_bottom,
+        baseline: measured.baseline.min(measured.height) + edge_top,
         node,
         wrappers: wrappers.to_vec(),
         align: inherited_vertical_align(source, wrappers),
+        before,
+        content_offset_y: edge_top,
     });
+}
+
+#[allow(clippy::too_many_arguments)]
+fn prepare_atom_placement<R>(
+    line: &mut Line,
+    lines: &mut Vec<Line>,
+    wrappers: &[Wrapper],
+    width: f64,
+    height: f64,
+    allow_wrap: bool,
+    next_y: &mut f64,
+    region_for_line: &mut R,
+    opened_wrappers: &mut HashSet<usize>,
+) -> (f64, bool)
+where
+    R: FnMut(f64, f64, f64) -> InlineRegion,
+{
+    let mut before = transition_width(&line.open_wrappers, wrappers, opened_wrappers);
+    let end_guard = wrappers
+        .iter()
+        .map(|wrapper| wrapper.style.end_reservation(true))
+        .sum::<f64>();
+    prepare_line_region(
+        line,
+        *next_y,
+        height,
+        before + width + end_guard,
+        region_for_line,
+    );
+    let projected = line.width + before + width + end_guard;
+    let wrapped = allow_wrap && !line.atoms.is_empty() && projected > line.available_width;
+    if wrapped {
+        close_line(line, wrappers, false);
+        flush_line(line, lines, false, next_y);
+        before = transition_width(&[], wrappers, opened_wrappers);
+        prepare_line_region(
+            line,
+            *next_y,
+            height,
+            before + width + end_guard,
+            region_for_line,
+        );
+    }
+    for wrapper in wrappers {
+        opened_wrappers.insert(wrapper.key);
+    }
+    line.open_wrappers = wrappers.to_vec();
+    (before, wrapped)
 }
 
 fn push_atom_into_line<R>(
     line: &mut Line,
     lines: &mut Vec<Line>,
-    atom: Atom,
+    mut atom: Atom,
     allow_wrap: bool,
     next_y: &mut f64,
     region_for_line: &mut R,
+    opened_wrappers: &mut HashSet<usize>,
 ) where
     R: FnMut(f64, f64, f64) -> InlineRegion,
 {
-    prepare_line_region(line, *next_y, atom.height, atom.width, region_for_line);
-    if allow_wrap && !line.atoms.is_empty() && line.width + atom.width > line.available_width {
-        flush_line(line, lines, false, next_y);
-        prepare_line_region(line, *next_y, atom.height, atom.width, region_for_line);
-    }
+    atom.before = prepare_atom_placement(
+        line,
+        lines,
+        &atom.wrappers,
+        atom.width,
+        atom.height,
+        allow_wrap,
+        next_y,
+        region_for_line,
+        opened_wrappers,
+    )
+    .0;
     line.push(atom);
+}
+
+fn transition_width(
+    current: &[Wrapper],
+    target: &[Wrapper],
+    opened_wrappers: &HashSet<usize>,
+) -> f64 {
+    let common = common_prefix(current, target);
+    let closing = current[common..]
+        .iter()
+        .map(|wrapper| wrapper.style.end_reservation(true))
+        .sum::<f64>();
+    let opening = target[common..]
+        .iter()
+        .map(|wrapper| {
+            wrapper
+                .style
+                .start_reservation(!opened_wrappers.contains(&wrapper.key))
+        })
+        .sum::<f64>();
+    closing + opening
+}
+
+fn close_line(line: &mut Line, continuing: &[Wrapper], final_line: bool) {
+    let common = common_prefix(&line.open_wrappers, continuing);
+    line.width += line
+        .open_wrappers
+        .iter()
+        .enumerate()
+        .map(|(index, wrapper)| {
+            let last = final_line || index >= common;
+            wrapper.style.end_reservation(last)
+        })
+        .sum::<f64>();
+    line.open_wrappers.clear();
+}
+
+fn common_prefix(left: &[Wrapper], right: &[Wrapper]) -> usize {
+    left.iter()
+        .zip(right)
+        .take_while(|(left, right)| left.key == right.key)
+        .count()
 }
 
 fn prepare_line_region<R>(
@@ -612,6 +731,7 @@ fn measure_text<M: TextMeasurer>(
 
 fn break_atom<M: TextMeasurer>(node: LayoutNode, wrappers: Vec<Wrapper>, measurer: &M) -> Atom {
     let measured = measure_text(&node, "", measurer);
+    let (edge_top, edge_bottom) = vertical_edges(&wrappers);
     let mut content = node.content.clone();
     if let Some(Content::Text(text)) = &mut content {
         text.value.clear();
@@ -620,9 +740,11 @@ fn break_atom<M: TextMeasurer>(node: LayoutNode, wrappers: Vec<Wrapper>, measure
     Atom {
         leaf_key: None,
         width: 0.0,
-        height: measured.height,
-        baseline: measured.baseline.min(measured.height),
+        height: measured.height + edge_top + edge_bottom,
+        baseline: measured.baseline.min(measured.height) + edge_top,
         align: VerticalAlign::Baseline,
+        before: 0.0,
+        content_offset_y: edge_top,
         wrappers,
         node: PositionedNode {
             x: 0.0,
@@ -635,6 +757,16 @@ fn break_atom<M: TextMeasurer>(node: LayoutNode, wrappers: Vec<Wrapper>, measure
             ext: node.ext,
         },
     }
+}
+
+fn vertical_edges(wrappers: &[Wrapper]) -> (f64, f64) {
+    wrappers.iter().fold((0.0, 0.0), |(top, bottom), wrapper| {
+        let edges = wrapper.style.fragment_edges(false, false);
+        (
+            top + edges.border.top + edges.padding.top,
+            bottom + edges.padding.bottom + edges.border.bottom,
+        )
+    })
 }
 
 fn flush_line(line: &mut Line, lines: &mut Vec<Line>, force_empty: bool, next_y: &mut f64) {
@@ -659,6 +791,7 @@ fn position_lines(lines: Vec<Line>) -> InlineLayout {
         let mut x = line.x;
         width = width.max(line.x + line.width);
         for mut atom in line.atoms {
+            x += atom.before;
             atom.node.x = x;
             atom.node.y = line.y
                 + match atom.align {
@@ -666,7 +799,8 @@ fn position_lines(lines: Vec<Line>) -> InlineLayout {
                     VerticalAlign::Top => 0.0,
                     VerticalAlign::Middle => (line_height - atom.height) / 2.0,
                     VerticalAlign::Bottom => line_height - atom.height,
-                };
+                }
+                + atom.content_offset_y;
             x += atom.width;
             if !merge_with_previous(&mut placed, &atom, line_index) {
                 placed.push(PlacedAtom {
@@ -712,29 +846,46 @@ fn merge_with_previous(placed: &mut [PlacedAtom], atom: &Atom, line: usize) -> b
 
 enum Builder {
     Wrapper {
-        template: Wrapper,
+        template: Box<Wrapper>,
         children: Vec<Builder>,
     },
     Leaf(PositionedNode),
 }
 
 fn rebuild_wrappers(atoms: Vec<PlacedAtom>) -> Vec<PositionedNode> {
+    let mut fragment_totals = HashMap::new();
+    let mut counted = HashSet::new();
+    for atom in &atoms {
+        for wrapper in &atom.wrappers {
+            if counted.insert((atom.line, wrapper.key)) {
+                *fragment_totals.entry(wrapper.key).or_insert(0usize) += 1;
+            }
+        }
+    }
     let mut output = Vec::new();
     let mut current_line = None;
     let mut roots = Vec::new();
     let mut emitted_ids = HashSet::new();
+    let mut seen_fragments = HashMap::new();
 
     for atom in atoms {
         if current_line.is_some_and(|line| line != atom.line) {
             output.extend(finalize_forest(
                 std::mem::take(&mut roots),
                 &mut emitted_ids,
+                &fragment_totals,
+                &mut seen_fragments,
             ));
         }
         current_line = Some(atom.line);
         insert_builder(&mut roots, &atom.wrappers, atom.node);
     }
-    output.extend(finalize_forest(roots, &mut emitted_ids));
+    output.extend(finalize_forest(
+        roots,
+        &mut emitted_ids,
+        &fragment_totals,
+        &mut seen_fragments,
+    ));
     output
 }
 
@@ -752,7 +903,7 @@ fn insert_builder(target: &mut Vec<Builder>, path: &[Wrapper], leaf: PositionedN
     let mut children = Vec::new();
     insert_builder(&mut children, tail, leaf);
     target.push(Builder::Wrapper {
-        template: head.clone(),
+        template: Box::new(head.clone()),
         children,
     });
 }
@@ -760,18 +911,26 @@ fn insert_builder(target: &mut Vec<Builder>, path: &[Wrapper], leaf: PositionedN
 fn finalize_forest(
     builders: Vec<Builder>,
     emitted_ids: &mut HashSet<usize>,
+    fragment_totals: &HashMap<usize, usize>,
+    seen_fragments: &mut HashMap<usize, usize>,
 ) -> Vec<PositionedNode> {
     builders
         .into_iter()
-        .map(|builder| finalize_builder(builder, emitted_ids))
+        .map(|builder| finalize_builder(builder, emitted_ids, fragment_totals, seen_fragments))
         .collect()
 }
 
-fn finalize_builder(builder: Builder, emitted_ids: &mut HashSet<usize>) -> PositionedNode {
+fn finalize_builder(
+    builder: Builder,
+    emitted_ids: &mut HashSet<usize>,
+    fragment_totals: &HashMap<usize, usize>,
+    seen_fragments: &mut HashMap<usize, usize>,
+) -> PositionedNode {
     match builder {
         Builder::Leaf(node) => node,
         Builder::Wrapper { template, children } => {
-            let mut children = finalize_forest(children, emitted_ids);
+            let mut children =
+                finalize_forest(children, emitted_ids, fragment_totals, seen_fragments);
             let min_x = children
                 .iter()
                 .map(|node| node.x)
@@ -793,7 +952,11 @@ fn finalize_builder(builder: Builder, emitted_ids: &mut HashSet<usize>) -> Posit
                 child.y -= min_y;
             }
             let first_fragment = emitted_ids.insert(template.key);
-            PositionedNode {
+            let fragment_index = seen_fragments.entry(template.key).or_insert(0);
+            let last_fragment =
+                *fragment_index + 1 == fragment_totals.get(&template.key).copied().unwrap_or(1);
+            *fragment_index += 1;
+            let mut positioned = PositionedNode {
                 x: min_x,
                 y: min_y,
                 width: (max_x - min_x).max(0.0),
@@ -802,7 +965,12 @@ fn finalize_builder(builder: Builder, emitted_ids: &mut HashSet<usize>) -> Posit
                 content: None,
                 children,
                 ext: template.node.ext,
-            }
+            };
+            decorate_fragment(
+                &mut positioned,
+                template.style.fragment_edges(first_fragment, last_fragment),
+            );
+            positioned
         }
     }
 }
@@ -874,6 +1042,7 @@ fn finite_non_negative(value: f64) -> f64 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use layout_inline_box::BoxDecorationBreak;
     use layout_ir::{color_black, font_spec, Ext, FontSpec, MeasureResult, TextAlign, TextContent};
     use std::collections::HashMap;
 
@@ -916,6 +1085,38 @@ mod tests {
         LayoutNode::container(children)
             .with_ext("block", display_ext("inline"))
             .with_ext("html", ExtValue::Map(html))
+    }
+
+    fn decorated_link(mode: BoxDecorationBreak) -> LayoutNode {
+        let mut node = link(vec![text("one two three", 10.0)])
+            .with_margin(layout_ir::Edges {
+                top: 0.0,
+                right: 2.0,
+                bottom: 0.0,
+                left: 2.0,
+            })
+            .with_padding(layout_ir::Edges {
+                top: 2.0,
+                right: 4.0,
+                bottom: 2.0,
+                left: 4.0,
+            });
+        node.ext
+            .insert("inlineBox".into(), layout_inline_box::inline_box_ext(mode));
+        node.ext.insert(
+            "paint".into(),
+            ExtValue::Map(HashMap::from([
+                ("borderTopWidth".into(), ExtValue::Float(1.0)),
+                ("borderRightWidth".into(), ExtValue::Float(1.0)),
+                ("borderBottomWidth".into(), ExtValue::Float(1.0)),
+                ("borderLeftWidth".into(), ExtValue::Float(1.0)),
+            ])),
+        );
+        node
+    }
+
+    fn has_border(node: &PositionedNode, key: &str) -> bool {
+        matches!(node.ext.get("paint"), Some(ExtValue::Map(values)) if values.contains_key(key))
     }
 
     #[test]
@@ -999,6 +1200,53 @@ mod tests {
             matches!(node.ext.get("html"), Some(ExtValue::Map(values)) if values.get("role") == Some(&ExtValue::Str("link".into())))
         }));
         assert!(layout.children.iter().all(|node| node.width <= 42.0));
+    }
+
+    #[test]
+    fn sliced_inline_edges_reserve_only_the_first_and_last_fragments() {
+        let layout = layout_inline_run(
+            &[decorated_link(BoxDecorationBreak::Slice)],
+            40.0,
+            &Mono,
+            |_, _| unreachable!(),
+        );
+        assert_eq!(layout.line_count, 3);
+        assert_eq!(layout.children.len(), 3);
+        assert_eq!(
+            (layout.children[0].x, layout.children[0].width),
+            (2.0, 20.0)
+        );
+        assert_eq!(
+            (layout.children[1].x, layout.children[1].width),
+            (0.0, 15.0)
+        );
+        assert_eq!(
+            (layout.children[2].x, layout.children[2].width),
+            (0.0, 30.0)
+        );
+        assert!(has_border(&layout.children[0], "borderLeftWidth"));
+        assert!(!has_border(&layout.children[0], "borderRightWidth"));
+        assert!(!has_border(&layout.children[1], "borderLeftWidth"));
+        assert!(has_border(&layout.children[2], "borderRightWidth"));
+        assert_eq!(layout.height, 48.0);
+    }
+
+    #[test]
+    fn cloned_inline_edges_repeat_on_every_fragment() {
+        let layout = layout_inline_run(
+            &[decorated_link(BoxDecorationBreak::Clone)],
+            40.0,
+            &Mono,
+            |_, _| unreachable!(),
+        );
+        assert_eq!(layout.children.len(), 3);
+        assert!(layout.children.iter().all(|fragment| {
+            fragment.x == 2.0
+                && has_border(fragment, "borderLeftWidth")
+                && has_border(fragment, "borderRightWidth")
+        }));
+        assert_eq!(layout.children[0].width, 25.0);
+        assert_eq!(layout.children[2].width, 35.0);
     }
 
     #[test]

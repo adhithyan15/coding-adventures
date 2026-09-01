@@ -8,9 +8,9 @@ spine_node: SPINE-EXCHANGE-NAMES
 sequence: 1090
 chapter: 39
 type: word
-headword: औरत
-gloss: woman — feminine, an Arabic word that only came to mean "woman" in Persian, and one of three Hindi words separated by register
-romanization: "aurat"
+headword: औरत / महिला / स्त्री
+gloss: woman — everyday औरत, respectful public महिला, and literary स्त्री form a three-register set
+romanization: "aurat / mahilā / strī"
 concept_tag: HI-PERSON-WOMAN
 prerequisites: [HI-C39-aadmi, HI-C12-bhaai-bahin, HI-C12-pitaa-maataa]
 sounds: [diphthong-au, spineless-ra]

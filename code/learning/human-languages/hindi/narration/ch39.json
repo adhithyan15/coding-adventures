@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "The People Around You",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:63cfde3859528478",
+  "sourceHash": "fnv1a64:e6681413619479df",
   "lessons": [
     {
       "id": "HI-C39-dost",
@@ -494,16 +494,16 @@
       "id": "HI-C39-aurat",
       "sequence": 1090,
       "title": "औरत (aurat) — the word for \"woman,\" and which one to use",
-      "headword": "औरत",
-      "romanization": "aurat",
-      "gloss": "woman — feminine, an Arabic word that only came to mean \"woman\" in Persian, and one of three Hindi words separated by register",
+      "headword": "औरत / महिला / स्त्री",
+      "romanization": "aurat / mahilā / strī",
+      "gloss": "woman — everyday औरत, respectful public महिला, and literary स्त्री form a three-register set",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38ebca3cc6423ec5",
+      "sourceHash": "fnv1a64:bea77af43c918456",
       "notice": null,
       "blocks": [
         {
@@ -538,7 +538,7 @@
             },
             {
               "kind": "speech",
-              "text": "The family: पिता, माता, भाई, बहन, बच्चा (bacca), आदमी (ādmī), औरत (aurat) — and the chosen one, दोस्त (dost)."
+              "text": "The family: पिता, माता, भाई, बहन, बच्चा (bacca), आदमी (ādmī), औरत — and the chosen one, दोस्त (dost)."
             }
           ]
         },
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "औरत (aurat) is Arabic, عورة (ʿawra), on the three-consonant root ʿ-w-r — built the way k-t-b built किताब — whose senses run to a weak point, a gap in a defence, something left uncovered."
+              "text": "औरत is Arabic, عورة (ʿawra), on the three-consonant root ʿ-w-r — built the way k-t-b built किताब — whose senses run to a weak point, a gap in a defence, something left uncovered."
             },
             {
               "kind": "speech",
@@ -572,7 +572,7 @@
             },
             {
               "kind": "speech",
-              "text": "औरत (aurat) — Perso-Arabic, plain and everyday. Common in speech; some speakers avoid it formally, partly because of the origin above."
+              "text": "औरत — Perso-Arabic, plain and everyday. Common in speech; some speakers avoid it formally, partly because of the origin above."
             },
             {
               "kind": "speech",
@@ -584,7 +584,7 @@
             },
             {
               "kind": "speech",
-              "text": "महिला where you would write, औरत (aurat) where you would talk."
+              "text": "महिला where you would write, औरत where you would talk."
             }
           ]
         },
@@ -650,7 +650,7 @@
             },
             {
               "kind": "speech",
-              "text": "Does Arabic عورة mean \"woman\"? (No — that sense is Persian.) Which goes on a public sign, which in conversation? (महिला written; औरत (aurat) spoken.) Your family, minding every possessive? (Merā pitā, merī mātā, merā bhāī, merī bahin, merā bacchā.)"
+              "text": "Does Arabic عورة mean \"woman\"? (No — that sense is Persian.) Which goes on a public sign, which in conversation? (महिला written; औरत spoken.) Your family, minding every possessive? (Merā pitā, merī mātā, merā bhāī, merī bahin, merā bacchā.)"
             }
           ]
         }

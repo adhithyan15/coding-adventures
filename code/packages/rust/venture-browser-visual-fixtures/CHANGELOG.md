@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add a fragmented inline-box fixture covering slice/clone edge continuation,
+  recursive paint, and one shared link hit region per visual line fragment.
+
 - Add a float fixture covering opposing exclusions, flow bands, clearance,
   shrink-to-fit sizing, recursive paint, and shared host loading.
 - Add a table fixture covering section ordering, fixed columns, captions,

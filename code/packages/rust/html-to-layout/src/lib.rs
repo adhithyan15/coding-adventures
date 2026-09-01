@@ -19,6 +19,7 @@ use layout_grid::{
     grid_ext, GridAlignment, GridAutoFlow, GridContainerStyle, GridContentAlignment, GridItemStyle,
     GridSelfAlignment, GridTrack,
 };
+use layout_inline_box::{inline_box_ext, BoxDecorationBreak};
 use layout_ir::{
     color_black, edges_all, edges_xy, font_bold, font_italic, font_spec, rgb, Color, Edges,
     ExtValue, FontSpec, ImageContent, ImageFit, LayoutNode, SizeValue, TextAlign, TextContent,
@@ -149,6 +150,7 @@ pub struct HtmlComputedStyle {
     pub box_sizing: String,
     pub text_align: TextAlign,
     pub white_space: String,
+    pub box_decoration_break: BoxDecorationBreak,
     pub float: FloatStyle,
     pub flex_container: FlexContainerStyle,
     pub flex_item: FlexItemStyle,
@@ -327,6 +329,10 @@ where
         .insert("block".into(), block_ext(node, display, &style));
     layout.ext.insert("float".into(), float_ext(style.float));
     layout.ext.insert(
+        "inlineBox".into(),
+        inline_box_ext(style.box_decoration_break),
+    );
+    layout.ext.insert(
         "flex".into(),
         flex_ext(style.flex_container, style.flex_item),
     );
@@ -454,6 +460,7 @@ where
     style.border_width = Edges::default();
     style.border_color = [None; 4];
     style.box_sizing = "content-box".into();
+    style.box_decoration_break = BoxDecorationBreak::Slice;
     style.float = FloatStyle::default();
     style.flex_container = FlexContainerStyle::default();
     style.flex_item = FlexItemStyle::default();
@@ -599,6 +606,7 @@ fn root_computed_style(context: &HtmlStyleContext) -> HtmlComputedStyle {
         box_sizing: "content-box".into(),
         text_align: TextAlign::Start,
         white_space: "normal".into(),
+        box_decoration_break: BoxDecorationBreak::Slice,
         float: FloatStyle::default(),
         flex_container: FlexContainerStyle::default(),
         flex_item: FlexItemStyle::default(),
@@ -770,6 +778,14 @@ fn apply_declaration_winners(
                     .then(TextDecoration::underline);
             }
             "display" => style.display = value.first().cloned(),
+            "box-decoration-break" => {
+                style.box_decoration_break = if value.first().is_some_and(|value| value == "clone")
+                {
+                    BoxDecorationBreak::Clone
+                } else {
+                    BoxDecorationBreak::Slice
+                }
+            }
             "float" => {
                 style.float.side = match value.first().map(String::as_str) {
                     Some("left") => FloatSide::Left,
@@ -2741,6 +2757,40 @@ mod tests {
     }
 
     #[test]
+    fn computed_inline_box_edges_fragment_through_shared_layout() {
+        let render = parse_browser_render_tree(
+            "<p id='line'><a id='edge' href='next.html'>one two three four five</a></p>",
+        )
+        .unwrap();
+        let context = HtmlStyleContext::with_author_stylesheets(
+            mosaic_html_theme(),
+            [
+                "#line { width: 70px; margin: 0; } #edge { margin: 0 2px; padding: 2px 4px; \
+              border: 1px solid blue; background: red; box-decoration-break: clone; }",
+            ],
+        )
+        .unwrap();
+        let layout =
+            html_render_tree_to_layout_with_style_context(&render, &context, &never_visited);
+        let edge = find_by_id(&layout, "edge").unwrap();
+        assert_eq!(
+            layout_inline_box::InlineBoxStyle::from_layout(edge).decoration_break,
+            BoxDecorationBreak::Clone
+        );
+
+        let positioned = layout_block(&layout, constraints_width(240.0), &TestMeasurer);
+        let mut fragments = Vec::new();
+        collect_positioned_by_href(&positioned, "next.html", &mut fragments);
+        assert!(fragments.len() >= 2);
+        assert!(fragments.iter().all(|fragment| {
+            matches!(fragment.ext.get("paint"), Some(ExtValue::Map(values))
+                if values.get("borderLeftWidth") == Some(&ExtValue::Float(1.0))
+                    && values.get("borderRightWidth") == Some(&ExtValue::Float(1.0)))
+        }));
+        assert!(fragments.windows(2).all(|pair| pair[0].y < pair[1].y));
+    }
+
+    #[test]
     fn computed_positioning_removes_items_from_flow_and_orders_stacking() {
         let render = parse_browser_render_tree(
             "<main id='stage'><div id='normal'>N</div><div id='front'>F</div>\
@@ -3179,6 +3229,19 @@ mod tests {
         node.children
             .iter()
             .find_map(|child| find_positioned_by_id(child, id))
+    }
+
+    fn collect_positioned_by_href<'a>(
+        node: &'a PositionedNode,
+        href: &str,
+        matches: &mut Vec<&'a PositionedNode>,
+    ) {
+        if positioned_html_string(node, "href") == Some(href) {
+            matches.push(node);
+        }
+        for child in &node.children {
+            collect_positioned_by_href(child, href, matches);
+        }
     }
 
     fn find_positioned_by_html_role<'a>(

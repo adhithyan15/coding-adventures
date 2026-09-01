@@ -42,6 +42,7 @@ import type {
 } from "@coding-adventures/forme-types";
 import type { Capability } from "@coding-adventures/forme-capability";
 import type { StageContext, StageInitContext } from "./context.js";
+import type { ExternalStateManifest } from "./external-state.js";
 
 /** A JSON-Schema-shaped value; the orchestrator runs the actual validator. */
 export type JsonSchema = JsonValue;
@@ -137,6 +138,19 @@ export interface Stage<
     config: unknown,
     ctx: StageContext,
   ): StageOutput<Out>;
+
+  /**
+   * Observe the external objects a source will read during `run`.
+   *
+   * Only source stages (`consumes: Void`) may implement this hook. The
+   * orchestrator calls it immediately before `run` with the same context, so a
+   * provider can memoize the observed snapshot in `ctx.cache` and guarantee
+   * that the manifest and emitted values describe one coherent read.
+   */
+  externalState?(
+    config: unknown,
+    ctx: StageContext,
+  ): ExternalStateManifest | Promise<ExternalStateManifest>;
 
   // ─── Optional lifecycle hooks ───────────────────────────────────────
   /**

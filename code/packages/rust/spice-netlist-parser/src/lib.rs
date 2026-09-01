@@ -2453,6 +2453,17 @@ fn parse_element(
                     "BJT VAR must be finite and non-negative",
                 ));
             }
+            let forward_beta_rolloff_current = model
+                .params
+                .get("IKF")
+                .or_else(|| model.params.get("IK"))
+                .copied()
+                .unwrap_or(0.0);
+            if !forward_beta_rolloff_current.is_finite() || forward_beta_rolloff_current < 0.0 {
+                return Err(NetlistParseError::new(
+                    "BJT IKF must be finite and non-negative",
+                ));
+            }
             let mut bjt = Bjt::with_model(
                 name,
                 &fields[1],
@@ -2479,6 +2490,7 @@ fn parse_element(
             bjt.energy_gap_electron_volts = energy_gap_electron_volts;
             bjt.forward_early_voltage = forward_early_voltage;
             bjt.reverse_early_voltage = reverse_early_voltage;
+            bjt.forward_beta_rolloff_current = forward_beta_rolloff_current;
             Ok(Element::Bjt(bjt))
         }
         'J' => {
