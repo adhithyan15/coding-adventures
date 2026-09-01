@@ -1,0 +1,39 @@
+% ============================================================================
+% sign-element-color.query.adj — worked recall over the sign-element-color
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to answer "what colour is a stop
+% sign's background?" (direct), "which sign has a red background?" (REVERSE,
+% returning STOP alone), "which parts of a YIELD sign are red?" (reverse on
+% the ELEMENT, returning BOTH legend and border), or "what colour is a NO
+% PASSING ZONE sign?" (abstain — its sentence specifies a shape and says
+% nothing about colour).
+%
+% It states no fact of its own — it only `import`s the grounded table and
+% asks binding queries.
+%
+% *** THE FOURTH QUERY IS THE POINT OF THE THIRD COLUMN. *** A YIELD sign's
+% BACKGROUND is WHITE. "A yield sign is red" is false as stated — red is
+% its border and its legend. A two-column table would have answered "red"
+% and been wrong about the most recognisable sign in the country, with a
+% federal citation attached.
+%
+% NOTE ON THE ABSTAIN QUERIES: they are written in VARIABLE form. A
+% fully-bound query that matches nothing produces NO recall entry at all
+% rather than an abstention, so the ground form would silently prove
+% nothing.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli sign-element-color.query.adj
+% ============================================================================
+
+import "sign-element-color.adj"
+
+? sign_element_color(stop_sign, background, $C)       % expect red
+? sign_element_color(stop_sign, legend, $C)           % expect white
+? sign_element_color($S, background, red)             % expect stop_sign ALONE (reverse)
+? sign_element_color(yield_sign, background, $C)      % expect WHITE -- not red; this is why element is a column
+? sign_element_color(yield_sign, $E, red)             % expect legend AND border (reverse on the element)
+? sign_element_color(warning_sign, background, $C)    % expect yellow
+? sign_element_color(no_passing_zone_sign, $E, $C)    % expect abstain -- its sentence gives a shape, not colours
+? sign_element_color(regulatory_sign, $E, $C)         % expect abstain -- the rectangular default says nothing about colour, and STOP/YIELD prove regulatory signs share no scheme
