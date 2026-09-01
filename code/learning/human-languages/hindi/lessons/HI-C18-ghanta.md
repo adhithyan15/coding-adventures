@@ -8,8 +8,8 @@ spine_node: SPINE-TIME-OF-DAY
 sequence: 650
 chapter: 18
 type: word
-headword: घंटा
-gloss: hour — literally "bell," from the historical practice of striking a bell to mark the hour
+headword: घंटा / बजना
+gloss: hour or bell, and बजना — to strike or toll, the verb Hindi uses to tell time
 romanization: "ghaṇṭā"
 concept_tag: HI-TIME-HOUR
 prerequisites: [HI-C17-dopahar-aadhi-raat]
