@@ -1,0 +1,125 @@
+% ============================================================================
+% bill-stage-successor — which stage a bill moves to next on its way
+% through Congress (adj-facts-stdlib, CIVICS).
+% ============================================================================
+% "How does a bill become a law?" is the canonical elementary civics
+% question, and this table answers it one honest hop at a time. Recall is a
+% binding query:
+%
+%     ? bill_stage_successor(committee_review, $N)
+%       % first_chamber_vote
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `bill_stage_successor(stage, next_stage)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the next stage WITH its source, on the CPU, with zero
+% model calls. The query also runs BACKWARD, which answers "what has to
+% happen before this?":
+%
+%     ? bill_stage_successor($P, presented_to_president)
+%       % vote_on_same_version
+%
+% WHY A SUCCESSOR RELATION AND NOT A STEP NUMBER. This stdlib already
+% ships four ordinal-position tables — `astronomy/moon-phases.adj`'s
+% `moon_phase_order`, `astronomy/planets.adj`'s `planet_order`,
+% `biology/mitosis-phase-order.adj`, and
+% `earth-science/sedimentary-rock-formation-step.adj` — and the obvious
+% move here was a fifth: `bill_stage_step(stage, step_number)`, 1 through
+% 7. That would have been WRONG for this source, and the reason is worth
+% stating because the failure would have been invisible.
+%
+% Those four tables all decode sources that state POSITIONS: a numbered or
+% explicitly-counted sequence. This source does not. It states
+% TRANSITIONS, in continuous narrative prose, each marked by its own
+% connective — "Once a bill is introduced, it is assigned to a
+% committee...", "The bill is THEN put before that chamber...", "IF the
+% bill passes one body of Congress, IT GOES TO the other body...". Every
+% sentence says what comes AFTER what. None says what number anything is.
+%
+% Assigning absolute ordinals would have required inventing an answer to a
+% question the page never addresses: where does the count start? Is
+% `introduced` step 1, or is the idea-origin list before it step 1? Pick
+% differently and EVERY number changes, yet no test would fail and no
+% citation would look wrong — the table would simply assert positions its
+% own source never states. A successor relation records exactly the
+% adjacency the prose does state, nothing more, and has the incidental
+% virtue of being stable: if a future source names an additional stage,
+% two rows change here, whereas an ordinal table would renumber wholesale.
+%
+% Provenance: quoted verbatim from USA.gov's "How laws are made" page,
+% "How a bill becomes a law" section. Each row decodes exactly one of the
+% prose's own transition sentences:
+%
+%     stage -> next_stage                                    transition sentence (verbatim)
+%     ----------------------------------------------------   -------------------------------------------------------
+%     introduced -> committee_review                          "Once a bill is introduced, it is assigned to a
+%                                                                committee whose members will research, discuss, and
+%                                                                make changes to the bill."
+%     committee_review -> first_chamber_vote                  "The bill is then put before that chamber to be voted
+%                                                                on."
+%     first_chamber_vote -> second_chamber_process            "If the bill passes one body of Congress, it goes to
+%                                                                the other body to go through a similar process of
+%                                                                research, discussion, changes, and voting."
+%     second_chamber_process -> reconcile_differences         "Once both bodies vote to accept a bill, they must work
+%                                                                out any differences between the two versions."
+%     reconcile_differences -> vote_on_same_version           "Then both chambers vote on the same version of the
+%                                                                bill."
+%     vote_on_same_version -> presented_to_president          "If it passes, they present it to the president."
+%     presented_to_president -> president_considers           "The president then considers the bill."
+%
+% curl-fetched the raw page and read it byte-for-byte before writing this
+% file (not just an AI-summarized WebFetch). `trust authoritative` —
+% USA.gov is the U.S. General Services Administration's official guide to
+% government information, a first-party .gov publisher of exactly the fact
+% being recalled, the same tier and the SAME page
+% `chamber-exclusive-power.adj` and `veto-override.adj` already cite.
+%
+% Honest abstention:
+%
+%   - `president_considers` HAS no successor row, and that is deliberate
+%     rather than an oversight. From that point the prose BRANCHES: the
+%     president "can approve the bill and sign it into law", or can "refuse
+%     to approve a bill" (a veto), or may let it go unsigned into a pocket
+%     veto. A successor relation cannot honestly represent a branch — it
+%     would have to pick one outcome arbitrarily, or return three
+%     "next stages" as if they all happened. The chain this table records
+%     is the LINEAR portion of the journey, and it stops exactly where the
+%     source stops being linear. What happens on each branch is already
+%     held by `checks-and-balances.adj` (the veto as an act) and
+%     `veto-override.adj` (whether that act can be undone).
+%   - The idea-origin list the same page states — "The idea for a bill can
+%     come from a: Sitting member of the U.S. Senate or House of
+%     Representatives / Proposal during a congressional candidate's
+%     election campaign / Petition by people or citizen groups..." —
+%     answers WHERE a bill starts, not what stage follows what. Different
+%     axis, its own future table.
+%   - Any stage not named by one of the seven transition sentences above is
+%     deliberately NOT a row, so a recall ABSTAINS rather than inventing a
+%     step in the process.
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table bill_stage_successor {
+    columns stage, next_stage
+
+    row (introduced, committee_review)
+    row (committee_review, first_chamber_vote)
+    row (first_chamber_vote, second_chamber_process)
+    row (second_chamber_process, reconcile_differences)
+    row (reconcile_differences, vote_on_same_version)
+    row (vote_on_same_version, presented_to_president)
+    row (presented_to_president, president_considers)
+
+    source "Once a bill is introduced, it is assigned to a committee whose members will research, discuss, and make changes to the bill."
+    locator "https://www.usa.gov/how-laws-are-made"
+    trust authoritative
+
+    cites "The bill is then put before that chamber to be voted on." locator "https://www.usa.gov/how-laws-are-made"
+    cites "If the bill passes one body of Congress, it goes to the other body to go through a similar process of research, discussion, changes, and voting." locator "https://www.usa.gov/how-laws-are-made"
+    cites "Once both bodies vote to accept a bill, they must work out any differences between the two versions." locator "https://www.usa.gov/how-laws-are-made"
+    cites "Then both chambers vote on the same version of the bill." locator "https://www.usa.gov/how-laws-are-made"
+    cites "If it passes, they present it to the president." locator "https://www.usa.gov/how-laws-are-made"
+    cites "The president then considers the bill." locator "https://www.usa.gov/how-laws-are-made"
+}
