@@ -12,8 +12,9 @@
 
   Verified by serving the corrected bundle from `/deep/nested/engram/`: entry
   point, hashed chunk, and wasm all 200, with the engine's magic bytes intact.
-  The base fix is in the Mosaic React emitter rather than another local
-  override.
+  The `base` fix is in the Mosaic React emitter, since Engram is the first app
+  to build through `--emit-project` and so the first to depend on the
+  generated Vite config at all.
 
 - Added `scripts/build-web.sh`, a cross-platform build for the web host:
   compiles the engine to wasm, emits the app as a complete React/Vite project,

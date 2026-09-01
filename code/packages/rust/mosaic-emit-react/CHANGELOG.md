@@ -15,10 +15,12 @@ renders blank. That reads as a working deploy with no content rather than as a
 failure, which is why it survived.
 
 Engram's v0.3.0 web release shipped with this defect and is what surfaced it.
-`task-app` had already hit it and worked around it locally, overriding the
-generated config through `[host_assets]` with a comment explaining the exact
-failure — so the emitter default stayed wrong and the next app to come along
-inherited it. Fixed at the emitter, where it stops being every app's problem.
+Engram is the first app to build through `--emit-project`, so it is the first
+to depend on this generated config at all: `task-app` hand-maintains its own
+Vite shell and set `base: "./"` there from the start, with a comment naming the
+exact failure. The emitter's default had therefore never been exercised by a
+shipping app, and was wrong the whole time. Fixed at the emitter, where it stops
+being every app's problem.
 
 ### Fixed - preserve HostInput accessible names (#13717)
 
