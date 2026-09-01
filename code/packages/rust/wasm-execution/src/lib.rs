@@ -1750,6 +1750,48 @@ impl Table {
 // Section 5: HostFunction trait
 // ══════════════════════════════════════════════════════════════════════════════
 
+/// A funcref value's real identity, self-contained enough to be stored in
+/// a `Table`/global cell and later invoked by ANY instance, not just the
+/// one that produced it (W35 first slice: `code/specs/
+/// W35-wasm-cross-instance-function-identity.md`) — the fix for the gap
+/// `Table`'s own W28 doc comment already named ("a real funcref written
+/// into a SHARED table by one module and then `call_indirect`-invoked
+/// through a DIFFERENT module needs actual cross-instance function
+/// IDENTITY for table entries"). Lives in `wasm-execution` (not
+/// `wasm-types`, which cannot depend on anything with a `dyn HostFunction`
+/// in it either — `HostFunction` itself is defined here) so `ref.func`/
+/// `call_indirect`/`call_ref`/`table.get`/`table.set` can all consume it
+/// directly, once slice 2 wires them to.
+///
+/// **W35 slice 1 note**: this type is purely additive at this point —
+/// nothing constructs a `FuncRefTarget` yet outside of tests, and nothing
+/// reads one back out of a table/global cell (`TableStorage::elements`
+/// stays `Vec<Option<u32>>` and `ref.func`/`call_indirect`/etc. are
+/// entirely unchanged until slice 2). It exists here now purely so the
+/// representation compiles and derives correctly before any call site
+/// depends on it — the same "prove the shape first" discipline W34's own
+/// first slice used.
+#[derive(Clone)]
+pub struct FuncRefTarget {
+    /// A process-wide-unique, never-repeating identity — the SAME
+    /// `AtomicU64`-minted, "imported adopts the exporter's own identity
+    /// verbatim" pattern `wasm-runtime::WasmInstance::tag_identities`
+    /// (W23) already uses for tags, generalized from tags to functions.
+    /// `ref.eq`/table-entry-equality compares ONLY this field — cheap,
+    /// allocation-free, and never needs to touch `callable`.
+    pub identity: u64,
+    /// The real dispatch target. Reuses the EXISTING `HostFunction`
+    /// abstraction verbatim — `call_indirect`/`call_ref`'s post-fix
+    /// dispatch (slice 2) will be `target.callable.call(args, memory)`,
+    /// mechanically identical to how a plain cross-module
+    /// `call $imported_func` already works today. `Rc`, not `Box` (see
+    /// `host_functions`'s own storage, changed from `Box<dyn
+    /// HostFunction>` to `Rc<dyn HostFunction>` in this same slice), so a
+    /// `FuncRefTarget` can cheaply CLONE an existing import's callable
+    /// instead of needing to rebuild it.
+    pub callable: Rc<dyn HostFunction>,
+}
+
 /// A host function — callable from WASM via imports.
 ///
 /// Host functions are the bridge between the WASM sandbox and the outside
@@ -1864,6 +1906,50 @@ pub trait HostFunction {
     fn canonically_matches(&self, target: &(Rc<CanonicalGroup>, u32), budget: &mut wasm_types::CrossModuleComparisonBudget) -> bool {
         self.canonical_type().is_some_and(|ct| wasm_types::canonical_type_entries_equivalent_budgeted(Some(&ct), Some(target), budget))
     }
+
+    /// This function's own stable, process-wide-unique identity (W35
+    /// first slice: `code/specs/
+    /// W35-wasm-cross-instance-function-identity.md`) — mirrors
+    /// `wasm_runtime::WasmInstance::tag_identities`'s (W23) own "imported
+    /// adopts the exporter's identity verbatim" contract, just for
+    /// functions instead of tags. Defaults to `0` (reserved, "no stable
+    /// identity" — correct for every pre-existing WASI-shim
+    /// `HostFunction`, none of which are ever the target of a stored
+    /// funcref in this corpus). `wasm-conformance`'s `CrossModuleFunction`
+    /// and a future `LocalFunctionRef` (W35 third slice) are the two real
+    /// implementors — neither exists yet in this slice, which is purely
+    /// additive representation, so every CURRENT implementor of this
+    /// trait gets this default unchanged.
+    fn identity(&self) -> u64 {
+        0
+    }
+}
+
+/// Injected by `wasm-runtime::build_engine` (a future `set_self_resolver`,
+/// mirroring `set_type_subtyping`'s optional-setter shape — W35 third
+/// slice) -- lets a LIVE opcode handler (`ref.func`, `table.init`) build a
+/// self-contained [`FuncRefTarget`] for one of the CURRENTLY EXECUTING
+/// instance's OWN local (non-imported) functions, without `wasm-execution`
+/// ever naming `WasmInstance` directly (`wasm-execution` sits BELOW
+/// `wasm-runtime` in the dependency graph and cannot name that type — see
+/// `code/specs/W35-wasm-cross-instance-function-identity.md`'s "Why the
+/// naive `Rc<WasmInstance>` sketch doesn't work as stated" section).
+///
+/// **W35 slice 1 note**: this trait is declared but deliberately
+/// UNIMPLEMENTED by anything in this slice, and nothing in
+/// `WasmExecutionContext`/`WasmExecutionEngine` holds a value of this type
+/// yet (no `self_resolver` field exists at this point — the spec's own
+/// slice-1 description names only `FuncRefTarget`, `HostFunction::
+/// identity()`, the `host_functions` `Box`→`Rc` swap, and this trait
+/// declaration as slice-1 work; threading an actual resolver through
+/// `WasmExecutionContext`/`WasmExecutionEngine`, plus the real
+/// `resolve_function_ref` call site that would use it, is W35's third
+/// slice, alongside `wasm-runtime`'s own implementation of this trait).
+pub trait SelfFunctionResolver {
+    /// Build a self-contained [`FuncRefTarget`] for one of the CURRENTLY
+    /// EXECUTING instance's own local (non-imported) functions, named by
+    /// its combined-index-space `func_index`.
+    fn resolve_local_function(&self, func_index: u32) -> Result<FuncRefTarget, VMError>;
 }
 
 /// A host interface — resolves WASM imports.
@@ -3684,7 +3770,7 @@ pub struct WasmExecutionContext {
     /// dynamic type check both need.
     pub func_type_indices: Vec<u32>,
     pub func_bodies: Vec<Option<FunctionBody>>,
-    pub host_functions: Vec<Option<Box<dyn HostFunction>>>,
+    pub host_functions: Vec<Option<Rc<dyn HostFunction>>>,
     pub typed_locals: Vec<WasmValue>,
     pub label_stack: Vec<Label>,
     pub control_flow_map: HashMap<usize, ControlTarget>,
@@ -3894,6 +3980,23 @@ pub struct WasmExecutionContext {
     /// `v128_heap`'s own deferred-cleanup note) — bounded instead by
     /// [`MAX_EXCEPTION_HEAP_LEN`].
     pub exception_heap: Vec<ExceptionPayload>,
+    /// Scratch area letting a `Copy` `WasmValue::Ref(Some(handle))` stand
+    /// in for a non-`Copy` [`FuncRefTarget`] for the duration of one
+    /// execution (W35 first slice: `code/specs/
+    /// W35-wasm-cross-instance-function-identity.md`) — mirrors `gc_heap`/
+    /// `v128_heap`'s own "index, not embedded value" shape, but — unlike
+    /// those two — does NOT need to persist across calls: a
+    /// `FuncRefTarget` handle is always consumed (dispatched, or copied
+    /// into `TableStorage`/a global cell as a real `FuncRefTarget`) within
+    /// the SAME execution that produced it; nothing durable ever stores a
+    /// raw handle into this Vec. Reset (cleared) at the start of every
+    /// call, same as the operand stack itself.
+    ///
+    /// **W35 slice 1 note**: purely additive at this point — nothing
+    /// pushes to or reads from this Vec yet. `ref.func`/`table.get`/
+    /// `call_indirect`/etc. still operate exactly as they did before this
+    /// field existed; wiring them to use it is W35's second slice.
+    pub func_ref_heap: Vec<FuncRefTarget>,
 }
 
 /// Process-wide counter minting a fresh, never-repeating
@@ -11935,7 +12038,7 @@ pub struct WasmEngineConfig {
     pub global_types: Vec<GlobalType>,
     pub func_types: Vec<FuncType>,
     pub func_bodies: Vec<Option<FunctionBody>>,
-    pub host_functions: Vec<Option<Box<dyn HostFunction>>>,
+    pub host_functions: Vec<Option<Rc<dyn HostFunction>>>,
 }
 
 /// Mutable engine state that should be written back to a long-lived instance.
@@ -11943,7 +12046,7 @@ pub struct WasmEngineState {
     pub memories: Vec<LinearMemory>,
     pub tables: Vec<Table>,
     pub globals: Vec<Rc<RefCell<WasmValue>>>,
-    pub host_functions: Vec<Option<Box<dyn HostFunction>>>,
+    pub host_functions: Vec<Option<Rc<dyn HostFunction>>>,
     /// The instance's persistent v128 heap after this call (see
     /// `code/specs/W15-wasm-v128-persistent-storage.md`) -- set via
     /// [`WasmExecutionEngine::set_v128_heap`] before the call (mirroring
@@ -11988,7 +12091,7 @@ pub struct WasmExecutionEngine {
     global_types: Vec<GlobalType>,
     func_types: Vec<FuncType>,
     func_bodies: Vec<Option<FunctionBody>>,
-    host_functions: Vec<Option<Box<dyn HostFunction>>>,
+    host_functions: Vec<Option<Rc<dyn HostFunction>>>,
     /// Field counts per struct type index (LANG77 L3b-3a-3b).  Empty by default;
     /// set with [`WasmExecutionEngine::set_struct_field_counts`].  Flows into the
     /// execution context so `struct.new N` knows how many fields to pop.
@@ -12501,6 +12604,13 @@ impl WasmExecutionEngine {
             // across SEPARATE top-level calls isn't needed here, unlike
             // `v128_heap`).
             exception_heap: Vec::new(),
+            // W35 slice 1: purely additive scratch space, not wired into
+            // any opcode handler yet -- see `func_ref_heap`'s own doc
+            // comment. Reset per top-level call, exactly like
+            // `exception_heap` above, since (once wired in slice 2) a
+            // handle here is always consumed within the same execution
+            // that produced it.
+            func_ref_heap: Vec::new(),
         };
 
         // Reset and execute.
@@ -14049,7 +14159,7 @@ mod tests {
             global_types: vec![],
             func_types: vec![callee_import_type, caller_type],
             func_bodies: vec![None, Some(caller_body)],
-            host_functions: vec![Some(Box::new(CrossEngineCall(std::cell::RefCell::new(callee_engine))))],
+            host_functions: vec![Some(Rc::new(CrossEngineCall(std::cell::RefCell::new(callee_engine))))],
         });
         caller_engine.set_tags(vec![0]);
         caller_engine.set_tag_identities(vec![111]); // engine A's own, UNRELATED local tag

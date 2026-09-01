@@ -2,6 +2,37 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.24] — 2026-09-01 (W35 first slice — `host_functions` moves from `Box` to `Rc`)
+
+Mechanical ripple from `wasm-execution` 0.9.87 (slice 1 of 4 for
+`code/specs/W35-wasm-cross-instance-function-identity.md` — see that
+crate's own CHANGELOG for the full rationale). No behavior change in this
+crate either.
+
+- **`WasmInstance::host_functions`** and `WasmRuntime::instantiate`'s own
+  local `host_functions` builder Vec: `Vec<Option<Box<dyn HostFunction>>>`
+  → `Vec<Option<Rc<dyn HostFunction>>>` — round-trips through
+  `wasm-execution::WasmEngineConfig`/`WasmEngineState`, both now `Rc`-based
+  too, so this crate's own field had to follow.
+- **`HostInterface::resolve_function`'s signature is UNCHANGED** — it
+  still returns `Option<Box<dyn HostFunction>>` (out of this slice's
+  scope per the spec's own call-site audit). The one real conversion this
+  ripple needed: `instantiate()`'s import-resolution loop now does
+  `host_functions.push(Some(Rc::from(host_func)))` instead of `Some
+  (host_func)` — `Rc::from(Box<dyn HostFunction>)` is a standard, safe,
+  allocation-cheap conversion (no re-boxing; `Rc` takes ownership of the
+  same heap allocation `Box` already had).
+- `tests/call_typed_with_v128.rs` hand-builds a `WasmInstance` directly
+  (every field `pub`) — its own `host_functions: Vec<Option<Box<dyn
+  HostFunction>>>` type annotation updated to `Rc` to match.
+
+### Verification
+
+See `wasm-execution`'s own CHANGELOG entry for this slice — it covers
+`cargo test`/`cargo clippy`/conformance-baseline verification for both
+crates together (run and diffed jointly, since the change ripples across
+both).
+
 ## [0.6.23] — 2026-09-01 (test fixture update for `wasm-types`' new `missing_data_count_section` field)
 
 No functional change in this crate. `wasm-types` 0.1.23 added

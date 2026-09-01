@@ -21,7 +21,7 @@ fn engine_from_wat(wat: &str) -> (WasmExecutionEngine, WasmModule) {
     let module = wasm_wast_parser::parse_module(wat).expect("module should parse");
     let func_types: Vec<FuncType> = module.functions.iter().map(|&t| module.types[t as usize].clone()).collect();
     let func_bodies: Vec<Option<FunctionBody>> = module.code.iter().cloned().map(Some).collect();
-    let host_functions: Vec<Option<Box<dyn HostFunction>>> = module.functions.iter().map(|_| None).collect();
+    let host_functions: Vec<Option<Rc<dyn HostFunction>>> = module.functions.iter().map(|_| None).collect();
     // Globals need their ACTUAL evaluated values here (this lower-level
     // `WasmEngineConfig` API, unlike a full `wasm-runtime::instantiate()`,
     // takes already-computed globals, not raw init-expr bytes) -- exercises
