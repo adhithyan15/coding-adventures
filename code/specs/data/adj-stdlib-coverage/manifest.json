@@ -3086,6 +3086,21 @@
       "source_cas_hashes": [],
       "benchmark_paths": [],
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
+      "id": "adj.civics.3to5.checks_and_balances",
+      "title": "Recall which act one part of the U.S. federal government can take against another, in any direction: by actor, by action, or by the thing acted upon",
+      "band": "3-5",
+      "domain": "civics",
+      "competency": "recall",
+      "coverage_roots": ["c3.socialstudies"],
+      "standards": [],
+      "prerequisites": ["adj.civics.3to5.government_branch_member"],
+      "libraries": ["code/specs/data/adj-facts-stdlib/civics/checks-and-balances.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     }
   ]
 }
