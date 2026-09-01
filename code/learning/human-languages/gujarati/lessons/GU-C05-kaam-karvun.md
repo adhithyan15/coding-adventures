@@ -6,6 +6,7 @@ sequence: 310
 chapter: 11
 type: word
 headword: કામ કરવું
+romanization: "kām karvũ"
 gloss: to work (lit. "work-do")
 concept_tag: GU-VERB-KARVU
 prerequisites: [GU-C05-bolvun]

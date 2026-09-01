@@ -6,6 +6,7 @@ sequence: 110
 chapter: 8
 type: word
 headword: છે
+romanization: "chhe"
 gloss: is (the copula)
 concept_tag: WORD-IS
 prerequisites: [GU-C02-naam]

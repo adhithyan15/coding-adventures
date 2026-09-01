@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Courtesy and Responses",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e66f259f764738ac",
+  "sourceHash": "fnv1a64:1ddec31a3082edb5",
   "lessons": [
     {
       "id": "GU-W02-ra",
@@ -917,15 +917,15 @@
       "sequence": 20,
       "title": "આભાર (ābhār) — \"thank you,\" an obligation gladly owed",
       "headword": "આભાર",
-      "romanization": "",
-      "gloss": "thank you (ābhār)",
+      "romanization": "ābhār",
+      "gloss": "thank you",
       "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3776abc0357800fe",
+      "sourceHash": "fnv1a64:debb8e7788f2f008",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1070,7 +1070,7 @@
       "sequence": 30,
       "title": "આવજો (āvjo) — \"goodbye\" (come again)",
       "headword": "આવજો",
-      "romanization": "",
+      "romanization": "āvjo",
       "gloss": "goodbye (lit. \"[please] come [again]\")",
       "script": "gujarati",
       "modality": "sight",
@@ -1078,7 +1078,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:68832a3502719fbb",
+      "sourceHash": "fnv1a64:89ca8313c27816ee",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1223,15 +1223,15 @@
       "sequence": 40,
       "title": "હા / ના (hā / nā) — \"yes\" and \"no\"",
       "headword": "હા / ના",
-      "romanization": "",
-      "gloss": "yes / no (hā / nā)",
+      "romanization": "hā / nā",
+      "gloss": "yes / no",
       "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:839091e76f8dd6a6",
+      "sourceHash": "fnv1a64:b81dda3639bcc3be",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1695,26 +1695,24 @@
       "sequence": 50,
       "title": "સારું (sārũ) — \"good,\" \"okay\"",
       "headword": "સારું",
-      "romanization": "",
-      "gloss": "good, okay, fine (sārũ)",
+      "romanization": "sārũ",
+      "gloss": "good, okay, fine",
       "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "script-block",
-        "sight-cue"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:eb2b7964f602dd71",
+      "sourceHash": "fnv1a64:9fea9ef8b9f51fb5",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -1763,23 +1761,23 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look at that ending -ું (-ũ). Gujarati, like Marathi, keeps three genders from Sanskrit — masculine, feminine, and neuter — where Hindi and Punjabi kept only two. An adjective agrees with its noun in all three:"
+              "text": "Listen to that ending, -ũ. Gujarati, like Marathi, keeps three genders from Sanskrit — masculine, feminine, and neuter — where Hindi and Punjabi kept only two. An adjective agrees with its noun in all three, and the ending is what changes:"
             },
             {
               "kind": "speech",
-              "text": "સારો (sāro) — masculine."
+              "text": "sāro — masculine."
             },
             {
               "kind": "speech",
-              "text": "સારી (sārī) — feminine."
+              "text": "sārī — feminine."
             },
             {
               "kind": "speech",
-              "text": "સારું (sārũ) — neuter."
+              "text": "sārũ — neuter."
             },
             {
               "kind": "speech",
-              "text": "Standing alone as \"okay,\" it takes the neuter sārũ. You will meet this three-way agreement on every adjective and possessive."
+              "text": "Three endings by ear only, for now: the signs that write -o and -ī arrive in the next chapter, and the three spellings come back once you can read them. Standing alone as \"okay,\" it takes the neuter sārũ. You will meet this three-way agreement on every adjective and possessive."
             }
           ]
         },

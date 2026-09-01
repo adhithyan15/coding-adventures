@@ -6,7 +6,8 @@ sequence: 40
 chapter: 2
 type: word
 headword: હા / ના
-gloss: yes / no (hā / nā)
+romanization: "hā / nā"
+gloss: yes / no
 concept_tag: RESPONSE-YESNO
 prerequisites: [GU-C01-namaste, GU-W02-bha]
 sounds: [long-aa, no-top-line]

@@ -6,6 +6,7 @@ sequence: 160
 chapter: 8
 type: phrase
 headword: તમારું નામ શું છે?
+romanization: "tamārũ nām shũ chhe?"
 gloss: what's your name?
 concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [GU-C02-tu-tame, GU-C02-shun, GU-C02-chhe, GU-W02-va]

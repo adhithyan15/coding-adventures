@@ -6,6 +6,7 @@ sequence: 320
 chapter: 11
 type: word
 headword: રહેવું
+romanization: "rahevũ"
 gloss: to live, to stay
 concept_tag: GU-VERB-RAHEVU
 prerequisites: [GU-C05-bolvun]
