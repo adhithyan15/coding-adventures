@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Changed — declare both everyday Hindi words for foot
+
+- Chapter 38 now declares **पैर / पाँव** as its headword instead of naming only
+  **पैर**. The lesson already defines **पाँव** as Hindi's other everyday word
+  for “foot,” contrasts the two words' historical stems, and asks learners to
+  recall which one descends from Sanskrit **पाद**; its metadata now exposes
+  both assessed forms.
+
 ### Changed — declare the Hindi location postposition
 
 - Chapter 5 now declares **रहना / में** as its headword instead of naming only

@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "Six Words for Where It Hurts",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:53743df220dce521",
+  "sourceHash": "fnv1a64:cd4409f00bdd77b2",
   "lessons": [
     {
       "id": "HI-C38-aankh",
@@ -381,16 +381,16 @@
       "id": "HI-C38-pair",
       "sequence": 1040,
       "title": "पैर (pair) — the foot, and the ancestor it does not have",
-      "headword": "पैर",
+      "headword": "पैर / पाँव",
       "romanization": "",
-      "gloss": "foot — masculine, and NOT the descendant of Sanskrit pāda; that honour belongs to पाँव",
+      "gloss": "foot — the two everyday forms descend from different Sanskrit stems, पैर from pad- and पाँव from pāda",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cb2aa2a3f2093877",
+      "sourceHash": "fnv1a64:8b3bb4e08d480d62",
       "notice": null,
       "blocks": [
         {
