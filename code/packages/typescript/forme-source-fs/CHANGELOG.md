@@ -1,5 +1,25 @@
 # Changelog — @coding-adventures/forme-source-fs
 
+## 0.3.0 — 2026-09-01
+
+### Added — identity persistence (write side)
+
+- Missing `.<basename>.id.json` sidecars are created with exclusive-write
+  semantics, so concurrent first reads converge on one UUIDv7 without
+  overwriting either build's result.
+- Existing malformed sidecars now fail with a clear diagnostic and remain
+  untouched. Silently generating another ID would violate published identity.
+- `storage:write` is now an explicit audited capability alongside
+  `storage:read`; `persistIdentities: false` remains write-free.
+
+### Changed
+
+- Source revisions hash only file bytes. Moving content together with its
+  identity sidecar preserves both `LogicalId` and `RevisionId`; editing bytes
+  preserves logical identity and changes the revision.
+- The stage metadata, package version, config schema, and README now describe
+  the implemented v0.3 contract consistently.
+
 ## 0.2.0 — 2026-05-16
 
 ### Added — identity persistence (read side)
