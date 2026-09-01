@@ -1,0 +1,23 @@
+% ============================================================================
+% speleothem-growth-surface.query.adj — worked recall over the
+% speleothem-growth-surface library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "which one hangs from
+% the ceiling?" (direct), "which speleothem grows up from the floor?"
+% (reverse — the direction the classic confusion actually runs in), or
+% "where does a column grow from?" (abstain — a column is formed by two
+% speleothems joining, so it has no single growth surface) — it states no
+% fact of its own — it only `import`s the grounded table and asks binding
+% queries.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli speleothem-growth-surface.query.adj
+% ============================================================================
+
+import "speleothem-growth-surface.adj"
+
+? speleothem_growth_surface(stalactite, $S)     % expect cave_ceiling (direct)
+? speleothem_growth_surface(stalagmite, $S)     % expect cave_floor (direct)
+? speleothem_growth_surface($P, cave_floor)     % expect stalagmite (reverse -- the direction the confusion runs in)
+? speleothem_growth_surface(column, $S)         % expect abstain -- "Columns are not stalactites nor are they stalagmites; they are both, together"; formed by two speleothems JOINING, so no single growth surface
+? speleothem_growth_surface(helictite, $S)      % expect abstain -- the source places it on ceilings, walls AND "less often" floors; one surface would drop the others, all three would flatten the source's own hedge
