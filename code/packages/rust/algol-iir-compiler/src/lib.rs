@@ -2740,10 +2740,19 @@ impl Compiler {
 
     /// Recognize the existing exact integer exponent language plus built-in
     /// `sqrt` over exact tracked integer arithmetic. Integral square-root forms
-    /// may compose through checked addition, subtraction, and multiplication.
+    /// may compose through checked addition, subtraction, multiplication, and
+    /// pure path-independent conditionals.
     fn exact_tracked_integral_exponent_expression(&self, node: &GrammarASTNode) -> bool {
         if self.exact_tracked_integer_expression(node) {
             return true;
+        }
+        if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
+            return self.static_predicate_dependencies(condition).is_some()
+                && self.exact_tracked_integral_exponent_expression(then_node)
+                && self.exact_tracked_integral_exponent_expression(else_node)
+                && self
+                    .static_real_arithmetic_value_with_widen(node, true)
+                    .is_some_and(|value| value.fract() == 0.0);
         }
         if let Some(child) = single_parenthesized_child(node) {
             return self.exact_tracked_integral_exponent_expression(child);
@@ -10792,6 +10801,37 @@ mod tests {
             let main = module.get_function("main").expect("has main");
             assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"));
             if source.contains("real procedure sqrt") {
+                assert!(main.instructions.iter().any(|instr| instr.op == "call"));
+            }
+        }
+    }
+
+    #[test]
+    fn al4_path_independent_conditional_tracked_sqrt_exponents_unroll_real_powers() {
+        let module = compile_source(
+            "begin integer gate, exponent; real saved; exponent := 4; saved := 6.0 ^ (if gate = 0 then sqrt(exponent) else sqrt(exponent)) + 6.0; exponent := 9; if saved = 42.0 then output(42) else output(1) end",
+            "test",
+        )
+        .expect("equal conditional square-root exponents should unroll");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| instr.op == "jmp_if_false"));
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+        assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
+    }
+
+    #[test]
+    fn al4_conditional_tracked_sqrt_exponents_retain_unsafe_runtime_power() {
+        for source in [
+            "begin integer gate, exponent; real saved; exponent := 4; saved := 6.0 ^ (if gate = 0 then sqrt(exponent) else sqrt(exponent) + 1) end",
+            "begin integer gate, exponent; real saved; exponent := 2; saved := 6.0 ^ (if gate = 0 then sqrt(exponent) else sqrt(exponent)) end",
+            "begin boolean procedure choose; choose := true; integer exponent; real saved; exponent := 4; saved := 6.0 ^ (if choose() then sqrt(exponent) else sqrt(exponent)) end",
+            "begin real procedure sqrt(x); value x; integer x; sqrt := 2.0; integer gate, exponent; real saved; exponent := 4; saved := 6.0 ^ (if gate = 0 then sqrt(exponent) else sqrt(exponent)) end",
+        ] {
+            let module = compile_source(source, "test")
+                .expect("unsafe conditional square-root exponents must remain dynamic");
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"));
+            if source.contains("procedure choose") || source.contains("procedure sqrt") {
                 assert!(main.instructions.iter().any(|instr| instr.op == "call"));
             }
         }
