@@ -4,6 +4,7 @@ sequence: 180
 chapter: 8
 type: word
 headword: काम करणे
+romanization: "kām karṇe"
 gloss: to work (kām karṇe)
 concept_tag: MR-VERB-KARNE
 prerequisites: [MR-C05-rahne, MR-C01-namaskar]

@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "BN-W03-abar-read",
+    "language": "bengali",
+    "chapter": 18,
+    "sequence": 1840,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9d6d9425def3a5b1",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

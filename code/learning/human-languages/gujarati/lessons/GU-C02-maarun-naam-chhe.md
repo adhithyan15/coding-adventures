@@ -6,6 +6,7 @@ sequence: 120
 chapter: 8
 type: phrase
 headword: મારું નામ … છે
+romanization: "mārũ nām … chhe"
 gloss: my name is…
 concept_tag: INTRO-MY-NAME-IS
 prerequisites: [GU-C02-maarun, GU-C02-naam, GU-C02-chhe]

@@ -3,7 +3,8 @@
     "MR-PATH-006",
     "MR-PATH-008",
     "MR-PATH-017",
-    "MR-PATH-018"
+    "MR-PATH-018",
+    "MR-PATH-025"
   ],
   "omits": [
     "WORD-GOOD",

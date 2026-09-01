@@ -2,6 +2,40 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.16] - 2026-08-31 (W33 second slice — real dynamic dispatch, item 4)
+
+Extracts the nominal reflexive/transitive subtype-chain walk out of
+`WasmModule::func_type_is_nominal_subtype` into a new free function,
+`nominal_subtype_chain(type_subtyping: &[TypeSubtyping], sub_idx, super_idx)
+-> bool`, so `wasm-execution`'s new runtime `call_indirect`/`ref.cast`/
+`ref.test` dynamic dispatch checks (W33's own item (4), see `code/specs/
+W33-wasm-gc-recursive-type-subtyping.md`'s second addendum) can reuse the
+EXACT same, already security-reviewed (cycle-safe, hop-capped) walk instead
+of re-implementing it against a bare `&[TypeSubtyping]` slice — `wasm-
+execution::WasmExecutionContext` deliberately doesn't hold a full
+`WasmModule` (see that struct's own doc comments), so a method on
+`WasmModule` alone couldn't be called from there. `WasmModule::
+func_type_is_nominal_subtype` is now a one-line wrapper around this;
+behavior and the `MAX_SUBTYPE_CHAIN_HOPS = 1_000` bound are unchanged.
+
+### Added
+
+- **`nominal_subtype_chain(type_subtyping: &[TypeSubtyping], sub_idx: u32,
+  super_idx: u32) -> bool`**: the free-function form described above.
+- **`any_declares_subtyping(type_subtyping: &[TypeSubtyping]) -> bool`**:
+  whether ANY entry is non-default (a real declared `sub $parent`,
+  non-final, or a real `>1`-member `rec` group). Needed because
+  `wasm-wast-parser`'s `dedup_type` pushes a `TypeSubtyping::default()`
+  placeholder for EVERY type it declares, `sub`-declared or not — so
+  `type_subtyping.is_empty()` is NOT a reliable "this module never uses
+  `sub`" signal (the vector is fully populated for nearly every real
+  module). `wasm-execution`'s new dynamic-dispatch checks use this to
+  decide between two rules: no real `sub` anywhere → the engine's original
+  pre-W33 structural-equality check (zero regression risk for the 256
+  vendored corpus files that never use `sub`); real `sub` present
+  somewhere → the real nominal (reflexive-or-subtype) check GC-proposal
+  type identity actually requires.
+
 ## [0.1.15] - 2026-08-31 (W33 first slice — GC nominal subtyping + `rec` groups)
 
 Implements the `wasm-types` half of `code/specs/

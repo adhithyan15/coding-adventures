@@ -4,6 +4,7 @@ sequence: 80
 chapter: 5
 type: word
 headword: तू / तुम्ही
+romanization: "tū / tumhī"
 gloss: you (tū familiar / tumhī respectful)
 concept_tag: PRONOUN-YOU
 prerequisites: [MR-C02-majhe-naav-aahe]

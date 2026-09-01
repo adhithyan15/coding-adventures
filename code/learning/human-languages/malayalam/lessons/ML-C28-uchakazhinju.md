@@ -7,6 +7,7 @@ chapter: 28
 type: phrase
 headword: ഉച്ചകഴിഞ്ഞ്
 gloss: "afternoon" (uchakaḻiññ) — a transparent two-word phrase, not a single dictionary headword: ഉച്ച (ML-C17's "noon") + കഴിഞ്ഞ്, the past converb form of കഴിയുക (kaḻiyuka, Wiktionary-confirmed Proto-Dravidian *kaẓi, "to be over, spent") — Wiktionary itself directly shows only the finite past tense കഴിഞ്ഞു (kaḻiññu); the converb form used in this compound is a reasonable grammatical inference, not itself the form Wiktionary lists; literally "noon having passed" — a structurally different strategy than Telugu's, where the SAME noon-word (మధ్యాహ్నం) simply widened its own meaning rather than compounding with a second word
+romanization: "uchakaḻiññ"
 concept_tag: TIME-AFTERNOON
 prerequisites: [ML-C17-paathira, ML-C27-vaikunneram]
 sounds: [malayalam-geminate-cha, malayalam-zha]

@@ -1,0 +1,769 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 23,
+  "title": "First Food Words: No New Signs",
+  "drivablePrefix": 9,
+  "sourceHash": "fnv1a64:fd96dfe522531686",
+  "lessons": [
+    {
+      "id": "MW-C18-hear-daal",
+      "sequence": 1730,
+      "title": "Hear dāl — lentils",
+      "headword": "dāl",
+      "romanization": "dāl",
+      "gloss": "lentils",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1244e01a31c4c2d8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the five-word transport payoff, then say horse and market."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dāl — lentils."
+            },
+            {
+              "kind": "speech",
+              "text": "Two beats, and the second one is long. Hear it twice, point to a bowl of cooked lentils, and say it once. The spelling stays covered until the sound and the meaning are comfortable."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C18-hear-daal-meaning",
+              "prompt": "What food does dāl name?",
+              "assesses": [
+                "MW-LEX-DAAL-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "lentils",
+                "lentil",
+                "cooked lentils"
+              ],
+              "feedback": {
+                "correct": "Right: dāl names lentils.",
+                "incorrect": "Hold the long second beat with the food: dā-l — lentils."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C18-daal",
+      "sequence": 1740,
+      "title": "दाल (dāl) — lentils on the page",
+      "headword": "दाल",
+      "romanization": "dāl",
+      "gloss": "lentils, written entirely with familiar signs",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9423e60114c294ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 18,
+              "perItem": false,
+              "source": "[PAUSE 18s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say lentils, then write horse and ज."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दा + ल becomes दाल — dāl — lentils."
+            },
+            {
+              "kind": "speech",
+              "text": "Three units, all of them met before: द, the long ा, and ल."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look, cover, wait five seconds, and write दाल (dāl). Check that the ा sits after द and not after ल."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C18-daal-dictation",
+              "prompt": "From dāl, write lentils.",
+              "assesses": [
+                "MW-LEX-DAAL-01",
+                "MW-SCRIPT-DAAL-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "दाल",
+                "दाल lentils"
+              ],
+              "feedback": {
+                "correct": "Right: दाल means lentils.",
+                "incorrect": "Build दा, then add ल."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C18-hear-ghee",
+      "sequence": 1750,
+      "title": "Hear ghī — clarified butter",
+      "headword": "ghī",
+      "romanization": "ghī",
+      "gloss": "clarified butter",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:223f9428c3284e14",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the seven-word shopping payoff, then write lentils and market."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ghī — clarified butter."
+            },
+            {
+              "kind": "speech",
+              "text": "One beat, opening with the same breathy sound heard at the start of ghar and ghoṛo. Hear it twice and say it once."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C18-hear-ghee-meaning",
+              "prompt": "What food does ghī name?",
+              "assesses": [
+                "MW-LEX-GHEE-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "clarified butter",
+                "ghee",
+                "clarified butter (ghee)"
+              ],
+              "feedback": {
+                "correct": "Right: ghī names clarified butter.",
+                "incorrect": "Keep the breathy opening with the fat: ghī — clarified butter."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C18-ghee",
+      "sequence": 1760,
+      "title": "घी (ghī) — clarified butter on the page",
+      "headword": "घी",
+      "romanization": "ghī",
+      "gloss": "clarified butter, written with two familiar units",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7c98903fbe69b04f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say clarified butter, recall the five-word transport payoff, then say bus."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घ + ी becomes घी — ghī — clarified butter."
+            },
+            {
+              "kind": "speech",
+              "text": "The same घ that opens घर and घोड़ो, carrying the long ी met in पाणी."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look, cover, wait five seconds, and write घी (ghī). Keep the ी stroke tall enough to reach the headline."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C18-ghee-dictation",
+              "prompt": "From ghī, write clarified butter.",
+              "assesses": [
+                "MW-LEX-GHEE-01",
+                "MW-SCRIPT-GHEE-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "घी",
+                "घी ghee",
+                "घी clarified butter"
+              ],
+              "feedback": {
+                "correct": "Right: घी means clarified butter.",
+                "incorrect": "Write घ, then add the long ी."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C18-hear-sabji",
+      "sequence": 1770,
+      "title": "Hear sabjī — vegetables",
+      "headword": "sabjī",
+      "romanization": "sabjī",
+      "gloss": "vegetables",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:58dd0404341a35dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 18,
+              "perItem": false,
+              "source": "[PAUSE 18s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write clarified butter, bus, and घ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sabjī — vegetables."
+            },
+            {
+              "kind": "speech",
+              "text": "Three beats, ending long. Hear it twice, point to a vegetable dish, and say it once."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C18-hear-sabji-meaning",
+              "prompt": "What food does sabjī name?",
+              "assesses": [
+                "MW-LEX-SABJI-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "vegetables",
+                "vegetable",
+                "a vegetable dish"
+              ],
+              "feedback": {
+                "correct": "Right: sabjī names vegetables.",
+                "incorrect": "Keep the long final beat with the food: sab-jī — vegetables."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C18-sabji",
+      "sequence": 1780,
+      "title": "सबजी (sabjī) — vegetables on the page",
+      "headword": "सबजी",
+      "romanization": "sabjī",
+      "gloss": "vegetables, written entirely with familiar signs",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c67eb660c66a3248",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 18,
+              "perItem": false,
+              "source": "[PAUSE 18s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say vegetables and vehicle, then write home."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स + ब + जी becomes सबजी — sabjī — vegetables."
+            },
+            {
+              "kind": "speech",
+              "text": "Four units, every one of them already in the hand. The source spells it with a full ब between स and जी; other Rajasthani writing prints a clustered spelling for the same word, so treat this form as the one attested here rather than as the only one anybody uses."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look, cover, wait five seconds, and write सबजी (sabjī). Check that ब keeps its own short vowel and carries no vowel-killer."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C18-sabji-dictation",
+              "prompt": "From sabjī, write vegetables.",
+              "assesses": [
+                "MW-LEX-SABJI-01",
+                "MW-SCRIPT-SABJI-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "सबजी",
+                "सबजी vegetables"
+              ],
+              "feedback": {
+                "correct": "Right: सबजी means vegetables.",
+                "incorrect": "Write स, then ब, then जी."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R18-food-three",
+      "sequence": 1790,
+      "title": "Retrieve three food words",
+      "headword": "दाल — घी — सबजी",
+      "romanization": "dāl — ghī — sabjī",
+      "gloss": "lentils, clarified butter, and vegetables",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:213d60df5c054709",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 18,
+              "perItem": false,
+              "source": "[PAUSE 18s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write vehicle, then say temple and home."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear the three words in a mixed order, give each meaning, read three shuffled cards, then write all three from sound."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R18-food-three-recall",
+              "prompt": "Write lentils, clarified butter, and vegetables in order.",
+              "assesses": [
+                "MW-LEX-DAAL-01",
+                "MW-LEX-GHEE-01",
+                "MW-LEX-SABJI-01"
+              ],
+              "responseSeconds": 28,
+              "acceptedResponses": [
+                "दाल — घी — सबजी",
+                "दाल घी सबजी",
+                "दाल, घी, सबजी"
+              ],
+              "feedback": {
+                "correct": "All three food meanings remain distinct.",
+                "incorrect": "Repair only the missed word, then repeat the set."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C18-food-three",
+      "sequence": 1800,
+      "title": "Payoff — three food words in four skills",
+      "headword": "दाल — घी — सबजी",
+      "romanization": "dāl — ghī — sabjī",
+      "gloss": "a three-word food map",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d1e0536bbf854918",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 16,
+              "perItem": false,
+              "source": "[PAUSE 16s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say cart, then write temple."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Identify three heard words."
+            },
+            {
+              "kind": "speech",
+              "text": "Produce three words from meaning cues."
+            },
+            {
+              "kind": "speech",
+              "text": "Match three printed cards to meanings."
+            },
+            {
+              "kind": "speech",
+              "text": "Write all three heard words without a model."
+            },
+            {
+              "kind": "speech",
+              "text": "Pass each skill separately. Three food names are a vocabulary foundation, not an order placed in a kitchen or a shop."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C18-food-three-payoff",
+              "prompt": "Complete all four scored checks, then write the three food words.",
+              "assesses": [
+                "MW-PERFORMANCE-FOOD-THREE-FOUR-SKILL-01"
+              ],
+              "responseSeconds": 38,
+              "acceptedResponses": [
+                "दाल — घी — सबजी",
+                "दाल घी सबजी"
+              ],
+              "feedback": {
+                "correct": "The three-word food map passes in all four skills.",
+                "incorrect": "Repair only the failed skill or word, then retry that part."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R18-food-close",
+      "sequence": 1810,
+      "title": "Close the first food loop",
+      "headword": "first food set",
+      "romanization": "food close",
+      "gloss": "delayed independent recall of three food words",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1f9aadf52ceb5580",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 18,
+              "perItem": false,
+              "source": "[PAUSE 18s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the three-place payoff, then write cart."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "With every model hidden, identify, say, read, and write दाल (dāl), घी (ghī), and सबजी (sabjī) in a shuffled order."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R18-food-close-recall",
+              "prompt": "Which four skills must pass independently?",
+              "assesses": [
+                "MW-PERFORMANCE-FOOD-THREE-FOUR-SKILL-01"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "listening, speaking, reading, writing",
+                "listening speaking reading writing"
+              ],
+              "feedback": {
+                "correct": "All four skills remain independently required.",
+                "incorrect": "Retry only the failed skill; do not average it away."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "tamil",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:d506af230e99b443",
+  "lessonIds": [
+    "TA-C65-drink",
+    "TA-C65-walk",
+    "TA-W21-read-kudi",
+    "TA-C65-stop",
+    "TA-C65-open",
+    "TA-C65-close",
+    "TA-C65-doing-recall"
+  ],
+  "tex": "tamil/book/chapters/ch65-doing-and-undoing.tex"
+}

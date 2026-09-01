@@ -65,6 +65,14 @@ gloss. Both were repaired at the source rather than by loosening the field:
 The 164-page figure in this track's README was also stale: the book now
 compiles at **454 pages**, still with zero missing characters and zero errors.
 
+### Changed — declare the Hindi gain noun
+
+- Chapter 35 now declares **लेना / लाभ** as its headword instead of naming only
+  the verb “to take.” The lesson already defines **लाभ** as “profit, gain,
+  benefit,” uses it to show the consonant lost by **लेना**, and asks learners to
+  recall both the noun and why it preserves **भ**; its metadata now exposes that
+  assessed standalone noun.
+
 ### Changed — declare the complete Hindi woman-register set
 
 - Chapter 39 now declares **औरत / महिला / स्त्री** as its headword instead of

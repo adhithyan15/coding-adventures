@@ -85,6 +85,18 @@ fn basic_typed_mul_accepted_by_every_backend() {
     assert_accepted_by_lang_full_backends(&m, "`C = A * B`");
 }
 
+/// VM-018 `RND` — shared typed globals, cross-function call, exact integer
+/// recurrence, and final f64 scaling must all validate on the portable AOT
+/// backends even when a local CLR/JVM runtime is unavailable.
+#[test]
+fn basic_portable_rnd_accepted_by_every_backend() {
+    let src = "10 LET A = RND(-1)\n\
+               20 LET B = RND(0)\n\
+               30 END\n";
+    let m = compile_source(src, "compat_rnd").expect("BASIC RND must compile");
+    assert_accepted_by_lang_full_backends(&m, "portable `RND`");
+}
+
 // ---------------------------------------------------------------------------
 // Group 3: control flow
 // ---------------------------------------------------------------------------

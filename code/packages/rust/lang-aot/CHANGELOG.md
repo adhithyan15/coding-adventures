@@ -1,5 +1,16 @@
 # Changelog — `lang-aot`
 
+## 0.288.0 - 2026-09-01 (Dartmouth BASIC portable RND parity)
+
+The unified matrix now executes Dartmouth BASIC's deterministic `RND` contract
+on NativeAOT, LLVM, WASM, JVM, CLR, VM, and JIT. One program proves negative
+reseeding, positive advancement, zero-argument repeatability, and the next
+advance through stable integer buckets `22`, `85032`, `85032`, and `601352`.
+
+The frontend implements a Park–Miller generator through the already-shared
+typed module-global substrate, so no backend receives a BASIC-specific random
+runtime or host entropy dependency.
+
 ## 0.287.0 - 2026-09-01 (ALGOL conditional tracked `sqrt` exponents)
 
 The ALGOL matrix now proves on all seven standard backends that equal exact

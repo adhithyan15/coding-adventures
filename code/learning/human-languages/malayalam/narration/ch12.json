@@ -4,14 +4,14 @@
   "chapter": 12,
   "title": "Family",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:93695824937a6b9e",
+  "sourceHash": "fnv1a64:5ab1da165a0311c2",
   "lessons": [
     {
       "id": "ML-C12-kudumbam",
       "sequence": 400,
       "title": "അച്ഛൻ, അമ്മ, and four sibling words — Malayalam's own set",
       "headword": "അച്ഛൻ അമ്മ ചേട്ടൻ അനിയൻ ചേച്ചി അനിയത്തി",
-      "romanization": "",
+      "romanization": "acchan amma cēṭṭan aniyan cēcci aniyatti",
       "gloss": "father, mother, and four age-graded sibling words — Malayalam's own distinct set, still following the shared Dravidian age-first pattern",
       "script": "malayalam",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8f4b6bd85c63fb9",
+      "sourceHash": "fnv1a64:08007c00cf22eefb",
       "notice": null,
       "blocks": [
         {

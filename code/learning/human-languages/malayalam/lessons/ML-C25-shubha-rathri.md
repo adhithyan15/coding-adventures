@@ -7,6 +7,7 @@ chapter: 25
 type: phrase
 headword: ശുഭ രാത്രി
 gloss: "good night" — the standard Sanskrit-tatsama phrase (rāthri already met, śubha new); some sources describe modern Malayalam speakers often code-switching to English "good night" instead — the same claim, similarly thinly sourced, is also made about Telugu
+romanization: "śubha rāthri"
 concept_tag: GREETING-GOODNIGHT
 prerequisites: [ML-C24-native-night-words]
 sounds: [malayalam-sha, malayalam-bha]

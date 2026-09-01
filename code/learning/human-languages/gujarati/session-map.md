@@ -1,4 +1,4 @@
-# Session Map - Gujarati Chapters 1-27
+# Session Map - Gujarati Chapters 1-28
 
 This is the contributor-facing inventory of the canonical Gujarati reading
 order. Every session is a lesson designed for five minutes or less. The
@@ -18,6 +18,9 @@ The ramp is deliberately uneven in quantity but gentle in difficulty:
   review labels.
 - Chapters 24-27 begin the next vocabulary tranche with oral-first acquisition,
   familiar-script writing practice, and separately visible four-skill checks.
+- Chapter 28 turns that tranche ear-first: eight time words arrive as sound and
+  meaning, only two of them reach the page, and both returns at the end are
+  measured retrieval rather than adjacent review.
 
 ## Canonical session inventory
 
@@ -53,13 +56,16 @@ canonical `sequence` order.
 | 144-150 | 25 | Hand and Money Join the Map | `GU-C21-hear-haath` -> `GU-C21-haath` -> `GU-C21-hear-paisa` -> `GU-W21-ai-matra` -> `GU-C21-paisa` -> `GU-R21-travel-five` -> `GU-C21-travel-five` |
 | 151-157 | 26 | City, School, and Road | `GU-C22-hear-shahar` -> `GU-C22-shahar` -> `GU-C22-hear-shaalaa` -> `GU-C22-shaalaa` -> `GU-C22-hear-rasto` -> `GU-C22-rasto` -> `GU-C22-route-three` |
 | 158-165 | 27 | Village and Shop Complete Ten | `GU-C23-hear-gaam` -> `GU-R23-route-three-r1` -> `GU-C23-gaam` -> `GU-C23-hear-dukaan` -> `GU-C23-dukaan` -> `GU-R23-map-ten` -> `GU-C23-map-ten` -> `GU-R23-shaalaa-rasto-r2` |
+| 166-179 | 28 | The Day and Its Times | `GU-C24-hear-savaar` -> `GU-C24-hear-bapor` -> `GU-C24-hear-saanj` -> `GU-C24-hear-raat` -> `GU-C24-day-parts-four` -> `GU-C24-raat` -> `GU-C24-hear-divas` -> `GU-C24-hear-mahino` -> `GU-C24-hear-aaj` -> `GU-C24-aaj` -> `GU-C24-hear-atyaare` -> `GU-C24-time-eight` -> `GU-R24-time-eight-r1` -> `GU-R24-map-ten-r3` |
 
 ## Current boundary
 
-The current book contains 27 chapters and 165 lessons. It teaches all 41
+The current book contains 28 chapters and 179 lessons. It teaches all 41
 Gujarati forms that the book shows, includes the complete pre-A1 writing-stage
 ladder, and carries the doorway and conversation material through measured
-distant retrieval. It has begun, but has not completed, the 300-headword
-pre-A1 vocabulary target. Later vocabulary, composition, timed mocks, rubrics,
-calibration, and book-only learner evidence remain explicit backlog rather than
-present-tense readiness claims.
+distant retrieval. Every native-script headword now carries a romanization, so
+no lesson asks the reader to decode a sign nobody taught. It has begun, but has
+not completed, the 300-headword pre-A1 vocabulary target, which now stands at
+52. Later vocabulary, composition, timed mocks, rubrics, calibration, and
+book-only learner evidence remain explicit backlog rather than present-tense
+readiness claims.

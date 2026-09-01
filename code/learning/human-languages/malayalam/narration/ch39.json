@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Tea, Coffee, Milk",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:acc57fe426087d5b",
+  "sourceHash": "fnv1a64:69ff1388b0351478",
   "lessons": [
     {
       "id": "ML-C39-chaaya",
@@ -423,6 +423,177 @@
             {
               "kind": "speech",
               "text": "Ask for milk, politely. (Dayavāyi oru pāl.) Does Tamil's word for milk match Malayalam's? (Yes — exactly, pāl both.) What does Kannada's hālu show? (The regular p-to-h law.) Which earlier liquid word broke from Tamil entirely, unlike this one? (വെള്ളം, water.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-S132-letter-ga",
+      "sequence": 925,
+      "title": "ഗ (ga) — one character, met inside words you already say",
+      "headword": "ഗ",
+      "romanization": "ga",
+      "gloss": "the single character ഗ — recognised inside words you already say",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:4580e12f1121a981",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ഗ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ഗ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ൺ — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only — and it has been sitting in front of you on pages you have already read."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ഗ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഗ — ga."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant carrying its own a — the voiced partner of ക ka. Put your fingers on your throat and say ka, then ga: the second one hums."
+            },
+            {
+              "kind": "speech",
+              "text": "This one is different from the seven before it: no word you have met so far is written with it. It is being put into your hand early, so that the day a word like anugrahaṁ (a blessing) arrives, the shape is already familiar and only the meaning is new."
+            },
+            {
+              "kind": "speech",
+              "text": "Two shapes stand close to it, and both are ones you can already read:"
+            },
+            {
+              "kind": "speech",
+              "text": "ക ka — the very first letter of this book's script ladder; ഗ (ga) is what it sounds like with the voice switched on."
+            },
+            {
+              "kind": "speech",
+              "text": "ങ്ങ — the humming pair inside നിങ്ങൾ niṅṅaḷ, a different letter and a different sound."
+            },
+            {
+              "kind": "speech",
+              "text": "Say ka, ga twice over, then look at the two shapes again."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ഗ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ഗ (ga) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find ഗ (ga) in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find ഗ in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "ക, ഗ (ga), നിങ്ങൾ."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ഗ three times, saying ga as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ഗ three times, saying *ga* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ഗ (ga) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ഗ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ഗ? What sound does it carry? (ga.) Which of ക and ഗ hums in the throat?"
             }
           ]
         }

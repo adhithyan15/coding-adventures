@@ -6,6 +6,7 @@ sequence: 200
 chapter: 9
 type: phrase
 headword: તમે કેમ છો?
+romanization: "tame kem chho?"
 gloss: how are you? (respectful)
 concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [GU-C03-kem, GU-C02-tu-tame, GU-C02-chhe, GU-W02-dha]

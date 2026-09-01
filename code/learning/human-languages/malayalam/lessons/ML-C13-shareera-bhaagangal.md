@@ -7,6 +7,7 @@ chapter: 13
 type: word
 headword: തല കൈ
 gloss: head and hand — matching Tamil's native pair almost exactly
+romanization: "thala kai"
 concept_tag: ML-BODY-BASIC
 prerequisites: [ML-C12-kudumbam]
 sounds: [malayalam-vowel-sign-ai]

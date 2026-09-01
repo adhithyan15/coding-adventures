@@ -1,0 +1,7 @@
+{
+  "language": "marathi",
+  "chapter": 22,
+  "output": "marathi/book/chapters/ch22-request-verbs.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mr"
+}

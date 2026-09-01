@@ -1,0 +1,17 @@
+{
+  "id": "MR-EXT-029-PASSING-VERBS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can ask someone to tell me their name, quote what I said, say that I am learning Marathi, and ask whether a thing is to be had -- carrying the telling verb by ear because its letter is still owed to me.",
+  "prerequisites": [
+    "MR-EXT-028-WELLBEING-VERBS"
+  ],
+  "lessons": [
+    "MR-C24-sangne",
+    "MR-C24-mhanne",
+    "MR-C24-shikne",
+    "MR-C24-milne",
+    "MR-R24-passing-verbs"
+  ]
+}

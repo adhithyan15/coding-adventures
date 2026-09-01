@@ -61,6 +61,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Build-tool language source-input registry
 
+- Replaced the Swift build tool's hand-maintained source/metadata allowlists
+  with an immutable generated projection of the full neutral registry. Swift
+  now enforces every package-local selector role and scope, exact Engram paths,
+  unknown-language rejection, language/root binding, portable identity
+  validation, pre-sort candidate limits, canonical registry-digest evidence,
+  and finite source bounds through the same production matcher consumed by four
+  neutral cases.
+  Retained-handle reads now stop at the snapshotted byte count and reject an
+  additional probe byte, closing concurrent POSIX growth before allocation.
+  Repository-relative boundary adoption remains explicitly separate and
+  pending rather than being approximated with broader package authority.
 - Registered the exact Engram WASM BUILD inputs for that package root only: the
   smoke script, its imported host module, and the checked-in WebAssembly bytes.
   Added a language-neutral exact-path fixture and tracked Git-blob projection

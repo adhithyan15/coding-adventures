@@ -1,0 +1,28 @@
+{
+  "chapter": 19,
+  "title": "Both Bodies of a Vowel",
+  "label": "ch:bn-both-bodies-of-a-vowel",
+  "canDo": "I can read six more Bengali words I already say — চা, পরিবার, জল, নীল, ভাই and এক — and say which of a vowel's two forms to write, and why, from whether there is a consonant in front of it.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "BN-W04-ek-read",
+    "kind": "reading",
+    "summary": "One is read as a vowel that opens a word with no consonant to carry it, which finally makes visible the claim the numbers chapter could only assert; then all six of the chapter's words are read back with nothing new introduced.",
+    "assesses": [
+      "BN-SCRIPT-CHA-01",
+      "BN-SCRIPT-CHAA-READ-01",
+      "BN-SCRIPT-PA-01",
+      "BN-SCRIPT-PORIBAR-READ-01",
+      "BN-SCRIPT-JA-01",
+      "BN-SCRIPT-JOL-READ-01",
+      "BN-SCRIPT-II-MATRA-01",
+      "BN-SCRIPT-NIL-READ-01",
+      "BN-SCRIPT-I-INDEP-01",
+      "BN-SCRIPT-BHAI-READ-01",
+      "BN-SCRIPT-E-INDEP-01",
+      "BN-SCRIPT-EK-READ-01"
+    ]
+  }
+}

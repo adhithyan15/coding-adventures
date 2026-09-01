@@ -1,0 +1,8 @@
+[package]
+name = "diagram-layout-packet"
+version = "0.1.0"
+edition = "2021"
+description = "Deterministic backend-neutral layout for Mermaid packet diagrams"
+
+[dependencies]
+diagram-ir = { path = "../diagram-ir" }

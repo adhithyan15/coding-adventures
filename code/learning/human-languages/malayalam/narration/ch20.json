@@ -4,14 +4,14 @@
   "chapter": 20,
   "title": "Numbers 11–20 and Weather",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b5aeec7a2cb4b3db",
+  "sourceHash": "fnv1a64:e071347c6d895bfd",
   "lessons": [
     {
       "id": "ML-C20-pathinonnu-irupathu",
       "sequence": 490,
       "title": "പതിനൊന്ന്, ഇരുപത് — transparent \"two-tens,\" matching Tamil closely",
       "headword": "പതിനൊന്ന് — ഇരുപത്",
-      "romanization": "",
+      "romanization": "pathinonnŭ — irupathŭ",
       "gloss": "11-20 — additive \"ten-echo\" compounds for the teens, then irupathu (20), transparently \"two-tens\" — iru (\"two\") + pathu (\"ten\"), matching Tamil closely",
       "script": "malayalam",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e118e921dd579c5",
+      "sourceHash": "fnv1a64:2df7905253cc1e9c",
       "notice": null,
       "blocks": [
         {

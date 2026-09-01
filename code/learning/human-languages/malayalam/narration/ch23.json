@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Day",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a314701877510adb",
+  "sourceHash": "fnv1a64:ade1bd41b380ab86",
   "lessons": [
     {
       "id": "ML-C23-divasam",
@@ -114,9 +114,9 @@
     {
       "id": "ML-C23-naal",
       "sequence": 540,
-      "title": "നാൾ — the native day-word that narrowed its job",
+      "title": "നാൾ (nāḷ) — the native day-word that narrowed its job",
       "headword": "നാൾ",
-      "romanization": "",
+      "romanization": "nāḷ",
       "gloss": "the native day-word, narrowed into narrative use and living compounds rather than erased",
       "script": "malayalam",
       "modality": "voice",
@@ -124,7 +124,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c52f31160d246a7e",
+      "sourceHash": "fnv1a64:3ae8898062297b90",
       "notice": null,
       "blocks": [
         {

@@ -4,14 +4,14 @@
   "chapter": 8,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f308b01bcd78b1e6",
+  "sourceHash": "fnv1a64:dce228abd1da8fbc",
   "lessons": [
     {
       "id": "MR-C05-bolne",
       "sequence": 165,
       "title": "बोलणे (bolṇe) — \"to speak\"",
       "headword": "बोलणे",
-      "romanization": "",
+      "romanization": "bolṇe",
       "gloss": "to speak (bolṇe)",
       "script": "devanagari",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8137d55585765fb5",
+      "sourceHash": "fnv1a64:500a2ac6b70bac51",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -152,7 +152,7 @@
       "sequence": 170,
       "title": "मी मराठी बोलतो (mī marāṭhī bolto) — \"I speak Marathi\"",
       "headword": "मी मराठी बोलतो",
-      "romanization": "",
+      "romanization": "mī marāṭhī bolto",
       "gloss": "I speak Marathi (gendered)",
       "script": "devanagari",
       "modality": "voice",
@@ -160,7 +160,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3cf66530d8e3f343",
+      "sourceHash": "fnv1a64:21fc752615af4207",
       "notice": null,
       "blocks": [
         {
@@ -272,7 +272,7 @@
       "sequence": 175,
       "title": "राहणे (rāhṇe) — \"to live, to stay\"",
       "headword": "राहणे",
-      "romanization": "",
+      "romanization": "rāhṇe",
       "gloss": "to live, to stay (rāhṇe)",
       "script": "devanagari",
       "modality": "sight",
@@ -281,7 +281,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:89c8d32a453db833",
+      "sourceHash": "fnv1a64:4df2cf5f3c0d1019",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -399,7 +399,7 @@
       "sequence": 180,
       "title": "काम करणे (kām karṇe) — \"to work\"",
       "headword": "काम करणे",
-      "romanization": "",
+      "romanization": "kām karṇe",
       "gloss": "to work (kām karṇe)",
       "script": "devanagari",
       "modality": "sight",
@@ -407,7 +407,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:efc2a0d808a8c7f1",
+      "sourceHash": "fnv1a64:fce552c4f34ae76b",
       "notice": {
         "modality": "sight",
         "needs": [

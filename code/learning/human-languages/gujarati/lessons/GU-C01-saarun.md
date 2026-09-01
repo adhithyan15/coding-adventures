@@ -6,7 +6,8 @@ sequence: 50
 chapter: 2
 type: word
 headword: સારું
-gloss: good, okay, fine (sārũ)
+romanization: "sārũ"
+gloss: good, okay, fine
 concept_tag: RESPONSE-OKAY
 prerequisites: [GU-C01-namaste]
 sounds: [long-aa, u-nasal]
@@ -55,14 +56,17 @@ English uses "alright."
 ## Grammar Lens: three genders, on the adjective
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C01-NAMASTE-01, GU-CONCEPT-C01-SAARUN-01] -->
 
-Look at that ending **-ું** (*-ũ*). Gujarati, like Marathi, keeps **three**
+Listen to that ending, *-ũ*. Gujarati, like Marathi, keeps **three**
 genders from Sanskrit — masculine, feminine, **and neuter** — where Hindi and
-Punjabi kept only two. An adjective agrees with its noun in all three:
+Punjabi kept only two. An adjective agrees with its noun in all three, and the
+ending is what changes:
 
-- **સારો** (*sāro*) — masculine
-- **સારી** (*sārī*) — feminine
-- **સારું** (*sārũ*) — **neuter**
+- *sāro* — masculine
+- *sārī* — feminine
+- *sārũ* — **neuter**
 
+Three endings by ear only, for now: the signs that write *-o* and *-ī* arrive in
+the next chapter, and the three spellings come back once you can read them.
 Standing alone as "okay," it takes the neuter *sārũ*. You will meet this
 three-way agreement on every adjective and possessive.
 

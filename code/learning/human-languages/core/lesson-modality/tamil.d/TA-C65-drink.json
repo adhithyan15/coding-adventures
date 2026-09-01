@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C65-drink",
+    "language": "tamil",
+    "chapter": 65,
+    "sequence": 2460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e2ee4013d8a5ce2"
+  },
+  "findings": []
+}

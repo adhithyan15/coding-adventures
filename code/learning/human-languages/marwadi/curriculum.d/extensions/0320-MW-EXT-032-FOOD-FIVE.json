@@ -1,0 +1,20 @@
+{
+  "id": "MW-EXT-032-FOOD-FIVE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can add flatbread and hard wheat rolls to a five-word food map in four separately scored skills after learning only ट.",
+  "prerequisites": [
+    "MW-EXT-031-FOOD-THREE"
+  ],
+  "lessons": [
+    "MW-C19-hear-roti",
+    "MW-W19-tta",
+    "MW-C19-roti",
+    "MW-C19-hear-baati",
+    "MW-C19-baati",
+    "MW-R19-food-new-two",
+    "MW-C19-food-five",
+    "MW-R19-script-close"
+  ]
+}

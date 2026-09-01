@@ -5,6 +5,7 @@ chapter: 3
 type: word
 headword: ഞാൻ
 gloss: I
+romanization: "ñān"
 concept_tag: PRONOUN-I
 prerequisites: [ML-C02-enre]
 sounds: [nya-initial, long-aa]

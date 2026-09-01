@@ -1,8 +1,8 @@
 Sanskrit, chapter 19: Counting On --- Six to Ten, and What They Prove.
-6 lessons. All 6 can be done entirely by ear.
+7 lessons. You can do the first 6 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 6.
+Lesson 1 of 7.
 षट् (ṣaṭ) — six.
 
 Warm-up.
@@ -31,7 +31,7 @@ Wrap-up Recall.
 What are the Latin and English cousins of षट् (ṣaṭ)? (Sex and six.) Why are numbers good evidence of relatedness? (They are rarely borrowed.)
 
 
-Lesson 2 of 6.
+Lesson 2 of 7.
 सप्त (sapta) — seven.
 
 Warm-up.
@@ -60,7 +60,7 @@ Wrap-up Recall.
 Which consonants survive across all four forms? (S, p, t.) Is Sanskrit the ancestor of Latin and English? (No — a cousin; the parent was never written down.)
 
 
-Lesson 3 of 6.
+Lesson 3 of 7.
 अष्ट (aṣṭa) — eight.
 
 Warm-up.
@@ -89,7 +89,7 @@ Wrap-up Recall.
 Which English word is अष्ट (aṣṭa) related to, and what is its silent -gh-? (Eight — the ghost of a pronounced consonant.) Is the "two fours" reading established? (No — a hypothesis.)
 
 
-Lesson 4 of 6.
+Lesson 4 of 7.
 नवन् (navan) — nine.
 
 Warm-up.
@@ -119,7 +119,7 @@ Wrap-up Recall.
 What is the difference between नव and नवन् (navan)? (New, and nine.) Are they the same word? (No — two ancient words that drifted into similar shapes.)
 
 
-Lesson 5 of 6.
+Lesson 5 of 7.
 दश (daśa) — ten.
 
 Warm-up.
@@ -148,7 +148,7 @@ Wrap-up Recall.
 Which English words carry Latin decem? (Decimal, decade, December.) Why is December's name wrong? (It was the tenth month before the calendar changed.)
 
 
-Lesson 6 of 6.
+Lesson 6 of 7.
 सङ्ख्याशब्दाः (saṅkhyā-śabdāḥ) — the numbers, and what they prove.
 
 Warm-up.
@@ -176,3 +176,48 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What makes the correspondences evidence rather than coincidence? (They are regular.) What do they show? (Common inheritance from an older language.)
+
+
+Lesson 7 of 7.
+ज (ja) — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ज and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one: ख — what does it do?
+[pause 2 seconds]
+One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: ज.
+ज — ja.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not j, it is ja.
+What it is made of:
+an open left hook curling clockwise around the lower bowl and continuing through the middle bar.
+a top-to-bottom right stem.
+the top shirorekhā.
+You already say these, and every one of them has ज (ja) somewhere inside it:
+जानाति jānāti — he, she, or it knows.
+ज्ञान jñāna — knowledge.
+The root behind jānāti is written ज्ञ — ज (ja) and ञ joined — and it is said jña in some regions and gya in others. The letter is steady even where the sound is not.
+
+Writing: ज.
+1. start at the open upper-left tip, sweep down and clockwise around the lower bowl, then rise through the inner shoulder and continue right along the middle bar to the right-stem junction without lifting.
+2. lift and draw the right stem top-to-bottom.
+3. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 2. The pen comes up 2 times and no more.
+Verified three-stroke teaching form fitted to the bundled printed outline.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-ज (ja)-order.gif’, strokes 1–3, Wikimedia Commons, 10 May 2009.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these words, and find ज (ja) in the ones that have it]
+[pause 8 seconds for the answer]
+जानाति, खादति.
+[once you have stopped driving — trace: ज three times, saying ja as you finish each one]
+[your turn — look: back at any page of this chapter and find ज (ja) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — ज? What sound does it carry? (ja.) Name one word you already say that contains it.

@@ -1,0 +1,22 @@
+{
+  "language": "marwadi",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:a4fe922724533127",
+  "lessonIds": [
+    "MW-C19-hear-roti",
+    "MW-W19-tta",
+    "MW-C19-roti",
+    "MW-C19-hear-baati",
+    "MW-C19-baati",
+    "MW-R19-food-new-two",
+    "MW-C19-food-five",
+    "MW-R19-script-close"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 1,
+  "text": "marwadi/narration/ch24.txt",
+  "json": "marwadi/narration/ch24.json",
+  "textHash": "fnv1a64:702e21ff2e27a1be",
+  "jsonHash": "fnv1a64:10f0c36c140cf930",
+  "findings": []
+}

@@ -4,14 +4,14 @@
   "chapter": 16,
   "title": "The Traditional Months",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c783b6c08a409aef",
+  "sourceHash": "fnv1a64:deaefbb11818dc4b",
   "lessons": [
     {
       "id": "ML-C16-kollavarsham-maasangal",
       "sequence": 440,
       "title": "ചിങ്ങം to കർക്കടകം — Kerala's own solar calendar, named by the zodiac",
       "headword": "ചിങ്ങം കന്നി തുലാം വൃശ്ചികം ധനു മകരം കുംഭം മീനം മേടം ഇടവം മിഥുനം കർക്കടകം",
-      "romanization": "",
+      "romanization": "ciṅṅaṁ kanni tulāṁ vṛścikaṁ dhanu makaraṁ kuṁbhaṁ mīnaṁ mēṭaṁ iṭavaṁ mithunaṁ karkkaṭakaṁ",
       "gloss": "the twelve months of the Malayalam (Kollam Era) solar calendar — also solar, like Tamil's, but named for ZODIAC SIGNS rather than nakshatras",
       "script": "malayalam",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:15853d09bdad6b8a",
+      "sourceHash": "fnv1a64:09a17f02406eb19f",
       "notice": null,
       "blocks": [
         {
