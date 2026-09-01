@@ -1788,12 +1788,14 @@ impl WasmModule {
 /// representing all types as trees in tied form and canonicalising them
 /// bottom-up in linear time upfront").
 ///
-/// This slice (W34 first slice) only ever constructs a `CanonicalGroup`
-/// with exactly one member -- `members.len() == 1` always holds for every
-/// value this slice produces -- since only `rec_group_size == 1` groups are
-/// in scope; a future slice's real multi-member De Bruijn numbering will
-/// populate `members` with more than one [`CanonicalSubtype`] without this
-/// type itself needing to change shape.
+/// The W34 first slice only ever constructed a `CanonicalGroup` with
+/// exactly one member (`rec_group_size == 1` groups only). The W34 second
+/// slice lifted that restriction with real multi-member De Bruijn
+/// numbering -- `members` now holds one [`CanonicalSubtype`] per real
+/// `rec`-group member, in declaration order, without this type itself
+/// needing to change shape at all: this mirrors `interpreter/valid/
+/// valid.ml`'s `check_rec_type`, which builds every member of a group
+/// together in one call.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct CanonicalGroup {
     pub members: Vec<CanonicalSubtype>,
@@ -1807,11 +1809,13 @@ pub struct CanonicalGroup {
 pub struct CanonicalSubtype {
     pub is_final: bool,
     /// The declared `sub $parent` supertype, tied the same way the body
-    /// is: [`CanonicalHeapRef::Rec`] for an (extremely unusual, and
-    /// rejected elsewhere by `wasm-validator`'s own acyclicity check
-    /// before this ever runs) in-group self-supertype, [`CanonicalHeapRef::
-    /// Outer`] for a reference to an earlier, already-canonicalized group.
-    /// `None` for no declared supertype.
+    /// is: [`CanonicalHeapRef::Rec`] for a reference to ANY member of the
+    /// SAME group being tied (not just this member itself -- a supertype
+    /// naming an earlier sibling within a multi-member group is ordinary
+    /// and, unlike a literal self-supertype, not rejected by anything
+    /// upstream), [`CanonicalHeapRef::Outer`] for a reference to an
+    /// earlier, already-canonicalized group. `None` for no declared
+    /// supertype.
     pub supertype: Option<CanonicalHeapRef>,
     pub comp: CanonicalCompType,
 }
@@ -1906,17 +1910,20 @@ pub enum AbstractHeapKind {
 pub enum CanonicalHeapRef {
     Abstract(AbstractHeapKind),
     /// A reference within the SAME group being tied (MVP.md's "rolling"/
-    /// "tying" -- `interpreter/syntax/types.ml`'s `roll_rec_type`). This
-    /// slice only ever produces `Rec(0)`, the only value a singleton group
-    /// can exercise; a future multi-member slice's own numbering will
-    /// produce every `0..N-1`.
+    /// "tying" -- `interpreter/syntax/types.ml`'s `roll_rec_type`): `i` is
+    /// the target member's own position within the group (`0` for a
+    /// singleton's self-reference; `0..N-1` for any member of a real
+    /// `N`-member group, per the W34 second slice's group-relative
+    /// numbering -- `roll_rec_type`'s own `Int32.sub x' x`, group-start-
+    /// relative, not the module's absolute type-section index).
     Rec(u32),
     /// A reference to an EARLIER group, embedded wholesale (already fully
     /// tied/closed when it was computed -- `match.ml`'s `subst_of`: "embed
     /// that earlier group's already-rolled `def_type` value wholesale, one
     /// level, and stops"), plus this reference's own position within that
-    /// group (always `0` for anything this slice produces, since every
-    /// group this slice can even SEE is itself a singleton).
+    /// group (the referenced member's position within its OWN group --
+    /// `0` for a reference to a singleton group, `0..N-1` for a reference
+    /// into a real `N`-member earlier group).
     ///
     /// `Rc`, not the design sketch's `Box` -- `Rc` (not an owned clone) is
     /// the right choice at every embed site, not just the top-level
@@ -1985,152 +1992,270 @@ fn total_type_count(module: &WasmModule) -> usize {
     }
 }
 
-/// Resolves a single reference (by flat type-section index) into a
-/// [`CanonicalHeapRef`], given the OWN index of the type doing the
-/// referencing (`self_idx`) and every EARLIER index's already-computed
-/// canonical form (`canonical_so_far`, indexed the same way the final
-/// result of [`canonicalize_types`] is).
+/// Bookkeeping threaded alongside every value [`resolve_heap_index`] and
+/// friends build, so [`canonicalize_types`] can reject a tree before it
+/// becomes dangerous to the compiler-derived `Drop`/`PartialEq`/`Hash`
+/// traversals `CanonicalGroup` and friends need for correctness
+/// (structural, not pointer, comparison is the whole point of canonical
+/// equivalence). Two DIFFERENT costs, because they bound two DIFFERENT
+/// resources:
 ///
-/// - `target_idx == self_idx` -- a self-reference, the only in-group
-///   reference a singleton group can express -- ties to `Rec(0)`.
-/// - Otherwise, `canonical_so_far[target_idx]` must already hold a computed
-///   `Some((group, position))` (guaranteed for any in-range, EARLIER
-///   singleton group, since [`canonicalize_types`] processes flat indices
-///   in strictly increasing order and a validated module's own `sub`/`rec`
-///   forward-reference rule -- already enforced by `wasm-wast-parser`/
-///   `wasm-validator` before this ever runs -- means a type can only
-///   reference an index in `[0, self_idx]`) -- embeds that group wholesale
-///   via [`CanonicalHeapRef::Outer`].
-/// - Anything else (out of range, or a reference into a `rec_group_size >
-///   1` group this slice does not canonicalize) returns `None` -- this
-///   type's own canonical form is therefore ALSO `None` (see
-///   [`canonicalize_types`]'s use of `?`), never a wrong or partial value:
-///   a caller sees "not yet canonicalized," never a silently-incomplete
-///   tree. This is also this function's whole answer to "what if a
-///   caller hands in indices that don't actually satisfy the ordering
-///   invariant" (an unvalidated, hand-built `WasmModule`, say, with a
-///   forward or out-of-bounds reference): there is no recursion here at
-///   all -- only a single array index into ALREADY-COMPUTED entries -- so
-///   a malformed index can only ever produce `None` (an honest "can't
-///   canonicalize this"), never a panic, an infinite loop, or a stack
-///   overflow.
-///
-/// **Security review finding (W34 first slice)**: constructing the tree is
-/// not the only place depth matters. `CanonicalHeapRef::Outer` embeds an
-/// EARLIER group's `Rc<CanonicalGroup>` wholesale (shared, never deep-
-/// cloned -- see that variant's own doc comment), so a module containing a
-/// long CHAIN of singleton groups, each referencing the immediately
-/// preceding one (`type[i] = func(param (ref i-1))`, no cycle at all,
-/// just many links), builds a genuinely nested value tree `N` links deep.
-/// The compiler-derived `Drop`/`PartialEq`/`Hash` implementations
-/// `CanonicalGroup` and friends need for correctness (structural, not
-/// pointer, comparison is the whole point of canonical equivalence) all
-/// walk that nesting RECURSIVELY -- a security review of this slice
-/// empirically confirmed a real process-aborting stack overflow when
-/// dropping such a chain (reliably by ~50,000 links, comfortably reachable
-/// from a small, realistic module). Returning `None` once `depth` would
-/// exceed [`MAX_CANONICAL_OUTER_DEPTH`] -- checked HERE, the one place new
-/// depth is ever introduced -- bounds all three derived traversals at
-/// their common root cause, with a huge safety margin below the depth
-/// that was shown to matter (this crate's own real corpus never nests
-/// more than a handful of groups deep in the first place).
-fn resolve_heap_index(target_idx: u32, self_idx: u32, canonical_so_far: &[Option<(Rc<CanonicalGroup>, u32)>], depths: &[u32]) -> Option<(CanonicalHeapRef, u32)> {
-    if target_idx == self_idx {
-        return Some((CanonicalHeapRef::Rec(0), 0));
-    }
-    let (group, position) = canonical_so_far.get(target_idx as usize)?.as_ref()?;
-    let depth = depths.get(target_idx as usize).copied().unwrap_or(0) + 1;
-    if depth > MAX_CANONICAL_OUTER_DEPTH {
-        return None;
-    }
-    Some((CanonicalHeapRef::Outer(Rc::clone(group), *position), depth))
+/// - `depth`: how many `Outer`-embedding hops deep the LONGEST single
+///   reference chain reaches. Bounds STACK depth -- a long chain of
+///   singleton (or now, W34 second slice, multi-member) groups, each
+///   referencing only the one immediately before it, makes those derived
+///   traversals recurse `depth` frames deep (see [`MAX_CANONICAL_OUTER_
+///   DEPTH`]'s own doc comment for the W34 first slice's empirical
+///   stack-overflow finding this closed).
+/// - `weight`: how many nodes a FULLY-UNSHARED expansion of this tree
+///   would contain. Bounds TOTAL WORK -- a reference chain that also
+///   BRANCHES (several sibling positions, or several members of the same
+///   `rec` group, all embedding the same earlier group) MULTIPLIES,
+///   rather than adds, the node count a full structural comparison must
+///   visit at each level, even though `Rc` sharing keeps actual memory
+///   linear (see [`MAX_CANONICAL_TREE_WEIGHT`]'s own doc comment for a
+///   worked numeric example -- `depth` alone cannot catch this, because
+///   branching leaves the LONGEST single chain short even as the total
+///   node count a naive recursive comparison visits explodes).
+#[derive(Debug, Clone, Copy)]
+struct CanonicalCost {
+    depth: u32,
+    weight: u64,
 }
 
-/// The hop cap [`resolve_heap_index`] enforces -- see that function's own
-/// doc comment for the `Drop`/`PartialEq`/`Hash` stack-overflow finding
-/// this bounds, and this crate's own pre-existing [`MAX_SUBTYPE_CHAIN_HOPS`]
+impl CanonicalCost {
+    /// The cost of a single leaf node that embeds nothing further -- a
+    /// scalar `ValueType`, an `I8`/`I16` storage type, or a `Rec` marker
+    /// (which never embeds another group, unlike `Outer`).
+    const LEAF: CanonicalCost = CanonicalCost { depth: 0, weight: 1 };
+    /// The cost of "nothing yet" -- the starting accumulator for a sum
+    /// over a member's params/results/fields, or a `None`-placeholder
+    /// slot's cost (never actually read in that case, since a `None`
+    /// entry's cost can never be looked up by [`resolve_heap_index`]
+    /// without that lookup itself already having failed first).
+    const ZERO: CanonicalCost = CanonicalCost { depth: 0, weight: 0 };
+
+    /// Whether this cost is still within both caps -- checked as soon as
+    /// possible after every partial sum, not only once at the very end, so
+    /// a pathological module is rejected before its (never fully built)
+    /// tree could grow any larger.
+    fn within_caps(self) -> bool {
+        self.depth <= MAX_CANONICAL_OUTER_DEPTH && self.weight <= MAX_CANONICAL_TREE_WEIGHT
+    }
+
+    /// Combines the cost of two SIBLING pieces of one member's own body
+    /// (two params, two fields, a supertype reference alongside the body,
+    /// ...): `depth` is the max of the two (a stack only ever recurses
+    /// down ONE of them at a time), `weight` is their SUM (a full
+    /// structural comparison visits BOTH, so their total node counts add
+    /// -- and, transitively, MULTIPLY across levels when the same
+    /// weight-heavy group is referenced from more than one sibling
+    /// position, which is exactly the blowup this cost exists to catch).
+    /// `saturating_add`, not `+`, purely as defense in depth: every input
+    /// is already capped at [`MAX_CANONICAL_TREE_WEIGHT`] before it can be
+    /// combined into anything else, so an actual overflow is not
+    /// reachable even from an implausible module, but a saturating sum
+    /// can never panic regardless.
+    fn combine_sum(self, other: CanonicalCost) -> CanonicalCost {
+        CanonicalCost { depth: self.depth.max(other.depth), weight: self.weight.saturating_add(other.weight) }
+    }
+}
+
+/// Resolves a single reference (by flat type-section index) into a
+/// [`CanonicalHeapRef`], given the group currently being tied (`[group_
+/// start, group_end)`, a half-open range of flat indices -- `group_end -
+/// group_start` is that group's own member count, `1` for a singleton)
+/// and every EARLIER group's already-computed canonical form
+/// (`canonical_so_far`, indexed the same way the final result of
+/// [`canonicalize_types`] is).
+///
+/// - `group_start <= target_idx < group_end` -- a reference to ANY member
+///   of the SAME group being tied (W34 second slice's real De Bruijn
+///   numbering, `interpreter/syntax/types.ml`'s `roll_rec_type`: `Int32.
+///   sub x' x`, group-start-relative) -- ties to `Rec(target_idx -
+///   group_start)`. This subsumes the W34 first slice's singleton
+///   self-reference case exactly (`group_start == target_idx ==
+///   group_end - 1` reduces to `Rec(0)`).
+/// - `target_idx < group_start` -- a reference to an EARLIER, already-
+///   canonicalized group. `canonical_so_far[target_idx]` must already
+///   hold a computed `Some((group, position))` (guaranteed for any
+///   in-range, earlier group, since [`canonicalize_types`] processes
+///   groups in strictly increasing flat-index order and a validated
+///   module's own `sub`/`rec` forward-reference rule -- already enforced
+///   by `wasm-wast-parser`/`wasm-validator` before this ever runs -- means
+///   a type can only reference an index `< group_end`) -- embeds that
+///   group wholesale via [`CanonicalHeapRef::Outer`], provided doing so
+///   would not push `depth` past [`MAX_CANONICAL_OUTER_DEPTH`] or
+///   `weight` past [`MAX_CANONICAL_TREE_WEIGHT`] (see [`CanonicalCost`]'s
+///   own doc comment for what each bounds).
+/// - `target_idx >= group_end` -- a forward reference, either into this
+///   group's own not-yet-fully-declared tail (impossible for a
+///   syntactically real `rec` group, whose members are exactly `[group_
+///   start, group_end)`, but not impossible for a hand-built, unvalidated
+///   `WasmModule`) or into a later group entirely -- never valid (WASM's
+///   own ordering rule) -- returns `None`.
+/// - Anything else (out of range entirely, or a reference into an earlier
+///   group that itself failed to canonicalize) also returns `None` -- this
+///   type's own canonical form is therefore ALSO `None` (see
+///   [`canonicalize_types`]'s use of this), never a wrong or partial
+///   value: a caller sees "not yet canonicalized," never a silently-
+///   incomplete tree. This is also this function's whole answer to "what
+///   if a caller hands in indices that don't actually satisfy the
+///   ordering invariant" (an unvalidated, hand-built `WasmModule`, say,
+///   with a forward or out-of-bounds reference): there is no recursion
+///   here at all -- only a single array index into ALREADY-COMPUTED
+///   entries -- so a malformed index can only ever produce `None` (an
+///   honest "can't canonicalize this"), never a panic, an infinite loop,
+///   or a stack overflow.
+fn resolve_heap_index(
+    target_idx: u32,
+    group_start: u32,
+    group_end: u32,
+    canonical_so_far: &[Option<(Rc<CanonicalGroup>, u32)>],
+    costs: &[CanonicalCost],
+) -> Option<(CanonicalHeapRef, CanonicalCost)> {
+    if target_idx >= group_start && target_idx < group_end {
+        return Some((CanonicalHeapRef::Rec(target_idx - group_start), CanonicalCost::LEAF));
+    }
+    if target_idx >= group_end {
+        return None;
+    }
+    let (group, position) = canonical_so_far.get(target_idx as usize)?.as_ref()?;
+    let target_cost = costs.get(target_idx as usize).copied().unwrap_or(CanonicalCost::LEAF);
+    let cost = CanonicalCost { depth: target_cost.depth + 1, weight: target_cost.weight.saturating_add(1) };
+    if !cost.within_caps() {
+        return None;
+    }
+    Some((CanonicalHeapRef::Outer(Rc::clone(group), *position), cost))
+}
+
+/// The hop cap [`resolve_heap_index`] enforces on `depth` -- see
+/// [`CanonicalCost`]'s own doc comment for the STACK-depth concern this
+/// bounds (distinct from [`MAX_CANONICAL_TREE_WEIGHT`]'s total-work
+/// concern), and this crate's own pre-existing [`MAX_SUBTYPE_CHAIN_HOPS`]
 /// for the established "1,000 hops is this codebase's own accepted safe
 /// magnitude for a chain-shaped bound" precedent this mirrors.
 const MAX_CANONICAL_OUTER_DEPTH: u32 = 1_000;
 
+/// The total-node-count cap [`resolve_heap_index`] enforces on `weight` --
+/// see [`CanonicalCost`]'s own doc comment for the branching-multiplication
+/// finding this defends against (W34 second slice: real multi-member `rec`
+/// groups make it far more natural for one group to reference an earlier
+/// one from SEVERAL sibling positions at once than the first slice's
+/// singleton-only groups ever could). A chain of `L` groups, each
+/// referencing the one immediately before it from exactly TWO sibling
+/// positions (e.g. `type[i] = func(param (ref i-1) (ref i-1))`), has
+/// `depth == L` (bounded fine by [`MAX_CANONICAL_OUTER_DEPTH`]'s 1,000-hop
+/// cap) but `weight` DOUBLING at every level -- `2^L`, which exceeds even
+/// a generous cap by `L` in the low tens, long before `depth`'s own cap
+/// would ever engage. `1_000_000` is generous relative to anything this
+/// crate's own real corpus needs (every vendored `rec` group is a handful
+/// of members referencing a handful of earlier groups) while still small
+/// enough that even a maximally adversarial doubling chain cannot reach
+/// more than ~20 levels before hitting it, keeping a worst-case rejected
+/// canonicalization itself cheap to detect.
+const MAX_CANONICAL_TREE_WEIGHT: u64 = 1_000_000;
+
 /// Ties one [`ValueType`] -- the full, exhaustive per-variant mapping this
 /// slice's `CanonicalValType`/`CanonicalHeapRef`/`AbstractHeapKind` design
 /// exists for. `None` propagates a [`resolve_heap_index`] failure (an
-/// unresolvable concrete reference, or the depth cap) up to the caller
-/// unchanged. Returns the tied value alongside the max `Outer`-embedding
-/// depth reached anywhere inside it (`0` for every scalar/abstract variant
-/// and for `Rec`, since neither embeds another group).
-fn canonicalize_value_type(vt: ValueType, self_idx: u32, canonical_so_far: &[Option<(Rc<CanonicalGroup>, u32)>], depths: &[u32]) -> Option<(CanonicalValType, u32)> {
+/// unresolvable concrete reference, or either cap) up to the caller
+/// unchanged. Returns the tied value alongside its own [`CanonicalCost`]
+/// (`CanonicalCost::LEAF` for every scalar/abstract variant and for
+/// `Rec`, since neither embeds another group).
+fn canonicalize_value_type(
+    vt: ValueType,
+    group_start: u32,
+    group_end: u32,
+    canonical_so_far: &[Option<(Rc<CanonicalGroup>, u32)>],
+    costs: &[CanonicalCost],
+) -> Option<(CanonicalValType, CanonicalCost)> {
     use AbstractHeapKind as A;
     use CanonicalHeapRef::Abstract;
-    let resolve = |i: u32| resolve_heap_index(i, self_idx, canonical_so_far, depths);
+    let resolve = |i: u32| resolve_heap_index(i, group_start, group_end, canonical_so_far, costs);
     Some(match vt {
-        ValueType::I32 => (CanonicalValType::I32, 0),
-        ValueType::I64 => (CanonicalValType::I64, 0),
-        ValueType::F32 => (CanonicalValType::F32, 0),
-        ValueType::F64 => (CanonicalValType::F64, 0),
-        ValueType::V128 => (CanonicalValType::V128, 0),
-        ValueType::Anyref => (CanonicalValType::Ref(true, Abstract(A::Any)), 0),
+        ValueType::I32 => (CanonicalValType::I32, CanonicalCost::LEAF),
+        ValueType::I64 => (CanonicalValType::I64, CanonicalCost::LEAF),
+        ValueType::F32 => (CanonicalValType::F32, CanonicalCost::LEAF),
+        ValueType::F64 => (CanonicalValType::F64, CanonicalCost::LEAF),
+        ValueType::V128 => (CanonicalValType::V128, CanonicalCost::LEAF),
+        ValueType::Anyref => (CanonicalValType::Ref(true, Abstract(A::Any)), CanonicalCost::LEAF),
         // Non-null in this crate -- see `ValueType::I31ref`'s own doc
         // comment ("(ref i31)", not "(ref null i31)").
-        ValueType::I31ref => (CanonicalValType::Ref(false, Abstract(A::I31)), 0),
-        ValueType::Funcref => (CanonicalValType::Ref(true, Abstract(A::Func)), 0),
-        ValueType::Externref => (CanonicalValType::Ref(true, Abstract(A::Extern)), 0),
-        ValueType::Exnref => (CanonicalValType::Ref(true, Abstract(A::Exn)), 0),
-        ValueType::NullFuncref => (CanonicalValType::Ref(true, Abstract(A::NoFunc)), 0),
-        ValueType::NullExternref => (CanonicalValType::Ref(true, Abstract(A::NoExtern)), 0),
-        ValueType::NullExnref => (CanonicalValType::Ref(true, Abstract(A::NoExn)), 0),
-        ValueType::NullRef => (CanonicalValType::Ref(true, Abstract(A::None)), 0),
-        ValueType::NonNullArrayAny => (CanonicalValType::Ref(false, Abstract(A::Array)), 0),
+        ValueType::I31ref => (CanonicalValType::Ref(false, Abstract(A::I31)), CanonicalCost::LEAF),
+        ValueType::Funcref => (CanonicalValType::Ref(true, Abstract(A::Func)), CanonicalCost::LEAF),
+        ValueType::Externref => (CanonicalValType::Ref(true, Abstract(A::Extern)), CanonicalCost::LEAF),
+        ValueType::Exnref => (CanonicalValType::Ref(true, Abstract(A::Exn)), CanonicalCost::LEAF),
+        ValueType::NullFuncref => (CanonicalValType::Ref(true, Abstract(A::NoFunc)), CanonicalCost::LEAF),
+        ValueType::NullExternref => (CanonicalValType::Ref(true, Abstract(A::NoExtern)), CanonicalCost::LEAF),
+        ValueType::NullExnref => (CanonicalValType::Ref(true, Abstract(A::NoExn)), CanonicalCost::LEAF),
+        ValueType::NullRef => (CanonicalValType::Ref(true, Abstract(A::None)), CanonicalCost::LEAF),
+        ValueType::NonNullArrayAny => (CanonicalValType::Ref(false, Abstract(A::Array)), CanonicalCost::LEAF),
         ValueType::StructRef(i) => {
-            let (r, d) = resolve(i)?;
-            (CanonicalValType::Ref(true, r), d)
+            let (r, c) = resolve(i)?;
+            (CanonicalValType::Ref(true, r), c)
         }
         ValueType::ConcreteFuncRef(i) => {
-            let (r, d) = resolve(i)?;
-            (CanonicalValType::Ref(true, r), d)
+            let (r, c) = resolve(i)?;
+            (CanonicalValType::Ref(true, r), c)
         }
         ValueType::ArrayRef(i) => {
-            let (r, d) = resolve(i)?;
-            (CanonicalValType::Ref(true, r), d)
+            let (r, c) = resolve(i)?;
+            (CanonicalValType::Ref(true, r), c)
         }
         ValueType::NonNullStructRef(i) => {
-            let (r, d) = resolve(i)?;
-            (CanonicalValType::Ref(false, r), d)
+            let (r, c) = resolve(i)?;
+            (CanonicalValType::Ref(false, r), c)
         }
         ValueType::NonNullConcreteFuncRef(i) => {
-            let (r, d) = resolve(i)?;
-            (CanonicalValType::Ref(false, r), d)
+            let (r, c) = resolve(i)?;
+            (CanonicalValType::Ref(false, r), c)
         }
         ValueType::NonNullArrayRef(i) => {
-            let (r, d) = resolve(i)?;
-            (CanonicalValType::Ref(false, r), d)
+            let (r, c) = resolve(i)?;
+            (CanonicalValType::Ref(false, r), c)
         }
     })
 }
 
-fn canonicalize_field_type(f: FieldType, self_idx: u32, canonical_so_far: &[Option<(Rc<CanonicalGroup>, u32)>], depths: &[u32]) -> Option<(CanonicalFieldType, u32)> {
-    let (storage, depth) = match f.storage {
-        StorageType::I8 => (CanonicalStorageType::I8, 0),
-        StorageType::I16 => (CanonicalStorageType::I16, 0),
+fn canonicalize_field_type(
+    f: FieldType,
+    group_start: u32,
+    group_end: u32,
+    canonical_so_far: &[Option<(Rc<CanonicalGroup>, u32)>],
+    costs: &[CanonicalCost],
+) -> Option<(CanonicalFieldType, CanonicalCost)> {
+    let (storage, cost) = match f.storage {
+        StorageType::I8 => (CanonicalStorageType::I8, CanonicalCost::LEAF),
+        StorageType::I16 => (CanonicalStorageType::I16, CanonicalCost::LEAF),
         StorageType::Val(vt) => {
-            let (cvt, d) = canonicalize_value_type(vt, self_idx, canonical_so_far, depths)?;
-            (CanonicalStorageType::Val(cvt), d)
+            let (cvt, c) = canonicalize_value_type(vt, group_start, group_end, canonical_so_far, costs)?;
+            (CanonicalStorageType::Val(cvt), c)
         }
     };
-    Some((CanonicalFieldType { storage, mutable: f.mutable }, depth))
+    Some((CanonicalFieldType { storage, mutable: f.mutable }, cost))
 }
 
-fn canonicalize_comp_type(module: &WasmModule, idx: u32, canonical_so_far: &[Option<(Rc<CanonicalGroup>, u32)>], depths: &[u32]) -> Option<(CanonicalCompType, u32)> {
+fn canonicalize_comp_type(
+    module: &WasmModule,
+    idx: u32,
+    group_start: u32,
+    group_end: u32,
+    canonical_so_far: &[Option<(Rc<CanonicalGroup>, u32)>],
+    costs: &[CanonicalCost],
+) -> Option<(CanonicalCompType, CanonicalCost)> {
     match comp_type_at(module, idx)? {
         CompTypeRef::Func(ft) => {
-            let mut depth = 0u32;
+            let mut cost = CanonicalCost::ZERO;
             let params = ft
                 .params
                 .iter()
                 .map(|vt| {
-                    let (cvt, d) = canonicalize_value_type(*vt, idx, canonical_so_far, depths)?;
-                    depth = depth.max(d);
+                    let (cvt, c) = canonicalize_value_type(*vt, group_start, group_end, canonical_so_far, costs)?;
+                    cost = cost.combine_sum(c);
+                    if !cost.within_caps() {
+                        return None;
+                    }
                     Some(cvt)
                 })
                 .collect::<Option<Vec<_>>>()?;
@@ -2138,118 +2263,218 @@ fn canonicalize_comp_type(module: &WasmModule, idx: u32, canonical_so_far: &[Opt
                 .results
                 .iter()
                 .map(|vt| {
-                    let (cvt, d) = canonicalize_value_type(*vt, idx, canonical_so_far, depths)?;
-                    depth = depth.max(d);
+                    let (cvt, c) = canonicalize_value_type(*vt, group_start, group_end, canonical_so_far, costs)?;
+                    cost = cost.combine_sum(c);
+                    if !cost.within_caps() {
+                        return None;
+                    }
                     Some(cvt)
                 })
                 .collect::<Option<Vec<_>>>()?;
-            Some((CanonicalCompType::Func(params, results), depth))
+            Some((CanonicalCompType::Func(params, results), cost))
         }
         CompTypeRef::Struct(st) => {
-            let mut depth = 0u32;
+            let mut cost = CanonicalCost::ZERO;
             let fields = st
                 .fields
                 .iter()
                 .map(|f| {
-                    let (cf, d) = canonicalize_field_type(*f, idx, canonical_so_far, depths)?;
-                    depth = depth.max(d);
+                    let (cf, c) = canonicalize_field_type(*f, group_start, group_end, canonical_so_far, costs)?;
+                    cost = cost.combine_sum(c);
+                    if !cost.within_caps() {
+                        return None;
+                    }
                     Some(cf)
                 })
                 .collect::<Option<Vec<_>>>()?;
-            Some((CanonicalCompType::Struct(fields), depth))
+            Some((CanonicalCompType::Struct(fields), cost))
         }
         CompTypeRef::Array(at) => {
-            let (field, depth) = canonicalize_field_type(at.element, idx, canonical_so_far, depths)?;
-            Some((CanonicalCompType::Array(field), depth))
+            let (field, cost) = canonicalize_field_type(at.element, group_start, group_end, canonical_so_far, costs)?;
+            Some((CanonicalCompType::Array(field), cost))
         }
     }
 }
 
-/// Builds the one-member [`CanonicalGroup`] for the singleton group
-/// starting (and ending) at flat type-section index `idx`, or `None` if any
-/// reference inside it can't yet be resolved (see [`resolve_heap_index`]'s
-/// own doc comment for the ways that happens, including the depth cap).
-/// Returns the group alongside its own max `Outer`-embedding depth, for
-/// [`canonicalize_types`] to record in its parallel `depths` table.
-fn build_singleton_canonical(module: &WasmModule, idx: u32, canonical_so_far: &[Option<(Rc<CanonicalGroup>, u32)>], depths: &[u32]) -> Option<(CanonicalGroup, u32)> {
-    let ts = module.type_subtyping_at(idx);
-    let mut depth = 0u32;
+/// Builds the [`CanonicalSubtype`] for ONE member of the group currently
+/// being tied (`member_idx`, somewhere in `[group_start, group_end)`), or
+/// `None` if any reference inside it can't yet be resolved or either cost
+/// cap would be exceeded (see [`resolve_heap_index`]'s own doc comment).
+/// Returns the subtype alongside its own [`CanonicalCost`], for
+/// [`canonicalize_types`] to fold into the whole GROUP's own cost (a full
+/// structural traversal of the group visits every member, so the group's
+/// total cost is the SUM of its members' costs, not just one of them).
+///
+/// This is the one function the W34 second slice's real multi-member
+/// numbering actually needed to change the SHAPE of, versus the first
+/// slice's `build_singleton_canonical`: it now takes the group's `(group_
+/// start, group_end)` bounds as an explicit parameter (rather than
+/// assuming `group_end == group_start + 1`), and is called once per
+/// member of a real `rec` group, not once per (always-singleton) group.
+/// Every other helper it calls (`resolve_heap_index`, `canonicalize_
+/// value_type`, `canonicalize_field_type`, `canonicalize_comp_type`) is
+/// reused UNCHANGED in shape from the first slice, per that slice's own
+/// addendum note that only the numbering itself, not these helpers,
+/// needed to grow group-awareness.
+fn build_member_canonical(
+    module: &WasmModule,
+    member_idx: u32,
+    group_start: u32,
+    group_end: u32,
+    canonical_so_far: &[Option<(Rc<CanonicalGroup>, u32)>],
+    costs: &[CanonicalCost],
+) -> Option<(CanonicalSubtype, CanonicalCost)> {
+    let ts = module.type_subtyping_at(member_idx);
+    let mut cost = CanonicalCost::ZERO;
     let supertype = match ts.supertype {
         Some(sup_idx) => {
-            let (r, d) = resolve_heap_index(sup_idx, idx, canonical_so_far, depths)?;
-            depth = depth.max(d);
+            let (r, c) = resolve_heap_index(sup_idx, group_start, group_end, canonical_so_far, costs)?;
+            cost = cost.combine_sum(c);
+            if !cost.within_caps() {
+                return None;
+            }
             Some(r)
         }
         None => None,
     };
-    let (comp, comp_depth) = canonicalize_comp_type(module, idx, canonical_so_far, depths)?;
-    depth = depth.max(comp_depth);
-    Some((CanonicalGroup { members: vec![CanonicalSubtype { is_final: ts.is_final, supertype, comp }] }, depth))
+    let (comp, comp_cost) = canonicalize_comp_type(module, member_idx, group_start, group_end, canonical_so_far, costs)?;
+    cost = cost.combine_sum(comp_cost);
+    if !cost.within_caps() {
+        return None;
+    }
+    Some((CanonicalSubtype { is_final: ts.is_final, supertype, comp }, cost))
 }
 
-/// Computes this module's own canonical type-group forms -- W34 first
-/// slice: singleton (`rec_group_size == 1`) groups only. One entry per flat
-/// type-section index (`total_type_count` long); `None` at any index that
-/// belongs to a `rec_group_size > 1` group (multi-member De Bruijn
-/// numbering is a later slice's job -- see the spec's own "Recommended
-/// slice decomposition"), or whose body/supertype couldn't be resolved
-/// (see [`resolve_heap_index`]).
+/// Whether the `rec` group claimed to start at flat index `group_start`
+/// (with member count `size`, read from `group_start`'s own [`TypeSubtyping`])
+/// is internally CONSISTENT -- every one of its `size` claimed members
+/// actually exists in range and agrees with the group's own claimed shape
+/// (`rec_group_size == size`, `rec_group_position` matching its own offset
+/// from `group_start`). This is the defensive check a hand-built,
+/// never-validated `WasmModule` needs (a real, `wasm-wast-parser`-produced
+/// module's own `rec`-group metadata is always internally consistent by
+/// construction, but [`canonicalize_types`] must never assume that): a
+/// module claiming an inconsistent shape is simply unresolvable at
+/// `group_start`, not a license to guess.
+fn group_bounds_are_consistent(module: &WasmModule, group_start: u32, size: u32, total: usize) -> bool {
+    size >= 1
+        && (group_start as u64).saturating_add(size as u64) <= total as u64
+        && (0..size).all(|offset| {
+            let member = module.type_subtyping_at(group_start + offset);
+            member.rec_group_size == size && member.rec_group_position == offset
+        })
+}
+
+/// Computes this module's own canonical type-group forms. One entry per
+/// flat type-section index (`total_type_count` long); `None` at any index
+/// whose own group's metadata is internally inconsistent (see
+/// [`group_bounds_are_consistent`]), or whose body/supertype (or ANY
+/// sibling member's, in a real multi-member group -- see below) couldn't
+/// be resolved (see [`resolve_heap_index`]).
 ///
-/// Processes flat indices in strictly increasing order, and -- critically
+/// Processes GROUPS (a contiguous range of flat indices sharing one
+/// `rec_group_size`/`rec_group_position` shape -- a size-1 range for a
+/// singleton) in strictly increasing flat-index order, and -- critically
 /// for both correctness and termination -- NEVER recurses into an earlier
-/// group's own computation while computing a later one: each singleton's
+/// group's own computation while computing a later one: each group's
 /// canonical form is built by looking up already-finished entries in
 /// `out` (the reference interpreter's own incremental, group-ordered
 /// design -- `interpreter/valid/valid.ml`'s `check_rec_type`, called once
-/// per group with the running context so far). A self-reference inside the
-/// group being built ties to `Rec(0)` (checked BEFORE the "look up an
-/// earlier entry" path, so it never even attempts to index `out` at its
-/// own not-yet-pushed position). There is therefore no recursive descent
-/// of any kind in this function or anything it calls -- no cyclic or
-/// self-referential type structure can make this loop, panic, or overflow
-/// the stack, regardless of whether the module was ever validated (see
-/// [`resolve_heap_index`]'s own doc comment for the full argument).
+/// per group with the running context so far). A reference to ANY member
+/// of the group currently being built (not just to `member_idx` itself)
+/// ties to `Rec(i)` (checked BEFORE the "look up an earlier entry" path in
+/// `resolve_heap_index`, so it never even attempts to index `out` at a
+/// position within the group not-yet-pushed). There is therefore no
+/// recursive descent of any kind in this function or anything it calls --
+/// no cyclic or self/group-referential type structure can make this loop,
+/// panic, or overflow the stack, regardless of whether the module was
+/// ever validated (see [`resolve_heap_index`]'s own doc comment for the
+/// full argument).
+///
+/// A real `rec` group's `Rc<CanonicalGroup>` is built ONCE, containing
+/// EVERY member's [`CanonicalSubtype`] together (the group is a single
+/// tied unit, per MVP.md's own `tie($t) = tie_$t(<ctxtype>)`), and shared
+/// via `Rc::clone` across every one of that group's `size` flat indices --
+/// only the `u32` position half of each index's `(Rc<CanonicalGroup>,
+/// u32)` entry differs between sibling members. If ANY member of a group
+/// fails to canonicalize (an unresolvable reference, or either
+/// [`CanonicalCost`] cap), the WHOLE group's every member becomes `None`
+/// -- never a partial group with some members present and others missing,
+/// which would let a later `Outer` embed of that "group" silently omit
+/// the failed member's own tied form.
 ///
 /// The natural, non-disruptive caching point for this is `wasm-validator`'s
 /// `ValidatedModule` (see that crate's own `validate()`, called right after
 /// `check_type_subtyping_is_acyclic` succeeds -- canonicalization's
 /// termination argument above already assumes references only ever point
-/// at an earlier-or-same index, exactly what that acyclicity/ordering
+/// at an earlier-or-same group, exactly what that acyclicity/ordering
 /// check establishes) -- NOT a field on `WasmModule` itself, so an
 /// unvalidated module can never carry a stale or attacker-supplied
 /// `canonical_types` value.
 pub fn canonicalize_types(module: &WasmModule) -> Vec<Option<(Rc<CanonicalGroup>, u32)>> {
     let n = total_type_count(module);
     let mut out: Vec<Option<(Rc<CanonicalGroup>, u32)>> = Vec::with_capacity(n);
-    // Parallel to `out`: `depths[idx]` is `out[idx]`'s own max `Outer`-
-    // embedding depth (`0` for a leaf group referencing no earlier one, or
-    // for a `None` entry -- never read in that case, since `resolve_heap_
-    // index` already rejects an unresolvable target before it would
-    // consult this table). See `resolve_heap_index`'s own doc comment for
-    // why this bound exists (a real, security-review-confirmed stack-
-    // overflow finding in the derived `Drop`/`PartialEq`/`Hash` traversals
-    // a long, unbounded `Outer` chain would otherwise require).
-    let mut depths: Vec<u32> = Vec::with_capacity(n);
-    for idx in 0..n as u32 {
-        let ts = module.type_subtyping_at(idx);
-        if ts.rec_group_size != 1 || ts.rec_group_position != 0 {
-            // Not a singleton group (or malformed metadata claiming to be
-            // one while disagreeing about its own position) -- out of
-            // scope for this slice, or simply unrepresentable.
+    // Parallel to `out`: `costs[idx]` is `out[idx]`'s own group's total
+    // `CanonicalCost` (the SAME value repeated for every member index of
+    // one group -- an `Outer` reference to ANY member embeds the WHOLE
+    // group, so the relevant cost for a later reference is the group's
+    // total, not one member's own share of it). Never read for a `None`
+    // entry, since `resolve_heap_index` already rejects an unresolvable
+    // target before it would consult this table. See `CanonicalCost`'s
+    // own doc comment for why both dimensions of this bound exist (real,
+    // security-review-confirmed findings in the derived `Drop`/
+    // `PartialEq`/`Hash` traversals an unbounded tree would otherwise
+    // let through).
+    let mut costs: Vec<CanonicalCost> = Vec::with_capacity(n);
+    let mut idx: u32 = 0;
+    while (idx as usize) < n {
+        let group_start = idx;
+        let size = module.type_subtyping_at(group_start).rec_group_size;
+        let is_group_start = module.type_subtyping_at(group_start).rec_group_position == 0;
+        if !is_group_start || !group_bounds_are_consistent(module, group_start, size, n) {
+            // Metadata that doesn't hold together as a real group starting
+            // HERE -- unresolvable, and NOT safe to skip past: advance by
+            // exactly one flat index so a malformed module can never
+            // cause this loop to misalign with real group boundaries an
+            // EARLIER, already-pushed entry might still depend on.
             out.push(None);
-            depths.push(0);
+            costs.push(CanonicalCost::ZERO);
+            idx += 1;
             continue;
         }
-        match build_singleton_canonical(module, idx, &out, &depths) {
-            Some((group, depth)) => {
-                out.push(Some((Rc::new(group), 0u32)));
-                depths.push(depth);
-            }
-            None => {
-                out.push(None);
-                depths.push(0);
+        let group_end = group_start + size;
+        let mut members = Vec::with_capacity(size as usize);
+        let mut group_cost = CanonicalCost::ZERO;
+        let mut all_members_ok = true;
+        for member_idx in group_start..group_end {
+            match build_member_canonical(module, member_idx, group_start, group_end, &out, &costs) {
+                Some((subtype, cost)) => {
+                    group_cost = group_cost.combine_sum(cost);
+                    members.push(subtype);
+                    if !group_cost.within_caps() {
+                        all_members_ok = false;
+                        break;
+                    }
+                }
+                None => {
+                    all_members_ok = false;
+                    break;
+                }
             }
         }
+        if all_members_ok {
+            let group_rc = Rc::new(CanonicalGroup { members });
+            for position in 0..size {
+                out.push(Some((Rc::clone(&group_rc), position)));
+                costs.push(group_cost);
+            }
+        } else {
+            for _ in 0..size {
+                out.push(None);
+                costs.push(CanonicalCost::ZERO);
+            }
+        }
+        idx = group_end;
     }
     out
 }
@@ -3426,20 +3651,312 @@ mod tests {
         assert_eq!(canonical_a[1], canonical_b[6]); // s1 == s1
     }
 
-    /// Multi-member `rec` groups are explicitly OUT OF SCOPE for this
-    /// slice (deferred to a later one) -- every member of a
-    /// `rec_group_size > 1` group must canonicalize to `None`, never a
-    /// wrong/partial value.
+    // ────────────────────────────────────────────────────────────────────
+    // W34 second slice: real multi-member `rec`-group De Bruijn numbering
+    // ────────────────────────────────────────────────────────────────────
+
+    /// Builds the `TypeSubtyping` entries for a `size`-member group, with
+    /// the given per-member `(supertype, is_final)` pairs (`supertype`
+    /// indices are ABSOLUTE flat indices, same convention as everywhere
+    /// else in this crate -- the group's own start doesn't matter here,
+    /// only each member's `rec_group_position` relative to it).
+    fn group_subtyping(size: u32, members: &[(Option<u32>, bool)]) -> Vec<TypeSubtyping> {
+        assert_eq!(members.len(), size as usize);
+        (0..size)
+            .map(|off| {
+                let (supertype, is_final) = members[off as usize];
+                TypeSubtyping { supertype, is_final, rec_group_size: size, rec_group_position: off }
+            })
+            .collect()
+    }
+
+    /// A previously-unresolvable case: a genuine `rec_group_size > 1`
+    /// group now DOES canonicalize -- `type-rec.wast`'s own 2-member
+    /// mutual pair (lines 15-18): `(rec (type $h (func (param (ref $k))))
+    /// (type $k (func (result (ref $h)))))`. `$h` (flat index 0) references
+    /// `$k` (flat index 1, the OTHER end of the SAME group) -- group-
+    /// relative, so `Rec(1)`, not the module-absolute `1`; `$k` references
+    /// `$h` (flat index 0, this group's own start) -- `Rec(0)`.
     #[test]
-    fn multi_member_rec_groups_are_not_canonicalized_by_this_slice() {
+    fn two_member_mutual_group_ties_with_group_relative_rec_numbering() {
         let m = WasmModule {
             types: vec![
-                FuncType { params: vec![], results: vec![] },
-                FuncType { params: vec![], results: vec![] },
+                FuncType { params: vec![ValueType::ConcreteFuncRef(1)], results: vec![] }, // $h
+                FuncType { params: vec![], results: vec![ValueType::ConcreteFuncRef(0)] }, // $k
             ],
+            type_subtyping: group_subtyping(2, &[(None, true), (None, true)]),
+            ..Default::default()
+        };
+        let canonical = canonicalize_types(&m);
+        let (h_group, h_pos) = canonical[0].as_ref().expect("$h must canonicalize");
+        let (k_group, k_pos) = canonical[1].as_ref().expect("$k must canonicalize");
+        // Both flat indices share the SAME underlying group (the whole
+        // point of `Outer`/position-pair identity -- a `rec` group is one
+        // tied unit, not two independent ones).
+        assert!(Rc::ptr_eq(h_group, k_group));
+        assert_eq!(*h_pos, 0);
+        assert_eq!(*k_pos, 1);
+        assert_eq!(
+            h_group.members,
+            vec![
+                CanonicalSubtype { is_final: true, supertype: None, comp: CanonicalCompType::Func(vec![CanonicalValType::Ref(true, CanonicalHeapRef::Rec(1))], vec![]) },
+                CanonicalSubtype { is_final: true, supertype: None, comp: CanonicalCompType::Func(vec![], vec![CanonicalValType::Ref(true, CanonicalHeapRef::Rec(0))]) },
+            ]
+        );
+    }
+
+    /// Two SEPARATELY-declared multi-member groups, at completely
+    /// different flat indices in two different modules, with the SAME
+    /// shape and the SAME internal reference wiring, must canonicalize to
+    /// byte-identical forms -- cross-module comparability (MVP.md's "no
+    /// shared numbering needed" promise), now proven for a real
+    /// multi-member group rather than just a singleton.
+    #[test]
+    fn two_independently_indexed_isomorphic_multi_member_groups_canonicalize_identically() {
+        fn build(offset: u32) -> WasmModule {
+            let padding = FuncType { params: vec![], results: vec![] };
+            let mut types = vec![padding; offset as usize];
+            types.push(FuncType { params: vec![ValueType::ConcreteFuncRef(offset + 1)], results: vec![] });
+            types.push(FuncType { params: vec![], results: vec![ValueType::ConcreteFuncRef(offset)] });
+            let mut type_subtyping = vec![TypeSubtyping::default(); offset as usize];
+            type_subtyping.extend(group_subtyping(2, &[(None, true), (None, true)]));
+            WasmModule { types, type_subtyping, ..Default::default() }
+        }
+        let module_a = build(0);
+        let module_b = build(4);
+        let canonical_a = canonicalize_types(&module_a);
+        let canonical_b = canonicalize_types(&module_b);
+        assert_eq!(canonical_a[0], canonical_b[4]);
+        assert_eq!(canonical_a[1], canonical_b[5]);
+    }
+
+    /// Two multi-member groups with the SAME member count (2) but a
+    /// DIFFERENT internal reference pattern must NOT canonicalize equal --
+    /// this is the actual point of group-relative numbering, not just
+    /// "same shape, ignore the wiring." Group A is the alternating 2-cycle
+    /// above (`$h` -> `$k`, `$k` -> `$h`); group B has BOTH members
+    /// reference the SAME sibling (`$p` -> `$p` itself, `$q` -> `$p`) --
+    /// same member count, same total reference count, genuinely different
+    /// wiring.
+    #[test]
+    fn same_member_count_but_different_wiring_does_not_canonicalize_equal() {
+        let alternating = WasmModule {
+            types: vec![
+                FuncType { params: vec![ValueType::ConcreteFuncRef(1)], results: vec![] },
+                FuncType { params: vec![ValueType::ConcreteFuncRef(0)], results: vec![] },
+            ],
+            type_subtyping: group_subtyping(2, &[(None, true), (None, true)]),
+            ..Default::default()
+        };
+        let both_point_at_first = WasmModule {
+            types: vec![
+                FuncType { params: vec![ValueType::ConcreteFuncRef(0)], results: vec![] }, // $p -> $p (Rec(0))
+                FuncType { params: vec![ValueType::ConcreteFuncRef(0)], results: vec![] }, // $q -> $p (Rec(0))
+            ],
+            type_subtyping: group_subtyping(2, &[(None, true), (None, true)]),
+            ..Default::default()
+        };
+        let canonical_alt = canonicalize_types(&alternating);
+        let canonical_both = canonicalize_types(&both_point_at_first);
+        assert_ne!(canonical_alt[0], canonical_both[0]);
+        assert_ne!(canonical_alt[1], canonical_both[1]);
+        // Sanity: the two members WITHIN `both_point_at_first` also differ
+        // from each other (`$p` self-references, `$q` doesn't) -- confirms
+        // the mismatch isn't an artifact of comparing the wrong indices.
+        assert_ne!(canonical_both[0], canonical_both[1]);
+    }
+
+    /// Composition: a group referencing an EARLIER multi-member group
+    /// (`Outer`) whose OWN internal numbering is multi-member `Rec`. A
+    /// singleton `$caller` (flat index 2) references `$h` (flat index 0,
+    /// position 0 of the earlier 2-member `$h`/`$k` group) -- must tie to
+    /// `Outer(<the $h/$k group>, 0)`, embedding the WHOLE 2-member group,
+    /// not just a copy of `$h` alone.
+    #[test]
+    fn a_later_type_referencing_an_earlier_multi_member_group_composes_outer_with_multi_rec() {
+        let m = WasmModule {
+            types: vec![
+                FuncType { params: vec![ValueType::ConcreteFuncRef(1)], results: vec![] }, // $h -> $k
+                FuncType { params: vec![], results: vec![ValueType::ConcreteFuncRef(0)] }, // $k -> $h
+                FuncType { params: vec![ValueType::ConcreteFuncRef(0)], results: vec![] }, // $caller -> $h
+            ],
+            type_subtyping: {
+                let mut ts = group_subtyping(2, &[(None, true), (None, true)]);
+                ts.push(TypeSubtyping::default());
+                ts
+            },
+            ..Default::default()
+        };
+        let canonical = canonicalize_types(&m);
+        let (hk_group, _) = canonical[0].as_ref().unwrap();
+        let (caller_group, caller_pos) = canonical[2].as_ref().expect("$caller must canonicalize");
+        assert_eq!(*caller_pos, 0);
+        assert_eq!(caller_group.members.len(), 1);
+        match &caller_group.members[0].comp {
+            CanonicalCompType::Func(params, _) => match &params[0] {
+                CanonicalValType::Ref(true, CanonicalHeapRef::Outer(embedded, pos)) => {
+                    assert_eq!(*pos, 0);
+                    // The embedded group is the WHOLE $h/$k group (2
+                    // members), byte-identical to it -- not a partial or
+                    // re-derived copy.
+                    assert_eq!(**embedded, **hk_group);
+                    assert_eq!(embedded.members.len(), 2);
+                }
+                other => panic!("expected an Outer(2-member group, 0) reference, got {other:?}"),
+            },
+            other => panic!("expected a Func comp type, got {other:?}"),
+        }
+    }
+
+    /// Composition the other direction: a LATER multi-member group whose
+    /// members mix an intra-group `Rec` reference with an `Outer`
+    /// reference into an EARLIER multi-member group, within the SAME
+    /// member. `$c` (flat index 2, group 2) references both `$b` (flat
+    /// index 1, group 1's second member -- `Outer(group1, 1)`) and `$c`
+    /// itself (flat index 2, in-group -- `Rec(0)`); `$d` (flat index 3) is
+    /// a plain, non-referencing sibling.
+    #[test]
+    fn a_later_multi_member_group_mixes_outer_and_rec_within_one_member() {
+        let m = WasmModule {
+            types: vec![
+                FuncType { params: vec![], results: vec![] },                                                    // $a (group1[0])
+                FuncType { params: vec![ValueType::ConcreteFuncRef(0)], results: vec![] },                        // $b (group1[1]) -> $a
+                FuncType { params: vec![ValueType::ConcreteFuncRef(1), ValueType::ConcreteFuncRef(2)], results: vec![] }, // $c (group2[0]) -> $b, $c
+                FuncType { params: vec![], results: vec![] },                                                    // $d (group2[1])
+            ],
+            type_subtyping: {
+                let mut ts = group_subtyping(2, &[(None, true), (None, true)]);
+                ts.extend(group_subtyping(2, &[(None, true), (None, true)]));
+                ts
+            },
+            ..Default::default()
+        };
+        let canonical = canonicalize_types(&m);
+        let (group1, _) = canonical[0].as_ref().unwrap();
+        let (group2, c_pos) = canonical[2].as_ref().expect("$c must canonicalize");
+        assert_eq!(*c_pos, 0);
+        match &group2.members[0].comp {
+            CanonicalCompType::Func(params, _) => {
+                match &params[0] {
+                    CanonicalValType::Ref(true, CanonicalHeapRef::Outer(embedded, 1)) => {
+                        assert_eq!(**embedded, **group1);
+                    }
+                    other => panic!("expected Outer(group1, 1), got {other:?}"),
+                }
+                match &params[1] {
+                    CanonicalValType::Ref(true, CanonicalHeapRef::Rec(0)) => {}
+                    other => panic!("expected Rec(0) (self-reference within group2), got {other:?}"),
+                }
+            }
+            other => panic!("expected a Func comp type, got {other:?}"),
+        }
+    }
+
+    /// The W33/W34 addenda's own worked "3-cycle" example
+    /// (`type-subtyping.wast` lines 68-87, re-verified fresh against the
+    /// vendored corpus file): a 3-member group where each member's body
+    /// references a DIFFERENT sibling (`$t1` -> `$t3`, `$t2` -> `$t2`
+    /// itself, `$t3` -> `$t1`), AND a declared `sub` chain threading
+    /// through the same group (`$t3 <: $t2 <: $t1`, `$t1` itself
+    /// declaring no supertype). Wiring this into `nominal_subtype_chain`'s
+    /// own termination check is slice 3's job (this slice does not touch
+    /// `is_assignable`/`nominal_subtype_chain` at all) -- what this test
+    /// confirms is that the canonical FORMS themselves, including the
+    /// supertype links, tie correctly for this exact corpus example.
+    #[test]
+    fn the_three_cycle_worked_example_canonicalizes_correctly() {
+        let m = WasmModule {
+            types: vec![
+                FuncType { params: vec![ValueType::I32, ValueType::ConcreteFuncRef(2)], results: vec![] }, // $t1 -> $t3
+                FuncType { params: vec![ValueType::I32, ValueType::ConcreteFuncRef(1)], results: vec![] }, // $t2 -> $t2
+                FuncType { params: vec![ValueType::I32, ValueType::ConcreteFuncRef(0)], results: vec![] }, // $t3 -> $t1
+            ],
+            type_subtyping: group_subtyping(3, &[(None, false), (Some(0), false), (Some(1), false)]),
+            ..Default::default()
+        };
+        let canonical = canonicalize_types(&m);
+        let (group, _) = canonical[0].as_ref().expect("the 3-cycle must canonicalize");
+        assert_eq!(group.members.len(), 3);
+        assert_eq!(
+            group.members,
+            vec![
+                CanonicalSubtype {
+                    is_final: false,
+                    supertype: None,
+                    comp: CanonicalCompType::Func(vec![CanonicalValType::I32, CanonicalValType::Ref(true, CanonicalHeapRef::Rec(2))], vec![]),
+                },
+                CanonicalSubtype {
+                    is_final: false,
+                    supertype: Some(CanonicalHeapRef::Rec(0)),
+                    comp: CanonicalCompType::Func(vec![CanonicalValType::I32, CanonicalValType::Ref(true, CanonicalHeapRef::Rec(1))], vec![]),
+                },
+                CanonicalSubtype {
+                    is_final: false,
+                    supertype: Some(CanonicalHeapRef::Rec(1)),
+                    comp: CanonicalCompType::Func(vec![CanonicalValType::I32, CanonicalValType::Ref(true, CanonicalHeapRef::Rec(0))], vec![]),
+                },
+            ]
+        );
+        // All three flat indices share the identical `Rc` allocation
+        // (one tied group, three positions into it).
+        assert_eq!(canonical[0].as_ref().unwrap().0, canonical[1].as_ref().unwrap().0);
+        assert_eq!(canonical[0].as_ref().unwrap().0, canonical[2].as_ref().unwrap().0);
+        assert_eq!(canonical[0].as_ref().unwrap().1, 0);
+        assert_eq!(canonical[1].as_ref().unwrap().1, 1);
+        assert_eq!(canonical[2].as_ref().unwrap().1, 2);
+    }
+
+    /// `type-canon.wast`'s own second module (5-member group, `$t0..$t4`,
+    /// several members referencing more than one sibling each) -- a real
+    /// corpus fixture, not a hand-simplified one, exercised as a smoke +
+    /// correctness test: it must canonicalize (not `None`), and two
+    /// members with genuinely different bodies must not collide.
+    #[test]
+    fn type_canon_wast_five_member_group_canonicalizes() {
+        // (rec
+        //   (type $t0 (func (param i32 (ref $t2) (ref $t3))))
+        //   (type $t1 (func (param i32 (ref $t0) i32 (ref $t4))))
+        //   (type $t2 (func (param i32 (ref $t2) (ref $t1))))
+        //   (type $t3 (func (param i32 (ref $t2) i32 (ref $t4))))
+        //   (type $t4 (func (param (ref $t0) (ref $t2))))
+        // )
+        use ValueType::{ConcreteFuncRef as R, I32};
+        let m = WasmModule {
+            types: vec![
+                FuncType { params: vec![I32, R(2), R(3)], results: vec![] },
+                FuncType { params: vec![I32, R(0), I32, R(4)], results: vec![] },
+                FuncType { params: vec![I32, R(2), R(1)], results: vec![] },
+                FuncType { params: vec![I32, R(2), I32, R(4)], results: vec![] },
+                FuncType { params: vec![R(0), R(2)], results: vec![] },
+            ],
+            type_subtyping: group_subtyping(5, &[(None, true); 5]),
+            ..Default::default()
+        };
+        let canonical = canonicalize_types(&m);
+        for (i, entry) in canonical.iter().enumerate() {
+            assert!(entry.is_some(), "member {i} of type-canon.wast's 5-member group must canonicalize");
+        }
+        // $t0 and $t2 have genuinely different bodies (different param
+        // counts/wiring) and must not collide.
+        assert_ne!(canonical[0], canonical[2]);
+    }
+
+    /// Defensive/security: a `rec_group_size > 1` claim that ISN'T
+    /// internally consistent (here, the two members disagree about the
+    /// group's own size) must canonicalize to `None` at every position it
+    /// touches, never panic, and never silently guess which member's
+    /// claim to believe. This replaces the W34 first slice's "multi-member
+    /// groups are always `None`" test, updated for the second slice's real
+    /// reality: a CONSISTENT multi-member group now canonicalizes fine
+    /// (see the tests above); only a genuinely malformed one still can't.
+    #[test]
+    fn inconsistent_multi_member_group_metadata_canonicalizes_to_none_without_panicking() {
+        let m = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }, FuncType { params: vec![], results: vec![] }],
             type_subtyping: vec![
                 TypeSubtyping { rec_group_size: 2, rec_group_position: 0, ..Default::default() },
-                TypeSubtyping { rec_group_size: 2, rec_group_position: 1, ..Default::default() },
+                // Disagrees with index 0's own claimed group size.
+                TypeSubtyping { rec_group_size: 3, rec_group_position: 1, ..Default::default() },
             ],
             ..Default::default()
         };
@@ -3447,12 +3964,11 @@ mod tests {
         assert_eq!(canonical, vec![None, None]);
     }
 
-    /// A singleton type referencing a MULTI-MEMBER group's member: that
-    /// reference can't be tied (the target's own canonical form doesn't
-    /// exist in this slice), so the REFERRING singleton also canonicalizes
-    /// to `None` -- never a tree with a dangling/wrong reference baked in.
+    /// A type referencing a genuinely-failed (inconsistent-metadata)
+    /// multi-member group can't tie either -- the failure propagates, it
+    /// never gets silently skipped over.
     #[test]
-    fn a_singleton_referencing_an_uncanonicalized_multi_member_group_is_also_none() {
+    fn a_type_referencing_an_inconsistent_multi_member_group_is_also_none() {
         let m = WasmModule {
             types: vec![
                 FuncType { params: vec![], results: vec![] },
@@ -3461,7 +3977,7 @@ mod tests {
             ],
             type_subtyping: vec![
                 TypeSubtyping { rec_group_size: 2, rec_group_position: 0, ..Default::default() },
-                TypeSubtyping { rec_group_size: 2, rec_group_position: 1, ..Default::default() },
+                TypeSubtyping { rec_group_size: 3, rec_group_position: 1, ..Default::default() },
                 TypeSubtyping::default(),
             ],
             ..Default::default()
@@ -3470,6 +3986,54 @@ mod tests {
         assert_eq!(canonical[0], None);
         assert_eq!(canonical[1], None);
         assert_eq!(canonical[2], None);
+    }
+
+    /// Security review concern distinct from stack depth (see
+    /// `CanonicalCost`'s own doc comment): a chain of groups where each
+    /// level references the one immediately before it from TWO sibling
+    /// positions at once doubles `weight` at every level, while `depth`
+    /// only grows by 1 -- so a naive bound on `depth` alone would let this
+    /// through even though a full structural `PartialEq`/`Hash`/`Drop`
+    /// traversal of the resulting (memory-cheap, thanks to `Rc` sharing)
+    /// tree would need to visit an EXPONENTIAL number of nodes. This test
+    /// builds such a chain far past where `2^level` would exceed
+    /// `MAX_CANONICAL_TREE_WEIGHT`, and confirms (a) early levels (still
+    /// within the weight budget) canonicalize normally, (b) levels past
+    /// the point where doubling exceeds the cap become `None` rather than
+    /// an ever-larger tree, and (c) this all completes fast and drops
+    /// cleanly -- if the weight cap regressed to "unbounded" (or to
+    /// tracking `depth` alone), this test would hang or take
+    /// astronomically long rather than fail quickly.
+    #[test]
+    fn outer_embedding_weight_is_capped_for_branching_reference_chains() {
+        // level 0: plain, no references (weight 1).
+        // level i (i >= 1): func(param (ref level[i-1]) (ref level[i-1])).
+        // weight(level[i]) ~ 2 * weight(level[i-1]) + O(1), so weight
+        // roughly doubles every level -- `MAX_CANONICAL_TREE_WEIGHT` is
+        // 1_000_000, comfortably exceeded well before level 25.
+        let levels = 40usize;
+        let mut types = Vec::with_capacity(levels);
+        types.push(FuncType { params: vec![], results: vec![] });
+        for i in 1..levels {
+            let prev = (i - 1) as u32;
+            types.push(FuncType { params: vec![ValueType::ConcreteFuncRef(prev), ValueType::ConcreteFuncRef(prev)], results: vec![] });
+        }
+        let type_subtyping = vec![TypeSubtyping::default(); levels];
+        let m = WasmModule { types, type_subtyping, ..Default::default() };
+
+        let canonical = canonicalize_types(&m); // must return promptly, not hang or blow up memory
+        assert_eq!(canonical.len(), levels);
+        // Early levels, well within the weight budget, still canonicalize.
+        assert!(canonical[0].is_some());
+        assert!(canonical[1].is_some());
+        assert!(canonical[5].is_some());
+        // By the last level, doubling 39 times from a base weight of 1
+        // (2^39, astronomically past 1_000_000) must have been rejected
+        // somewhere along the chain, so it and everything after the
+        // rejection point must be `None`.
+        assert!(canonical[levels - 1].is_none(), "a doubling reference chain must stop canonicalizing once total weight exceeds the cap, not keep branching forever");
+        // `canonical` (holding whatever `Rc<CanonicalGroup>` chain was
+        // built up to the rejection point) drops cleanly here.
     }
 
     /// Declared `sub`/finality metadata is part of a type's real canonical

@@ -2,6 +2,21 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.81] - 2026-09-01 (W34 second slice — real multi-member `rec`-group canonicalization)
+
+No code changes to this crate's own logic — `ValidatedModule::canonical_
+type_at`/`canonically_equivalent` and the `validate()` call site are
+byte-for-byte unchanged, since `wasm_types::canonicalize_types`'s public
+signature didn't change either. Bumped alongside `wasm-types` 0.1.19
+because its own dependency now correctly canonicalizes real multi-member
+`rec` groups (previously always `None`) — every existing caller through
+this crate's `ValidatedModule` picks that up automatically. Two new tests
+added exercising a real 2-member mutual `rec` group and a metadata-
+inconsistent one through the real `validate()` entry point (see
+`wasm-types`'s own CHANGELOG for the underlying algorithm change, and
+`code/specs/W34-wasm-gc-canonical-type-equivalence.md`'s addendum for the
+full accounting).
+
 ## [0.2.80] - 2026-09-01 (W34 first slice — canonical type-group equivalence caching)
 
 `ValidatedModule` gains a private `canonical_types` field, computed by
