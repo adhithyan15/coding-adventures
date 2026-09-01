@@ -2,6 +2,31 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.80] - 2026-08-31 (W33 first slice — GC nominal subtyping + rec groups)
+
+### Added
+
+- **`HostFunction::type_group_shape`**: a new DEFAULT trait method
+  returning `(1, 0)` (a singleton `rec` group) — part of `code/specs/
+  W33-wasm-gc-recursive-type-subtyping.md`'s "first slice" cross-module
+  import-compatibility guard. Being a default method, every existing
+  `HostFunction` implementor across this workspace (WASI shims, test
+  doubles, `wasm-conformance`'s `CrossModuleFunction`) keeps compiling
+  unchanged; only `CrossModuleFunction` overrides it (see that crate's
+  own changelog).
+- **`HostInterface::resolve_tag_group_shape`**: same shape, same
+  default-method backward-compatibility reasoning, for tag imports.
+
+Neither method is consulted by anything in THIS crate — they exist so
+`wasm-runtime`'s import-linking code (the actual consumer) can ask a host
+for a function/tag's `rec`-group identity without a required, breaking
+trait-method addition. See `wasm-runtime`'s own changelog for how they're
+used and why a conservative shape guard (rather than the real cross-module
+canonical type-group equivalence algorithm, `code/specs/
+W33-wasm-gc-recursive-type-subtyping.md`'s own explicitly out-of-scope
+item 3b) is enough to avoid a false accept without implementing that
+algorithm.
+
 ## [0.9.79] - 2026-08-31 (security review follow-up to W32 second slice)
 
 ### Fixed

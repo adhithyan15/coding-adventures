@@ -1329,6 +1329,24 @@ impl WasmRuntime {
                     if host_func.func_type() != &ft {
                         return Err(link_error("incompatible import type", imp));
                     }
+                    // W33 first slice: a plain `FuncType` shape match
+                    // alone isn't enough once `rec` groups exist -- two
+                    // structurally-identical members of a `rec` group at
+                    // DIFFERENT positions are DISTINCT types under the
+                    // real GC canonicalization algorithm (`code/specs/
+                    // W33-wasm-gc-recursive-type-subtyping.md`'s own
+                    // item (3b), which this crate does not implement).
+                    // This conservative guard ANDs a `(rec_group_size,
+                    // rec_group_position)` match onto the pre-existing
+                    // structural check -- see `tag.wast`'s own
+                    // `assert_unlinkable` case, which needs exactly this.
+                    // Safe for every PRE-EXISTING import (both sides
+                    // report the singleton-group default, always
+                    // trivially matching): can only ADD a rejection on
+                    // top of the check above, never remove one.
+                    if host_func.type_group_shape() != module.type_group_shape(*type_idx) {
+                        return Err(link_error("incompatible import type", imp));
+                    }
 
                     func_types.push(ft);
                     func_bodies.push(None);
@@ -1431,6 +1449,18 @@ impl WasmRuntime {
                         .and_then(|h| h.resolve_tag(&imp.module_name, &imp.name))
                         .ok_or_else(|| link_error("unknown import", imp))?;
                     if actual != expected {
+                        return Err(link_error("incompatible import type", imp));
+                    }
+                    // W33 first slice: same conservative `rec`-group
+                    // shape guard as the `Function` arm above, and for
+                    // the same reason -- `tag.wast`'s own
+                    // `assert_unlinkable` case is a TAG import using
+                    // exactly this shape (`(rec (type $t1 (func)) (type
+                    // $t2 (func)))`, importing under `$t2` when the
+                    // export was declared `$t1`).
+                    let importer_shape = module.type_group_shape(*type_idx);
+                    let exporter_shape = self.host.as_ref().map(|h| h.resolve_tag_group_shape(&imp.module_name, &imp.name)).unwrap_or((1, 0));
+                    if exporter_shape != importer_shape {
                         return Err(link_error("incompatible import type", imp));
                     }
                     tags.push(*type_idx);
@@ -2193,6 +2223,95 @@ mod tests {
         fn resolve_table(&self, _module_name: &str, _name: &str) -> Option<Table> {
             None
         }
+    }
+
+    // ── W33 first slice: cross-module `rec`-group shape guard ───────────────
+
+    /// A host function that reports a caller-chosen `(rec_group_size,
+    /// rec_group_position)` (W33 first slice) instead of the trait's own
+    /// `(1, 0)` default -- lets these tests simulate a `rec`-group member
+    /// without going through a real cross-module `CrossModuleFunction`.
+    struct GroupShapeHostFunction {
+        func_type: FuncType,
+        group_shape: (u32, u32),
+    }
+
+    impl HostFunction for GroupShapeHostFunction {
+        fn func_type(&self) -> &FuncType {
+            &self.func_type
+        }
+        fn call(&self, _args: &[WasmValue], _memory: Option<&mut LinearMemory>) -> Result<Vec<WasmValue>, TrapError> {
+            Ok(vec![])
+        }
+        fn type_group_shape(&self) -> (u32, u32) {
+            self.group_shape
+        }
+    }
+
+    struct GroupShapeHost {
+        group_shape: (u32, u32),
+    }
+
+    impl HostInterface for GroupShapeHost {
+        fn resolve_function(&self, module_name: &str, name: &str) -> Option<Box<dyn HostFunction>> {
+            if module_name == "env" && name == "f" {
+                Some(Box::new(GroupShapeHostFunction { func_type: FuncType { params: vec![], results: vec![] }, group_shape: self.group_shape }))
+            } else {
+                None
+            }
+        }
+        fn resolve_global(&self, _module_name: &str, _name: &str) -> Option<(GlobalType, WasmValue)> {
+            None
+        }
+        fn resolve_memory(&self, _module_name: &str, _name: &str) -> Option<LinearMemory> {
+            None
+        }
+        fn resolve_table(&self, _module_name: &str, _name: &str) -> Option<Table> {
+            None
+        }
+    }
+
+    /// A module importing "env"."f" as a function whose OWN declared type
+    /// (index 0) carries the given `(rec_group_size, rec_group_position)`.
+    fn module_importing_function_in_a_rec_group(group_shape: (u32, u32)) -> WasmModule {
+        WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }],
+            type_subtyping: vec![TypeSubtyping { rec_group_size: group_shape.0, rec_group_position: group_shape.1, ..Default::default() }],
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "f".to_string(),
+                kind: ExternalKind::Function,
+                type_info: ImportTypeInfo::Function(0),
+            }],
+            ..Default::default()
+        }
+    }
+
+    #[test]
+    fn rejects_a_function_import_whose_rec_group_position_mismatches() {
+        // `tag.wast`'s own `assert_unlinkable` shape, reduced to a
+        // function import: the module declares its type as position 0 of
+        // a 2-member group; the host reports position 1 of a
+        // structurally-identical group. A PLAIN `FuncType` shape
+        // comparison alone (both are `(func)`) would wrongly accept this
+        // -- the new `type_group_shape` guard must catch it.
+        let runtime = WasmRuntime::with_host(Box::new(GroupShapeHost { group_shape: (2, 1) }));
+        let module = module_importing_function_in_a_rec_group((2, 0));
+        let validated = runtime.validate(&module).unwrap();
+        let err = runtime.instantiate(&validated).err().unwrap();
+        assert!(err.to_string().contains("incompatible import type"), "{err}");
+    }
+
+    #[test]
+    fn accepts_a_function_import_whose_rec_group_shape_matches() {
+        // The positive counterpart: identical `(rec_group_size,
+        // rec_group_position)` on both sides links fine, same as every
+        // pre-W33 import (which implicitly used the singleton-group
+        // default `(1, 0)` on both sides).
+        let runtime = WasmRuntime::with_host(Box::new(GroupShapeHost { group_shape: (2, 0) }));
+        let module = module_importing_function_in_a_rec_group((2, 0));
+        let validated = runtime.validate(&module).unwrap();
+        assert!(runtime.instantiate(&validated).is_ok());
     }
 
     /// Build the raw WASM binary for a square(x) = x * x function.

@@ -2,6 +2,41 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.17] — 2026-08-31 (W33 first slice — cross-module `rec`-group guard)
+
+Adding `(rec ...)` group parsing (`wasm-wast-parser` 0.1.89) makes modules
+that use it newly BUILDABLE — including ones whose cross-module
+import/tag linking `instantiate()` now actually reaches. This crate's
+pre-existing import-compatibility check compares only a plain `FuncType`
+shape, which is blind to `rec`-group POSITION: two structurally-identical
+members of a `rec` group at different positions (e.g. `tag.wast`'s own
+`(rec (type $t1 (func)) (type $t2 (func)))`) are DISTINCT types under the
+real GC canonicalization algorithm, but would wrongly compare equal here.
+Full canonical type-group equivalence (`code/specs/
+W33-wasm-gc-recursive-type-subtyping.md`'s own item 3b) is out of scope
+for this slice — but leaving the gap unguarded would have let some newly-
+reachable `assert_unlinkable` corpus cases wrongly LINK once `rec` groups
+parse, a real regression the full-corpus baseline diff would have caught.
+
+### Added
+
+- **Function and tag import compatibility now also requires a matching
+  `(rec_group_size, rec_group_position)`** (`wasm_types::WasmModule::
+  type_group_shape`, ANDed onto the pre-existing `FuncType`/tag-type
+  structural equality check, never replacing it): `instantiate()`'s
+  `ImportTypeInfo::Function`/`ImportTypeInfo::Tag` arms now ask the host
+  (`HostFunction::type_group_shape`/`HostInterface::
+  resolve_tag_group_shape`, both new `wasm-execution` 0.9.80 default
+  methods returning `(1, 0)`) and compare against the importing module's
+  own declared shape. Safe for every PRE-EXISTING import (both sides
+  trivially report the singleton-group default): can only ADD a
+  rejection on top of the existing check, never remove one — verified via
+  the full-corpus baseline diff showing zero regressions (see
+  `wasm-conformance`'s own changelog for the exact tallies).
+- Two new unit tests (`rejects_a_function_import_whose_rec_group_position_
+  mismatches`/`accepts_a_function_import_whose_rec_group_shape_matches`)
+  exercising the guard directly, independent of the full corpus.
+
 ## [0.6.16] — 2026-08-31 (W32 second slice — non-null concrete reference types)
 
 ### Added

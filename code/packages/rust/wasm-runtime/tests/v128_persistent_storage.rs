@@ -40,6 +40,7 @@ fn v128_global_initialized_via_v128_const_instantiates_and_reads_back_exact_byte
 
     let module = WasmModule {
         types: vec![FuncType { params: vec![], results: vec![ValueType::V128] }],
+        type_subtyping: vec![],
         struct_types: vec![],
         imports: vec![],
         functions: vec![0],
@@ -111,6 +112,7 @@ fn v128_value_allocated_in_one_call_is_visible_in_a_later_separate_call() {
     let func_type = FuncType { params: vec![], results: vec![ValueType::V128] };
     let module = WasmModule {
         types: vec![func_type.clone(), func_type],
+        type_subtyping: vec![],
         struct_types: vec![],
         imports: vec![],
         functions: vec![0, 1],
