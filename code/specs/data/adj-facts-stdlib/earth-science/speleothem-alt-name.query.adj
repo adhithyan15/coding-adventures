@@ -1,0 +1,35 @@
+% ============================================================================
+% speleothem-alt-name.query.adj — worked recall over the speleothem-alt-name
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to answer "what else is a
+% coralloid called?" (direct), "I heard the guide say 'organ pipes' — what
+% is that?" (REVERSE, and the direction that actually matters on a cave
+% tour), or "is cave popcorn another word for coralloid?" (abstain — the
+% page says both that it is and that it is one KIND of coralloid, and this
+% library will not pick a side).
+%
+% It states no fact of its own — it only `import`s the grounded table and
+% asks binding queries.
+%
+% NOTE ON THE ABSTAIN QUERIES: they are written in VARIABLE form
+% (`$S, cave_popcorn`) rather than ground form (`coralloid, cave_popcorn`).
+% A fully-bound query that matches nothing produces NO recall entry at all
+% rather than an abstention, so the ground form would silently prove
+% nothing.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli speleothem-alt-name.query.adj
+% ============================================================================
+
+import "speleothem-alt-name.adj"
+
+? speleothem_alt_name(coralloid, $N)        % expect corallite
+? speleothem_alt_name(frozen_waterfall, $N) % expect petrified_waterfall, cascades, rivers, glaciers, organ_pipes -- five names for one form
+? speleothem_alt_name(column, $N)           % expect pillar
+? speleothem_alt_name($S, organ_pipes)      % expect frozen_waterfall (REVERSE -- the useful direction)
+? speleothem_alt_name($S, pillar)           % expect column (reverse)
+? speleothem_alt_name(drapery, $N)          % expect cave_bacon_when_characteristic_layers_present -- the CONDITION rides in the atom
+? speleothem_alt_name($S, cave_bacon)       % expect abstain -- the UNCONDITIONAL name; the source only licenses it when the layers are present
+? speleothem_alt_name($S, cave_popcorn)     % expect abstain -- the page calls it BOTH a synonym for coralloid AND one of several kinds of coralloid
+? speleothem_alt_name(stalactite, $N)       % expect abstain -- this page gives it exactly one name
