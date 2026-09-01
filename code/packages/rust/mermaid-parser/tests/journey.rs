@@ -7,7 +7,10 @@ const SOURCE: &str = "%%{init: {\"journey\": {\"diagramMarginX\": 24, \"diagramM
 fn journey_core_grammar_lowers_to_typed_ir() {
     let (title, journey) = parse_journey(SOURCE).expect("journey should parse");
     assert_eq!(title.as_deref(), Some("Checkout\nexperience"));
-    assert_eq!(journey.accessibility_title.as_deref(), Some("Checkout journey"));
+    assert_eq!(
+        journey.accessibility_title.as_deref(),
+        Some("Checkout journey")
+    );
     assert_eq!(
         journey.accessibility_description.as_deref(),
         Some("A native checkout\nexperience")
@@ -23,7 +26,10 @@ fn journey_core_grammar_lowers_to_typed_ir() {
     assert_eq!(journey.config.task_height, Some(52.0));
     assert_eq!(journey.config.task_margin, Some(18.0));
     assert_eq!(journey.config.task_font_size, Some(18.0));
-    assert_eq!(journey.config.task_font_family.as_deref(), Some("Avenir Next"));
+    assert_eq!(
+        journey.config.task_font_family.as_deref(),
+        Some("Avenir Next")
+    );
     assert_eq!(journey.config.title_font_size, Some(22.0));
     assert_eq!(journey.config.title_font_family.as_deref(), Some("Georgia"));
     assert_eq!(journey.config.title_color.as_deref(), Some("#123456"));

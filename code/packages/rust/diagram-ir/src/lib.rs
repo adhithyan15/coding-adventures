@@ -221,6 +221,54 @@ pub struct LayoutedPacketDiagram {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub struct BoardCard {
+    pub id: String,
+    pub label: DiagramLabel,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct BoardColumn {
+    pub id: String,
+    pub label: DiagramLabel,
+    pub cards: Vec<BoardCard>,
+}
+
+#[derive(Clone, Debug, PartialEq, Default)]
+pub struct BoardDiagram {
+    pub columns: Vec<BoardColumn>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedBoardCard {
+    pub id: String,
+    pub label: DiagramLabel,
+    pub x: f64,
+    pub y: f64,
+    pub width: f64,
+    pub height: f64,
+    pub style: ResolvedDiagramStyle,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedBoardColumn {
+    pub id: String,
+    pub label: DiagramLabel,
+    pub x: f64,
+    pub y: f64,
+    pub width: f64,
+    pub height: f64,
+    pub cards: Vec<LayoutedBoardCard>,
+    pub style: ResolvedDiagramStyle,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedBoardDiagram {
+    pub columns: Vec<LayoutedBoardColumn>,
+    pub width: f64,
+    pub height: f64,
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub struct Point {
     pub x: f64,
     pub y: f64,
@@ -1187,7 +1235,10 @@ impl GanttDuration {
 
 impl Default for GanttDuration {
     fn default() -> Self {
-        Self { value: 0.0, unit: GanttDurationUnit::Days }
+        Self {
+            value: 0.0,
+            unit: GanttDurationUnit::Days,
+        }
     }
 }
 
@@ -1790,9 +1841,15 @@ mod tests {
             id: "t1".into(),
             label: "D".into(),
             start: TaskStart::Date("2026-01-01".into()),
-            duration: GanttDuration { value: 5.0, unit: GanttDurationUnit::Days },
+            duration: GanttDuration {
+                value: 5.0,
+                unit: GanttDurationUnit::Days,
+            },
             end: None,
-            tags: GanttTaskTags { done: true, ..GanttTaskTags::default() },
+            tags: GanttTaskTags {
+                done: true,
+                ..GanttTaskTags::default()
+            },
             dependencies: vec![],
             link: None,
             callback: None,

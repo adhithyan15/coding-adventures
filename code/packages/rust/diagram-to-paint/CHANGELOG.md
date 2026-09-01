@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.108.0
+
+- Lower Kanban columns and cards to backend-neutral paint with Metal-to-PNG validation.
+
 ## 0.107.0
 
 - Lower packet field geometry and shaped labels to backend-neutral paint and validate Metal-to-PNG rendering.

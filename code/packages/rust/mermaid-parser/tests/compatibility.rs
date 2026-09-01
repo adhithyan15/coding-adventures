@@ -1,9 +1,9 @@
 use std::collections::BTreeSet;
 
 use mermaid_parser::{
-    detect_mermaid_type, parse_any_mermaid, parse_block, parse_gantt, parse_gitgraph, parse_journey, parse_pie,
-    parse_mindmap, parse_packet, parse_quadrant_chart, parse_requirement_diagram, parse_sankey,
-    parse_sequence_diagram, parse_timeline, parse_xychart,
+    detect_mermaid_type, parse_any_mermaid, parse_block, parse_gantt, parse_gitgraph,
+    parse_journey, parse_kanban, parse_mindmap, parse_packet, parse_pie, parse_quadrant_chart,
+    parse_requirement_diagram, parse_sankey, parse_sequence_diagram, parse_timeline, parse_xychart,
     MERMAID_COMPATIBILITY_BASELINE,
 };
 use serde_json::Value;
@@ -36,6 +36,20 @@ const PACKET_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/packet-11.16.1-corpus.json"
 ));
+const KANBAN_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/kanban-11.16.1-corpus.json"
+));
+
+#[test]
+fn pinned_kanban_subset_corpus_parses_to_board_ir() {
+    let corpus: Value = serde_json::from_str(KANBAN_CORPUS).expect("kanban corpus must be JSON");
+    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
+        let board = parse_kanban(fixture["source"].as_str().expect("fixture source"))
+            .expect("kanban fixture should parse");
+        assert!(!board.columns.is_empty());
+    }
+}
 
 #[test]
 fn pinned_packet_subset_corpus_parses_to_packet_ir() {
@@ -114,9 +128,12 @@ const SEQUENCE_VISUAL_CORPUS: &str = include_str!(concat!(
 
 #[test]
 fn pinned_timeline_core_corpus_matches_upstream_acceptance() {
-    let corpus: Value = serde_json::from_str(TIMELINE_CORPUS).expect("timeline corpus must be JSON");
-    assert_eq!(corpus["upstream_commit"].as_str(),
-        Some("7ecca0cd7f1658ef74f4e7e91f925724ef403bbf"));
+    let corpus: Value =
+        serde_json::from_str(TIMELINE_CORPUS).expect("timeline corpus must be JSON");
+    assert_eq!(
+        corpus["upstream_commit"].as_str(),
+        Some("7ecca0cd7f1658ef74f4e7e91f925724ef403bbf")
+    );
     for fixture in corpus["valid"].as_array().expect("valid corpus array") {
         let id = fixture["id"].as_str().expect("fixture id");
         let source = fixture["source"].as_str().expect("fixture source");
@@ -126,14 +143,17 @@ fn pinned_timeline_core_corpus_matches_upstream_acceptance() {
     for fixture in corpus["invalid"].as_array().expect("invalid corpus array") {
         let id = fixture["id"].as_str().expect("fixture id");
         let source = fixture["source"].as_str().expect("fixture source");
-        assert!(parse_timeline(source).is_err(),
-            "invalid upstream fixture {id} unexpectedly parsed");
+        assert!(
+            parse_timeline(source).is_err(),
+            "invalid upstream fixture {id} unexpectedly parsed"
+        );
     }
 }
 
 #[test]
 fn pinned_sequence_corpus_matches_upstream_acceptance() {
-    let corpus: Value = serde_json::from_str(SEQUENCE_CORPUS).expect("sequence corpus must be JSON");
+    let corpus: Value =
+        serde_json::from_str(SEQUENCE_CORPUS).expect("sequence corpus must be JSON");
     assert_eq!(
         corpus["upstream_commit"].as_str(),
         Some("7ecca0cd7f1658ef74f4e7e91f925724ef403bbf")
@@ -156,7 +176,8 @@ fn pinned_sequence_corpus_matches_upstream_acceptance() {
 
 #[test]
 fn pinned_sequence_visual_corpus_references_valid_syntax_fixtures() {
-    let syntax: Value = serde_json::from_str(SEQUENCE_CORPUS).expect("sequence corpus must be JSON");
+    let syntax: Value =
+        serde_json::from_str(SEQUENCE_CORPUS).expect("sequence corpus must be JSON");
     let visual: Value =
         serde_json::from_str(SEQUENCE_VISUAL_CORPUS).expect("sequence visual corpus must be JSON");
     assert_eq!(visual["upstream_commit"], syntax["upstream_commit"]);
@@ -176,7 +197,10 @@ fn pinned_sequence_visual_corpus_references_valid_syntax_fixtures() {
     assert!(fixtures.is_subset(&valid));
     assert_eq!(
         fixtures.len(),
-        visual["fixtures"].as_array().expect("visual fixture array").len(),
+        visual["fixtures"]
+            .as_array()
+            .expect("visual fixture array")
+            .len(),
         "visual fixture ids must be unique"
     );
 }
@@ -184,17 +208,23 @@ fn pinned_sequence_visual_corpus_references_valid_syntax_fixtures() {
 #[test]
 fn pinned_gantt_supported_corpus_matches_upstream_acceptance() {
     let corpus: Value = serde_json::from_str(GANTT_CORPUS).expect("gantt corpus must be JSON");
-    assert_eq!(corpus["upstream_commit"].as_str(),
-        Some("7ecca0cd7f1658ef74f4e7e91f925724ef403bbf"));
+    assert_eq!(
+        corpus["upstream_commit"].as_str(),
+        Some("7ecca0cd7f1658ef74f4e7e91f925724ef403bbf")
+    );
     for fixture in corpus["valid"].as_array().expect("valid corpus array") {
         let id = fixture["id"].as_str().expect("fixture id");
         let source = fixture["source"].as_str().expect("fixture source");
-        parse_gantt(source).unwrap_or_else(|error| panic!("valid upstream fixture {id} failed: {error}"));
+        parse_gantt(source)
+            .unwrap_or_else(|error| panic!("valid upstream fixture {id} failed: {error}"));
     }
     for fixture in corpus["invalid"].as_array().expect("invalid corpus array") {
         let id = fixture["id"].as_str().expect("fixture id");
         let source = fixture["source"].as_str().expect("fixture source");
-        assert!(parse_gantt(source).is_err(), "invalid upstream fixture {id} unexpectedly parsed");
+        assert!(
+            parse_gantt(source).is_err(),
+            "invalid upstream fixture {id} unexpectedly parsed"
+        );
     }
 }
 
@@ -217,7 +247,11 @@ fn pinned_gantt_visual_corpus_covers_every_valid_fixture() {
         .map(|id| id.as_str().expect("visual fixture id"))
         .collect::<BTreeSet<_>>();
     assert_eq!(actual, expected);
-    assert_eq!(actual.len(), valid.len(), "visual fixture ids must be unique");
+    assert_eq!(
+        actual.len(),
+        valid.len(),
+        "visual fixture ids must be unique"
+    );
 }
 
 #[test]
@@ -237,7 +271,10 @@ fn gantt_full_status_is_backed_by_pinned_syntax_and_visual_corpora() {
         serde_json::from_str(GANTT_VISUAL_CORPUS).expect("Gantt visual corpus must be JSON");
     assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
     assert!(!syntax["valid"].as_array().expect("valid corpus").is_empty());
-    assert!(!syntax["invalid"].as_array().expect("invalid corpus").is_empty());
+    assert!(!syntax["invalid"]
+        .as_array()
+        .expect("invalid corpus")
+        .is_empty());
 }
 
 #[test]
@@ -429,7 +466,10 @@ fn requirement_full_status_is_backed_by_the_pinned_corpus() {
     let corpus: Value =
         serde_json::from_str(REQUIREMENT_CORPUS).expect("requirement corpus must be JSON");
     assert!(!corpus["valid"].as_array().expect("valid corpus").is_empty());
-    assert!(!corpus["invalid"].as_array().expect("invalid corpus").is_empty());
+    assert!(!corpus["invalid"]
+        .as_array()
+        .expect("invalid corpus")
+        .is_empty());
 }
 
 #[test]
@@ -470,7 +510,10 @@ fn journey_full_status_is_backed_by_the_pinned_corpus() {
 
     let corpus: Value = serde_json::from_str(JOURNEY_CORPUS).expect("journey corpus must be JSON");
     assert!(!corpus["valid"].as_array().expect("valid corpus").is_empty());
-    assert!(!corpus["invalid"].as_array().expect("invalid corpus").is_empty());
+    assert!(!corpus["invalid"]
+        .as_array()
+        .expect("invalid corpus")
+        .is_empty());
 }
 
 #[test]
@@ -571,9 +614,9 @@ Alice->>Bob: Hello
 
 #[test]
 fn recognized_but_unimplemented_family_is_not_reported_as_unknown() {
-    let error = parse_any_mermaid("kanban\nTodo\n  task1[Task]")
+    let error = parse_any_mermaid("architecture-beta\nservice api(server)[API]")
         .err()
-        .expect("kanban support is not implemented yet");
+        .expect("architecture support is not implemented yet");
     assert!(error.message.contains("recognized but not implemented"));
     assert!(error.message.contains(MERMAID_COMPATIBILITY_BASELINE));
 }

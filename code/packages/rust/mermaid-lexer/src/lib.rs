@@ -28,6 +28,8 @@ const MINDMAP_TOKEN_GRAMMAR_SOURCE: &str =
 const BLOCK_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/block.tokens");
 const PACKET_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/packet.tokens");
+const KANBAN_TOKEN_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/kanban.tokens");
 const REQUIREMENT_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.tokens");
 const XYCHART_TOKEN_GRAMMAR_SOURCE: &str =
@@ -94,6 +96,10 @@ pub fn create_mermaid_block_lexer(source: &str) -> GrammarLexer<'_> {
 
 pub fn create_mermaid_packet_lexer(source: &str) -> GrammarLexer<'_> {
     create_lexer(source, PACKET_TOKEN_GRAMMAR_SOURCE, "packet.tokens")
+}
+
+pub fn create_mermaid_kanban_lexer(source: &str) -> GrammarLexer<'_> {
+    create_lexer(source, KANBAN_TOKEN_GRAMMAR_SOURCE, "kanban.tokens")
 }
 
 pub fn create_mermaid_requirement_lexer(source: &str) -> GrammarLexer<'_> {
@@ -327,6 +333,11 @@ pub fn try_tokenize_mermaid_packet(source: &str) -> Result<Vec<Token>, String> {
     lexer.tokenize().map_err(|error| error.to_string())
 }
 
+pub fn try_tokenize_mermaid_kanban(source: &str) -> Result<Vec<Token>, String> {
+    let mut lexer = create_mermaid_kanban_lexer(source);
+    lexer.tokenize().map_err(|error| error.to_string())
+}
+
 pub fn try_tokenize_mermaid_xychart(source: &str) -> Result<Vec<Token>, String> {
     let mut lexer = create_mermaid_xychart_lexer(source);
     lexer.tokenize().map_err(|error| error.to_string())
@@ -348,10 +359,9 @@ mod tests {
 
     #[test]
     fn tokenizes_block_statements_as_complete_lines() {
-        let tokens = try_tokenize_mermaid_block(
-            "block-beta\ncolumns 2\nA[Parser] B(IR)\nA --> B\n",
-        )
-        .unwrap();
+        let tokens =
+            try_tokenize_mermaid_block("block-beta\ncolumns 2\nA[Parser] B(IR)\nA --> B\n")
+                .unwrap();
         let lines = tokens
             .iter()
             .filter(|token| token.type_name.as_deref() == Some("STATEMENT_LINE"))
@@ -362,10 +372,9 @@ mod tests {
 
     #[test]
     fn tokenizes_packet_fields_as_complete_lines() {
-        let tokens = try_tokenize_mermaid_packet(
-            "packet-beta\n0-7: \"Header\"\n8-31: \"Payload\"\n",
-        )
-        .unwrap();
+        let tokens =
+            try_tokenize_mermaid_packet("packet-beta\n0-7: \"Header\"\n8-31: \"Payload\"\n")
+                .unwrap();
         let lines = tokens
             .iter()
             .filter(|token| token.type_name.as_deref() == Some("STATEMENT_LINE"))
@@ -375,11 +384,22 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_kanban_indentation_as_complete_lines() {
+        let tokens =
+            try_tokenize_mermaid_kanban("kanban\n  Todo\n    task[Write tests]\n").unwrap();
+        let lines = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("STATEMENT_LINE"))
+            .map(|token| token.value.as_str())
+            .collect::<Vec<_>>();
+        assert_eq!(lines, ["  Todo", "    task[Write tests]"]);
+    }
+
+    #[test]
     fn tokenizes_mindmap_indentation_and_shapes_as_complete_lines() {
-        let tokens = try_tokenize_mermaid_mindmap(
-            "mindmap\n  root((Native))\n    Parser[Grammar first]\n",
-        )
-        .unwrap();
+        let tokens =
+            try_tokenize_mermaid_mindmap("mindmap\n  root((Native))\n    Parser[Grammar first]\n")
+                .unwrap();
         let lines = tokens
             .iter()
             .filter(|token| token.type_name.as_deref() == Some("NODE_LINE"))
@@ -441,11 +461,20 @@ mod tests {
         let tokens = try_tokenize_mermaid_gantt(
             "gantt\naxisFormat %m/%d\ntickInterval 1week\nexcludes weekends, 2026-01-01\nincludes 2026-01-03\ninclusiveEndDates\ntopAxis\ntodayMarker off\nweekday monday\nweekend friday\n",
         ).unwrap();
-        let names = tokens.iter().filter_map(|token| token.type_name.as_deref()).collect::<Vec<_>>();
+        let names = tokens
+            .iter()
+            .filter_map(|token| token.type_name.as_deref())
+            .collect::<Vec<_>>();
         for expected in [
-            "AXIS_FORMAT_STATEMENT", "TICK_INTERVAL_STATEMENT", "EXCLUDES_STATEMENT",
-            "INCLUDES_STATEMENT", "INCLUSIVE_END_DATES", "TOP_AXIS",
-            "TODAY_MARKER_STATEMENT", "WEEKDAY_STATEMENT", "WEEKEND_STATEMENT",
+            "AXIS_FORMAT_STATEMENT",
+            "TICK_INTERVAL_STATEMENT",
+            "EXCLUDES_STATEMENT",
+            "INCLUDES_STATEMENT",
+            "INCLUSIVE_END_DATES",
+            "TOP_AXIS",
+            "TODAY_MARKER_STATEMENT",
+            "WEEKDAY_STATEMENT",
+            "WEEKEND_STATEMENT",
         ] {
             assert!(names.contains(&expected), "missing {expected}: {names:?}");
         }
@@ -455,7 +484,8 @@ mod tests {
     fn tokenizes_gantt_today_marker_hex_colors() {
         let tokens = try_tokenize_mermaid_gantt(
             "gantt\ntodayMarker stroke-width:5px,stroke:#00f,opacity:0.5\n",
-        ).unwrap();
+        )
+        .unwrap();
         assert!(tokens.iter().any(|token| {
             token.type_name.as_deref() == Some("TODAY_MARKER_STATEMENT")
                 && token.value.ends_with("stroke:#00f,opacity:0.5")

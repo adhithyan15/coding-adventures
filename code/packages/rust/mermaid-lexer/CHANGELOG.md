@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.78.0
+
+- Preserve Mermaid 11.16.1 Kanban indentation through a dedicated grammar.
+
 ## 0.77.0
 
 - Tokenize Mermaid 11.16.1 packet statements through a dedicated grammar.

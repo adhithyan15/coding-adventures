@@ -12,21 +12,21 @@ pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 use std::collections::{HashMap, HashSet};
 
 use diagram_ir::{
-    DiagramDirection, DiagramLabel, DiagramShape, DiagramStyle, EdgeKind, GraphDiagram, GraphEdge,
-    GraphGroup, GraphLink, GraphNode, GridCell, GridConnection, GridDiagram, PacketDiagram,
-    PacketField,
+    BoardCard, BoardColumn, BoardDiagram, DiagramDirection, DiagramLabel, DiagramShape,
+    DiagramStyle, EdgeKind, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell,
+    GridConnection, GridDiagram, PacketDiagram, PacketField,
 };
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
 use mermaid_lexer::{
     tokenize_mermaid, tokenize_mermaid_c4, tokenize_mermaid_er, tokenize_mermaid_gitgraph,
     tokenize_mermaid_pie, tokenize_mermaid_sankey, tokenize_mermaid_sequence,
-    tokenize_mermaid_state, try_tokenize_mermaid_gantt, try_tokenize_mermaid_journey,
-    try_tokenize_mermaid_quadrant, try_tokenize_mermaid_requirement,
-    try_tokenize_mermaid_block, try_tokenize_mermaid_mindmap, try_tokenize_mermaid_packet,
+    tokenize_mermaid_state, try_tokenize_mermaid_block, try_tokenize_mermaid_gantt,
+    try_tokenize_mermaid_journey, try_tokenize_mermaid_kanban, try_tokenize_mermaid_mindmap,
+    try_tokenize_mermaid_packet, try_tokenize_mermaid_quadrant, try_tokenize_mermaid_requirement,
     try_tokenize_mermaid_timeline, try_tokenize_mermaid_xychart,
 };
-use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
+use parser::grammar_parser::{DEFAULT_MAX_RULE_DEPTH, GrammarASTNode, GrammarParser};
 
 const PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/mermaid.grammar");
 const PIE_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/pie.grammar");
@@ -52,11 +52,14 @@ const BLOCK_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/block.grammar");
 const PACKET_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/packet.grammar");
+const KANBAN_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/kanban.grammar");
 const REQUIREMENT_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.grammar");
 const XYCHART_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/xychart.grammar");
-const GANTT_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/gantt.grammar");
+const GANTT_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/gantt.grammar");
 
 /// Recursion-depth cap for the Mermaid [`GrammarParser`] — see
 /// [`GrammarParser::with_max_depth`] for why this guard exists at all (deep
@@ -333,11 +336,12 @@ pub fn parse_mermaid_xychart_ast(source: &str) -> Result<GrammarASTNode, ParseEr
 
 pub fn parse_mermaid_gantt_ast(source: &str) -> Result<GrammarASTNode, ParseError> {
     let preprocessed = preprocess_mermaid_source(source)?;
-    let tokens = try_tokenize_mermaid_gantt(&preprocessed.source).map_err(|message| ParseError {
-        message,
-        line: 1,
-        col: 1,
-    })?;
+    let tokens =
+        try_tokenize_mermaid_gantt(&preprocessed.source).map_err(|message| ParseError {
+            message,
+            line: 1,
+            col: 1,
+        })?;
     let grammar = parse_parser_grammar(GANTT_PARSER_GRAMMAR_SOURCE)
         .unwrap_or_else(|error| panic!("Failed to parse gantt.grammar: {error}"));
     let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH);
@@ -540,16 +544,17 @@ fn token_name(token: &Token) -> &str {
 
 use diagram_ir::{
     Axis, AxisKind, ChartDataPoint, ChartDiagram, ChartKind, ChartOrientation, ChartSeries,
-    Compartment, CompartmentKind, GanttConfig, GanttDateFormat, GanttDateFormatPart, GanttDiagram, GanttDisplayMode, GanttDuration, GanttDurationUnit, GanttSection, GanttTask, GitBranch, GitCommitType,
-    GitDiagram, GitEvent, JourneyConfig, JourneyDiagram, JourneySection, JourneyTask, PieSlice,
-    QuadrantConfig, QuadrantPoint, RelKind, RequirementElementMetadata, RequirementKind,
-    RequirementMetadata, RequirementRisk, RequirementVerifyMethod, SankeyFlow, SankeyNode,
-    SequenceArrowhead, SequenceBlockKind, SequenceCentralConnection, SequenceDiagram,
+    Compartment, CompartmentKind, GanttConfig, GanttDateFormat, GanttDateFormatPart, GanttDiagram,
+    GanttDisplayMode, GanttDuration, GanttDurationUnit, GanttSection, GanttTask, GanttTaskTags,
+    GitBranch, GitCommitType, GitDiagram, GitEvent, JourneyConfig, JourneyDiagram, JourneySection,
+    JourneyTask, PieSlice, QuadrantConfig, QuadrantPoint, RelKind, RequirementElementMetadata,
+    RequirementKind, RequirementMetadata, RequirementRisk, RequirementVerifyMethod, SankeyFlow,
+    SankeyNode, SequenceArrowhead, SequenceBlockKind, SequenceCentralConnection, SequenceDiagram,
     SequenceEvent, SequenceLineStyle, SequenceLink, SequenceNotePlacement, SequenceParticipant,
     SequenceParticipantGroup, SequenceParticipantKind, SequenceProperty, SequenceTextWrap,
     SeriesKind, StructuralDiagram, StructuralGroup, StructuralKind, StructuralNode,
-    GanttTaskTags, StructuralNodeKind, StructuralNodeMetadata, StructuralRelationship, TaskEnd,
-    TaskStart, TemporalBody, TemporalDiagram, TemporalKind, TimelineDiagram, TimelineDirection,
+    StructuralNodeKind, StructuralNodeMetadata, StructuralRelationship, TaskEnd, TaskStart,
+    TemporalBody, TemporalDiagram, TemporalKind, TimelineDiagram, TimelineDirection,
     TimelinePeriod, TimelineSection, XyAxisConfig, XyChartConfig,
 };
 
@@ -640,6 +645,7 @@ impl MermaidDiagramType {
                 | Self::Mindmap
                 | Self::Block
                 | Self::Packet
+                | Self::Kanban
                 | Self::Timeline
                 | Self::Requirement
                 | Self::Pie
@@ -662,6 +668,7 @@ pub enum MermaidDiagram {
     Temporal(TemporalDiagram),
     Grid(GridDiagram),
     Packet(PacketDiagram),
+    Board(BoardDiagram),
 }
 
 /// Detect a Mermaid 11.16.1 diagram family from its header.
@@ -784,6 +791,7 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
         MermaidDiagramType::Mindmap => parse_mindmap(source).map(MermaidDiagram::Graph),
         MermaidDiagramType::Block => parse_block(source).map(MermaidDiagram::Grid),
         MermaidDiagramType::Packet => parse_packet(source).map(MermaidDiagram::Packet),
+        MermaidDiagramType::Kanban => parse_kanban(source).map(MermaidDiagram::Board),
         unsupported => Err(ParseError {
             message: format!(
                 "Mermaid {} diagram family {:?} is recognized but not implemented",
@@ -794,6 +802,99 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
             col: 1,
         }),
     }
+}
+
+/// Parse a core indentation-defined Mermaid Kanban board.
+pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
+    let prepared = prepare_line_grammar_source(source)?;
+    let tokens = try_tokenize_mermaid_kanban(&prepared).map_err(|message| ParseError {
+        message,
+        line: 1,
+        col: 1,
+    })?;
+    let grammar = parse_parser_grammar(KANBAN_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|error| panic!("Failed to parse kanban.grammar: {error}"));
+    GrammarParser::new(tokens.clone(), grammar)
+        .with_max_depth(MAX_RULE_DEPTH)
+        .parse()
+        .map_err(|error| ParseError {
+            message: error.message,
+            line: error.token.line,
+            col: error.token.column,
+        })?;
+
+    let lines = tokens
+        .iter()
+        .filter(|token| token.type_name.as_deref() == Some("STATEMENT_LINE"))
+        .collect::<Vec<_>>();
+    let column_indent = lines
+        .iter()
+        .map(|token| token.value.len() - token.value.trim_start().len())
+        .min()
+        .ok_or_else(|| ParseError {
+            message: "kanban diagram requires a column".into(),
+            line: 1,
+            col: 1,
+        })?;
+    let mut diagram = BoardDiagram::default();
+    let mut ids = HashSet::new();
+    let mut card_indent = None;
+    for token in lines {
+        let indent = token.value.len() - token.value.trim_start().len();
+        let value = token.value.trim();
+        if value.contains("@{") || value.starts_with("::") || value.starts_with("style ") {
+            return Err(token_error(
+                token,
+                "kanban decorations are outside the supported subset",
+            ));
+        }
+        let (explicit_id, label) = parse_board_node(value);
+        let id = unique_mindmap_id(
+            explicit_id.unwrap_or_else(|| mindmap_slug(&label)),
+            &mut ids,
+        );
+        if indent == column_indent {
+            diagram.columns.push(BoardColumn {
+                id,
+                label: DiagramLabel::new(label),
+                cards: Vec::new(),
+            });
+        } else if indent > column_indent {
+            match card_indent {
+                Some(expected) if indent != expected => {
+                    return Err(token_error(
+                        token,
+                        "nested kanban cards are outside the supported subset",
+                    ));
+                }
+                None => card_indent = Some(indent),
+                Some(_) => {}
+            }
+            let column = diagram
+                .columns
+                .last_mut()
+                .ok_or_else(|| token_error(token, "kanban card must follow a column"))?;
+            column.cards.push(BoardCard {
+                id,
+                label: DiagramLabel::new(label),
+            });
+        } else {
+            return Err(token_error(token, "invalid kanban indentation"));
+        }
+    }
+    Ok(diagram)
+}
+
+fn parse_board_node(source: &str) -> (Option<String>, String) {
+    if let Some(open) = source.find('[') {
+        if source.ends_with(']') {
+            return (
+                Some(source[..open].trim().to_string()),
+                normalize_mermaid_line_breaks(source[open + 1..source.len() - 1].trim()),
+            );
+        }
+    }
+    (None, normalize_mermaid_line_breaks(source.trim()))
 }
 
 /// Parse absolute inclusive bit ranges from the Mermaid packet family.
@@ -941,11 +1042,17 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             title = Some(normalize_mermaid_line_breaks(value.trim()));
             continue;
         }
-        if let Some((_, value)) = line.strip_prefix("accTitle").and_then(|line| line.split_once(':')) {
+        if let Some((_, value)) = line
+            .strip_prefix("accTitle")
+            .and_then(|line| line.split_once(':'))
+        {
             accessibility_title = Some(value.trim().to_string());
             continue;
         }
-        if let Some((_, value)) = line.strip_prefix("accDescr").and_then(|line| line.split_once(':')) {
+        if let Some((_, value)) = line
+            .strip_prefix("accDescr")
+            .and_then(|line| line.split_once(':'))
+        {
             accessibility_description = Some(value.trim().to_string());
             continue;
         }
@@ -980,7 +1087,10 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             }
             let (id, label, shape) = parse_block_node(item);
             if id.is_empty() || !ids.insert(id.clone()) {
-                return Err(token_error(token, format!("duplicate or empty block id {id:?}")));
+                return Err(token_error(
+                    token,
+                    format!("duplicate or empty block id {id:?}"),
+                ));
             }
             cells.push(GridCell {
                 id,
@@ -995,14 +1105,21 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
     for connection in &connections {
         if !ids.contains(&connection.from) || !ids.contains(&connection.to) {
             return Err(ParseError {
-                message: format!("block connection references an unknown node: {} --> {}", connection.from, connection.to),
+                message: format!(
+                    "block connection references an unknown node: {} --> {}",
+                    connection.from, connection.to
+                ),
                 line: 1,
                 col: 1,
             });
         }
     }
     if cells.iter().all(|cell| !cell.visible) {
-        return Err(ParseError { message: "block diagram requires a visible node".into(), line: 1, col: 1 });
+        return Err(ParseError {
+            message: "block diagram requires a visible node".into(),
+            line: 1,
+            col: 1,
+        });
     }
 
     Ok(GridDiagram {
@@ -1022,7 +1139,11 @@ fn prepare_line_grammar_source(source: &str) -> Result<String, ParseError> {
         .lines()
         .map(|line| {
             let trimmed = line.trim();
-            if trimmed.is_empty() || trimmed.starts_with("%%") { "" } else { line }
+            if trimmed.is_empty() || trimmed.starts_with("%%") {
+                ""
+            } else {
+                line
+            }
         })
         .collect::<Vec<_>>()
         .join("\n"))
@@ -1037,13 +1158,17 @@ fn split_block_items(line: &str) -> Vec<&str> {
             '[' | '(' | '{' => depth += 1,
             ']' | ')' | '}' => depth = depth.saturating_sub(1),
             character if character.is_whitespace() && depth == 0 => {
-                if start < index { items.push(&line[start..index]); }
+                if start < index {
+                    items.push(&line[start..index]);
+                }
                 start = index + character.len_utf8();
             }
             _ => {}
         }
     }
-    if start < line.len() { items.push(&line[start..]); }
+    if start < line.len() {
+        items.push(&line[start..]);
+    }
     items
 }
 
@@ -1058,13 +1183,19 @@ fn parse_block_node(source: &str) -> (String, String, DiagramShape) {
             if source.ends_with(close) {
                 return (
                     source[..index].trim().to_string(),
-                    source[index + open.len()..source.len() - close.len()].trim().to_string(),
+                    source[index + open.len()..source.len() - close.len()]
+                        .trim()
+                        .to_string(),
                     shape,
                 );
             }
         }
     }
-    (source.to_string(), source.to_string(), DiagramShape::RoundedRect)
+    (
+        source.to_string(),
+        source.to_string(),
+        DiagramShape::RoundedRect,
+    )
 }
 
 /// Parse the grammar-backed Mermaid mindmap subset into graph semantic IR.
@@ -1219,11 +1350,7 @@ fn mindmap_slug(label: &str) -> String {
         .filter(|part| !part.is_empty())
         .collect::<Vec<_>>()
         .join("-");
-    if slug.is_empty() {
-        "node".into()
-    } else {
-        slug
-    }
+    if slug.is_empty() { "node".into() } else { slug }
 }
 
 fn unique_mindmap_id(base: String, ids: &mut HashSet<String>) -> String {
@@ -1335,7 +1462,7 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
                             return Err(token_error(
                                 cursor.current(),
                                 "invalid requirement direction",
-                            ))
+                            ));
                         }
                     },
                 );
@@ -1571,7 +1698,7 @@ fn parse_requirement_target_style(
                         return Err(token_error(
                             token,
                             "requirement font style must be normal or italic",
-                        ))
+                        ));
                     }
                 });
             }
@@ -1881,7 +2008,9 @@ pub fn parse_journey(source: &str) -> Result<(Option<String>, JourneyDiagram), P
     for token in tokens {
         match token.type_name.as_deref() {
             Some("TITLE_STATEMENT") => {
-                title = Some(normalize_mermaid_line_breaks(token.value["title".len()..].trim()));
+                title = Some(normalize_mermaid_line_breaks(
+                    token.value["title".len()..].trim(),
+                ));
             }
             Some("ACC_TITLE_STATEMENT") => {
                 accessibility_title = token
@@ -1957,11 +2086,12 @@ pub fn parse_journey(source: &str) -> Result<(Option<String>, JourneyDiagram), P
 /// Parse Mermaid 11.16.1 timeline statements into temporal semantic IR.
 pub fn parse_timeline(source: &str) -> Result<(Option<String>, TimelineDiagram), ParseError> {
     let preprocessed = preprocess_mermaid_source(source)?;
-    let tokens = try_tokenize_mermaid_timeline(&preprocessed.source).map_err(|message| ParseError {
-        message,
-        line: 1,
-        col: 1,
-    })?;
+    let tokens =
+        try_tokenize_mermaid_timeline(&preprocessed.source).map_err(|message| ParseError {
+            message,
+            line: 1,
+            col: 1,
+        })?;
     let grammar = parse_parser_grammar(TIMELINE_PARSER_GRAMMAR_SOURCE)
         .unwrap_or_else(|error| panic!("Failed to parse timeline.grammar: {error}"));
     let mut grammar_parser =
@@ -1982,14 +2112,20 @@ pub fn parse_timeline(source: &str) -> Result<(Option<String>, TimelineDiagram),
             Some("HEADER_LR") => direction = TimelineDirection::LeftRight,
             Some("HEADER_TD" | "HEADER") => direction = TimelineDirection::TopDown,
             Some("TITLE_STATEMENT") => {
-                title = Some(normalize_mermaid_line_breaks(token.value["title".len()..].trim()));
+                title = Some(normalize_mermaid_line_breaks(
+                    token.value["title".len()..].trim(),
+                ));
             }
             Some("ACC_TITLE_STATEMENT") => {
-                accessibility_title = token.value.split_once(':')
+                accessibility_title = token
+                    .value
+                    .split_once(':')
                     .map(|(_, value)| value.trim().to_string());
             }
             Some("ACC_DESCR_STATEMENT") => {
-                accessibility_description = token.value.split_once(':')
+                accessibility_description = token
+                    .value
+                    .split_once(':')
                     .map(|(_, value)| value.trim().to_string());
             }
             Some("ACC_DESCR_BLOCK") => {
@@ -2012,19 +2148,27 @@ pub fn parse_timeline(source: &str) -> Result<(Option<String>, TimelineDiagram),
             }),
             Some("PERIOD_STATEMENT") => {
                 if sections.is_empty() {
-                    sections.push(TimelineSection { label: None, periods: Vec::new() });
+                    sections.push(TimelineSection {
+                        label: None,
+                        periods: Vec::new(),
+                    });
                 }
-                sections.last_mut().expect("timeline section exists").periods.push(
-                    TimelinePeriod {
+                sections
+                    .last_mut()
+                    .expect("timeline section exists")
+                    .periods
+                    .push(TimelinePeriod {
                         label: normalize_mermaid_line_breaks(token.value.trim()),
                         events: Vec::new(),
-                    },
-                );
+                    });
             }
             Some("EVENT_STATEMENT") => {
-                let period = sections.last_mut()
+                let period = sections
+                    .last_mut()
                     .and_then(|section| section.periods.last_mut())
-                    .ok_or_else(|| token_error(&token, "timeline event requires a preceding period"))?;
+                    .ok_or_else(|| {
+                        token_error(&token, "timeline event requires a preceding period")
+                    })?;
                 period.events.push(normalize_mermaid_line_breaks(
                     token.value.trim_start_matches(':').trim(),
                 ));
@@ -2033,12 +2177,15 @@ pub fn parse_timeline(source: &str) -> Result<(Option<String>, TimelineDiagram),
         }
     }
 
-    Ok((title, TimelineDiagram {
-        accessibility_title,
-        accessibility_description,
-        direction,
-        sections,
-    }))
+    Ok((
+        title,
+        TimelineDiagram {
+            accessibility_title,
+            accessibility_description,
+            direction,
+            sections,
+        },
+    ))
 }
 
 fn parse_mermaid_font_size(value: String) -> Option<f64> {
@@ -2415,7 +2562,7 @@ pub fn parse_xychart(source: &str) -> Result<ChartDiagram, ParseError> {
                 return Err(token_error(
                     &token,
                     format!("unexpected XY-chart token {other}"),
-                ))
+                ));
             }
         }
     }
@@ -2864,7 +3011,7 @@ fn parse_quadrant_point_style(raw: &str, token: &Token) -> Result<QuadrantPointS
                 return Err(token_error(
                     token,
                     format!("unsupported quadrant point style {property:?}"),
-                ))
+                ));
             }
         }
     }
@@ -3885,7 +4032,7 @@ fn apply_state_style(
                     return Err(token_error(
                         value,
                         "state font style must be normal or italic",
-                    ))
+                    ));
                 }
             });
         }
@@ -3904,7 +4051,7 @@ fn apply_state_style(
             return Err(token_error(
                 value,
                 format!("unsupported state style property {property:?}"),
-            ))
+            ));
         }
     }
     Ok(())
@@ -4226,11 +4373,17 @@ fn preprocess_mermaid_source(source: &str) -> Result<PreprocessedMermaid, ParseE
 
 fn mermaid_front_matter_scalar(source: &str, key: &str) -> Option<String> {
     let mut lines = source.lines().skip_while(|line| line.trim().is_empty());
-    if lines.next()?.trim() != "---" { return None; }
+    if lines.next()?.trim() != "---" {
+        return None;
+    }
     for line in lines {
         let trimmed = line.trim();
-        if trimmed == "---" { break; }
-        let Some((name, value)) = trimmed.split_once(':') else { continue };
+        if trimmed == "---" {
+            break;
+        }
+        let Some((name, value)) = trimmed.split_once(':') else {
+            continue;
+        };
         if name.trim() == key {
             return Some(value.trim().trim_matches(['\'', '"']).to_ascii_lowercase());
         }
@@ -4675,7 +4828,7 @@ fn parse_sequence_participant(
             return Err(token_error(
                 &declaration,
                 format!("expected participant or actor after create, got {other:?}"),
-            ))
+            ));
         }
     };
     let id = take_sequence_actor_ref(cursor)?;
@@ -4754,7 +4907,7 @@ fn parse_sequence_participant_config(
                         return Err(token_error(
                             token,
                             format!("unsupported sequence participant type {other:?}"),
-                        ))
+                        ));
                     }
                 });
             }
@@ -5016,7 +5169,7 @@ fn parse_sequence_control_block(
             return Err(token_error(
                 &start,
                 format!("unsupported sequence control block {other:?}"),
-            ))
+            ));
         }
     };
     let (label, wrap, fill) = if kind == SequenceBlockKind::Rect {
@@ -5170,7 +5323,7 @@ fn parse_sequence_message(
             return Err(token_error(
                 &arrow,
                 format!("unsupported sequence arrow {other}"),
-            ))
+            ));
         }
     };
     let central_destination = cursor.consume_if("CENTRAL").is_some();
@@ -5229,7 +5382,7 @@ fn parse_sequence_note(
             return Err(token_error(
                 &placement_token,
                 format!("invalid note placement {other:?}"),
-            ))
+            ));
         }
     };
     let mut participants = vec![take_sequence_actor_ref(cursor)?];
@@ -6529,11 +6682,12 @@ fn upsert_c4_node(
 pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
     parse_mermaid_gantt_ast(source)?;
     let preprocessed = preprocess_mermaid_source(source)?;
-    let tokens = try_tokenize_mermaid_gantt(&preprocessed.source).map_err(|message| ParseError {
-        message,
-        line: 1,
-        col: 1,
-    })?;
+    let tokens =
+        try_tokenize_mermaid_gantt(&preprocessed.source).map_err(|message| ParseError {
+            message,
+            line: 1,
+            col: 1,
+        })?;
     let mut date_format = GanttDateFormat::default();
     let mut title = None;
     let mut accessibility_title = None;
@@ -6566,7 +6720,8 @@ pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
                 accessibility_description = Some(token.value[open + 1..close].trim().to_string());
             }
             Some("DATE_FORMAT_STATEMENT") => {
-                date_format = parse_gantt_date_format(&token, token.value["dateFormat".len()..].trim())?;
+                date_format =
+                    parse_gantt_date_format(&token, token.value["dateFormat".len()..].trim())?;
             }
             Some("AXIS_FORMAT_STATEMENT") => {
                 config.axis_format = Some(gantt_statement_value(&token, "axisFormat"));
@@ -6575,10 +6730,16 @@ pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
                 config.tick_interval = Some(gantt_statement_value(&token, "tickInterval"));
             }
             Some("INCLUDES_STATEMENT") => {
-                merge_gantt_calendar_tokens(&mut config.includes, &gantt_statement_value(&token, "includes"));
+                merge_gantt_calendar_tokens(
+                    &mut config.includes,
+                    &gantt_statement_value(&token, "includes"),
+                );
             }
             Some("EXCLUDES_STATEMENT") => {
-                merge_gantt_calendar_tokens(&mut config.excludes, &gantt_statement_value(&token, "excludes"));
+                merge_gantt_calendar_tokens(
+                    &mut config.excludes,
+                    &gantt_statement_value(&token, "excludes"),
+                );
             }
             Some("INCLUSIVE_END_DATES") => config.inclusive_end_dates = true,
             Some("TOP_AXIS") => config.top_axis = true,
@@ -6586,10 +6747,12 @@ pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
                 config.today_marker = Some(gantt_statement_value(&token, "todayMarker"));
             }
             Some("WEEKDAY_STATEMENT") => {
-                config.weekday = Some(gantt_statement_value(&token, "weekday").to_ascii_lowercase());
+                config.weekday =
+                    Some(gantt_statement_value(&token, "weekday").to_ascii_lowercase());
             }
             Some("WEEKEND_STATEMENT") => {
-                config.weekend = Some(gantt_statement_value(&token, "weekend").to_ascii_lowercase());
+                config.weekend =
+                    Some(gantt_statement_value(&token, "weekend").to_ascii_lowercase());
             }
             Some("SECTION_STATEMENT") => {
                 if let Some(section) = current_section.take() {
@@ -6653,9 +6816,12 @@ fn validate_gantt_calendar(
     let mut excluded = config
         .excludes
         .iter()
-        .filter(|value| matches!(value.as_str(),
-            "monday" | "tuesday" | "wednesday" | "thursday" |
-            "friday" | "saturday" | "sunday"))
+        .filter(|value| {
+            matches!(
+                value.as_str(),
+                "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday"
+            )
+        })
         .map(String::as_str)
         .collect::<HashSet<_>>();
     if config.excludes.iter().any(|value| value == "weekends") {
@@ -6676,34 +6842,47 @@ fn validate_gantt_calendar(
 }
 
 fn parse_gantt_date_format(token: &Token, source: &str) -> Result<GanttDateFormat, ParseError> {
-    if source.is_empty() { return Err(token_error(token, "Gantt dateFormat cannot be empty")); }
+    if source.is_empty() {
+        return Err(token_error(token, "Gantt dateFormat cannot be empty"));
+    }
     if source == "yyyy-mm-dd" {
-        return Ok(GanttDateFormat { source: source.into(), ..GanttDateFormat::default() });
+        return Ok(GanttDateFormat {
+            source: source.into(),
+            ..GanttDateFormat::default()
+        });
     }
     let mut parts = Vec::new();
     let mut index = 0;
     while index < source.len() {
         let remaining = &source[index..];
         if let Some(literal) = remaining.strip_prefix('[') {
-            let close = literal.find(']').ok_or_else(|| token_error(token, "unterminated Gantt dateFormat literal"))?;
+            let close = literal
+                .find(']')
+                .ok_or_else(|| token_error(token, "unterminated Gantt dateFormat literal"))?;
             parts.push(GanttDateFormatPart::Literal(literal[..close].to_string()));
             index += close + 2;
             continue;
         }
         let known = [
-            ("YYYY", GanttDateFormatPart::Year4), ("MMMM", GanttDateFormatPart::MonthLong),
+            ("YYYY", GanttDateFormatPart::Year4),
+            ("MMMM", GanttDateFormatPart::MonthLong),
             ("dddd", GanttDateFormatPart::WeekdayLong),
-            ("MMM", GanttDateFormatPart::MonthShort), ("SSS", GanttDateFormatPart::Millisecond),
+            ("MMM", GanttDateFormatPart::MonthShort),
+            ("SSS", GanttDateFormatPart::Millisecond),
             ("SS", GanttDateFormatPart::Millisecond2),
             ("ddd", GanttDateFormatPart::WeekdayShort),
             ("dd", GanttDateFormatPart::WeekdayMin),
             ("ZZ", GanttDateFormatPart::TimezoneOffsetCompact),
             ("hh", GanttDateFormatPart::Hour12Padded),
-            ("YY", GanttDateFormatPart::Year2), ("MM", GanttDateFormatPart::Month2),
+            ("YY", GanttDateFormatPart::Year2),
+            ("MM", GanttDateFormatPart::Month2),
             ("Do", GanttDateFormatPart::DayOrdinal),
-            ("DD", GanttDateFormatPart::Day2), ("HH", GanttDateFormatPart::Hour24),
-            ("mm", GanttDateFormatPart::Minute), ("ss", GanttDateFormatPart::Second),
-            ("M", GanttDateFormatPart::Month), ("D", GanttDateFormatPart::Day),
+            ("DD", GanttDateFormatPart::Day2),
+            ("HH", GanttDateFormatPart::Hour24),
+            ("mm", GanttDateFormatPart::Minute),
+            ("ss", GanttDateFormatPart::Second),
+            ("M", GanttDateFormatPart::Month),
+            ("D", GanttDateFormatPart::Day),
             ("S", GanttDateFormatPart::Millisecond1),
             ("d", GanttDateFormatPart::WeekdayNumber),
             ("H", GanttDateFormatPart::Hour24Unpadded),
@@ -6715,16 +6894,23 @@ fn parse_gantt_date_format(token: &Token, source: &str) -> Result<GanttDateForma
             ("A", GanttDateFormatPart::MeridiemUpper),
             ("a", GanttDateFormatPart::MeridiemLower),
             ("Z", GanttDateFormatPart::TimezoneOffsetColon),
-            ("X", GanttDateFormatPart::UnixSeconds), ("x", GanttDateFormatPart::UnixMilliseconds),
+            ("X", GanttDateFormatPart::UnixSeconds),
+            ("x", GanttDateFormatPart::UnixMilliseconds),
         ];
-        if let Some((name, part)) = known.into_iter().find(|(name, _)| remaining.starts_with(name)) {
+        if let Some((name, part)) = known
+            .into_iter()
+            .find(|(name, _)| remaining.starts_with(name))
+        {
             parts.push(part);
             index += name.len();
             continue;
         }
         let character = remaining.chars().next().expect("index is within source");
         if character.is_ascii_alphabetic() {
-            return Err(token_error(token, format!("unsupported Gantt dateFormat token starting at {remaining:?}")));
+            return Err(token_error(
+                token,
+                format!("unsupported Gantt dateFormat token starting at {remaining:?}"),
+            ));
         }
         match parts.last_mut() {
             Some(GanttDateFormatPart::Literal(literal)) => literal.push(character),
@@ -6732,12 +6918,25 @@ fn parse_gantt_date_format(token: &Token, source: &str) -> Result<GanttDateForma
         }
         index += character.len_utf8();
     }
-    let timestamp_parts = parts.iter().filter(|part| matches!(part,
-        GanttDateFormatPart::UnixSeconds | GanttDateFormatPart::UnixMilliseconds)).count();
+    let timestamp_parts = parts
+        .iter()
+        .filter(|part| {
+            matches!(
+                part,
+                GanttDateFormatPart::UnixSeconds | GanttDateFormatPart::UnixMilliseconds
+            )
+        })
+        .count();
     if timestamp_parts > 0 && parts.len() != 1 {
-        return Err(token_error(token, "Gantt Unix timestamp formats cannot be combined"));
+        return Err(token_error(
+            token,
+            "Gantt Unix timestamp formats cannot be combined",
+        ));
     }
-    Ok(GanttDateFormat { source: source.to_string(), parts })
+    Ok(GanttDateFormat {
+        source: source.to_string(),
+        parts,
+    })
 }
 
 fn gantt_date_matches_format(value: &str, format: &GanttDateFormat) -> bool {
@@ -6746,7 +6945,9 @@ fn gantt_date_matches_format(value: &str, format: &GanttDateFormat) -> bool {
     for part in &format.parts {
         let consumed = match part {
             GanttDateFormatPart::Literal(literal) => {
-                let Some(next) = rest.strip_prefix(literal) else { return false };
+                let Some(next) = rest.strip_prefix(literal) else {
+                    return false;
+                };
                 rest = next;
                 continue;
             }
@@ -6756,10 +6957,13 @@ fn gantt_date_matches_format(value: &str, format: &GanttDateFormat) -> bool {
             GanttDateFormatPart::Quarter => consume_quarter(rest),
             GanttDateFormatPart::Month | GanttDateFormatPart::Day => consume_digits(rest, 1, 2),
             GanttDateFormatPart::DayOrdinal => consume_ordinal_day(rest),
-            GanttDateFormatPart::Month2 | GanttDateFormatPart::Day2 | GanttDateFormatPart::Hour24
-                | GanttDateFormatPart::Minute => consume_digits(rest, 2, 2),
-            GanttDateFormatPart::Hour24Unpadded | GanttDateFormatPart::MinuteUnpadded
-                | GanttDateFormatPart::SecondUnpadded => consume_digits(rest, 1, 2),
+            GanttDateFormatPart::Month2
+            | GanttDateFormatPart::Day2
+            | GanttDateFormatPart::Hour24
+            | GanttDateFormatPart::Minute => consume_digits(rest, 2, 2),
+            GanttDateFormatPart::Hour24Unpadded
+            | GanttDateFormatPart::MinuteUnpadded
+            | GanttDateFormatPart::SecondUnpadded => consume_digits(rest, 1, 2),
             GanttDateFormatPart::Hour12 => consume_digits(rest, 1, 2),
             GanttDateFormatPart::Hour12Padded => consume_digits(rest, 2, 2),
             GanttDateFormatPart::Second if seconds_only => consume_digits(rest, 1, 2),
@@ -6777,7 +6981,9 @@ fn gantt_date_matches_format(value: &str, format: &GanttDateFormat) -> bool {
             GanttDateFormatPart::MeridiemLower => consume_meridiem(rest, false),
             GanttDateFormatPart::TimezoneOffsetColon => consume_timezone_offset(rest, true),
             GanttDateFormatPart::TimezoneOffsetCompact => consume_timezone_offset(rest, false),
-            GanttDateFormatPart::UnixSeconds | GanttDateFormatPart::UnixMilliseconds => consume_signed_digits(rest),
+            GanttDateFormatPart::UnixSeconds | GanttDateFormatPart::UnixMilliseconds => {
+                consume_signed_digits(rest)
+            }
         };
         let Some(length) = consumed else { return false };
         rest = &rest[length..];
@@ -6796,14 +7002,25 @@ fn consume_weekday_number(value: &str) -> Option<usize> {
 fn consume_ordinal_day(value: &str) -> Option<usize> {
     let digits = consume_digits(value, 1, 2)?;
     let day = value[..digits].parse::<u8>().ok()?;
-    if !(1..=31).contains(&day) { return None; }
+    if !(1..=31).contains(&day) {
+        return None;
+    }
     let suffix = ordinal_suffix(i64::from(day));
-    value[digits..].starts_with(suffix).then_some(digits + suffix.len())
+    value[digits..]
+        .starts_with(suffix)
+        .then_some(digits + suffix.len())
 }
 
 fn ordinal_suffix(value: i64) -> &'static str {
-    if (11..=13).contains(&(value % 100)) { return "th"; }
-    match value % 10 { 1 => "st", 2 => "nd", 3 => "rd", _ => "th" }
+    if (11..=13).contains(&(value % 100)) {
+        return "th";
+    }
+    match value % 10 {
+        1 => "st",
+        2 => "nd",
+        3 => "rd",
+        _ => "th",
+    }
 }
 
 fn consume_meridiem(value: &str, uppercase: bool) -> Option<usize> {
@@ -6816,26 +7033,42 @@ fn consume_meridiem(value: &str, uppercase: bool) -> Option<usize> {
 }
 
 fn consume_timezone_offset(value: &str, colon: bool) -> Option<usize> {
-    if value.starts_with('Z') { return Some(1); }
+    if value.starts_with('Z') {
+        return Some(1);
+    }
     let bytes = value.as_bytes();
-    if !matches!(bytes.first(), Some(b'+') | Some(b'-')) { return None; }
+    if !matches!(bytes.first(), Some(b'+') | Some(b'-')) {
+        return None;
+    }
     let expected = if colon { 6 } else { 5 };
-    if bytes.len() < expected { return None; }
-    if colon && bytes.get(3) != Some(&b':') { return None; }
+    if bytes.len() < expected {
+        return None;
+    }
+    if colon && bytes.get(3) != Some(&b':') {
+        return None;
+    }
     let hour = &value[1..3];
     let minute = if colon { &value[4..6] } else { &value[3..5] };
     (hour.bytes().all(|byte| byte.is_ascii_digit())
         && minute.bytes().all(|byte| byte.is_ascii_digit()))
-        .then_some(expected)
+    .then_some(expected)
 }
 
 fn consume_digits(value: &str, minimum: usize, maximum: usize) -> Option<usize> {
-    let count = value.bytes().take(maximum).take_while(u8::is_ascii_digit).count();
+    let count = value
+        .bytes()
+        .take(maximum)
+        .take_while(u8::is_ascii_digit)
+        .count();
     (count >= minimum).then_some(count)
 }
 
 fn consume_letters(value: &str, minimum: usize, maximum: usize) -> Option<usize> {
-    let count = value.bytes().take(maximum).take_while(u8::is_ascii_alphabetic).count();
+    let count = value
+        .bytes()
+        .take(maximum)
+        .take_while(u8::is_ascii_alphabetic)
+        .count();
     (count >= minimum).then_some(count)
 }
 
@@ -6846,12 +7079,19 @@ fn consume_signed_digits(value: &str) -> Option<usize> {
 }
 
 fn validate_gantt_dependencies(sections: &[GanttSection]) -> Result<(), ParseError> {
-    let tasks = sections.iter().flat_map(|section| section.tasks.iter()).collect::<Vec<_>>();
+    let tasks = sections
+        .iter()
+        .flat_map(|section| section.tasks.iter())
+        .collect::<Vec<_>>();
     let mut unique_tasks = HashMap::new();
     for task in &tasks {
         if let Some(previous) = unique_tasks.insert(task.id.as_str(), *task) {
             if !previous.tags.vertical || !task.tags.vertical {
-                return Err(ParseError { message: "duplicate Gantt task id".into(), line: 1, col: 1 });
+                return Err(ParseError {
+                    message: "duplicate Gantt task id".into(),
+                    line: 1,
+                    col: 1,
+                });
             }
         }
     }
@@ -6879,17 +7119,27 @@ fn validate_gantt_dependencies(sections: &[GanttSection]) -> Result<(), ParseErr
         }
     }
 
-    let starts = tasks.iter().map(|task| (task.id.as_str(), &task.start)).collect::<HashMap<_, _>>();
+    let starts = tasks
+        .iter()
+        .map(|task| (task.id.as_str(), &task.start))
+        .collect::<HashMap<_, _>>();
     fn visit<'a>(
         id: &'a str,
         starts: &HashMap<&'a str, &'a TaskStart>,
         visiting: &mut HashSet<&'a str>,
         visited: &mut HashSet<&'a str>,
     ) -> bool {
-        if visited.contains(id) { return false; }
-        if !visiting.insert(id) { return true; }
+        if visited.contains(id) {
+            return false;
+        }
+        if !visiting.insert(id) {
+            return true;
+        }
         if let Some(TaskStart::After(dependencies)) = starts.get(id) {
-            if dependencies.iter().any(|dependency| visit(dependency, starts, visiting, visited)) {
+            if dependencies
+                .iter()
+                .any(|dependency| visit(dependency, starts, visiting, visited))
+            {
                 return true;
             }
         }
@@ -6899,8 +7149,15 @@ fn validate_gantt_dependencies(sections: &[GanttSection]) -> Result<(), ParseErr
     }
     let mut visiting = HashSet::new();
     let mut visited = HashSet::new();
-    if starts.keys().any(|id| visit(id, &starts, &mut visiting, &mut visited)) {
-        return Err(ParseError { message: "cyclic Gantt after dependency".into(), line: 1, col: 1 });
+    if starts
+        .keys()
+        .any(|id| visit(id, &starts, &mut visiting, &mut visited))
+    {
+        return Err(ParseError {
+            message: "cyclic Gantt after dependency".into(),
+            line: 1,
+            col: 1,
+        });
     }
     Ok(())
 }
@@ -6929,11 +7186,7 @@ fn gantt_metadata_value(token: &Token) -> Option<String> {
 }
 
 fn normalize_gantt_prefixed_label(value: &str) -> String {
-    normalize_mermaid_line_breaks(
-        value
-            .trim_start_matches([';', '#'])
-            .trim_start(),
-    )
+    normalize_mermaid_line_breaks(value.trim_start_matches([';', '#']).trim_start())
 }
 
 fn apply_gantt_interaction(
@@ -7052,9 +7305,17 @@ fn parse_gantt_task(
             let previous = previous_task_id.ok_or_else(|| {
                 token_error(token, "sequential Gantt task requires a previous task")
             })?;
-            (generated_id(generated_task_count), format!("after {previous}"), *end)
+            (
+                generated_id(generated_task_count),
+                format!("after {previous}"),
+                *end,
+            )
         }
-        [start, end] => (generated_id(generated_task_count), (*start).to_string(), *end),
+        [start, end] => (
+            generated_id(generated_task_count),
+            (*start).to_string(),
+            *end,
+        ),
         [id, start, end] => ((*id).to_string(), (*start).to_string(), *end),
         _ => return Err(token_error(token, "invalid Gantt task field count")),
     };
@@ -7090,11 +7351,18 @@ fn apply_gantt_task_tag(value: &str, tags: &mut GanttTaskTags) -> bool {
     true
 }
 
-fn parse_gantt_task_start(token: &Token, value: &str, date_format: &GanttDateFormat) -> Result<TaskStart, ParseError> {
+fn parse_gantt_task_start(
+    token: &Token,
+    value: &str,
+    date_format: &GanttDateFormat,
+) -> Result<TaskStart, ParseError> {
     if let Some(ids) = value.strip_prefix("after ") {
         let dependencies = gantt_dependency_ids(ids);
         if dependencies.is_empty() {
-            return Err(token_error(token, "Gantt after requires at least one task id"));
+            return Err(token_error(
+                token,
+                "Gantt after requires at least one task id",
+            ));
         }
         Ok(TaskStart::After(dependencies))
     } else if gantt_date_matches_format(value, date_format)
@@ -7102,7 +7370,10 @@ fn parse_gantt_task_start(token: &Token, value: &str, date_format: &GanttDateFor
     {
         Ok(TaskStart::Date(value.to_string()))
     } else {
-        Err(token_error(token, "Gantt task start does not match dateFormat"))
+        Err(token_error(
+            token,
+            "Gantt task start does not match dateFormat",
+        ))
     }
 }
 
@@ -7114,17 +7385,26 @@ fn parse_gantt_task_end(
     if let Some(ids) = value.strip_prefix("until ") {
         let dependencies = gantt_dependency_ids(ids);
         if dependencies.is_empty() {
-            return Err(token_error(token, "Gantt until requires at least one task id"));
+            return Err(token_error(
+                token,
+                "Gantt until requires at least one task id",
+            ));
         }
         Ok((GanttDuration::default(), Some(TaskEnd::Until(dependencies))))
     } else if gantt_date_matches_format(value, date_format)
         || gantt_date_matches_three_digit_year_fallback(value, date_format)
     {
-        Ok((GanttDuration::default(), Some(TaskEnd::Date(value.to_string()))))
+        Ok((
+            GanttDuration::default(),
+            Some(TaskEnd::Date(value.to_string())),
+        ))
     } else if let Some(duration) = parse_duration(value).filter(|duration| duration.value >= 0.0) {
         Ok((duration, None))
     } else {
-        Err(token_error(token, "invalid Gantt task duration or end date"))
+        Err(token_error(
+            token,
+            "invalid Gantt task duration or end date",
+        ))
     }
 }
 
@@ -7136,10 +7416,7 @@ fn gantt_dependency_ids(value: &str) -> Vec<String> {
         .collect()
 }
 
-fn gantt_date_matches_three_digit_year_fallback(
-    value: &str,
-    format: &GanttDateFormat,
-) -> bool {
+fn gantt_date_matches_three_digit_year_fallback(value: &str, format: &GanttDateFormat) -> bool {
     if format.parts != GanttDateFormat::default().parts {
         return false;
     }
@@ -7147,13 +7424,20 @@ fn gantt_date_matches_three_digit_year_fallback(
     if bytes.len() != 9 || bytes[3] != b'-' || bytes[6] != b'-' {
         return false;
     }
-    if !bytes[..3].iter().chain(&bytes[4..6]).chain(&bytes[7..]).all(u8::is_ascii_digit) {
+    if !bytes[..3]
+        .iter()
+        .chain(&bytes[4..6])
+        .chain(&bytes[7..])
+        .all(u8::is_ascii_digit)
+    {
         return false;
     }
     let year = value[..3].parse::<i64>().ok();
     let month = value[4..6].parse::<i64>().ok();
     let day = value[7..].parse::<i64>().ok();
-    let (Some(year), Some(month), Some(day)) = (year, month, day) else { return false };
+    let (Some(year), Some(month), Some(day)) = (year, month, day) else {
+        return false;
+    };
     let maximum_day = match month {
         4 | 6 | 9 | 11 => 30,
         2 if year % 4 == 0 && (year % 100 != 0 || year % 400 == 0) => 29,
@@ -7166,13 +7450,22 @@ fn gantt_date_matches_three_digit_year_fallback(
 
 fn parse_duration(s: &str) -> Option<GanttDuration> {
     let s = s.trim();
-    let units = [("ms", GanttDurationUnit::Milliseconds), ("s", GanttDurationUnit::Seconds),
-        ("m", GanttDurationUnit::Minutes), ("h", GanttDurationUnit::Hours),
-        ("d", GanttDurationUnit::Days), ("w", GanttDurationUnit::Weeks)];
-    let (number, unit) = units.into_iter().find_map(|(suffix, unit)|
-        s.strip_suffix(suffix).map(|number| (number, unit)))
+    let units = [
+        ("ms", GanttDurationUnit::Milliseconds),
+        ("s", GanttDurationUnit::Seconds),
+        ("m", GanttDurationUnit::Minutes),
+        ("h", GanttDurationUnit::Hours),
+        ("d", GanttDurationUnit::Days),
+        ("w", GanttDurationUnit::Weeks),
+    ];
+    let (number, unit) = units
+        .into_iter()
+        .find_map(|(suffix, unit)| s.strip_suffix(suffix).map(|number| (number, unit)))
         .unwrap_or((s, GanttDurationUnit::Days));
-    Some(GanttDuration { value: number.parse().ok()?, unit })
+    Some(GanttDuration {
+        value: number.parse().ok()?,
+        unit,
+    })
 }
 
 // ── Tests ─────────────────────────────────────────────────────────────────
@@ -7183,10 +7476,9 @@ mod tests_dg04 {
 
     #[test]
     fn block_parses_grid_cells_spaces_shapes_and_connections() {
-        let diagram = parse_block(
-            "block-beta\ncolumns 3\nA[Parser] space B(IR)\nC((Paint))\nA -->|lower| C",
-        )
-        .unwrap();
+        let diagram =
+            parse_block("block-beta\ncolumns 3\nA[Parser] space B(IR)\nC((Paint))\nA -->|lower| C")
+                .unwrap();
         assert_eq!(diagram.columns, 3);
         assert_eq!(diagram.cells.len(), 4);
         assert!(!diagram.cells[1].visible);
@@ -7211,7 +7503,10 @@ mod tests_dg04 {
         .unwrap();
         assert_eq!(diagram.title.as_deref(), Some("Native packet"));
         assert_eq!(diagram.fields.len(), 3);
-        assert_eq!((diagram.fields[1].start_bit, diagram.fields[1].end_bit), (8, 31));
+        assert_eq!(
+            (diagram.fields[1].start_bit, diagram.fields[1].end_bit),
+            (8, 31)
+        );
         assert_eq!(diagram.fields[2].label.text, "Sequence number");
     }
 
@@ -7227,6 +7522,32 @@ mod tests_dg04 {
             MermaidDiagram::Packet(diagram) => assert_eq!(diagram.fields.len(), 1),
             _ => panic!("expected packet IR"),
         }
+    }
+
+    #[test]
+    fn kanban_parses_columns_cards_and_explicit_ids() {
+        let board = parse_kanban(
+            "kanban\n  todo[Todo]\n    parser[Write grammar]\n    tests[Add tests]\n  done[Done]\n    ship[Ship]",
+        )
+        .unwrap();
+        assert_eq!(board.columns.len(), 2);
+        assert_eq!(board.columns[0].id, "todo");
+        assert_eq!(board.columns[0].cards.len(), 2);
+        assert_eq!(board.columns[1].cards[0].label.text, "Ship");
+    }
+
+    #[test]
+    fn dispatch_kanban_to_board_ir() {
+        match parse_any_mermaid("kanban\nTodo\n  task1[Task]").unwrap() {
+            MermaidDiagram::Board(board) => assert_eq!(board.columns.len(), 1),
+            _ => panic!("expected board IR"),
+        }
+    }
+
+    #[test]
+    fn kanban_rejects_nested_cards_outside_partial_subset() {
+        let error = parse_kanban("kanban\nTodo\n  task1[Task]\n    nested[Nested]").unwrap_err();
+        assert!(error.message.contains("nested kanban cards"));
     }
 
     #[test]
@@ -7424,10 +7745,12 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
 
         let categorical =
             parse_xychart("xychart\nx-axis [A, B]\nbar [1, 2, 99]\nline [3, 4, 88]\n").unwrap();
-        assert!(categorical
-            .series
-            .iter()
-            .all(|series| series.data.len() == 2));
+        assert!(
+            categorical
+                .series
+                .iter()
+                .all(|series| series.data.len() == 2)
+        );
     }
 
     #[test]
@@ -7790,10 +8113,9 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(hash.sections[0].label.as_deref(), Some("Build"));
         assert_eq!(hash.sections[0].tasks[0].label, "Parser");
 
-        let delimited = parse_gantt(
-            "gantt;title ;Release plan;section ;Build;Parser :parser, 2026-03-01, 1d",
-        )
-        .unwrap();
+        let delimited =
+            parse_gantt("gantt;title ;Release plan;section ;Build;Parser :parser, 2026-03-01, 1d")
+                .unwrap();
         assert_eq!(delimited.sections[0].tasks[0].label, "Parser");
     }
 
@@ -7833,7 +8155,10 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         ).unwrap();
         assert_eq!(diagram.config.axis_format.as_deref(), Some("%m/%d"));
         assert_eq!(diagram.config.tick_interval.as_deref(), Some("2weeks"));
-        assert_eq!(diagram.config.excludes, ["weekends", "2026-01-01", "monday"]);
+        assert_eq!(
+            diagram.config.excludes,
+            ["weekends", "2026-01-01", "monday"]
+        );
         assert_eq!(diagram.config.includes, ["2026-01-03"]);
         assert!(diagram.config.inclusive_end_dates);
         assert!(diagram.config.top_axis);
@@ -7841,9 +8166,9 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(diagram.config.weekday.as_deref(), Some("monday"));
         assert_eq!(diagram.config.weekend.as_deref(), Some("friday"));
 
-        let compact = parse_gantt(
-            "---\ndisplayMode: compact\n---\ngantt\nTask :t1, 2026-01-01, 1d\n",
-        ).unwrap();
+        let compact =
+            parse_gantt("---\ndisplayMode: compact\n---\ngantt\nTask :t1, 2026-01-01, 1d\n")
+                .unwrap();
         assert_eq!(compact.config.display_mode, GanttDisplayMode::Compact);
     }
 
@@ -7859,9 +8184,9 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
 
     #[test]
     fn gantt_preserves_explicit_end_dates() {
-        let diagram = parse_gantt(
-            "gantt\ninclusiveEndDates\nRelease :release, 2026-03-01, 2026-03-03\n",
-        ).unwrap();
+        let diagram =
+            parse_gantt("gantt\ninclusiveEndDates\nRelease :release, 2026-03-01, 2026-03-03\n")
+                .unwrap();
         let task = &diagram.sections[0].tasks[0];
         assert_eq!(task.end, Some(TaskEnd::Date("2026-03-03".into())));
         assert_eq!(task.duration, GanttDuration::default());
@@ -7873,9 +8198,15 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
             "gantt\nA :a, 2026-03-01, 2d\nB :b, 2026-03-02, 5d\nC :c, after a b, 1d\nWindow :w, 2026-02-28, until b c\n",
         ).unwrap();
         let tasks = &diagram.sections[0].tasks;
-        assert_eq!(tasks[2].start, TaskStart::After(vec!["a".into(), "b".into()]));
+        assert_eq!(
+            tasks[2].start,
+            TaskStart::After(vec!["a".into(), "b".into()])
+        );
         assert_eq!(tasks[2].dependencies, ["a", "b"]);
-        assert_eq!(tasks[3].end, Some(TaskEnd::Until(vec!["b".into(), "c".into()])));
+        assert_eq!(
+            tasks[3].end,
+            Some(TaskEnd::Until(vec!["b".into(), "c".into()]))
+        );
 
         assert!(parse_gantt("gantt\nA :a, after missing, 1d\n").is_err());
         assert!(parse_gantt("gantt\nA :a, after b, 1d\nB :b, after a, 1d\n").is_err());
@@ -7887,7 +8218,11 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         let diagram = parse_gantt(
             "gantt\nsection First\nAnchor :anchor, 2026-03-01, 2d\nGenerated :after anchor, 1d\nsection Second\nSequential :active, 3d\nDated :2026-03-10, 1d\n",
         ).unwrap();
-        let tasks = diagram.sections.iter().flat_map(|section| &section.tasks).collect::<Vec<_>>();
+        let tasks = diagram
+            .sections
+            .iter()
+            .flat_map(|section| &section.tasks)
+            .collect::<Vec<_>>();
         assert_eq!(tasks[1].id, "task1");
         assert_eq!(tasks[1].start, TaskStart::After(vec!["anchor".into()]));
         assert_eq!(tasks[2].id, "task2");
@@ -7924,9 +8259,9 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert!(parse_gantt(
             "gantt\ndateFormat HH:mm\nMarker :vert, marker, 17:30, 2m\nMarker :vert, marker, 17:30, 2m\n"
         ).is_ok());
-        assert!(parse_gantt(
-            "gantt\nTask :task, 2026-01-01, 1d\nTask :task, 2026-01-02, 1d\n"
-        ).is_err());
+        assert!(
+            parse_gantt("gantt\nTask :task, 2026-01-01, 1d\nTask :task, 2026-01-02, 1d\n").is_err()
+        );
     }
 
     #[test]
@@ -7935,48 +8270,81 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
             "gantt\ndateFormat DD/MM/YYYY HH:mm\nsection Build\nTask :t1, 02/01/2026 06:30, 03/01/2026 18:45",
         ).unwrap();
         assert_eq!(diagram.date_format.source, "DD/MM/YYYY HH:mm");
-        assert!(diagram.date_format.parts.contains(&GanttDateFormatPart::Hour24));
+        assert!(
+            diagram
+                .date_format
+                .parts
+                .contains(&GanttDateFormatPart::Hour24)
+        );
         assert!(matches!(diagram.sections[0].tasks[0].end,
             Some(TaskEnd::Date(ref value)) if value == "03/01/2026 18:45"));
-        assert!(parse_gantt("gantt\ndateFormat DD/MM/YYYY\nTask :t1, 2026-01-02, 1d")
-            .unwrap_err().message.contains("does not match dateFormat"));
+        assert!(
+            parse_gantt("gantt\ndateFormat DD/MM/YYYY\nTask :t1, 2026-01-02, 1d")
+                .unwrap_err()
+                .message
+                .contains("does not match dateFormat")
+        );
     }
 
     #[test]
     fn gantt_compiles_unpadded_time_formats() {
-        let diagram = parse_gantt(
-            "gantt\ndateFormat YYYY-MM-DD H:m:s\nTask :t1, 2026-03-01 4:5:6, 1s",
-        ).unwrap();
-        assert!(diagram.date_format.parts.contains(&GanttDateFormatPart::Hour24Unpadded));
-        assert!(diagram.date_format.parts.contains(&GanttDateFormatPart::MinuteUnpadded));
-        assert!(diagram.date_format.parts.contains(&GanttDateFormatPart::SecondUnpadded));
+        let diagram =
+            parse_gantt("gantt\ndateFormat YYYY-MM-DD H:m:s\nTask :t1, 2026-03-01 4:5:6, 1s")
+                .unwrap();
+        assert!(
+            diagram
+                .date_format
+                .parts
+                .contains(&GanttDateFormatPart::Hour24Unpadded)
+        );
+        assert!(
+            diagram
+                .date_format
+                .parts
+                .contains(&GanttDateFormatPart::MinuteUnpadded)
+        );
+        assert!(
+            diagram
+                .date_format
+                .parts
+                .contains(&GanttDateFormatPart::SecondUnpadded)
+        );
     }
 
     #[test]
     fn gantt_compiles_quarter_formats() {
         let diagram = parse_gantt("gantt\ndateFormat YYYY-Q\nPlanning :p1, 2026-2, 1d").unwrap();
-        assert!(diagram.date_format.parts.contains(&GanttDateFormatPart::Quarter));
+        assert!(
+            diagram
+                .date_format
+                .parts
+                .contains(&GanttDateFormatPart::Quarter)
+        );
         assert!(parse_gantt("gantt\ndateFormat YYYY-Q\nBad :b, 2026-5, 1d").is_err());
     }
 
     #[test]
     fn gantt_compiles_signed_variable_width_year_formats() {
-        let diagram = parse_gantt(
-            "gantt\ndateFormat Y-MM-DD\nPlanning :p1, +2026-03-01, 1d",
-        )
-        .unwrap();
-        assert!(diagram.date_format.parts.contains(&GanttDateFormatPart::YearSigned));
+        let diagram =
+            parse_gantt("gantt\ndateFormat Y-MM-DD\nPlanning :p1, +2026-03-01, 1d").unwrap();
+        assert!(
+            diagram
+                .date_format
+                .parts
+                .contains(&GanttDateFormatPart::YearSigned)
+        );
         assert!(parse_gantt("gantt\ndateFormat Y-MM-DD\nAncient :a, -1-03-01, 1d").is_ok());
         assert!(parse_gantt("gantt\ndateFormat Y-MM-DD\nBad :b, +-03-01, 1d").is_err());
     }
 
     #[test]
     fn gantt_accepts_upstream_three_digit_year_fallback() {
-        let diagram = parse_gantt(
-            "gantt\ndateFormat YYYY-MM-DD\nVacation :trip, 202-12-01, 7d",
-        )
-        .unwrap();
-        assert_eq!(diagram.sections[0].tasks[0].start, TaskStart::Date("202-12-01".into()));
+        let diagram =
+            parse_gantt("gantt\ndateFormat YYYY-MM-DD\nVacation :trip, 202-12-01, 7d").unwrap();
+        assert_eq!(
+            diagram.sections[0].tasks[0].start,
+            TaskStart::Date("202-12-01".into())
+        );
         assert!(parse_gantt("gantt\ndateFormat YYYYMMDD\nBad :b, 202304, 1d").is_err());
     }
 
@@ -7985,26 +8353,46 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         let named = parse_gantt(
             "gantt\ndateFormat D MMMM YYYY [at] HH:mm:ss.SSS\nTask :t1, 2 January 2026 at 04:05:06.007, 1d",
         ).unwrap();
-        assert!(named.date_format.parts.contains(&GanttDateFormatPart::MonthLong));
+        assert!(
+            named
+                .date_format
+                .parts
+                .contains(&GanttDateFormatPart::MonthLong)
+        );
         let unix = parse_gantt("gantt\ndateFormat X\nTask :t1, 1767225600, 1767312000").unwrap();
-        assert!(matches!(unix.sections[0].tasks[0].end, Some(TaskEnd::Date(_))));
+        assert!(matches!(
+            unix.sections[0].tasks[0].end,
+            Some(TaskEnd::Date(_))
+        ));
         assert!(parse_gantt("gantt\ndateFormat YYYY-QQ\nTask :t1, 2026-01, 1d").is_err());
     }
 
     #[test]
     fn gantt_compiles_fractional_second_formats() {
         let one = parse_gantt("gantt\ndateFormat HH:mm:ss.S\nTask :t1, 00:00:00.5, 1s").unwrap();
-        assert!(one.date_format.parts.contains(&GanttDateFormatPart::Millisecond1));
+        assert!(
+            one.date_format
+                .parts
+                .contains(&GanttDateFormatPart::Millisecond1)
+        );
         let two = parse_gantt("gantt\ndateFormat HH:mm:ss.SS\nTask :t1, 00:00:00.25, 1s").unwrap();
-        assert!(two.date_format.parts.contains(&GanttDateFormatPart::Millisecond2));
+        assert!(
+            two.date_format
+                .parts
+                .contains(&GanttDateFormatPart::Millisecond2)
+        );
     }
 
     #[test]
     fn gantt_compiles_and_validates_ordinal_days() {
-        let diagram = parse_gantt(
-            "gantt\ndateFormat Do MMMM YYYY\nRelease :r1, 1st March 2026, 1d",
-        ).unwrap();
-        assert!(diagram.date_format.parts.contains(&GanttDateFormatPart::DayOrdinal));
+        let diagram =
+            parse_gantt("gantt\ndateFormat Do MMMM YYYY\nRelease :r1, 1st March 2026, 1d").unwrap();
+        assert!(
+            diagram
+                .date_format
+                .parts
+                .contains(&GanttDateFormatPart::DayOrdinal)
+        );
         assert!(parse_gantt("gantt\ndateFormat Do MMMM YYYY\nBad :b, 2st March 2026, 1d").is_err());
     }
 
@@ -8012,26 +8400,46 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     fn gantt_compiles_timezone_offset_formats() {
         let colon = parse_gantt(
             "gantt\ndateFormat YYYY-MM-DD[T]HH:mmZ\nTask :t1, 2026-01-02T04:05+02:30, 1h",
-        ).unwrap();
-        assert!(colon.date_format.parts.contains(&GanttDateFormatPart::TimezoneOffsetColon));
+        )
+        .unwrap();
+        assert!(
+            colon
+                .date_format
+                .parts
+                .contains(&GanttDateFormatPart::TimezoneOffsetColon)
+        );
 
         let compact = parse_gantt(
             "gantt\ndateFormat YYYY-MM-DD[T]HH:mmZZ\nTask :t1, 2026-01-02T04:05-0730, 1h",
-        ).unwrap();
-        assert!(compact.date_format.parts.contains(&GanttDateFormatPart::TimezoneOffsetCompact));
-        assert!(parse_gantt(
-            "gantt\ndateFormat YYYY-MM-DD[T]HH:mmZ\nTask :t1, 2026-01-02T04:05+0230, 1h",
-        ).is_err());
+        )
+        .unwrap();
+        assert!(
+            compact
+                .date_format
+                .parts
+                .contains(&GanttDateFormatPart::TimezoneOffsetCompact)
+        );
+        assert!(
+            parse_gantt(
+                "gantt\ndateFormat YYYY-MM-DD[T]HH:mmZ\nTask :t1, 2026-01-02T04:05+0230, 1h",
+            )
+            .is_err()
+        );
     }
 
     #[test]
     fn gantt_accepts_single_component_seconds_format() {
-        let diagram = parse_gantt(
-            "gantt\ndateFormat ss\nsection Network Request\nRTT :rtt, 0, 20",
-        ).unwrap();
+        let diagram =
+            parse_gantt("gantt\ndateFormat ss\nsection Network Request\nRTT :rtt, 0, 20").unwrap();
         assert_eq!(diagram.date_format.parts, [GanttDateFormatPart::Second]);
-        assert_eq!(diagram.sections[0].tasks[0].start, TaskStart::Date("0".into()));
-        assert_eq!(diagram.sections[0].tasks[0].end, Some(TaskEnd::Date("20".into())));
+        assert_eq!(
+            diagram.sections[0].tasks[0].start,
+            TaskStart::Date("0".into())
+        );
+        assert_eq!(
+            diagram.sections[0].tasks[0].end,
+            Some(TaskEnd::Date("20".into()))
+        );
     }
 
     #[test]
@@ -8039,37 +8447,75 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         let diagram = parse_gantt(
             "gantt\ndateFormat YYYY-MM-DD h:mm A\nMorning :am, 2026-03-01 9:30 AM, 1h\nNoon :pm, 2026-03-01 12:30 PM, 1h",
         ).unwrap();
-        assert!(diagram.date_format.parts.contains(&GanttDateFormatPart::Hour12));
-        assert!(diagram.date_format.parts.contains(&GanttDateFormatPart::MeridiemUpper));
+        assert!(
+            diagram
+                .date_format
+                .parts
+                .contains(&GanttDateFormatPart::Hour12)
+        );
+        assert!(
+            diagram
+                .date_format
+                .parts
+                .contains(&GanttDateFormatPart::MeridiemUpper)
+        );
 
         let padded = parse_gantt(
             "gantt\ndateFormat YYYY-MM-DD hh:mm a\nEvening :pm, 2026-03-01 09:30 pm, 1h",
-        ).unwrap();
-        assert!(padded.date_format.parts.contains(&GanttDateFormatPart::Hour12Padded));
-        assert!(padded.date_format.parts.contains(&GanttDateFormatPart::MeridiemLower));
+        )
+        .unwrap();
+        assert!(
+            padded
+                .date_format
+                .parts
+                .contains(&GanttDateFormatPart::Hour12Padded)
+        );
+        assert!(
+            padded
+                .date_format
+                .parts
+                .contains(&GanttDateFormatPart::MeridiemLower)
+        );
     }
 
     #[test]
     fn gantt_compiles_named_weekday_formats() {
-        let numeric = parse_gantt(
-            "gantt\ndateFormat d YYYY-MM-DD\nRelease :r1, 0 2026-03-01, 1d",
-        ).unwrap();
-        assert!(numeric.date_format.parts.contains(&GanttDateFormatPart::WeekdayNumber));
+        let numeric =
+            parse_gantt("gantt\ndateFormat d YYYY-MM-DD\nRelease :r1, 0 2026-03-01, 1d").unwrap();
+        assert!(
+            numeric
+                .date_format
+                .parts
+                .contains(&GanttDateFormatPart::WeekdayNumber)
+        );
 
-        let minimum = parse_gantt(
-            "gantt\ndateFormat dd YYYY-MM-DD\nRelease :r1, Su 2026-03-01, 1d",
-        ).unwrap();
-        assert!(minimum.date_format.parts.contains(&GanttDateFormatPart::WeekdayMin));
+        let minimum =
+            parse_gantt("gantt\ndateFormat dd YYYY-MM-DD\nRelease :r1, Su 2026-03-01, 1d").unwrap();
+        assert!(
+            minimum
+                .date_format
+                .parts
+                .contains(&GanttDateFormatPart::WeekdayMin)
+        );
 
-        let short = parse_gantt(
-            "gantt\ndateFormat ddd YYYY-MM-DD\nRelease :r1, Sun 2026-03-01, 1d",
-        ).unwrap();
-        assert!(short.date_format.parts.contains(&GanttDateFormatPart::WeekdayShort));
+        let short =
+            parse_gantt("gantt\ndateFormat ddd YYYY-MM-DD\nRelease :r1, Sun 2026-03-01, 1d")
+                .unwrap();
+        assert!(
+            short
+                .date_format
+                .parts
+                .contains(&GanttDateFormatPart::WeekdayShort)
+        );
 
-        let long = parse_gantt(
-            "gantt\ndateFormat dddd YYYY-MM-DD\nRelease :r1, Sunday 2026-03-01, 1d",
-        ).unwrap();
-        assert!(long.date_format.parts.contains(&GanttDateFormatPart::WeekdayLong));
+        let long =
+            parse_gantt("gantt\ndateFormat dddd YYYY-MM-DD\nRelease :r1, Sunday 2026-03-01, 1d")
+                .unwrap();
+        assert!(
+            long.date_format
+                .parts
+                .contains(&GanttDateFormatPart::WeekdayLong)
+        );
         assert!(parse_gantt("gantt\ndateFormat d YYYY-MM-DD\nBad :b, 7 2026-03-01, 1d").is_err());
     }
 
@@ -8079,10 +8525,34 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
             "gantt\ndateFormat x\nA :a, 0, 20ms\nB :b, after a, 0.1s\nC :c, after b, 2m\nD :d, after c, 3h",
         ).unwrap();
         let tasks = &diagram.sections[0].tasks;
-        assert_eq!(tasks[0].duration, GanttDuration { value: 20.0, unit: GanttDurationUnit::Milliseconds });
-        assert_eq!(tasks[1].duration, GanttDuration { value: 0.1, unit: GanttDurationUnit::Seconds });
-        assert_eq!(tasks[2].duration, GanttDuration { value: 2.0, unit: GanttDurationUnit::Minutes });
-        assert_eq!(tasks[3].duration, GanttDuration { value: 3.0, unit: GanttDurationUnit::Hours });
+        assert_eq!(
+            tasks[0].duration,
+            GanttDuration {
+                value: 20.0,
+                unit: GanttDurationUnit::Milliseconds
+            }
+        );
+        assert_eq!(
+            tasks[1].duration,
+            GanttDuration {
+                value: 0.1,
+                unit: GanttDurationUnit::Seconds
+            }
+        );
+        assert_eq!(
+            tasks[2].duration,
+            GanttDuration {
+                value: 2.0,
+                unit: GanttDurationUnit::Minutes
+            }
+        );
+        assert_eq!(
+            tasks[3].duration,
+            GanttDuration {
+                value: 3.0,
+                unit: GanttDurationUnit::Hours
+            }
+        );
     }
 
     #[test]
@@ -9101,9 +9571,11 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         )
         .expect_err("unterminated front matter must not consume the diagram");
 
-        assert!(error
-            .message
-            .contains("unterminated Mermaid YAML front matter"));
+        assert!(
+            error
+                .message
+                .contains("unterminated Mermaid YAML front matter")
+        );
         assert_eq!(error.line, 2);
     }
 
@@ -9539,12 +10011,16 @@ B//-A: reverse stick top
         .unwrap();
         let properties = &diagram.participants[0].properties;
         assert_eq!(properties.len(), 3);
-        assert!(properties
-            .iter()
-            .any(|property| property.name == "role" && property.value_json == "\"owner\""));
-        assert!(properties
-            .iter()
-            .any(|property| property.name == "active" && property.value_json == "true"));
+        assert!(
+            properties
+                .iter()
+                .any(|property| property.name == "role" && property.value_json == "\"owner\"")
+        );
+        assert!(
+            properties
+                .iter()
+                .any(|property| property.name == "active" && property.value_json == "true")
+        );
         assert!(properties.iter().any(|property| {
             property.name == "limits" && property.value_json == "{\"daily\":5}"
         }));
