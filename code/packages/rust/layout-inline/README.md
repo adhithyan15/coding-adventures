@@ -13,6 +13,11 @@ containers are reconstructed once per occupied line. This lets HTML links,
 document annotations, and future UI spans retain accurate geometry without
 putting producer-specific behavior in the layout engine.
 
+Fragment reconstruction delegates margin, padding, border, and
+`box-decoration-break` continuation to `layout-inline-box`. Slice mode keeps
+only the outermost inline edges; clone mode repeats them per line, and both feed
+ordinary positioned geometry to paint and hit testing.
+
 Formatting-context owners pass inherited `whiteSpace` and `wordBreak`
 properties through `InlineOptions`; producers do not need to duplicate those
 properties onto every descendant leaf.

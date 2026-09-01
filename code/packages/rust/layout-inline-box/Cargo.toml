@@ -1,0 +1,8 @@
+[package]
+name = "layout-inline-box"
+version = "0.1.0"
+edition = "2021"
+description = "Reusable fragmented inline box edge and decoration policy over layout-ir"
+
+[dependencies]
+layout-ir = { path = "../layout-ir" }

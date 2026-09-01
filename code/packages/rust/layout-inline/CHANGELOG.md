@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Preserve semantic wrapper margin, padding, border, and
+  `box-decoration-break` slice/clone edges across line fragments, including
+  edge-aware line fitting and vertical decoration extents.
+
 - Add line-specific region formatting with horizontal offsets and vertical
   advancement for float/exclusion integration while preserving wrapper
   fragmentation and baseline alignment.

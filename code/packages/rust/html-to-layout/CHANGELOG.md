@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Project computed `box-decoration-break` plus inline margin, padding, and
+  border values into the reusable fragmented inline-box contract.
+
 - Project computed `float` and `clear` values into the reusable
   `layout-float` extension contract.
 - Project CSS table layout, border spacing/collapse, caption side, vertical
