@@ -274,6 +274,10 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
     guard let warning else { return update }
     var augmented = update
     augmented["persistenceWarning"] = warning
+    if var props = augmented["props"] as? [String: Any], props.keys.contains("storage-warning") {
+      props["storage-warning"] = warning
+      augmented["props"] = props
+    }
     return augmented
   }
 

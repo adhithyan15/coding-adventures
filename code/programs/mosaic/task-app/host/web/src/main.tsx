@@ -26,6 +26,7 @@ import {
   loadWorkspace,
   makeWorkspaceRecord,
   openWorkspaceStorage,
+  preserveRejectedWorkspace,
   saveWorkspace,
 } from "./persistence";
 
@@ -1367,21 +1368,49 @@ async function boot() {
 
   // Restore the persisted workspace before the first render (no loading spinner):
   // load the engine snapshot, then seed the controller with the saved host state.
-  const storage = await openWorkspaceStorage();
-  const saved = await loadWorkspace(storage);
+  const storageSession = await openWorkspaceStorage();
+  const storage = storageSession.storage;
+  let persistenceWarning = storageSession.warning;
+  let saved: Awaited<ReturnType<typeof loadWorkspace>>;
+  try {
+    saved = await loadWorkspace(storage);
+  } catch (err) {
+    const detail = err instanceof Error ? err.message : String(err);
+    persistenceWarning = `Saved data could not be read. Trestle started a fresh workspace: ${detail}`;
+    saved = undefined;
+  }
   if (saved) {
     try {
       engine.load(saved.snapshot);
     } catch (err) {
-      console.error("Could not restore the saved workspace; starting fresh.", err);
+      const detail = err instanceof Error ? err.message : String(err);
+      try {
+        await preserveRejectedWorkspace(storage, saved);
+        persistenceWarning =
+          `Saved data could not be restored. Trestle started a fresh workspace and kept the ` +
+          `rejected record as workspace/web-corrupt for recovery: ${detail}`;
+      } catch (preserveError) {
+        const preserveDetail =
+          preserveError instanceof Error ? preserveError.message : String(preserveError);
+        persistenceWarning =
+          `Saved data could not be restored, and its recovery copy could not be written. ` +
+          `Do not clear this site's browser data: ${detail}; ${preserveDetail}`;
+      }
+      saved = undefined;
     }
     // `load` clears the engine's selection (it pointed into the replaced workspace),
     // so re-apply the remembered one. A project that no longer exists is rejected and
     // we simply stay on the default.
-    if (saved.activeProject) {
+    if (saved?.activeProject) {
       engine.setActiveProject({ id: saved.activeProject });
     }
   }
+
+  let updatePersistenceWarning: ((warning: string) => void) | undefined;
+  const reportPersistenceWarning = (warning: string) => {
+    persistenceWarning = warning;
+    updatePersistenceWarning?.(warning);
+  };
 
   const controller = makeController(engine, {
     initialOrder: saved?.order ?? [],
@@ -1390,12 +1419,21 @@ async function boot() {
       saveWorkspace(
         storage,
         makeWorkspaceRecord(snapshot, order, counter, Date.now(), activeProject),
+        reportPersistenceWarning,
       ),
   });
 
   function Root() {
     const [props, setProps] = useState(() => controller.getProps());
     const [theme, setTheme] = useState<Theme>(resolveTheme);
+    const [storageWarning, setStorageWarning] = useState(persistenceWarning);
+
+    useEffect(() => {
+      updatePersistenceWarning = setStorageWarning;
+      return () => {
+        updatePersistenceWarning = undefined;
+      };
+    }, []);
 
     // Switching theme swaps the rendered component *type*, so React unmounts the old
     // tree and builds a new one — which destroys the focused <input> and drops the
@@ -1473,6 +1511,9 @@ async function boot() {
     return (
       <Emitted
         {...props}
+        storageStatus={storageSession.status}
+        storageLocation={storageSession.location}
+        storageWarning={storageWarning}
         themeIsDark={theme === "dark" ? "dark" : ""}
         ringGradient={computeRingGradient(theme, props.ringPercentValue)}
         // `board.columns`' 4th cell is a placeholder — same reasoning as

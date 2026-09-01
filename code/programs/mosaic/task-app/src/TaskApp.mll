@@ -200,6 +200,20 @@ layout TaskApp {
         }
       }
 
+      // Persistence is host-owned, so the layout only presents the host's
+      // plain-language truth. This is deliberately non-modal and before the
+      // content column: warnings remain visible without stealing task capture
+      // focus, and the normal local-only/data-location contract is discoverable.
+      Column [ storage-panel ] {
+        Row [ storage-summary ] {
+          Text [ storage-status ] ( content : slot: storage-status )
+          Text [ storage-location ] ( content : slot: storage-location )
+        }
+        If ( when: slot: storage-warning ) {
+          Text [ storage-warning ] ( content : slot: storage-warning )
+        }
+      }
+
       Column [ content ] {
         If ( when: slot: timeline-mode ) {
           Column [ timeline-card ] {

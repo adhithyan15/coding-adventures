@@ -410,6 +410,9 @@ impl TaskMosaicApp {
                 schedule.as_ref().and_then(|result| result.project_finish).map(format_date).unwrap_or_else(|| "—".to_string())),
             "status-label": if overdue_count > 0 { format!("{overdue_count} overdue") } else { "On track".to_string() },
             "status-warn": if overdue_count > 0 { "warn" } else { "" },
+            "storage-status": "Saved locally on this device",
+            "storage-location": local_data_guidance(),
+            "storage-warning": "",
             "ring-gradient": "",
             "ring-percent": format!("{percent}%"),
             "ring-percent-value": percent,
@@ -1458,6 +1461,23 @@ fn parse_date(value: &str) -> Option<Date> {
     Date::from_ymd(year, month, day)
 }
 
+fn local_data_guidance() -> &'static str {
+    #[cfg(target_os = "windows")]
+    {
+        return "Local only · %LOCALAPPDATA%\\task-app\\mosaic-state.v1.json · close Trestle before backup or restore";
+    }
+    #[cfg(target_os = "macos")]
+    {
+        return "Local only · ~/Library/Application Support/task-app/mosaic-state.v1.json · close Trestle before backup or restore";
+    }
+    #[cfg(target_os = "linux")]
+    {
+        return "Local only · see LOCAL-DATA.txt beside this release for the exact Linux backend path and backup steps";
+    }
+    #[allow(unreachable_code)]
+    "Local only · see LOCAL-DATA.txt beside this release for the platform data path and backup steps"
+}
+
 fn format_date(date: Date) -> String {
     let (year, month, day) = date.to_ymd();
     format!("{year:04}-{month:02}-{day:02}")
@@ -1567,6 +1587,9 @@ mod tests {
         "summary",
         "status-label",
         "status-warn",
+        "storage-status",
+        "storage-location",
+        "storage-warning",
         "ring-gradient",
         "ring-percent",
         "ring-percent-value",
@@ -1739,6 +1762,11 @@ mod tests {
         for key in REQUIRED_PROPS {
             assert!(object.contains_key(*key), "missing required prop {key}");
         }
+        assert_eq!(object["storage-status"], "Saved locally on this device");
+        assert!(object["storage-location"]
+            .as_str()
+            .is_some_and(|location| location.starts_with("Local only · ")));
+        assert_eq!(object["storage-warning"], "");
     }
 
     #[test]
