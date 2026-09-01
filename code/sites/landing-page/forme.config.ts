@@ -13,7 +13,7 @@ const config: PipelineConfig = {
   name: "coding-adventures-landing",
   settings: {
     storageRoot: ".",
-    cacheDir: null,
+    cacheDir: ".forme/cache",
     reproducibleBuild: false,
     maxConcurrency: null,
     logLevel: "info",

@@ -21,6 +21,8 @@ npm run build:clean
 
 The clean build uses the shared Forme local-dependency bootstrap, then drives
 `forme clean` and `forme build` with no site-specific orchestrator wrapper. It
+removes and repopulates the containment-checked `.forme/cache`; subsequent
+builds reuse safe pure-stage entries across separate CLI processes. The build
 validates the content model, compiles the portable typography/color layer
 through Style IR and the AOT slicer, inlines the browser-specific layout layer,
 fingerprints the social image, rewrites its metadata URL for the GitHub Pages

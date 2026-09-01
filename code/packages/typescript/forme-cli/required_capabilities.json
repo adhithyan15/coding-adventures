@@ -30,14 +30,14 @@
     {
       "category": "fs",
       "action": "write",
-      "target": "user-selected deterministic JSON build report",
-      "justification": "Writes the optional --report manifest and file-hash summary after a successful build."
+      "target": "configured project cache and user-selected deterministic JSON build report",
+      "justification": "Persists deterministic pure-stage entries beneath the configured project cache and writes the optional --report manifest after a successful build."
     },
     {
       "category": "fs",
       "action": "create",
-      "target": "parent directories for the user-selected build report",
-      "justification": "Creates missing parent directories before writing the explicitly requested --report path."
+      "target": "configured project cache and parent directories for the user-selected build report",
+      "justification": "Creates cache shards beneath the configured project directory and missing report parent directories."
     },
     {
       "category": "proc",

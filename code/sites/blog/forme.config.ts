@@ -49,7 +49,7 @@ const config: PipelineConfig = {
   name: "coding-adventures-blog",
   settings: {
     storageRoot: ".",
-    cacheDir: null,
+    cacheDir: ".forme/cache",
     reproducibleBuild: false,
     maxConcurrency: null,
     logLevel: "info",
@@ -60,7 +60,7 @@ const config: PipelineConfig = {
     {
       id: "source",
       stage: sourceFs,
-      config: { glob: "**/*.md", root: "data" },
+      config: { glob: "**/*.md", root: "data", persistIdentities: true },
     },
     {
       id: "parse",

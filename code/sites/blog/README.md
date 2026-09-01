@@ -47,6 +47,8 @@ npm run build:clean
 
 That one command uses Forme's shared local-dependency bootstrap, then runs
 `forme clean` and `forme build` with no site-specific orchestrator wrapper. It
+wipes and repopulates the containment-checked `.forme/cache`; subsequent builds
+reuse safe pure-stage entries across separate CLI processes. The build
 writes article pages plus `index.html`, `rss.xml`, `atom.xml`,
 and `sitemap.xml` under `dist/blog/`. Subsequent builds can use `npm run build`;
 run `npm run check` to validate the config and typed DAG without invoking

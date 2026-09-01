@@ -1,5 +1,14 @@
 # Changelog — @coding-adventures/forme-cli
 
+## 0.3.0 — 2026-09-01
+
+- Wired `settings.cacheDir` to the filesystem cache backend so safe pure-stage
+  outputs are reused across separate CLI processes.
+- Refused project-root and outside-project cache paths before any cache access,
+  matching the containment contract already enforced by `forme clean`.
+- Added deterministic per-stage cache statistics to `--report` output for
+  product-level incremental-build verification.
+
 ## 0.2.0 — 2026-08-31
 
 - Added `forme watch` with declarative `--port` and `--debounce` options.
