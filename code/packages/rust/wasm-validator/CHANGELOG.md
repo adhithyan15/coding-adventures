@@ -46,11 +46,21 @@ before the file passed:
   before the narrow default) hits this exactly; `meet-funcref-2`'s `$l2
   $l2 $l1` (narrow first) happened to pass even on the old code, which is
   why this needed its own dedicated order-sensitive test rather than
-  trusting one passing permutation. Fixed by checking each target against
-  a throwaway CLONE of the real stack (`StackType` is `Copy`, so this is
-  cheap) instead of mutating it — every target's check is now fully
-  independent, and the real `stack` is only ever consumed once, by the
-  final default-types pop.
+  trusting one passing permutation. Fixed by popping the default target's
+  own arity worth of values from the real stack exactly ONCE into a small
+  `operands` vec, then checking every target (labels AND default) against
+  that SAME fixed snapshot via a new `check_stacktype_assignable` helper
+  (factored out of `pop_expect`) — no target's check can influence any
+  other's, and the real `stack` is only ever touched by that one pop.
+  **Security-hardened during review**: an earlier draft of this fix
+  instead cloned the WHOLE operand stack once per target — correct, but
+  `O(target_count * stack_depth)`, and `br_table`'s target count and the
+  operand stack's depth are BOTH independently attacker-controlled within
+  a single instruction, making that a real quadratic-blowup DoS vector.
+  The `operands`-snapshot approach is `O(target_count * arity)` instead —
+  the exact same asymptotic cost the original (order-dependent, but not
+  DoS-prone) implementation already had, so this fix adds no new
+  complexity-attack surface.
 - Bug 2 alone would NOT have fixed `br_table.wast` (bug 1 had to land
   first so `table.get` had a concrete type to hand `br_table` in the
   first place) — confirmed by reverting each fix independently and
