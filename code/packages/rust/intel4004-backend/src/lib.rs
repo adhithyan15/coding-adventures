@@ -4,7 +4,7 @@
 //! [`intel4004_encoder`].  Mirror of `ge225-backend` /
 //! `aarch64-backend` in shape and intent.
 //!
-//! ## Scope (v0.1.0 — Phase 4 of the migration)
+//! ## Scope (v0.2.0)
 //!
 //! Same op set the deprecated `iir-to-intel4004` v0.3.0 covered,
 //! but consuming **monomorphised CIR** (`const_i64`, `ret_i64`,
@@ -14,6 +14,7 @@
 //! |--------|---------------|----------|
 //! | Constants | `const_i8` … `const_i64`, `const_u8` … `const_u64`, `const_bool` | `(XCH r_evict)?` + `LDM n` |
 //! | Move | `mov_*` | `(XCH r_evict_src)?` + `LD r_src` + `XCH r_dest` |
+//! | Globals | `global_store`, `global_load` | module slot → DCL/FIM/SRC + WRM/RDM or WR0..3/RD0..3 |
 //! | Returns | `ret_*`, `ret_void` | `(LD r_var)?` + `JUN 0x000` (halt loop) |
 //! | Anything else | — | returns `None` (graceful AOT/JIT fallback) |
 //!
@@ -25,7 +26,10 @@
 //! for round-trip, or an EPROM burner for a 4004 dev board.
 //! `Backend::run` panics with a clear message.
 
-use intel4004_encoder::{encode_ld, encode_ldm, encode_xch, HALT_LOOP};
+use intel4004_encoder::{
+    encode_dcl, encode_fim, encode_ld, encode_ldm, encode_rd_status, encode_rdm, encode_src,
+    encode_wr_status, encode_wrm, encode_xch, HALT_LOOP,
+};
 use jit_core::backend::{Backend, FunctionContext};
 use jit_core::cir::{CIRInstr, CIROperand};
 use std::collections::HashMap;
@@ -52,6 +56,7 @@ pub enum BackendError {
     UndefinedVariable(String),
     ImmediateOutOfRange(i64),
     OutOfRegisters(String),
+    OutOfRam(String),
 }
 
 impl fmt::Display for BackendError {
@@ -68,7 +73,11 @@ impl fmt::Display for BackendError {
             ),
             Self::OutOfRegisters(n) => write!(
                 f,
-                "intel4004-backend: out of registers (ACC + r0..r15 = 17 slots) while binding {n:?}"
+                "intel4004-backend: out of registers (r0/r1 are reserved for RAM addressing) while binding {n:?}"
+            ),
+            Self::OutOfRam(n) => write!(
+                f,
+                "intel4004-backend: global {n:?} exceeds the 320-nibble RAM capacity"
             ),
         }
     }
@@ -81,7 +90,19 @@ impl std::error::Error for BackendError {}
 // ===========================================================================
 
 pub fn compile(_ctx: &FunctionContext<'_>, cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
-    compile_single_function(cir)
+    let slots = collect_global_slots(cir)?;
+    compile_single_function(cir, &slots)
+}
+
+/// Compile with a module-wide global-slot map.  The AOT driver uses this entry
+/// point so every function addresses a given global through the same 4004 RAM
+/// character even when functions mention globals in different orders.
+pub fn compile_with_global_slots(
+    _ctx: &FunctionContext<'_>,
+    cir: &[CIRInstr],
+    global_slots: &HashMap<String, usize>,
+) -> Result<Vec<u8>, BackendError> {
+    compile_single_function(cir, global_slots)
 }
 
 // ===========================================================================
@@ -91,14 +112,30 @@ pub fn compile(_ctx: &FunctionContext<'_>, cir: &[CIRInstr]) -> Result<Vec<u8>, 
 const ACC_MARKER: u8 = 16;
 const GP_REGISTER_COUNT: usize = intel4004_encoder::GP_REGISTER_COUNT;
 
-fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
+const RAM_ADDRESS_PAIR: u8 = 0;
+const FIRST_VALUE_REGISTER: usize = 2;
+const RAM_MAIN_CHARACTER_COUNT: usize = 4 * 4 * 16;
+const RAM_STATUS_CHARACTER_COUNT: usize = 4 * 4 * 4;
+const RAM_NIBBLE_COUNT: usize = RAM_MAIN_CHARACTER_COUNT + RAM_STATUS_CHARACTER_COUNT;
+
+fn compile_single_function(
+    cir: &[CIRInstr],
+    global_slots: &HashMap<String, usize>,
+) -> Result<Vec<u8>, BackendError> {
     if cir.is_empty() {
         return Ok(HALT_LOOP.to_vec());
     }
 
     let mut bytes = Vec::new();
     let mut env: HashMap<String, u8> = HashMap::new();
-    let mut next_reg: usize = 0;
+    // Preserve the original 16-register allocator for functions without RAM
+    // traffic.  A function that addresses globals reserves P0 (r0/r1) for
+    // FIM/SRC and allocates ordinary values from r2 upward.
+    let mut next_reg: usize = if global_slots.is_empty() {
+        0
+    } else {
+        FIRST_VALUE_REGISTER
+    };
     let mut acc_owner: Option<String> = None;
 
     for instr in cir {
@@ -153,6 +190,44 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
             continue;
         }
 
+        // ── global_store_<ty> name, value ────────────────────────────
+        if op == "global_store" || op.starts_with("global_store_") {
+            let name = parse_var_src(instr, 0, op)?;
+            let value = parse_var_src(instr, 1, op)?;
+            if !env.contains_key(&value) {
+                return Err(BackendError::UndefinedVariable(value));
+            }
+            if matches!(env.get(&value), Some(&ACC_MARKER)) {
+                evict_acc(&mut bytes, &mut env, &mut acc_owner, &mut next_reg)?;
+            }
+            let value_reg = env[&value];
+            let slot = global_slot(global_slots, &name)?;
+            let address = emit_ram_select(&mut bytes, slot);
+            bytes.push(encode_ld(value_reg));
+            bytes.push(match address {
+                RamAddress::Main => encode_wrm(),
+                RamAddress::Status(index) => encode_wr_status(index),
+            });
+            acc_owner = None;
+            continue;
+        }
+
+        // ── global_load_<ty> name -> dest ─────────────────────────────
+        if op == "global_load" || op.starts_with("global_load_") {
+            let name = parse_var_src(instr, 0, op)?;
+            let dest = require_dest(instr, op)?;
+            let slot = global_slot(global_slots, &name)?;
+            evict_acc(&mut bytes, &mut env, &mut acc_owner, &mut next_reg)?;
+            let address = emit_ram_select(&mut bytes, slot);
+            bytes.push(match address {
+                RamAddress::Main => encode_rdm(),
+                RamAddress::Status(index) => encode_rd_status(index),
+            });
+            env.insert(dest.to_string(), ACC_MARKER);
+            acc_owner = Some(dest.to_string());
+            continue;
+        }
+
         return Err(BackendError::UnsupportedOp(op.to_string()));
     }
 
@@ -160,6 +235,68 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
         bytes.extend_from_slice(&HALT_LOOP);
     }
     Ok(bytes)
+}
+
+fn collect_global_slots(cir: &[CIRInstr]) -> Result<HashMap<String, usize>, BackendError> {
+    let mut slots = HashMap::new();
+    for instr in cir {
+        if instr.op == "global_load"
+            || instr.op == "global_store"
+            || instr.op.starts_with("global_load_")
+            || instr.op.starts_with("global_store_")
+        {
+            let name = parse_var_src(instr, 0, &instr.op)?;
+            let next = slots.len();
+            if next >= RAM_NIBBLE_COUNT {
+                return Err(BackendError::OutOfRam(name));
+            }
+            slots.entry(name).or_insert(next);
+        }
+    }
+    Ok(slots)
+}
+
+fn global_slot(slots: &HashMap<String, usize>, name: &str) -> Result<usize, BackendError> {
+    let slot = slots
+        .get(name)
+        .copied()
+        .ok_or_else(|| BackendError::InvalidOperand(format!("unknown global {name:?}")))?;
+    if slot >= RAM_NIBBLE_COUNT {
+        return Err(BackendError::OutOfRam(name.to_string()));
+    }
+    Ok(slot)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum RamAddress {
+    Main,
+    Status(u8),
+}
+
+fn emit_ram_select(bytes: &mut Vec<u8>, slot: usize) -> RamAddress {
+    let (bank, register, character, address) = if slot < RAM_MAIN_CHARACTER_COUNT {
+        let bank = (slot / 64) as u8;
+        let within_bank = slot % 64;
+        (
+            bank,
+            (within_bank / 16) as u8,
+            (within_bank % 16) as u8,
+            RamAddress::Main,
+        )
+    } else {
+        let status_slot = slot - RAM_MAIN_CHARACTER_COUNT;
+        (
+            (status_slot / 16) as u8,
+            ((status_slot % 16) / 4) as u8,
+            0,
+            RamAddress::Status((status_slot % 4) as u8),
+        )
+    };
+    bytes.push(encode_ldm(bank));
+    bytes.push(encode_dcl());
+    bytes.extend_from_slice(&encode_fim(RAM_ADDRESS_PAIR, (register << 4) | character));
+    bytes.push(encode_src(RAM_ADDRESS_PAIR));
+    address
 }
 
 // ===========================================================================
@@ -248,11 +385,13 @@ impl Backend for Intel4004Backend {
     }
 
     fn compile(&self, ir: &[CIRInstr]) -> Option<Vec<u8>> {
-        compile_single_function(ir).ok()
+        let slots = collect_global_slots(ir).ok()?;
+        compile_single_function(ir, &slots).ok()
     }
 
     fn compile_function(&self, _ctx: &FunctionContext<'_>, ir: &[CIRInstr]) -> Option<Vec<u8>> {
-        compile_single_function(ir).ok()
+        let slots = collect_global_slots(ir).ok()?;
+        compile_single_function(ir, &slots).ok()
     }
 
     fn run(&self, _binary: &[u8], _args: &[Value]) -> Value {
@@ -260,5 +399,77 @@ impl Backend for Intel4004Backend {
             "intel4004 backend is emit-only; load bytes into an Intel 4004 simulator to execute.  \
              See code/specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md."
         );
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn instr(op: &str, dest: Option<&str>, srcs: Vec<CIROperand>) -> CIRInstr {
+        CIRInstr {
+            op: op.to_string(),
+            dest: dest.map(str::to_string),
+            srcs,
+            ty: "i64".to_string(),
+            deopt_to: None,
+        }
+    }
+
+    #[test]
+    fn global_store_then_load_uses_4004_ram() {
+        let cir = vec![
+            instr("const_i64", Some("v0"), vec![CIROperand::Int(9)]),
+            instr(
+                "global_store",
+                None,
+                vec![
+                    CIROperand::Var("digit".into()),
+                    CIROperand::Var("v0".into()),
+                ],
+            ),
+            instr(
+                "global_load",
+                Some("v1"),
+                vec![CIROperand::Var("digit".into())],
+            ),
+            instr("ret_i64", None, vec![CIROperand::Var("v1".into())]),
+        ];
+        let bytes = compile_single_function(&cir, &collect_global_slots(&cir).unwrap()).unwrap();
+        assert_eq!(
+            bytes,
+            vec![
+                0xd9, 0xb2, // const 9, evicted to r2 before RAM selection
+                0xd0, 0xfd, 0x20, 0x00, 0x21, 0xa2, 0xe0, // bank 0, RAM[0][0][0] = r2
+                0xd0, 0xfd, 0x20, 0x00, 0x21, 0xe9, // reload RAM[0][0][0]
+                0x40, 0x00,
+            ]
+        );
+    }
+
+    #[test]
+    fn module_slot_selects_last_main_character() {
+        let mut slots = HashMap::new();
+        slots.insert("last".to_string(), 255);
+        let cir = vec![instr(
+            "global_load",
+            Some("v0"),
+            vec![CIROperand::Var("last".into())],
+        )];
+        let bytes = compile_single_function(&cir, &slots).unwrap();
+        assert_eq!(&bytes[..6], &[0xd3, 0xfd, 0x20, 0x3f, 0x21, 0xe9]);
+    }
+
+    #[test]
+    fn module_slot_selects_last_status_character() {
+        let mut slots = HashMap::new();
+        slots.insert("last".to_string(), 319);
+        let cir = vec![instr(
+            "global_load",
+            Some("v0"),
+            vec![CIROperand::Var("last".into())],
+        )];
+        let bytes = compile_single_function(&cir, &slots).unwrap();
+        assert_eq!(&bytes[..6], &[0xd3, 0xfd, 0x20, 0x30, 0x21, 0xef]);
     }
 }

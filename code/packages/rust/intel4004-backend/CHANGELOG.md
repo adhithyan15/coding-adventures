@@ -1,5 +1,15 @@
 # Changelog — intel4004-backend
 
+## v0.2.0 — 2026-08-31 — Intel 4004 global RAM mapping
+
+`global_store` and `global_load` now address the Intel 4004's complete
+320-nibble RAM: 256 main-memory characters through `WRM`/`RDM`, followed by
+64 status characters through `WR0..3`/`RD0..3`. Register pair P0 is reserved
+as the `FIM`/`SRC` address bus only in functions that use RAM.
+
+The new `compile_with_global_slots` entry point accepts a module-wide slot map,
+so different functions agree on each global's bank/register/character address.
+
 ## v0.1.0 — 2026-06-03 — Phase 4 of historical-arch backend migration
 
 Initial release.  Implements `jit_core::backend::Backend` for the
@@ -16,7 +26,8 @@ Intel 4004, consuming monomorphised CIR.  Mirror of `ge225-backend`
     load bytes into an Intel 4004 simulator to execute"`.
 - `pub fn compile(ctx, cir) -> Result<Vec<u8>, BackendError>` —
   direct AOT entry point.
-- `pub enum BackendError` with 5 diagnostic variants.
+- `pub enum BackendError` with diagnostic variants for malformed and
+  unsupported input, range errors, and exhausted registers.
 
 ### Covered CIR ops
 

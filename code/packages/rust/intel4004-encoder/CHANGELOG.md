@@ -1,5 +1,12 @@
 # Changelog — intel4004-encoder
 
+## v0.2.0 — 2026-08-31 — RAM addressing and data operations
+
+Adds pure encoders for `FIM`, `SRC`, `DCL`, `WRM`, `RDM`, and the four
+RAM-status read/write instructions. These are the complete instruction
+families needed to map Nib's one-nibble `bcd` statics across the 4004's 256
+main and 64 status RAM characters.
+
 ## v0.1.0 — 2026-06-03 — initial carve-out from iir-to-intel4004 v0.3.0
 
 Phase 4 of the historical-arch backend migration (see

@@ -41,10 +41,10 @@ one fresh worktree and one PR; remove the worktree after merge.
 | — | VM-021 | done ([#13442](https://github.com/adhithyan15/coding-adventures/pull/13442)) | Add Macsyma to the universal JIT and its cross-backend conformance suite. | Macsyma's integer arithmetic corpus agrees across VM, NativeAOT, LLVM, WASM, JVM, CLR, and JIT. |
 | — | VM-017 | done ([#13452](https://github.com/adhithyan15/coding-adventures/pull/13452)) | Add mixed numeric/string Dartmouth BASIC `DATA`, `READ`, and `RESTORE` semantics. | Scalar and array string reads preserve source order with numeric values and execute on all applicable standard backends. |
 | — | VM-022 | done ([#13762](https://github.com/adhithyan15/coding-adventures/pull/13762)) | Repair the TypeScript Dartmouth BASIC parser `BUILD` so it runs that package's tests instead of ending in the generic parser package. | `BUILD` executes the Dartmouth parser suite itself and includes a mixed numeric/string `DATA` regression. |
-| 1 | VM-023 | in progress | Audit and repair the same stateful-directory build defect across non-ALGOL TypeScript parser and lexer frontends. | Every affected package's normal and Windows build scripts run that package's own tests, with an automated guard against ending in a dependency directory. |
-| 2 | VM-012 | queued | Implement Nib BCD storage semantics and Intel-4004 RAM mapping. | Hardware-faithful programs agree across the portable matrix and the 4004 simulator. |
-| 3 | VM-018 | decision required | Define and implement portable Dartmouth BASIC `RND` semantics. | The accepted seed/repeatability contract is documented and executed consistently across all standard backends. |
-| 4 | VM-013 | decision required | Define portable semantics for Oct's Intel-8008 intrinsics (`in`, `adc`, `sbb`, rotations, carry, parity). | The accepted semantics are documented and every intrinsic has executed portable and 8008 proofs. |
+| — | VM-023 | done ([#13773](https://github.com/adhithyan15/coding-adventures/pull/13773)) | Audit and repair the same stateful-directory build defect across non-ALGOL TypeScript parser and lexer frontends. | Every affected package's normal and Windows build scripts run that package's own tests, with an automated guard against ending in a dependency directory. |
+| 1 | VM-012 | in review ([#13785](https://github.com/adhithyan15/coding-adventures/pull/13785)) | Implement Nib BCD storage semantics and Intel-4004 RAM mapping. | Hardware-faithful programs agree across the portable matrix and the 4004 simulator. |
+| 2 | VM-018 | decision required | Define and implement portable Dartmouth BASIC `RND` semantics. | The accepted seed/repeatability contract is documented and executed consistently across all standard backends. |
+| 3 | VM-013 | decision required | Define portable semantics for Oct's Intel-8008 intrinsics (`in`, `adc`, `sbb`, rotations, carry, parity). | The accepted semantics are documented and every intrinsic has executed portable and 8008 proofs. |
 
 ## Discovery log
 
@@ -144,6 +144,11 @@ one fresh worktree and one PR; remove the worktree after merge.
   Dependency installs now run in subshells, and a CI-discovered repository
   test rejects any future top-level sibling `cd` in non-ALGOL `BUILD` or
   `BUILD_windows` fronts.
+- **VM-D019 — confirmed 2026-08-31:** the 4004 simulator models 256 main RAM
+  characters plus 64 status characters, while the old backend had no RAM ops
+  and compiled functions independently. VM-012 uses the complete 320-nibble
+  space and builds a module-wide global-slot map before lowering functions, so
+  every function agrees on a static's physical address.
 
 ## Ownership boundary
 

@@ -43,6 +43,7 @@
 #![warn(missing_docs)]
 #![warn(rust_2018_idioms)]
 
+use std::collections::HashMap;
 use std::fmt;
 use std::path::Path;
 
@@ -2222,17 +2223,48 @@ pub fn compile_file_to_intel4004_bin(
     // legacy `iir_to_intel4004::lower_iir_to_intel4004`.  Same
     // pipeline as `compile_file_to_ge225_bin` (Phase 3).
     let _ = stem;
+    let compiled_functions: Vec<_> = module
+        .functions
+        .iter()
+        .map(|function| {
+            let inferred = aot_core::infer::infer_types(function);
+            let cir = aot_core::specialise::aot_specialise(function, Some(&inferred));
+            (function, cir)
+        })
+        .collect();
+
+    // The 4004 has no linker-managed data section: module globals live in
+    // RAM characters. Build one first-seen map for the whole module so every
+    // function uses the same bank/register/character address for a name.
+    let mut global_slots = HashMap::new();
+    for (_, cir) in &compiled_functions {
+        for instr in cir {
+            if instr.op == "global_load"
+                || instr.op == "global_store"
+                || instr.op.starts_with("global_load_")
+                || instr.op.starts_with("global_store_")
+            {
+                if let Some(name) = instr
+                    .srcs
+                    .first()
+                    .and_then(jit_core::cir::CIROperand::as_var)
+                {
+                    let next = global_slots.len();
+                    global_slots.entry(name.to_string()).or_insert(next);
+                }
+            }
+        }
+    }
+
     let mut bytes = Vec::new();
     let empty_params: Vec<(String, String)> = Vec::new();
-    for f in &module.functions {
-        let inferred = aot_core::infer::infer_types(f);
-        let cir = aot_core::specialise::aot_specialise(f, Some(&inferred));
+    for (f, cir) in compiled_functions {
         let ctx = jit_core::backend::FunctionContext {
             name: f.name.as_str(),
             params: &empty_params,
             return_type: f.return_type.as_str(),
         };
-        let fn_bytes = intel4004_backend::compile(&ctx, &cir)
+        let fn_bytes = intel4004_backend::compile_with_global_slots(&ctx, &cir, &global_slots)
             .map_err(|e| LangAotError::Intel4004BackendError(format!("{e}")))?;
         bytes.extend_from_slice(&fn_bytes);
     }
