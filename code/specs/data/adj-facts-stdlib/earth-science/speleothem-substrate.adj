@@ -1,0 +1,151 @@
+% ============================================================================
+% speleothem-substrate — what a speleothem grows ON (adj-facts-stdlib,
+% EARTH-SCIENCE).
+% ============================================================================
+% Recall is a binding query:
+%
+%     ? speleothem_substrate(helictite, $S)
+%       % cave_ceiling
+%       % cave_wall
+%       % cave_floor_less_often
+%       % carbonate_coating
+%       % crust
+%       % soda_straw_sometimes
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `speleothem_substrate(speleothem, substrate)` carrying the
+% source citation, so the lookup above is the ordinary SLD binding query.
+% The query also runs BACKWARD — "what grows on cave walls?" is a question
+% nothing in this stdlib could answer before.
+%
+% *** THIS IS A DIFFERENT RELATION FROM `speleothem_growth_surface`, AND
+% THE DIFFERENCE IS THE WHOLE REASON IT EXISTS. ***
+%
+% `speleothem-growth-surface.adj` answers "the surface a dripstone grows
+% FROM", and is single-valued: a stalactite hangs from the ceiling, a
+% stalagmite builds up from the floor, one surface each. It deliberately
+% ABSTAINED on `helictite`, and its header gives the reason: the source
+% places helictites on three surfaces with a frequency hedge on the third,
+% and "one surface would drop the others while three-as-equals would
+% flatten the source's own frequency hedge."
+%
+% That reasoning was right about THAT relation. It is not an argument that
+% the fact is untableable — only that it does not fit a single-valued
+% "grows from" relation. This relation is multi-valued and means "grows
+% ON", which is the source's own verb for these speleothems, and it carries
+% the hedge the ordinary way: INSIDE THE ATOM of the value the hedge
+% modifies, following the placement rule `veto-override.adj` and
+% `karst-process-zone.adj` already apply. So `cave_floor_less_often` is a
+% value and bare `cave_floor` is NOT — a query for the unhedged floor
+% abstains, because asking for it is asking where helictites grow just as
+% readily as anywhere else, which this source declines to say.
+%
+% Same move `speleothem-component.adj` made for the `column` abstention:
+% when a table declines, the fix is a new relation shaped to the question,
+% never a loosened row in the old one.
+%
+% TWO SPELEOTHEMS, NOT ONE. This was nearly built as a helictite-only
+% table, which would have been thin enough to question. The page states the
+% same shape twice — a list of substrates ending in a hedged floor — so
+% `frostwork` is a second member and the relation is a real axis rather
+% than a wrapper around one sentence.
+%
+% Provenance: three sentences from the U.S. National Park Service's
+% "Speleothems" page.
+%
+%   - The `source` envelope quotes TWO CONTIGUOUS SENTENCES as one string.
+%     That is deliberate. The second begins "They typically grow on other
+%     speleothems…", and cited alone its subject is a bare pronoun — a
+%     reader could not tell who "They" refers to. The two sentences are
+%     adjacent in the article, so quoting the pair is still verbatim and
+%     makes the citation self-contained. A citation that cannot be read
+%     without the page open is not doing its job.
+%   - The `cites` corroboration carries the frostwork sentence.
+%
+% HEDGE PLACEMENT, three qualifiers, each placed by the settled rule:
+%
+%     qualifier         modifies            therefore lives
+%     ---------------   -----------------   -----------------------------
+%     "less often"      cave floors only    in the atom
+%                                           (cave_floor_less_often)
+%     "sometimes"       soda straws only    in the atom
+%                                           (soda_straw_sometimes)
+%     "typically"       the whole clause    in the CITATION, which quotes
+%                       "grow on other      it verbatim; the atoms
+%                       speleothems"        carbonate_coating and crust
+%                                           stay bare
+%     "less             frostwork's         in the atom, with FROSTWORK'S
+%      occasionally"    floors only         OWN WORDING preserved
+%                                           (cave_floor_less_occasionally)
+%
+% Note the last one. Frostwork's hedge is NOT normalised to match
+% helictite's, even though "less occasionally" is awkward English and
+% plainly means the same thing. They are different sentences and each atom
+% carries the word its own sentence used. Smoothing them into one spelling
+% would be editing a citation to make a table tidier.
+%
+% TWO THINGS THIS TABLE DOES NOT CLAIM, stated so nobody reads them in:
+%
+%   - THE SUBSTRATE COLUMN MIXES KINDS, on purpose. Some values are parts
+%     of the cave (`cave_ceiling`, `cave_wall`, `ledge`) and some are other
+%     speleothems (`stalactite`, `carbonate_coating`, `crust`,
+%     `soda_straw_sometimes`). The relation means "the thing it grows on",
+%     which is coherent across both, and the source itself mixes them in a
+%     single list ("on stalactites, walls, ceilings, ledges"). Do not read
+%     a value as necessarily being a cave surface.
+%   - THE LISTS ARE NOT CLOSED. The helictite substrate sentence says "SUCH
+%     AS carbonate coatings, crusts" — exemplary, not exhaustive. Absence
+%     of a substrate from this table means the source did not name it, NOT
+%     that a speleothem does not grow there.
+%
+% `trust authoritative` — the National Park Service is a first-party .gov
+% publisher, the same source the seven sibling cave/karst libraries cite.
+% Every sentence was taken from a RAW TEXT EXTRACTION of the page, never
+% from a fetch summary; summarised readings of this same page have
+% disagreed with each other about what it contains.
+%
+% Provenance is TABLE-level, so all eleven rows carry both sentences and
+% `--explain` shows only the primary one — meaning the frostwork rows
+% display under the helictite sentence there. That is a property of every
+% multi-sentence table in this stdlib, tracked as issue #13898; the JSON
+% output is the authoritative view.
+%
+% Honest abstention:
+%
+%   - Bare `cave_floor` is NOT a value, for either speleothem. Both
+%     sentences hedge the floor and the hedge rides in the atom, so the
+%     unqualified query correctly finds nothing.
+%   - `stalagmite`, `column`, `drapery` and the rest get no rows. This page
+%     describes what they are made of and where they form, but never says
+%     what they grow ON, and inferring a substrate from general karst
+%     knowledge is exactly what a grounded recall library must not do.
+%   - `slanted_surface` is not a row. Cave bacon "forms on slanted
+%     surfaces", but that is a description of the SHAPE of a surface rather
+%     than an identifiable thing in a cave, and it would not join with any
+%     other value in this column.
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table speleothem_substrate {
+    columns speleothem, substrate
+
+    row (helictite, cave_ceiling)
+    row (helictite, cave_wall)
+    row (helictite, cave_floor_less_often)
+    row (helictite, carbonate_coating)
+    row (helictite, crust)
+    row (helictite, soda_straw_sometimes)
+
+    row (frostwork, stalactite)
+    row (frostwork, cave_wall)
+    row (frostwork, cave_ceiling)
+    row (frostwork, ledge)
+    row (frostwork, cave_floor_less_occasionally)
+
+    source "Helictites grow on cave ceilings, walls, and less often on cave floors. They typically grow on other speleothems, such as carbonate coatings, crusts, and sometimes on soda straws."
+    locator "https://www.nps.gov/subjects/caves/speleothems.htm"
+    trust authoritative
+    cites "Frostwork can also be found on stalactites, walls, ceilings, ledges, and less occasionally on floors (Hill, 1997)." locator "https://www.nps.gov/subjects/caves/speleothems.htm"
+}
