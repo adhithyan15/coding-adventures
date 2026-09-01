@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Taking, Asking, Helping — and Liking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c3901b21c9305eaf",
+  "sourceHash": "fnv1a64:81d131671e08774a",
   "lessons": [
     {
       "id": "HI-C35-lena",
@@ -141,7 +141,7 @@
       "sequence": 910,
       "title": "पूछना (pūchnā) — \"to ask,\" and the reason English says \"pray\"",
       "headword": "पूछना",
-      "romanization": "",
+      "romanization": "pūchnā",
       "gloss": "to ask — the same inherited verb as English \"pray\", which once meant nothing more than asking",
       "script": "devanagari",
       "modality": "sight",
@@ -149,7 +149,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5f08a1e07ec3a130",
+      "sourceHash": "fnv1a64:ab03df41968d208f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -215,7 +215,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Behind पूछना stands Sanskrit पृच्छति (pṛcchati, \"asks\"), and behind that a reconstructed root prek-, \"to ask.\" This one paid out generously across the family:"
+              "text": "Behind पूछना (pūchnā) stands Sanskrit पृच्छति (pṛcchati, \"asks\"), and behind that a reconstructed root prek-, \"to ask.\" This one paid out generously across the family:"
             },
             {
               "kind": "speech",
@@ -303,7 +303,7 @@
       "sequence": 920,
       "title": "मदद करना (madad karnā) — \"to help,\" and the machine that builds it",
       "headword": "मदद करना",
-      "romanization": "",
+      "romanization": "madad karnā",
       "gloss": "to help — a noun plus करना, which is how Hindi turns almost anything into a verb",
       "script": "devanagari",
       "modality": "voice",
@@ -311,7 +311,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9955fcd100455fe4",
+      "sourceHash": "fnv1a64:7b33e9afc9498105",
       "notice": null,
       "blocks": [
         {
@@ -338,7 +338,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मदद (madad) is a noun: \"help, aid.\" On its own it does nothing. Bolt करना (karnā, \"to do\") on the end and you have the verb: मदद करना, literally \"to do help.\""
+              "text": "मदद (madad) is a noun: \"help, aid.\" On its own it does nothing. Bolt करना (karnā, \"to do\") on the end and you have the verb: मदद करना (madad karnā), literally \"to do help.\""
             },
             {
               "kind": "speech",
@@ -445,7 +445,7 @@
       "sequence": 930,
       "title": "पसंद (pasand) — Hindi does not like things; things please Hindi",
       "headword": "मुझे … पसंद है",
-      "romanization": "",
+      "romanization": "mujhe … pasand hai",
       "gloss": "liked, pleasing — a Persian noun, not a verb, in a sentence where the thing you like is the subject and you are only the person it happens to",
       "script": "devanagari",
       "modality": "voice",
@@ -453,7 +453,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:58727195d0913ba8",
+      "sourceHash": "fnv1a64:7245f395e56a1845",
       "notice": null,
       "blocks": [
         {
@@ -522,7 +522,7 @@
             },
             {
               "kind": "speech",
-              "text": "For an active \"like\", Hindi uses last lesson's join: पसंद करना, \"to do liking,\" nearer to \"I choose, I prefer.\" For everyday liking, मुझे … पसंद है."
+              "text": "For an active \"like\", Hindi uses last lesson's join: पसंद करना, \"to do liking,\" nearer to \"I choose, I prefer.\" For everyday liking, मुझे … पसंद है (mujhe … pasand hai)."
             }
           ]
         },

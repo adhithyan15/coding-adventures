@@ -10,6 +10,7 @@ chapter: 12
 type: word
 headword: पिता / माता / बाप / माँ
 gloss: father and mother — respectable पिता and माता, everyday spoken बाप and माँ
+romanization: "pitā / mātā / bāp / māṁ"
 concept_tag: HI-FAMILY-PARENTS
 prerequisites: [HI-C11-laal-niila]
 sounds: [devanagari-long-aa, retroflex-vs-dental-ta]

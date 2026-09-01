@@ -10,6 +10,7 @@ chapter: 1
 type: word
 headword: नमस्कार
 gloss: hello (namaskār — more formal)
+romanization: "namaskār"
 concept_tag: GREETING-FORMAL
 prerequisites: [HI-C01-namaste]
 sounds: [devanagari-inherent-a, matra-aa]

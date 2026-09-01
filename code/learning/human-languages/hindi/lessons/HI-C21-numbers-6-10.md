@@ -10,6 +10,7 @@ chapter: 21
 type: word
 headword: छह सात आठ नौ दस
 gloss: six to ten, with seven and eight repeating the same Prakrit weight trade as three
+romanization: "chhah sāt āṭh nau das"
 concept_tag: HI-NUMBERS-6-10
 prerequisites: [HI-C06-paanch-nasal]
 sounds: [matra-au, retroflex-tha]

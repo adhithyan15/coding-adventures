@@ -4,14 +4,14 @@
   "chapter": 9,
   "title": "Sorry",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5b3036bf00dd4f04",
+  "sourceHash": "fnv1a64:4dd29d6ac31e6d9d",
   "lessons": [
     {
       "id": "HI-C09-maaf-kijiye",
       "sequence": 520,
       "title": "माफ़ कीजिए (māf kījiye) — please forgive me / sorry",
       "headword": "माफ़ कीजिए",
-      "romanization": "",
+      "romanization": "māf kījiye",
       "gloss": "please forgive me / sorry (māf kījiye — \"please do forgiveness\")",
       "script": "devanagari",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:069a9f40916e102b",
+      "sourceHash": "fnv1a64:39e45f366ed752dd",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "So माफ़ कीजिए is literally \"please do forgiven[-ness]\" — please make [this] forgiven. It's the same light-verb move you've already met: naming a state (forgiveness, kindness, compassion) and asking someone to do it."
+              "text": "So माफ़ कीजिए (māf kījiye) is literally \"please do forgiven[-ness]\" — please make [this] forgiven. It's the same light-verb move you've already met: naming a state (forgiveness, kindness, compassion) and asking someone to do it."
             }
           ]
         },
@@ -65,7 +65,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "माफ़ कीजिए is warm and genuinely everyday — but Hindi keeps a more formal, Sanskritic cousin for writing and ceremony: क्षमा करें (kṣamā karēṁ), \"please grant kṣamā\" — from Sanskrit क्षमा (kṣamā), \"patience, forbearance, forgiveness.\" Where kṛpayā was the bookish \"please,\" kṣamā karēṁ is the bookish \"sorry.\""
+              "text": "माफ़ कीजिए (māf kījiye) is warm and genuinely everyday — but Hindi keeps a more formal, Sanskritic cousin for writing and ceremony: क्षमा करें (kṣamā karēṁ), \"please grant kṣamā\" — from Sanskrit क्षमा (kṣamā), \"patience, forbearance, forgiveness.\" Where kṛpayā was the bookish \"please,\" kṣamā karēṁ is the bookish \"sorry.\""
             },
             {
               "kind": "speech",
@@ -126,7 +126,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does माफ़ कीजिए literally mean? (\"Please do forgiven[-ness]\" — māf \"forgiven\" + kījiye \"please do.\") Where does māf come from? (Borrowed via Persian from Arabic ʿafw, \"to pardon.\") What's the more formal, Sanskritic cousin? (क्षमा करें kṣamā karēṁ, from kṣamā \"patience/forgiveness.\") What do many Hindi speakers just say instead, casually? (The English word \"sorry.\")"
+              "text": "What does माफ़ कीजिए (māf kījiye) literally mean? (\"Please do forgiven[-ness]\" — māf \"forgiven\" + kījiye \"please do.\") Where does māf come from? (Borrowed via Persian from Arabic ʿafw, \"to pardon.\") What's the more formal, Sanskritic cousin? (क्षमा करें kṣamā karēṁ, from kṣamā \"patience/forgiveness.\") What do many Hindi speakers just say instead, casually? (The English word \"sorry.\")"
             }
           ]
         }

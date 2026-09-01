@@ -4,14 +4,14 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5913125d2c92b363",
+  "sourceHash": "fnv1a64:be2a5eba47140116",
   "lessons": [
     {
       "id": "HI-C02-naam",
       "sequence": 110,
       "title": "नाम (nām) — \"name,\" a word older than Europe",
       "headword": "नाम",
-      "romanization": "",
+      "romanization": "nām",
       "gloss": "name",
       "script": "devanagari",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:162b6d9579bd5020",
+      "sourceHash": "fnv1a64:f985bf51f2d01211",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -442,7 +442,7 @@
       "sequence": 140,
       "title": "मेरा नाम … है (merā nām … hai) — \"my name is…\"",
       "headword": "मेरा नाम … है",
-      "romanization": "",
+      "romanization": "merā nām … hai",
       "gloss": "my name is…",
       "script": "devanagari",
       "modality": "voice",
@@ -450,7 +450,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ffece98fc3af25e8",
+      "sourceHash": "fnv1a64:94b56aa798bef470",
       "notice": null,
       "blocks": [
         {
@@ -481,7 +481,7 @@
             },
             {
               "kind": "speech",
-              "text": "मेरा नाम (merā nām) … है (hai) = \"my name … is\" = \"my name is…\""
+              "text": "मेरा नाम … है (merā nām … hai) = \"my name … is\" = \"my name is…\""
             },
             {
               "kind": "speech",
@@ -555,7 +555,7 @@
       "sequence": 150,
       "title": "आप / तुम (āp / tum) — \"you,\" respectful and familiar",
       "headword": "आप / तुम",
-      "romanization": "",
+      "romanization": "āp / tum",
       "gloss": "you (respectful / familiar)",
       "script": "devanagari",
       "modality": "sight",
@@ -563,7 +563,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a863a274a8e1571d",
+      "sourceHash": "fnv1a64:d495122790ba38f8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -842,7 +842,7 @@
       "sequence": 170,
       "title": "आपका नाम क्या है? (āpkā nām kyā hai?) — \"what's your name?\"",
       "headword": "आपका नाम क्या है?",
-      "romanization": "",
+      "romanization": "āpkā nām kyā hai?",
       "gloss": "what's your name?",
       "script": "devanagari",
       "modality": "voice",
@@ -850,7 +850,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86a08175943df2a6",
+      "sourceHash": "fnv1a64:e0dc49469968e958",
       "notice": null,
       "blocks": [
         {
@@ -881,7 +881,7 @@
             },
             {
               "kind": "speech",
-              "text": "आपका नाम क्या (kyā) है (hai)? = literally \"your name what is?\" = \"what's your name?\""
+              "text": "आपका नाम क्या है? (āpkā nām kyā hai?) = literally \"your name what is?\" = \"what's your name?\""
             },
             {
               "kind": "speech",
@@ -953,7 +953,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does आपका नाम क्या (kyā) है? literally say, and where's the verb? (\"Your name what is?\"; the verb hai is last.) What's āpkā made of? (āp + kā, \"you\" + possessive.)"
+              "text": "What does आपका नाम क्या है? (āpkā nām kyā hai?) literally say, and where's the verb? (\"Your name what is?\"; the verb hai is last.) What's āpkā made of? (āp + kā, \"you\" + possessive.)"
             }
           ]
         }
@@ -964,7 +964,7 @@
       "sequence": 180,
       "title": "ख़ुशी (khushī) — \"happiness,\" and \"pleased to meet you\"",
       "headword": "ख़ुशी",
-      "romanization": "",
+      "romanization": "khushī",
       "gloss": "happiness / pleased to meet you",
       "script": "devanagari",
       "modality": "voice",
@@ -972,7 +972,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ebb8ad2f1d7071f5",
+      "sourceHash": "fnv1a64:4595c485c262ed66",
       "notice": null,
       "blocks": [
         {
@@ -1242,7 +1242,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does a mātrā do to the inherent vowel? (Replaces it — never adds to it.) What does the word mātrā mean, and what English words share its root? (\"Measure\" — meter, measure, month.) Where does ा attach, and where does े? (Right; above the bar.) Write नाम — what does it mean? (\"Name\".) Next: the one mātrā whose position tries to fool your eye."
+              "text": "What does a mātrā do to the inherent vowel? (Replaces it — never adds to it.) What does the word mātrā mean, and what English words share its root? (\"Measure\" — meter, measure, month.) Where does ा attach, and where does े? (Right; above the bar.) Write नाम (nām) — what does it mean? (\"Name\".) Next: the one mātrā whose position tries to fool your eye."
             }
           ]
         }
@@ -1656,7 +1656,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "नाम — three pieces, one bar",
+              "instruction": "नाम (nām) — three pieces, one bar",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -2319,7 +2319,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0832aa5013d12f47",
+      "sourceHash": "fnv1a64:599fdd6a479e507d",
       "notice": null,
       "blocks": [
         {
@@ -2354,7 +2354,7 @@
               "rowCount": 4,
               "utterances": [
                 "मेरा नाम मीरा है। (merā nām Mīrā hai) (merā nām Mira hai) means My name is Mira.",
-                "आपका नाम क्या है? (āpkā nām kyā hai) means What's your name?",
+                "आपका नाम क्या है? (āpkā nām kyā hai?) means What's your name?",
                 "मेरा नाम अरुण है। (merā nām Aruṇ hai) (merā nām Arun hai) means My name is Arun.",
                 "आपसे मिलकर ख़ुशी हुई। (āpse milkar khushī huī) means Pleased to meet you."
               ]

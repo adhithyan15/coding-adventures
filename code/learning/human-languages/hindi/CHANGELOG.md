@@ -2,6 +2,69 @@
 
 ## [Unreleased]
 
+### Changed — 70 Hindi headwords stop being load-bearing script
+
+Seventy lessons printed their headword in Devanagari and declared no
+`romanization`. Every one of them already *said* the word in romanization —
+in its own title line, its gloss, or its body prose — so the reader was never
+actually stranded. The structured field was simply empty, and the field is the
+contract: `script-closure` reads it, the narration exporter reads it, and the
+book's glossary and running heads read it. An empty field made **नमस्कार**
+count as a glyph the reader must decode unaided, when the page beside it said
+*namaskār* all along.
+
+Each lesson now declares the romanization **its own prose already teaches** —
+transcribed, not invented, and matching that lesson's chosen orthography rather
+than a house style imposed over it (so Chapter 26 keeps *raat* and Chapter 29
+keeps *shaam*, the forms those lessons print). Multi-word headwords keep their
+own separators: **आप / तुम** → `āp / tum`, **मुझे … पसंद है** → `mujhe …
+pasand hai`.
+
+Three downstream artefacts move with it, all in the reader's favour:
+
+- **Narration.** A voice-only learner previously heard `read "नमस्कार"` — an
+  instruction naming a string they cannot pronounce. It now reads
+  `read "नमस्कार (namaskār)"`. This is HL08's point, and it was silently
+  failing for seventy lessons.
+- **The book's table of contents.** Section short-titles were bare Devanagari,
+  so the ToC was unnavigable to a reader still learning the script. They are
+  now the romanization.
+- **The glossary.** Those seventy entries gain their romanization and sort into
+  Latin order beside the rest, instead of clumping by Devanagari codepoint.
+
+Measured on the corpus report: Hindi's load-bearing headwords fall **71 → 1**,
+and Hindi's script-closure violations fall **69 → 40** — the single largest
+exposure seam in the corpus, and Hindi was the worst track in it. Corpus-wide
+the exposure count falls 283 → 213 and closure 643 → 614; every point of both
+deltas is Hindi.
+
+**One lesson is deliberately left load-bearing.** `HI-A1F01-name-no-model` is
+a no-model writing checkpoint whose own prompt reads "With no bank,
+romanization, or copyable answer, complete the Hindi name field." Its
+withheld romanization *is* the assessment condition. Declaring the field to
+drive the count to zero would have leaked support into the narration of a
+lesson built to remove it, so the remaining 1 is intended and should stay.
+
+Declaring the field also exposed two places where a lesson glossed the same
+word twice, in two spellings, because the narration exporter's de-duplication
+is an exact-substring test and the new field near-missed the body's existing
+gloss. Both were repaired at the source rather than by loosening the field:
+
+- **Chapter 4** was the track's lone romanization outlier, writing च as *c*
+  (*caltā*, *calnā*) where every other lesson writes *ch* (*chār*, *chāy*,
+  *chammach*, *sochnā*) — and where its own title, slug, roadmap and
+  session-map entry all said *chaltā*. Its Hindi word forms are now *chaltā /
+  chaltī / chalnā*. The Sanskrit root (*cal-*, *calan*, *cañcal*) stays in
+  IAST because it is a Sanskrit citation, and the letter name **च** (*ca*)
+  stays as `HI-S117-letter-ca` teaches it: the track romanises *letters* in
+  IAST and *words* for the reader, and that split is deliberate.
+- **Chapter 2's practice table** glossed **आपका नाम क्या है?** as
+  *āpkā nām kyā hai*, dropping the question mark the Hindi cell carries. It
+  now matches.
+
+The 164-page figure in this track's README was also stale: the book now
+compiles at **454 pages**, still with zero missing characters and zero errors.
+
 ### Changed — declare both Hindi parent-register pairs
 
 - Chapter 12 now declares **पिता / माता / बाप / माँ** as its headword instead

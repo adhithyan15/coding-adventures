@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 39,
-  "sourceHash": "fnv1a64:4ec60d644b61096f",
+  "sourceHash": "fnv1a64:63cfde3859528478",
   "lessonIds": [
     "HI-C39-dost",
     "HI-C39-baccha",
@@ -12,7 +12,7 @@
   "drivablePrefix": 0,
   "text": "hindi/narration/ch39.txt",
   "json": "hindi/narration/ch39.json",
-  "textHash": "fnv1a64:76833c0d1bb45710",
-  "jsonHash": "fnv1a64:49458cbfb1623284",
+  "textHash": "fnv1a64:0feb164e8c3d33cd",
+  "jsonHash": "fnv1a64:dadf265981af90a2",
   "findings": []
 }

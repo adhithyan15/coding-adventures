@@ -10,6 +10,7 @@ chapter: 5
 type: word
 headword: करना / काम करना
 gloss: to do, to make (and काम करना, "to work")
+romanization: "karnā / kām karnā"
 concept_tag: VERB-DO-MAKE
 prerequisites: [HI-C05-bolna]
 sounds: [matra-a]

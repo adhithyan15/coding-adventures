@@ -4,14 +4,14 @@
   "chapter": 22,
   "title": "Numbers Eleven to Twenty",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a981ab87fb2e2f50",
+  "sourceHash": "fnv1a64:696cf4e90f800822",
   "lessons": [
     {
       "id": "HI-C22-gyarah-bees",
       "sequence": 710,
       "title": "ग्यारह, बीस — genuinely irregular, and one honest exception",
       "headword": "ग्यारह — बीस",
-      "romanization": "",
+      "romanization": "gyārah — bīs",
       "gloss": "11-20 — genuinely irregular, must be memorized individually; but उन्नीस (19) most likely preserves Sanskrit's OWN subtractive naming, the same logic as Latin's ūndēvīgintī",
       "script": "devanagari",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d576522ab400044",
+      "sourceHash": "fnv1a64:0c90354c3400c997",
       "notice": null,
       "blocks": [
         {

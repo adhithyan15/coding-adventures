@@ -4,14 +4,14 @@
   "chapter": 29,
   "title": "Evening",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:584204f9dd2c6f51",
+  "sourceHash": "fnv1a64:2557b5dc6ff31802",
   "lessons": [
     {
       "id": "HI-C29-shaam",
       "sequence": 800,
       "title": "शाम (shaam) — \"evening,\" and a tempting false cognate",
       "headword": "शाम",
-      "romanization": "",
+      "romanization": "shaam",
       "gloss": "\"evening\" (shaam) — another genuine Persian loanword, like subah; looks tempting to connect to Sanskrit श्यामा (śyāmā, \"night/dark\"), but that's a false cognate — different root entirely, despite the resemblance",
       "script": "devanagari",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d90d30ca114427b",
+      "sourceHash": "fnv1a64:799a588882a9aa48",
       "notice": null,
       "blocks": [
         {

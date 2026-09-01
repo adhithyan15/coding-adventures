@@ -10,6 +10,7 @@ chapter: 5
 type: word
 headword: बोलता हूँ, बोलती हूँ, बोलते हैं
 gloss: the present-habitual template — stem + -tā/-tī/-te + honā
+romanization: "boltā hūṁ, boltī hūṁ, bolte haiṁ"
 concept_tag: HI-GRAMMAR-PRESENT-HABITUAL
 prerequisites: [HI-C05-bolna, HI-C03-hun]
 sounds: [matra-a, matra-i, chandrabindu-nasal]

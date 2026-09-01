@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 31,
-  "sourceHash": "fnv1a64:387bffd3c1c0fb8d",
+  "sourceHash": "fnv1a64:b0501219e0004bb3",
   "lessonIds": [
     "HI-C31-suprabhat"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "hindi/narration/ch31.txt",
   "json": "hindi/narration/ch31.json",
-  "textHash": "fnv1a64:fc6c2015a2054560",
-  "jsonHash": "fnv1a64:9f067c521a769ae2",
+  "textHash": "fnv1a64:fc9a85d82cd0a261",
+  "jsonHash": "fnv1a64:ac0fbcd767989e4b",
   "findings": []
 }

@@ -10,6 +10,7 @@ chapter: 39
 type: word
 headword: औरत
 gloss: woman — feminine, an Arabic word that only came to mean "woman" in Persian, and one of three Hindi words separated by register
+romanization: "aurat"
 concept_tag: HI-PERSON-WOMAN
 prerequisites: [HI-C39-aadmi, HI-C12-bhaai-bahin, HI-C12-pitaa-maataa]
 sounds: [diphthong-au, spineless-ra]

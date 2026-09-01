@@ -10,6 +10,7 @@ chapter: 31
 type: phrase
 headword: सुप्रभात
 gloss: "good morning" (suprabhat) — सु ("good") + प्रभात (prabhāt, native Sanskrit "dawn," from prabhā, "light, splendour," itself from bhā, "to shine") — a completely different word from सुबह, the Persian-loan everyday noun; skews formal/written (radio, greeting cards) rather than casual spoken Hindi, where नमस्ते covers mornings too — but there's no strong evidence it's being displaced by English the way some other languages' night greetings were found to be
+romanization: "suprabhāt"
 concept_tag: GREETING-MORNING
 prerequisites: [HI-C28-subah]
 sounds: [devanagari-conjunct-pra, devanagari-bha]

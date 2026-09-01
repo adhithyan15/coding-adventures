@@ -4,14 +4,14 @@
   "chapter": 7,
   "title": "Yes and No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:edc45ec1e3a2ef7e",
+  "sourceHash": "fnv1a64:513de09e728a0591",
   "lessons": [
     {
       "id": "HI-C07-haan",
       "sequence": 490,
       "title": "हाँ (hāṃ) — yes",
       "headword": "हाँ",
-      "romanization": "",
+      "romanization": "hāṃ",
       "gloss": "yes (hāṃ)",
       "script": "devanagari",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:969aec64699b4c42",
+      "sourceHash": "fnv1a64:0469ae861197bfaf",
       "notice": null,
       "blocks": [
         {
@@ -126,7 +126,7 @@
             },
             {
               "kind": "speech",
-              "text": "How do you say yes in Hindi? (hāṃ, हाँ.) What does the chandrabindu ँ do to the vowel? (Nasalises it — sends it through the nose.) How do you make hāṃ polite? (Add जी — jī hāṃ.) Next: नहीं, no."
+              "text": "How do you say yes in Hindi? (hāṃ, हाँ.) What does the chandrabindu ँ do to the vowel? (Nasalises it — sends it through the nose.) How do you make hāṃ polite? (Add जी — jī hāṃ.) Next: नहीं (nahīṃ), no."
             }
           ]
         }
@@ -137,7 +137,7 @@
       "sequence": 500,
       "title": "नहीं (nahīṃ) — no / not",
       "headword": "नहीं",
-      "romanization": "",
+      "romanization": "nahīṃ",
       "gloss": "no / not (nahīṃ)",
       "script": "devanagari",
       "modality": "voice",
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2b7402c18b17129",
+      "sourceHash": "fnv1a64:20c4bd049298d3e3",
       "notice": null,
       "blocks": [
         {
@@ -216,11 +216,11 @@
             },
             {
               "kind": "speech",
-              "text": "answer: आप आ रहे हैं? — नहीं. (\"Are you coming?\" — \"No.\")"
+              "text": "answer: आप आ रहे हैं? — नहीं (nahīṃ). (\"Are you coming?\" — \"No.\")"
             },
             {
               "kind": "speech",
-              "text": "negator: मैं नहीं जानता — \"I do not know.\""
+              "text": "negator: मैं नहीं (nahīṃ) जानता — \"I do not know.\""
             },
             {
               "kind": "speech",

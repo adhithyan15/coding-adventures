@@ -4,14 +4,14 @@
   "chapter": 31,
   "title": "Good Morning",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:387bffd3c1c0fb8d",
+  "sourceHash": "fnv1a64:b0501219e0004bb3",
   "lessons": [
     {
       "id": "HI-C31-suprabhat",
       "sequence": 820,
       "title": "सुप्रभात (suprabhāt) — \"good morning,\" a different root than the noun",
       "headword": "सुप्रभात",
-      "romanization": "",
+      "romanization": "suprabhāt",
       "gloss": "\"good morning\" (suprabhat) — सु (\"good\") + प्रभात (prabhāt, native Sanskrit \"dawn,\" from prabhā, \"light, splendour,\" itself from bhā, \"to shine\") — a completely different word from सुबह, the Persian-loan everyday noun; skews formal/written (radio, greeting cards) rather than casual spoken Hindi, where नमस्ते covers mornings too — but there's no strong evidence it's being displaced by English the way some other languages' night greetings were found to be",
       "script": "devanagari",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ec36327a14e022b",
+      "sourceHash": "fnv1a64:43d21399895b9036",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here's a genuine, checked-not-assumed finding — hedged carefully, because the evidence behind it is thin: some sources describe Telugu speakers often code-switching to English \"good night\" instead of their own Sanskrit-descended phrase, though that claim might apply more broadly across South Asian languages, not just Telugu. सुप्रभात's own story is different again, and just as worth hedging: it skews toward formal, written contexts — speeches, radio, the well-known Hindi WhatsApp-forward \"good morning image\" culture — rather than casual spoken conversation, where नमस्ते commonly covers mornings too. That's a real formal/everyday split, but it isn't the same thing as being displaced by English specifically — there's no strong evidence for that particular substitution here. Don't assume every \"good ___\" greeting in every language follows the same displacement story; verify each one on its own, and don't flatten a hedge into a fact either way."
+              "text": "Here's a genuine, checked-not-assumed finding — hedged carefully, because the evidence behind it is thin: some sources describe Telugu speakers often code-switching to English \"good night\" instead of their own Sanskrit-descended phrase, though that claim might apply more broadly across South Asian languages, not just Telugu. सुप्रभात (suprabhāt)'s own story is different again, and just as worth hedging: it skews toward formal, written contexts — speeches, radio, the well-known Hindi WhatsApp-forward \"good morning image\" culture — rather than casual spoken conversation, where नमस्ते commonly covers mornings too. That's a real formal/everyday split, but it isn't the same thing as being displaced by English specifically — there's no strong evidence for that particular substitution here. Don't assume every \"good ___\" greeting in every language follows the same displacement story; verify each one on its own, and don't flatten a hedge into a fact either way."
             }
           ]
         },
