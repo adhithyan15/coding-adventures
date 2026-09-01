@@ -1235,10 +1235,7 @@ impl GanttDuration {
 
 impl Default for GanttDuration {
     fn default() -> Self {
-        Self {
-            value: 0.0,
-            unit: GanttDurationUnit::Days,
-        }
+        Self { value: 0.0, unit: GanttDurationUnit::Days }
     }
 }
 
@@ -1841,15 +1838,9 @@ mod tests {
             id: "t1".into(),
             label: "D".into(),
             start: TaskStart::Date("2026-01-01".into()),
-            duration: GanttDuration {
-                value: 5.0,
-                unit: GanttDurationUnit::Days,
-            },
+            duration: GanttDuration { value: 5.0, unit: GanttDurationUnit::Days },
             end: None,
-            tags: GanttTaskTags {
-                done: true,
-                ..GanttTaskTags::default()
-            },
+            tags: GanttTaskTags { done: true, ..GanttTaskTags::default() },
             dependencies: vec![],
             link: None,
             callback: None,

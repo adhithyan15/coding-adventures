@@ -31,12 +31,13 @@ pub const VERSION: &str = "0.62.0";
 use std::collections::HashMap;
 
 use diagram_ir::{
-    DiagramShape, EdgeKind, GanttTaskTags, GeoElement, GitCommitSymbol, LayoutedBoardDiagram,
-    LayoutedChartDiagram, LayoutedChartItem, LayoutedGeometricDiagram, LayoutedGraphDiagram,
-    LayoutedGraphEdge, LayoutedGraphNode, LayoutedPacketDiagram, LayoutedSequenceDiagram,
-    LayoutedSequenceItem, LayoutedStructuralDiagram, LayoutedTemporalDiagram, LayoutedTemporalItem,
-    Orientation, Point, RelKind, SequenceArrowhead, SequenceBlockKind, SequenceCentralConnection,
-    SequenceLineStyle, SequenceParticipantKind, SequenceProperty, TextAlign as GeoTextAlign,
+    DiagramShape, EdgeKind, GeoElement, GitCommitSymbol, LayoutedChartDiagram, LayoutedChartItem,
+    LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
+    LayoutedBoardDiagram, LayoutedPacketDiagram,
+    LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram,
+    LayoutedTemporalDiagram, LayoutedTemporalItem, Orientation, Point, RelKind, SequenceArrowhead,
+    SequenceBlockKind, SequenceCentralConnection, SequenceLineStyle, SequenceParticipantKind,
+    GanttTaskTags, SequenceProperty, TextAlign as GeoTextAlign,
 };
 use layout_ir::{Color, Content, FontSpec, PositionedNode, TextAlign, TextContent};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
@@ -605,12 +606,7 @@ where
             diagram.width,
             options.title_font.size * 1.2,
             options.title_font.clone(),
-            Color {
-                r: 15,
-                g: 23,
-                b: 42,
-                a: 255,
-            },
+            Color { r: 15, g: 23, b: 42, a: 255 },
         ));
     }
     for field in &diagram.fields {
@@ -669,12 +665,7 @@ where
         &LayoutToPaintOptions {
             width: diagram.width,
             height: diagram.height,
-            background: Color {
-                r: 0,
-                g: 0,
-                b: 0,
-                a: 0,
-            },
+            background: Color { r: 0, g: 0, b: 0, a: 0 },
             device_pixel_ratio: 1.0,
             shaper: options.shaper,
             metrics: options.metrics,
@@ -697,13 +688,7 @@ where
         background: if bg.a == 255 {
             format!("rgb({}, {}, {})", bg.r, bg.g, bg.b)
         } else {
-            format!(
-                "rgba({}, {}, {}, {:.4})",
-                bg.r,
-                bg.g,
-                bg.b,
-                f64::from(bg.a) / 255.0
-            )
+            format!("rgba({}, {}, {}, {:.4})", bg.r, bg.g, bg.b, f64::from(bg.a) / 255.0)
         },
         instructions,
         id: None,
@@ -725,98 +710,51 @@ where
     let mut text_children = Vec::new();
     for column in &board.columns {
         instructions.push(PaintInstruction::Rect(PaintRect {
-            base: PaintBase::default(),
-            x: column.x,
-            y: column.y,
-            width: column.width,
-            height: column.height,
-            fill: Some(column.style.fill.clone()),
-            stroke: Some(column.style.stroke.clone()),
+            base: PaintBase::default(), x: column.x, y: column.y,
+            width: column.width, height: column.height,
+            fill: Some(column.style.fill.clone()), stroke: Some(column.style.stroke.clone()),
             stroke_width: Some(column.style.stroke_width),
             corner_radius: Some(column.style.corner_radius),
-            stroke_dash: None,
-            stroke_dash_offset: None,
+            stroke_dash: None, stroke_dash_offset: None,
         }));
         let mut heading_font = options.title_font.clone();
         heading_font.size = 16.0;
         text_children.push(text_node_no_wrap(
-            &column.label.text,
-            column.x + 12.0,
-            column.y + 14.0,
-            column.width - 24.0,
-            22.0,
-            heading_font,
+            &column.label.text, column.x + 12.0, column.y + 14.0,
+            column.width - 24.0, 22.0, heading_font,
             css_to_color(&column.style.text_color),
         ));
         for card in &column.cards {
             instructions.push(PaintInstruction::Rect(PaintRect {
-                base: PaintBase::default(),
-                x: card.x,
-                y: card.y,
-                width: card.width,
-                height: card.height,
-                fill: Some(card.style.fill.clone()),
-                stroke: Some(card.style.stroke.clone()),
+                base: PaintBase::default(), x: card.x, y: card.y,
+                width: card.width, height: card.height,
+                fill: Some(card.style.fill.clone()), stroke: Some(card.style.stroke.clone()),
                 stroke_width: Some(card.style.stroke_width),
                 corner_radius: Some(card.style.corner_radius),
-                stroke_dash: None,
-                stroke_dash_offset: None,
+                stroke_dash: None, stroke_dash_offset: None,
             }));
             text_children.push(text_node(
-                &card.label.text,
-                card.x + 10.0,
-                card.y + 18.0,
-                card.width - 20.0,
-                card.height - 24.0,
-                options.label_font.clone(),
-                css_to_color(&card.style.text_color),
+                &card.label.text, card.x + 10.0, card.y + 18.0,
+                card.width - 20.0, card.height - 24.0,
+                options.label_font.clone(), css_to_color(&card.style.text_color),
             ));
         }
     }
     let root = PositionedNode {
-        x: 0.0,
-        y: 0.0,
-        width: board.width,
-        height: board.height,
-        id: None,
-        content: None,
-        children: text_children,
-        ext: HashMap::new(),
+        x: 0.0, y: 0.0, width: board.width, height: board.height,
+        id: None, content: None, children: text_children, ext: HashMap::new(),
     };
-    instructions.extend(
-        layout_to_paint(
-            &root,
-            &LayoutToPaintOptions {
-                width: board.width,
-                height: board.height,
-                background: Color {
-                    r: 0,
-                    g: 0,
-                    b: 0,
-                    a: 0,
-                },
-                device_pixel_ratio: 1.0,
-                shaper: options.shaper,
-                metrics: options.metrics,
-                resolver: options.resolver,
-            },
-        )
-        .instructions,
-    );
+    instructions.extend(layout_to_paint(&root, &LayoutToPaintOptions {
+        width: board.width, height: board.height,
+        background: Color { r: 0, g: 0, b: 0, a: 0 },
+        device_pixel_ratio: 1.0, shaper: options.shaper,
+        metrics: options.metrics, resolver: options.resolver,
+    }).instructions);
     let bg = options.background;
     PaintScene {
-        width: board.width,
-        height: board.height,
-        background: format!(
-            "rgba({}, {}, {}, {:.4})",
-            bg.r,
-            bg.g,
-            bg.b,
-            f64::from(bg.a) / 255.0
-        ),
-        instructions,
-        id: None,
-        metadata: None,
+        width: board.width, height: board.height,
+        background: format!("rgba({}, {}, {}, {:.4})", bg.r, bg.g, bg.b, f64::from(bg.a) / 255.0),
+        instructions, id: None, metadata: None,
     }
 }
 
@@ -2746,22 +2684,10 @@ fn git_commit_symbol_instructions(
             PaintInstruction::Path(PaintPath {
                 base: PaintBase::default(),
                 commands: vec![
-                    PathCommand::MoveTo {
-                        x: x - 4.0,
-                        y: y - 4.0,
-                    },
-                    PathCommand::LineTo {
-                        x: x + 4.0,
-                        y: y + 4.0,
-                    },
-                    PathCommand::MoveTo {
-                        x: x - 4.0,
-                        y: y + 4.0,
-                    },
-                    PathCommand::LineTo {
-                        x: x + 4.0,
-                        y: y - 4.0,
-                    },
+                    PathCommand::MoveTo { x: x - 4.0, y: y - 4.0 },
+                    PathCommand::LineTo { x: x + 4.0, y: y + 4.0 },
+                    PathCommand::MoveTo { x: x - 4.0, y: y + 4.0 },
+                    PathCommand::LineTo { x: x + 4.0, y: y - 4.0 },
                 ],
                 fill: None,
                 fill_rule: None,
@@ -2801,35 +2727,20 @@ fn git_commit_symbol_instructions(
                 stroke_dash_offset: None,
             }),
         ],
-        GitCommitSymbol::Merge => vec![normal(), ellipse(x, y, 5.0, None, "#ffffff".into())],
+        GitCommitSymbol::Merge => vec![
+            normal(),
+            ellipse(x, y, 5.0, None, "#ffffff".into()),
+        ],
         GitCommitSymbol::CherryPick => vec![
             normal(),
-            ellipse(
-                x - 3.0,
-                y + 2.0,
-                2.0,
-                Some("#ffffff".into()),
-                "#ffffff".into(),
-            ),
-            ellipse(
-                x + 3.0,
-                y + 2.0,
-                2.0,
-                Some("#ffffff".into()),
-                "#ffffff".into(),
-            ),
+            ellipse(x - 3.0, y + 2.0, 2.0, Some("#ffffff".into()), "#ffffff".into()),
+            ellipse(x + 3.0, y + 2.0, 2.0, Some("#ffffff".into()), "#ffffff".into()),
             PaintInstruction::Path(PaintPath {
                 base: PaintBase::default(),
                 commands: vec![
-                    PathCommand::MoveTo {
-                        x: x - 3.0,
-                        y: y + 2.0,
-                    },
+                    PathCommand::MoveTo { x: x - 3.0, y: y + 2.0 },
                     PathCommand::LineTo { x, y: y - 4.0 },
-                    PathCommand::LineTo {
-                        x: x + 3.0,
-                        y: y + 2.0,
-                    },
+                    PathCommand::LineTo { x: x + 3.0, y: y + 2.0 },
                 ],
                 fill: None,
                 fill_rule: None,
@@ -2886,53 +2797,22 @@ where
             LayoutedTemporalItem::TimelineSpine { x1, y1, x2, y2 } => {
                 instructions.push(PaintInstruction::Path(line_path(
                     &[Point { x: *x1, y: *y1 }, Point { x: *x2, y: *y2 }],
-                    "#475569",
-                    3.0,
+                    "#475569", 3.0,
                 )));
             }
-            LayoutedTemporalItem::TimelineSection {
-                x,
-                y,
-                width,
-                height,
-                label,
-            } => {
+            LayoutedTemporalItem::TimelineSection { x, y, width, height, label } => {
                 instructions.push(PaintInstruction::Rect(PaintRect {
-                    base: PaintBase::default(),
-                    x: *x,
-                    y: *y,
-                    width: *width,
-                    height: *height,
-                    fill: Some("#0f172a".into()),
-                    stroke: None,
-                    stroke_width: None,
-                    corner_radius: Some(15.0),
-                    stroke_dash: None,
-                    stroke_dash_offset: None,
+                    base: PaintBase::default(), x: *x, y: *y, width: *width, height: *height,
+                    fill: Some("#0f172a".into()), stroke: None, stroke_width: None,
+                    corner_radius: Some(15.0), stroke_dash: None, stroke_dash_offset: None,
                 }));
                 text_children.push(text_node(
-                    label,
-                    *x + 10.0,
-                    *y + 6.0,
-                    *width - 20.0,
-                    *height - 12.0,
-                    lf.clone(),
-                    Color {
-                        r: 255,
-                        g: 255,
-                        b: 255,
-                        a: 255,
-                    },
+                    label, *x + 10.0, *y + 6.0, *width - 20.0, *height - 12.0, lf.clone(),
+                    Color { r: 255, g: 255, b: 255, a: 255 },
                 ));
             }
             LayoutedTemporalItem::TimelinePeriod {
-                x,
-                y,
-                width,
-                height,
-                label,
-                events,
-                color_index,
+                x, y, width, height, label, events, color_index,
             } => {
                 const FILLS: [&str; 6] = [
                     "#dbeafe", "#dcfce7", "#fef3c7", "#fae8ff", "#ffe4e6", "#cffafe",
@@ -2942,51 +2822,22 @@ where
                 ];
                 let palette_index = *color_index % FILLS.len();
                 instructions.push(PaintInstruction::Rect(PaintRect {
-                    base: PaintBase::default(),
-                    x: *x,
-                    y: *y,
-                    width: *width,
-                    height: *height,
+                    base: PaintBase::default(), x: *x, y: *y, width: *width, height: *height,
                     fill: Some(FILLS[palette_index].into()),
-                    stroke: Some(STROKES[palette_index].into()),
-                    stroke_width: Some(2.0),
-                    corner_radius: Some(8.0),
-                    stroke_dash: None,
-                    stroke_dash_offset: None,
+                    stroke: Some(STROKES[palette_index].into()), stroke_width: Some(2.0),
+                    corner_radius: Some(8.0), stroke_dash: None, stroke_dash_offset: None,
                 }));
                 text_children.push(text_node(
-                    label,
-                    *x + 12.0,
-                    *y + 8.0,
-                    *width - 24.0,
-                    22.0,
-                    options.title_font.clone(),
-                    Color {
-                        r: 15,
-                        g: 23,
-                        b: 42,
-                        a: 255,
-                    },
+                    label, *x + 12.0, *y + 8.0, *width - 24.0, 22.0,
+                    options.title_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 },
                 ));
                 if !events.is_empty() {
-                    let event_text = events
-                        .iter()
-                        .map(|event| format!("- {event}"))
-                        .collect::<Vec<_>>()
-                        .join("\n");
+                    let event_text = events.iter().map(|event| format!("- {event}"))
+                        .collect::<Vec<_>>().join("\n");
                     text_children.push(text_node(
-                        &event_text,
-                        *x + 12.0,
-                        *y + 32.0,
-                        *width - 24.0,
-                        (*height - 38.0).max(12.0),
-                        lf.clone(),
-                        Color {
-                            r: 51,
-                            g: 65,
-                            b: 85,
-                            a: 255,
-                        },
+                        &event_text, *x + 12.0, *y + 32.0, *width - 24.0,
+                        (*height - 38.0).max(12.0), lf.clone(),
+                        Color { r: 51, g: 65, b: 85, a: 255 },
                     ));
                 }
             }
@@ -3061,12 +2912,7 @@ where
                     1.5,
                 )));
             }
-            LayoutedTemporalItem::TimeAxisTick {
-                x,
-                y,
-                label,
-                label_above,
-            } => {
+            LayoutedTemporalItem::TimeAxisTick { x, y, label, label_above } => {
                 instructions.push(PaintInstruction::Path(line_path(
                     &[Point { x: *x, y: *y - 4.0 }, Point { x: *x, y: *y }],
                     "#374151",
@@ -3075,11 +2921,7 @@ where
                 text_children.push(text_node(
                     label,
                     x - 20.0,
-                    if *label_above {
-                        *y - ls * 1.2 - 2.0
-                    } else {
-                        *y + 2.0
-                    },
+                    if *label_above { *y - ls * 1.2 - 2.0 } else { *y + 2.0 },
                     40.0,
                     ls * 1.2,
                     lf.clone(),
@@ -3212,12 +3054,7 @@ where
                     120.0,
                     ls * 1.2,
                     lf.clone(),
-                    Color {
-                        r: 75,
-                        g: 85,
-                        b: 99,
-                        a: 255,
-                    },
+                    Color { r: 75, g: 85, b: 99, a: 255 },
                 ));
             }
             LayoutedTemporalItem::TodayMarker {
@@ -3263,7 +3100,10 @@ where
                 label,
             } => {
                 instructions.push(PaintInstruction::Path(line_path(
-                    &[Point { x: *x1, y: *y1 }, Point { x: *x2, y: *y2 }],
+                    &[
+                        Point { x: *x1, y: *y1 },
+                        Point { x: *x2, y: *y2 },
+                    ],
                     color,
                     1.0,
                 )));
@@ -4113,39 +3953,28 @@ mod tests {
     #[test]
     fn git_commit_symbols_emit_distinct_backend_neutral_geometry() {
         let reverse = git_commit_symbol_instructions(20.0, 20.0, &GitCommitSymbol::Reverse);
-        assert!(reverse
-            .iter()
-            .any(|item| matches!(item, PaintInstruction::Path(_))));
+        assert!(reverse.iter().any(|item| matches!(item, PaintInstruction::Path(_))));
 
-        let highlight = git_commit_symbol_instructions(20.0, 20.0, &GitCommitSymbol::Highlight);
+        let highlight =
+            git_commit_symbol_instructions(20.0, 20.0, &GitCommitSymbol::Highlight);
         assert_eq!(
-            highlight
-                .iter()
-                .filter(|item| matches!(item, PaintInstruction::Rect(_)))
-                .count(),
+            highlight.iter().filter(|item| matches!(item, PaintInstruction::Rect(_))).count(),
             2
         );
 
         let merge = git_commit_symbol_instructions(20.0, 20.0, &GitCommitSymbol::Merge);
         assert_eq!(
-            merge
-                .iter()
-                .filter(|item| matches!(item, PaintInstruction::Ellipse(_)))
-                .count(),
+            merge.iter().filter(|item| matches!(item, PaintInstruction::Ellipse(_))).count(),
             2
         );
 
-        let cherry_pick = git_commit_symbol_instructions(20.0, 20.0, &GitCommitSymbol::CherryPick);
+        let cherry_pick =
+            git_commit_symbol_instructions(20.0, 20.0, &GitCommitSymbol::CherryPick);
         assert_eq!(
-            cherry_pick
-                .iter()
-                .filter(|item| matches!(item, PaintInstruction::Ellipse(_)))
-                .count(),
+            cherry_pick.iter().filter(|item| matches!(item, PaintInstruction::Ellipse(_))).count(),
             3
         );
-        assert!(cherry_pick
-            .iter()
-            .any(|item| matches!(item, PaintInstruction::Path(_))));
+        assert!(cherry_pick.iter().any(|item| matches!(item, PaintInstruction::Path(_))));
     }
 
     #[test]

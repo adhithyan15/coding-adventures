@@ -23,17 +23,16 @@ mod apple {
     use diagram_layout_structural::layout_structural_diagram;
     use diagram_layout_temporal::layout_temporal_diagram;
     use diagram_to_paint::{
-        diagram_to_paint, diagram_to_paint_board, diagram_to_paint_chart, diagram_to_paint_packet,
-        diagram_to_paint_sequence, diagram_to_paint_structural, diagram_to_paint_temporal,
-        DiagramToPaintOptions,
+        diagram_to_paint, diagram_to_paint_board, diagram_to_paint_chart, diagram_to_paint_packet, diagram_to_paint_sequence,
+        diagram_to_paint_structural, diagram_to_paint_temporal, DiagramToPaintOptions,
     };
     use dot_parser::parse_to_diagram;
     use layout_ir::font_spec;
     use mermaid_parser::{
-        parse_block, parse_c4_diagram, parse_er_diagram, parse_gantt, parse_gitgraph,
-        parse_journey, parse_kanban, parse_mindmap, parse_packet, parse_pie, parse_quadrant_chart,
-        parse_requirement_diagram, parse_sankey, parse_sequence_diagram, parse_state_diagram,
-        parse_timeline, parse_to_diagram as parse_mermaid_to_diagram, parse_xychart,
+        parse_block, parse_c4_diagram, parse_er_diagram, parse_gantt, parse_gitgraph, parse_journey, parse_kanban, parse_packet, parse_pie,
+        parse_mindmap, parse_quadrant_chart, parse_requirement_diagram, parse_sankey,
+        parse_sequence_diagram, parse_state_diagram, parse_timeline,
+        parse_to_diagram as parse_mermaid_to_diagram, parse_xychart,
     };
     use paint_codec_png::write_png;
     use paint_instructions::PaintInstruction;
@@ -210,7 +209,9 @@ mod apple {
         let scene = diagram_to_paint(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,
-            PaintInstruction::Path(_) | PaintInstruction::Rect(_) | PaintInstruction::Ellipse(_)
+            PaintInstruction::Path(_)
+                | PaintInstruction::Rect(_)
+                | PaintInstruction::Ellipse(_)
         )));
         assert!(scene
             .instructions
@@ -232,12 +233,7 @@ mod apple {
         let metrics = CoreTextMetrics;
         let resolver = CoreTextResolver::new();
         let opts = DiagramToPaintOptions {
-            background: layout_ir::Color {
-                r: 248,
-                g: 250,
-                b: 252,
-                a: 255,
-            },
+            background: layout_ir::Color { r: 248, g: 250, b: 252, a: 255 },
             device_pixel_ratio: 2.0,
             label_font: font_spec("Helvetica", 14.0),
             title_font: font_spec("Helvetica", 18.0),
@@ -246,14 +242,8 @@ mod apple {
             resolver: &resolver,
         };
         let scene = diagram_to_paint(&layout, &opts);
-        assert!(scene
-            .instructions
-            .iter()
-            .any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
-        assert!(scene
-            .instructions
-            .iter()
-            .any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_block_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
@@ -272,12 +262,7 @@ mod apple {
         let scene = diagram_to_paint_packet(
             &layout,
             &DiagramToPaintOptions {
-                background: layout_ir::Color {
-                    r: 248,
-                    g: 250,
-                    b: 252,
-                    a: 255,
-                },
+                background: layout_ir::Color { r: 248, g: 250, b: 252, a: 255 },
                 device_pixel_ratio: 2.0,
                 label_font: font_spec("Helvetica", 14.0),
                 title_font: font_spec("Helvetica", 18.0),
@@ -286,14 +271,8 @@ mod apple {
                 resolver: &resolver,
             },
         );
-        assert!(scene
-            .instructions
-            .iter()
-            .any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
-        assert!(scene
-            .instructions
-            .iter()
-            .any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_packet_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
@@ -312,12 +291,7 @@ mod apple {
         let scene = diagram_to_paint_board(
             &layout,
             &DiagramToPaintOptions {
-                background: layout_ir::Color {
-                    r: 248,
-                    g: 250,
-                    b: 252,
-                    a: 255,
-                },
+                background: layout_ir::Color { r: 248, g: 250, b: 252, a: 255 },
                 device_pixel_ratio: 2.0,
                 label_font: font_spec("Helvetica", 14.0),
                 title_font: font_spec("Helvetica", 18.0),
@@ -326,14 +300,8 @@ mod apple {
                 resolver: &resolver,
             },
         );
-        assert!(scene
-            .instructions
-            .iter()
-            .any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
-        assert!(scene
-            .instructions
-            .iter()
-            .any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_kanban_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
@@ -618,10 +586,7 @@ line "Target" [35, 50, 68, 82]"##,
         let layout = layout_chart_diagram(&diagram, 600.0, 400.0);
         assert_eq!((layout.width, layout.height), (720.0, 440.0));
         assert_eq!(layout.background_color.as_deref(), Some("#fff8e7"));
-        assert_eq!(
-            diagram.orientation,
-            diagram_ir::ChartOrientation::Horizontal
-        );
+        assert_eq!(diagram.orientation, diagram_ir::ChartOrientation::Horizontal);
         assert!(layout.items.iter().any(|item| matches!(
             item,
             diagram_ir::LayoutedChartItem::AxisSpine { y1, y2, .. }
@@ -981,17 +946,10 @@ line "Target" [35, 50, 68, 82]"##,
             diagram_ir::LayoutedTemporalItem::TimeAxisTick { label, .. }
                 if label == "01/01"
         )));
-        assert_eq!(
-            layout
-                .items
-                .iter()
-                .filter(|item| matches!(
-                    item,
-                    diagram_ir::LayoutedTemporalItem::TimeAxisSpine { .. }
-                ))
-                .count(),
-            2
-        );
+        assert_eq!(layout.items.iter().filter(|item| matches!(
+            item,
+            diagram_ir::LayoutedTemporalItem::TimeAxisSpine { .. }
+        )).count(), 2);
         assert!(layout.items.iter().any(|item| matches!(
             item,
             diagram_ir::LayoutedTemporalItem::VerticalMarker { label, .. }
@@ -1073,24 +1031,15 @@ line "Target" [35, 50, 68, 82]"##,
             },
             800.0,
         );
-        let widths = precise_layout
-            .items
-            .iter()
-            .filter_map(|item| match item {
-                diagram_ir::LayoutedTemporalItem::TaskBar { width, .. } => Some(*width),
-                _ => None,
-            })
-            .collect::<Vec<_>>();
+        let widths = precise_layout.items.iter().filter_map(|item| match item {
+            diagram_ir::LayoutedTemporalItem::TaskBar { width, .. } => Some(*width),
+            _ => None,
+        }).collect::<Vec<_>>();
         assert!((widths[0] / widths[1] - 4.0).abs() < 0.01);
         let precise_scene = diagram_to_paint_temporal(
             &precise_layout,
             &DiagramToPaintOptions {
-                background: layout_ir::Color {
-                    r: 255,
-                    g: 255,
-                    b: 255,
-                    a: 255,
-                },
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
                 device_pixel_ratio: 2.0,
                 label_font: font_spec("Helvetica", 12.0),
                 title_font: font_spec("Helvetica", 16.0),
@@ -1119,12 +1068,7 @@ line "Target" [35, 50, 68, 82]"##,
         let meridiem_scene = diagram_to_paint_temporal(
             &meridiem_layout,
             &DiagramToPaintOptions {
-                background: layout_ir::Color {
-                    r: 255,
-                    g: 255,
-                    b: 255,
-                    a: 255,
-                },
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
                 device_pixel_ratio: 2.0,
                 label_font: font_spec("Helvetica", 12.0),
                 title_font: font_spec("Helvetica", 16.0),
@@ -1153,12 +1097,7 @@ line "Target" [35, 50, 68, 82]"##,
         let weekday_scene = diagram_to_paint_temporal(
             &weekday_layout,
             &DiagramToPaintOptions {
-                background: layout_ir::Color {
-                    r: 255,
-                    g: 255,
-                    b: 255,
-                    a: 255,
-                },
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
                 device_pixel_ratio: 2.0,
                 label_font: font_spec("Helvetica", 12.0),
                 title_font: font_spec("Helvetica", 16.0),
@@ -1187,12 +1126,7 @@ line "Target" [35, 50, 68, 82]"##,
         let fractional_scene = diagram_to_paint_temporal(
             &fractional_layout,
             &DiagramToPaintOptions {
-                background: layout_ir::Color {
-                    r: 255,
-                    g: 255,
-                    b: 255,
-                    a: 255,
-                },
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
                 device_pixel_ratio: 2.0,
                 label_font: font_spec("Helvetica", 12.0),
                 title_font: font_spec("Helvetica", 16.0),
@@ -1221,12 +1155,7 @@ line "Target" [35, 50, 68, 82]"##,
         let ordinal_scene = diagram_to_paint_temporal(
             &ordinal_layout,
             &DiagramToPaintOptions {
-                background: layout_ir::Color {
-                    r: 255,
-                    g: 255,
-                    b: 255,
-                    a: 255,
-                },
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
                 device_pixel_ratio: 2.0,
                 label_font: font_spec("Helvetica", 12.0),
                 title_font: font_spec("Helvetica", 16.0),
@@ -1255,12 +1184,7 @@ line "Target" [35, 50, 68, 82]"##,
         let compact_weekday_scene = diagram_to_paint_temporal(
             &compact_weekday_layout,
             &DiagramToPaintOptions {
-                background: layout_ir::Color {
-                    r: 255,
-                    g: 255,
-                    b: 255,
-                    a: 255,
-                },
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
                 device_pixel_ratio: 2.0,
                 label_font: font_spec("Helvetica", 12.0),
                 title_font: font_spec("Helvetica", 16.0),
@@ -1270,11 +1194,8 @@ line "Target" [35, 50, 68, 82]"##,
             },
         );
         let compact_weekday_pixels = render(&compact_weekday_scene);
-        write_png(
-            &compact_weekday_pixels,
-            "/tmp/mermaid_gantt_compact_weekday_e2e.png",
-        )
-        .expect("compact-weekday PNG write failed");
+        write_png(&compact_weekday_pixels, "/tmp/mermaid_gantt_compact_weekday_e2e.png")
+            .expect("compact-weekday PNG write failed");
         assert!(!compact_weekday_scene.instructions.is_empty());
 
         let unpadded_time = parse_gantt(
@@ -1292,12 +1213,7 @@ line "Target" [35, 50, 68, 82]"##,
         let unpadded_time_scene = diagram_to_paint_temporal(
             &unpadded_time_layout,
             &DiagramToPaintOptions {
-                background: layout_ir::Color {
-                    r: 255,
-                    g: 255,
-                    b: 255,
-                    a: 255,
-                },
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
                 device_pixel_ratio: 2.0,
                 label_font: font_spec("Helvetica", 12.0),
                 title_font: font_spec("Helvetica", 16.0),
@@ -1307,11 +1223,8 @@ line "Target" [35, 50, 68, 82]"##,
             },
         );
         let unpadded_time_pixels = render(&unpadded_time_scene);
-        write_png(
-            &unpadded_time_pixels,
-            "/tmp/mermaid_gantt_unpadded_time_e2e.png",
-        )
-        .expect("unpadded-time PNG write failed");
+        write_png(&unpadded_time_pixels, "/tmp/mermaid_gantt_unpadded_time_e2e.png")
+            .expect("unpadded-time PNG write failed");
         assert!(!unpadded_time_scene.instructions.is_empty());
 
         let quarter = parse_gantt(
@@ -1329,12 +1242,7 @@ line "Target" [35, 50, 68, 82]"##,
         let quarter_scene = diagram_to_paint_temporal(
             &quarter_layout,
             &DiagramToPaintOptions {
-                background: layout_ir::Color {
-                    r: 255,
-                    g: 255,
-                    b: 255,
-                    a: 255,
-                },
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
                 device_pixel_ratio: 2.0,
                 label_font: font_spec("Helvetica", 12.0),
                 title_font: font_spec("Helvetica", 16.0),
@@ -1363,12 +1271,7 @@ line "Target" [35, 50, 68, 82]"##,
         let signed_year_scene = diagram_to_paint_temporal(
             &signed_year_layout,
             &DiagramToPaintOptions {
-                background: layout_ir::Color {
-                    r: 255,
-                    g: 255,
-                    b: 255,
-                    a: 255,
-                },
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
                 device_pixel_ratio: 2.0,
                 label_font: font_spec("Helvetica", 12.0),
                 title_font: font_spec("Helvetica", 16.0),
@@ -1378,11 +1281,8 @@ line "Target" [35, 50, 68, 82]"##,
             },
         );
         let signed_year_pixels = render(&signed_year_scene);
-        write_png(
-            &signed_year_pixels,
-            "/tmp/mermaid_gantt_signed_year_e2e.png",
-        )
-        .expect("signed-year PNG write failed");
+        write_png(&signed_year_pixels, "/tmp/mermaid_gantt_signed_year_e2e.png")
+            .expect("signed-year PNG write failed");
         assert!(!signed_year_scene.instructions.is_empty());
     }
 
@@ -1395,20 +1295,9 @@ line "Target" [35, 50, 68, 82]"##,
 
         let valid = syntax["valid"].as_array().expect("valid Gantt fixtures");
         let fixture_ids = visual["fixtures"].as_array().expect("visual fixture ids");
-        assert_eq!(
-            fixture_ids.len(),
-            valid.len(),
-            "visual corpus must cover every valid fixture"
-        );
-        let unique = fixture_ids
-            .iter()
-            .filter_map(Value::as_str)
-            .collect::<BTreeSet<_>>();
-        assert_eq!(
-            unique.len(),
-            fixture_ids.len(),
-            "visual fixture ids must be unique"
-        );
+        assert_eq!(fixture_ids.len(), valid.len(), "visual corpus must cover every valid fixture");
+        let unique = fixture_ids.iter().filter_map(Value::as_str).collect::<BTreeSet<_>>();
+        assert_eq!(unique.len(), fixture_ids.len(), "visual fixture ids must be unique");
 
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;
@@ -1433,12 +1322,7 @@ line "Target" [35, 50, 68, 82]"##,
             let scene = diagram_to_paint_temporal(
                 &layout,
                 &DiagramToPaintOptions {
-                    background: layout_ir::Color {
-                        r: 255,
-                        g: 255,
-                        b: 255,
-                        a: 255,
-                    },
+                    background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
                     device_pixel_ratio: 2.0,
                     label_font: font_spec("Helvetica", 12.0),
                     title_font: font_spec("Helvetica", 16.0),
@@ -1447,15 +1331,9 @@ line "Target" [35, 50, 68, 82]"##,
                     resolver: &resolver,
                 },
             );
-            assert!(
-                !scene.instructions.is_empty(),
-                "visual fixture {id} must lower to paint"
-            );
+            assert!(!scene.instructions.is_empty(), "visual fixture {id} must lower to paint");
             let pixels = render(&scene);
-            assert!(
-                pixels.width > 0 && pixels.height > 0,
-                "visual fixture {id} must render"
-            );
+            assert!(pixels.width > 0 && pixels.height > 0, "visual fixture {id} must render");
             let path = format!("/tmp/mermaid_gantt_11_16_1_{id}.png");
             write_png(&pixels, &path)
                 .unwrap_or_else(|error| panic!("visual fixture {id} PNG failed: {error}"));
@@ -1884,9 +1762,10 @@ line "Target" [35, 50, 68, 82]"##,
                 .iter()
                 .find(|fixture| fixture["id"] == id)
                 .unwrap_or_else(|| panic!("visual fixture {id} missing from syntax corpus"));
-            let diagram =
-                parse_sequence_diagram(fixture["source"].as_str().expect("fixture source"))
-                    .unwrap_or_else(|error| panic!("sequence visual fixture {id} failed: {error}"));
+            let diagram = parse_sequence_diagram(
+                fixture["source"].as_str().expect("fixture source"),
+            )
+            .unwrap_or_else(|error| panic!("sequence visual fixture {id} failed: {error}"));
             let layout = layout_sequence_diagram(&diagram);
             let scene = diagram_to_paint_sequence(
                 &layout,
@@ -1918,39 +1797,25 @@ line "Target" [35, 50, 68, 82]"##,
         let (title, timeline) = parse_timeline(
             "timeline TD\naccTitle: Product history\naccDescr: Native release milestones\ntitle Native timeline\nsection Foundation\n2024 : Prototype\n     : First customer\nsection Growth\n2025 : General availability",
         ).expect("timeline parse failed");
-        let layout = layout_temporal_diagram(
-            &TemporalDiagram {
-                kind: TemporalKind::Timeline,
-                title,
-                body: TemporalBody::Timeline(timeline),
-            },
-            720.0,
-        );
+        let layout = layout_temporal_diagram(&TemporalDiagram {
+            kind: TemporalKind::Timeline,
+            title,
+            body: TemporalBody::Timeline(timeline),
+        }, 720.0);
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;
         let resolver = CoreTextResolver::new();
-        let scene = diagram_to_paint_temporal(
-            &layout,
-            &DiagramToPaintOptions {
-                background: layout_ir::Color {
-                    r: 255,
-                    g: 255,
-                    b: 255,
-                    a: 255,
-                },
-                device_pixel_ratio: 2.0,
-                label_font: font_spec("Helvetica", 13.0),
-                title_font: font_spec("Helvetica", 17.0),
-                shaper: &shaper,
-                metrics: &metrics,
-                resolver: &resolver,
-            },
-        );
+        let scene = diagram_to_paint_temporal(&layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+            device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 13.0),
+            title_font: font_spec("Helvetica", 17.0),
+            shaper: &shaper,
+            metrics: &metrics,
+            resolver: &resolver,
+        });
         assert_eq!(
-            scene
-                .metadata
-                .as_ref()
-                .and_then(|metadata| metadata.get("accessibility.title")),
+            scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.title")),
             Some(&"Product history".to_string())
         );
         assert!(!scene.instructions.is_empty());
