@@ -460,8 +460,9 @@ their lowering must reset any direct-`Row` or direct-`Stack` context inherited
 by the `If` node. When such a multi-widget conditional is itself a direct child
 of a `Row` and has no explicit branch `flex-grow`, the emitted ternary is
 wrapped in `Flexible` so the branch `Column` receives a finite horizontal
-constraint. An explicit branch `flex-grow` continues to emit `Expanded` with
-the authored flex value.
+constraint, provided that the containing `Row` is not itself being
+shrink-wrapped as a non-flex child of another `Row`. An explicit branch
+`flex-grow` continues to emit `Expanded` with the authored flex value.
 
 ---
 

@@ -146,8 +146,10 @@ When a conditional branch contains multiple widgets, the generated
 not inherit an outer `Row`'s flex context and cannot place `Expanded` controls
 under that intermediate Column's unbounded vertical constraints. If the
 conditional itself is a direct `Row` child without an explicit branch flex,
-the emitter wraps it in `Flexible` so the Column receives a finite horizontal
-constraint; authored branch flex continues to use `Expanded`.
+the emitter wraps it in `Flexible` when that Row can legally host flex children,
+so the Column receives a finite horizontal constraint without breaking a
+nested Row that is itself shrink-wrapped. Authored branch flex continues to
+use `Expanded`.
 
 ## What works in v0.2 / what's deferred
 

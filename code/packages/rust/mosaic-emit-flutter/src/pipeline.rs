@@ -1964,6 +1964,10 @@ struct TableCtx<'a> {
     /// `Row`. Flutter text fields require a finite horizontal constraint,
     /// so direct row inputs lower through `Expanded`.
     direct_row_child: bool,
+    /// True when the immediate `Row` can legally host `Expanded`/`Flexible`
+    /// children. A `Row` that is itself a non-flex child of another `Row` is
+    /// laid out with unbounded width and must keep its children non-flex.
+    direct_row_accepts_flex: bool,
     /// Whole-component radio-group membership (`#13007`), computed once
     /// in `emit_widget_class` via [`collect_radio_group_members`] and
     /// threaded unchanged through every recursive call — `emit_host_radio`
@@ -2361,17 +2365,26 @@ fn emit_container(
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let inner_pad = " ".repeat(indent + 2);
-    let child_ctx = TableCtx {
-        direct_row_child: widget == "Row",
-        direct_stack_child: widget == "Stack",
-        ..ctx
-    };
 
     let style_props = node
         .part_name
         .as_deref()
         .and_then(|p| part_styles.get(p).map(String::as_str))
         .unwrap_or("");
+    let props = parse_style_props(style_props);
+    let width = props.get("width").and_then(|v| fixed_pixel_length(v));
+    let height = props.get("height").and_then(|v| fixed_pixel_length(v));
+    let elevation = elevation_tier(&props);
+    let row_accepts_flex = widget == "Row"
+        && (!ctx.direct_row_child
+            || width.is_some()
+            || part_flex_grow(node, part_styles).is_some());
+    let child_ctx = TableCtx {
+        direct_row_child: widget == "Row",
+        direct_row_accepts_flex: row_accepts_flex,
+        direct_stack_child: widget == "Stack",
+        ..ctx
+    };
 
     // Special case for Box → Container.
     if widget == "Container" {
@@ -2497,10 +2510,6 @@ fn emit_container(
     // part's own `width`/`height` via this wrapper gives the subtree a
     // real, bounded size again, matching what `Box`'s decoration path
     // already does for the same properties.
-    let props = parse_style_props(style_props);
-    let width = props.get("width").and_then(|v| fixed_pixel_length(v));
-    let height = props.get("height").and_then(|v| fixed_pixel_length(v));
-    let elevation = elevation_tier(&props);
     if width.is_some() || height.is_some() || elevation.is_some() {
         // `SizedBox` when there's only sizing to carry (no `decoration:`
         // to attach) — `flutter analyze`'s `sized_box_for_whitespace`
@@ -2939,7 +2948,9 @@ fn emit_if_dart(
             // Column horizontally bounded when the conditional is a direct
             // Row child, while allowing it to choose less than the available
             // width when its contents do not need all of it.
-            None if introduces_branch_column => format!("Flexible(child: {ternary})"),
+            None if introduces_branch_column && ctx.direct_row_accepts_flex => {
+                format!("Flexible(child: {ternary})")
+            }
             None => ternary,
         }
     } else {
@@ -5135,6 +5146,7 @@ fn emit_host_table(
         sheet_font_family: sheet_font_family.as_deref(),
         sheet_font_size: sheet_font_size.as_deref(),
         direct_row_child: false,
+        direct_row_accepts_flex: false,
         direct_stack_child: false,
         radio_group_members: parent_ctx.radio_group_members,
     };
@@ -10504,6 +10516,45 @@ mod tests {
         assert!(
             !out.contains("Expanded("),
             "nested branch inputs must use the intermediate Column context:\n{out}"
+        );
+    }
+
+    /// A nested Row is shrink-wrapped by its parent Row. Even a loose
+    /// `Flexible` is invalid in that unbounded-width context, so a
+    /// multi-widget conditional inside it must remain a non-flex child.
+    #[test]
+    fn multi_widget_if_inside_nested_row_does_not_emit_flexible() {
+        let m = component(
+            "Toolbar",
+            vec![slot("active", SlotType::Bool, true)],
+            vec![],
+        );
+        let l = layout(
+            "Toolbar",
+            node_with(
+                "Row",
+                vec![],
+                vec![node_with(
+                    "Row",
+                    vec![],
+                    vec![
+                        if_node(
+                            LayoutPropValue::SlotRef("active".into()),
+                            vec![text_node("List"), text_node("Board")],
+                        ),
+                        else_node(vec![text_node("Timeline"), text_node("Notes")]),
+                    ],
+                )],
+            ),
+        );
+
+        let out = from_pipeline(&m, &l, &empty_style("Toolbar"))
+            .expect("emit nested row conditional")
+            .output;
+        assert!(out.contains("Column(children: ["), "got:\n{out}");
+        assert!(
+            !out.contains("Flexible(child:"),
+            "a shrink-wrapped nested Row cannot host flex children:\n{out}"
         );
     }
 
