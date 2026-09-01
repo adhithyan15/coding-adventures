@@ -11092,9 +11092,7 @@ fn populate_select_selectedcontent(select: &mut Element) {
         ) else {
             continue;
         };
-        if selectedcontent.children.is_empty() {
-            selectedcontent.children = option_children.clone();
-        }
+        selectedcontent.children = option_children.clone();
     }
 }
 
@@ -46546,6 +46544,105 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+    }
+
+    #[test]
+    fn selected_content_replaces_authored_children_with_the_selected_option() {
+        let source = "<!doctype html><select><button><selectedcontent>old é\r\n</selectedcontent></button><option>first</option><option selected><b>new</b></option></select>";
+        let document = parse_html(source).unwrap();
+        let selectedcontent =
+            find_first_element_in_nodes(&document.children, "selectedcontent").unwrap();
+        assert_eq!(selectedcontent.children.len(), 1);
+        let bold = element(&selectedcontent.children[0]);
+        assert_eq!(bold.name, "b");
+        assert_eq!(bold.children, vec![Node::text("new")]);
+        assert!(source.len() > source.chars().count());
+
+        let incomplete = parse_html(
+            "<!doctype html><select><button><selectedcontent>old</selectedcontent></button><option>new",
+        )
+        .unwrap();
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&incomplete.children, "selectedcontent").unwrap()
+            ),
+            "new"
+        );
+
+        let fragment = parse_html_fragment_for_context(
+            "<select><button><selectedcontent>old</selectedcontent></button><option>new</option></select>",
+            "body",
+        )
+        .unwrap();
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&fragment, "selectedcontent").unwrap()
+            ),
+            "new"
+        );
+
+        let integration = parse_html(
+            "<!doctype html><svg><foreignObject><select><button><selectedcontent>old</selectedcontent></button><option>new</option></select></foreignObject></svg>",
+        )
+        .unwrap();
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&integration.children, "selectedcontent").unwrap()
+            ),
+            "new"
+        );
+
+        let foreign = parse_html(
+            "<!doctype html><svg><select><selectedcontent>old</selectedcontent><option>new</option></select></svg>",
+        )
+        .unwrap();
+        let foreign_selectedcontent =
+            find_first_element_in_nodes(&foreign.children, "selectedcontent").unwrap();
+        assert_eq!(foreign_selectedcontent.namespace.as_deref(), Some("svg"));
+        assert_eq!(element_text_content(foreign_selectedcontent), "old");
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "select".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "button".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "selectedcontent".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("old".to_string()),
+            Token::EndTag {
+                name: "selectedcontent".to_string(),
+            },
+            Token::EndTag {
+                name: "button".to_string(),
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("new".to_string()),
+            Token::Eof,
+        ]);
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&direct_document.children, "selectedcontent").unwrap()
+            ),
+            "new"
+        );
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
     }
 
     #[test]
