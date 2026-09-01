@@ -15,7 +15,16 @@
     "SA-S111-letter-ka",
     "SA-S112-vowel-sign-e",
     "SA-S113-letter-pa",
-    "SA-S114-letter-ha"
+    "SA-S114-letter-ha",
+    "SA-S115-vowel-sign-au",
+    "SA-S116-letter-tta",
+    "SA-S117-letter-ttha",
+    "SA-S118-letter-ssa",
+    "SA-S119-letter-kha",
+    "SA-S120-letter-ja",
+    "SA-S121-letter-u",
+    "SA-S122-letter-pha",
+    "SA-S123-letter-o"
   ],
   "before": [],
   "inline": [
