@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate JFET `BETA` / `BET` transconductance before lowering.
 - Lower finite optional JFET `BETATCE` mobility-temperature coefficients.
 - Lower finite JFET `BEX` mobility-temperature exponents.
 - Lower valid JFET `TNOM` / `T_NOM` nominal temperatures with canonical

@@ -4947,17 +4947,10 @@ the Rust, Python, and TypeScript surfaces together.
      `BETA` and `BET` alone control transconductance.
 
 2. Rust JFET model-card parser parity audit.
-   - Status: in progress; threshold, channel-length-modulation, and
-     gate-capacitance, flicker-noise, junction-potential, and forward-bias
-     depletion, gate saturation-current, and gate-current temperature-exponent
-     bandgap-voltage, noise-equation-level, channel-noise-coefficient, drain-
-     resistance, source-resistance, threshold-temperature-coefficient,
-     alternative-threshold-temperature-coefficient, and nominal-temperature
-     parameters are completed in the current slices.
-   - Live audit found the Rust element lowerer accepts fewer already-supported
-     JFET aliases and model-card validations than the Python and TypeScript
-     facades. Audit the remaining direct aliases and finite/range validation as
-     small independent items.
+   - Status: completed through the JFET `BETA` / `BET` validation slice.
+   - The Rust element lowerer now matches the engine and Python/TypeScript
+     facades for every advertised direct JFET model-card parameter, including
+     canonical alias precedence and finite/range validation.
 
 3. Rust JFET `LAMBDA` / `LAM` parser parity.
    - Status: completed by the channel-length-modulation slice.
@@ -5056,7 +5049,18 @@ the Rust, Python, and TypeScript surfaces together.
      now does the same while preserving omitted `None` semantics for `BEX`
      fallback and rejecting non-finite input before element lowering.
 
-20. Grammar-backed parser and app facade.
+20. Rust JFET `BETA` / `BET` transconductance validation parity.
+   - Status: completed by the JFET beta validation slice.
+   - Canonical `BETA` now takes precedence over `BET`, and the selected value
+     must be finite and positive before element lowering.
+
+21. Rust BJT saturation-current-temperature-exponent parser parity.
+   - Status: prioritized next after the direct JFET model-card audit.
+   - The engine and Python/TypeScript facades lower finite BJT `XTI` values
+     into the saturation-current-temperature-exponent field, while the Rust
+     element lowerer still leaves the engine default in place.
+
+22. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
      syntax facade as the grammar evolves, even if that breaks current
      pre-release parser APIs.
@@ -5064,7 +5068,7 @@ the Rust, Python, and TypeScript surfaces together.
      toward packaging, WebAssembly embedding, and product integration backed by
      the same public parser contract.
 
-21. Deck compatibility follow-up.
+23. Deck compatibility follow-up.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.
@@ -5075,7 +5079,7 @@ the Rust, Python, and TypeScript surfaces together.
      command routing, including control flow, variables, and script execution
      policy.
 
-22. Production solver core follow-up.
+24. Production solver core follow-up.
    - Sparse real/complex matrix paths now have cross-language native coverage,
      and Python real DC solves now use an optional SciPy sparse-LU backend with
      structured native fallback metadata.
