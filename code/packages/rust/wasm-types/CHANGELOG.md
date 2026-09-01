@@ -2,6 +2,55 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.21] - 2026-09-01 (W34 fourth slice — cross-module canonical equivalence, epic closed)
+
+Two new free functions supporting `wasm-runtime`'s cross-module
+import-compatibility check (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`,
+final slice): the same real canonical algorithm the third slice wired
+into WITHIN-module checks, now usable when the two sides of a comparison
+live in two entirely separate `canonical_types` tables (one per
+independently-validated module, no shared numbering at all).
+
+- **`canonical_type_entries_equivalent(a: Option<&(Rc<CanonicalGroup>, u32)>, b: Option<&(Rc<CanonicalGroup>, u32)>) -> bool`**
+  — the actual comparison logic factored out of `canonical_types_equivalent`
+  (which now just extracts two entries from ONE table and delegates here),
+  so it can also be called directly with two entries from two DIFFERENT
+  tables. `Rc::ptr_eq` fast path first (hits whenever both entries came
+  from the SAME `canonicalize_types` call, thanks to that function's own
+  interning), full derived `PartialEq` fallback otherwise — identical
+  contract and cost profile to the pre-existing function, just no longer
+  hardcoded to a single-table shape. `None` on either side is
+  conservatively `false`, never a wrong `true`.
+- **`canonical_chain_reaches(type_subtyping, canonical_types, start_idx, target) -> bool`**
+  — the cross-module counterpart to `nominal_subtype_chain`'s own
+  termination check: climbs ONE module's own local `sub` chain, starting
+  at `start_idx` (reflexively including it), checking each ancestor
+  against an EXTERNAL `target` from a different module's own canonical
+  table. Needed because real WASM func-import compatibility is a
+  SUBTYPING relation, not plain equality — an export declared `(sub
+  $parent (func))` must be importable at its own `$parent` type, not only
+  at its exact declared type (`type-subtyping.wast`'s own `M6`/`M7`
+  "Linking" cases). A declared supertype relationship is only ever
+  meaningful within the module that declared it, so this walks exactly
+  ONE module's table, never crossing between two modules' own `sub`
+  chains. Same `MAX_SUBTYPE_CHAIN_HOPS` bound as `nominal_subtype_chain`,
+  for the identical termination/complexity reason.
+- 6 new unit tests: `canonical_type_entries_equivalent` compared across
+  two genuinely separate `canonicalize_types` calls (both the isomorphic-
+  positive and differently-positioned-negative cases, plus every `None`
+  combination); `canonical_chain_reaches` climbing a real declared chain to
+  reach an external target (both the zero-hop reflexive case and the
+  one-hop climb), and correctly failing to match a genuinely unrelated
+  target.
+
+**Security note**: both new functions are pure, non-recursive comparisons
+over already-capped data (`canonicalize_types`'s own `CanonicalCost`
+depth/weight caps, and the pre-existing `MAX_SUBTYPE_CHAIN_HOPS` hop
+bound) — see `wasm-runtime`'s own CHANGELOG for this slice's dedicated
+cross-module security review (a NEW trust boundary this epic had not
+exercised before: two independently-attacker-controlled modules' type
+data compared against each other for the first time).
+
 ## [0.1.20] - 2026-09-01 (W34 third slice — wire canonical equivalence into within-module subtyping)
 
 `nominal_subtype_chain` (the shared, security-reviewed `sub`-chain walk

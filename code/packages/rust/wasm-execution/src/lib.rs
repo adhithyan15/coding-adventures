@@ -1803,6 +1803,56 @@ pub trait HostFunction {
     fn is_final(&self) -> bool {
         true
     }
+
+    /// This function's own real canonical type-group identity (W34 fourth
+    /// slice: `code/specs/W34-wasm-gc-canonical-type-equivalence.md`), if
+    /// known -- `(this function's own group's canonical form, its
+    /// position within it)`, the SAME shape [`wasm_types::canonicalize_types`]
+    /// produces and `wasm-validator::ValidatedModule::canonical_type_at`
+    /// exposes.
+    ///
+    /// Defaults to `None` ("no canonical identity available") — correct
+    /// for every existing host function (WASI shims, test doubles, ...),
+    /// none of which have or need a `CanonicalGroup`; the cross-module
+    /// import-compatibility check (`wasm-runtime::instantiate`) falls back
+    /// to the pre-existing three-part conservative guard
+    /// (`type_group_shape`/`is_final`/structural `FuncType` equality)
+    /// whenever EITHER side of an import reports `None` here, so every
+    /// `None`-returning `HostFunction` import is byte-for-byte unaffected
+    /// by this accessor's existence. Only `wasm-conformance`'s
+    /// `CrossModuleFunction` (a WASM module's own exported function,
+    /// imported by ANOTHER WASM module — the one place two independently-
+    /// computed canonical-type tables, with no shared numbering, actually
+    /// need comparing) overrides this, returning the EXPORTING module's
+    /// own already-computed `canonical_types[idx]` entry, cloned (cheap:
+    /// `Rc`-backed) at resolution time.
+    fn canonical_type(&self) -> Option<(Rc<CanonicalGroup>, u32)> {
+        None
+    }
+
+    /// Whether this function's own real declared type canonically
+    /// MATCHES `target` (W34 fourth slice) -- either directly canonically
+    /// equivalent, or reachable by climbing this function's own module-
+    /// LOCAL nominal `sub` chain (a declared supertype relationship is
+    /// only ever meaningful within the module that declared it) until an
+    /// equivalent ancestor is found. This is the real cross-module import-
+    /// compatibility rule: a func import is satisfiable by an export whose
+    /// actual type is a nominal SUBTYPE of the declared import type, not
+    /// only by an exact canonical match (`type-subtyping.wast`'s own `M6`/
+    /// `M7` "Linking" cases need exactly this — an export declared `(sub
+    /// $parent (func))` importable at its own `$parent` type). See
+    /// `wasm_types::canonical_chain_reaches`'s own doc comment for the
+    /// full algorithm.
+    ///
+    /// Defaults to a REFLEXIVE-only check (`self.canonical_type()`
+    /// compared directly to `target`, no chain to climb) — correct for
+    /// every existing `HostFunction` impl, none of which have a declared
+    /// `sub` chain to walk. Only `wasm-conformance`'s `CrossModuleFunction`
+    /// overrides this, to also climb the exporting module's own declared
+    /// chain via `canonical_chain_reaches`.
+    fn canonically_matches(&self, target: &(Rc<CanonicalGroup>, u32)) -> bool {
+        self.canonical_type().is_some_and(|ct| wasm_types::canonical_type_entries_equivalent(Some(&ct), Some(target)))
+    }
 }
 
 /// A host interface — resolves WASM imports.

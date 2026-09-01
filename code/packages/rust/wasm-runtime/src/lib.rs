@@ -1430,39 +1430,88 @@ impl WasmRuntime {
                         .as_ref()
                         .and_then(|h| h.resolve_function(&imp.module_name, &imp.name))
                         .ok_or_else(|| link_error("unknown import", imp))?;
-                    if host_func.func_type() != &ft {
-                        return Err(link_error("incompatible import type", imp));
-                    }
-                    // W33 first slice: a plain `FuncType` shape match
-                    // alone isn't enough once `rec` groups exist -- two
-                    // structurally-identical members of a `rec` group at
-                    // DIFFERENT positions are DISTINCT types under the
-                    // real GC canonicalization algorithm (`code/specs/
-                    // W33-wasm-gc-recursive-type-subtyping.md`'s own
-                    // item (3b), which this crate does not implement).
-                    // This conservative guard ANDs a `(rec_group_size,
-                    // rec_group_position)` match onto the pre-existing
-                    // structural check -- see `tag.wast`'s own
-                    // `assert_unlinkable` case, which needs exactly this.
-                    // Safe for every PRE-EXISTING import (both sides
-                    // report the singleton-group default, always
-                    // trivially matching): can only ADD a rejection on
-                    // top of the check above, never remove one.
-                    if host_func.type_group_shape() != module.type_group_shape(*type_idx) {
-                        return Err(link_error("incompatible import type", imp));
-                    }
-                    // W33 first slice: finality is as much a part of a
-                    // type's real canonical identity as its shape or
-                    // `rec`-group position -- `(sub (func))` (open) and
-                    // `(sub final (func))` (final) are DISTINCT types
-                    // even though `FuncType` equality can't see it (see
-                    // `HostFunction::is_final`'s own doc comment).
-                    // `type-subtyping.wast` lines 594-617 needs exactly
-                    // this. Same "strictly additive, safe for every
-                    // pre-existing import" reasoning as the group-shape
-                    // guard above.
-                    if host_func.is_final() != module.type_subtyping_at(*type_idx).is_final {
-                        return Err(link_error("incompatible import type", imp));
+
+                    // W34 fourth slice (`code/specs/
+                    // W34-wasm-gc-canonical-type-equivalence.md`): when
+                    // BOTH the importing module's own declared type and
+                    // the exporting host function report a real canonical
+                    // identity, compare THOSE directly instead of the
+                    // pre-existing three-part conservative guard below --
+                    // real cross-module canonical equivalence needs no
+                    // shared numbering between the two modules at all (see
+                    // `wasm_types::canonical_type_entries_equivalent`'s own
+                    // doc comment), and SUBSUMES every one of the three
+                    // checks below (shape/finality are already folded into
+                    // `CanonicalSubtype`'s own fields; structural shape is
+                    // the whole point of the comparison) -- this is what
+                    // finally accepts an isomorphic-but-differently-
+                    // numbered `rec` group import (`type-equivalence.wast`'s
+                    // own "Semantic types (link time)" section) while
+                    // STILL rejecting a genuine topology mismatch the old
+                    // guard couldn't see (`type-subtyping.wast`'s `M5`/
+                    // `M10`/`M11` cases -- see that file's own "Linking"
+                    // section).
+                    //
+                    // Falls back to the three-part guard, UNCHANGED, when
+                    // EITHER side reports `None` (no real canonical
+                    // identity available -- e.g. a WASI-shim host import,
+                    // or a type this slice's canonicalizer couldn't
+                    // resolve) -- this is strictly additive over the old
+                    // guard's own already-proven-sound behavior for every
+                    // such import: the guard is never removed, only
+                    // bypassed in favor of a MORE PRECISE check when one is
+                    // actually available.
+                    let module_canonical_type = canonical_types.get(*type_idx as usize).cloned().flatten();
+                    match (host_func.canonical_type(), &module_canonical_type) {
+                        (Some(_), Some(module_ct)) => {
+                            // `canonically_matches` (not a plain equality
+                            // check) -- a func import is satisfiable by an
+                            // export whose actual type is a nominal
+                            // SUBTYPE of the declared import type, not
+                            // only an exact canonical match (see that
+                            // method's own doc comment; `type-subtyping.
+                            // wast`'s `M6`/`M7` "Linking" cases need
+                            // exactly this).
+                            if !host_func.canonically_matches(module_ct) {
+                                return Err(link_error("incompatible import type", imp));
+                            }
+                        }
+                        _ => {
+                            if host_func.func_type() != &ft {
+                                return Err(link_error("incompatible import type", imp));
+                            }
+                            // W33 first slice: a plain `FuncType` shape match
+                            // alone isn't enough once `rec` groups exist -- two
+                            // structurally-identical members of a `rec` group at
+                            // DIFFERENT positions are DISTINCT types under the
+                            // real GC canonicalization algorithm (`code/specs/
+                            // W33-wasm-gc-recursive-type-subtyping.md`'s own
+                            // item (3b)). This conservative guard ANDs a
+                            // `(rec_group_size, rec_group_position)` match onto
+                            // the pre-existing structural check -- see
+                            // `tag.wast`'s own `assert_unlinkable` case, which
+                            // needs exactly this. Safe for every PRE-EXISTING
+                            // import (both sides report the singleton-group
+                            // default, always trivially matching): can only ADD
+                            // a rejection on top of the check above, never
+                            // remove one.
+                            if host_func.type_group_shape() != module.type_group_shape(*type_idx) {
+                                return Err(link_error("incompatible import type", imp));
+                            }
+                            // W33 first slice: finality is as much a part of a
+                            // type's real canonical identity as its shape or
+                            // `rec`-group position -- `(sub (func))` (open) and
+                            // `(sub final (func))` (final) are DISTINCT types
+                            // even though `FuncType` equality can't see it (see
+                            // `HostFunction::is_final`'s own doc comment).
+                            // `type-subtyping.wast` lines 594-617 needs exactly
+                            // this. Same "strictly additive, safe for every
+                            // pre-existing import" reasoning as the group-shape
+                            // guard above.
+                            if host_func.is_final() != module.type_subtyping_at(*type_idx).is_final {
+                                return Err(link_error("incompatible import type", imp));
+                            }
+                        }
                     }
 
                     func_types.push(ft);
@@ -2520,6 +2569,145 @@ mod tests {
         // default `(1, 0)` on both sides).
         let runtime = WasmRuntime::with_host(Box::new(GroupShapeHost { group_shape: (2, 0), is_final: true }));
         let module = module_importing_function_in_a_rec_group((2, 0));
+        let validated = runtime.validate(&module).unwrap();
+        assert!(runtime.instantiate(&validated).is_ok());
+    }
+
+    // ── W34 fourth slice: cross-module canonical type-group equivalence
+    // (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`) ──────────────
+
+    /// A host function that reports a real `CanonicalGroup` identity
+    /// instead of the trait's own `None` default -- lets these tests
+    /// exercise `wasm-runtime`'s new canonical-comparison path directly,
+    /// without needing a real cross-module `CrossModuleFunction` (that
+    /// full end-to-end path is covered separately by `wasm-conformance`'s
+    /// own tests). Deliberately reports a `func_type()` with a raw
+    /// `ConcreteFuncRef` index that does NOT match the importing module's
+    /// own raw index -- proving these tests exercise REAL canonical
+    /// equivalence, not a coincidental raw-structural match the old
+    /// three-part guard could already have accepted.
+    struct CanonicalHostFunction {
+        func_type: FuncType,
+        canonical_type: Option<(Rc<CanonicalGroup>, u32)>,
+    }
+
+    impl HostFunction for CanonicalHostFunction {
+        fn func_type(&self) -> &FuncType {
+            &self.func_type
+        }
+        fn call(&self, _args: &[WasmValue], _memory: Option<&mut LinearMemory>) -> Result<Vec<WasmValue>, TrapError> {
+            Ok(vec![])
+        }
+        fn canonical_type(&self) -> Option<(Rc<CanonicalGroup>, u32)> {
+            self.canonical_type.clone()
+        }
+    }
+
+    struct CanonicalHost {
+        func_type: FuncType,
+        canonical_type: Option<(Rc<CanonicalGroup>, u32)>,
+    }
+
+    impl HostInterface for CanonicalHost {
+        fn resolve_function(&self, module_name: &str, name: &str) -> Option<Box<dyn HostFunction>> {
+            if module_name == "env" && name == "f" {
+                Some(Box::new(CanonicalHostFunction { func_type: self.func_type.clone(), canonical_type: self.canonical_type.clone() }))
+            } else {
+                None
+            }
+        }
+        fn resolve_global(&self, _module_name: &str, _name: &str) -> Option<(GlobalType, WasmValue)> {
+            None
+        }
+        fn resolve_memory(&self, _module_name: &str, _name: &str) -> Option<LinearMemory> {
+            None
+        }
+        fn resolve_table(&self, _module_name: &str, _name: &str) -> Option<Table> {
+            None
+        }
+    }
+
+    /// A module declaring a single self-referencing singleton `rec` type
+    /// at flat index 0 (`type-rec.wast`'s own simplest self-reference
+    /// shape) and importing "env"."f" at it.
+    fn module_importing_a_self_referencing_function() -> WasmModule {
+        WasmModule {
+            types: vec![FuncType { params: vec![ValueType::ConcreteFuncRef(0)], results: vec![] }],
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "f".to_string(),
+                kind: ExternalKind::Function,
+                type_info: ImportTypeInfo::Function(0),
+            }],
+            ..Default::default()
+        }
+    }
+
+    /// A throwaway `WasmModule` used only to derive a real, self-contained
+    /// `CanonicalGroup` for a host function to report -- the SAME
+    /// self-referencing shape `module_importing_a_self_referencing_function`
+    /// declares, but at flat index `offset` in a completely unrelated
+    /// table (no shared numbering with the importing module at all).
+    fn host_side_self_referencing_canonical_type(offset: u32) -> (Rc<CanonicalGroup>, u32) {
+        let padding = FuncType { params: vec![], results: vec![] };
+        let mut types = vec![padding; offset as usize];
+        types.push(FuncType { params: vec![ValueType::ConcreteFuncRef(offset)], results: vec![] });
+        let module = WasmModule { types, ..Default::default() };
+        wasm_types::canonicalize_types(&module)[offset as usize].clone().expect("self-referencing singleton must canonicalize")
+    }
+
+    #[test]
+    fn accepts_a_cross_module_import_via_canonical_equivalence_when_raw_indices_differ() {
+        // Host's OWN raw `func_type` self-references index 7 -- deliberately
+        // NOT index 0 (the importing module's own raw index) -- so plain
+        // `FuncType` equality (the pre-W34-fourth-slice-only fallback path)
+        // would reject this. Real canonical equivalence must accept it
+        // anyway, since both sides tie to the identical `Rec(0)` shape.
+        let host_func_type = FuncType { params: vec![ValueType::ConcreteFuncRef(7)], results: vec![] };
+        let host_canonical = host_side_self_referencing_canonical_type(3);
+        let runtime = WasmRuntime::with_host(Box::new(CanonicalHost { func_type: host_func_type, canonical_type: Some(host_canonical) }));
+        let module = module_importing_a_self_referencing_function();
+        let validated = runtime.validate(&module).unwrap();
+        assert!(runtime.instantiate(&validated).is_ok(), "canonically-equivalent self-referencing types at different raw indices must link");
+    }
+
+    #[test]
+    fn rejects_a_cross_module_import_whose_canonical_type_genuinely_differs() {
+        // The host reports a canonical type for a NON-self-referencing
+        // empty `(func)` -- genuinely different from the importing
+        // module's self-referencing `(func (param (ref 0)))` -- even
+        // though the host's raw `func_type()` HAPPENS to structurally
+        // equal neither (irrelevant here, since a real canonical type on
+        // both sides bypasses the raw-`FuncType`-equality fallback
+        // entirely; only the canonical comparison decides).
+        let unrelated_module = WasmModule { types: vec![FuncType { params: vec![], results: vec![] }], ..Default::default() };
+        let unrelated_canonical = wasm_types::canonicalize_types(&unrelated_module)[0].clone().unwrap();
+        let host_func_type = FuncType { params: vec![], results: vec![] };
+        let runtime = WasmRuntime::with_host(Box::new(CanonicalHost { func_type: host_func_type, canonical_type: Some(unrelated_canonical) }));
+        let module = module_importing_a_self_referencing_function();
+        let validated = runtime.validate(&module).unwrap();
+        let err = runtime.instantiate(&validated).err().unwrap();
+        assert!(err.to_string().contains("incompatible import type"), "{err}");
+    }
+
+    #[test]
+    fn falls_back_to_the_conservative_guard_when_the_host_reports_no_canonical_type() {
+        // The trait default (`canonical_type() -> None`) must still hit the
+        // pre-existing three-part guard, byte-for-byte -- a plain,
+        // non-self-referencing `(func)` on both sides links fine via the
+        // fallback path alone, exactly as it did before this slice.
+        let host_func_type = FuncType { params: vec![], results: vec![] };
+        let runtime = WasmRuntime::with_host(Box::new(CanonicalHost { func_type: host_func_type, canonical_type: None }));
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }],
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "f".to_string(),
+                kind: ExternalKind::Function,
+                type_info: ImportTypeInfo::Function(0),
+            }],
+            ..Default::default()
+        };
         let validated = runtime.validate(&module).unwrap();
         assert!(runtime.instantiate(&validated).is_ok());
     }

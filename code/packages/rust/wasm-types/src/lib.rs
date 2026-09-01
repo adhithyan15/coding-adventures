@@ -1668,6 +1668,61 @@ pub fn nominal_subtype_chain(type_subtyping: &[TypeSubtyping], canonical_types: 
     false
 }
 
+/// Whether SOME type in the ascending nominal `sub` chain starting at
+/// `start_idx` -- reflexively including `start_idx` itself -- within ONE
+/// module's own `type_subtyping`/`canonical_types` tables is canonically
+/// equivalent to an EXTERNAL `target` (W34 fourth slice: `code/specs/
+/// W34-wasm-gc-canonical-type-equivalence.md`).
+///
+/// This is [`nominal_subtype_chain`]'s cross-module counterpart: that
+/// function compares two indices INTO THE SAME table (so its raw
+/// `sub_idx == super_idx` reflexive check is a valid same-module fast
+/// path); this one compares a chain walked in ONE module's table against
+/// a target that lives in a DIFFERENT, independently-canonicalized
+/// module's own table -- raw index equality is meaningless there (the two
+/// modules share no numbering at all), so every hop's termination,
+/// including the reflexive base case, is checked by real canonical
+/// equivalence only, via [`canonical_type_entries_equivalent`].
+///
+/// Needed for cross-module linking's own subtyping rule: a WASM func
+/// import may be satisfied by an export whose ACTUAL declared type is a
+/// nominal subtype (not merely canonically equivalent) of the import's
+/// declared type -- MVP.md's own "subtyping is nominal modulo type
+/// canonicalisation," applied across the module boundary rather than
+/// within one module. A declared `sub $parent` relationship is only ever
+/// meaningful within the module that declared it (there is no such thing
+/// as a supertype relationship spanning two modules), so this walks
+/// EXACTLY ONE module's own chain -- the EXPORTING module's -- checking
+/// each ancestor against the IMPORTING module's declared type.
+///
+/// Same [`MAX_SUBTYPE_CHAIN_HOPS`] bound as [`nominal_subtype_chain`], for
+/// the identical reason (a malformed/cyclic chain, or one from a
+/// hand-built, never-validated `WasmModule`, must still terminate and
+/// stay linear rather than looping or scaling with an attacker-chosen
+/// chain length).
+pub fn canonical_chain_reaches(type_subtyping: &[TypeSubtyping], canonical_types: &[Option<(Rc<CanonicalGroup>, u32)>], start_idx: u32, target: Option<&(Rc<CanonicalGroup>, u32)>) -> bool {
+    let Some(target) = target else {
+        return false;
+    };
+    if canonical_type_entries_equivalent(canonical_types.get(start_idx as usize).and_then(|o| o.as_ref()), Some(target)) {
+        return true;
+    }
+    let mut cur = start_idx;
+    let at = |idx: u32| type_subtyping.get(idx as usize).copied().unwrap_or_default();
+    for _ in 0..MAX_SUBTYPE_CHAIN_HOPS {
+        match at(cur).supertype {
+            Some(parent) => {
+                if canonical_type_entries_equivalent(canonical_types.get(parent as usize).and_then(|o| o.as_ref()), Some(target)) {
+                    return true;
+                }
+                cur = parent;
+            }
+            None => return false,
+        }
+    }
+    false
+}
+
 /// Whether flat type-section indices `i` and `j` are canonically
 /// equivalent (W34: `code/specs/W34-wasm-gc-canonical-type-equivalence.md`),
 /// given a `canonical_types` table shaped like [`canonicalize_types`]'s own
@@ -1679,7 +1734,26 @@ pub fn nominal_subtype_chain(type_subtyping: &[TypeSubtyping], canonical_types: 
 /// canonically_equivalent` (the public, post-validation accessor) use, so
 /// the two can never drift apart.
 pub fn canonical_types_equivalent(canonical_types: &[Option<(Rc<CanonicalGroup>, u32)>], i: u32, j: u32) -> bool {
-    match (canonical_types.get(i as usize).and_then(|o| o.as_ref()), canonical_types.get(j as usize).and_then(|o| o.as_ref())) {
+    canonical_type_entries_equivalent(
+        canonical_types.get(i as usize).and_then(|o| o.as_ref()),
+        canonical_types.get(j as usize).and_then(|o| o.as_ref()),
+    )
+}
+
+/// The actual comparison [`canonical_types_equivalent`] performs, factored
+/// out to a two-`Option`-references shape (W34 fourth slice: `code/specs/
+/// W34-wasm-gc-canonical-type-equivalence.md`) so it can also back
+/// CROSS-MODULE comparisons, where the two entries being compared live in
+/// two entirely separate `canonical_types` tables (one per independently-
+/// validated `WasmModule`, no shared numbering at all -- see
+/// `wasm-runtime`'s import-compatibility check, the one real caller that
+/// needs this two-table shape) rather than two indices into the SAME
+/// table. `None` on either side is conservatively `false` -- "not known to
+/// be equivalent," never a wrong `true` -- exactly [`canonical_types_equivalent`]'s
+/// own existing contract, preserved here verbatim, not weakened by the
+/// refactor.
+pub fn canonical_type_entries_equivalent(a: Option<&(Rc<CanonicalGroup>, u32)>, b: Option<&(Rc<CanonicalGroup>, u32)>) -> bool {
+    match (a, b) {
         // Security review finding (W34 third slice): `Rc::ptr_eq` FIRST,
         // as a fast path -- `canonicalize_types`'s own interning (see that
         // function's doc comment) guarantees two content-identical groups
@@ -1690,13 +1764,13 @@ pub fn canonical_types_equivalent(canonical_types: &[Option<(Rc<CanonicalGroup>,
         // (a real recursive structural walk, still bounded by `CanonicalCost`'s
         // construction-time caps) only when the two `Rc`s come from
         // different allocations -- e.g. two independently-validated
-        // modules' own `canonical_types` tables, which this function's own
-        // signature and doc comment have always supported comparing with
-        // no shared context, and which per-call interning deliberately
-        // does not attempt to unify (see `canonicalize_types`'s own doc
-        // comment for why: no synchronization, no unbounded process-
-        // lifetime cache, for a cross-module case this slice doesn't wire
-        // in yet).
+        // modules' own `canonical_types` tables (the cross-module case
+        // this slice wires in via `canonical_type_entries_equivalent`
+        // directly, and `canonical_types_equivalent`'s own single-table
+        // callers keep hitting the fast path exactly as before, since
+        // interning is per-`canonicalize_types`-call and every within-
+        // module comparison's two entries necessarily came from the SAME
+        // call).
         (Some((a, pa)), Some((b, pb))) => pa == pb && (Rc::ptr_eq(a, b) || a == b),
         _ => false,
     }
@@ -3990,6 +4064,110 @@ mod tests {
         let canonical_b = canonicalize_types(&module_b);
         assert_eq!(canonical_a[0], canonical_b[4]);
         assert_eq!(canonical_a[1], canonical_b[5]);
+    }
+
+    /// W34 fourth slice (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`):
+    /// [`canonical_type_entries_equivalent`] is the two-DIFFERENT-tables
+    /// shape [`wasm-runtime`]'s cross-module import check actually needs
+    /// (as opposed to [`canonical_types_equivalent`]'s own two-indices-
+    /// into-ONE-table shape, correct only within a single module) --
+    /// proven directly here at the narrowest possible layer, before any
+    /// `wasm-runtime`/`wasm-conformance` wiring, matching this campaign's
+    /// own "verify the mechanism before the plumbing" discipline. Reuses
+    /// the SAME two isomorphic-but-differently-indexed modules the
+    /// preceding test already proved `canonicalize_types` handles
+    /// correctly -- this test's own job is only to prove the COMPARISON
+    /// function itself (not `canonicalize_types`) is genuinely usable
+    /// across two independent tables with no shared numbering.
+    #[test]
+    fn canonical_type_entries_equivalent_compares_across_two_independent_tables() {
+        fn build(offset: u32) -> WasmModule {
+            let padding = FuncType { params: vec![], results: vec![] };
+            let mut types = vec![padding; offset as usize];
+            types.push(FuncType { params: vec![ValueType::ConcreteFuncRef(offset + 1)], results: vec![] });
+            types.push(FuncType { params: vec![], results: vec![ValueType::ConcreteFuncRef(offset)] });
+            let mut type_subtyping = vec![TypeSubtyping::default(); offset as usize];
+            type_subtyping.extend(group_subtyping(2, &[(None, true), (None, true)]));
+            WasmModule { types, type_subtyping, ..Default::default() }
+        }
+        let canonical_a = canonicalize_types(&build(0));
+        let canonical_b = canonicalize_types(&build(4));
+        // Isomorphic entries, from two SEPARATE `canonicalize_types` calls
+        // (so interning cannot have unified them into one `Rc` allocation
+        // -- this exercises the full structural `==` fallback path, not
+        // just the same-call `Rc::ptr_eq` fast path).
+        assert!(canonical_type_entries_equivalent(canonical_a[0].as_ref(), canonical_b[4].as_ref()));
+        assert!(canonical_type_entries_equivalent(canonical_a[1].as_ref(), canonical_b[5].as_ref()));
+        // A genuinely different position within the SAME isomorphic group
+        // is correctly NOT equivalent.
+        assert!(!canonical_type_entries_equivalent(canonical_a[0].as_ref(), canonical_b[5].as_ref()));
+        // `None` on either side is conservatively `false`, never a wrong
+        // `true`.
+        assert!(!canonical_type_entries_equivalent(None, canonical_b[4].as_ref()));
+        assert!(!canonical_type_entries_equivalent(canonical_a[0].as_ref(), None));
+        assert!(!canonical_type_entries_equivalent(None, None));
+    }
+
+    /// W34 fourth slice: [`canonical_chain_reaches`] is the cross-module
+    /// counterpart to [`nominal_subtype_chain`]'s own termination check --
+    /// proving directly (not just via `wasm-runtime`'s own end-to-end
+    /// linking tests) that climbing ONE module's own local `sub` chain
+    /// past the reflexive start reaches a target from a DIFFERENT module's
+    /// own canonical-type table. Mirrors `type-subtyping.wast`'s own `M6`/
+    /// `M7` "Linking" cases: an export declared `(sub $parent (func))` is
+    /// importable at its own `$parent` type, not only at its own exact
+    /// type.
+    #[test]
+    fn canonical_chain_reaches_climbs_one_modules_own_chain_to_match_an_external_target() {
+        // Exporting module: $parent (idx0, no supertype, open), $child
+        // (idx1, sub $parent, open) -- both empty `(func)` bodies.
+        let empty_func = FuncType { params: vec![], results: vec![] };
+        let exporter = WasmModule {
+            types: vec![empty_func.clone(), empty_func.clone()],
+            type_subtyping: vec![TypeSubtyping { supertype: None, is_final: false, ..Default::default() }, TypeSubtyping { supertype: Some(0), is_final: false, ..Default::default() }],
+            ..Default::default()
+        };
+        // Importing module declares ITS OWN, differently-indexed copy of
+        // just $parent's shape (idx0 here, after a padding type at idx...
+        // actually no padding needed: the point is this table is entirely
+        // SEPARATE from the exporter's, indices are irrelevant to compare).
+        let importer = WasmModule {
+            types: vec![empty_func],
+            type_subtyping: vec![TypeSubtyping { supertype: None, is_final: false, ..Default::default() }],
+            ..Default::default()
+        };
+        let exporter_canonical = canonicalize_types(&exporter);
+        let importer_canonical = canonicalize_types(&importer);
+        let target = importer_canonical[0].as_ref().expect("importer's $parent must canonicalize");
+
+        // Climbing from $child (idx1) reaches $parent (idx0) after one hop,
+        // which IS canonically equivalent to the importer's own $parent.
+        assert!(canonical_chain_reaches(&exporter.type_subtyping, &exporter_canonical, 1, Some(target)));
+        // The reflexive case (climbing from $parent itself) also matches,
+        // with zero hops.
+        assert!(canonical_chain_reaches(&exporter.type_subtyping, &exporter_canonical, 0, Some(target)));
+        // `None` target is conservatively `false`.
+        assert!(!canonical_chain_reaches(&exporter.type_subtyping, &exporter_canonical, 0, None));
+    }
+
+    /// The negative counterpart: a target with NO ancestor anywhere in the
+    /// chain (a genuinely unrelated type) must correctly report `false`,
+    /// not accidentally match via the hop walk running past the real
+    /// ancestor.
+    #[test]
+    fn canonical_chain_reaches_does_not_match_an_unrelated_target() {
+        let empty_func = FuncType { params: vec![], results: vec![] };
+        let one_param_func = FuncType { params: vec![ValueType::I32], results: vec![] };
+        let exporter = WasmModule {
+            types: vec![empty_func.clone(), empty_func],
+            type_subtyping: vec![TypeSubtyping { supertype: None, is_final: false, ..Default::default() }, TypeSubtyping { supertype: Some(0), is_final: false, ..Default::default() }],
+            ..Default::default()
+        };
+        let unrelated = WasmModule { types: vec![one_param_func], ..Default::default() };
+        let exporter_canonical = canonicalize_types(&exporter);
+        let unrelated_canonical = canonicalize_types(&unrelated);
+        let target = unrelated_canonical[0].as_ref().expect("unrelated type must canonicalize");
+        assert!(!canonical_chain_reaches(&exporter.type_subtyping, &exporter_canonical, 1, Some(target)));
     }
 
     /// Two multi-member groups with the SAME member count (2) but a

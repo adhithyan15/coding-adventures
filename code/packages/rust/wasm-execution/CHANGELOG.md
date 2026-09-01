@@ -2,6 +2,41 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.85] - 2026-09-01 (W34 fourth slice — cross-module canonical equivalence, epic closed)
+
+`HostFunction` gains two new default methods so the trait itself can
+carry a real GC-proposal canonical type-group identity, for cross-module
+linking (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`, this
+epic's final slice):
+
+- **`canonical_type(&self) -> Option<(Rc<CanonicalGroup>, u32)>`** —
+  defaults to `None` ("no canonical identity available"), correct for
+  every pre-existing `HostFunction` impl (WASI shims, test doubles — none
+  of which have or need a `CanonicalGroup`). Only `wasm-conformance`'s
+  `CrossModuleFunction` overrides this, returning the exporting module's
+  own already-computed `canonical_types[idx]` entry.
+- **`canonically_matches(&self, target: &(Rc<CanonicalGroup>, u32)) -> bool`**
+  — whether this function's own real type canonically MATCHES `target`:
+  either directly canonically equivalent, or reachable by climbing this
+  function's own module-LOCAL nominal `sub` chain. Defaults to a
+  reflexive-only check via `canonical_type()` (no chain to climb, correct
+  for every impl without a declared `sub` chain); `CrossModuleFunction`
+  overrides this to climb the exporting module's own chain via the new
+  `wasm_types::canonical_chain_reaches`. This is the real cross-module
+  import-compatibility rule (a func import is satisfiable by an export
+  whose actual type is a nominal SUBTYPE of the declared import type, not
+  only an exact match — `type-subtyping.wast`'s own `M6`/`M7` "Linking"
+  cases need exactly this; an earlier draft of this slice that used plain
+  equality regressed those two cases, caught by re-running the full
+  conformance baseline before considering the slice done, not merely
+  reasoning about it).
+
+Both are purely additive to the trait: every pre-existing `HostFunction`
+implementor is unaffected (still gets the `None`/reflexive-only
+defaults), so `wasm-runtime`'s import check (see that crate's own
+CHANGELOG) falls back to its pre-existing three-part conservative guard
+for every one of them, byte-for-byte unchanged.
+
 ## [0.9.84] - 2026-09-01 (W34 third slice — canonical equivalence in runtime dispatch)
 
 `WasmExecutionContext`/`WasmExecutionEngine` gain a `canonical_types`
