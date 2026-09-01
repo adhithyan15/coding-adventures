@@ -22,7 +22,7 @@ use mermaid_lexer::{
     tokenize_mermaid_pie, tokenize_mermaid_sankey, tokenize_mermaid_sequence,
     tokenize_mermaid_state, try_tokenize_mermaid_gantt, try_tokenize_mermaid_journey,
     try_tokenize_mermaid_quadrant, try_tokenize_mermaid_requirement,
-    try_tokenize_mermaid_timeline, try_tokenize_mermaid_xychart,
+    try_tokenize_mermaid_mindmap, try_tokenize_mermaid_timeline, try_tokenize_mermaid_xychart,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
@@ -44,6 +44,8 @@ const JOURNEY_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/journey.grammar");
 const TIMELINE_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/timeline.grammar");
+const MINDMAP_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/mindmap.grammar");
 const REQUIREMENT_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.grammar");
 const XYCHART_PARSER_GRAMMAR_SOURCE: &str =
@@ -629,6 +631,7 @@ impl MermaidDiagramType {
                 | Self::Gantt
                 | Self::GitGraph
                 | Self::Journey
+                | Self::Mindmap
                 | Self::Timeline
                 | Self::Requirement
                 | Self::Pie
@@ -768,6 +771,7 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
                 body: TemporalBody::Timeline(timeline),
             })
         }),
+        MermaidDiagramType::Mindmap => parse_mindmap(source).map(MermaidDiagram::Graph),
         unsupported => Err(ParseError {
             message: format!(
                 "Mermaid {} diagram family {:?} is recognized but not implemented",
@@ -777,6 +781,195 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
             line: 1,
             col: 1,
         }),
+    }
+}
+
+/// Parse the grammar-backed Mermaid mindmap subset into graph semantic IR.
+///
+/// The graph preserves the tree's parent/child relationships; the shared graph
+/// layout and PaintScene lowering then keep rendering backend-neutral.
+pub fn parse_mindmap(source: &str) -> Result<GraphDiagram, ParseError> {
+    let prepared = prepare_mindmap_source(source)?;
+    let tokens = try_tokenize_mermaid_mindmap(&prepared).map_err(|message| ParseError {
+        message,
+        line: 1,
+        col: 1,
+    })?;
+    let grammar = parse_parser_grammar(MINDMAP_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|error| panic!("Failed to parse mindmap.grammar: {error}"));
+    let mut grammar_parser =
+        GrammarParser::new(tokens.clone(), grammar).with_max_depth(MAX_RULE_DEPTH);
+    grammar_parser.parse().map_err(|error| ParseError {
+        message: error.message,
+        line: error.token.line,
+        col: error.token.column,
+    })?;
+
+    let mut nodes = Vec::new();
+    let mut edges = Vec::new();
+    let mut ancestors = Vec::<(usize, String)>::new();
+    let mut ids = HashSet::new();
+
+    for token in tokens
+        .iter()
+        .filter(|token| token.type_name.as_deref() == Some("NODE_LINE"))
+    {
+        let indent = token
+            .value
+            .chars()
+            .take_while(|character| character.is_whitespace())
+            .map(|character| if character == '\t' { 4 } else { 1 })
+            .sum::<usize>();
+        let source = token.value.trim();
+        let (explicit_id, label, shape) = parse_mindmap_node(source);
+        let base_id = explicit_id.unwrap_or_else(|| mindmap_slug(&label));
+        let id = unique_mindmap_id(base_id, &mut ids);
+
+        while ancestors.last().is_some_and(|(level, _)| *level >= indent) {
+            ancestors.pop();
+        }
+        if !nodes.is_empty() && ancestors.is_empty() {
+            return Err(token_error(
+                token,
+                "mindmap nodes after the root must be indented",
+            ));
+        }
+        if let Some((_, parent_id)) = ancestors.last() {
+            edges.push(GraphEdge {
+                id: None,
+                from: parent_id.clone(),
+                to: id.clone(),
+                label: None,
+                kind: EdgeKind::Undirected,
+                style: None,
+            });
+        }
+        let depth = ancestors.len();
+        nodes.push(GraphNode {
+            id: id.clone(),
+            label: DiagramLabel::new(label),
+            shape: Some(shape),
+            style: Some(mindmap_depth_style(depth)),
+        });
+        ancestors.push((indent, id));
+    }
+
+    if nodes.is_empty() {
+        return Err(ParseError {
+            message: "mindmap requires a root node".into(),
+            line: 1,
+            col: 1,
+        });
+    }
+
+    Ok(GraphDiagram {
+        direction: DiagramDirection::Tb,
+        requested_width: None,
+        hide_empty_descriptions: false,
+        title: None,
+        accessibility_title: None,
+        accessibility_description: None,
+        links: Vec::new(),
+        groups: Vec::new(),
+        nodes,
+        edges,
+    })
+}
+
+fn prepare_mindmap_source(source: &str) -> Result<String, ParseError> {
+    let source = blank_mermaid_front_matter(source)?;
+    let source = String::from_utf8(source).expect("front matter blanking preserves UTF-8");
+    Ok(source
+        .lines()
+        .map(|line| {
+            let trimmed = line.trim();
+            if trimmed.is_empty()
+                || (trimmed.starts_with("%%{") && trimmed.ends_with("}%%"))
+                || trimmed.starts_with("%%")
+            {
+                ""
+            } else {
+                line
+            }
+        })
+        .collect::<Vec<_>>()
+        .join("\n"))
+}
+
+fn parse_mindmap_node(source: &str) -> (Option<String>, String, DiagramShape) {
+    for (open, close, shape) in [
+        ("((", "))", DiagramShape::Ellipse),
+        ("[", "]", DiagramShape::Rect),
+        ("(", ")", DiagramShape::RoundedRect),
+    ] {
+        if let Some(open_index) = source.find(open) {
+            if source.ends_with(close) && open_index + open.len() <= source.len() - close.len() {
+                let id = source[..open_index].trim();
+                let label = source[open_index + open.len()..source.len() - close.len()].trim();
+                return (
+                    (!id.is_empty()).then(|| id.to_string()),
+                    normalize_mermaid_line_breaks(label),
+                    shape,
+                );
+            }
+        }
+    }
+    (
+        None,
+        normalize_mermaid_line_breaks(source),
+        DiagramShape::RoundedRect,
+    )
+}
+
+fn mindmap_slug(label: &str) -> String {
+    let slug = label
+        .chars()
+        .map(|character| {
+            if character.is_ascii_alphanumeric() {
+                character.to_ascii_lowercase()
+            } else {
+                '-'
+            }
+        })
+        .collect::<String>()
+        .split('-')
+        .filter(|part| !part.is_empty())
+        .collect::<Vec<_>>()
+        .join("-");
+    if slug.is_empty() {
+        "node".into()
+    } else {
+        slug
+    }
+}
+
+fn unique_mindmap_id(base: String, ids: &mut HashSet<String>) -> String {
+    if ids.insert(base.clone()) {
+        return base;
+    }
+    let mut suffix = 2;
+    loop {
+        let candidate = format!("{base}-{suffix}");
+        if ids.insert(candidate.clone()) {
+            return candidate;
+        }
+        suffix += 1;
+    }
+}
+
+fn mindmap_depth_style(depth: usize) -> DiagramStyle {
+    let (fill, stroke, text_color) = match depth % 4 {
+        0 => ("#fff3bf", "#d97706", "#78350f"),
+        1 => ("#dbeafe", "#2563eb", "#1e3a8a"),
+        2 => ("#dcfce7", "#16a34a", "#14532d"),
+        _ => ("#fce7f3", "#db2777", "#831843"),
+    };
+    DiagramStyle {
+        fill: Some(fill.into()),
+        stroke: Some(stroke.into()),
+        text_color: Some(text_color.into()),
+        corner_radius: Some(12.0),
+        ..DiagramStyle::default()
     }
 }
 
@@ -6704,6 +6897,36 @@ fn parse_duration(s: &str) -> Option<GanttDuration> {
 #[cfg(test)]
 mod tests_dg04 {
     use super::*;
+
+    #[test]
+    fn mindmap_parses_indented_tree_shapes_and_unique_ids() {
+        let diagram = parse_mindmap(
+            "mindmap\n  root((Native))\n    Parser[Grammar]\n      Paint(Scene)\n    Parser",
+        )
+        .unwrap();
+        assert_eq!(diagram.nodes.len(), 4);
+        assert_eq!(diagram.edges.len(), 3);
+        assert_eq!(diagram.nodes[0].shape, Some(DiagramShape::Ellipse));
+        assert_eq!(diagram.nodes[1].shape, Some(DiagramShape::Rect));
+        assert_eq!(diagram.nodes[2].shape, Some(DiagramShape::RoundedRect));
+        assert_eq!(diagram.nodes[3].id, "parser");
+    }
+
+    #[test]
+    fn dispatch_mindmap_to_graph_ir() {
+        match parse_any_mermaid("mindmap\nroot((mindmap))\n  Topic").unwrap() {
+            MermaidDiagram::Graph(diagram) => assert_eq!(diagram.edges.len(), 1),
+            _ => panic!("expected graph-backed mindmap"),
+        }
+    }
+
+    #[test]
+    fn mindmap_preprocesses_front_matter_and_directives_without_losing_indentation() {
+        let source = "---\ntitle: Native\n---\n%%{init: {\"theme\": \"neutral\"}}%%\nmindmap\n  root((mindmap))\n    Topic";
+        let diagram = parse_mindmap(source).unwrap();
+        assert_eq!(diagram.nodes.len(), 2);
+        assert_eq!(diagram.edges.len(), 1);
+    }
 
     const CLASS_SRC: &str = "classDiagram
   class Animal { +name: String; +speak() void }

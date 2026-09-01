@@ -100,7 +100,7 @@
     {
       "id": "mindmap",
       "headers": ["mindmap"],
-      "status": "detected",
+      "status": "partial",
       "ir": "tree",
       "smoke_source": "mindmap\nroot((mindmap))\n  Topic"
     },

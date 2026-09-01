@@ -27,9 +27,9 @@ mod apple {
     use layout_ir::font_spec;
     use mermaid_parser::{
         parse_c4_diagram, parse_er_diagram, parse_gantt, parse_gitgraph, parse_journey, parse_pie,
-        parse_quadrant_chart, parse_requirement_diagram, parse_sankey, parse_sequence_diagram,
-        parse_state_diagram, parse_timeline, parse_to_diagram as parse_mermaid_to_diagram,
-        parse_xychart,
+        parse_mindmap, parse_quadrant_chart, parse_requirement_diagram, parse_sankey,
+        parse_sequence_diagram, parse_state_diagram, parse_timeline,
+        parse_to_diagram as parse_mermaid_to_diagram, parse_xychart,
     };
     use paint_codec_png::write_png;
     use paint_instructions::PaintInstruction;
@@ -176,6 +176,47 @@ mod apple {
             glyph_runs > 0,
             "expected at least one PaintGlyphRun from shaping pipeline"
         );
+    }
+
+    #[test]
+    fn render_mermaid_mindmap_to_png() {
+        let graph = parse_mindmap(
+            "mindmap\n  root((Native Mermaid))\n    Parser[Grammar first]\n      IR(Semantic tree)\n    Paint((Backend neutral))\n      Metal\n      PNG",
+        )
+        .expect("mindmap parse failed");
+        let layout = layout_graph_diagram(&graph, None, None);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let opts = DiagramToPaintOptions {
+            background: layout_ir::Color {
+                r: 255,
+                g: 252,
+                b: 245,
+                a: 255,
+            },
+            device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 14.0),
+            title_font: font_spec("Helvetica", 18.0),
+            shaper: &shaper,
+            metrics: &metrics,
+            resolver: &resolver,
+        };
+
+        let scene = diagram_to_paint(&layout, &opts);
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Path(_)
+                | PaintInstruction::Rect(_)
+                | PaintInstruction::Ellipse(_)
+        )));
+        assert!(scene
+            .instructions
+            .iter()
+            .any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_mindmap_e2e.png").expect("PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
     }
 
     #[test]

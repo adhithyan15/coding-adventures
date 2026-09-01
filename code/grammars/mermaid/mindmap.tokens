@@ -1,0 +1,12 @@
+# @version 1
+# Mermaid 11.16.1 mindmap token grammar.
+# Upstream: packages/mermaid/src/diagrams/mindmap/parser/mindmap.jison
+
+case_sensitive: false
+
+skip:
+  COMMENT = /[ \t]*%%[^\r\n]*/
+
+NEWLINE  = /\r?\n/
+HEADER   = /mindmap[ \t]*/
+NODE_LINE = /[ \t]*[^ \t\r\n][^\r\n]*/

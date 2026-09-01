@@ -340,6 +340,15 @@ which lowers to backend-neutral PaintScene rectangles, paths, and shaped text
 and is exercised by a Metal-to-PNG fixture. The family remains partial until
 the complete pinned syntax and tolerant visual corpus passes.
 
+### Mindmap Native Slice
+
+The initial Mermaid 11.16.1 mindmap slice is grammar-backed and preserves
+indentation as parent-child semantic relationships. It supports plain, square,
+rounded, and circular nodes, deterministic generated IDs, depth styles, shared
+graph layout, and backend-neutral PaintScene lowering. A native Metal-to-PNG
+fixture validates this documented subset; icons, classes, and additional
+mindmap shapes remain explicitly outside the partial compatibility level.
+
 ### Structural Groups
 
 Nested containers such as C4 boundaries are semantic structural groups, not

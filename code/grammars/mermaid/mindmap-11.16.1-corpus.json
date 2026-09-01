@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "upstream": "mermaid@11.16.1",
+  "family": "mindmap",
+  "supported_subset": "Indented trees with plain, square, rounded, and circular nodes",
+  "fixtures": [
+    { "id": "basic", "source": "mindmap\n  root((mindmap))\n    Origins\n      Long history\n    Research" },
+    { "id": "shapes", "source": "mindmap\n  root[Native renderer]\n    parser(Grammar first)\n    paint((Backend neutral))" }
+  ]
+}
