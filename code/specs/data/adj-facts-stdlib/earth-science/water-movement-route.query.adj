@@ -1,0 +1,32 @@
+% ============================================================================
+% water-movement-route.query.adj — worked recall over the
+% water-movement-route library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to answer "which way does runoff
+% move water?" (direct), "which processes move water into the ground?"
+% (REVERSE, and the question worth having — nothing in this stdlib could
+% answer it before), or "which way does condensation move water?" (abstain
+% — none of the three route sentences lists it, and being a famous water
+% cycle process is not evidence about THIS relation).
+%
+% It states no fact of its own — it only `import`s the grounded table and
+% asks binding queries.
+%
+% NOTE ON THE ABSTAIN QUERIES: they are written in VARIABLE form. A
+% fully-bound query that matches nothing produces NO recall entry at all
+% rather than an abstention, so the ground form would silently prove
+% nothing.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli water-movement-route.query.adj
+% ============================================================================
+
+import "water-movement-route.adj"
+
+? water_movement_route(runoff, $R)                        % expect across_the_surface
+? water_movement_route(groundwater_recharge, $R)          % expect into_the_ground
+? water_movement_route($P, into_the_ground)               % expect infiltration AND groundwater_recharge (reverse)
+? water_movement_route($P, between_atmosphere_and_surface) % expect evaporation, evapotranspiration, precipitation (reverse)
+? water_movement_route(condensation, $R)                  % expect abstain -- stage 2 of water-cycle.adj's FIVE-stage ordering, but NO route sentence here lists it
+? water_movement_route(sublimation, $R)                   % expect abstain -- named once on the page, never placed in a route
+? water_movement_route(transpiration, $R)                 % expect abstain -- the sentence lists EVAPOTRANSPIRATION; splitting the compound would assert a decomposition the source does not make
