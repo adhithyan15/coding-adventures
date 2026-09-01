@@ -5,6 +5,17 @@ this file.
 
 ## [Unreleased]
 
+### Fixed - nested conditionals inherited an invalid Row flex context (#13725)
+
+Multi-widget `If`/`Else` branches introduce an intermediate `Column`. Their
+nested widgets now use that Column as their parent context instead of
+incorrectly inheriting the outer Row context, preventing `Expanded(TextField)`
+from being emitted under unbounded vertical constraints. Direct-Row
+conditionals also wrap the generated Column in `Flexible` when no explicit
+branch flex is authored, giving it a finite horizontal constraint. A
+generated-project widget test pumps both nested branches to keep the runtime
+layout valid.
+
 ### Fixed - preserve dynamic HostButton accessible names (#13754)
 
 Flutter buttons now wrap authored accessible names in native `Semantics`,

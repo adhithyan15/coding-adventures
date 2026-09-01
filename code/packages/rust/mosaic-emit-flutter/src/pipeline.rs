@@ -2928,9 +2928,22 @@ fn emit_if_dart(
     // available here, so we check both and prefer whichever is set.
     let flex = branch_flex_grow(&if_node.children, part_styles)
         .or_else(|| else_node.and_then(|en| branch_flex_grow(&en.children, part_styles)));
-    let body = match ctx.direct_row_child.then_some(flex).flatten() {
-        Some(f) => format!("Expanded(flex: {f}, child: {ternary})"),
-        None => ternary,
+    let introduces_branch_column = if_node.children.len() > 1
+        || else_node
+            .map(|node| node.children.len() > 1)
+            .unwrap_or(false);
+    let body = if ctx.direct_row_child {
+        match flex {
+            Some(f) => format!("Expanded(flex: {f}, child: {ternary})"),
+            // A multi-widget branch is represented by a Column. Keep that
+            // Column horizontally bounded when the conditional is a direct
+            // Row child, while allowing it to choose less than the available
+            // width when its contents do not need all of it.
+            None if introduces_branch_column => format!("Flexible(child: {ternary})"),
+            None => ternary,
+        }
+    } else {
+        ternary
     };
     Ok(format!("{pad}({body})\n"))
 }
@@ -2968,7 +2981,24 @@ fn render_branch(
         let s = emit_widget_tree(&children[0], indent, part_styles, component, emits, ctx)?;
         return Ok(s.trim_end_matches('\n').trim_start().to_string());
     }
-    let inner = emit_paired_children(children, indent + 2, part_styles, component, emits, ctx)?;
+    // A multi-widget branch introduces its own Column. The branch's widgets
+    // are therefore direct children of that Column, not of the Row/Stack that
+    // contains the conditional expression. Carrying the outer context through
+    // here can emit Expanded(TextField(...)) under an unbounded-height Column,
+    // which Flutter rejects at layout time.
+    let child_ctx = TableCtx {
+        direct_row_child: false,
+        direct_stack_child: false,
+        ..ctx
+    };
+    let inner = emit_paired_children(
+        children,
+        indent + 2,
+        part_styles,
+        component,
+        emits,
+        child_ctx,
+    )?;
     Ok(format!(
         "Column(children: [\n{}{}])",
         inner,
@@ -10399,6 +10429,82 @@ mod tests {
         );
         assert!(out.contains("Text(\"editor\")"), "got:\n{out}");
         assert!(out.contains("Text(\"empty\")"), "got:\n{out}");
+    }
+
+    /// #13725: a multi-widget conditional branch introduces a Column. Nested
+    /// conditionals inside that branch must not inherit the outer Row context,
+    /// or their HostInput branches emit Expanded widgets under the Column and
+    /// fail at runtime with unbounded vertical constraints.
+    #[test]
+    fn nested_if_inside_row_branch_column_resets_direct_row_context() {
+        let m = component(
+            "Composer",
+            vec![
+                slot("outer", SlotType::Bool, true),
+                slot("inner", SlotType::Bool, true),
+                slot("value", SlotType::Text, true),
+            ],
+            vec![],
+        );
+        let input = || LayoutNode {
+            tag: "HostInput".into(),
+            part_name: Some("input".into()),
+            props: vec![LayoutProp {
+                name: "value".into(),
+                value: LayoutPropValue::SlotRef("value".into()),
+            }],
+            children: vec![],
+        };
+        let style = StyleDef {
+            component_name: "Composer".into(),
+            parts: vec![PartStyle {
+                name: "input".into(),
+                base: vec![
+                    StyleProp {
+                        name: "width".into(),
+                        value: "100%".into(),
+                    },
+                    StyleProp {
+                        name: "flex-grow".into(),
+                        value: "1".into(),
+                    },
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let l = layout(
+            "Composer",
+            node_with(
+                "Row",
+                vec![],
+                vec![
+                    if_node(
+                        LayoutPropValue::SlotRef("outer".into()),
+                        vec![
+                            text_node("Task"),
+                            if_node(LayoutPropValue::SlotRef("inner".into()), vec![input()]),
+                            else_node(vec![input()]),
+                        ],
+                    ),
+                    else_node(vec![text_node("Unavailable")]),
+                ],
+            ),
+        );
+
+        let out = from_pipeline(&m, &l, &style)
+            .expect("emit nested conditional")
+            .output;
+        assert!(out.contains("Column(children: ["), "got:\n{out}");
+        assert!(
+            out.contains("Flexible(child: (_mosaicTruthy(outer)) ?"),
+            "the intermediate Column must receive a finite Row width:\n{out}"
+        );
+        assert_eq!(out.matches("TextField(").count(), 2, "got:\n{out}");
+        assert!(
+            !out.contains("Expanded("),
+            "nested branch inputs must use the intermediate Column context:\n{out}"
+        );
     }
 
     // ----- If when: is an Expr — passes through verbatim --------------------

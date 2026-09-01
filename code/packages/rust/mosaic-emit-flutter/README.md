@@ -141,6 +141,14 @@ enter Dart's statically typed boolean positions. Text-input change and commit
 handlers synthesize their declared zero- or one-value event constructors, so a
 required payload cannot be silently omitted from generated Dart.
 
+When a conditional branch contains multiple widgets, the generated
+`Column` becomes their parent layout context. Nested conditionals therefore do
+not inherit an outer `Row`'s flex context and cannot place `Expanded` controls
+under that intermediate Column's unbounded vertical constraints. If the
+conditional itself is a direct `Row` child without an explicit branch flex,
+the emitter wraps it in `Flexible` so the Column receives a finite horizontal
+constraint; authored branch flex continues to use `Expanded`.
+
 ## What works in v0.2 / what's deferred
 
 See `CHANGELOG.md` for the full feature matrix. The headline:
