@@ -4,14 +4,14 @@
   "chapter": 14,
   "title": "Seasons",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4dbd9ec5c79e2acb",
+  "sourceHash": "fnv1a64:cc5531c9d48e7222",
   "lessons": [
     {
       "id": "ML-C14-kaalangal",
       "sequence": 420,
       "title": "വസന്തകാലം, വേനൽ, മഴ, ശൈത്യം — the same pattern as Tamil",
       "headword": "വസന്തകാലം വേനൽക്കാലം മഴക്കാലം ശൈത്യകാലം",
-      "romanization": "",
+      "romanization": "vasanthakālaṁ venalkkālaṁ mazhakkālaṁ śaithyakālaṁ",
       "gloss": "spring, summer, monsoon, winter — matching Tamil's pattern of native heat/rain/cold words plus a Sanskrit \"spring\"",
       "script": "malayalam",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2987afd1acf6966c",
+      "sourceHash": "fnv1a64:502d5a79aa6a26a8",
       "notice": null,
       "blocks": [
         {
@@ -228,7 +228,7 @@
             },
             {
               "kind": "speech",
-              "text": "വസന്തകാലം വേനൽക്കാലം മഴക്കാലം ശൈത്യകാലം — spring, summer, monsoon, winter."
+              "text": "വസന്തകാലം വേനൽക്കാലം മഴക്കാലം ശൈത്യകാലം (vasanthakālaṁ venalkkālaṁ mazhakkālaṁ śaithyakālaṁ) — spring, summer, monsoon, winter."
             }
           ]
         },

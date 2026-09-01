@@ -5,6 +5,7 @@ chapter: 5
 type: phrase
 headword: ഞാൻ മലയാളം സംസാരിക്കുന്നു
 gloss: I speak Malayalam
+romanization: "ñān malayāḷaṁ saṁsārikkunnu"
 concept_tag: ML-WORD-MALAYALAM
 prerequisites: [ML-C05-samsaarikkuka, ML-C03-njaan]
 sounds: [retroflex-l, long-aa]

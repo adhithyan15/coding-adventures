@@ -6,6 +6,7 @@ sequence: 300
 chapter: 11
 type: phrase
 headword: હું ગુજરાતી બોલું છું
+romanization: "hũ gujarātī bolũ chhũ"
 gloss: I speak Gujarati
 concept_tag: GU-WORD-GUJARATI
 prerequisites: [GU-C05-bolvun, GU-C03-hun]

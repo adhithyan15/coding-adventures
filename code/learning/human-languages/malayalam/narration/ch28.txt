@@ -26,4 +26,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does ഉച്ചകഴിഞ്ഞ് literally mean? ("Noon having passed" — ഉച്ച, "noon," plus the past tense of കഴിയുക, "to be over, spent.") Is ഉച്ചകഴിഞ്ഞ് a single dictionary word, like ഉച്ച itself? (No — it's a transparent two-word phrase; no Wiktionary entry exists for the compound as a whole.) How does Malayalam's strategy for naming "afternoon" differ from Telugu's? (Telugu widens its existing noon-word's meaning; Malayalam instead builds a new phrase, keeping the noon-word unchanged.)
+What does ഉച്ചകഴിഞ്ഞ് (uchakaḻiññ) literally mean? ("Noon having passed" — ഉച്ച, "noon," plus the past tense of കഴിയുക, "to be over, spent.") Is ഉച്ചകഴിഞ്ഞ് (uchakaḻiññ) a single dictionary word, like ഉച്ച itself? (No — it's a transparent two-word phrase; no Wiktionary entry exists for the compound as a whole.) How does Malayalam's strategy for naming "afternoon" differ from Telugu's? (Telugu widens its existing noon-word's meaning; Malayalam instead builds a new phrase, keeping the noon-word unchanged.)

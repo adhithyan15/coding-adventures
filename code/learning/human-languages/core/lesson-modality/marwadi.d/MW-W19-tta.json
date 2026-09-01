@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MW-W19-tta",
+    "language": "marwadi",
+    "chapter": 24,
+    "sequence": 1830,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f31496d8a2869f03",
+    "detachableSegments": [
+      "Script — one sign"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

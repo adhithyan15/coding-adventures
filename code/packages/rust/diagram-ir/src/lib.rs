@@ -179,6 +179,47 @@ pub struct GridDiagram {
     pub connections: Vec<GridConnection>,
 }
 
+/// A labeled inclusive bit range in a Mermaid packet diagram.
+#[derive(Clone, Debug, PartialEq)]
+pub struct PacketField {
+    pub start_bit: u32,
+    pub end_bit: u32,
+    pub label: DiagramLabel,
+}
+
+/// Semantic IR for a packet bit-field diagram.
+#[derive(Clone, Debug, PartialEq, Default)]
+pub struct PacketDiagram {
+    pub title: Option<String>,
+    pub accessibility_title: Option<String>,
+    pub accessibility_description: Option<String>,
+    pub fields: Vec<PacketField>,
+}
+
+/// Resolved field rectangle emitted by packet layout.
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedPacketField {
+    pub start_bit: u32,
+    pub end_bit: u32,
+    pub label: DiagramLabel,
+    pub x: f64,
+    pub y: f64,
+    pub width: f64,
+    pub height: f64,
+    pub style: ResolvedDiagramStyle,
+}
+
+/// Backend-neutral packet geometry ready for Paint lowering.
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedPacketDiagram {
+    pub title: Option<String>,
+    pub accessibility_title: Option<String>,
+    pub accessibility_description: Option<String>,
+    pub fields: Vec<LayoutedPacketField>,
+    pub width: f64,
+    pub height: f64,
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct Point {
     pub x: f64,

@@ -9,7 +9,10 @@ pieces taught before the whole; and a book you can read straight through.
 ## What's different about the Malayalam track
 
 - **The script is taught through useful words, with a writing runway.** Hear and
-  use *namaskāram* first; then meet only two or three shapes at a time. The
+  use *namaskāram* first; then meet only two or three shapes at a time. Every
+  headword carries a romanization, so a word is always sayable before it is
+  readable, and the character that spells it arrives in a later, separate
+  lesson. The
   meaningful unit **നമ** moves from tracing through dictation before the whole
   written greeting appears. A reader who already reads Malayalam can skim the
   tiny script steps.
@@ -95,6 +98,13 @@ pieces taught before the whole; and a book you can read straight through.
   from China through Persia, coffee sailed from Arabia through Europe);
   **ūṇ** (a meal, and the second eat-verb, **uṇṇuka**, this book had never
   taught). In the book.
+
+- **The script ladder** ([`lessons/ML-S*`](./lessons/)): thirty-two one-character
+  lessons drizzled through the chapters — one letter, one chapter, with ordinary
+  vocabulary in between — each anchored on a word the reader has already said
+  out loud. `ML-S125`–`ML-S132` close it out with **ഊ · ഓ · ഹ · ൃ · ഭ · ഥ · ൺ ·
+  ഗ**, after which the track teaches every one of the sixty-seven characters it
+  puts on the page.
 
 All forty-seven later lessons remain below five effective minutes.
 

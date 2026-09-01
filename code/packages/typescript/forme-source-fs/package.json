@@ -1,7 +1,7 @@
 {
   "name": "@coding-adventures/forme-source-fs",
-  "version": "0.3.0",
-  "description": "Forme source stage: walks a filesystem directory and emits a Stream<ContentSource> per matching file (FM00 §5.1).",
+  "version": "0.4.0",
+  "description": "Forme source stage: observes a revision-addressed filesystem snapshot and emits a Stream<ContentSource> (FM00 §5.1).",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {

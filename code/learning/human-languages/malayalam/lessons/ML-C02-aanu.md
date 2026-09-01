@@ -5,6 +5,7 @@ chapter: 2
 type: word
 headword: ആണ്
 gloss: is (the copula)
+romanization: "āṇŭ"
 concept_tag: WORD-IS
 prerequisites: [ML-C02-peru]
 sounds: [independent-aa, retroflex-nu]

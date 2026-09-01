@@ -6,6 +6,7 @@ sequence: 260
 chapter: 10
 type: word
 headword: પાછા
+romanization: "pāchhā"
 gloss: again, back
 concept_tag: GU-WORD-PACHHA
 prerequisites: []

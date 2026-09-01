@@ -2,6 +2,84 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.81] - 2026-08-31 (W33 second slice — real dynamic dispatch, item 4)
+
+Wires the W33 first slice's nominal-subtype-chain machinery into real
+RUNTIME dynamic dispatch — `call_indirect`'s type check, and a brand-new
+`ref.cast`/`ref.test` implementation — closing item (4) of `code/specs/
+W33-wasm-gc-recursive-type-subtyping.md` for every SINGLE-MODULE case
+(cross-module canonical equivalence, item 3b, remains explicitly out of
+scope; see that spec's second addendum for the full accounting).
+
+### Fixed
+
+- **`call_indirect`/`return_call_indirect`'s dynamic type check was plain
+  `FuncType` structural equality** — no type-identity or nominal-subtype
+  awareness at all, a pre-existing simplification that predates W33
+  entirely and was simply unreachable until `rec`/`sub` parsing (first
+  slice) let any module using them parse at all. `type-subtyping.wast`
+  lines 373-401 (`$t1 <- $t2 <- $t3`, all identically-shaped `(func)`
+  types related only by a `sub` chain) exposed it directly: a table slot
+  holding a real SUPERtype of the declared call type wrongly succeeded
+  (should trap), while transitively-related subtypes several hops away
+  wrongly relied on coincidental shape equality rather than a real
+  subtype relationship. New shared helper `call_indirect_type_matches`
+  applies the real GC-proposal rule (reflexive index equality OR a real
+  declared `sub`-chain relationship) — but ONLY once the module is known
+  to use `sub` somewhere (`wasm_types::any_declares_subtyping`); a module
+  that never declares `sub` gets the EXACT pre-existing structural check,
+  byte-for-byte, since pre-GC WASM has no nominal type identity at all and
+  two independently-declared, coincidentally-identical-shaped types genuinely
+  ARE the same type there — this gating was added specifically because the
+  naive "always use nominal" rule regressed `call_indirect.wast`/
+  `func.wast`/`func_ptrs.wast` in the full 257-file conformance baseline
+  during development (confirmed via the diff, then fixed; zero regressions
+  in the version actually shipped).
+- **`0xFB 0x16`/`0x17` (`ref.cast`/`ref.cast null`)'s binary decoder never
+  consumed their LEB128 heap-type immediate** (fell into the `_ => (0, 0)`
+  no-immediate default), which would silently desync every instruction
+  after it in the same function body the moment any producer emitted the
+  bytes.
+- **`ref.test`/`ref.test null`'s runtime check was a stub**: `Ref(Some(_))`
+  → always 1, ignoring the type-index immediate entirely — correct only by
+  coincidence, since this engine's only prior consumer (McCarthy `pair?`)
+  has exactly one struct type in its whole value model, so "is it any
+  struct ref" happened to equal "is it that struct type".
+
+### Added
+
+- **A real, non-stub `ref.cast`/`ref.cast null` implementation** (opcodes
+  `0xFB 0x16`/`0x17`, previously entirely unimplemented — traps
+  `"unsupported WasmGC opcode 0xFB 0x16"` before this slice): pops a
+  reference, pushes it back unchanged if it's a real dynamic instance of
+  the target type, else traps `"cast failure"` — the exact message
+  `type-subtyping.wast`'s `assert_trap` cases expect.
+- **A real, non-stub `ref.test`/`ref.test null`** dynamic type check,
+  replacing the old any-non-null-ref stub.
+- **`ref_matches_concrete_type`**: the shared helper both of the above use.
+  Disambiguates this engine's two disjoint `WasmValue::Ref(Option<u32>)`
+  interpretations (a raw FUNCTION index for funcref, a `gc_heap` HANDLE for
+  structref — there is no per-value tag) using the target `type_idx`
+  itself: an index inside `[0, ctx.types.len())` names a function type (the
+  real, newly-wired FUNCREF path, verified against `type-subtyping.wast`'s
+  entire "Runtime types" section, which exercises funcref casts/tests
+  exclusively); an index at or past `ctx.types.len()` names a struct/array
+  type per `wasm_types::WasmModule`'s own absolute-numbering convention,
+  where this engine deliberately preserves the OLD permissive stub — real
+  per-struct-type nominal identity needs this crate's still-fully-open
+  struct/array TEXT-format parsing gap (W33's own "Recommended scope" step
+  2), not attempted here, and the stub loses no real coverage today since
+  this engine's value model only ever allocates one struct shape.
+- **`WasmExecutionContext::type_subtyping: Vec<TypeSubtyping>`** and
+  **`WasmExecutionContext::func_type_indices: Vec<u32>`** (plus matching
+  `WasmExecutionEngine::set_type_subtyping`/`set_func_type_indices`
+  optional setters, same pattern as `set_type_section`): the two new
+  pieces of module state `call_indirect_type_matches`/
+  `ref_matches_concrete_type` need. Both empty by default (every existing
+  hand-built engine in this crate's own ~560 unit tests keeps working
+  unchanged); `wasm-runtime` now always sets both for a real instantiated
+  module (see that crate's own changelog).
+
 ## [0.9.80] - 2026-08-31 (W33 first slice — GC nominal subtyping + rec groups)
 
 ### Added

@@ -4,14 +4,14 @@
   "chapter": 21,
   "title": "Dog and Cat",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8e23ea4f97e7ae6e",
+  "sourceHash": "fnv1a64:5936318c61f6751b",
   "lessons": [
     {
       "id": "ML-C21-naaya-poocha",
       "sequence": 510,
-      "title": "നായ, പൂച്ച — matching Tamil closely on both counts",
+      "title": "നായ, പൂച്ച (nāya, pūcca) — matching Tamil closely on both counts",
       "headword": "നായ, പൂച്ച",
-      "romanization": "",
+      "romanization": "nāya, pūcca",
       "gloss": "dog and cat — naaya continues the solid, ancient native Dravidian dog-root shared with Kannada and Tamil, no mystery; poocha matches Tamil's everyday cat-word closely, part of the pattern where Dravidian genuinely splits on \"cat\" more than \"dog\"",
       "script": "malayalam",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d55ae2fb36fe9cc7",
+      "sourceHash": "fnv1a64:23607412c0612200",
       "notice": null,
       "blocks": [
         {

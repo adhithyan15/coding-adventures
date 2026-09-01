@@ -178,6 +178,31 @@ memory demand at a time.
 | S170 | `MW-R17-transport-new-two` | retrieve rickshaw and horse | mixed four-skill recall |
 | S171 | `MW-C17-transport-five` | pass the five-word transport map | non-compensatory listening, speaking, reading, and writing |
 | S172 | `MW-R17-script-close` | close **ड़** and **श** in load-bearing words | independent sign and word dictation |
+| S173 | `MW-C18-hear-daal` | hear *dāl* as lentils | none; meaning precedes spelling |
+| S174 | `MW-C18-daal` | assemble **दाल** from known signs | delayed copy and dictation |
+| S175 | `MW-C18-hear-ghee` | hear *ghī* as clarified butter | none; meaning precedes spelling |
+| S176 | `MW-C18-ghee` | assemble **घी** from known signs | delayed copy and dictation |
+| S177 | `MW-C18-hear-sabji` | hear *sabjī* as vegetables | none; meaning precedes spelling |
+| S178 | `MW-C18-sabji` | assemble **सबजी** from known signs | delayed copy and dictation |
+| S179 | `MW-R18-food-three` | retrieve lentils, butter, and vegetables | mixed four-skill recall |
+| S180 | `MW-C18-food-three` | pass the three-word food map | non-compensatory listening, speaking, reading, and writing |
+| S181 | `MW-R18-food-close` | close the first food loop | hidden-model three-word recall |
+| S182 | `MW-C19-hear-roti` | hear *roṭī* as flatbread | none; meaning precedes the new consonant |
+| S183 | `MW-W19-tta` | distinguish **ट** from aspirated **ठ** | observe, trace, copy one sign |
+| S184 | `MW-C19-roti` | assemble **रोटी** | delayed copy and dictation |
+| S185 | `MW-C19-hear-baati` | hear *bāṭī* as hard wheat rolls | none; the curled sound returns by ear |
+| S186 | `MW-C19-baati` | assemble **बाटी** beside **रोटी** | delayed copy and dictation |
+| S187 | `MW-R19-food-new-two` | retrieve flatbread and hard wheat rolls | mixed four-skill recall |
+| S188 | `MW-C19-food-five` | pass the five-word food map | non-compensatory listening, speaking, reading, and writing |
+| S189 | `MW-R19-script-close` | close the writing loop for **ट** | independent sign and word dictation |
+| S190 | `MW-C20-hear-churma` | hear *chūrmā* as the sweet crumbled wheat dessert | none; meaning precedes spelling |
+| S191 | `MW-C20-churma` | assemble **चूरमा** from known signs | delayed copy and dictation |
+| S192 | `MW-C20-hear-chaay` | hear *chāy* as tea | none; meaning precedes the new consonant |
+| S193 | `MW-W20-ya` | distinguish **य** from familiar **भ** | observe, trace, copy one sign |
+| S194 | `MW-C20-chaay` | assemble **चाय** | delayed copy and dictation |
+| S195 | `MW-R20-food-new-two` | retrieve the sweet and the tea | mixed four-skill recall |
+| S196 | `MW-C20-food-seven` | pass the seven-word food map | non-compensatory listening, speaking, reading, and writing |
+| S197 | `MW-R20-script-close` | close **य** and **ट** in load-bearing words | independent sign and word dictation |
 
 Reviews use expanding spacing: repeat S7 the next day, after three days, after
 one week, and after two weeks. A failed written recall sends the learner back to

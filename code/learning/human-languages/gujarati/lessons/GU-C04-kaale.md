@@ -6,6 +6,7 @@ sequence: 250
 chapter: 10
 type: phrase
 headword: કાલે મળીશું
+romanization: "kāle maḷīshũ"
 gloss: see you tomorrow (and the કાલ puzzle)
 concept_tag: FAREWELL-TOMORROW
 prerequisites: [GU-C04-malishun]

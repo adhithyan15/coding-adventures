@@ -41,32 +41,43 @@
 //!
 //! ## MUL/DIV exception
 //!
-//! Gate-level implementation of a 16×16-bit multiplier (~1000 gates) is out of
-//! scope.  `MULU`, `MULS`, `DIVU`, `DIVS` use host Rust arithmetic.
+//! `MULU`/`MULS` use fixed partial-product gate networks and `DIVU`/`DIVS`
+//! use fixed restoring gate-divider networks.
 
 use crate::alu::{
-    add16, add32, add8, and16, and32, and8, cmp16, cmp32, cmp8, neg16, neg32, neg8, negx16,
-    negx32, negx8, not16_flags, not32_flags, not8_flags, or16, or32, or8, shift_op, sub16,
-    sub32, sub8, xor16, xor32, xor8, AluResult68K,
+    add16, add32, add8, and16, and32, and8, cmp16, cmp32, cmp8, gate_divs32_16, gate_divu32_16,
+    gate_muls16, gate_mulu16, neg16, neg32, neg8, negx16, negx32, negx8, not16_flags, not32_flags,
+    not8_flags, or16, or32, or8, shift_op, sub16, sub32, sub8, xor16, xor32, xor8, AluResult68K,
 };
 use crate::registers::{RegisterFile68K, ADDR_MASK, BYTE_MASK, LONG_MASK, WORD_MASK};
+use crate::state::{DffMemory, StateRegister};
+use m68k_simulator::{
+    ExecutionResult, M68kError, M68kSimulator, M68kState, StepTrace, INITIAL_SP, LOAD_ADDRESS,
+    MEMORY_SIZE,
+};
 
 /// 16 MB address space.
-pub const MEM_SIZE: usize = 0x100_0000;
+pub const MEM_SIZE: usize = MEMORY_SIZE;
 /// Programs load here.
-const LOAD_ADDR: usize = 0x001000;
+const LOAD_ADDR: usize = LOAD_ADDRESS as usize;
 #[allow(dead_code)] // used only in test assertions; dead in lib compilation
-const INIT_SP: u32 = 0x00F000;
+const INIT_SP: u32 = INITIAL_SP;
+
+/// Exact persistent topology: 134,217,728 memory bits, 512 D/A-register
+/// bits, 32 PC bits, 16 SR bits, and one halt bit.
+pub const FLIP_FLOP_COUNT: usize = MEM_SIZE * 8 + 16 * 32 + 32 + 16 + 1;
 
 /// Motorola 68000 CPU — gate-level simulation.
+#[derive(Clone)]
 pub struct Cpu68K {
     /// Register file (D0–D7, A0–A7, PC, SR).
     pub rf: RegisterFile68K,
     /// Flat 16 MB memory (big-endian byte order).
     /// Heap-allocated via `vec!` to avoid stack overflow (16 MB > default stack).
-    pub mem: Vec<u8>,
+    pub mem: DffMemory,
     /// True after STOP / TRAP #15.
     pub halted: bool,
+    halt_state: StateRegister,
 }
 
 impl Default for Cpu68K {
@@ -78,18 +89,19 @@ impl Default for Cpu68K {
 impl Cpu68K {
     /// Create a new 68000 in power-on state (memory zeroed, registers default).
     pub fn new() -> Self {
-        Cpu68K {
+        let mut cpu = Cpu68K {
             rf: RegisterFile68K::new(),
-            mem: vec![0u8; MEM_SIZE],
+            mem: DffMemory::new(MEM_SIZE),
             halted: false,
-        }
+            halt_state: StateRegister::new(1),
+        };
+        cpu.clock_wires_into_state();
+        cpu
     }
 
     /// Reset CPU state and memory to power-on.
     pub fn reset(&mut self) {
-        self.rf = RegisterFile68K::new();
-        self.mem.iter_mut().for_each(|b| *b = 0);
-        self.halted = false;
+        *self = Self::new();
     }
 
     /// Load a program at LOAD_ADDR, clamping to available memory.
@@ -100,7 +112,149 @@ impl Cpu68K {
     pub fn load(&mut self, program: &[u8]) {
         let end = LOAD_ADDR.saturating_add(program.len()).min(MEM_SIZE);
         let len = end - LOAD_ADDR;
-        self.mem[LOAD_ADDR..end].copy_from_slice(&program[..len]);
+        self.mem.copy_from_slice(LOAD_ADDR, &program[..len]);
+        self.clock_wires_into_state();
+    }
+
+    /// Return a complete owned snapshot of every architectural bit.
+    pub fn get_state(&self) -> M68kState {
+        M68kState {
+            d: self.rf.d,
+            a: self.rf.a,
+            pc: self.rf.pc,
+            sr: self.rf.sr,
+            halted: self.halted,
+            memory: self.mem.snapshot(),
+        }
+    }
+
+    /// Atomically restore a complete architectural state.
+    pub fn restore(&mut self, state: &M68kState) -> Result<(), M68kError> {
+        if state.memory.len() != MEM_SIZE {
+            return Err(M68kError::InvalidState(format!(
+                "state memory has {} bytes; gate simulator requires {MEM_SIZE}",
+                state.memory.len()
+            )));
+        }
+        if state.pc > ADDR_MASK {
+            return Err(M68kError::InvalidState(format!(
+                "PC {:#010x} exceeds the 24-bit address bus",
+                state.pc
+            )));
+        }
+        self.rf.d = state.d;
+        self.rf.a = state.a;
+        self.rf.pc = state.pc;
+        self.rf.sr = state.sr;
+        self.halted = state.halted;
+        self.mem.restore_snapshot(&state.memory);
+        self.clock_wires_into_state();
+        Ok(())
+    }
+
+    /// Reset and atomically load a program at the Spec 07n origin.
+    pub fn load_checked(&mut self, program: &[u8]) -> Result<(), M68kError> {
+        self.load_at_checked(program, LOAD_ADDRESS)
+    }
+
+    /// Reset and atomically load a program at an explicit 24-bit origin.
+    pub fn load_at_checked(&mut self, program: &[u8], origin: u32) -> Result<(), M68kError> {
+        let end = usize::try_from(origin)
+            .ok()
+            .and_then(|start| start.checked_add(program.len()));
+        if origin > ADDR_MASK || end.is_none_or(|value| value > MEM_SIZE) {
+            return Err(M68kError::ProgramTooLarge {
+                origin,
+                size: program.len(),
+            });
+        }
+        self.reset();
+        self.mem.copy_from_slice(origin as usize, program);
+        self.rf.pc = origin;
+        self.clock_wires_into_state();
+        Ok(())
+    }
+
+    /// Execute one instruction atomically with complete before/after state.
+    pub fn step_checked(&mut self) -> Result<StepTrace, M68kError> {
+        if self.halted {
+            return Err(M68kError::Halted);
+        }
+        if self.rf.pc & 1 != 0 {
+            return Err(M68kError::Execution(format!(
+                "misaligned instruction fetch at {:#08x}",
+                self.rf.pc
+            )));
+        }
+        let state_before = self.get_state();
+        let pc_before = self.rf.pc;
+        let raw = self.mem_read_word(pc_before);
+
+        let mut oracle = M68kSimulator::architectural();
+        oracle.restore(&state_before)?;
+        let oracle_trace = oracle.step_checked()?;
+
+        self.step();
+        let state_after = self.get_state();
+        if state_after != oracle_trace.state_after {
+            self.restore(&state_before)?;
+            return Err(M68kError::Execution(format!(
+                "gate transition diverged from functional oracle for {} at {pc_before:#08x}",
+                oracle_trace.mnemonic
+            )));
+        }
+        Ok(StepTrace {
+            pc_before,
+            pc_after: self.rf.pc,
+            raw,
+            mnemonic: oracle_trace.mnemonic,
+            state_before,
+            state_after,
+        })
+    }
+
+    /// Execute the loaded machine transactionally for at most `max_steps`.
+    pub fn run_loaded_checked(&mut self, max_steps: usize) -> Result<ExecutionResult, M68kError> {
+        let original = self.get_state();
+        let mut traces = Vec::new();
+        while traces.len() < max_steps && !self.halted {
+            match self.step_checked() {
+                Ok(trace) => traces.push(trace),
+                Err(error) => {
+                    self.restore(&original)?;
+                    return Err(error);
+                }
+            }
+        }
+        Ok(ExecutionResult {
+            halted: self.halted,
+            steps: traces.len(),
+            pc: self.rf.pc,
+            final_state: self.get_state(),
+            traces,
+        })
+    }
+
+    /// Reset, load, and execute a program transactionally.
+    pub fn run_checked(
+        &mut self,
+        program: &[u8],
+        max_steps: usize,
+    ) -> Result<ExecutionResult, M68kError> {
+        let original = self.get_state();
+        self.load_checked(program)?;
+        match self.run_loaded_checked(max_steps) {
+            Ok(result) => Ok(result),
+            Err(error) => {
+                self.restore(&original)?;
+                Err(error)
+            }
+        }
+    }
+
+    fn clock_wires_into_state(&mut self) {
+        self.rf.clock_wires_into_state();
+        self.halt_state.write(u32::from(self.halted));
     }
 
     /// Reset, load, and run up to `max_steps` instructions.  Returns steps taken.
@@ -132,7 +286,9 @@ impl Cpu68K {
 
     /// Execute one instruction.
     pub fn step(&mut self) {
-        if self.halted { return; }
+        if self.halted {
+            return;
+        }
         let op = self.fetch_word();
         let hi = (op >> 12) & 0xF;
         match hi {
@@ -148,14 +304,17 @@ impl Cpu68K {
             0xC => self.exec_line_c(op),
             0xD => self.exec_line_d(op),
             0xE => self.exec_line_e(op),
-            _   => { self.halted = true; } // unimplemented — halt
+            _ => {
+                self.halted = true;
+            } // unimplemented — halt
         }
+        self.clock_wires_into_state();
     }
 
     // ── Memory helpers ────────────────────────────────────────────────────────
 
     fn mem_read_byte(&self, addr: u32) -> u8 {
-        self.mem[(addr & ADDR_MASK) as usize]
+        self.mem.read((addr & ADDR_MASK) as usize)
     }
 
     fn mem_read_word(&self, addr: u32) -> u16 {
@@ -186,14 +345,15 @@ impl Cpu68K {
     }
 
     fn mem_write_byte(&mut self, addr: u32, val: u32) {
-        self.mem[(addr & ADDR_MASK) as usize] = (val & BYTE_MASK) as u8;
+        self.mem
+            .write((addr & ADDR_MASK) as usize, (val & BYTE_MASK) as u8);
     }
 
     fn mem_write_word(&mut self, addr: u32, val: u32) {
         let a0 = (addr.wrapping_add(0) & ADDR_MASK) as usize;
         let a1 = (addr.wrapping_add(1) & ADDR_MASK) as usize;
-        self.mem[a0] = ((val >> 8) & 0xFF) as u8;
-        self.mem[a1] = (val & 0xFF) as u8;
+        self.mem.write(a0, ((val >> 8) & 0xFF) as u8);
+        self.mem.write(a1, (val & 0xFF) as u8);
     }
 
     fn mem_write_long(&mut self, addr: u32, val: u32) {
@@ -201,10 +361,10 @@ impl Cpu68K {
         let a1 = (addr.wrapping_add(1) & ADDR_MASK) as usize;
         let a2 = (addr.wrapping_add(2) & ADDR_MASK) as usize;
         let a3 = (addr.wrapping_add(3) & ADDR_MASK) as usize;
-        self.mem[a0] = ((val >> 24) & 0xFF) as u8;
-        self.mem[a1] = ((val >> 16) & 0xFF) as u8;
-        self.mem[a2] = ((val >>  8) & 0xFF) as u8;
-        self.mem[a3] = (val & 0xFF) as u8;
+        self.mem.write(a0, ((val >> 24) & 0xFF) as u8);
+        self.mem.write(a1, ((val >> 16) & 0xFF) as u8);
+        self.mem.write(a2, ((val >> 8) & 0xFF) as u8);
+        self.mem.write(a3, (val & 0xFF) as u8);
     }
 
     fn mem_write(&mut self, addr: u32, sz: usize, val: u32) {
@@ -310,7 +470,11 @@ impl Cpu68K {
                 let xn_n = ((ext >> 12) & 7) as usize;
                 let xn_long = (ext >> 11) & 1; // 0=word, 1=long
                 let is_an = (ext >> 15) & 1;
-                let xn_val = if is_an == 1 { self.rf.a[xn_n] } else { self.rf.d[xn_n] };
+                let xn_val = if is_an == 1 {
+                    self.rf.a[xn_n]
+                } else {
+                    self.rf.d[xn_n]
+                };
                 let xn = if xn_long == 0 {
                     sign_extend_16(xn_val & WORD_MASK)
                 } else {
@@ -326,7 +490,7 @@ impl Cpu68K {
                         let w = self.fetch_word();
                         sign_extend_16(w as u32) & ADDR_MASK
                     }
-                    1 => self.fetch_long() & ADDR_MASK,   // (abs).L
+                    1 => self.fetch_long() & ADDR_MASK, // (abs).L
                     2 => {
                         // d16(PC)
                         let pc_base = self.rf.pc;
@@ -341,7 +505,11 @@ impl Cpu68K {
                         let xn_n = ((ext >> 12) & 7) as usize;
                         let xn_long = (ext >> 11) & 1;
                         let is_an = (ext >> 15) & 1;
-                        let xn_val = if is_an == 1 { self.rf.a[xn_n] } else { self.rf.d[xn_n] };
+                        let xn_val = if is_an == 1 {
+                            self.rf.a[xn_n]
+                        } else {
+                            self.rf.d[xn_n]
+                        };
                         let xn = if xn_long == 0 {
                             sign_extend_16(xn_val & WORD_MASK)
                         } else {
@@ -349,11 +517,17 @@ impl Cpu68K {
                         };
                         (pc_base.wrapping_add(xn).wrapping_add(d8)) & ADDR_MASK
                     }
-                    _ => { self.halted = true; 0 }
+                    _ => {
+                        self.halted = true;
+                        0
+                    }
                 }
             }
 
-            _ => { self.halted = true; 0 }
+            _ => {
+                self.halted = true;
+                0
+            }
         }
     }
 
@@ -406,17 +580,28 @@ impl Cpu68K {
     fn apply_cmp(&mut self, r: &AluResult68K) {
         // CMP: N/Z/V/C from result; X unchanged.
         let old_x = self.rf.flag_x();
-        self.rf.set_ccr(old_x, r.flag_n, r.flag_z, r.flag_v, r.flag_c);
+        self.rf
+            .set_ccr(old_x, r.flag_n, r.flag_z, r.flag_v, r.flag_c);
     }
 
     // ── Decode helpers ────────────────────────────────────────────────────────
 
     fn sz_from_code_arith(code: u16) -> Option<usize> {
-        match code { 0 => Some(1), 1 => Some(2), 2 => Some(4), _ => None }
+        match code {
+            0 => Some(1),
+            1 => Some(2),
+            2 => Some(4),
+            _ => None,
+        }
     }
 
     fn sz_from_code_move(code: u16) -> Option<usize> {
-        match code { 1 => Some(1), 3 => Some(2), 2 => Some(4), _ => None }
+        match code {
+            1 => Some(1),
+            3 => Some(2),
+            2 => Some(4),
+            _ => None,
+        }
     }
 
     // ── Bit operations (BTST/BCHG/BCLR/BSET) ─────────────────────────────────
@@ -464,12 +649,12 @@ impl Cpu68K {
 
     fn exec_line0(&mut self, op: u16) {
         let sz_code = (op >> 6) & 3;
-        let mode    = (op >> 3) & 7;
-        let reg     = op & 7;
+        let mode = (op >> 3) & 7;
+        let reg = op & 7;
 
         // BTST/BCHG/BCLR/BSET immediate bit number: 0000 1000 tt eeee
         if (op & 0xFF00) == 0x0800 {
-            let kind  = (op >> 6) & 3;
+            let kind = (op >> 6) & 3;
             let bit_n = self.fetch_word() as u32 & 0x1F;
             self.exec_bit_op(bit_n, kind, mode, reg);
             return;
@@ -477,7 +662,7 @@ impl Cpu68K {
 
         // BTST/BCHG/BCLR/BSET register bit number: 0000 rrr1 00 ea
         if (op & 0x0138) == 0x0100 && sz_code <= 3 {
-            let dn   = (op >> 9) & 7;
+            let dn = (op >> 9) & 7;
             let kind = (op >> 6) & 3;
             let bit_n = self.rf.d[dn as usize];
             self.exec_bit_op(bit_n, kind, mode, reg);
@@ -488,7 +673,13 @@ impl Cpu68K {
         match op8 {
             0x00 => {
                 // ORI
-                let sz = match Self::sz_from_code_arith(sz_code) { Some(s) => s, None => { self.halted = true; return; }};
+                let sz = match Self::sz_from_code_arith(sz_code) {
+                    Some(s) => s,
+                    None => {
+                        self.halted = true;
+                        return;
+                    }
+                };
                 let imm = self.fetch_imm(sz);
                 if mode == 7 && reg == 4 {
                     // ORI #imm, CCR
@@ -507,7 +698,13 @@ impl Cpu68K {
             }
             0x02 => {
                 // ANDI
-                let sz = match Self::sz_from_code_arith(sz_code) { Some(s) => s, None => { self.halted = true; return; }};
+                let sz = match Self::sz_from_code_arith(sz_code) {
+                    Some(s) => s,
+                    None => {
+                        self.halted = true;
+                        return;
+                    }
+                };
                 let imm = self.fetch_imm(sz);
                 if mode == 7 && reg == 4 {
                     let ccr = self.rf.read_ccr() & (imm as u8 & 0x1F);
@@ -525,7 +722,13 @@ impl Cpu68K {
             }
             0x04 => {
                 // SUBI
-                let sz = match Self::sz_from_code_arith(sz_code) { Some(s) => s, None => { self.halted = true; return; }};
+                let sz = match Self::sz_from_code_arith(sz_code) {
+                    Some(s) => s,
+                    None => {
+                        self.halted = true;
+                        return;
+                    }
+                };
                 let imm = self.fetch_imm(sz);
                 let a = self.ea_read(mode, reg, sz);
                 let result = self.do_sub(a, imm, sz);
@@ -533,7 +736,13 @@ impl Cpu68K {
             }
             0x06 => {
                 // ADDI
-                let sz = match Self::sz_from_code_arith(sz_code) { Some(s) => s, None => { self.halted = true; return; }};
+                let sz = match Self::sz_from_code_arith(sz_code) {
+                    Some(s) => s,
+                    None => {
+                        self.halted = true;
+                        return;
+                    }
+                };
                 let imm = self.fetch_imm(sz);
                 let a = self.ea_read(mode, reg, sz);
                 let result = self.do_add(a, imm, sz);
@@ -541,7 +750,13 @@ impl Cpu68K {
             }
             0x0A => {
                 // EORI
-                let sz = match Self::sz_from_code_arith(sz_code) { Some(s) => s, None => { self.halted = true; return; }};
+                let sz = match Self::sz_from_code_arith(sz_code) {
+                    Some(s) => s,
+                    None => {
+                        self.halted = true;
+                        return;
+                    }
+                };
                 let imm = self.fetch_imm(sz);
                 if mode == 7 && reg == 4 {
                     let ccr = self.rf.read_ccr() ^ (imm as u8 & 0x1F);
@@ -554,12 +769,20 @@ impl Cpu68K {
             }
             0x0C => {
                 // CMPI
-                let sz = match Self::sz_from_code_arith(sz_code) { Some(s) => s, None => { self.halted = true; return; }};
+                let sz = match Self::sz_from_code_arith(sz_code) {
+                    Some(s) => s,
+                    None => {
+                        self.halted = true;
+                        return;
+                    }
+                };
                 let imm = self.fetch_imm(sz);
                 let a = self.ea_read(mode, reg, sz);
                 self.do_cmp(a, imm, sz);
             }
-            _ => { self.halted = true; }
+            _ => {
+                self.halted = true;
+            }
         }
     }
 
@@ -629,12 +852,18 @@ impl Cpu68K {
     // ─────────────────────────────────────────────────────────────────────────
 
     fn exec_move(&mut self, op: u16) {
-        let sz_code  = (op >> 12) & 3;
-        let sz       = match Self::sz_from_code_move(sz_code) { Some(s) => s, None => { self.halted = true; return; }};
-        let dst_reg  = (op >> 9) & 7;
+        let sz_code = (op >> 12) & 3;
+        let sz = match Self::sz_from_code_move(sz_code) {
+            Some(s) => s,
+            None => {
+                self.halted = true;
+                return;
+            }
+        };
+        let dst_reg = (op >> 9) & 7;
         let dst_mode = (op >> 6) & 7;
         let src_mode = (op >> 3) & 7;
-        let src_reg  = op & 7;
+        let src_reg = op & 7;
 
         let val = self.ea_read(src_mode, src_reg, sz);
 
@@ -657,14 +886,18 @@ impl Cpu68K {
 
     fn exec_line4(&mut self, op: u16) {
         let sz_code = (op >> 6) & 3;
-        let mode    = (op >> 3) & 7;
-        let reg     = op & 7;
+        let mode = (op >> 3) & 7;
+        let reg = op & 7;
 
         // NOP
-        if op == 0x4E71 { return; }
+        if op == 0x4E71 {
+            return;
+        }
 
         // RESET
-        if op == 0x4E70 { return; }
+        if op == 0x4E70 {
+            return;
+        }
 
         // RTS
         if op == 0x4E75 {
@@ -750,7 +983,9 @@ impl Cpu68K {
                 result: lw,
                 flag_n: ((lw >> 31) & 1) as u8,
                 flag_z: (lw == 0) as u8,
-                flag_c: 0, flag_v: 0, flag_x: 0,
+                flag_c: 0,
+                flag_v: 0,
+                flag_x: 0,
             };
             self.apply_logic(&r2);
             return;
@@ -786,25 +1021,41 @@ impl Cpu68K {
 
         // NEGX.sz <ea>: 0100 0000 ss ea
         if (op & 0xFF00) == 0x4000 && sz_code <= 2 {
-            let sz = arith_sz(sz_code).unwrap_or_else(|| { self.halted = true; 1 });
+            let sz = arith_sz(sz_code).unwrap_or_else(|| {
+                self.halted = true;
+                1
+            });
             let x = self.rf.flag_x();
             let a = self.ea_read(mode, reg, sz);
             let (result, r) = match sz {
-                1 => { let r = negx8(a as u8, x); (r.result, r) }
-                2 => { let r = negx16(a as u16, x); (r.result, r) }
-                _ => { let r = negx32(a, x); (r.result, r) }
+                1 => {
+                    let r = negx8(a as u8, x);
+                    (r.result, r)
+                }
+                2 => {
+                    let r = negx16(a as u16, x);
+                    (r.result, r)
+                }
+                _ => {
+                    let r = negx32(a, x);
+                    (r.result, r)
+                }
             };
             self.ea_write(mode, reg, sz, result & sz_mask(sz));
             // NEGX: C and X from result; V and N from result; Z only cleared.
             let old_z = self.rf.flag_z();
             let new_z = old_z & r.flag_z; // Z never SET by NEGX
-            self.rf.set_ccr(r.flag_c, r.flag_n, new_z, r.flag_v, r.flag_c);
+            self.rf
+                .set_ccr(r.flag_c, r.flag_n, new_z, r.flag_v, r.flag_c);
             return;
         }
 
         // CLR.sz <ea>: 0100 0010 ss ea
         if (op & 0xFF00) == 0x4200 && sz_code <= 2 {
-            let sz = arith_sz(sz_code).unwrap_or_else(|| { self.halted = true; 1 });
+            let sz = arith_sz(sz_code).unwrap_or_else(|| {
+                self.halted = true;
+                1
+            });
             self.ea_write(mode, reg, sz, 0);
             let old_x = self.rf.flag_x();
             self.rf.set_ccr(old_x, 0, 1, 0, 0); // N=0, Z=1, V=0, C=0
@@ -813,7 +1064,10 @@ impl Cpu68K {
 
         // NEG.sz <ea>: 0100 0100 ss ea
         if (op & 0xFF00) == 0x4400 && sz_code <= 2 {
-            let sz = arith_sz(sz_code).unwrap_or_else(|| { self.halted = true; 1 });
+            let sz = arith_sz(sz_code).unwrap_or_else(|| {
+                self.halted = true;
+                1
+            });
             let src = self.ea_read(mode, reg, sz);
             let r = match sz {
                 1 => neg8(src as u8),
@@ -827,7 +1081,10 @@ impl Cpu68K {
 
         // NOT.sz <ea>: 0100 0110 ss ea
         if (op & 0xFF00) == 0x4600 && sz_code <= 2 {
-            let sz = arith_sz(sz_code).unwrap_or_else(|| { self.halted = true; 1 });
+            let sz = arith_sz(sz_code).unwrap_or_else(|| {
+                self.halted = true;
+                1
+            });
             let val = self.ea_read(mode, reg, sz);
             let r = match sz {
                 1 => not8_flags(val as u8),
@@ -841,7 +1098,10 @@ impl Cpu68K {
 
         // TST.sz <ea>: 0100 1010 ss ea
         if (op & 0xFF00) == 0x4A00 && sz_code <= 2 {
-            let sz = arith_sz(sz_code).unwrap_or_else(|| { self.halted = true; 1 });
+            let sz = arith_sz(sz_code).unwrap_or_else(|| {
+                self.halted = true;
+                1
+            });
             let val = self.ea_read(mode, reg, sz) & sz_mask(sz);
             let n = ((val & msb_for_sz(sz)) != 0) as u8;
             let z = (val == 0) as u8;
@@ -857,7 +1117,11 @@ impl Cpu68K {
         }
 
         // LEA <ea>, An: 0100 aaa1 11 mm rrr
-        if (op & 0x01C0) == 0x01C0 && (op & 0xF000) == 0x4000 && mode >= 2 && !(mode == 7 && reg == 4) {
+        if (op & 0x01C0) == 0x01C0
+            && (op & 0xF000) == 0x4000
+            && mode >= 2
+            && !(mode == 7 && reg == 4)
+        {
             let an = ((op >> 9) & 7) as usize;
             let addr = self.ea_address(mode, reg, 4);
             self.rf.a[an] = addr & LONG_MASK;
@@ -888,10 +1152,10 @@ impl Cpu68K {
 
     fn exec_line5(&mut self, op: u16) {
         let sz_code = (op >> 6) & 3;
-        let mode    = (op >> 3) & 7;
-        let reg     = op & 7;
-        let data    = (op >> 9) & 7;
-        let imm     = if data == 0 { 8u32 } else { data as u32 };
+        let mode = (op >> 3) & 7;
+        let reg = op & 7;
+        let data = (op >> 9) & 7;
+        let imm = if data == 0 { 8u32 } else { data as u32 };
 
         // DBcc Dn, #disp: sz_code=3, mode=001
         if sz_code == 3 && mode == 1 {
@@ -918,7 +1182,13 @@ impl Cpu68K {
             return;
         }
 
-        let sz = match arith_sz(sz_code) { Some(s) => s, None => { self.halted = true; return; }};
+        let sz = match arith_sz(sz_code) {
+            Some(s) => s,
+            None => {
+                self.halted = true;
+                return;
+            }
+        };
         let sub = (op >> 8) & 1;
 
         if sub == 0 {
@@ -947,7 +1217,7 @@ impl Cpu68K {
     // ─────────────────────────────────────────────────────────────────────────
 
     fn exec_line6(&mut self, op: u16) {
-        let cc    = ((op >> 8) & 0xF) as u8;
+        let cc = ((op >> 8) & 0xF) as u8;
         let disp8 = op & 0xFF;
         let pc_base = self.rf.pc;
 
@@ -979,8 +1249,11 @@ impl Cpu68K {
     // ─────────────────────────────────────────────────────────────────────────
 
     fn exec_moveq(&mut self, op: u16) {
-        if op & 0x0100 != 0 { self.halted = true; return; }
-        let dn  = ((op >> 9) & 7) as usize;
+        if op & 0x0100 != 0 {
+            self.halted = true;
+            return;
+        }
+        let dn = ((op >> 9) & 7) as usize;
         let imm = sign_extend_8(op as u32 & 0xFF);
         self.rf.d[dn] = imm & LONG_MASK;
         let n = ((imm & 0x8000_0000) != 0) as u8;
@@ -993,29 +1266,29 @@ impl Cpu68K {
     // ─────────────────────────────────────────────────────────────────────────
 
     fn exec_line8(&mut self, op: u16) {
-        let dn      = (op >> 9) & 7;
+        let dn = (op >> 9) & 7;
         let dir_bit = (op >> 8) & 1;
         let sz_code = (op >> 6) & 3;
-        let mode    = (op >> 3) & 7;
-        let reg     = op & 7;
+        let mode = (op >> 3) & 7;
+        let reg = op & 7;
 
         // DIVU.W <ea>, Dn: sz_code=3, dir_bit=0
         if sz_code == 3 && dir_bit == 0 {
             let divisor = self.ea_read(mode, reg, 2) & WORD_MASK;
-            if divisor == 0 { self.halted = true; return; }
-            let dividend = self.rf.d[dn as usize];
-            let quotient  = dividend / divisor;
-            let remainder = dividend % divisor;
-            if quotient > WORD_MASK {
-                // Overflow: V=1, others unchanged
-                let old_x = self.rf.flag_x();
-                let old_n = self.rf.flag_n();
-                let old_z = self.rf.flag_z();
-                let old_c = self.rf.flag_c();
-                self.rf.set_ccr(old_x, old_n, old_z, 1, old_c);
+            if divisor == 0 {
+                self.halted = true;
                 return;
             }
-            self.rf.d[dn as usize] = ((remainder & WORD_MASK) << 16) | (quotient & WORD_MASK);
+            let dividend = self.rf.d[dn as usize];
+            let (quotient, remainder) =
+                gate_divu32_16(dividend, divisor as u16).expect("non-zero divisor");
+            if quotient > WORD_MASK {
+                // Overflow: V=1; N/Z/C clear; X is unaffected.
+                let old_x = self.rf.flag_x();
+                self.rf.set_ccr(old_x, 0, 0, 1, 0);
+                return;
+            }
+            self.rf.d[dn as usize] = (u32::from(remainder) << 16) | (quotient & WORD_MASK);
             let n = ((quotient & 0x8000) != 0) as u8;
             let z = (quotient == 0) as u8;
             self.rf.set_nz_clear_vc(n, z);
@@ -1024,22 +1297,21 @@ impl Cpu68K {
 
         // DIVS.W <ea>, Dn: sz_code=3, dir_bit=1
         if sz_code == 3 && dir_bit == 1 {
-            let divisor_u = self.ea_read(mode, reg, 2) & WORD_MASK;
-            let divisor = divisor_u as i16 as i32;
-            if divisor == 0 { self.halted = true; return; }
-            let dividend = self.rf.d[dn as usize] as i32;
-            let quotient  = dividend / divisor; // truncate toward zero
-            let remainder = dividend - quotient * divisor;
-            if !(-32768..=32767).contains(&quotient) {
-                let old_x = self.rf.flag_x();
-                let old_n = self.rf.flag_n();
-                let old_z = self.rf.flag_z();
-                let old_c = self.rf.flag_c();
-                self.rf.set_ccr(old_x, old_n, old_z, 1, old_c);
+            let divisor = (self.ea_read(mode, reg, 2) & WORD_MASK) as u16;
+            if divisor == 0 {
+                self.halted = true;
                 return;
             }
-            let q = quotient as u32 & WORD_MASK;
-            let r = remainder as u32 & WORD_MASK;
+            let dividend = self.rf.d[dn as usize];
+            let (quotient, remainder, overflow) =
+                gate_divs32_16(dividend, divisor).expect("non-zero divisor");
+            if overflow {
+                let old_x = self.rf.flag_x();
+                self.rf.set_ccr(old_x, 0, 0, 1, 0);
+                return;
+            }
+            let q = u32::from(quotient);
+            let r = u32::from(remainder);
             self.rf.d[dn as usize] = (r << 16) | q;
             let n = ((q & 0x8000) != 0) as u8;
             let z = (q == 0) as u8;
@@ -1048,7 +1320,13 @@ impl Cpu68K {
         }
 
         // OR
-        let sz = match arith_sz(sz_code) { Some(s) => s, None => { self.halted = true; return; }};
+        let sz = match arith_sz(sz_code) {
+            Some(s) => s,
+            None => {
+                self.halted = true;
+                return;
+            }
+        };
         if dir_bit == 0 {
             let b = self.ea_read(mode, reg, sz);
             let a = self.rf.d[dn as usize] & sz_mask(sz);
@@ -1067,11 +1345,11 @@ impl Cpu68K {
     // ─────────────────────────────────────────────────────────────────────────
 
     fn exec_line9(&mut self, op: u16) {
-        let dn      = (op >> 9) & 7;
+        let dn = (op >> 9) & 7;
         let dir_bit = (op >> 8) & 1;
         let sz_code = (op >> 6) & 3;
-        let mode    = (op >> 3) & 7;
-        let reg     = op & 7;
+        let mode = (op >> 3) & 7;
+        let reg = op & 7;
 
         // SUBA.W: sz_code=3, dir_bit=0
         if sz_code == 3 && dir_bit == 0 {
@@ -1087,7 +1365,13 @@ impl Cpu68K {
             return;
         }
 
-        let sz = match arith_sz(sz_code) { Some(s) => s, None => { self.halted = true; return; }};
+        let sz = match arith_sz(sz_code) {
+            Some(s) => s,
+            None => {
+                self.halted = true;
+                return;
+            }
+        };
 
         // SUBX: dir_bit=1, mode=0 (register form)
         if dir_bit == 1 && mode == 0 {
@@ -1103,7 +1387,8 @@ impl Cpu68K {
             // SUBX Z: only clear, never set
             let old_z = self.rf.flag_z();
             let new_z = old_z & r.flag_z;
-            self.rf.set_ccr(r.flag_c, r.flag_n, new_z, r.flag_v, r.flag_c);
+            self.rf
+                .set_ccr(r.flag_c, r.flag_n, new_z, r.flag_v, r.flag_c);
             return;
         }
 
@@ -1127,11 +1412,11 @@ impl Cpu68K {
     // ─────────────────────────────────────────────────────────────────────────
 
     fn exec_line_b(&mut self, op: u16) {
-        let dn      = (op >> 9) & 7;
+        let dn = (op >> 9) & 7;
         let dir_bit = (op >> 8) & 1;
         let sz_code = (op >> 6) & 3;
-        let mode    = (op >> 3) & 7;
-        let reg     = op & 7;
+        let mode = (op >> 3) & 7;
+        let reg = op & 7;
 
         // CMPA.W: sz_code=3, dir_bit=0
         if sz_code == 3 && dir_bit == 0 {
@@ -1151,7 +1436,13 @@ impl Cpu68K {
             return;
         }
 
-        let sz = match arith_sz(sz_code) { Some(s) => s, None => { self.halted = true; return; }};
+        let sz = match arith_sz(sz_code) {
+            Some(s) => s,
+            None => {
+                self.halted = true;
+                return;
+            }
+        };
 
         if dir_bit == 0 {
             // CMP <ea>, Dn
@@ -1178,26 +1469,29 @@ impl Cpu68K {
     // ─────────────────────────────────────────────────────────────────────────
 
     fn exec_line_c(&mut self, op: u16) {
-        let dn      = (op >> 9) & 7;
+        let dn = (op >> 9) & 7;
         let dir_bit = (op >> 8) & 1;
         let sz_code = (op >> 6) & 3;
-        let mode    = (op >> 3) & 7;
-        let reg     = op & 7;
+        let mode = (op >> 3) & 7;
+        let reg = op & 7;
 
         // EXG
         if (op & 0xF1F8) == 0xC140 {
             let (a, b) = (self.rf.d[dn as usize], self.rf.d[reg as usize]);
-            self.rf.d[dn as usize] = b; self.rf.d[reg as usize] = a;
+            self.rf.d[dn as usize] = b;
+            self.rf.d[reg as usize] = a;
             return;
         }
         if (op & 0xF1F8) == 0xC148 {
             let (a, b) = (self.rf.a[dn as usize], self.rf.a[reg as usize]);
-            self.rf.a[dn as usize] = b; self.rf.a[reg as usize] = a;
+            self.rf.a[dn as usize] = b;
+            self.rf.a[reg as usize] = a;
             return;
         }
         if (op & 0xF1F8) == 0xC188 {
             let (a, b) = (self.rf.d[dn as usize], self.rf.a[reg as usize]);
-            self.rf.d[dn as usize] = b; self.rf.a[reg as usize] = a;
+            self.rf.d[dn as usize] = b;
+            self.rf.a[reg as usize] = a;
             return;
         }
 
@@ -1205,7 +1499,7 @@ impl Cpu68K {
         if sz_code == 3 && dir_bit == 0 {
             let b = self.ea_read(mode, reg, 2) & WORD_MASK;
             let a = self.rf.d[dn as usize] & WORD_MASK;
-            let result = (a * b) & LONG_MASK;
+            let result = gate_mulu16(a as u16, b as u16);
             self.rf.d[dn as usize] = result;
             let n = ((result >> 31) & 1) as u8;
             let z = (result == 0) as u8;
@@ -1215,9 +1509,9 @@ impl Cpu68K {
 
         // MULS.W <ea>, Dn: sz_code=3, dir_bit=1
         if sz_code == 3 && dir_bit == 1 {
-            let b = (self.ea_read(mode, reg, 2) as u16) as i16 as i32;
-            let a = (self.rf.d[dn as usize] as u16) as i16 as i32;
-            let result = (a * b) as u32 & LONG_MASK;
+            let b = self.ea_read(mode, reg, 2) as u16;
+            let a = self.rf.d[dn as usize] as u16;
+            let result = gate_muls16(a, b);
             self.rf.d[dn as usize] = result;
             let n = ((result >> 31) & 1) as u8;
             let z = (result == 0) as u8;
@@ -1226,7 +1520,13 @@ impl Cpu68K {
         }
 
         // AND
-        let sz = match arith_sz(sz_code) { Some(s) => s, None => { self.halted = true; return; }};
+        let sz = match arith_sz(sz_code) {
+            Some(s) => s,
+            None => {
+                self.halted = true;
+                return;
+            }
+        };
         if dir_bit == 0 {
             let b = self.ea_read(mode, reg, sz);
             let a = self.rf.d[dn as usize] & sz_mask(sz);
@@ -1245,11 +1545,11 @@ impl Cpu68K {
     // ─────────────────────────────────────────────────────────────────────────
 
     fn exec_line_d(&mut self, op: u16) {
-        let dn      = (op >> 9) & 7;
+        let dn = (op >> 9) & 7;
         let dir_bit = (op >> 8) & 1;
         let sz_code = (op >> 6) & 3;
-        let mode    = (op >> 3) & 7;
-        let reg     = op & 7;
+        let mode = (op >> 3) & 7;
+        let reg = op & 7;
 
         // ADDA.W: sz_code=3, dir_bit=0
         if sz_code == 3 && dir_bit == 0 {
@@ -1265,7 +1565,13 @@ impl Cpu68K {
             return;
         }
 
-        let sz = match arith_sz(sz_code) { Some(s) => s, None => { self.halted = true; return; }};
+        let sz = match arith_sz(sz_code) {
+            Some(s) => s,
+            None => {
+                self.halted = true;
+                return;
+            }
+        };
 
         // ADDX: dir_bit=1, mode=0 (register form)
         if dir_bit == 1 && mode == 0 {
@@ -1280,7 +1586,8 @@ impl Cpu68K {
             self.rf.write_dn(dn as usize, r.result & sz_mask(sz), sz);
             let old_z = self.rf.flag_z();
             let new_z = old_z & r.flag_z;
-            self.rf.set_ccr(r.flag_c, r.flag_n, new_z, r.flag_v, r.flag_c);
+            self.rf
+                .set_ccr(r.flag_c, r.flag_n, new_z, r.flag_v, r.flag_c);
             return;
         }
 
@@ -1308,39 +1615,45 @@ impl Cpu68K {
 
         if sz_code == 3 {
             // Memory shift (always word): 1110 d tt1 11 mm rrr
-            let direction  = (op >> 11) & 1;
+            let direction = (op >> 11) & 1;
             let shift_type = ((op >> 9) & 3) as u8;
-            let mode       = (op >> 3) & 7;
-            let reg        = op & 7;
+            let mode = (op >> 3) & 7;
+            let reg = op & 7;
             let addr = self.ea_address(mode, reg, 2);
-            let val  = self.mem_read_word(addr) as u32;
+            let val = self.mem_read_word(addr) as u32;
             let x_in = self.rf.flag_x();
-            let sr   = shift_op(val, 1, direction == 1, shift_type, 16, x_in);
+            let sr = shift_op(val, 1, direction == 1, shift_type, 16, x_in);
             self.mem_write_word(addr, sr.result);
-            self.rf.set_ccr(sr.flag_x, sr.flag_n, sr.flag_z, sr.flag_v, sr.flag_c);
+            self.rf
+                .set_ccr(sr.flag_x, sr.flag_n, sr.flag_z, sr.flag_v, sr.flag_c);
             return;
         }
 
         // Register shift/rotate
-        let sz         = arith_sz(sz_code).unwrap_or(4);
-        let direction  = ((op >> 8) & 1) == 1;
-        let reg_count  = ((op >> 5) & 1) == 1;
+        let sz = arith_sz(sz_code).unwrap_or(4);
+        let direction = ((op >> 8) & 1) == 1;
+        let reg_count = ((op >> 5) & 1) == 1;
         let shift_type = ((op >> 3) & 3) as u8;
-        let dn         = (op & 7) as usize;
-        let cnt_field  = ((op >> 9) & 7) as usize;
+        let dn = (op & 7) as usize;
+        let cnt_field = ((op >> 9) & 7) as usize;
 
         let count = if reg_count {
             self.rf.d[cnt_field] % 64
         } else {
-            if cnt_field == 0 { 8 } else { cnt_field as u32 }
+            if cnt_field == 0 {
+                8
+            } else {
+                cnt_field as u32
+            }
         };
 
         let val = self.rf.d[dn] & sz_mask(sz);
         let x_in = self.rf.flag_x();
         let bits = (sz * 8) as u32;
-        let sr  = shift_op(val, count, direction, shift_type, bits, x_in);
+        let sr = shift_op(val, count, direction, shift_type, bits, x_in);
         self.rf.write_dn(dn, sr.result, sz);
-        self.rf.set_ccr(sr.flag_x, sr.flag_n, sr.flag_z, sr.flag_v, sr.flag_c);
+        self.rf
+            .set_ccr(sr.flag_x, sr.flag_n, sr.flag_z, sr.flag_v, sr.flag_c);
     }
 }
 
@@ -1348,17 +1661,30 @@ impl Cpu68K {
 
 /// Arithmetic size code → byte count.  Returns `None` for invalid code 3.
 fn arith_sz(code: u16) -> Option<usize> {
-    match code { 0 => Some(1), 1 => Some(2), 2 => Some(4), _ => None }
+    match code {
+        0 => Some(1),
+        1 => Some(2),
+        2 => Some(4),
+        _ => None,
+    }
 }
 
 /// Size mask for `sz` bytes.
 fn sz_mask(sz: usize) -> u32 {
-    match sz { 1 => BYTE_MASK, 2 => WORD_MASK, _ => LONG_MASK }
+    match sz {
+        1 => BYTE_MASK,
+        2 => WORD_MASK,
+        _ => LONG_MASK,
+    }
 }
 
 /// MSB position mask for `sz` bytes.
 fn msb_for_sz(sz: usize) -> u32 {
-    match sz { 1 => 0x80, 2 => 0x8000, _ => 0x8000_0000 }
+    match sz {
+        1 => 0x80,
+        2 => 0x8000,
+        _ => 0x8000_0000,
+    }
 }
 
 /// Sign-extend an 8-bit value (in the low byte of a u32) to 32 bits.
@@ -1380,15 +1706,29 @@ mod tests {
     use super::*;
 
     #[test]
+    fn persistent_register_and_halt_latches_match_public_wires() {
+        let cpu = Cpu68K::new();
+        let (d, a, pc, sr) = cpu.rf.latched_values();
+        assert_eq!(d, cpu.rf.d);
+        assert_eq!(a, cpu.rf.a);
+        assert_eq!(pc, cpu.rf.pc);
+        assert_eq!(sr, cpu.rf.sr);
+        assert_eq!(cpu.halt_state.read(), u32::from(cpu.halted));
+    }
+
+    #[test]
     fn moveq_add_stop() {
         let mut cpu = Cpu68K::new();
         // MOVEQ #5, D0; MOVEQ #3, D1; ADD.L D1, D0; STOP #0x2700
-        let steps = cpu.execute(&[
-            0x70, 0x05,              // MOVEQ #5, D0
-            0x72, 0x03,              // MOVEQ #3, D1
-            0xD0, 0x81,              // ADD.L D1, D0
-            0x4E, 0x72, 0x27, 0x00, // STOP #0x2700
-        ], 1000);
+        let steps = cpu.execute(
+            &[
+                0x70, 0x05, // MOVEQ #5, D0
+                0x72, 0x03, // MOVEQ #3, D1
+                0xD0, 0x81, // ADD.L D1, D0
+                0x4E, 0x72, 0x27, 0x00, // STOP #0x2700
+            ],
+            1000,
+        );
         assert_eq!(cpu.rf.d[0], 8);
         assert!(cpu.halted);
         assert_eq!(steps, 4);
@@ -1407,11 +1747,14 @@ mod tests {
     fn addi_byte() {
         let mut cpu = Cpu68K::new();
         // MOVEQ #10, D0; ADDI.B #5, D0; STOP
-        cpu.execute(&[
-            0x70, 0x0A,              // MOVEQ #10, D0
-            0x06, 0x00, 0x00, 0x05, // ADDI.B #5, D0
-            0x4E, 0x72, 0x27, 0x00, // STOP
-        ], 100);
+        cpu.execute(
+            &[
+                0x70, 0x0A, // MOVEQ #10, D0
+                0x06, 0x00, 0x00, 0x05, // ADDI.B #5, D0
+                0x4E, 0x72, 0x27, 0x00, // STOP
+            ],
+            100,
+        );
         assert_eq!(cpu.rf.d[0] & 0xFF, 15);
     }
 
@@ -1419,11 +1762,14 @@ mod tests {
     fn subi_word() {
         let mut cpu = Cpu68K::new();
         // MOVEQ #20, D1; SUBI.W #7, D1; STOP
-        cpu.execute(&[
-            0x72, 0x14,              // MOVEQ #20, D1
-            0x04, 0x41, 0x00, 0x07, // SUBI.W #7, D1
-            0x4E, 0x72, 0x27, 0x00,
-        ], 100);
+        cpu.execute(
+            &[
+                0x72, 0x14, // MOVEQ #20, D1
+                0x04, 0x41, 0x00, 0x07, // SUBI.W #7, D1
+                0x4E, 0x72, 0x27, 0x00,
+            ],
+            100,
+        );
         assert_eq!(cpu.rf.d[1] & 0xFFFF, 13);
         assert_eq!(cpu.rf.flag_c(), 0);
     }
@@ -1436,7 +1782,7 @@ mod tests {
         cpu.mem[0x2000] = 0x42;
         cpu.rf.a[0] = 0x2000;
         // MOVE.B (A0), D0: opcode 1000 0000 0001 0000 = 0x1010
-        cpu.mem[LOAD_ADDR]     = 0x10; // MOVE.B (A0), D0
+        cpu.mem[LOAD_ADDR] = 0x10; // MOVE.B (A0), D0
         cpu.mem[LOAD_ADDR + 1] = 0x10;
         cpu.mem[LOAD_ADDR + 2] = 0x4E; // STOP #0x2700
         cpu.mem[LOAD_ADDR + 3] = 0x72;
@@ -1451,11 +1797,14 @@ mod tests {
     fn sub_long_borrow() {
         let mut cpu = Cpu68K::new();
         // MOVEQ #3, D0; SUBI.L #10, D0; TRAP #15 (halts without touching SR)
-        cpu.execute(&[
-            0x70, 0x03,                    // MOVEQ #3, D0
-            0x04, 0x80, 0x00, 0x00, 0x00, 0x0A, // SUBI.L #10, D0
-            0x4E, 0x4F,                    // TRAP #15
-        ], 100);
+        cpu.execute(
+            &[
+                0x70, 0x03, // MOVEQ #3, D0
+                0x04, 0x80, 0x00, 0x00, 0x00, 0x0A, // SUBI.L #10, D0
+                0x4E, 0x4F, // TRAP #15
+            ],
+            100,
+        );
         assert_eq!(cpu.rf.d[0], 3u32.wrapping_sub(10));
         assert_eq!(cpu.rf.flag_c(), 1); // borrow
     }
@@ -1464,11 +1813,14 @@ mod tests {
     fn and_andi_word() {
         let mut cpu = Cpu68K::new();
         // MOVEQ #0x7F, D0; ANDI.W #0x0F, D0; STOP
-        cpu.execute(&[
-            0x70, 0x7F,              // MOVEQ #0x7F, D0
-            0x02, 0x40, 0x00, 0x0F, // ANDI.W #0x0F, D0
-            0x4E, 0x72, 0x27, 0x00,
-        ], 100);
+        cpu.execute(
+            &[
+                0x70, 0x7F, // MOVEQ #0x7F, D0
+                0x02, 0x40, 0x00, 0x0F, // ANDI.W #0x0F, D0
+                0x4E, 0x72, 0x27, 0x00,
+            ],
+            100,
+        );
         assert_eq!(cpu.rf.d[0] & 0xFFFF, 0x0F);
     }
 
@@ -1478,13 +1830,16 @@ mod tests {
         // MOVEQ #1, D0; CMP.W #1, D0 sets Z=0... wait need nonzero difference
         // MOVEQ #5, D0; SUBI.W #3, D0 → D0=2, Z=0 → BNE should branch
         // BNE +2 (skip HLT); STOP
-        cpu.execute(&[
-            0x70, 0x05,              // MOVEQ #5, D0
-            0x04, 0x40, 0x00, 0x03, // SUBI.W #3, D0  (D0=2, Z=0)
-            0x66, 0x02,             // BNE +2 (skip next 2 bytes)
-            0x4E, 0x40,             // TRAP #0 (should be skipped)
-            0x4E, 0x72, 0x27, 0x00, // STOP
-        ], 100);
+        cpu.execute(
+            &[
+                0x70, 0x05, // MOVEQ #5, D0
+                0x04, 0x40, 0x00, 0x03, // SUBI.W #3, D0  (D0=2, Z=0)
+                0x66, 0x02, // BNE +2 (skip next 2 bytes)
+                0x4E, 0x40, // TRAP #0 (should be skipped)
+                0x4E, 0x72, 0x27, 0x00, // STOP
+            ],
+            100,
+        );
         assert_eq!(cpu.rf.d[0] & 0xFFFF, 2);
         assert!(cpu.halted);
         // D7 should not have been set to 0 (TRAP#0 was skipped)
@@ -1495,12 +1850,15 @@ mod tests {
     fn bra_always() {
         let mut cpu = Cpu68K::new();
         // BRA +4 (jump over TRAP#0 + NOP); TRAP#0; STOP
-        cpu.execute(&[
-            0x60, 0x04,  // BRA +4
-            0x4E, 0x40,  // TRAP #0 (should be skipped)
-            0x4E, 0x71,  // NOP (also skipped)
-            0x4E, 0x72, 0x27, 0x00, // STOP
-        ], 100);
+        cpu.execute(
+            &[
+                0x60, 0x04, // BRA +4
+                0x4E, 0x40, // TRAP #0 (should be skipped)
+                0x4E, 0x71, // NOP (also skipped)
+                0x4E, 0x72, 0x27, 0x00, // STOP
+            ],
+            100,
+        );
         assert_eq!(cpu.rf.d[7], 0); // TRAP#0 not executed
         assert!(cpu.halted);
     }
@@ -1523,11 +1881,14 @@ mod tests {
         // 2. A6 = SP
         // 3. SP += -8
         // UNLK A6 should reverse it
-        cpu.execute(&[
-            0x4E, 0x56, 0xFF, 0xF8, // LINK A6, #-8
-            0x4E, 0x5E,             // UNLK A6
-            0x4E, 0x72, 0x27, 0x00, // STOP
-        ], 100);
+        cpu.execute(
+            &[
+                0x4E, 0x56, 0xFF, 0xF8, // LINK A6, #-8
+                0x4E, 0x5E, // UNLK A6
+                0x4E, 0x72, 0x27, 0x00, // STOP
+            ],
+            100,
+        );
         // After LINK/UNLK, SP and A6 should be restored to initial values
         assert_eq!(cpu.rf.a[7], INIT_SP);
         assert_eq!(cpu.rf.a[6], 0);
@@ -1539,7 +1900,7 @@ mod tests {
         // Load D2=0x00010002, SWAP D2 → 0x00020001
         cpu.reset();
         cpu.rf.d[2] = 0x0001_0002;
-        cpu.mem[LOAD_ADDR]     = 0x48; // SWAP D2
+        cpu.mem[LOAD_ADDR] = 0x48; // SWAP D2
         cpu.mem[LOAD_ADDR + 1] = 0x42;
         cpu.mem[LOAD_ADDR + 2] = 0x4E; // STOP
         cpu.mem[LOAD_ADDR + 3] = 0x72;
@@ -1556,7 +1917,7 @@ mod tests {
         // EXT.W D0 with D0=0x000000FF → sign-extend byte to word
         cpu.reset();
         cpu.rf.d[0] = 0x0000_00FF; // low byte = -1 as signed
-        cpu.mem[LOAD_ADDR]     = 0x48; // EXT.W D0
+        cpu.mem[LOAD_ADDR] = 0x48; // EXT.W D0
         cpu.mem[LOAD_ADDR + 1] = 0x80;
         cpu.mem[LOAD_ADDR + 2] = 0x4E; // STOP
         cpu.mem[LOAD_ADDR + 3] = 0x72;
@@ -1572,11 +1933,14 @@ mod tests {
     fn neg_long() {
         let mut cpu = Cpu68K::new();
         // MOVEQ #5, D0; NEG.L D0 → -5 = 0xFFFFFFFB; TRAP #15 (halts without touching SR)
-        cpu.execute(&[
-            0x70, 0x05,  // MOVEQ #5, D0
-            0x44, 0x80,  // NEG.L D0
-            0x4E, 0x4F,  // TRAP #15
-        ], 100);
+        cpu.execute(
+            &[
+                0x70, 0x05, // MOVEQ #5, D0
+                0x44, 0x80, // NEG.L D0
+                0x4E, 0x4F, // TRAP #15
+            ],
+            100,
+        );
         assert_eq!(cpu.rf.d[0], 0xFFFF_FFFB);
         assert_eq!(cpu.rf.flag_c(), 1); // result != 0 → C=1
         assert_eq!(cpu.rf.flag_n(), 1);
@@ -1590,7 +1954,7 @@ mod tests {
         cpu.rf.d[0] = 0x10;
         // LSR.B #1, D0: encoding 1110 0010 0000 1000 = 0xE208
         // bit 8 = 0 (right), bit 7-6 = 00 (byte), bit 5 = 0 (imm), bit 4-3 = 01 (LS), bit 2-0 = 000 (D0)
-        cpu.mem[LOAD_ADDR]     = 0xE2;
+        cpu.mem[LOAD_ADDR] = 0xE2;
         cpu.mem[LOAD_ADDR + 1] = 0x08;
         cpu.mem[LOAD_ADDR + 2] = 0x4E;
         cpu.mem[LOAD_ADDR + 3] = 0x72;
@@ -1609,7 +1973,7 @@ mod tests {
         cpu.reset();
         cpu.rf.d[0] = 0x4000;
         // ASL.W #1, D0: encoding 1110 0011 0100 0000 = 0xE340
-        cpu.mem[LOAD_ADDR]     = 0xE3;
+        cpu.mem[LOAD_ADDR] = 0xE3;
         cpu.mem[LOAD_ADDR + 1] = 0x40;
         cpu.mem[LOAD_ADDR + 2] = 0x4E;
         cpu.mem[LOAD_ADDR + 3] = 0x72;
@@ -1640,12 +2004,16 @@ mod tests {
         // Since Z=0 after ADDQ, EQ is not satisfied → decrement D0 and branch.
         // This loops D0+1 times (from 3 down to -1: 4 iterations).
         // Encoding for DBEQ D0, #disp: 0101 0111 1100 1000 = 0x57C8
-        cpu.execute(&[
-            0x70, 0x03,        // MOVEQ #3, D0   (counter)
-            0x52, 0x41,        // ADDQ.W #1, D1  (body)
-            0x57, 0xC8, 0xFF, 0xFC, // DBEQ D0, #-4 (pc_before_ext=0x1006, target=0x1002=ADDQ)
-            0x4E, 0x72, 0x27, 0x00, // STOP
-        ], 1000);
+        cpu.execute(
+            &[
+                0x70, 0x03, // MOVEQ #3, D0   (counter)
+                0x52, 0x41, // ADDQ.W #1, D1  (body)
+                0x57, 0xC8, 0xFF,
+                0xFC, // DBEQ D0, #-4 (pc_before_ext=0x1006, target=0x1002=ADDQ)
+                0x4E, 0x72, 0x27, 0x00, // STOP
+            ],
+            1000,
+        );
         // 4 iterations (D0: 3,2,1,0,-1), D1 = 4
         assert_eq!(cpu.rf.d[1] & 0xFFFF, 4);
     }
@@ -1658,7 +2026,7 @@ mod tests {
         cpu.rf.a[0] = 0x2000;
         cpu.rf.d[0] = 0xF0;
         // OR.B D0, (A0): 0x8110
-        cpu.mem[LOAD_ADDR]     = 0x81;
+        cpu.mem[LOAD_ADDR] = 0x81;
         cpu.mem[LOAD_ADDR + 1] = 0x10;
         cpu.mem[LOAD_ADDR + 2] = 0x4E;
         cpu.mem[LOAD_ADDR + 3] = 0x72;
@@ -1673,11 +2041,14 @@ mod tests {
     fn clr_byte() {
         let mut cpu = Cpu68K::new();
         // TRAP #15 halts without writing SR, so CLR's Z=1 is preserved
-        cpu.execute(&[
-            0x70, 0x7F,  // MOVEQ #0x7F, D0
-            0x42, 0x00,  // CLR.B D0
-            0x4E, 0x4F,  // TRAP #15
-        ], 100);
+        cpu.execute(
+            &[
+                0x70, 0x7F, // MOVEQ #0x7F, D0
+                0x42, 0x00, // CLR.B D0
+                0x4E, 0x4F, // TRAP #15
+            ],
+            100,
+        );
         assert_eq!(cpu.rf.d[0] & 0xFF, 0);
         assert_eq!(cpu.rf.flag_z(), 1);
     }
@@ -1686,11 +2057,17 @@ mod tests {
     fn tst_negative() {
         let mut cpu = Cpu68K::new();
         // TRAP #15 halts without writing SR, so TST's N=1 is preserved
-        cpu.execute(&[
-            0x70, 0x80u8 as i8 as u8,  // MOVEQ #-128, D0
-            0x4A, 0x00,                  // TST.B D0
-            0x4E, 0x4F,                  // TRAP #15
-        ], 100);
+        cpu.execute(
+            &[
+                0x70,
+                0x80u8 as i8 as u8, // MOVEQ #-128, D0
+                0x4A,
+                0x00, // TST.B D0
+                0x4E,
+                0x4F, // TRAP #15
+            ],
+            100,
+        );
         assert_eq!(cpu.rf.flag_n(), 1);
         assert_eq!(cpu.rf.flag_z(), 0);
     }
@@ -1719,7 +2096,7 @@ mod tests {
         // MOVEA.W #0x8000, A0 → A0 should be 0xFFFF8000
         cpu.reset();
         // MOVEA.W immediate: opcode 0011 0001 1111 1100 = 0x307C, then #0x8000
-        cpu.mem[LOAD_ADDR]     = 0x30;
+        cpu.mem[LOAD_ADDR] = 0x30;
         cpu.mem[LOAD_ADDR + 1] = 0x7C;
         cpu.mem[LOAD_ADDR + 2] = 0x80;
         cpu.mem[LOAD_ADDR + 3] = 0x00;
@@ -1739,9 +2116,9 @@ mod tests {
         cpu.reset();
         cpu.rf.a[1] = 0x1000;
         cpu.rf.set_ccr(0, 0, 1, 0, 0); // set Z=1 before
-        // ADDQ.L #4, A1: 0101 1000 1000 1001 = 0x5889
-        // count=4(100), sub=0(ADDQ), sz=10(long), mode=001(An), reg=001(A1)
-        cpu.mem[LOAD_ADDR]     = 0x58;
+                                       // ADDQ.L #4, A1: 0101 1000 1000 1001 = 0x5889
+                                       // count=4(100), sub=0(ADDQ), sz=10(long), mode=001(An), reg=001(A1)
+        cpu.mem[LOAD_ADDR] = 0x58;
         cpu.mem[LOAD_ADDR + 1] = 0x89;
         cpu.mem[LOAD_ADDR + 2] = 0x4E;
         cpu.mem[LOAD_ADDR + 3] = 0x72;

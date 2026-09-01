@@ -73,6 +73,10 @@ describe("sourceFs — stage shape", () => {
   it("apiVersion targets the kernel", () => {
     expect(sourceFs.apiVersion).toBe(1);
   });
+
+  it("publishes external filesystem state", () => {
+    expect(sourceFs.externalState).toBeTypeOf("function");
+  });
 });
 
 describe("sourceFs — running", () => {
@@ -169,5 +173,35 @@ describe("sourceFs — running", () => {
     await expect((async () => {
       for await (const _ of iter) { void _; }
     })()).rejects.toThrow();
+  });
+
+  it("publishes a sorted deterministic manifest and runs from the same snapshot", async () => {
+    await mkdir(join(root, "a"), { recursive: true });
+    await writeFile(join(root, "z.md"), "z-before");
+    await writeFile(join(root, "a", "a.md"), "a-before");
+    const config = { glob: "**/*.md", root };
+    const ctx = makeCtx();
+    const manifest = await sourceFs.externalState!(config, ctx);
+
+    expect(manifest.version).toBe(1);
+    expect(manifest.revision).toMatch(/^blake2b:[0-9a-f]{64}$/);
+    expect(manifest.entries.map(entry => entry.locator)).toEqual([
+      "a/a.md",
+      "z.md",
+    ]);
+
+    // The hook and run share ctx.cache, so a source edit between the two does
+    // not mix one observation with a different emitted snapshot.
+    await writeFile(join(root, "z.md"), "z-after");
+    const emitted: Array<{ path: string; revision: string; bytes: Uint8Array }> = [];
+    for await (const source of sourceFs.run(undefined as never, config, ctx) as AsyncIterable<typeof emitted[number]>) {
+      emitted.push(source);
+    }
+    const z = emitted.find(source => source.path === "z.md")!;
+    expect(new TextDecoder().decode(z.bytes)).toBe("z-before");
+    expect(z.revision).toBe(manifest.entries.find(entry => entry.locator === "z.md")!.revision);
+
+    const changed = await sourceFs.externalState!(config, makeCtx());
+    expect(changed.revision).not.toBe(manifest.revision);
   });
 });

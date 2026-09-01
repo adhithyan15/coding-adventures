@@ -720,6 +720,31 @@ reparse, hardlink, handle-race, and real filesystem enforcement remain required
 in each native engine-adoption child and are not inferred from the neutral
 snapshot.
 
+The Swift build-tool package-registry adoption keeps one immutable native
+projection of this registry beside the production collector. Its tests decode
+the checked JSON registry itself and compare every universal selector,
+language entry, scoped rule, package-exact rule, case-alias group, owner, and
+reason with that production projection. The collector then resolves all seven
+input roles from the same projection: universal BUILD names remain recursive;
+universal and language root basenames plus variable manifest suffixes remain
+root-only; fixed relative and exact-package paths apply in both modes; and
+recursive plus scoped selectors apply only in extension mode. Unknown
+languages fail before enumeration. This equality test is adoption evidence,
+not runtime authority: the Swift executable does not locate or decode a
+repository fixture when it hashes a package.
+
+The adoption evidence also recomputes the domain-separated canonical JSON
+digest, checks every consumed case pin, binds `code/packages|programs/<lane>`
+to the selected language, requires a package-name component, and applies the
+candidate ceiling during incremental immediate-child enumeration before
+bounded sorting.
+
+That package-local projection does not by itself complete Swift's native
+source-input adoption. A separate dependent Swift owner integrates the
+repository-relative boundary registry, tracked-regular-file evidence, and its
+reverse diff index. Until that owner lands, the Swift engine makes no claim to
+hash shared or generated-pruning-exception inputs outside a package root.
+
 For the exact Rust `code/packages/rust/engram-wasm` package root, one
 `package_exact_inputs` rule includes the BUILD-executed `js/smoke.mjs`, its
 exact `js/engram-mosaic-host-wasm.mjs` import, and the exact

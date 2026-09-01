@@ -1,0 +1,21 @@
+{
+  "chapter": 65,
+  "title": "Doing, and Undoing",
+  "label": "ch:ta-doing-and-undoing",
+  "canDo": "I can say drink, walk, stop, open and close in Tamil, and name the action that undoes each one.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "TA-C65-doing-recall",
+    "kind": "production",
+    "summary": "Complete TA-C65-doing-recall and produce each of the five doings from the act that undoes it, out of order.",
+    "assesses": [
+      "TA-LEX-C65-DOING-01",
+      "TA-LEX-C65-DOING-02",
+      "TA-LEX-C65-DOING-03",
+      "TA-LEX-C65-DOING-04",
+      "TA-LEX-C65-DOING-05"
+    ]
+  }
+}

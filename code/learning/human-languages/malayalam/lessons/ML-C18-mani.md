@@ -7,6 +7,7 @@ chapter: 18
 type: word
 headword: മണി
 gloss: hour — Malayalam's OWN dictionary tradition treats bell/hour/gem as ONE Sanskrit word, unlike Tamil's closely related mani, which its own dictionaries split into two unrelated homophones
+romanization: "maṇi"
 concept_tag: ML-TIME-HOUR
 prerequisites: [ML-C17-paathira]
 sounds: [malayalam-retroflex-nna, malayalam-vowel-sign-i]

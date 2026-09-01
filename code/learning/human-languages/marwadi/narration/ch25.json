@@ -1,0 +1,698 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 25,
+  "title": "The Sweet and the Tea: One New Consonant",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:7cd0163cf6e20ced",
+  "lessons": [
+    {
+      "id": "MW-C20-hear-churma",
+      "sequence": 1900,
+      "title": "Hear chūrmā — sweet crumbled wheat",
+      "headword": "chūrmā",
+      "romanization": "chūrmā",
+      "gloss": "sweet crumbled wheat dessert",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3a7c64c6223a14cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the five-word food payoff, say hard wheat rolls, then write wind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chūrmā — sweet crumbled wheat dessert."
+            },
+            {
+              "kind": "speech",
+              "text": "Three beats, the middle one long. Hear it twice and say it once. The source names it beside dāl and bāṭī; the three are often served together, and this lesson teaches the word rather than the custom."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C20-hear-churma-meaning",
+              "prompt": "What food does chūrmā name?",
+              "assesses": [
+                "MW-LEX-CHURMA-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "sweet crumbled wheat dessert",
+                "crumbled wheat dessert",
+                "a sweet crumbled wheat dessert"
+              ],
+              "feedback": {
+                "correct": "Right: chūrmā names a sweet crumbled wheat dessert.",
+                "incorrect": "Hold the long middle beat with the sweet: chū-r-mā."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C20-churma",
+      "sequence": 1910,
+      "title": "चूरमा (chūrmā) — the sweet on the page",
+      "headword": "चूरमा",
+      "romanization": "chūrmā",
+      "gloss": "sweet crumbled wheat dessert, written entirely with familiar signs",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b8f10c13e384ff32",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the five-word transport payoff, then say the sweet crumbled wheat dessert and cloud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चू + र + मा becomes चूरमा — chūrmā — sweet crumbled wheat dessert."
+            },
+            {
+              "kind": "speech",
+              "text": "The ू under च is the long ū met in मिलसू, and मा closes with the long ा used since the first greeting."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look, cover, wait five seconds, and write चूरमा (chūrmā). Check that the ू hangs below च and not below र."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C20-churma-dictation",
+              "prompt": "From chūrmā, write the sweet crumbled wheat dessert.",
+              "assesses": [
+                "MW-LEX-CHURMA-01",
+                "MW-SCRIPT-CHURMA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "चूरमा",
+                "चूरमा churma"
+              ],
+              "feedback": {
+                "correct": "Right: चूरमा names the sweet crumbled wheat dessert.",
+                "incorrect": "Build चू, then र, then मा."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C20-hear-chaay",
+      "sequence": 1920,
+      "title": "Hear chāy — tea",
+      "headword": "chāy",
+      "romanization": "chāy",
+      "gloss": "tea",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e16e95ed525b311b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 18,
+              "perItem": false,
+              "source": "[PAUSE 18s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say lentils, then write the sweet crumbled wheat dessert and cloud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chāy — tea."
+            },
+            {
+              "kind": "speech",
+              "text": "One long beat closing on a glide. It opens with the same consonant as chūrmā. Hear it twice and say it once. The spelling waits one lesson, because its final consonant has not been taught yet."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C20-hear-chaay-meaning",
+              "prompt": "What drink does chāy name?",
+              "assesses": [
+                "MW-LEX-CHAAY-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "tea",
+                "a cup of tea"
+              ],
+              "feedback": {
+                "correct": "Right: chāy names tea.",
+                "incorrect": "Keep the long vowel and the closing glide with the drink: chāy — tea."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-W20-ya",
+      "sequence": 1930,
+      "title": "य (ya) — the glide at the end of tea",
+      "headword": "य",
+      "romanization": "ya",
+      "gloss": "the Devanagari ya consonant",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:1ed0aeb721002847",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — one sign"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one sign until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say tea and rain, then write hard wheat rolls."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one sign",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "य — ya."
+            },
+            {
+              "kind": "speech",
+              "text": "A left loop, a short arm, and a vertical stem on the right. Set it beside भ of भाई: भ opens its left side into a hook that reaches the stem, while य (ya) closes its left side into a loop."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace य (ya) once. Copy it once. Write भ beside it and say which one closes its left side. Cover both, wait five seconds, and write य (ya) from the glide sound cue."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Devanagari chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-W20-ya-write",
+              "prompt": "Write the Devanagari ya consonant.",
+              "assesses": [
+                "MW-SCRIPT-YA-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "य",
+                "य ya"
+              ],
+              "feedback": {
+                "correct": "Right: य carries the glide at the end of tea.",
+                "incorrect": "Close the left side into a loop, then draw the stem."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C20-chaay",
+      "sequence": 1940,
+      "title": "चाय (chāy) — tea on the page",
+      "headword": "चाय",
+      "romanization": "chāy",
+      "gloss": "tea, written after the ya consonant is isolated",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:37408e7899cf5c7e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 18,
+              "perItem": false,
+              "source": "[PAUSE 18s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say tea, then write य (ya) and rain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चा + य (ya) becomes चाय — chāy — tea."
+            },
+            {
+              "kind": "speech",
+              "text": "The य (ya) carries no vowel mark of its own here and closes the word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look, cover, wait five seconds, and write चाय (chāy). Check that the ा sits after च and that य (ya) ends the word bare."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C20-chaay-dictation",
+              "prompt": "From chāy, write tea.",
+              "assesses": [
+                "MW-LEX-CHAAY-01",
+                "MW-SCRIPT-CHAAY-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "चाय",
+                "चाय tea"
+              ],
+              "feedback": {
+                "correct": "Right: चाय means tea.",
+                "incorrect": "Build चा, then add य."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R20-food-new-two",
+      "sequence": 1950,
+      "title": "Retrieve the sweet and the tea",
+      "headword": "चूरमा — चाय",
+      "romanization": "chūrmā — chāy",
+      "gloss": "the sweet crumbled wheat dessert and tea",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3edd8e61f8fe338c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 16,
+              "perItem": false,
+              "source": "[PAUSE 16s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write य (ya), then say rain and write it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear both words in both orders, give each meaning, read two cards, then write both from sound."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R20-food-new-two-recall",
+              "prompt": "Write the sweet crumbled wheat dessert and tea in order.",
+              "assesses": [
+                "MW-LEX-CHURMA-01",
+                "MW-LEX-CHAAY-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "चूरमा — चाय",
+                "चूरमा चाय",
+                "चूरमा, चाय"
+              ],
+              "feedback": {
+                "correct": "Both new food meanings remain distinct.",
+                "incorrect": "Repair only the missed word, then repeat the pair."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C20-food-seven",
+      "sequence": 1960,
+      "title": "Payoff — seven food words in four skills",
+      "headword": "दाल — घी — सबजी — रोटी — बाटी — चूरमा — चाय",
+      "romanization": "dāl — ghī — sabjī — roṭī — bāṭī — chūrmā — chāy",
+      "gloss": "seven source-attested food and drink words",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:164325f37acc288e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 22,
+              "perItem": false,
+              "source": "[PAUSE 22s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the earlier five-word food payoff and the three-word weather payoff."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Identify seven heard words."
+            },
+            {
+              "kind": "speech",
+              "text": "Produce seven words from meaning cues."
+            },
+            {
+              "kind": "speech",
+              "text": "Match seven printed cards to meanings."
+            },
+            {
+              "kind": "speech",
+              "text": "Write all seven heard words without a model."
+            },
+            {
+              "kind": "speech",
+              "text": "Pass each skill separately. Seven food names are a vocabulary map; offering food, accepting it, asking for more, and refusing politely are all still untaught."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C20-food-seven-payoff",
+              "prompt": "Complete all four scored checks, then write the two newest words.",
+              "assesses": [
+                "MW-PERFORMANCE-FOOD-SEVEN-FOUR-SKILL-01"
+              ],
+              "responseSeconds": 45,
+              "acceptedResponses": [
+                "चूरमा — चाय",
+                "चूरमा चाय"
+              ],
+              "feedback": {
+                "correct": "The seven-word food map passes in all four skills.",
+                "incorrect": "Repair only the failed skill or word, then retry that part."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R20-script-close",
+      "sequence": 1970,
+      "title": "Close the writing loop for य (ya)",
+      "headword": "य",
+      "romanization": "ya",
+      "gloss": "delayed closure for the chapter's only new script unit",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:86fae0668d404541",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the seven-word food payoff, then say vegetables and tea."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Without a model, write य (ya) and ट from sound cues. Then write चाय (chāy), रोटी, बाटी, चूरमा (chūrmā), and सबजी from dictation. Repair only the missed unit and repeat that word once."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Marwari Pathshala, Lesson 6; Unicode Devanagari chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R20-script-close-recall",
+              "prompt": "Write the glide consonant, then the curled ta.",
+              "assesses": [
+                "MW-SCRIPT-YA-01",
+                "MW-SCRIPT-TTA-01"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "य — ट",
+                "य ट",
+                "य, ट"
+              ],
+              "feedback": {
+                "correct": "Both signs added in this slice close independently.",
+                "incorrect": "Repair the missed unit, then rewrite its word."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

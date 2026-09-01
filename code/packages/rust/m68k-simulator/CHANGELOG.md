@@ -1,5 +1,23 @@
 # Changelog — m68k-simulator
 
+## [0.2.0] - 2026-08-28
+
+### Added
+
+- Complete indexed and PC-relative effective addressing and every Spec 07n
+  immediate/bit, NEGX/PEA/SR/CCR, multiply/divide, ADDX/SUBX, and memory
+  shift/rotate family previously deferred by the Rust port.
+- Exact 16 MiB architectural constructor plus complete owned state, typed
+  atomic load/restore/step/run APIs, and full before/after traces.
+- Reproducible 82-vector Python-oracle full-state differential and six
+  architectural lifecycle/atomicity tests.
+
+### Fixed
+
+- Checked out-of-range and alignment behavior now fails closed rather than
+  inheriting silent zero reads/dropped writes from caller-sized legacy memory.
+- SUBX carry/borrow handling now covers the maximum operand plus extend edge.
+
 ## [0.1.0] - 2026-08-17
 
 ### Added

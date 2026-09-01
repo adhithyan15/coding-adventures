@@ -1,0 +1,22 @@
+{
+  "chapter": 24,
+  "title": "Bread and Rolls: One New Consonant",
+  "label": "ch:mw-food-five",
+  "canDo": "I can add flatbread and hard wheat rolls to the food map after learning only ट and reusing every other sign.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "MW-C19-food-five",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Two more source-attested food words begin by ear, add only ट, and join the earlier three in a non-compensatory four-skill payoff.",
+    "assesses": [
+      "MW-LEX-ROTI-01",
+      "MW-SCRIPT-TTA-01",
+      "MW-SCRIPT-ROTI-01",
+      "MW-LEX-BAATI-01",
+      "MW-SCRIPT-BAATI-01",
+      "MW-PERFORMANCE-FOOD-FIVE-FOUR-SKILL-01"
+    ]
+  }
+}

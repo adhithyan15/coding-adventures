@@ -6,6 +6,7 @@ sequence: 130
 chapter: 8
 type: phrase
 headword: તમને મળીને આનંદ થયો
+romanization: "tamne maḷīne ānand thayo"
 gloss: pleased to meet you (lit. "meeting you, joy happened")
 concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [GU-C02-maarun-naam-chhe]

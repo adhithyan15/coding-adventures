@@ -18,7 +18,7 @@ The word, taken apart.
 പോകുക (pōkuka, "to go") and വരിക (varika, "to come") are native Dravidian verbs. Notice the ending -ഉക (-uka) — this is how Malayalam names a verb in the dictionary, its "to ___" form (where Tamil uses a bare stem). Malayalam, like all its family, does not say a plain "goodbye": it says "I go, and I come back."
 
 Sounds you'll need.
-പോ (pō) + കുക (kuka, the -uka infinitive) becomes പോകുക. Its partner വരിക (varika, “to come”).
+പോ (pō) + കുക (kuka, the -uka infinitive) becomes പോകുക (pōkuka). Its partner വരിക (varika, “to come”).
 
 Guided Practice.
 [pause 1 second]
@@ -109,7 +109,7 @@ The letters in this word.
 വീണ്ടും (vīṇḍuṁ): note the retroflex cluster ണ്ട (ṇḍ) and the final anusvāra. കാണാം (kāṇāṁ, "let's see") you just learned.
 
 The word, taken apart.
-വീണ്ടും കാണാം = വീണ്ടും (vīṇḍuṁ, "again") + കാണാം (kāṇāṁ, "let's see") — "we'll see [each other] again." Both words are native Dravidian: vīṇḍuṁ ("again," from vīṇṭu, "to return") and kāṇ ("to see"). Where Tamil's "we'll meet again" reaches for the Sanskrit loan sandi to say "meet," Malayalam — like Kannada — keeps its own native verb, here "to see."
+വീണ്ടും കാണാം (vīṇḍuṁ kāṇāṁ) = വീണ്ടും (vīṇḍuṁ, "again") + കാണാം (kāṇāṁ, "let's see") — "we'll see [each other] again." Both words are native Dravidian: vīṇḍuṁ ("again," from vīṇṭu, "to return") and kāṇ ("to see"). Where Tamil's "we'll meet again" reaches for the Sanskrit loan sandi to say "meet," Malayalam — like Kannada — keeps its own native verb, here "to see."
 
 Guided Practice.
 [pause 1 second]

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C24-hear-savaar",
+    "language": "gujarati",
+    "chapter": 28,
+    "sequence": 1160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:34ca10584610a8eb"
+  },
+  "findings": []
+}

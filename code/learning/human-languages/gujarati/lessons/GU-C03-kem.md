@@ -6,6 +6,7 @@ sequence: 190
 chapter: 9
 type: word
 headword: કેમ
+romanization: "kem"
 gloss: how (also "why")
 concept_tag: QUESTION-HOW
 prerequisites: [GU-C02-shun, GU-W02-bha]

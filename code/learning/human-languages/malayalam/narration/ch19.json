@@ -4,14 +4,14 @@
   "chapter": 19,
   "title": "Asking Someone's Age",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b368a65361afa6f1",
+  "sourceHash": "fnv1a64:83035b2a50aeabce",
   "lessons": [
     {
       "id": "ML-C19-vayassu",
       "sequence": 480,
-      "title": "നിങ്ങൾക്ക് എത്ര വയസ്സുണ്ട്? — \"to you, how much age exists?\"",
+      "title": "നിങ്ങൾക്ക് എത്ര വയസ്സുണ്ട്? (niṅṅaḷkkŭ ethra vayassuṇṭŭ?) — \"to you, how much age exists?\"",
       "headword": "നിങ്ങൾക്ക് എത്ര വയസ്സുണ്ട്?",
-      "romanization": "",
+      "romanization": "niṅṅaḷkkŭ ethra vayassuṇṭŭ?",
       "gloss": "how old are you? — literally \"to you how much age exists?\"; the SAME Sanskrit vayas word, but Malayalam adds a dative-subject + existential verb, a genuinely different shape than Kannada/Telugu's plain possessive",
       "script": "malayalam",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0edebb4be94b008",
+      "sourceHash": "fnv1a64:b119ea083e23f0ca",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "നിങ്ങൾക്ക് എത്ര വയസ്സുണ്ട്? — \"How old are you?\" (formal/plural) — literally \"to you, how much age exists?\" (ningaḷkku ethra vayassuṇṭŭ? — from ningaḷkku, \"to you\" [dative] + ethra vayassu, \"how much age\" + uṇṭŭ, \"exists.\")"
+              "text": "നിങ്ങൾക്ക് എത്ര വയസ്സുണ്ട്? (niṅṅaḷkkŭ ethra vayassuṇṭŭ?) — \"How old are you?\" (formal/plural) — literally \"to you, how much age exists?\" (ningaḷkku ethra vayassuṇṭŭ? — from ningaḷkku, \"to you\" [dative] + ethra vayassu, \"how much age\" + uṇṭŭ, \"exists.\")"
             },
             {
               "kind": "speech",

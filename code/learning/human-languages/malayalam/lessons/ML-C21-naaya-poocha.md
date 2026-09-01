@@ -7,6 +7,7 @@ chapter: 21
 type: word
 headword: നായ, പൂച്ച
 gloss: dog and cat — naaya continues the solid, ancient native Dravidian dog-root shared with Kannada and Tamil, no mystery; poocha matches Tamil's everyday cat-word closely, part of the pattern where Dravidian genuinely splits on "cat" more than "dog"
+romanization: "nāya, pūcca"
 concept_tag: ML-ANIMALS
 prerequisites: [ML-C20-pathinonnu-irupathu]
 sounds: [malayalam-vowel-sign-aa, malayalam-geminate-ch]

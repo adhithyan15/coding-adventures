@@ -40,10 +40,15 @@ import {
 import { defineStage } from "@coding-adventures/forme-stage";
 import {
   computeBinaryRevisionId,
+  computeRevisionId,
   generateLogicalId,
   isLogicalIdShape,
 } from "@coding-adventures/forme-identity";
-import type { Logger } from "@coding-adventures/forme-stage";
+import type {
+  ExternalStateManifest,
+  Logger,
+  StageContext,
+} from "@coding-adventures/forme-stage";
 import { parseGlob, walkFiles } from "./walker.js";
 
 export interface SourceFsConfig {
@@ -174,9 +179,103 @@ function mimeFor(ext: string): string | null {
   return MIME_BY_EXT[ext.toLowerCase()] ?? null;
 }
 
+interface SourceSnapshot {
+  readonly sources: readonly ContentSource[];
+  readonly externalState: ExternalStateManifest;
+}
+
+function validatedConfig(rawConfig: unknown): Required<SourceFsConfig> {
+  const config = rawConfig as SourceFsConfig;
+  if (typeof config?.glob !== "string" || config.glob.length === 0) {
+    throw new Error("forme-source-fs: config.glob must be a non-empty string");
+  }
+  return {
+    glob: config.glob,
+    root: config.root ?? process.cwd(),
+    persistIdentities: config.persistIdentities !== false,
+  };
+}
+
+async function sourceSnapshot(
+  rawConfig: unknown,
+  ctx: StageContext,
+): Promise<SourceSnapshot> {
+  const config = validatedConfig(rawConfig);
+  const key = ctx.cache.keyFor([
+    "forme-source-fs-snapshot-v1",
+    config.root,
+    config.glob,
+    config.persistIdentities ? 1 : 0,
+  ]);
+  return ctx.cache.getOrCompute(key, () => scanSourceSnapshot(config, ctx));
+}
+
+async function scanSourceSnapshot(
+  config: Required<SourceFsConfig>,
+  ctx: StageContext,
+): Promise<SourceSnapshot> {
+  const { ext } = parseGlob(config.glob);
+  const stats = { matched: 0, sidecarsLoaded: 0, sidecarsCreated: 0 };
+  const sources: ContentSource[] = [];
+
+  for await (const absPath of walkFiles(config.root, ext)) {
+    ctx.cancellation.throwIfCancelled();
+    const relPath = relative(config.root, absPath);
+    const fileBytes = await readFile(absPath);
+    const fileStat = await getFileStat(absPath);
+    const bytes = new Uint8Array(fileBytes);
+    let identity: LogicalId;
+    if (config.persistIdentities) {
+      const persisted = await resolvePersistedIdentity(absPath, ctx.logger);
+      identity = persisted.identity;
+      if (persisted.created) stats.sidecarsCreated++;
+      else stats.sidecarsLoaded++;
+    } else {
+      identity = generateLogicalId();
+    }
+    sources.push({
+      path: relPath,
+      bytes,
+      mimeType: mimeFor(ext),
+      identity,
+      // Revisions identify content, not its current locator. Renaming a file
+      // together with its sidecar therefore preserves both IDs.
+      revision: computeBinaryRevisionId(bytes),
+      providerMeta: {
+        mtimeMs: fileStat.mtimeMs,
+        sizeBytes: fileStat.size,
+      },
+    });
+    stats.matched++;
+  }
+
+  const entries = sources
+    .map(source => ({
+      locator: source.path.replaceAll("\\", "/"),
+      identity: source.identity,
+      revision: source.revision,
+    }))
+    .sort((left, right) => left.locator < right.locator ? -1 : left.locator > right.locator ? 1 : 0);
+  const externalState: ExternalStateManifest = {
+    version: 1,
+    revision: computeRevisionId({ version: 1, entries }),
+    entries,
+  };
+
+  ctx.logger.debug("forme-source-fs scan complete", {
+    root: config.root,
+    ext,
+    matched: stats.matched,
+    sidecarsLoaded: stats.sidecarsLoaded,
+    sidecarsCreated: stats.sidecarsCreated,
+    externalStateRevision: externalState.revision,
+  });
+  return { sources, externalState };
+}
+
 const sourceFs = defineStage({
   name: "@coding-adventures/forme-source-fs",
-  version: "0.3.0",
+  version: "0.4.0",
   apiVersion: 1,
   description: "Walk a filesystem directory and emit one ContentSource per matching file.",
   consumes: Kinds.Void,
@@ -191,59 +290,12 @@ const sourceFs = defineStage({
       persistIdentities: { type: "boolean" },
     },
   },
+  async externalState(rawConfig, ctx) {
+    return (await sourceSnapshot(rawConfig, ctx)).externalState;
+  },
   async *run(_input, rawConfig, ctx) {
-    const config = rawConfig as SourceFsConfig;
-    if (typeof config?.glob !== "string" || config.glob.length === 0) {
-      throw new Error("forme-source-fs: config.glob must be a non-empty string");
-    }
-    const root = config.root ?? process.cwd();
-    const { ext } = parseGlob(config.glob);
-    // Persistence defaults to TRUE.  Tests can opt out by setting
-    // `persistIdentities: false` in the config to get the legacy
-    // generate-fresh-every-time behaviour.
-    const persistIdentities = config.persistIdentities !== false;
-    const stats = { matched: 0, sidecarsLoaded: 0, sidecarsCreated: 0 };
-
-    for await (const absPath of walkFiles(root, ext)) {
-      ctx.cancellation.throwIfCancelled();
-      const relPath = relative(root, absPath);
-      const fileBytes = await readFile(absPath);
-      const fileStat = await getFileStat(absPath);
-      const bytes = new Uint8Array(fileBytes);
-      // Persistence is opt-out. Enabled builds read or exclusively create a
-      // stable sidecar; ephemeral builds deliberately generate a fresh UUID.
-      let identity: LogicalId;
-      if (persistIdentities) {
-        const persisted = await resolvePersistedIdentity(absPath, ctx.logger);
-        identity = persisted.identity;
-        if (persisted.created) stats.sidecarsCreated++;
-        else stats.sidecarsLoaded++;
-      } else {
-        identity = generateLogicalId();
-      }
-      const source: ContentSource = {
-        path: relPath,
-        bytes,
-        mimeType: mimeFor(ext),
-        identity,
-        // Revisions identify content, not its current locator. Renaming a file
-        // together with its sidecar therefore preserves both IDs.
-        revision: computeBinaryRevisionId(bytes),
-        providerMeta: {
-          mtimeMs: fileStat.mtimeMs,
-          sizeBytes: fileStat.size,
-        },
-      };
-      stats.matched++;
-      yield source as never;
-    }
-
-    ctx.logger.debug("forme-source-fs scan complete", {
-      root, ext,
-      matched: stats.matched,
-      sidecarsLoaded: stats.sidecarsLoaded,
-      sidecarsCreated: stats.sidecarsCreated,
-    });
+    const snapshot = await sourceSnapshot(rawConfig, ctx);
+    for (const source of snapshot.sources) yield source as never;
   },
 });
 

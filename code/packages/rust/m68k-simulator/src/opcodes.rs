@@ -20,7 +20,7 @@
 //!   `Scc` ([`cc_taken`]/[`CC_NAMES`]).
 //! - The HALT sentinel, [`TRAP_15_WORD`] — see the crate-level doc for
 //!   why `TRAP #15`, not `STOP #imm`, was chosen.
-//! - [`sign_extend32`]-style helpers for the sign extensions that recur
+//! - `sign_extend32`-style helpers for the sign extensions that recur
 //!   throughout `decode.rs`/`execute.rs` (word→long, byte→word, etc).
 
 // ===========================================================================
@@ -28,11 +28,9 @@
 // ===========================================================================
 
 /// 24-bit address bus (16 MiB) — every computed effective address is
-/// masked with this, mirroring the Python original's `_ADDR_MASK`.  The
-/// backing `Memory` a caller constructs may be smaller (tests routinely
-/// use a few KiB); an access past the backing store's actual size still
-/// panics via `cpu_simulator::Memory`'s own bounds check, same as every
-/// other Rust ISA simulator in this repo.
+/// masked with this, mirroring the Python oracle's `_ADDR_MASK`. Checked
+/// execution always uses the exact 16 MiB backing store; caller-sized memory
+/// is retained only by the documented legacy constructor.
 pub const ADDR_MASK: u32 = 0x00FF_FFFF;
 
 // ===========================================================================
@@ -152,22 +150,22 @@ pub const CC_NAMES: [&str; 16] = [
 /// opword field, which can never exceed 15.
 pub fn cc_taken(cc: u8, n: bool, z: bool, v: bool, c: bool) -> bool {
     match cc {
-        0 => true,             // T  -- always
-        1 => false,            // F  -- never
-        2 => !c && !z,         // HI -- higher (unsigned >)
-        3 => c || z,           // LS -- lower or same (unsigned <=)
-        4 => !c,               // CC -- carry clear (unsigned >=)
-        5 => c,                // CS -- carry set (unsigned <)
-        6 => !z,                // NE -- not equal
-        7 => z,                 // EQ -- equal
-        8 => !v,                // VC -- overflow clear
-        9 => v,                 // VS -- overflow set
-        10 => !n,                // PL -- plus (non-negative)
-        11 => n,                 // MI -- minus (negative)
-        12 => n == v,             // GE -- signed >=
-        13 => n != v,             // LT -- signed <
-        14 => !z && (n == v),     // GT -- signed >
-        15 => z || (n != v),      // LE -- signed <=
+        0 => true,            // T  -- always
+        1 => false,           // F  -- never
+        2 => !c && !z,        // HI -- higher (unsigned >)
+        3 => c || z,          // LS -- lower or same (unsigned <=)
+        4 => !c,              // CC -- carry clear (unsigned >=)
+        5 => c,               // CS -- carry set (unsigned <)
+        6 => !z,              // NE -- not equal
+        7 => z,               // EQ -- equal
+        8 => !v,              // VC -- overflow clear
+        9 => v,               // VS -- overflow set
+        10 => !n,             // PL -- plus (non-negative)
+        11 => n,              // MI -- minus (negative)
+        12 => n == v,         // GE -- signed >=
+        13 => n != v,         // LT -- signed <
+        14 => !z && (n == v), // GT -- signed >
+        15 => z || (n != v),  // LE -- signed <=
         _ => panic!("m68k-simulator: invalid condition code {cc} (must be 0-15)"),
     }
 }

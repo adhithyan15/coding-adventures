@@ -4,14 +4,14 @@
   "chapter": 15,
   "title": "Water and Rice",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a91f500fe749649a",
+  "sourceHash": "fnv1a64:a61a482fceb0b26c",
   "lessons": [
     {
       "id": "ML-C15-vellam-ari",
       "sequence": 430,
       "title": "വെള്ളം, അരി, ചോറ് — a different water-word, the same rice-words",
       "headword": "വെള്ളം അരി ചോറ്",
-      "romanization": "",
+      "romanization": "veḷḷaṁ ari cōṟu",
       "gloss": "water (a genuinely DIFFERENT word than Tamil's), and rice raw/cooked, closely matching Tamil",
       "script": "malayalam",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:52093eeffc1197b2",
+      "sourceHash": "fnv1a64:c072377bc1d3a3c5",
       "notice": null,
       "blocks": [
         {

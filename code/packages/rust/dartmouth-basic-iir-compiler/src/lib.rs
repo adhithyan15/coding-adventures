@@ -42,6 +42,7 @@
 //! | `A$(i)` (rvalue) | `<eval i → x>; array_get A$, x -> t` (`str`) — E4d-BA-arr |
 //! | `STOP`         | same as `END` for V1 |
 //! | `DEF FNx(P)=e` | sibling `IIRFunction` + `call` (BA5); `FNx(arg)` → `call` |
+//! | `RND(X)`       | deterministic Park–Miller generator in `__basic_rnd`, shared through one typed module-global state slot (VM-018) |
 //!
 //! ## Strings
 //!
@@ -184,6 +185,12 @@ fn compile_program(ast: &GrammarASTNode, module_name: &str)
     main.source_map = std::mem::take(&mut comp.source_map);
     let mut module = IIRModule::new(module_name, "dartmouth-basic");
     module.functions.push(main);
+    // VM-018: RND is a real sibling function rather than an ambient host
+    // callback. Its one i64 state slot is shared by main and every DEF FN via
+    // the module-global substrate all seven standard backends already execute.
+    if comp.uses_rnd {
+        module.functions.push(rnd_helper_function());
+    }
     // BA2/BA7: if any `PRINT` rendered a value, append the synthetic
     // numeric helpers (`__basic_print_int` / `__basic_print_uint` /
     // `__basic_print_real`) so the `call`s emitted by `emit_print` resolve.
@@ -286,6 +293,11 @@ struct Compiler {
     /// helpers when they're actually used — a program with no `PRINT` (or
     /// only bare `PRINT`s) carries no dead functions.
     needs_print_helpers: bool,
+    /// Whether the source contains a call to `RND`. A pre-pass sets this before
+    /// any statement is lowered so `main` can initialise the shared generator
+    /// state even when the first executed call sits behind a forward jump or in
+    /// a `DEF FN` sibling function.
+    uses_rnd: bool,
     /// Number of `GOSUB` statements in the whole program, counted by a
     /// pre-pass (BA1 / enabler E7).  When > 0, `main` gets a return-address
     /// stack (an `array<i64>` + the `__basic_gosub_sp` pointer) materialised
@@ -318,6 +330,7 @@ impl Default for Compiler {
             scalar_types: std::collections::HashMap::new(),
             data_pool: Vec::new(),
             needs_print_helpers: false,
+            uses_rnd: false,
             gosub_count: 0,
             gosub_next_id: 0,
         }
@@ -437,6 +450,14 @@ impl Compiler {
             }
         }
 
+        // VM-018: initialise the deterministic RNG before any BASIC line can
+        // execute. The helper stores subsequent states in this same global,
+        // which also makes calls from DEF FN share the program's sequence.
+        self.uses_rnd = ast_contains_builtin(ast, "rnd");
+        if self.uses_rnd {
+            self.emit_rnd_state_init();
+        }
+
         // Pre-pass — gather the `DATA` pool (BA6).  Every `DATA` statement's
         // numeric literals are collected across the whole program in
         // line-number order (the children are already in source order), so a
@@ -479,6 +500,25 @@ impl Compiler {
             self.emit_end();
         }
         Ok(())
+    }
+
+    fn emit_rnd_state_init(&mut self) {
+        let seed = self.fresh_temp();
+        self.emit(
+            "const",
+            Some(&seed),
+            vec![Operand::Int(BASIC_RND_DEFAULT_SEED)],
+            "i64",
+        );
+        self.emit(
+            "global_store",
+            None,
+            vec![
+                Operand::Str(BASIC_RND_STATE.to_string()),
+                Operand::Var(seed),
+            ],
+            "void",
+        );
     }
 
     fn emit_line(&mut self, line: &GrammarASTNode) -> Result<(), CompileError> {
@@ -1869,7 +1909,8 @@ impl Compiler {
     /// | `ATN(X)` | `f64_atan`           | arctan via libm/Math.atan etc.     |
     /// | `TAN(X)` | `f64_tan`            | tangent via libm/Math.tan etc.     |
     ///
-    /// `RND` still needs a cross-backend RNG and is rejected with a clear error.
+    /// `RND` calls a deterministic sibling helper backed by one module-global
+    /// integer state. No host entropy or backend-specific runtime ABI is used.
     fn emit_builtin_fn(&mut self, name: &str, node: &GrammarASTNode)
         -> Result<ExprValue, CompileError>
     {
@@ -2005,6 +2046,22 @@ impl Compiler {
                 Ok(ExprValue { slot: dest, ty: BasicScalarType::Real })
             }
 
+            // VM-018 portable randomness. The argument contract lives in the
+            // helper: negative reseeds, zero repeats, positive advances.
+            "rnd" => {
+                let dest = self.fresh_temp();
+                self.emit(
+                    "call",
+                    Some(&dest),
+                    vec![
+                        Operand::Var(BASIC_RND_HELPER.to_string()),
+                        Operand::Var(arg.slot),
+                    ],
+                    "f64",
+                );
+                Ok(ExprValue { slot: dest, ty: BasicScalarType::Real })
+            }
+
             _ => Err(CompileError::Unsupported(format!(
                 "built-in function `{}` not yet implemented \
                  (needs cross-backend math support)",
@@ -2100,6 +2157,17 @@ fn child_nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
     }).collect()
 }
 
+/// Return true when `node` contains a specific BASIC builtin token.
+fn ast_contains_builtin(node: &GrammarASTNode, wanted: &str) -> bool {
+    node.children.iter().any(|child| match child {
+        ASTNodeOrToken::Node(n) => ast_contains_builtin(n, wanted),
+        ASTNodeOrToken::Token(t) => {
+            t.effective_type_name() == "BUILTIN_FN"
+                && t.value.eq_ignore_ascii_case(wanted)
+        }
+    })
+}
+
 fn extract_line_num(line: &GrammarASTNode) -> Option<i64> {
     for c in &line.children {
         if let ASTNodeOrToken::Token(t) = c {
@@ -2155,6 +2223,16 @@ const BASIC_DATA_STRING_ARRAY: &str = "__basic_data_str";
 const BASIC_DATA_COUNT: &str = "__basic_data_count";
 /// The IIR register holding the `READ`/`RESTORE` pointer into the pool (BA6).
 const BASIC_DATA_PTR: &str = "__basic_data_ptr";
+
+/// VM-018's shared Park–Miller state and helper names. These prefixes are not
+/// legal Dartmouth identifiers, so user variables and `FNx` declarations
+/// cannot collide with them.
+const BASIC_RND_STATE: &str = "__basic_rnd_state";
+const BASIC_RND_HELPER: &str = "__basic_rnd";
+const BASIC_RND_DEFAULT_SEED: i64 = 1;
+const BASIC_RND_MULTIPLIER: i64 = 48_271;
+const BASIC_RND_MODULUS: i64 = 2_147_483_647;
+const BASIC_RND_MAX_SEED: i64 = BASIC_RND_MODULUS - 1;
 
 /// Largest exponent the frontend will unroll for `base ^ <literal>`.
 /// This is a deliberately small no-runtime-helper slice; larger/general
@@ -2464,6 +2542,109 @@ fn print_sep_char(node: &GrammarASTNode) -> char {
         }
     }
     ';'
+}
+
+/// Build VM-018's deterministic Dartmouth BASIC `RND` helper.
+///
+/// The helper uses the Park–Miller minimal-standard recurrence with the 48,271
+/// multiplier. Its recurrence is exact integer arithmetic on every backend;
+/// only argument classification and the final `state / 2_147_483_647` scaling
+/// use `f64`. Argument semantics are deliberately explicit and portable:
+///
+/// - `x < 0`: clamp `floor(abs(x))` into `1..=2_147_483_646`, reseed, then
+///   advance once;
+/// - `x == 0`: return the current sample without advancing;
+/// - `x > 0`: advance once and return the new sample.
+///
+/// `main` seeds the shared state to 1 before executing any source line. The
+/// result is always strictly between 0 and 1. Because the state is a typed
+/// module global, calls from `main` and from any `DEF FN` consume one sequence.
+fn rnd_helper_function() -> IIRFunction {
+    fn var(s: &str) -> Operand { Operand::Var(s.to_string()) }
+    let mk = |op: &str, dest: Option<&str>, srcs: Vec<Operand>, ty: &str| {
+        IIRInstr::new(op, dest.map(str::to_string), srcs, ty)
+    };
+
+    let body = vec![
+        mk(
+            "global_load",
+            Some("state"),
+            vec![Operand::Str(BASIC_RND_STATE.to_string())],
+            "i64",
+        ),
+        mk("const", Some("zero_r"), vec![Operand::Float(0.0)], "f64"),
+        mk("cmp_lt", Some("is_negative"), vec![var("x"), var("zero_r")], "f64"),
+        mk("jmp_if_true", None, vec![var("is_negative"), var("rnd_reseed")], "void"),
+        mk("cmp_eq", Some("is_repeat"), vec![var("x"), var("zero_r")], "f64"),
+        mk("jmp_if_true", None, vec![var("is_repeat"), var("rnd_repeat")], "void"),
+        mk("jmp", None, vec![var("rnd_advance")], "void"),
+
+        mk("label", None, vec![var("rnd_reseed")], "void"),
+        mk("neg", Some("seed_mag_r"), vec![var("x")], "f64"),
+        mk("const", Some("one_i"), vec![Operand::Int(1)], "i64"),
+        mk("const", Some("max_seed_i"), vec![Operand::Int(BASIC_RND_MAX_SEED)], "i64"),
+        mk("const", Some("one_r"), vec![Operand::Float(1.0)], "f64"),
+        mk(
+            "const",
+            Some("max_seed_r"),
+            vec![Operand::Float(BASIC_RND_MAX_SEED as f64)],
+            "f64",
+        ),
+        mk("cmp_lt", Some("seed_below_one"), vec![var("seed_mag_r"), var("one_r")], "f64"),
+        mk("jmp_if_true", None, vec![var("seed_below_one"), var("rnd_seed_one")], "void"),
+        mk("cmp_gt", Some("seed_above_max"), vec![var("seed_mag_r"), var("max_seed_r")], "f64"),
+        mk("jmp_if_true", None, vec![var("seed_above_max"), var("rnd_seed_max")], "void"),
+        mk("real_to_int_floor", Some("state"), vec![var("seed_mag_r")], "i64"),
+        mk("jmp", None, vec![var("rnd_advance")], "void"),
+        mk("label", None, vec![var("rnd_seed_one")], "void"),
+        mk("mov", Some("state"), vec![var("one_i")], "i64"),
+        mk("jmp", None, vec![var("rnd_advance")], "void"),
+        mk("label", None, vec![var("rnd_seed_max")], "void"),
+        mk("mov", Some("state"), vec![var("max_seed_i")], "i64"),
+
+        mk("label", None, vec![var("rnd_advance")], "void"),
+        mk("const", Some("multiplier"), vec![Operand::Int(BASIC_RND_MULTIPLIER)], "i64"),
+        mk("const", Some("modulus_i"), vec![Operand::Int(BASIC_RND_MODULUS)], "i64"),
+        mk("mul", Some("product"), vec![var("state"), var("multiplier")], "i64"),
+        mk("mod", Some("next"), vec![var("product"), var("modulus_i")], "i64"),
+        mk(
+            "global_store",
+            None,
+            vec![Operand::Str(BASIC_RND_STATE.to_string()), var("next")],
+            "void",
+        ),
+        mk("int_to_real", Some("next_r"), vec![var("next")], "f64"),
+        mk(
+            "const",
+            Some("modulus_r"),
+            vec![Operand::Float(BASIC_RND_MODULUS as f64)],
+            "f64",
+        ),
+        mk("div", Some("sample"), vec![var("next_r"), var("modulus_r")], "f64"),
+        mk("ret", None, vec![var("sample")], "f64"),
+
+        mk("label", None, vec![var("rnd_repeat")], "void"),
+        mk("int_to_real", Some("state_r"), vec![var("state")], "f64"),
+        mk(
+            "const",
+            Some("repeat_modulus_r"),
+            vec![Operand::Float(BASIC_RND_MODULUS as f64)],
+            "f64",
+        ),
+        mk("div", Some("repeat_sample"), vec![var("state_r"), var("repeat_modulus_r")], "f64"),
+        mk("ret", None, vec![var("repeat_sample")], "f64"),
+    ];
+
+    let body_len = body.len();
+    let mut helper = IIRFunction::new(
+        BASIC_RND_HELPER,
+        vec![("x".to_string(), "f64".to_string())],
+        "f64",
+        body,
+    );
+    helper.type_status = FunctionTypeStatus::FullyTyped;
+    helper.source_map = vec![SourceLoc::SYNTHETIC; body_len];
+    helper
 }
 
 /// Synthetic helper functions BA2/BA7 `PRINT` lowering calls to render numeric
@@ -3103,6 +3284,42 @@ mod tests {
                 "expected exactly one {op} instruction",
             );
         }
+    }
+
+    /// VM-018: RND lowers to one shared Park–Miller helper and initialises its
+    /// module-global state before the first BASIC line.
+    #[test]
+    fn compiles_portable_rnd_with_shared_state() {
+        let m = compile(
+            "10 DEF FNR(X) = RND(X)\n20 PRINT RND(-1)\n30 PRINT FNR(1)\n40 END\n",
+        )
+        .expect("portable RND compiles in main and DEF FN");
+        let main = &m.functions[0].instructions;
+        assert!(main.iter().any(|instr| {
+            instr.op == "global_store"
+                && matches!(instr.srcs.first(), Some(Operand::Str(name)) if name == BASIC_RND_STATE)
+        }), "main must initialise the shared RND state");
+        assert!(calls_named(main, BASIC_RND_HELPER));
+
+        let user_fn = m.functions.iter().find(|f| f.name.eq_ignore_ascii_case("fnr"))
+            .expect("DEF FNR helper exists");
+        assert!(calls_named(&user_fn.instructions, BASIC_RND_HELPER));
+
+        let rnd = m.functions.iter().find(|f| f.name == BASIC_RND_HELPER)
+            .expect("RND helper exists");
+        for op in ["global_load", "global_store", "mul", "mod", "int_to_real", "div"] {
+            assert!(rnd.instructions.iter().any(|instr| instr.op == op),
+                "RND helper must contain {op}");
+        }
+    }
+
+    #[test]
+    fn omits_rnd_helper_when_program_does_not_use_rnd() {
+        let m = compile("10 PRINT 42\n20 END\n").expect("ordinary BASIC compiles");
+        assert!(m.functions.iter().all(|f| f.name != BASIC_RND_HELPER));
+        assert!(m.functions[0].instructions.iter().all(|instr| {
+            !matches!(instr.srcs.first(), Some(Operand::Str(name)) if name == BASIC_RND_STATE)
+        }));
     }
 
     /// E4-dyn: `INPUT A$` reads a whole line as a *runtime string* via the

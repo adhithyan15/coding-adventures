@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a7f1b28bea94fe88",
+  "sourceHash": "fnv1a64:e22431798e886ea6",
   "lessons": [
     {
       "id": "ML-C01-namaskaram",
@@ -986,7 +986,7 @@
       "sequence": 30,
       "title": "അതെ (athe) — \"yes,\" literally \"that [is so]\"",
       "headword": "അതെ",
-      "romanization": "",
+      "romanization": "athe",
       "gloss": "yes (athe — \"that [is so]\")",
       "script": "malayalam",
       "modality": "sight",
@@ -994,7 +994,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f4cc416de3521c37",
+      "sourceHash": "fnv1a64:a5dcbab25e9c401a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1136,7 +1136,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read അതെ. What everyday word is it built from, and so what does \"yes\" literally assert? (athu, \"that\" — so \"yes\" = \"that [is so]\".) Where does the \"e\" vowel sign sit, and where is it read? (Written before the consonant, read after.)"
+              "text": "Read അതെ (athe). What everyday word is it built from, and so what does \"yes\" literally assert? (athu, \"that\" — so \"yes\" = \"that [is so]\".) Where does the \"e\" vowel sign sit, and where is it read? (Written before the consonant, read after.)"
             }
           ]
         }

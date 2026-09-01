@@ -7,6 +7,7 @@ chapter: 23
 type: etymology
 headword: നാൾ
 gloss: the native day-word, narrowed into narrative use and living compounds rather than erased
+romanization: "nāḷ"
 concept_tag: ML-TIME-DAY-NATIVE
 prerequisites: [ML-C23-divasam]
 sounds: [malayalam-vowel-sign-aa]

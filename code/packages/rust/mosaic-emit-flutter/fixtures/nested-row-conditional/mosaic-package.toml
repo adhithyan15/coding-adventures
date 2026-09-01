@@ -1,0 +1,13 @@
+[package]
+name = "mosaic-pkg-flutter-nested-row-conditional-fixture"
+version = "0.1.0"
+description = "Flutter nested Row conditional layout regression fixture"
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["NestedRowConditional"]
+
+[dependencies]
+
+[kernel]
+version = "1"

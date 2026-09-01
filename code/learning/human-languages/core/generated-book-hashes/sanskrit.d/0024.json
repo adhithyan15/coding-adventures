@@ -1,13 +1,15 @@
 {
   "language": "sanskrit",
   "chapter": 24,
-  "sourceHash": "fnv1a64:282c86bfdc36d0ce",
+  "sourceHash": "fnv1a64:48c7b196e3498743",
   "lessonIds": [
     "SA-C24-water",
     "SA-C24-rice",
     "SA-C24-fruit",
     "SA-C24-cloth",
-    "SA-C24-lamp"
+    "SA-C24-lamp",
+    "SA-S122-letter-pha",
+    "SA-S123-letter-o"
   ],
   "tex": "sanskrit/book/chapters/ch24-things-you-ask-for.tex"
 }

@@ -1,0 +1,17 @@
+{
+  "language": "marwadi",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:fe87d306e2aba987",
+  "lessonIds": [
+    "MW-C18-hear-daal",
+    "MW-C18-daal",
+    "MW-C18-hear-ghee",
+    "MW-C18-ghee",
+    "MW-C18-hear-sabji",
+    "MW-C18-sabji",
+    "MW-R18-food-three",
+    "MW-C18-food-three",
+    "MW-R18-food-close"
+  ],
+  "tex": "marwadi/book/chapters/ch23-food-three.tex"
+}

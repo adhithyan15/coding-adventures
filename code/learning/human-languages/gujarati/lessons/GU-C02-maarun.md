@@ -6,6 +6,7 @@ sequence: 100
 chapter: 8
 type: word
 headword: મારું
+romanization: "mārũ"
 gloss: my (neuter; also મારો m. / મારી f.)
 concept_tag: PRONOUN-MY
 prerequisites: [GU-C02-naam]

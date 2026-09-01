@@ -4,6 +4,11 @@ Gate-level Motorola 68000 (1979) simulator in Rust. Every arithmetic and
 logic operation routes through AND, OR, XOR, NOT gates and a 32-stage
 ripple-carry adder — no integer primitives in the data path.
 
+The exact persistent topology is **134,218,289 D flip-flops**: 134,217,728
+memory bits, 560 register/PC/SR bits, and one halt latch. Memory packs stable Q
+values because a completed master/slave clock state is fully determined by Q;
+each simulator write reconstructs and clocks both latch phases.
+
 ## Architecture
 
 The Motorola 68000 was a landmark 16/32-bit processor introduced in 1979.
@@ -52,6 +57,7 @@ alu.rs
   add8/16/32, sub8/16/32, neg8/16/32, negx8/16/32
   and8/16/32, or8/16/32, xor8/16/32, not8/16/32_flags, cmp8/16/32
   shift_op: ASL/ASR/LSL/LSR/ROXL/ROXR/ROL/ROR
+  fixed 16×16 partial-product multiply and 32÷16 restoring divide
 
 registers.rs
   RegisterFile68K: D0–D7, A0–A7, PC, SR
@@ -60,10 +66,14 @@ registers.rs
   set_ccr / set_nzvc_x / set_nz_clear_vc / negx_z
   test_cc: all 16 condition codes (T, F, HI, LS, CC/HI, CS/LO, …)
 
+state.rs
+  packed stable-Q DFF memory and explicit master/slave state registers
+
 cpu.rs
-  Cpu68K: 16 MB flat memory (heap-allocated Vec<u8>, big-endian byte order)
+  Cpu68K: 16 MB packed DFF memory (big-endian byte order)
   EA resolution: all 14 addressing modes
   ~100 opcodes across instruction lines 0–9, B–E
+  shared full state/traces and typed transactional checked lifecycle
 ```
 
 ### Subtraction model
@@ -113,27 +123,34 @@ assert!(cpu.halted);
 |------|-------------|
 | 0    | ADDI, ANDI, CMPI, EORI, ORI, SUBI, BTST/BSET/BCLR/BCHG (imm) |
 | 1–3  | MOVE.B / MOVE.W / MOVE.L / MOVEA |
-| 4    | CLR, EXT, ILLEGAL, LINK, NEG, NEGX, NOT, PEA, RESET, STOP, SWAP, TRAP, UNLK, TST |
+| 4    | CLR, EXT, LINK/UNLK, NEG/NEGX, NOT, PEA/LEA, JSR/JMP/RTS/RTR, RESET, STOP, SWAP, TRAP, TST, SR/CCR moves |
 | 5    | ADDQ, SUBQ, DBcc, Scc |
 | 6    | BRA, BSR, Bcc (all 14 conditions) |
 | 7    | MOVEQ |
-| 8    | OR, DIVU/DIVS (host arithmetic), SBCD |
+| 8    | OR, DIVU/DIVS (fixed restoring gate network) |
 | 9    | SUB, SUBA, SUBX |
 | B    | CMP, CMPA, CMPM, EOR |
-| C    | AND, MULU/MULS (host arithmetic), ABCD, EXG |
+| C    | AND, MULU/MULS (fixed partial-product gate network), EXG |
 | D    | ADD, ADDA, ADDX |
 | E    | ASL/ASR, LSL/LSR, ROL/ROR, ROXL/ROXR (register and memory forms) |
 
+## Checked lifecycle and conformance
+
+`get_state`, `restore`, `load_checked`, `load_at_checked`, `step_checked`,
+`run_loaded_checked`, and `run_checked` share the functional simulator's owned
+`M68kState`, traces, results, and typed errors. Failures are atomic. The gate
+CPU is differentially checked against all 82 committed Python-oracle full-state
+vectors in addition to its component and instruction tests.
+
 ## Limitations
 
-- **MUL/DIV**: use host arithmetic — a gate-level ×16 booth multiplier
-  is out of scope for this simulator.
 - **Supervisor/user mode**: the simulator initialises SR=0x2700
   (supervisor mode, interrupts masked) but does not enforce privilege.
 - **Interrupts and exceptions**: not simulated; TRAP #15 is used as a
   soft halt.
-- **Word alignment**: not enforced (real 68000 raises address error on
-  misaligned word/long accesses).
+- **Word alignment**: checked transitions reject misaligned instruction/data
+  accesses through the functional contract; legacy direct methods retain their
+  original wrapping behavior.
 
 ## How it fits in the stack
 

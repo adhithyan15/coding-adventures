@@ -32,6 +32,7 @@ pub const GRID_FIXTURE_PATH: &str = "/grid.html";
 pub const POSITIONED_FIXTURE_PATH: &str = "/positioned.html";
 pub const TABLE_FIXTURE_PATH: &str = "/table.html";
 pub const FLOAT_FIXTURE_PATH: &str = "/float.html";
+pub const INLINE_BOX_FIXTURE_PATH: &str = "/inline-box.html";
 pub const VIEWPORT_WIDTH: f64 = 240.0;
 pub const VIEWPORT_HEIGHT: f64 = 120.0;
 pub const GPU_LAYER_FIXTURE_WIDTH: u32 = 16;
@@ -97,6 +98,9 @@ pub const TABLE_FIXTURE_HTML: &str = r#"<!doctype html><html><body><table id="ta
 
 /// Compact float, exclusion, shrink-to-fit, and clearance fixture.
 pub const FLOAT_FIXTURE_HTML: &str = r#"<!doctype html><html><body><div id="float-stage" style="width:224px"><div id="float-left" style="float:left;width:72px;height:48px;background:red">Left</div><div id="float-right" style="float:right;width:52px;height:36px;background:blue">Right</div><p id="float-flow" style="margin:0;background:green">Text wraps inside the shared exclusion band.</p><div id="float-clear" style="clear:both;height:18px;background:red">Clear</div><div id="float-auto" style="float:right;background:blue">shrink</div></div></body></html>"#;
+
+/// Wrapped semantic inline boxes exercising slice and clone edge continuation.
+pub const INLINE_BOX_FIXTURE_HTML: &str = r#"<!doctype html><html><body><p style="width:130px;margin:0"><a id="slice-link" href="slice.html" style="margin:0 2px;padding:2px 4px;border:1px solid red;background:green">sliced inline edges cross several lines</a></p><p style="width:130px;margin:8px 0 0"><a id="clone-link" href="clone.html" style="margin:0 2px;padding:2px 4px;border:1px solid blue;background:red;box-decoration-break:clone">cloned inline edges repeat on every line</a></p></body></html>"#;
 
 /// A compact backend-neutral oracle for isolated GPU composition.
 ///
@@ -493,6 +497,7 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
     let positioned_url = format!("{origin}{POSITIONED_FIXTURE_PATH}");
     let table_url = format!("{origin}{TABLE_FIXTURE_PATH}");
     let float_url = format!("{origin}{FLOAT_FIXTURE_PATH}");
+    let inline_box_url = format!("{origin}{INLINE_BOX_FIXTURE_PATH}");
     match requested_url {
         url if url == page_url => Ok(BrowserFetchResponse::new(
             url,
@@ -553,6 +558,12 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
             200,
             Some("text/html; charset=utf-8".into()),
             FLOAT_FIXTURE_HTML.as_bytes().to_vec(),
+        )),
+        url if url == inline_box_url => Ok(BrowserFetchResponse::new(
+            url,
+            200,
+            Some("text/html; charset=utf-8".into()),
+            INLINE_BOX_FIXTURE_HTML.as_bytes().to_vec(),
         )),
         url if url == format!("{origin}{MISSING_IMAGE_PATH}") => {
             Err("intentional visual fixture image failure".into())
@@ -663,6 +674,23 @@ pub fn load_float_page(origin: &str) -> Result<BrowserPage, String> {
         &text,
     );
     let url = format!("{}{FLOAT_FIXTURE_PATH}", origin.trim_end_matches('/'));
+    pipeline
+        .load(&url, &|requested: &str| fixture_response(origin, requested))
+        .map_err(|error| error.to_string())
+}
+
+pub fn load_inline_box_page(origin: &str) -> Result<BrowserPage, String> {
+    let theme = mosaic_html_theme();
+    let text = DeterministicText;
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, 1.0),
+        &text,
+        &text,
+        &text,
+        &text,
+    );
+    let url = format!("{}{INLINE_BOX_FIXTURE_PATH}", origin.trim_end_matches('/'));
     pipeline
         .load(&url, &|requested: &str| fixture_response(origin, requested))
         .map_err(|error| error.to_string())
@@ -1318,6 +1346,36 @@ mod tests {
     }
 
     #[test]
+    fn inline_box_fixture_converges_fragment_edges_paint_and_hit_regions() {
+        let page = load_inline_box_page("http://venture.test").expect("inline box fixture page");
+        let mut sliced = Vec::new();
+        let mut cloned = Vec::new();
+        collect_positioned_href(&page.paint.positioned, "slice.html", &mut sliced);
+        collect_positioned_href(&page.paint.positioned, "clone.html", &mut cloned);
+        assert!(sliced.len() >= 2);
+        assert!(cloned.len() >= 2);
+        assert!(sliced.windows(2).all(|pair| pair[0].y < pair[1].y));
+        assert!(cloned.iter().all(|fragment| fragment.width > 10.0));
+        assert_eq!(
+            page.paint
+                .links
+                .iter()
+                .filter(|link| link.url.ends_with("slice.html"))
+                .count(),
+            sliced.len()
+        );
+        assert_eq!(
+            page.paint
+                .links
+                .iter()
+                .filter(|link| link.url.ends_with("clone.html"))
+                .count(),
+            cloned.len()
+        );
+        assert!(!page.paint.scene.instructions.is_empty());
+    }
+
+    #[test]
     fn international_page_converges_direction_wrap_and_font_fallback() {
         let page = load_international_page("http://venture.test").expect("international page");
         for id in [
@@ -1367,6 +1425,26 @@ mod tests {
         node.children
             .iter()
             .find_map(|child| find_positioned_id(child, id))
+    }
+
+    fn collect_positioned_href<'a>(
+        node: &'a PositionedNode,
+        href: &str,
+        matches: &mut Vec<&'a PositionedNode>,
+    ) {
+        let node_href = node.ext.get("html").and_then(|value| match value {
+            layout_ir::ExtValue::Map(values) => match values.get("href") {
+                Some(layout_ir::ExtValue::Str(value)) => Some(value.as_str()),
+                _ => None,
+            },
+            _ => None,
+        });
+        if node_href.is_some_and(|value| value.ends_with(href)) {
+            matches.push(node);
+        }
+        for child in &node.children {
+            collect_positioned_href(child, href, matches);
+        }
     }
 
     #[test]

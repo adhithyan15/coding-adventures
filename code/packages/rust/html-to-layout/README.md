@@ -28,6 +28,9 @@ The adapter maps parser-supplied display categories, text, headings, images,
 hidden content, stable IDs, and resolved link/resource URLs. Browser metadata
 needed after layout is retained under `LayoutNode.ext["html"]`, so positioned
 nodes still carry link targets and semantic roles for hit testing.
+Inline semantic containers also retain margin, padding, border paint, and a
+typed `inlineBox` decoration-break extension so shared line layout can build
+accurate slice/clone fragments.
 The optional visited callback receives only resolved URLs. It selects theme
 colors and inherited link decoration without exposing history or persistence
 policy to this producer adapter. `HtmlStyleContext` adds a host-neutral

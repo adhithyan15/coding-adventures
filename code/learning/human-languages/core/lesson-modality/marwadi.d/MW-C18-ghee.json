@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C18-ghee",
+    "language": "marwadi",
+    "chapter": 23,
+    "sequence": 1760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c98903fbe69b04f"
+  },
+  "findings": []
+}

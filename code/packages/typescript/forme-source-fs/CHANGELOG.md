@@ -1,5 +1,17 @@
 # Changelog — @coding-adventures/forme-source-fs
 
+## 0.4.0 — 2026-09-01
+
+### Added — external source observation
+
+- `externalState` publishes globally sorted, portable locators with stable
+  logical identities and binary content revisions, plus a canonical aggregate
+  revision for the complete filesystem snapshot.
+- Observation and `run` share the stage-local cache, so one scan creates a
+  coherent manifest and emitted stream without rereading source files.
+- Focused tests prove deterministic ordering, digest changes after edits, and
+  snapshot coherence when a file changes between observation and emission.
+
 ## 0.3.0 — 2026-09-01
 
 ### Added — identity persistence (write side)

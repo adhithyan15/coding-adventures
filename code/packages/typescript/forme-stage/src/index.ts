@@ -35,6 +35,7 @@ export type {
 
 // ─── StageContext shapes ──────────────────────────────────────────────────
 export type { StageContext, StageInitContext } from "./context.js";
+export type { ExternalStateEntry, ExternalStateManifest } from "./external-state.js";
 
 // ─── Logger ───────────────────────────────────────────────────────────────
 export {

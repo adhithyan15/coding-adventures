@@ -5078,13 +5078,26 @@ the Rust, Python, and TypeScript surfaces together.
      `VAR` precedence; invalid input is rejected before element lowering.
 
 25. Rust BJT forward-beta-rolloff-current parser parity.
-   - Status: prioritized next after the BJT reverse-Early-voltage slice.
+   - Status: completed by the Rust BJT forward-beta-rolloff-current slice.
    - The engine and Python/TypeScript facades lower finite non-negative BJT
-     `IKF` values, with `IK` as a fallback alias, into the forward-beta-rolloff
-     current field; the Rust element lowerer still leaves the engine default in
-     place.
+     `IKF` values, with `IK` as a fallback alias and canonical `IKF`
+     precedence, into the forward-beta-rolloff current field; Rust now does
+     the same and rejects invalid input before element lowering.
 
-26. Grammar-backed parser and app facade.
+26. Rust BJT reverse-beta-rolloff-current parser parity.
+   - Status: completed by the Rust BJT reverse-beta-rolloff-current slice.
+   - The engine and Python/TypeScript facades lower finite non-negative BJT
+     `IKR` values into the reverse-beta-rolloff current field; Rust now does
+     the same and rejects invalid input before element lowering.
+
+27. Rust BJT nominal-temperature parser parity.
+   - Status: prioritized next after the BJT reverse-beta-rolloff-current slice.
+   - The engine and Python/TypeScript facades lower valid BJT `TNOM` values,
+     with `T_NOM` as a fallback alias and canonical `TNOM` precedence, into
+     the optional nominal-temperature field after Celsius-to-Kelvin conversion;
+     the Rust element lowerer still leaves the engine default in place.
+
+28. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
      syntax facade as the grammar evolves, even if that breaks current
      pre-release parser APIs.
@@ -5092,7 +5105,7 @@ the Rust, Python, and TypeScript surfaces together.
      toward packaging, WebAssembly embedding, and product integration backed by
      the same public parser contract.
 
-27. Deck compatibility follow-up.
+29. Deck compatibility follow-up.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.

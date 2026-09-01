@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "The People Around You",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:4ec60d644b61096f",
+  "sourceHash": "fnv1a64:cb3a111c1854f8c4",
   "lessons": [
     {
       "id": "HI-C39-dost",
@@ -494,16 +494,16 @@
       "id": "HI-C39-aurat",
       "sequence": 1090,
       "title": "औरत (aurat) — the word for \"woman,\" and which one to use",
-      "headword": "औरत",
+      "headword": "औरत / महिला / स्त्री",
       "romanization": "",
-      "gloss": "woman — feminine, an Arabic word that only came to mean \"woman\" in Persian, and one of three Hindi words separated by register",
+      "gloss": "woman — everyday औरत, respectful public महिला, and literary स्त्री form a three-register set",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:48da5f6f87220b65",
+      "sourceHash": "fnv1a64:9e66a6731715629a",
       "notice": null,
       "blocks": [
         {

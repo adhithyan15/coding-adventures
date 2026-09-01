@@ -7,6 +7,7 @@ chapter: 15
 type: word
 headword: വെള്ളം അരി ചോറ്
 gloss: water (a genuinely DIFFERENT word than Tamil's), and rice raw/cooked, closely matching Tamil
+romanization: "veḷḷaṁ ari cōṟu"
 concept_tag: ML-FOOD-BASIC
 prerequisites: [ML-C14-kaalangal]
 sounds: [malayalam-geminate-lla, malayalam-vowel-sign-oo]

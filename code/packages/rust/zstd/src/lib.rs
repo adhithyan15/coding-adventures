@@ -406,6 +406,14 @@ impl<'a> FwdBitReader<'a> {
 /// `.apkg` would use.
 const MAX_ACC_LOG: u8 = 9;
 
+/// The smallest `accuracy_log` whose table can actually be built.
+///
+/// The wire floor is 5 (`read(4) + 5`), so nothing below this arrives from a
+/// frame — but `build_decode_table`'s spread stride degenerates for tables of
+/// 2 and 8 cells, so the constructor refuses them rather than relying on every
+/// future caller knowing that.
+const MIN_ACC_LOG: u8 = 5;
+
 /// Decode an FSE table description into a normalised distribution.
 ///
 /// Returns `(normalised_counts, accuracy_log, bytes_consumed)`.
@@ -581,6 +589,20 @@ impl FseTable {
     fn from_norm(norm: &[i16], acc_log: u8) -> Result<Self, String> {
         if acc_log > MAX_ACC_LOG {
             return Err(format!("FSE accuracy_log {acc_log} exceeds {MAX_ACC_LOG}"));
+        }
+        // The upper bound was here from the start; the lower one is the half
+        // that is easy to forget, because no *wire* frame can reach it — the
+        // encoded field is `read(4) + 5`, and the predefined tables are 5 and 6.
+        // But `build_decode_table`'s spread step is `(sz>>1) + (sz>>3) + 3`,
+        // which for sz=2 is 4 and for sz=8 is 8: both ≡ 0 mod sz, so `pos`
+        // never advances and every count lands in cell 0. The `total ==
+        // table_size` check below does not catch that, and the resulting table
+        // has a symbol with zero occurrences — breaking the exact invariant
+        // `fse_update_state` relies on when it chose `wrapping_add`. Reachable
+        // only from inside the crate today, which makes this the cheapest
+        // possible moment to close it.
+        if acc_log < MIN_ACC_LOG {
+            return Err(format!("FSE accuracy_log {acc_log} is below {MIN_ACC_LOG}"));
         }
         if norm.is_empty() || norm.len() > 256 {
             return Err(format!("FSE distribution has {} symbols", norm.len()));
@@ -2737,6 +2759,18 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
         let btype = (hdr >> 1) & 3;
         let bsize = (hdr >> 3) as usize;
 
+        // RFC 8878 §3.1.1.2 caps `Block_Size` at 128 KB, and a conforming
+        // encoder never exceeds it. The field is 21 bits wide, though, so a
+        // hostile frame can declare 2 MB — and for RLE blocks, where the whole
+        // payload is one byte, that is a 16x cheaper amplifier than the format
+        // permits. The output budget bounds the total either way; this bounds
+        // the *rate*, and rejects a frame real libzstd would refuse.
+        if bsize > MAX_BLOCK_SIZE {
+            return Err(format!(
+                "block declares {bsize} bytes, past the {MAX_BLOCK_SIZE}-byte maximum"
+            ));
+        }
+
         match btype {
             0 => {
                 // Raw block: `bsize` bytes of verbatim content.
@@ -2811,7 +2845,9 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
             let magic = u32::from_le_bytes([rest[0], rest[1], rest[2], rest[3]]);
             if magic == MAGIC {
                 return Err(
-                    "concatenated frames are not supported: a second Zstandard frame follows                      this one, and decoding only the first would silently drop its content"
+                    "concatenated frames are not supported: a second Zstandard frame \
+                     follows this one, and decoding only the first would silently \
+                     drop its content"
                         .into(),
                 );
             }
@@ -4035,14 +4071,53 @@ mod tests {
 
     #[test]
     fn fse_table_build_rejects_distributions_that_do_not_sum_to_the_table() {
+        // acc_log 5 is the smallest the wire can encode and the smallest this
+        // constructor accepts; the table holds 32 cells.
         // One slot short.
-        assert!(FseTable::from_norm(&[2, 1], 2).is_err());
+        assert!(FseTable::from_norm(&[20, 11], 5).is_err());
         // One slot over.
-        assert!(FseTable::from_norm(&[3, 2], 2).is_err());
+        assert!(FseTable::from_norm(&[20, 13], 5).is_err());
         // Counts below -1 are not a thing.
-        assert!(FseTable::from_norm(&[-2, 6], 2).is_err());
+        assert!(FseTable::from_norm(&[-2, 34], 5).is_err());
         // Exact fit is accepted, including the "-1" one-slot symbols.
-        assert!(FseTable::from_norm(&[2, 1, -1], 2).is_ok());
+        assert!(FseTable::from_norm(&[20, 11, -1], 5).is_ok());
+    }
+
+    #[test]
+    fn fse_table_build_rejects_an_accuracy_log_below_the_wire_floor() {
+        // No frame can ask for these — the encoded field is `read(4) + 5`. But
+        // `build_decode_table`'s spread stride is `(sz>>1) + (sz>>3) + 3`,
+        // which is 4 for sz=2 and 8 for sz=8: both ≡ 0 mod sz, so the walk
+        // never leaves cell 0 and every other cell stays unwritten. The
+        // sum-to-table-size check passes, so nothing downstream notices, and
+        // the table then violates the exact-occupancy invariant that lets
+        // `fse_update_state` use `wrapping_add`. Guarded at the constructor so
+        // a future caller cannot reintroduce it from outside the wire path.
+        assert!(FseTable::from_norm(&[0, 2], 1).is_err());
+        assert!(FseTable::from_norm(&[0, 4, 4], 3).is_err());
+        // The floor itself still builds.
+        assert!(FseTable::from_norm(&[20, 11, -1], 5).is_ok());
+    }
+
+    #[test]
+    fn a_block_may_not_declare_more_than_the_format_maximum() {
+        // `Block_Size` is 21 bits wide, so a hostile frame can name 2 MB where
+        // RFC 8878 caps blocks at 128 KB. For an RLE block the entire payload
+        // is one byte, so the gap is a 16x amplifier over what the format
+        // allows. Header: last=1, type=1 (RLE), size = MAX_BLOCK_SIZE + 1.
+        let bsize = (MAX_BLOCK_SIZE + 1) as u32;
+        let hdr = 1 | (1 << 1) | (bsize << 3);
+        let mut frame = MAGIC.to_le_bytes().to_vec();
+        frame.push(0); // Frame_Header_Descriptor: no content size, no dict.
+        frame.push(0); // Window_Descriptor.
+        frame.extend_from_slice(&hdr.to_le_bytes()[..3]);
+        frame.push(b'A');
+
+        let error = decompress(&frame).expect_err("an oversized block must be refused");
+        assert!(
+            error.contains("maximum"),
+            "the error should name the block maximum, got: {error}"
+        );
     }
 
     #[test]
