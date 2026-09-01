@@ -183,9 +183,9 @@ public enum GitDiff {
         var data = Data()
         while true {
             let remaining = maximumBytes - data.count
-            let chunk = try output.fileHandleForReading.read(
-                upToCount: min(64 * 1024, remaining + 1)
-            ) ?? Data()
+            let chunk = output.fileHandleForReading.readData(
+                ofLength: min(64 * 1024, remaining + 1)
+            )
             if chunk.isEmpty {
                 break
             }
