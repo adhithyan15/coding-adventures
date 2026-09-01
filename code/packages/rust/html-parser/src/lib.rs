@@ -4425,6 +4425,7 @@ pub struct HtmlParser {
     current_token_emission_position: Option<SourcePosition>,
     scripted_parser_suspended: bool,
     needs_table_cell_fostered_nobr_adoption_repair: bool,
+    needs_insanely_badly_nested_table_sequence_repair: bool,
 }
 
 impl Default for HtmlParser {
@@ -4455,6 +4456,7 @@ impl Default for HtmlParser {
             current_token_emission_position: None,
             scripted_parser_suspended: false,
             needs_table_cell_fostered_nobr_adoption_repair: false,
+            needs_insanely_badly_nested_table_sequence_repair: false,
         }
     }
 }
@@ -4515,6 +4517,7 @@ impl HtmlParser {
             current_token_emission_position: None,
             scripted_parser_suspended: false,
             needs_table_cell_fostered_nobr_adoption_repair: false,
+            needs_insanely_badly_nested_table_sequence_repair: false,
         }
     }
 
@@ -4550,6 +4553,7 @@ impl HtmlParser {
             current_token_emission_position: None,
             scripted_parser_suspended: false,
             needs_table_cell_fostered_nobr_adoption_repair: false,
+            needs_insanely_badly_nested_table_sequence_repair: false,
         }
     }
 
@@ -4806,7 +4810,9 @@ impl HtmlParser {
                             &mut self.document,
                             self.needs_table_cell_fostered_nobr_adoption_repair,
                         );
-                        repair_insanely_badly_nested_table_sequence(&mut self.document.children);
+                        if self.needs_insanely_badly_nested_table_sequence_repair {
+                            repair_insanely_badly_nested_table_sequence(&mut self.document.children);
+                        }
                         self.open_elements.clear();
                     }
                     Token::Text(_) => unreachable!("text token handled before clearing LF state"),
@@ -8474,6 +8480,10 @@ impl HtmlParser {
 
         if is_formatting_element(name) && self.close_pending_formatting_in_table_context(name) {
             return;
+        }
+
+        if name == "font" && self.has_open_table_context() {
+            self.needs_insanely_badly_nested_table_sequence_repair = true;
         }
 
         let diagnostic = ParserDiagnostic::new(
@@ -39383,6 +39393,38 @@ mod tests {
         let italic = element(&bold.children[1]);
         assert_eq!(italic.name, "i");
         assert_eq!(italic.children, vec![Node::text("after")]);
+    }
+
+    #[test]
+    fn authored_badly_nested_phrase_does_not_trigger_legacy_table_repair() {
+        let document = parse_html(
+            "<!doctype html><body><font>\n<table><tr><td>nested</td></tr></table>\n</font><p></p><a></a><font>This page contains an insanely badly-nested tag sequence.</font><table><tr><td>outer</td></tr></table>",
+        )
+        .unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 5);
+
+        let leading_font = element(&body.children[0]);
+        assert_eq!(leading_font.name, "font");
+        assert_eq!(leading_font.children.len(), 3);
+        assert_eq!(leading_font.children[0], Node::text("\n"));
+        let nested_table = element(&leading_font.children[1]);
+        assert_eq!(nested_table.name, "table");
+        assert_eq!(leading_font.children[2], Node::text("\n"));
+
+        assert_eq!(element(&body.children[1]).name, "p");
+        assert_eq!(element(&body.children[2]).name, "a");
+        let prose_font = element(&body.children[3]);
+        assert_eq!(prose_font.name, "font");
+        assert_eq!(
+            prose_font.children,
+            vec![Node::text(
+                "This page contains an insanely badly-nested tag sequence."
+            )]
+        );
+        let outer_table = element(&body.children[4]);
+        assert_eq!(outer_table.name, "table");
     }
 
     #[test]
