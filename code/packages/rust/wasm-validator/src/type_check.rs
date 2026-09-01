@@ -47,7 +47,7 @@
 
 use wasm_leb128::{decode_signed, decode_unsigned, decode_unsigned_bounded};
 use wasm_opcodes::get_opcode;
-use wasm_types::{FuncType, FunctionBody, GlobalType, ValueType, WasmModule};
+use wasm_types::{FieldType, FuncType, FunctionBody, GlobalType, ValueType, WasmModule};
 
 use crate::ValidationError;
 
@@ -529,20 +529,53 @@ fn max_align_for(access_bytes: u32) -> u32 {
     access_bytes.trailing_zeros()
 }
 
+/// Ceiling on `array.new_fixed`'s literal element-count immediate this
+/// validator will actually iterate over (W33 fourth slice) -- see that
+/// opcode's own match arm for why an unbounded loop over an
+/// attacker-controlled count is a real algorithmic DoS, not a hypothetical
+/// one, even though no single iteration allocates memory.
+const MAX_ARRAY_NEW_FIXED_COUNT: u32 = 1_000_000;
+
 /// The declared field count of the WasmGC struct type at type-section index
-/// `type_idx` -- how many values `struct.new` pops. Struct types live after
-/// the function types in the combined type index space: struct type `k` is
-/// at type-section index `module.types.len() + k` (see `WasmModule::struct_types`'s
-/// own doc comment).
+/// `type_idx` -- how many values `struct.new` pops. Resolved via
+/// `WasmModule::struct_type_at` (W33 fourth slice: `type_kinds`-aware first,
+/// falling back to the legacy `types.len() + k` offset convention -- see
+/// that method's own doc comment) rather than re-deriving the offset
+/// directly here, since a TEXT-format module can now interleave struct
+/// declarations among func ones in a way the legacy formula alone cannot
+/// represent.
 fn struct_field_count(module: &WasmModule, type_idx: u32) -> Result<usize, ValidationError> {
-    let struct_idx = (type_idx as usize)
-        .checked_sub(module.types.len())
-        .ok_or_else(|| ValidationError::TypeIndexOutOfBounds(format!("struct.new type index {type_idx} is a function type, not a struct type")))?;
     let st = module
-        .struct_types
-        .get(struct_idx)
-        .ok_or_else(|| ValidationError::TypeIndexOutOfBounds(format!("struct.new references struct type index {type_idx}, but only {} struct types exist", module.struct_types.len())))?;
+        .struct_type_at(type_idx)
+        .ok_or_else(|| ValidationError::TypeIndexOutOfBounds(format!("struct.new references struct type index {type_idx}, but no such struct type exists")))?;
     Ok(st.fields.len())
+}
+
+/// The array-type analogue of [`struct_field_count`]: the element
+/// [`StorageType`]/mutability of the WasmGC array type at flat type-section
+/// index `type_idx` (W33 fourth slice) -- resolved the same
+/// `type_kinds`-aware-first way via [`WasmModule::array_type_at`].
+fn array_element_field(module: &WasmModule, type_idx: u32) -> Result<&FieldType, ValidationError> {
+    module
+        .array_type_at(type_idx)
+        .map(|at| &at.element)
+        .ok_or_else(|| ValidationError::TypeIndexOutOfBounds(format!("references array type index {type_idx}, but no such array type exists")))
+}
+
+/// One field of the WasmGC struct type at flat type-section index
+/// `type_idx` (W33 fourth slice) -- `struct.set`'s own bounds AND
+/// mutability check both need the real [`FieldType`], not just the field
+/// count [`struct_field_count`] returns.
+fn struct_field(module: &WasmModule, type_idx: u32, field_idx: u32) -> Result<&FieldType, ValidationError> {
+    let st = module
+        .struct_type_at(type_idx)
+        .ok_or_else(|| ValidationError::TypeIndexOutOfBounds(format!("references struct type index {type_idx}, but no such struct type exists")))?;
+    st.fields.get(field_idx as usize).ok_or_else(|| {
+        ValidationError::TypeIndexOutOfBounds(format!(
+            "struct.set references field index {field_idx} of type {type_idx}, but only {} fields exist",
+            st.fields.len()
+        ))
+    })
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -1112,21 +1145,100 @@ fn const_expr_type(expr: &[u8], ctx: &ModuleContext, global_limit: Option<u32>) 
                 stack.push(StackType::Known(ValueType::V128));
             }
             // WasmGC prefix (0xFB): `ref.i31` (sub-opcode 0x1C) is the one
-            // GC instruction the real spec allows in a constant expression.
-            // Pops the i32 payload, pushes `(ref i31)` (always non-null).
+            // GC instruction the real spec allows in a constant expression
+            // for THIS repo's pre-W33-fourth-slice scope. W33 fourth slice
+            // adds the real GC proposal's OTHER constant-legal instructions:
+            // `struct.new`/`struct.new_default`/`array.new`/`array.new_
+            // default`/`array.new_fixed` -- confirmed directly against the
+            // real vendored corpus, not assumed: `struct.wast`'s own
+            // `(global (ref $vec) (struct.new $vec ...))`/`(global (ref
+            // $vec) (struct.new_default $vec))` and `array.wast`'s
+            // `(global (ref $vec) (array.new $vec ...))`/`(global (ref
+            // $vec) (array.new_fixed $vec 2 ...))` are all real, VALID
+            // (non-`assert_invalid`) module-level globals. `array.new_data`/
+            // `array.new_elem` are deliberately excluded (`array.wast`'s own
+            // `assert_invalid "constant expression required"` cases probe
+            // exactly this) -- moot for now anyway since `wasm-wast-parser`
+            // doesn't parse either instruction at all yet (see that crate's
+            // own `encode_gc_struct_array_instr` doc comment), so a global
+            // using one fails to PARSE long before reaching this checker.
             0xFB => {
                 let sub = *expr
                     .get(offset)
                     .ok_or_else(|| ValidationError::Other("truncated WasmGC opcode in constant expression".to_string()))?;
                 offset += 1;
-                if sub != 0x1C {
-                    return Err(ValidationError::Other(format!(
-                        "illegal WasmGC sub-opcode 0x{sub:02X} in constant expression"
-                    )));
+                match sub {
+                    0x1C => {
+                        let v = pop_const(&mut stack)?;
+                        check_const_operand(v, ValueType::I32, ctx.module)?;
+                        stack.push(StackType::Known(ValueType::I31ref));
+                    }
+                    0x00 | 0x01 => {
+                        // struct.new / struct.new_default <type_idx>.
+                        let (type_idx, size) = decode_unsigned_bounded(expr, offset, 32)
+                            .map_err(|e| ValidationError::Other(format!("struct.new: {e}")))?;
+                        offset += size;
+                        let type_idx = type_idx as u32;
+                        let st = ctx
+                            .module
+                            .struct_type_at(type_idx)
+                            .ok_or_else(|| ValidationError::TypeIndexOutOfBounds(format!("struct.new references struct type index {type_idx}, but no such struct type exists")))?;
+                        if sub == 0x00 {
+                            // struct.new: pop one const operand per declared
+                            // field, in REVERSE (last field on top).
+                            for field in st.fields.iter().rev() {
+                                let v = pop_const(&mut stack)?;
+                                check_const_operand(v, field.storage.widened_type(), ctx.module)?;
+                            }
+                        }
+                        stack.push(StackType::Known(ValueType::NonNullStructRef(type_idx)));
+                    }
+                    0x06 | 0x07 => {
+                        // array.new / array.new_default <type_idx>: pop
+                        // [elem_value?, i32 length].
+                        let (type_idx, size) = decode_unsigned_bounded(expr, offset, 32)
+                            .map_err(|e| ValidationError::Other(format!("array.new: {e}")))?;
+                        offset += size;
+                        let type_idx = type_idx as u32;
+                        let elem_ty = array_element_field(ctx.module, type_idx)?.storage.widened_type();
+                        let len = pop_const(&mut stack)?;
+                        check_const_operand(len, ValueType::I32, ctx.module)?;
+                        if sub == 0x06 {
+                            let v = pop_const(&mut stack)?;
+                            check_const_operand(v, elem_ty, ctx.module)?;
+                        }
+                        stack.push(StackType::Known(ValueType::NonNullArrayRef(type_idx)));
+                    }
+                    0x08 => {
+                        // array.new_fixed <type_idx> <count>: pop `count`
+                        // const operands. Same `MAX_ARRAY_NEW_FIXED_COUNT`
+                        // DoS guard as the function-body checker's own
+                        // identical arm -- see that arm's doc comment.
+                        let (type_idx, sz1) = decode_unsigned_bounded(expr, offset, 32)
+                            .map_err(|e| ValidationError::Other(format!("array.new_fixed: {e}")))?;
+                        offset += sz1;
+                        let type_idx = type_idx as u32;
+                        let (count, sz2) = decode_unsigned_bounded(expr, offset, 32)
+                            .map_err(|e| ValidationError::Other(format!("array.new_fixed count: {e}")))?;
+                        offset += sz2;
+                        let elem_ty = array_element_field(ctx.module, type_idx)?.storage.widened_type();
+                        if count > MAX_ARRAY_NEW_FIXED_COUNT as u64 {
+                            return Err(ValidationError::Other(format!(
+                                "array.new_fixed count {count} exceeds the maximum of {MAX_ARRAY_NEW_FIXED_COUNT}"
+                            )));
+                        }
+                        for _ in 0..count {
+                            let v = pop_const(&mut stack)?;
+                            check_const_operand(v, elem_ty, ctx.module)?;
+                        }
+                        stack.push(StackType::Known(ValueType::NonNullArrayRef(type_idx)));
+                    }
+                    _ => {
+                        return Err(ValidationError::Other(format!(
+                            "illegal WasmGC sub-opcode 0x{sub:02X} in constant expression"
+                        )));
+                    }
                 }
-                let v = pop_const(&mut stack)?;
-                check_const_operand(v, ValueType::I32, ctx.module)?;
-                stack.push(StackType::Known(ValueType::I31ref));
             }
             // `ref.null <heap_type>` -- same heap-type byte -> `ValueType`
             // mapping the function-body checker's own `0xD0` handler uses
@@ -1697,23 +1809,133 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         }
                         stack.push(StackType::Unknown);
                     }
-                    0x02 => {
-                        // struct.get <type_idx> <field_idx>: pops structref,
-                        // pushes the field's value.
-                        let (_, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad struct.get type index: {e}")))?;
-                        let (_, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad struct.get field index: {e}")))?;
+                    0x01 => {
+                        // struct.new_default <type_idx> (W33 fourth slice):
+                        // pops NOTHING (every field gets its type's zero
+                        // value), pushes one structref -- the only
+                        // difference from struct.new's stack effect.
+                        let (type_idx, size) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad struct.new_default type index: {e}")))?;
+                        offset += size;
+                        // Still a real bounds check on `type_idx` (matching
+                        // struct.new's own behavior) even though the field
+                        // count itself isn't used for a pop loop here.
+                        struct_field_count(ctx.module, type_idx as u32)?;
+                        stack.push(StackType::Unknown);
+                    }
+                    0x02 | 0x03 | 0x05 => {
+                        // struct.get / struct.get_s / struct.get_u
+                        // <type_idx> <field_idx> (W33 fourth slice adds the
+                        // two packed-field variants, sharing struct.get's
+                        // existing stack-effect shape: pop structref, push
+                        // the field's -- possibly sign/zero-extended --
+                        // value). See `encode_gc_struct_array_instr`'s own
+                        // doc comment (wasm-wast-parser) for why 0x05 is
+                        // struct.get_u in THIS repo's numbering, not the
+                        // real GC spec's.
+                        let (type_idx, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad struct.get type index: {e}")))?;
+                        let (field_idx, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad struct.get field index: {e}")))?;
                         offset += sz1 + sz2;
+                        struct_field(ctx.module, type_idx as u32, field_idx as u32)?; // real bounds check
                         pop_val(&mut stack, frame!())?;
                         stack.push(StackType::Unknown);
                     }
                     0x04 => {
                         // struct.set <type_idx> <field_idx>: pops the new
-                        // value and the structref.
-                        let (_, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad struct.set type index: {e}")))?;
-                        let (_, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad struct.set field index: {e}")))?;
+                        // value and the structref. W33 fourth slice: also a
+                        // real mutability check -- `struct.wast`'s own
+                        // "struct.set-immutable" `assert_invalid` case
+                        // requires this to be a validation error, not
+                        // silently accepted (the field itself is still
+                        // real, storage-backed data at runtime; immutability
+                        // is purely a static, validator-enforced property,
+                        // same division of responsibility as every other
+                        // WASM "invalid" rule this crate checks statically).
+                        let (type_idx, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad struct.set type index: {e}")))?;
+                        let (field_idx, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad struct.set field index: {e}")))?;
                         offset += sz1 + sz2;
+                        if !struct_field(ctx.module, type_idx as u32, field_idx as u32)?.mutable {
+                            return Err(ValidationError::Other(format!("struct.set: immutable field {field_idx} of type {type_idx}")));
+                        }
                         pop_val(&mut stack, frame!())?;
                         pop_val(&mut stack, frame!())?;
+                    }
+                    0x06 | 0x07 => {
+                        // array.new / array.new_default <type_idx> (W33
+                        // fourth slice): array.new pops [elem_value, i32
+                        // length]; array.new_default pops only [i32
+                        // length] (the element gets its type's zero value).
+                        // Both push one arrayref.
+                        let (type_idx, size) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad array.new type index: {e}")))?;
+                        offset += size;
+                        array_element_field(ctx.module, type_idx as u32)?; // real bounds check
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // length
+                        if sub == 0x06 {
+                            pop_val(&mut stack, frame!())?; // elem value
+                        }
+                        stack.push(StackType::Unknown);
+                    }
+                    0x08 => {
+                        // array.new_fixed <type_idx> <count> (W33 fourth
+                        // slice): pops exactly `count` element values
+                        // (declared as a literal immediate, not derived
+                        // from the operand stack), pushes one arrayref.
+                        // `count` is bounded by `MAX_ARRAY_NEW_FIXED_COUNT`
+                        // before the pop loop runs -- a malformed module
+                        // could otherwise claim a `u32::MAX` count and
+                        // force this validator into a multi-billion-
+                        // iteration loop (a real algorithmic DoS even
+                        // though each iteration is O(1) and allocates
+                        // nothing -- the same class of guard `wasm-module-
+                        // parser`'s `MAX_PREALLOC` exists for, just for
+                        // iteration count here instead of allocation size).
+                        let (type_idx, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad array.new_fixed type index: {e}")))?;
+                        let (count, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad array.new_fixed count: {e}")))?;
+                        offset += sz1 + sz2;
+                        array_element_field(ctx.module, type_idx as u32)?; // real bounds check
+                        if count > MAX_ARRAY_NEW_FIXED_COUNT as u64 {
+                            return Err(ValidationError::Other(format!(
+                                "array.new_fixed count {count} exceeds the maximum of {MAX_ARRAY_NEW_FIXED_COUNT}"
+                            )));
+                        }
+                        for _ in 0..count {
+                            pop_val(&mut stack, frame!())?;
+                        }
+                        stack.push(StackType::Unknown);
+                    }
+                    0x0B | 0x0C | 0x0D => {
+                        // array.get / array.get_s / array.get_u <type_idx>
+                        // (W33 fourth slice): pops [arrayref, i32 index],
+                        // pushes the element's -- possibly sign/zero-
+                        // extended -- value.
+                        let (type_idx, size) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad array.get type index: {e}")))?;
+                        offset += size;
+                        array_element_field(ctx.module, type_idx as u32)?; // real bounds check
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // index
+                        pop_val(&mut stack, frame!())?; // arrayref
+                        stack.push(StackType::Unknown);
+                    }
+                    0x0E => {
+                        // array.set <type_idx>: pops [arrayref, i32 index,
+                        // value], pushes nothing. W33 fourth slice: also a
+                        // real mutability check -- `array.wast`'s own
+                        // "array.set-immutable" `assert_invalid` case, the
+                        // array-hierarchy mirror of struct.set's own check
+                        // just above.
+                        let (type_idx, size) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad array.set type index: {e}")))?;
+                        offset += size;
+                        if !array_element_field(ctx.module, type_idx as u32)?.mutable {
+                            return Err(ValidationError::Other(format!("array.set: immutable array element (type {type_idx})")));
+                        }
+                        pop_val(&mut stack, frame!())?; // value
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // index
+                        pop_val(&mut stack, frame!())?; // arrayref
+                    }
+                    0x0F => {
+                        // array.len (W33 fourth slice): NO type immediate
+                        // (see `encode_array_len`'s own doc comment in
+                        // wasm-wast-parser) -- pops one arrayref, pushes I32.
+                        pop_val(&mut stack, frame!())?;
+                        push_val(&mut stack, ValueType::I32);
                     }
                     0x14 | 0x15 => {
                         // ref.test / ref.test null <heap_type>: pops a ref,
