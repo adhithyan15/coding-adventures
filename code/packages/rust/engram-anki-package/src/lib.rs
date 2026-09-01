@@ -7,9 +7,6 @@
 
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::fmt;
-// Only the zstd call sites need this; without `modern-format` there are none.
-#[cfg(feature = "modern-format")]
-use std::io::Cursor;
 
 use coding_adventures_sha1::sum1;
 pub use engram_core::EngramMediaReferenceAnalysis;
@@ -4310,61 +4307,39 @@ fn collection_member_for_format(
     })
 }
 
-/// The message a build without `modern-format` returns for a modern package.
-#[cfg(not(feature = "modern-format"))]
-///
-/// It names the format and the limitation rather than saying "unsupported", so a
-/// user who drags a `.colpkg` into browser Engram learns that legacy `.apkg` is
-/// the way through, instead of concluding the app is broken.
-const MODERN_FORMAT_UNAVAILABLE: &str = "this build supports legacy Anki .apkg packages only; \
-     modern .anki21b / .colpkg packages need zstd decompression, which is not \
-     available here — export from Anki in the legacy format, or use a desktop build";
-
 /// Decompress a package member.
 ///
-/// Legacy packages store members uncompressed, so this is a copy for them and the
-/// `modern-format` feature is irrelevant. Only the modern branch needs zstd, which
-/// is why turning the feature off still leaves a fully working legacy importer
-/// rather than no importer at all.
+/// Legacy packages store members uncompressed, so this is a copy for them. Only
+/// the modern branch needs zstd, and it now reaches the repo's own decoder —
+/// which means this works identically on every target, the browser included.
+/// There is no longer a build in which a modern package is refused for want of a
+/// decompressor.
 fn decode_package_payload(
     format: CollectionFormat,
     label: &str,
     bytes: &[u8],
 ) -> Result<Vec<u8>, ApkgError> {
     if format.is_modern() {
-        #[cfg(feature = "modern-format")]
-        {
-            return zstd_crate::stream::decode_all(Cursor::new(bytes)).map_err(|err| {
-                apkg_error(format!("failed to decode zstd-compressed {label}: {err}"))
-            });
-        }
-        #[cfg(not(feature = "modern-format"))]
-        {
-            // Deliberately an error, not a fallback to the raw bytes. Handing back
-            // a zstd frame as if it were a collection would surface much later as
-            // corrupt data of unclear origin; failing here says what happened.
-            let _ = (label, bytes);
-            return Err(apkg_error(MODERN_FORMAT_UNAVAILABLE));
-        }
+        return zstd::decompress(bytes)
+            .map_err(|err| apkg_error(format!("failed to decode zstd-compressed {label}: {err}")));
     }
     Ok(bytes.to_vec())
 }
 
 /// Compress a package member for a modern package.
 ///
-/// Only ever called on the modern write path, so without `modern-format` there is
-/// nothing meaningful to return.
+/// Our encoder emits raw literals with predefined FSE tables — valid Zstandard
+/// that any decoder reads, but larger than what libzstd produces at the same
+/// nominal level. That is a deliberate trade: a correct frame everywhere beats a
+/// smaller frame that only native builds can write. The round-trip test decodes
+/// what we emit with real libzstd, so "valid" is measured rather than asserted.
+///
+/// Compression itself is infallible, but the signature keeps its `Result` so the
+/// call sites — which interleave this with fallible zip writes — do not have to
+/// change shape, and so a future encoder that can fail has somewhere to report it.
 fn encode_package_payload(label: &str, bytes: &[u8]) -> Result<Vec<u8>, ApkgError> {
-    #[cfg(feature = "modern-format")]
-    {
-        zstd_crate::stream::encode_all(Cursor::new(bytes), 0)
-            .map_err(|err| apkg_error(format!("failed to encode zstd-compressed {label}: {err}")))
-    }
-    #[cfg(not(feature = "modern-format"))]
-    {
-        let _ = (label, bytes);
-        Err(apkg_error(MODERN_FORMAT_UNAVAILABLE))
-    }
+    let _ = label;
+    Ok(zstd::compress(bytes))
 }
 
 fn media_manifest(
@@ -4500,12 +4475,17 @@ mod tests {
         writer.finish()
     }
 
-    #[cfg(feature = "modern-format")]
+    /// Fixtures are compressed by **real libzstd**, deliberately.
+    ///
+    /// Every modern-package test below therefore exercises our decoder against
+    /// bytes a real encoder produced, which is the only way the assertion means
+    /// anything. Building fixtures with our own encoder would prove we can read
+    /// back our own bytes — the exact circularity that let the decoder ship
+    /// without Huffman or FSE support and still show green.
     fn zstd_encode(data: &[u8]) -> Vec<u8> {
-        zstd_crate::stream::encode_all(Cursor::new(data), 0).unwrap()
+        zstd_crate::stream::encode_all(std::io::Cursor::new(data), 0).unwrap()
     }
 
-    #[cfg(feature = "modern-format")]
     fn modern_package(collection: &[u8], media_assets: &[MediaAsset<'_>]) -> Vec<u8> {
         let mut writer = ZipWriter::new();
 
@@ -4818,7 +4798,6 @@ CREATE TABLE graves (
         assert_eq!(manifest.media.unmapped_files, vec!["2"]);
     }
 
-    #[cfg(feature = "modern-format")]
     #[test]
     fn recognizes_modern_collection_members() {
         let apkg = modern_package(b"modern collection", &[]);
@@ -4831,7 +4810,6 @@ CREATE TABLE graves (
         assert_eq!(collection, b"modern collection");
     }
 
-    #[cfg(feature = "modern-format")]
     #[test]
     fn reads_collection_members_across_legacy_and_modern_packages() {
         let legacy = package(&[(LEGACY_COLLECTION, b"legacy collection")]);
@@ -6711,18 +6689,6 @@ CREATE TABLE graves (
         assert!(imported.card_progress.is_empty());
     }
 
-    /// Without `modern-format`, a modern package fails with a message that says
-    /// what to do — it does not import partial data.
-    ///
-    /// This is the configuration wasm is built in, so it is the behaviour a
-    /// browser user actually meets when they drag in a `.colpkg`. The failure mode
-    /// worth guarding against is not the error; it is a build that treats the
-    /// still-compressed payload as a collection and imports something plausible
-    /// and wrong.
-    ///
-    /// The package here carries deliberately invalid payload bytes. That is the
-    /// point: format is detected by member name, so the code must refuse before it
-    /// ever looks at the content, and the test needs no zstd to construct.
     /// The media budget's arithmetic, which is where it went wrong before.
     ///
     /// The first version used `usize::saturating_mul`. On `wasm32`, `usize` is 32
@@ -6763,27 +6729,34 @@ CREATE TABLE graves (
         // as runtime assertions here.
     }
 
-    #[cfg(not(feature = "modern-format"))]
+    /// A modern package whose payload is not a zstd frame is refused, and the
+    /// error names the member rather than importing something plausible.
+    ///
+    /// This test used to assert the opposite of what it does now. It was gated
+    /// on `not(feature = "modern-format")` and pinned the message a browser user
+    /// met when they dragged in a `.colpkg`: *this build supports legacy .apkg
+    /// only*. That message is gone because the limitation is gone — the decoder
+    /// is ours and pure Rust, so wasm decodes modern packages like every other
+    /// target.
+    ///
+    /// What still matters is the failure mode the old test was really guarding:
+    /// a build that treats a still-compressed payload as a collection and
+    /// imports something plausible and wrong. Format is detected by member name,
+    /// so garbage under a modern name must fail at decode, loudly.
     #[test]
-    fn modern_packages_fail_with_an_actionable_error_when_zstd_is_unavailable() {
+    fn a_modern_member_that_is_not_a_zstd_frame_is_refused() {
         let apkg = package(&[(SQLITE_21B_COLLECTION, b"not actually zstd")]);
 
         let error = read_v11_collection(&apkg)
-            .expect_err("a modern package must not import in a legacy-only build");
+            .expect_err("a non-zstd payload must not be imported as a collection");
 
         assert!(
-            error.message.contains("legacy Anki .apkg"),
-            "the error should point at the legacy format as the way through, got: {}",
-            error.message
-        );
-        assert!(
-            error.message.contains(".anki21b") || error.message.contains(".colpkg"),
-            "the error should name the format that failed, got: {}",
+            error.message.contains("zstd"),
+            "the error should say decompression failed, got: {}",
             error.message
         );
     }
 
-    #[cfg(feature = "modern-format")]
     #[test]
     fn v11_collection_reader_accepts_modern_zstd_envelope() {
         let sqlite = v11_sqlite_collection_bytes();
@@ -6833,7 +6806,6 @@ CREATE TABLE graves (
         assert_eq!(audio.data, b"mp3");
     }
 
-    #[cfg(feature = "modern-format")]
     #[test]
     fn inspects_and_reads_modern_zstd_media_entries() {
         let apkg = modern_package(
@@ -6903,7 +6875,6 @@ CREATE TABLE graves (
         assert_eq!(state.media_assets[0].data, b"mp3");
     }
 
-    #[cfg(feature = "modern-format")]
     #[test]
     fn reads_modern_media_payloads_via_legacy_zip_filename() {
         let mut writer = ZipWriter::new();
@@ -7006,7 +6977,6 @@ CREATE TABLE graves (
         assert_eq!(image.data, b"png");
     }
 
-    #[cfg(feature = "modern-format")]
     #[test]
     fn writes_modern_apkg_envelope_and_state_export() {
         let sqlite = v11_sqlite_collection_bytes();
@@ -7212,5 +7182,83 @@ CREATE TABLE graves (
         let invalid_media = package(&[(LEGACY_COLLECTION, b"sqlite"), (MEDIA_MAP, b"not json")]);
         let error = inspect_apkg(&invalid_media).unwrap_err();
         assert!(error.message.contains("invalid Anki media map JSON"));
+    }
+
+    /// Our decoder reads what libzstd wrote, across the payload shapes a real
+    /// collection contains.
+    ///
+    /// The shapes matter more than the count. Highly repetitive SQLite pages,
+    /// incompressible media bytes, and short payloads drive different literals
+    /// types and sequence modes, and the decoder handled exactly one of those
+    /// combinations before RFC 8878 support landed.
+    #[test]
+    fn our_decoder_reads_frames_real_libzstd_produced() {
+        let cases: Vec<(&str, Vec<u8>)> = vec![
+            ("empty", Vec::new()),
+            ("one byte", vec![b'x']),
+            ("repetitive, like a sqlite page", vec![0u8; 64 * 1024]),
+            (
+                "prose, which drives huffman literals",
+                "the quick brown fox jumps over the lazy dog. "
+                    .repeat(2000)
+                    .into_bytes(),
+            ),
+            (
+                "incompressible, like media",
+                (0..96u32 * 1024).map(|i| (i.wrapping_mul(2654435761) >> 13) as u8).collect(),
+            ),
+        ];
+
+        for (label, original) in cases {
+            let frame = zstd_encode(&original);
+            let decoded = zstd::decompress(&frame)
+                .unwrap_or_else(|err| panic!("{label}: our decoder rejected a real frame: {err}"));
+            assert_eq!(
+                decoded, original,
+                "{label}: our decoder did not reproduce the original bytes"
+            );
+        }
+    }
+
+    /// Real libzstd reads what we wrote.
+    ///
+    /// Our encoder emits raw literals with predefined tables, which is valid but
+    /// unusual — precisely the kind of frame a self-only test suite would never
+    /// catch being wrong. Anki itself will decode these with real libzstd, so
+    /// this is the direction that decides whether an exported `.colpkg` opens.
+    #[test]
+    fn real_libzstd_reads_frames_our_encoder_produced() {
+        let original = "amma\tmother\nappa\tfather\n".repeat(3000).into_bytes();
+        let frame = zstd::compress(&original);
+
+        let decoded = zstd_crate::stream::decode_all(std::io::Cursor::new(&frame[..]))
+            .expect("real libzstd must accept the frames we emit");
+        assert_eq!(decoded, original);
+    }
+
+    /// A modern package we write is one Anki can open, end to end.
+    ///
+    /// The two tests above check the codec in isolation; this one checks the
+    /// package layer actually routes through it. It writes a modern package with
+    /// our encoder and reads every compressed member back with real libzstd,
+    /// which is what Anki does.
+    #[test]
+    fn a_modern_package_we_write_is_readable_by_real_libzstd() {
+        let collection = v11_sqlite_collection_bytes();
+        let encoded = encode_package_payload("collection", &collection)
+            .expect("encoding a modern payload should succeed");
+
+        let round_tripped = zstd_crate::stream::decode_all(std::io::Cursor::new(&encoded[..]))
+            .expect("Anki reads modern members with real libzstd");
+        assert_eq!(
+            round_tripped, collection,
+            "a modern member we wrote did not survive a real libzstd read"
+        );
+
+        // And our own reader agrees, so the two directions cannot drift apart
+        // without one of them failing.
+        let ours = decode_package_payload(CollectionFormat::Sqlite21b, "collection", &encoded)
+            .expect("our reader should read our writer");
+        assert_eq!(ours, collection);
     }
 }

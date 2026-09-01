@@ -1901,9 +1901,9 @@ impl EngramSession {
 
     /// Merge an imported Anki package into the current collection.
     ///
-    /// Runs on every target, wasm included. A modern `.anki21b` / `.colpkg` on a
-    /// build without `modern-format` (which is how wasm is built) surfaces the
-    /// package layer's explicit error rather than importing partial data.
+    /// Runs on every target, wasm included, and now handles modern `.anki21b` /
+    /// `.colpkg` there too — the package layer decompresses through the repo's
+    /// own zstd, so the browser is no longer restricted to legacy `.apkg`.
     pub fn merge_anki_apkg(&mut self, bytes: &[u8]) -> String {
         catch_json(|| match read_v11_collection_as_engram_state(bytes) {
             Ok(imported_state) => {
