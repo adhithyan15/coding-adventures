@@ -2,6 +2,78 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.19] - 2026-09-01 (W34 second slice — canonical type-group equivalence, real multi-member `rec` groups)
+
+Lifts the first slice's `rec_group_size == 1` restriction: `canonicalize_
+types` now correctly canonicalizes real multi-member `rec` groups with
+group-relative De Bruijn numbering, per `MVP.md`'s own "rolling"/"tying"
+mechanism and the reference interpreter's `roll_rec_type` (re-verified
+fresh against `WebAssembly/gc`'s current `interpreter/syntax/types.ml` and
+`interpreter/valid/match.ml` — byte-for-byte identical to what the W34
+spec cites).
+
+- **Real group-relative `Rec(i)` numbering** — a reference to ANY member of
+  the group currently being tied (not just to the referencing member
+  itself) now ties to `CanonicalHeapRef::Rec(i)`, where `i` is that
+  member's own position within the group (`target_idx - group_start`),
+  not a module-absolute index. `resolve_heap_index` was generalized from a
+  `self_idx`-based self-reference check to a `[group_start, group_end)`
+  range check; every other helper (`canonicalize_value_type`,
+  `canonicalize_field_type`, `canonicalize_comp_type`) is reused unchanged
+  in shape, exactly as the first slice's own addendum predicted. A
+  singleton group is now just the `group_end - group_start == 1` case of
+  the same machinery, not a separate code path.
+- **`canonicalize_types` now processes GROUPS, not individual flat
+  indices** — a contiguous range of `rec_group_size` indices sharing one
+  shape is built together as ONE `CanonicalGroup` (all members' bodies
+  resolved against the SAME group bounds), then shared via `Rc::clone`
+  across every one of that group's flat indices, differing only in the
+  `u32` position half of `(Rc<CanonicalGroup>, u32)`. If ANY member fails
+  to canonicalize, the WHOLE group's every member becomes `None` — never a
+  partial group.
+- **Two separately-declared multi-member groups with identical internal
+  wiring canonicalize equal, regardless of flat-index numbering or which
+  module they came from**; two groups with the same member count but
+  different internal reference wiring do NOT — proven directly by new
+  unit tests, not just asserted. Composition of the first slice's `Outer`
+  (cross-group embedding) with the new multi-member `Rec` numbering is
+  proven both directions: a later type referencing an earlier multi-member
+  group, and a later multi-member group mixing an `Outer` reference and an
+  in-group `Rec` reference within the SAME member.
+- **New DoS finding, closed in the same slice that introduced its own
+  precondition**: real multi-member groups make "one group referencing an
+  earlier one from several sibling positions at once" far more natural
+  than the first slice's singleton-only groups ever could. A chain of such
+  branching references DOUBLES the total node count a full structural
+  `PartialEq`/`Hash`/`Drop` traversal must visit at every level (while
+  `Rc` sharing keeps actual memory linear), which the first slice's own
+  `MAX_CANONICAL_OUTER_DEPTH` (bounding STACK depth, i.e. the longest
+  single reference chain) does NOT catch, since branching leaves that
+  longest chain short even as the total node count explodes
+  exponentially. Closed by threading a second, independent cost dimension
+  (`CanonicalCost::weight`, summed — not maxed — across sibling
+  references) alongside the existing depth, capped at
+  `MAX_CANONICAL_TREE_WEIGHT` (1,000,000). A new regression test
+  (`outer_embedding_weight_is_capped_for_branching_reference_chains`)
+  builds a 40-level doubling chain and confirms it is rejected quickly
+  rather than hanging or exhausting memory.
+- **9 new unit tests** in `wasm-types` (2-member mutual group group-
+  relative numbering; cross-module comparability for a real multi-member
+  group; same member count with different wiring correctly NOT equal;
+  both directions of `Outer`+multi-`Rec` composition; the W33/W34 addenda's
+  own worked "3-cycle" example, canonical forms confirmed directly per
+  this slice's own scope boundary; `type-canon.wast`'s real 5-member
+  fixture; inconsistent multi-member metadata still safely producing
+  `None`; the branching-weight DoS regression above) plus 2 new
+  `wasm-validator` tests exercising the same through the real `validate()`
+  entry point.
+- Corpus impact: none observable in this slice's own tally (nothing wires
+  canonical equivalence into any validation/execution DECISION path yet —
+  that remains slice 3/4's job); see the full 257-file baseline diff in
+  `wasm-conformance`'s own CHANGELOG and `code/specs/
+  W34-wasm-gc-canonical-type-equivalence.md`'s addendum for the
+  measurement.
+
 ## [0.1.18] - 2026-09-01 (W34 first slice — canonical type-group equivalence, singleton groups)
 
 Adds `CanonicalGroup`/`CanonicalSubtype`/`CanonicalCompType`/

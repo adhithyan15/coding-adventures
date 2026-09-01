@@ -2053,16 +2053,45 @@ mod tests {
     }
 
     #[test]
-    fn validate_leaves_multi_member_rec_groups_uncanonicalized_but_still_accepts_the_module() {
-        // Slice 1's own explicit boundary: a real multi-member `rec` group
-        // must still VALIDATE fine (nothing about this slice should make a
-        // previously-valid module invalid), but its members canonicalize
-        // to `None` -- deferred to a later slice.
+    fn validate_computes_canonical_types_for_a_real_multi_member_rec_group() {
+        // W34 second slice: a real multi-member `rec` group now
+        // canonicalizes through the actual `validate()` entry point too,
+        // not just `wasm_types::canonicalize_types` directly -- `$h`/`$k`,
+        // `type-rec.wast` lines 15-18, `$h -> $k` (`Rec(1)`), `$k -> $h`
+        // (`Rec(0)`).
+        let module = WasmModule {
+            types: vec![
+                FuncType { params: vec![ValueType::ConcreteFuncRef(1)], results: vec![] },
+                FuncType { params: vec![], results: vec![ValueType::ConcreteFuncRef(0)] },
+            ],
+            type_subtyping: vec![
+                TypeSubtyping { rec_group_size: 2, rec_group_position: 0, ..Default::default() },
+                TypeSubtyping { rec_group_size: 2, rec_group_position: 1, ..Default::default() },
+            ],
+            ..Default::default()
+        };
+        let validated = validate(&module).unwrap();
+        assert!(validated.canonical_type_at(0).is_some());
+        assert!(validated.canonical_type_at(1).is_some());
+        // The two members are NOT canonically equivalent to each other
+        // (different bodies -- `$h` takes a param, `$k` returns a
+        // result), but each is a stable, self-consistent identity.
+        assert!(!validated.canonically_equivalent(0, 1));
+        assert!(validated.canonically_equivalent(0, 0));
+    }
+
+    #[test]
+    fn validate_rejects_canonicalizing_an_internally_inconsistent_rec_group_claim() {
+        // A hand-built module whose two "sibling" entries disagree about
+        // their own group's size must still VALIDATE fine if nothing else
+        // is wrong with it (canonicalization failing is not the same as
+        // the module being ill-typed), but canonicalizes to `None` rather
+        // than guessing.
         let module = WasmModule {
             types: vec![FuncType { params: vec![], results: vec![] }, FuncType { params: vec![], results: vec![] }],
             type_subtyping: vec![
                 TypeSubtyping { rec_group_size: 2, rec_group_position: 0, ..Default::default() },
-                TypeSubtyping { rec_group_size: 2, rec_group_position: 1, ..Default::default() },
+                TypeSubtyping { rec_group_size: 3, rec_group_position: 1, ..Default::default() },
             ],
             ..Default::default()
         };
