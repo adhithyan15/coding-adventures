@@ -30,6 +30,15 @@
       "cas_hash": null
     },
     {
+      "id": "c3.socialstudies",
+      "title": "College, Career, and Civic Life (C3) Framework for Social Studies State Standards",
+      "version": "declared-2026-09-01",
+      "locator": "https://www.socialstudies.org/sites/default/files/2017/Jun/c3-framework-for-social-studies-rev0617.pdf",
+      "status": "declared",
+      "retrieved_at": null,
+      "cas_hash": null
+    },
+    {
       "id": "usmle.step1",
       "title": "USMLE Step 1 content outline and specifications",
       "version": "declared-2026-08-02",
@@ -3043,6 +3052,21 @@
       "standards": [],
       "prerequisites": [],
       "libraries": ["code/specs/data/adj-facts-stdlib/physics/energy-conversion-example.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
+      "id": "adj.civics.3to5.government_branch_member",
+      "title": "Recall which named officer or institution makes up a branch of the U.S. federal government",
+      "band": "3-5",
+      "domain": "civics",
+      "competency": "recall",
+      "coverage_roots": ["c3.socialstudies"],
+      "standards": [],
+      "prerequisites": [],
+      "libraries": ["code/specs/data/adj-facts-stdlib/civics/government-branch-member.adj"],
       "modalities": ["text"],
       "source_cas_hashes": [],
       "benchmark_paths": [],
