@@ -33,7 +33,8 @@ use crate::WastParseError;
 use std::collections::HashMap;
 use wasm_types::{
     DataSegment, Element, Export, ExternalKind, FuncType, FunctionBody, Global, GlobalType,
-    Import, ImportTypeInfo, Limits, MemoryType, TableType, ValueType, WasmModule, FUNCREF,
+    Import, ImportTypeInfo, Limits, MemoryType, TableType, TypeSubtyping, ValueType, WasmModule,
+    FUNCREF,
 };
 
 /// Parse a whole WAT source text: the plain-`.wat` entry point, and also
@@ -461,11 +462,23 @@ fn parse_func_signature(fields: &[&SExpr], type_names: &HashMap<String, u32>) ->
 /// Find-or-insert `ty` into `module.types`, returning its index — the
 /// "implicit type deduplication" WAT does for a `func`/`call_indirect`
 /// signature that isn't an explicit `(type $t)` reference.
+///
+/// A structural match against an EXISTING entry (including one with its
+/// own declared `sub`/`final` metadata) correctly reuses that entry's
+/// index wholesale, metadata included — an anonymous inline signature
+/// that happens to match `$t`'s shape exactly IS `$t`, not a fresh type,
+/// so inheriting its subtyping metadata is the right behavior, not an
+/// oversight. Only the "genuinely new" branch needs to push a matching
+/// `type_subtyping` placeholder (W33 first slice) to keep the two arrays
+/// in lockstep — a fresh implicit type is always final, has no declared
+/// supertype, and is its own singleton group, exactly `TypeSubtyping`'s
+/// own `Default`.
 fn dedup_type(module: &mut WasmModule, ty: FuncType) -> u32 {
     if let Some(idx) = module.types.iter().position(|t| *t == ty) {
         idx as u32
     } else {
         module.types.push(ty);
+        module.type_subtyping.push(TypeSubtyping::default());
         (module.types.len() - 1) as u32
     }
 }
@@ -474,65 +487,197 @@ fn dedup_type(module: &mut WasmModule, ty: FuncType) -> u32 {
 // Pass 1 — collect every index space's names and sizes.
 // ─────────────────────────────────────────────────────────────────────────
 
+/// Parses one type-section entry's signature form: either a bare `(func
+/// ...)` body (implicitly final, no declared supertype -- the pre-GC/MVP
+/// default) or the GC proposal's `(sub [final] $parent? (func ...))`
+/// wrapper (W33 first slice: `code/specs/
+/// W33-wasm-gc-recursive-type-subtyping.md`). Returns the resolved
+/// `FuncType` body plus the declared supertype (if any) and finality.
+///
+/// `sig_form` is `None` for a bare `(type $name)` with no body at all --
+/// this crate already tolerated that before this slice by defaulting to
+/// an empty func type, preserved here unchanged.
+///
+/// This crate only tracks a SINGLE declared supertype (`sub`'s real
+/// grammar is `typeidx*`, zero or more) -- the real corpus never
+/// exercises more than one, and a second supertype atom here will simply
+/// fail to resolve as the composite-type body (a clear parse error, not a
+/// silent misparse).
+fn parse_type_body(pos: usize, sig_form: Option<&[SExpr]>, type_names: &HashMap<String, u32>) -> Result<(FuncType, Option<u32>, bool), WastParseError> {
+    let Some(sig) = sig_form else {
+        return Ok((FuncType { params: vec![], results: vec![] }, None, true));
+    };
+    if sig.first().and_then(|e| e.as_atom()) == Some("sub") {
+        let mut rest = &sig[1..];
+        let mut is_final = false;
+        if rest.first().and_then(|e| e.as_atom()) == Some("final") {
+            is_final = true;
+            rest = &rest[1..];
+        }
+        let mut supertype = None;
+        if let Some(first) = rest.first() {
+            if first.as_list().is_none() {
+                supertype = Some(resolve_idx(type_names, first, "type")?);
+                rest = &rest[1..];
+            }
+        }
+        let body = rest.first().and_then(|e| e.as_list()).ok_or(WastParseError::UnexpectedToken {
+            pos,
+            found: "".to_string(),
+            expected: "a composite type body ('(func ...)') inside 'sub'",
+        })?;
+        reject_non_func_body(pos, body)?;
+        let sig_fields: Vec<&SExpr> = body.iter().skip(1).collect();
+        let func_type = parse_func_signature(&sig_fields, type_names)?;
+        Ok((func_type, supertype, is_final))
+    } else {
+        reject_non_func_body(pos, sig)?;
+        let sig_fields: Vec<&SExpr> = sig.iter().skip(1).collect();
+        let func_type = parse_func_signature(&sig_fields, type_names)?;
+        Ok((func_type, None, true))
+    }
+}
+
+/// W32 second slice fix (found while investigating why a struct-declaring
+/// module started reporting a misleading `Pass` once `(ref $t)` parsing
+/// landed, NOT a pre-existing test this slice broke): a `(type ... (struct
+/// ...))` / `(type ... (array ...))` body's head atom is NOT "func", but
+/// callers of this used to swallow it anyway -- `parse_func_signature`
+/// only ever recognizes `(param ...)`/`(result ...)` fields, so a
+/// struct's `(field ...)` entries were silently ignored and EVERY
+/// struct/array type declaration silently became an EMPTY `(func)` type
+/// instead of a real parse error. Reject explicitly instead: a real "not
+/// yet supported" (this parser has no struct/array TEXT-format type
+/// declarations at all, see `wasm_types::ValueType::NonNullStructRef`'s
+/// own doc comment) must stay a `NotYetSupported` grade at the
+/// conformance-harness level, never silently downgrade the type into a
+/// fabricated `func` shape a later reference can walk into unnoticed.
+fn reject_non_func_body(pos: usize, body: &[SExpr]) -> Result<(), WastParseError> {
+    if let Some(head) = body.first().and_then(|e| e.as_atom()) {
+        if head != "func" {
+            return Err(WastParseError::UnexpectedToken {
+                pos,
+                found: head.to_string(),
+                expected: "a func type body ('(func ...)') -- struct/array type declarations are not yet supported by this parser",
+            });
+        }
+    }
+    Ok(())
+}
+
 fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
-    // `type` declarations first -- other fields' inline signatures may not
-    // reference them, but explicit `(type $t)` uses need the name resolved
-    // before pass 2, and it's harmless to do this uniformly first.
+    // `type`/`rec` declarations first -- other fields' inline signatures
+    // may not reference them, but explicit `(type $t)` uses need the name
+    // resolved before pass 2, and it's harmless to do this uniformly
+    // first.
+    //
+    // W33 first slice (`code/specs/W33-wasm-gc-recursive-type-subtyping.md`):
+    // every plain `(type ...)` field is its own implicit SINGLETON `rec`
+    // group -- the real GC proposal's own rule, and what lets a
+    // non-`rec`-wrapped type self-reference (e.g. `(type (func (param
+    // (ref 0))))`, `type-rec.wast`'s own first module) -- while an
+    // explicit `(rec (type ...) (type ...) ...)` field is a multi-member
+    // group. Either way, the group is processed in TWO PHASES so any
+    // member can forward-reference (even self-reference) any OTHER member
+    // of its OWN group, which isn't "done" being declared yet when an
+    // earlier sibling's body is parsed (W32's own `type-rec.wast`
+    // investigation already flagged plain `idx < types.len()` bounds
+    // checking as insufficient for exactly this):
+    //   phase A -- register every member's name (if any) and reserve its
+    //              type-section index with a placeholder body, for the
+    //              WHOLE group;
+    //   phase B -- parse every member's real body, now that every name in
+    //              THIS group (and every earlier group) resolves.
+    // A reference to a type in a LATER, not-yet-started group still fails
+    // ("unknown type"/index out of bounds) exactly as before -- only
+    // references within the current group, or an earlier already-fully-
+    // registered one, resolve.
     for f in fields {
-        if f.is_keyword_list("type") {
+        let members: Vec<&SExpr> = if f.is_keyword_list("rec") {
             let items = f.as_list().unwrap();
-            let mut rest = &items[1..];
-            if let Some(name) = rest.first().and_then(|e| e.as_atom()) {
+            for m in &items[1..] {
+                if !m.is_keyword_list("type") {
+                    return Err(WastParseError::UnexpectedToken {
+                        pos: m.pos(),
+                        found: m.as_atom().unwrap_or("list").to_string(),
+                        expected: "a '(type ...)' field inside a '(rec ...)' group",
+                    });
+                }
+            }
+            items[1..].iter().collect()
+        } else if f.is_keyword_list("type") {
+            vec![*f]
+        } else {
+            continue;
+        };
+
+        let group_start = ctx.module.types.len() as u32;
+        let group_size = members.len() as u32;
+
+        // Phase A: register names, reserve indices with placeholder bodies.
+        for (i, m) in members.iter().enumerate() {
+            let items = m.as_list().unwrap();
+            if let Some(name) = items.get(1).and_then(|e| e.as_atom()) {
                 if name.starts_with('$') {
                     if ctx.type_names.contains_key(name) {
-                        return Err(WastParseError::DuplicateIdentifier { pos: f.pos(), name: name.to_string(), space: "type" });
+                        return Err(WastParseError::DuplicateIdentifier { pos: m.pos(), name: name.to_string(), space: "type" });
                     }
-                    ctx.type_names.insert(name.to_string(), ctx.module.types.len() as u32);
-                    rest = &rest[1..];
+                    ctx.type_names.insert(name.to_string(), group_start + i as u32);
                 }
+            }
+            ctx.module.types.push(FuncType { params: vec![], results: vec![] });
+            ctx.module.type_subtyping.push(TypeSubtyping {
+                supertype: None,
+                is_final: true,
+                rec_group_size: group_size,
+                rec_group_position: i as u32,
+            });
+        }
+
+        // Phase B: parse every member's real body -- every name in this
+        // group (and every earlier one) resolves now.
+        for (i, m) in members.iter().enumerate() {
+            let items = m.as_list().unwrap();
+            let mut rest = &items[1..];
+            if rest.first().and_then(|e| e.as_atom()).is_some_and(|s| s.starts_with('$')) {
+                rest = &rest[1..];
             }
             let sig_form = rest.first().and_then(|e| e.as_list());
-            // W32 second slice fix (found while investigating why a
-            // struct-declaring module started reporting a misleading
-            // `Pass` once `(ref $t)` parsing landed, NOT a pre-existing
-            // test this slice broke): a `(type ... (struct ...))` /
-            // `(type ... (array ...))` body's head atom is NOT "func", but
-            // the code below this used to swallow it anyway --
-            // `parse_func_signature` only ever recognizes `(param ...)`/
-            // `(result ...)` fields, so a struct's `(field ...)` entries
-            // were silently ignored and EVERY struct/array type
-            // declaration silently became an EMPTY `(func)` type
-            // (`FuncType { params: [], results: [] }`) instead of a real
-            // parse error. That was invisible before this slice (nothing
-            // could reference the resulting bogus empty func type in a
-            // way that validated), but `(ref $t)`'s new non-null-concrete-
-            // ref parsing (this slice) is EXACTLY the shape that CAN
-            // reference it silently correctly-typed-looking
-            // (`struct.wast`'s own `(func (param (ref $forward))) (type
-            // $forward (struct))` -- `$forward` resolves to a real, if
-            // WRONG, `NonNullConcreteFuncRef` index instead of failing to
-            // parse). Reject explicitly instead: a real "not yet
-            // supported" (this parser has no struct/array TEXT-format
-            // type declarations at all, see `wasm_types::ValueType::
-            // NonNullStructRef`'s own doc comment) must stay a
-            // `NotYetSupported` grade at the conformance-harness level,
-            // never silently downgrade the type into fabricated `func`
-            // shape a later reference can walk into unnoticed.
-            if let Some(sig) = sig_form {
-                if let Some(head) = sig.first().and_then(|e| e.as_atom()) {
-                    if head != "func" {
-                        return Err(WastParseError::UnexpectedToken {
-                            pos: f.pos(),
-                            found: head.to_string(),
-                            expected: "a func type body ('(func ...)') -- struct/array type declarations are not yet supported by this parser",
-                        });
-                    }
-                }
+            let (func_type, supertype, is_final) = parse_type_body(m.pos(), sig_form, &ctx.type_names)?;
+            // Numeric type-index references (`(ref 2)`, unlike `(ref
+            // $name)`) bypass `resolve_idx`'s name-registration check
+            // entirely -- it just parses the digits, with no notion of
+            // "has this index been declared yet." A NAMED forward
+            // reference to a type in a LATER, not-yet-started group
+            // already fails naturally (that name isn't in `type_names`
+            // yet), but a NUMERIC one would otherwise silently succeed
+            // merely because the index happens to exist by the time the
+            // WHOLE MODULE is done parsing -- `type-rec.wast`'s own
+            // `assert_invalid "unknown type"` cases (lines 21-34) probe
+            // exactly this: a reference to the immediately-following,
+            // not-yet-started type. Reject any numeric reference (in the
+            // body OR the `sub` parent) landing at or past this group's
+            // own end -- everything at or before `group_start +
+            // group_size` (this group's own members, or any earlier,
+            // already-fully-registered group) stays legal.
+            let max_allowed = group_start + group_size;
+            let out_of_group = func_type
+                .params
+                .iter()
+                .chain(func_type.results.iter())
+                .filter_map(|vt| match vt {
+                    ValueType::ConcreteFuncRef(idx) | ValueType::NonNullConcreteFuncRef(idx) => Some(*idx),
+                    _ => None,
+                })
+                .chain(supertype)
+                .find(|idx| *idx >= max_allowed);
+            if let Some(idx) = out_of_group {
+                return Err(WastParseError::UnknownIdentifier { pos: m.pos(), name: idx.to_string(), space: "type" });
             }
-            let func_sig = sig_form.unwrap_or(&[]);
-            let sig_fields: Vec<&SExpr> = func_sig.iter().skip(1).collect();
-            let func_type = parse_func_signature(&sig_fields, &ctx.type_names)?;
-            ctx.module.types.push(func_type);
+            let idx = (group_start + i as u32) as usize;
+            ctx.module.types[idx] = func_type;
+            ctx.module.type_subtyping[idx].supertype = supertype;
+            ctx.module.type_subtyping[idx].is_final = is_final;
         }
     }
 
@@ -1079,6 +1224,15 @@ fn build(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
             // `type` is fully handled by `collect_symbols` (pass 1) --
             // nothing left to do for it here.
             "type" => {}
+            // `rec` (W33 first slice): same story as `type` above --
+            // `collect_symbols` already parses every member's name AND
+            // body (see its own two-phase-per-group doc comment), so
+            // there's nothing left to do here either. Before this slice,
+            // `rec` fell through to the catch-all `other` arm below and
+            // was correctly rejected as unrecognized (W32 addendum) --
+            // this arm is what makes it a real, supported construct
+            // instead of just an honestly-rejected one.
+            "rec" => {}
             // W32 addendum (2026-08-31): every OTHER unrecognized top-level
             // module field used to fall through here silently -- this was a
             // real, demonstrated bug, not a hypothetical one. `(rec (type
@@ -6283,23 +6437,31 @@ mod tests {
     }
 
     #[test]
-    fn rec_type_group_is_rejected_not_silently_dropped() {
-        // Regression guard for the sibling bug to the struct/array one
-        // above, found investigating `type-subtyping.wast` (W32 addendum,
-        // 2026-08-31): `(rec (type $a ...) (type $b ...))` matched NEITHER
-        // `collect_symbols`'s `is_keyword_list("type")` check (it's a
-        // `rec`, not a `type`, at the top level) NOR any arm of `build`'s
-        // dispatch match, whose fallback used to be a bare `_ => {}` --
-        // silently doing nothing. A module made ENTIRELY of `rec` blocks
-        // whose declared types were never referenced by anything else
-        // therefore parsed as a trivially-valid EMPTY module instead of
-        // failing with a clear "not yet supported" error -- demonstrated
-        // via two of `type-subtyping.wast`'s own "Recursive definitions"
-        // modules, which used to spuriously report `Pass` under the
-        // conformance harness's `assert_invalid`-shaped "did it get
-        // rejected" grading. Must now be a clean parse error.
-        let err = parse_module("(module (rec (type $a (func))))").unwrap_err();
-        assert!(matches!(err, WastParseError::UnexpectedToken { .. }), "{err:?}");
+    fn rec_type_group_is_real_not_silently_dropped() {
+        // W32 addendum (2026-08-31) found `(rec (type $a ...) (type $b
+        // ...))` matched NEITHER `collect_symbols`'s `is_keyword_list
+        // ("type")` check (it's a `rec`, not a `type`, at the top level)
+        // NOR any arm of `build`'s dispatch match, whose fallback used to
+        // be a bare `_ => {}` -- silently doing nothing. A module made
+        // ENTIRELY of `rec` blocks whose declared types were never
+        // referenced by anything else therefore parsed as a trivially-
+        // valid EMPTY module instead of a real one, demonstrated via two
+        // of `type-subtyping.wast`'s own "Recursive definitions" modules,
+        // which used to spuriously report `Pass` under the conformance
+        // harness's `assert_invalid`-shaped "did it get rejected" grading.
+        // That addendum's own fix made `rec` a clean, honest
+        // `NotYetSupported` parse error instead (still not "the empty
+        // module" bug, just a different — then-correct — outcome).
+        //
+        // W33 first slice (`code/specs/
+        // W33-wasm-gc-recursive-type-subtyping.md`) made `rec` a REAL,
+        // parsed construct: this module must now parse successfully, AND
+        // its declared type must be the real, non-empty `(func (param
+        // i32))` -- not silently dropped (the original bug) and not
+        // silently downgraded to a bogus empty `(func)` (0.1.87's sibling
+        // struct/array fix's own failure mode).
+        let m = parse_module("(module (rec (type $a (func (param i32)))))").unwrap();
+        assert_eq!(m.types, vec![FuncType { params: vec![ValueType::I32], results: vec![] }]);
     }
 
     #[test]
@@ -6319,6 +6481,134 @@ mod tests {
         // syntax for an implicit empty `(func)` type.
         let m = parse_module("(module (type $t) (func (type $t)))").unwrap();
         assert_eq!(m.types[0], FuncType { params: vec![], results: vec![] });
+    }
+
+    // ── W33 first slice: `rec` group parsing + forward/self reference ──────
+
+    #[test]
+    fn standalone_type_is_an_implicit_singleton_group_that_can_self_reference() {
+        // `type-rec.wast`'s own first module (line 4): a PLAIN, non-`rec`
+        // type can reference its OWN index -- the real GC proposal treats
+        // every standalone `(type ...)` as its own implicit singleton
+        // `rec` group, which is exactly what makes self-reference legal
+        // here (the two-phase-per-group scheme reserves this type's own
+        // index BEFORE parsing its body).
+        let m = parse_module("(module (type (func (param (ref 0)) (result (ref 0)))))").unwrap();
+        assert_eq!(m.types[0], FuncType { params: vec![ValueType::NonNullConcreteFuncRef(0)], results: vec![ValueType::NonNullConcreteFuncRef(0)] });
+        assert_eq!(m.type_subtyping[0].rec_group_size, 1);
+        assert_eq!(m.type_subtyping[0].rec_group_position, 0);
+    }
+
+    #[test]
+    fn rec_group_members_can_forward_reference_each_other() {
+        // `type-rec.wast` line 5-8: two members of ONE `rec` group, where
+        // the FIRST references the SECOND (a genuine forward reference --
+        // plain `idx < types.len()` bounds checking, this crate's
+        // pre-W33 approach, would reject this since the second member
+        // isn't "done" being declared when the first's body is parsed).
+        let m = parse_module(
+            "(module (type (func (param (ref 0)) (result (ref 0)))) (rec (type (func (param (ref 2)))) (type (func (result (ref 1))))))",
+        )
+        .unwrap();
+        assert_eq!(m.types.len(), 3);
+        assert_eq!(m.types[1], FuncType { params: vec![ValueType::NonNullConcreteFuncRef(2)], results: vec![] });
+        assert_eq!(m.types[2], FuncType { params: vec![], results: vec![ValueType::NonNullConcreteFuncRef(1)] });
+        assert_eq!(m.type_subtyping[1].rec_group_size, 2);
+        assert_eq!(m.type_subtyping[1].rec_group_position, 0);
+        assert_eq!(m.type_subtyping[2].rec_group_position, 1);
+    }
+
+    #[test]
+    fn rec_group_member_can_self_reference() {
+        // `type-rec.wast` line 14: a single-member `rec` group whose one
+        // member references itself.
+        let m = parse_module("(module (rec (type $g (func (param (ref $g)) (result (ref $g))))))").unwrap();
+        assert_eq!(m.types[0], FuncType { params: vec![ValueType::NonNullConcreteFuncRef(0)], results: vec![ValueType::NonNullConcreteFuncRef(0)] });
+    }
+
+    #[test]
+    fn empty_rec_group_is_a_harmless_no_op() {
+        // `type-rec.wast` line 10: `(rec)` with zero members.
+        let m = parse_module("(module (rec))").unwrap();
+        assert!(m.types.is_empty());
+    }
+
+    #[test]
+    fn rec_group_member_referencing_a_later_unstarted_group_is_still_unknown_type() {
+        // `type-rec.wast` lines 28-34: a reference to a type in a LATER,
+        // not-yet-started group must still fail -- forward reference
+        // resolution is scoped to the CURRENT group only, never the whole
+        // module. Both the plain-type and `rec`-wrapped shapes must
+        // reject identically.
+        let err = parse_module("(module (type (func (param (ref 1)))) (type (func)))").unwrap_err();
+        assert!(matches!(err, WastParseError::UnknownIdentifier { .. } | WastParseError::UnexpectedToken { .. }), "{err:?}");
+        let err = parse_module("(module (rec (type (func (param (ref 1))))) (rec (type (func))))").unwrap_err();
+        assert!(matches!(err, WastParseError::UnknownIdentifier { .. } | WastParseError::UnexpectedToken { .. }), "{err:?}");
+    }
+
+    #[test]
+    fn rec_member_that_is_not_a_type_field_is_rejected() {
+        let err = parse_module("(module (rec (func)))").unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedToken { .. }), "{err:?}");
+    }
+
+    // ── W33 first slice: `sub`/`final` nominal subtyping parsing ────────────
+
+    #[test]
+    fn sub_with_no_parent_is_open_for_further_subtyping() {
+        // `type-subtyping.wast` line 4: `(sub (array i32))` has no parent
+        // and no `final` keyword -- declared, but explicitly NOT final.
+        let m = parse_module("(module (type $e0 (sub (func))))").unwrap();
+        assert_eq!(m.type_subtyping[0].supertype, None);
+        assert!(!m.type_subtyping[0].is_final);
+    }
+
+    #[test]
+    fn sub_with_a_parent_records_the_declared_supertype() {
+        let m = parse_module("(module (type $f0 (sub (func))) (type $f1 (sub $f0 (func))))").unwrap();
+        assert_eq!(m.type_subtyping[1].supertype, Some(0));
+        assert!(!m.type_subtyping[1].is_final);
+        assert!(m.func_type_is_nominal_subtype(1, 0));
+        assert!(!m.func_type_is_nominal_subtype(0, 1));
+    }
+
+    #[test]
+    fn sub_final_forecloses_further_subtyping() {
+        // `type-subtyping.wast` line 346: `(sub final (func))`.
+        let m = parse_module("(module (type $t2 (sub final (func))))").unwrap();
+        assert!(m.type_subtyping[0].is_final);
+        assert_eq!(m.type_subtyping[0].supertype, None);
+    }
+
+    #[test]
+    fn no_sub_clause_at_all_defaults_to_final() {
+        // The MVP/pre-GC default: a plain `(type (func))` with no `sub`
+        // wrapper at all forecloses subtyping just as much as an explicit
+        // `(sub final ...)` does (`type-subtyping.wast`'s own "Finality
+        // violation" section, lines 780-786, relies on exactly this).
+        let m = parse_module("(module (type $t (func)))").unwrap();
+        assert!(m.type_subtyping[0].is_final);
+        assert_eq!(m.type_subtyping[0].supertype, None);
+    }
+
+    #[test]
+    fn sub_final_with_a_parent_records_both() {
+        // `type-subtyping.wast` line 807: `(sub final $t (func))`.
+        let m = parse_module("(module (type $t (sub (func))) (type $s (sub final $t (func))))").unwrap();
+        assert_eq!(m.type_subtyping[1].supertype, Some(0));
+        assert!(m.type_subtyping[1].is_final);
+    }
+
+    #[test]
+    fn sub_can_target_a_type_in_its_own_rec_group() {
+        // `type-subtyping.wast` lines 70-72 ("Subsumption"): `$t2 sub $t1`
+        // where both are members of the SAME `rec` group.
+        let m = parse_module(
+            "(module (rec (type $t1 (sub (func (param i32)))) (type $t2 (sub $t1 (func (param i32))))))",
+        )
+        .unwrap();
+        assert_eq!(m.type_subtyping[1].supertype, Some(0));
+        assert!(m.func_type_is_nominal_subtype(1, 0));
     }
 
     #[test]

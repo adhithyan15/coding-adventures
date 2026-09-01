@@ -722,6 +722,92 @@ pub struct FuncType {
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
+// W33 first slice: GC-proposal `(sub [final] $parent (comptype))` nominal
+// subtyping + `(rec ...)` type groups
+// ──────────────────────────────────────────────────────────────────────────────
+
+/// Per-type-section-entry nominal-subtyping metadata for the WebAssembly GC
+/// proposal's `(sub [final] $parent* (comptype))` declaration syntax (W33
+/// first slice: `code/specs/W33-wasm-gc-recursive-type-subtyping.md`).
+///
+/// Parallel array to [`WasmModule::types`] (function types only, this
+/// slice -- struct/array TEXT-format declarations remain unparseable, see
+/// `wasm-wast-parser`'s own doc comments): `WasmModule::type_subtyping[i]`
+/// describes `types[i]`'s own declared supertype (if any), whether it
+/// forecloses further subtyping, and which `(rec ...)` group it belongs to.
+///
+/// Any `WasmModule` that predates this field (every hand-built test
+/// literal across this workspace, and `wasm-module-parser`'s binary
+/// decoder, which has no GC `sub`/`rec` binary encoding at all) simply
+/// leaves this vector empty or shorter than `types` -- every accessor here
+/// ([`WasmModule::type_subtyping_at`] and everything built on it) treats a
+/// missing entry as [`TypeSubtyping::default`] (final, no supertype,
+/// singleton group), exactly the semantics every pre-W33 type already had.
+/// This is a deliberate design choice, not an oversight: it means adding
+/// this field never requires touching any of this workspace's many
+/// existing `WasmModule { .. }` literals, and never risks an
+/// index-out-of-bounds panic on one that doesn't know about it.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct TypeSubtyping {
+    /// The declared `sub $parent` supertype, if any -- an index into
+    /// [`WasmModule::types`], the SAME "function-type index space, no
+    /// offset" convention [`ValueType::ConcreteFuncRef`]/
+    /// [`ValueType::NonNullConcreteFuncRef`] already use. `None` for a
+    /// type with no `sub` clause at all, or an explicit `(sub (comptype))`
+    /// with no parent listed.
+    ///
+    /// This crate only tracks a SINGLE declared supertype: the GC
+    /// proposal's grammar allows `sub final? typeidx* comptype` (zero or
+    /// more supertypes syntactically), but restricts to at most one in
+    /// practice, and the real corpus never exercises more than one.
+    pub supertype: Option<u32>,
+    /// Whether this type forecloses further subtyping: `true` for a type
+    /// with NO `sub` clause at all (the MVP/pre-GC default, per the real
+    /// GC proposal's own rule) or an explicit `(sub final ...)`; `false`
+    /// only for an explicit `(sub ...)` (with or without a `$parent`) that
+    /// omits `final`.
+    pub is_final: bool,
+    /// How many sibling members (including itself) share this type's
+    /// `(rec ...)` group -- `1` for a type declared standalone (an
+    /// implicit singleton group, the real GC proposal's own rule for every
+    /// non-`rec`-wrapped `(type ...)`) or inside an explicit `(rec (type
+    /// ...))` with exactly one member.
+    pub rec_group_size: u32,
+    /// This type's own zero-based position within its `(rec ...)` group
+    /// (see `rec_group_size`) -- always `0` for a singleton group.
+    ///
+    /// Needed ONLY for cross-module comparisons (import/tag type
+    /// matching, `wasm-runtime`): the real WebAssembly GC proposal's
+    /// canonical type-group equivalence algorithm considers two
+    /// structurally-identical members of a `rec` group at DIFFERENT
+    /// positions to be DISTINCT types (see `tag.wast`'s own
+    /// `assert_unlinkable` case: `(rec (type $t1 (func)) (type $t2
+    /// (func)))`'s `$t1`/`$t2` are byte-identical bodies at different
+    /// positions, and importing under the wrong one must fail). This
+    /// slice does NOT implement the real algorithm (`code/specs/
+    /// W33-wasm-gc-recursive-type-subtyping.md`'s own "recursive
+    /// type-group canonical equivalence" is explicitly out of scope) --
+    /// a same-module (WITHIN-module) nominal `sub`-chain check never
+    /// needs this field at all (a module's own type-section index is
+    /// already a unique, unambiguous identity), so this field's only
+    /// consumer is the conservative cross-module guard `wasm-runtime`
+    /// applies alongside its pre-existing structural `FuncType` equality
+    /// check: requiring a matching `(rec_group_size, rec_group_position)`
+    /// on both sides NEVER accepts a canonically-DIFFERENT pair the real
+    /// algorithm would reject (it only adds a strictly stronger necessary
+    /// condition on top of a check that already runs), so it can only
+    /// PREVENT a false accept, never cause a false reject beyond what the
+    /// pre-existing simpler check already risked.
+    pub rec_group_position: u32,
+}
+
+impl Default for TypeSubtyping {
+    fn default() -> Self {
+        Self { supertype: None, is_final: true, rec_group_size: 1, rec_group_position: 0 }
+    }
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
 // Limits
 // ──────────────────────────────────────────────────────────────────────────────
 
@@ -1186,6 +1272,12 @@ pub struct WasmModule {
     /// Type section (§1): all function signatures, deduplicated.
     pub types: Vec<FuncType>,
 
+    /// Per-`types`-entry GC-proposal nominal-subtyping/`rec`-group metadata
+    /// (W33 first slice) -- see [`TypeSubtyping`]'s own doc comment for why
+    /// this is allowed to be shorter than `types` (or empty) and what that
+    /// means for every accessor that reads it.
+    pub type_subtyping: Vec<TypeSubtyping>,
+
     /// WasmGC struct type definitions (also in the type section, after `types`).
     ///
     /// Struct type `k` is at type-section index `types.len() + k`.
@@ -1229,6 +1321,80 @@ pub struct WasmModule {
     /// round-trips through a real binary layout, so that ordering detail
     /// doesn't affect anything here, only documented for fidelity.
     pub tags: Vec<u32>,
+}
+
+impl WasmModule {
+    /// Returns `idx`'s own [`TypeSubtyping`] metadata, or the default
+    /// (final, no supertype, singleton group) if `idx` is out of range or
+    /// this module never populated the vector -- see `TypeSubtyping`'s own
+    /// doc comment for why that fallback is always safe rather than a bug
+    /// to guard against.
+    pub fn type_subtyping_at(&self, idx: u32) -> TypeSubtyping {
+        self.type_subtyping.get(idx as usize).copied().unwrap_or_default()
+    }
+
+    /// Whether function type `sub_idx` is a reflexive, transitive NOMINAL
+    /// subtype of `super_idx`, per each type's own declared `sub $parent`
+    /// chain (W33 first slice). Walks the chain by absolute type-section
+    /// index -- always correct WITHIN one module (an index is a unique,
+    /// unambiguous identity there), unlike cross-module comparisons (see
+    /// [`Self::type_group_shape`]'s own doc comment for why those need a
+    /// different, more conservative check instead).
+    ///
+    /// Bounded to at most `types.len()` hops so a malformed/cyclic chain
+    /// (which `wasm-validator`'s own module-level check rejects before a
+    /// module's function bodies are ever type-checked against it) can
+    /// never loop forever.
+    pub fn func_type_is_nominal_subtype(&self, sub_idx: u32, super_idx: u32) -> bool {
+        if sub_idx == super_idx {
+            return true;
+        }
+        let mut cur = sub_idx;
+        // Security review finding (W33 first slice): this used to bound
+        // the walk to `self.types.len()` hops -- correct for
+        // TERMINATION (paired with `wasm-validator`'s own
+        // `check_type_subtyping_is_acyclic`, a cyclic chain can no
+        // longer reach here at all), but NOT for algorithmic complexity.
+        // This method is called from `wasm-validator::is_assignable`,
+        // which runs at every `pop_expect` call site -- i.e. roughly once
+        // per instruction operand, across every function body in a
+        // module. A module declaring one very long, entirely spec-legal
+        // `sub` chain (N types) plus M call sites checking assignability
+        // against a type near the chain's root forces O(N*M) total
+        // validation work -- confirmed to scale linearly per query,
+        // verified directly rather than assumed. `MAX_SUBTYPE_CHAIN_HOPS`
+        // caps the PER-QUERY cost to a constant instead: a chain longer
+        // than this bound simply reports "not a nominal subtype" beyond
+        // the cutoff (a false negative -- SAFE, since it can only make
+        // this method reject something a deeper walk might have
+        // accepted, never wrongly accept). The real corpus's own longest
+        // chain is a handful of hops; this bound is generous by several
+        // orders of magnitude while keeping worst-case per-query cost
+        // bounded.
+        for _ in 0..Self::MAX_SUBTYPE_CHAIN_HOPS {
+            match self.type_subtyping_at(cur).supertype {
+                Some(parent) if parent == super_idx => return true,
+                Some(parent) => cur = parent,
+                None => return false,
+            }
+        }
+        false
+    }
+
+    /// The hop cap [`Self::func_type_is_nominal_subtype`] enforces -- see
+    /// that method's own doc comment for why a bounded walk (rather than
+    /// one scaled to `types.len()`) matters for algorithmic complexity,
+    /// not just termination.
+    const MAX_SUBTYPE_CHAIN_HOPS: u32 = 1_000;
+
+    /// `(rec_group_size, rec_group_position)` for type `idx` -- see
+    /// [`TypeSubtyping::rec_group_position`]'s own doc comment for why
+    /// this exists and how `wasm-runtime`'s cross-module import/tag
+    /// type-compatibility check uses it.
+    pub fn type_group_shape(&self, idx: u32) -> (u32, u32) {
+        let st = self.type_subtyping_at(idx);
+        (st.rec_group_size, st.rec_group_position)
+    }
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -1601,6 +1767,7 @@ mod tests {
     fn wasm_module_has_all_fields() {
         let m = WasmModule {
             types: vec![FuncType { params: vec![], results: vec![ValueType::I32] }],
+            type_subtyping: vec![],
             struct_types: vec![],
             imports: vec![],
             functions: vec![0],
@@ -1989,5 +2156,130 @@ mod tests {
         assert!(!ValueType::NonNullStructRef(0).is_non_null_subtype_of(&ValueType::NonNullStructRef(0)));
         assert!(!ValueType::Funcref.is_non_null_subtype_of(&ValueType::Funcref));
         assert!(!ValueType::I32.is_non_null_subtype_of(&ValueType::I32));
+    }
+
+    // ── W33 first slice: `TypeSubtyping` / `WasmModule` GC nominal-subtyping
+    // and `rec`-group helpers ───────────────────────────────────────────────
+
+    #[test]
+    fn type_subtyping_default_is_final_no_supertype_singleton_group() {
+        let st = TypeSubtyping::default();
+        assert_eq!(st.supertype, None);
+        assert!(st.is_final);
+        assert_eq!(st.rec_group_size, 1);
+        assert_eq!(st.rec_group_position, 0);
+    }
+
+    #[test]
+    fn type_subtyping_at_falls_back_to_default_when_module_never_populated_it() {
+        // A `WasmModule` built before this field existed (every hand-built
+        // test literal, `wasm-module-parser`'s binary decoder) leaves
+        // `type_subtyping` empty even though `types` is not -- this must
+        // never panic, and must report the pre-W33 "plain" semantics.
+        let m = WasmModule { types: vec![FuncType { params: vec![], results: vec![] }], ..Default::default() };
+        assert_eq!(m.type_subtyping_at(0), TypeSubtyping::default());
+        // Out-of-range is just as safe.
+        assert_eq!(m.type_subtyping_at(99), TypeSubtyping::default());
+    }
+
+    #[test]
+    fn func_type_is_nominal_subtype_is_reflexive() {
+        let m = WasmModule { types: vec![FuncType { params: vec![], results: vec![] }], ..Default::default() };
+        assert!(m.func_type_is_nominal_subtype(0, 0));
+    }
+
+    #[test]
+    fn func_type_is_nominal_subtype_walks_a_direct_parent_chain() {
+        // t2 sub t1, t3 sub t2 -- t3 <: t2 <: t1, transitively t3 <: t1.
+        let m = WasmModule {
+            types: vec![
+                FuncType { params: vec![], results: vec![] },
+                FuncType { params: vec![], results: vec![] },
+                FuncType { params: vec![], results: vec![] },
+            ],
+            type_subtyping: vec![
+                TypeSubtyping::default(),
+                TypeSubtyping { supertype: Some(0), ..Default::default() },
+                TypeSubtyping { supertype: Some(1), ..Default::default() },
+            ],
+            ..Default::default()
+        };
+        assert!(m.func_type_is_nominal_subtype(1, 0)); // t2 <: t1 (direct)
+        assert!(m.func_type_is_nominal_subtype(2, 1)); // t3 <: t2 (direct)
+        assert!(m.func_type_is_nominal_subtype(2, 0)); // t3 <: t1 (transitive)
+        // Never the reverse direction.
+        assert!(!m.func_type_is_nominal_subtype(0, 1));
+        assert!(!m.func_type_is_nominal_subtype(0, 2));
+        assert!(!m.func_type_is_nominal_subtype(1, 2));
+    }
+
+    #[test]
+    fn func_type_is_nominal_subtype_false_for_unrelated_types() {
+        let m = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }, FuncType { params: vec![], results: vec![] }],
+            ..Default::default()
+        };
+        // Two independently-declared final types with no `sub` chain
+        // between them are NOT nominal subtypes of each other, even if
+        // structurally identical (that would need canonical equivalence,
+        // W33's own explicitly out-of-scope piece).
+        assert!(!m.func_type_is_nominal_subtype(0, 1));
+        assert!(!m.func_type_is_nominal_subtype(1, 0));
+    }
+
+    #[test]
+    fn func_type_is_nominal_subtype_never_loops_forever_on_a_cycle() {
+        // A malformed/cyclic chain (should be rejected by `wasm-validator`
+        // before this is ever called on it) must still terminate here.
+        let m = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }, FuncType { params: vec![], results: vec![] }],
+            type_subtyping: vec![
+                TypeSubtyping { supertype: Some(1), ..Default::default() },
+                TypeSubtyping { supertype: Some(0), ..Default::default() },
+            ],
+            ..Default::default()
+        };
+        assert!(!m.func_type_is_nominal_subtype(0, 99));
+    }
+
+    #[test]
+    fn func_type_is_nominal_subtype_bounds_chain_walk_to_a_fixed_hop_cap() {
+        // Security review finding (W33 first slice): a chain longer than
+        // `MAX_SUBTYPE_CHAIN_HOPS` must report "not a nominal subtype"
+        // rather than walking arbitrarily far -- the whole point is
+        // bounding PER-QUERY cost to a constant regardless of how many
+        // types a (potentially adversarial) module declares. Build a
+        // chain one hop longer than the cap: types[i] sub types[i-1] for
+        // i in 1..=N, with N > MAX_SUBTYPE_CHAIN_HOPS.
+        let n = (WasmModule::MAX_SUBTYPE_CHAIN_HOPS + 10) as usize;
+        let types = vec![FuncType { params: vec![], results: vec![] }; n + 1];
+        let mut type_subtyping = vec![TypeSubtyping::default()];
+        for i in 1..=n {
+            type_subtyping.push(TypeSubtyping { supertype: Some((i - 1) as u32), is_final: false, ..Default::default() });
+        }
+        let m = WasmModule { types, type_subtyping, ..Default::default() };
+        // A query landing WITHIN the cap still succeeds.
+        assert!(m.func_type_is_nominal_subtype(10, 0));
+        // A query whose real chain length exceeds the cap reports false
+        // -- a safe false negative (this can only make the caller
+        // reject something a deeper walk might have accepted), not a
+        // false positive.
+        assert!(!m.func_type_is_nominal_subtype(n as u32, 0));
+    }
+
+    #[test]
+    fn type_group_shape_reports_size_and_position() {
+        let m = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }; 2],
+            type_subtyping: vec![
+                TypeSubtyping { rec_group_size: 2, rec_group_position: 0, ..Default::default() },
+                TypeSubtyping { rec_group_size: 2, rec_group_position: 1, ..Default::default() },
+            ],
+            ..Default::default()
+        };
+        assert_eq!(m.type_group_shape(0), (2, 0));
+        assert_eq!(m.type_group_shape(1), (2, 1));
+        // Out of range falls back to the singleton default.
+        assert_eq!(m.type_group_shape(5), (1, 0));
     }
 }

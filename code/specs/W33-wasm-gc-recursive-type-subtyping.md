@@ -297,3 +297,161 @@ above.
   baseline after EVERY step above, not just at the end — this epic's
   size makes an end-of-epic-only diff much harder to attribute
   regressions within.
+
+## Addendum (first slice, 2026-08-31): items (1), (2), (3a) shipped; (3b)/(4) re-verified, both still needed
+
+Implemented exactly the scope this spec's own "Recommended scope"
+section labeled steps 1, 3, and 4 above (function-type field-list
+subtyping rules; `final`/no-`sub` foreclosure; `(rec ...)` parsing with
+forward-reference-aware index resolution) — WITHOUT step 2 (struct/array
+TEXT-format bodies, a separate, still-open gap this slice didn't
+attempt) and WITHOUT step 5 (canonicalization). Landed across four
+crates: `wasm-types` 0.1.15 (`TypeSubtyping`, `WasmModule::
+func_type_is_nominal_subtype`/`type_group_shape`), `wasm-wast-parser`
+0.1.89 (`rec`/`sub`/`final` parsing), `wasm-validator` 0.2.76
+(`check_type_subtyping`, `is_assignable`'s nominal-subtype arms),
+`wasm-execution` 0.9.80 + `wasm-runtime` 0.6.17 (a conservative
+cross-module import guard, added mid-slice once the baseline diff
+surfaced a real regression risk — see below).
+
+### Struct/array bodies stayed out of scope, and turned out not to gate this slice's own wins
+
+The original "Recommended scope" listed struct/array TEXT-format parsing
+(step 2) as a prerequisite, reasoning "nearly every `sub` case in this
+file targets a struct or array." Re-checked directly against the corpus
+rather than assumed: `type-subtyping.wast`'s "Subsumption" section
+(lines 68-113, three-cycle and mutually-recursive-pair modules), its
+"Finality violation" section (lines 780-811), the pure-arity-mismatch
+case in "Invalid subtyping definitions" (lines 944-949), and "Testing
+exported functions with non-flat types" (lines 954-976) are ALL
+pure-`func` — no struct/array involved at all. These became this
+slice's real, verified wins (see `wasm-conformance` 0.1.106's own
+changelog for the exact tallies) entirely without struct/array support.
+Struct/array remains its own, separate, still-fully-open gap.
+
+### Re-verified item (4)'s dependency on (3b): PARTIALLY optimistic, as predicted the campaign sometimes finds
+
+This spec's main text claimed items (1)-(3) must all exist before (4)'s
+dynamic checks become reachable at all (`assert_return`/`assert_trap`
+tallies for the "Runtime types" section were "100% `not_yet_supported`").
+Re-verified directly this time (not re-assumed): once (1)+(2)+(3a) exist,
+`type-subtyping.wast`'s "Runtime types" section's SINGLE-MODULE
+`call_indirect`/`ref.cast` directives (lines 283-343, 344-371, 373-401)
+turn out to depend on (3b) NOT AT ALL in principle — comparing a
+function's actual declared type against a `call_indirect`/`ref.cast`
+target type when BOTH live in the SAME module's type-section index space
+never needs cross-module canonical identity, only the same
+absolute-index nominal-chain walk (1) already implements. This is the
+"optimistic" half of the campaign's own track record repeating (like
+`call_ref.wast`/`return_call_ref.wast` in W32's second slice).
+
+But the OTHER half held too, confirmed by running the real corpus rather
+than reasoning abstractly: implementing (4)'s actual dynamic WIRING is
+still real, non-trivial, genuinely-scoped work this slice did not
+attempt (explicitly out of bounds per this slice's own task), and
+running the corpus anyway (to see what NOT implementing it costs)
+surfaced a DIFFERENT, more specific finding than "blocked on 3b" would
+have predicted: `wasm-execution`'s existing runtime `call_indirect`
+dynamic-dispatch check is a PRE-EXISTING simplification (plain `FuncType`
+structural equality, no type-identity or nominal-subtype awareness at
+all) that predates this slice entirely and was simply never reachable
+before (no module using `sub`/`rec` could parse). `type-subtyping.wast`
+lines 344-371's `fail1`/`fail2` (two structurally-identical-but-distinct
+`$t1`/`$t2` types) now reach it and expose it directly: 2 new
+`assert_trap` fails, confirmed via a per-directive diagnostic trace, not
+guessed. So: (4)'s dependency on (3b) is real for the "Linking" section's
+CROSS-MODULE `assert_unlinkable` cases (confirmed unavoidable, see
+below), but NOT for the "Runtime types" section's single-module cases —
+those are blocked on actually building (4)'s dynamic wiring itself
+(which also needs a real type-identity-aware `call_indirect`/`ref.cast`
+runtime check in `wasm-execution`, not just a `wasm-validator` change),
+a smaller and more tractable-looking follow-on than the spec's own
+blanket framing suggested, but still explicitly not attempted here.
+
+### The conservative cross-module guard: what it catches, what it can't, and why the gap is real (3b), not a bug
+
+`rec`-group parsing makes EVERY corpus module using it reachable at
+once, including cross-module `assert_unlinkable`/linking directives this
+slice's own scope (single-module-only nominal checking) doesn't cover.
+Running the full baseline mid-slice surfaced a real regression risk: the
+pre-existing `wasm-runtime` import-compatibility check (`host_func.
+func_type() != &ft`, plain `FuncType` structural equality) is blind to
+`rec`-group POSITION and to `final`-ness, both now reachable. Rather than
+attempt full canonical equivalence (still explicitly out of scope), this
+slice added two narrow, SOUND, strictly-additive guards — `wasm_types::
+WasmModule::type_group_shape` (rec-group size/position) and a finality
+check — ANDed onto the pre-existing structural check. Both are provably
+safe: every pre-existing import trivially reports the same default on
+both sides, so neither guard can ever newly ACCEPT something the old
+check rejected, only newly REJECT something the old check wrongly
+accepted. Verified via the diagnostic trace: without these two guards,
+`type-subtyping.wast`'s `assert_unlinkable` tally would have been 4
+fails, not 2 — `tag.wast`'s own position-mismatch case and `type-
+subtyping.wast` lines 594-617's finality-mismatch pair are both real,
+confirmed fixes.
+
+The 2 REMAINING `assert_unlinkable` fails (`type-subtyping.wast`'s
+M10/M11 pair, lines 746-774) are the genuine (3b) case these two guards
+cannot reach by construction: the exporter's and importer's `rec` groups
+have the SAME size, position, AND finality, but DIFFERENT internal
+cross-reference topology (one group's second member's `sub` parent
+points OUTSIDE its own group to an earlier, separately-declared group;
+the other's points to its own sibling). Telling these apart needs the
+real course-of-values/de-Bruijn canonical numbering this spec's own
+section 3 describes — confirmed directly by tracing the specific
+directive, not assumed from the general shape of the problem. No shallow
+shape/finality/position check reaches it without becoming that
+algorithm, which — per this slice's own explicit instruction not to
+invent a simplified version of (3b) — was not attempted.
+
+### A newly-discovered, THIRD gap: global init-expression type-checking, unrelated to `sub`/`final`/`rec`
+
+Tracing two "honest reclassification" cases (`type-rec.wast`/`type-
+subtyping.wast`'s `assert_invalid "type mismatch"` counts each dropping
+by one, Pass → `not_yet_supported`, never `fail`) surfaced a real,
+independent gap: **this repo's `wasm-validator` does not type-check a
+global's init expression against its declared type anywhere** — checked
+directly (not assumed): there is no const-expr type-checker at all, only
+a bounds check on the declared type's own index. Every corpus case that
+relies on `(global (ref $t) (ref.func $f))`-shaped type mismatches (both
+files use this as their ONLY mechanism to probe several `sub`/`rec`
+interactions) is honestly unreachable for real verification. This
+predates W33 entirely and would affect a plain `(global i32 (i64.const
+0))` mismatch too — it is NOT part of this spec's own scope (sub/final/
+rec), and is recorded here only because this slice is what made it newly
+OBSERVABLE (the surrounding `rec` syntax used to fail to parse first).
+Worth its own future slice; not attempted here.
+
+### What's confirmed still deferred to (3b)/(4), with the specific evidence (not just the spec's original framing)
+
+- **(3b), cross-module canonical type-group equivalence**: confirmed
+  necessary and sufficient to explain ALL 6 `type-equivalence.wast` fails
+  (every one of its ~21 modules exists specifically to probe
+  canonical-but-not-nominal equivalence between independently-declared,
+  isomorphic-or-identical types) and the 2 remaining `type-subtyping.
+  wast` `assert_unlinkable` fails (the M10/M11 topology-mismatch case
+  above). `type-canon.wast` is fully passing already (its 2 modules
+  don't need canonicalization at all, confirmed by this slice's own
+  baseline diff) — it is NOT, contrary to a naive reading of this spec's
+  original "verify against type-canon.wast... before attempting
+  type-subtyping.wast" plan, a meaningful proof point for (3b)
+  specifically; `type-equivalence.wast` is the real one.
+- **(4), dynamic `call_indirect`/`ref.cast`/`ref.test` checks**: confirmed
+  necessary for `type-subtyping.wast`'s entire "Runtime types" section
+  (lines 283-534, still 100% `not_yet_supported` for `ref.cast`/`ref.
+  test`-using modules specifically because this crate's wast-parser
+  additionally can't parse `ref.cast`/`ref.test` nested inside a folded
+  `(block (result T) ...)` form at all — a separate, pre-existing parser
+  gap, confirmed via the diagnostic trace, distinct from (4) itself) and
+  for the 2 `assert_trap` fails traced above (a real-but-reachable
+  `wasm-execution` runtime-dispatch gap once (1)-(3a) exist). Per the
+  finding above, the SINGLE-MODULE half of "Runtime types" does NOT
+  additionally need (3b) — only its own dynamic-wiring implementation,
+  not attempted this slice.
+- **Struct/array TEXT-format bodies** (this spec's own step 2): fully
+  unchanged, still fully open. Confirmed via the full baseline diff:
+  `struct.wast`/`array.wast` show ZERO tally changes from this slice.
+- **Global init-expression type-checking**: a new, third, independent
+  gap (above) — not part of this spec's own scope, not previously
+  tracked anywhere in this repo's specs, recorded here for whichever
+  future slice picks it up.

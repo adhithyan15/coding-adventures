@@ -1757,6 +1757,46 @@ pub trait HostFunction {
         args: &[WasmValue],
         memory: Option<&mut LinearMemory>,
     ) -> Result<Vec<WasmValue>, TrapError>;
+
+    /// `(rec_group_size, rec_group_position)` for this function's own
+    /// declared type-section entry (W33 first slice: `code/specs/
+    /// W33-wasm-gc-recursive-type-subtyping.md`) -- see
+    /// `wasm_types::TypeSubtyping::rec_group_position`'s own doc comment
+    /// for why this matters for cross-module import compatibility (two
+    /// structurally-identical members of a `rec` group at DIFFERENT
+    /// positions are DISTINCT types, which a plain `FuncType` shape
+    /// comparison alone can't see).
+    ///
+    /// Defaults to `(1, 0)` (a singleton group) — correct for every
+    /// existing host function (WASI shims, test doubles, ...), none of
+    /// which know or care about `rec` groups. Only `wasm-conformance`'s
+    /// `CrossModuleFunction` (a WASM module's own exported function,
+    /// imported by ANOTHER WASM module — the one place `rec`-group
+    /// identity can actually differ) overrides this.
+    fn type_group_shape(&self) -> (u32, u32) {
+        (1, 0)
+    }
+
+    /// Whether this function's own declared type-section entry forecloses
+    /// further subtyping (W33 first slice) -- see `wasm_types::
+    /// TypeSubtyping::is_final`'s own doc comment. Part of the same
+    /// cross-module import-compatibility guard `type_group_shape`
+    /// documents: TWO types with otherwise-identical shape but DIFFERENT
+    /// finality are distinct canonical types (finality is as much a part
+    /// of a type's real identity as its shape or `rec`-group position),
+    /// so a plain `FuncType` comparison alone can't tell `(sub (func))`
+    /// (open) apart from `(sub final (func))` (final) -- `type-
+    /// subtyping.wast`'s own `assert_unlinkable` cases at lines 594-617
+    /// need exactly this.
+    ///
+    /// Defaults to `true` (final) — correct for every existing host
+    /// function (WASI shims, test doubles, ...) and for every type that
+    /// predates `sub`/`final` parsing (which always defaults to final
+    /// too, see `wasm_types::TypeSubtyping::default`). Only `wasm-
+    /// conformance`'s `CrossModuleFunction` overrides this.
+    fn is_final(&self) -> bool {
+        true
+    }
 }
 
 /// A host interface — resolves WASM imports.
@@ -1794,6 +1834,24 @@ pub trait HostInterface {
     /// conformance`'s `RegistryHost`) needs to override this.
     fn resolve_tag(&self, _module_name: &str, _name: &str) -> Option<(FuncType, u64)> {
         None
+    }
+
+    /// `(rec_group_size, rec_group_position)` for the tag [`Self::
+    /// resolve_tag`] would resolve for the same `module_name`/`name` (W33
+    /// first slice) -- see [`HostFunction::type_group_shape`]'s own doc
+    /// comment for why this matters and why a default of `(1, 0)` is
+    /// always safe for every host that doesn't override it.
+    fn resolve_tag_group_shape(&self, _module_name: &str, _name: &str) -> (u32, u32) {
+        (1, 0)
+    }
+
+    /// Whether the tag [`Self::resolve_tag`] would resolve for the same
+    /// `module_name`/`name` forecloses further subtyping (W33 first
+    /// slice) -- see [`HostFunction::is_final`]'s own doc comment for why
+    /// this matters and why a default of `true` is always safe for every
+    /// host that doesn't override it.
+    fn resolve_tag_is_final(&self, _module_name: &str, _name: &str) -> bool {
+        true
     }
 
     /// Bind the current instance memory into the host before a call executes.

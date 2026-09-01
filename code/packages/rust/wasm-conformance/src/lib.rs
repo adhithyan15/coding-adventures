@@ -139,7 +139,14 @@ impl HostInterface for RegistryHost {
     fn resolve_function(&self, module_name: &str, name: &str) -> Option<Box<dyn HostFunction>> {
         let (instance_rc, index) = self.find_export(module_name, name, ExternalKind::Function)?;
         let func_type = instance_rc.borrow().func_types.get(index as usize)?.clone();
-        Some(Box::new(CrossModuleFunction { instance: instance_rc, export_name: name.to_string(), func_type }))
+        let (group_shape, is_final) = {
+            let instance = instance_rc.borrow();
+            match combined_function_type_idx(&instance, index) {
+                Some(t) => (instance.module.type_group_shape(t), instance.module.type_subtyping_at(t).is_final),
+                None => ((1, 0), true),
+            }
+        };
+        Some(Box::new(CrossModuleFunction { instance: instance_rc, export_name: name.to_string(), func_type, group_shape, is_final }))
     }
 
     fn resolve_global(&self, module_name: &str, name: &str) -> Option<(GlobalType, WasmValue)> {
@@ -216,6 +223,63 @@ impl HostInterface for RegistryHost {
         let identity = *instance.tag_identities.get(index as usize)?;
         Some((func_type, identity))
     }
+
+    /// W33 first slice: the `(rec_group_size, rec_group_position)`
+    /// counterpart to `resolve_tag` above, for `wasm-runtime`'s
+    /// cross-module import-compatibility guard (`HostInterface::
+    /// resolve_tag_group_shape`'s own doc comment). Re-resolves the same
+    /// export rather than caching it alongside `resolve_tag`'s own
+    /// result -- registry lookups here are simple `HashMap`/`Vec`
+    /// indexing, cheap enough that a second lookup is not worth the
+    /// complexity of threading a combined return type through
+    /// `HostInterface`'s existing, already-stable `resolve_tag` shape.
+    fn resolve_tag_group_shape(&self, module_name: &str, name: &str) -> (u32, u32) {
+        let Some((instance_rc, index)) = self.find_export(module_name, name, ExternalKind::Tag) else {
+            return (1, 0);
+        };
+        let instance = instance_rc.borrow();
+        let Some(&type_idx) = instance.tags.get(index as usize) else {
+            return (1, 0);
+        };
+        instance.module.type_group_shape(type_idx)
+    }
+
+    /// W33 first slice: the finality counterpart to `resolve_tag_group_shape`
+    /// above — see `HostFunction::is_final`'s own doc comment.
+    fn resolve_tag_is_final(&self, module_name: &str, name: &str) -> bool {
+        let Some((instance_rc, index)) = self.find_export(module_name, name, ExternalKind::Tag) else {
+            return true;
+        };
+        let instance = instance_rc.borrow();
+        let Some(&type_idx) = instance.tags.get(index as usize) else {
+            return true;
+        };
+        instance.module.type_subtyping_at(type_idx).is_final
+    }
+}
+
+/// The type-SECTION index (into `instance.module.types`) for the
+/// COMBINED-index-space function `index` in `instance` (W33 first slice)
+/// -- `index` follows the same "imports first, then module-defined"
+/// convention `instance.func_types` itself uses. Mirrors `wasm-validator`'s
+/// own `build_module_context`'s identical imports-first-then-declared
+/// resolution for `func_type_indices`.
+fn combined_function_type_idx(instance: &WasmInstance, index: u32) -> Option<u32> {
+    let imported_function_count = instance.module.imports.iter().filter(|i| i.kind == ExternalKind::Function).count() as u32;
+    if index < imported_function_count {
+        instance
+            .module
+            .imports
+            .iter()
+            .filter(|i| i.kind == ExternalKind::Function)
+            .nth(index as usize)
+            .and_then(|imp| match &imp.type_info {
+                wasm_types::ImportTypeInfo::Function(t) => Some(*t),
+                _ => None,
+            })
+    } else {
+        instance.module.functions.get((index - imported_function_count) as usize).copied()
+    }
 }
 
 /// A resolved cross-module function import (WASM05/W10): calling it
@@ -237,6 +301,15 @@ struct CrossModuleFunction {
     instance: Rc<RefCell<WasmInstance>>,
     export_name: String,
     func_type: FuncType,
+    /// W33 first slice: this function's own `(rec_group_size,
+    /// rec_group_position)`, computed once at `resolve_function` time
+    /// (see `combined_function_type_idx`) — see `HostFunction::
+    /// type_group_shape`'s own doc comment.
+    group_shape: (u32, u32),
+    /// W33 first slice: this function's own declared finality, computed
+    /// alongside `group_shape` — see `HostFunction::is_final`'s own doc
+    /// comment.
+    is_final: bool,
 }
 
 impl HostFunction for CrossModuleFunction {
@@ -247,6 +320,14 @@ impl HostFunction for CrossModuleFunction {
     fn call(&self, args: &[WasmValue], _memory: Option<&mut LinearMemory>) -> Result<Vec<WasmValue>, TrapError> {
         let mut instance = self.instance.borrow_mut();
         WasmRuntime::new().call_typed(&mut instance, &self.export_name, args)
+    }
+
+    fn type_group_shape(&self) -> (u32, u32) {
+        self.group_shape
+    }
+
+    fn is_final(&self) -> bool {
+        self.is_final
     }
 }
 

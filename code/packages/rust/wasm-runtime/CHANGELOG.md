@@ -2,6 +2,53 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.17] — 2026-08-31 (W33 first slice — cross-module `rec`-group guard)
+
+Adding `(rec ...)` group parsing (`wasm-wast-parser` 0.1.89) makes modules
+that use it newly BUILDABLE — including ones whose cross-module
+import/tag linking `instantiate()` now actually reaches. This crate's
+pre-existing import-compatibility check compares only a plain `FuncType`
+shape, which is blind to `rec`-group POSITION: two structurally-identical
+members of a `rec` group at different positions (e.g. `tag.wast`'s own
+`(rec (type $t1 (func)) (type $t2 (func)))`) are DISTINCT types under the
+real GC canonicalization algorithm, but would wrongly compare equal here.
+Full canonical type-group equivalence (`code/specs/
+W33-wasm-gc-recursive-type-subtyping.md`'s own item 3b) is out of scope
+for this slice — but leaving the gap unguarded would have let some newly-
+reachable `assert_unlinkable` corpus cases wrongly LINK once `rec` groups
+parse, a real regression the full-corpus baseline diff would have caught.
+
+### Added
+
+- **Function and tag import compatibility now also requires a matching
+  `(rec_group_size, rec_group_position)`** (`wasm_types::WasmModule::
+  type_group_shape`, ANDed onto the pre-existing `FuncType`/tag-type
+  structural equality check, never replacing it): `instantiate()`'s
+  `ImportTypeInfo::Function`/`ImportTypeInfo::Tag` arms now ask the host
+  (`HostFunction::type_group_shape`/`HostInterface::
+  resolve_tag_group_shape`, both new `wasm-execution` 0.9.80 default
+  methods returning `(1, 0)`) and compare against the importing module's
+  own declared shape. Safe for every PRE-EXISTING import (both sides
+  trivially report the singleton-group default): can only ADD a
+  rejection on top of the existing check, never remove one — verified via
+  the full-corpus baseline diff showing zero regressions (see
+  `wasm-conformance`'s own changelog for the exact tallies).
+- **Function and tag import compatibility ALSO requires matching
+  finality** (`HostFunction::is_final`/`HostInterface::
+  resolve_tag_is_final`, both new `wasm-execution` 0.9.80 default methods
+  returning `true`): `(sub (func))` (open) and `(sub final (func))`
+  (final) are structurally identical `FuncType`s yet distinct canonical
+  types — this fixed 2 of the 4 new `assert_unlinkable` fails the initial
+  `rec`-group-shape-only guard left behind (`type-subtyping.wast` lines
+  594-617's finality-mismatch pair); see `wasm-conformance`'s own
+  changelog for the full before/after accounting, including the 2
+  remaining fails (`type-subtyping.wast`'s M10/M11 linking pair) this
+  guard does NOT catch — confirmed to need real cross-module canonical
+  type-group equivalence (item 3b), not a shallow shape/finality check.
+- Four new unit tests (two for the `rec`-group-shape guard, two for the
+  finality guard) exercising both directly, independent of the full
+  corpus.
+
 ## [0.6.16] — 2026-08-31 (W32 second slice — non-null concrete reference types)
 
 ### Added

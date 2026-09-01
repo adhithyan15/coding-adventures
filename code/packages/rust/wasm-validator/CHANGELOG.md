@@ -2,6 +2,89 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.76] - 2026-08-31 (W33 first slice — GC nominal subtyping validation)
+
+Implements the `wasm-validator` half of `code/specs/
+W33-wasm-gc-recursive-type-subtyping.md`'s "first slice" scope: structural
+CHECKING of the `sub`/`final` declarations `wasm-wast-parser` 0.1.89 now
+parses, plus wiring the resulting nominal subtype relation into every
+existing static assignability check (`call`, locals, globals, block
+types, ...) via `is_assignable`. Does NOT implement cross-module canonical
+type-group equivalence (item 3b) or dynamic `call_indirect`/`ref.cast`/
+`ref.test` checks against real subtype relationships (item 4) — both
+remain explicitly out of scope, see the spec's own addendum for this
+slice's re-verification of exactly what's still blocked on each.
+
+### Added
+
+- **`check_type_subtyping`**: validates every `module.types` entry with a
+  declared `sub $parent` (via `wasm-types` 0.1.15's `type_subtyping`) —
+  called at the top of `type_check_module`, so it runs for every module
+  regardless of whether any function body ever exercises the declared
+  type. Two things reject a declaration:
+  - **the parent is final** (`type-subtyping.wast`'s "Finality violation"
+    section, lines 780-811) — checked for both the implicit default
+    (no `sub` clause at all) and an explicit `(sub final ...)`.
+  - **the declared child/parent pair fails `func_is_structural_subtype`**
+    (below) — e.g. an arity mismatch (`type-subtyping.wast` lines
+    944-949) or a param/result variance violation.
+  - Struct/array composite-type-kind invariance and field-list
+    width/depth/variance rules (the rest of `type-subtyping.wast`'s
+    "Invalid subtyping definitions" section) are NOT checked — this
+    slice's parser only ever produces `FuncType` entries (struct/array
+    TEXT-format bodies remain unparseable), so there's nothing of that
+    shape to validate yet; those cases stay correctly rejected for the
+    pre-existing "struct/array not yet supported" parse-time reason
+    instead, an honest `NotYetSupported`-shaped non-regression.
+- **`func_is_structural_subtype`**: the GC proposal's REAL function-type
+  subtyping rule — invariant arity, contravariant params, covariant
+  results — independently verified (per the spec's own "Why this needs
+  GC, not function-references" section) against the narrower
+  function-references `Overview.md` rule ("invariant for now") to confirm
+  this file needs the wider GC rule, not that one.
+- **`is_assignable` gained three new arms** (and, with it, `pop_expect`/
+  `pop_expect_many`/`results_assignable`/`push_ctrl`/`pop_ctrl`/
+  `type_check_numeric` all now take a `module: &WasmModule` parameter to
+  thread it through): `ConcreteFuncRef(i)`/`NonNullConcreteFuncRef(i)`
+  flowing into a `ConcreteFuncRef(j)`/`NonNullConcreteFuncRef(j)` slot
+  where `i` is a declared NOMINAL subtype of `j` (`WasmModule::
+  func_type_is_nominal_subtype`). This is what makes `call`'s existing
+  argument-type check (and every other static assignability check) honor
+  a declared `sub` chain — e.g. `type-subtyping.wast`'s "Subsumption"
+  section's `$f2 (param (ref $t2)) (call $f1 (local.get $r))` validates
+  because `$t2 <: $t1` per the module's own chain, not mere structural
+  equality (every arm predates this slice and never looks at `module` at
+  all, so a `WasmModule` that never populated `type_subtyping` behaves
+  exactly as before). Deliberately does NOT attempt canonical/structural
+  equivalence between two independently-declared, `sub`-unrelated types
+  even if byte-identical in shape (item 3b, out of scope).
+
+Full-corpus baseline diff (`wasm-conformance`) confirms zero regressions
+— see that crate's own changelog entry for the exact before/after
+tallies across every affected file.
+
+### Security review follow-up
+
+- **`check_type_subtyping` now rejects a cyclic `sub` chain** (new
+  `check_type_subtyping_is_acyclic`, an O(number of types) three-color
+  traversal). A security review found that `(rec (type $t1 (sub $t2
+  (func))) (type $t2 (sub $t1 (func))))` used to validate successfully:
+  each type's own IMMEDIATE parent link checks out fine in isolation
+  (invariant arity trivially satisfied both directions on empty func
+  shapes), so nothing rejected the cycle as a whole — confirmed directly
+  that this made `WasmModule::func_type_is_nominal_subtype(0, 1)` AND
+  `(1, 0)` both return `true`, i.e. two independently-declared,
+  differently-indexed types became mutually interchangeable via
+  `is_assignable`. That is exactly the "canonical equivalence between
+  unrelated types" this crate's own `is_assignable` doc comment says must
+  stay unimplemented (W33's own item 3b) — a wrong ACCEPT here is a real
+  soundness risk, not just a missed capability. Confirmed via the full
+  corpus re-run: zero real `.wast` files declare a cyclic `sub` chain, so
+  this fix causes no baseline changes.
+
+wasm-validator 0.2.76 (this security-review follow-up landed within the
+same unreleased version as the fix it patches, not a separate bump).
+
 ## [0.2.75] - 2026-08-31 (W32 second slice — non-null concrete reference types)
 
 ### Added

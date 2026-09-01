@@ -1689,4 +1689,262 @@ mod tests {
         };
         assert!(validate(&module).is_ok());
     }
+
+    // ── W33 first slice: GC `sub`/`final` nominal subtyping (`code/specs/
+    // W33-wasm-gc-recursive-type-subtyping.md`) ─────────────────────────────
+
+    #[test]
+    fn accepts_a_valid_nominal_subtype_chain_matching_the_real_corpus_shape() {
+        // Mirrors `type-subtyping.wast`'s own "Subsumption" 3-cycle
+        // exactly (lines 68-73): `$t1 (func (param i32 (ref $t3)))`, `$t2
+        // (sub $t1 (func (param i32 (ref $t2))))` (self-referencing),
+        // `$t3 (sub $t2 (func (param i32 (ref $t1))))` -- contravariant
+        // params satisfied at every declared `sub` step via the real
+        // subtype chain (`$t3 <: $t2 <: $t1`), not mere structural
+        // equality (the params at each step are DIFFERENT concrete
+        // indices).
+        let module = WasmModule {
+            types: vec![
+                FuncType { params: vec![ValueType::I32, ValueType::NonNullConcreteFuncRef(2)], results: vec![] }, // $t1
+                FuncType { params: vec![ValueType::I32, ValueType::NonNullConcreteFuncRef(1)], results: vec![] }, // $t2 sub $t1
+                FuncType { params: vec![ValueType::I32, ValueType::NonNullConcreteFuncRef(0)], results: vec![] }, // $t3 sub $t2
+            ],
+            type_subtyping: vec![
+                TypeSubtyping { supertype: None, is_final: false, ..Default::default() },
+                TypeSubtyping { supertype: Some(0), is_final: false, ..Default::default() },
+                TypeSubtyping { supertype: Some(1), is_final: false, ..Default::default() },
+            ],
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok(), "{:?}", validate(&module).unwrap_err());
+    }
+
+    #[test]
+    fn rejects_a_sub_declaration_whose_parent_is_final() {
+        // `type-subtyping.wast` lines 780-786: a type with NO `sub` clause
+        // at all defaults to final -- declaring a further sub of it must
+        // be rejected.
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }, FuncType { params: vec![], results: vec![] }],
+            type_subtyping: vec![
+                TypeSubtyping::default(), // final by default, no `sub` clause
+                TypeSubtyping { supertype: Some(0), is_final: false, ..Default::default() },
+            ],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::Other(_)), "{err:?}");
+    }
+
+    #[test]
+    fn rejects_a_sub_declaration_whose_explicit_final_parent_forecloses_it() {
+        // `type-subtyping.wast` lines 796-802: `(sub final (func))`
+        // followed by an attempted `(sub $t (func))` — an EXPLICIT
+        // `final` forecloses just as much as the implicit default above.
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }, FuncType { params: vec![], results: vec![] }],
+            type_subtyping: vec![
+                TypeSubtyping { supertype: None, is_final: true, ..Default::default() },
+                TypeSubtyping { supertype: Some(0), is_final: false, ..Default::default() },
+            ],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::Other(_)), "{err:?}");
+    }
+
+    #[test]
+    fn accepts_a_sub_of_a_non_final_parent() {
+        // The positive counterpart of the two finality tests above: an
+        // OPEN (non-final) parent's sub declaration must be accepted.
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }, FuncType { params: vec![], results: vec![] }],
+            type_subtyping: vec![
+                TypeSubtyping { supertype: None, is_final: false, ..Default::default() },
+                TypeSubtyping { supertype: Some(0), is_final: false, ..Default::default() },
+            ],
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok());
+    }
+
+    #[test]
+    fn rejects_a_sub_declaration_with_mismatched_arity() {
+        // `type-subtyping.wast` lines 944-949: `$f0 (sub (func))`, `$f1
+        // (sub $f0 (func (param i32)))` -- the GC proposal's function
+        // subtyping rule requires INVARIANT arity; adding a param is
+        // rejected even though the parent is open (non-final).
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }, FuncType { params: vec![ValueType::I32], results: vec![] }],
+            type_subtyping: vec![
+                TypeSubtyping { supertype: None, is_final: false, ..Default::default() },
+                TypeSubtyping { supertype: Some(0), is_final: false, ..Default::default() },
+            ],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::Other(_)), "{err:?}");
+    }
+
+    #[test]
+    fn rejects_a_sub_declaration_violating_param_contravariance() {
+        // A declared `sub` whose param goes the WRONG way (covariant
+        // instead of contravariant) must be rejected: the parent func
+        // type's param is `(ref $wide)`; the declared "sub" narrows it to
+        // `(ref $narrow)`, a STRICT nominal subtype of `$wide` -- but
+        // params must WIDEN (or stay equal), never narrow, in a real
+        // subtype, so this must be rejected even though `$narrow <:
+        // $wide` genuinely holds (it's just the wrong position for it).
+        let module = WasmModule {
+            types: vec![
+                FuncType { params: vec![], results: vec![] },                                     // 0: $wide (marker, final=false)
+                FuncType { params: vec![], results: vec![] },                                     // 1: $narrow, sub $wide
+                FuncType { params: vec![ValueType::NonNullConcreteFuncRef(0)], results: vec![] },  // 2: parent func type -- param (ref $wide)
+                FuncType { params: vec![ValueType::NonNullConcreteFuncRef(1)], results: vec![] },  // 3: declared "sub" of #2 -- param (ref $narrow), WRONG direction
+            ],
+            type_subtyping: vec![
+                TypeSubtyping { supertype: None, is_final: false, ..Default::default() },
+                TypeSubtyping { supertype: Some(0), is_final: false, ..Default::default() },
+                TypeSubtyping { supertype: None, is_final: false, ..Default::default() },
+                TypeSubtyping { supertype: Some(2), is_final: false, ..Default::default() },
+            ],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::Other(_)), "{err:?}");
+    }
+
+    #[test]
+    fn rejects_a_cyclic_sub_declaration() {
+        // Security review finding (W33 first slice): `(rec (type $t1 (sub
+        // $t2 (func))) (type $t2 (sub $t1 (func))))` -- two types
+        // declared as mutual `sub`s of EACH OTHER. Each individual link
+        // structurally checks out fine in isolation (empty/empty func
+        // shapes, invariant arity trivially satisfied both ways), so
+        // without a dedicated cycle check this validates successfully
+        // and makes `func_type_is_nominal_subtype(0, 1)` AND `(1, 0)`
+        // both `true` -- two independently-declared, differently-indexed
+        // types becoming mutually interchangeable, exactly the
+        // "canonical equivalence between unrelated types" this slice's
+        // own scope says must stay unimplemented (a wrong ACCEPT here is
+        // a real soundness risk).
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }, FuncType { params: vec![], results: vec![] }],
+            type_subtyping: vec![
+                TypeSubtyping { supertype: Some(1), is_final: false, ..Default::default() },
+                TypeSubtyping { supertype: Some(0), is_final: false, ..Default::default() },
+            ],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::Other(_)), "{err:?}");
+    }
+
+    #[test]
+    fn rejects_a_self_cyclic_sub_declaration() {
+        // The degenerate 1-cycle: a type declared as its OWN supertype.
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }],
+            type_subtyping: vec![TypeSubtyping { supertype: Some(0), is_final: false, ..Default::default() }],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::Other(_)), "{err:?}");
+    }
+
+    #[test]
+    fn rejects_a_longer_cyclic_sub_chain() {
+        // A 3-cycle: t0 sub t2, t1 sub t0, t2 sub t1 -- no individual
+        // link is a self-reference, but the whole chain loops.
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }; 3],
+            type_subtyping: vec![
+                TypeSubtyping { supertype: Some(2), is_final: false, ..Default::default() },
+                TypeSubtyping { supertype: Some(0), is_final: false, ..Default::default() },
+                TypeSubtyping { supertype: Some(1), is_final: false, ..Default::default() },
+            ],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::Other(_)), "{err:?}");
+    }
+
+    #[test]
+    fn accepts_a_module_with_multiple_independent_acyclic_sub_chains() {
+        // Regression guard for the cycle checker itself: it must not
+        // reject legitimate, SEPARATE (non-interacting) acyclic chains
+        // sharing one module's type section, and its "already proven
+        // acyclic" (BLACK) memoization must not cause it to skip
+        // checking a later, independent chain.
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }; 4],
+            type_subtyping: vec![
+                TypeSubtyping { supertype: None, is_final: false, ..Default::default() },
+                TypeSubtyping { supertype: Some(0), is_final: false, ..Default::default() },
+                TypeSubtyping { supertype: None, is_final: false, ..Default::default() },
+                TypeSubtyping { supertype: Some(2), is_final: false, ..Default::default() },
+            ],
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok());
+    }
+
+    #[test]
+    fn call_argument_accepts_a_declared_nominal_subtype_concrete_func_ref() {
+        // Integration test for `is_assignable`'s new W33 arms via a real
+        // `call`: `$f1`'s function type takes a `(ref $t1)` param; `$f2`'s
+        // takes a `(ref $t2)` param where `$t2 sub $t1`. `$f2`'s body
+        // calls `$f1` passing its OWN param straight through -- valid
+        // because `(ref $t2) <: (ref $t1)` per the declared chain, the
+        // exact mechanic `type-subtyping.wast`'s "Subsumption" section
+        // tests via real function bodies, not just type-section shape.
+        let module = WasmModule {
+            types: vec![
+                FuncType { params: vec![], results: vec![] },                                      // 0: $t1 (final=false)
+                FuncType { params: vec![], results: vec![] },                                      // 1: $t2 sub $t1
+                FuncType { params: vec![ValueType::NonNullConcreteFuncRef(0)], results: vec![] },   // 2: $f1's type -- param (ref $t1)
+                FuncType { params: vec![ValueType::NonNullConcreteFuncRef(1)], results: vec![] },   // 3: $f2's type -- param (ref $t2)
+            ],
+            type_subtyping: vec![
+                TypeSubtyping { supertype: None, is_final: false, ..Default::default() },
+                TypeSubtyping { supertype: Some(0), is_final: false, ..Default::default() },
+                TypeSubtyping::default(),
+                TypeSubtyping::default(),
+            ],
+            functions: vec![2, 3],
+            code: vec![
+                FunctionBody { locals: vec![], code: vec![0x0B] }, // $f1: drop param, done
+                FunctionBody { locals: vec![], code: vec![0x20, 0x00, 0x10, 0x00, 0x0B] }, // $f2: local.get 0; call 0; end
+            ],
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok(), "{:?}", validate(&module).unwrap_err());
+    }
+
+    #[test]
+    fn call_argument_rejects_an_unrelated_concrete_func_ref() {
+        // The negative counterpart: `$t1`/`$t2` are declared with NO `sub`
+        // relationship between them at all (two independent, final types)
+        // -- passing a `(ref $t2)` where `(ref $t1)` is expected must be
+        // rejected. This is deliberately NOT the same as the positive
+        // test's types (no `sub` declared here), proving the new
+        // assignability arms require a REAL declared chain, not just "any
+        // two concrete func ref types."
+        let module = WasmModule {
+            types: vec![
+                FuncType { params: vec![], results: vec![] },                                      // 0: $t1
+                FuncType { params: vec![], results: vec![] },                                      // 1: $t2 (unrelated to $t1)
+                FuncType { params: vec![ValueType::NonNullConcreteFuncRef(0)], results: vec![] },   // 2: $f1's type -- param (ref $t1)
+                FuncType { params: vec![ValueType::NonNullConcreteFuncRef(1)], results: vec![] },   // 3: $f2's type -- param (ref $t2)
+            ],
+            functions: vec![2, 3],
+            code: vec![
+                FunctionBody { locals: vec![], code: vec![0x0B] },
+                FunctionBody { locals: vec![], code: vec![0x20, 0x00, 0x10, 0x00, 0x0B] }, // local.get 0; call 0; end
+            ],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::Other(_)), "{err:?}");
+    }
 }
