@@ -29,6 +29,7 @@ pub const IMPORTED_STYLESHEET_PATH: &str = "/fixture-base.css";
 pub const INTERNATIONAL_FIXTURE_PATH: &str = "/international.html";
 pub const FLEX_FIXTURE_PATH: &str = "/flex.html";
 pub const GRID_FIXTURE_PATH: &str = "/grid.html";
+pub const POSITIONED_FIXTURE_PATH: &str = "/positioned.html";
 pub const VIEWPORT_WIDTH: f64 = 240.0;
 pub const VIEWPORT_HEIGHT: f64 = 120.0;
 pub const GPU_LAYER_FIXTURE_WIDTH: u32 = 16;
@@ -85,6 +86,9 @@ pub const FLEX_FIXTURE_HTML: &str = r#"<!doctype html><html><body><div id="flex-
 
 /// Compact named-track grid geometry shared by every Venture host.
 pub const GRID_FIXTURE_HTML: &str = r#"<!doctype html><html><body><div id="grid-deck" style="display:grid;width:240px;height:100px;grid-template-columns:60px 1fr 1fr;grid-template-rows:30px 1fr;grid-template-areas:'head head side' 'main main side';gap:10px"><div id="grid-head" style="grid-area:head;background:red">H</div><div id="grid-main" style="grid-area:main;background:green">M</div><div id="grid-side" style="grid-area:side;order:-1;background:blue">S</div></div></body></html>"#;
+
+/// Compact positioning, stacking, clipping, and viewport-scroll fixture.
+pub const POSITIONED_FIXTURE_HTML: &str = r#"<!doctype html><html><body><div style="height:0"><a id="fixed-link" href="fixed.html" style="position:fixed;top:4px;right:8px;width:64px;height:18px;z-index:9;background:red">Fixed</a></div><div id="clip-stage" style="position:relative;width:120px;height:42px;overflow:hidden;background:green"><a id="clipped-link" href="clip.html" style="position:absolute;left:96px;top:8px;width:60px;height:18px;background:blue">Clip</a></div><div style="height:60px">Spacer</div><a id="sticky-link" href="sticky.html" style="position:sticky;top:5px;height:18px;background:blue">Sticky</a><div style="height:220px">Scrollable tail</div></body></html>"#;
 
 /// A compact backend-neutral oracle for isolated GPU composition.
 ///
@@ -478,6 +482,7 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
     let international_url = format!("{origin}{INTERNATIONAL_FIXTURE_PATH}");
     let flex_url = format!("{origin}{FLEX_FIXTURE_PATH}");
     let grid_url = format!("{origin}{GRID_FIXTURE_PATH}");
+    let positioned_url = format!("{origin}{POSITIONED_FIXTURE_PATH}");
     match requested_url {
         url if url == page_url => Ok(BrowserFetchResponse::new(
             url,
@@ -520,6 +525,12 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
             200,
             Some("text/html; charset=utf-8".into()),
             GRID_FIXTURE_HTML.as_bytes().to_vec(),
+        )),
+        url if url == positioned_url => Ok(BrowserFetchResponse::new(
+            url,
+            200,
+            Some("text/html; charset=utf-8".into()),
+            POSITIONED_FIXTURE_HTML.as_bytes().to_vec(),
         )),
         url if url == format!("{origin}{MISSING_IMAGE_PATH}") => {
             Err("intentional visual fixture image failure".into())
@@ -579,6 +590,23 @@ pub fn load_grid_page(origin: &str) -> Result<BrowserPage, String> {
         &text,
     );
     let url = format!("{}{GRID_FIXTURE_PATH}", origin.trim_end_matches('/'));
+    pipeline
+        .load(&url, &|requested: &str| fixture_response(origin, requested))
+        .map_err(|error| error.to_string())
+}
+
+pub fn load_positioned_page(origin: &str) -> Result<BrowserPage, String> {
+    let theme = mosaic_html_theme();
+    let text = DeterministicText;
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, 1.0),
+        &text,
+        &text,
+        &text,
+        &text,
+    );
+    let url = format!("{}{POSITIONED_FIXTURE_PATH}", origin.trim_end_matches('/'));
     pipeline
         .load(&url, &|requested: &str| fixture_response(origin, requested))
         .map_err(|error| error.to_string())
@@ -986,11 +1014,85 @@ fn deterministic_font_ref(character: char) -> &'static str {
 mod tests {
     use super::*;
 
+    fn find_node<'a>(node: &'a PositionedNode, id: &str) -> Option<(&'a PositionedNode, f64, f64)> {
+        let mut stack = vec![(node, 0.0, 0.0)];
+        while let Some((node, parent_x, parent_y)) = stack.pop() {
+            let x = parent_x + node.x;
+            let y = parent_y + node.y;
+            if node.id.as_deref() == Some(id) {
+                return Some((node, x, y));
+            }
+            for child in node.children.iter().rev() {
+                stack.push((child, x, y));
+            }
+        }
+        None
+    }
+
+    fn contains_instruction(
+        instructions: &[PaintInstruction],
+        predicate: &impl Fn(&PaintInstruction) -> bool,
+    ) -> bool {
+        instructions.iter().any(|instruction| {
+            predicate(instruction)
+                || match instruction {
+                    PaintInstruction::Group(group) => {
+                        contains_instruction(&group.children, predicate)
+                    }
+                    PaintInstruction::Clip(clip) => contains_instruction(&clip.children, predicate),
+                    PaintInstruction::Layer(layer) => {
+                        contains_instruction(&layer.children, predicate)
+                    }
+                    _ => false,
+                }
+        })
+    }
+
     #[test]
     fn representative_page_captures_initial_and_scrolled_visuals() {
         let capture = capture("http://venture.test").expect("capture fixture");
         capture.assert_valid();
         eprintln!("{}", capture.describe());
+    }
+
+    #[test]
+    fn positioned_fixture_shares_geometry_clips_and_scroll_behavior() {
+        let page = load_positioned_page("http://venture.test").expect("positioned fixture");
+        let (stage, stage_x, _) = find_node(&page.paint.positioned, "clip-stage").unwrap();
+        let clipped = page
+            .paint
+            .links
+            .iter()
+            .find(|region| region.url.ends_with("clip.html"))
+            .unwrap();
+        assert!(clipped.x + clipped.width <= stage_x + stage.width);
+        let fixed = page
+            .paint
+            .links
+            .iter()
+            .find(|region| region.fixed && region.url.ends_with("fixed.html"))
+            .unwrap()
+            .clone();
+        assert!(contains_instruction(
+            &page.paint.scene.instructions,
+            &|instruction| { matches!(instruction, PaintInstruction::Clip(_)) }
+        ));
+
+        let mut viewport = BrowserViewport::new(page, VIEWPORT_HEIGHT);
+        viewport.scroll_command(BrowserScrollCommand::DocumentEnd);
+        assert_eq!(
+            viewport
+                .hit_test_link(fixed.x + fixed.width / 2.0, fixed.y + fixed.height / 2.0)
+                .map(|region| region.url.as_str()),
+            Some(fixed.url.as_str())
+        );
+        let scene = viewport.viewport_scene();
+        assert!(scene.instructions.iter().any(|instruction| {
+            matches!(instruction, PaintInstruction::Group(group) if group.base.metadata.as_ref().and_then(|metadata| metadata.get("layout.position")).is_some_and(|value| value == "fixed"))
+        }));
+        assert!(contains_instruction(&scene.instructions, &|instruction| {
+            matches!(instruction, PaintInstruction::Group(group) if group.base.metadata.as_ref().and_then(|metadata| metadata.get("layout.position")).is_some_and(|value| value == "sticky") && group.transform.is_some_and(|transform| transform[5] > 0.0))
+        }));
     }
 
     #[test]

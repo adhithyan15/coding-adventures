@@ -43,7 +43,7 @@
 //!
 //! ### Explicit non-goals (v1)
 //!
-//! - `float` / `clear` / absolute positioning
+//! - `float` / `clear`; positioned descendants delegate to `layout-positioned`
 //! - Full CSS inline formatting: justification, UAX #14 breaking, and
 //!   edge-decoration continuation. Fragmentation and baseline alignment are
 //!   delegated to the reusable `layout-inline` crate.
@@ -59,6 +59,7 @@ use layout_ir::{
     Constraints, Content, Edges, ExtValue, LayoutNode, MeasureResult, PositionedNode, SizeValue,
     TextContent, TextMeasurer,
 };
+use layout_positioned::{stable_stack, PositionedStyle};
 
 pub const VERSION: &str = "0.3.0";
 
@@ -86,12 +87,32 @@ pub fn layout_block<M: TextMeasurer>(
     // A top-level node's own margin is NOT applied here — the caller
     // decides where to place the root. For typical use (root at 0,0),
     // this matches the expected UI02 semantics.
-    lay_out_any(container, constraints, measurer, 0.0, 0.0)
+    lay_out_any(
+        container,
+        constraints,
+        measurer,
+        0.0,
+        0.0,
+        LayoutContext {
+            viewport_width: constraints.max_width,
+            viewport_height: constraints.max_height,
+            parent_abs_x: 0.0,
+            parent_abs_y: 0.0,
+        },
+    )
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Core recursion
 // ═══════════════════════════════════════════════════════════════════════════
+
+#[derive(Clone, Copy)]
+struct LayoutContext {
+    viewport_width: f64,
+    viewport_height: f64,
+    parent_abs_x: f64,
+    parent_abs_y: f64,
+}
 
 /// Lay out a single node (leaf or container) at the given `(x, y)` in
 /// its parent's content-area coordinate space.
@@ -101,6 +122,74 @@ fn lay_out_any<M: TextMeasurer>(
     measurer: &M,
     x: f64,
     y: f64,
+    context: LayoutContext,
+) -> PositionedNode {
+    let style = PositionedStyle::from_layout(node);
+    let mut flow_node;
+    let normal_node = if node
+        .children
+        .iter()
+        .any(|child| PositionedStyle::from_layout(child).is_out_of_flow())
+    {
+        flow_node = node.clone();
+        flow_node
+            .children
+            .retain(|child| !PositionedStyle::from_layout(child).is_out_of_flow());
+        &flow_node
+    } else {
+        node
+    };
+    let mut positioned = lay_out_normal(normal_node, constraints, measurer, x, y, context);
+    style.apply_in_flow_offset(&mut positioned);
+    let current_abs_x = context.parent_abs_x + positioned.x;
+    let current_abs_y = context.parent_abs_y + positioned.y;
+
+    for child in node
+        .children
+        .iter()
+        .filter(|child| PositionedStyle::from_layout(child).is_out_of_flow())
+    {
+        let child_style = PositionedStyle::from_layout(child);
+        let containing_width = if child_style.position == layout_positioned::Position::Fixed {
+            context.viewport_width
+        } else {
+            positioned.width
+        };
+        let containing_height = if child_style.position == layout_positioned::Position::Fixed {
+            context.viewport_height
+        } else {
+            positioned.height
+        };
+        let mut child_positioned = lay_out_any(
+            child,
+            unconstrained_height(containing_width),
+            measurer,
+            0.0,
+            0.0,
+            LayoutContext {
+                parent_abs_x: current_abs_x,
+                parent_abs_y: current_abs_y,
+                ..context
+            },
+        );
+        child_style.resolve_out_of_flow(&mut child_positioned, containing_width, containing_height);
+        if child_style.position == layout_positioned::Position::Fixed {
+            child_positioned.x -= current_abs_x;
+            child_positioned.y -= current_abs_y;
+        }
+        positioned.children.push(child_positioned);
+    }
+    stable_stack(&mut positioned.children);
+    positioned
+}
+
+fn lay_out_normal<M: TextMeasurer>(
+    node: &LayoutNode,
+    constraints: Constraints,
+    measurer: &M,
+    x: f64,
+    y: f64,
+    context: LayoutContext,
 ) -> PositionedNode {
     // `x` and `y` are the already-margin-adjusted coordinates of this
     // node's top-left corner in its parent's content-area space. We
@@ -133,7 +222,20 @@ fn lay_out_any<M: TextMeasurer>(
             node,
             flex_constraints,
             measurer,
-            |child, child_constraints| lay_out_any(child, child_constraints, measurer, 0.0, 0.0),
+            |child, child_constraints| {
+                lay_out_any(
+                    child,
+                    child_constraints,
+                    measurer,
+                    0.0,
+                    0.0,
+                    LayoutContext {
+                        parent_abs_x: context.parent_abs_x + x,
+                        parent_abs_y: context.parent_abs_y + y,
+                        ..context
+                    },
+                )
+            },
         );
         positioned.x = x;
         positioned.y = y;
@@ -151,7 +253,20 @@ fn lay_out_any<M: TextMeasurer>(
             node,
             grid_constraints,
             measurer,
-            |child, child_constraints| lay_out_any(child, child_constraints, measurer, 0.0, 0.0),
+            |child, child_constraints| {
+                lay_out_any(
+                    child,
+                    child_constraints,
+                    measurer,
+                    0.0,
+                    0.0,
+                    LayoutContext {
+                        parent_abs_x: context.parent_abs_x + x,
+                        parent_abs_y: context.parent_abs_y + y,
+                        ..context
+                    },
+                )
+            },
         );
         positioned.x = x;
         positioned.y = y;
@@ -191,6 +306,7 @@ fn lay_out_any<M: TextMeasurer>(
         padding,
         outer_max_width,
         padding_horizontal,
+        context,
     )
 }
 
@@ -209,6 +325,7 @@ fn lay_out_container<M: TextMeasurer>(
     padding: Edges,
     outer_max_width: f64,
     padding_horizontal: f64,
+    context: LayoutContext,
 ) -> PositionedNode {
     // Use the full available width while placing children. Inline containers
     // with `Wrap` width shrink to their occupied line width after placement.
@@ -245,7 +362,18 @@ fn lay_out_container<M: TextMeasurer>(
                 InlineOptions::from_node(node),
                 measurer,
                 |atomic, width| {
-                    lay_out_any(atomic, unconstrained_height(width), measurer, 0.0, 0.0)
+                    lay_out_any(
+                        atomic,
+                        unconstrained_height(width),
+                        measurer,
+                        0.0,
+                        0.0,
+                        LayoutContext {
+                            parent_abs_x: context.parent_abs_x + x,
+                            parent_abs_y: context.parent_abs_y + y,
+                            ..context
+                        },
+                    )
                 },
             );
             for mut fragment in inline.children {
@@ -288,7 +416,18 @@ fn lay_out_container<M: TextMeasurer>(
         let child_x = padding.left + child_margin.left;
         let child_y = cursor_y;
 
-        let mut positioned = lay_out_any(child, child_constraints, measurer, child_x, child_y);
+        let mut positioned = lay_out_any(
+            child,
+            child_constraints,
+            measurer,
+            child_x,
+            child_y,
+            LayoutContext {
+                parent_abs_x: context.parent_abs_x + x,
+                parent_abs_y: context.parent_abs_y + y,
+                ..context
+            },
+        );
         let free_inline =
             (inner_max_width - positioned.width - child_margin.left - child_margin.right).max(0.0);
         let auto_left = block_bool(child, "marginLeftAuto");

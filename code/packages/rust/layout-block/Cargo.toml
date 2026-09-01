@@ -9,3 +9,4 @@ layout-ir = { path = "../layout-ir" }
 layout-inline = { path = "../layout-inline" }
 layout-flexbox = { path = "../layout-flexbox" }
 layout-grid = { path = "../layout-grid" }
+layout-positioned = { path = "../layout-positioned" }

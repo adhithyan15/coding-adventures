@@ -6,6 +6,7 @@ description = "UI04 — walks a PositionedNode tree and emits a PaintScene with 
 
 [dependencies]
 layout-ir = { path = "../layout-ir" }
+layout-positioned = { path = "../layout-positioned" }
 paint-instructions = { path = "../paint-instructions" }
 text-interfaces = { path = "../text-interfaces" }
 text-flow = { path = "../text-flow" }

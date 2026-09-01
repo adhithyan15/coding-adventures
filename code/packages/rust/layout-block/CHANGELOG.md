@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Dispatch relative and out-of-flow positioned descendants through the shared
+  positioning contract without coupling flex, grid, or block flow to CSS.
+
+## Unreleased
+
 - Dispatch `grid` and atomic `inline-grid` nodes through the reusable
   `layout-grid` formatting context while preserving recursive child layout.
 - Dispatch `flex` and atomic `inline-flex` containers through the reusable

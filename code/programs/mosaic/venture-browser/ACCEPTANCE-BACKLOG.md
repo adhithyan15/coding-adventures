@@ -123,6 +123,12 @@ cross-platform proving application. Items are ordered by risk and dependency.
   host-neutral Rust grid engine, tolerant typed diagnostics, computed CSS
   longhand/shorthand mapping, recursive `grid`/`inline-grid` dispatch, and a
   deterministic geometry-and-paint fixture shared by every Venture host.
+- [x] **P2 CSS convergence — positioned formatting and clipping.** Add a
+  reusable contract for relative, absolute, fixed, and sticky boxes, computed
+  insets, stable z-order, overflow clips, scroll extents, and clip-aware hit
+  testing. Completed with host-neutral diagnostics and geometry, paint-group
+  projection for fixed/sticky scrolling, and a deterministic fixture shared by
+  the Venture browser pipeline and available native/web hosts.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Keep fixed paint groups outside document translation and apply reusable
+  sticky top-inset clamping while scrolling.
+
 ## 0.9.1
 
 - Coordinate the package with Venture's first immutable pre-1.0 release.

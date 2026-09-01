@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Bound scene scroll extents to positioned overflow, intersect link regions
+  with ancestor clips, and preserve fixed-link viewport hit testing.
 - Add composition through a pre-parsed `HtmlStyleContext`, preserving the
   existing theme-only and visited-link entry points as compatibility wrappers.
 - Add stable URI discovery and tri-state incremental image resolution so

@@ -1,0 +1,8 @@
+[package]
+name = "layout-positioned"
+version = "0.1.0"
+edition = "2021"
+description = "Reusable positioned formatting, stacking, overflow, and clipping contracts over layout-ir"
+
+[dependencies]
+layout-ir = { path = "../layout-ir" }

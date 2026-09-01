@@ -199,19 +199,106 @@ impl ScrollState {
 /// The document instructions remain unchanged beneath a translated group. The
 /// viewport-sized output surface provides the clip boundary at the backend.
 pub fn scrolled_viewport_scene(scene: &PaintScene, scroll: &ScrollState) -> PaintScene {
+    let mut fixed = Vec::new();
+    let mut document = extract_fixed_instructions(scene.instructions.clone(), &mut fixed);
+    for instruction in &mut document {
+        apply_sticky_offset(instruction, scroll.offset_y);
+    }
+    let mut instructions = vec![PaintInstruction::Group(PaintGroup {
+        base: PaintBase::default(),
+        children: document,
+        transform: Some([1.0, 0.0, 0.0, 1.0, 0.0, -scroll.offset_y]),
+        opacity: None,
+    })];
+    instructions.extend(fixed);
     PaintScene {
         width: scene.width,
         height: scroll.viewport_height,
         background: scene.background.clone(),
-        instructions: vec![PaintInstruction::Group(PaintGroup {
-            base: PaintBase::default(),
-            children: scene.instructions.clone(),
-            transform: Some([1.0, 0.0, 0.0, 1.0, 0.0, -scroll.offset_y]),
-            opacity: None,
-        })],
+        instructions,
         id: scene.id.clone(),
         metadata: scene.metadata.clone(),
     }
+}
+
+fn extract_fixed_instructions(
+    instructions: Vec<PaintInstruction>,
+    fixed: &mut Vec<PaintInstruction>,
+) -> Vec<PaintInstruction> {
+    let mut document = Vec::new();
+    for mut instruction in instructions {
+        if is_fixed_instruction(&instruction) {
+            fixed.push(instruction);
+            continue;
+        }
+        match &mut instruction {
+            PaintInstruction::Group(group) => {
+                group.children =
+                    extract_fixed_instructions(std::mem::take(&mut group.children), fixed);
+            }
+            PaintInstruction::Clip(clip) => {
+                clip.children =
+                    extract_fixed_instructions(std::mem::take(&mut clip.children), fixed);
+            }
+            PaintInstruction::Layer(layer) => {
+                layer.children =
+                    extract_fixed_instructions(std::mem::take(&mut layer.children), fixed);
+            }
+            _ => {}
+        }
+        document.push(instruction);
+    }
+    document
+}
+
+fn apply_sticky_offset(instruction: &mut PaintInstruction, scroll_y: f64) {
+    match instruction {
+        PaintInstruction::Group(group) => {
+            if let Some(metadata) = &group.base.metadata {
+                if metadata
+                    .get("layout.position")
+                    .is_some_and(|value| value == "sticky")
+                {
+                    let top = metadata
+                        .get("layout.sticky.top")
+                        .and_then(|value| value.parse::<f64>().ok())
+                        .unwrap_or(0.0);
+                    let original_y = metadata
+                        .get("layout.sticky.y")
+                        .and_then(|value| value.parse::<f64>().ok())
+                        .unwrap_or(0.0);
+                    let offset = (scroll_y + top - original_y).max(0.0);
+                    group.transform = Some([1.0, 0.0, 0.0, 1.0, 0.0, offset]);
+                }
+            }
+            for child in &mut group.children {
+                apply_sticky_offset(child, scroll_y);
+            }
+        }
+        PaintInstruction::Clip(clip) => {
+            for child in &mut clip.children {
+                apply_sticky_offset(child, scroll_y);
+            }
+        }
+        PaintInstruction::Layer(layer) => {
+            for child in &mut layer.children {
+                apply_sticky_offset(child, scroll_y);
+            }
+        }
+        _ => {}
+    }
+}
+
+fn is_fixed_instruction(instruction: &PaintInstruction) -> bool {
+    let PaintInstruction::Group(group) = instruction else {
+        return false;
+    };
+    group
+        .base
+        .metadata
+        .as_ref()
+        .and_then(|metadata| metadata.get("layout.position"))
+        .is_some_and(|position| position == "fixed")
 }
 
 /// One resource returned by a browser-owned transport.
@@ -2913,6 +3000,7 @@ mod tests {
             width: 30.0,
             height: 12.0,
             url: "http://example.test/next".into(),
+            fixed: false,
         };
         let mut scroll = ScrollState::new(60.0, 140.0);
         scroll.set_offset_y(60.0);
@@ -2936,6 +3024,65 @@ mod tests {
         };
         assert_eq!(group.transform, Some([1.0, 0.0, 0.0, 1.0, 0.0, -60.0]));
         assert_eq!(group.children, document.instructions);
+    }
+
+    #[test]
+    fn viewport_scene_keeps_fixed_content_and_clamps_sticky_content() {
+        let sticky = PaintInstruction::Group(PaintGroup {
+            base: PaintBase {
+                id: None,
+                metadata: Some(std::collections::HashMap::from([
+                    ("layout.position".into(), "sticky".into()),
+                    ("layout.sticky.top".into(), "5".into()),
+                    ("layout.sticky.y".into(), "20".into()),
+                ])),
+            },
+            children: Vec::new(),
+            transform: None,
+            opacity: None,
+        });
+        let fixed = PaintInstruction::Group(PaintGroup {
+            base: PaintBase {
+                id: None,
+                metadata: Some(std::collections::HashMap::from([(
+                    "layout.position".into(),
+                    "fixed".into(),
+                )])),
+            },
+            children: Vec::new(),
+            transform: None,
+            opacity: None,
+        });
+        let scene = PaintScene {
+            width: 100.0,
+            height: 300.0,
+            background: "white".into(),
+            instructions: vec![
+                sticky,
+                PaintInstruction::Group(PaintGroup {
+                    base: PaintBase::default(),
+                    children: vec![fixed],
+                    transform: None,
+                    opacity: None,
+                }),
+            ],
+            id: None,
+            metadata: None,
+        };
+        let mut scroll = ScrollState::new(80.0, 300.0);
+        scroll.set_offset_y(40.0);
+        let viewport = scrolled_viewport_scene(&scene, &scroll);
+
+        assert_eq!(viewport.instructions.len(), 2);
+        let PaintInstruction::Group(document) = &viewport.instructions[0] else {
+            panic!("expected translated document group");
+        };
+        assert_eq!(document.transform.unwrap()[5], -40.0);
+        let PaintInstruction::Group(sticky) = &document.children[0] else {
+            panic!("expected sticky group");
+        };
+        assert_eq!(sticky.transform.unwrap()[5], 25.0);
+        assert!(is_fixed_instruction(&viewport.instructions[1]));
     }
 
     #[test]
