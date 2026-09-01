@@ -2,6 +2,48 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.86] - 2026-09-01 (W-next — cross-instance mutable global sharing)
+
+**Real correctness bug, found bug-hunting the module-linking corner of the
+conformance corpus** (`instance.wast`'s "Import is not generative" tests,
+`linking.wast`'s `mut_glob` tests): `HostInterface::resolve_global`
+returned a plain, independently-owned `WasmValue` copy, unlike `resolve_
+memory`/`resolve_table`, which already return genuinely shared
+`Rc<RefCell<..>>`-backed handles (W28). Correct for an IMMUTABLE global
+(whose value never changes again after `instantiate()`), but silently
+wrong for a MUTABLE one: two imports of the same exported mutable global
+(directly, twice under different local names in one module, or via a
+re-export chain) each got their own independent copy of whatever value
+the global held AT IMPORT TIME, so a `global.set` through any one alias
+was invisible to every other — the exact same class of bug W28 already
+fixed for memory/table, just never applied to the one remaining piece of
+shared instance state.
+
+- `HostInterface::resolve_global` now returns `Option<(GlobalType,
+  Rc<RefCell<WasmValue>>)>`, not `Option<(GlobalType, WasmValue)>`.
+- `WasmExecutionContext::globals`, `WasmEngineConfig::globals`, `WasmEngineState::globals`,
+  and `WasmExecutionEngine`'s own internal `globals` field are all
+  `Vec<Rc<RefCell<WasmValue>>>` now, not `Vec<WasmValue>` — the `global.get`/
+  `global.set` opcode handlers (0x23/0x24) now `.borrow()`/`.borrow_mut()`
+  through the shared cell instead of reading/writing an owned slot
+  directly, so a write through EITHER an importing or exporting instance's
+  own combined index space is immediately visible through the other.
+  `evaluate_const_expr`/`evaluate_const_expr_gc` are UNCHANGED — they
+  still take a plain `&[WasmValue]` snapshot; callers (`wasm-runtime::
+  instantiate()`) derive one from the shared cells at each point a
+  const-expr needs to read "the globals defined so far."
+- `gc.rs`'s root-marking (`mark`) dereferences a snapshot of the current
+  global values before scanning for live references, for the same reason.
+- Every pre-existing `HostInterface` implementor (this crate has none —
+  `wasm-runtime`'s WASI stubs and test doubles, `wasm-conformance`'s
+  `RegistryHost`) needed its `resolve_global` signature updated; see
+  those crates' own CHANGELOGs.
+
+### Corpus impact
+
+See `wasm-runtime`'s own CHANGELOG for the full, programmatically-diffed
+baseline accounting (this crate has no `.wast` corpus of its own).
+
 ## [0.9.85] - 2026-09-01 (W34 fourth slice — cross-module canonical equivalence, epic closed)
 
 `HostFunction` gains two new default methods so the trait itself can

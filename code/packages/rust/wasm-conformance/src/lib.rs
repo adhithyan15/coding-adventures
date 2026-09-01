@@ -173,11 +173,24 @@ impl HostInterface for RegistryHost {
         Some(Box::new(CrossModuleFunction { instance: instance_rc, export_name: name.to_string(), func_type, group_shape, is_final, canonical_type, type_idx }))
     }
 
-    fn resolve_global(&self, module_name: &str, name: &str) -> Option<(GlobalType, WasmValue)> {
+    fn resolve_global(&self, module_name: &str, name: &str) -> Option<(GlobalType, Rc<RefCell<WasmValue>>)> {
         let (instance_rc, index) = self.find_export(module_name, name, ExternalKind::Global)?;
         let instance = instance_rc.borrow();
         let gtype = instance.global_types.get(index as usize)?.clone();
-        let gval = *instance.globals.get(index as usize)?;
+        // Real cross-instance global sharing (real corpus vendoring pass,
+        // `instance.wast`'s "Import is not generative" tests / `linking.
+        // wast`'s `mut_glob` tests): `.clone()` here clones the `Rc`
+        // pointer, NOT the `WasmValue` it points to (mirrors `resolve_
+        // memory`/`resolve_table`'s own W28 `.cloned()` fix immediately
+        // below/above -- see either's doc comment for the full
+        // rationale). Before this fix this line was `*instance.globals.
+        // get(index as usize)?` -- a genuine VALUE copy of whatever the
+        // global held at THIS EXACT MOMENT -- so the importing instance's
+        // own `globals` slot and the exporting instance's original
+        // silently diverged the moment either side executed a
+        // `global.set`, exactly the shape `LinearMemory`/`Table` had
+        // before W28.
+        let gval = instance.globals.get(index as usize)?.clone();
         Some((gtype, gval))
     }
 
@@ -215,8 +228,15 @@ impl HostInterface for RegistryHost {
         // so `.cloned()` shares storage rather than copying it. Still
         // does NOT give a table entry real cross-instance function
         // IDENTITY -- see `Table`'s own doc comment in `wasm-execution`
-        // for the deliberately out-of-scope follow-on that remains
-        // (`linking0.wast`/`linking3.wast`'s one known-gap `fail` each).
+        // for the deliberately out-of-scope follow-on that remains.
+        // Confirmed (real corpus bug-hunt pass, W-next) to be the root
+        // cause of every remaining WRONG-VALUE (not not-yet-supported)
+        // `assert_return` failure in `elem.wast`, `linking.wast`, and
+        // `linking3.wast` -- NOT `linking0.wast`, whose own one
+        // remaining failure turned out to be a completely different,
+        // since-fixed bug (active element segments were being applied
+        // AFTER data segments instead of before -- see `wasm-runtime::
+        // instantiate()`'s own comment on that fix).
         let table = instance_rc.borrow().tables.get(index as usize).cloned();
         table
     }
@@ -950,7 +970,7 @@ impl Executor {
                     .exports
                     .iter()
                     .find(|(n, kind, _)| n == name && *kind == ExternalKind::Global)
-                    .and_then(|(_, _, idx)| instance.globals.get(*idx as usize).copied())
+                    .and_then(|(_, _, idx)| instance.globals.get(*idx as usize).map(|g| *g.borrow()))
                     // A global read is not a call -- there's no engine
                     // `ctx` involved at all -- but UNLIKE at the time this
                     // comment was first written (SIMD PR1b-3), a

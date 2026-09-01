@@ -286,3 +286,52 @@ directive form `wasm-wast-parser`'s script grammar has zero support for
 at all — a distinct, self-contained grammar-plus-`Executor` feature, not
 blocked by the storage-sharing fix above, just out of scope for this
 addendum.
+
+**Second addendum (W-next — cross-module linking value-corruption
+bug-hunt pass):** `instance.wast` is vendored now (a later, separate pass
+added the `(module definition ...)`/`(module instance ...)` grammar this
+addendum found missing above) and, together with `elem.wast`/
+`linking.wast`/`linking0.wast`/`linking3.wast`, was re-investigated after
+a real-value probe of `wasm_conformance::run_wast_source()` surfaced a
+cluster of wrong-VALUE `assert_return` failures (not `NotYetSupported`
+gaps) across these five files. Two genuinely distinct root causes were
+found and disentangled:
+
+1. **Mutable globals were never made cross-instance-shared the way W28
+   already made memory/table** -- `HostInterface::resolve_global`
+   returned a plain `WasmValue` copy, and `WasmInstance::globals` was a
+   plain `Vec<WasmValue>`, so two imports of the same mutable global (or
+   an import plus the exporting instance's own copy) silently diverged
+   the first time either side executed `global.set`. Fixed by giving
+   globals the exact same `Rc<RefCell<..>>`-backed shared-storage
+   treatment `LinearMemory`/`Table` already have (see `wasm-execution`'s
+   own CHANGELOG for the field-level design and `wasm-runtime`'s/
+   `wasm-conformance`'s own CHANGELOGs for the import-resolution and
+   `RegistryHost` sides). Fixed `instance.wast`'s "Import is not
+   generative" tests and one of `linking.wast`'s `mut_glob` tests, zero
+   regressions anywhere in the 257-file corpus.
+2. **Active element segments were applied AFTER active data segments,
+   not before** -- the exact opposite of the official spec's own
+   instantiation algorithm order (element-segment initializers run
+   strictly before data-segment initializers). This was invisible until
+   a module combined an in-bounds active element segment with a
+   trapping data segment: the elem write, which must already be applied
+   and PERSIST past the later data-segment trap, was silently lost
+   because the (wrongly-ordered) data loop's `?` returned before the elem
+   loop ever ran. Fixed by swapping the two loops in `wasm-runtime::
+   instantiate()` (see that function's own comment on the fix). Fixed
+   `linking0.wast`'s sole remaining failure (a spurious "uninitialized
+   table element" trap), zero regressions anywhere in the corpus.
+
+Both fixes are unrelated to the table cross-instance function IDENTITY
+gap this addendum already documented above as deliberately out of scope
+-- that gap remains exactly as described, and is now CONFIRMED (rather
+than merely suspected) to be the sole remaining root cause behind every
+other wrong-value failure in this same five-file cluster: `elem.wast`,
+`linking.wast`, and `linking3.wast` all still fail in exactly the shape
+that gap predicts (a table entry written by one instance's active elem
+segment, or a transient/failed-instantiation instance's elem segment,
+gets read back through a DIFFERENT instance's own function-index space).
+`linking0.wast` itself no longer exhibits the table-identity gap at all
+-- its one remaining failure was entirely explained by the elem/data
+ordering bug above, now fixed.
