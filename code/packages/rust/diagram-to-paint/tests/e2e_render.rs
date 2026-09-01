@@ -16,6 +16,7 @@ mod apple {
     };
     use diagram_layout_chart::layout_chart_diagram;
     use diagram_layout_graph::layout_graph_diagram;
+    use diagram_layout_grid::layout_grid_diagram;
     use diagram_layout_sequence::layout_sequence_diagram;
     use diagram_layout_structural::layout_structural_diagram;
     use diagram_layout_temporal::layout_temporal_diagram;
@@ -26,7 +27,7 @@ mod apple {
     use dot_parser::parse_to_diagram;
     use layout_ir::font_spec;
     use mermaid_parser::{
-        parse_c4_diagram, parse_er_diagram, parse_gantt, parse_gitgraph, parse_journey, parse_pie,
+        parse_block, parse_c4_diagram, parse_er_diagram, parse_gantt, parse_gitgraph, parse_journey, parse_pie,
         parse_mindmap, parse_quadrant_chart, parse_requirement_diagram, parse_sankey,
         parse_sequence_diagram, parse_state_diagram, parse_timeline,
         parse_to_diagram as parse_mermaid_to_diagram, parse_xychart,
@@ -216,6 +217,33 @@ mod apple {
             .any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_mindmap_e2e.png").expect("PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_mermaid_block_to_png() {
+        let grid = parse_block(
+            "block-beta\ntitle Native block grid\ncolumns 3\nA[Grammar] B(IR) C((Paint))\nspace D[Metal] E[PNG]\nA --> B\nB --> C\nC --> D\nD --> E",
+        )
+        .expect("block parse failed");
+        let layout = layout_grid_diagram(&grid);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let opts = DiagramToPaintOptions {
+            background: layout_ir::Color { r: 248, g: 250, b: 252, a: 255 },
+            device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 14.0),
+            title_font: font_spec("Helvetica", 18.0),
+            shaper: &shaper,
+            metrics: &metrics,
+            resolver: &resolver,
+        };
+        let scene = diagram_to_paint(&layout, &opts);
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_block_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
     }
 

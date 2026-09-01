@@ -1,28 +1,21 @@
-/**
- * identity-sidecar.test.ts — exercise the read-side identity
- * persistence (FM01 §7.2 sidecar reading) added in v0.2.0.
- *
- * Strategy: stage a tempdir with various sidecar configurations
- * (present / missing / malformed / wrong-shape / wrong-uuid-version)
- * and verify the stage produces the expected LogicalId in each case.
- */
+/** Exercise FM01 §7.2 filesystem identity persistence. */
 
-import { afterEach, beforeEach, describe, it, expect } from "vitest";
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { mkdtemp, readFile, rename, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
   createCancellationTokenSource,
-  inMemoryCache,
-  inMemoryEventBus,
-  noOpTelemetryEmitter,
-  silentLogger,
-  systemClock,
   deniedEnvApi,
   deniedFilesystemApi,
   deniedNetworkApi,
   deniedShellApi,
   deniedStorageApi,
+  inMemoryCache,
+  inMemoryEventBus,
+  noOpTelemetryEmitter,
+  silentLogger,
+  systemClock,
   type StageContext,
 } from "@coding-adventures/forme-stage";
 import sourceFs from "../src/index.js";
@@ -53,138 +46,119 @@ function makeCtx(): StageContext {
   };
 }
 
+interface SourceResult {
+  readonly path: string;
+  readonly identity: string;
+  readonly revision: string;
+}
+
 async function runAndCollect(
   config: { glob: string; root: string; persistIdentities?: boolean },
-): Promise<Array<{ path: string; identity: string }>> {
-  const ctx = makeCtx();
-  const out: Array<{ path: string; identity: string }> = [];
-  const iter = sourceFs.run(undefined as never, config, ctx) as AsyncIterable<{ path: string; identity: string }>;
-  for await (const v of iter) out.push(v);
+): Promise<SourceResult[]> {
+  const out: SourceResult[] = [];
+  const iter = sourceFs.run(undefined as never, config, makeCtx()) as AsyncIterable<SourceResult>;
+  for await (const value of iter) out.push(value);
   return out;
 }
 
-/** A valid UUIDv7 (version nibble `7`, variant nibble in `[89ab]`). */
 const STABLE_ID_1 = "01952c0d-7e63-7000-8000-000000000001";
 const STABLE_ID_2 = "01952c0d-7e63-7000-8000-000000000002";
 
-describe("sourceFs — identity sidecar (read side)", () => {
-  it("reads a valid sidecar and uses the persisted LogicalId", async () => {
+describe("sourceFs identity sidecars", () => {
+  it("reads a valid sidecar and ignores forward-compatible fields", async () => {
     await writeFile(join(root, "hello.md"), "body");
-    await writeFile(
-      join(root, ".hello.md.id.json"),
-      JSON.stringify({ logicalId: STABLE_ID_1 }),
-    );
+    await writeFile(join(root, ".hello.md.id.json"), JSON.stringify({
+      logicalId: STABLE_ID_1,
+      createdAt: "2026-05-16T00:00:00Z",
+      someFutureField: { nested: true },
+    }));
     const out = await runAndCollect({ glob: "**/*.md", root });
     expect(out).toHaveLength(1);
     expect(out[0]!.identity).toBe(STABLE_ID_1);
   });
 
-  it("produces the same identity across two runs when sidecar is present", async () => {
+  it("creates a missing sidecar and reuses its identity across runs", async () => {
     await writeFile(join(root, "hello.md"), "body");
-    await writeFile(
-      join(root, ".hello.md.id.json"),
-      JSON.stringify({ logicalId: STABLE_ID_1 }),
-    );
-    const a = await runAndCollect({ glob: "**/*.md", root });
-    const b = await runAndCollect({ glob: "**/*.md", root });
-    expect(a[0]!.identity).toBe(b[0]!.identity);
+    const first = await runAndCollect({ glob: "**/*.md", root });
+    const second = await runAndCollect({ glob: "**/*.md", root });
+    const sidecar = JSON.parse(await readFile(join(root, ".hello.md.id.json"), "utf-8"));
+    expect(first[0]!.identity).toBe(second[0]!.identity);
+    expect(first[0]!.identity).toBe(sidecar.logicalId);
   });
 
-  it("produces DIFFERENT identities across two runs when sidecar is missing", async () => {
+  it("concurrent first reads converge on the exclusively created identity", async () => {
     await writeFile(join(root, "hello.md"), "body");
-    const a = await runAndCollect({ glob: "**/*.md", root });
-    const b = await runAndCollect({ glob: "**/*.md", root });
-    expect(a[0]!.identity).not.toBe(b[0]!.identity);
+    const [first, second] = await Promise.all([
+      runAndCollect({ glob: "**/*.md", root }),
+      runAndCollect({ glob: "**/*.md", root }),
+    ]);
+    const sidecar = JSON.parse(await readFile(join(root, ".hello.md.id.json"), "utf-8"));
+    expect(first[0]!.identity).toBe(second[0]!.identity);
+    expect(first[0]!.identity).toBe(sidecar.logicalId);
   });
 
-  it("multiple files with distinct sidecars get their own identities", async () => {
+  it("resolves distinct sidecars per file", async () => {
     await writeFile(join(root, "a.md"), "A");
     await writeFile(join(root, "b.md"), "B");
     await writeFile(join(root, ".a.md.id.json"), JSON.stringify({ logicalId: STABLE_ID_1 }));
     await writeFile(join(root, ".b.md.id.json"), JSON.stringify({ logicalId: STABLE_ID_2 }));
     const out = await runAndCollect({ glob: "**/*.md", root });
-    const byPath = new Map(out.map((s) => [s.path, s.identity]));
+    const byPath = new Map(out.map(source => [source.path, source.identity]));
     expect(byPath.get("a.md")).toBe(STABLE_ID_1);
     expect(byPath.get("b.md")).toBe(STABLE_ID_2);
   });
 
-  it("falls back to fresh id when sidecar contains malformed JSON", async () => {
+  it.each([
+    ["invalid JSON", "not-json{", "contains invalid JSON"],
+    ["empty JSON", "", "contains invalid JSON"],
+    ["non-object JSON", JSON.stringify("text"), "is not a JSON object"],
+    ["missing logicalId", JSON.stringify({ note: "no id" }), "missing/malformed logicalId"],
+    ["non-string logicalId", JSON.stringify({ logicalId: 42 }), "missing/malformed logicalId"],
+    [
+      "non-v7 logicalId",
+      JSON.stringify({ logicalId: "01952c0d-7e63-4000-8000-000000000001" }),
+      "missing/malformed logicalId",
+    ],
+  ])("rejects %s without overwriting it", async (_label, text, diagnostic) => {
     await writeFile(join(root, "hello.md"), "body");
-    await writeFile(join(root, ".hello.md.id.json"), "not-json{");
-    const out = await runAndCollect({ glob: "**/*.md", root });
-    expect(out).toHaveLength(1);
-    // Some fresh UUIDv7.
-    expect(out[0]!.identity).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
-    expect(out[0]!.identity).not.toBe(STABLE_ID_1);
+    const sidecarPath = join(root, ".hello.md.id.json");
+    await writeFile(sidecarPath, text);
+    await expect(runAndCollect({ glob: "**/*.md", root })).rejects.toThrow(diagnostic);
+    expect(await readFile(sidecarPath, "utf-8")).toBe(text);
   });
 
-  it("falls back to fresh id when sidecar is not an object", async () => {
+  it("persistIdentities=false neither reads nor writes sidecars", async () => {
     await writeFile(join(root, "hello.md"), "body");
-    await writeFile(join(root, ".hello.md.id.json"), JSON.stringify("just-a-string"));
-    const out = await runAndCollect({ glob: "**/*.md", root });
-    expect(out[0]!.identity).not.toBe("just-a-string");
+    await writeFile(join(root, ".hello.md.id.json"), "malformed");
+    const first = await runAndCollect({ glob: "**/*.md", root, persistIdentities: false });
+    const second = await runAndCollect({ glob: "**/*.md", root, persistIdentities: false });
+    expect(first[0]!.identity).not.toBe(second[0]!.identity);
+    expect(await readFile(join(root, ".hello.md.id.json"), "utf-8")).toBe("malformed");
   });
 
-  it("falls back when logicalId field is missing", async () => {
-    await writeFile(join(root, "hello.md"), "body");
-    await writeFile(join(root, ".hello.md.id.json"), JSON.stringify({ note: "no id" }));
-    const out = await runAndCollect({ glob: "**/*.md", root });
-    expect(out[0]!.identity).not.toBe("");
-    expect(out[0]!.identity).toMatch(/^[0-9a-f]{8}-/);
-  });
-
-  it("falls back when logicalId is wrong shape (v4 instead of v7)", async () => {
-    // UUIDv4 has version nibble 4; we require 7.
-    const v4 = "01952c0d-7e63-4000-8000-000000000001";
-    await writeFile(join(root, "hello.md"), "body");
-    await writeFile(join(root, ".hello.md.id.json"), JSON.stringify({ logicalId: v4 }));
-    const out = await runAndCollect({ glob: "**/*.md", root });
-    expect(out[0]!.identity).not.toBe(v4);
-  });
-
-  it("falls back when logicalId is a number, not a string", async () => {
-    await writeFile(join(root, "hello.md"), "body");
-    await writeFile(join(root, ".hello.md.id.json"), JSON.stringify({ logicalId: 42 }));
-    const out = await runAndCollect({ glob: "**/*.md", root });
-    expect(out[0]!.identity).toMatch(/^[0-9a-f]{8}-/);
-  });
-
-  it("ignores unknown sidecar fields (forward-compat)", async () => {
-    await writeFile(join(root, "hello.md"), "body");
-    await writeFile(
-      join(root, ".hello.md.id.json"),
-      JSON.stringify({
-        logicalId: STABLE_ID_1,
-        createdAt: "2026-05-16T00:00:00Z",
-        note: "human-readable",
-        someFutureField: { nested: true },
-      }),
-    );
-    const out = await runAndCollect({ glob: "**/*.md", root });
-    expect(out[0]!.identity).toBe(STABLE_ID_1);
-  });
-
-  it("persistIdentities=false → always generates fresh, ignoring sidecar", async () => {
-    await writeFile(join(root, "hello.md"), "body");
-    await writeFile(join(root, ".hello.md.id.json"), JSON.stringify({ logicalId: STABLE_ID_1 }));
-    const out = await runAndCollect({ glob: "**/*.md", root, persistIdentities: false });
-    expect(out[0]!.identity).not.toBe(STABLE_ID_1);
-  });
-
-  it("sidecar files themselves are NOT emitted as content sources", async () => {
-    // Sidecars start with a dot — the walker should skip them as
-    // hidden files.  Verify this stays true.
+  it("does not emit hidden identity sidecars as content", async () => {
     await writeFile(join(root, "hello.md"), "body");
     await writeFile(join(root, ".hello.md.id.json"), JSON.stringify({ logicalId: STABLE_ID_1 }));
     const out = await runAndCollect({ glob: "**/*.md", root });
-    expect(out).toHaveLength(1);
-    expect(out[0]!.path).toBe("hello.md");
+    expect(out.map(source => source.path)).toEqual(["hello.md"]);
   });
 
-  it("empty sidecar file → fresh id (treated as missing)", async () => {
-    await writeFile(join(root, "hello.md"), "body");
-    await writeFile(join(root, ".hello.md.id.json"), "");
-    const out = await runAndCollect({ glob: "**/*.md", root });
-    expect(out[0]!.identity).toMatch(/^[0-9a-f]{8}-/);
+  it("preserves identity and revision when content and sidecar move together", async () => {
+    await writeFile(join(root, "before.md"), "same bytes");
+    const before = await runAndCollect({ glob: "**/*.md", root });
+    await rename(join(root, "before.md"), join(root, "after.md"));
+    await rename(join(root, ".before.md.id.json"), join(root, ".after.md.id.json"));
+    const after = await runAndCollect({ glob: "**/*.md", root });
+    expect(after[0]!.identity).toBe(before[0]!.identity);
+    expect(after[0]!.revision).toBe(before[0]!.revision);
+  });
+
+  it("preserves identity but changes revision after an edit", async () => {
+    await writeFile(join(root, "hello.md"), "before");
+    const before = await runAndCollect({ glob: "**/*.md", root });
+    await writeFile(join(root, "hello.md"), "after");
+    const after = await runAndCollect({ glob: "**/*.md", root });
+    expect(after[0]!.identity).toBe(before[0]!.identity);
+    expect(after[0]!.revision).not.toBe(before[0]!.revision);
   });
 });

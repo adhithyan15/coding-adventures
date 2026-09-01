@@ -1,0 +1,4 @@
+# @version 1
+# Mermaid 11.16.1 block diagram core parser grammar.
+
+document = { NEWLINE } HEADER { NEWLINE | STATEMENT_LINE } EOF ;

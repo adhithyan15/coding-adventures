@@ -23,6 +23,15 @@ The current native pipeline supports documented subsets of:
 - `journey`
 - `timeline`
 - `mindmap`
+- `block` / `block-beta`
+
+The initial `block` subset uses dedicated line-preserving token and parser
+grammars. Column counts, flat node grids, explicit spaces, core node shapes,
+titles, accessibility metadata, and directed labeled connections lower into
+typed grid IR. `diagram-layout-grid` resolves stable authored slots into shared
+graph geometry, which follows the existing backend-neutral PaintScene lowering
+path. Nested blocks, spans, classes, and style directives remain outside the
+partial compatibility claim.
 
 The initial `mindmap` subset uses a dedicated indentation-preserving token
 grammar and parser grammar. Plain, square, rounded, and circular nodes lower to

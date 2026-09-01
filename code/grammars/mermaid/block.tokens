@@ -1,0 +1,11 @@
+# @version 1
+# Mermaid 11.16.1 block diagram token grammar.
+
+case_sensitive: false
+
+skip:
+  COMMENT = /[ \t]*%%[^\r\n]*/
+
+NEWLINE       = /\r?\n/
+HEADER        = /block(?:-beta)?[ \t]*/
+STATEMENT_LINE = /[ \t]*[^ \t\r\n][^\r\n]*/
