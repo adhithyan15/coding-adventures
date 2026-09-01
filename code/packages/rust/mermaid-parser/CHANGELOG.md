@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.184.0
+
+- Parse a grammar-backed Mermaid 11.16.1 packet slice into typed packet IR.
+
 ## 0.156.0
 
 - Match Mermaid's bounded fallback for three-digit years under the default Gantt date format.

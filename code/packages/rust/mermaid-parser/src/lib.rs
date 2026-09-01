@@ -13,7 +13,8 @@ use std::collections::{HashMap, HashSet};
 
 use diagram_ir::{
     DiagramDirection, DiagramLabel, DiagramShape, DiagramStyle, EdgeKind, GraphDiagram, GraphEdge,
-    GraphGroup, GraphLink, GraphNode, GridCell, GridConnection, GridDiagram,
+    GraphGroup, GraphLink, GraphNode, GridCell, GridConnection, GridDiagram, PacketDiagram,
+    PacketField,
 };
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
@@ -22,8 +23,8 @@ use mermaid_lexer::{
     tokenize_mermaid_pie, tokenize_mermaid_sankey, tokenize_mermaid_sequence,
     tokenize_mermaid_state, try_tokenize_mermaid_gantt, try_tokenize_mermaid_journey,
     try_tokenize_mermaid_quadrant, try_tokenize_mermaid_requirement,
-    try_tokenize_mermaid_block, try_tokenize_mermaid_mindmap, try_tokenize_mermaid_timeline,
-    try_tokenize_mermaid_xychart,
+    try_tokenize_mermaid_block, try_tokenize_mermaid_mindmap, try_tokenize_mermaid_packet,
+    try_tokenize_mermaid_timeline, try_tokenize_mermaid_xychart,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
@@ -49,6 +50,8 @@ const MINDMAP_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/mindmap.grammar");
 const BLOCK_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/block.grammar");
+const PACKET_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/packet.grammar");
 const REQUIREMENT_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.grammar");
 const XYCHART_PARSER_GRAMMAR_SOURCE: &str =
@@ -636,6 +639,7 @@ impl MermaidDiagramType {
                 | Self::Journey
                 | Self::Mindmap
                 | Self::Block
+                | Self::Packet
                 | Self::Timeline
                 | Self::Requirement
                 | Self::Pie
@@ -657,6 +661,7 @@ pub enum MermaidDiagram {
     Structural(StructuralDiagram),
     Temporal(TemporalDiagram),
     Grid(GridDiagram),
+    Packet(PacketDiagram),
 }
 
 /// Detect a Mermaid 11.16.1 diagram family from its header.
@@ -778,6 +783,7 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
         }),
         MermaidDiagramType::Mindmap => parse_mindmap(source).map(MermaidDiagram::Graph),
         MermaidDiagramType::Block => parse_block(source).map(MermaidDiagram::Grid),
+        MermaidDiagramType::Packet => parse_packet(source).map(MermaidDiagram::Packet),
         unsupported => Err(ParseError {
             message: format!(
                 "Mermaid {} diagram family {:?} is recognized but not implemented",
@@ -788,6 +794,106 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
             col: 1,
         }),
     }
+}
+
+/// Parse absolute inclusive bit ranges from the Mermaid packet family.
+pub fn parse_packet(source: &str) -> Result<PacketDiagram, ParseError> {
+    let prepared = prepare_line_grammar_source(source)?;
+    let tokens = try_tokenize_mermaid_packet(&prepared).map_err(|message| ParseError {
+        message,
+        line: 1,
+        col: 1,
+    })?;
+    let grammar = parse_parser_grammar(PACKET_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|error| panic!("Failed to parse packet.grammar: {error}"));
+    GrammarParser::new(tokens.clone(), grammar)
+        .with_max_depth(MAX_RULE_DEPTH)
+        .parse()
+        .map_err(|error| ParseError {
+            message: error.message,
+            line: error.token.line,
+            col: error.token.column,
+        })?;
+
+    let mut diagram = PacketDiagram::default();
+    let mut next_bit = 0u32;
+    for token in tokens
+        .iter()
+        .filter(|token| token.type_name.as_deref() == Some("STATEMENT_LINE"))
+    {
+        let line = token.value.trim();
+        if let Some(value) = line.strip_prefix("title ") {
+            diagram.title = Some(normalize_mermaid_line_breaks(value.trim()));
+            continue;
+        }
+        if let Some((_, value)) = line
+            .strip_prefix("accTitle")
+            .and_then(|line| line.split_once(':'))
+        {
+            diagram.accessibility_title = Some(value.trim().to_string());
+            continue;
+        }
+        if let Some((_, value)) = line
+            .strip_prefix("accDescr")
+            .and_then(|line| line.split_once(':'))
+        {
+            diagram.accessibility_description = Some(value.trim().to_string());
+            continue;
+        }
+
+        let (range, label) = line
+            .split_once(':')
+            .ok_or_else(|| token_error(token, "packet field requires a bit range and label"))?;
+        let (start_bit, end_bit) = if let Some((start, end)) = range.split_once('-') {
+            let start = parse_packet_bit(token, start)?;
+            let end = parse_packet_bit(token, end)?;
+            (start, end)
+        } else {
+            let bit = parse_packet_bit(token, range)?;
+            (bit, bit)
+        };
+        if start_bit > end_bit {
+            return Err(token_error(token, "packet field range must be ascending"));
+        }
+        if start_bit != next_bit {
+            return Err(token_error(
+                token,
+                format!("packet fields must be contiguous; expected bit {next_bit}"),
+            ));
+        }
+        if end_bit / 32 != start_bit / 32 {
+            return Err(token_error(
+                token,
+                "packet fields spanning 32-bit rows are outside the supported subset",
+            ));
+        }
+        let label = label.trim();
+        if label.len() < 2 || !label.starts_with('"') || !label.ends_with('"') {
+            return Err(token_error(token, "packet field label must be quoted"));
+        }
+        diagram.fields.push(PacketField {
+            start_bit,
+            end_bit,
+            label: DiagramLabel::new(unquote_mermaid_string(label)),
+        });
+        next_bit = end_bit
+            .checked_add(1)
+            .ok_or_else(|| token_error(token, "packet bit range is too large"))?;
+    }
+    if diagram.fields.is_empty() {
+        return Err(ParseError {
+            message: "packet diagram requires at least one field".into(),
+            line: 1,
+            col: 1,
+        });
+    }
+    Ok(diagram)
+}
+
+fn parse_packet_bit(token: &Token, raw: &str) -> Result<u32, ParseError> {
+    raw.trim()
+        .parse::<u32>()
+        .map_err(|_| token_error(token, format!("invalid packet bit index {raw:?}")))
 }
 
 /// Parse the grammar-backed flat Mermaid block subset into grid semantic IR.
@@ -7094,6 +7200,32 @@ mod tests_dg04 {
         match parse_any_mermaid("block-beta\ncolumns 2\nA B").unwrap() {
             MermaidDiagram::Grid(diagram) => assert_eq!(diagram.cells.len(), 2),
             _ => panic!("expected block grid"),
+        }
+    }
+
+    #[test]
+    fn packet_parses_contiguous_absolute_bit_ranges() {
+        let diagram = parse_packet(
+            "packet-beta\ntitle Native packet\n0-7: \"Version\"\n8-31: \"Payload length\"\n32-63: \"Sequence number\"",
+        )
+        .unwrap();
+        assert_eq!(diagram.title.as_deref(), Some("Native packet"));
+        assert_eq!(diagram.fields.len(), 3);
+        assert_eq!((diagram.fields[1].start_bit, diagram.fields[1].end_bit), (8, 31));
+        assert_eq!(diagram.fields[2].label.text, "Sequence number");
+    }
+
+    #[test]
+    fn packet_rejects_gaps_and_unquoted_labels() {
+        assert!(parse_packet("packet-beta\n0-7: \"Header\"\n9-15: \"Gap\"").is_err());
+        assert!(parse_packet("packet-beta\n0-7: Header").is_err());
+    }
+
+    #[test]
+    fn dispatch_packet_to_packet_ir() {
+        match parse_any_mermaid("packet-beta\n0-7: \"Header\"").unwrap() {
+            MermaidDiagram::Packet(diagram) => assert_eq!(diagram.fields.len(), 1),
+            _ => panic!("expected packet IR"),
         }
     }
 

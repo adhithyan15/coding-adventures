@@ -4,6 +4,7 @@ sequence: 140
 chapter: 7
 type: word
 headword: भेटू
+romanization: "bheṭū"
 gloss: (we'll) meet (bheṭū)
 concept_tag: MR-VERB-BHETNE
 prerequisites: [MR-C04-punha, MR-C02-anand]

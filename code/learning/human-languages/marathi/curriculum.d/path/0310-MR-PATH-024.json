@@ -1,0 +1,16 @@
+{
+  "id": "MR-PATH-024",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "MR-C22-dene",
+    "MR-C22-pine",
+    "MR-C22-anne",
+    "MR-C22-thevne",
+    "MR-R22-request-verbs"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-027-REQUEST-VERBS"
+  ],
+  "after": []
+}

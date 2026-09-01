@@ -15,6 +15,71 @@ The authored reading order does not change. Bengali's order-integrity debt
 falls from three false forward reviews to zero, so the five-minute ramp now
 describes what the learner actually encounters.
 
+### Added — Chapters 17–19, seventeen more pieces and eighteen readable words (HL-C194)
+
+Thirty-five lessons in three chapters. **Seventeen teach one piece each; eighteen
+introduce no new shape at all** and hand back a word the reader has been saying
+since chapters 1–15.
+
+`scriptLessons` 10 → 45, `taughtGlyphs` 9 → 26, `neverTaughtGlyphs` **39 → 22**.
+Bengali was the worst never-taught glyph count in the corpus and is no longer in
+the bottom four.
+
+**Gloss-first, then glyph-by-glyph, interleaved.** No chapter here is a block of
+alphabet. A piece arrives, the next lesson spends it on a word already in the
+mouth, and the piece after that waits until something has come between — so
+**ি** is taught, spent on আমি, and only then does **ল** arrive. Every one of the
+eighteen words was romanized and spoken in an earlier chapter before it was ever
+shown as a shape to decode.
+
+**Nothing untaught is ever printed.** A script lesson is credited by
+`measureScriptClosure` with teaching *every* target-script glyph in its body, so
+these chapters were written against a cumulative allow-list and checked
+mechanically: no lesson shows a Bengali glyph that an earlier lesson has not
+taught. That guard caught a first draft of `BN-W02-lal-read` quoting **কাল দেখা
+হবে** — four untaught shapes — which is now romanized instead.
+
+**Signs before letters, and why.** Three of chapter 17's five additions are vowel
+signs, because a sign multiplies where a consonant adds: every consonant already
+held can take every sign. Chapter 18 then does the plain-and-breathy square
+(**ব**/**ভ**, **ক**/**খ**, **ত**/**দ**/**ধ**), which is the one distinction an
+English-speaking reader has no habit for at all. Chapter 19 closes the machinery
+by giving three vowels both of their bodies — **আ**/**া**, **ই**/**ি**,
+**এ**/**ে** — so the choice between a sign and a full letter becomes predictable
+rather than three separate facts.
+
+**The closure violations did not move, and that is placement, not pedagogy.**
+`scriptClosureViolations` stays at 65 because the measurement walks lessons in
+reading order and these chapters sit after all fifteen content chapters. Replaying
+the measurement over hypothetical orderings put numbers on the alternatives:
+relocating chapter 16 alone buys three violations, while interleaving all
+twenty-six pieces across chapters 1–6 buys seventeen. That restructure is filed as
+HL-C194 in `BACKLOG.d/`, together with the two obstacles it has to plan around —
+the `language-ladder` test that pins Bengali chapter 6, and the payoff
+representativeness floor.
+
+**What this costs, stated rather than buried.** Thirty-five writing lessons
+cannot be done hands-free, so Bengali's drivable share falls from 88% to 61% —
+the price every script-teaching track pays, and Bengali now sits between Tamil
+and Chinese rather than above them. The chapter-prefix reachable count is
+unchanged at 70: no existing chapter lost its ear-drivable opening. Distinct
+pre-A1 headwords are unchanged at 46, because these lessons re-read words the
+track already teaches rather than adding vocabulary — `vocabularyOf()` absorbs
+the duplicate headwords, which is the intended behaviour here and not a
+shortfall being hidden.
+
+Reinforcement did not regress. The three chapter payoffs would each have been
+retrieved fewer than twice, so `BN-W02-kemon-read` now reads the greeting back
+alongside its own six words, `BN-W03-kalo-read` re-reads কেমন, and
+`BN-W04-cha` declares the breathy dental its warm-up was already asking for.
+Under-revisited pre-A1 atoms stay at 13, and `BN-SCRIPT-NOMOSHKAR-READ-01` —
+which had **no** retrieval anywhere before this tranche — now has two.
+
+The forced nineteen-chapter build is warning-free: **194 pages, zero
+`Missing character`, zero over/underfull boxes, zero LaTeX warnings.** All
+seventeen new shapes render from the vendored Noto Sans Bengali font with no
+preamble change.
+
 ### Added — Chapter 16, the first nine pieces of the script (HL-C222)
 
 Ten lessons. **Nine teach one piece each; one introduces nothing** and assembles

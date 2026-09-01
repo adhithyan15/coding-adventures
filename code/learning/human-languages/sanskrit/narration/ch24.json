@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Things You Ask For",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:324ce87c5ce6ce22",
+  "sourceHash": "fnv1a64:fa4441efa49999f1",
   "lessons": [
     {
       "id": "SA-C24-water",
@@ -611,6 +611,418 @@
             {
               "kind": "speech",
               "text": "What does दीपः (dīpaḥ) mean? (\"a lamp\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-S122-letter-pha",
+      "sequence": 1171,
+      "title": "फ (pha) — one character, met inside words you already say",
+      "headword": "फ",
+      "romanization": "pha",
+      "gloss": "the single character फ — recognised inside words you already say",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8abfac8caf05c965",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: फ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: फ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: उ — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: फ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फ — pha."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not ph, it is pha."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "a left stem joined through the lower bowl to a rising and retraced central stem."
+            },
+            {
+              "kind": "speech",
+              "text": "a separate clockwise right arch."
+            },
+            {
+              "kind": "speech",
+              "text": "the top shirorekhā."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say this word, and it has फ (pha) inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "फलम् phalam — fruit."
+            },
+            {
+              "kind": "speech",
+              "text": "फ (pha) is प with a puff of breath after it — the same relation ठ has to ट. Say p and ph with a hand in front of your mouth and the difference is the air."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: फ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. descend the left stem, curve right around the lower bowl, rise along the central side to the headline, then retrace down the central stem without lifting."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift at the central junction and sweep clockwise over and down through the open right arch."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "Verified three-stroke teaching form; another learner source stages the components differently."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: JackPotte, ‘Devanagari pʰ फ (pha).gif’, strokes 1–3, Wikimedia Commons, 29 March 2009."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find फ (pha) in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find फ in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "फलम् (phalam), जलम् (jalam)."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "फ three times, saying pha as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: फ three times, saying *pha* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find फ (pha) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find फ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — फ? What sound does it carry? (pha.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-S123-letter-o",
+      "sequence": 1172,
+      "title": "ओ — one character, met inside words you already say",
+      "headword": "ओ",
+      "romanization": "o",
+      "gloss": "the single character ओ — recognised inside words you already say",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:a8e980d57644e48b",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ओ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ओ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: फ (pha) — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ओ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ओ — o."
+            },
+            {
+              "kind": "speech",
+              "text": "It is an independent vowel — the shape the vowel o takes when a word begins with it, rather than the sign it becomes inside a word."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "the joined upper and lower bowls of अ."
+            },
+            {
+              "kind": "speech",
+              "text": "a separately swept middle shoulder."
+            },
+            {
+              "kind": "speech",
+              "text": "the inner stem."
+            },
+            {
+              "kind": "speech",
+              "text": "the trailing stem."
+            },
+            {
+              "kind": "speech",
+              "text": "a separate upper arc."
+            },
+            {
+              "kind": "speech",
+              "text": "the top shirorekhā."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say this word, and it has ओ inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "ओदनः odanaḥ — cooked rice."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at आ and then at ओ. The whole of आ is in there; ओ adds one arc over the top. That is how the vowel letters are built — not twelve unrelated shapes but a few shapes wearing marks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ओ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. curve right around the upper bowl and continue down and around the lower bowl without lifting."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift and sweep the middle shoulder right."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift and descend the inner stem."
+            },
+            {
+              "kind": "speech",
+              "text": "4. lift and descend the trailing stem."
+            },
+            {
+              "kind": "speech",
+              "text": "5. lift at the trailing stem's headline junction and sweep the upper arc upward and left."
+            },
+            {
+              "kind": "speech",
+              "text": "6. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 5. The pen comes up 5 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "Verified modern printed teaching form; traditional and everyday handwriting may divide or simplify the curves differently."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari ओ stroke order.svg’, panels 1–6, Wikimedia Commons, 5 August 2023."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find ओ in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find ओ in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "ओदनः (odanaḥ), फलम् (phalam)."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ओ three times, saying o as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ओ three times, saying *o* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ओ once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ओ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ओ? What sound does it carry? (o.) Name one word you already say that contains it."
             }
           ]
         }

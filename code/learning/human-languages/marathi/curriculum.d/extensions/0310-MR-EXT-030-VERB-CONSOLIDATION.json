@@ -1,0 +1,16 @@
+{
+  "id": "MR-EXT-030-VERB-CONSOLIDATION",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can produce all twelve of the new Marathi verbs at a wider spacing, say what the mala frame does in each of the four sentences built on it, and recognise the earliest signs, sounds and words of the book at a durable distance.",
+  "prerequisites": [
+    "MR-EXT-029-PASSING-VERBS"
+  ],
+  "lessons": [
+    "MR-R25-twelve-verbs",
+    "MR-R25-dative-frame",
+    "MR-R25-recognition-script",
+    "MR-R25-recognition-words"
+  ]
+}

@@ -1,8 +1,8 @@
 Sanskrit, chapter 20: People --- and the Four Noun Endings.
-5 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+6 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 5.
+Lesson 1 of 6.
 नरः (naraḥ) — man, person.
 
 Warm-up.
@@ -31,7 +31,7 @@ Wrap-up Recall.
 Which family does नरः (naraḥ) belong to, and how do you know? (Masculine — the -aḥ.) Which English words carry its Greek cousin? (Android, Andrew.)
 
 
-Lesson 2 of 5.
+Lesson 2 of 6.
 नारी (nārī) — woman.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -62,7 +62,7 @@ Wrap-up Recall.
 What do नरः (naraḥ) and नारी (nārī) share? (The stem nar-.) Which ending marks this feminine? (Long -ī.)
 
 
-Lesson 3 of 5.
+Lesson 3 of 6.
 बालः (bālaḥ) — child, boy.
 
 Warm-up.
@@ -91,7 +91,7 @@ Wrap-up Recall.
 What does बाल cover beyond "boy"? (Anything in its early state.) Which two feminine endings have you met? (-ī and -ā.)
 
 
-Lesson 4 of 5.
+Lesson 4 of 6.
 वृद्धः (vṛddhaḥ) — an old person, an elder.
 
 Warm-up.
@@ -121,7 +121,7 @@ Wrap-up Recall.
 What root is वृद्धः (vṛddhaḥ) built on? (√वृध्, "to grow.") Which word would you use of an old building? (Purātana.)
 
 
-Lesson 5 of 5.
+Lesson 5 of 6.
 जनः (janaḥ) — people, folk.
 
 Warm-up.
@@ -148,3 +148,47 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What does √जन् mean? (To be born.) Which English words share it? (Gene, genesis, generate, nation.)
+
+
+Lesson 6 of 6.
+उ — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: उ and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one: ज — what does it do?
+[pause 2 seconds]
+One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: उ.
+उ — u.
+It is an independent vowel — the shape the vowel u takes when a word begins with it, rather than the sign it becomes inside a word.
+What it is made of:
+a joined upper bowl and lower loop.
+the top shirorekhā.
+You already say these, and every one of them has उ somewhere inside it:
+उत्तम uttama — good, best.
+उदक udaka — water — the other word for it.
+उपसर्ग upasarga — a prefix, the piece that turns गच्छति into आगच्छति.
+You have read the u sound many times without ever meeting this shape, because inside a word it is a small hook tucked under the consonant instead. उ is what it looks like when a word opens on it and there is no consonant to sit under.
+
+Writing: उ.
+1. start at the headline junction, curve down and left around the upper bowl, then sweep back through the waist and around the lower loop without lifting.
+2. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 1. The pen comes up 1 times and no more.
+Verified modern printed teaching form; everyday handwriting may simplify the curves.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari उ stroke order.svg’, panels 1–2, Wikimedia Commons, 5 August 2023.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these words, and find उ (u) in the ones that have it]
+[pause 8 seconds for the answer]
+उत्तम, नरः (naraḥ).
+[once you have stopped driving — trace: उ three times, saying u as you finish each one]
+[your turn — look: back at any page of this chapter and find उ (u) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — उ? What sound does it carry? (u.) Name one word you already say that contains it.

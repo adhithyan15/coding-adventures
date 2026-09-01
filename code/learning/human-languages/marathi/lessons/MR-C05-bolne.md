@@ -4,6 +4,7 @@ sequence: 165
 chapter: 8
 type: word
 headword: बोलणे
+romanization: "bolṇe"
 gloss: to speak (bolṇe)
 concept_tag: MR-VERB-BOLNE
 prerequisites: [MR-C01-yeto, MR-C02-aahe]

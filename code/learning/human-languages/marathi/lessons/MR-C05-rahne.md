@@ -4,6 +4,7 @@ sequence: 175
 chapter: 8
 type: word
 headword: राहणे
+romanization: "rāhṇe"
 gloss: to live, to stay (rāhṇe)
 concept_tag: MR-VERB-RAHNE
 prerequisites: [MR-C05-bolne]

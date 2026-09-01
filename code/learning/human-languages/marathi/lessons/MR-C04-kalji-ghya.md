@@ -4,6 +4,7 @@ sequence: 155
 chapter: 7
 type: phrase
 headword: काळजी घ्या
+romanization: "kāḷjī ghyā"
 gloss: take care (kāḷjī ghyā)
 concept_tag: MR-PHRASE-TAKE-CARE
 prerequisites: [MR-C04-udya-bhetu]

@@ -1,4 +1,4 @@
-# Session Guide — Marathi Chapters 1–18
+# Session Guide — Marathi Chapters 1–25
 
 Same spaced-repetition schedule as the other tracks (a word from session *N*
 resurfaces at successively wider distances). Lessons are named by slug. The
@@ -218,7 +218,51 @@ The final checkpoint changes the requested values, so it tests selection rather
 than copying a memorized completed form. It is independent but untimed; the
 timed checkpoint remains #13474 and full A1 readiness remains #13459.
 
+## Chapter 22 — Give, Bring, Put
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 150 | C22-dene | देणे | *\*deh₃-* → donate, dative, data |
+| 151 | C22-pine | पिणे | the drinking root already banked under **पाणी** |
+| 152 | C22-anne | आणणे | *ā-* + *nī-*, "leading toward here" |
+| 153 | C22-thevne | ठेवणे | *sthā-* "to stand" → stand, stay, state, statue |
+| 154 | R22-request-verbs | (retrieval) | four requests against the **कृपया** frame |
+
+## Chapter 23 — Sit, and How You Feel
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 155 | C23-basne | बसणे | *viś-* "to settle" → Latin *vīcus*, English **-wich** |
+| 156 | C23-vatne | वाटणे | the third dative subject: *malā baraṁ vāṭtaṁ* |
+| 157 | C23-jhopne | झोपणे | Marathi's own word where Hindi kept *\*swep-* |
+| 158 | C23-chalne | चालणे | *cal-* beside **विचार**'s *car-*; **चालेल** as everyday yes |
+| 159 | R23-wellbeing-verbs | (retrieval) | one visit, four verbs |
+
+## Chapter 24 — What Passes Between Two People
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 160 | C24-sangne | *sāṅgṇe* | **gloss-first**: its *ga* is not taught yet, so the word arrives by ear |
+| 161 | C24-mhanne | म्हणणे | the readable partner; Sanskrit *bh-* became Marathi *mh-* |
+| 162 | C24-shikne | शिकणे | desiderative of *śak-*: learning is wanting to be able |
+| 163 | C24-milne | मिळणे | the fourth dative subject, carrying **ळ** |
+| 164 | R24-passing-verbs | (retrieval) | the exchange, unaided |
+
+## Chapter 25 — The Twelve, Further Apart
+
+| Session | Lesson | Job |
+|---|---|---|
+| 165 | R25-twelve-verbs | all twelve at a wider spacing |
+| 166 | R25-dative-frame | the four sentences on one **मला** frame |
+| 167 | R25-recognition-script | **ह**, **ो** and the *cha*-toward-*ts* sound, recognised at distance |
+| 168 | R25-recognition-words | **आहे**, the numbers, **समजणे**, **मित्र**, **कुटुंब** at distance |
+
+These four chapters sit after the A1 writing runways in book order while
+realizing **pre-A1** spine nodes. A node's level is a property of the node, not
+of where its chapter falls in the book.
+
 ## Next
 
-The next Marathi script-closure tranche starts at the Chapter 5 doorway and
-teaches the next missing forms before their first load-bearing use.
+The next Marathi script tranche should teach **ग**, **घ** and **ख** — three
+consonants the book shows and never teaches — before their next load-bearing
+use. See HL-C217 for why they are not in the verb tranche.

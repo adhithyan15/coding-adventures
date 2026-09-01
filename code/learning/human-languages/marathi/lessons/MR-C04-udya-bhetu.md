@@ -4,6 +4,7 @@ sequence: 150
 chapter: 7
 type: phrase
 headword: उद्या भेटू
+romanization: "udyā bheṭū"
 gloss: see you tomorrow (udyā bheṭū)
 concept_tag: FAREWELL-TOMORROW
 prerequisites: [MR-C04-punha-bhetu]

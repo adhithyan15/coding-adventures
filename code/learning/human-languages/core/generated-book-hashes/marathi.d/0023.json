@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:2de60005da349809",
+  "lessonIds": [
+    "MR-C23-basne",
+    "MR-C23-vatne",
+    "MR-C23-jhopne",
+    "MR-C23-chalne",
+    "MR-R23-wellbeing-verbs"
+  ],
+  "tex": "marathi/book/chapters/ch23-wellbeing-verbs.tex"
+}

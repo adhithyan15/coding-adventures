@@ -1,8 +1,8 @@
 Sanskrit, chapter 17: Time --- Day, Night, and When Things Happen.
-6 lessons. All 6 can be done entirely by ear.
+7 lessons. You can do the first 6 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 6.
+Lesson 1 of 7.
 दिनम् (dinam) — day.
 
 Warm-up.
@@ -31,7 +31,7 @@ Wrap-up Recall.
 What did the root behind दिनम् (dinam) originally mean? (The bright sky.) Which family does it belong to, and how do you know? (Neuter — the -am ending.)
 
 
-Lesson 2 of 6.
+Lesson 2 of 7.
 रात्रिः (rātriḥ) — night.
 
 Warm-up.
@@ -60,7 +60,7 @@ Wrap-up Recall.
 What is रात्रिः (rātriḥ) in the hymns, beyond a noun? (A presence addressed by name.) What does its ending tell you? (That there are more than two noun families.)
 
 
-Lesson 3 of 6.
+Lesson 3 of 7.
 अद्य (adya) — today.
 
 Warm-up.
@@ -89,7 +89,7 @@ Wrap-up Recall.
 What are the two pieces of अद्य (adya)? (A-, "this," and the dy- of "day.") What English word is built the same way? (Today.)
 
 
-Lesson 4 of 6.
+Lesson 4 of 7.
 ह्यः (hyaḥ) — yesterday.
 
 Warm-up.
@@ -118,7 +118,7 @@ Wrap-up Recall.
 Which Latin word is ह्यः (hyaḥ) related to? (Heri.) What English word still carries the same root? (Yesterday.) What does the family all mean? (The day before this one.)
 
 
-Lesson 5 of 6.
+Lesson 5 of 7.
 सदा (sadā) — always.
 
 Warm-up.
@@ -147,7 +147,7 @@ Wrap-up Recall.
 What does the sa- in सदा (sadā) carry? (Together, whole, the same.) Which English word shares it? (Same.)
 
 
-Lesson 6 of 6.
+Lesson 6 of 7.
 कालशब्दाः (kāla-śabdāḥ) — where a time word stands.
 
 Warm-up.
@@ -174,3 +174,51 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which three words never change their ending? (अद्य (adya), ह्यः (hyaḥ), सदा (sadā).) Why can Sanskrit move words around freely? (Because the endings carry the grammar, not the order.)
+
+
+Lesson 7 of 7.
+ष (ṣa) — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ष and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one: ठ — what does it do?
+[pause 2 seconds]
+One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: ष.
+ष — ṣa.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not ṣ, it is ṣa.
+What it is made of:
+a U-shaped body drawn from the left side around the lower bowl and up the right side.
+a retraced top-to-bottom right stem.
+a down-right inner diagonal.
+the top shirorekhā.
+You already say these, and every one of them has ष (ṣa) somewhere inside it:
+क्षीरम् kṣīram — milk.
+अक्षि akṣi — eye.
+अक्षिणी akṣiṇī — two eyes, the dual.
+In every one of those words ष (ṣa) is riding inside a conjunct: क् + ष (ṣa) fused into the single shape क्ष. Owning both halves is not owning the join — क्ष has a look of its own and gets its own lesson later. For now: find the ष (ṣa) in it, and let the rest wait.
+
+Writing: ष.
+1. descend the left side, curve counterclockwise around the lower bowl, and rise along the right side to the headline without lifting.
+2. lift and draw the right stem top-to-bottom, retracing its upper body-side segment before continuing below the bowl.
+3. lift at the upper-left interior and draw the inner diagonal down-right to the bowl junction.
+4. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 3. The pen comes up 3 times and no more.
+Verified four-stroke teaching form fitted to the bundled printed outline.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-ष (ṣa)-order.gif’, strokes 1–4, Wikimedia Commons, 10 May 2009.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these words, and find ष (ṣa) in the ones that have it]
+[pause 8 seconds for the answer]
+अक्षि, पठति.
+[once you have stopped driving — trace: ष three times, saying ṣa as you finish each one]
+[your turn — look: back at any page of this chapter and find ष (ṣa) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — ष? What sound does it carry? (ṣa.) Name one word you already say that contains it.
