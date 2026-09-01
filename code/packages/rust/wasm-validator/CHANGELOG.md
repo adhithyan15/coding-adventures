@@ -2,6 +2,130 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.84] - 2026-09-01 (fix: memarg/prefixed-sub-opcode LEB128 under-strictness + missing data-count-section gate)
+
+A fresh corpus-wide prioritization pass after the W32/W33/W34 campaign
+closed (`code/specs/W07-wasm-post-mvp-epics.md`'s "Addendum (2026-09-01)"
+item 2) found `binary-leb128.wast` (7 failures of 58 `assert_malformed`)
+and `binary.wast` (2 failures of 107) failing with the identical harness
+message `"binary module parsed but should have been rejected as
+malformed"`. All 9 looked like one bug from the outside; direct-probing
+each specific failing directive (`wasm_conformance::run_wast_source`,
+one throwaway test per file) showed they're actually **two unrelated
+root causes**, both in this crate:
+
+### Fixed — memarg align/offset and `0xFC`/`0xFD` sub-opcode LEB128 strictness (7 of the 9)
+
+`wasm-module-parser` never walks function-body instructions (bodies are
+stored as raw bytes — see that crate's own `parse_code_section` doc
+comment), so every LEB128 immediate INSIDE a function body — a memory
+instruction's `align`/`offset` memarg fields, and the `0xFC`
+(saturating-conversion/bulk-memory)/`0xFD` (SIMD) prefix's own
+sub-opcode — is decoded here, in `type_check.rs`, while walking
+instructions for real type-checking. All of them went through the
+native-64-bit-budget `decode_unsigned` instead of a width-bounded
+`decode_unsigned_bounded`, so a 6+-byte (over the real `u32` budget) or
+high-bit-set (out-of-range for 32 bits) encoding of a small, otherwise
+legal value parsed successfully instead of being rejected — the exact
+same "as u32 truncates silently"/"no byte-count cap" bug class
+`wasm-module-parser`'s own `read_u32leb` closed for section-level fields
+in the prior `wasm-leb128` 0.2.0 hardening pass, just never propagated to
+this crate's instruction-level decode sites.
+
+Fixed at every memarg site in this file: plain memory ops (`0x28..=
+0x3E`), atomics (`0xFE`), and all five `v128`-prefixed memarg
+instructions (`0xFD`'s `Load`/`Store`/`*Lane` families) — not just the
+two opcodes the failing tests happen to exercise, since it's the exact
+same decode call copy-pasted across all of them. Also fixed the `0xFC`
+and `0xFD` prefix's own sub-opcode reads (`binary-leb128.wast`'s
+"i64_trunc_sat_f64_u with 6 bytes" case) the same way.
+
+`align` is unconditionally `u32` per spec, so it's now always
+`decode_unsigned_bounded(.., 32)`. `offset` is genuinely
+context-dependent and got this wrong in BOTH directions before landing
+on the fix below:
+
+- **First attempt bounded `offset` to 32 bits unconditionally**, on the
+  theory that the previous W25 comment's claim ("offset is `u64`
+  unconditionally in the real spec's binary grammar, verified live
+  against the spec page") was checking the spec's CURRENT
+  (post-memory64-merge) text rather than the pinned testsuite commit
+  this repo's `wasm-conformance` corpus is actually graded against
+  (`28864811cf03bdbf880733786148feaba339582d`) — and `binary-leb128.wast`
+  itself supports that: it asserts a 6-byte offset encoding of the value
+  `2`, on a plain 32-bit memory, IS malformed ("integer representation
+  too long"), which only holds under a 5-byte/32-bit budget.
+- **That first attempt regressed `binary_leb128_64.wast`** (caught by
+  the mandatory full-corpus baseline diff, not inspection): its own
+  non-`assert_malformed` `module` directive uses a 10-byte offset
+  encoding of `2^64 - 1` on an `is64` (memory64) memory and expects it to
+  parse fine, while `2^64` itself (one bit further) is its own
+  `assert_malformed` case. So `offset` really is `u64`-wide, but ONLY
+  when the addressed memory is actually `is64` — not unconditionally
+  either way.
+- **Final fix**: `align` decoded first (always 32-bit-bounded), which
+  also yields the multi-memory flag bit (`has_memidx`) before `offset` is
+  decoded. When `!has_memidx`, the target memory is implicitly memory 0,
+  known immediately — decode `offset` at 64 bits if memory 0 is `is64`,
+  else 32. When `has_memidx` IS set, the real target memory index isn't
+  decoded until AFTER `offset` in this binary format, so which memory
+  `offset` even addresses is still unknown at decode time — falls back
+  to the full native 64-bit budget rather than guess, which is exactly
+  this crate's previous (correct, un-regressed) behavior for that
+  combination. No corpus file exercises a multi-memory memarg with an
+  offset value a 32-bit budget would have rejected, so that fallback is
+  a pure no-op today, not a knowingly-loose carve-out.
+
+### Fixed — `memory.init`/`data.drop` without a data count section (2 of the 9)
+
+`binary.wast`'s other two failures ("memory.init requires a data count
+section", "data.drop requires a data count section") are a completely
+unrelated bug: the spec requires a data count section (§12) whenever
+`memory.init`/`data.drop` (`0xFC 0x08`/`0xFC 0x09`) appears anywhere in
+the code section, independent of whether the referenced data segment
+actually exists — and nothing enforced that at all. `wasm-module-parser`
+already parses §12 but previously discarded whether it was PRESENT once
+the (separate, pre-existing) count-vs-`module.data.len()` cross-check was
+done; it now threads that fact forward as `WasmModule::
+missing_data_count_section` (new field, see `wasm-types`'s changelog),
+deliberately phrased as a default-`false` "missing" flag so every
+existing `WasmModule` construction site (including every TEXT-form
+module — no binary "data count section" concept even exists there) keeps
+its current behavior for free. This crate's `0x08`/`0x09` opcode arms
+now check that flag FIRST, before their existing out-of-bounds
+data-segment-index checks, so it fires even for an otherwise-valid
+`data_idx`.
+
+### Added
+
+- `wasm-module-parser`, `binary-leb128.wast`/`binary_leb128_64.wast`-
+  inspired regression tests (`src/lib.rs`): `missing_data_count_section`
+  set/unset correctly.
+- This crate's own regression tests (`src/lib.rs`): memarg align overlong
+  + out-of-range rejected (with a minimal-encoding positive control),
+  memarg offset overlong on a 32-bit memory rejected, memarg offset
+  widening to 64 bits on an `is64` memory (both the `2^64 - 1`-parses and
+  `2^64`-rejected directions, directly from `binary_leb128_64.wast`),
+  `0xFC` sub-opcode overlong rejected (with a minimal-encoding positive
+  control), and `memory.init`/`data.drop` with/without
+  `missing_data_count_section` set.
+
+### Verification
+
+Full `wasm-conformance` baseline diff (all 257 vendored files, via
+`--write-baseline` + a programmatic before/after diff of `tests/fixtures/
+testsuite-status.json`'s `files` map): exactly 2 files changed —
+`binary-leb128.wast` (`assert_malformed` 51/58 with 7 failing -> 58/58)
+and `binary.wast` (`assert_malformed` 105/107 with 2 failing -> 107/107).
+Zero regressions anywhere else, including `binary_leb128_64.wast` (which
+DID regress — `module` 1/1 -> 0/1 — during the first, unconditionally-
+32-bit `offset` attempt described above, caught by this same diff before
+it shipped, and is back to 1/1 pass / 0 fail with the final context-aware
+fix). `cargo test`/`cargo clippy -- -D warnings` clean across
+`wasm-module-parser`, `wasm-wast-parser`, `wasm-execution`,
+`wasm-runtime`, `wasm-validator`, `wasm-conformance`, `wasm-types`,
+`wasm-leb128`.
+
 ## [0.2.83] - 2026-09-01 (fix: `br_table.wast` total-failure regression — two independent bugs)
 
 While prioritizing the vendored testsuite corpus for a fresh pass, found

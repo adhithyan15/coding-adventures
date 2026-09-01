@@ -1088,7 +1088,14 @@ mod tests {
         let dirs = parse_script(r#"(module binary "\00\61\73\6d\01\00\00\00")"#).unwrap();
         match &dirs[0] {
             Directive::Module { result, .. } => {
-                assert_eq!(result.as_ref(), &Ok(wasm_types::WasmModule::default()))
+                // Not quite `WasmModule::default()`: a binary module with
+                // no data count section (§12) genuinely has none, so
+                // `missing_data_count_section` is `true` here -- see that
+                // field's own doc comment (W-addendum 2026-09-01 pass).
+                // Harmless in this module specifically since it also has
+                // no `memory.init`/`data.drop` to gate.
+                let expected = wasm_types::WasmModule { missing_data_count_section: true, ..Default::default() };
+                assert_eq!(result.as_ref(), &Ok(expected))
             }
             other => panic!("unexpected directive: {other:?}"),
         }

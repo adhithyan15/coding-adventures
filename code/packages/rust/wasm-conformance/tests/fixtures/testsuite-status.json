@@ -1080,8 +1080,8 @@
         "not_yet_supported": 0
       },
       "assert_malformed": {
-        "pass": 51,
-        "fail": 7,
+        "pass": 58,
+        "fail": 0,
         "trap": 0,
         "not_yet_supported": 0
       },
@@ -1142,8 +1142,8 @@
         "not_yet_supported": 0
       },
       "assert_malformed": {
-        "pass": 105,
-        "fail": 2,
+        "pass": 107,
+        "fail": 0,
         "trap": 0,
         "not_yet_supported": 0
       },
@@ -15961,8 +15961,8 @@
       "not_yet_supported": 95
     },
     "assert_malformed": {
-      "pass": 1304,
-      "fail": 9,
+      "pass": 1313,
+      "fail": 0,
       "trap": 0,
       "not_yet_supported": 627
     },
