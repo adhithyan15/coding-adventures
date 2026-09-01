@@ -351,3 +351,64 @@ per unit of implementation risk," matching the pattern this session's
 own WASM04/WASM06/WASM08 arc already validated: pick the smallest thing
 that unlocks real, currently-blocked corpus coverage, verify via the
 full baseline diff, ship it, repeat.
+
+---
+
+## Addendum (2026-09-01) — known remaining gaps found during a fresh
+## corpus-wide prioritization pass, after W32/W33/W34 closed
+
+Everything above is stale (SIMD/atomics/tail-calls/GC-beyond-the-narrow-
+slice have all since shipped — see `W08`-`W34`). Rather than rewrite this
+whole survey, this addendum records what a full `wasm_conformance_report`
+run against the pinned 257-file corpus turned up as genuinely still open,
+for whoever does the next prioritization pass. Two real regressions found
+in the same pass (a `wasm-validator` funcref-assignability bug wiping out
+`br_table.wast`, and a mutable-global/elem-vs-data-ordering bug in
+`wasm-runtime`) were already fixed (see `wasm-validator`/`wasm-runtime`/
+`wasm-conformance` CHANGELOGs, PRs #13881/#13882). What's left:
+
+1. **Cross-instance function-reference identity (the big one).**
+   `wasm-execution`'s table entries store bare `u32` function indices with
+   no instance identity attached. When a table (or an element/global of
+   funcref type) is shared across module-linking boundaries via
+   `register`/import, `call_indirect`/`table.get` resolve that index
+   against whichever instance happens to be EXECUTING right now, not
+   whichever instance actually wrote it. This is confirmed (not guessed)
+   as the sole remaining cause of every real (non-"not yet supported")
+   failure in `elem.wast`, `linking.wast`, `linking0.wast`, and
+   `linking3.wast` as of this pass — e.g. `linking.wast` expects `4` and
+   `-4` from two adjacent calls and gets them swapped, a classic
+   wrong-instance-namespace symptom. Fixing this for real means giving
+   `WasmValue::Ref` (or an equivalent) real cross-instance identity —
+   likely `Rc<WasmInstance>` (or an instance-id + function-index pair)
+   everywhere a funcref is stored or compared, not just where it's called
+   — which touches every call site that currently assumes "function
+   reference == u32 index into the current instance." Sized **L** per
+   this doc's own yardstick (a real representation change rippling through
+   `wasm-types`/`wasm-execution`/`wasm-runtime`), and — per this repo's
+   standing "no shortcuts, do the hard core" principle — worth a proper
+   `W35` spec-first PR rather than deferring a fourth time.
+
+2. **Malformed-binary LEB128 under-strictness.** `binary-leb128.wast`
+   (7 real failures) and `binary.wast` (2 real failures) each contain
+   `assert_malformed` cases where `wasm-module-parser` accepts a binary
+   module it should reject (over-long/non-canonical LEB128 encodings,
+   confirmed via a direct probe — every failure is "binary module parsed
+   but should have been rejected as malformed"). Contained to
+   `wasm-module-parser`'s LEB128 decoding, no representation questions —
+   a clean, self-contained next PR. Sized **S**.
+
+3. **`table.wast`'s oversized-declared-minimum case (unconfirmed as a
+   real bug — needs spec-text verification before fixing).** One `module`
+   directive declares a table with minimum `4294967295` (`u32::MAX`)
+   elements; `wasm-validator` rejects it for exceeding this interpreter's
+   10,000,000-element resource-limit heuristic. It's genuinely unclear
+   without re-reading the exact `.wast` directive and the spec's own
+   implementation-limits language whether the real spec expects this to
+   validate (deferring the actual failure to instantiation/allocation
+   time, since a numeric minimum alone doesn't have to eagerly allocate)
+   or whether rejecting at validation time is an acceptable
+   implementation-defined limit. Lowest priority of the three (affects
+   exactly one `module` directive in the whole corpus) — investigate the
+   actual assertion type in `table.wast` around this case before deciding
+   whether it's a bug.
