@@ -114,8 +114,58 @@ large or deeply-structured type in ONE module could cause disproportionate
 comparison cost against a module importing from it (a cross-module
 amplification distinct from the third slice's already-fixed single-module
 one), and whether the comparison correctly handles a module importing
-from itself or a cyclic import chain without infinite recursion. See this
-package's own PR description / commit message for the review's findings.
+from itself or a cyclic import chain without infinite recursion.
+
+**Result: one real HIGH-severity finding, fixed before push** — this
+epic's FOURTH consecutive slice with a genuine finding in its own review.
+`MAX_CANONICAL_TREE_WEIGHT` bounds any ONE `CanonicalGroup` tree's shape
+at construction time, so any ONE full structural comparison between two
+such trees is itself bounded — but nothing previously bounded how many
+times a full, near-max-weight comparison could be ATTEMPTED across an
+entire `instantiate()` call's whole import-resolution loop. Unlike the
+WITHIN-module case (where `canonicalize_types`'s own interning makes
+every SAME-shape comparison an O(1) `Rc::ptr_eq` hit, and triggering many
+DIFFERENT expensive comparisons requires declaring that many expensive
+types — itself bounded by module size), the cross-module case can never
+hit `Rc::ptr_eq` at all (two different modules' `canonicalize_types`
+calls never intern into the same allocation), and an attacker who
+controls both the importing and exporting module can multiply one
+expensive-but-capped comparison by an arbitrary, BYTE-CHEAP import count
+— each `(func (import "M" "f") (type $expensive))` costs only a few
+bytes to declare, unlike the expensive type itself. Worst case: `imports
+× hops (≤1,000) × per-comparison cost (≤1,000,000 nodes)`, each factor
+individually capped but their PRODUCT unbounded by anything that existed
+before this fix.
+
+Fixed by introducing `wasm_types::CrossModuleComparisonBudget`: a shared,
+mutable work counter created ONCE per `instantiate()` call (before the
+import-resolution loop starts, not per import) and threaded `&mut`
+through the whole loop via a new parameter on `HostFunction::
+canonically_matches`. A hand-written, budget-aware structural-equality
+walk (`canonical_type_entries_equivalent_budgeted` and its per-field/
+per-variant helpers in `wasm-types`) replaces derived `PartialEq`
+specifically on the cross-module comparison path, charging one unit per
+tree node visited (budget checked BEFORE recursing into any child, so
+exhaustion can never be preceded by uncharged work) and failing CLOSED
+(reports "not equivalent," never a false accept) once exhausted — the
+same direction every other cap in this mechanism already takes. See
+`wasm-types`'s own CHANGELOG for the full account, including the
+re-review that confirmed the fix's completeness (every field/variant of
+`CanonicalGroup`'s tree is covered by the budgeted walk, budget-before-
+work ordering holds in all seven helper functions, and the budget
+arithmetic uses `checked_sub` with no overflow/panic path). Full 257-file
+conformance baseline re-confirmed byte-for-byte identical before and
+after this fix, since it changes worst-case performance only, never
+behavior.
+
+The self-import/cyclic-import-chain question came back clean on first
+review: `wasm-conformance`'s own sequential register-after-instantiate
+model (a module is only inserted into the registry AFTER its own
+`instantiate()` call returns successfully) makes both a self-import and a
+genuine A↔B import cycle structurally impossible to reach — a module
+being instantiated cannot yet resolve an import back to itself or to a
+not-yet-completed sibling, so this fails as an ordinary "unknown import"
+link error, never a `RefCell` double-borrow or infinite recursion.
 
 ## [0.6.20] — 2026-09-01 (W34 third slice — thread canonical equivalence into wasm-execution)
 

@@ -15,7 +15,7 @@ epic's final slice):
   of which have or need a `CanonicalGroup`). Only `wasm-conformance`'s
   `CrossModuleFunction` overrides this, returning the exporting module's
   own already-computed `canonical_types[idx]` entry.
-- **`canonically_matches(&self, target: &(Rc<CanonicalGroup>, u32)) -> bool`**
+- **`canonically_matches(&self, target: &(Rc<CanonicalGroup>, u32), budget: &mut wasm_types::CrossModuleComparisonBudget) -> bool`**
   — whether this function's own real type canonically MATCHES `target`:
   either directly canonically equivalent, or reachable by climbing this
   function's own module-LOCAL nominal `sub` chain. Defaults to a
@@ -29,13 +29,22 @@ epic's final slice):
   cases need exactly this; an earlier draft of this slice that used plain
   equality regressed those two cases, caught by re-running the full
   conformance baseline before considering the slice done, not merely
-  reasoning about it).
+  reasoning about it). The `budget` parameter is a security-review
+  finding, fixed before push (see `wasm-types`'s own CHANGELOG for the
+  full account): `wasm-runtime::instantiate` creates ONE `wasm_types::
+  CrossModuleComparisonBudget` per `instantiate()` call and passes the
+  SAME one into every import's `canonically_matches` call, bounding total
+  cross-module comparison cost across a module's ENTIRE import list — not
+  just each individual comparison — closing an aggregate-cost DoS an
+  attacker who controls both the importing and exporting module could
+  otherwise exploit (declaring many byte-cheap imports all targeting one
+  expensive-but-individually-capped comparison).
 
-Both are purely additive to the trait: every pre-existing `HostFunction`
-implementor is unaffected (still gets the `None`/reflexive-only
-defaults), so `wasm-runtime`'s import check (see that crate's own
-CHANGELOG) falls back to its pre-existing three-part conservative guard
-for every one of them, byte-for-byte unchanged.
+Both new methods are purely additive to the trait: every pre-existing
+`HostFunction` implementor is unaffected (still gets the `None`/
+reflexive-only defaults), so `wasm-runtime`'s import check (see that
+crate's own CHANGELOG) falls back to its pre-existing three-part
+conservative guard for every one of them, byte-for-byte unchanged.
 
 ## [0.9.84] - 2026-09-01 (W34 third slice — canonical equivalence in runtime dispatch)
 

@@ -43,13 +43,75 @@ independently-validated module, no shared numbering at all).
   one-hop climb), and correctly failing to match a genuinely unrelated
   target.
 
-**Security note**: both new functions are pure, non-recursive comparisons
-over already-capped data (`canonicalize_types`'s own `CanonicalCost`
-depth/weight caps, and the pre-existing `MAX_SUBTYPE_CHAIN_HOPS` hop
-bound) — see `wasm-runtime`'s own CHANGELOG for this slice's dedicated
-cross-module security review (a NEW trust boundary this epic had not
-exercised before: two independently-attacker-controlled modules' type
-data compared against each other for the first time).
+**Security review finding, fixed before push**: a dedicated security-review
+sub-agent, briefed on the NEW trust boundary this slice opens (the first
+time this epic compares two INDEPENDENTLY-ATTACKER-CONTROLLED modules'
+type data against each other, rather than one module's own data against
+itself), found a real HIGH-severity DoS — this epic's FOURTH consecutive
+slice with a genuine finding in its own review. `MAX_CANONICAL_TREE_
+WEIGHT` bounds any ONE `CanonicalGroup` tree's shape at construction time
+(so any ONE full structural comparison is itself bounded), but nothing
+bounded how many times a full, near-max-weight comparison could be
+ATTEMPTED across an entire `wasm-runtime::instantiate()` call: the
+cross-module case can never hit the `Rc::ptr_eq` fast path that makes the
+WITHIN-module case cheap (two different modules' `canonicalize_types`
+calls never intern into the same allocation), and an attacker who
+controls both the importing and exporting module can multiply one
+expensive-but-capped comparison by an arbitrary, byte-cheap import count
+(each import declaration costs only a few bytes, unlike the expensive
+type itself) — `imports × hops (≤1,000) × per-comparison cost
+(≤1,000,000 nodes)`, each factor individually capped but their PRODUCT
+unbounded.
+
+Fixed by adding:
+- **`CrossModuleComparisonBudget`** — a shared, mutable work counter
+  (`MAX_CROSS_MODULE_CANONICAL_COMPARISON_BUDGET = 4_000_000`, `new()`/
+  `with_budget(u64)`/`remaining()`), meant to be created ONCE per
+  `wasm-runtime::instantiate()` call and threaded `&mut` through that
+  call's ENTIRE import-resolution loop (not reset per import). `take(cost)`
+  uses `checked_sub`, floors at zero (never wraps, never panics), and
+  reports "out of budget" once exhausted.
+- **`canonical_type_entries_equivalent_budgeted`** and seven private
+  per-field/per-variant helper functions (`group_equal_budgeted`,
+  `subtype_equal_budgeted`, `comp_type_equal_budgeted`, `field_type_
+  equal_budgeted`, `storage_type_equal_budgeted`, `val_type_equal_
+  budgeted`, `heap_ref_equal_budgeted`) — a hand-written, budget-aware
+  structural-equality walk mirroring derived `PartialEq`'s exact recursive
+  shape (every field, every enum variant, every `Vec` length-checked
+  before zipping), but charging the shared budget one unit per node
+  visited — checked BEFORE recursing into any child, so exhaustion can
+  never be preceded by uncharged work — and bailing out to "not equal"
+  (fail CLOSED, never a false accept) the instant it's exhausted, rather
+  than continuing an unconditional full walk. `canonical_chain_reaches`
+  (this slice's own new cross-module chain walk) and `wasm-execution`'s
+  `HostFunction::canonically_matches` (see that crate's own CHANGELOG)
+  both now take this budget.
+- Existing WITHIN-module comparisons (`canonical_types_equivalent`,
+  `nominal_subtype_chain`, `is_assignable`'s termination check) are
+  UNCHANGED and keep using the unbudgeted comparison — the amplification
+  this fix closes is specific to the cross-module, attacker-controlled-
+  import-count case; within one module, triggering many genuinely-
+  different expensive comparisons requires declaring that many expensive
+  types, itself bounded by module size.
+- A re-review confirmed the fix's completeness directly, not just its
+  presence: every field/variant of `CanonicalGroup`'s tree is covered by
+  the budgeted walk (checked against the real struct/enum definitions,
+  not assumed from the design), budget-before-work ordering holds in all
+  seven helper functions, `Rc::ptr_eq`'s fast path can never fire
+  incorrectly across two different modules' allocations, and the budget
+  arithmetic has no overflow/panic/divide-by-zero path.
+- New regression test `cross_module_comparison_budget_exhausts_and_fails_
+  closed`: proves the budget genuinely exhausts and fails closed using a
+  small custom budget (`with_budget(20)`), not by actually spending
+  millions of real iterations — confirms both those two genuinely-
+  different types stay correctly rejected throughout, and that a
+  genuinely-equivalent (but not `Rc`-identical) pair is CONSERVATIVELY
+  rejected once the budget runs out, proving the fail-closed direction
+  applies even to real matches, not only mismatches.
+
+Full 257-file conformance baseline re-confirmed byte-for-byte identical
+before and after this fix, since it changes worst-case performance only,
+never behavior.
 
 ## [0.1.20] - 2026-09-01 (W34 third slice — wire canonical equivalence into within-module subtyping)
 
