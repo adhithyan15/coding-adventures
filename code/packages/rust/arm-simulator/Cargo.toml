@@ -2,7 +2,7 @@
 name = "arm-simulator"
 version = "0.1.0"
 edition = "2021"
-description = "ARMv7 subset simulator — the architecture that powers your phone"
+description = "Complete Spec 07b ARMv7 educational functional simulator with a preserved legacy wrapper"
 
 [dependencies]
 cpu-simulator = { path = "../cpu-simulator" }

@@ -7,7 +7,7 @@
 //!
 //! Unlike RISC-V's strict, zero-magic layout, ARM features several unique design
 //! quirks. Most notably: conditionally executed instructions. Every instruction
-//! has a 4-bit condition code field (bits [31:28]). The CPU checks the condition
+//! has a 4-bit condition code field (bits 31–28). The CPU checks the condition
 //! flags before executing -- if the condition isn't met, the instruction becomes
 //! a NOP (no operation).
 //!
@@ -46,11 +46,13 @@
 //! This clever trick lets ARM represent many useful constants (like powers
 //! of 2 and common masks) that wouldn't fit in a plain 12-bit field.
 
-use std::collections::HashMap;
+pub mod functional;
+
 use cpu_simulator::{
-    CPU, DecodeResult, ExecuteResult, InstructionDecoder, InstructionExecutor, Memory,
-    PipelineTrace, RegisterFile,
+    DecodeResult, ExecuteResult, InstructionDecoder, InstructionExecutor, Memory, PipelineTrace,
+    RegisterFile, CPU,
 };
+use std::collections::HashMap;
 
 // ===========================================================================
 // Constants
@@ -338,20 +340,12 @@ pub fn encode_mov_imm(rd: usize, imm: u32) -> u32 {
 
 /// Encode `ADD Rd, Rn, Rm` with condition=AL, register mode.
 pub fn encode_add(rd: usize, rn: usize, rm: usize) -> u32 {
-    ((COND_AL << 28)
-        | (OPCODE_ADD << 21))
-        | ((rn as u32) << 16)
-        | ((rd as u32) << 12)
-        | (rm as u32)
+    ((COND_AL << 28) | (OPCODE_ADD << 21)) | ((rn as u32) << 16) | ((rd as u32) << 12) | (rm as u32)
 }
 
 /// Encode `SUB Rd, Rn, Rm` with condition=AL, register mode.
 pub fn encode_sub(rd: usize, rn: usize, rm: usize) -> u32 {
-    ((COND_AL << 28)
-        | (OPCODE_SUB << 21))
-        | ((rn as u32) << 16)
-        | ((rd as u32) << 12)
-        | (rm as u32)
+    ((COND_AL << 28) | (OPCODE_SUB << 21)) | ((rn as u32) << 16) | ((rd as u32) << 12) | (rm as u32)
 }
 
 /// Encode the HLT sentinel.
@@ -414,7 +408,10 @@ mod tests {
 
         sim.run(&program);
         let val = sim.cpu.registers.read(1);
-        assert_eq!(val, 0x40000000, "Rotate right by 2 of 1 should be 0x40000000");
+        assert_eq!(
+            val, 0x40000000,
+            "Rotate right by 2 of 1 should be 0x40000000"
+        );
     }
 
     /// Unknown opcodes should produce a non-empty mnemonic, not crash.
