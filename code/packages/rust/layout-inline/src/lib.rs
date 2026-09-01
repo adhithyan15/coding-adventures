@@ -20,6 +20,13 @@ pub struct InlineLayout {
     pub line_count: u32,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct InlineRegion {
+    pub x: f64,
+    pub y: f64,
+    pub width: f64,
+}
+
 #[derive(Clone)]
 struct Wrapper {
     key: usize,
@@ -114,6 +121,9 @@ struct Line {
     max_ascent: f64,
     max_descent: f64,
     max_height: f64,
+    x: f64,
+    y: f64,
+    available_width: f64,
 }
 
 impl Line {
@@ -163,11 +173,43 @@ pub fn layout_inline_run_with_options<M, F>(
     max_width: f64,
     options: InlineOptions,
     measurer: &M,
-    mut layout_atomic: F,
+    layout_atomic: F,
 ) -> InlineLayout
 where
     M: TextMeasurer,
     F: FnMut(&LayoutNode, f64) -> PositionedNode,
+{
+    layout_inline_run_in_regions_with_options(
+        nodes,
+        max_width,
+        options,
+        measurer,
+        layout_atomic,
+        |y, _, _| InlineRegion {
+            x: 0.0,
+            y,
+            width: max_width,
+        },
+    )
+}
+
+/// Format an inline run against line-specific available regions.
+///
+/// The provider receives the next candidate y, tentative line height, and the
+/// width required by the next atom. It may advance y past an exclusion and
+/// returns the x offset and width available at that band.
+pub fn layout_inline_run_in_regions_with_options<M, F, R>(
+    nodes: &[LayoutNode],
+    max_width: f64,
+    options: InlineOptions,
+    measurer: &M,
+    mut layout_atomic: F,
+    mut region_for_line: R,
+) -> InlineLayout
+where
+    M: TextMeasurer,
+    F: FnMut(&LayoutNode, f64) -> PositionedNode,
+    R: FnMut(f64, f64, f64) -> InlineRegion,
 {
     let max_width = finite_non_negative(max_width);
     let mut sources = Vec::new();
@@ -179,6 +221,7 @@ where
     let mut lines = Vec::new();
     let mut line = Line::default();
     let mut pending_space = false;
+    let mut next_y = 0.0;
 
     for source in sources {
         match source {
@@ -194,13 +237,30 @@ where
                     for (index, segment) in segments.iter().enumerate() {
                         if !segment.is_empty() {
                             push_text_atom(
-                                &mut line, &mut lines, &node, key, &wrappers, segment, false,
-                                false, max_width, measurer,
+                                &mut line,
+                                &mut lines,
+                                &node,
+                                key,
+                                &wrappers,
+                                segment,
+                                false,
+                                false,
+                                measurer,
+                                &mut next_y,
+                                &mut region_for_line,
                             );
                         }
                         if index + 1 < segments.len() {
-                            line.push(break_atom(node.clone(), wrappers.clone(), measurer));
-                            flush_line(&mut line, &mut lines, false);
+                            let atom = break_atom(node.clone(), wrappers.clone(), measurer);
+                            push_atom_into_line(
+                                &mut line,
+                                &mut lines,
+                                atom,
+                                false,
+                                &mut next_y,
+                                &mut region_for_line,
+                            );
+                            flush_line(&mut line, &mut lines, false, &mut next_y);
                         }
                     }
                     pending_space = false;
@@ -225,8 +285,9 @@ where
                             piece,
                             pending_space,
                             white_space != WhiteSpace::NoWrap,
-                            max_width,
                             measurer,
+                            &mut next_y,
+                            &mut region_for_line,
                         );
                         pending_space = false;
                     }
@@ -244,8 +305,9 @@ where
                         piece.value,
                         pending_space || piece.leading_space,
                         white_space != WhiteSpace::NoWrap,
-                        max_width,
                         measurer,
+                        &mut next_y,
+                        &mut region_for_line,
                     );
                     pending_space = piece.trailing_space;
                 }
@@ -269,20 +331,31 @@ where
                     wrappers,
                     align,
                 };
-                if !line.atoms.is_empty() && line.width + atom.width > max_width {
-                    flush_line(&mut line, &mut lines, false);
-                }
-                line.push(atom);
+                push_atom_into_line(
+                    &mut line,
+                    &mut lines,
+                    atom,
+                    true,
+                    &mut next_y,
+                    &mut region_for_line,
+                );
             }
             SourceItem::Break { node, wrappers } => {
                 pending_space = false;
                 let atom = break_atom(node, wrappers, measurer);
-                line.push(atom);
-                flush_line(&mut line, &mut lines, true);
+                push_atom_into_line(
+                    &mut line,
+                    &mut lines,
+                    atom,
+                    false,
+                    &mut next_y,
+                    &mut region_for_line,
+                );
+                flush_line(&mut line, &mut lines, true, &mut next_y);
             }
         }
     }
-    flush_line(&mut line, &mut lines, false);
+    flush_line(&mut line, &mut lines, false, &mut next_y);
 
     position_lines(lines)
 }
@@ -410,7 +483,7 @@ fn flatten(
 }
 
 #[allow(clippy::too_many_arguments)]
-fn push_text_atom<M: TextMeasurer>(
+fn push_text_atom<M: TextMeasurer, R>(
     line: &mut Line,
     lines: &mut Vec<Line>,
     source: &LayoutNode,
@@ -419,19 +492,36 @@ fn push_text_atom<M: TextMeasurer>(
     word: &str,
     needs_space: bool,
     allow_wrap: bool,
-    max_width: f64,
     measurer: &M,
-) {
+    next_y: &mut f64,
+    region_for_line: &mut R,
+) where
+    R: FnMut(f64, f64, f64) -> InlineRegion,
+{
     let mut value = if needs_space && !line.atoms.is_empty() {
         format!(" {word}")
     } else {
         word.to_string()
     };
     let mut measured = measure_text(source, &value, measurer);
-    if allow_wrap && !line.atoms.is_empty() && line.width + measured.width > max_width {
-        flush_line(line, lines, false);
+    prepare_line_region(
+        line,
+        *next_y,
+        measured.height,
+        measured.width,
+        region_for_line,
+    );
+    if allow_wrap && !line.atoms.is_empty() && line.width + measured.width > line.available_width {
+        flush_line(line, lines, false, next_y);
         value = word.to_string();
         measured = measure_text(source, &value, measurer);
+        prepare_line_region(
+            line,
+            *next_y,
+            measured.height,
+            measured.width,
+            region_for_line,
+        );
     }
 
     let mut fragment = source.clone();
@@ -460,6 +550,53 @@ fn push_text_atom<M: TextMeasurer>(
         wrappers: wrappers.to_vec(),
         align: inherited_vertical_align(source, wrappers),
     });
+}
+
+fn push_atom_into_line<R>(
+    line: &mut Line,
+    lines: &mut Vec<Line>,
+    atom: Atom,
+    allow_wrap: bool,
+    next_y: &mut f64,
+    region_for_line: &mut R,
+) where
+    R: FnMut(f64, f64, f64) -> InlineRegion,
+{
+    prepare_line_region(line, *next_y, atom.height, atom.width, region_for_line);
+    if allow_wrap && !line.atoms.is_empty() && line.width + atom.width > line.available_width {
+        flush_line(line, lines, false, next_y);
+        prepare_line_region(line, *next_y, atom.height, atom.width, region_for_line);
+    }
+    line.push(atom);
+}
+
+fn prepare_line_region<R>(
+    line: &mut Line,
+    candidate_y: f64,
+    atom_height: f64,
+    required_width: f64,
+    region_for_line: &mut R,
+) where
+    R: FnMut(f64, f64, f64) -> InlineRegion,
+{
+    let tentative_height = line.max_height.max(atom_height).max(f64::EPSILON);
+    // Once a line owns a band, a wider next atom must wrap rather than move
+    // already placed atoms to a later band. Empty lines may advance past an
+    // exclusion when even their first atom cannot fit.
+    let required_width = if line.atoms.is_empty() {
+        required_width
+    } else {
+        0.0
+    };
+    let candidate_y = if line.atoms.is_empty() {
+        candidate_y
+    } else {
+        line.y
+    };
+    let region = region_for_line(candidate_y, tentative_height, required_width);
+    line.x = finite_non_negative(region.x);
+    line.y = finite_non_negative(region.y).max(candidate_y);
+    line.available_width = finite_non_negative(region.width);
 }
 
 fn measure_text<M: TextMeasurer>(
@@ -500,16 +637,17 @@ fn break_atom<M: TextMeasurer>(node: LayoutNode, wrappers: Vec<Wrapper>, measure
     }
 }
 
-fn flush_line(line: &mut Line, lines: &mut Vec<Line>, force_empty: bool) {
+fn flush_line(line: &mut Line, lines: &mut Vec<Line>, force_empty: bool, next_y: &mut f64) {
     if !line.atoms.is_empty() || force_empty {
+        *next_y = (*next_y).max(line.y + line.height());
         lines.push(std::mem::take(line));
     }
 }
 
 fn position_lines(lines: Vec<Line>) -> InlineLayout {
     let mut placed = Vec::new();
-    let mut y = 0.0;
     let mut width: f64 = 0.0;
+    let mut height: f64 = 0.0;
 
     for (line_index, line) in lines.into_iter().enumerate() {
         let line_height = line.height();
@@ -518,16 +656,17 @@ fn position_lines(lines: Vec<Line>) -> InlineLayout {
         } else {
             line_height
         };
-        let mut x = 0.0;
-        width = width.max(line.width);
+        let mut x = line.x;
+        width = width.max(line.x + line.width);
         for mut atom in line.atoms {
             atom.node.x = x;
-            atom.node.y = y + match atom.align {
-                VerticalAlign::Baseline => (baseline - atom.baseline).max(0.0),
-                VerticalAlign::Top => 0.0,
-                VerticalAlign::Middle => (line_height - atom.height) / 2.0,
-                VerticalAlign::Bottom => line_height - atom.height,
-            };
+            atom.node.y = line.y
+                + match atom.align {
+                    VerticalAlign::Baseline => (baseline - atom.baseline).max(0.0),
+                    VerticalAlign::Top => 0.0,
+                    VerticalAlign::Middle => (line_height - atom.height) / 2.0,
+                    VerticalAlign::Bottom => line_height - atom.height,
+                };
             x += atom.width;
             if !merge_with_previous(&mut placed, &atom, line_index) {
                 placed.push(PlacedAtom {
@@ -538,7 +677,7 @@ fn position_lines(lines: Vec<Line>) -> InlineLayout {
                 });
             }
         }
-        y += line_height;
+        height = height.max(line.y + line_height);
     }
 
     let line_count = placed
@@ -548,7 +687,7 @@ fn position_lines(lines: Vec<Line>) -> InlineLayout {
     InlineLayout {
         children,
         width,
-        height: y,
+        height,
         line_count,
     }
 }
@@ -799,6 +938,37 @@ mod tests {
         );
         assert_eq!(layout.children[1].x, 0.0);
         assert_eq!(layout.children[1].y, 10.0);
+    }
+
+    #[test]
+    fn line_regions_can_expand_after_an_exclusion_expires() {
+        let layout = layout_inline_run_in_regions_with_options(
+            &[text("one two three four", 10.0)],
+            100.0,
+            InlineOptions::default(),
+            &Mono,
+            |_, _| unreachable!(),
+            |y, _, _| {
+                if y < 10.0 {
+                    InlineRegion {
+                        x: 40.0,
+                        y,
+                        width: 40.0,
+                    }
+                } else {
+                    InlineRegion {
+                        x: 0.0,
+                        y,
+                        width: 100.0,
+                    }
+                }
+            },
+        );
+        assert_eq!(layout.line_count, 2);
+        assert_eq!(layout.children[0].x, 40.0);
+        assert_eq!(layout.children[1].x, 0.0);
+        assert_eq!(layout.children[1].y, 10.0);
+        assert_eq!(layout.width, 75.0);
     }
 
     #[test]

@@ -44,6 +44,8 @@ per-side spacing and borders, text alignment, and white-space flow. Parsed
 Table display roles and HTML span/section metadata map to a typed table
 contract alongside computed layout mode, border model/spacing, caption side,
 and cell vertical alignment.
+Computed `float` and `clear` values map to the typed `ext["float"]` contract;
+HTML and hosts remain unaware of exclusion geometry.
 
 This bridge intentionally keeps CSS syntax in `css-parser`, browser loading in
 `venture-browser-core`, and inline geometry in the layout engines. It projects

@@ -14,6 +14,7 @@ use layout_flexbox::{
     flex_ext, AlignContent, AlignItems, AlignSelf, FlexBasis, FlexContainerStyle, FlexDirection,
     FlexItemStyle, FlexWrap, JustifyContent,
 };
+use layout_float::{float_ext, Clear, FloatSide, FloatStyle};
 use layout_grid::{
     grid_ext, GridAlignment, GridAutoFlow, GridContainerStyle, GridContentAlignment, GridItemStyle,
     GridSelfAlignment, GridTrack,
@@ -148,6 +149,7 @@ pub struct HtmlComputedStyle {
     pub box_sizing: String,
     pub text_align: TextAlign,
     pub white_space: String,
+    pub float: FloatStyle,
     pub flex_container: FlexContainerStyle,
     pub flex_item: FlexItemStyle,
     pub grid_container: GridContainerStyle,
@@ -323,6 +325,7 @@ where
     layout
         .ext
         .insert("block".into(), block_ext(node, display, &style));
+    layout.ext.insert("float".into(), float_ext(style.float));
     layout.ext.insert(
         "flex".into(),
         flex_ext(style.flex_container, style.flex_item),
@@ -451,6 +454,7 @@ where
     style.border_width = Edges::default();
     style.border_color = [None; 4];
     style.box_sizing = "content-box".into();
+    style.float = FloatStyle::default();
     style.flex_container = FlexContainerStyle::default();
     style.flex_item = FlexItemStyle::default();
     style.grid_container = GridContainerStyle::default();
@@ -595,6 +599,7 @@ fn root_computed_style(context: &HtmlStyleContext) -> HtmlComputedStyle {
         box_sizing: "content-box".into(),
         text_align: TextAlign::Start,
         white_space: "normal".into(),
+        float: FloatStyle::default(),
         flex_container: FlexContainerStyle::default(),
         flex_item: FlexItemStyle::default(),
         grid_container: GridContainerStyle::default(),
@@ -765,6 +770,21 @@ fn apply_declaration_winners(
                     .then(TextDecoration::underline);
             }
             "display" => style.display = value.first().cloned(),
+            "float" => {
+                style.float.side = match value.first().map(String::as_str) {
+                    Some("left") => FloatSide::Left,
+                    Some("right") => FloatSide::Right,
+                    _ => FloatSide::None,
+                }
+            }
+            "clear" => {
+                style.float.clear = match value.first().map(String::as_str) {
+                    Some("left") => Clear::Left,
+                    Some("right") => Clear::Right,
+                    Some("both") => Clear::Both,
+                    _ => Clear::None,
+                }
+            }
             "position" => {
                 style.positioned.position = match value.first().map(String::as_str) {
                     Some("relative") => Position::Relative,
@@ -2753,6 +2773,45 @@ mod tests {
         assert_eq!(find_positioned_by_id(stage, "front").unwrap().y, 10.0);
         assert_eq!(stage.children.first().unwrap().id.as_deref(), Some("back"));
         assert_eq!(stage.children.last().unwrap().id.as_deref(), Some("front"));
+    }
+
+    #[test]
+    fn computed_float_and_clear_values_drive_exclusion_geometry() {
+        let render = parse_browser_render_tree(
+            "<main id='stage'><div id='left'>L</div><div id='right'>R</div>\
+             <p id='flow'>one two three four five six</p><div id='clear'>C</div></main>",
+        )
+        .unwrap();
+        let context = HtmlStyleContext::with_author_stylesheets(
+            mosaic_html_theme(),
+            ["#stage { width: 240px; } \
+              #left { float: left; width: 70px; height: 48px; } \
+              #right { float: right; width: 50px; height: 36px; } \
+              #flow { margin: 0; } #clear { clear: both; height: 20px; }"],
+        )
+        .unwrap();
+        let layout =
+            html_render_tree_to_layout_with_style_context(&render, &context, &never_visited);
+        assert_eq!(
+            FloatStyle::from_layout(find_by_id(&layout, "left").unwrap()).side,
+            FloatSide::Left
+        );
+        assert_eq!(
+            FloatStyle::from_layout(find_by_id(&layout, "clear").unwrap()).clear,
+            Clear::Both
+        );
+
+        let positioned = layout_block(&layout, constraints_width(240.0), &TestMeasurer);
+        let stage = find_positioned_by_id(&positioned, "stage").unwrap();
+        assert_eq!(find_positioned_by_id(stage, "left").unwrap().x, 0.0);
+        assert_eq!(
+            find_positioned_by_id(stage, "right").unwrap().x,
+            stage.width - 50.0
+        );
+        let flow = find_positioned_by_id(stage, "flow").unwrap();
+        assert!(flow.x >= 70.0);
+        assert!(flow.x + flow.width <= stage.width - 50.0);
+        assert!(find_positioned_by_id(stage, "clear").unwrap().y >= 48.0);
     }
 
     #[test]

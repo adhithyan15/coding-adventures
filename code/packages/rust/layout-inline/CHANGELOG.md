@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Add line-specific region formatting with horizontal offsets and vertical
+  advancement for float/exclusion integration while preserving wrapper
+  fragmentation and baseline alignment.
+
+## Unreleased
+
 - Replaced whitespace/code-point fragmentation with host-neutral Unicode
   line-break and grapheme analysis, including inherited HTML direction.
 

@@ -116,17 +116,18 @@ keep the browser shell from being complete.
 
 Completed convergence foundations: exact zero-missing HTML tokenizer/tree
 construction ratchets; native generated-host interaction gates; shared
-scrollbars, hover status, and cursors; and reusable fragmented inline layout.
+scrollbars, hover status, and cursors; reusable fragmented/international inline
+layout; deterministic real-page visual acceptance; and host-neutral flex,
+grid, positioned/clipped, table, and float formatting contexts.
 
-1. **P1 — real-page visual acceptance.** Add deterministic screenshot and
-   geometry fixtures for representative 1993-era pages, including wrapped
-   links, mixed fonts, preformatted text, images, and scrolling.
-2. **P2 — international inline convergence.** Replace whitespace-only break
-   opportunities with a reusable UAX #14 component, then add bidi/RTL as a
-   separate shaping/layout phase rather than embedding either in HTML.
-3. **P2 — richer inline box edges.** Preserve padding, margins, borders, and
+1. **P1 — richer inline box edges.** Preserve padding, margins, borders, and
    decoration continuation policy across semantic wrapper fragments before
    expanding the supported CSS surface.
+2. **P1 — intrinsic replaced sizing.** Resolve image intrinsic dimensions,
+   aspect ratios, min/max constraints, and object-fit geometry before layout so
+   normal, flex, grid, table, and floated replaced boxes share one answer.
+3. **P2 — generated and marker boxes.** Add reusable list-marker and generated
+   content boxes without teaching HTML, paint, or native hosts special cases.
 
 Completed in the visited-link convergence phase: `browser-navigation` owns
 canonical, fragment-insensitive URL membership and reusable history;

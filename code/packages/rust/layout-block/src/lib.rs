@@ -43,7 +43,8 @@
 //!
 //! ### Explicit non-goals (v1)
 //!
-//! - `float` / `clear`; positioned descendants delegate to `layout-positioned`
+//! - Floats and clear delegate to `layout-float`; positioned descendants
+//!   delegate to `layout-positioned`.
 //! - Full CSS inline formatting: justification, UAX #14 breaking, and
 //!   edge-decoration continuation. Fragmentation and baseline alignment are
 //!   delegated to the reusable `layout-inline` crate.
@@ -53,8 +54,9 @@
 //! Each exclusion matches the spec's documented non-goals.
 
 use layout_flexbox::layout_flexbox_with;
+use layout_float::{shrink_to_fit, ExclusionSpace, FloatStyle};
 use layout_grid::layout_grid_with;
-use layout_inline::{layout_inline_run_with_options, InlineOptions};
+use layout_inline::{layout_inline_run_in_regions_with_options, InlineOptions, InlineRegion};
 use layout_ir::{
     Constraints, Content, Edges, ExtValue, LayoutNode, MeasureResult, PositionedNode, SizeValue,
     TextContent, TextMeasurer,
@@ -373,22 +375,64 @@ fn lay_out_container<M: TextMeasurer>(
     let mut prev_margin_bottom: f64 = 0.0;
     let mut have_placed_block = false;
     let mut index = 0;
+    let mut exclusions = ExclusionSpace::new(inner_max_width);
 
     while index < node.children.len() {
         let child = &node.children[index];
         let child_margin = child.margin.unwrap_or_default();
         let child_display = display_value(child);
+        let float_style = FloatStyle::from_layout(child);
+
+        if float_style.is_floating() {
+            let candidate_y = exclusions.clearance_y(float_style.clear, cursor_y);
+            let band = exclusions.available_band(candidate_y, 1.0);
+            let (preferred_min, preferred) = intrinsic_inline_sizes(child, measurer);
+            let available = (band.width - child_margin.left - child_margin.right).max(0.0);
+            let float_width = resolve_float_width(child, preferred_min, preferred, available);
+            let mut float_node = child.clone();
+            float_node.width = Some(SizeValue::Fixed(float_width));
+            let mut positioned = lay_out_any(
+                &float_node,
+                unconstrained_height(float_width + child_margin.left + child_margin.right),
+                measurer,
+                0.0,
+                0.0,
+                LayoutContext {
+                    parent_abs_x: context.parent_abs_x + x,
+                    parent_abs_y: context.parent_abs_y + y,
+                    ..context
+                },
+            );
+            let footprint_width = positioned.width + child_margin.left + child_margin.right;
+            let footprint_height = positioned.height + child_margin.top + child_margin.bottom;
+            let placement = exclusions.place(
+                float_style.side,
+                candidate_y,
+                footprint_width,
+                footprint_height,
+            );
+            positioned.x = padding.left + placement.x + child_margin.left;
+            positioned.y = placement.y + child_margin.top;
+            max_inline_right = max_inline_right.max(positioned.x + positioned.width);
+            children_positioned.push(positioned);
+            index += 1;
+            continue;
+        }
+
+        cursor_y = exclusions.clearance_y(float_style.clear, cursor_y);
 
         if is_inline_level(child_display) || child_display == Some("line-break") {
             let start = index;
             while index < node.children.len() {
                 let display = display_value(&node.children[index]);
-                if !is_inline_level(display) && display != Some("line-break") {
+                if FloatStyle::from_layout(&node.children[index]).is_floating()
+                    || (!is_inline_level(display) && display != Some("line-break"))
+                {
                     break;
                 }
                 index += 1;
             }
-            let inline = layout_inline_run_with_options(
+            let inline = layout_inline_run_in_regions_with_options(
                 &node.children[start..index],
                 inner_max_width,
                 InlineOptions::from_node(node),
@@ -406,6 +450,17 @@ fn lay_out_container<M: TextMeasurer>(
                             ..context
                         },
                     )
+                },
+                |line_y, line_height, required_width| {
+                    let candidate = cursor_y + line_y;
+                    let placed =
+                        exclusions.next_y_with_width(candidate, line_height, required_width);
+                    let band = exclusions.available_band(placed, line_height);
+                    InlineRegion {
+                        x: band.x,
+                        y: placed - cursor_y,
+                        width: band.width,
+                    }
                 },
             );
             for mut fragment in inline.children {
@@ -439,13 +494,14 @@ fn lay_out_container<M: TextMeasurer>(
         // Child constraints: width-limited by the container's inner
         // content area; height is unconstrained here — the parent
         // accumulates it from children.
-        let child_constraints = unconstrained_height(inner_max_width);
+        let band = exclusions.available_band(cursor_y, 1.0);
+        let child_constraints = unconstrained_height(band.width);
 
         // Pass parent-relative x/y to the child. Coordinates are
         // relative to the parent's content-area origin (per UI02
         // spec). `cursor_y` already has the (collapsed) top-margin
         // spacing added — the leaf primitives do NOT re-add margin.
-        let child_x = padding.left + child_margin.left;
+        let child_x = padding.left + band.x + child_margin.left;
         let child_y = cursor_y;
 
         let mut positioned = lay_out_any(
@@ -461,7 +517,7 @@ fn lay_out_container<M: TextMeasurer>(
             },
         );
         let free_inline =
-            (inner_max_width - positioned.width - child_margin.left - child_margin.right).max(0.0);
+            (band.width - positioned.width - child_margin.left - child_margin.right).max(0.0);
         let auto_left = block_bool(child, "marginLeftAuto");
         let auto_right = block_bool(child, "marginRightAuto");
         if auto_left && auto_right {
@@ -476,7 +532,7 @@ fn lay_out_container<M: TextMeasurer>(
         children_positioned.push(positioned);
         index += 1;
     }
-    let content_height = cursor_y + padding.bottom;
+    let content_height = cursor_y.max(exclusions.bottom()) + padding.bottom;
 
     // Resolve outer height: explicit hint overrides content height.
     let outer_height = resolve_container_height(node, content_height);
@@ -551,6 +607,59 @@ fn block_bool(node: &LayoutNode, key: &str) -> bool {
         Some(ExtValue::Map(values)) => matches!(values.get(key), Some(ExtValue::Bool(true))),
         _ => false,
     }
+}
+
+fn resolve_float_width(
+    node: &LayoutNode,
+    preferred_min: f64,
+    preferred: f64,
+    available: f64,
+) -> f64 {
+    let raw = match node.width {
+        Some(SizeValue::Fixed(value)) => value,
+        Some(SizeValue::Percent(fraction)) => available * fraction.clamp(0.0, 1.0),
+        Some(SizeValue::Fill | SizeValue::Wrap) | None => {
+            shrink_to_fit(preferred_min, preferred, available)
+        }
+    };
+    clamp_with_min_max(raw, node.min_width, node.max_width).min(available)
+}
+
+fn intrinsic_inline_sizes<M: TextMeasurer>(node: &LayoutNode, measurer: &M) -> (f64, f64) {
+    if let Some(Content::Text(text)) = &node.content {
+        let preferred = measurer.measure(&text.value, &text.font, None).width;
+        let preferred_min = text
+            .value
+            .split(char::is_whitespace)
+            .map(|word| measurer.measure(word, &text.font, None).width)
+            .fold(0.0, f64::max);
+        return (preferred_min, preferred);
+    }
+    if matches!(node.content, Some(Content::Image(_))) {
+        let width = match node.width {
+            Some(SizeValue::Fixed(width)) => width,
+            _ => node.min_width.unwrap_or(0.0),
+        };
+        return (width, width);
+    }
+    let mut preferred_min: f64 = 0.0;
+    let mut preferred: f64 = 0.0;
+    let inline_children = node
+        .children
+        .iter()
+        .all(|child| is_inline_level(display_value(child)));
+    for child in &node.children {
+        let (child_min, child_preferred) = intrinsic_inline_sizes(child, measurer);
+        preferred_min = preferred_min.max(child_min);
+        if inline_children {
+            preferred += child_preferred;
+        } else {
+            preferred = preferred.max(child_preferred);
+        }
+    }
+    let padding = node.padding.unwrap_or_default();
+    let horizontal = padding.left + padding.right;
+    (preferred_min + horizontal, preferred + horizontal)
 }
 
 fn resolve_container_width(node: &LayoutNode, outer_max_width: f64) -> f64 {
@@ -1067,6 +1176,87 @@ mod tests {
         assert!((out.children[1].y - 64.8).abs() < 1e-6);
     }
 
+    #[test]
+    fn left_and_right_floats_create_a_shared_exclusion_band() {
+        let left = LayoutNode::container(vec![inline_text("Left", 10.0)])
+            .with_width(size_fixed(80.0))
+            .with_height(size_fixed(40.0))
+            .with_id("left")
+            .with_ext("float", float_style("left", "none"));
+        let right = LayoutNode::container(vec![inline_text("Right", 10.0)])
+            .with_width(size_fixed(60.0))
+            .with_height(size_fixed(30.0))
+            .with_id("right")
+            .with_ext("float", float_style("right", "none"));
+        let text = inline_text("one two three four five", 10.0).with_id("flow");
+        let out = layout_block(
+            &LayoutNode::container(vec![left, right, text]),
+            constraints_fixed(240.0, 200.0),
+            &MonoMeasurer::new(),
+        );
+        assert_eq!(out.children[0].x, 0.0);
+        assert_eq!(out.children[1].x, 180.0);
+        assert!(out.children[2].x >= 80.0);
+        assert!(out.children[2].x + out.children[2].width <= 180.0);
+        assert_eq!(out.height, 40.0);
+    }
+
+    #[test]
+    fn clear_both_moves_a_block_below_float_exclusions() {
+        let floated = LayoutNode::empty()
+            .with_width(size_fixed(90.0))
+            .with_height(size_fixed(55.0))
+            .with_ext("float", float_style("left", "none"));
+        let clear = LayoutNode::empty()
+            .with_height(size_fixed(20.0))
+            .with_id("clear")
+            .with_ext("float", float_style("none", "both"));
+        let out = layout_block(
+            &LayoutNode::container(vec![floated, clear]),
+            constraints_fixed(240.0, 200.0),
+            &MonoMeasurer::new(),
+        );
+        assert_eq!(out.children[1].y, 55.0);
+        assert_eq!(out.height, 75.0);
+    }
+
+    #[test]
+    fn float_margins_participate_in_exclusion_and_containment() {
+        let floated = LayoutNode::empty()
+            .with_width(size_fixed(50.0))
+            .with_height(size_fixed(20.0))
+            .with_margin(Edges {
+                top: 5.0,
+                right: 15.0,
+                bottom: 7.0,
+                left: 10.0,
+            })
+            .with_ext("float", float_style("left", "none"));
+        let flow = inline_text("flow", 10.0);
+        let out = layout_block(
+            &LayoutNode::container(vec![floated, flow]),
+            constraints_fixed(200.0, 100.0),
+            &MonoMeasurer::new(),
+        );
+        assert_eq!((out.children[0].x, out.children[0].y), (10.0, 5.0));
+        assert_eq!(out.children[1].x, 75.0);
+        assert_eq!(out.height, 32.0);
+    }
+
+    #[test]
+    fn auto_width_float_uses_intrinsic_shrink_to_fit_width() {
+        let floated = LayoutNode::container(vec![inline_text("small words", 10.0)])
+            .with_ext("float", float_style("right", "none"));
+        let out = layout_block(
+            &LayoutNode::container(vec![floated]),
+            constraints_fixed(240.0, 200.0),
+            &MonoMeasurer::new(),
+        );
+        assert_eq!(out.children[0].width, 55.0);
+        assert_eq!(out.children[0].x, 185.0);
+        assert_eq!(out.height, 12.0);
+    }
+
     fn inline_text(value: &str, size: f64) -> LayoutNode {
         LayoutNode::leaf_text(text(value, size))
             .with_width(size_wrap())
@@ -1084,5 +1274,12 @@ mod tests {
             "display".into(),
             ExtValue::Str(value.into()),
         )]))
+    }
+
+    fn float_style(side: &str, clear: &str) -> ExtValue {
+        ExtValue::Map(std::collections::HashMap::from([
+            ("side".into(), ExtValue::Str(side.into())),
+            ("clear".into(), ExtValue::Str(clear.into())),
+        ]))
     }
 }

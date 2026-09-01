@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add a float fixture covering opposing exclusions, flow bands, clearance,
+  shrink-to-fit sizing, recursive paint, and shared host loading.
 - Add a table fixture covering section ordering, fixed columns, captions,
   row/column spans, spacing, recursive paint, and shared host loading.
 - Add a positioned fixture covering out-of-flow geometry, clipping, fixed

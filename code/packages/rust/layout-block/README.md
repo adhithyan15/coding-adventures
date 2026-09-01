@@ -18,6 +18,9 @@ Handles:
   wrapper splitting, measured baseline alignment, and explicit line breaks.
 - Flex, grid, and table containers delegate through reusable formatting
   contexts while preserving the same recursive child-layout boundary.
+- Float and clear values delegate to `layout-float`; left/right exclusions,
+  intrinsic shrink-to-fit sizing, margin footprints, clearance, and containing
+  block height all share one formatting-context state.
 - Nested containers with padding on both outer and inner sides.
 - Text leaves — width/height resolved by the supplied measurer with
   wrap-at-max-width semantics.
@@ -29,7 +32,6 @@ Handles:
 Out of scope for v1 (per UI07):
 - Unicode UAX #14 line-breaking and bidirectional text.
 - Full CSS inline edge-decoration continuation across fragments.
-- `float` / `clear`.
 - RTL / bidirectional text.
 - CSS columns.
 - Parent-child margin collapse.
@@ -40,7 +42,8 @@ existing `document-ast-to-layout` output preserves its original geometry.
 
 ## Tests
 
-18 unit tests cover single leaves, block stacking, atomic inline placement and
+23 unit tests cover single leaves, block stacking, float exclusions and
+clearance, intrinsic shrink-to-fit sizing, atomic inline placement and
 wrapping, margin collapsing,
 nested containers, size hints, min/max clamping, content passthrough,
 empty containers, and a realistic document shape.

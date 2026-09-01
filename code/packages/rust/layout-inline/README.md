@@ -2,6 +2,10 @@
 
 Reusable inline formatting contexts for the shared Layout IR.
 
+`layout_inline_run_in_regions_with_options` accepts a line-region provider so
+the same fragmentation and semantic-wrapper machinery can flow around reusable
+float exclusions, widening later lines when an exclusion expires.
+
 `layout_inline_run` consumes producer-neutral inline `LayoutNode` siblings and
 returns positioned fragments. Text is split at line-break opportunities,
 line boxes align mixed fonts and replaced content, and semantic inline

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Project computed `float` and `clear` values into the reusable
+  `layout-float` extension contract.
 - Project CSS table layout, border spacing/collapse, caption side, vertical
   alignment, section kinds, and HTML row/column spans into `ext["table"]`.
 
