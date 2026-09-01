@@ -349,6 +349,17 @@ graph layout, and backend-neutral PaintScene lowering. A native Metal-to-PNG
 fixture validates this documented subset; icons, classes, and additional
 mindmap shapes remain explicitly outside the partial compatibility level.
 
+### Block Native Slice
+
+The initial Mermaid 11.16.1 block slice parses `block` and `block-beta` through
+dedicated portable grammars into typed grid IR. The subset preserves positive
+column counts, flat node ordering, explicit `space` slots, square, rounded,
+circular, and diamond nodes, titles, accessibility metadata, and directed
+connections with optional labels. `diagram-layout-grid` resolves deterministic
+cell geometry before the shared backend-neutral PaintScene lowering path. A
+native Metal-to-PNG fixture gates this slice; nested blocks, spans, classes, and
+style directives remain explicitly unsupported at the partial level.
+
 ### Structural Groups
 
 Nested containers such as C4 boundaries are semantic structural groups, not
