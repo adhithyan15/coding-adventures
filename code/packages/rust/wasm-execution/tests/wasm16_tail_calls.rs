@@ -22,7 +22,7 @@
 //! survive on a default thread stack).
 
 use std::rc::Rc;
-use wasm_execution::{HostFunction, Table, WasmEngineConfig, WasmExecutionEngine, WasmValue};
+use wasm_execution::{HostFunction, Table, TableElement, WasmEngineConfig, WasmExecutionEngine, WasmValue};
 use wasm_types::{FuncType, FunctionBody, WasmModule};
 
 fn engine_from_wat(wat: &str) -> (WasmExecutionEngine, WasmModule) {
@@ -42,7 +42,7 @@ fn engine_from_wat(wat: &str) -> (WasmExecutionEngine, WasmModule) {
     for elem in &module.elements {
         if let Some(table) = tables.get_mut(elem.table_index as usize) {
             for (j, &func_idx) in elem.function_indices.iter().enumerate() {
-                table.set(j as u32, func_idx).expect("elem segment should fit the table");
+                table.set(j as u32, func_idx.map(TableElement::Raw)).expect("elem segment should fit the table");
             }
         }
     }

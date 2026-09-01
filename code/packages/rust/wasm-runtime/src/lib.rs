@@ -34,7 +34,7 @@ use std::time::{Instant, SystemTime, UNIX_EPOCH};
 
 use wasm_execution::{
     evaluate_const_expr, evaluate_const_expr_gc, GcObject, HostFunction, HostInterface,
-    LinearMemory, Table, TrapError, WasmEngineConfig, WasmExecutionEngine, WasmValue,
+    LinearMemory, Table, TableElement, TrapError, WasmEngineConfig, WasmExecutionEngine, WasmValue,
 };
 use wasm_module_parser::WasmModuleParser;
 use wasm_types::{
@@ -1943,8 +1943,22 @@ impl WasmRuntime {
                 // MAX_TABLE_ELEMENTS` (far below `u32::MAX`) -- so this
                 // cast never loses information for any value that reaches
                 // this loop body.
+                // W35 slice 2 mechanical fallout: `Table::set` now takes a
+                // real `TableElement`, not a bare `u32` -- see
+                // `code/specs/W35-wasm-cross-instance-function-identity.md`
+                // §6. `TableElement::Raw` wraps this active elem segment's
+                // entry verbatim, UNRESOLVED, exactly as it always was:
+                // real resolution (via `WasmExecutionContext::resolve_
+                // function_ref_for_dispatch`) happens lazily, at
+                // `call_indirect`'s own read site, once this instance's
+                // `WasmExecutionContext` actually exists (it doesn't yet,
+                // here in `instantiate()`). This is a purely mechanical
+                // type-following change, not new cross-instance logic --
+                // resolving eagerly here, using the DECLARING instance's
+                // own context, is W35's third slice (`LocalFunctionRef`),
+                // deliberately out of this slice's scope.
                 for (j, &func_idx) in elem.function_indices.iter().enumerate() {
-                    table.set((offset_num + j as u64) as u32, func_idx)?;
+                    table.set((offset_num + j as u64) as u32, func_idx.map(TableElement::Raw))?;
                 }
             }
         }
