@@ -6,6 +6,7 @@ sequence: 210
 chapter: 9
 type: word
 headword: મજા
+romanization: "majā"
 gloss: enjoyment, fun — and the reply "હું મજામાં છું"
 concept_tag: WORD-WELL
 prerequisites: [GU-C03-hun, GU-C03-tame-kem-chho, GU-W02-vocalic-r]

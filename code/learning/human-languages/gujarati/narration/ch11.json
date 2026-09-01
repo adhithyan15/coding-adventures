@@ -4,14 +4,14 @@
   "chapter": 11,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b0d2fc9d6326f9d3",
+  "sourceHash": "fnv1a64:6db7dcb6b2e752cd",
   "lessons": [
     {
       "id": "GU-C05-bolvun",
       "sequence": 290,
       "title": "બોલવું (bolvũ) — \"to speak,\" your first full verb",
       "headword": "બોલવું",
-      "romanization": "",
+      "romanization": "bolvũ",
       "gloss": "to speak",
       "script": "gujarati",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a39a65a9b6df1354",
+      "sourceHash": "fnv1a64:1aed8d621c978f0c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -165,7 +165,7 @@
       "sequence": 300,
       "title": "હું ગુજરાતી બોલું છું (hũ gujarātī bolũ chhũ) — \"I speak Gujarati\"",
       "headword": "હું ગુજરાતી બોલું છું",
-      "romanization": "",
+      "romanization": "hũ gujarātī bolũ chhũ",
       "gloss": "I speak Gujarati",
       "script": "gujarati",
       "modality": "sight",
@@ -173,7 +173,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4f161b0669003e7d",
+      "sourceHash": "fnv1a64:f4520a9106a02ed3",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -220,7 +220,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "હું ગુજરાતી બોલું છું = હું (hũ, \"I\") + ગુજરાતી (gujarātī, the object) + બોલું છું (bolũ chhũ, \"speak\") — \"I Gujarati speak,\" verb last. The name ગુજરાત (Gujarāt) comes from the Gurjar — a people who entered western India around the 6th–8th centuries and gave their name to the land (Gurjara-deśa becomes Gujarāt); gujarātī is \"[the language] of Gujarat.\" So the language is named after a people, and the region after them in turn."
+              "text": "હું ગુજરાતી બોલું છું (hũ gujarātī bolũ chhũ) = હું (hũ, \"I\") + ગુજરાતી (gujarātī, the object) + બોલું છું (bolũ chhũ, \"speak\") — \"I Gujarati speak,\" verb last. The name ગુજરાત (Gujarāt) comes from the Gurjar — a people who entered western India around the 6th–8th centuries and gave their name to the land (Gurjara-deśa becomes Gujarāt); gujarātī is \"[the language] of Gujarat.\" So the language is named after a people, and the region after them in turn."
             }
           ]
         },
@@ -299,7 +299,7 @@
       "sequence": 310,
       "title": "કામ કરવું (kām karvũ) — \"to work\"",
       "headword": "કામ કરવું",
-      "romanization": "",
+      "romanization": "kām karvũ",
       "gloss": "to work (lit. \"work-do\")",
       "script": "gujarati",
       "modality": "sight",
@@ -307,7 +307,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5f9642ea6560d78b",
+      "sourceHash": "fnv1a64:cfb85864c46a1bb7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -434,7 +434,7 @@
       "sequence": 320,
       "title": "રહેવું (rahevũ) — \"to live, to stay\"",
       "headword": "રહેવું",
-      "romanization": "",
+      "romanization": "rahevũ",
       "gloss": "to live, to stay",
       "script": "gujarati",
       "modality": "sight",
@@ -442,7 +442,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3b605c3e7f93e572",
+      "sourceHash": "fnv1a64:0ca947cff8f80227",
       "notice": {
         "modality": "sight",
         "needs": [

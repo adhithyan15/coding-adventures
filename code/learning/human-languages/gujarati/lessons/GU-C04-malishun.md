@@ -6,6 +6,7 @@ sequence: 240
 chapter: 10
 type: word
 headword: મળીશું
+romanization: "maḷīshũ"
 gloss: (we) will meet
 concept_tag: GU-VERB-MALVU
 prerequisites: [GU-C03-hun]

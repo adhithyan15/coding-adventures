@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C24-day-parts-four",
+    "language": "gujarati",
+    "chapter": 28,
+    "sequence": 1200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c50c55ccf97b60a2"
+  },
+  "findings": []
+}
