@@ -5055,12 +5055,18 @@ the Rust, Python, and TypeScript surfaces together.
      must be finite and positive before element lowering.
 
 21. Rust BJT saturation-current-temperature-exponent parser parity.
-   - Status: prioritized next after the direct JFET model-card audit.
-   - The engine and Python/TypeScript facades lower finite BJT `XTI` values
-     into the saturation-current-temperature-exponent field, while the Rust
-     element lowerer still leaves the engine default in place.
+   - Status: completed by the Rust BJT temperature-exponent slice.
+   - Finite BJT `XTI` values now lower into the engine
+     saturation-current-temperature-exponent field, while non-finite input is
+     rejected before element lowering.
 
-22. Grammar-backed parser and app facade.
+22. Rust BJT energy-gap parser parity.
+   - Status: prioritized next after the BJT temperature-exponent slice.
+   - The engine and Python/TypeScript facades lower positive finite BJT `EG`
+     values into the energy-gap field, while the Rust element lowerer still
+     leaves the engine default in place.
+
+23. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
      syntax facade as the grammar evolves, even if that breaks current
      pre-release parser APIs.
@@ -5068,7 +5074,7 @@ the Rust, Python, and TypeScript surfaces together.
      toward packaging, WebAssembly embedding, and product integration backed by
      the same public parser contract.
 
-23. Deck compatibility follow-up.
+24. Deck compatibility follow-up.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.

@@ -1369,7 +1369,7 @@ Rload out 0 1k
 fn parses_bjt_models_into_operating_point_circuits() {
     let parsed = parse_netlist(
         r#"
-.model fast NPN(IS=1e-13 BF=120 VT=26m CJE=2p CJC=3p TF=4n TR=5n)
+.model fast NPN(IS=1e-13 BF=120 VT=26m CJE=2p CJC=3p TF=4n TR=5n XTI=2.5)
 Vcc vcc 0 DC 5
 Vbase base 0 DC 0.7
 Q1 vcc base out fast
@@ -1405,6 +1405,7 @@ Rload out 0 1k
     assert_close(bjt.base_collector_capacitance, 3.0e-12);
     assert_close(bjt.forward_transit_time, 4.0e-9);
     assert_close(bjt.reverse_transit_time, 5.0e-9);
+    assert_close(bjt.saturation_current_temperature_exponent, 2.5);
 
     let result = dc_op(&parsed.circuit).unwrap();
     let out = result.voltage("out").unwrap();
@@ -1429,6 +1430,13 @@ Q1 vcc base out pullup
     assert_close(bjt.saturation_current, 2.0e-14);
     assert_close(bjt.forward_beta, 80.0);
     assert_close(bjt.thermal_voltage, 27.0e-3);
+}
+
+#[test]
+fn rejects_non_finite_bjt_temperature_exponent() {
+    let error = parse_netlist(".model bad NPN(XTI=1e999)\nQ1 c b e bad").unwrap_err();
+
+    assert!(error.to_string().contains("BJT XTI must be finite"));
 }
 
 #[test]

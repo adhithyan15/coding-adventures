@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Lower finite BJT `XTI` model-card values into the engine saturation-current
+  temperature exponent and reject non-finite values before element lowering.
 - Validate JFET `BETA` / `BET` transconductance before lowering.
 - Lower finite optional JFET `BETATCE` mobility-temperature coefficients.
 - Lower finite JFET `BEX` mobility-temperature exponents.
