@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Changed — declare Hindi's time-telling verb
+
+- Chapter 18 now declares **घंटा / बजना** as its headword instead of naming
+  only “hour / bell.” The lesson already defines **बजना** as “to strike, to
+  toll,” teaches it as Hindi's time-telling verb, practises singular and plural
+  clock sentences, and asks learners to recall its literal meaning; its
+  metadata now exposes that assessed verb.
+
 ### Changed — declare the complete Hindi book-register set
 
 - Chapter 37 now declares **किताब / पुस्तक / पोथा** as its headword instead of
