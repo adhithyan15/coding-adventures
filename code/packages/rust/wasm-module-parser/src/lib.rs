@@ -1633,6 +1633,29 @@ impl WasmModuleParser {
             }
         }
 
+        // Real corpus bug (`binary.wast`'s "memory.init requires a data
+        // count section" / "data.drop requires a data count section"
+        // `assert_malformed` cases -- the W-addendum 2026-09-01 LEB128
+        // prioritization pass): the spec requires a data count section
+        // (§12) whenever the code section uses `memory.init`/`data.drop`
+        // (`0xFC 0x08`/`0xFC 0x09`), REGARDLESS of whether the data
+        // section's own segment count would otherwise agree. This crate
+        // doesn't walk function-body instructions byte-by-byte (`code` is
+        // stored raw, see `parse_code_section`'s own doc comment) -- and
+        // deliberately does NOT start here, since a byte-pattern scan for
+        // `0xFC 0x08`/`0xFC 0x09` without real instruction-boundary
+        // tracking risks a false positive on some OTHER instruction's raw
+        // immediate bytes (e.g. an `f64.const`'s 8 literal bytes)
+        // coincidentally containing that pair. `wasm-validator`'s
+        // type-checker already walks every instruction precisely (it has
+        // to, to type-check them) and already has dedicated `0x08`/`0x09`
+        // arms -- this flag just hands it the one piece of binary-only
+        // context it has no other way to recover once section parsing is
+        // done: whether §12 was present at all. See `WasmModule::
+        // missing_data_count_section`'s own doc comment for why this is
+        // phrased as "missing" (default `false`) rather than "has".
+        module.missing_data_count_section = data_count.is_none();
+
         Ok(module)
     }
 }
@@ -2298,6 +2321,33 @@ mod tests {
             "unexpected error: {}",
             err.message
         );
+    }
+
+    /// W-addendum 2026-09-01 pass (`binary.wast`'s "memory.init/data.drop
+    /// requires a data count section" `assert_malformed` cases): a binary
+    /// module with no data count section at all must come out of this
+    /// crate flagged `missing_data_count_section: true` -- the actual
+    /// "memory.init/data.drop without one is malformed" enforcement lives
+    /// in `wasm-validator` (this crate never walks function-body
+    /// instructions), but it can only do that if this crate hands the one
+    /// piece of binary-only context it needs forward instead of silently
+    /// dropping it once the data-count/data-section length cross-check
+    /// above is done.
+    #[test]
+    fn test_missing_data_count_section_flag_set_when_section_absent() {
+        let data = wasm_with_sections(&[]);
+        let m = WasmModuleParser::parse(&data).unwrap();
+        assert!(m.missing_data_count_section);
+    }
+
+    /// The mirror case: a data count section IS present (and agrees with
+    /// the data section, so it parses at all) -- the flag must be `false`.
+    #[test]
+    fn test_missing_data_count_section_flag_false_when_section_present() {
+        let data_count_payload = vec![0x00]; // declares 0 segments
+        let data = wasm_with_sections(&[make_section(12, &data_count_payload)]);
+        let m = WasmModuleParser::parse(&data).unwrap();
+        assert!(!m.missing_data_count_section);
     }
 
     // ── Test 11: Element section ──────────────────────────────────────────────

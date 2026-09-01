@@ -2,6 +2,39 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.15] — 2026-09-01 — track whether a binary module declared a data count section
+
+Real corpus bug found during a fresh prioritization pass (`code/specs/
+W07-wasm-post-mvp-epics.md`'s "Addendum (2026-09-01)" item 2):
+`binary.wast` has two `assert_malformed` cases — "memory.init requires a
+data count section" and "data.drop requires a data count section" — that
+this crate's own parse always accepted, since nothing anywhere enforced
+that rule.
+
+### Added
+
+- `WasmModule::missing_data_count_section` (new field, defined in
+  `wasm-types` — see that crate's own CHANGELOG for the field's full
+  design rationale). This crate sets it to `data_count.is_none()` right
+  after the existing data-count/data-section-length cross-check, once
+  parsing is otherwise complete.
+
+### Notes
+
+- The actual "reject `memory.init`/`data.drop` without one" enforcement
+  does NOT live in this crate — this crate never walks function-body
+  instructions byte-by-byte (`parse_code_section` stores `code` raw,
+  deliberately, to avoid a byte-pattern scan for `0xFC 0x08`/`0xFC 0x09`
+  that could false-positive on some OTHER instruction's raw immediate
+  bytes coincidentally matching that pair, e.g. an `f64.const`'s literal
+  8 bytes). `wasm-validator`'s type-checker already walks every
+  instruction precisely for real type-checking and already has dedicated
+  `0x08`/`0x09` arms — see its own CHANGELOG for where the actual gate
+  lives.
+- 2 new regression tests (`src/lib.rs`): the flag is `true` when §12 is
+  absent, `false` when present (and agreeing with the data section, so
+  the module parses at all).
+
 ## [0.2.14] — 2026-09-01 — W33 fourth slice: `FieldType.val_type` → `FieldType.storage` rename fallout
 
 No functional change in this crate — `wasm-types` 0.1.17 renamed

@@ -1641,6 +1641,28 @@ pub struct WasmModule {
     /// round-trips through a real binary layout, so that ordering detail
     /// doesn't affect anything here, only documented for fidelity.
     pub tags: Vec<u32>,
+
+    /// Bulk-memory proposal (W-addendum 2026-09-01): `true` only when this
+    /// module was parsed from a **binary** module that used `memory.init`
+    /// or `data.drop` (opcode `0xFC 0x08`/`0xFC 0x09`) somewhere in its
+    /// code section WITHOUT a preceding data count section (§12, binary
+    /// id `0x0c`). The spec requires that section whenever either
+    /// instruction appears — see `binary.wast`'s own `assert_malformed`
+    /// cases ("memory.init requires a data count section", "data.drop
+    /// requires a data count section").
+    ///
+    /// Deliberately phrased as a "missing" flag (default `false`, i.e.
+    /// "nothing missing") rather than a `has_data_count_section: bool` so
+    /// every EXISTING `WasmModule` construction site — every hand-built
+    /// test fixture in this crate and the sibling crates, and every
+    /// TEXT-form module `wasm-wast-parser::module::parse_module_expr`
+    /// builds directly (no binary round-trip, so no literal "data count
+    /// section" concept even exists there) — keeps its current, correct
+    /// behavior for free via `bool`'s own `Default` (`false`) instead of
+    /// needing to be updated to opt in. Only `wasm-module-parser`'s binary
+    /// path, which alone knows whether a data count section was present
+    /// in the bytes it just parsed, ever sets this to `true`.
+    pub missing_data_count_section: bool,
 }
 
 /// The hop cap [`nominal_subtype_chain`] enforces -- see that function's
@@ -3321,6 +3343,7 @@ mod tests {
             data: vec![],
             customs: vec![],
             tags: vec![],
+            missing_data_count_section: false,
         };
         assert_eq!(m.types.len(), 1);
         assert_eq!(m.struct_types.len(), 0);
@@ -3349,6 +3372,7 @@ mod tests {
         assert!(m.data.is_empty());
         assert!(m.customs.is_empty());
         assert!(m.tags.is_empty());
+        assert!(!m.missing_data_count_section);
     }
 
     // ── WasmGC type tests ──────────────────────────────────────────────────────

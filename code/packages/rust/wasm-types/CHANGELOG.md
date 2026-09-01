@@ -2,6 +2,37 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.23] - 2026-09-01 (add: `WasmModule::missing_data_count_section`)
+
+New field for the same fresh corpus-prioritization pass as `wasm-
+module-parser`/`wasm-validator`'s own CHANGELOGs (`code/specs/
+W07-wasm-post-mvp-epics.md`'s "Addendum (2026-09-01)" item 2,
+`binary.wast`'s "memory.init/data.drop requires a data count section"
+`assert_malformed` cases).
+
+- **New `WasmModule::missing_data_count_section: bool`** (default
+  `false` via the existing `#[derive(Default)]`). `true` only when this
+  module was parsed from a BINARY module that had no data count section
+  (§12, binary id `0x0c`) at all. Deliberately phrased as a "missing"
+  flag rather than `has_data_count_section` so every EXISTING
+  `WasmModule` construction site — every hand-built test fixture across
+  this crate and its sibling crates, and every TEXT-form module `wasm-
+  wast-parser::module::parse_module_expr` builds directly (no binary
+  round-trip, so no literal "data count section" concept even exists
+  there) — keeps its current, correct behavior for free via `bool`'s own
+  `Default`, instead of needing to opt in one by one. Only `wasm-
+  module-parser`'s binary path, the one place that actually knows
+  whether §12 was present in the bytes it just parsed, ever sets this to
+  `true`. `wasm-validator`'s type-checker is the one place that reads it
+  (its `0x08`/`0x09` — `memory.init`/`data.drop` — opcode arms), since
+  it's the only crate that walks function-body instructions precisely
+  enough to know when those opcodes are actually used.
+- Two existing tests in this crate updated for the new field: `wasm_
+  module_has_all_fields` (which deliberately uses struct-literal syntax
+  with every field named, to catch exactly this kind of drift) and `wasm_
+  module_default_is_empty` (asserts the new field's `Default` is
+  `false`).
+
 ## [0.1.22] - 2026-09-01 (fix: tables can now carry a concrete element type)
 
 Found while root-causing a real, previously-shipped regression: the whole

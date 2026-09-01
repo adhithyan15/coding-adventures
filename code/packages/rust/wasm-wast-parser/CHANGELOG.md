@@ -1,5 +1,20 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.94 — 2026-09-01 — test fixture update for `wasm-types`' new `missing_data_count_section` field
+
+No functional change in this crate. `wasm-types` 0.1.23 added `WasmModule::
+missing_data_count_section` (see that crate's own CHANGELOG — part of the
+same pass as `wasm-module-parser`/`wasm-validator`'s `binary.wast`
+data-count-section fixes). One existing test here,
+`module_binary_directive_builds_a_real_module_from_decoded_bytes`,
+compared a real (binary-parsed) `WasmModule` against a bare `WasmModule::
+default()` — updated to expect `missing_data_count_section: true` instead,
+since the test's own module has no data count section at all (a plain
+`"\00\61\73\6d\01\00\00\00"` magic+version binary), and that's now
+correctly reflected rather than silently dropped. Harmless either way in
+this specific module since it also has no `memory.init`/`data.drop` to
+gate.
+
 ## 0.1.93 — 2026-09-01 — fix: `(table $t reftype (elem ...))` no longer discards its reftype
 
 Root-caused while prioritizing the vendored testsuite corpus: the whole

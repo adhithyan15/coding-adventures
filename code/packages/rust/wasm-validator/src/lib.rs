@@ -904,6 +904,248 @@ mod tests {
         assert!(matches!(err, ValidationError::TypeIndexOutOfBounds(_)));
     }
 
+    // ── W-addendum 2026-09-01 pass: memarg/sub-opcode LEB128 strictness ─────
+    //
+    // Real corpus bugs (`binary-leb128.wast`'s memarg align/offset overlong
+    // and out-of-range `assert_malformed` cases, and its 0xFC sub-opcode
+    // overlong case): a memory instruction's `align`/`offset` immediates,
+    // and a `0xFC`/`0xFD`-prefixed instruction's sub-opcode immediate, were
+    // all decoded via the native-64-bit-budget `decode_unsigned` instead of
+    // a width-bounded decode, so a 6+-byte or high-bit-set encoding of a
+    // small value parsed successfully instead of being rejected. Each
+    // negative case here has a matching positive-control case proving the
+    // FIX didn't also reject the ordinary minimal encoding of the exact
+    // same value.
+
+    /// A minimal single-function module with one declared memory, whose
+    /// only function body is the given code -- the common shape every
+    /// memarg test below needs. `access_i32` picks a natural-alignment-2
+    /// memory op (`i32.load`) so `align` values up to `2` are legal.
+    fn module_with_memory_and_code(is64: bool, code: Vec<u8>) -> WasmModule {
+        WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }],
+            functions: vec![0],
+            memories: vec![MemoryType { limits: Limits { min: 1, max: None }, shared: false, is64 }],
+            code: vec![FunctionBody { locals: vec![], code }],
+            ..Default::default()
+        }
+    }
+
+    /// `i32.load` with `align` encoded as an overlong (6-byte, one more
+    /// than the `ceil(32/7) = 5`-byte budget) LEB128 of the otherwise
+    /// perfectly legal value `2` -- exactly `binary-leb128.wast`'s
+    /// "alignment 2 with one byte too many" case (adapted from the raw
+    /// binary form to a directly-constructed `WasmModule`, since this
+    /// crate validates bytecode either way).
+    #[test]
+    fn memarg_align_overlong_leb128_is_rejected() {
+        let code = vec![
+            0x41, 0x00, // i32.const 0
+            0x28, // i32.load
+            0x82, 0x80, 0x80, 0x80, 0x80, 0x00, // align 2, overlong (6 bytes)
+            0x00, // offset 0
+            0x1A, // drop
+            0x0B, // end
+        ];
+        let module = module_with_memory_and_code(false, code);
+        assert!(validate(&module).is_err(), "overlong memarg align must be rejected");
+    }
+
+    /// The exact same `align`/`offset`/instruction shape as the previous
+    /// test, but with `align` encoded MINIMALLY (1 byte) -- must still
+    /// validate fine. Guards against the fix over-rejecting.
+    #[test]
+    fn memarg_align_minimal_leb128_still_parses() {
+        let code = vec![
+            0x41, 0x00, // i32.const 0
+            0x28, // i32.load
+            0x02, // align 2, minimal
+            0x00, // offset 0
+            0x1A, // drop
+            0x0B, // end
+        ];
+        let module = module_with_memory_and_code(false, code);
+        assert!(validate(&module).is_ok(), "{:?}", validate(&module).unwrap_err());
+    }
+
+    /// `i32.load` with `offset` encoded overlong (6 bytes) on a plain
+    /// (32-bit) memory -- `binary-leb128.wast`'s "offset 2 with one byte
+    /// too many" case.
+    #[test]
+    fn memarg_offset_overlong_leb128_is_rejected_on_32bit_memory() {
+        let code = vec![
+            0x41, 0x00, // i32.const 0
+            0x28, // i32.load
+            0x02, // align 2, minimal
+            0x82, 0x80, 0x80, 0x80, 0x80, 0x00, // offset 2, overlong (6 bytes)
+            0x1A, // drop
+            0x0B, // end
+        ];
+        let module = module_with_memory_and_code(false, code);
+        assert!(validate(&module).is_err(), "overlong memarg offset on a 32-bit memory must be rejected");
+    }
+
+    /// `i32.load` with `align` encoded in the full 5-byte `u32` budget but
+    /// with an out-of-range high bit set (`\x82\x80\x80\x80\x10` decodes
+    /// bit 32, one past the 32-bit width) -- `binary-leb128.wast`'s
+    /// "alignment 2 with unused bits set" case.
+    #[test]
+    fn memarg_align_out_of_range_high_bit_is_rejected() {
+        let code = vec![
+            0x41, 0x00, // i32.const 0
+            0x28, // i32.load
+            0x82, 0x80, 0x80, 0x80, 0x10, // align 2, bit 32 spuriously set
+            0x00, // offset 0
+            0x1A, // drop
+            0x0B, // end
+        ];
+        let module = module_with_memory_and_code(false, code);
+        assert!(validate(&module).is_err(), "out-of-range memarg align must be rejected");
+    }
+
+    /// `binary_leb128_64.wast`'s own pair of cases, the reason `offset`
+    /// can't just be blanket-narrowed to 32 bits: on an `is64` (memory64)
+    /// memory, `offset` genuinely needs the full 64-bit budget. A 10-byte
+    /// encoding of `2^64 - 1` must parse fine...
+    #[test]
+    fn memarg_offset_widens_to_64_bits_on_is64_memory() {
+        let code = vec![
+            0x42, 0x00, // i64.const 0 (address operand is i64 for an is64 memory)
+            0x28, // i32.load
+            0x02, // align 2, minimal
+            0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x01, // offset 2^64 - 1
+            0x1A, // drop
+            0x0B, // end
+        ];
+        let module = module_with_memory_and_code(true, code);
+        assert!(validate(&module).is_ok(), "{:?}", validate(&module).unwrap_err());
+    }
+
+    /// ...but `2^64` itself (one bit further -- out of range even for the
+    /// full 64-bit budget) must still be rejected.
+    #[test]
+    fn memarg_offset_out_of_range_even_at_64_bits_on_is64_memory() {
+        let code = vec![
+            0x42, 0x00, // i64.const 0
+            0x28, // i32.load
+            0x02, // align 2, minimal
+            0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x02, // offset 2^64
+            0x1A, // drop
+            0x0B, // end
+        ];
+        let module = module_with_memory_and_code(true, code);
+        assert!(validate(&module).is_err(), "offset 2^64 must be rejected even on an is64 memory");
+    }
+
+    /// `binary-leb128.wast`'s "i64_trunc_sat_f64_u with 6 bytes" case: the
+    /// `0xFC`-prefixed sub-opcode is a `u32` LEB128, same overlong rule as
+    /// every other `u32` field.
+    #[test]
+    fn fc_prefixed_sub_opcode_overlong_leb128_is_rejected() {
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![ValueType::F64], results: vec![ValueType::I64] }],
+            functions: vec![0],
+            code: vec![FunctionBody {
+                locals: vec![],
+                code: vec![
+                    0x20, 0x00, // local.get 0
+                    0xFC, 0x87, 0x80, 0x80, 0x80, 0x80, 0x00, // i64.trunc_sat_f64_u (sub-opcode 7), overlong (6 bytes)
+                    0x0B, // end
+                ],
+            }],
+            ..Default::default()
+        };
+        assert!(validate(&module).is_err(), "overlong 0xFC sub-opcode must be rejected");
+    }
+
+    /// Same instruction, sub-opcode encoded minimally (1 byte) -- must
+    /// still validate fine.
+    #[test]
+    fn fc_prefixed_sub_opcode_minimal_leb128_still_parses() {
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![ValueType::F64], results: vec![ValueType::I64] }],
+            functions: vec![0],
+            code: vec![FunctionBody {
+                locals: vec![],
+                code: vec![
+                    0x20, 0x00, // local.get 0
+                    0xFC, 0x07, // i64.trunc_sat_f64_u (sub-opcode 7), minimal
+                    0x0B, // end
+                ],
+            }],
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok(), "{:?}", validate(&module).unwrap_err());
+    }
+
+    // ── W-addendum 2026-09-01 pass: data count section required for
+    //    memory.init/data.drop (`binary.wast`'s own two `assert_malformed`
+    //    cases -- a different root cause than the LEB128 strictness gaps
+    //    above, but found and fixed in the same pass) ──────────────────────
+
+    /// `memory.init` with `missing_data_count_section: true` must be
+    /// rejected, even when the referenced data segment index is perfectly
+    /// in-bounds -- the data-count-section check fires FIRST.
+    #[test]
+    fn memory_init_without_data_count_section_is_rejected() {
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }],
+            functions: vec![0],
+            memories: vec![MemoryType { limits: Limits { min: 1, max: None }, shared: false, is64: false }],
+            data: vec![DataSegment { memory_index: 0, offset_expr: vec![0x41, 0x00, 0x0B], data: vec![], is_passive: false }],
+            code: vec![FunctionBody {
+                locals: vec![],
+                code: vec![
+                    0x41, 0x00, // i32.const 0 (dest)
+                    0x41, 0x00, // i32.const 0 (src)
+                    0x41, 0x00, // i32.const 0 (len)
+                    0xFC, 0x08, 0x00, 0x00, // memory.init 0 0
+                    0x0B, // end
+                ],
+            }],
+            missing_data_count_section: true,
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(format!("{err}").contains("data count section"), "{err:?}");
+    }
+
+    /// The same module, but with `missing_data_count_section: false` (as a
+    /// real binary WOULD set it, had it declared §12) -- `memory.init`
+    /// must validate fine.
+    #[test]
+    fn memory_init_with_data_count_section_parses_fine() {
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }],
+            functions: vec![0],
+            memories: vec![MemoryType { limits: Limits { min: 1, max: None }, shared: false, is64: false }],
+            data: vec![DataSegment { memory_index: 0, offset_expr: vec![0x41, 0x00, 0x0B], data: vec![], is_passive: false }],
+            code: vec![FunctionBody {
+                locals: vec![],
+                code: vec![0x41, 0x00, 0x41, 0x00, 0x41, 0x00, 0xFC, 0x08, 0x00, 0x00, 0x0B],
+            }],
+            missing_data_count_section: false,
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok(), "{:?}", validate(&module).unwrap_err());
+    }
+
+    /// `data.drop` with `missing_data_count_section: true` must be
+    /// rejected, same as `memory.init` above.
+    #[test]
+    fn data_drop_without_data_count_section_is_rejected() {
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }],
+            functions: vec![0],
+            data: vec![DataSegment { memory_index: 0, offset_expr: vec![], data: vec![], is_passive: true }],
+            code: vec![FunctionBody { locals: vec![], code: vec![0xFC, 0x09, 0x00, 0x0B] }],
+            missing_data_count_section: true,
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(format!("{err}").contains("data count section"), "{err:?}");
+    }
+
     // ── Check 4c: ConcreteFuncRef bounds (W11 addendum, security-review round) ──
     //
     // A bare NUMERIC `(ref null N)` has no declaration-time guarantee its

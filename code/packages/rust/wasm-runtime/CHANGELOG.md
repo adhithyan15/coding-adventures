@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.23] — 2026-09-01 (test fixture update for `wasm-types`' new `missing_data_count_section` field)
+
+No functional change in this crate. `wasm-types` 0.1.23 added
+`WasmModule::missing_data_count_section` (see that crate's own
+CHANGELOG). Two hand-built `WasmModule` struct literals in `tests/
+v128_persistent_storage.rs` named every field explicitly (no `..Default::
+default()`) — updated to add the new field (`false`, matching every
+other field's already-default-equivalent value there).
+
 ## [0.6.22] — 2026-09-01 (W-next — cross-module linking value-corruption bug-hunt: two real, distinct bugs)
 
 A fresh prioritization pass over the conformance corpus's module-linking

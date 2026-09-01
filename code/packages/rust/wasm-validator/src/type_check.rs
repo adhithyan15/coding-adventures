@@ -1773,7 +1773,18 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
         match byte {
             // ── `0xFC`-prefixed saturating conversions and bulk memory ──
             0xFC => {
-                let (sub, size) = decode_unsigned(code, offset)
+                // Real corpus bug (`binary-leb128.wast`'s "i64_trunc_sat_
+                // f64_u with 6 bytes" `assert_malformed` case, W-addendum
+                // 2026-09-01 pass): the sub-opcode is a `u32` LEB128 per
+                // spec, same as every other index-shaped immediate --
+                // `decode_unsigned` (bounded only to the native 64-bit/
+                // 10-byte budget) let a 6-byte encoding of the small value
+                // `7` through uncaught. `decode_unsigned_bounded(.., 32)`
+                // enforces the real `ceil(32/7) = 5`-byte cap (overlong)
+                // and the "unused top bits must be zero" out-of-range rule
+                // -- exactly `read_u32leb`'s own precedent in
+                // `wasm-module-parser`.
+                let (sub, size) = decode_unsigned_bounded(code, offset, 32)
                     .map_err(|e| ValidationError::Other(format!("bad 0xFC sub-opcode: {e}")))?;
                 offset += size;
                 match sub {
@@ -1803,6 +1814,19 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // runtime trap, matching every other indexed
                         // immediate this type-checker validates (func/
                         // table/global/local indices).
+                        //
+                        // Real corpus bug (`binary.wast`'s "memory.init
+                        // requires a data count section", W-addendum
+                        // 2026-09-01 pass): the spec requires a data count
+                        // section (§12) whenever `memory.init` appears
+                        // ANYWHERE in the code section, independent of
+                        // whether the data segment it names actually
+                        // exists -- checked FIRST, before the out-of-
+                        // bounds checks below, so it fires even for a
+                        // `data_idx` that happens to be in-bounds.
+                        if ctx.module.missing_data_count_section {
+                            err!("memory.init requires a data count section");
+                        }
                         if !ctx.has_memory {
                             err!("memory.init requires a declared memory");
                         }
@@ -1843,6 +1867,14 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // data segment it never gets to `memory.init`
                         // from) -- just the same out-of-bounds data-
                         // segment-index check as `memory.init` above.
+                        //
+                        // Same "data count section required" gate as
+                        // `memory.init` above (`binary.wast`'s "data.drop
+                        // requires a data count section" case), checked
+                        // first for the same reason.
+                        if ctx.module.missing_data_count_section {
+                            err!("data.drop requires a data count section");
+                        }
                         let (data_idx, data_size) = decode_idx(code, offset)?;
                         offset += data_size;
                         if data_idx as usize >= ctx.module.data.len() {
@@ -2950,21 +2982,56 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 // LEB128 trails the offset. Mirrors `wasm-execution`'s
                 // own decode exactly (`MULTI_MEMORY_FLAG`).
                 const MULTI_MEMORY_FLAG: u32 = 0x40;
-                let (raw_align, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad memarg align: {e}")))?;
-                // W25 (memory64): the memarg `offset` immediate is `u64`
-                // unconditionally in the real spec's binary grammar
-                // (verified live against `https://webassembly.github.io/
-                // spec/core/binary/instructions.html` -- see `code/specs/
-                // W25-wasm-memory64-first-slice.md`), not just for a
-                // 64-bit memory; widened from the previous `u32`-typed
-                // read purely for decode correctness -- this arm never
-                // actually uses the decoded VALUE, only its byte length,
-                // so this change is a no-op for every already-passing
-                // file.
-                let (_mem_offset, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad memarg offset: {e}")))?;
+                // Real corpus bug (`binary-leb128.wast`'s memarg align/
+                // offset overlong and out-of-range `assert_malformed`
+                // cases, W-addendum 2026-09-01 pass): `align` is a `u32`
+                // per spec, unconditionally -- `decode_unsigned` (bounded
+                // only to the native 64-bit/10-byte budget) let a 6+-byte
+                // or high-bit-set encoding of a small value through
+                // uncaught.
+                let (raw_align, sz1) = decode_unsigned_bounded(code, offset, 32).map_err(|e| ValidationError::Other(format!("bad memarg align: {e}")))?;
                 let raw_align = raw_align as u32;
                 let has_memidx = raw_align & MULTI_MEMORY_FLAG != 0;
                 let align = raw_align & !MULTI_MEMORY_FLAG;
+                // `offset`'s own width is genuinely context-dependent --
+                // NOT unconditionally `u32` the way `align` is. This
+                // SUPERSEDES the previous W25 comment here, which claimed
+                // (citing a LIVE fetch of the current spec page) that
+                // `offset` is `u64` "unconditionally": that's the spec's
+                // CURRENT (post-memory64-merge) text, but the pinned
+                // testsuite commit this repo's `wasm-conformance` corpus
+                // is actually graded against
+                // (`28864811cf03bdbf880733786148feaba339582d`) disagrees
+                // in BOTH directions, confirmed by two real corpus files:
+                // - `binary-leb128.wast` asserts a 6-byte offset encoding
+                //   of the value `2`, on a plain 32-bit memory, IS
+                //   malformed ("integer representation too long") -- only
+                //   holds under a 5-byte/32-bit budget.
+                // - `binary_leb128_64.wast` asserts a 10-byte offset
+                //   encoding of `2^64 - 1`, on a memory64 (`is64`) memory,
+                //   is perfectly valid (a plain, non-`assert_malformed`
+                //   `module`), and that `2^64` (one bit further) IS
+                //   malformed ("integer too large") -- only holds under a
+                //   FULL 64-bit budget.
+                // So: narrow to 32 bits only when we can already prove
+                // (without having decoded `offset` yet) that a 32-bit
+                // budget is correct -- i.e. no explicit multi-memory
+                // `memidx` follows (so the target is implicitly memory 0)
+                // AND memory 0 isn't `is64`. The multi-memory case can't
+                // be resolved this way at all: `memidx` isn't decoded
+                // until AFTER `offset` in this format (see below), so
+                // which memory `offset` even addresses is still unknown
+                // here -- fall back to the full native 64-bit budget
+                // (`decode_unsigned_bounded(.., 64)` is byte-for-byte
+                // `decode_unsigned`) rather than guess, exactly preserving
+                // this crate's previous, un-regressed behavior for that
+                // combination (no corpus file currently exercises a
+                // multi-memory memarg with an offset value that a 32-bit
+                // budget would have rejected anyway, so this is a pure
+                // no-op there, not a knowingly-loose carve-out).
+                let implicit_memory_0_is64 = !has_memidx && ctx.memory_is64.first().copied().unwrap_or(false);
+                let offset_bits: u32 = if has_memidx || implicit_memory_0_is64 { 64 } else { 32 };
+                let (_mem_offset, sz2) = decode_unsigned_bounded(code, offset + sz1, offset_bits).map_err(|e| ValidationError::Other(format!("bad memarg offset: {e}")))?;
                 offset += sz1 + sz2;
                 let memidx = if has_memidx {
                     let (memidx, sz3) = decode_idx(code, offset)?;
@@ -3049,8 +3116,15 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     // though no real module would hit that), no stack
                     // effect at all.
                 } else {
-                    let (align, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad atomic memarg align: {e}")))?;
-                    let (_mem_offset, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad atomic memarg offset: {e}")))?;
+                    // Same align/offset width fix as the plain-memory
+                    // `0x28..=0x3E` memarg read above -- `align` is always
+                    // `u32`-bounded; `offset` widens to 64 bits only for
+                    // an `is64` memory 0 (atomics have no multi-memory
+                    // `memidx` immediate at all, so memory 0 is always the
+                    // target -- no ambiguous case to fall back from here).
+                    let (align, sz1) = decode_unsigned_bounded(code, offset, 32).map_err(|e| ValidationError::Other(format!("bad atomic memarg align: {e}")))?;
+                    let offset_bits: u32 = if ctx.memory_is64.first().copied().unwrap_or(false) { 64 } else { 32 };
+                    let (_mem_offset, sz2) = decode_unsigned_bounded(code, offset + sz1, offset_bits).map_err(|e| ValidationError::Other(format!("bad atomic memarg offset: {e}")))?;
                     offset += sz1 + sz2;
 
                     if !ctx.has_memory {
@@ -3138,7 +3212,11 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
             // correctly -- its actual byte VALUES don't affect the type
             // stack, only its presence (pushing one `V128`) does.
             0xFD => {
-                let (sub, size) = decode_unsigned(code, offset)
+                // Same u32-bounded fix as the `0xFC` sub-opcode read above
+                // -- identical shape (a LEB128 `u32` sub-opcode), same
+                // overlong/out-of-range gap when left on the unbounded
+                // native decoder.
+                let (sub, size) = decode_unsigned_bounded(code, offset, 32)
                     .map_err(|e| ValidationError::Other(format!("bad 0xFD sub-opcode: {e}")))?;
                 offset += size;
                 let simd_op = wasm_opcodes::get_simd_op(sub as u32)
@@ -3901,10 +3979,28 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                             err!("v128.load/v128.store used, but module declares no memory");
                         }
                         const MULTI_MEMORY_FLAG: u32 = 0x40;
-                        let (raw_align, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad v128 memarg align: {e}")))?;
-                        let (_mem_offset, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad v128 memarg offset: {e}")))?;
+                        // Same u32-bounded fix (W-addendum 2026-09-01
+                        // pass) as the plain-memory `0x28..=0x3E` memarg
+                        // read above, applied here and at every other
+                        // `v128`-prefixed memarg site below -- identical
+                        // field shapes, same overlong/out-of-range gap on
+                        // the unbounded native decoder.
+                        let (raw_align, sz1) = decode_unsigned_bounded(code, offset, 32).map_err(|e| ValidationError::Other(format!("bad v128 memarg align: {e}")))?;
                         let raw_align = raw_align as u32;
                         let has_memidx = raw_align & MULTI_MEMORY_FLAG != 0;
+                        // `offset` width: same context-dependent rule as
+                        // the plain-memory `0x28..=0x3E` arm -- 32 bits
+                        // only when memory 0 (the only target v128.load/
+                        // v128.store currently allows -- see the explicit
+                        // non-zero-`memidx` rejection below) is known,
+                        // right now, not to be `is64`; the ambiguous
+                        // explicit-`memidx` case (rejected below anyway
+                        // once decoded, but not yet known at this point)
+                        // falls back to the full native 64-bit budget
+                        // rather than guess.
+                        let implicit_memory_0_is64 = !has_memidx && ctx.memory_is64.first().copied().unwrap_or(false);
+                        let offset_bits: u32 = if has_memidx || implicit_memory_0_is64 { 64 } else { 32 };
+                        let (_mem_offset, sz2) = decode_unsigned_bounded(code, offset + sz1, offset_bits).map_err(|e| ValidationError::Other(format!("bad v128 memarg offset: {e}")))?;
                         offset += sz1 + sz2;
                         if has_memidx {
                             let (memidx, sz3) = decode_idx(code, offset)?;
@@ -3966,10 +4062,22 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                             err!("v128.load8_lane/v128.store8_lane used, but module declares no memory");
                         }
                         const MULTI_MEMORY_FLAG: u32 = 0x40;
-                        let (raw_align, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad v128 memarg align: {e}")))?;
-                        let (_mem_offset, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad v128 memarg offset: {e}")))?;
+                        let (raw_align, sz1) = decode_unsigned_bounded(code, offset, 32).map_err(|e| ValidationError::Other(format!("bad v128 memarg align: {e}")))?;
                         let raw_align = raw_align as u32;
                         let has_memidx = raw_align & MULTI_MEMORY_FLAG != 0;
+                        // `offset` width: same context-dependent rule as
+                        // the plain-memory `0x28..=0x3E` arm -- 32 bits
+                        // only when memory 0 (the only target v128.load/
+                        // v128.store currently allows -- see the explicit
+                        // non-zero-`memidx` rejection below) is known,
+                        // right now, not to be `is64`; the ambiguous
+                        // explicit-`memidx` case (rejected below anyway
+                        // once decoded, but not yet known at this point)
+                        // falls back to the full native 64-bit budget
+                        // rather than guess.
+                        let implicit_memory_0_is64 = !has_memidx && ctx.memory_is64.first().copied().unwrap_or(false);
+                        let offset_bits: u32 = if has_memidx || implicit_memory_0_is64 { 64 } else { 32 };
+                        let (_mem_offset, sz2) = decode_unsigned_bounded(code, offset + sz1, offset_bits).map_err(|e| ValidationError::Other(format!("bad v128 memarg offset: {e}")))?;
                         offset += sz1 + sz2;
                         if has_memidx {
                             let (memidx, sz3) = decode_idx(code, offset)?;
@@ -4034,10 +4142,22 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                             err!("v128.load16_lane/v128.store16_lane used, but module declares no memory");
                         }
                         const MULTI_MEMORY_FLAG: u32 = 0x40;
-                        let (raw_align, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad v128 memarg align: {e}")))?;
-                        let (_mem_offset, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad v128 memarg offset: {e}")))?;
+                        let (raw_align, sz1) = decode_unsigned_bounded(code, offset, 32).map_err(|e| ValidationError::Other(format!("bad v128 memarg align: {e}")))?;
                         let raw_align = raw_align as u32;
                         let has_memidx = raw_align & MULTI_MEMORY_FLAG != 0;
+                        // `offset` width: same context-dependent rule as
+                        // the plain-memory `0x28..=0x3E` arm -- 32 bits
+                        // only when memory 0 (the only target v128.load/
+                        // v128.store currently allows -- see the explicit
+                        // non-zero-`memidx` rejection below) is known,
+                        // right now, not to be `is64`; the ambiguous
+                        // explicit-`memidx` case (rejected below anyway
+                        // once decoded, but not yet known at this point)
+                        // falls back to the full native 64-bit budget
+                        // rather than guess.
+                        let implicit_memory_0_is64 = !has_memidx && ctx.memory_is64.first().copied().unwrap_or(false);
+                        let offset_bits: u32 = if has_memidx || implicit_memory_0_is64 { 64 } else { 32 };
+                        let (_mem_offset, sz2) = decode_unsigned_bounded(code, offset + sz1, offset_bits).map_err(|e| ValidationError::Other(format!("bad v128 memarg offset: {e}")))?;
                         offset += sz1 + sz2;
                         if has_memidx {
                             let (memidx, sz3) = decode_idx(code, offset)?;
@@ -4103,10 +4223,22 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                             err!("v128.load32_lane/v128.store32_lane used, but module declares no memory");
                         }
                         const MULTI_MEMORY_FLAG: u32 = 0x40;
-                        let (raw_align, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad v128 memarg align: {e}")))?;
-                        let (_mem_offset, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad v128 memarg offset: {e}")))?;
+                        let (raw_align, sz1) = decode_unsigned_bounded(code, offset, 32).map_err(|e| ValidationError::Other(format!("bad v128 memarg align: {e}")))?;
                         let raw_align = raw_align as u32;
                         let has_memidx = raw_align & MULTI_MEMORY_FLAG != 0;
+                        // `offset` width: same context-dependent rule as
+                        // the plain-memory `0x28..=0x3E` arm -- 32 bits
+                        // only when memory 0 (the only target v128.load/
+                        // v128.store currently allows -- see the explicit
+                        // non-zero-`memidx` rejection below) is known,
+                        // right now, not to be `is64`; the ambiguous
+                        // explicit-`memidx` case (rejected below anyway
+                        // once decoded, but not yet known at this point)
+                        // falls back to the full native 64-bit budget
+                        // rather than guess.
+                        let implicit_memory_0_is64 = !has_memidx && ctx.memory_is64.first().copied().unwrap_or(false);
+                        let offset_bits: u32 = if has_memidx || implicit_memory_0_is64 { 64 } else { 32 };
+                        let (_mem_offset, sz2) = decode_unsigned_bounded(code, offset + sz1, offset_bits).map_err(|e| ValidationError::Other(format!("bad v128 memarg offset: {e}")))?;
                         offset += sz1 + sz2;
                         if has_memidx {
                             let (memidx, sz3) = decode_idx(code, offset)?;
@@ -4172,10 +4304,22 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                             err!("v128.load64_lane/v128.store64_lane used, but module declares no memory");
                         }
                         const MULTI_MEMORY_FLAG: u32 = 0x40;
-                        let (raw_align, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad v128 memarg align: {e}")))?;
-                        let (_mem_offset, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad v128 memarg offset: {e}")))?;
+                        let (raw_align, sz1) = decode_unsigned_bounded(code, offset, 32).map_err(|e| ValidationError::Other(format!("bad v128 memarg align: {e}")))?;
                         let raw_align = raw_align as u32;
                         let has_memidx = raw_align & MULTI_MEMORY_FLAG != 0;
+                        // `offset` width: same context-dependent rule as
+                        // the plain-memory `0x28..=0x3E` arm -- 32 bits
+                        // only when memory 0 (the only target v128.load/
+                        // v128.store currently allows -- see the explicit
+                        // non-zero-`memidx` rejection below) is known,
+                        // right now, not to be `is64`; the ambiguous
+                        // explicit-`memidx` case (rejected below anyway
+                        // once decoded, but not yet known at this point)
+                        // falls back to the full native 64-bit budget
+                        // rather than guess.
+                        let implicit_memory_0_is64 = !has_memidx && ctx.memory_is64.first().copied().unwrap_or(false);
+                        let offset_bits: u32 = if has_memidx || implicit_memory_0_is64 { 64 } else { 32 };
+                        let (_mem_offset, sz2) = decode_unsigned_bounded(code, offset + sz1, offset_bits).map_err(|e| ValidationError::Other(format!("bad v128 memarg offset: {e}")))?;
                         offset += sz1 + sz2;
                         if has_memidx {
                             let (memidx, sz3) = decode_idx(code, offset)?;
