@@ -3269,6 +3269,39 @@
       "source_cas_hashes": [],
       "benchmark_paths": [],
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
+      "id": "adj.science.3to5.speleothem_component",
+      "title": "Recall which two speleothems join to form a column, closing the growth-surface library's recorded abstention",
+      "band": "3-5",
+      "domain": "science",
+      "competency": "recall",
+      "coverage_roots": ["ngss"],
+      "standards": [],
+      "prerequisites": [],
+      "libraries": ["code/specs/data/adj-facts-stdlib/earth-science/speleothem-component.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
+      "id": "adj.science.3to5.compound_speleothem_surface",
+      "title": "Derive which cave surfaces a compound speleothem reaches by composing its components with their growth surfaces, recovering an answer the growth-surface relation correctly declined",
+      "band": "3-5",
+      "domain": "science",
+      "competency": "infer",
+      "coverage_roots": ["ngss"],
+      "standards": [],
+      "prerequisites": [
+        "adj.science.3to5.speleothem_component",
+        "adj.science.3to5.speleothem_growth_surface"
+      ],
+      "libraries": ["code/specs/data/adj-facts-stdlib/earth-science/compound-speleothem-surface.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     }
   ]
 }
