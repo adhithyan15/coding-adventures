@@ -16,6 +16,7 @@
  */
 
 import { computeRevisionId } from "@coding-adventures/forme-identity";
+import { memoryCache, type CacheBackend } from "@coding-adventures/forme-cache";
 import {
   consoleLogger,
   createCancellationTokenSource,
@@ -27,6 +28,7 @@ import type { Pipeline, RunOptions, RunResult } from "./types.js";
 
 export interface RunOnceContext {
   readonly logger?: Logger;
+  readonly cache?: CacheBackend;
 }
 
 export async function runOnce(
@@ -47,15 +49,22 @@ export async function runOnce(
     ?? consoleLogger({ level: pipeline.config.settings.logLevel })
       .child({ pipeline: pipeline.config.name });
 
-  const result = await executeDag(pipeline.dag, {
-    cancellation,
-    bestEffort,
-    logger,
-    // Honour the pipeline's reproducible-build setting (FM03 §8).
-    // The scheduler swaps systemClock for frozenClock at every
-    // StageContext construction site when this is true.
-    reproducibleBuild: pipeline.config.settings.reproducibleBuild,
-  });
+  const ownedCache = ctx.cache === undefined ? memoryCache() : null;
+  const cache = ctx.cache ?? ownedCache!;
+  let result;
+  try {
+    result = await executeDag(pipeline.dag, {
+      cancellation,
+      bestEffort,
+      logger,
+      cache,
+      useCache: options.useCache ?? true,
+      // Honour the pipeline's reproducible-build setting (FM03 §8).
+      reproducibleBuild: pipeline.config.settings.reproducibleBuild,
+    });
+  } finally {
+    if (ownedCache !== null) await ownedCache.dispose();
+  }
 
   // Map sink-keyed outputs to OutputSpec names when present.
   const outputs: Record<string, unknown> = {};

@@ -14,10 +14,11 @@
  *     one fan-in invocation. This is correct but not lazy — large streams
  *     allocate fully. Lazy streaming lands in v1 alongside parallelism.
  *
- *   - **No incremental rebuild.**  Every run executes every stage;
- *     the cache backend exists but isn't hit yet.  Incremental
- *     rebuild (FM03 §6) lands when the orchestrator gains revision
- *     tracking per instance.
+ *   - **Safe cache reuse, not yet an exact affected scheduler.** Sources and
+ *     capability-bearing stages still execute on every run because they may
+ *     observe or replay external state. Pure downstream invocations reuse
+ *     deterministic cached outputs per materialized input. Exact external
+ *     revisions and changed-and-downstream scheduling remain FM-B032.
  *
  *   - **Reproducible-build mode is wired through.**  When
  *     `settings.reproducibleBuild = true`, every StageContext receives
@@ -65,8 +66,17 @@ import type {
   StageInitContext,
 } from "@coding-adventures/forme-stage";
 import type { JsonValue } from "@coding-adventures/forme-types";
+import type { CacheBackend, CacheEntry } from "@coding-adventures/forme-cache";
+import { cacheKey, makeEntry } from "@coding-adventures/forme-cache";
+import { computeBinaryRevisionId } from "@coding-adventures/forme-identity";
 import type { ResolvedInstance, PipelineDag } from "./dag.js";
 import type { RunError, RunOutcome, StageRunSummary } from "./types.js";
+import {
+  decodeCachedStageOutput,
+  encodeCachedStageOutput,
+  encodeCacheValue,
+  type CachedStageOutput,
+} from "./cache-codec.js";
 
 /** Per-instance run state held during execution. */
 interface RunState {
@@ -94,6 +104,8 @@ export interface SchedulerOptions {
   readonly logger: Logger;
   readonly cancellation: CancellationToken;
   readonly bestEffort: boolean;
+  readonly cache: CacheBackend;
+  readonly useCache: boolean;
   /**
    * When true, every StageContext receives a `frozenClock` whose wall
    * time is fixed for the duration of the run.  Combined with the
@@ -214,10 +226,15 @@ export async function executeDag(
         // Named fan-in is a join boundary: every producer has already been
         // materialized, every stream gets a fresh replayable AsyncIterable,
         // and the stage is invoked exactly once with the stable port object.
-        const result = await inst.stage.run(inputs.value as never, inst.config, ctx);
-        const stored = await materialize(result, inst.stage.produces.name === "Stream");
+        const stored = await runCached(inst, cacheInputValue(inst, states), options, async () =>
+          materialize(
+            await inst.stage.run(inputs.value as never, inst.config, ctx),
+            inst.stage.produces.name === "Stream",
+          ));
         state.output = stored.value;
         state.isStreamOutput = stored.isStream;
+        state.summary.cacheHits += stored.cacheHit ? 1 : 0;
+        state.summary.cacheMisses += stored.cacheMiss ? 1 : 0;
         state.summary.itemsConsumed = inputs.itemCount;
         state.summary.itemsProduced = stored.isStream
           ? (stored.value as unknown[]).length
@@ -225,10 +242,15 @@ export async function executeDag(
       } else if (inst.stage.consumes.name === "Stream" || inst.stage.consumes.name === "Void"
           || isSingleProducer(inst, dag, states)) {
         // One invocation: source / collector-style / single-input.
-        const result = await inst.stage.run(inputs.value as never, inst.config, ctx);
-        const stored = await materialize(result, inst.stage.produces.name === "Stream");
+        const stored = await runCached(inst, cacheInputValue(inst, states), options, async () =>
+          materialize(
+            await inst.stage.run(inputs.value as never, inst.config, ctx),
+            inst.stage.produces.name === "Stream",
+          ));
         state.output = stored.value;
         state.isStreamOutput = stored.isStream;
+        state.summary.cacheHits += stored.cacheHit ? 1 : 0;
+        state.summary.cacheMisses += stored.cacheMiss ? 1 : 0;
         state.summary.itemsConsumed = inputs.itemCount;
         state.summary.itemsProduced = stored.isStream
           ? (stored.value as unknown[]).length
@@ -242,8 +264,10 @@ export async function executeDag(
         const collected: unknown[] = [];
         for (const item of list) {
           options.cancellation.throwIfCancelled();
-          const r = await inst.stage.run(item as never, inst.config, ctx);
-          const sub = await materialize(r, false);
+          const sub = await runCached(inst, item, options, async () =>
+            materialize(await inst.stage.run(item as never, inst.config, ctx), false));
+          state.summary.cacheHits += sub.cacheHit ? 1 : 0;
+          state.summary.cacheMisses += sub.cacheMiss ? 1 : 0;
           collected.push(sub.value);
         }
         state.output = collected;
@@ -423,6 +447,87 @@ function collectInputs(
     return { value: list, itemCount: list.length };
   }
   return { value: prod.output, itemCount: 1 };
+}
+
+function cacheInputValue(inst: ResolvedInstance, states: Map<string, RunState>): unknown {
+  if (hasNamedInputs(inst)) {
+    const value: Record<string, unknown> = { default: rawProducerOutput(inst.producer, states) };
+    for (const port of [...inst.inputProducers.keys()].sort()) {
+      value[port] = rawProducerOutput(inst.inputProducers.get(port)!, states);
+    }
+    return value;
+  }
+  return rawProducerOutput(inst.producer, states);
+}
+
+function rawProducerOutput(producerId: string | null, states: Map<string, RunState>): unknown {
+  return producerId === null ? undefined : states.get(producerId)?.output;
+}
+
+interface CacheRunResult extends CachedStageOutput {
+  readonly cacheHit: boolean;
+  readonly cacheMiss: boolean;
+}
+
+async function runCached(
+  inst: ResolvedInstance,
+  input: unknown,
+  options: SchedulerOptions,
+  execute: () => Promise<CachedStageOutput>,
+): Promise<CacheRunResult> {
+  // Sources observe external state, and capability-bearing stages may read or
+  // replay side effects. Until FM-B032 threads explicit external revisions and
+  // replay contracts, only pure non-source invocations are safe to skip.
+  const hasInput = inst.producer !== null || inst.inputProducers.size !== 0;
+  if (!options.useCache || !hasInput || inst.capabilities.length !== 0) {
+    return { ...(await execute()), cacheHit: false, cacheMiss: false };
+  }
+
+  let inputBytes: Uint8Array;
+  try {
+    inputBytes = encodeCacheValue(input);
+  } catch {
+    return { ...(await execute()), cacheHit: false, cacheMiss: false };
+  }
+  const key = cacheKey({
+    stageName: inst.stage.name,
+    stageVersion: inst.stage.version,
+    stageConfig: (inst.config ?? null) as JsonValue,
+    inputRevision: computeBinaryRevisionId(inputBytes),
+    capabilities: inst.capabilities.map(String),
+  });
+  let entry: CacheEntry | null = null;
+  try {
+    entry = await options.cache.get(key);
+  } catch (error) {
+    options.logger.warn(`cache read skipped for ${inst.stage.name} (${inst.id})`, {
+      error: String(error),
+    });
+  }
+  if (entry !== null) {
+    try {
+      return { ...decodeCachedStageOutput(entry.payload), cacheHit: true, cacheMiss: false };
+    } catch (decodeError) {
+      try {
+        await options.cache.invalidate(key);
+      } catch (error) {
+        options.logger.warn(`malformed cache entry could not be invalidated for ${inst.stage.name} (${inst.id})`, {
+          decodeError: String(decodeError),
+          error: String(error),
+        });
+      }
+    }
+  }
+
+  const result = await execute();
+  try {
+    await options.cache.put(key, makeEntry(encodeCachedStageOutput(result)));
+  } catch (error) {
+    options.logger.warn(`cache write skipped for ${inst.stage.name} (${inst.id})`, {
+      error: String(error),
+    });
+  }
+  return { ...result, cacheHit: false, cacheMiss: true };
 }
 
 async function materialize(
