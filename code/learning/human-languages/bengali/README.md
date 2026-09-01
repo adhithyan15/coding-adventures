@@ -114,6 +114,22 @@ before the whole; and a book you can read straight through.
   on the Persian word for "eye" চোখ's own lesson already named as its only
   cousin). In the book.
 
+- **Chapter 16 — Hanging From the Head-Line, One Piece at a Time**
+  ([`lessons/BN-W01-*`](./lessons/)): the first nine pieces — ন, া, আ, হ, ম,
+  স, ক, ্, র — and the greeting নমস্কার read back from them, conjunct and
+  all. In the book.
+- **Chapters 17–19 — the script strand continued** ([`lessons/BN-W02-*`,
+  `BN-W03-*`, `BN-W04-*`](./lessons/)): seventeen more pieces and eighteen
+  words handed back to the eye. **Ch. 17** adds ি, ল, ত, ু, ে and reads নাম,
+  আমি, লাল, তিন, তুমি, কেমন — three of the five additions being vowel signs,
+  because a sign multiplies where a consonant adds. **Ch. 18** adds ো, ব, ভ,
+  খ, দ, ধ and reads কালো, আবার, ভালো, মুখ, সাদা, দুধ — the plain-and-breathy
+  square, the one distinction an English-speaking reader has no habit for.
+  **Ch. 19** adds চ, প, জ, ী, ই, এ and reads চা, পরিবার, জল, নীল, ভাই, এক,
+  closing the machinery by giving three vowels both of their bodies. Every
+  word was romanized and spoken in Chapters 1–15 before it was ever shown as
+  a shape to decode. In the book.
+
 With Chapters 8 and 9 the track realizes **14 of the 40 core verb concepts**, up
 from six, and joins Spanish, Latin and Portuguese on all eight of
 `VERB-THINK`, `VERB-UNDERSTAND`, `VERB-READ`, `VERB-WRITE`, `VERB-TAKE`,
@@ -126,6 +142,15 @@ headwords (of the 300 HL09 asks for) and closing the one pre-A1 spine node —
 from 33 to 46 distinct headwords, and close two universal concepts —
 `COURTESY-PLEASE` and `COURTESY-SORRY` — this track had never realized,
 plus `GREETING-WELCOME`.
+
+Chapters 16–19 build the script strand: `scriptLessons` 0 → 45,
+`taughtGlyphs` 0 → 26, and **`neverTaughtGlyphs` 48 → 22** — Bengali was the
+worst never-taught glyph count in the corpus and is no longer in the bottom
+four. Twenty-two shapes remain, headed by য, ়, ও, গ and ছ. The closure
+*violation* count is unmoved at 65, because that measurement walks lessons in
+reading order and the script strand sits after all fifteen content chapters;
+the measured cost and the obstacles to interleaving it are recorded in
+`BACKLOG.d` as HL-C194.
 
 ---
 
@@ -201,6 +226,26 @@ first-person can-do sentence and the lesson that pays it off.
   covering **4 of the chapter's 4** introduced atoms, plus a rescue of the
   dative construction and ভালোবাসা from the liking-and-loving lesson,
   unrevisited since they were taught.
+- **Chapter 17** — *"I can read six Bengali words I already say — নাম, আমি,
+  লাল, তিন, তুমি and কেমন — by adding five pieces to the nine I already
+  write, and I can say why a vowel sign written in front of a consonant is
+  still spoken after it."* Payoff:
+  [`BN-W02-kemon-read`](./lessons/BN-W02-kemon-read.md), a reading that
+  introduces no new shape and covers **11 of the chapter's 11** introduced
+  atoms.
+- **Chapter 18** — *"I can read six more Bengali words I already say, tell a
+  plain consonant from its breathy partner on the page and in the mouth, and
+  say why the o-sign is two signs I already write rather than a new shape."*
+  Payoff: [`BN-W03-dudh-read`](./lessons/BN-W03-dudh-read.md), which puts the
+  plain dental and its breathy partner in one three-piece word — **12 of the
+  chapter's 12** introduced atoms.
+- **Chapter 19** — *"I can read six more Bengali words I already say, and say
+  which of a vowel's two forms to write, and why, from whether there is a
+  consonant in front of it."* Payoff:
+  [`BN-W04-ek-read`](./lessons/BN-W04-ek-read.md), which reads এক as a vowel
+  opening a word with no consonant to carry it — making visible the claim
+  Chapter 6 could only assert — and covers **12 of the chapter's 12**
+  introduced atoms.
 
 Chapters 1–5 are **not in the ledger yet**, and that gap is deliberate. They are
 still schema v1, so their lessons declare no knowledge atoms and no payoff there
@@ -212,12 +257,12 @@ gap report is meant to surface; the entries land as those chapters migrate.
 Compiles with XeLaTeX using the **vendored** Noto Sans Bengali font
 (`../../_fonts/NotoSansBengali-Static.ttf`). Build the isolated entrypoint with
 `code/scripts/check-book-compile.sh --strict bengali` from the repository root.
-Chapters 6 through 15 are generated from the canonical lessons; their
+Chapters 6 through 19 are generated from the canonical lessons; their
 Bengali-script runs use that font while their section bookmarks use authored
 romanization.
 
-The forced fifteen-chapter build is warning-free — 119 pages, zero
-`Missing character`, zero over/underfull boxes, and the conjuncts and marks
+The forced nineteen-chapter build is warning-free — 194 pages, zero
+`Missing character`, zero over/underfull boxes, zero LaTeX warnings, and the conjuncts and marks
 Chapters 8 through 15 add (**ড়**, **জ্ঞ**, **য্য**, **দ্বার**, **ন্ধ**,
 **ৃ**, **ঃ**, **শ**, **স্ব**) all render from the vendored font with no
 preamble change: main-font punctuation, chapter-qualified recap anchors,

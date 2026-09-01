@@ -1,0 +1,1587 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 17,
+  "title": "Five More Pieces, Six More Words",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:b3f39eb8aa3bd543",
+  "lessons": [
+    {
+      "id": "BN-W02-naam-read",
+      "sequence": 1700,
+      "title": "নাম (nām) — a whole word, read, with nothing new in it",
+      "headword": "নাম",
+      "romanization": "nām",
+      "gloss": "a whole word, read, with nothing new in it",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:089e441131abad64",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the greeting again before starting. Every piece in it is one you made from memory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The word for name has been said aloud since the second chapter. Here it is on the page, and there is nothing in it you have not already written:"
+            },
+            {
+              "kind": "speech",
+              "text": "ন + া + ম becomes নাম (nām)."
+            },
+            {
+              "kind": "speech",
+              "text": "ন — nô, carrying its own vowel."
+            },
+            {
+              "kind": "speech",
+              "text": "া — the mātrā, which throws that vowel out and puts ā in its place, so the piece now says nā."
+            },
+            {
+              "kind": "speech",
+              "text": "ম — mô."
+            },
+            {
+              "kind": "speech",
+              "text": "nām. Say it with the mouth open on the first syllable and closed on the second, and you have the word you have been using since আমার নাম — \"my name.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Look at the top of the three shapes. The head-line is one unbroken bar across the whole word. That bar is why a Bengali word looks like a single object rather than three, and it is also the reason a reader coming from English keeps trying to break it in the wrong places: the bar is decoration on the letters, not a boundary between them."
+            },
+            {
+              "kind": "speech",
+              "text": "One more falls out of the same nine pieces. ন + া + ক is nāk — the word for nose from the chapter on the face."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "নাম (nām)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: নাম]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "নাক",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: নাক]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "নাম (nām)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: নাম]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many new pieces were in this lesson? (None.) What does the mātrā do to the vowel a consonant already carries? (Replaces it.) And what is the bar along the top — a letter boundary, or part of the letters? (Part of the letters.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W02-i-matra",
+      "sequence": 1710,
+      "title": "ি (-i) — the i-sign, written before the consonant it is heard after",
+      "headword": "ি",
+      "romanization": "-i",
+      "gloss": "the i-sign — written before the consonant it is heard after",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:04d6b1cc437ef1b7",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read নাম (nām) aloud before adding another piece."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The mātrā া replaced a consonant's vowel with ā and sat to the right of it. Here is the sign that puts i there instead:"
+            },
+            {
+              "kind": "speech",
+              "text": "ি (-i)."
+            },
+            {
+              "kind": "speech",
+              "text": "The sound is the i of English bit — short, and never the ee of feet."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the part worth slowing down for. This sign is written to the left of the consonant it belongs to, and spoken to the right of it. Take ম mô and add it:"
+            },
+            {
+              "kind": "speech",
+              "text": "ম + ি (-i) becomes মি — said mi, not im."
+            },
+            {
+              "kind": "speech",
+              "text": "The hook sits in front on the page; the vowel lands behind in the mouth. Nothing about the shape tells you that, and nothing about the sound tells you either. It is a habit of the writing system, held on to from the Brahmi script every Indian abugida descends from, and Devanagari does exactly the same thing."
+            },
+            {
+              "kind": "speech",
+              "text": "A reader who tries to sound out the marks in the order the eye meets them will get this word backwards every time. Read the consonant first, then the sign in front of it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ি (-i)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ি]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "মি",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: মি]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "নাম (nām)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: নাম]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which side of its consonant is ি (-i) written on? (The left.) Which side is it heard on? (The right.) And is the sound the i of bit or of feet? (Of bit.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W02-ami-read",
+      "sequence": 1720,
+      "title": "আমি (āmi) — the word for I, and two more that come free with it",
+      "headword": "আমি",
+      "romanization": "āmi",
+      "gloss": "the word for I, and two more that come free with it",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:73b0cd3035a15831",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ি (-i) once, and say which side of its consonant it goes on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আ + ম + ি (-i) becomes আমি (āmi)."
+            },
+            {
+              "kind": "speech",
+              "text": "আ — the independent vowel, standing on its own because nothing comes before it to hang a sign on."
+            },
+            {
+              "kind": "speech",
+              "text": "ম — mô."
+            },
+            {
+              "kind": "speech",
+              "text": "ি (-i) — written in front of that ম, heard after it."
+            },
+            {
+              "kind": "speech",
+              "text": "āmi — I. The word from the third chapter, the one that came down from Sanskrit asmi and is cousin to English am."
+            },
+            {
+              "kind": "speech",
+              "text": "Watch what the sign does to the eye. On the page the order runs আ, then the hook, then ম. In the mouth it runs ā, then m, then i. The middle two swap. This is the single most common stumble for a new reader of any Indian script, and the cure is mechanical: find the consonant, say it, then say the sign leaning on its left."
+            },
+            {
+              "kind": "speech",
+              "text": "Two more words are now readable with nothing added."
+            },
+            {
+              "kind": "speech",
+              "text": "ক + ি (-i) becomes কি — ki, the question word: what."
+            },
+            {
+              "kind": "speech",
+              "text": "আ + স + ি (-i) becomes আসি — āsi, the goodbye from the first chapter that means \"I'll come again\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Three words out of one sign. That is what a working set does."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "আমি (āmi)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: আমি]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "কি",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: কি]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "আসি",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: আসি]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "আমি (āmi)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: আমি]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In আমি (āmi), which two sounds swap between the page and the mouth? (The m and the i.) Why does আ stand in its own full shape here? (Because nothing comes before it to carry a sign.) And what does আসি mean? (\"I'll come again\" — the goodbye.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W02-la",
+      "sequence": 1730,
+      "title": "ল (lô) — the consonant la",
+      "headword": "ল",
+      "romanization": "lô",
+      "gloss": "the consonant la — one l where the south has three",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:44c09a50738fec5f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read আমি (āmi) and কি aloud before adding a new shape."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ল (lô)."
+            },
+            {
+              "kind": "speech",
+              "text": "lô — the l of English let, made with the tongue-tip on the back of the top teeth rather than on the ridge behind them. English puts it a little further back and lets the tongue-body sag, which is what makes an English l at the end of a word sound thick. Bengali keeps it forward and light in every position."
+            },
+            {
+              "kind": "speech",
+              "text": "The shape hangs from the head-line like the rest, with a loop at the bottom left and a stroke that turns back on itself."
+            },
+            {
+              "kind": "speech",
+              "text": "Bengali has one letter for this sound. That is worth naming, because the south of the subcontinent does not: Tamil and Malayalam each carry three distinct l-letters for three distinct tongue positions, and a Bengali reader meeting a Tamil place-name is looking at distinctions their own script never had to record. Going the other way is easier — a southern reader has one Bengali shape to learn where they had three."
+            },
+            {
+              "kind": "speech",
+              "text": "Add the mātrā and the piece says lā:"
+            },
+            {
+              "kind": "speech",
+              "text": "ল (lô) + া becomes লা."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ল (lô)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ল]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "লা",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: লা]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "আমি (āmi)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: আমি]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does the tongue go for Bengali ল (lô) — on the teeth or on the ridge behind them? (On the teeth.) How many l-letters does Bengali have? (One.) And how many do Tamil and Malayalam have? (Three.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W02-lal-read",
+      "sequence": 1740,
+      "title": "লাল (lāl) — red, and the day-word that runs both ways",
+      "headword": "লাল",
+      "romanization": "lāl",
+      "gloss": "red, and the day-word that runs both ways",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:7d3d2c74235695a3",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ল (lô) once, then say where the tongue sits for it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ল (lô) + া + ল (lô) becomes লাল (lāl)."
+            },
+            {
+              "kind": "speech",
+              "text": "The same letter twice, with the mātrā between them. The first ল (lô) takes the sign and becomes lā; the second keeps its own inherent vowel, which at the end of a word is barely voiced at all. So the word comes out lāl — one syllable to an English ear, the colour red, the Persian gem-word from the chapter on colours."
+            },
+            {
+              "kind": "speech",
+              "text": "Swap the first shape for ক and you get another word already in your mouth:"
+            },
+            {
+              "kind": "speech",
+              "text": "ক + া + ল (lô) becomes কাল."
+            },
+            {
+              "kind": "speech",
+              "text": "kāl — the word that means tomorrow and yesterday both, and which the farewell chapter used in kāl dækhā hôbe. Bengali does not think the two days need separate names; the distance from today is what the word records, and the direction comes from the verb."
+            },
+            {
+              "kind": "speech",
+              "text": "Two words, three pieces each, one shape different between them. Reading is starting to be recombination rather than recognition."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "লাল (lāl)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: লাল]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "কাল",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: কাল]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "আমি (āmi)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: আমি]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "লাল (lāl)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: লাল]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why is the second ল in লাল (lāl) not said lô? (Its inherent vowel is barely voiced at the end of a word.) And which two days does কাল cover? (Yesterday and tomorrow — both.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W02-ta",
+      "sequence": 1750,
+      "title": "ত (tô) — the consonant ta, the dental one",
+      "headword": "ত",
+      "romanization": "tô",
+      "gloss": "the consonant ta — the dental one, and English has no letter for it",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:c54b5876175bb444",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read লাল (lāl) and কাল aloud before adding a new shape."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ত (tô)."
+            },
+            {
+              "kind": "speech",
+              "text": "tô — and the tongue goes somewhere an English speaker does not put it. Press the tip flat against the back of the top front teeth, so the contact is on enamel, and release. That is this letter."
+            },
+            {
+              "kind": "speech",
+              "text": "The English t of top is made a centimetre further back, on the ridge behind the teeth. Bengali has a separate letter for that further-back sound, and it arrives later in this chapter's family. The two are not accents of one letter: they spell different words. So an English t dropped into a Bengali word is not a slight accent — it is the other letter, and the listener hears it as one."
+            },
+            {
+              "kind": "speech",
+              "text": "The test is physical, not auditory. Say English top and feel where the tongue lands. Slide it forward onto the teeth and say it again. The second one is ত (tô)."
+            },
+            {
+              "kind": "speech",
+              "text": "With the mātrā:"
+            },
+            {
+              "kind": "speech",
+              "text": "ত (tô) + া becomes তা."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ত (tô)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ত]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "তা",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: তা]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "লাল (lāl)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: লাল]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does the tongue touch for ত (tô) — the teeth or the ridge behind them? (The teeth.) Does Bengali have a second, further-back t? (Yes, a separate letter.) And is using the English one a small accent, or a different letter? (A different letter.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W02-tin-read",
+      "sequence": 1760,
+      "title": "তিন (tin) — three, read",
+      "headword": "তিন",
+      "romanization": "tin",
+      "gloss": "three — the numeral you can now read as well as count",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:dae22b9a1a88cf33",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ত (tô), then write ি (-i), and say which side of a consonant the second one goes on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ত (tô) + ি (-i) + ন becomes তিন (tin)."
+            },
+            {
+              "kind": "speech",
+              "text": "Read it the way the mouth needs it, not the way the eye meets it:"
+            },
+            {
+              "kind": "speech",
+              "text": "ত (tô) — the dental t, tongue on the teeth."
+            },
+            {
+              "kind": "speech",
+              "text": "ি (-i) — leaning on that ত (tô) from the left, heard after it."
+            },
+            {
+              "kind": "speech",
+              "text": "ন — nô, its inherent vowel almost silent at the end."
+            },
+            {
+              "kind": "speech",
+              "text": "tin — three, counted since the numbers chapter."
+            },
+            {
+              "kind": "speech",
+              "text": "The hook in front of ত (tô) is the same trap as আমি (āmi), and it will keep being the same trap until the hand has written it twenty times. On the page: hook, t, n. In the mouth: t, i, n."
+            },
+            {
+              "kind": "speech",
+              "text": "This word is also about as old as words get. Sanskrit tri, Latin trēs, Greek treîs, English three — the numbers chapter set that out, and the point here is only that you can now meet it on a page in Kolkata instead of in a table."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "তিন (tin)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: তিন]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "লাল (lāl)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: লাল]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "তিন (tin)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: তিন]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In তিন (tin), is the hook read before or after the ত (tô)? (After — it is only written before.) And what does the word mean? (Three.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W02-u-matra",
+      "sequence": 1770,
+      "title": "ু (-u) — the u-sign, hanging below the line",
+      "headword": "ু",
+      "romanization": "-u",
+      "gloss": "the u-sign — the first mark that hangs below the line",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:fb872c49825bdf69",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read তিন (tin) aloud, and say which piece the eye meets first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two vowel signs so far: া to the right, ি (-i) to the left. Here is the third direction."
+            },
+            {
+              "kind": "speech",
+              "text": "ু (-u)."
+            },
+            {
+              "kind": "speech",
+              "text": "The sound is the u of English put, short and rounded — never the oo of food."
+            },
+            {
+              "kind": "speech",
+              "text": "It is written underneath its consonant, tucked into the bottom of the shape:"
+            },
+            {
+              "kind": "speech",
+              "text": "ত (tô) + ু (-u) becomes তু — said tu."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole of the news, and it matters more than it sounds. A script whose marks go above, below, left and right of a letter cannot be read as a line of beads. The consonant is the anchor; everything else is furniture arranged around it. Find the anchor first, then look around it, and the reading order stops being a guess."
+            },
+            {
+              "kind": "speech",
+              "text": "The hand has to learn it too: the stroke starts at the foot of the consonant and curls, and it must not drift so far left that it looks like it belongs to the letter before."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ু (-u)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ু]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "তু",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: তু]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "তিন (tin)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: তিন]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which side of its consonant does ু (-u) sit on? (Underneath.) Is the sound the u of put or the oo of food? (Of put.) And which piece of a written syllable is the anchor? (The consonant.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W02-tumi-read",
+      "sequence": 1780,
+      "title": "তুমি (tumi) — the familiar you, read",
+      "headword": "তুমি",
+      "romanization": "tumi",
+      "gloss": "the familiar you — one word, two vowel signs, two directions",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:7d0edf4ac31e00fc",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ু (-u) and ি (-i), and say which way each of them faces."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ত (tô) + ু (-u) + ম + ি (-i) becomes তুমি (tumi)."
+            },
+            {
+              "kind": "speech",
+              "text": "Four pieces, and the two vowel signs go to two different places:"
+            },
+            {
+              "kind": "speech",
+              "text": "ত (tô) with ু (-u) slung underneath it — tu."
+            },
+            {
+              "kind": "speech",
+              "text": "ম with ি (-i) standing in front of it — mi."
+            },
+            {
+              "kind": "speech",
+              "text": "tumi — the middle rung of Bengali's three-way you: tui for a child or a brother, tumi for a friend, āpni for a stranger or an elder. This is the one a learner uses most and the one that will be used back at them."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice what the word looks like as an object. Above the letters runs the head-line; below the first letter hangs the u-sign; between the letters stands the i-hook. Three levels on one word. The eye that only scans along the head-line will miss half of it — Bengali reading is a scan of a band, not of a line."
+            },
+            {
+              "kind": "speech",
+              "text": "Say আমি (āmi) তুমি (tumi) aloud, the two pronouns together, and hear that each is two light syllables with no stress worth speaking of. Bengali does not lean on one syllable the way English does."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "তুমি (tumi)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: তুমি]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "আমি (āmi)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: আমি]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "তুমি (tumi)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: তুমি]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In তুমি (tumi), where is the u-sign? (Under the first letter.) Where is the i-sign? (In front of the second.) And which of the three yous is তুমি (tumi)? (The familiar one — for a friend.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W02-e-matra",
+      "sequence": 1790,
+      "title": "ে (-e) — the e-sign, standing in front",
+      "headword": "ে",
+      "romanization": "-e",
+      "gloss": "the e-sign — the second mark that stands in front",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:425a09c1ea0d9ca1",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read তুমি (tumi), and name where each of its two vowel signs sits."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ে (-e)."
+            },
+            {
+              "kind": "speech",
+              "text": "The vowel of English pet, said with the mouth a little more closed than an English speaker expects."
+            },
+            {
+              "kind": "speech",
+              "text": "It is written in front of its consonant, exactly like ি (-i):"
+            },
+            {
+              "kind": "speech",
+              "text": "ক + ে (-e) becomes কে — said ke."
+            },
+            {
+              "kind": "speech",
+              "text": "Two signs now stand on the left, and it is worth having a rule for them rather than two facts. A vowel sign written before the consonant is still spoken after it. That single sentence covers ি (-i) and ে (-e) and everything the script will do with a leading mark from here on. It is not a quirk of two letters; it is how the system writes a leading mark at all."
+            },
+            {
+              "kind": "speech",
+              "text": "The shape is a single upright stroke with a small hook, and it is easy to write too tall — it should reach the head-line and stop."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep an eye on this one. It is going to come back joined to something else, and when it does, both halves will already be yours."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ে (-e)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ে]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "কে",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: কে]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "তুমি (tumi)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: তুমি]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two signs are written in front of their consonant? (ি (-i) and ে (-e).) And what is true of any sign written in front? (It is spoken after.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W02-kemon-read",
+      "sequence": 1800,
+      "title": "কেমন (kemon) — how, and the six words this chapter gave back",
+      "headword": "কেমন",
+      "romanization": "kemon",
+      "gloss": "how — and six words read with fourteen pieces",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:b7f9f5cc8cd87cdf",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the three vowel signs of this chapter and say which way each one faces."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ক + ে (-e) + ম + ন becomes কেমন (kemon)."
+            },
+            {
+              "kind": "speech",
+              "text": "ক with ে (-e) in front of it — ke."
+            },
+            {
+              "kind": "speech",
+              "text": "ম — mô."
+            },
+            {
+              "kind": "speech",
+              "text": "ন — its inherent vowel worn almost to nothing at the end."
+            },
+            {
+              "kind": "speech",
+              "text": "kemon — how, the word that opens the sentence you have been saying since the third chapter to ask someone how they are."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new was needed for it. That is the shape of this whole chapter: five pieces added, and six words that were already in the mouth handed over to the eye."
+            },
+            {
+              "kind": "speech",
+              "text": "Count what you hold now. Nine pieces came from the first script chapter; five more were added here — ি (-i), ল (lô), ত (tô), ু (-u), ে (-e). Fourteen pieces, and with them:"
+            },
+            {
+              "kind": "speech",
+              "text": "নাম (nām) — name."
+            },
+            {
+              "kind": "speech",
+              "text": "আমি (āmi) — I."
+            },
+            {
+              "kind": "speech",
+              "text": "লাল (lāl) — red."
+            },
+            {
+              "kind": "speech",
+              "text": "তিন (tin) — three."
+            },
+            {
+              "kind": "speech",
+              "text": "তুমি (tumi) — you."
+            },
+            {
+              "kind": "speech",
+              "text": "কেমন (kemon) — how."
+            },
+            {
+              "kind": "speech",
+              "text": "and, without being counted as words of their own, নাক, কি, আসি and কাল."
+            },
+            {
+              "kind": "speech",
+              "text": "Three of the five additions were vowel signs, and that ratio is not an accident. The consonants are many and each one buys a little; the vowel signs are few and each one buys a great deal, because every consonant already held can take every sign. Adding a sign multiplies. Adding a letter adds."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "নাম (nām) আমি (āmi) লাল (lāl) তিন (tin) তুমি (tumi) কেমন (kemon)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: নাম আমি লাল তিন তুমি কেমন]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "নমস্কার",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: নমস্কার]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "কেমন (kemon)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: কেমন]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "তুমি (tumi) কেমন (kemon)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: তুমি কেমন]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many new pieces did this chapter add? (Five.) How many of them were vowel signs? (Three.) And why is a vowel sign worth more than a consonant? (Because every consonant you hold can take it — it multiplies.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

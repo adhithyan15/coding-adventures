@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "BN-W03-dudh-read",
+    "language": "bengali",
+    "chapter": 18,
+    "sequence": 1920,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:411fc062be32d426",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
