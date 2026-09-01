@@ -1369,7 +1369,7 @@ Rload out 0 1k
 fn parses_bjt_models_into_operating_point_circuits() {
     let parsed = parse_netlist(
         r#"
-.model fast NPN(IS=1e-13 BF=120 VT=26m CJE=2p CJC=3p TF=4n TR=5n XTI=2.5 EG=1.05)
+.model fast NPN(IS=1e-13 BF=120 VT=26m CJE=2p CJC=3p TF=4n TR=5n XTI=2.5 EG=1.05 VAF=75 VA=120)
 Vcc vcc 0 DC 5
 Vbase base 0 DC 0.7
 Q1 vcc base out fast
@@ -1407,6 +1407,7 @@ Rload out 0 1k
     assert_close(bjt.reverse_transit_time, 5.0e-9);
     assert_close(bjt.saturation_current_temperature_exponent, 2.5);
     assert_close(bjt.energy_gap_electron_volts, 1.05);
+    assert_close(bjt.forward_early_voltage, 75.0);
 
     let result = dc_op(&parsed.circuit).unwrap();
     let out = result.voltage("out").unwrap();
@@ -1448,6 +1449,27 @@ fn rejects_invalid_bjt_energy_gap() {
         assert!(error
             .to_string()
             .contains("BJT EG must be finite and positive"));
+    }
+}
+
+#[test]
+fn parses_bjt_forward_early_voltage_alias() {
+    let parsed = parse_netlist(".model shaped NPN(VA=80)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.forward_early_voltage, 80.0);
+}
+
+#[test]
+fn rejects_invalid_bjt_forward_early_voltage() {
+    for value in ["-0.1", "1e999"] {
+        let error = parse_netlist(&format!(".model bad NPN(VAF={value})\nQ1 c b e bad")).unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("BJT VAF must be finite and non-negative"));
     }
 }
 
