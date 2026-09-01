@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+### Added — teach independent ऋ before scoring ऋतु
+
+- Added a four-minute chapter 13 script lesson that separates careful **ṛ**
+  from ordinary Hindi **ri**, gives a sourced four-stroke learner order, and
+  moves from recognition through supported copying, delayed recall, and a
+  no-model writing checkpoint.
+- Added **ऋ** to the shared Devanagari data and authored letter ledger, then
+  promoted **ऋतु** into chapter 14's declared headword only after the new
+  script lesson owns and assesses the character.
+
 ### Changed — declare the complete Hindi woman-register set
 
 - Chapter 39 now declares **औरत / महिला / स्त्री** as its headword instead of

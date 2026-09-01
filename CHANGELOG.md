@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Hindi independent ऋ writing runway
+
+- Added a sourced, sub-five-minute recognition-to-no-model writing lesson for
+  independent **ऋ**, then promoted **ऋतु** into the declared seasons headword
+  after script closure became teach-first.
+
 ### Venture fragmented inline box edges
 
 - Added reusable `layout-inline-box` policy for fragmented margins, padding,

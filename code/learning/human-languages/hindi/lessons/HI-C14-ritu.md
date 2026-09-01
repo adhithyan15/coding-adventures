@@ -8,17 +8,18 @@ spine_node: SPINE-TIME-OF-DAY
 sequence: 610
 chapter: 14
 type: word
-headword: वसंत ग्रीष्म वर्षा शरद् हेमंत शिशिर
-gloss: SIX traditional seasons, not four — India's own ऋतु system, which the Western four-season frame doesn't map onto cleanly
+headword: ऋतु / वसंत ग्रीष्म वर्षा शरद् हेमंत शिशिर
+gloss: ऋतु and the SIX traditional seasons — India's own system, which the Western four-season frame doesn't map onto cleanly
+romanization: "ṛtu / vasant grīṣma varṣā śarad hemant śiśir"
 concept_tag: HI-SEASONS
-prerequisites: [HI-C13-haath]
+prerequisites: [HI-S125-letter-vocalic-r]
 sounds: [devanagari-conjunct-shma, anusvara]
 roots: [ritu-sanskrit-six-season-system]
 etymology_hook: "Hindi's traditional calendar recognizes SIX ऋतु (ṛtu) 'seasons', not four — vasant, grishma, varsha (monsoon), sharad, hemant, shishir — a genuinely different structure, not just extra vocabulary"
 duration:
   max_seconds: 253
 requires:
-  knowledge: [HI-CONCEPT-C13-HAATH-01, HI-CONCEPT-C13-HAATH-02]
+  knowledge: [HI-SCRIPT-RECOG-125, HI-SCRIPT-WRITE-125]
 introduces:
   knowledge: [HI-CONCEPT-C14-RITU-01, HI-CONCEPT-C14-RITU-02]
 practises:
@@ -28,7 +29,7 @@ modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-hindi
-reviews_of: [HI-C13-haath]
+reviews_of: [HI-C13-haath, HI-S125-letter-vocalic-r]
 ---
 
 # वसंत, ग्रीष्म, वर्षा, शरद्, हेमंत, शिशिर — six seasons, not four

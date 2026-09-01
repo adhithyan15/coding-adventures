@@ -3,11 +3,13 @@
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
     "HI-C13-sir",
-    "HI-C13-haath"
+    "HI-C13-haath",
+    "HI-S125-letter-vocalic-r"
   ],
   "before": [],
   "inline": [
-    "HI-EXT-016-LANGUAGE-SPECIFIC"
+    "HI-EXT-016-LANGUAGE-SPECIFIC",
+    "HI-EXT-016-RRI-SCRIPT"
   ],
   "after": []
 }
