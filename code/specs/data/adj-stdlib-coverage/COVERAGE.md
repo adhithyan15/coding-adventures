@@ -10,7 +10,7 @@ exists. Semantic coverage is tracked in `code/specs/ADJ-STDLIB-COVERAGE.md`.
 
 | Collection | Content libraries | Clauses | Query companions | Test references | Source envelopes | Byte-verified |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| facts | 348 | 351 | 347 (99.7%) | 348 (100.0%) | 348 (100.0%) | 0 (0.0%) |
+| facts | 349 | 352 | 348 (99.7%) | 349 (100.0%) | 349 (100.0%) | 0 (0.0%) |
 | formulas | 163 | 404 | 163 (100.0%) | 163 (100.0%) | 163 (100.0%) | 4 (2.5%) |
 | medical-recall | 63 | 634 | 63 (100.0%) | 63 (100.0%) | 60 (95.2%) | 0 (0.0%) |
 
@@ -31,7 +31,7 @@ provenance bundle whose CAS graph proves all cited source bytes.
 | `facts/calendar` | 2 | 2 | 2 | 2 | 2 | 0 |
 | `facts/chemistry` | 20 | 20 | 20 | 20 | 20 | 0 |
 | `facts/civics` | 10 | 10 | 10 | 10 | 10 | 0 |
-| `facts/earth-science` | 13 | 13 | 13 | 13 | 13 | 0 |
+| `facts/earth-science` | 14 | 14 | 14 | 14 | 14 | 0 |
 | `facts/engineering` | 1 | 1 | 1 | 1 | 1 | 0 |
 | `facts/environment` | 3 | 3 | 3 | 3 | 3 | 0 |
 | `facts/geography` | 12 | 12 | 12 | 12 | 12 | 0 |
@@ -74,7 +74,7 @@ None.
 - `code/specs/data/mycin-2026/recall/endocrine-edges.adj`
 - `code/specs/data/mycin-2026/recall/iem-edges.adj`
 
-### Missing pinned source bytes (570)
+### Missing pinned source bytes (571)
 
 See the JSON form of this report for the complete machine-readable list.
 
