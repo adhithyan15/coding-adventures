@@ -23,6 +23,8 @@ const JOURNEY_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/journey.tokens");
 const TIMELINE_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/timeline.tokens");
+const MINDMAP_TOKEN_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/mindmap.tokens");
 const REQUIREMENT_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.tokens");
 const XYCHART_TOKEN_GRAMMAR_SOURCE: &str =
@@ -77,6 +79,10 @@ pub fn create_mermaid_journey_lexer(source: &str) -> GrammarLexer<'_> {
 
 pub fn create_mermaid_timeline_lexer(source: &str) -> GrammarLexer<'_> {
     create_lexer(source, TIMELINE_TOKEN_GRAMMAR_SOURCE, "timeline.tokens")
+}
+
+pub fn create_mermaid_mindmap_lexer(source: &str) -> GrammarLexer<'_> {
+    create_lexer(source, MINDMAP_TOKEN_GRAMMAR_SOURCE, "mindmap.tokens")
 }
 
 pub fn create_mermaid_requirement_lexer(source: &str) -> GrammarLexer<'_> {
@@ -295,6 +301,11 @@ pub fn try_tokenize_mermaid_timeline(source: &str) -> Result<Vec<Token>, String>
     lexer.tokenize().map_err(|error| error.to_string())
 }
 
+pub fn try_tokenize_mermaid_mindmap(source: &str) -> Result<Vec<Token>, String> {
+    let mut lexer = create_mermaid_mindmap_lexer(source);
+    lexer.tokenize().map_err(|error| error.to_string())
+}
+
 pub fn try_tokenize_mermaid_xychart(source: &str) -> Result<Vec<Token>, String> {
     let mut lexer = create_mermaid_xychart_lexer(source);
     lexer.tokenize().map_err(|error| error.to_string())
@@ -313,6 +324,20 @@ pub fn try_tokenize_mermaid_requirement(source: &str) -> Result<Vec<Token>, Stri
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn tokenizes_mindmap_indentation_and_shapes_as_complete_lines() {
+        let tokens = try_tokenize_mermaid_mindmap(
+            "mindmap\n  root((Native))\n    Parser[Grammar first]\n",
+        )
+        .unwrap();
+        let lines = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("NODE_LINE"))
+            .map(|token| token.value.as_str())
+            .collect::<Vec<_>>();
+        assert_eq!(lines, ["  root((Native))", "    Parser[Grammar first]"]);
+    }
     use lexer::token::TokenType;
 
     fn custom_name(token: &Token) -> Option<&str> {

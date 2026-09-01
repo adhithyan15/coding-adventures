@@ -21,6 +21,16 @@ The current native pipeline supports documented subsets of:
 - `xychart`
 - `quadrantChart`
 - `journey`
+- `timeline`
+- `mindmap`
+
+The initial `mindmap` subset uses a dedicated indentation-preserving token
+grammar and parser grammar. Plain, square, rounded, and circular nodes lower to
+graph semantic IR with explicit parent-child edges, deterministic IDs, and
+depth-resolved styles. The shared graph layout and diagram-to-paint path then
+produce backend-neutral geometry and glyphs; a native Metal fixture validates
+the complete pipeline to PNG. Unsupported mindmap decorations remain outside
+the partial compatibility claim.
 
 The `xychart` pipeline preserves chart orientation, titles, accessibility
 metadata, categorical and numeric axes, named bar and line series, and optional

@@ -2,8 +2,8 @@ use std::collections::BTreeSet;
 
 use mermaid_parser::{
     detect_mermaid_type, parse_any_mermaid, parse_gantt, parse_gitgraph, parse_journey, parse_pie,
-    parse_quadrant_chart, parse_requirement_diagram, parse_sankey, parse_sequence_diagram,
-    parse_timeline, parse_xychart,
+    parse_mindmap, parse_quadrant_chart, parse_requirement_diagram, parse_sankey,
+    parse_sequence_diagram, parse_timeline, parse_xychart,
     MERMAID_COMPATIBILITY_BASELINE,
 };
 use serde_json::Value;
@@ -24,6 +24,23 @@ const TIMELINE_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/timeline-11.16.1-corpus.json"
 ));
+const MINDMAP_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/mindmap-11.16.1-corpus.json"
+));
+
+#[test]
+fn pinned_mindmap_subset_corpus_parses_to_tree_edges() {
+    let corpus: Value = serde_json::from_str(MINDMAP_CORPUS).expect("mindmap corpus must be JSON");
+    assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
+    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        let source = fixture["source"].as_str().expect("fixture source");
+        let diagram = parse_mindmap(source)
+            .unwrap_or_else(|error| panic!("mindmap fixture {id} failed: {error}"));
+        assert_eq!(diagram.edges.len() + 1, diagram.nodes.len());
+    }
+}
 const REQUIREMENT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/requirement-11.16.1-corpus.json"
@@ -520,9 +537,9 @@ Alice->>Bob: Hello
 
 #[test]
 fn recognized_but_unimplemented_family_is_not_reported_as_unknown() {
-    let error = parse_any_mermaid("mindmap\nroot((mindmap))")
+    let error = parse_any_mermaid("block-beta\ncolumns 2\nA B")
         .err()
-        .expect("mindmap support is not implemented yet");
+        .expect("block support is not implemented yet");
     assert!(error.message.contains("recognized but not implemented"));
     assert!(error.message.contains(MERMAID_COMPATIBILITY_BASELINE));
 }
