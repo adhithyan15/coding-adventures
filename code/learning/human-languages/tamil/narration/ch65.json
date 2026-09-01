@@ -58,10 +58,6 @@
             },
             {
               "kind": "speech",
-              "text": "<!-- Safety, per HL24 section 6: every prompt in this lesson names the liquid, and none derives a person-noun from this verb. The objectless form and that person-noun both carry the drinking-habit reading rather than the sense taught here, so neither is written out anywhere in this file. The omission is deliberate; a later editor completing the pattern would undo it. Narration speaks these comments aloud, which is the second reason the hazardous forms are described rather than quoted. -->."
-            },
-            {
-              "kind": "speech",
               "text": "Across the family: Kannada uses ಕುಡಿ (kuḍi) and Malayalam കുടിക്കുക (kuṭikkuka) — the same word, worn a little differently. Telugu reached for something else entirely and drinks with త్రాగు (trāgu)."
             }
           ]
@@ -753,10 +749,6 @@
             {
               "kind": "speech",
               "text": "Across the family, this one did not travel. Kannada shuts a door with ಮುಚ್ಚು (muccu), Telugu with మూయు (mūyu), and Malayalam with അടയ്ക്കുക (aṭaykkuka). Four sisters, three different words — after two verbs the family held in common, a reminder that the sharing is real but never guaranteed."
-            },
-            {
-              "kind": "speech",
-              "text": "<!-- Safety, per HL24 section 6: this lesson builds no person-noun from this verb. One exists that looks like it would be that form, and it is not -- it is an unrelated Sanskrit borrowing, and it is an insult. It is described rather than spelled out here because narration speaks these comments aloud, so quoting it would put it in the learner's ear by the same route the drill was kept from putting it in their mouth. The omission is deliberate. -->."
             }
           ]
         },

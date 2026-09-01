@@ -4,13 +4,13 @@
   "chapter": 9,
   "title": "Sorry",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5b3036bf00dd4f04",
+  "sourceHash": "fnv1a64:dd7fdd78a0ff55bc",
   "lessons": [
     {
       "id": "HI-C09-maaf-kijiye",
       "sequence": 520,
       "title": "माफ़ कीजिए (māf kījiye) — please forgive me / sorry",
-      "headword": "माफ़ कीजिए",
+      "headword": "माफ़ कीजिए / क्षमा करें",
       "romanization": "",
       "gloss": "please forgive me / sorry (māf kījiye — \"please do forgiveness\")",
       "script": "devanagari",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:069a9f40916e102b",
+      "sourceHash": "fnv1a64:edbf2c95095fe541",
       "notice": null,
       "blocks": [
         {
