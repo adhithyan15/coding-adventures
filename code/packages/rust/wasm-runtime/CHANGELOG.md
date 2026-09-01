@@ -33,9 +33,21 @@ parse, a real regression the full-corpus baseline diff would have caught.
   rejection on top of the existing check, never remove one — verified via
   the full-corpus baseline diff showing zero regressions (see
   `wasm-conformance`'s own changelog for the exact tallies).
-- Two new unit tests (`rejects_a_function_import_whose_rec_group_position_
-  mismatches`/`accepts_a_function_import_whose_rec_group_shape_matches`)
-  exercising the guard directly, independent of the full corpus.
+- **Function and tag import compatibility ALSO requires matching
+  finality** (`HostFunction::is_final`/`HostInterface::
+  resolve_tag_is_final`, both new `wasm-execution` 0.9.80 default methods
+  returning `true`): `(sub (func))` (open) and `(sub final (func))`
+  (final) are structurally identical `FuncType`s yet distinct canonical
+  types — this fixed 2 of the 4 new `assert_unlinkable` fails the initial
+  `rec`-group-shape-only guard left behind (`type-subtyping.wast` lines
+  594-617's finality-mismatch pair); see `wasm-conformance`'s own
+  changelog for the full before/after accounting, including the 2
+  remaining fails (`type-subtyping.wast`'s M10/M11 linking pair) this
+  guard does NOT catch — confirmed to need real cross-module canonical
+  type-group equivalence (item 3b), not a shallow shape/finality check.
+- Four new unit tests (two for the `rec`-group-shape guard, two for the
+  finality guard) exercising both directly, independent of the full
+  corpus.
 
 ## [0.6.16] — 2026-08-31 (W32 second slice — non-null concrete reference types)
 

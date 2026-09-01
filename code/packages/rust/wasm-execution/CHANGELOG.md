@@ -16,6 +16,14 @@ All notable changes to this package will be documented in this file.
   own changelog).
 - **`HostInterface::resolve_tag_group_shape`**: same shape, same
   default-method backward-compatibility reasoning, for tag imports.
+- **`HostFunction::is_final`/`HostInterface::resolve_tag_is_final`**: same
+  default-method shape (both default to `true`), reporting whether a
+  function/tag's own declared type forecloses further subtyping.
+  Finality is as much a part of a type's real canonical identity as its
+  shape or `rec`-group position — `(sub (func))` (open) and `(sub final
+  (func))` (final) are structurally IDENTICAL `FuncType`s yet distinct
+  types, which neither a plain shape comparison nor the group-shape guard
+  above can tell apart (`type-subtyping.wast` lines 594-617 needs this).
 
 Neither method is consulted by anything in THIS crate — they exist so
 `wasm-runtime`'s import-linking code (the actual consumer) can ask a host

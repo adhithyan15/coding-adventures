@@ -139,8 +139,14 @@ impl HostInterface for RegistryHost {
     fn resolve_function(&self, module_name: &str, name: &str) -> Option<Box<dyn HostFunction>> {
         let (instance_rc, index) = self.find_export(module_name, name, ExternalKind::Function)?;
         let func_type = instance_rc.borrow().func_types.get(index as usize)?.clone();
-        let group_shape = combined_function_type_group_shape(&instance_rc.borrow(), index);
-        Some(Box::new(CrossModuleFunction { instance: instance_rc, export_name: name.to_string(), func_type, group_shape }))
+        let (group_shape, is_final) = {
+            let instance = instance_rc.borrow();
+            match combined_function_type_idx(&instance, index) {
+                Some(t) => (instance.module.type_group_shape(t), instance.module.type_subtyping_at(t).is_final),
+                None => ((1, 0), true),
+            }
+        };
+        Some(Box::new(CrossModuleFunction { instance: instance_rc, export_name: name.to_string(), func_type, group_shape, is_final }))
     }
 
     fn resolve_global(&self, module_name: &str, name: &str) -> Option<(GlobalType, WasmValue)> {
@@ -237,18 +243,30 @@ impl HostInterface for RegistryHost {
         };
         instance.module.type_group_shape(type_idx)
     }
+
+    /// W33 first slice: the finality counterpart to `resolve_tag_group_shape`
+    /// above — see `HostFunction::is_final`'s own doc comment.
+    fn resolve_tag_is_final(&self, module_name: &str, name: &str) -> bool {
+        let Some((instance_rc, index)) = self.find_export(module_name, name, ExternalKind::Tag) else {
+            return true;
+        };
+        let instance = instance_rc.borrow();
+        let Some(&type_idx) = instance.tags.get(index as usize) else {
+            return true;
+        };
+        instance.module.type_subtyping_at(type_idx).is_final
+    }
 }
 
-/// The `(rec_group_size, rec_group_position)` for the type of the
+/// The type-SECTION index (into `instance.module.types`) for the
 /// COMBINED-index-space function `index` in `instance` (W33 first slice)
 /// -- `index` follows the same "imports first, then module-defined"
 /// convention `instance.func_types` itself uses. Mirrors `wasm-validator`'s
 /// own `build_module_context`'s identical imports-first-then-declared
-/// resolution for `func_type_indices`, just computing the group shape
-/// instead of returning the raw type index.
-fn combined_function_type_group_shape(instance: &WasmInstance, index: u32) -> (u32, u32) {
+/// resolution for `func_type_indices`.
+fn combined_function_type_idx(instance: &WasmInstance, index: u32) -> Option<u32> {
     let imported_function_count = instance.module.imports.iter().filter(|i| i.kind == ExternalKind::Function).count() as u32;
-    let type_idx = if index < imported_function_count {
+    if index < imported_function_count {
         instance
             .module
             .imports
@@ -261,10 +279,6 @@ fn combined_function_type_group_shape(instance: &WasmInstance, index: u32) -> (u
             })
     } else {
         instance.module.functions.get((index - imported_function_count) as usize).copied()
-    };
-    match type_idx {
-        Some(t) => instance.module.type_group_shape(t),
-        None => (1, 0),
     }
 }
 
@@ -289,9 +303,13 @@ struct CrossModuleFunction {
     func_type: FuncType,
     /// W33 first slice: this function's own `(rec_group_size,
     /// rec_group_position)`, computed once at `resolve_function` time
-    /// (see `combined_function_type_group_shape`) — see
-    /// `HostFunction::type_group_shape`'s own doc comment.
+    /// (see `combined_function_type_idx`) — see `HostFunction::
+    /// type_group_shape`'s own doc comment.
     group_shape: (u32, u32),
+    /// W33 first slice: this function's own declared finality, computed
+    /// alongside `group_shape` — see `HostFunction::is_final`'s own doc
+    /// comment.
+    is_final: bool,
 }
 
 impl HostFunction for CrossModuleFunction {
@@ -306,6 +324,10 @@ impl HostFunction for CrossModuleFunction {
 
     fn type_group_shape(&self) -> (u32, u32) {
         self.group_shape
+    }
+
+    fn is_final(&self) -> bool {
+        self.is_final
     }
 }
 
