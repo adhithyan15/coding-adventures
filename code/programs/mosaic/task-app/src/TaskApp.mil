@@ -51,6 +51,14 @@ component TaskApp {
   slot status-label : text ;
   slot status-warn  : text ;
 
+  // Host-owned persistence truth. The status and location stay visible so the
+  // local-only model and backup surface are discoverable; the warning is empty
+  // during normal durable operation and becomes non-empty for volatile fallback,
+  // failed writes, or a rejected saved workspace.
+  slot storage-status   : text ;
+  slot storage-location : text ;
+  slot storage-warning  : text ;
+
   // The project-progress ring (task-app-icon-assets-v1.md) — the workspace's
   // overall percent-complete as a circular fill, next to the view switcher.
   // `ring-gradient` is a host-computed `conic-gradient(...)` CSS string (the

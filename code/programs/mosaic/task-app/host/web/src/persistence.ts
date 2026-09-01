@@ -43,6 +43,9 @@ export const WORKSPACE_STORE = "workspace";
 /** The key of the (currently only) workspace record. */
 export const WORKSPACE_KEY = "web";
 
+/** Fixed recovery key used to preserve the most recently rejected web record. */
+export const RECOVERY_WORKSPACE_KEY = "web-corrupt";
+
 /** The persisted shape: the engine snapshot plus the host-owned session state. */
 export interface WorkspaceRecord {
   /** Primary key (the store's keyPath) — always {@link WORKSPACE_KEY}. */
@@ -64,6 +67,15 @@ export interface WorkspaceRecord {
   savedAt: number;
 }
 
+/** What the UI needs to say truthfully about the selected backend. */
+export interface WorkspaceStorageSession {
+  storage: KVStorage;
+  durable: boolean;
+  status: string;
+  location: string;
+  warning: string;
+}
+
 /** The store schema, shared by both backends so their key handling matches. */
 const SCHEMA = [{ name: WORKSPACE_STORE, keyPath: "id" }];
 
@@ -75,21 +87,45 @@ const SCHEMA = [{ name: WORKSPACE_STORE, keyPath: "id" }];
  *
  * (The checklist-app boots exactly this way; we copy the proven pattern.)
  */
-export async function openWorkspaceStorage(): Promise<KVStorage> {
+export async function openWorkspaceStorage(): Promise<WorkspaceStorageSession> {
   try {
     const idb = new IndexedDBStorage({ dbName: "task-app", version: 1, stores: SCHEMA });
     await idb.open();
-    return idb;
+    return {
+      storage: idb,
+      durable: true,
+      status: "Saved locally on this device",
+      location: "This browser profile · IndexedDB database task-app, workspace record web",
+      warning: "",
+    };
   } catch {
     const mem = new MemoryStorage(SCHEMA);
     await mem.open();
-    return mem;
+    return {
+      storage: mem,
+      durable: false,
+      status: "Temporary session only",
+      location: "Memory in this tab · closing or reloading removes these changes",
+      warning:
+        "Durable local storage is unavailable. Changes will be lost when this tab closes or reloads.",
+    };
   }
 }
 
 /** Read the persisted workspace, or `undefined` on a first visit. */
 export function loadWorkspace(storage: KVStorage): Promise<WorkspaceRecord | undefined> {
   return storage.get<WorkspaceRecord>(WORKSPACE_STORE, WORKSPACE_KEY);
+}
+
+/** Preserve a rejected record before normal saves can replace the live key. */
+export function preserveRejectedWorkspace(
+  storage: KVStorage,
+  record: WorkspaceRecord,
+): Promise<void> {
+  return storage.put(WORKSPACE_STORE, {
+    ...record,
+    id: RECOVERY_WORKSPACE_KEY,
+  });
 }
 
 /**
@@ -123,6 +159,13 @@ export function makeWorkspaceRecord(
  * costs at most the latest edit on a crash — an acceptable trade for a task
  * app. (A banking app would await and surface errors.)
  */
-export function saveWorkspace(storage: KVStorage, record: WorkspaceRecord): void {
-  void storage.put(WORKSPACE_STORE, record);
+export function saveWorkspace(
+  storage: KVStorage,
+  record: WorkspaceRecord,
+  onError?: (message: string) => void,
+): void {
+  void storage.put(WORKSPACE_STORE, record).catch((error: unknown) => {
+    const detail = error instanceof Error ? error.message : String(error);
+    onError?.(`Could not save changes to local storage: ${detail}`);
+  });
 }

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- When an application's prop envelope declares `storage-warning`, propagate the
+  native host's existing persistence warning into that prop as well as the
+  diagnostic top-level field. Generated UI can now show corrupt-state or write
+  failures persistently instead of leaving them only in logs/status chrome.
 - Preserve JSON strings as Kotlin strings in the Compose/JNA host even when
   their contents look numeric or boolean, while keeping actual JSON numbers
   and booleans mapped to native Kotlin primitives.

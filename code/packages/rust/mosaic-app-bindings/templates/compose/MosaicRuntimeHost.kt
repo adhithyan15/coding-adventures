@@ -283,7 +283,15 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
 
     private fun withPersistenceWarning(update: JsonObject): JsonObject {
         val warning = persistenceWarning ?: return update
-        return JsonObject(update + ("persistenceWarning" to JsonPrimitive(warning)))
+        val augmented = update.toMutableMap()
+        augmented["persistenceWarning"] = JsonPrimitive(warning)
+        val props = update["props"] as? JsonObject
+        if (props?.containsKey("storage-warning") == true) {
+            augmented["props"] = JsonObject(
+                props + ("storage-warning" to JsonPrimitive(warning)),
+            )
+        }
+        return JsonObject(augmented)
     }
 
     private fun withJsonInput(

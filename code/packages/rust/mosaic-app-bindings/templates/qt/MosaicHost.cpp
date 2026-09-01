@@ -386,6 +386,11 @@ QVariantMap MosaicHost::withPersistenceWarning(const QVariantMap &update) const
     if (persistenceWarning_.isEmpty()) return update;
     auto augmented = update;
     augmented.insert(QStringLiteral("persistenceWarning"), persistenceWarning_);
+    auto props = augmented.value(QStringLiteral("props")).toMap();
+    if (props.contains(QStringLiteral("storage-warning"))) {
+        props.insert(QStringLiteral("storage-warning"), persistenceWarning_);
+        augmented.insert(QStringLiteral("props"), props);
+    }
     return augmented;
 }
 

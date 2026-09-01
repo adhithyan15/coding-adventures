@@ -6,6 +6,14 @@ All notable changes to the `task-app-web` host are documented here.
 
 ### Fixed
 
+- Persistence is no longer silent: the host reports IndexedDB versus volatile
+  memory in the app, surfaces background-save failures, and turns rejected saved
+  snapshots into a recoverable startup warning. The rejected record is copied to
+  the fixed `workspace/web-corrupt` recovery key before normal saves can replace
+  `workspace/web`.
+
+### Fixed
+
 - List completion buttons now have state-aware ARIA names that include the
   task name while retaining the compact circle/check visual.
 
