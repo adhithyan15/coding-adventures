@@ -45,9 +45,13 @@
 //! implement and is the reading that makes that example type-check. See
 //! `pop_val` below.
 
+use std::rc::Rc;
+
 use wasm_leb128::{decode_signed, decode_unsigned, decode_unsigned_bounded};
 use wasm_opcodes::get_opcode;
-use wasm_types::{FieldType, FuncType, FunctionBody, GlobalType, ValueType, WasmModule};
+use wasm_types::{
+    ArrayType, CanonicalGroup, FieldType, FuncType, FunctionBody, GlobalType, StorageType, StructType, TypeKind, ValueType, WasmModule, nominal_subtype_chain,
+};
 
 use crate::ValidationError;
 
@@ -184,14 +188,79 @@ fn is_numeric_or_vector(vt: ValueType) -> bool {
     matches!(vt, ValueType::I32 | ValueType::I64 | ValueType::F32 | ValueType::F64 | ValueType::V128)
 }
 
+/// A `&WasmModule` bundled with its own canonicalized type-group forms
+/// (W34 third slice, `code/specs/W34-wasm-gc-canonical-type-equivalence.md`),
+/// computed exactly ONCE per [`type_check_module`] call -- right after
+/// [`check_type_subtyping`] confirms the module's `sub`/`rec` reference
+/// ordering is well-founded, the same precondition `wasm_types::
+/// canonicalize_types`'s own termination argument depends on -- and
+/// threaded everywhere `module: &WasmModule` used to be threaded through
+/// this file's instruction-level type-checking machinery.
+///
+/// `Copy` (both fields are plain references/slices) so every existing call
+/// site that used to forward a bare `module`/`ctx.module` value keeps
+/// compiling completely unchanged once this type replaces `&WasmModule` in
+/// each of those functions' signatures -- no call site needed to grow a
+/// new argument. `Deref<Target = WasmModule>` for the identical reason:
+/// every existing `module.<field or method>` access (the overwhelming
+/// majority of this file's own usages, e.g. `module.type_subtyping_at(..)`,
+/// `module.types.len()`) also keeps compiling unchanged -- only the
+/// handful of call sites that need real canonical-equivalence data reach
+/// for `.canonically_equivalent(..)` directly.
+///
+/// This is intentionally a lightweight, per-call-cheap value: it carries a
+/// borrowed slice, never a fresh computation, so passing it through 150+
+/// existing call sites costs nothing beyond what passing `&WasmModule`
+/// already cost (two words instead of one). See this crate's own security
+/// review for this slice for why per-call-site cost, not just correctness,
+/// was checked here.
+#[derive(Clone, Copy)]
+struct TypeContext<'a> {
+    module: &'a WasmModule,
+    canonical_types: &'a [Option<(Rc<CanonicalGroup>, u32)>],
+}
+
+impl<'a> std::ops::Deref for TypeContext<'a> {
+    type Target = WasmModule;
+    fn deref(&self) -> &WasmModule {
+        self.module
+    }
+}
+
+impl<'a> TypeContext<'a> {
+    /// Whether flat type-section indices `sub_idx`/`super_idx` are related
+    /// by the real GC-proposal rule (W34): nominal (nested `sub` chain) OR
+    /// canonically equivalent at any hop, per [`nominal_subtype_chain`]'s
+    /// own doc comment ("nominal modulo canonicalization"). This is the
+    /// SAME shared, security-reviewed walk `wasm-execution`'s runtime
+    /// dispatch uses (via its own `canonical_types` field), so the two can
+    /// never drift apart.
+    fn nominal_or_canonical_subtype(&self, sub_idx: u32, super_idx: u32) -> bool {
+        nominal_subtype_chain(&self.module.type_subtyping, self.canonical_types, sub_idx, super_idx)
+    }
+}
+
 /// `actual` flows where `expected` is required. `module` supplies the W33
 /// first-slice nominal `sub`-chain (`code/specs/
-/// W33-wasm-gc-recursive-type-subtyping.md`) needed for the two new
-/// `ConcreteFuncRef`/`NonNullConcreteFuncRef` arms below -- every OTHER
-/// arm here predates W33 and never looks at `module` at all, so a
-/// `WasmModule` that never populated `type_subtyping` (see that field's
-/// own doc comment) behaves exactly as before.
-fn is_assignable(actual: ValueType, expected: ValueType, module: &WasmModule) -> bool {
+/// W33-wasm-gc-recursive-type-subtyping.md`) AND, since W34's third slice
+/// (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`), real canonical
+/// type-group equivalence, needed for every `ConcreteFuncRef`/
+/// `NonNullConcreteFuncRef`/`StructRef`/`NonNullStructRef`/`ArrayRef`/
+/// `NonNullArrayRef` arm below -- every OTHER arm here predates W33 and
+/// never looks at `module` at all, so a `WasmModule` that never populated
+/// `type_subtyping` (see that field's own doc comment) behaves exactly as
+/// before.
+///
+/// **W34 third slice**: the `StructRef`/`NonNullStructRef`/`ArrayRef`/
+/// `NonNullArrayRef` arms are NEW -- this function had ZERO arms for any
+/// of the four struct/array reference variants before this slice (a real,
+/// previously-open gap the W34 spec's own research flagged: those variants
+/// are already index-parametrized exactly like `ConcreteFuncRef`, and
+/// `TypeSubtyping`/`nominal_subtype_chain` were already kind-agnostic --
+/// only this function's own arm list was incomplete). Added here using the
+/// exact same `nominal_or_canonical_subtype` termination the func arms now
+/// also use, generalized rather than duplicated.
+fn is_assignable(actual: ValueType, expected: ValueType, module: TypeContext) -> bool {
     actual == expected
         || matches!((actual, expected), (ValueType::ConcreteFuncRef(_), ValueType::Funcref))
         || actual.is_bottom_subtype_of(&expected)
@@ -200,29 +269,35 @@ fn is_assignable(actual: ValueType, expected: ValueType, module: &WasmModule) ->
         // see `ValueType::is_non_null_subtype_of`'s own doc comment for why
         // both hops of each chain are direct rules, not composed ones.
         || actual.is_non_null_subtype_of(&expected)
-        // W33 first slice: a reference to a DECLARED NOMINAL SUBTYPE of a
-        // concrete function type flows wherever a reference to that
-        // supertype is expected -- `(ref $t2)`/`(ref null $t2)` is
-        // assignable to a `(ref $t1)`/`(ref null $t1)` slot whenever `$t2
-        // <: $t1` per the module's own `sub` chain (`type-subtyping.wast`'s
-        // "Subsumption" section: `$f2`'s param `(ref $t2)` flowing into
-        // `$f1`'s `(ref $t1)` param at a `call` site is EXACTLY this,
-        // combined with `ValueType`'s own pre-existing ref-covariance).
-        // Deliberately does NOT attempt canonical/structural equivalence
-        // between two independently-declared, unrelated-by-`sub` types
-        // even if byte-identical in shape -- that's W33's own explicitly
-        // out-of-scope item (3b), see `WasmModule::
-        // func_type_is_nominal_subtype`'s own doc comment.
-        || matches!((actual, expected), (ValueType::ConcreteFuncRef(i), ValueType::ConcreteFuncRef(j)) if module.func_type_is_nominal_subtype(i, j))
-        || matches!((actual, expected), (ValueType::NonNullConcreteFuncRef(i), ValueType::NonNullConcreteFuncRef(j)) if module.func_type_is_nominal_subtype(i, j))
-        || matches!((actual, expected), (ValueType::NonNullConcreteFuncRef(i), ValueType::ConcreteFuncRef(j)) if module.func_type_is_nominal_subtype(i, j))
+        // W33 first slice / W34 third slice: a reference to a DECLARED
+        // NOMINAL SUBTYPE, or a CANONICALLY EQUIVALENT type, flows wherever
+        // a reference to the expected type is required -- `(ref $t2)`/`(ref
+        // null $t2)` is assignable to a `(ref $t1)`/`(ref null $t1)` slot
+        // whenever `$t2 <: $t1` per the module's own `sub` chain OR `$t2`/
+        // `$t1` are canonically the same type despite having no declared
+        // relationship at all (`type-subtyping.wast`'s "Subsumption"
+        // section combined with `type-rec.wast`'s "Static/Dynamic matching"
+        // sections -- see `code/specs/
+        // W34-wasm-gc-canonical-type-equivalence.md`'s own worked example).
+        || matches!((actual, expected), (ValueType::ConcreteFuncRef(i), ValueType::ConcreteFuncRef(j)) if module.nominal_or_canonical_subtype(i, j))
+        || matches!((actual, expected), (ValueType::NonNullConcreteFuncRef(i), ValueType::NonNullConcreteFuncRef(j)) if module.nominal_or_canonical_subtype(i, j))
+        || matches!((actual, expected), (ValueType::NonNullConcreteFuncRef(i), ValueType::ConcreteFuncRef(j)) if module.nominal_or_canonical_subtype(i, j))
+        // W34 third slice: the struct/array analogues of the three func
+        // arms above -- see this function's own doc comment for why these
+        // didn't exist at all before this slice.
+        || matches!((actual, expected), (ValueType::StructRef(i), ValueType::StructRef(j)) if module.nominal_or_canonical_subtype(i, j))
+        || matches!((actual, expected), (ValueType::NonNullStructRef(i), ValueType::NonNullStructRef(j)) if module.nominal_or_canonical_subtype(i, j))
+        || matches!((actual, expected), (ValueType::NonNullStructRef(i), ValueType::StructRef(j)) if module.nominal_or_canonical_subtype(i, j))
+        || matches!((actual, expected), (ValueType::ArrayRef(i), ValueType::ArrayRef(j)) if module.nominal_or_canonical_subtype(i, j))
+        || matches!((actual, expected), (ValueType::NonNullArrayRef(i), ValueType::NonNullArrayRef(j)) if module.nominal_or_canonical_subtype(i, j))
+        || matches!((actual, expected), (ValueType::NonNullArrayRef(i), ValueType::ArrayRef(j)) if module.nominal_or_canonical_subtype(i, j))
 }
 
 /// Pop one value and require it to be assignable to `expected` (an
 /// `Unknown` actual or expected always matches -- see [`pop_val`]; a
 /// `Known` actual must satisfy [`is_assignable`], not bare equality, so a
 /// concrete function-type ref can flow wherever `funcref` is expected).
-fn pop_expect(stack: &mut Vec<StackType>, frame: &ControlFrame, expected: ValueType, module: &WasmModule) -> Result<(), ValidationError> {
+fn pop_expect(stack: &mut Vec<StackType>, frame: &ControlFrame, expected: ValueType, module: TypeContext<'_>) -> Result<(), ValidationError> {
     match pop_val(stack, frame)? {
         StackType::Unknown => Ok(()),
         StackType::Known(actual) if is_assignable(actual, expected, module) => Ok(()),
@@ -234,7 +309,7 @@ fn pop_expect(stack: &mut Vec<StackType>, frame: &ControlFrame, expected: ValueT
 
 /// Pop and verify a whole type list, in reverse (the last-listed type is
 /// on top of the stack -- e.g. `store`'s `[I32, T]` pops `T` first).
-fn pop_expect_many(stack: &mut Vec<StackType>, frame: &ControlFrame, expected: &[ValueType], module: &WasmModule) -> Result<(), ValidationError> {
+fn pop_expect_many(stack: &mut Vec<StackType>, frame: &ControlFrame, expected: &[ValueType], module: TypeContext<'_>) -> Result<(), ValidationError> {
     for &t in expected.iter().rev() {
         pop_expect(stack, frame, t, module)?;
     }
@@ -248,7 +323,7 @@ fn pop_expect_many(stack: &mut Vec<StackType>, frame: &ControlFrame, expected: &
 /// see [`is_assignable`]). Arity must match exactly (WASM has no
 /// result-count subtyping); each pairwise result must be assignable in
 /// the same direction `pop_expect` already checks.
-fn results_assignable(callee_results: &[ValueType], function_results: &[ValueType], module: &WasmModule) -> bool {
+fn results_assignable(callee_results: &[ValueType], function_results: &[ValueType], module: TypeContext<'_>) -> bool {
     callee_results.len() == function_results.len()
         && callee_results.iter().zip(function_results.iter()).all(|(&a, &b)| is_assignable(a, b, module))
 }
@@ -336,7 +411,7 @@ fn push_ctrl(
     kind: FrameKind,
     start_types: Vec<ValueType>,
     end_types: Vec<ValueType>,
-    module: &WasmModule,
+    module: TypeContext<'_>,
 ) -> Result<(), ValidationError> {
     let outer = control_stack.last().cloned();
     // The enclosing frame is the "current" one for the purposes of popping
@@ -376,7 +451,7 @@ fn push_ctrl(
 /// the stack (dead-code-tolerant), require nothing extra is left over
 /// (skipped while unreachable -- dead code may leave any shape, so it's
 /// simply flushed down to the frame's own floor instead), then pop it.
-fn pop_ctrl(stack: &mut Vec<StackType>, control_stack: &mut Vec<ControlFrame>, module: &WasmModule) -> Result<ControlFrame, ValidationError> {
+fn pop_ctrl(stack: &mut Vec<StackType>, control_stack: &mut Vec<ControlFrame>, module: TypeContext<'_>) -> Result<ControlFrame, ValidationError> {
     let frame = control_stack
         .last()
         .cloned()
@@ -404,7 +479,7 @@ fn pop_ctrl(stack: &mut Vec<StackType>, control_stack: &mut Vec<ControlFrame>, m
 /// index -- see that function's own doc comment for the `ctx.types`-not-
 /// `ctx.func_types` history this crate has no analogous bug to repeat, since
 /// it's never given anything BUT the real type section).
-fn decode_blocktype(module: &WasmModule, code: &[u8], offset: usize) -> Result<(Vec<ValueType>, Vec<ValueType>, usize), ValidationError> {
+fn decode_blocktype(module: TypeContext<'_>, code: &[u8], offset: usize) -> Result<(Vec<ValueType>, Vec<ValueType>, usize), ValidationError> {
     let byte = *code
         .get(offset)
         .ok_or_else(|| ValidationError::Other("truncated blocktype immediate".to_string()))?;
@@ -544,7 +619,7 @@ const MAX_ARRAY_NEW_FIXED_COUNT: u32 = 1_000_000;
 /// directly here, since a TEXT-format module can now interleave struct
 /// declarations among func ones in a way the legacy formula alone cannot
 /// represent.
-fn struct_field_count(module: &WasmModule, type_idx: u32) -> Result<usize, ValidationError> {
+fn struct_field_count(module: TypeContext<'_>, type_idx: u32) -> Result<usize, ValidationError> {
     let st = module
         .struct_type_at(type_idx)
         .ok_or_else(|| ValidationError::TypeIndexOutOfBounds(format!("struct.new references struct type index {type_idx}, but no such struct type exists")))?;
@@ -555,8 +630,22 @@ fn struct_field_count(module: &WasmModule, type_idx: u32) -> Result<usize, Valid
 /// [`StorageType`]/mutability of the WasmGC array type at flat type-section
 /// index `type_idx` (W33 fourth slice) -- resolved the same
 /// `type_kinds`-aware-first way via [`WasmModule::array_type_at`].
-fn array_element_field(module: &WasmModule, type_idx: u32) -> Result<&FieldType, ValidationError> {
+///
+/// Reaches through `module.module` (the wrapped `&'a WasmModule` field)
+/// rather than `module.array_type_at(..)` directly (which WOULD also
+/// compile, via [`TypeContext`]'s `Deref`, but would tie the returned
+/// `&FieldType`'s lifetime to this function's own ephemeral internal
+/// auto-ref of the by-value `module: TypeContext<'_>` parameter -- one
+/// step shorter than the real `'a` this reference actually lives for, a
+/// real, easy-to-miss lifetime trap for any `Deref`-based wrapper handing
+/// back a borrowed reference, not merely a style preference). Every OTHER
+/// function in this file that reaches through `module.<method>` only ever
+/// consumes the result immediately (an owned/`Copy` value, or a reference
+/// used and dropped within the SAME function body), so this trap doesn't
+/// apply to them -- see [`struct_field`] just below for the identical fix.
+fn array_element_field(module: TypeContext<'_>, type_idx: u32) -> Result<&FieldType, ValidationError> {
     module
+        .module
         .array_type_at(type_idx)
         .map(|at| &at.element)
         .ok_or_else(|| ValidationError::TypeIndexOutOfBounds(format!("references array type index {type_idx}, but no such array type exists")))
@@ -565,9 +654,11 @@ fn array_element_field(module: &WasmModule, type_idx: u32) -> Result<&FieldType,
 /// One field of the WasmGC struct type at flat type-section index
 /// `type_idx` (W33 fourth slice) -- `struct.set`'s own bounds AND
 /// mutability check both need the real [`FieldType`], not just the field
-/// count [`struct_field_count`] returns.
-fn struct_field(module: &WasmModule, type_idx: u32, field_idx: u32) -> Result<&FieldType, ValidationError> {
+/// count [`struct_field_count`] returns. See [`array_element_field`]'s own
+/// doc comment for why this reaches through `module.module` explicitly.
+fn struct_field(module: TypeContext<'_>, type_idx: u32, field_idx: u32) -> Result<&FieldType, ValidationError> {
     let st = module
+        .module
         .struct_type_at(type_idx)
         .ok_or_else(|| ValidationError::TypeIndexOutOfBounds(format!("references struct type index {type_idx}, but no such struct type exists")))?;
     st.fields.get(field_idx as usize).ok_or_else(|| {
@@ -602,7 +693,7 @@ fn is_boolean_result_numeric(suffix: &str) -> bool {
 /// `*.const`, 1 for unary/`eqz`, 2 for binary/comparison) already come from
 /// `wasm-opcodes`' metadata, so this one rule covers the whole family
 /// instead of ~130 individually hand-listed opcodes.
-fn type_check_numeric(stack: &mut Vec<StackType>, frame: &ControlFrame, name: &str, stack_pop: u8, module: &WasmModule) -> Result<(), ValidationError> {
+fn type_check_numeric(stack: &mut Vec<StackType>, frame: &ControlFrame, name: &str, stack_pop: u8, module: TypeContext<'_>) -> Result<(), ValidationError> {
     let (prefix, suffix) = name.split_once('.').ok_or_else(|| ValidationError::Other(format!("malformed numeric opcode name {name:?}")))?;
     let operand_type = match prefix {
         "i32" => ValueType::I32,
@@ -665,7 +756,14 @@ fn conversion_types(name: &str) -> Option<(ValueType, ValueType)> {
 /// Everything needed to resolve an instruction's type rule, computed once
 /// per module (not per function) and threaded through.
 struct ModuleContext<'a> {
-    module: &'a WasmModule,
+    /// W34 third slice: `module` is now a [`TypeContext`], bundling the raw
+    /// `&'a WasmModule` together with this module's own canonicalized
+    /// type-group forms (computed once in [`type_check_module`], right
+    /// after [`check_type_subtyping`] confirms the `sub`/`rec` ordering is
+    /// well-founded) -- see that type's own doc comment for why every
+    /// existing `ctx.module.<field/method>` access below still compiles
+    /// unchanged.
+    module: TypeContext<'a>,
     /// Combined imported + module-defined function types, indexed by the
     /// combined function index space (imports first, matching every other
     /// index space in the binary format).
@@ -745,7 +843,7 @@ struct ModuleContext<'a> {
     tag_types: Vec<FuncType>,
 }
 
-fn build_module_context(module: &WasmModule) -> Result<ModuleContext<'_>, ValidationError> {
+fn build_module_context<'a>(module: &'a WasmModule, canonical_types: &'a [Option<(Rc<CanonicalGroup>, u32)>]) -> Result<ModuleContext<'a>, ValidationError> {
     use wasm_types::ImportTypeInfo;
 
     let mut func_types = Vec::new();
@@ -825,7 +923,7 @@ fn build_module_context(module: &WasmModule) -> Result<ModuleContext<'_>, Valida
     table_is64.extend(module.tables.iter().map(|t| t.is64));
 
     Ok(ModuleContext {
-        module,
+        module: TypeContext { module, canonical_types },
         func_types,
         func_type_indices,
         global_types,
@@ -862,11 +960,26 @@ fn build_module_context(module: &WasmModule) -> Result<ModuleContext<'_>, Valida
 ///   body, which stays unparseable and therefore unreachable here, see
 ///   `wasm-wast-parser`'s own struct/array doc comments).
 ///
-/// Struct/array composite-type-kind invariance and field-list
-/// width/depth/variance rules (the SAME section's remaining cases) are not
-/// checked here at all -- this slice only ever produces `FuncType`
-/// entries in `module.types` (struct/array TEXT-format bodies are still
-/// unparseable), so there is nothing of that shape to validate yet.
+/// **W34 third slice** (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`):
+/// struct/array composite-type-kind invariance and field-list
+/// width/depth/variance rules ARE now checked here too, dispatching on each
+/// side's real [`TypeKind`] (`Func`/`Struct`/`Array`) instead of always
+/// reading `module.types[i]` as the real body. Before this slice, a
+/// struct/array-kind flat index's `module.types[i]` slot is an unused,
+/// never-populated dummy `FuncType { params: vec![], results: vec![] }`
+/// (see [`TypeKind`]'s own doc comment) -- so a declared `(sub $parent
+/// (struct ...))`/`(sub $parent (array ...))` relationship used to be
+/// checked against TWO EMPTY func signatures (trivially "compatible": zero
+/// arity, vacuously contravariant/covariant) instead of the real
+/// field/element lists, a real, previously-open correctness gap the W34
+/// spec's own research flagged (pre-dating W34 entirely -- a W33-first-
+/// slice-era gap struct/array TEXT-format parsing, shipped in W33's fourth
+/// slice, made newly REACHABLE without fixing). See
+/// [`struct_is_structural_subtype`]/[`array_is_structural_subtype`] for the
+/// real width/depth/variance rules now applied. A declared `sub`
+/// relationship between two DIFFERENT composite-type kinds (e.g. a struct
+/// declaring a func parent) is always rejected -- the GC proposal has no
+/// such cross-kind subtyping relation at all.
 fn check_type_subtyping(module: &WasmModule) -> Result<(), ValidationError> {
     // Security review finding (W33 first slice): a cyclic `sub` chain
     // (`(rec (type $t1 (sub $t2 (func))) (type $t2 (sub $t1 (func))))`)
@@ -887,22 +1000,55 @@ fn check_type_subtyping(module: &WasmModule) -> Result<(), ValidationError> {
     // pairwise.
     check_type_subtyping_is_acyclic(module)?;
 
-    for (i, child) in module.types.iter().enumerate() {
-        let Some(parent_idx) = module.type_subtyping_at(i as u32).supertype else {
+    // W34 third slice: this whole function runs BEFORE `canonical_types`
+    // exists (canonicalization's own termination argument depends on the
+    // acyclicity check just above already having succeeded -- see
+    // `wasm_types::canonicalize_types`'s own doc comment), so every
+    // `is_assignable` call reachable from here (via `func_is_structural_
+    // subtype`/`field_is_structural_subtype`) gets an EMPTY canonical
+    // table -- exactly `nominal_subtype_chain`'s own documented "no
+    // canonical data available" fallback, and correct here regardless:
+    // composite-type structural-subtype variance (this function's own
+    // job) is about whether a DECLARED `sub` relationship is LEGAL, which
+    // is orthogonal to canonical equivalence (see the W34 spec's own
+    // "Composite-type subtyping... already implemented, cited for
+    // completeness" section) -- not a corner this slice is cutting.
+    let no_canonical = TypeContext { module, canonical_types: &[] };
+
+    for i in 0..module.types.len() as u32 {
+        let Some(parent_idx) = module.type_subtyping_at(i).supertype else {
             continue;
         };
-        let Some(parent) = module.types.get(parent_idx as usize) else {
+        if parent_idx as usize >= module.types.len() {
             return Err(ValidationError::TypeIndexOutOfBounds(format!(
                 "type #{i} declares supertype index {parent_idx}, but only {} types exist",
                 module.types.len()
             )));
-        };
+        }
         if module.type_subtyping_at(parent_idx).is_final {
             return Err(ValidationError::Other(format!("sub type: type #{i} declares #{parent_idx} as its supertype, but #{parent_idx} is final")));
         }
-        if !func_is_structural_subtype(child, parent, module) {
+        let child_kind = module.type_kinds.get(i as usize).copied().unwrap_or(TypeKind::Func);
+        let parent_kind = module.type_kinds.get(parent_idx as usize).copied().unwrap_or(TypeKind::Func);
+        let ok = match (child_kind, parent_kind) {
+            (TypeKind::Func, TypeKind::Func) => func_is_structural_subtype(&module.types[i as usize], &module.types[parent_idx as usize], no_canonical),
+            (TypeKind::Struct(ck), TypeKind::Struct(pk)) => match (module.struct_types.get(ck as usize), module.struct_types.get(pk as usize)) {
+                (Some(c), Some(p)) => struct_is_structural_subtype(c, p, no_canonical),
+                _ => false,
+            },
+            (TypeKind::Array(ck), TypeKind::Array(pk)) => match (module.array_types.get(ck as usize), module.array_types.get(pk as usize)) {
+                (Some(c), Some(p)) => array_is_structural_subtype(c, p, no_canonical),
+                _ => false,
+            },
+            // A struct declaring a func/array parent (or any other
+            // cross-kind mix) has no legal subtyping relation at all --
+            // the real GC proposal never relates different composite-type
+            // kinds this way.
+            _ => false,
+        };
+        if !ok {
             return Err(ValidationError::Other(format!(
-                "sub type: type #{i} is not a valid structural subtype of its declared supertype #{parent_idx} (arity must match, params contravariant, results covariant)"
+                "sub type: type #{i} is not a valid structural subtype of its declared supertype #{parent_idx} (arity/field-count must match kind-appropriate rules: func -- contravariant params, covariant results; struct -- width+per-field covariant/invariant; array -- element covariant/invariant)"
             )));
         }
     }
@@ -979,7 +1125,7 @@ fn check_type_subtyping_is_acyclic(module: &WasmModule) -> Result<(), Validation
 /// ($s' is $s's own sub), yet accepting the WIDER `(ref $s)` param in the
 /// subtype is correct because params are contravariant; the result
 /// position (`(ref any) <: anyref`) is covariant.
-fn func_is_structural_subtype(child: &FuncType, parent: &FuncType, module: &WasmModule) -> bool {
+fn func_is_structural_subtype(child: &FuncType, parent: &FuncType, module: TypeContext<'_>) -> bool {
     child.params.len() == parent.params.len()
         && child.results.len() == parent.results.len()
         // Contravariant: the PARENT's param must be assignable to the
@@ -988,6 +1134,67 @@ fn func_is_structural_subtype(child: &FuncType, parent: &FuncType, module: &Wasm
         // Covariant: the CHILD's result must be assignable to the
         // PARENT's result slot (the child may return something NARROWER).
         && child.results.iter().zip(parent.results.iter()).all(|(&c, &p)| is_assignable(c, p, module))
+}
+
+/// **W34 third slice**: one struct/array FIELD's own structural subtyping
+/// rule, per the real GC proposal's `##### Composite Types` text --
+/// mutability must match exactly (a field can't gain OR lose mutability
+/// through a `sub` relationship), and:
+/// - **mutable fields are INVARIANT**: the storage type must match
+///   EXACTLY (a mutable field can be both read and written, so neither a
+///   wider-on-read nor a wider-on-write relaxation is sound).
+/// - **immutable fields are COVARIANT**: the child's storage type need
+///   only be [`is_assignable`] to the parent's (an immutable field is
+///   read-only, so a NARROWER child value type is a sound stand-in
+///   wherever the parent's wider type is expected).
+///
+/// Packed storage (`i8`/`i16`) has no further covariance of its own within
+/// this crate's `StorageType` (there's no narrower-than-`i8` packed width
+/// to be covariant WITH) -- two packed fields are compatible only when
+/// their packed width matches exactly, mutable or not, which falls out of
+/// this same rule for the mutable case and (since `StorageType::I8 ==
+/// StorageType::I8` is the only way two packed variants satisfy
+/// `is_assignable`, which never relates `I8`/`I16` to anything else) for
+/// the immutable case too.
+fn field_is_structural_subtype(child: &FieldType, parent: &FieldType, module: TypeContext<'_>) -> bool {
+    if child.mutable != parent.mutable {
+        return false;
+    }
+    if child.mutable {
+        child.storage == parent.storage
+    } else {
+        match (child.storage, parent.storage) {
+            (StorageType::Val(c), StorageType::Val(p)) => is_assignable(c, p, module),
+            (StorageType::I8, StorageType::I8) | (StorageType::I16, StorageType::I16) => true,
+            _ => false,
+        }
+    }
+}
+
+/// **W34 third slice**: the GC proposal's real struct structural subtyping
+/// rule -- **width subtyping** (the child may declare MORE fields than the
+/// parent; every extra trailing field is simply not visible through the
+/// parent's own type) plus, for every field position the parent DOES
+/// declare, [`field_is_structural_subtype`]'s per-field variance rule, in
+/// declaration order (struct fields are positional, not named, at the
+/// binary/structural level -- `type-subtyping.wast`'s own struct/array
+/// "Invalid subtyping definitions" cases this closes are exactly these
+/// two rules: a child with FEWER fields than its declared parent, and a
+/// mutable field whose storage type merely widens instead of matching
+/// exactly).
+fn struct_is_structural_subtype(child: &StructType, parent: &StructType, module: TypeContext<'_>) -> bool {
+    child.fields.len() >= parent.fields.len() && parent.fields.iter().zip(child.fields.iter()).all(|(p, c)| field_is_structural_subtype(c, p, module))
+}
+
+/// **W34 third slice**: the GC proposal's real array structural subtyping
+/// rule -- an array type is, structurally, a single [`FieldType`] (see
+/// [`ArrayType`]'s own doc comment for why this crate reuses `FieldType`
+/// directly rather than a bespoke element-type shape), so array subtyping
+/// is exactly [`field_is_structural_subtype`] applied once to the two
+/// arrays' own `element` fields -- no width dimension exists for an array
+/// (it has exactly one field position, always).
+fn array_is_structural_subtype(child: &ArrayType, parent: &ArrayType, module: TypeContext<'_>) -> bool {
+    field_is_structural_subtype(&child.element, &parent.element, module)
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -1342,7 +1549,7 @@ fn pop_const(stack: &mut Vec<StackType>) -> Result<StackType, ValidationError> {
 /// Require a constant-expression operand to be assignable to `expected`
 /// (an `Unknown` actual always matches, mirroring `pop_expect`'s identical
 /// dead-code-polymorphism rule for ordinary instructions).
-fn check_const_operand(actual: StackType, expected: ValueType, module: &WasmModule) -> Result<(), ValidationError> {
+fn check_const_operand(actual: StackType, expected: ValueType, module: TypeContext<'_>) -> Result<(), ValidationError> {
     match actual {
         StackType::Unknown => Ok(()),
         StackType::Known(t) if is_assignable(t, expected, module) => Ok(()),
@@ -1359,7 +1566,7 @@ fn check_const_operand(actual: StackType, expected: ValueType, module: &WasmModu
 /// per this section's own design goal: a const-expr type-checker that
 /// respects real subtyping (`(global (ref $t) (ref.func $f))` needs the
 /// real subtype check, not bare equality), not a narrower one-off rule.
-fn check_const_expr_result(actual: StackType, expected: ValueType, module: &WasmModule, what: &str) -> Result<(), ValidationError> {
+fn check_const_expr_result(actual: StackType, expected: ValueType, module: TypeContext<'_>, what: &str) -> Result<(), ValidationError> {
     match actual {
         StackType::Unknown => Ok(()),
         StackType::Known(t) if is_assignable(t, expected, module) => Ok(()),
@@ -1418,9 +1625,32 @@ fn check_const_exprs(ctx: &ModuleContext) -> Result<(), ValidationError> {
     Ok(())
 }
 
-pub(crate) fn type_check_module(module: &WasmModule) -> Result<(), ValidationError> {
+/// Type-checks every function body in `module`, returning this module's own
+/// canonicalized type-group forms (W34 third slice: `code/specs/
+/// W34-wasm-gc-canonical-type-equivalence.md`) as a side product on success,
+/// so `crate::validate` (the sole caller) can cache them on `ValidatedModule`
+/// WITHOUT computing them a second time -- see the inline comment below for
+/// why right here, immediately after `check_type_subtyping`, is the correct
+/// place to compute them (and the only place this crate computes them at
+/// all: every instruction-level check below reaches them via `ModuleContext`/
+/// `TypeContext`, never by calling `canonicalize_types` again).
+pub(crate) fn type_check_module(module: &WasmModule) -> Result<Vec<Option<(Rc<CanonicalGroup>, u32)>>, ValidationError> {
     check_type_subtyping(module)?;
-    let ctx = build_module_context(module)?;
+    // W34 third slice: computed exactly ONCE per module, right here --
+    // `check_type_subtyping` just above already ran `check_type_subtyping_
+    // is_acyclic` as its own first step, establishing the ordering
+    // guarantee `canonicalize_types`'s own termination argument depends
+    // on. Threaded into every instruction-level check below via
+    // `ModuleContext`/`TypeContext` (see those types' own doc comments)
+    // rather than recomputed at each call site -- the whole point of
+    // computing it once here is that `is_assignable` and friends, called
+    // per-instruction, never pay canonicalization's own cost again, only
+    // the O(1) `Rc`-backed comparison `canonically_equivalent`/
+    // `nominal_subtype_chain` does. Returned to `crate::validate` so IT
+    // doesn't need to compute this a second time for `ValidatedModule`'s
+    // own cache.
+    let canonical_types = wasm_types::canonicalize_types(module);
+    let ctx = build_module_context(module, &canonical_types)?;
     check_const_exprs(&ctx)?;
     let imported_function_count = ctx.func_types.len() - module.functions.len();
 
@@ -1433,7 +1663,7 @@ pub(crate) fn type_check_module(module: &WasmModule) -> Result<(), ValidationErr
             .ok_or_else(|| ValidationError::Other(format!("function #{func_idx} (type {type_idx}) has no matching code entry")))?;
         type_check_function(&ctx, func_idx, func_type, body)?;
     }
-    Ok(())
+    Ok(canonical_types)
 }
 
 fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncType, body: &FunctionBody) -> Result<(), ValidationError> {

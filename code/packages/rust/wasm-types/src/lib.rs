@@ -1634,20 +1634,54 @@ const MAX_SUBTYPE_CHAIN_HOPS: u32 = 1_000;
 /// within the cap simply reports "not a nominal subtype" past the
 /// cutoff -- a false negative, never a false positive, and never an
 /// unbounded walk.
-pub fn nominal_subtype_chain(type_subtyping: &[TypeSubtyping], sub_idx: u32, super_idx: u32) -> bool {
-    if sub_idx == super_idx {
+///
+/// W34 third slice (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`):
+/// `canonical_types` is a second, parallel slice (typically `ValidatedModule::
+/// canonical_types`/`WasmExecutionContext::canonical_types` -- the SAME
+/// per-flat-index `Vec<Option<(Rc<CanonicalGroup>, u32)>>` this crate's own
+/// `canonicalize_types` produces) that upgrades BOTH the reflexive base
+/// case and every hop's own termination check from raw index equality to
+/// real canonical equivalence -- exactly the GC proposal's own rule
+/// (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`'s "Subtyping
+/// across type indices": "`$t <: $t'` iff `$t` and `$t'` define equivalent
+/// types [not merely `$t = $t'`], or ... `$t'' <: $t'`... Effectively,
+/// this means that subtyping is 'nominal' modulo type canonicalisation.").
+/// Pass an empty slice (`&[]`) for a caller that has no canonical data at
+/// all (or predates this slice) -- [`canonical_types_equivalent`] always
+/// reports `false` for an empty/too-short slice, so this is a strict,
+/// zero-behavior-change superset of the old nominal-only rule, never a
+/// new false accept.
+pub fn nominal_subtype_chain(type_subtyping: &[TypeSubtyping], canonical_types: &[Option<(Rc<CanonicalGroup>, u32)>], sub_idx: u32, super_idx: u32) -> bool {
+    if sub_idx == super_idx || canonical_types_equivalent(canonical_types, sub_idx, super_idx) {
         return true;
     }
     let mut cur = sub_idx;
     let at = |idx: u32| type_subtyping.get(idx as usize).copied().unwrap_or_default();
     for _ in 0..MAX_SUBTYPE_CHAIN_HOPS {
         match at(cur).supertype {
-            Some(parent) if parent == super_idx => return true,
+            Some(parent) if parent == super_idx || canonical_types_equivalent(canonical_types, parent, super_idx) => return true,
             Some(parent) => cur = parent,
             None => return false,
         }
     }
     false
+}
+
+/// Whether flat type-section indices `i` and `j` are canonically
+/// equivalent (W34: `code/specs/W34-wasm-gc-canonical-type-equivalence.md`),
+/// given a `canonical_types` table shaped like [`canonicalize_types`]'s own
+/// return value (one `Option<(Rc<CanonicalGroup>, u32)>` per flat index).
+/// `false`, conservatively, whenever EITHER side is out of range or wasn't
+/// canonicalized (`None`) -- never a wrong `true`. This is the single
+/// shared comparison both [`nominal_subtype_chain`] (the chain-walk's own
+/// termination check) and `wasm-validator::ValidatedModule::
+/// canonically_equivalent` (the public, post-validation accessor) use, so
+/// the two can never drift apart.
+pub fn canonical_types_equivalent(canonical_types: &[Option<(Rc<CanonicalGroup>, u32)>], i: u32, j: u32) -> bool {
+    match (canonical_types.get(i as usize).cloned().flatten(), canonical_types.get(j as usize).cloned().flatten()) {
+        (Some(a), Some(b)) => a == b,
+        _ => false,
+    }
 }
 
 /// Whether ANY entry in `type_subtyping` declares real GC-proposal nominal
@@ -1699,7 +1733,18 @@ impl WasmModule {
     /// module's function bodies are ever type-checked against it) can
     /// never loop forever.
     pub fn func_type_is_nominal_subtype(&self, sub_idx: u32, super_idx: u32) -> bool {
-        nominal_subtype_chain(&self.type_subtyping, sub_idx, super_idx)
+        // Nominal-only, by design: `WasmModule` never carries `canonical_
+        // types` itself (see `canonicalize_types`'s own doc comment for
+        // why that lives only on `ValidatedModule`/`WasmExecutionContext`,
+        // computed post-validation) -- so this convenience method passes
+        // an empty canonical-equivalence table, which `nominal_subtype_
+        // chain` guarantees is behaviorally identical to the pre-W34
+        // nominal-only rule (see that function's own doc comment). Callers
+        // that DO have real canonical data (`wasm-validator::type_check`'s
+        // `is_assignable`, `wasm-execution`'s runtime dispatch) call
+        // `nominal_subtype_chain` directly instead, passing their own
+        // `canonical_types` slice.
+        nominal_subtype_chain(&self.type_subtyping, &[], sub_idx, super_idx)
     }
 
     /// `(rec_group_size, rec_group_position)` for type `idx` -- see
@@ -3425,10 +3470,86 @@ mod tests {
         };
         // Two independently-declared final types with no `sub` chain
         // between them are NOT nominal subtypes of each other, even if
-        // structurally identical (that would need canonical equivalence,
-        // W33's own explicitly out-of-scope piece).
+        // structurally identical -- `func_type_is_nominal_subtype` itself
+        // stays nominal-only BY DESIGN (see its own doc comment), since
+        // `WasmModule` never carries `canonical_types`; canonical
+        // equivalence is exactly what `nominal_subtype_chain` gains when a
+        // REAL caller (below) passes one in.
         assert!(!m.func_type_is_nominal_subtype(0, 1));
         assert!(!m.func_type_is_nominal_subtype(1, 0));
+    }
+
+    /// W34 third slice (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`):
+    /// positive case -- two independently-declared, nominally-UNRELATED
+    /// (no `sub` chain at all) but canonically-EQUIVALENT (byte-identical
+    /// tied shape) types must be accepted once a real `canonical_types`
+    /// table is supplied, even though `func_type_is_nominal_subtype`
+    /// (nominal-only, no canonical data) correctly rejects the exact same
+    /// pair -- this is the direct proof that `nominal_subtype_chain`'s new
+    /// `canonical_types` parameter, not just its existing nominal chain
+    /// walk, is what closes the gap.
+    #[test]
+    fn nominal_subtype_chain_accepts_canonically_equivalent_but_nominally_unrelated_types() {
+        let m = WasmModule {
+            types: vec![
+                FuncType { params: vec![ValueType::I32], results: vec![] },
+                FuncType { params: vec![ValueType::I32], results: vec![] },
+            ],
+            ..Default::default()
+        };
+        // Nominal-only: correctly rejected, no declared `sub` relationship.
+        assert!(!m.func_type_is_nominal_subtype(0, 1));
+        assert!(!m.func_type_is_nominal_subtype(1, 0));
+        // With real canonical data: both directions accepted, since `<:`
+        // per the GC proposal's own rule is "nominal modulo canonical
+        // equivalence" -- reflexive-equivalent types are subtypes of each
+        // other regardless of `sub`-chain declaration.
+        let canonical = canonicalize_types(&m);
+        assert!(nominal_subtype_chain(&m.type_subtyping, &canonical, 0, 1));
+        assert!(nominal_subtype_chain(&m.type_subtyping, &canonical, 1, 0));
+    }
+
+    /// W34 third slice: negative case -- two independently-declared,
+    /// nominally-unrelated AND canonically-INEQUIVALENT (genuinely
+    /// different shape) types must still be correctly rejected even with a
+    /// real `canonical_types` table present -- proves the upgrade never
+    /// introduces a false accept for a genuinely different pair.
+    #[test]
+    fn nominal_subtype_chain_still_rejects_canonically_inequivalent_unrelated_types() {
+        let m = WasmModule {
+            types: vec![
+                FuncType { params: vec![ValueType::I32], results: vec![] },
+                FuncType { params: vec![ValueType::I64], results: vec![] },
+            ],
+            ..Default::default()
+        };
+        let canonical = canonicalize_types(&m);
+        assert!(!nominal_subtype_chain(&m.type_subtyping, &canonical, 0, 1));
+        assert!(!nominal_subtype_chain(&m.type_subtyping, &canonical, 1, 0));
+    }
+
+    /// W34 third slice: an empty `canonical_types` slice (the exact table
+    /// `func_type_is_nominal_subtype` itself passes) must behave IDENTICALLY
+    /// to the pre-W34 nominal-only rule -- proves the new parameter is a
+    /// strict, zero-behavior-change superset for every caller that has no
+    /// canonical data at all, not a silent behavior change.
+    #[test]
+    fn nominal_subtype_chain_with_empty_canonical_table_matches_old_nominal_only_behavior() {
+        let m = WasmModule {
+            types: vec![
+                FuncType { params: vec![ValueType::I32], results: vec![] },
+                FuncType { params: vec![ValueType::I32], results: vec![] },
+                FuncType { params: vec![], results: vec![] },
+            ],
+            type_subtyping: vec![
+                TypeSubtyping::default(),
+                TypeSubtyping { supertype: Some(0), ..Default::default() },
+                TypeSubtyping::default(),
+            ],
+            ..Default::default()
+        };
+        assert!(nominal_subtype_chain(&m.type_subtyping, &[], 1, 0)); // declared sub chain still works
+        assert!(!nominal_subtype_chain(&m.type_subtyping, &[], 0, 2)); // unrelated, no canonical data at all
     }
 
     #[test]

@@ -648,12 +648,30 @@ enum ParsedComposite {
 /// ...)`/`(struct ...)`/`(array ...)` body (implicitly final, no declared
 /// supertype -- the pre-GC/MVP default) or the GC proposal's `(sub [final]
 /// $parent? (comptype))` wrapper (W33 first slice: `code/specs/
-/// W33-wasm-gc-recursive-type-subtyping.md`) -- `sub` stays FUNC-only (the
-/// real corpus files this slice targets, `struct.wast`/`array.wast`, never
-/// wrap a struct/array body in `sub` at all; `type-subtyping.wast`'s
-/// struct-in-`sub` cases are this spec's own still-open canonical-
-/// equivalence gap, not attempted here). Returns the resolved composite
-/// body plus the declared supertype (if any, func-only) and finality.
+/// W33-wasm-gc-recursive-type-subtyping.md`). Returns the resolved
+/// composite body plus the declared supertype (if any) and finality.
+///
+/// **W34 third slice** (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`):
+/// `sub` is no longer func-only -- a `(sub $parent (struct ...))`/`(sub
+/// $parent (array ...))` now parses to a real `ParsedComposite::Struct`/
+/// `Array`, exactly like the bare (non-`sub`) case just below already did.
+/// This closes a real, previously-undiscovered parser-level gap this
+/// slice's own investigation found (not previously recorded anywhere): the
+/// vendored `type-subtyping.wast`'s own "Definitions"/"Invalid subtyping
+/// definitions" sections declare struct/array `sub` relationships
+/// extensively (e.g. `(type $e0 (sub (array i32)))`, `(type $s0 (sub
+/// (struct)))`) -- before this fix, EVERY one of those modules failed to
+/// PARSE at all (a hard `UnexpectedToken` error from the old `reject_non_
+/// func_body` call this branch used to make unconditionally), never even
+/// reaching `wasm-validator`'s `check_type_subtyping` -- so this slice's
+/// own fix to that function's struct/array structural checker (see its own
+/// doc comment) would have been unreachable from any real `.wast` source
+/// without this companion parser fix. `peek_member_kind` (this file, just
+/// above) already anticipated this: it already looks INSIDE a `sub`
+/// wrapper to find `struct`/`array`/`func`, so `MemberKind`/`TypeKind`
+/// were already computed correctly for a struct/array-kind `sub`-wrapped
+/// member even before this fix -- only this function's OWN body-parsing
+/// branch was still hardcoded to func.
 ///
 /// `sig_form` is `None` for a bare `(type $name)` with no body at all --
 /// this crate already tolerated that before W33 by defaulting to an empty
@@ -690,12 +708,24 @@ fn parse_composite_body(
         let body = rest.first().and_then(|e| e.as_list()).ok_or(WastParseError::UnexpectedToken {
             pos,
             found: "".to_string(),
-            expected: "a composite type body ('(func ...)') inside 'sub'",
+            expected: "a composite type body ('(func ...)'/'(struct ...)'/'(array ...)') inside 'sub'",
         })?;
-        reject_non_func_body(pos, body)?;
-        let sig_fields: Vec<&SExpr> = body.iter().skip(1).collect();
-        let func_type = parse_func_signature(&sig_fields, type_names, module)?;
-        Ok((ParsedComposite::Func(func_type), supertype, is_final))
+        match body.first().and_then(|e| e.as_atom()) {
+            Some("struct") => {
+                let (st, field_names) = parse_struct_body(body, type_names, module)?;
+                Ok((ParsedComposite::Struct(st, field_names), supertype, is_final))
+            }
+            Some("array") => {
+                let at = parse_array_body(pos, body, type_names, module)?;
+                Ok((ParsedComposite::Array(at), supertype, is_final))
+            }
+            _ => {
+                reject_non_func_body(pos, body)?;
+                let sig_fields: Vec<&SExpr> = body.iter().skip(1).collect();
+                let func_type = parse_func_signature(&sig_fields, type_names, module)?;
+                Ok((ParsedComposite::Func(func_type), supertype, is_final))
+            }
+        }
     } else {
         match sig.first().and_then(|e| e.as_atom()) {
             Some("struct") => {
@@ -722,18 +752,18 @@ fn parse_composite_body(
 /// `result` field, turning every struct/array declaration into a
 /// fabricated empty `(func)` type instead of a real parse error. Struct/array
 /// bodies now have their own real parsers ([`parse_struct_body`]/
-/// [`parse_array_body`]); this function's remaining job is narrower: reject
-/// anything that's neither `func` NOR a real struct/array body reaching it
-/// by mistake (a bare "unknown composite-type keyword" case, and the ONLY
-/// path for a `(sub ...)`-wrapped body, which stays func-only by design --
-/// see [`parse_composite_body`]'s own doc comment for why).
+/// [`parse_array_body`]), reached directly by [`parse_composite_body`]
+/// (both its bare and, since W34's third slice, its `sub`-wrapped branch);
+/// this function's remaining job is narrower: reject a bare "unknown
+/// composite-type keyword" -- something that's neither `func`, `struct`,
+/// NOR `array` -- reaching either branch by mistake.
 fn reject_non_func_body(pos: usize, body: &[SExpr]) -> Result<(), WastParseError> {
     if let Some(head) = body.first().and_then(|e| e.as_atom()) {
         if head != "func" {
             return Err(WastParseError::UnexpectedToken {
                 pos,
                 found: head.to_string(),
-                expected: "a func type body ('(func ...)') -- 'struct'/'array' bodies are not supported inside 'sub'",
+                expected: "a composite type body ('(func ...)', '(struct ...)', or '(array ...)')",
             });
         }
     }
@@ -1047,11 +1077,29 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
                     ctx.module.struct_types.push(struct_type);
                     ctx.module.type_kinds[idx] = TypeKind::Struct(k);
                     ctx.struct_field_names.insert(idx as u32, field_names);
+                    // W34 third slice: a real, previously-undiscovered
+                    // companion bug to the `sub`-struct/array parse
+                    // restriction this slice's own investigation found and
+                    // fixed just above (`parse_composite_body`) -- this
+                    // arm used to silently DISCARD `supertype`/`is_final`
+                    // entirely (harmless before this slice, since a
+                    // struct/array `ParsedComposite` could never carry
+                    // anything but the phase-A default `(None, true)` --
+                    // `sub` was func-only). Now that a `(sub $parent
+                    // (struct/array ...))` can produce a REAL declared
+                    // supertype/finality, this write is load-bearing: see
+                    // the identical `Func` arm just above, which already
+                    // did this correctly.
+                    ctx.module.type_subtyping[idx].supertype = supertype;
+                    ctx.module.type_subtyping[idx].is_final = is_final;
                 }
                 ParsedComposite::Array(array_type) => {
                     let k = ctx.module.array_types.len() as u32;
                     ctx.module.array_types.push(array_type);
                     ctx.module.type_kinds[idx] = TypeKind::Array(k);
+                    // See the identical fix on the `Struct` arm just above.
+                    ctx.module.type_subtyping[idx].supertype = supertype;
+                    ctx.module.type_subtyping[idx].is_final = is_final;
                 }
             }
         }
@@ -7112,6 +7160,45 @@ mod tests {
         assert_eq!(m.array_types[0].element.storage, StorageType::Val(ValueType::I32));
         assert!(!m.array_types[0].element.mutable);
         assert_eq!(m.type_kinds, vec![TypeKind::Array(0)]);
+    }
+
+    /// **W34 third slice** (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`):
+    /// a `(sub ... (struct ...))`/`(sub ... (array ...))` body used to be a
+    /// hard parse error (`reject_non_func_body`'s old, unconditional
+    /// "'struct'/'array' bodies are not supported inside 'sub'" rejection,
+    /// found by this slice's own investigation, not previously recorded) --
+    /// the vendored `type-subtyping.wast`'s own "Definitions"/"Invalid
+    /// subtyping definitions" sections declare exactly this shape
+    /// extensively (`(type $e0 (sub (array i32)))`, `(type $s0 (sub
+    /// (struct)))`), so every one of those modules failed to parse at all
+    /// before this fix, never even reaching `wasm-validator`. Now a real
+    /// `StructType`/`ArrayType` with the declared supertype/finality
+    /// preserved, exactly like the bare (non-`sub`) case already worked.
+    #[test]
+    fn sub_wrapped_struct_type_parses_as_a_real_struct_with_its_declared_supertype() {
+        let m = parse_module("(module (type $s0 (sub (struct))) (type $s1 (sub $s0 (struct (field i32)))))").unwrap();
+        assert_eq!(m.struct_types.len(), 2);
+        assert!(m.struct_types[0].fields.is_empty());
+        assert_eq!(m.struct_types[1].fields.len(), 1);
+        assert_eq!(m.type_kinds, vec![TypeKind::Struct(0), TypeKind::Struct(1)]);
+        assert_eq!(m.type_subtyping[0].supertype, None);
+        assert!(!m.type_subtyping[0].is_final); // `sub` without `final` is open
+        assert_eq!(m.type_subtyping[1].supertype, Some(0));
+    }
+
+    #[test]
+    fn sub_wrapped_array_type_parses_as_a_real_array_with_its_declared_supertype() {
+        let m = parse_module("(module (type $a0 (sub (array i32))) (type $a1 (sub $a0 (array i32))))").unwrap();
+        assert_eq!(m.array_types.len(), 2);
+        assert_eq!(m.array_types[0].element.storage, StorageType::Val(ValueType::I32));
+        assert_eq!(m.type_kinds, vec![TypeKind::Array(0), TypeKind::Array(1)]);
+        assert_eq!(m.type_subtyping[1].supertype, Some(0));
+    }
+
+    #[test]
+    fn sub_wrapped_final_struct_type_is_marked_final() {
+        let m = parse_module("(module (type $s0 (sub final (struct))))").unwrap();
+        assert!(m.type_subtyping[0].is_final);
     }
 
     // ── W33 fourth slice: real corpus struct/array field-list grammar ──────────

@@ -38,7 +38,7 @@ use wasm_execution::{
 };
 use wasm_module_parser::WasmModuleParser;
 use wasm_types::{
-    ExternalKind, FuncType, FunctionBody, GlobalType, Import, ImportTypeInfo, Limits, ValueType,
+    CanonicalGroup, ExternalKind, FuncType, FunctionBody, GlobalType, Import, ImportTypeInfo, Limits, ValueType,
     WasmModule,
 };
 use wasm_validator::{validate, ValidatedModule, ValidationError};
@@ -1132,6 +1132,23 @@ pub struct WasmInstance {
     /// (`call_indirect`'s real subtype check, `ref.cast`/`ref.test`'s
     /// dynamic type check).
     pub func_type_indices: Vec<u32>,
+    /// This module's own canonicalized type-group forms (W34 third slice,
+    /// `code/specs/W34-wasm-gc-canonical-type-equivalence.md`) -- cloned
+    /// once, at `instantiate()` time, from `ValidatedModule::
+    /// canonical_types()` (already computed by `wasm-validator::validate`,
+    /// which `instantiate()` requires having already succeeded -- see this
+    /// struct's own `module` field, and `validate`'s own doc comment).
+    /// Same index space as `func_type_indices`/`module.types` (one entry
+    /// per flat type-section index). Threaded into `wasm-execution` by
+    /// `build_engine` via `WasmExecutionEngine::set_canonical_types`,
+    /// mirroring `type_subtyping`/`set_type_subtyping`'s own exact
+    /// "parallel slice, not a whole `WasmModule`" pattern -- so `call_
+    /// indirect`/`ref.cast`/`ref.test`'s runtime dispatch can use real
+    /// canonical equivalence, not just the nominal `sub`-chain, without
+    /// `wasm-execution::WasmExecutionContext` ever needing to hold a full
+    /// `WasmModule` (see that struct's own doc comments on `types`/
+    /// `func_types` for why it deliberately doesn't).
+    pub canonical_types: Vec<Option<(Rc<CanonicalGroup>, u32)>>,
     /// Function bodies (None for imports).
     pub func_bodies: Vec<Option<FunctionBody>>,
     /// Resolved imported host functions.
@@ -1372,6 +1389,11 @@ impl WasmRuntime {
     /// pattern `wasm-conformance`'s harness already used.
     pub fn instantiate(&self, validated: &ValidatedModule) -> Result<WasmInstance, TrapError> {
         let module = validated.module();
+        // W34 third slice: cloned once, here, from `validated` (already
+        // computed by `wasm-validator::validate` -- see `WasmInstance::
+        // canonical_types`'s own doc comment for why this is the ONLY
+        // place this crate ever needs to reach for it).
+        let canonical_types = validated.canonical_types().to_vec();
         let mut func_types: Vec<FuncType> = Vec::new();
         // Combined imported + module-defined func_index -> TYPE-SECTION-index
         // space (W33 second slice), index-aligned with `func_types` above --
@@ -1860,6 +1882,7 @@ impl WasmRuntime {
             global_types,
             func_types,
             func_type_indices,
+            canonical_types,
             func_bodies,
             host_functions,
             tags,
@@ -2124,6 +2147,17 @@ impl WasmRuntime {
         // right for a module that never declares `sub`).
         engine.set_type_subtyping(instance.module.type_subtyping.clone());
         engine.set_func_type_indices(instance.func_type_indices.clone());
+
+        // Thread this module's own canonicalized type-group forms (W34
+        // third slice: `code/specs/W34-wasm-gc-canonical-type-equivalence.md`),
+        // same optional-setter pattern as `set_type_subtyping` immediately
+        // above -- `instance.canonical_types` (NOT `instance.module`,
+        // which never carries this data at all -- see `WasmInstance::
+        // canonical_types`'s own doc comment for why) was cloned once from
+        // `ValidatedModule` at `instantiate()` time. Left unset, `call_
+        // indirect_type_matches`/`ref_matches_concrete_type` fall back to
+        // nominal-only dispatch, unchanged from before this slice.
+        engine.set_canonical_types(instance.canonical_types.clone());
 
         // Thread the module's tag section (W-next: real catch-clause
         // matching) so `throw`/`catch` know each tag's declared param

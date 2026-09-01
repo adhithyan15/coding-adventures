@@ -61,7 +61,7 @@ use virtual_machine::{
 };
 use wasm_leb128::{decode_signed, decode_unsigned, decode_unsigned_bounded};
 use wasm_opcodes::get_opcode;
-use wasm_types::{FuncType, FunctionBody, GlobalType, TypeSubtyping, ValueType};
+use wasm_types::{CanonicalGroup, FuncType, FunctionBody, GlobalType, TypeSubtyping, ValueType};
 
 // ══════════════════════════════════════════════════════════════════════════════
 // Section 1: WasmValue — Typed WASM values
@@ -3577,6 +3577,23 @@ pub struct WasmExecutionContext {
     /// fallback, rather than an empty-means-"no nominal relation exists"
     /// reading, is the SAFE default for every pre-GC module.
     pub type_subtyping: Vec<TypeSubtyping>,
+    /// Per-`types`-entry canonicalized type-group form (W34 third slice,
+    /// `code/specs/W34-wasm-gc-canonical-type-equivalence.md`) — one
+    /// `Option<(Rc<CanonicalGroup>, u32)>` per flat type-section index,
+    /// exactly [`wasm_types::canonicalize_types`]'s own output shape (or
+    /// `ValidatedModule::canonical_types`'s, which `wasm-runtime` clones
+    /// from). Empty unless the embedder set it (or the module never uses
+    /// `sub`/`rec`, or every one of its types canonicalizes to `None`),
+    /// same "empty means fall back to the pre-W34 rule" contract as
+    /// `type_subtyping` above — [`nominal_subtype_chain`](wasm_types::nominal_subtype_chain)'s
+    /// own doc comment guarantees an empty slice here is behaviorally
+    /// identical to never having wired canonical equivalence in at all,
+    /// never a new false accept. Set with [`WasmExecutionEngine::
+    /// set_canonical_types`], threaded the SAME "parallel slice, not a
+    /// whole `WasmModule`" way `type_subtyping` already is (this struct
+    /// deliberately never holds a full `WasmModule` -- see this struct's
+    /// own module-level doc comment).
+    pub canonical_types: Vec<Option<(Rc<CanonicalGroup>, u32)>>,
     /// Each FUNCTION's own declared type-SECTION index (parallel to
     /// `func_types`, which holds the resolved `FuncType` shape instead) —
     /// see [`WasmExecutionEngine::set_func_type_indices`]'s doc comment.
@@ -4475,7 +4492,7 @@ fn ref_matches_concrete_type(ctx: &WasmExecutionContext, type_idx: u32, payload:
     }
     if (type_idx as usize) < ctx.types.len() {
         match ctx.func_type_indices.get(payload as usize) {
-            Some(&actual_type_idx) => wasm_types::nominal_subtype_chain(&ctx.type_subtyping, actual_type_idx, type_idx),
+            Some(&actual_type_idx) => wasm_types::nominal_subtype_chain(&ctx.type_subtyping, &ctx.canonical_types, actual_type_idx, type_idx),
             None => false,
         }
     } else {
@@ -11278,7 +11295,7 @@ fn register_control(vm: &mut GenericVM) {
             return expected.params == actual.params && expected.results == actual.results;
         }
         match ctx.func_type_indices.get(func_index) {
-            Some(&actual_type_idx) => wasm_types::nominal_subtype_chain(&ctx.type_subtyping, actual_type_idx, type_idx as u32),
+            Some(&actual_type_idx) => wasm_types::nominal_subtype_chain(&ctx.type_subtyping, &ctx.canonical_types, actual_type_idx, type_idx as u32),
             None => false,
         }
     }
@@ -11899,6 +11916,10 @@ pub struct WasmExecutionEngine {
     /// (W33 second slice) — see [`Self::set_type_subtyping`]'s doc
     /// comment. Empty by default.
     type_subtyping: Vec<TypeSubtyping>,
+    /// Per-`type_section`-entry canonicalized type-group form (W34 third
+    /// slice) — see [`Self::set_canonical_types`]'s doc comment. Empty by
+    /// default.
+    canonical_types: Vec<Option<(Rc<CanonicalGroup>, u32)>>,
     /// Each FUNCTION's own declared type-section index, parallel to
     /// `func_types` — see [`Self::set_func_type_indices`]'s doc comment.
     /// Empty by default.
@@ -11985,6 +12006,7 @@ impl WasmExecutionEngine {
             array_element_storage: Vec::new(),
             type_section: Vec::new(),
             type_subtyping: Vec::new(),
+            canonical_types: Vec::new(),
             func_type_indices: Vec::new(),
             tags: Vec::new(),
             tag_identities: Vec::new(),
@@ -12060,6 +12082,25 @@ impl WasmExecutionEngine {
     /// chaining.
     pub fn set_type_subtyping(&mut self, type_subtyping: Vec<TypeSubtyping>) -> &mut Self {
         self.type_subtyping = type_subtyping;
+        self
+    }
+
+    /// Register the module's per-type-section-entry canonicalized
+    /// type-group forms (W34 third slice: `code/specs/
+    /// W34-wasm-gc-canonical-type-equivalence.md`) — same optional-setter
+    /// pattern, and same index space, as [`Self::set_type_subtyping`]
+    /// (`canonical_types[N]` describes `type_section[N]`, exactly
+    /// `wasm_types::canonicalize_types`'s own output shape, or
+    /// `wasm_validator::ValidatedModule::canonical_types`'s, which
+    /// `wasm-runtime` clones from at instantiation time). Left unset
+    /// (empty), `call_indirect_type_matches`/`ref_matches_concrete_type`
+    /// fall back to nominal-only dispatch (their pre-W34 behavior) --
+    /// `nominal_subtype_chain`'s own doc comment guarantees an empty slice
+    /// here changes nothing for a module that predates this slice, or
+    /// that never declares a `sub`/`rec` shape canonical equivalence
+    /// alone could bridge. Returns `&mut self` for chaining.
+    pub fn set_canonical_types(&mut self, canonical_types: Vec<Option<(Rc<CanonicalGroup>, u32)>>) -> &mut Self {
+        self.canonical_types = canonical_types;
         self
     }
 
@@ -12308,6 +12349,7 @@ impl WasmExecutionEngine {
             func_types: self.func_types.clone(),
             types: self.type_section.clone(),
             type_subtyping: self.type_subtyping.clone(),
+            canonical_types: self.canonical_types.clone(),
             func_type_indices: self.func_type_indices.clone(),
             func_bodies: self.func_bodies.clone(),
             host_functions,
