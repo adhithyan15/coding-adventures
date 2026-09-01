@@ -89,9 +89,25 @@ const (
 // passing, and the run would be green. The gate that would otherwise notice a
 // build-tool change is itself computed by the modified evaluator, so that check
 // is circular and cannot be relied on.
+// internal/gitdiff earns its place for a stronger reason than the others:
+// GetChangedFiles *produces* changedFiles, which is at once the only input to
+// the path clause, the only input to touchesGatingMachinery itself, and
+// upstream of the affected closure. A GetChangedFiles that returned, say,
+// ["README.md"] would yield an empty-but-non-nil affected set and a non-nil
+// file list, so none of the run-everything escapes trigger and every gate
+// evaluates false — a complete all-false ci_jobs map that satisfies the
+// workflow's guard while every gated job skips and ci-gate reports green.
+//
+// internal/discovery and internal/resolver are deliberately NOT here. They feed
+// only the package clause, and after every job gate gained a directory-glob
+// path clause, a corrupted dependency graph can no longer silence a gate whose
+// files were actually touched. Keeping them out stops the sentinel from
+// swallowing the whole build tool. TestUnrelatedBuildToolChangeIsNotASentinel
+// pins that boundary.
 var machineryPrefixes = []string{
 	"code/programs/go/build-tool/internal/cigates/",
 	"code/programs/go/build-tool/internal/globmatch/",
+	"code/programs/go/build-tool/internal/gitdiff/",
 	"code/programs/go/build-tool/main.go",
 }
 

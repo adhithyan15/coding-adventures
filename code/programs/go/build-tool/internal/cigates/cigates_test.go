@@ -109,6 +109,9 @@ func TestGatingImplementationChangeSelfTestsEveryGate(t *testing.T) {
 		"code/programs/go/build-tool/internal/cigates/cigates.go",
 		"code/programs/go/build-tool/internal/cigates/cigates_test.go",
 		"code/programs/go/build-tool/internal/globmatch/globmatch.go",
+		// gitdiff PRODUCES changedFiles, so it controls the path clause, the
+		// affected closure, and this very sentinel check.
+		"code/programs/go/build-tool/internal/gitdiff/gitdiff.go",
 		"code/programs/go/build-tool/main.go",
 	} {
 		t.Run(file, func(t *testing.T) {
@@ -118,16 +121,22 @@ func TestGatingImplementationChangeSelfTestsEveryGate(t *testing.T) {
 	}
 }
 
-// The sentinel must not swallow the whole build tool: an unrelated change to,
-// say, the reporter should still be gated normally.
+// The sentinel must not swallow the whole build tool. This pins the deliberate
+// boundary: discovery and resolver feed only the PACKAGE clause, and since every
+// job gate also carries a directory-glob path clause — filesystem truth — a
+// corrupted dependency graph can no longer silence a gate whose files were
+// actually touched. So they are not sentinels, and neither is the reporter.
 func TestUnrelatedBuildToolChangeIsNotASentinel(t *testing.T) {
-	got := Evaluate(
-		testRegistry(),
-		map[string]bool{},
-		[]string{"code/programs/go/build-tool/internal/reporter/reporter.go"},
-		false,
-	)
-	assertAll(t, got, false, "unrelated build-tool change")
+	for _, file := range []string{
+		"code/programs/go/build-tool/internal/reporter/reporter.go",
+		"code/programs/go/build-tool/internal/discovery/discovery.go",
+		"code/programs/go/build-tool/internal/resolver/resolver.go",
+	} {
+		t.Run(file, func(t *testing.T) {
+			got := Evaluate(testRegistry(), map[string]bool{}, []string{file}, false)
+			assertAll(t, got, false, "unrelated build-tool change")
+		})
+	}
 }
 
 // ---------------------------------------------------------------------------
