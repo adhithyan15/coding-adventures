@@ -203,6 +203,34 @@ first-person can-do sentence and the lesson that pays it off.
   **डोळा**'s drifted meanings. It assesses **2 of the chapter's 2** introduced
   atoms (1.00).
 
+- **Chapter 22 — Give, Bring, Put** ([`lessons/MR-C22-*`](./lessons/)):
+  **देणे, पिणे, आणणे, ठेवणे** — the verbs the noun-only request pattern had been
+  doing without. *\*deh₃-* behind **donate**, **dative** and **data**; the
+  drinking root the reader already owned from **पाणी**; *ā-* + *nī-*, "leading
+  toward here," reusing the prefix that made **येणे**; and *sthā-*, "to stand,"
+  behind **stand**, **stay**, **state** and **statue**. Payoff:
+  [`MR-R22-request-verbs`](./lessons/MR-R22-request-verbs.md).
+- **Chapter 23 — Sit, and How You Feel** ([`lessons/MR-C23-*`](./lessons/)):
+  **बसणे, वाटणे, झोपणे, चालणे** — the verbs of a visit. **बसा** is hospitality
+  in one word, on a root that also named villages (Latin *vīcus*, English
+  **-wich**); **वाटणे** is the third verb to put the speaker in the dative;
+  **झोपणे** is the second everyday word Marathi built for itself rather than
+  inheriting, beside **डोळा**; and **चालेल**, "it will walk," is the everyday
+  yes. Payoff: [`MR-R23-wellbeing-verbs`](./lessons/MR-R23-wellbeing-verbs.md).
+- **Chapter 24 — What Passes Between Two People**
+  ([`lessons/MR-C24-*`](./lessons/)): **सांगणे, म्हणणे, शिकणे, मिळणे**.
+  **सांगणे** is taught **gloss-first**: its *ga* has never been taught, so the
+  word arrives by ear with its Devanagari confined to the headword and the debt
+  stated out loud, and **म्हणणे** follows as the partner every piece of which the
+  reader can already write. **शिकणे** is the desiderative of *śak-*, so learning
+  is *wanting to be able*; **मिळणे** puts the reader in the dative a fourth
+  time. Payoff: [`MR-R24-passing-verbs`](./lessons/MR-R24-passing-verbs.md).
+- **Chapter 25 — The Twelve, Further Apart** ([`lessons/MR-R25-*`](./lessons/)):
+  the whole run at a wider spacing, the four dative sentences on one frame, and
+  two recognition-at-distance lessons that answer the R4 window the longer track
+  opened on the book's earliest signs, sounds and words. Payoff:
+  [`MR-R25-dative-frame`](./lessons/MR-R25-dative-frame.md).
+
 Chapters 3–6 are **not in the ledger yet**, and that gap is deliberate. They are
 still schema v1, so their lessons declare no knowledge atoms and no payoff there
 could honestly claim to assess anything. A placeholder would hide debt the HL05

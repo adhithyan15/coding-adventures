@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:e1e0b878e2af576d",
+  "lessonIds": [
+    "MR-C23-basne",
+    "MR-C23-vatne",
+    "MR-C23-jhopne",
+    "MR-C23-chalne",
+    "MR-R23-wellbeing-verbs"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "marathi/narration/ch23.txt",
+  "json": "marathi/narration/ch23.json",
+  "textHash": "fnv1a64:bf0f36f16da4e3b9",
+  "jsonHash": "fnv1a64:be2f1f7d3786e872",
+  "findings": []
+}

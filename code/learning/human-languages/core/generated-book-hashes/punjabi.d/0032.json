@@ -1,0 +1,12 @@
+{
+  "language": "punjabi",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:b610d26ef1b468dc",
+  "lessonIds": [
+    "PA-C32-changa",
+    "PA-W09-chacha",
+    "PA-C32-thik-thak",
+    "PA-W09-gagga"
+  ],
+  "tex": "punjabi/book/chapters/ch32-good-and-soso.tex"
+}

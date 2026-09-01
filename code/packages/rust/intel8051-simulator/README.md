@@ -77,3 +77,17 @@ timers, the serial port, and the interrupt controller — this is a
 **behavioral instruction-set simulator**, not a cycle-accurate or
 peripheral-accurate one, matching the Python reference's documented
 scope.
+
+## Checked lifecycle and conformance
+
+The normative API adds complete owned `Intel8051State`, before/after
+`StepTrace`, typed `Intel8051Error`, and `ExecutionResult` with final state and
+traces. `load_checked`, `load_at_checked`, `restore`, `step_checked`,
+`run_loaded_checked`, and `run_checked` reject overflow, truncation, halted
+steps, invalid states, and execution faults without partial mutation. Checked
+loads clear code and XDATA before installing a fresh program.
+
+The committed Python-oracle fixture hashes complete PC/halt/IRAM/SFR/code/XDATA
+state for every one of the 256 opcode bytes. The generator is reproducible, and
+the Rust differential consumes every hash. Existing encoder and backend
+consumers remain compatible with the legacy methods.

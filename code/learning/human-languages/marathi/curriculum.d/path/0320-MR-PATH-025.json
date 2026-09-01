@@ -1,0 +1,16 @@
+{
+  "id": "MR-PATH-025",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "MR-C23-basne",
+    "MR-C23-vatne",
+    "MR-C23-jhopne",
+    "MR-C23-chalne",
+    "MR-R23-wellbeing-verbs"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-028-WELLBEING-VERBS"
+  ],
+  "after": []
+}

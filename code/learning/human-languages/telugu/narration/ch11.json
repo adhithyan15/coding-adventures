@@ -4,14 +4,14 @@
   "chapter": 11,
   "title": "Four Core Colours",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b87d88f980c9b000",
+  "sourceHash": "fnv1a64:4ea2830975802028",
   "lessons": [
     {
       "id": "TE-C11-rangulu",
       "sequence": 380,
       "title": "నలుపు, తెలుపు, ఎరుపు, నీలం — the pattern completes itself",
       "headword": "నలుపు తెలుపు ఎరుపు నీలం",
-      "romanization": "",
+      "romanization": "nalupu telupu erupu nīlam",
       "gloss": "black, white, red, blue — Telugu's own basic colors, completing the whole family's shared blue",
       "script": "telugu",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d9887faa67f4d0a2",
+      "sourceHash": "fnv1a64:f879c8134b7351f5",
       "notice": null,
       "blocks": [
         {

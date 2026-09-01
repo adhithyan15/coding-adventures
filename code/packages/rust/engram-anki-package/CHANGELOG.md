@@ -2,6 +2,41 @@
 
 ## Unreleased
 
+**Modern `.anki21b` / `.colpkg` packages now work in the browser**, and the
+`modern-format` feature is gone.
+
+That feature existed for one reason: the only zstd that could read real frames
+was the third-party crate, which reaches libzstd's C sources through `zstd-sys`
+and cannot target `wasm32-unknown-unknown`. So the browser build turned it off
+and every modern package was refused with an explanatory message. The message
+was honest, but it described a capability gap, not a design.
+
+The repo's own `zstd` now decodes Huffman literals and FSE table descriptions
+per RFC 8878 — what real encoders actually emit — and is pure Rust with no build
+script. `decode_package_payload` and `encode_package_payload` route through it
+unconditionally, so the feature, the `cfg` branches, the
+`MODERN_FORMAT_UNAVAILABLE` message, and the split target-dependency in
+`engram-core-wasm` all go away together. **Every target now gets the same
+package layer with the same capabilities**, rather than a reduced browser
+configuration that had to be kept honest separately.
+
+The third-party crate stays as a **dev-dependency oracle**, the role `rusqlite`
+already holds here. Modern-package fixtures are compressed by real libzstd and
+read back by our decoder; a second test compresses with our encoder and decodes
+with real libzstd, which is the direction that decides whether an exported
+`.colpkg` opens in Anki. Building fixtures with our own encoder would only prove
+we can read back our own bytes — the exact circularity that let the decoder ship
+without Huffman support and still show green.
+
+Our encoder emits raw literals with predefined FSE tables: valid Zstandard that
+any decoder reads, but larger than libzstd at the same nominal level. That is a
+deliberate trade — a correct frame on every target beats a smaller frame only
+native builds can write.
+
+The test that asserted the old refusal is replaced by one asserting the failure
+mode that still matters: a modern member whose payload is not a zstd frame is
+refused at decode rather than imported as a plausible-looking collection.
+
 **Media expansion is now budgeted**, with the budget clamped at both ends and
 computed in `u64`. An earlier draft used `usize::saturating_mul`, which on
 `wasm32` saturates to `usize::MAX` for any archive over ~82 MiB — and since the

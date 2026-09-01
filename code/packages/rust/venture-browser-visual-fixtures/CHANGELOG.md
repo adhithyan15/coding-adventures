@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add a decoded intrinsic-size and cover-fit fixture shared by every browser
+  host pipeline.
+
 - Add a fragmented inline-box fixture covering slice/clone edge continuation,
   recursive paint, and one shared link hit region per visual line fragment.
 

@@ -1,0 +1,24 @@
+{
+  "id": "BN-EXT-020-SCRIPT-BREATH-AND-PAIRS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read six more Bengali words I already say, tell a plain consonant from its breathy partner on the page and in the mouth, and say why the o-sign is two signs I already write rather than a new shape.",
+  "prerequisites": [
+    "BN-EXT-019-SCRIPT-PIECES-INTO-WORDS"
+  ],
+  "lessons": [
+    "BN-W03-o-matra",
+    "BN-W03-kalo-read",
+    "BN-W03-ba",
+    "BN-W03-abar-read",
+    "BN-W03-bha",
+    "BN-W03-bhalo-read",
+    "BN-W03-kha",
+    "BN-W03-mukh-read",
+    "BN-W03-da",
+    "BN-W03-shada-read",
+    "BN-W03-dha",
+    "BN-W03-dudh-read"
+  ]
+}

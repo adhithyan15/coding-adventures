@@ -4,6 +4,7 @@ sequence: 145
 chapter: 7
 type: phrase
 headword: पुन्हा भेटू
+romanization: "punhā bheṭū"
 gloss: see you again (punhā bheṭū)
 concept_tag: FAREWELL-LATER
 prerequisites: [MR-C04-punha, MR-C04-bhetu, MR-C01-yeto]

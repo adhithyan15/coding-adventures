@@ -4,6 +4,7 @@ sequence: 120
 chapter: 6
 type: phrase
 headword: मी बरा आहे
+romanization: "mī barā āhe"
 gloss: I'm well, thank you (mī barā āhe)
 concept_tag: WORD-WELL
 prerequisites: [MR-C03-mi, MR-C01-baram, MR-C01-dhanyavad]

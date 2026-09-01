@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "UR-W17-nun-ghunna",
+    "language": "urdu",
+    "chapter": 17,
+    "sequence": 900,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e7b0b65378096007",
+    "detachableSegments": [
+      "Script — the shape",
+      "The letters in this word"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

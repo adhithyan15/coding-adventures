@@ -4,6 +4,7 @@ sequence: 95
 chapter: 5
 type: phrase
 headword: भेटून आनंद झाला
+romanization: "bheṭūn ānand jhālā"
 gloss: pleased to meet you (bheṭūn ānand jhālā)
 concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [MR-C02-tumche-naav-kaay-aahe]

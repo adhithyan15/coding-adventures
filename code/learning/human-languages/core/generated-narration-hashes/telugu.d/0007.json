@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 7,
-  "sourceHash": "fnv1a64:5c5cd4c2eebf816a",
+  "sourceHash": "fnv1a64:7d0e2b590becb216",
   "lessonIds": [
     "TE-C07-numbers-1-5",
     "TE-C07-numbers-6-10",
@@ -13,6 +13,6 @@
   "text": "telugu/narration/ch07.txt",
   "json": "telugu/narration/ch07.json",
   "textHash": "fnv1a64:11a5d479ce09be36",
-  "jsonHash": "fnv1a64:3dcd5536d2da2220",
+  "jsonHash": "fnv1a64:cb60d4212afa45bc",
   "findings": []
 }

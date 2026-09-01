@@ -103,6 +103,23 @@ where a word needs them.
   uncertainty: love named as stickiness, and a disputed tie to the *snow* root.
   **Authored.**
 
+## The script ladder
+
+The script is taught inline and never as a gated reading course, but it is
+still a ladder: `SA-S01`–`SA-S123` teach one Devanagari character each, placed
+**last in a chapter** so that the words carrying that character have already
+been met in romanization. Characters taught, in the order the reader meets them:
+
+म त · न स · अ ि · आ र · ् क · ा े · प · ह · ◌ौ · ट ठ · ष · ख · ज · उ · फ ओ
+
+The first fourteen follow the shared 24-position Devanagari letter ledger. The
+nine added after ◌ौ were chosen by **debt** instead: each is a character the
+corpus was showing without ever teaching, ordered so that it arrives before the
+lessons that need it. That took the never-taught count from 18 to 9. The nine
+that remain — ऋ ङ (no cited stroke order in the shared script file) and
+इ ई घ ड ँ ू ◌ै (no Sanskrit headword carries them yet) — are backlog `HL-C217`,
+and the second group is a **vocabulary** job before it is a script job.
+
 ## Planned
 
 | Chapter | Theme |

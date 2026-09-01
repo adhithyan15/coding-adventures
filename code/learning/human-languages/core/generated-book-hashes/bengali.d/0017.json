@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:a5004dd60e4e4f45",
+  "lessonIds": [
+    "BN-W02-naam-read",
+    "BN-W02-i-matra",
+    "BN-W02-ami-read",
+    "BN-W02-la",
+    "BN-W02-lal-read",
+    "BN-W02-ta",
+    "BN-W02-tin-read",
+    "BN-W02-u-matra",
+    "BN-W02-tumi-read",
+    "BN-W02-e-matra",
+    "BN-W02-kemon-read"
+  ],
+  "tex": "bengali/book/chapters/ch17-pieces-into-words.tex"
+}

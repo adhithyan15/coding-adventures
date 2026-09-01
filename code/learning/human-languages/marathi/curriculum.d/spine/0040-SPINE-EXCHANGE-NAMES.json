@@ -3,7 +3,8 @@
     "MR-PATH-005",
     "MR-PATH-007",
     "MR-PATH-016",
-    "MR-PATH-020"
+    "MR-PATH-020",
+    "MR-PATH-026"
   ],
   "omits": [
     "PRONOUN-ME"

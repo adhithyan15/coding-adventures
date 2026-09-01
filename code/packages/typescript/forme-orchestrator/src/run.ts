@@ -31,9 +31,9 @@ import type {
   StageRunSummary,
 } from "./types.js";
 import {
-  compareWithRevisionLedger,
   loadRevisionLedger,
   persistRevisionLedger,
+  revisionLedgerKey,
 } from "./revision-ledger.js";
 
 export interface RunOnceContext {
@@ -71,10 +71,12 @@ export async function runOnce(
       logger,
       cache,
       useCache: options.useCache ?? true,
+      previousLedger,
+      checkpointNamespace: revisionLedgerKey(pipeline),
       // Honour the pipeline's reproducible-build setting (FM03 §8).
       reproducibleBuild: pipeline.config.settings.reproducibleBuild,
     });
-    stages = compareWithRevisionLedger(result.summaries, previousLedger);
+    stages = result.summaries;
     if (result.outcome === "success") {
       await persistRevisionLedger(cache, pipeline, stages, logger);
     }

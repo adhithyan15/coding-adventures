@@ -4,14 +4,14 @@
   "chapter": 10,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e424b6bae7c89597",
+  "sourceHash": "fnv1a64:c6f6bfea597097f1",
   "lessons": [
     {
       "id": "GU-C04-malishun",
       "sequence": 240,
       "title": "મળીશું (maḷīshũ) — \"(we) will meet\"",
       "headword": "મળીશું",
-      "romanization": "",
+      "romanization": "maḷīshũ",
       "gloss": "(we) will meet",
       "script": "gujarati",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:407c60b886d9799c",
+      "sourceHash": "fnv1a64:b471bf7c2e824f9f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -145,7 +145,7 @@
       "sequence": 250,
       "title": "કાલે મળીશું (kāle maḷīshũ) — \"see you tomorrow\"",
       "headword": "કાલે મળીશું",
-      "romanization": "",
+      "romanization": "kāle maḷīshũ",
       "gloss": "see you tomorrow (and the કાલ puzzle)",
       "script": "gujarati",
       "modality": "sight",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:64c1b09bc9c5bd72",
+      "sourceHash": "fnv1a64:11f63b490b4d634c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -268,7 +268,7 @@
       "sequence": 260,
       "title": "પાછા (pāchhā) — \"again, back\"",
       "headword": "પાછા",
-      "romanization": "",
+      "romanization": "pāchhā",
       "gloss": "again, back",
       "script": "gujarati",
       "modality": "sight",
@@ -276,7 +276,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a78cf8f157adce3f",
+      "sourceHash": "fnv1a64:45c27dc44d9d57a3",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -382,7 +382,7 @@
       "sequence": 270,
       "title": "પાછા મળીશું (pāchhā maḷīshũ) — \"we'll meet again\"",
       "headword": "પાછા મળીશું",
-      "romanization": "",
+      "romanization": "pāchhā maḷīshũ",
       "gloss": "we'll meet again (goodbye)",
       "script": "gujarati",
       "modality": "voice",
@@ -390,7 +390,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45f403388d1b5a5c",
+      "sourceHash": "fnv1a64:5ee11226d486e730",
       "notice": null,
       "blocks": [
         {

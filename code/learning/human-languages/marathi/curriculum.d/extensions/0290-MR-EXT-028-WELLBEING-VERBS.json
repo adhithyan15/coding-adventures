@@ -1,0 +1,17 @@
+{
+  "id": "MR-EXT-028-WELLBEING-VERBS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can run a short Marathi visit: seat my guest, say how I feel on the dative frame, say that I am sleepy, and accept an offer with chalel.",
+  "prerequisites": [
+    "MR-EXT-027-REQUEST-VERBS"
+  ],
+  "lessons": [
+    "MR-C23-basne",
+    "MR-C23-vatne",
+    "MR-C23-jhopne",
+    "MR-C23-chalne",
+    "MR-R23-wellbeing-verbs"
+  ]
+}

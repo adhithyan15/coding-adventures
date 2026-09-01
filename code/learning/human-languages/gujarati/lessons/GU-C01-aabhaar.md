@@ -6,7 +6,8 @@ sequence: 20
 chapter: 2
 type: word
 headword: આભાર
-gloss: thank you (ābhār)
+romanization: "ābhār"
+gloss: thank you
 concept_tag: COURTESY-THANKS
 prerequisites: [GU-W02-vocalic-r]
 sounds: [independent-aa, no-top-line]

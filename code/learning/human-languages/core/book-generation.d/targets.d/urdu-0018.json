@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 18,
+  "output": "urdu/book/chapters/ch18-script-meeting.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

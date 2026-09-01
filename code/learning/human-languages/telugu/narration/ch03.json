@@ -4,14 +4,14 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f9bcb1dd350456aa",
+  "sourceHash": "fnv1a64:845cc27abc245772",
   "lessons": [
     {
       "id": "TE-C03-elaa",
       "sequence": 150,
       "title": "ఎలా (elā) — \"how,\" another of the e- questions",
       "headword": "ఎలా",
-      "romanization": "",
+      "romanization": "elā",
       "gloss": "how",
       "script": "telugu",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ebf42526447fc257",
+      "sourceHash": "fnv1a64:b24dc62106a7888e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -77,7 +77,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ఎ (independent short e) + లా (lā) becomes ఎలా (elā)."
+              "text": "ఎ (independent short e) + లా (lā) becomes ఎలా (elā) (elā)."
             }
           ]
         },
@@ -136,7 +136,7 @@
       "sequence": 160,
       "title": "మీరు ఎలా ఉన్నారు? (mīru elā unnāru?)",
       "headword": "మీరు ఎలా ఉన్నారు?",
-      "romanization": "",
+      "romanization": "mīru elā unnāru?",
       "gloss": "how are you? (respectful)",
       "script": "telugu",
       "modality": "sight",
@@ -144,7 +144,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ace8ded04e327c56",
+      "sourceHash": "fnv1a64:8fdc940083ffdf58",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "మీరు ఎలా ఉన్నారు? = మీరు (mīru, \"you,\" respectful) + ఎలా (elā, \"how\") + ఉన్నారు (unnāru, \"are\") — \"you how are?\", the verb last, as in every Telugu sentence. The verb is ఉండు (uṇḍu), \"to be / to exist / to stay\" — native Dravidian, and the workhorse behind \"how are you,\" \"I'm well,\" and (you'll see in Chapter 5) \"I live.\""
+              "text": "మీరు ఎలా ఉన్నారు? (mīru elā unnāru?) = మీరు (mīru, \"you,\" respectful) + ఎలా (elā, \"how\") + ఉన్నారు (unnāru, \"are\") — \"you how are?\", the verb last, as in every Telugu sentence. The verb is ఉండు (uṇḍu), \"to be / to exist / to stay\" — native Dravidian, and the workhorse behind \"how are you,\" \"I'm well,\" and (you'll see in Chapter 5) \"I live.\""
             }
           ]
         },

@@ -1,15 +1,16 @@
 {
   "language": "kannada",
   "chapter": 21,
-  "sourceHash": "fnv1a64:2b839b98fc94504a",
+  "sourceHash": "fnv1a64:93a6391427d5c911",
   "lessonIds": [
-    "KA-C21-naayi-bekku"
+    "KA-C21-naayi-bekku",
+    "KA-S126-letter-u"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "kannada/narration/ch21.txt",
   "json": "kannada/narration/ch21.json",
-  "textHash": "fnv1a64:f3e95b05c05e2195",
-  "jsonHash": "fnv1a64:fe3a32aa63e52166",
+  "textHash": "fnv1a64:bd2e7776a110adf7",
+  "jsonHash": "fnv1a64:f842c32187f42877",
   "findings": []
 }

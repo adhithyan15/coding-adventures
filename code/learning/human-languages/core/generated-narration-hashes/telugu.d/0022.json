@@ -1,15 +1,16 @@
 {
   "language": "telugu",
   "chapter": 22,
-  "sourceHash": "fnv1a64:fd1ed5e909687fa0",
+  "sourceHash": "fnv1a64:764024d77a49e785",
   "lessonIds": [
-    "TE-C22-pacha-pasupu"
+    "TE-C22-pacha-pasupu",
+    "TE-S125-letter-ha"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "telugu/narration/ch22.txt",
   "json": "telugu/narration/ch22.json",
-  "textHash": "fnv1a64:8ecae3220ca35ede",
-  "jsonHash": "fnv1a64:0d500ba5291d3820",
+  "textHash": "fnv1a64:5dec019b8cbf3be2",
+  "jsonHash": "fnv1a64:98455106fe3eba1a",
   "findings": []
 }

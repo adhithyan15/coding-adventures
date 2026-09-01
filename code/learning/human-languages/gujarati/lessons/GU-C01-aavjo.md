@@ -6,6 +6,7 @@ sequence: 30
 chapter: 2
 type: word
 headword: આવજો
+romanization: "āvjo"
 gloss: goodbye (lit. "[please] come [again]")
 concept_tag: FAREWELL
 prerequisites: [GU-C01-namaste, GU-W02-ya]

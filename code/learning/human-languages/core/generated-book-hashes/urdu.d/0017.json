@@ -1,0 +1,18 @@
+{
+  "language": "urdu",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:1a30c443b2c436e5",
+  "lessonIds": [
+    "UR-C17-yih",
+    "UR-C17-kaam",
+    "UR-W17-he",
+    "UR-C17-kahan",
+    "UR-C17-review-shapes",
+    "UR-W17-bari-ye",
+    "UR-C17-maan",
+    "UR-C17-review-hai",
+    "UR-W17-nun-ghunna",
+    "UR-C17-practice"
+  ],
+  "tex": "urdu/book/chapters/ch17-script-copula.tex"
+}

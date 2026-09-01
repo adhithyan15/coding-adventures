@@ -6,6 +6,7 @@ sequence: 91
 chapter: 8
 type: word
 headword: નામ
+romanization: "nām"
 gloss: name
 concept_tag: WORD-NAME
 prerequisites: []

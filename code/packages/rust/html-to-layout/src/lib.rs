@@ -26,6 +26,7 @@ use layout_ir::{
     TextDecoration,
 };
 use layout_positioned::{positioned_ext, Overflow, Position, PositionedStyle};
+use layout_replaced::replaced_ext;
 use layout_table::{
     table_ext, BorderCollapse, CaptionSide, TableContainerStyle, TableItemStyle, TableLayout,
     VerticalAlign,
@@ -91,6 +92,7 @@ pub struct HtmlStyleContext {
     pub author_stylesheets: Vec<HtmlAuthorStylesheet>,
     pub viewport_width: f64,
     pub viewport_height: f64,
+    pub image_intrinsics: HashMap<String, (f64, f64)>,
 }
 
 impl HtmlStyleContext {
@@ -100,12 +102,27 @@ impl HtmlStyleContext {
             author_stylesheets: Vec::new(),
             viewport_width: 800.0,
             viewport_height: 600.0,
+            image_intrinsics: HashMap::new(),
         }
     }
 
     pub fn with_viewport(mut self, width: f64, height: f64) -> Self {
         self.viewport_width = finite_non_negative(width);
         self.viewport_height = finite_non_negative(height);
+        self
+    }
+
+    pub fn with_image_intrinsics(
+        mut self,
+        values: impl IntoIterator<Item = (String, f64, f64)>,
+    ) -> Self {
+        self.image_intrinsics = values
+            .into_iter()
+            .filter_map(|(url, width, height)| {
+                (width.is_finite() && width > 0.0 && height.is_finite() && height > 0.0)
+                    .then_some((url, (width, height)))
+            })
+            .collect();
         self
     }
 
@@ -122,6 +139,7 @@ impl HtmlStyleContext {
             author_stylesheets,
             viewport_width: 800.0,
             viewport_height: 600.0,
+            image_intrinsics: HashMap::new(),
         })
     }
 }
@@ -151,6 +169,8 @@ pub struct HtmlComputedStyle {
     pub text_align: TextAlign,
     pub white_space: String,
     pub box_decoration_break: BoxDecorationBreak,
+    pub aspect_ratio: Option<f64>,
+    pub object_fit: ImageFit,
     pub float: FloatStyle,
     pub flex_container: FlexContainerStyle,
     pub flex_item: FlexItemStyle,
@@ -308,7 +328,7 @@ where
     let mut layout = match display {
         "inline-text" => text_leaf(node.text.as_deref().unwrap_or_default(), &style),
         "line-break" => text_leaf("\n", &style),
-        "inline-replaced" if node.role == "image" => image_leaf(node),
+        "inline-replaced" if node.role == "image" => image_leaf(node, &style, context),
         _ => container_or_fallback(node, context, &style, &next_ancestors, is_visited),
     };
 
@@ -419,16 +439,30 @@ fn text_leaf(value: &str, style: &HtmlComputedStyle) -> LayoutNode {
     .with_height(SizeValue::Wrap)
 }
 
-fn image_leaf(node: &BrowserRenderNode) -> LayoutNode {
+fn image_leaf(
+    node: &BrowserRenderNode,
+    style: &HtmlComputedStyle,
+    context: &HtmlStyleContext,
+) -> LayoutNode {
     let source = node
         .resolved_src
         .as_deref()
         .or(node.src.as_deref())
         .unwrap_or_default();
-    LayoutNode::leaf_image(ImageContent {
+    let mut layout = LayoutNode::leaf_image(ImageContent {
         src: source.to_string(),
-        fit: ImageFit::Contain,
-    })
+        fit: style.object_fit,
+    });
+    let intrinsic = context.image_intrinsics.get(source).copied();
+    layout.ext.insert(
+        "replaced".into(),
+        replaced_ext(
+            intrinsic.map(|size| size.0),
+            intrinsic.map(|size| size.1),
+            style.aspect_ratio,
+        ),
+    );
+    layout
 }
 
 fn style_for_node<F>(
@@ -461,6 +495,8 @@ where
     style.border_color = [None; 4];
     style.box_sizing = "content-box".into();
     style.box_decoration_break = BoxDecorationBreak::Slice;
+    style.aspect_ratio = None;
+    style.object_fit = ImageFit::Fill;
     style.float = FloatStyle::default();
     style.flex_container = FlexContainerStyle::default();
     style.flex_item = FlexItemStyle::default();
@@ -607,6 +643,8 @@ fn root_computed_style(context: &HtmlStyleContext) -> HtmlComputedStyle {
         text_align: TextAlign::Start,
         white_space: "normal".into(),
         box_decoration_break: BoxDecorationBreak::Slice,
+        aspect_ratio: None,
+        object_fit: ImageFit::Fill,
         float: FloatStyle::default(),
         flex_container: FlexContainerStyle::default(),
         flex_item: FlexItemStyle::default(),
@@ -784,6 +822,17 @@ fn apply_declaration_winners(
                     BoxDecorationBreak::Clone
                 } else {
                     BoxDecorationBreak::Slice
+                }
+            }
+            "aspect-ratio" => {
+                style.aspect_ratio = parse_aspect_ratio(&value);
+            }
+            "object-fit" => {
+                style.object_fit = match value.first().map(String::as_str) {
+                    Some("contain") | Some("scale-down") => ImageFit::Contain,
+                    Some("cover") => ImageFit::Cover,
+                    Some("none") => ImageFit::None,
+                    _ => ImageFit::Fill,
                 }
             }
             "float" => {
@@ -2244,6 +2293,19 @@ fn parse_percentage(value: &[String]) -> Option<f64> {
         .filter(|value| value.is_finite() && *value >= 0.0)
 }
 
+fn parse_aspect_ratio(value: &[String]) -> Option<f64> {
+    let authored = value
+        .iter()
+        .filter(|token| token.as_str() != "auto")
+        .cloned()
+        .collect::<String>();
+    let (numerator, denominator) = authored.split_once('/').unwrap_or((authored.as_str(), "1"));
+    let numerator = numerator.parse::<f64>().ok()?;
+    let denominator = denominator.parse::<f64>().ok()?;
+    let ratio = numerator / denominator;
+    (ratio.is_finite() && ratio > 0.0).then_some(ratio)
+}
+
 fn parse_box_length(
     value: &[String],
     style: &HtmlComputedStyle,
@@ -2788,6 +2850,36 @@ mod tests {
                     && values.get("borderRightWidth") == Some(&ExtValue::Float(1.0)))
         }));
         assert!(fragments.windows(2).all(|pair| pair[0].y < pair[1].y));
+    }
+
+    #[test]
+    fn decoded_intrinsics_and_css_ratio_project_replaced_geometry() {
+        let render =
+            parse_browser_render_tree("<img id='hero' src='hero.gif' alt='hero'>").unwrap();
+        let context = HtmlStyleContext::with_author_stylesheets(
+            mosaic_html_theme(),
+            ["#hero { width: 80px; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }"],
+        )
+        .unwrap()
+        .with_image_intrinsics([("hero.gif".into(), 40.0, 80.0)]);
+        let layout =
+            html_render_tree_to_layout_with_style_context(&render, &context, &never_visited);
+        let hero = find_by_id(&layout, "hero").unwrap();
+        assert!(matches!(
+            &hero.content,
+            Some(Content::Image(image)) if image.fit == ImageFit::Cover
+        ));
+        assert_eq!(
+            layout_replaced::IntrinsicSize::from_layout(hero),
+            layout_replaced::IntrinsicSize {
+                width: Some(40.0),
+                height: Some(80.0),
+                aspect_ratio: Some(4.0 / 3.0),
+            }
+        );
+        let positioned = layout_block(&layout, constraints_width(200.0), &TestMeasurer);
+        let hero = find_positioned_by_id(&positioned, "hero").unwrap();
+        assert_eq!((hero.width, hero.height), (80.0, 60.0));
     }
 
     #[test]

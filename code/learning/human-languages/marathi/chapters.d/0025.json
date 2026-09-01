@@ -1,0 +1,21 @@
+{
+  "chapter": 25,
+  "title": "The Twelve, Further Apart",
+  "label": "ch:mr-twelve-verbs-r2",
+  "canDo": "I can produce all twelve of the new verbs at a wider spacing, and say what the mala frame does in each of the four sentences built on it.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MR-R25-dative-frame",
+    "kind": "production",
+    "summary": "Complete MR-R25-dative-frame and produce feeling, sleepiness, and getting on one dative frame, then say word for word what mala is doing in each.",
+    "assesses": [
+      "MR-GRAMMAR-DATIVE-KNOWLEDGE",
+      "MR-GRAMMAR-DATIVE-LIKING",
+      "MR-GRAMMAR-DATIVE-FEELING",
+      "MR-LEX-VATNE",
+      "MR-LEX-MILNE"
+    ]
+  }
+}

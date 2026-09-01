@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 2,
-  "sourceHash": "fnv1a64:e66f259f764738ac",
+  "sourceHash": "fnv1a64:1ddec31a3082edb5",
   "lessonIds": [
     "GU-W02-ra",
     "GU-W02-da",
@@ -23,7 +23,7 @@
   "drivablePrefix": 0,
   "text": "gujarati/narration/ch02.txt",
   "json": "gujarati/narration/ch02.json",
-  "textHash": "fnv1a64:793433660d98cb71",
-  "jsonHash": "fnv1a64:277bce5bc4ffb3e9",
+  "textHash": "fnv1a64:843a19cdbdb81c16",
+  "jsonHash": "fnv1a64:94b3f65768f2fe07",
   "findings": []
 }

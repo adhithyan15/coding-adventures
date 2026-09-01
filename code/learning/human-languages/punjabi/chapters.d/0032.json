@@ -1,0 +1,20 @@
+{
+  "chapter": 32,
+  "title": "Good and So-So",
+  "label": "ch:pa-good-and-soso",
+  "canDo": "I can answer how are you with changa or thik-thak, say why changa's origin is disputed rather than settled, name echo reduplication as the habit that made thak, and write both Gurmukhi consonants of changa.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PA-C32-thik-thak",
+    "kind": "production",
+    "summary": "The reader produces the middling answer, states that its second half carries no meaning outside the pair, names echo reduplication as the machine that made it, and runs all three wellbeing answers against each other.",
+    "assesses": [
+      "PA-LEX-THIK-THAK",
+      "PA-FORM-ECHO-REDUPLICATION",
+      "PA-LEX-CHANGA",
+      "PA-SCRIPT-CHA-01"
+    ]
+  }
+}

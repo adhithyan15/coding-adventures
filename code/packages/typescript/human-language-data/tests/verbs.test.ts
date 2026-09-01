@@ -110,7 +110,13 @@ describe("corpus snapshot", () => {
 
     expect(report.summary.tracksWithNoCoreVerb).toBe(3);
     expect(report.summary.universallyMissing).toHaveLength(0);
-    expect(report.summary.meanCoveredPercent).toBe(38); // a new zero-verb starter makes the corpus average honest
+    // 38 -> 39. Marathi's pre-A1 verb tranche (chapters 22-25) puts ten more
+    // CANONICAL core-verb tags on the board -- GIVE, DRINK, BRING, PUT, SIT,
+    // SLEEP, WALK, SAY, LEARN, GET -- where the track previously had four verbs
+    // under namespaced MR-VERB-* tags that this cross-language join cannot see.
+    // The mean is allowed to rise for that reason and no other: it moves because
+    // a track taught the shared concepts, not because the denominator shrank.
+    expect(report.summary.meanCoveredPercent).toBe(39); // a new zero-verb starter makes the corpus average honest
 
     // The tracks that have joined the cross-language corpus, named explicitly so a
     // regression that silently unhooks these lessons cannot hide inside a total.

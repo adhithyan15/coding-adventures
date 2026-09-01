@@ -70,7 +70,7 @@ Warm-up.
 Assemble the two atoms into the standard warm goodbye.
 
 The phrase, assembled.
-पुन्हा (punhā, again) + भेटू (bheṭū, we'll meet) becomes पुन्हा भेटू — "we'll meet again." Two words, and the whole promise of return is spoken.
+पुन्हा (punhā, again) + भेटू (bheṭū, we'll meet) becomes पुन्हा भेटू (punhā bheṭū) — "we'll meet again." Two words, and the whole promise of return is spoken.
 This is the fuller, explicit twin of Chapter 4's येतो (yeto, "I'll come [again]"). Both refuse a final "farewell": one says I'll come back, the other we'll meet again — the subcontinent's shared goodbye-as-promise (Hindi phir milenge, Bengali āshi, Tamil pōy varugiṟēṉ).
 
 Why it's said this way.
@@ -101,7 +101,7 @@ The letters in this word.
 (Skim if you read Devanagari.) उ (u, standalone vowel) + द्या (dyā, द da joined by a halant to य ya with the long-ā stroke) becomes उद्या udyā.
 
 The phrase, assembled.
-उद्या (udyā, "tomorrow") + भेटू (bheṭū, we'll meet) becomes उद्या भेटू — "we'll meet tomorrow."
+उद्या (udyā, "tomorrow") + भेटू (bheṭū, we'll meet) becomes उद्या भेटू (udyā bheṭū) — "we'll meet tomorrow."
 उद्या comes from Sanskrit श्वः (śvaḥ) by way of a later udya-; unlike Hindi's kal (which means both tomorrow and yesterday), Marathi keeps tomorrow and yesterday as two distinct words — udyā (tomorrow) vs. काल (kāl, yesterday). No ambiguity about which way time is pointing.
 
 Why it's said this way.
@@ -132,7 +132,7 @@ The letters in this word.
 (Skim if you read Devanagari.) काळजी carries the letter ळ (ḷa) — a retroflex "l," the tongue curled back. Standard Hindi dropped this sound; Marathi (like the Dravidian south and Gujarati) keeps it, and it appears in many everyday Marathi words. का + ळ + जी becomes kāḷjī. Then घ्या (ghyā, "take," respectful).
 
 The phrase, assembled.
-काळजी (kāḷjī, "care, concern") + घ्या (ghyā, "take," the respectful imperative) becomes काळजी घ्या — "take care." To a friend, the familiar imperative: काळजी घे (kāḷjī ghe).
+काळजी (kāḷjī, "care, concern") + घ्या (ghyā, "take," the respectful imperative) becomes काळजी घ्या (kāḷjī ghyā) — "take care." To a friend, the familiar imperative: काळजी घे (kāḷjī ghe).
 
 Why it's said this way.
 Where punhā bheṭū looks ahead to the next meeting, kāḷjī ghyā looks after the person in between — "mind yourself until then." The respectful घ्या (ghyā) matches the तुम्ही register from Chapter 5; the familiar घे (ghe) matches तू.

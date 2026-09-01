@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+- Replace the Swift hasher's independent source and metadata maps with a
+  generated, source-embedded projection of the complete 23-language neutral
+  registry. Production collection now distinguishes all seven selector roles,
+  consumes the four package-local neutral fixtures, includes exact hybrid
+  companions, resources, scripts, Engram WASM inputs, and root capability
+  metadata, rejects unknown languages and portable-path aliases, and bounds
+  candidate, result, per-file, and aggregate bytes without accepting a runtime
+  registry path. Canonical package paths must contain a package name and match
+  the selected language; incremental enumeration applies the candidate ceiling
+  before sorting; and tests recompute the domain-separated digest while
+  checking every fixture pin. Repository-relative boundary inputs remain a
+  separate explicitly owned follow-up rather than being widened into package
+  authority.
+- Bound retained-handle file reads to the exact snapshotted size and probe one
+  byte past it without appending, so a concurrent POSIX writer cannot grow a
+  source beyond the per-file ceiling before the mutation check.
 - Complete portable source hashing with every established lane's primary
   sources and package metadata, the shared 26-component exact pruning registry, OCaml
   coverage, strict declared-source selection, and both neutral collection

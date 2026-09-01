@@ -1,0 +1,17 @@
+{
+  "id": "MR-EXT-027-REQUEST-VERBS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can ask for four everyday actions in Marathi -- give, drink, bring, put -- and complete the request pattern that the noun-only version of it had been doing without.",
+  "prerequisites": [
+    "MR-EXT-015-LANGUAGE-SPECIFIC"
+  ],
+  "lessons": [
+    "MR-C22-dene",
+    "MR-C22-pine",
+    "MR-C22-anne",
+    "MR-C22-thevne",
+    "MR-R22-request-verbs"
+  ]
+}

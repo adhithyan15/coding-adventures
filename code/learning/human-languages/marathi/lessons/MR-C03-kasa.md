@@ -4,6 +4,7 @@ sequence: 105
 chapter: 6
 type: word
 headword: कसा / कशी / कसं
+romanization: "kasā / kaśī / kasaṁ"
 gloss: how (kasā m. / kaśī f. / kasaṁ n.)
 concept_tag: QUESTION-HOW
 prerequisites: [MR-C02-kaay]

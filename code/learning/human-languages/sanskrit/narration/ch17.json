@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Time --- Day, Night, and When Things Happen",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:ab3cfa7e85761303",
+  "sourceHash": "fnv1a64:01f0c7634e79bc97",
   "lessons": [
     {
       "id": "SA-C17-day",
@@ -733,6 +733,215 @@
             {
               "kind": "speech",
               "text": "Which three words never change their ending? (अद्य (adya), ह्यः (hyaḥ), सदा (sadā).) Why can Sanskrit move words around freely? (Because the endings carry the grammar, not the order.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-S118-letter-ssa",
+      "sequence": 841,
+      "title": "ष (ṣa) — one character, met inside words you already say",
+      "headword": "ष",
+      "romanization": "ṣa",
+      "gloss": "the single character ष — recognised inside words you already say",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:cfbc6583ea328d46",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ष",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ष and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ठ — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ष",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ष — ṣa."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not ṣ, it is ṣa."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "a U-shaped body drawn from the left side around the lower bowl and up the right side."
+            },
+            {
+              "kind": "speech",
+              "text": "a retraced top-to-bottom right stem."
+            },
+            {
+              "kind": "speech",
+              "text": "a down-right inner diagonal."
+            },
+            {
+              "kind": "speech",
+              "text": "the top shirorekhā."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these, and every one of them has ष (ṣa) somewhere inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "क्षीरम् kṣīram — milk."
+            },
+            {
+              "kind": "speech",
+              "text": "अक्षि akṣi — eye."
+            },
+            {
+              "kind": "speech",
+              "text": "अक्षिणी akṣiṇī — two eyes, the dual."
+            },
+            {
+              "kind": "speech",
+              "text": "In every one of those words ष (ṣa) is riding inside a conjunct: क् + ष (ṣa) fused into the single shape क्ष. Owning both halves is not owning the join — क्ष has a look of its own and gets its own lesson later. For now: find the ष (ṣa) in it, and let the rest wait."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ष",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. descend the left side, curve counterclockwise around the lower bowl, and rise along the right side to the headline without lifting."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift and draw the right stem top-to-bottom, retracing its upper body-side segment before continuing below the bowl."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift at the upper-left interior and draw the inner diagonal down-right to the bowl junction."
+            },
+            {
+              "kind": "speech",
+              "text": "4. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 3. The pen comes up 3 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "Verified four-stroke teaching form fitted to the bundled printed outline."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-ष (ṣa)-order.gif’, strokes 1–4, Wikimedia Commons, 10 May 2009."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find ष (ṣa) in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find ष in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "अक्षि, पठति."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ष three times, saying ṣa as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ष three times, saying *ṣa* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ष (ṣa) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ष once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ष? What sound does it carry? (ṣa.) Name one word you already say that contains it."
             }
           ]
         }
