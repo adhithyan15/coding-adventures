@@ -3236,6 +3236,39 @@
       "source_cas_hashes": [],
       "benchmark_paths": [],
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
+      "id": "adj.science.3to5.zone_water_table_position",
+      "title": "Recall whether a named groundwater zone sits above or below the water table",
+      "band": "3-5",
+      "domain": "science",
+      "competency": "recall",
+      "coverage_roots": ["ngss"],
+      "standards": [],
+      "prerequisites": [],
+      "libraries": ["code/specs/data/adj-facts-stdlib/earth-science/zone-water-table-position.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
+      "id": "adj.science.3to5.karst_process_water_table_position",
+      "title": "Derive where a karst process happens relative to the water table by composing the process/zone and zone/position relations, and abstain where the source's typicality hedge blocks the join",
+      "band": "3-5",
+      "domain": "science",
+      "competency": "infer",
+      "coverage_roots": ["ngss"],
+      "standards": [],
+      "prerequisites": [
+        "adj.science.3to5.karst_process_zone",
+        "adj.science.3to5.zone_water_table_position"
+      ],
+      "libraries": ["code/specs/data/adj-facts-stdlib/earth-science/karst-process-water-table-position.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     }
   ]
 }

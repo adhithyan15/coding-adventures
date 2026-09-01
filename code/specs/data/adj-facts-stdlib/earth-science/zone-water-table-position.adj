@@ -1,0 +1,104 @@
+% ============================================================================
+% zone-water-table-position — where each groundwater zone sits relative to
+% the water table (adj-facts-stdlib, EARTH-SCIENCE).
+% ============================================================================
+% Recall is a binding query:
+%
+%     ? zone_water_table_position(zone_of_aeration, $P)
+%       % above_the_water_table
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `zone_water_table_position(zone, position)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the position WITH its source, on the CPU, with zero model
+% calls. The query also runs BACKWARD.
+%
+% THIRD cave/karst library. `karst-process-zone.adj` deliberately declined
+% to hold this as a third column, its header recording that a zone's
+% position is a fact about the ZONE rather than about the process and
+% would repeat once per process row rather than adding an axis. This table
+% holds it once, and the two COMPOSE — through the `rule` in the sibling
+% `karst-process-water-table-position.adj`, since a query is a single term
+% and a two-hop chain has to be a rule body:
+%
+%     karst_process_zone(speleothem_deposition, zone_of_aeration)
+%     zone_water_table_position(zone_of_aeration, above_the_water_table)
+%     ---------------------------------------------------------------
+%     speleothem deposition happens above the water table
+%
+% *** AND THE CHAIN DELIBERATELY DOES NOT JOIN ON THE OTHER SIDE. ***
+% `karst_process_zone` binds `zone_of_saturation_typically` for
+% `cave_formation` — the hedge lives in the atom, because the source says
+% caves TYPICALLY form below the water table while saying speleothem
+% deposition IS NOT POSSIBLE UNTIL they are above it. That hedged atom
+% does not unify with this table's bare `zone_of_saturation`, so the
+% two-hop chain yields NOTHING for cave formation.
+%
+% That is the system working, not a defect to be smoothed away. The
+% unjoined chain would have concluded "cave formation happens below the
+% water table" as a flat fact, which is precisely the claim the source
+% declines to make. A faithful hedge has to survive composition, not just
+% direct recall — otherwise the qualifier is preserved in one table and
+% quietly discarded the moment anything reasons across two. The rule
+% sibling's e2e test asserts BOTH halves: that the aeration side chains,
+% and that the saturation side does not. Making the shipped hedged atom
+% bare to tidy the join would promote a tendency to a rule, so it stays.
+%
+% Provenance: both rows come from the SAME single sentence
+% `karst-process-zone.adj` cites, on the U.S. National Park Service's
+% "Speleothems" page:
+%
+%     "Although the formation of caves typically takes place below the
+%      water table in the zone of saturation, the deposition of
+%      speleothems is not possible until caves are above the water table
+%      in the zone of aeration."
+%
+%     zone (this table's atom)   position (this table's atom)
+%     ------------------------   ----------------------------
+%     zone_of_saturation         below_the_water_table
+%     zone_of_aeration           above_the_water_table
+%
+% HOW THE PAIRING IS READ, stated plainly so a reader can audit it. Each
+% column VALUE appears verbatim in the sentence — "below the water table"
+% and "the zone of saturation"; "above the water table" and "the zone of
+% aeration". The PAIRING of the two is apposition: the sentence gives one
+% location under two descriptions ("below the water table in the zone of
+% saturation"), so within this sentence the zone of saturation IS the
+% below-the-water-table position. That is a reading of a phrase rather
+% than a standalone definitional sentence, and it is recorded here as such
+% so the inference is inspectable rather than implied. It is not a
+% paraphrase: nothing is reworded, and no value is supplied that the
+% source does not state.
+%
+% The page was CONTENT-verified rather than merely status-checked (200, no
+% soft-404 markers, 118 substantive sentences, zero hub markers). `trust
+% authoritative` — the National Park Service is a first-party .gov
+% publisher, the same source the two sibling cave/karst libraries cite.
+%
+% Honest abstention:
+%
+%   - The VADOSE and PHREATIC zones are the standard synonyms for these
+%     two, and a reader may well ask for them by those names. This source
+%     never uses either word, so a recall on them ABSTAINS rather than
+%     answering from general karst vocabulary.
+%   - No third zone is a row. This sentence names exactly two, and the
+%     capillary fringe and other subdivisions a hydrology text would add
+%     are outside what this page states.
+%   - The water table's own DEPTH, and any claim about how it moves, are
+%     not values of this relation — the sentence uses the water table only
+%     as a reference surface.
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table zone_water_table_position {
+    columns zone, position
+
+    row (zone_of_saturation, below_the_water_table)
+    row (zone_of_aeration, above_the_water_table)
+
+    source "Although the formation of caves typically takes place below the water table in the zone of saturation, the deposition of speleothems is not possible until caves are above the water table in the zone of aeration."
+    locator "https://www.nps.gov/subjects/caves/speleothems.htm"
+    trust authoritative
+}
