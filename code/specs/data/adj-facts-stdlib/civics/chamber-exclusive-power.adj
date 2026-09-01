@@ -1,0 +1,106 @@
+% ============================================================================
+% chamber-exclusive-power — the lawmaking power each chamber of Congress
+% holds EXCLUSIVELY (adj-facts-stdlib, CIVICS).
+% ============================================================================
+% The two chambers of Congress are equal in how they function, but each can
+% originate one kind of legislation the other cannot. Recall is a binding
+% query:
+%
+%     ? chamber_exclusive_power(house_of_representatives, $P)
+%       % initiate_tax_and_revenue_legislation
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `chamber_exclusive_power(chamber, power)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the power WITH its source, on the CPU, with zero model
+% calls, and abstains on any power not one of these two source-cited rows.
+% The query also runs BACKWARD, which is the direction a learner is usually
+% quizzed in:
+%
+%     ? chamber_exclusive_power($C, initiate_tax_and_revenue_legislation)
+%       % house_of_representatives
+%
+% FIFTH library in `civics/`, and the FIRST from a source other than the
+% "Branches of the U.S. government" page — that page is now fully decoded
+% by `government-branch-member.adj`, `congress-chamber.adj`,
+% `checks-and-balances.adj`, and the derived `chamber-branch.adj`, so this
+% one opens a new page (and a new axis) rather than restating a mined one.
+%
+% ATOM REUSE IS DELIBERATE. `house_of_representatives` and `senate` are the
+% exact atoms `congress-chamber.adj` already binds, so this table composes
+% with the shipped civics graph instead of forking a parallel vocabulary.
+% Chained through `chamber-branch.adj`'s derived `chamber_branch`, a
+% learner can get from an exclusive power all the way to a branch:
+%
+%     chamber_exclusive_power(house_of_representatives, initiate_tax_and_revenue_legislation)
+%     chamber_branch(house_of_representatives, legislative)
+%
+% Note the source writes "the House" in both of these sentences while
+% naming it "The U.S. House of Representatives" elsewhere on the site; the
+% longer atom is used here because it is the one the sibling table already
+% established, and a chamber vocabulary that disagrees with itself would
+% silently break every composition above.
+%
+% Provenance: quoted verbatim from USA.gov's "How laws are made" page,
+% "How the House and Senate's lawmaking procedures are different" section,
+% which states each exclusive power as its own bullet:
+%
+%     chamber (this table's atom)   power (this table's atom)                             quote (verbatim)
+%     ---------------------------   ---------------------------------------------------   -----------------------------------------------------
+%     house_of_representatives      initiate_tax_and_revenue_legislation                   "Only the House can initiate tax and revenue-related
+%                                                                                             legislation"
+%     senate                        draft_legislation_on_presidential_nominations_and_     "Only the Senate can draft legislation related to
+%                                     treaties                                                presidential nominations and treaties"
+%
+% curl-fetched the raw page and read it byte-for-byte before writing this
+% file (not just an AI-summarized WebFetch) — confirmed both sentences
+% appear verbatim as the first two bullets of that section's list, each
+% beginning "Only the", which is what makes them EXCLUSIVE powers rather
+% than merely powers the chamber happens to have. `trust authoritative` —
+% USA.gov is the U.S. General Services Administration's official guide to
+% government information, a first-party .gov publisher of exactly the fact
+% being recalled, the same tier the four sibling civics libraries cite.
+%
+% Honest abstention:
+%
+%   - "While the House processes legislation through a majority vote, the
+%     Senate does so through deliberation and debate prior to voting." —
+%     a real sentence in the same section, and a genuine House/Senate
+%     contrast, but it describes a PROCEDURE each chamber uses, not a kind
+%     of legislation only that chamber may originate. It is a different
+%     axis and belongs in its own table, not flattened in here beside two
+%     "Only the ..." powers.
+%   - The section's own framing that the chambers are "equal in how they
+%     function" is a characterization of the pair, not a power held by
+%     either one.
+%   - Any power not one of these two — including every act in
+%     `checks-and-balances.adj`, which holds what one part of government
+%     can do TO another rather than what one chamber may exclusively
+%     ORIGINATE — is deliberately NOT a row. In particular
+%     `checks_and_balances(congress, confirm_or_reject, presidential_
+%     nominees)` is a distinct fact from this table's senate row: confirming
+%     a nominee is a check Congress applies to the executive; drafting
+%     legislation RELATED TO nominations and treaties is a lawmaking power
+%     the Senate holds alone.
+%
+% NAMING NOTE, to save a future reader a grep: `money/us-bills.adj` and
+% `money/bill-back-vignette.adj` use the atom `bill` for CURRENCY. That is
+% a homonym, not a collision — this table names no `bill` atom at all, and
+% legislative bills are a separate subject from banknotes.
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table chamber_exclusive_power {
+    columns chamber, power
+
+    row (house_of_representatives, initiate_tax_and_revenue_legislation)
+    row (senate, draft_legislation_on_presidential_nominations_and_treaties)
+
+    source "Only the House can initiate tax and revenue-related legislation"
+    locator "https://www.usa.gov/how-laws-are-made"
+    trust authoritative
+
+    cites "Only the Senate can draft legislation related to presidential nominations and treaties" locator "https://www.usa.gov/how-laws-are-made"
+}
