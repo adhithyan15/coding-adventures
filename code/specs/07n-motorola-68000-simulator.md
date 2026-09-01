@@ -35,8 +35,9 @@ The 68000 represents a major philosophical departure from Intel's 8086:
 Where Intel chose backwards compatibility and market timing, Motorola chose
 clean design. The result was an ISA that CPU architects still cite as exemplary.
 
-This spec defines Layer **07n** — a Python behavioral simulator for the 68000
-following the SIM00 `Simulator[M68KState]` protocol.
+This spec defines Layer **07n** — the Rust behavioral simulator for the 68000.
+The mature Python implementation remains the independent behavioral oracle and
+generates the committed language-neutral full-state vectors.
 
 ---
 
@@ -334,108 +335,57 @@ Every instruction fetch must be from a word-aligned address.
 
 ---
 
-## SIM00 Protocol Implementation
+## Rust lifecycle contract
 
-This simulator implements `Simulator[M68KState]` from `simulator_protocol`.
+`M68kSimulator::architectural()` constructs exactly 16,777,216 bytes of memory,
+PC `0x001000`, A7 `0x00F000`, SR `0x2700`, zeroed registers/memory, and a clear
+halt latch. `reset()` returns the configured machine to its corresponding
+power-on state.
 
-### `M68KSimulator.reset()`
+The checked public boundary is:
 
-Clears all data registers (D0–D7 = 0), address registers (A0–A6 = 0),
-sets A7 (SSP) = 0x00F00000, PC = 0x001000, SR = 0x2700 (supervisor, IMask=7).
-Zeroes memory. Clears halt flag and trace list.
+- `load_checked` / `load_at_checked`: validate the complete range before reset
+  or mutation, then load deterministically.
+- `restore`: validate snapshot memory length and the 24-bit PC before mutation.
+- `step_checked`: reject halted/misaligned/undefined execution atomically and
+  return raw opword, mnemonic, PCs, and complete before/after states.
+- `run_loaded_checked` / `run_checked`: caller-bounded execution; any execution
+  error restores the whole pre-run machine.
+- `get_state`: immutable owned snapshot of all data/address registers, PC, SR,
+  halt state, and all 16 MiB of memory.
 
-### `M68KSimulator.load(program)`
+Failures use `M68kError`; no checked range, decode, alignment, or halted-state
+failure panics or leaves partial architectural mutation. The caller-sized
+zero-origin constructor and string-returning step/run methods are retained only
+for existing Rust backend/encoder compatibility.
 
-Copies `program` bytes into memory starting at the load address (0x001000).
-Does **not** reset CPU state (registers, PC, SP) — call `reset()` first if
-you want a clean state. Used by `execute()` internally after `reset()`.
-
-### `M68KSimulator.step()`
-
-Fetches, decodes, and executes one instruction. Returns a `StepTrace` with:
-- `pc_before` — PC value before fetch
-- `pc_after` — PC value after execution (next instruction or jump target)
-- `mnemonic` — short assembly-language form (e.g., `"MOVE.W D1, D0"`)
-- `description` — `"<mnemonic> @ 0x<hex pc_before>"`
-
-Raises `RuntimeError` if the CPU is halted.
-
-### `M68KSimulator.execute(program, max_steps=100_000)`
-
-1. Calls `reset()`
-2. Calls `load(program)`
-3. Loops calling `step()` until halted or `max_steps` exceeded
-4. Returns `ExecutionResult[M68KState]`
-
-A STOP instruction halts the simulator.
-TRAP #15 is treated as an alternate halt (for convenience).
-
-### `M68KSimulator.get_state()`
-
-Returns a frozen `M68KState` snapshot of the current CPU state, converting
-all mutable lists/bytearrays to tuples.
-
----
-
-## M68KState specification
-
-```python
-@dataclass(frozen=True)
-class M68KState:
-    # Data registers (32-bit unsigned)
-    d0: int; d1: int; d2: int; d3: int
-    d4: int; d5: int; d6: int; d7: int
-
-    # Address registers (32-bit unsigned, A7 = supervisor stack pointer)
-    a0: int; a1: int; a2: int; a3: int
-    a4: int; a5: int; a6: int; a7: int
-
-    # Program counter (24-bit effective, stored as 32-bit unsigned)
-    pc: int
-
-    # Status register (16-bit)
-    sr: int
-
-    # Individual CCR bits (derived from SR)
-    # x: bool  # extend
-    # n: bool  # negative
-    # z: bool  # zero
-    # v: bool  # overflow
-    # c: bool  # carry
-
-    # Halt flag
-    halted: bool
-
-    # Memory (16 MB = 16,777,216 bytes)
-    memory: tuple[int, ...]
+```rust
+pub struct M68kState {
+    pub d: [u32; 8],
+    pub a: [u32; 8],
+    pub pc: u32,
+    pub sr: u16,
+    pub halted: bool,
+    pub memory: Vec<u8>,
+}
 ```
-
-Properties on M68KState: `.x`, `.n`, `.z`, `.v`, `.c` extract CCR bits from `sr`.
-Properties `.d` and `.a` return tuples of all data/address registers.
-
----
 
 ## Package layout
 
-```
-code/packages/python/motorola-68000-simulator/
-├── BUILD
-├── CHANGELOG.md
-├── README.md
-├── pyproject.toml
-└── src/
-    └── motorola_68000_simulator/
-        ├── __init__.py
-        ├── py.typed
-        ├── state.py        # M68KState frozen dataclass
-        ├── flags.py        # CCR computation helpers
-        └── simulator.py    # M68KSimulator
-tests/
-├── __init__.py
-├── test_instructions.py    # unit tests per instruction
-├── test_programs.py        # multi-instruction programs
-├── test_protocol.py        # SIM00 protocol conformance
-└── test_coverage.py        # edge cases for full coverage
+```text
+code/packages/rust/m68k-simulator/
+├── src/
+│   ├── decode.rs      # complete effective-address and memory contract
+│   ├── execute.rs     # line-based full Spec 07n dispatch
+│   ├── flags.rs       # X/N/Z/V/C helpers
+│   ├── opcodes.rs     # masks, sizes, conditions, halt convention
+│   ├── simulator.rs   # state and checked/legacy lifecycle
+│   └── encoding.rs    # canonical consumer encoders
+└── tests/
+    ├── lifecycle.rs
+    ├── python_differential.rs
+    ├── generate_python_oracle.py
+    └── python_oracle.jsonl
 ```
 
 ---
@@ -453,16 +403,15 @@ tests/
    a "halt/OS call" mechanism. We halt on TRAP #15; TRAP #0–#14 call a stub handler
    that simply records the trap number in D7 and continues.
 
-4. **No address error on odd access**: Real 68000 hardware raises an address error
-   fault when a word/long access targets an odd address. Our simulator raises
-   Python `ValueError` immediately, which fails the test (an odd-aligned program
-   is a bug). This simplifies exception-vector handling.
+4. **Typed address errors**: Real 68000 hardware vectors an odd word/long
+   access. Checked Rust execution returns `M68kError::Execution` and restores
+   the complete pre-step state instead of implementing exception-vector timing.
 
 5. **24-bit address wrap**: Addresses are masked with 0xFFFFFF. Accesses above
    0xFFFFFF wrap around to the start of the address space.
 
-6. **No bus errors, illegal instruction traps**: Unrecognised opcodes raise
-   Python `RuntimeError` with a descriptive message.
+6. **No bus-error timing**: Unrecognised encodings and out-of-backing-range
+   accesses return typed checked errors; line-A and line-F remain reserved.
 
 7. **DIVU/DIVS overflow**: On real hardware, division overflow sets V=1 and does
    not update the register. Our simulator follows this semantics.
