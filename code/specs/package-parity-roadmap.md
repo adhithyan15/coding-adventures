@@ -12438,10 +12438,10 @@ schema-3 inventory also pass. RustSec reports no vulnerability among 1,537
 locked dependencies and retains two existing allowed unmaintained warnings.
 
 After the final rebase onto exact `origin/main`
-`e6bf3ea70ac6b34ba45fa76d6119a8ff627f7169`, the refreshed inventory has 15
-established lanes, 1,398 implementation identities, 4,614 implementation
-slots, and 1,437 all-reported identities. Its bands are 175/265, 123/934,
-172/2,165, and 928/12,992; Rust has 739 singletons, OCaml remains at zero,
+`e5d7e1aaeae1439353a936e62c8311ba1f0219cc`, the refreshed inventory has 15
+established lanes, 1,399 implementation identities, 4,615 implementation
+slots, and 1,438 all-reported identities. Its bands are 175/265, 123/934,
+172/2,165, and 929/13,006; Rust has 740 singletons, OCaml remains at zero,
 and canonical collisions and unknown buckets remain zero. The merged
 TypeScript-only `forme-cli` identity stays under
 `forme-portable-core-family-classification`. Dedicated PR #13768 has merged
@@ -12457,8 +12457,21 @@ Merged PR #13761 adds Rust `layout-grid` beside TypeScript,
 moving the identity into the two-to-four band. New pending owner
 `layout-grid-two-lane-classification` now owns its pure UI08 conformance,
 dependency order, and missing applicable-lane review. The resulting state has
-639 unique owners and 1,006 dependency edges: 199 merged, 439 pending, and
+640 unique owners and 1,006 dependency edges: 199 merged, 440 pending, and
 exactly this Engram owner in progress.
+
+Merged PR #13774 adds the Rust-only `layout-positioned` identity and its
+host-neutral UI10 positioning and clipping contract. New pending owner
+`layout-positioned-portable-core-classification` owns tolerant positioned
+metadata, insets, flow participation, z-order, overflow and scroll extents,
+paint clips, hit-region intersection, fixed viewport coordinates, sticky
+clamping, malformed inputs, numeric behavior, resource limits, applicable-lane
+rollout, and reviewed exceptions. HTML/CSS parsing, DOM and window authority,
+toolkit rendering, transformed containing blocks, writing modes, nested
+interactive scrolling, complete stacking contexts, floats, and fragmentation
+remain outside that portable core. The other intervening Mermaid, SPICE, Z80,
+Hindi, Mosaic accessibility, and existing-package changes add no identity or
+unowned portable contract and do not overlap this Engram implementation.
 
 ## Autonomous Loop Protocol
 
