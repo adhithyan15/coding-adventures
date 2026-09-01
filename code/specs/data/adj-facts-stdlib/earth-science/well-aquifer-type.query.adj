@@ -1,0 +1,30 @@
+% ============================================================================
+% well-aquifer-type.query.adj — worked recall over the well-aquifer-type
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to answer "what kind of aquifer
+% does an artesian well reach?" (direct), "which wells are drilled into a
+% confined aquifer?" (REVERSE, returning BOTH artesian kinds — the question
+% actually worth asking), or "what kind of aquifer does a dug well reach?"
+% (abstain — a real and common well type, but not one this sentence names).
+%
+% It states no fact of its own — it only `import`s the grounded table and
+% asks binding queries.
+%
+% NOTE ON THE ABSTAIN QUERIES: they are written in VARIABLE form. A
+% fully-bound query that matches nothing produces NO recall entry at all
+% rather than an abstention, so the ground form would silently prove
+% nothing.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli well-aquifer-type.query.adj
+% ============================================================================
+
+import "well-aquifer-type.adj"
+
+? well_aquifer_type(artesian_well, $A)          % expect confined_aquifer
+? well_aquifer_type(water_table_well, $A)       % expect unconfined_aquifer
+? well_aquifer_type($W, confined_aquifer)       % expect artesian_well AND flowing_artesian_well -- the source names them as two distinct wells
+? well_aquifer_type($W, unconfined_aquifer)     % expect water_table_well only
+? well_aquifer_type(dug_well, $A)               % expect abstain -- a real well type this sentence does not name
+? well_aquifer_type(spring, $A)                 % expect abstain -- not a well at all
