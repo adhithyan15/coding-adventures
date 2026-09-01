@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - preserve HostInput accessible names (#13717)
+
+Web Component templates now retain literal, slot-backed, and expression-backed
+`HostInput.a11y-label` values as escaped `aria-label` attributes.
+
 ### Security - validate literal HostLink.href scheme; upgrade safeHref to an allowlist (#13052)
 
 Follow-up to #12038 (the identical XAML gap). A literal `href` was spliced

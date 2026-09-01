@@ -8088,6 +8088,32 @@ fn emit_host_input(
             escape_xaml_attr(part_name)
         ));
     }
+    match find_prop_value(node, "a11y-label") {
+        Some(LayoutPropValue::String(label)) => {
+            attrs.push_str(&format!(
+                " AutomationProperties.Name=\"{}\"",
+                escape_xaml_attr(label)
+            ));
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            attrs.push_str(&format!(
+                " AutomationProperties.Name=\"{{x:Bind {}, Mode=OneWay}}\"",
+                ctx.slot_xbind_path(slot)
+            ));
+        }
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => attrs.push_str(&format!(
+                " AutomationProperties.Name=\"{{x:Bind {path}, Mode=OneWay}}\""
+            )),
+            ExprLowering::Helper(call) => attrs.push_str(&format!(
+                " AutomationProperties.Name=\"{{x:Bind {call}, Mode=OneWay}}\""
+            )),
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        _ => {}
+    }
 
     // value: slot/string/expr â†’ Text binding
     match find_prop_value(node, "value") {
@@ -13983,6 +14009,38 @@ mod tests {
             "got:\n{}",
             r.xaml
         );
+    }
+
+    #[test]
+    fn host_input_accessible_name_lowers_literal_and_slot_values() {
+        let c = component(
+            "Foo",
+            vec![slot("spoken-title", SlotType::Text, true)],
+            vec![],
+        );
+        for (value, expected) in [
+            (
+                LayoutPropValue::String("Task name".into()),
+                "AutomationProperties.Name=\"Task name\"",
+            ),
+            (
+                LayoutPropValue::SlotRef("spoken-title".into()),
+                "AutomationProperties.Name=\"{x:Bind SpokenTitle, Mode=OneWay}\"",
+            ),
+        ] {
+            let l = layout_with_root(
+                "Foo",
+                host_input_node(
+                    None,
+                    vec![LayoutProp {
+                        name: "a11y-label".into(),
+                        value,
+                    }],
+                ),
+            );
+            let out = compile(&c, &l, &empty_style("Foo")).xaml;
+            assert!(out.contains(expected), "expected {expected} in:\n{out}");
+        }
     }
 
     #[test]

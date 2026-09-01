@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Fixed - preserve HostInput accessible names (#13717)
+
+Static HTML now emits literal and slot-backed `HostInput.a11y-label` values as
+escaped `aria-label` attributes.
+
 ### Security - validate literal HostLink.href's URI scheme (#13052)
 
 Follow-up to #12038 (the identical XAML gap). A literal `href` was spliced

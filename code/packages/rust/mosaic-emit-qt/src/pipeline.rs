@@ -3638,6 +3638,31 @@ fn emit_text_input_qml(
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
 
+    match node
+        .props
+        .iter()
+        .find(|prop| prop.name == "a11y-label")
+        .map(|prop| &prop.value)
+    {
+        Some(LayoutPropValue::String(label)) => {
+            writeln!(
+                out,
+                "{inner_pad}Accessible.name: \"{}\"",
+                escape_qml_string(label)
+            )
+            .unwrap();
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let camel = to_camel_case_first_lower(slot);
+            validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            writeln!(out, "{inner_pad}Accessible.name: {camel}").unwrap();
+        }
+        Some(LayoutPropValue::Expr(expr)) => {
+            writeln!(out, "{inner_pad}Accessible.name: {expr}").unwrap();
+        }
+        _ => {}
+    }
+
     if find_keyword_prop(node, "auto-focus") == Some("true") {
         writeln!(out, "{inner_pad}Component.onCompleted: forceActiveFocus()").unwrap();
     }
@@ -7757,6 +7782,40 @@ mod tests {
             "missing readOnly binding in:\n{}",
             result.output
         );
+    }
+
+    #[test]
+    fn host_input_accessible_name_lowers_literal_and_slot_values() {
+        let m = component(
+            "X",
+            vec![slot("spoken-title", SlotType::Text, true)],
+            vec![],
+        );
+        for (value, expected) in [
+            (
+                LayoutPropValue::String("Task name".into()),
+                "Accessible.name: \"Task name\"",
+            ),
+            (
+                LayoutPropValue::SlotRef("spoken-title".into()),
+                "Accessible.name: spokenTitle",
+            ),
+        ] {
+            let l = LayoutDef {
+                component_name: "X".into(),
+                root: LayoutNode {
+                    tag: "HostInput".into(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "a11y-label".into(),
+                        value,
+                    }],
+                    children: vec![],
+                },
+            };
+            let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+            assert!(out.contains(expected), "expected {expected} in:\n{out}");
+        }
     }
 
     #[test]

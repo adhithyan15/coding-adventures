@@ -4042,7 +4042,14 @@ fn emit_host_input(
         .unwrap();
     }
 
-    if let Some(modifier) = host_control_modifier_expr(node, style.as_ref()) {
+    let mut modifier_expr = host_control_modifier_expr(node, style.as_ref());
+    if let Some(accessible_label) = text_prop_expr(node, "a11y-label")? {
+        let base = modifier_expr.unwrap_or_else(|| "Modifier".to_string());
+        modifier_expr = Some(format!(
+            "{base}.semantics {{ contentDescription = {accessible_label} }}"
+        ));
+    }
+    if let Some(modifier) = modifier_expr {
         let modifier = if auto_focus {
             format!("{modifier}.then(_mosaicAutoFocusModifier)")
         } else {
@@ -6230,6 +6237,41 @@ mod tests {
         assert!(out.contains("Text(text = \"Search cards\")"), "got:\n{out}");
         assert!(out.contains("innerTextField()"), "got:\n{out}");
         assert!(out.contains("enabled = !(true),"), "got:\n{out}");
+    }
+
+    #[test]
+    fn host_input_accessible_name_lowers_literal_and_slot_values() {
+        let m = component(
+            "Search",
+            vec![slot("spoken-title", SlotType::Text, true)],
+            vec![],
+        );
+        for (value, expected) in [
+            (
+                LayoutPropValue::String("Task name".into()),
+                "contentDescription = \"Task name\"",
+            ),
+            (
+                LayoutPropValue::SlotRef("spoken-title".into()),
+                "contentDescription = spokenTitle",
+            ),
+        ] {
+            let l = layout(
+                "Search",
+                node(
+                    "HostInput",
+                    vec![LayoutProp {
+                        name: "a11y-label".into(),
+                        value,
+                    }],
+                    vec![],
+                ),
+            );
+            let out = from_pipeline(&m, &l, &empty_style("Search"))
+                .unwrap()
+                .output;
+            assert!(out.contains(expected), "expected {expected} in:\n{out}");
+        }
     }
 
     #[test]

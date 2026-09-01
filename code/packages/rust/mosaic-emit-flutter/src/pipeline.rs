@@ -3580,6 +3580,21 @@ fn emit_host_input(
     } else {
         pad.clone()
     };
+    let accessibility_label = match find_prop_value(node, "a11y-label") {
+        Some(LayoutPropValue::String(label)) => Some(format!("\"{}\"", escape_dart_string(label))),
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let field = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&field)?;
+            Some(field)
+        }
+        Some(LayoutPropValue::Expr(expr)) => Some(expr.clone()),
+        _ => None,
+    };
+    let input_pad = if accessibility_label.is_some() {
+        format!("{field_pad}  ")
+    } else {
+        field_pad.clone()
+    };
     // UI28-1 / U29-D1 — accept Expr in `value:` so
     // mosaic-pkg-grid v0.2.0's `HostInput ( value: ( v ) )` shape
     // reaches the TextField with the For-bound cell text. The Expr
@@ -3608,30 +3623,42 @@ fn emit_host_input(
     let mut out = String::new();
     if direct_row_child {
         writeln!(out, "{pad}Expanded(").unwrap();
-        writeln!(out, "{field_pad}child: TextField(").unwrap();
+        if let Some(label) = &accessibility_label {
+            writeln!(out, "{field_pad}child: Semantics(").unwrap();
+            writeln!(out, "{field_pad}  label: {label},").unwrap();
+            writeln!(out, "{field_pad}  textField: true,").unwrap();
+            writeln!(out, "{field_pad}  child: TextField(").unwrap();
+        } else {
+            writeln!(out, "{field_pad}child: TextField(").unwrap();
+        }
+    } else if let Some(label) = &accessibility_label {
+        writeln!(out, "{field_pad}Semantics(").unwrap();
+        writeln!(out, "{field_pad}  label: {label},").unwrap();
+        writeln!(out, "{field_pad}  textField: true,").unwrap();
+        writeln!(out, "{field_pad}  child: TextField(").unwrap();
     } else {
         writeln!(out, "{field_pad}TextField(").unwrap();
     }
     writeln!(
         out,
-        "{field_pad}  controller: TextEditingController(text: {value_expr}),"
+        "{input_pad}  controller: TextEditingController(text: {value_expr}),"
     )
     .unwrap();
 
     if let Some(p) = find_string_prop(node, "placeholder") {
         writeln!(
             out,
-            "{field_pad}  decoration: InputDecoration(hintText: \"{}\"),",
+            "{input_pad}  decoration: InputDecoration(hintText: \"{}\"),",
             escape_dart_string(p)
         )
         .unwrap();
     }
 
     if let Some(read_only) = bool_prop_expression(node, "read-only")? {
-        writeln!(out, "{field_pad}  readOnly: {read_only},").unwrap();
+        writeln!(out, "{input_pad}  readOnly: {read_only},").unwrap();
     }
     if find_keyword_prop(node, "auto-focus") == Some("true") {
-        writeln!(out, "{field_pad}  autofocus: true,").unwrap();
+        writeln!(out, "{input_pad}  autofocus: true,").unwrap();
     }
 
     // onChange — wraps the new value in a dispatched event.
@@ -3658,7 +3685,7 @@ fn emit_host_input(
         let args = host_input_event_args(emits, emit_name, "value")?;
         writeln!(
             out,
-            "{field_pad}  onChanged: (value) => dispatch({component}Event{case}({args})),"
+            "{input_pad}  onChanged: (value) => dispatch({component}Event{case}({args})),"
         )
         .unwrap();
     }
@@ -3668,11 +3695,14 @@ fn emit_host_input(
         let args = host_input_event_args(emits, emit_name, "value")?;
         writeln!(
             out,
-            "{field_pad}  onSubmitted: (value) => dispatch({component}Event{case}({args})),"
+            "{input_pad}  onSubmitted: (value) => dispatch({component}Event{case}({args})),"
         )
         .unwrap();
     }
-    writeln!(out, "{field_pad})").unwrap();
+    writeln!(out, "{input_pad})").unwrap();
+    if accessibility_label.is_some() {
+        writeln!(out, "{field_pad})").unwrap();
+    }
     if direct_row_child {
         writeln!(out, "{pad})").unwrap();
     }
@@ -7470,6 +7500,47 @@ mod tests {
         assert!(out.contains("TextField("));
         assert!(out.contains("TextEditingController(text: formula)"));
         assert!(out.contains("hintText: \"Type a formula\""));
+    }
+
+    #[test]
+    fn host_input_accessible_name_lowers_literal_and_slot_values() {
+        let m = component(
+            "X",
+            vec![slot("spoken-title", SlotType::Text, true)],
+            vec![],
+        );
+        for (value, expected) in [
+            (
+                LayoutPropValue::String("Task name".into()),
+                "label: \"Task name\"",
+            ),
+            (
+                LayoutPropValue::SlotRef("spoken-title".into()),
+                "label: spokenTitle",
+            ),
+        ] {
+            let l = layout(
+                "X",
+                node_with(
+                    "HostInput",
+                    vec![LayoutProp {
+                        name: "a11y-label".into(),
+                        value,
+                    }],
+                    vec![],
+                ),
+            );
+            let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+            assert!(
+                out.contains("Semantics("),
+                "expected semantics wrapper:\n{out}"
+            );
+            assert!(out.contains(expected), "expected {expected} in:\n{out}");
+            assert!(
+                out.contains("textField: true"),
+                "expected text-field role:\n{out}"
+            );
+        }
     }
 
     #[test]

@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - preserve HostInput accessible names (#13717)
+
+Qt text inputs now lower authored accessible names to `Accessible.name`,
+including literal, slot-backed, and repeated-row expression values.
+
 ### Added - drive a `MultiEffect` drop shadow from `elevation` (#12028 item 1, UI41)
 
 Fourth of five in the elevation-tokens cascade (mosstyle-compiler contract →

@@ -65,11 +65,12 @@ links existing Mosaic work instead of duplicating it.
 18. **P1 — [#13688](https://github.com/adhithyan15/coding-adventures/issues/13688):**
    edit task names and due dates directly from List. **Done in #13740.**
 19. **P1 — [#13691](https://github.com/adhithyan15/coding-adventures/issues/13691):**
-   give completion controls descriptive accessible names. **In review.**
+   give completion controls descriptive accessible names. **Done in #13755.**
 20. **P1 — [#13717](https://github.com/adhithyan15/coding-adventures/issues/13717):**
    lower authored `HostInput.a11y-label` values across every Mosaic backend.
    Discovered while validating #13689; adjacent semantic error text keeps the
    current correction accessible without overstating input-label coverage.
+   **In progress.**
 21. **P1 — [#13754](https://github.com/adhithyan15/coding-adventures/issues/13754):**
    preserve dynamic `HostButton.a11y-label` values in Qt, Flutter, SwiftUI,
    and XAML. Discovered while validating #13691; React and Compose are covered
