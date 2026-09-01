@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add scoped counters, generated before/after content, and inside/outside list
+  markers to the shared browser fixture router and paint acceptance.
+
 - Add a decoded intrinsic-size and cover-fit fixture shared by every browser
   host pipeline.
 
