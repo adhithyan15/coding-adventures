@@ -25,6 +25,7 @@
 pub mod decode;
 pub mod execute;
 pub mod flags;
+pub mod functional;
 pub mod harness;
 pub mod memory;
 pub mod state;
@@ -79,15 +80,41 @@ impl Simulator {
         let off = self.state.rip.wrapping_sub(self.code_base) as usize;
         let d = decode(&self.code, off)?;
         let next_ip = self.code_base.wrapping_add((off + d.len) as u64);
-        let flow = exec_one(&mut self.state, &mut self.mem, &d.instr, self.code_base, next_ip, off)?;
+        let flow = exec_one(
+            &mut self.state,
+            &mut self.mem,
+            &d.instr,
+            self.code_base,
+            next_ip,
+            off,
+        )?;
         match flow {
-            Flow::Next => { self.state.rip = next_ip; Ok(StepOutcome::Continue) }
-            Flow::Jump(t) => { self.state.rip = t; Ok(StepOutcome::Continue) }
+            Flow::Next => {
+                self.state.rip = next_ip;
+                Ok(StepOutcome::Continue)
+            }
+            Flow::Jump(t) => {
+                self.state.rip = t;
+                Ok(StepOutcome::Continue)
+            }
             Flow::Trap => Err(Trap::IllegalInstruction(self.state.rip)),
+            Flow::Halt => Ok(StepOutcome::Halt(self.state.get(Reg::Rax))),
             Flow::Ret => {
                 let sp = self.state.get(Reg::Rsp);
                 let ret = self.mem.load(sp, 8)?;
                 self.state.set(Reg::Rsp, sp.wrapping_add(8));
+                if ret == self.return_sentinel {
+                    Ok(StepOutcome::Halt(self.state.get(Reg::Rax)))
+                } else {
+                    self.state.rip = ret;
+                    Ok(StepOutcome::Continue)
+                }
+            }
+            Flow::RetAdjust(bytes) => {
+                let sp = self.state.get(Reg::Rsp);
+                let ret = self.mem.load(sp, 8)?;
+                self.state
+                    .set(Reg::Rsp, sp.wrapping_add(8).wrapping_add(u64::from(bytes)));
                 if ret == self.return_sentinel {
                     Ok(StepOutcome::Halt(self.state.get(Reg::Rax)))
                 } else {
@@ -146,7 +173,10 @@ impl Simulator {
             // to 0 itself, so a `,[.,]` cat loop halts at end-of-input.
             "__twig_getchar" | "getchar" => {
                 let r = match self.input.get(self.input_pos) {
-                    Some(&b) => { self.input_pos += 1; b as u64 }
+                    Some(&b) => {
+                        self.input_pos += 1;
+                        b as u64
+                    }
                     None => u64::MAX, // EOF (-1)
                 };
                 self.state.set(Reg::Rax, r);
@@ -204,10 +234,9 @@ mod tests {
 
     // The exact bytes the x86_64-backend emits for `const_u64 v=42; ret_u64 v`.
     const MIN_FN: &[u8] = &[
-        0x55, 0x48, 0x89, 0xE5, 0x48, 0x81, 0xEC, 0x10, 0x00, 0x00, 0x00,
-        0x48, 0xC7, 0xC0, 0x2A, 0x00, 0x00, 0x00, 0x48, 0x89, 0x85, 0xF8,
-        0xFF, 0xFF, 0xFF, 0x48, 0x8B, 0x85, 0xF8, 0xFF, 0xFF, 0xFF, 0x48,
-        0x89, 0xEC, 0x5D, 0xC3,
+        0x55, 0x48, 0x89, 0xE5, 0x48, 0x81, 0xEC, 0x10, 0x00, 0x00, 0x00, 0x48, 0xC7, 0xC0, 0x2A,
+        0x00, 0x00, 0x00, 0x48, 0x89, 0x85, 0xF8, 0xFF, 0xFF, 0xFF, 0x48, 0x8B, 0x85, 0xF8, 0xFF,
+        0xFF, 0xFF, 0x48, 0x89, 0xEC, 0x5D, 0xC3,
     ];
 
     #[test]
@@ -216,7 +245,11 @@ mod tests {
             .function("main", MIN_FN, &[])
             .build("main")
             .expect("entry exists");
-        assert_eq!(sim.run().unwrap(), 42, "the simulator runs real x86_64 codegen → 42");
+        assert_eq!(
+            sim.run().unwrap(),
+            42,
+            "the simulator runs real x86_64 codegen → 42"
+        );
     }
 
     // The shape `x86_64-backend` emits after every `field_store` / `array_set`:
@@ -235,7 +268,10 @@ mod tests {
     /// resolves at all, independent of any particular frontend.
     #[test]
     fn gc_write_barrier_resolves_instead_of_trapping() {
-        let relocs = [harness::Reloc { patch_offset: 1, symbol: "__twig_gc_write_barrier".into() }];
+        let relocs = [harness::Reloc {
+            patch_offset: 1,
+            symbol: "__twig_gc_write_barrier".into(),
+        }];
         let mut sim = harness::MachineCodeHarness::new()
             .function("main", BARRIER_CALL_FN, &relocs)
             .build("main")
@@ -265,10 +301,17 @@ mod tests {
         // `alloc(0)` is an idempotent probe of the bump cursor: it reserves
         // nothing and returns the current (aligned) `heap_next`.
         let heap_before = sim.mem.alloc(0).expect("heap probe");
-        sim.host_call("__twig_gc_write_barrier").expect("the barrier shim resolves");
+        sim.host_call("__twig_gc_write_barrier")
+            .expect("the barrier shim resolves");
         let heap_after = sim.mem.alloc(0).expect("heap probe");
-        assert_eq!(heap_before, heap_after, "the barrier must not allocate — the heap cursor may not move");
-        assert!(sim.stdout.is_empty(), "the barrier must not write to stdout");
+        assert_eq!(
+            heap_before, heap_after,
+            "the barrier must not allocate — the heap cursor may not move"
+        );
+        assert!(
+            sim.stdout.is_empty(),
+            "the barrier must not write to stdout"
+        );
     }
 
     /// The fix must not have widened the dispatch table into a catch-all: an
@@ -281,7 +324,9 @@ mod tests {
             .expect("entry exists");
         assert_eq!(
             sim.host_call("__twig_not_a_real_symbol"),
-            Err(Trap::UnresolvedExternal("__twig_not_a_real_symbol".to_string())),
+            Err(Trap::UnresolvedExternal(
+                "__twig_not_a_real_symbol".to_string()
+            )),
             "unknown externals must still trap, not silently no-op",
         );
     }
