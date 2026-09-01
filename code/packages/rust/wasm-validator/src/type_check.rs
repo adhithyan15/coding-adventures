@@ -1625,6 +1625,7 @@ fn check_const_exprs(ctx: &ModuleContext) -> Result<(), ValidationError> {
 /// place to compute them (and the only place this crate computes them at
 /// all: every instruction-level check below reaches them via `ModuleContext`/
 /// `TypeContext`, never by calling `canonicalize_types` again).
+#[allow(clippy::type_complexity)] // Vec<Option<(Rc<CanonicalGroup>, u32)>> mirrors wasm_types::canonicalize_types's own return shape verbatim; a type alias would only hide the connection.
 pub(crate) fn type_check_module(module: &WasmModule) -> Result<Vec<Option<(Rc<CanonicalGroup>, u32)>>, ValidationError> {
     // Security review finding (W33 first slice): a cyclic `sub` chain must
     // be rejected before ANYTHING downstream leans on the `sub` graph
