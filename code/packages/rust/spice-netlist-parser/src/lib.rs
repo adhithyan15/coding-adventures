@@ -2431,6 +2431,17 @@ fn parse_element(
             if !energy_gap_electron_volts.is_finite() || energy_gap_electron_volts <= 0.0 {
                 return Err(NetlistParseError::new("BJT EG must be finite and positive"));
             }
+            let forward_early_voltage = model
+                .params
+                .get("VAF")
+                .or_else(|| model.params.get("VA"))
+                .copied()
+                .unwrap_or(0.0);
+            if !forward_early_voltage.is_finite() || forward_early_voltage < 0.0 {
+                return Err(NetlistParseError::new(
+                    "BJT VAF must be finite and non-negative",
+                ));
+            }
             let mut bjt = Bjt::with_model(
                 name,
                 &fields[1],
@@ -2455,6 +2466,7 @@ fn parse_element(
             );
             bjt.saturation_current_temperature_exponent = saturation_current_temperature_exponent;
             bjt.energy_gap_electron_volts = energy_gap_electron_volts;
+            bjt.forward_early_voltage = forward_early_voltage;
             Ok(Element::Bjt(bjt))
         }
         'J' => {
