@@ -12,9 +12,9 @@ pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 use std::collections::{HashMap, HashSet};
 
 use diagram_ir::{
-    DiagramDirection, DiagramLabel, DiagramShape, DiagramStyle, EdgeKind, GraphDiagram, GraphEdge,
-    GraphGroup, GraphLink, GraphNode, GridCell, GridConnection, GridDiagram, PacketDiagram,
-    PacketField,
+    BoardCard, BoardColumn, BoardDiagram, DiagramDirection, DiagramLabel, DiagramShape,
+    DiagramStyle, EdgeKind, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell,
+    GridConnection, GridDiagram, PacketDiagram, PacketField,
 };
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
@@ -23,8 +23,8 @@ use mermaid_lexer::{
     tokenize_mermaid_pie, tokenize_mermaid_sankey, tokenize_mermaid_sequence,
     tokenize_mermaid_state, try_tokenize_mermaid_gantt, try_tokenize_mermaid_journey,
     try_tokenize_mermaid_quadrant, try_tokenize_mermaid_requirement,
-    try_tokenize_mermaid_block, try_tokenize_mermaid_mindmap, try_tokenize_mermaid_packet,
-    try_tokenize_mermaid_timeline, try_tokenize_mermaid_xychart,
+    try_tokenize_mermaid_block, try_tokenize_mermaid_kanban, try_tokenize_mermaid_mindmap,
+    try_tokenize_mermaid_packet, try_tokenize_mermaid_timeline, try_tokenize_mermaid_xychart,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
@@ -52,6 +52,8 @@ const BLOCK_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/block.grammar");
 const PACKET_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/packet.grammar");
+const KANBAN_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/kanban.grammar");
 const REQUIREMENT_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.grammar");
 const XYCHART_PARSER_GRAMMAR_SOURCE: &str =
@@ -640,6 +642,7 @@ impl MermaidDiagramType {
                 | Self::Mindmap
                 | Self::Block
                 | Self::Packet
+                | Self::Kanban
                 | Self::Timeline
                 | Self::Requirement
                 | Self::Pie
@@ -662,6 +665,7 @@ pub enum MermaidDiagram {
     Temporal(TemporalDiagram),
     Grid(GridDiagram),
     Packet(PacketDiagram),
+    Board(BoardDiagram),
 }
 
 /// Detect a Mermaid 11.16.1 diagram family from its header.
@@ -784,6 +788,7 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
         MermaidDiagramType::Mindmap => parse_mindmap(source).map(MermaidDiagram::Graph),
         MermaidDiagramType::Block => parse_block(source).map(MermaidDiagram::Grid),
         MermaidDiagramType::Packet => parse_packet(source).map(MermaidDiagram::Packet),
+        MermaidDiagramType::Kanban => parse_kanban(source).map(MermaidDiagram::Board),
         unsupported => Err(ParseError {
             message: format!(
                 "Mermaid {} diagram family {:?} is recognized but not implemented",
@@ -794,6 +799,75 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
             col: 1,
         }),
     }
+}
+
+/// Parse a core indentation-defined Mermaid Kanban board.
+pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
+    let prepared = prepare_line_grammar_source(source)?;
+    let tokens = try_tokenize_mermaid_kanban(&prepared).map_err(|message| ParseError {
+        message, line: 1, col: 1,
+    })?;
+    let grammar = parse_parser_grammar(KANBAN_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|error| panic!("Failed to parse kanban.grammar: {error}"));
+    GrammarParser::new(tokens.clone(), grammar)
+        .with_max_depth(MAX_RULE_DEPTH)
+        .parse()
+        .map_err(|error| ParseError {
+            message: error.message, line: error.token.line, col: error.token.column,
+        })?;
+
+    let lines = tokens.iter()
+        .filter(|token| token.type_name.as_deref() == Some("STATEMENT_LINE"))
+        .collect::<Vec<_>>();
+    let column_indent = lines.iter()
+        .map(|token| token.value.len() - token.value.trim_start().len())
+        .min()
+        .ok_or_else(|| ParseError {
+            message: "kanban diagram requires a column".into(), line: 1, col: 1,
+        })?;
+    let mut diagram = BoardDiagram::default();
+    let mut ids = HashSet::new();
+    let mut card_indent = None;
+    for token in lines {
+        let indent = token.value.len() - token.value.trim_start().len();
+        let value = token.value.trim();
+        if value.contains("@{") || value.starts_with("::") || value.starts_with("style ") {
+            return Err(token_error(token, "kanban decorations are outside the supported subset"));
+        }
+        let (explicit_id, label) = parse_board_node(value);
+        let id = unique_mindmap_id(explicit_id.unwrap_or_else(|| mindmap_slug(&label)), &mut ids);
+        if indent == column_indent {
+            diagram.columns.push(BoardColumn {
+                id, label: DiagramLabel::new(label), cards: Vec::new(),
+            });
+        } else if indent > column_indent {
+            match card_indent {
+                Some(expected) if indent != expected => {
+                    return Err(token_error(token, "nested kanban cards are outside the supported subset"));
+                }
+                None => card_indent = Some(indent),
+                Some(_) => {}
+            }
+            let column = diagram.columns.last_mut()
+                .ok_or_else(|| token_error(token, "kanban card must follow a column"))?;
+            column.cards.push(BoardCard { id, label: DiagramLabel::new(label) });
+        } else {
+            return Err(token_error(token, "invalid kanban indentation"));
+        }
+    }
+    Ok(diagram)
+}
+
+fn parse_board_node(source: &str) -> (Option<String>, String) {
+    if let Some(open) = source.find('[') {
+        if source.ends_with(']') {
+            return (
+                Some(source[..open].trim().to_string()),
+                normalize_mermaid_line_breaks(source[open + 1..source.len() - 1].trim()),
+            );
+        }
+    }
+    (None, normalize_mermaid_line_breaks(source.trim()))
 }
 
 /// Parse absolute inclusive bit ranges from the Mermaid packet family.
@@ -7227,6 +7301,32 @@ mod tests_dg04 {
             MermaidDiagram::Packet(diagram) => assert_eq!(diagram.fields.len(), 1),
             _ => panic!("expected packet IR"),
         }
+    }
+
+    #[test]
+    fn kanban_parses_columns_cards_and_explicit_ids() {
+        let board = parse_kanban(
+            "kanban\n  todo[Todo]\n    parser[Write grammar]\n    tests[Add tests]\n  done[Done]\n    ship[Ship]",
+        )
+        .unwrap();
+        assert_eq!(board.columns.len(), 2);
+        assert_eq!(board.columns[0].id, "todo");
+        assert_eq!(board.columns[0].cards.len(), 2);
+        assert_eq!(board.columns[1].cards[0].label.text, "Ship");
+    }
+
+    #[test]
+    fn dispatch_kanban_to_board_ir() {
+        match parse_any_mermaid("kanban\nTodo\n  task1[Task]").unwrap() {
+            MermaidDiagram::Board(board) => assert_eq!(board.columns.len(), 1),
+            _ => panic!("expected board IR"),
+        }
+    }
+
+    #[test]
+    fn kanban_rejects_nested_cards_outside_partial_subset() {
+        let error = parse_kanban("kanban\nTodo\n  task1[Task]\n    nested[Nested]").unwrap_err();
+        assert!(error.message.contains("nested kanban cards"));
     }
 
     #[test]

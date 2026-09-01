@@ -142,7 +142,7 @@
     {
       "id": "kanban",
       "headers": ["kanban"],
-      "status": "detected",
+      "status": "partial",
       "ir": "board",
       "smoke_source": "kanban\nTodo\n  task1[Task]"
     },

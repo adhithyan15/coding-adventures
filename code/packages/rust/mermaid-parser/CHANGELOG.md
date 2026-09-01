@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.185.0
+
+- Parse a grammar-backed Mermaid 11.16.1 Kanban slice into typed board IR.
+
 ## 0.184.0
 
 - Parse a grammar-backed Mermaid 11.16.1 packet slice into typed packet IR.
