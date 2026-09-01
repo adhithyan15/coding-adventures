@@ -63,6 +63,28 @@ Full-corpus baseline diff (`wasm-conformance`) confirms zero regressions
 — see that crate's own changelog entry for the exact before/after
 tallies across every affected file.
 
+### Security review follow-up
+
+- **`check_type_subtyping` now rejects a cyclic `sub` chain** (new
+  `check_type_subtyping_is_acyclic`, an O(number of types) three-color
+  traversal). A security review found that `(rec (type $t1 (sub $t2
+  (func))) (type $t2 (sub $t1 (func))))` used to validate successfully:
+  each type's own IMMEDIATE parent link checks out fine in isolation
+  (invariant arity trivially satisfied both directions on empty func
+  shapes), so nothing rejected the cycle as a whole — confirmed directly
+  that this made `WasmModule::func_type_is_nominal_subtype(0, 1)` AND
+  `(1, 0)` both return `true`, i.e. two independently-declared,
+  differently-indexed types became mutually interchangeable via
+  `is_assignable`. That is exactly the "canonical equivalence between
+  unrelated types" this crate's own `is_assignable` doc comment says must
+  stay unimplemented (W33's own item 3b) — a wrong ACCEPT here is a real
+  soundness risk, not just a missed capability. Confirmed via the full
+  corpus re-run: zero real `.wast` files declare a cyclic `sub` chain, so
+  this fix causes no baseline changes.
+
+wasm-validator 0.2.76 (this security-review follow-up landed within the
+same unreleased version as the fix it patches, not a separate bump).
+
 ## [0.2.75] - 2026-08-31 (W32 second slice — non-null concrete reference types)
 
 ### Added

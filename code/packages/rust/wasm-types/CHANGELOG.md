@@ -54,6 +54,22 @@ subtype relationships).
   `assert_unlinkable` case), never introduce a new false reject beyond
   what the pre-existing simpler check already risked.
 
+### Security review follow-up
+
+- **`func_type_is_nominal_subtype` now bounds its chain walk to a fixed
+  `MAX_SUBTYPE_CHAIN_HOPS` (1,000) constant instead of `self.types.len()`.**
+  The original bound was correct for TERMINATION but not algorithmic
+  complexity: this method is called from `wasm-validator::is_assignable`
+  at roughly every instruction operand's `pop_expect` call site, so a
+  module declaring one very long, entirely spec-legal `sub` chain (N
+  types) plus M call sites checking assignability near the chain's root
+  forced O(N·M) total validation work — confirmed to scale linearly per
+  query via direct benchmarking (a security review finding, not a
+  hypothetical). A chain longer than the cap now safely reports "not a
+  nominal subtype" beyond the cutoff — a false negative (can only make
+  the caller reject something a deeper walk might have accepted), never
+  a false accept.
+
 ## [0.1.14] - 2026-08-31 (W32 second slice — non-null concrete reference types)
 
 ### Added

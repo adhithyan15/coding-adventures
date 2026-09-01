@@ -835,6 +835,25 @@ fn build_module_context(module: &WasmModule) -> Result<ModuleContext<'_>, Valida
 /// entries in `module.types` (struct/array TEXT-format bodies are still
 /// unparseable), so there is nothing of that shape to validate yet.
 fn check_type_subtyping(module: &WasmModule) -> Result<(), ValidationError> {
+    // Security review finding (W33 first slice): a cyclic `sub` chain
+    // (`(rec (type $t1 (sub $t2 (func))) (type $t2 (sub $t1 (func))))`)
+    // used to slip past the per-type loop below entirely -- each type's
+    // OWN immediate parent link structurally checks out fine in
+    // isolation, so nothing ever rejected the cycle as a whole. The real
+    // GC proposal requires the `sub` relation to be well-founded
+    // (acyclic); without this check, two independently-declared,
+    // differently-indexed types become mutually interchangeable via
+    // `WasmModule::func_type_is_nominal_subtype` (confirmed directly: a
+    // 2-cycle makes `func_type_is_nominal_subtype(0, 1)` AND `(1, 0)`
+    // both return `true`) -- exactly the "canonical equivalence between
+    // unrelated types" this slice's own `is_assignable` doc comment says
+    // must stay unimplemented, since a wrong ACCEPT here is a real
+    // soundness risk, not just a missed capability. Must run BEFORE the
+    // structural per-link check below: a cyclic declaration is invalid
+    // regardless of whether its individual links happen to check out
+    // pairwise.
+    check_type_subtyping_is_acyclic(module)?;
+
     for (i, child) in module.types.iter().enumerate() {
         let Some(parent_idx) = module.type_subtyping_at(i as u32).supertype else {
             continue;
@@ -852,6 +871,62 @@ fn check_type_subtyping(module: &WasmModule) -> Result<(), ValidationError> {
             return Err(ValidationError::Other(format!(
                 "sub type: type #{i} is not a valid structural subtype of its declared supertype #{parent_idx} (arity must match, params contravariant, results covariant)"
             )));
+        }
+    }
+    Ok(())
+}
+
+/// Rejects a cyclic `sub` chain anywhere in `module.types` (security
+/// review finding, W33 first slice -- see `check_type_subtyping`'s own
+/// doc comment for why this matters). Each type has AT MOST one declared
+/// `sub` parent, so the whole `supertype` relation forms a "functional
+/// graph" (out-degree <= 1 everywhere) -- a real, spec-legal such graph is
+/// a forest of chains all eventually reaching a type with `supertype:
+/// None`; a cycle means at least one chain never terminates.
+///
+/// Uses the standard three-color (white/gray/black) traversal, giving
+/// O(number of types) total work: every type is colored exactly once,
+/// and a follow-up traversal starting from an already-BLACK type stops
+/// immediately rather than re-walking a chain already proven acyclic.
+/// This keeps the check itself cheap even for a module with many
+/// separate chains -- deliberately NOT the O(chain depth) per-query cost
+/// `WasmModule::func_type_is_nominal_subtype` has (that one is a
+/// different, already-addressed finding -- see its own doc comment for
+/// the fixed hop bound).
+fn check_type_subtyping_is_acyclic(module: &WasmModule) -> Result<(), ValidationError> {
+    const WHITE: u8 = 0; // not yet visited
+    const GRAY: u8 = 1; // on the current traversal's path
+    const BLACK: u8 = 2; // fully processed, already proven acyclic
+
+    let n = module.types.len();
+    let mut color = vec![WHITE; n];
+    for start in 0..n {
+        if color[start] != WHITE {
+            continue;
+        }
+        let mut path = Vec::new();
+        let mut cur = start;
+        loop {
+            match color[cur] {
+                WHITE => {
+                    color[cur] = GRAY;
+                    path.push(cur);
+                }
+                GRAY => {
+                    return Err(ValidationError::Other(format!("sub type: type #{cur}'s declared supertype chain is cyclic")));
+                }
+                _ => break, // BLACK: already proven acyclic from here on
+            }
+            match module.type_subtyping_at(cur as u32).supertype {
+                Some(parent) if (parent as usize) < n => cur = parent as usize,
+                // No parent, or an out-of-range one (a different error
+                // the per-type loop below reports precisely) -- either
+                // way, this chain terminates here.
+                _ => break,
+            }
+        }
+        for node in path {
+            color[node] = BLACK;
         }
     }
     Ok(())

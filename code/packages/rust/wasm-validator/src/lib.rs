@@ -1815,6 +1815,81 @@ mod tests {
     }
 
     #[test]
+    fn rejects_a_cyclic_sub_declaration() {
+        // Security review finding (W33 first slice): `(rec (type $t1 (sub
+        // $t2 (func))) (type $t2 (sub $t1 (func))))` -- two types
+        // declared as mutual `sub`s of EACH OTHER. Each individual link
+        // structurally checks out fine in isolation (empty/empty func
+        // shapes, invariant arity trivially satisfied both ways), so
+        // without a dedicated cycle check this validates successfully
+        // and makes `func_type_is_nominal_subtype(0, 1)` AND `(1, 0)`
+        // both `true` -- two independently-declared, differently-indexed
+        // types becoming mutually interchangeable, exactly the
+        // "canonical equivalence between unrelated types" this slice's
+        // own scope says must stay unimplemented (a wrong ACCEPT here is
+        // a real soundness risk).
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }, FuncType { params: vec![], results: vec![] }],
+            type_subtyping: vec![
+                TypeSubtyping { supertype: Some(1), is_final: false, ..Default::default() },
+                TypeSubtyping { supertype: Some(0), is_final: false, ..Default::default() },
+            ],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::Other(_)), "{err:?}");
+    }
+
+    #[test]
+    fn rejects_a_self_cyclic_sub_declaration() {
+        // The degenerate 1-cycle: a type declared as its OWN supertype.
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }],
+            type_subtyping: vec![TypeSubtyping { supertype: Some(0), is_final: false, ..Default::default() }],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::Other(_)), "{err:?}");
+    }
+
+    #[test]
+    fn rejects_a_longer_cyclic_sub_chain() {
+        // A 3-cycle: t0 sub t2, t1 sub t0, t2 sub t1 -- no individual
+        // link is a self-reference, but the whole chain loops.
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }; 3],
+            type_subtyping: vec![
+                TypeSubtyping { supertype: Some(2), is_final: false, ..Default::default() },
+                TypeSubtyping { supertype: Some(0), is_final: false, ..Default::default() },
+                TypeSubtyping { supertype: Some(1), is_final: false, ..Default::default() },
+            ],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::Other(_)), "{err:?}");
+    }
+
+    #[test]
+    fn accepts_a_module_with_multiple_independent_acyclic_sub_chains() {
+        // Regression guard for the cycle checker itself: it must not
+        // reject legitimate, SEPARATE (non-interacting) acyclic chains
+        // sharing one module's type section, and its "already proven
+        // acyclic" (BLACK) memoization must not cause it to skip
+        // checking a later, independent chain.
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }; 4],
+            type_subtyping: vec![
+                TypeSubtyping { supertype: None, is_final: false, ..Default::default() },
+                TypeSubtyping { supertype: Some(0), is_final: false, ..Default::default() },
+                TypeSubtyping { supertype: None, is_final: false, ..Default::default() },
+                TypeSubtyping { supertype: Some(2), is_final: false, ..Default::default() },
+            ],
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok());
+    }
+
+    #[test]
     fn call_argument_accepts_a_declared_nominal_subtype_concrete_func_ref() {
         // Integration test for `is_assignable`'s new W33 arms via a real
         // `call`: `$f1`'s function type takes a `(ref $t1)` param; `$f2`'s

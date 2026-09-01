@@ -1350,7 +1350,28 @@ impl WasmModule {
             return true;
         }
         let mut cur = sub_idx;
-        for _ in 0..=self.types.len() {
+        // Security review finding (W33 first slice): this used to bound
+        // the walk to `self.types.len()` hops -- correct for
+        // TERMINATION (paired with `wasm-validator`'s own
+        // `check_type_subtyping_is_acyclic`, a cyclic chain can no
+        // longer reach here at all), but NOT for algorithmic complexity.
+        // This method is called from `wasm-validator::is_assignable`,
+        // which runs at every `pop_expect` call site -- i.e. roughly once
+        // per instruction operand, across every function body in a
+        // module. A module declaring one very long, entirely spec-legal
+        // `sub` chain (N types) plus M call sites checking assignability
+        // against a type near the chain's root forces O(N*M) total
+        // validation work -- confirmed to scale linearly per query,
+        // verified directly rather than assumed. `MAX_SUBTYPE_CHAIN_HOPS`
+        // caps the PER-QUERY cost to a constant instead: a chain longer
+        // than this bound simply reports "not a nominal subtype" beyond
+        // the cutoff (a false negative -- SAFE, since it can only make
+        // this method reject something a deeper walk might have
+        // accepted, never wrongly accept). The real corpus's own longest
+        // chain is a handful of hops; this bound is generous by several
+        // orders of magnitude while keeping worst-case per-query cost
+        // bounded.
+        for _ in 0..Self::MAX_SUBTYPE_CHAIN_HOPS {
             match self.type_subtyping_at(cur).supertype {
                 Some(parent) if parent == super_idx => return true,
                 Some(parent) => cur = parent,
@@ -1359,6 +1380,12 @@ impl WasmModule {
         }
         false
     }
+
+    /// The hop cap [`Self::func_type_is_nominal_subtype`] enforces -- see
+    /// that method's own doc comment for why a bounded walk (rather than
+    /// one scaled to `types.len()`) matters for algorithmic complexity,
+    /// not just termination.
+    const MAX_SUBTYPE_CHAIN_HOPS: u32 = 1_000;
 
     /// `(rec_group_size, rec_group_position)` for type `idx` -- see
     /// [`TypeSubtyping::rec_group_position`]'s own doc comment for why
@@ -2213,6 +2240,31 @@ mod tests {
             ..Default::default()
         };
         assert!(!m.func_type_is_nominal_subtype(0, 99));
+    }
+
+    #[test]
+    fn func_type_is_nominal_subtype_bounds_chain_walk_to_a_fixed_hop_cap() {
+        // Security review finding (W33 first slice): a chain longer than
+        // `MAX_SUBTYPE_CHAIN_HOPS` must report "not a nominal subtype"
+        // rather than walking arbitrarily far -- the whole point is
+        // bounding PER-QUERY cost to a constant regardless of how many
+        // types a (potentially adversarial) module declares. Build a
+        // chain one hop longer than the cap: types[i] sub types[i-1] for
+        // i in 1..=N, with N > MAX_SUBTYPE_CHAIN_HOPS.
+        let n = (WasmModule::MAX_SUBTYPE_CHAIN_HOPS + 10) as usize;
+        let types = vec![FuncType { params: vec![], results: vec![] }; n + 1];
+        let mut type_subtyping = vec![TypeSubtyping::default()];
+        for i in 1..=n {
+            type_subtyping.push(TypeSubtyping { supertype: Some((i - 1) as u32), is_final: false, ..Default::default() });
+        }
+        let m = WasmModule { types, type_subtyping, ..Default::default() };
+        // A query landing WITHIN the cap still succeeds.
+        assert!(m.func_type_is_nominal_subtype(10, 0));
+        // A query whose real chain length exceeds the cap reports false
+        // -- a safe false negative (this can only make the caller
+        // reject something a deeper walk might have accepted), not a
+        // false positive.
+        assert!(!m.func_type_is_nominal_subtype(n as u32, 0));
     }
 
     #[test]
