@@ -2,6 +2,24 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.18] — 2026-08-31 (W33 second slice — thread subtyping info into the engine)
+
+### Added
+
+- **`WasmInstance::func_type_indices: Vec<u32>`**: each function's own
+  declared type-SECTION index, combined imported+module-defined index
+  space (parallel to `func_types`, which holds the resolved `FuncType`
+  SHAPE instead). Populated in `instantiate()` alongside `func_types`
+  itself (same two loops, same order).
+- **`build_engine` now calls `wasm-execution`'s new `set_type_subtyping`/
+  `set_func_type_indices`** (threading `instance.module.type_subtyping`
+  and the new `instance.func_type_indices` through), alongside the
+  pre-existing `set_type_section` call — giving `call_indirect`'s real
+  subtype check and `ref.cast`/`ref.test`'s dynamic type check
+  (`wasm-execution` 0.9.81, W33 second slice, item 4) what they need for
+  every real instantiated module. See that crate's own changelog for the
+  runtime-side consumer.
+
 ## [0.6.17] — 2026-08-31 (W33 first slice — cross-module `rec`-group guard)
 
 Adding `(rec ...)` group parsing (`wasm-wast-parser` 0.1.89) makes modules
