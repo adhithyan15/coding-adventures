@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Changed — declare the complete Hindi woman-register set
+
+- Chapter 39 now declares **औरत / महिला / स्त्री** as its headword instead of
+  naming only everyday **औरत**. The lesson already defines **महिला** as the
+  respectful public form and **स्त्री** as the older literary form, contrasts
+  all three registers, and assesses which word belongs on a public sign; its
+  metadata now exposes the complete set.
+
 ### Changed — declare both Hindi parent-register pairs
 
 - Chapter 12 now declares **पिता / माता / बाप / माँ** as its headword instead
