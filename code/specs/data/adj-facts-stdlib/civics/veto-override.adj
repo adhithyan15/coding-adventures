@@ -1,0 +1,91 @@
+% ============================================================================
+% veto-override — whether Congress can override each kind of presidential
+% veto (adj-facts-stdlib, CIVICS).
+% ============================================================================
+% "Can Congress override a veto?" has two different answers depending on
+% WHICH kind of veto the president used, and that contrast is the whole
+% content of this table. Recall is a binding query:
+%
+%     ? veto_override(pocket_veto, $S)
+%       % cannot_be_overridden_by_congress
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `veto_override(veto_type, override_status)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the status WITH its source, on the CPU, with zero model
+% calls, and abstains on any veto kind not one of these two source-cited
+% rows. The query also runs BACKWARD:
+%
+%     ? veto_override($T, cannot_be_overridden_by_congress)
+%       % pocket_veto
+%
+% THE HEDGE IS PART OF THE FACT. The source does NOT say Congress can
+% always override an ordinary veto — it says "in most cases Congress can
+% vote to override that veto". Collapsing that to a bare `yes` would state
+% something the source deliberately does not, so the atom keeps the
+% qualifier: `congress_can_override_in_most_cases`. The pocket-veto row
+% carries no such hedge because its own sentence carries none ("it cannot
+% be overridden by Congress"), and the asymmetry between the two atoms is
+% therefore a faithful reflection of the source rather than sloppy
+% parallelism.
+%
+% Provenance: quoted verbatim from USA.gov's "How laws are made" page,
+% "How a bill becomes a law" section:
+%
+%     veto_type (this table's atom)  override_status (this table's atom)      quote (verbatim)
+%     -----------------------------  ---------------------------------------  ---------------------------------------------------
+%     veto                           congress_can_override_in_most_cases       "If the president chooses to veto a bill, in most
+%                                                                                 cases Congress can vote to override that veto
+%                                                                                 and the bill becomes a law."
+%     pocket_veto                    cannot_be_overridden_by_congress          "This action is called a pocket veto, and it
+%                                                                                 cannot be overridden by Congress."
+%
+% curl-fetched the raw page and read it byte-for-byte before writing this
+% file (not just an AI-summarized WebFetch). `trust authoritative` —
+% USA.gov is the U.S. General Services Administration's official guide to
+% government information, a first-party .gov publisher of exactly the fact
+% being recalled, the same tier and the same page
+% `chamber-exclusive-power.adj` already cites.
+%
+% NEW AXIS, not a restatement. `checks-and-balances.adj` already ships
+% `checks_and_balances(president, veto, legislation_created_by_congress)`
+% — that row says the veto EXISTS as an act one branch takes against
+% another. This table says something that row cannot: whether the act can
+% be UNDONE, and by whom. The two compose rather than overlap — the check
+% and its own counter-check. Note `veto` appears in both files as an atom,
+% but in different argument positions of different predicates: there it is
+% an ACTION, here it is a KIND of veto. Distinct predicates, so there is no
+% collision to disambiguate, and a recall against one can never be confused
+% with a recall against the other.
+%
+% Honest abstention:
+%
+%   - The CONDITIONS that produce a pocket veto — "if the president does
+%     not sign off on a bill and it remains unsigned when Congress is no
+%     longer in session, the bill will be vetoed by default" — are stated
+%     by the same paragraph, but they answer WHEN a pocket veto happens,
+%     not whether it can be overridden. That is a different axis and
+%     belongs in its own table rather than flattened into this one.
+%   - `line_item_veto` is a real term in U.S. civics vocabulary, but this
+%     source never names it, so a recall on it ABSTAINS rather than
+%     inventing an override status for it.
+%   - The president's other two options the same paragraph states —
+%     approving and signing a bill into law — are not vetoes at all and
+%     have no override status to record.
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table veto_override {
+    columns veto_type, override_status
+
+    row (veto, congress_can_override_in_most_cases)
+    row (pocket_veto, cannot_be_overridden_by_congress)
+
+    source "If the president chooses to veto a bill, in most cases Congress can vote to override that veto and the bill becomes a law."
+    locator "https://www.usa.gov/how-laws-are-made"
+    trust authoritative
+
+    cites "This action is called a pocket veto, and it cannot be overridden by Congress." locator "https://www.usa.gov/how-laws-are-made"
+}
