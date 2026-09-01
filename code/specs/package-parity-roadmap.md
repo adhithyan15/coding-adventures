@@ -12438,7 +12438,7 @@ schema-3 inventory also pass. RustSec reports no vulnerability among 1,537
 locked dependencies and retains two existing allowed unmaintained warnings.
 
 After the final rebase onto exact `origin/main`
-`0a3057022f704c4244c24d36e79d386d9b1273d0`, the refreshed inventory has 15
+`8e2b2933797acda0bfa166ecb4794377e9518521`, the refreshed inventory has 15
 established lanes, 1,399 implementation identities, 4,615 implementation
 slots, and 1,438 all-reported identities. Its bands are 175/265, 123/934,
 172/2,165, and 929/13,006; Rust has 740 singletons, OCaml remains at zero,
@@ -12475,6 +12475,11 @@ unowned portable contract and do not overlap this Engram implementation.
 Merged PR #13773 changes only BUILD fronts for existing TypeScript packages to
 isolate frontend build directories; it adds no package identity, source-input
 boundary, ownership gap, or overlap with this implementation.
+Merged PR #13777 extends the existing `forme-orchestrator` root with
+deterministic persistent-cache behavior plus package metadata and dependency
+lockfiles. It remains covered by `forme-portable-core-family-classification`
+and adds no package identity, source-input boundary, ownership gap, or Engram
+overlap.
 
 ## Autonomous Loop Protocol
 
