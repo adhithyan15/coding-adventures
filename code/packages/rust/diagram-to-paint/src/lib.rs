@@ -33,7 +33,7 @@ use std::collections::HashMap;
 use diagram_ir::{
     DiagramShape, EdgeKind, GeoElement, GitCommitSymbol, LayoutedChartDiagram, LayoutedChartItem,
     LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
-    LayoutedPacketDiagram,
+    LayoutedBoardDiagram, LayoutedPacketDiagram,
     LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram,
     LayoutedTemporalDiagram, LayoutedTemporalItem, Orientation, Point, RelKind, SequenceArrowhead,
     SequenceBlockKind, SequenceCentralConnection, SequenceLineStyle, SequenceParticipantKind,
@@ -693,6 +693,68 @@ where
         instructions,
         id: None,
         metadata: (!metadata.is_empty()).then_some(metadata),
+    }
+}
+
+/// Lower Kanban columns and cards into backend-neutral paint instructions.
+pub fn diagram_to_paint_board<S, M, R>(
+    board: &LayoutedBoardDiagram,
+    options: &DiagramToPaintOptions<'_, S, M, R>,
+) -> PaintScene
+where
+    S: TextShaper,
+    M: FontMetrics<Handle = S::Handle>,
+    R: FontResolver<Handle = S::Handle>,
+{
+    let mut instructions = Vec::new();
+    let mut text_children = Vec::new();
+    for column in &board.columns {
+        instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(), x: column.x, y: column.y,
+            width: column.width, height: column.height,
+            fill: Some(column.style.fill.clone()), stroke: Some(column.style.stroke.clone()),
+            stroke_width: Some(column.style.stroke_width),
+            corner_radius: Some(column.style.corner_radius),
+            stroke_dash: None, stroke_dash_offset: None,
+        }));
+        let mut heading_font = options.title_font.clone();
+        heading_font.size = 16.0;
+        text_children.push(text_node_no_wrap(
+            &column.label.text, column.x + 12.0, column.y + 14.0,
+            column.width - 24.0, 22.0, heading_font,
+            css_to_color(&column.style.text_color),
+        ));
+        for card in &column.cards {
+            instructions.push(PaintInstruction::Rect(PaintRect {
+                base: PaintBase::default(), x: card.x, y: card.y,
+                width: card.width, height: card.height,
+                fill: Some(card.style.fill.clone()), stroke: Some(card.style.stroke.clone()),
+                stroke_width: Some(card.style.stroke_width),
+                corner_radius: Some(card.style.corner_radius),
+                stroke_dash: None, stroke_dash_offset: None,
+            }));
+            text_children.push(text_node(
+                &card.label.text, card.x + 10.0, card.y + 18.0,
+                card.width - 20.0, card.height - 24.0,
+                options.label_font.clone(), css_to_color(&card.style.text_color),
+            ));
+        }
+    }
+    let root = PositionedNode {
+        x: 0.0, y: 0.0, width: board.width, height: board.height,
+        id: None, content: None, children: text_children, ext: HashMap::new(),
+    };
+    instructions.extend(layout_to_paint(&root, &LayoutToPaintOptions {
+        width: board.width, height: board.height,
+        background: Color { r: 0, g: 0, b: 0, a: 0 },
+        device_pixel_ratio: 1.0, shaper: options.shaper,
+        metrics: options.metrics, resolver: options.resolver,
+    }).instructions);
+    let bg = options.background;
+    PaintScene {
+        width: board.width, height: board.height,
+        background: format!("rgba({}, {}, {}, {:.4})", bg.r, bg.g, bg.b, f64::from(bg.a) / 255.0),
+        instructions, id: None, metadata: None,
     }
 }
 

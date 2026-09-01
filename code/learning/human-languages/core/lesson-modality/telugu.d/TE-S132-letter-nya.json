@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TE-S132-letter-nya",
+    "language": "telugu",
+    "chapter": 51,
+    "sequence": 1381,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:43ee68632c04819f",
+    "detachableSegments": [
+      "Script you'll notice: ఞ",
+      "Writing: ఞ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

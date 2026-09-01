@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Four Verbs Between People",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2849330214cf237b",
+  "sourceHash": "fnv1a64:070eff26acbbcd5e",
   "lessons": [
     {
       "id": "TE-C34-tiisuko",
@@ -754,6 +754,179 @@
             {
               "kind": "speech",
               "text": "Say \"I like Telugu,\" say how many verbs it holds, and name the four datives. (Nāku telugu iṣṭaṁ; none; vaccu a skill, telusu a fact, arthamaindi a landing, iṣṭaṁ a taste.) Which native verb does the same job, and what hides inside iṣṭapaḍu? (నచ్చు; పడు, the falling of varṣaṁ paḍutōndi.) Which English word is iṣṭaṁ's cousin, and is it praśna's? (Ask; no, that is pray — and six languages in three families build liking so.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-S130-letter-tha",
+      "sequence": 741,
+      "title": "థ (tha) — one character, met inside words you already say",
+      "headword": "థ",
+      "romanization": "tha",
+      "gloss": "the single character థ — recognised inside words you already say",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:3c877fd3960f7e26",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: థ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: థ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ఋ — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: థ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "థ — tha."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not th, it is tha."
+            },
+            {
+              "kind": "speech",
+              "text": "The h in tha is a puff of breath, the same thing you added to బ to get భ when the good-night greeting arrived. Here the plain letter is త, the very first character this book ever asked you to trace. Say ta, then say it again and let the breath out after it: that is థ."
+            },
+            {
+              "kind": "speech",
+              "text": "It is worth saying what this letter is not. It is not the th of English this or thin. The tongue stays where it goes for త, against the back of the teeth; only the breath is added."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these, and both have థ (tha) inside them:"
+            },
+            {
+              "kind": "speech",
+              "text": "అర్థం arthaṁ — meaning, the word inside arthaṁ cēsukō."
+            },
+            {
+              "kind": "speech",
+              "text": "అపార్థం apārthaṁ — a misunderstanding, meaning gone wrong."
+            },
+            {
+              "kind": "speech",
+              "text": "In both, థ is carrying ర stacked on top of it — the ర్థ block named when you learned to understand things. Now the lower half of that block has a name of its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: థ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on థ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these two, and say which one has థ (tha) and which has త",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these two, and say which one has థ and which has త]"
+            },
+            {
+              "kind": "speech",
+              "text": "అర్థం, తెలుగు."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ta, then tha, and hear the breath arrive",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ta*, then *tha*, and hear the breath arrive]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "థ three times, saying tha as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: థ three times, saying *tha* as you finish each one]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — థ? What does it carry that త does not, and what does it not sound like? (tha — the same t with a puff of breath after it, and not the English th.) Name one word you already say that contains it."
             }
           ]
         }

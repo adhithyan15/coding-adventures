@@ -32,17 +32,19 @@
 //! `bits.rs`, keeping the PC update in the gate-level data path.
 
 use crate::bits::add_16bit_full;
+use crate::state::{DffMemory, StateRegister};
 
 /// The 8051 register file: 256-byte IRAM (including SFRs) + 16-bit PC.
 ///
-/// IRAM is stored as a flat `[u8; 256]` array.  All arithmetic/logic
-/// operations on register contents go through the ALU gate primitives —
-/// this struct only handles storage and addressing.
+/// IRAM is stored in 2,048 packed stable-Q D flip-flops. All arithmetic and
+/// logic operations on register contents go through the ALU gate primitives;
+/// this struct handles storage and addressing.
 pub struct RegisterFile8051 {
     /// Internal RAM: 0x00-0x7F lower RAM, 0x80-0xFF SFRs.
-    pub iram: [u8; 256],
+    pub iram: DffMemory,
     /// Program counter (16-bit, not memory-mapped on real 8051).
     pub pc: u16,
+    pc_state: StateRegister,
 }
 
 impl RegisterFile8051 {
@@ -52,7 +54,13 @@ impl RegisterFile8051 {
     /// determinism.  The caller (CPU reset) is responsible for setting
     /// SFR initial values (SP=0x07, P0-P3=0xFF, etc.).
     pub fn new() -> Self {
-        Self { iram: [0u8; 256], pc: 0 }
+        let mut rf = Self {
+            iram: DffMemory::new(256),
+            pc: 0,
+            pc_state: StateRegister::new(16),
+        };
+        rf.pc_state.write(0);
+        rf
     }
 
     // ── IRAM byte access ─────────────────────────────────────────────────────
@@ -60,13 +68,13 @@ impl RegisterFile8051 {
     /// Read one byte from IRAM (or SFR space) at `addr`.
     #[inline]
     pub fn read_iram8(&self, addr: u8) -> u8 {
-        self.iram[addr as usize]
+        self.iram.read(addr as usize)
     }
 
     /// Write one byte to IRAM (or SFR space) at `addr`.
     #[inline]
     pub fn write_iram8(&mut self, addr: u8, val: u8) {
-        self.iram[addr as usize] = val;
+        self.iram.write(addr as usize, val);
     }
 
     // ── PC access ────────────────────────────────────────────────────────────
@@ -81,6 +89,7 @@ impl RegisterFile8051 {
     #[inline]
     pub fn write_pc(&mut self, val: u16) {
         self.pc = val;
+        self.pc_state.write(val);
     }
 
     /// Increment the PC by `by` using the gate-level 16-bit adder.
@@ -88,7 +97,7 @@ impl RegisterFile8051 {
     /// Wraps at 0xFFFF → 0x0000.
     pub fn increment_pc(&mut self, by: u16) {
         let (new_pc, _carry) = add_16bit_full(self.pc, by, 0);
-        self.pc = new_pc;
+        self.write_pc(new_pc);
     }
 
     // ── Bit addressing ───────────────────────────────────────────────────────
@@ -118,17 +127,35 @@ impl RegisterFile8051 {
     /// Read one bit from the bit-addressable space.  Returns 0 or 1.
     pub fn read_bit(&self, bit_addr: u8) -> u8 {
         let (byte_addr, bit_pos) = self.resolve_bit_addr(bit_addr);
-        (self.iram[byte_addr as usize] >> bit_pos) & 1
+        (self.iram.read(byte_addr as usize) >> bit_pos) & 1
     }
 
     /// Write one bit to the bit-addressable space (`val` must be 0 or 1).
     pub fn write_bit(&mut self, bit_addr: u8, val: u8) {
         let (byte_addr, bit_pos) = self.resolve_bit_addr(bit_addr);
-        if val & 1 != 0 {
-            self.iram[byte_addr as usize] |= 1 << bit_pos;
+        let old = self.iram.read(byte_addr as usize);
+        let updated = if val & 1 != 0 {
+            old | (1 << bit_pos)
         } else {
-            self.iram[byte_addr as usize] &= !(1u8 << bit_pos);
-        }
+            old & !(1u8 << bit_pos)
+        };
+        self.iram.write(byte_addr as usize, updated);
+    }
+
+    pub(crate) fn restore_iram(&mut self, bytes: &[u8; 256]) {
+        self.iram.restore_snapshot(bytes);
+    }
+
+    pub(crate) fn iram_snapshot(&self) -> [u8; 256] {
+        self.iram
+            .snapshot()
+            .try_into()
+            .unwrap_or_else(|_| unreachable!("fixed 8051 IRAM size"))
+    }
+
+    #[cfg(test)]
+    pub(crate) fn latched_pc(&self) -> u16 {
+        self.pc_state.read()
     }
 }
 
@@ -159,6 +186,7 @@ mod tests {
         assert_eq!(rf.read_pc(), 0xFFFF);
         rf.increment_pc(1); // wraps
         assert_eq!(rf.read_pc(), 0x0000);
+        assert_eq!(rf.latched_pc(), 0x0000);
     }
 
     #[test]
@@ -183,7 +211,7 @@ mod tests {
         rf.write_bit(0xD7, 1);
         assert_eq!(rf.read_bit(0xD7), 1);
         assert_eq!(rf.iram[0xD0], 0x80); // PSW byte, bit 7 set
-        // PSW bit 0 (P) = bit addr 0xD0
+                                         // PSW bit 0 (P) = bit addr 0xD0
         rf.write_bit(0xD0, 1);
         assert_eq!(rf.read_bit(0xD0), 1);
         assert_eq!(rf.iram[0xD0], 0x81); // bits 7 and 0

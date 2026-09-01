@@ -34,6 +34,12 @@
 //! assert_eq!(cpu.read_register(0), 42);
 //! ```
 
+use std::fmt;
+use std::panic::{catch_unwind, AssertUnwindSafe};
+
+/// Complete ARMv1 architectural address space (64 MiB).
+pub const MEMORY_SIZE: usize = 1 << 26;
+
 // =========================================================================
 // Processor Modes
 // =========================================================================
@@ -161,8 +167,8 @@ pub const OP_MVN: u32 = 0xF;
 /// Returns the mnemonic for an ALU opcode.
 pub fn op_string(opcode: u32) -> &'static str {
     const NAMES: [&str; 16] = [
-        "AND", "EOR", "SUB", "RSB", "ADD", "ADC", "SBC", "RSC",
-        "TST", "TEQ", "CMP", "CMN", "ORR", "MOV", "BIC", "MVN",
+        "AND", "EOR", "SUB", "RSB", "ADD", "ADC", "SBC", "RSC", "TST", "TEQ", "CMP", "CMN", "ORR",
+        "MOV", "BIC", "MVN",
     ];
     if (opcode as usize) < 16 {
         NAMES[opcode as usize]
@@ -181,7 +187,10 @@ pub fn is_test_op(opcode: u32) -> bool {
 /// For logical ops, the C flag comes from the barrel shifter carry-out
 /// rather than the ALU's adder carry.
 pub fn is_logical_op(opcode: u32) -> bool {
-    matches!(opcode, OP_AND | OP_EOR | OP_TST | OP_TEQ | OP_ORR | OP_MOV | OP_BIC | OP_MVN)
+    matches!(
+        opcode,
+        OP_AND | OP_EOR | OP_TST | OP_TEQ | OP_ORR | OP_MOV | OP_BIC | OP_MVN
+    )
 }
 
 // =========================================================================
@@ -240,8 +249,7 @@ pub const HALT_SWI: u32 = 0x123456;
 // =========================================================================
 
 /// Represents the ARM1's four condition flags.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[derive(Default)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct Flags {
     /// Negative -- set when result's bit 31 is 1.
     pub n: bool,
@@ -252,7 +260,6 @@ pub struct Flags {
     /// Overflow -- set on signed overflow.
     pub v: bool,
 }
-
 
 // =========================================================================
 // Memory Access
@@ -286,6 +293,97 @@ pub struct Trace {
     pub memory_reads: Vec<MemoryAccess>,
     pub memory_writes: Vec<MemoryAccess>,
 }
+
+/// Complete owned snapshot of all 27 physical registers and memory bytes.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Arm1State {
+    pub regs: [u32; 27],
+    pub memory: Vec<u8>,
+    pub halted: bool,
+    pub loaded_origin: u32,
+    pub loaded_len: usize,
+}
+
+/// Complete checked instruction transition.
+#[derive(Debug, Clone, PartialEq)]
+pub struct StepTrace {
+    pub address: u32,
+    pub raw: u32,
+    pub mnemonic: String,
+    pub legacy: Trace,
+    pub state_before: Arm1State,
+    pub state_after: Arm1State,
+}
+
+/// Result of a bounded checked execution.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ExecutionResult {
+    pub halted: bool,
+    pub steps: usize,
+    pub final_state: Arm1State,
+    pub traces: Vec<StepTrace>,
+}
+
+/// Typed fail-closed lifecycle error.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Arm1Error {
+    Halted,
+    InvalidRegister {
+        index: usize,
+    },
+    MisalignedProgram {
+        origin: u32,
+    },
+    ProgramOutOfRange {
+        origin: u32,
+        length: usize,
+        memory_size: usize,
+    },
+    InvalidState(String),
+    TruncatedInstruction {
+        pc: u32,
+    },
+    MemoryOutOfRange {
+        address: u32,
+        width: usize,
+    },
+    Execution(String),
+}
+
+impl fmt::Display for Arm1Error {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Halted => f.write_str("CPU is halted"),
+            Self::InvalidRegister { index } => {
+                write!(f, "logical register index {index} is outside R0-R15")
+            }
+            Self::MisalignedProgram { origin } => {
+                write!(f, "program origin {origin:#010x} is not word-aligned")
+            }
+            Self::ProgramOutOfRange {
+                origin,
+                length,
+                memory_size,
+            } => write!(
+                f,
+                "program of {length} bytes at {origin:#010x} exceeds {memory_size}-byte memory"
+            ),
+            Self::InvalidState(message) | Self::Execution(message) => f.write_str(message),
+            Self::TruncatedInstruction { pc } => {
+                write!(
+                    f,
+                    "instruction at {pc:#010x} crosses the loaded program boundary"
+                )
+            }
+            Self::MemoryOutOfRange { address, width } => write!(
+                f,
+                "{width}-byte data access at {address:#010x} exceeds memory"
+            ),
+        }
+    }
+}
+
+impl std::error::Error for Arm1Error {}
 
 // =========================================================================
 // ALU Result
@@ -354,7 +452,13 @@ pub fn evaluate_condition(cond: u32, flags: Flags) -> bool {
 /// - `amount`: number of positions to shift
 /// - `carry_in`: current carry flag
 /// - `by_register`: true if shift amount comes from a register
-pub fn barrel_shift(value: u32, shift_type: u32, amount: u32, carry_in: bool, by_register: bool) -> (u32, bool) {
+pub fn barrel_shift(
+    value: u32,
+    shift_type: u32,
+    amount: u32,
+    carry_in: bool,
+    by_register: bool,
+) -> (u32, bool) {
     // When shifting by a register value, if the amount is 0 the value passes
     // through unchanged and the carry flag is unaffected.
     if by_register && amount == 0 {
@@ -506,7 +610,14 @@ pub fn decode_immediate(imm8: u32, rotate: u32) -> (u32, bool) {
 //   Logical: C = carry from barrel shifter, V = unchanged
 
 /// Performs one of the 16 ALU operations.
-pub fn alu_execute(opcode: u32, a: u32, b: u32, carry_in: bool, shifter_carry: bool, old_v: bool) -> ALUResult {
+pub fn alu_execute(
+    opcode: u32,
+    a: u32,
+    b: u32,
+    carry_in: bool,
+    shifter_carry: bool,
+    old_v: bool,
+) -> ALUResult {
     let mut result: u32;
     let carry: bool;
     let overflow: bool;
@@ -862,7 +973,11 @@ impl DecodedInstruction {
 
     fn disasm_data_processing(&self, cond: &str) -> String {
         let op = op_string(self.opcode);
-        let suf = if self.s && !is_test_op(self.opcode) { "S" } else { "" };
+        let suf = if self.s && !is_test_op(self.opcode) {
+            "S"
+        } else {
+            ""
+        };
         let op2 = self.disasm_operand2();
 
         if self.opcode == OP_MOV || self.opcode == OP_MVN {
@@ -883,7 +998,12 @@ impl DecodedInstruction {
             return format!("R{}", self.rm);
         }
         if self.shift_by_reg {
-            return format!("R{}, {} R{}", self.rm, shift_string(self.shift_type), self.rs);
+            return format!(
+                "R{}, {} R{}",
+                self.rm,
+                shift_string(self.shift_type),
+                self.rs
+            );
         }
         let mut amount = self.shift_imm;
         if amount == 0 {
@@ -914,9 +1034,15 @@ impl DecodedInstruction {
 
         if self.pre_index {
             let wb = if self.write_back { "!" } else { "" };
-            format!("{op}{cond}{b_suf} R{}, [R{}, {sign}{offset}]{wb}", self.rd, self.rn)
+            format!(
+                "{op}{cond}{b_suf} R{}, [R{}, {sign}{offset}]{wb}",
+                self.rd, self.rn
+            )
         } else {
-            format!("{op}{cond}{b_suf} R{}, [R{}], {sign}{offset}", self.rd, self.rn)
+            format!(
+                "{op}{cond}{b_suf} R{}, [R{}], {sign}{offset}",
+                self.rd, self.rn
+            )
         }
     }
 
@@ -962,7 +1088,7 @@ fn disasm_reg_list(list: u16) -> String {
 // ARMv1 instruction set as designed by Sophie Wilson and Steve Furber.
 //
 // Architecture:
-//   - 16 visible registers (R0-R15), 25 physical (banked for FIQ/IRQ/SVC)
+//   - 16 visible registers (R0-R15), 27 physical (banked for FIQ/IRQ/SVC)
 //   - R15 = combined Program Counter + Status Register
 //   - 3-stage pipeline: Fetch -> Decode -> Execute
 
@@ -982,6 +1108,10 @@ pub struct ARM1 {
 
     /// Has the CPU been halted?
     halted: bool,
+
+    /// Contiguous program range used by checked instruction fetch.
+    loaded_origin: u32,
+    loaded_len: usize,
 }
 
 impl ARM1 {
@@ -990,14 +1120,25 @@ impl ARM1 {
     /// On power-on, the ARM1 enters Supervisor mode with IRQs and FIQs disabled,
     /// and begins executing from address 0x00000000 (the Reset vector).
     pub fn new(memory_size: usize) -> Self {
-        let memory_size = if memory_size == 0 { 1024 * 1024 } else { memory_size };
+        let memory_size = if memory_size == 0 {
+            1024 * 1024
+        } else {
+            memory_size
+        };
         let mut cpu = Self {
             regs: [0; 27],
             memory: vec![0u8; memory_size],
             halted: false,
+            loaded_origin: 0,
+            loaded_len: memory_size,
         };
         cpu.reset();
         cpu
+    }
+
+    /// Create a machine with the complete 26-bit, 64 MiB address space.
+    pub fn architectural() -> Self {
+        Self::new(MEMORY_SIZE)
     }
 
     /// Restores the CPU to its power-on state.
@@ -1021,6 +1162,23 @@ impl ARM1 {
     pub fn write_register(&mut self, index: usize, value: u32) {
         let phys = self.physical_reg(index);
         self.regs[phys] = value;
+    }
+
+    /// Read a logical register with a typed range check.
+    pub fn read_register_checked(&self, index: usize) -> Result<u32, Arm1Error> {
+        if index >= 16 {
+            return Err(Arm1Error::InvalidRegister { index });
+        }
+        Ok(self.read_register(index))
+    }
+
+    /// Write a logical register with a typed range check.
+    pub fn write_register_checked(&mut self, index: usize, value: u32) -> Result<(), Arm1Error> {
+        if index >= 16 {
+            return Err(Arm1Error::InvalidRegister { index });
+        }
+        self.write_register(index, value);
+        Ok(())
     }
 
     /// Maps a logical register index (0-15) to a physical register index (0-26)
@@ -1059,10 +1217,18 @@ impl ARM1 {
     /// Updates the condition flags in R15.
     pub fn set_flags(&mut self, f: Flags) {
         let mut r15 = self.regs[15] & !(FLAG_N | FLAG_Z | FLAG_C | FLAG_V);
-        if f.n { r15 |= FLAG_N; }
-        if f.z { r15 |= FLAG_Z; }
-        if f.c { r15 |= FLAG_C; }
-        if f.v { r15 |= FLAG_V; }
+        if f.n {
+            r15 |= FLAG_N;
+        }
+        if f.z {
+            r15 |= FLAG_Z;
+        }
+        if f.c {
+            r15 |= FLAG_C;
+        }
+        if f.v {
+            r15 |= FLAG_V;
+        }
         self.regs[15] = r15;
     }
 
@@ -1079,6 +1245,30 @@ impl ARM1 {
     /// Returns the raw R15 register value.
     pub fn r15_raw(&self) -> u32 {
         self.regs[15]
+    }
+
+    /// Enter the IRQ vector when IRQs are enabled. Returns whether it was taken.
+    pub fn raise_irq(&mut self) -> bool {
+        if self.regs[15] & FLAG_I != 0 {
+            return false;
+        }
+        self.regs[24] = self.regs[15];
+        self.regs[15] = (self.regs[15] & !MODE_MASK) | MODE_IRQ | FLAG_I;
+        self.set_pc(0x18);
+        self.halted = false;
+        true
+    }
+
+    /// Enter the FIQ vector when FIQs are enabled. Returns whether it was taken.
+    pub fn raise_fiq(&mut self) -> bool {
+        if self.regs[15] & FLAG_F != 0 {
+            return false;
+        }
+        self.regs[22] = self.regs[15];
+        self.regs[15] = (self.regs[15] & !MODE_MASK) | MODE_FIQ | FLAG_I | FLAG_F;
+        self.set_pc(0x1C);
+        self.halted = false;
+        true
     }
 
     // =====================================================================
@@ -1129,6 +1319,32 @@ impl ARM1 {
         self.memory[a] = value;
     }
 
+    /// Read one word with a typed memory-bound check.
+    pub fn read_word_checked(&self, addr: u32) -> Result<u32, Arm1Error> {
+        self.checked_access(addr, 4)?;
+        Ok(self.read_word(addr))
+    }
+
+    /// Write one word with a typed memory-bound check.
+    pub fn write_word_checked(&mut self, addr: u32, value: u32) -> Result<(), Arm1Error> {
+        self.checked_access(addr, 4)?;
+        self.write_word(addr, value);
+        Ok(())
+    }
+
+    /// Read one byte with a typed memory-bound check.
+    pub fn read_byte_checked(&self, addr: u32) -> Result<u8, Arm1Error> {
+        self.checked_access(addr, 1)?;
+        Ok(self.read_byte(addr))
+    }
+
+    /// Write one byte with a typed memory-bound check.
+    pub fn write_byte_checked(&mut self, addr: u32, value: u8) -> Result<(), Arm1Error> {
+        self.checked_access(addr, 1)?;
+        self.write_byte(addr, value);
+        Ok(())
+    }
+
     /// Returns a reference to the raw memory array.
     pub fn memory(&self) -> &[u8] {
         &self.memory
@@ -1136,12 +1352,20 @@ impl ARM1 {
 
     /// Loads raw bytes into memory at the given start address.
     pub fn load_program(&mut self, code: &[u8], start_addr: u32) {
+        let start = start_addr as usize;
+        let available = self
+            .memory
+            .len()
+            .saturating_sub(start.min(self.memory.len()));
+        let copied = code.len().min(available);
         for (i, &b) in code.iter().enumerate() {
-            let addr = start_addr as usize + i;
+            let addr = start + i;
             if addr < self.memory.len() {
                 self.memory[addr] = b;
             }
         }
+        self.loaded_origin = start_addr;
+        self.loaded_len = copied;
     }
 
     /// Loads a program from u32 instruction words (convenience helper).
@@ -1153,12 +1377,234 @@ impl ARM1 {
         self.load_program(&code, start_addr);
     }
 
+    /// Return every physical register, memory byte, halt bit, and load bound.
+    pub fn get_state(&self) -> Arm1State {
+        Arm1State {
+            regs: self.regs,
+            memory: self.memory.clone(),
+            halted: self.halted,
+            loaded_origin: self.loaded_origin,
+            loaded_len: self.loaded_len,
+        }
+    }
+
+    /// Restore a validated complete snapshot atomically.
+    pub fn restore(&mut self, state: &Arm1State) -> Result<(), Arm1Error> {
+        if state.memory.len() != self.memory.len() {
+            return Err(Arm1Error::InvalidState(format!(
+                "state memory has {} bytes; simulator requires {}",
+                state.memory.len(),
+                self.memory.len()
+            )));
+        }
+        let start = usize::try_from(state.loaded_origin).ok();
+        let end = start.and_then(|value| value.checked_add(state.loaded_len));
+        if state.loaded_origin & 3 != 0 {
+            return Err(Arm1Error::InvalidState(format!(
+                "loaded origin {:#010x} is not word-aligned",
+                state.loaded_origin
+            )));
+        }
+        if state.loaded_origin as usize > self.memory.len()
+            || end.is_none_or(|value| value > self.memory.len())
+        {
+            return Err(Arm1Error::InvalidState(format!(
+                "loaded range {:#010x}+{} exceeds memory",
+                state.loaded_origin, state.loaded_len
+            )));
+        }
+        self.regs = state.regs;
+        self.memory.clone_from(&state.memory);
+        self.halted = state.halted;
+        self.loaded_origin = state.loaded_origin;
+        self.loaded_len = state.loaded_len;
+        Ok(())
+    }
+
+    /// Reset, clear memory, and load a byte program atomically.
+    pub fn load_checked(&mut self, code: &[u8]) -> Result<(), Arm1Error> {
+        self.load_at_checked(code, 0)
+    }
+
+    /// Reset, clear memory, and load a byte program at an explicit origin.
+    pub fn load_at_checked(&mut self, code: &[u8], origin: u32) -> Result<(), Arm1Error> {
+        let start = usize::try_from(origin).ok();
+        let end = start.and_then(|value| value.checked_add(code.len()));
+        if origin & 3 != 0 {
+            return Err(Arm1Error::MisalignedProgram { origin });
+        }
+        if end.is_none_or(|value| value > self.memory.len()) {
+            return Err(Arm1Error::ProgramOutOfRange {
+                origin,
+                length: code.len(),
+                memory_size: self.memory.len(),
+            });
+        }
+        self.reset();
+        self.memory.fill(0);
+        let start = start.expect("validated origin");
+        self.memory[start..start + code.len()].copy_from_slice(code);
+        self.set_pc(origin);
+        self.loaded_origin = origin;
+        self.loaded_len = code.len();
+        Ok(())
+    }
+
+    /// Reset, clear memory, and load little-endian instruction words atomically.
+    pub fn load_words_checked(
+        &mut self,
+        instructions: &[u32],
+        origin: u32,
+    ) -> Result<(), Arm1Error> {
+        let byte_len = instructions
+            .len()
+            .checked_mul(4)
+            .ok_or(Arm1Error::ProgramOutOfRange {
+                origin,
+                length: usize::MAX,
+                memory_size: self.memory.len(),
+            })?;
+        let mut code = Vec::with_capacity(byte_len);
+        for instruction in instructions {
+            code.extend_from_slice(&instruction.to_le_bytes());
+        }
+        self.load_at_checked(&code, origin)
+    }
+
+    fn loaded_contains_word(&self, pc: u32) -> bool {
+        let start = usize::try_from(self.loaded_origin).unwrap_or(usize::MAX);
+        let pc = usize::try_from(pc).unwrap_or(usize::MAX);
+        pc >= start
+            && pc
+                .checked_add(4)
+                .is_some_and(|end| end <= start + self.loaded_len)
+    }
+
+    fn checked_access(&self, address: u32, width: usize) -> Result<(), Arm1Error> {
+        let address = (address & PC_MASK) as usize;
+        let start = if width == 4 { address & !3 } else { address };
+        if start
+            .checked_add(width)
+            .is_none_or(|end| end > self.memory.len())
+        {
+            return Err(Arm1Error::MemoryOutOfRange {
+                address: address as u32,
+                width,
+            });
+        }
+        Ok(())
+    }
+
+    /// Execute one instruction with complete state and fail-closed data bounds.
+    pub fn step_checked(&mut self) -> Result<StepTrace, Arm1Error> {
+        if self.halted {
+            return Err(Arm1Error::Halted);
+        }
+        let address = self.pc();
+        if !self.loaded_contains_word(address) {
+            return Err(Arm1Error::TruncatedInstruction { pc: address });
+        }
+        let state_before = self.get_state();
+        let legacy = match catch_unwind(AssertUnwindSafe(|| self.step())) {
+            Ok(trace) => trace,
+            Err(payload) => {
+                self.restore(&state_before)?;
+                let message = payload
+                    .downcast_ref::<String>()
+                    .cloned()
+                    .or_else(|| {
+                        payload
+                            .downcast_ref::<&str>()
+                            .map(|value| (*value).to_string())
+                    })
+                    .unwrap_or_else(|| "ARM1 execution panicked".to_string());
+                return Err(Arm1Error::Execution(message));
+            }
+        };
+        let decoded = decode(legacy.raw);
+        let width = if decoded.inst_type == InstType::LoadStore && decoded.byte {
+            1
+        } else {
+            4
+        };
+        for access in legacy.memory_reads.iter().chain(&legacy.memory_writes) {
+            if let Err(error) = self.checked_access(access.address, width) {
+                self.restore(&state_before)?;
+                return Err(error);
+            }
+        }
+        let state_after = self.get_state();
+        Ok(StepTrace {
+            address,
+            raw: legacy.raw,
+            mnemonic: legacy.mnemonic.clone(),
+            legacy,
+            state_before,
+            state_after,
+        })
+    }
+
+    /// Execute an installed program transactionally for at most `max_steps`.
+    pub fn run_loaded_checked(&mut self, max_steps: usize) -> Result<ExecutionResult, Arm1Error> {
+        let original = self.get_state();
+        let mut traces = Vec::new();
+        while !self.halted && traces.len() < max_steps {
+            match self.step_checked() {
+                Ok(trace) => traces.push(trace),
+                Err(error) => {
+                    self.restore(&original)?;
+                    return Err(error);
+                }
+            }
+        }
+        Ok(ExecutionResult {
+            halted: self.halted,
+            steps: traces.len(),
+            final_state: self.get_state(),
+            traces,
+        })
+    }
+
+    /// Deterministically load and execute a fresh byte program transactionally.
+    pub fn run_checked(
+        &mut self,
+        code: &[u8],
+        max_steps: usize,
+    ) -> Result<ExecutionResult, Arm1Error> {
+        let original = self.get_state();
+        self.load_checked(code)?;
+        match self.run_loaded_checked(max_steps) {
+            Ok(result) => Ok(result),
+            Err(error) => {
+                self.restore(&original)?;
+                Err(error)
+            }
+        }
+    }
+
     // =====================================================================
     // Execution
     // =====================================================================
 
     /// Executes one instruction and returns a trace of what happened.
     pub fn step(&mut self) -> Trace {
+        if self.halted {
+            let regs = std::array::from_fn(|index| self.read_register(index));
+            let flags = self.flags();
+            return Trace {
+                address: self.pc(),
+                raw: 0,
+                mnemonic: "HALTED".to_string(),
+                condition: String::new(),
+                condition_met: false,
+                regs_before: regs,
+                regs_after: regs,
+                flags_before: flags,
+                flags_after: flags,
+                memory_reads: Vec::new(),
+                memory_writes: Vec::new(),
+            };
+        }
         let pc = self.pc();
         let mut regs_before = [0u32; 16];
         for (i, reg) in regs_before.iter_mut().enumerate() {
@@ -1274,11 +1720,21 @@ impl ARM1 {
 
         // Update flags if S bit set (and Rd != R15, handled above)
         if d.s && d.rd != 15 {
-            self.set_flags(Flags { n: result.n, z: result.z, c: result.c, v: result.v });
+            self.set_flags(Flags {
+                n: result.n,
+                z: result.z,
+                c: result.c,
+                v: result.v,
+            });
         }
         // Test-only ops always update flags
         if is_test_op(d.opcode) {
-            self.set_flags(Flags { n: result.n, z: result.z, c: result.c, v: result.v });
+            self.set_flags(Flags {
+                n: result.n,
+                z: result.z,
+                c: result.c,
+                v: result.v,
+            });
         }
     }
 
@@ -1302,7 +1758,8 @@ impl ARM1 {
             // Register offset (with optional shift)
             let mut rm_val = self.read_reg_for_exec(d.rm);
             if d.shift_imm != 0 {
-                let (shifted, _) = barrel_shift(rm_val, d.shift_type, d.shift_imm, self.flags().c, false);
+                let (shifted, _) =
+                    barrel_shift(rm_val, d.shift_type, d.shift_imm, self.flags().c, false);
                 rm_val = shifted;
             }
             rm_val
@@ -1311,7 +1768,11 @@ impl ARM1 {
         };
 
         let base = self.read_reg_for_exec(d.rn);
-        let addr = if d.up { base.wrapping_add(offset) } else { base.wrapping_sub(offset) };
+        let addr = if d.up {
+            base.wrapping_add(offset)
+        } else {
+            base.wrapping_sub(offset)
+        };
         let transfer_addr = if d.pre_index { addr } else { base };
 
         if d.load {
@@ -1326,7 +1787,10 @@ impl ARM1 {
                 }
                 v
             };
-            trace.memory_reads.push(MemoryAccess { address: transfer_addr, value });
+            trace.memory_reads.push(MemoryAccess {
+                address: transfer_addr,
+                value,
+            });
             if d.rd == 15 {
                 self.regs[15] = value;
             } else {
@@ -1339,14 +1803,16 @@ impl ARM1 {
             } else {
                 self.write_word(transfer_addr, value);
             }
-            trace.memory_writes.push(MemoryAccess { address: transfer_addr, value });
+            trace.memory_writes.push(MemoryAccess {
+                address: transfer_addr,
+                value,
+            });
         }
 
         // Write-back
-        if (d.write_back || !d.pre_index)
-            && d.rn != 15 {
-                self.write_register(d.rn, addr);
-            }
+        if (d.write_back || !d.pre_index) && d.rn != 15 {
+            self.write_register(d.rn, addr);
+        }
     }
 
     // =====================================================================
@@ -1363,8 +1829,8 @@ impl ARM1 {
         }
 
         let start_addr = match (d.pre_index, d.up) {
-            (false, true) => base,              // IA
-            (true, true) => base + 4,           // IB
+            (false, true) => base,                    // IA
+            (true, true) => base + 4,                 // IB
             (false, false) => base - (count * 4) + 4, // DA
             (true, false) => base - (count * 4),      // DB
         };
@@ -1377,20 +1843,30 @@ impl ARM1 {
 
             if d.load {
                 let value = self.read_word(addr);
-                trace.memory_reads.push(MemoryAccess { address: addr, value });
+                trace.memory_reads.push(MemoryAccess {
+                    address: addr,
+                    value,
+                });
                 if i == 15 {
                     self.regs[15] = value;
+                } else if d.force_user {
+                    self.regs[i] = value;
                 } else {
                     self.write_register(i, value);
                 }
             } else {
                 let value = if i == 15 {
                     self.regs[15].wrapping_add(4) // PC + 8 but we already added 4
+                } else if d.force_user {
+                    self.regs[i]
                 } else {
                     self.read_register(i)
                 };
                 self.write_word(addr, value);
-                trace.memory_writes.push(MemoryAccess { address: addr, value });
+                trace.memory_writes.push(MemoryAccess {
+                    address: addr,
+                    value,
+                });
             }
             addr += 4;
         }
@@ -1464,7 +1940,14 @@ impl ARM1 {
 // without an assembler.
 
 /// Creates a data processing instruction word.
-pub fn encode_data_processing(cond: u32, opcode: u32, s: u32, rn: u32, rd: u32, operand2: u32) -> u32 {
+pub fn encode_data_processing(
+    cond: u32,
+    opcode: u32,
+    s: u32,
+    rn: u32,
+    rd: u32,
+    operand2: u32,
+) -> u32 {
     (cond << 28) | operand2 | (opcode << 21) | (s << 20) | (rn << 16) | (rd << 12)
 }
 
@@ -1537,10 +2020,17 @@ pub fn encode_ldm(cond: u32, rn: u32, reg_list: u16, write_back: bool, mode: &st
         inst |= 1 << 21;
     }
     match mode {
-        "IA" => { inst |= 1 << 23; }
-        "IB" => { inst |= 1 << 24; inst |= 1 << 23; }
+        "IA" => {
+            inst |= 1 << 23;
+        }
+        "IB" => {
+            inst |= 1 << 24;
+            inst |= 1 << 23;
+        }
         "DA" => {}
-        "DB" => { inst |= 1 << 24; }
+        "DB" => {
+            inst |= 1 << 24;
+        }
         _ => {}
     }
     inst
@@ -1573,10 +2063,14 @@ impl std::fmt::Display for ARM1 {
             writeln!(
                 f,
                 "  R{:<2}={:08X}  R{:<2}={:08X}  R{:<2}={:08X}  R{:<2}={:08X}",
-                i, self.read_register(i),
-                i + 1, self.read_register(i + 1),
-                i + 2, self.read_register(i + 2),
-                i + 3, self.read_register(i + 3),
+                i,
+                self.read_register(i),
+                i + 1,
+                self.read_register(i + 1),
+                i + 2,
+                self.read_register(i + 2),
+                i + 3,
+                self.read_register(i + 3),
             )?;
         }
         Ok(())
@@ -1632,29 +2126,144 @@ mod tests {
     #[test]
     fn test_evaluate_condition_comprehensive() {
         let cases: Vec<(&str, u32, Flags, bool)> = vec![
-            ("EQ when Z set", COND_EQ, Flags { z: true, ..Default::default() }, true),
+            (
+                "EQ when Z set",
+                COND_EQ,
+                Flags {
+                    z: true,
+                    ..Default::default()
+                },
+                true,
+            ),
             ("EQ when Z clear", COND_EQ, Flags::default(), false),
             ("NE when Z clear", COND_NE, Flags::default(), true),
-            ("NE when Z set", COND_NE, Flags { z: true, ..Default::default() }, false),
-            ("CS when C set", COND_CS, Flags { c: true, ..Default::default() }, true),
+            (
+                "NE when Z set",
+                COND_NE,
+                Flags {
+                    z: true,
+                    ..Default::default()
+                },
+                false,
+            ),
+            (
+                "CS when C set",
+                COND_CS,
+                Flags {
+                    c: true,
+                    ..Default::default()
+                },
+                true,
+            ),
             ("CC when C clear", COND_CC, Flags::default(), true),
-            ("MI when N set", COND_MI, Flags { n: true, ..Default::default() }, true),
+            (
+                "MI when N set",
+                COND_MI,
+                Flags {
+                    n: true,
+                    ..Default::default()
+                },
+                true,
+            ),
             ("PL when N clear", COND_PL, Flags::default(), true),
-            ("VS when V set", COND_VS, Flags { v: true, ..Default::default() }, true),
+            (
+                "VS when V set",
+                COND_VS,
+                Flags {
+                    v: true,
+                    ..Default::default()
+                },
+                true,
+            ),
             ("VC when V clear", COND_VC, Flags::default(), true),
-            ("HI when C=1,Z=0", COND_HI, Flags { c: true, ..Default::default() }, true),
-            ("HI when C=1,Z=1", COND_HI, Flags { c: true, z: true, ..Default::default() }, false),
+            (
+                "HI when C=1,Z=0",
+                COND_HI,
+                Flags {
+                    c: true,
+                    ..Default::default()
+                },
+                true,
+            ),
+            (
+                "HI when C=1,Z=1",
+                COND_HI,
+                Flags {
+                    c: true,
+                    z: true,
+                    ..Default::default()
+                },
+                false,
+            ),
             ("LS when C=0", COND_LS, Flags::default(), true),
-            ("LS when Z=1", COND_LS, Flags { c: true, z: true, ..Default::default() }, true),
+            (
+                "LS when Z=1",
+                COND_LS,
+                Flags {
+                    c: true,
+                    z: true,
+                    ..Default::default()
+                },
+                true,
+            ),
             ("GE when N=V=0", COND_GE, Flags::default(), true),
-            ("GE when N=V=1", COND_GE, Flags { n: true, v: true, ..Default::default() }, true),
-            ("GE when N!=V", COND_GE, Flags { n: true, ..Default::default() }, false),
-            ("LT when N!=V", COND_LT, Flags { n: true, ..Default::default() }, true),
+            (
+                "GE when N=V=1",
+                COND_GE,
+                Flags {
+                    n: true,
+                    v: true,
+                    ..Default::default()
+                },
+                true,
+            ),
+            (
+                "GE when N!=V",
+                COND_GE,
+                Flags {
+                    n: true,
+                    ..Default::default()
+                },
+                false,
+            ),
+            (
+                "LT when N!=V",
+                COND_LT,
+                Flags {
+                    n: true,
+                    ..Default::default()
+                },
+                true,
+            ),
             ("LT when N=V", COND_LT, Flags::default(), false),
             ("GT when Z=0,N=V", COND_GT, Flags::default(), true),
-            ("GT when Z=1", COND_GT, Flags { z: true, ..Default::default() }, false),
-            ("LE when Z=1", COND_LE, Flags { z: true, ..Default::default() }, true),
-            ("LE when N!=V", COND_LE, Flags { n: true, ..Default::default() }, true),
+            (
+                "GT when Z=1",
+                COND_GT,
+                Flags {
+                    z: true,
+                    ..Default::default()
+                },
+                false,
+            ),
+            (
+                "LE when Z=1",
+                COND_LE,
+                Flags {
+                    z: true,
+                    ..Default::default()
+                },
+                true,
+            ),
+            (
+                "LE when N!=V",
+                COND_LE,
+                Flags {
+                    n: true,
+                    ..Default::default()
+                },
+                true,
+            ),
             ("AL always", COND_AL, Flags::default(), true),
             ("NV never", COND_NV, Flags::default(), false),
         ];
@@ -2018,10 +2627,7 @@ mod tests {
     #[test]
     fn test_mov_imm_and_halt() {
         let mut cpu = ARM1::new(4096);
-        cpu.load_program_words(&[
-            encode_mov_imm(COND_AL, 0, 42),
-            encode_halt(),
-        ], 0);
+        cpu.load_program_words(&[encode_mov_imm(COND_AL, 0, 42), encode_halt()], 0);
         let traces = cpu.run(100);
         assert_eq!(traces.len(), 2);
         assert_eq!(cpu.read_register(0), 42);
@@ -2031,12 +2637,15 @@ mod tests {
     #[test]
     fn test_add_two_registers() {
         let mut cpu = ARM1::new(4096);
-        cpu.load_program_words(&[
-            encode_mov_imm(COND_AL, 0, 10),
-            encode_mov_imm(COND_AL, 1, 20),
-            encode_alu_reg(COND_AL, OP_ADD, 0, 2, 0, 1),
-            encode_halt(),
-        ], 0);
+        cpu.load_program_words(
+            &[
+                encode_mov_imm(COND_AL, 0, 10),
+                encode_mov_imm(COND_AL, 1, 20),
+                encode_alu_reg(COND_AL, OP_ADD, 0, 2, 0, 1),
+                encode_halt(),
+            ],
+            0,
+        );
         cpu.run(100);
         assert_eq!(cpu.read_register(2), 30);
     }
@@ -2044,12 +2653,15 @@ mod tests {
     #[test]
     fn test_subs_with_flags() {
         let mut cpu = ARM1::new(4096);
-        cpu.load_program_words(&[
-            encode_mov_imm(COND_AL, 0, 5),
-            encode_mov_imm(COND_AL, 1, 5),
-            encode_alu_reg(COND_AL, OP_SUB, 1, 2, 0, 1), // SUBS R2, R0, R1
-            encode_halt(),
-        ], 0);
+        cpu.load_program_words(
+            &[
+                encode_mov_imm(COND_AL, 0, 5),
+                encode_mov_imm(COND_AL, 1, 5),
+                encode_alu_reg(COND_AL, OP_SUB, 1, 2, 0, 1), // SUBS R2, R0, R1
+                encode_halt(),
+            ],
+            0,
+        );
         cpu.run(100);
         assert_eq!(cpu.read_register(2), 0);
         assert!(cpu.flags().z);
@@ -2058,28 +2670,34 @@ mod tests {
     #[test]
     fn test_conditional_execution() {
         let mut cpu = ARM1::new(4096);
-        cpu.load_program_words(&[
-            encode_mov_imm(COND_AL, 0, 5),
-            encode_mov_imm(COND_AL, 1, 5),
-            encode_alu_reg(COND_AL, OP_SUB, 1, 2, 0, 1), // SUBS: sets Z flag
-            encode_mov_imm(COND_NE, 3, 99),  // should NOT execute (Z is set)
-            encode_mov_imm(COND_EQ, 4, 42),  // should execute (Z is set)
-            encode_halt(),
-        ], 0);
+        cpu.load_program_words(
+            &[
+                encode_mov_imm(COND_AL, 0, 5),
+                encode_mov_imm(COND_AL, 1, 5),
+                encode_alu_reg(COND_AL, OP_SUB, 1, 2, 0, 1), // SUBS: sets Z flag
+                encode_mov_imm(COND_NE, 3, 99),              // should NOT execute (Z is set)
+                encode_mov_imm(COND_EQ, 4, 42),              // should execute (Z is set)
+                encode_halt(),
+            ],
+            0,
+        );
         cpu.run(100);
-        assert_eq!(cpu.read_register(3), 0);  // skipped
+        assert_eq!(cpu.read_register(3), 0); // skipped
         assert_eq!(cpu.read_register(4), 42); // executed
     }
 
     #[test]
     fn test_branch() {
         let mut cpu = ARM1::new(4096);
-        cpu.load_program_words(&[
-            encode_mov_imm(COND_AL, 0, 1),
-            encode_branch(COND_AL, false, 4), // skip next instruction
-            encode_mov_imm(COND_AL, 0, 99),   // should be skipped
-            encode_halt(),
-        ], 0);
+        cpu.load_program_words(
+            &[
+                encode_mov_imm(COND_AL, 0, 1),
+                encode_branch(COND_AL, false, 4), // skip next instruction
+                encode_mov_imm(COND_AL, 0, 99),   // should be skipped
+                encode_halt(),
+            ],
+            0,
+        );
         cpu.run(100);
         assert_eq!(cpu.read_register(0), 1);
     }
@@ -2087,15 +2705,18 @@ mod tests {
     #[test]
     fn test_loop_sum_1_to_10() {
         let mut cpu = ARM1::new(4096);
-        cpu.load_program_words(&[
-            encode_mov_imm(COND_AL, 0, 0),   // R0 = sum = 0
-            encode_mov_imm(COND_AL, 1, 10),  // R1 = counter = 10
-            // loop:
-            encode_alu_reg(COND_AL, OP_ADD, 0, 0, 0, 1), // R0 += R1
-            encode_data_processing(COND_AL, OP_SUB, 1, 1, 1, (1 << 25) | 1), // SUBS R1, R1, #1
-            encode_branch(COND_NE, false, -16), // if not zero, loop
-            encode_halt(),
-        ], 0);
+        cpu.load_program_words(
+            &[
+                encode_mov_imm(COND_AL, 0, 0),  // R0 = sum = 0
+                encode_mov_imm(COND_AL, 1, 10), // R1 = counter = 10
+                // loop:
+                encode_alu_reg(COND_AL, OP_ADD, 0, 0, 0, 1), // R0 += R1
+                encode_data_processing(COND_AL, OP_SUB, 1, 1, 1, (1 << 25) | 1), // SUBS R1, R1, #1
+                encode_branch(COND_NE, false, -16),          // if not zero, loop
+                encode_halt(),
+            ],
+            0,
+        );
         cpu.run(200);
         assert_eq!(cpu.read_register(0), 55); // 1+2+...+10 = 55
     }
@@ -2106,15 +2727,18 @@ mod tests {
         // MOV R1, a high address using rotated immediate
         // 1 rotated right by 2 = 0x40000000... but we need something in memory range.
         // Let's use a different approach: store at offset from current location.
-        cpu.load_program_words(&[
-            encode_mov_imm(COND_AL, 0, 42),  // R0 = 42
-            // MOV R1, #256 (using rotated immediate: 1 rotated right by 24 = 1 << 8 = 256)
-            encode_data_processing(COND_AL, OP_MOV, 0, 0, 1, (1 << 25) | (12 << 8) | 1),
-            encode_str(COND_AL, 0, 1, 0, true),  // STR R0, [R1]
-            encode_mov_imm(COND_AL, 0, 0),   // R0 = 0
-            encode_ldr(COND_AL, 0, 1, 0, true),  // LDR R0, [R1]
-            encode_halt(),
-        ], 0);
+        cpu.load_program_words(
+            &[
+                encode_mov_imm(COND_AL, 0, 42), // R0 = 42
+                // MOV R1, #256 (using rotated immediate: 1 rotated right by 24 = 1 << 8 = 256)
+                encode_data_processing(COND_AL, OP_MOV, 0, 0, 1, (1 << 25) | (12 << 8) | 1),
+                encode_str(COND_AL, 0, 1, 0, true), // STR R0, [R1]
+                encode_mov_imm(COND_AL, 0, 0),      // R0 = 0
+                encode_ldr(COND_AL, 0, 1, 0, true), // LDR R0, [R1]
+                encode_halt(),
+            ],
+            0,
+        );
         cpu.run(100);
         assert_eq!(cpu.read_register(0), 42);
     }
@@ -2122,23 +2746,26 @@ mod tests {
     #[test]
     fn test_stm_ldm() {
         let mut cpu = ARM1::new(4096);
-        cpu.load_program_words(&[
-            encode_mov_imm(COND_AL, 0, 10),
-            encode_mov_imm(COND_AL, 1, 20),
-            encode_mov_imm(COND_AL, 2, 30),
-            encode_mov_imm(COND_AL, 3, 40),
-            // Set R5 to a memory address (256 = 1 ROR 24)
-            encode_data_processing(COND_AL, OP_MOV, 0, 0, 5, (1 << 25) | (12 << 8) | 1),
-            encode_stm(COND_AL, 5, 0x000F, true, "IA"), // STM R5!, {R0-R3}
-            encode_mov_imm(COND_AL, 0, 0),
-            encode_mov_imm(COND_AL, 1, 0),
-            encode_mov_imm(COND_AL, 2, 0),
-            encode_mov_imm(COND_AL, 3, 0),
-            // Reset R5 to 256
-            encode_data_processing(COND_AL, OP_MOV, 0, 0, 5, (1 << 25) | (12 << 8) | 1),
-            encode_ldm(COND_AL, 5, 0x000F, true, "IA"), // LDM R5!, {R0-R3}
-            encode_halt(),
-        ], 0);
+        cpu.load_program_words(
+            &[
+                encode_mov_imm(COND_AL, 0, 10),
+                encode_mov_imm(COND_AL, 1, 20),
+                encode_mov_imm(COND_AL, 2, 30),
+                encode_mov_imm(COND_AL, 3, 40),
+                // Set R5 to a memory address (256 = 1 ROR 24)
+                encode_data_processing(COND_AL, OP_MOV, 0, 0, 5, (1 << 25) | (12 << 8) | 1),
+                encode_stm(COND_AL, 5, 0x000F, true, "IA"), // STM R5!, {R0-R3}
+                encode_mov_imm(COND_AL, 0, 0),
+                encode_mov_imm(COND_AL, 1, 0),
+                encode_mov_imm(COND_AL, 2, 0),
+                encode_mov_imm(COND_AL, 3, 0),
+                // Reset R5 to 256
+                encode_data_processing(COND_AL, OP_MOV, 0, 0, 5, (1 << 25) | (12 << 8) | 1),
+                encode_ldm(COND_AL, 5, 0x000F, true, "IA"), // LDM R5!, {R0-R3}
+                encode_halt(),
+            ],
+            0,
+        );
         cpu.run(100);
         assert_eq!(cpu.read_register(0), 10);
         assert_eq!(cpu.read_register(1), 20);
@@ -2149,15 +2776,18 @@ mod tests {
     #[test]
     fn test_branch_and_link() {
         let mut cpu = ARM1::new(4096);
-        cpu.load_program_words(&[
-            encode_mov_imm(COND_AL, 0, 7),          // addr 0
-            encode_branch(COND_AL, true, 4),         // addr 4: BL +4 -> addr 16
-            encode_halt(),                           // addr 8
-            0,                                       // addr 12
-            encode_alu_reg(COND_AL, OP_ADD, 0, 0, 0, 0), // addr 16: ADD R0, R0, R0
-            // MOV PC, LR (return)
-            encode_data_processing(COND_AL, OP_MOV, 1, 0, 15, 14),
-        ], 0);
+        cpu.load_program_words(
+            &[
+                encode_mov_imm(COND_AL, 0, 7),               // addr 0
+                encode_branch(COND_AL, true, 4),             // addr 4: BL +4 -> addr 16
+                encode_halt(),                               // addr 8
+                0,                                           // addr 12
+                encode_alu_reg(COND_AL, OP_ADD, 0, 0, 0, 0), // addr 16: ADD R0, R0, R0
+                // MOV PC, LR (return)
+                encode_data_processing(COND_AL, OP_MOV, 1, 0, 15, 14),
+            ],
+            0,
+        );
         cpu.run(20);
         assert_eq!(cpu.read_register(0), 14); // 7 + 7
     }
@@ -2169,14 +2799,13 @@ mod tests {
             (OP_ADD << 21)) |   // Rn = R0
             (1 << 12) |   // Rd = R1
             (2 << 7) |    // shift amount = 2
-            (SHIFT_LSL << 5);             // Rm = R0
+            (SHIFT_LSL << 5); // Rm = R0
 
         let mut cpu = ARM1::new(4096);
-        cpu.load_program_words(&[
-            encode_mov_imm(COND_AL, 0, 7),
-            add_with_shift,
-            encode_halt(),
-        ], 0);
+        cpu.load_program_words(
+            &[encode_mov_imm(COND_AL, 0, 7), add_with_shift, encode_halt()],
+            0,
+        );
         cpu.run(100);
         assert_eq!(cpu.read_register(1), 35); // 7 + 7*4 = 35
     }
@@ -2185,15 +2814,18 @@ mod tests {
     fn test_cmp_and_conditional_branch() {
         // Compare and branch: if R0 > R1, set R2=1 else R2=0
         let mut cpu = ARM1::new(4096);
-        cpu.load_program_words(&[
-            encode_mov_imm(COND_AL, 0, 10),   // R0 = 10
-            encode_mov_imm(COND_AL, 1, 5),    // R1 = 5
-            // CMP R0, R1
-            encode_alu_reg(COND_AL, OP_CMP, 1, 0, 0, 1),
-            encode_mov_imm(COND_GT, 2, 1),    // R2 = 1 if R0 > R1
-            encode_mov_imm(COND_LE, 2, 0),    // R2 = 0 otherwise
-            encode_halt(),
-        ], 0);
+        cpu.load_program_words(
+            &[
+                encode_mov_imm(COND_AL, 0, 10), // R0 = 10
+                encode_mov_imm(COND_AL, 1, 5),  // R1 = 5
+                // CMP R0, R1
+                encode_alu_reg(COND_AL, OP_CMP, 1, 0, 0, 1),
+                encode_mov_imm(COND_GT, 2, 1), // R2 = 1 if R0 > R1
+                encode_mov_imm(COND_LE, 2, 0), // R2 = 0 otherwise
+                encode_halt(),
+            ],
+            0,
+        );
         cpu.run(100);
         assert_eq!(cpu.read_register(2), 1);
     }
@@ -2209,12 +2841,15 @@ mod tests {
     #[test]
     fn test_trace_memory_tracking() {
         let mut cpu = ARM1::new(4096);
-        cpu.load_program_words(&[
-            encode_mov_imm(COND_AL, 0, 99),
-            encode_data_processing(COND_AL, OP_MOV, 0, 0, 1, (1 << 25) | (12 << 8) | 1), // R1=256
-            encode_str(COND_AL, 0, 1, 0, true),
-            encode_halt(),
-        ], 0);
+        cpu.load_program_words(
+            &[
+                encode_mov_imm(COND_AL, 0, 99),
+                encode_data_processing(COND_AL, OP_MOV, 0, 0, 1, (1 << 25) | (12 << 8) | 1), // R1=256
+                encode_str(COND_AL, 0, 1, 0, true),
+                encode_halt(),
+            ],
+            0,
+        );
         let traces = cpu.run(100);
         // The STR instruction should have a memory write
         let str_trace = &traces[2];

@@ -1,9 +1,10 @@
 {
   "language": "telugu",
   "chapter": 25,
-  "sourceHash": "fnv1a64:a04c1830f3e529e5",
+  "sourceHash": "fnv1a64:e6b94bd507b0d7f7",
   "lessonIds": [
-    "TE-C25-shubha-ratri"
+    "TE-C25-shubha-ratri",
+    "TE-S128-letter-bha"
   ],
   "tex": "telugu/book/chapters/ch25-good-night.tex"
 }

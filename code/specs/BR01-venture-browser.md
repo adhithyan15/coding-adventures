@@ -118,14 +118,15 @@ Completed convergence foundations: exact zero-missing HTML tokenizer/tree
 construction ratchets; native generated-host interaction gates; shared
 scrollbars, hover status, and cursors; reusable fragmented/international inline
 layout; deterministic real-page visual acceptance; and host-neutral flex,
-grid, positioned/clipped, table, float, and fragmented inline-box formatting
-contexts.
+grid, positioned/clipped, table, float, fragmented inline-box, and intrinsic
+replaced formatting contexts; plus scoped generated content and marker boxes.
 
-1. **P1 — intrinsic replaced sizing.** Resolve image intrinsic dimensions,
-   aspect ratios, min/max constraints, and object-fit geometry before layout so
-   normal, flex, grid, table, and floated replaced boxes share one answer.
-2. **P2 — generated and marker boxes.** Add reusable list-marker and generated
-   content boxes without teaching HTML, paint, or native hosts special cases.
+Generated/marker convergence is complete: `layout-generated` owns CSS counter
+scopes and formatting, content evaluation, typed extension metadata, and
+diagnostics; `html-to-layout` maps pseudo-element cascade plus HTML list
+ordinals into ordinary text boxes; and shared block layout supplies outside
+marker gutters while inside markers remain in normal inline flow. The browser
+fixture ratchets layout and paint through the same host-neutral pipeline.
 
 Completed in the visited-link convergence phase: `browser-navigation` owns
 canonical, fragment-insensitive URL membership and reusable history;

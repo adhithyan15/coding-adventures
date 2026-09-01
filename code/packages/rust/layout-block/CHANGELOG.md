@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Resolve image leaves through shared intrinsic dimensions, aspect ratios, and
+  min/max constraints; float shrink-to-fit uses the same replaced width.
+
 - Integrate the reusable `layout-float` context for left/right placement,
   exclusion bands, clear-side advancement, margin footprints, shrink-to-fit
   widths, and float containment.

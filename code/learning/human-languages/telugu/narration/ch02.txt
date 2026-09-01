@@ -72,7 +72,7 @@ Assemble the two atoms — and note, as in Tamil and Kannada, no word for "is."
 
 The phrase, assembled.
 nā (my) + pēru (name) + your name.
-నా (nā) పేరు (pēru) … = "my name …" becomes "my name is…"
+నా పేరు … (nā pēru …) = "my name …" becomes "my name is…"
 Nā pēru Arun. becomes "My name is Arun."
 
 Grammar Lens: the zero copula.
@@ -161,7 +161,7 @@ Assemble the question — your + name + what — still no "is."
 
 The phrase, assembled.
 మీ (mī, "your") = the possessive of mīru ("you," respectful).
-మీ పేరు (pēru) ఏమిటి (ēmiṭi)? = literally "your name what?" = "what's your name?"
+మీ పేరు ఏమిటి? (mī pēru ēmiṭi?) = literally "your name what?" = "what's your name?"
 Three words, no verb — the zero copula holds for questions too.
 
 Grammar Lens: answer, and the familiar version.
@@ -176,7 +176,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does మీ పేరు (pēru) ఏమిటి (ēmiṭi)? literally say, and what's missing vs. English? ("Your name what?"; no "is" — zero copula.)
+What does మీ పేరు ఏమిటి? (mī pēru ēmiṭi?) literally say, and what's missing vs. English? ("Your name what?"; no "is" — zero copula.)
 
 
 Lesson 7 of 8.
@@ -201,7 +201,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is సంతోషం native or borrowed, and what does the contrast with Tamil show? (Sanskrit; Telugu borrows Sanskrit — here for "pleased" — where Tamil keeps native magiḻcci.)
+Is సంతోషం (santōṣam) native or borrowed, and what does the contrast with Tamil show? (Sanskrit; Telugu borrows Sanskrit — here for "pleased" — where Tamil keeps native magiḻcci.)
 
 
 Lesson 8 of 8.
@@ -210,7 +210,7 @@ Chapter 2 — the introduction, whole.
 The dialogue.
 [a table of 4 rows, read aloud]
 నా పేరు మీరా. (nā pēru Mira) means My name is Mira.
-మీ పేరు ఏమిటి? (mī pēru ēmiṭi) means What's your name?
+మీ పేరు ఏమిటి? (mī pēru ēmiṭi?) (mī pēru ēmiṭi) means What's your name?
 నా పేరు అరుణ్. (nā pēru Arun) means My name is Arun.
 సంతోషం. (santōṣam) means Pleased to meet you.
 Every atom traced:

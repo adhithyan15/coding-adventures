@@ -7,6 +7,7 @@ chapter: 14
 type: word
 headword: వసంత ఋతువు వేసవి వానాకాలం శీతాకాలం
 gloss: spring, summer, monsoon, winter — completing the Dravidian pattern of native heat/rain words plus Sanskrit spring
+romanization: "vasanta ṛtuvu vēsavi vānākālam śītākālam"
 concept_tag: TE-SEASONS
 prerequisites: [TE-C13-sharira-bhagalu]
 sounds: [telugu-vocalic-r, telugu-anusvara]

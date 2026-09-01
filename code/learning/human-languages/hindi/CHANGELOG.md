@@ -2,6 +2,22 @@
 
 ## [Unreleased]
 
+### Changed — declare both Hindi apology registers
+
+- Chapter 9 now declares **माफ़ कीजिए / क्षमा करें** instead of naming only
+  the everyday apology. The lesson already defines **क्षमा करें** as the formal,
+  Sanskritic cousin, contrasts its register with **माफ़ कीजिए**, practises the
+  complete phrase, and asks learners to recall it; its metadata now exposes both
+  assessed apologies.
+
+### Changed — declare the Hindi weekday building block
+
+- Chapter 10 now declares **वार** alongside **सोमवार** through **शुक्रवार**.
+  The lesson already defines **वार** as “day,” uses it as the productive second
+  half of every weekday, practises the `[deity] + वार` pattern, and asks learners
+  to recall both the form and its meaning; its metadata now exposes that assessed
+  standalone word.
+
 ### Changed — declare the Hindi gain noun
 
 - Chapter 35 now declares **लेना / लाभ** as its headword instead of naming only

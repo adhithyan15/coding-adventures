@@ -1,9 +1,10 @@
 {
   "language": "telugu",
   "chapter": 23,
-  "sourceHash": "fnv1a64:512981cf87b0ede8",
+  "sourceHash": "fnv1a64:47d93c510c91b52f",
   "lessonIds": [
-    "TE-C23-roju"
+    "TE-C23-roju",
+    "TE-S126-letter-nna"
   ],
   "tex": "telugu/book/chapters/ch23-day.tex"
 }

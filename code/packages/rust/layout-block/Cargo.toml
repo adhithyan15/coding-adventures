@@ -12,3 +12,5 @@ layout-flexbox = { path = "../layout-flexbox" }
 layout-grid = { path = "../layout-grid" }
 layout-table = { path = "../layout-table" }
 layout-positioned = { path = "../layout-positioned" }
+layout-replaced = { path = "../layout-replaced" }
+layout-generated = { path = "../layout-generated" }

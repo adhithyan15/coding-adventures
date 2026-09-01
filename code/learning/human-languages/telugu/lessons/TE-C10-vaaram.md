@@ -7,6 +7,7 @@ chapter: 10
 type: word
 headword: సోమవారం మంగళవారం బుధవారం గురువారం శుక్రవారం శనివారం ఆదివారం
 gloss: the seven weekdays — Sanskritic like Hindi, but Sunday means "the FIRST day," not "Sun's day"
+romanization: "Somavāram Maṅgaḷavāram Budhavāram Guruvāram Śukravāram Śanivāram Ādivāram"
 concept_tag: TE-DAYS-WEEK
 prerequisites: [TE-C09-kshaminchandi]
 sounds: [telugu-anusvara, telugu-conjunct-kra]
