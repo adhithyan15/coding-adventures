@@ -984,8 +984,9 @@ backend immediately) come before the enabler-dependent items.
   `abs` and `sign` calls over those exact values, plus exact integral built-in
   `sqrt` results over losslessly widened tracked integer arithmetic, including
   nested exact integral square roots, checked `+`, `-`, and `*` composition over
-  those integral forms, and pure path-independent conditionals with exact
-  integral square-root branches. Pure
+  those integral forms, pure built-in `abs`, `sign`, and `entier` calls over
+  exact integral square-root results, and pure path-independent conditionals
+  with exact integral square-root branches. Pure
   conditional exponent
   expressions whose tracked integer branches prove the same bounded value also
   retain multiplication while their selector still executes. Invalid
