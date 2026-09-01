@@ -1,0 +1,22 @@
+% ============================================================================
+% elector-allocation-method.query.adj — worked recall over the
+% elector-allocation-method library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how does Maine award
+% its electors?" (direct), "which states are the exception?" (reverse, and
+% multi-valued — it returns both), or "how exactly does the proportional
+% system work?" (abstain — the page names the system without explaining its
+% mechanism) — it states no fact of its own — it only `import`s the
+% grounded table and asks binding queries.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli elector-allocation-method.query.adj
+% ============================================================================
+
+import "elector-allocation-method.adj"
+
+? elector_allocation_method(maine, $M)                      % expect proportional (direct)
+? elector_allocation_method($J, proportional)               % expect two solutions: maine, nebraska (reverse -- "which states are the exception?")
+? elector_allocation_method(forty_eight_states_and_dc, $M)  % expect winner_take_all -- the rule the exception is an exception TO
+? elector_allocation_method(california, $M)                 % expect abstain -- the source describes the other 48 only as a GROUP; placing a specific state would be an inference the page does not license
+? elector_allocation_method($J, by_congressional_district)  % expect abstain -- the page names the proportional system without explaining its mechanism
