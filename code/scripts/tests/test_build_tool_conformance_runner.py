@@ -1584,6 +1584,26 @@ class CorpusTests(unittest.TestCase):
                 )
             )
 
+        for index, sensitive_root_component in enumerate(
+            (".env", "credentials", "local", "secrets", "signing", "token")
+        ):
+            sensitive_package_root = copy.deepcopy(canonical)
+            rust_entry = next(
+                entry for entry in sensitive_package_root["languages"]
+                if entry["language"] == "rust"
+            )
+            rust_entry["package_exact_inputs"][0]["package_root"] = (
+                f"code/packages/rust/{sensitive_root_component}"
+            )
+            rust_entry["package_exact_inputs"][0]["paths"] = ["README.md"]
+            mutations.append(
+                (
+                    f"sensitive-package-root-{index}",
+                    sensitive_package_root,
+                    "SOURCE_INPUT_SENSITIVE_PATH",
+                )
+            )
+
         package_global_collision = copy.deepcopy(canonical)
         rust_entry = next(
             entry for entry in package_global_collision["languages"]
@@ -1815,6 +1835,29 @@ class CorpusTests(unittest.TestCase):
             ],
             23,
         )
+        for allowed_root_component in (
+            "credential-custody",
+            "environment",
+            "localization",
+            "signature",
+            "tokenizer",
+        ):
+            with self.subTest(allowed_root_component=allowed_root_component):
+                allowed_root = copy.deepcopy(canonical)
+                rust_entry = next(
+                    entry for entry in allowed_root["languages"]
+                    if entry["language"] == "rust"
+                )
+                rust_entry["package_exact_inputs"][0]["package_root"] = (
+                    f"code/packages/rust/{allowed_root_component}"
+                )
+                rust_entry["package_exact_inputs"][0]["paths"] = ["README.md"]
+                self.assertEqual(
+                    runner._validate_source_input_registry(allowed_root, schema)[
+                        "language_count"
+                    ],
+                    23,
+                )
 
     def test_expected_results_are_checked_in_canonical_order(self) -> None:
         for case_path in sorted(CASES_ROOT.glob("*.json")):

@@ -659,7 +659,18 @@ def _repository_source_sensitive_path(path: str) -> bool:
         "secrets.toml",
         "signing.properties",
     }
-    blocked_components = {".aws", ".azure", ".gnupg", ".ssh", "secrets"}
+    blocked_components = {
+        ".aws",
+        ".azure",
+        ".env",
+        ".gnupg",
+        ".ssh",
+        "credentials",
+        "local",
+        "secrets",
+        "signing",
+        "token",
+    }
     blocked_suffixes = (".jks", ".key", ".keystore", ".p12", ".pem", ".pfx")
     sensitive_word = re.compile(
         r"(?:^|[._-])(credential|password|private[-_]?key|secret|signing|token)(?:[._-]|$)"
