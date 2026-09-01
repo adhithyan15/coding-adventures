@@ -7,6 +7,7 @@ chapter: 12
 type: word
 headword: അച്ഛൻ അമ്മ ചേട്ടൻ അനിയൻ ചേച്ചി അനിയത്തി
 gloss: father, mother, and four age-graded sibling words — Malayalam's own distinct set, still following the shared Dravidian age-first pattern
+romanization: "acchan amma cēṭṭan aniyan cēcci aniyatti"
 concept_tag: ML-FAMILY-BASIC
 prerequisites: [ML-C11-nirangal]
 sounds: [malayalam-chillu-n, malayalam-geminate-tta]

@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-S127-letter-ha",
+    "language": "malayalam",
+    "chapter": 34,
+    "sequence": 775,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:780e4d9869b8f09d",
+    "detachableSegments": [
+      "Script you'll notice: ഹ",
+      "Writing: ഹ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

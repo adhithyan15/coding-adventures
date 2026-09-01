@@ -7,6 +7,7 @@ chapter: 14
 type: word
 headword: വസന്തകാലം വേനൽക്കാലം മഴക്കാലം ശൈത്യകാലം
 gloss: spring, summer, monsoon, winter — matching Tamil's pattern of native heat/rain/cold words plus a Sanskrit "spring"
+romanization: "vasanthakālaṁ venalkkālaṁ mazhakkālaṁ śaithyakālaṁ"
 concept_tag: ML-SEASONS
 prerequisites: [ML-C13-shareera-bhaagangal]
 sounds: [malayalam-chillu-l, malayalam-anusvara]

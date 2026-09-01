@@ -5,6 +5,7 @@ chapter: 2
 type: phrase
 headword: എന്റെ പേര് … ആണ്
 gloss: my name is…
+romanization: "enṟe pēru … āṇŭ"
 concept_tag: INTRO-MY-NAME-IS
 prerequisites: [ML-C02-enre, ML-C02-peru, ML-C02-aanu]
 sounds: []

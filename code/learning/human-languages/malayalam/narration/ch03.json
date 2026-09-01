@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c73a9560fa68161c",
+  "sourceHash": "fnv1a64:56ff1ca7562bfcd4",
   "lessons": [
     {
       "id": "ML-C03-engane",
@@ -136,7 +136,7 @@
       "sequence": 170,
       "title": "സുഖമാണോ? (sukhamāṇō?) — \"how are you?\"",
       "headword": "സുഖമാണോ?",
-      "romanization": "",
+      "romanization": "sukhamāṇō?",
       "gloss": "how are you? (lit. \"are you well?\")",
       "script": "malayalam",
       "modality": "sight",
@@ -144,7 +144,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ddbb6f3c7508f1f1",
+      "sourceHash": "fnv1a64:8677149b568b4dca",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "സുഖമാണോ? literally means \"is [it] well?\" — where English says \"how are you?\", Malayalam more often says \"are you well?\" The word സുഖം (sukhaṁ, \"well-being, comfort, ease\") is a Sanskrit loan — sukha itself, borrowed whole (the su- \"good\" that is Greek eu-). Onto it, Malayalam adds its own native copula āṇŭ (\"is,\" from Chapter 2) and the question particle -ō — a whole yes/no question made by one small sound at the end. This mix — a Sanskrit noun, a Dravidian verb — is Malayalam in miniature."
+              "text": "സുഖമാണോ? (sukhamāṇō?) literally means \"is [it] well?\" — where English says \"how are you?\", Malayalam more often says \"are you well?\" The word സുഖം (sukhaṁ, \"well-being, comfort, ease\") is a Sanskrit loan — sukha itself, borrowed whole (the su- \"good\" that is Greek eu-). Onto it, Malayalam adds its own native copula āṇŭ (\"is,\" from Chapter 2) and the question particle -ō — a whole yes/no question made by one small sound at the end. This mix — a Sanskrit noun, a Dravidian verb — is Malayalam in miniature."
             }
           ]
         },
@@ -270,7 +270,7 @@
       "sequence": 180,
       "title": "ഞാൻ (ñān) — \"I,\" the Dravidian first person",
       "headword": "ഞാൻ",
-      "romanization": "",
+      "romanization": "ñān",
       "gloss": "I",
       "script": "malayalam",
       "modality": "sight",
@@ -278,7 +278,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0fdbbc2b7762997b",
+      "sourceHash": "fnv1a64:6279d792cc14d7b9",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -347,7 +347,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഞ (ña, a palatal nasal like “ny,” at the very start) + ാ (long ā) + ൻ (the word-final n, a chillu) becomes ഞാൻ."
+              "text": "ഞ (ña, a palatal nasal like “ny,” at the very start) + ാ (long ā) + ൻ (the word-final n, a chillu) becomes ഞാൻ (ñān)."
             }
           ]
         },

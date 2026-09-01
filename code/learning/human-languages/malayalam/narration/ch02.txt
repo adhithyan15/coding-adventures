@@ -93,7 +93,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is ആണ്, and how does Malayalam differ from Tamil here? (The copula "is," from āka; Malayalam has a word for "is" where Tamil uses none.)
+What is ആണ് (āṇŭ), and how does Malayalam differ from Tamil here? (The copula "is," from āka; Malayalam has a word for "is" where Tamil uses none.)
 
 
 Lesson 4 of 10.
@@ -105,7 +105,7 @@ Assemble the three atoms — including the copula āṇŭ that Tamil lacks.
 
 The phrase, assembled.
 enṟe (my) + pēru (name) + your name + āṇŭ (is).
-എന്റെ (enṟe) പേര് (pēr) … ആണ് = "my name … is" = "my name is…"
+എന്റെ പേര് … ആണ് (enṟe pēru … āṇŭ) = "my name … is" = "my name is…"
 Enṟe pēru Arun āṇŭ. becomes "My name is Arun."
 
 Grammar Lens: verb last.
@@ -181,7 +181,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Dravidian stem heads എന്ത്? (yā-/e-, same as Tamil eṉṉa, Telugu ēmiṭi.)
+What Dravidian stem heads എന്ത് (entŭ)? (yā-/e-, same as Tamil eṉṉa, Telugu ēmiṭi.)
 
 
 Lesson 7 of 10.
@@ -194,7 +194,7 @@ Assemble the question — your + name + what-is. And notice the copula hiding in
 The phrase, assembled.
 നിന്റെ (ninṟe, "your") = the possessive of nī ("you").
 എന്താണ് (entāṇŭ) = entŭ (what) + āṇŭ (is), fused into one.
-നിന്റെ പേര് (pēr) എന്താണ്? = literally "your name what is?"
+നിന്റെ പേര് എന്താണ്? (ninṟe pēru entāṇŭ?) = literally "your name what is?"
 Unlike the Tamil question (which had no verb), Malayalam carries its copula āṇŭ right inside the question-word entāṇŭ.
 
 Grammar Lens: answer, and the respectful version.
@@ -273,7 +273,7 @@ Before we start: this one needs your hands, so it is not a driving lesson. You c
 The dialogue.
 [a table of 4 rows, read aloud]
 എന്റെ പേര് മീരാ ആണ്. (enṟe pēru Mira āṇŭ) means My name is Mira.
-നിന്റെ പേര് എന്താണ്? (ninṟe pēru entāṇŭ) means What's your name?
+നിന്റെ പേര് എന്താണ്? (ninṟe pēru entāṇŭ?) (ninṟe pēru entāṇŭ) means What's your name?
 എന്റെ പേര് അരുൺ ആണ്. (enṟe pēru Arun āṇŭ) means My name is Arun.
 സന്തോഷം. (santōṣam) means Pleased to meet you.
 Every atom traced:

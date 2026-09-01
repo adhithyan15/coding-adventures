@@ -4,14 +4,14 @@
   "chapter": 22,
   "title": "Green and Yellow",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ec9b97d7e41fedb0",
+  "sourceHash": "fnv1a64:9e3cd4dacd1d5e35",
   "lessons": [
     {
       "id": "ML-C22-paccha-manja",
       "sequence": 520,
-      "title": "പച്ച, മഞ്ഞ — matching Tamil twice over, by two different routes",
+      "title": "പച്ച, മഞ്ഞ (pacca, mañña) — matching Tamil twice over, by two different routes",
       "headword": "പച്ച, മഞ്ഞ",
-      "romanization": "",
+      "romanization": "pacca, mañña",
       "gloss": "green and yellow — paccha matches Tamil's paccai almost exactly (the same pan-Dravidian pac- root already seen in Kannada and Telugu); manja is a completely separate native Dravidian root, a doublet of manjal (\"turmeric\"), matching Tamil's own mañcaḷ — a third, independent solution to this arc's recurring green/yellow puzzle",
       "script": "malayalam",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c30a3f461f13e7c7",
+      "sourceHash": "fnv1a64:e7dbdf28cac8d241",
       "notice": null,
       "blocks": [
         {

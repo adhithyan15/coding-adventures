@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6928ba9fa0a57b17",
+  "sourceHash": "fnv1a64:7d4b111dc2ad9916",
   "lessons": [
     {
       "id": "ML-C02-peru",
@@ -261,7 +261,7 @@
       "sequence": 90,
       "title": "ആണ് (āṇŭ) — \"is,\" where Malayalam breaks with its sisters",
       "headword": "ആണ്",
-      "romanization": "",
+      "romanization": "āṇŭ",
       "gloss": "is (the copula)",
       "script": "malayalam",
       "modality": "sight",
@@ -269,7 +269,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8a261dfc63184a1a",
+      "sourceHash": "fnv1a64:3bb46d24c479301f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -390,7 +390,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is ആണ്, and how does Malayalam differ from Tamil here? (The copula \"is,\" from āka; Malayalam has a word for \"is\" where Tamil uses none.)"
+              "text": "What is ആണ് (āṇŭ), and how does Malayalam differ from Tamil here? (The copula \"is,\" from āka; Malayalam has a word for \"is\" where Tamil uses none.)"
             }
           ]
         }
@@ -401,7 +401,7 @@
       "sequence": 100,
       "title": "എന്റെ പേര് … ആണ് (enṟe pēru … āṇŭ) — \"my name is…\"",
       "headword": "എന്റെ പേര് … ആണ്",
-      "romanization": "",
+      "romanization": "enṟe pēru … āṇŭ",
       "gloss": "my name is…",
       "script": "malayalam",
       "modality": "voice",
@@ -409,7 +409,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87918b1ad7eb55c2",
+      "sourceHash": "fnv1a64:18a3b4565c7e6b2c",
       "notice": null,
       "blocks": [
         {
@@ -440,7 +440,7 @@
             },
             {
               "kind": "speech",
-              "text": "എന്റെ (enṟe) പേര് (pēr) … ആണ് = \"my name … is\" = \"my name is…\""
+              "text": "എന്റെ പേര് … ആണ് (enṟe pēru … āṇŭ) = \"my name … is\" = \"my name is…\""
             },
             {
               "kind": "speech",
@@ -514,7 +514,7 @@
       "sequence": 110,
       "title": "നീ / നിങ്ങൾ (nī / niṅṅaḷ) — \"you,\" familiar and respectful",
       "headword": "നീ / നിങ്ങൾ",
-      "romanization": "",
+      "romanization": "nī / niṅṅaḷ",
       "gloss": "you (familiar / respectful)",
       "script": "malayalam",
       "modality": "sight",
@@ -522,7 +522,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6e10deb91f6108b2",
+      "sourceHash": "fnv1a64:a4e938a9c64e2303",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -641,7 +641,7 @@
       "sequence": 120,
       "title": "എന്ത് (entŭ) — \"what\"",
       "headword": "എന്ത്",
-      "romanization": "",
+      "romanization": "entŭ",
       "gloss": "what",
       "script": "malayalam",
       "modality": "sight",
@@ -649,7 +649,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:052d821c7d03fdce",
+      "sourceHash": "fnv1a64:31248effacd214a4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -755,7 +755,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Dravidian stem heads എന്ത്? (yā-/e-, same as Tamil eṉṉa, Telugu ēmiṭi.)"
+              "text": "What Dravidian stem heads എന്ത് (entŭ)? (yā-/e-, same as Tamil eṉṉa, Telugu ēmiṭi.)"
             }
           ]
         }
@@ -766,7 +766,7 @@
       "sequence": 130,
       "title": "നിന്റെ പേര് എന്താണ്? (ninṟe pēru entāṇŭ?) — \"what's your name?\"",
       "headword": "നിന്റെ പേര് എന്താണ്?",
-      "romanization": "",
+      "romanization": "ninṟe pēru entāṇŭ?",
       "gloss": "what's your name?",
       "script": "malayalam",
       "modality": "voice",
@@ -774,7 +774,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d13e365842c062e4",
+      "sourceHash": "fnv1a64:8717ca7edc9f6ada",
       "notice": null,
       "blocks": [
         {
@@ -809,7 +809,7 @@
             },
             {
               "kind": "speech",
-              "text": "നിന്റെ പേര് (pēr) എന്താണ്? = literally \"your name what is?\""
+              "text": "നിന്റെ പേര് എന്താണ്? (ninṟe pēru entāṇŭ?) = literally \"your name what is?\""
             },
             {
               "kind": "speech",
@@ -1133,7 +1133,7 @@
               "rowCount": 4,
               "utterances": [
                 "എന്റെ പേര് മീരാ ആണ്. (enṟe pēru Mira āṇŭ) means My name is Mira.",
-                "നിന്റെ പേര് എന്താണ്? (ninṟe pēru entāṇŭ) means What's your name?",
+                "നിന്റെ പേര് എന്താണ്? (ninṟe pēru entāṇŭ?) (ninṟe pēru entāṇŭ) means What's your name?",
                 "എന്റെ പേര് അരുൺ ആണ്. (enṟe pēru Arun āṇŭ) means My name is Arun.",
                 "സന്തോഷം. (santōṣam) means Pleased to meet you."
               ]
