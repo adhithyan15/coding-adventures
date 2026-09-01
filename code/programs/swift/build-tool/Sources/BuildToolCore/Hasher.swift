@@ -63,83 +63,28 @@ private enum SourceHashInputError: Error {
     case unavailable
     case unsafePath
     case unstable
+    case limitExceeded
 }
 
 public enum Hasher {
-    private static let sourceExtensions: [String: Set<String>] = [
-        "c": [".c", ".h", ".s", ".S"],
-        "cpp": [".cc", ".cpp", ".cxx", ".h", ".hh", ".hpp", ".hxx"],
-        "csharp": [".cs", ".csproj"],
-        "dart": [".dart", ".yaml"],
-        "python": [".py", ".toml", ".cfg"],
-        "ruby": [".rb", ".gemspec"],
-        "go": [".go"],
-        "typescript": [".ts", ".tsx", ".js", ".mjs", ".cjs", ".json"],
-        "rust": [".rs", ".toml"],
-        "elixir": [".ex", ".exs"],
-        "lua": [".lua", ".rockspec"],
-        "perl": [".pl", ".pm", ".t", ".xs"],
-        "swift": [".swift"],
-        "fsharp": [".fs", ".fsi", ".fsx", ".fsproj"],
-        "haskell": [".hs", ".cabal"],
-        "java": [".java"],
-        "kotlin": [".kt", ".kts"],
-        "mosaic": [".msl", ".mll", ".mil", ".rs", ".toml"],
-        "ocaml": [".ml", ".mli", ".opam"],
-        "starlark": [".star"],
-        "twig": [".tw"],
-        "wasm": [".rs", ".toml", ".wat"],
-        "dotnet": [".cs", ".fs", ".fsi", ".fsx", ".csproj", ".fsproj"],
-    ]
+    /// This is the production selector, not a test copy. The checked JSON is
+    /// embedded into generated Swift source, decoded without filesystem or
+    /// environment authority, and compared field-for-field in the test suite.
+    static let languageSourceInputRegistry = LanguageSourceInputRegistryProjection.value
+    static let languageSourceInputRegistryDigest =
+        "f49bfe8c7c9c0fb9b534ecc9ca4a614f3684abe32bdb0edac82d99bdc806fb70"
 
-    private static let specialFilenames: [String: Set<String>] = [
-        "c": ["CMakeLists.txt", "meson.build"],
-        "cpp": ["CMakeLists.txt", "meson.build"],
-        "csharp": ["global.json", "NuGet.Config", "nuget.config"],
-        "dart": ["pubspec.yaml", "pubspec.lock", "analysis_options.yaml"],
-        "python": ["pyproject.toml", "setup.py", "setup.cfg"],
-        "ruby": ["Gemfile", "Rakefile"],
-        "go": ["go.mod", "go.sum"],
-        "typescript": ["package.json", "package-lock.json", "tsconfig.json", "vitest.config.ts"],
-        "rust": ["Cargo.toml", "Cargo.lock"],
-        "elixir": ["mix.exs", "mix.lock"],
-        "lua": [],
-        "perl": ["Makefile.PL", "Build.PL", "cpanfile", "MANIFEST", "META.json", "META.yml"],
-        "swift": ["Package.swift"],
-        "fsharp": ["global.json", "NuGet.Config", "nuget.config"],
-        "haskell": ["cabal.project"],
-        "java": ["settings.gradle.kts", "build.gradle.kts", "gradle.properties"],
-        "kotlin": ["settings.gradle.kts", "build.gradle.kts", "gradle.properties"],
-        "mosaic": ["Cargo.toml", "Cargo.lock"],
-        "ocaml": [".ocamlformat", "dune", "dune-project"],
-        "starlark": [],
-        "twig": [],
-        "wasm": ["Cargo.toml", "Cargo.lock"],
-        "dotnet": ["global.json", "NuGet.Config", "nuget.config"],
-    ]
-
-    /// Variable-name package manifests remain inputs in strict declared-source
-    /// mode, but only at the package root. Nested project manifests describe
-    /// other package identities unless a Starlark `srcs` glob opts them in.
-    private static let declaredManifestExtensions: [String: Set<String>] = [
-        "ruby": [".gemspec"],
-        "lua": [".rockspec"],
-        "haskell": [".cabal"],
-        "ocaml": [".opam"],
-        "csharp": [".csproj"],
-        "fsharp": [".fsproj"],
-        "dotnet": [".csproj", ".fsproj"],
-    ]
-
-    /// Source hashing has a deliberately separate registry from discovery:
-    /// `specs` is not generated output, while these 26 exact components are.
-    private static let skippedSourceDirectories: Set<String> = [
-        ".git", ".hg", ".svn", ".venv", ".tox", ".mypy_cache",
-        ".pytest_cache", ".ruff_cache", ".stack-work", "__pycache__",
-        "node_modules", "vendor", "dist", "dist-newstyle", "_build",
-        "build", "target", ".claude", "Pods", ".gradle", ".dart_tool",
-        "gradle-build", "deps", ".build", ".cargo", "cover",
-    ]
+    private static let maximumCandidateCount = 100_000
+    private static let maximumSelectedInputCount = 50_000
+    private static let maximumFileBytes: UInt64 = 64 * 1024 * 1024
+    private static let maximumPackageBytes: UInt64 = 1024 * 1024 * 1024
+    private static let windowsReservedBasenames: Set<String> = Set(
+        ["CON", "PRN", "AUX", "NUL", "CONIN$", "CONOUT$", "CLOCK$"] +
+            ["COM", "LPT"].flatMap { prefix in
+                (1 ... 9).map { "\(prefix)\($0)" } +
+                    ["¹", "²", "³"].map { "\(prefix)\($0)" }
+            }
+    )
 
     public static func hashPackage(
         _ package: BuildPackage,
@@ -167,6 +112,7 @@ public enum Hasher {
             }
             var digest = SHA256Hasher()
             var fileStates: [(String, SecureObjectState)] = []
+            var packageBytes: UInt64 = 0
             for file in files {
                 let relative = try portableRelativePath(file, root: package.path)
                 let repositoryPath = packageRoot + "/" + relative
@@ -175,6 +121,13 @@ public enum Hasher {
                     file,
                     repositoryRoot: repositoryRoot
                 )
+                let (nextPackageBytes, overflow) = packageBytes.addingReportingOverflow(
+                    UInt64(snapshot.data.count)
+                )
+                guard !overflow, nextPackageBytes <= maximumPackageBytes else {
+                    throw SourceHashInputError.limitExceeded
+                }
+                packageBytes = nextPackageBytes
                 appendFrame(Data(repositoryPath.utf8), to: &digest)
                 appendFrame(snapshot.data, to: &digest)
                 fileStates.append((file, snapshot.state))
@@ -224,6 +177,13 @@ public enum Hasher {
         try collectSourceInputs(package, repositoryRoot: nil).files
     }
 
+    static func collectSourceFiles(
+        _ package: BuildPackage,
+        repositoryRoot: String
+    ) throws -> [String] {
+        try collectSourceInputs(package, repositoryRoot: repositoryRoot).files
+    }
+
     private static func collectSourceInputs(
         _ package: BuildPackage,
         repositoryRoot: String?
@@ -235,10 +195,25 @@ public enum Hasher {
         let fm = FileManager.default
         var files: [String] = []
         var directoryStates: [(String, SecureObjectState)] = []
+        var candidateCount = 0
+        var portableIdentities: [String: String] = [:]
 
-        let extensions = sourceExtensions[package.language] ?? []
-        let specials = specialFilenames[package.language] ?? []
-        let manifestExtensions = declaredManifestExtensions[package.language] ?? []
+        guard let languageInputs = languageSourceInputRegistry.inputs(
+            for: package.language
+        ) else {
+            throw SourceHashInputError.unsafePath
+        }
+        let universal = languageSourceInputRegistry.universalInputs
+        let generatedDirectories = Set(universal.generatedDirectoryComponents)
+        let repositoryPackageRoot = try repositoryRoot.map {
+            try repositoryPackagePath(package.path, repositoryRoot: $0)
+        }
+        let packageExactPaths = Set(
+            languageInputs.packageExactInputs
+                .filter { $0.packageRoot == repositoryPackageRoot }
+                .flatMap(\.paths)
+        )
+        let declaredMode = package.isStarlark && !package.declaredSrcs.isEmpty
 
         guard try entryKind(root) == .directory else {
             throw SourceHashInputError.unavailable
@@ -251,15 +226,25 @@ public enum Hasher {
             let entries = try fm.contentsOfDirectory(atPath: directory)
 
             for entry in entries.sorted(by: utf8LessThan) {
+                candidateCount += 1
+                guard candidateCount <= maximumCandidateCount else {
+                    throw SourceHashInputError.limitExceeded
+                }
                 let relativePath = relativeDirectory.isEmpty
                     ? entry
                     : "\(relativeDirectory)/\(entry)"
                 let fullPath = (directory as NSString).appendingPathComponent(entry)
+                let normalized = try portableCandidatePath(relativePath)
+                let identity = TrackedArtifactUnicode17.casefold(normalized)
+                if let existing = portableIdentities[identity], existing != normalized {
+                    throw SourceHashInputError.unsafePath
+                }
+                portableIdentities[identity] = normalized
                 switch try entryKind(fullPath) {
                 case .linked:
                     continue
                 case .directory:
-                    if !skippedSourceDirectories.contains(entry) {
+                    if !generatedDirectories.contains(entry) {
                         try visit(directory: fullPath, relativeDirectory: relativePath)
                     }
                     continue
@@ -269,35 +254,47 @@ public enum Hasher {
                     break
                 }
 
-                let normalized = try portableCandidatePath(relativePath)
                 let filename = (normalized as NSString).lastPathComponent
-                if isBuildFile(filename) {
-                    files.append(fullPath)
-                    continue
+                let isRoot = !normalized.contains("/")
+                var included = universal.buildFilenames.contains(filename)
+                if isRoot && universal.rootExactBasenames.contains(filename) {
+                    included = true
+                }
+                if isRoot && languageInputs.rootExactBasenames.contains(filename) {
+                    included = true
+                }
+                if isRoot && languageInputs.rootVariableSuffixes.contains(
+                    where: { filename.hasSuffix($0) }
+                ) {
+                    included = true
+                }
+                if languageInputs.rootExactRelativePaths.contains(normalized)
+                    || packageExactPaths.contains(normalized) {
+                    included = true
                 }
 
-                let fileExtension = (filename as NSString).pathExtension.isEmpty
-                    ? ""
-                    : ".\((filename as NSString).pathExtension)"
-                if specials.contains(filename)
-                    || (relativeDirectory.isEmpty
-                        && manifestExtensions.contains(fileExtension)) {
-                    files.append(fullPath)
-                    continue
-                }
-
-                if package.isStarlark && !package.declaredSrcs.isEmpty {
-                    if package.declaredSrcs.contains(where: { GlobMatch.matchPath($0, normalized) }) {
-                        files.append(fullPath)
+                if !declaredMode {
+                    if languageInputs.recursiveExactBasenames.contains(filename)
+                        || languageInputs.recursiveSuffixes.contains(
+                            where: { filename.hasSuffix($0) }
+                        )
+                        || languageInputs.scopedInputs.contains(
+                            where: { $0.matches(path: normalized, basename: filename) }
+                        ) {
+                        included = true
                     }
-                    continue
+                } else if !included && package.declaredSrcs.contains(
+                    where: { GlobMatch.matchPath($0, normalized) }
+                ) {
+                    included = true
                 }
 
-                if extensions.contains(fileExtension) {
+                if included {
+                    guard files.count < maximumSelectedInputCount else {
+                        throw SourceHashInputError.limitExceeded
+                    }
                     files.append(fullPath)
-                    continue
                 }
-
             }
 
             if let repositoryRoot, let before {
@@ -319,10 +316,6 @@ public enum Hasher {
             return utf8LessThan(left, right)
         }
         return (sortedFiles, directoryStates)
-    }
-
-    private static func isBuildFile(_ filename: String) -> Bool {
-        ["BUILD", "BUILD_mac", "BUILD_linux", "BUILD_windows", "BUILD_mac_and_linux"].contains(filename)
     }
 
     private enum EntryKind: Equatable {
@@ -413,15 +406,66 @@ public enum Hasher {
 
     private static func validatePortablePath(_ path: String) throws {
         guard !path.isEmpty,
+              path.unicodeScalars.count <= 512,
               !path.hasPrefix("/"),
               !path.contains("\\"),
-              !path.unicodeScalars.contains(where: { $0.value == 0 }) else {
+              unicodeScalarEqual(TrackedArtifactUnicode17.nfc(path), path),
+              !path.unicodeScalars.contains(where: unsafePortablePathScalar) else {
             throw SourceHashInputError.unsafePath
         }
-        for component in path.split(separator: "/", omittingEmptySubsequences: false)
-            where component.isEmpty || component == "." || component == ".." {
+        let scalars = Array(path.unicodeScalars)
+        if scalars.count >= 2,
+           asciiAlpha(scalars[0].value),
+           scalars[1].value == 0x3A {
             throw SourceHashInputError.unsafePath
         }
+        for componentSlice in path.split(
+            separator: "/",
+            omittingEmptySubsequences: false
+        ) {
+            let component = String(componentSlice)
+            guard !component.isEmpty,
+                  component != ".",
+                  component != "..",
+                  component.last != ".",
+                  component.last != " " else {
+                throw SourceHashInputError.unsafePath
+            }
+            let basename = String(component.split(
+                separator: ".",
+                maxSplits: 1,
+                omittingEmptySubsequences: false
+            )[0])
+            if windowsReservedBasenames.contains(
+                TrackedArtifactUnicode17.fullUppercase(basename)
+            ) {
+                throw SourceHashInputError.unsafePath
+            }
+        }
+    }
+
+    private static func asciiAlpha(_ scalar: UInt32) -> Bool {
+        (0x41 ... 0x5A).contains(scalar) || (0x61 ... 0x7A).contains(scalar)
+    }
+
+    private static func unsafePortablePathScalar(_ scalar: Unicode.Scalar) -> Bool {
+        if scalar.value < 0x20
+            || [0x3C, 0x3E, 0x3A, 0x22, 0x7C, 0x3F, 0x2A].contains(scalar.value) {
+            return true
+        }
+        switch scalar.properties.generalCategory {
+        case .control, .format, .lineSeparator, .paragraphSeparator:
+            return true
+        default:
+            return false
+        }
+    }
+
+    private static func unicodeScalarEqual(_ left: String, _ right: String) -> Bool {
+        left.unicodeScalars.elementsEqual(
+            right.unicodeScalars,
+            by: { $0.value == $1.value }
+        )
     }
 
     /// Identity and mutation fields read from an already-open object. The
@@ -493,7 +537,11 @@ public enum Hasher {
             repositoryRoot: repositoryRoot,
             expectDirectory: false
         ) { handle, before in
+            guard before.size <= maximumFileBytes else {
+                throw SourceHashInputError.limitExceeded
+            }
             var data = Data()
+            data.reserveCapacity(Int(before.size))
             var buffer = [UInt8](repeating: 0, count: 64 * 1024)
             while true {
                 var count = DWORD(0)
@@ -519,7 +567,11 @@ public enum Hasher {
             repositoryRoot: repositoryRoot,
             expectDirectory: false
         ) { descriptor, before in
+            guard before.size <= maximumFileBytes else {
+                throw SourceHashInputError.limitExceeded
+            }
             var data = Data()
+            data.reserveCapacity(Int(before.size))
             var buffer = [UInt8](repeating: 0, count: 64 * 1024)
             while true {
                 let count = buffer.withUnsafeMutableBytes { bytes in

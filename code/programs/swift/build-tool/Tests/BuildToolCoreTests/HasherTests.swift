@@ -206,10 +206,29 @@ struct HasherTests {
                 with: JSONEncoder().encode(Hasher.languageSourceInputRegistry)
             ) as? NSDictionary
         )
+        let checkedText = try #require(String(data: checkedData, encoding: .utf8))
+        let missingSelectorData = Data(
+            checkedText.replacingOccurrences(
+                of: "required_capabilities.json",
+                with: "required_capabilities.missing"
+            ).utf8
+        )
+        let missingSelector = try #require(
+            JSONSerialization.jsonObject(with: missingSelectorData) as? NSDictionary
+        )
+        var extraFields = try #require(checkedObject as? [String: Any])
+        extraFields["undeclared_selector_role"] = [".extra"]
+        let extraSelector = extraFields as NSDictionary
 
         #expect(checkedObject.isEqual(productionObject))
+        #expect(!missingSelector.isEqual(productionObject))
+        #expect(!extraSelector.isEqual(productionObject))
         #expect(checked.languages.count == 23)
         #expect(Set(checked.languages.map(\.language)).count == 23)
+        #expect(
+            Hasher.languageSourceInputRegistryDigest
+                == "f49bfe8c7c9c0fb9b534ecc9ca4a614f3684abe32bdb0edac82d99bdc806fb70"
+        )
     }
 
     @Test
@@ -298,6 +317,38 @@ struct HasherTests {
         #expect(throws: (any Error).self) {
             _ = try Hasher.collectSourceFiles(package)
         }
+    }
+
+    @Test
+    func packageExactInputsUseRepositoryPathInsteadOfPackageName() throws {
+        let root = try makeTempDirectory(label: "hasher_package_exact_scope")
+        defer { try? FileManager.default.removeItem(atPath: root) }
+        let packageRoot = (root as NSString).appendingPathComponent(
+            "code/packages/rust/engram-wasm-copy"
+        )
+        for path in [
+            "BUILD",
+            "js/engram-mosaic-host-wasm.mjs",
+            "js/smoke.mjs",
+            "pkg/engram_engine.wasm",
+        ] {
+            try writeFile(
+                (packageRoot as NSString).appendingPathComponent(path),
+                "input\n"
+            )
+        }
+        let package = BuildPackage(
+            name: "rust/engram-wasm",
+            path: packageRoot,
+            language: "rust"
+        )
+
+        #expect(
+            relativePaths(
+                try Hasher.collectSourceFiles(package, repositoryRoot: root),
+                root: packageRoot
+            ) == ["BUILD"]
+        )
     }
 
     @Test
