@@ -404,9 +404,18 @@ fn build_package_json(npm_name: &str, options: &EmitOptions) -> String {
     )
 }
 
+/// The Vite config for an emitted project.
+///
+/// `base: "./"` is the load-bearing line. Vite defaults to `"/"`, which emits
+/// `<script src="/assets/index-HASH.js">` — resolvable only when the app is
+/// served from the root of a domain. Every other deployment shape (a GitHub
+/// Pages project site, a staging subdirectory, a bundle someone unzipped and
+/// served from one level up) gets `index.html` 200 and its script 404, so the
+/// page renders blank and looks like a working deploy that simply has no
+/// content. An emitted starter project should be relocatable by default.
 fn build_vite_config() -> String {
     format!(
-        "{BANNER_TS}import {{ defineConfig }} from \"vite\";\nimport react from \"@vitejs/plugin-react-swc\";\n\nexport default defineConfig({{\n  plugins: [react()],\n}});\n"
+        "{BANNER_TS}import {{ defineConfig }} from \"vite\";\nimport react from \"@vitejs/plugin-react-swc\";\n\nexport default defineConfig({{\n  base: \"./\",\n  plugins: [react()],\n}});\n"
     )
 }
 

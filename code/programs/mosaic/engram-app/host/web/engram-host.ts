@@ -27,7 +27,15 @@ type HostedWindow = {
   mosaicHost?: EngramMosaicHost;
 };
 
-const WASM_URL = "/engram_engine.wasm";
+// Relative, not root-absolute. `"/engram_engine.wasm"` only resolves when the
+// app is served from the root of a domain; unzip a release bundle into any
+// subdirectory — a GitHub Pages project site, a staging path, a plain
+// `python -m http.server` one level up — and the fetch 404s while `index.html`
+// still returns 200. The page renders blank, which reads as a working deploy.
+//
+// The sibling `engram-host.mjs` always used the relative form; this file had
+// drifted, and this is the copy the React/Vite bundle ships.
+const WASM_URL = "./engram_engine.wasm";
 const DECK_ID_STORAGE_KEY = "engram.deckId";
 const SNAPSHOT_STORAGE_KEY = "engram.snapshot.v1";
 const HOST_INTENT_EVENT = "engram-host-intent";
