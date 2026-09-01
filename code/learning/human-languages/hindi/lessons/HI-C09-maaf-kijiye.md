@@ -8,7 +8,7 @@ spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 520
 chapter: 9
 type: phrase
-headword: माफ़ कीजिए
+headword: माफ़ कीजिए / क्षमा करें
 gloss: please forgive me / sorry (māf kījiye — "please do forgiveness")
 concept_tag: COURTESY-SORRY
 prerequisites: [HI-C08-kripaya]

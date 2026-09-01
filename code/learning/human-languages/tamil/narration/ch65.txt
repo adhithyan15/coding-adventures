@@ -13,7 +13,6 @@ You'll want to know: குடி.
 குடி (kuḍi) — "drink".
 You already have சாப்பிடு (sāppiḍu) for what you chew. குடி (kuḍi) is what you do to a liquid, and Tamil keeps the two apart the way English does: rice is சாப்பிடு, தண்ணீர் is குடி (kuḍi).
 Say what is being drunk, and say it in front of the verb: தண்ணீர் குடி (taṇṇīr kuḍi), தேநீர் குடி (tēnīr kuḍi), பால் குடி (pāl kuḍi). Naming the liquid is not decoration. On its own, without anything in front of it, குடி is also the everyday noun for the drinking habit — a man described as being given to குடி is being described as a drinker. So a speaker who wants the plain, ordinary sense puts the drink in the sentence, and there is nothing left to misread.
-<!-- Safety, per HL24 section 6: every prompt in this lesson names the liquid, and none derives a person-noun from this verb. The objectless form and that person-noun both carry the drinking-habit reading rather than the sense taught here, so neither is written out anywhere in this file. The omission is deliberate; a later editor completing the pattern would undo it. Narration speaks these comments aloud, which is the second reason the hazardous forms are described rather than quoted. -->.
 Across the family: Kannada uses ಕುಡಿ (kuḍi) and Malayalam കുടിക്കുക (kuṭikkuka) — the same word, worn a little differently. Telugu reached for something else entirely and drinks with త్రాగు (trāgu).
 
 What you've built.
@@ -177,7 +176,6 @@ You'll want to know: மூடு.
 The verb that undoes திற (tiṟa). A கதவு you have opened is a கதவு you can மூடு (mūḍu), and the two travel together the way naḍa and niṟuttu do.
 The long ூ at its front is the same sign you read in மூன்று (mūṉṟu, "three"). Two words, one sign, no relation between their meanings — worth noticing so the shape stops being a surprise.
 Across the family, this one did not travel. Kannada shuts a door with ಮುಚ್ಚು (muccu), Telugu with మూయు (mūyu), and Malayalam with അടയ്ക്കുക (aṭaykkuka). Four sisters, three different words — after two verbs the family held in common, a reminder that the sharing is real but never guaranteed.
-<!-- Safety, per HL24 section 6: this lesson builds no person-noun from this verb. One exists that looks like it would be that form, and it is not -- it is an unrelated Sanskrit borrowing, and it is an insult. It is described rather than spelled out here because narration speaks these comments aloud, so quoting it would put it in the learner's ear by the same route the drill was kept from putting it in their mouth. The omission is deliberate. -->.
 
 What you've built.
 Five everyday doings, in pairs: sāppiḍu with kuḍi, naḍa with niṟuttu, tiṟa with mūḍu. Each one arrived beside the act that undoes it, which is the cheapest way there is to hold two words instead of one.

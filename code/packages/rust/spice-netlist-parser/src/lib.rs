@@ -2470,6 +2470,18 @@ fn parse_element(
                     "BJT IKR must be finite and non-negative",
                 ));
             }
+            let nominal_temperature_kelvin = model
+                .params
+                .get("TNOM")
+                .or_else(|| model.params.get("T_NOM"))
+                .copied();
+            if nominal_temperature_kelvin.is_some_and(|temperature| {
+                !temperature.is_finite() || temperature <= 0.0
+            }) {
+                return Err(NetlistParseError::new(
+                    "BJT TNOM must be finite and positive",
+                ));
+            }
             let mut bjt = Bjt::with_model(
                 name,
                 &fields[1],
@@ -2498,6 +2510,8 @@ fn parse_element(
             bjt.reverse_early_voltage = reverse_early_voltage;
             bjt.forward_beta_rolloff_current = forward_beta_rolloff_current;
             bjt.reverse_beta_rolloff_current = reverse_beta_rolloff_current;
+            bjt.nominal_temperature_kelvin = nominal_temperature_kelvin
+                .map(|temperature_celsius| temperature_celsius + 273.15);
             Ok(Element::Bjt(bjt))
         }
         'J' => {
