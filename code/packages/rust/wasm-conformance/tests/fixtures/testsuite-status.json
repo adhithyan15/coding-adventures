@@ -15240,10 +15240,10 @@
         "not_yet_supported": 0
       },
       "module": {
-        "pass": 20,
+        "pass": 21,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 1
+        "not_yet_supported": 0
       },
       "register": {
         "pass": 6,
@@ -15358,16 +15358,16 @@
         "not_yet_supported": 0
       },
       "assert_unlinkable": {
-        "pass": 5,
-        "fail": 3,
+        "pass": 8,
+        "fail": 0,
         "trap": 0,
         "not_yet_supported": 0
       },
       "module": {
-        "pass": 36,
+        "pass": 37,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 10
+        "not_yet_supported": 9
       },
       "register": {
         "pass": 9,
@@ -15979,16 +15979,16 @@
       "not_yet_supported": 1998
     },
     "assert_unlinkable": {
-      "pass": 251,
-      "fail": 3,
+      "pass": 254,
+      "fail": 0,
       "trap": 0,
       "not_yet_supported": 0
     },
     "module": {
-      "pass": 1979,
+      "pass": 1981,
       "fail": 2,
       "trap": 0,
-      "not_yet_supported": 272
+      "not_yet_supported": 270
     },
     "register": {
       "pass": 73,

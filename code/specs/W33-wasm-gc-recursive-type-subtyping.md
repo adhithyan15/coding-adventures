@@ -786,3 +786,58 @@ findings don't change either gap's own recommended scope, only confirm
   data-/elem-segment integration (including the "constant expression
   required" rejection `array.wast`'s own `assert_invalid` cases probe
   for the first two), a genuinely separate, bounded follow-on slice.
+
+## Addendum (2026-09-01): item (3b), cross-module/same-module canonical type-group equivalence, is now CLOSED
+
+This spec's own "What's confirmed still open" section above (fourth
+slice) named "(3b), cross-module/same-module canonical type-group
+equivalence" as the one remaining real gap this document ever opened.
+It shipped as its own dedicated four-slice epic, `code/specs/
+W34-wasm-gc-canonical-type-equivalence.md` — closing the loop this
+document's own addenda tracked across all four of THEIR revisions:
+
+1. **Slice 1**: the `CanonicalGroup`/`CanonicalHeapRef` representation
+   and canonicalization for self-referencing SINGLETON `rec` groups.
+2. **Slice 2**: real multi-member De Bruijn numbering for actual `rec`
+   groups (plus a proactively-found-and-fixed stack-overflow-via-`Drop`
+   DoS in the singleton-only representation from slice 1, and a
+   branching-cost DoS in the new multi-member numbering).
+3. **Slice 3**: wired canonical equivalence into every WITHIN-MODULE
+   decision point this document's own addenda had traced needing it —
+   `is_assignable`'s reflexive base case (plus, found along the way, its
+   entirely-missing `StructRef`/`ArrayRef` arms), `check_type_subtyping`'s
+   struct/array structural-variance check (plus a design correction
+   hoisting acyclicity-checking ahead of canonicalization), and
+   `wasm-execution`'s runtime dispatch (`call_indirect_type_matches`/
+   `ref_matches_concrete_type`) — closing `type-rec.wast`'s "Static/
+   Dynamic matching" sections and `type-equivalence.wast`'s "Semantic
+   types (run time)" section, exactly the same-module cases this
+   document's own fourth-slice addendum (above) found (3b) ALSO needed,
+   contradicting its own third-slice addendum's narrower "(3b) is only
+   for cross-module linking" framing. A nested security review found a
+   real HIGH-severity DoS in this slice too (a per-instruction full
+   recursive comparison reachable per stack-pop, fixed via interning +
+   `Rc::ptr_eq`).
+4. **Slice 4**: wired canonical equivalence into CROSS-MODULE linking —
+   `wasm-runtime`'s import-compatibility check, replacing (not merely
+   supplementing) its conservative three-part guard whenever both sides
+   of an import report a real canonical identity. Closed the exact
+   `M10`/`M11` `assert_unlinkable` pair this document's OWN first-slice
+   addendum named all the way back at the top of this file, plus a
+   third case (`M5`) and `type-equivalence.wast`'s full "Semantic types
+   (link time)" section. A dedicated security review covered the new
+   trust boundary this final slice opens — two independently-attacker-
+   controlled modules' type data compared against each other for the
+   first time in this epic.
+
+Every corpus case this document's four addenda ever traced to (3b) —
+`type-equivalence.wast`'s 6 original fails, `type-rec.wast`'s "Static"/
+"Dynamic matching" sections, `type-subtyping.wast`'s "Subsumption"/
+"Linking" sections including the `M10`/`M11` pair — is now a real,
+individually-verified `Pass`. The two OTHER gaps this document's own
+"What's confirmed still open" section named alongside (3b) — no
+instruction-level type checker for struct/array's own real field/element
+result types, and `array.new_data`/`array.new_elem`/`array.copy`/
+`array.fill`/`array.init_data`/`array.init_elem` — remain open, entirely
+unrelated to canonical equivalence, exactly as this document's own fourth
+slice already scoped them; W34 never claimed either.

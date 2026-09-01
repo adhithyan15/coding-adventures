@@ -56,7 +56,7 @@ use std::rc::Rc;
 use wasm_execution::{HostFunction, HostInterface, LinearMemory, Table, TrapError, V128Bytes, WasmValue};
 use wasm_module_parser::WasmModuleParser;
 use wasm_runtime::{WasmInstance, WasmRuntime};
-use wasm_types::{ExternalKind, FuncType, GlobalType, WasmModule};
+use wasm_types::{CanonicalGroup, ExternalKind, FuncType, GlobalType, WasmModule};
 use wasm_wast_parser::script::{Action, ConstValue, Directive, Expected, F32LaneExpected, F64LaneExpected, ModuleSource};
 use wasm_wast_parser::{parse_script, WastParseError};
 
@@ -139,14 +139,38 @@ impl HostInterface for RegistryHost {
     fn resolve_function(&self, module_name: &str, name: &str) -> Option<Box<dyn HostFunction>> {
         let (instance_rc, index) = self.find_export(module_name, name, ExternalKind::Function)?;
         let func_type = instance_rc.borrow().func_types.get(index as usize)?.clone();
-        let (group_shape, is_final) = {
+        let (group_shape, is_final, canonical_type, type_idx) = {
             let instance = instance_rc.borrow();
             match combined_function_type_idx(&instance, index) {
-                Some(t) => (instance.module.type_group_shape(t), instance.module.type_subtyping_at(t).is_final),
-                None => ((1, 0), true),
+                Some(t) => (
+                    instance.module.type_group_shape(t),
+                    instance.module.type_subtyping_at(t).is_final,
+                    // W34 fourth slice: the EXPORTING module's own already-
+                    // computed canonical form for this function's type-
+                    // section index, cloned (cheap, `Rc`-backed) at
+                    // resolution time -- see `HostFunction::canonical_type`'s
+                    // own doc comment. `instance.canonical_types` (NOT
+                    // `instance.module`) is the same "cloned once at
+                    // `instantiate()` time from `ValidatedModule::
+                    // canonical_types()`" field `wasm-runtime`'s own
+                    // `WasmExecutionEngine` wiring already uses (W34 third
+                    // slice) -- reusing it here means a `CrossModuleFunction`
+                    // never needs to re-derive canonicalization itself.
+                    instance.canonical_types.get(t as usize).cloned().flatten(),
+                    // W34 fourth slice: this function's own flat type-
+                    // section index, kept (not just consumed above) so
+                    // `HostFunction::canonically_matches` can climb this
+                    // function's own module-LOCAL nominal `sub` chain
+                    // lazily at match time, re-borrowing `instance` --
+                    // see that method's own doc comment for why a declared
+                    // supertype relationship can only ever be walked
+                    // within the module that declared it.
+                    Some(t),
+                ),
+                None => ((1, 0), true, None, None),
             }
         };
-        Some(Box::new(CrossModuleFunction { instance: instance_rc, export_name: name.to_string(), func_type, group_shape, is_final }))
+        Some(Box::new(CrossModuleFunction { instance: instance_rc, export_name: name.to_string(), func_type, group_shape, is_final, canonical_type, type_idx }))
     }
 
     fn resolve_global(&self, module_name: &str, name: &str) -> Option<(GlobalType, WasmValue)> {
@@ -310,6 +334,23 @@ struct CrossModuleFunction {
     /// alongside `group_shape` — see `HostFunction::is_final`'s own doc
     /// comment.
     is_final: bool,
+    /// W34 fourth slice: this function's own real canonical type-group
+    /// identity, computed alongside `group_shape`/`is_final` above (from
+    /// the EXPORTING instance's own `canonical_types` table) — see
+    /// `HostFunction::canonical_type`'s own doc comment. `None` whenever
+    /// the exporting module's own type-section index wasn't canonicalized
+    /// (out of range, or the type it belongs to has an internally-
+    /// inconsistent `rec`-group shape — see `wasm_types::canonicalize_types`'s
+    /// own doc comment), in which case `wasm-runtime`'s import check falls
+    /// back to the pre-existing three-part conservative guard, unchanged.
+    canonical_type: Option<(Rc<CanonicalGroup>, u32)>,
+    /// W34 fourth slice: this function's own flat type-section index in
+    /// the EXPORTING instance's own module, kept so `canonically_matches`
+    /// can climb that module's own `type_subtyping` chain lazily (via a
+    /// fresh borrow of `instance`) rather than needing the whole chain
+    /// eagerly precomputed here. `None` in exactly the same case
+    /// `canonical_type` is `None` (an unresolvable combined type index).
+    type_idx: Option<u32>,
 }
 
 impl HostFunction for CrossModuleFunction {
@@ -328,6 +369,18 @@ impl HostFunction for CrossModuleFunction {
 
     fn is_final(&self) -> bool {
         self.is_final
+    }
+
+    fn canonical_type(&self) -> Option<(Rc<CanonicalGroup>, u32)> {
+        self.canonical_type.clone()
+    }
+
+    fn canonically_matches(&self, target: &(Rc<CanonicalGroup>, u32), budget: &mut wasm_types::CrossModuleComparisonBudget) -> bool {
+        let Some(type_idx) = self.type_idx else {
+            return false;
+        };
+        let instance = self.instance.borrow();
+        wasm_types::canonical_chain_reaches(&instance.module.type_subtyping, &instance.canonical_types, type_idx, Some(target), budget)
     }
 }
 
@@ -1984,5 +2037,96 @@ mod tests {
             "#,
         );
         assert!(matches!(results[1].1, DirectiveOutcome::NotYetSupported(_)));
+    }
+
+    // ── W34 fourth slice: cross-module canonical type-group equivalence
+    // (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`) ──────────────
+
+    /// Two independently-declared, structurally-identical `rec` groups, at
+    /// GENUINELY different flat type-section indices in each module (the
+    /// importer has two unrelated padding types declared FIRST, so its own
+    /// `rec` group starts at index 2, not 0 like the exporter's) -- no
+    /// shared numbering between the two modules at all, exactly the
+    /// cross-module comparability property the whole canonicalization
+    /// algorithm exists for (MVP.md's own "no shared context... upfront").
+    /// Before this slice, `wasm-runtime`'s import check only compared raw
+    /// `FuncType` shape plus `(rec_group_size, rec_group_position)` plus
+    /// finality -- none of which is even DECLARED equal here in a way that
+    /// proves real canonical equivalence rather than coincidental shape
+    /// matching, so this is a genuine, not vacuous, positive proof point
+    /// (mirrors `type-subtyping.wast`'s own `M3`/`M4` "Linking" cases, and
+    /// `type-equivalence.wast`'s "Semantic types (link time)" section).
+    #[test]
+    fn cross_module_isomorphic_rec_groups_with_no_shared_numbering_link_successfully() {
+        // The MVP.md/`type-equivalence.wast` "Isomorphic recursive types"
+        // headline shape (two mutually-referencing members, no `sub`
+        // relation declared at all): `$a1` and `$a2` (exporter) tie to the
+        // identical shape as `$b1`/`$b2` (importer) once De-Bruijn-numbered
+        // relative to their OWN group, regardless of the group's absolute
+        // starting index in each module.
+        let results = outcomes(
+            r#"
+            (module
+              (rec
+                (type $a1 (func (param i32 (ref $a2))))
+                (type $a2 (func (param i32 (ref $a1))))
+              )
+              (func (export "g") (type $a2))
+            )
+            (register "IsoExport")
+            (module
+              (type $pad0 (func (param i32)))
+              (type $pad1 (func (param i64)))
+              (rec
+                (type $b1 (func (param i32 (ref $b2))))
+                (type $b2 (func (param i32 (ref $b1))))
+              )
+              (func (import "IsoExport" "g") (type $b2))
+            )
+            "#,
+        );
+        // The importing module's own directive is index 2 (export module=0,
+        // register=1, import module=2) -- `Pass` here means real linking
+        // succeeded, not merely that the directive was gradeable.
+        assert_eq!(results[2], (DirectiveKind::Module, DirectiveOutcome::Pass), "{:?}", results[2]);
+    }
+
+    /// The `M5`-shaped negative case (`type-subtyping.wast` lines 652-666,
+    /// this crate's own vendored corpus copy): superficially similar to the
+    /// positive case above (the same type NAMES, `$f1`/`$f2`/`$g1`/`$g2`,
+    /// are deliberately reused across both modules, copy-paste-style), but
+    /// ONE internal reference is wired to a DIFFERENT earlier group than
+    /// its counterpart -- the exporter's `$g2`'s declared supertype `$f2`
+    /// sits in a `rec` group whose OTHER member (an anonymous struct)
+    /// references `$f1` (a group declared even EARLIER, NOT itself), while
+    /// the importer's `$g1`'s declared supertype `$f1`'s own sibling struct
+    /// references `$f1` REFLEXIVELY (`Rec(0)`, its own group). Canonicalized,
+    /// these tie to genuinely different shapes (`Outer` vs `Rec` at that
+    /// position) despite every group's own size/position/finality/`FuncType`
+    /// shape matching -- exactly the class of mismatch the OLD three-part
+    /// conservative guard could never see, and canonical equivalence must
+    /// NOT be fooled into accepting.
+    #[test]
+    fn cross_module_copy_paste_shaped_type_mismatch_is_correctly_rejected() {
+        let results = outcomes(
+            r#"
+            (module
+              (rec (type $f1 (sub (func))) (type (struct (field (ref $f1)))))
+              (rec (type $f2 (sub (func))) (type (struct (field (ref $f1)))))
+              (rec (type $g2 (sub $f2 (func))) (type (struct)))
+              (func (export "g") (type $g2))
+            )
+            (register "Sneaky")
+            (assert_unlinkable
+              (module
+                (rec (type $f1 (sub (func))) (type (struct (field (ref $f1)))))
+                (rec (type $g1 (sub $f1 (func))) (type (struct)))
+                (func (import "Sneaky" "g") (type $g1))
+              )
+              "incompatible import type"
+            )
+            "#,
+        );
+        assert_eq!(results[2], (DirectiveKind::AssertUnlinkable, DirectiveOutcome::Pass), "{:?}", results[2]);
     }
 }

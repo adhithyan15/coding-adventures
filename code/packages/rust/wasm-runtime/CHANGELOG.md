@@ -2,6 +2,171 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.21] — 2026-09-01 (W34 fourth slice — cross-module canonical equivalence, epic closed)
+
+`instantiate`'s function-import compatibility check (`ImportTypeInfo::
+Function` arm) now uses real canonical type-group equivalence for
+CROSS-MODULE linking, closing this epic's final gap (`code/specs/
+W34-wasm-gc-canonical-type-equivalence.md`): the last remaining decision
+point in this crate's WASM type system that still compared two
+independently-validated modules' types with no canonical-equivalence
+awareness at all.
+
+- When BOTH the importing module's own declared type
+  (`canonical_types[type_idx]`, already computed once at the top of
+  `instantiate` from `ValidatedModule::canonical_types()`) and the
+  exporting `HostFunction`'s own `canonical_type()` report a real
+  canonical identity, the check now calls `host_func.canonically_matches
+  (&module_ct)` — the real GC-proposal rule (canonical equivalence OR a
+  declared nominal subtype, climbing the EXPORTER's own local `sub`
+  chain) — and REPLACES the pre-existing three-part conservative guard
+  entirely for that import. This SUBSUMES the old guard's own `(rec_
+  group_size, rec_group_position)`/`is_final`/raw-`FuncType`-equality
+  checks (all three are already folded into a `CanonicalSubtype`'s own
+  fields) while additionally: (a) ACCEPTING an isomorphic-but-differently-
+  numbered `rec` group import the old guard couldn't recognize as the
+  same type (`type-equivalence.wast`'s own "Semantic types (link time)"
+  section), (b) ACCEPTING a genuine nominal-subtype import — an export
+  whose declared type is a `sub`-chain ancestor's canonical match, not its
+  own exact type (`type-subtyping.wast`'s own `M6`/`M7` "Linking" cases —
+  see the note below on why this needed a SECOND `HostFunction` method,
+  not just the first), and (c) STILL REJECTING a genuine topology mismatch
+  the old guard was blind to (`type-subtyping.wast`'s `M5`/`M10`/`M11`
+  cases — see "Corpus impact" below).
+- When EITHER side reports no real canonical identity (`None` — e.g. any
+  WASI-shim host import, or a type this crate's canonicalizer couldn't
+  resolve), the check falls back to the pre-existing three-part
+  conservative guard, UNCHANGED, verbatim — every such import is
+  byte-for-byte unaffected by this slice.
+- **A real regression found and fixed mid-implementation, not assumed
+  correct from the design sketch**: the spec's own Design §4 described the
+  cross-module check as a plain canonical-equivalence comparison. Building
+  it that way and re-running the full conformance baseline (this
+  campaign's own "diff after every change" discipline) surfaced two new
+  `NotYetSupported` regressions in `type-subtyping.wast` (`M6`/`M7`, whose
+  own "Linking" cases rely on a func import being satisfied by an export
+  whose declared type is a NOMINAL SUBTYPE of the import's declared type,
+  not merely canonically equivalent to it — real WASM func-import matching
+  is a subtyping relation, per MVP.md's own external-type-matching rule).
+  Root-caused by tracing exactly which corpus directive regressed and why,
+  fixed by adding `HostFunction::canonically_matches` (see `wasm-
+  execution`'s own CHANGELOG) instead of comparing `canonical_type()`
+  values directly — re-running the baseline confirmed both cases restored
+  to `Pass` with no new regressions anywhere else across all 257 files.
+
+### Corpus impact — real, measured, individually investigated, not
+asserted
+
+`--write-baseline` was re-run and diffed programmatically against the
+pre-slice baseline across all 257 files. Exactly 2 files changed, 5
+directive-level improvements, ZERO regressions:
+
+| File | Category | Before | After |
+|---|---|---|---|
+| `type-equivalence.wast` | `module` | 20 pass / 1 NYS | 21 pass / 0 NYS |
+| `type-subtyping.wast` | `assert_unlinkable` | 5 pass / 3 fail | 8 pass / 0 fail |
+| `type-subtyping.wast` | `module` | 36 pass / 10 NYS | 37 pass / 9 NYS |
+
+Every changed tally individually investigated, not just summed:
+
+- `type-equivalence.wast`'s one flipped `module` directive is the
+  "Indirect types" link-time case (`N.f1` imported at type `$t2`, whose
+  params/results reference `$s1`/`$s2` — themselves canonically identical,
+  byte-for-byte, but at swapped raw indices relative to `$t1`): plain raw
+  `FuncType` equality (comparing `$s1`'s vs `$s2`'s raw index INSIDE the
+  param/result types) rejected this before; real canonical equivalence,
+  which resolves those inner references to their tied form before
+  comparing, correctly accepts it.
+- `type-subtyping.wast`'s 3 flipped `assert_unlinkable` cases are exactly
+  the `M5`/`M10`/`M11` "Linking" cases this epic's THIRD slice's own
+  addendum named as present "since the first slice" (traced individually
+  via a throwaway per-directive debug harness, confirmed to fail with
+  reason `"module linked successfully; expected unlinkable"` before this
+  slice — i.e. the OLD three-part guard coincidentally accepted every one
+  of them, since their `(rec_group_size, rec_group_position)`/`is_final`/
+  raw-`FuncType`-shape all happen to match despite a genuine internal
+  topology mismatch the old guard structurally cannot see). All three are
+  now correctly rejected via real canonical equivalence.
+- `type-subtyping.wast`'s one flipped `module` directive is the `M`-
+  registration block's own `f1`/`f2` imports (lines 551-562): these rely
+  on `$t0 <: $t1 <: $t2`'s declared nominal chain, which is exactly what
+  `canonically_matches`'s chain-climbing (not plain equivalence) newly
+  supports for cross-module imports.
+- The other 9 `not_yet_supported` `module` entries in `type-subtyping.wast`
+  are UNCHANGED and individually re-confirmed unrelated to this slice: 7
+  are the pre-existing non-null-abstract-heap-type-as-result-type
+  `wasm-wast-parser` gap (predates W34 entirely), and 2 are genuinely
+  unresolvable structural gaps this slice's own scope does not touch.
+- The 2 pre-existing `module.fail` entries (unchanged, both before and
+  after) live in `br_table.wast`/`table.wast` — confirmed unrelated to
+  type/canonicalization at all.
+- No other file's tally changed at all, confirmed by diffing all 257
+  files' full tallies programmatically.
+
+### Security review
+
+A dedicated security-review sub-agent was briefed on this slice's diff
+(`git diff origin/main...HEAD`), specifically asked about the NEW trust
+boundary this slice opens (the first time this epic compares two
+INDEPENDENTLY-ATTACKER-CONTROLLED modules' type data against each other,
+rather than one module's own data against itself): whether a maliciously
+large or deeply-structured type in ONE module could cause disproportionate
+comparison cost against a module importing from it (a cross-module
+amplification distinct from the third slice's already-fixed single-module
+one), and whether the comparison correctly handles a module importing
+from itself or a cyclic import chain without infinite recursion.
+
+**Result: one real HIGH-severity finding, fixed before push** — this
+epic's FOURTH consecutive slice with a genuine finding in its own review.
+`MAX_CANONICAL_TREE_WEIGHT` bounds any ONE `CanonicalGroup` tree's shape
+at construction time, so any ONE full structural comparison between two
+such trees is itself bounded — but nothing previously bounded how many
+times a full, near-max-weight comparison could be ATTEMPTED across an
+entire `instantiate()` call's whole import-resolution loop. Unlike the
+WITHIN-module case (where `canonicalize_types`'s own interning makes
+every SAME-shape comparison an O(1) `Rc::ptr_eq` hit, and triggering many
+DIFFERENT expensive comparisons requires declaring that many expensive
+types — itself bounded by module size), the cross-module case can never
+hit `Rc::ptr_eq` at all (two different modules' `canonicalize_types`
+calls never intern into the same allocation), and an attacker who
+controls both the importing and exporting module can multiply one
+expensive-but-capped comparison by an arbitrary, BYTE-CHEAP import count
+— each `(func (import "M" "f") (type $expensive))` costs only a few
+bytes to declare, unlike the expensive type itself. Worst case: `imports
+× hops (≤1,000) × per-comparison cost (≤1,000,000 nodes)`, each factor
+individually capped but their PRODUCT unbounded by anything that existed
+before this fix.
+
+Fixed by introducing `wasm_types::CrossModuleComparisonBudget`: a shared,
+mutable work counter created ONCE per `instantiate()` call (before the
+import-resolution loop starts, not per import) and threaded `&mut`
+through the whole loop via a new parameter on `HostFunction::
+canonically_matches`. A hand-written, budget-aware structural-equality
+walk (`canonical_type_entries_equivalent_budgeted` and its per-field/
+per-variant helpers in `wasm-types`) replaces derived `PartialEq`
+specifically on the cross-module comparison path, charging one unit per
+tree node visited (budget checked BEFORE recursing into any child, so
+exhaustion can never be preceded by uncharged work) and failing CLOSED
+(reports "not equivalent," never a false accept) once exhausted — the
+same direction every other cap in this mechanism already takes. See
+`wasm-types`'s own CHANGELOG for the full account, including the
+re-review that confirmed the fix's completeness (every field/variant of
+`CanonicalGroup`'s tree is covered by the budgeted walk, budget-before-
+work ordering holds in all seven helper functions, and the budget
+arithmetic uses `checked_sub` with no overflow/panic path). Full 257-file
+conformance baseline re-confirmed byte-for-byte identical before and
+after this fix, since it changes worst-case performance only, never
+behavior.
+
+The self-import/cyclic-import-chain question came back clean on first
+review: `wasm-conformance`'s own sequential register-after-instantiate
+model (a module is only inserted into the registry AFTER its own
+`instantiate()` call returns successfully) makes both a self-import and a
+genuine A↔B import cycle structurally impossible to reach — a module
+being instantiated cannot yet resolve an import back to itself or to a
+not-yet-completed sibling, so this fails as an ordinary "unknown import"
+link error, never a `RefCell` double-borrow or infinite recursion.
+
 ## [0.6.20] — 2026-09-01 (W34 third slice — thread canonical equivalence into wasm-execution)
 
 - `WasmInstance` gains a `canonical_types` field, cloned once at

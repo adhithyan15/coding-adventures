@@ -1668,6 +1668,72 @@ pub fn nominal_subtype_chain(type_subtyping: &[TypeSubtyping], canonical_types: 
     false
 }
 
+/// Whether SOME type in the ascending nominal `sub` chain starting at
+/// `start_idx` -- reflexively including `start_idx` itself -- within ONE
+/// module's own `type_subtyping`/`canonical_types` tables is canonically
+/// equivalent to an EXTERNAL `target` (W34 fourth slice: `code/specs/
+/// W34-wasm-gc-canonical-type-equivalence.md`).
+///
+/// This is [`nominal_subtype_chain`]'s cross-module counterpart: that
+/// function compares two indices INTO THE SAME table (so its raw
+/// `sub_idx == super_idx` reflexive check is a valid same-module fast
+/// path); this one compares a chain walked in ONE module's table against
+/// a target that lives in a DIFFERENT, independently-canonicalized
+/// module's own table -- raw index equality is meaningless there (the two
+/// modules share no numbering at all), so every hop's termination,
+/// including the reflexive base case, is checked by real canonical
+/// equivalence only, via [`canonical_type_entries_equivalent`].
+///
+/// Needed for cross-module linking's own subtyping rule: a WASM func
+/// import may be satisfied by an export whose ACTUAL declared type is a
+/// nominal subtype (not merely canonically equivalent) of the import's
+/// declared type -- MVP.md's own "subtyping is nominal modulo type
+/// canonicalisation," applied across the module boundary rather than
+/// within one module. A declared `sub $parent` relationship is only ever
+/// meaningful within the module that declared it (there is no such thing
+/// as a supertype relationship spanning two modules), so this walks
+/// EXACTLY ONE module's own chain -- the EXPORTING module's -- checking
+/// each ancestor against the IMPORTING module's declared type.
+///
+/// Same [`MAX_SUBTYPE_CHAIN_HOPS`] bound as [`nominal_subtype_chain`], for
+/// the identical reason (a malformed/cyclic chain, or one from a
+/// hand-built, never-validated `WasmModule`, must still terminate and
+/// stay linear rather than looping or scaling with an attacker-chosen
+/// chain length).
+///
+/// Security-review finding (W34 fourth slice): takes a
+/// `&mut `[`CrossModuleComparisonBudget`] (not just the two tables) --
+/// spending from a budget SHARED across an entire `wasm-runtime::
+/// instantiate()` call's whole import-resolution loop, rather than
+/// running an unbounded comparison per call. See that type's own doc
+/// comment for the amplification a per-call-only bound (this crate
+/// already had, via `MAX_CANONICAL_TREE_WEIGHT`) does not close on its
+/// own: an attacker who controls both the importing and exporting module
+/// can multiply one expensive-but-capped comparison by an arbitrary,
+/// byte-cheap import count.
+pub fn canonical_chain_reaches(type_subtyping: &[TypeSubtyping], canonical_types: &[Option<(Rc<CanonicalGroup>, u32)>], start_idx: u32, target: Option<&(Rc<CanonicalGroup>, u32)>, budget: &mut CrossModuleComparisonBudget) -> bool {
+    let Some(target) = target else {
+        return false;
+    };
+    if canonical_type_entries_equivalent_budgeted(canonical_types.get(start_idx as usize).and_then(|o| o.as_ref()), Some(target), budget) {
+        return true;
+    }
+    let mut cur = start_idx;
+    let at = |idx: u32| type_subtyping.get(idx as usize).copied().unwrap_or_default();
+    for _ in 0..MAX_SUBTYPE_CHAIN_HOPS {
+        match at(cur).supertype {
+            Some(parent) => {
+                if canonical_type_entries_equivalent_budgeted(canonical_types.get(parent as usize).and_then(|o| o.as_ref()), Some(target), budget) {
+                    return true;
+                }
+                cur = parent;
+            }
+            None => return false,
+        }
+    }
+    false
+}
+
 /// Whether flat type-section indices `i` and `j` are canonically
 /// equivalent (W34: `code/specs/W34-wasm-gc-canonical-type-equivalence.md`),
 /// given a `canonical_types` table shaped like [`canonicalize_types`]'s own
@@ -1679,7 +1745,26 @@ pub fn nominal_subtype_chain(type_subtyping: &[TypeSubtyping], canonical_types: 
 /// canonically_equivalent` (the public, post-validation accessor) use, so
 /// the two can never drift apart.
 pub fn canonical_types_equivalent(canonical_types: &[Option<(Rc<CanonicalGroup>, u32)>], i: u32, j: u32) -> bool {
-    match (canonical_types.get(i as usize).and_then(|o| o.as_ref()), canonical_types.get(j as usize).and_then(|o| o.as_ref())) {
+    canonical_type_entries_equivalent(
+        canonical_types.get(i as usize).and_then(|o| o.as_ref()),
+        canonical_types.get(j as usize).and_then(|o| o.as_ref()),
+    )
+}
+
+/// The actual comparison [`canonical_types_equivalent`] performs, factored
+/// out to a two-`Option`-references shape (W34 fourth slice: `code/specs/
+/// W34-wasm-gc-canonical-type-equivalence.md`) so it can also back
+/// CROSS-MODULE comparisons, where the two entries being compared live in
+/// two entirely separate `canonical_types` tables (one per independently-
+/// validated `WasmModule`, no shared numbering at all -- see
+/// `wasm-runtime`'s import-compatibility check, the one real caller that
+/// needs this two-table shape) rather than two indices into the SAME
+/// table. `None` on either side is conservatively `false` -- "not known to
+/// be equivalent," never a wrong `true` -- exactly [`canonical_types_equivalent`]'s
+/// own existing contract, preserved here verbatim, not weakened by the
+/// refactor.
+pub fn canonical_type_entries_equivalent(a: Option<&(Rc<CanonicalGroup>, u32)>, b: Option<&(Rc<CanonicalGroup>, u32)>) -> bool {
+    match (a, b) {
         // Security review finding (W34 third slice): `Rc::ptr_eq` FIRST,
         // as a fast path -- `canonicalize_types`'s own interning (see that
         // function's doc comment) guarantees two content-identical groups
@@ -1690,13 +1775,13 @@ pub fn canonical_types_equivalent(canonical_types: &[Option<(Rc<CanonicalGroup>,
         // (a real recursive structural walk, still bounded by `CanonicalCost`'s
         // construction-time caps) only when the two `Rc`s come from
         // different allocations -- e.g. two independently-validated
-        // modules' own `canonical_types` tables, which this function's own
-        // signature and doc comment have always supported comparing with
-        // no shared context, and which per-call interning deliberately
-        // does not attempt to unify (see `canonicalize_types`'s own doc
-        // comment for why: no synchronization, no unbounded process-
-        // lifetime cache, for a cross-module case this slice doesn't wire
-        // in yet).
+        // modules' own `canonical_types` tables (the cross-module case
+        // this slice wires in via `canonical_type_entries_equivalent`
+        // directly, and `canonical_types_equivalent`'s own single-table
+        // callers keep hitting the fast path exactly as before, since
+        // interning is per-`canonicalize_types`-call and every within-
+        // module comparison's two entries necessarily came from the SAME
+        // call).
         (Some((a, pa)), Some((b, pb))) => pa == pb && (Rc::ptr_eq(a, b) || a == b),
         _ => false,
     }
@@ -2218,6 +2303,208 @@ const MAX_CANONICAL_OUTER_DEPTH: u32 = 1_000;
 /// more than ~20 levels before hitting it, keeping a worst-case rejected
 /// canonicalization itself cheap to detect.
 const MAX_CANONICAL_TREE_WEIGHT: u64 = 1_000_000;
+
+/// Total cross-module canonical-comparison work (counted in tree-node
+/// visits -- the same unit [`MAX_CANONICAL_TREE_WEIGHT`] already bounds
+/// per TREE at construction time) a single [`CrossModuleComparisonBudget`]
+/// starts with.
+///
+/// Security-review finding (W34 fourth slice, cross-module linking):
+/// `MAX_CANONICAL_TREE_WEIGHT` bounds any ONE `CanonicalGroup`'s shape, so
+/// any ONE full structural comparison between two such trees is itself
+/// bounded -- but nothing previously bounded how many times a full,
+/// near-max-weight comparison could be ATTEMPTED across an entire
+/// `wasm-runtime::instantiate()` call. Unlike the WITHIN-module case
+/// (where `canonicalize_types`'s own interning makes every SAME-shape
+/// comparison an O(1) `Rc::ptr_eq` hit, and triggering many DIFFERENT
+/// expensive comparisons requires declaring that many expensive types --
+/// itself bounded by module size), the cross-module case can never hit
+/// `Rc::ptr_eq` at all (two different modules' `canonicalize_types` calls
+/// never intern into the same allocation), AND an attacker who controls
+/// both the importing and exporting module can multiply one expensive-
+/// but-capped comparison by an arbitrary, BYTE-CHEAP import count (each
+/// `(func (import "M" "f") (type $expensive))` costs only a few bytes to
+/// declare, unlike the expensive type itself). `imports x hops x
+/// per-comparison-weight`, each individually capped, otherwise multiplies
+/// to an effectively unbounded total. This budget closes that gap by
+/// being SHARED across one `instantiate()` call's ENTIRE import-resolution
+/// loop (see [`CrossModuleComparisonBudget`]) rather than reset per
+/// import or per comparison. Once exhausted, every further comparison
+/// conservatively reports "not equivalent" -- fail CLOSED (a false
+/// negative -- an import that IS really compatible gets rejected once the
+/// budget runs out -- never a false accept), the same direction every
+/// other cap in this mechanism already takes. `4_000_000` is generous
+/// relative to anything this crate's own real corpus needs (single-digit
+/// import counts, single-digit-deep `sub` chains, small groups) while
+/// still keeping a worst-case adversarial `instantiate()` call's
+/// cross-module comparison work bounded to a small, fixed multiple of one
+/// already-accepted single-tree cap, regardless of import count.
+pub const MAX_CROSS_MODULE_CANONICAL_COMPARISON_BUDGET: u64 = 4_000_000;
+
+/// A shared, mutable work budget for cross-module canonical comparisons,
+/// meant to be created ONCE per `wasm-runtime::instantiate()` call and
+/// threaded (`&mut`) through that call's entire import-resolution loop --
+/// see [`MAX_CROSS_MODULE_CANONICAL_COMPARISON_BUDGET`]'s own doc comment
+/// for the amplification this defends against. Every budgeted comparison
+/// function in this module (`canonical_type_entries_equivalent_budgeted`,
+/// [`canonical_chain_reaches`]) decrements this by one for every tree node
+/// it visits, and treats "no budget left" as "not equivalent" rather than
+/// continuing the walk.
+#[derive(Debug)]
+pub struct CrossModuleComparisonBudget(u64);
+
+impl CrossModuleComparisonBudget {
+    /// A fresh budget at [`MAX_CROSS_MODULE_CANONICAL_COMPARISON_BUDGET`].
+    pub fn new() -> Self {
+        Self(MAX_CROSS_MODULE_CANONICAL_COMPARISON_BUDGET)
+    }
+
+    /// A budget starting at an explicit value -- exposed so callers with
+    /// their own resource-accounting policy (or tests proving exhaustion
+    /// deterministically, without spending millions of iterations) aren't
+    /// forced through the default constant.
+    pub fn with_budget(budget: u64) -> Self {
+        Self(budget)
+    }
+
+    /// Spend `cost` units, returning `false` (spending nothing further --
+    /// the budget floors at zero, never wraps) if that would exceed what
+    /// remains.
+    fn take(&mut self, cost: u64) -> bool {
+        match self.0.checked_sub(cost) {
+            Some(rest) => {
+                self.0 = rest;
+                true
+            }
+            None => {
+                self.0 = 0;
+                false
+            }
+        }
+    }
+
+    /// The budget remaining -- exposed for tests proving exhaustion
+    /// happens (not just that behavior degrades gracefully once it does).
+    pub fn remaining(&self) -> u64 {
+        self.0
+    }
+}
+
+impl Default for CrossModuleComparisonBudget {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+/// Budget-aware structural equality between two [`CanonicalGroup`]s --
+/// the manual, node-counted walk [`canonical_type_entries_equivalent_
+/// budgeted`] falls back to once its own `Rc::ptr_eq` fast path misses
+/// (always the case cross-module, since two different `canonicalize_
+/// types` calls never intern into the same allocation). Mirrors derived
+/// `PartialEq`'s own recursive shape exactly (same short-circuiting `&&`/
+/// `all` structure), but charges [`CrossModuleComparisonBudget`] one unit
+/// per node visited and bails out (reporting "not equal," never panicking
+/// or looping) the instant the budget is exhausted -- see that type's own
+/// doc comment for why an aggregate, ACROSS-COMPARISONS budget (not just
+/// each tree's own construction-time weight cap) is necessary here.
+fn group_equal_budgeted(a: &CanonicalGroup, b: &CanonicalGroup, budget: &mut CrossModuleComparisonBudget) -> bool {
+    budget.take(1)
+        && a.members.len() == b.members.len()
+        && a.members.iter().zip(b.members.iter()).all(|(x, y)| subtype_equal_budgeted(x, y, budget))
+}
+
+fn subtype_equal_budgeted(a: &CanonicalSubtype, b: &CanonicalSubtype, budget: &mut CrossModuleComparisonBudget) -> bool {
+    if !budget.take(1) || a.is_final != b.is_final {
+        return false;
+    }
+    let supertype_matches = match (&a.supertype, &b.supertype) {
+        (None, None) => true,
+        (Some(x), Some(y)) => heap_ref_equal_budgeted(x, y, budget),
+        _ => false,
+    };
+    supertype_matches && comp_type_equal_budgeted(&a.comp, &b.comp, budget)
+}
+
+fn comp_type_equal_budgeted(a: &CanonicalCompType, b: &CanonicalCompType, budget: &mut CrossModuleComparisonBudget) -> bool {
+    if !budget.take(1) {
+        return false;
+    }
+    match (a, b) {
+        (CanonicalCompType::Func(ap, ar), CanonicalCompType::Func(bp, br)) => {
+            ap.len() == bp.len()
+                && ar.len() == br.len()
+                && ap.iter().zip(bp.iter()).all(|(x, y)| val_type_equal_budgeted(x, y, budget))
+                && ar.iter().zip(br.iter()).all(|(x, y)| val_type_equal_budgeted(x, y, budget))
+        }
+        (CanonicalCompType::Struct(af), CanonicalCompType::Struct(bf)) => {
+            af.len() == bf.len() && af.iter().zip(bf.iter()).all(|(x, y)| field_type_equal_budgeted(x, y, budget))
+        }
+        (CanonicalCompType::Array(ae), CanonicalCompType::Array(be)) => field_type_equal_budgeted(ae, be, budget),
+        _ => false,
+    }
+}
+
+fn field_type_equal_budgeted(a: &CanonicalFieldType, b: &CanonicalFieldType, budget: &mut CrossModuleComparisonBudget) -> bool {
+    budget.take(1) && a.mutable == b.mutable && storage_type_equal_budgeted(&a.storage, &b.storage, budget)
+}
+
+fn storage_type_equal_budgeted(a: &CanonicalStorageType, b: &CanonicalStorageType, budget: &mut CrossModuleComparisonBudget) -> bool {
+    if !budget.take(1) {
+        return false;
+    }
+    match (a, b) {
+        (CanonicalStorageType::Val(x), CanonicalStorageType::Val(y)) => val_type_equal_budgeted(x, y, budget),
+        (CanonicalStorageType::I8, CanonicalStorageType::I8) => true,
+        (CanonicalStorageType::I16, CanonicalStorageType::I16) => true,
+        _ => false,
+    }
+}
+
+fn val_type_equal_budgeted(a: &CanonicalValType, b: &CanonicalValType, budget: &mut CrossModuleComparisonBudget) -> bool {
+    if !budget.take(1) {
+        return false;
+    }
+    match (a, b) {
+        (CanonicalValType::I32, CanonicalValType::I32) => true,
+        (CanonicalValType::I64, CanonicalValType::I64) => true,
+        (CanonicalValType::F32, CanonicalValType::F32) => true,
+        (CanonicalValType::F64, CanonicalValType::F64) => true,
+        (CanonicalValType::V128, CanonicalValType::V128) => true,
+        (CanonicalValType::Ref(an, ah), CanonicalValType::Ref(bn, bh)) => an == bn && heap_ref_equal_budgeted(ah, bh, budget),
+        _ => false,
+    }
+}
+
+fn heap_ref_equal_budgeted(a: &CanonicalHeapRef, b: &CanonicalHeapRef, budget: &mut CrossModuleComparisonBudget) -> bool {
+    if !budget.take(1) {
+        return false;
+    }
+    match (a, b) {
+        (CanonicalHeapRef::Abstract(x), CanonicalHeapRef::Abstract(y)) => x == y,
+        (CanonicalHeapRef::Rec(x), CanonicalHeapRef::Rec(y)) => x == y,
+        (CanonicalHeapRef::Outer(gx, px), CanonicalHeapRef::Outer(gy, py)) => px == py && (Rc::ptr_eq(gx, gy) || group_equal_budgeted(gx, gy, budget)),
+        _ => false,
+    }
+}
+
+/// The budgeted counterpart to [`canonical_type_entries_equivalent`] --
+/// identical contract (two-table-safe, `None` on either side is
+/// conservatively `false`), but spends from a shared
+/// [`CrossModuleComparisonBudget`] instead of running derived `PartialEq`
+/// unconditionally. `wasm-runtime`'s cross-module import-compatibility
+/// check (via [`canonical_chain_reaches`] and `HostFunction::
+/// canonically_matches`) uses this; `canonical_types_equivalent`'s own
+/// WITHIN-module callers (`nominal_subtype_chain`, `is_assignable`'s
+/// termination check) do NOT need it and keep using the unbudgeted
+/// version -- see [`MAX_CROSS_MODULE_CANONICAL_COMPARISON_BUDGET`]'s own
+/// doc comment for why the amplification this defends against is specific
+/// to the cross-module, attacker-controlled-import-count case.
+pub fn canonical_type_entries_equivalent_budgeted(a: Option<&(Rc<CanonicalGroup>, u32)>, b: Option<&(Rc<CanonicalGroup>, u32)>, budget: &mut CrossModuleComparisonBudget) -> bool {
+    match (a, b) {
+        (Some((ga, pa)), Some((gb, pb))) => pa == pb && (Rc::ptr_eq(ga, gb) || group_equal_budgeted(ga, gb, budget)),
+        _ => false,
+    }
+}
 
 /// Ties one [`ValueType`] -- the full, exhaustive per-variant mapping this
 /// slice's `CanonicalValType`/`CanonicalHeapRef`/`AbstractHeapKind` design
@@ -3990,6 +4277,176 @@ mod tests {
         let canonical_b = canonicalize_types(&module_b);
         assert_eq!(canonical_a[0], canonical_b[4]);
         assert_eq!(canonical_a[1], canonical_b[5]);
+    }
+
+    /// W34 fourth slice (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`):
+    /// [`canonical_type_entries_equivalent`] is the two-DIFFERENT-tables
+    /// shape [`wasm-runtime`]'s cross-module import check actually needs
+    /// (as opposed to [`canonical_types_equivalent`]'s own two-indices-
+    /// into-ONE-table shape, correct only within a single module) --
+    /// proven directly here at the narrowest possible layer, before any
+    /// `wasm-runtime`/`wasm-conformance` wiring, matching this campaign's
+    /// own "verify the mechanism before the plumbing" discipline. Reuses
+    /// the SAME two isomorphic-but-differently-indexed modules the
+    /// preceding test already proved `canonicalize_types` handles
+    /// correctly -- this test's own job is only to prove the COMPARISON
+    /// function itself (not `canonicalize_types`) is genuinely usable
+    /// across two independent tables with no shared numbering.
+    #[test]
+    fn canonical_type_entries_equivalent_compares_across_two_independent_tables() {
+        fn build(offset: u32) -> WasmModule {
+            let padding = FuncType { params: vec![], results: vec![] };
+            let mut types = vec![padding; offset as usize];
+            types.push(FuncType { params: vec![ValueType::ConcreteFuncRef(offset + 1)], results: vec![] });
+            types.push(FuncType { params: vec![], results: vec![ValueType::ConcreteFuncRef(offset)] });
+            let mut type_subtyping = vec![TypeSubtyping::default(); offset as usize];
+            type_subtyping.extend(group_subtyping(2, &[(None, true), (None, true)]));
+            WasmModule { types, type_subtyping, ..Default::default() }
+        }
+        let canonical_a = canonicalize_types(&build(0));
+        let canonical_b = canonicalize_types(&build(4));
+        // Isomorphic entries, from two SEPARATE `canonicalize_types` calls
+        // (so interning cannot have unified them into one `Rc` allocation
+        // -- this exercises the full structural `==` fallback path, not
+        // just the same-call `Rc::ptr_eq` fast path).
+        assert!(canonical_type_entries_equivalent(canonical_a[0].as_ref(), canonical_b[4].as_ref()));
+        assert!(canonical_type_entries_equivalent(canonical_a[1].as_ref(), canonical_b[5].as_ref()));
+        // A genuinely different position within the SAME isomorphic group
+        // is correctly NOT equivalent.
+        assert!(!canonical_type_entries_equivalent(canonical_a[0].as_ref(), canonical_b[5].as_ref()));
+        // `None` on either side is conservatively `false`, never a wrong
+        // `true`.
+        assert!(!canonical_type_entries_equivalent(None, canonical_b[4].as_ref()));
+        assert!(!canonical_type_entries_equivalent(canonical_a[0].as_ref(), None));
+        assert!(!canonical_type_entries_equivalent(None, None));
+    }
+
+    /// W34 fourth slice: [`canonical_chain_reaches`] is the cross-module
+    /// counterpart to [`nominal_subtype_chain`]'s own termination check --
+    /// proving directly (not just via `wasm-runtime`'s own end-to-end
+    /// linking tests) that climbing ONE module's own local `sub` chain
+    /// past the reflexive start reaches a target from a DIFFERENT module's
+    /// own canonical-type table. Mirrors `type-subtyping.wast`'s own `M6`/
+    /// `M7` "Linking" cases: an export declared `(sub $parent (func))` is
+    /// importable at its own `$parent` type, not only at its own exact
+    /// type.
+    #[test]
+    fn canonical_chain_reaches_climbs_one_modules_own_chain_to_match_an_external_target() {
+        // Exporting module: $parent (idx0, no supertype, open), $child
+        // (idx1, sub $parent, open) -- both empty `(func)` bodies.
+        let empty_func = FuncType { params: vec![], results: vec![] };
+        let exporter = WasmModule {
+            types: vec![empty_func.clone(), empty_func.clone()],
+            type_subtyping: vec![TypeSubtyping { supertype: None, is_final: false, ..Default::default() }, TypeSubtyping { supertype: Some(0), is_final: false, ..Default::default() }],
+            ..Default::default()
+        };
+        // Importing module declares ITS OWN, differently-indexed copy of
+        // just $parent's shape (idx0 here, after a padding type at idx...
+        // actually no padding needed: the point is this table is entirely
+        // SEPARATE from the exporter's, indices are irrelevant to compare).
+        let importer = WasmModule {
+            types: vec![empty_func],
+            type_subtyping: vec![TypeSubtyping { supertype: None, is_final: false, ..Default::default() }],
+            ..Default::default()
+        };
+        let exporter_canonical = canonicalize_types(&exporter);
+        let importer_canonical = canonicalize_types(&importer);
+        let target = importer_canonical[0].as_ref().expect("importer's $parent must canonicalize");
+
+        // Climbing from $child (idx1) reaches $parent (idx0) after one hop,
+        // which IS canonically equivalent to the importer's own $parent.
+        let mut budget = CrossModuleComparisonBudget::new();
+        assert!(canonical_chain_reaches(&exporter.type_subtyping, &exporter_canonical, 1, Some(target), &mut budget));
+        // The reflexive case (climbing from $parent itself) also matches,
+        // with zero hops.
+        let mut budget = CrossModuleComparisonBudget::new();
+        assert!(canonical_chain_reaches(&exporter.type_subtyping, &exporter_canonical, 0, Some(target), &mut budget));
+        // `None` target is conservatively `false`.
+        let mut budget = CrossModuleComparisonBudget::new();
+        assert!(!canonical_chain_reaches(&exporter.type_subtyping, &exporter_canonical, 0, None, &mut budget));
+    }
+
+    /// The negative counterpart: a target with NO ancestor anywhere in the
+    /// chain (a genuinely unrelated type) must correctly report `false`,
+    /// not accidentally match via the hop walk running past the real
+    /// ancestor.
+    #[test]
+    fn canonical_chain_reaches_does_not_match_an_unrelated_target() {
+        let empty_func = FuncType { params: vec![], results: vec![] };
+        let one_param_func = FuncType { params: vec![ValueType::I32], results: vec![] };
+        let exporter = WasmModule {
+            types: vec![empty_func.clone(), empty_func],
+            type_subtyping: vec![TypeSubtyping { supertype: None, is_final: false, ..Default::default() }, TypeSubtyping { supertype: Some(0), is_final: false, ..Default::default() }],
+            ..Default::default()
+        };
+        let unrelated = WasmModule { types: vec![one_param_func], ..Default::default() };
+        let exporter_canonical = canonicalize_types(&exporter);
+        let unrelated_canonical = canonicalize_types(&unrelated);
+        let target = unrelated_canonical[0].as_ref().expect("unrelated type must canonicalize");
+        let mut budget = CrossModuleComparisonBudget::new();
+        assert!(!canonical_chain_reaches(&exporter.type_subtyping, &exporter_canonical, 1, Some(target), &mut budget));
+    }
+
+    /// Security-review finding (W34 fourth slice): a `CrossModuleComparisonBudget`
+    /// genuinely exhausts and, once exhausted, every FURTHER comparison
+    /// conservatively reports "not equivalent" (fail CLOSED) rather than
+    /// continuing to walk -- proven deterministically with a tiny custom
+    /// budget (via `with_budget`), not by actually spending millions of
+    /// real iterations. Two DIFFERENT, genuinely non-equivalent groups
+    /// (so `Rc::ptr_eq` can never short-circuit) are compared repeatedly
+    /// against the same shared, shrinking budget until it can no longer
+    /// afford even one more comparison.
+    #[test]
+    fn cross_module_comparison_budget_exhausts_and_fails_closed() {
+        let a = WasmModule { types: vec![FuncType { params: vec![ValueType::I32], results: vec![] }], ..Default::default() };
+        let b = WasmModule { types: vec![FuncType { params: vec![ValueType::I64], results: vec![] }], ..Default::default() };
+        let canonical_a = canonicalize_types(&a);
+        let canonical_b = canonicalize_types(&b);
+        let entry_a = canonical_a[0].as_ref().unwrap();
+        let entry_b = canonical_b[0].as_ref().unwrap();
+
+        // A budget large enough for a handful of comparisons, but not an
+        // unbounded number.
+        let mut budget = CrossModuleComparisonBudget::with_budget(20);
+        let mut comparisons = 0;
+        while budget.remaining() > 0 && comparisons < 1000 {
+            let equivalent = canonical_type_entries_equivalent_budgeted(Some(entry_a), Some(entry_b), &mut budget);
+            // These two types are genuinely different (I32 param vs I64
+            // param) -- correctly `false` on every call, budget permitting
+            // or not.
+            assert!(!equivalent);
+            comparisons += 1;
+        }
+        // The budget must have actually been spent down to exactly zero
+        // (not left partially unspent, which would mean this test's own
+        // premise -- that repeated genuinely-different comparisons DO
+        // consume budget -- never actually exercised the mechanism), and
+        // it must have taken WELL under 1000 iterations to exhaust a
+        // budget of 20 (each comparison costs at least 1 unit).
+        assert_eq!(budget.remaining(), 0);
+        assert!(comparisons < 1000, "budget of 20 should exhaust in well under 1000 comparisons, took {comparisons}");
+        assert!(comparisons >= 1, "at least one comparison should have been attempted");
+
+        // Calling again with an ALREADY-exhausted budget must still be
+        // safe (no panic) and still conservatively `false`, never a wrong
+        // `true` -- fail CLOSED past exhaustion, not merely "stops
+        // spending."
+        assert!(!canonical_type_entries_equivalent_budgeted(Some(entry_a), Some(entry_b), &mut budget));
+        assert_eq!(budget.remaining(), 0);
+
+        // A GENUINELY equivalent pair (two SEPARATELY-canonicalized,
+        // structurally-identical singletons -- so `Rc::ptr_eq` cannot
+        // short-circuit for free, unlike comparing `entry_a` to itself)
+        // also fails closed once the budget is exhausted: a real match
+        // that would have been accepted with budget to spare is instead
+        // conservatively rejected. This is the whole point of "fail
+        // closed" -- past the budget, the mechanism no longer promises to
+        // FIND a real match, only promises never to INVENT one.
+        let c = WasmModule { types: vec![FuncType { params: vec![ValueType::I32], results: vec![] }], ..Default::default() };
+        let canonical_c = canonicalize_types(&c);
+        let entry_c = canonical_c[0].as_ref().unwrap();
+        assert_ne!(entry_a.0.as_ref() as *const _, entry_c.0.as_ref() as *const _, "must be two separate allocations, not accidentally the same Rc");
+        assert!(!canonical_type_entries_equivalent_budgeted(Some(entry_a), Some(entry_c), &mut budget));
     }
 
     /// Two multi-member groups with the SAME member count (2) but a
