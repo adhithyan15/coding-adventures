@@ -1,0 +1,115 @@
+% ============================================================================
+% compound-speleothem-surface — which cave surfaces a compound speleothem
+% reaches, DERIVED through its components (adj-facts-stdlib, EARTH-SCIENCE).
+% ============================================================================
+% Recall is a binding query:
+%
+%     ? compound_speleothem_surface(column, $S)
+%       % cave_ceiling
+%       % cave_floor
+%
+% No table states this. It is DERIVED, by a `rule` whose body chains the
+% component relation with the growth-surface relation:
+%
+%     speleothem_component(column, stalactite)
+%     speleothem_growth_surface(stalactite, cave_ceiling)
+%     ---------------------------------------------------
+%     compound_speleothem_surface(column, cave_ceiling)
+%
+%     speleothem_component(column, stalagmite)
+%     speleothem_growth_surface(stalagmite, cave_floor)
+%     ---------------------------------------------------
+%     compound_speleothem_surface(column, cave_floor)
+%
+% Two premises, two answers, each carrying the citations of the facts that
+% produced it.
+%
+% *** THIS IS THE OTHER HALF OF AN ABSTENTION, AND THE POINT OF THE PAIR. ***
+%
+% `speleothem-growth-surface.adj` refused to give `column` a value. Its
+% header states the reason precisely: recording `cave_ceiling` or
+% `cave_floor` "would be false, and recording both would misrepresent the
+% relation this table holds". That was right. `speleothem_growth_surface`
+% means THE SURFACE A SPELEOTHEM GROWS FROM, and a column does not grow
+% from a surface at all — it is two speleothems that met.
+%
+% But the reader's question — "does a column touch the ceiling or the
+% floor?" — is a good question with a grounded answer. It was never
+% unanswerable; it was merely not a question about growth surfaces. This
+% rule answers it in a relation that MEANS what the answer means: the
+% surfaces reached by this speleothem's components. Two answers is correct
+% here, where two rows would have been a misrepresentation there, because
+% the relations are not the same relation.
+%
+% That distinction is the whole argument for abstaining rather than
+% fudging. A table that had quietly bound both surfaces would have been
+% approximately useful and precisely wrong, and nothing downstream could
+% have recovered the difference. Because it declined, the honest answer
+% remained available — as a composition, in its own name, with its
+% provenance intact.
+%
+% The chain must be a RULE rather than a two-goal query: a query in this
+% language is a single term. Same shape as
+% `karst-process-water-table-position.adj` and `civics/chamber-branch.adj`.
+%
+% Provenance: the rule's envelope cites the sentence that establishes a
+% column as constituted by the pair, on the U.S. National Park Service's
+% "Speleothems" page:
+%
+%     "Columns are not stalactites nor are they stalagmites; they are
+%      both, together."
+%
+% `trust authoritative`. Each derived answer additionally carries the
+% citations of its two premises, so nothing it relied on goes uncited.
+%
+% *** A LIMITATION, STATED PLAINLY RATHER THAN LEFT TO BE DISCOVERED. ***
+% Provenance in this stdlib is attached at TABLE level: a table's `source`
+% envelope and its `cites` corroborations cover EVERY row, not the row that
+% happened to match. So the two answers here are provenanced IDENTICALLY.
+% The `cave_floor` answer carries the same citation list as the
+% `cave_ceiling` one — with the stalactite sentence as its primary citation
+% and the stalagmite sentence only as a corroboration — even though the
+% stalactite row played no part in deriving it.
+%
+% This is worth saying because the tempting claim is the opposite one: that
+% the ceiling answer traces to the stalactite sentence and the floor answer
+% to the stalagmite one. An earlier draft of this library's test asserted
+% exactly that, and the assertions PASSED — both sentences appear in the
+% output of any successful use of the growth-surface table, so the test
+% proved nothing while reading as though it proved per-answer attribution.
+% A library about provenance honesty does not get to overclaim its own
+% provenance. What holds is: BOTH PREMISES ARE CITED. What does not hold
+% is: each answer is cited with the sentence that produced it.
+%
+% `facts_compoundspeleothemsurface_e2e.rs` pins the limitation with a
+% floor-only query, which under row-level provenance would carry only the
+% stalagmite sentence and today carries the stalactite one too. If that
+% test ever fails, row-level provenance has landed and this header should
+% be revisited with it.
+%
+% Honest abstention (inherited from the premises):
+%
+%   - Any speleothem `speleothem_component` does not decompose has no
+%     components to chain through and abstains here. This relation is only
+%     defined for compound speleothems, which on this page means `column`
+%     alone.
+%   - `helictite` abstains, and for a reason worth stating: it is absent
+%     from BOTH premises. `speleothem-growth-surface.adj` declined it
+%     because the source gives three surfaces with a frequency hedge
+%     ("cave ceilings, walls, and less often on cave floors") that no
+%     two-column row can carry. A derived relation cannot repair a premise
+%     it inherits — composition propagates abstention exactly as it
+%     propagates provenance.
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+import "speleothem-component.adj"
+import "speleothem-growth-surface.adj"
+
+rule { head: compound_speleothem_surface($Compound, $Surface)
+       when: speleothem_component($Compound, $Component), speleothem_growth_surface($Component, $Surface)
+       source "Columns are not stalactites nor are they stalagmites; they are both, together."
+       locator "https://www.nps.gov/subjects/caves/speleothems.htm"
+       trust authoritative }

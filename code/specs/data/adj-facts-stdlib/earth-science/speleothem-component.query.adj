@@ -1,0 +1,29 @@
+% ============================================================================
+% speleothem-component.query.adj — worked recall over the
+% speleothem-component library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to answer "what is a column made
+% of?" (direct, TWO answers), "which compound speleothem is a stalagmite
+% part of?" (reverse), or "what is a pillar made of?" (abstain — the source
+% offers `pillar` as another NAME for a column, not as a second thing, and
+% tabling it would double-count one speleothem as two).
+%
+% It states no fact of its own — it only `import`s the grounded table and
+% asks binding queries.
+%
+% This library exists to CLOSE the `column` abstention that
+% `speleothem-growth-surface.adj` recorded. See
+% `compound-speleothem-surface.query.adj` for the other half, where the
+% surfaces that table declined to bind are recovered by composition.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli speleothem-component.query.adj
+% ============================================================================
+
+import "speleothem-component.adj"
+
+? speleothem_component(column, $C)          % expect stalactite AND stalagmite -- "they are both, together"
+? speleothem_component($Compound, stalagmite) % expect column (reverse)
+? speleothem_component(pillar, $C)          % expect abstain -- an alternative NAME for a column, not a second speleothem
+? speleothem_component(stalactite, $C)      % expect abstain -- a stalactite is a component, not a compound
+? speleothem_component(soda_straw, $C)      % expect abstain -- a developmental STAGE of one speleothem, not two joining
