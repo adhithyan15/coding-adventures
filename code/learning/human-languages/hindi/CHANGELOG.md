@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Changed — declare both Hindi apology registers
+
+- Chapter 9 now declares **माफ़ कीजिए / क्षमा करें** instead of naming only
+  the everyday apology. The lesson already defines **क्षमा करें** as the formal,
+  Sanskritic cousin, contrasts its register with **माफ़ कीजिए**, practises the
+  complete phrase, and asks learners to recall it; its metadata now exposes both
+  assessed apologies.
+
 ### Changed — declare the Hindi weekday building block
 
 - Chapter 10 now declares **वार** alongside **सोमवार** through **शुक्रवार**.
