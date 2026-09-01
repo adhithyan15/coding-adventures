@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Project decoded image dimensions, CSS `aspect-ratio`, and `object-fit` into
+  the reusable replaced sizing contract.
+
 - Project computed `box-decoration-break` plus inline margin, padding, and
   border values into the reusable fragmented inline-box contract.
 
