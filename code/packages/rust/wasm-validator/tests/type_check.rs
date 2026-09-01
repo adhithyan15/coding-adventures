@@ -4343,3 +4343,115 @@ fn valid_data_segment_offset_uses_i64_on_an_is64_memory() {
 fn invalid_data_segment_offset_uses_i32_on_an_is64_memory() {
     assert_invalid(r#"(module (memory i64 1) (data (i32.const 0) "x"))"#);
 }
+
+// ── W33 fourth slice: struct/array instructions ─────────────────────────────
+// (verified against `struct.wast`/`array.wast`'s own real vendored shapes)
+
+#[test]
+fn valid_struct_new_new_default_get_get_s_get_u_set() {
+    assert_valid(
+        r#"(module
+             (type $vec (struct (field f32) (field $y (mut f32)) (field f32)))
+             (global (ref $vec) (struct.new $vec (f32.const 1) (f32.const 2) (f32.const 3)))
+             (global (ref $vec) (struct.new_default $vec))
+             (func (result anyref) (struct.new_default $vec))
+             (func (param $v (ref $vec)) (result f32) (struct.get 0 0 (local.get $v)))
+             (func (param $v (ref $vec)) (result f32) (struct.get $vec $y (local.get $v)))
+             (type $s (struct (field (mut i8)) (field (mut i16))))
+             (func (param $v (ref $s)) (result i32) (struct.get_s $s 0 (local.get $v)))
+             (func (param $v (ref $s)) (result i32) (struct.get_u $s 1 (local.get $v)))
+             (func (param $v (ref $vec)) (param $y f32) (struct.set $vec $y (local.get $v) (local.get $y))))"#,
+    );
+}
+
+#[test]
+fn invalid_struct_set_on_an_immutable_field_is_rejected() {
+    assert_invalid(
+        r#"(module
+             (type $s (struct (field i64)))
+             (func (export "struct.set-immutable") (param $s (ref $s))
+               (struct.set $s 0 (local.get $s) (i64.const 1))))"#,
+    );
+}
+
+#[test]
+fn invalid_struct_get_out_of_range_field_index_is_rejected() {
+    assert_invalid(
+        r#"(module
+             (type $s (struct (field i32)))
+             (func (param $v (ref $s)) (result i32) (struct.get $s 5 (local.get $v))))"#,
+    );
+}
+
+#[test]
+fn valid_array_new_new_default_new_fixed_get_get_s_get_u_set_len() {
+    assert_valid(
+        r#"(module
+             (type $vec (array f32))
+             (type $mvec (array (mut f32)))
+             (global (ref $vec) (array.new $vec (f32.const 1) (i32.const 3)))
+             (global (ref $vec) (array.new_default $vec (i32.const 3)))
+             (global (ref $vec) (array.new_fixed $vec 2 (f32.const 1) (f32.const 2)))
+             (func $new (result (ref $vec)) (array.new_default $vec (i32.const 3)))
+             (func (param $i i32) (param $v (ref $vec)) (result f32) (array.get $vec (local.get $v) (local.get $i)))
+             (func (param $i i32) (param $v (ref $mvec)) (param $y f32) (result f32)
+               (array.set $mvec (local.get $v) (local.get $i) (local.get $y))
+               (array.get $mvec (local.get $v) (local.get $i)))
+             (type $bvec (array i8))
+             (func (param $i i32) (param $v (ref $bvec)) (result i32) (array.get_s $bvec (local.get $v) (local.get $i)))
+             (func (param $i i32) (param $v (ref $bvec)) (result i32) (array.get_u $bvec (local.get $v) (local.get $i)))
+             (func (param $v (ref array)) (result i32) (array.len (local.get $v))))"#,
+    );
+}
+
+#[test]
+fn invalid_array_set_on_an_immutable_array_is_rejected() {
+    assert_invalid(
+        r#"(module
+             (type $a (array i64))
+             (func (export "array.set-immutable") (param $a (ref $a))
+               (array.set $a (local.get $a) (i32.const 0) (i64.const 1))))"#,
+    );
+}
+
+#[test]
+fn invalid_array_new_fixed_count_over_the_dos_guard_ceiling_is_rejected() {
+    // A hand-crafted module can't spell a literal count this large via
+    // `wasm-wast-parser`'s own text grammar (it's a real u32 in the source),
+    // so this exercises the SAME validator code path a maliciously-crafted
+    // BINARY module (out of this crate's own text-only scope, but sharing
+    // `wasm-validator`'s function-body checker) would hit -- confirming the
+    // DoS guard rejects cleanly rather than looping for a very long time.
+    assert_invalid(
+        r#"(module
+             (type $vec (array i32))
+             (func (result (ref $vec)) (array.new_fixed $vec 4294967295 (i32.const 0))))"#,
+    );
+}
+
+#[test]
+fn valid_struct_new_and_array_new_as_global_const_exprs() {
+    // The real GC proposal extends constant expressions to allow these five
+    // instructions (`struct.wast`/`array.wast`'s own module-level globals
+    // use exactly this shape) -- confirmed directly against the vendored
+    // corpus, not assumed.
+    assert_valid(
+        r#"(module
+             (type $vec (struct (field f32) (field $y (mut f32)) (field f32)))
+             (global (ref $vec) (struct.new $vec (f32.const 1) (f32.const 2) (f32.const 3)))
+             (global (ref $vec) (struct.new_default $vec))
+             (type $avec (array f32))
+             (global (ref $avec) (array.new $avec (f32.const 1) (i32.const 3)))
+             (global (ref $avec) (array.new_default $avec (i32.const 3)))
+             (global (ref $avec) (array.new_fixed $avec 2 (f32.const 1) (f32.const 2))))"#,
+    );
+}
+
+#[test]
+fn invalid_struct_new_const_expr_field_type_mismatch_is_rejected() {
+    assert_invalid(
+        r#"(module
+             (type $vec (struct (field f32)))
+             (global (ref $vec) (struct.new $vec (i32.const 1))))"#,
+    );
+}

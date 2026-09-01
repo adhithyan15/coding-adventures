@@ -72,8 +72,11 @@ pub enum IIRBackendArtifact {
     /// WebAssembly module — produced by the `"iir-wasm"` backend.
     ///
     /// The inner `WasmModule` can be encoded to a `.wasm` binary via
-    /// `wasm_module_encoder::encode_module`.
-    Wasm(WasmModule),
+    /// `wasm_module_encoder::encode_module`. Boxed: the W33 GC slices grew
+    /// `WasmModule` (struct/array type tables) enough to trip clippy's
+    /// `large_enum_variant` lint against this enum's other, much smaller
+    /// variants.
+    Wasm(Box<WasmModule>),
 
     /// JVM class file — produced by the `"iir-jvm"` backend.
     ///
@@ -111,7 +114,7 @@ impl IIRBackendArtifact {
     /// Return a reference to the inner `WasmModule`, or `None` if this is a
     /// different backend artifact.
     pub fn as_wasm(&self) -> Option<&WasmModule> {
-        if let IIRBackendArtifact::Wasm(m) = self { Some(m) } else { None }
+        if let IIRBackendArtifact::Wasm(m) = self { Some(m.as_ref()) } else { None }
     }
 
     /// Return a reference to the inner `JvmClassFile`, or `None` if this is a

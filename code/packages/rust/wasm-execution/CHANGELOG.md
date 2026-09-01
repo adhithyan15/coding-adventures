@@ -2,6 +2,66 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.83] - 2026-09-01 (security review follow-up to W33 fourth slice)
+
+### Fixed
+
+- `evaluate_const_expr_gc`'s `array.new_fixed` (`0x08`) arm narrowed the
+  decoded `count` (a `u64`) to `usize` BEFORE comparing it against
+  `MAX_ARRAY_ALLOC`, instead of after. On a 64-bit host this is
+  lossless and harmless, but on a 32-bit host a crafted count like
+  `2^32 + 5` would silently wrap to `5` when narrowed, passing the
+  bounds check with a value the attacker didn't intend to be bounded —
+  defeating this guard's purpose as a real defense-in-depth check
+  independent of `wasm-validator`'s own compile-time one (which already
+  correctly compares on the full-width value). Fixed by comparing
+  `count > MAX_ARRAY_ALLOC as u64` before narrowing, matching the
+  validator's existing pattern.
+
+## [0.9.82] - 2026-09-01 (W33 fourth slice — real struct/array runtime semantics)
+
+Implements actual execution for every new struct/array opcode
+`wasm-wast-parser` can now emit: `struct.new_default`/`struct.get_s`/
+`struct.get_u` and the whole `array.*` family (`array.new`/
+`array.new_default`/`array.new_fixed`/`array.get`/`array.get_s`/
+`array.get_u`/`array.set`/`array.len`).
+
+- `GcObject` (`Struct(GcStruct) | Array(GcArray)`) unifies the GC heap
+  — `gc_heap` is now `Vec<Option<GcObject>>` instead of
+  `Vec<Option<GcStruct>>`, so a `WasmValue::Ref(Some(handle))` stays an
+  unambiguous single-heap index regardless of object kind, and the
+  existing mark-sweep collector needs only one small generic change
+  (`GcObject::children()`) to trace cross-references either direction.
+- Packed (`i8`/`i16`) field/element semantics need NO changes to
+  `struct.new`/`struct.set`/`array.new`/`array.set` at all — masking
+  purely at READ time (`get_s`/`get_u`) is sufficient and simpler,
+  verified byte-for-byte against `struct.wast`'s own "Packed field
+  instructions" module.
+- Two new per-type-index side tables (`struct_field_storage`,
+  `array_element_storage`) feed `struct.new_default`/`array.new_default`'s
+  per-field/element TYPE-correct zero value and the packed extension
+  width.
+- `array.new`/`array.new_default`'s length (an operand-stack i32) is
+  capped at `MAX_ARRAY_ALLOC` (1,000,000) BEFORE any `Vec` allocates —
+  real defense-in-depth independent of `wasm-validator`'s own
+  compile-time guard.
+- `evaluate_const_expr_gc` (a new superset of `evaluate_const_expr`,
+  which stays a thin wrapper with empty GC tables — avoids widening a
+  ~28-call-site signature) adds the same five constant instructions to
+  the RUNTIME const-expr evaluator used at instantiation.
+- `gc_heap` now persists across separate top-level calls (threaded
+  through `WasmExecutionEngine`/`WasmEngineState` exactly like
+  `v128_heap` already is) — needed because a GLOBAL initializer's
+  `struct.new` must survive into a LATER, separate call that reads it
+  back via `global.get` (`struct.wast`'s own "Packed field
+  instructions" module does exactly this).
+- `DecodedOperand::Gc`/`GcOp` gained a fourth `extra` field for
+  `array.new_fixed`'s literal element-count immediate.
+
+38 new unit tests. All 572 lib tests plus every integration test suite
+in this crate pass — zero regressions to the pre-existing
+`struct.new`/`get`/`set` path or the McCarthy Lisp/LANG77 backend.
+
 ## [0.9.81] - 2026-08-31 (W33 second slice — real dynamic dispatch, item 4)
 
 Wires the W33 first slice's nominal-subtype-chain machinery into real

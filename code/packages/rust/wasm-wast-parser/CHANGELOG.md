@@ -1,5 +1,62 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.91 — 2026-09-01 — W33 fourth slice: struct/array TEXT-format grammar + instructions
+
+Closes the gap every prior W33 slice's addendum independently confirmed
+as the real remaining blocker for `struct.wast`/`array.wast`: this crate
+had ZERO text-format parsing for `(type $t (struct ...))`/`(type $t
+(array ...))` declarations.
+
+- `(struct (field ...) ...)`/`(array ...)` type bodies, inside a plain
+  `(type ...)` or a `(rec ...)` group (reusing the existing rec-group
+  two-phase forward-reference machinery): field lists (multiple unnamed
+  fields per clause, `(field)` with zero fields, named single fields),
+  packed `i8`/`i16` storage, mutability, and duplicate-field-name
+  detection (`struct.wast`'s own "duplicate field" `assert_malformed`
+  case).
+- `collect_symbols`'s type/rec loop now peeks each member's composite
+  kind (func/struct/array) in phase A, before any body is parsed, so a
+  `(ref $t)` field can forward-reference a not-yet-parsed sibling in the
+  SAME rec group and still resolve to the right `ValueType` variant.
+  `wasm_types::TypeKind` bookkeeping keeps the existing binary/legacy
+  `types.len() + k` convention completely undisturbed for every module
+  that never declares a struct/array.
+- `struct.new`/`struct.new_default`/`struct.get`/`struct.get_s`/
+  `struct.get_u`/`struct.set` and `array.new`/`array.new_default`/
+  `array.new_fixed`/`array.get`/`array.get_s`/`array.get_u`/`array.set`/
+  `array.len` — folded form only (matching `ref.test`/`ref.cast`'s own
+  established scope). Sub-opcode numbering deliberately preserves
+  `struct.new`(0x00)/`struct.get`(0x02)/`struct.set`(0x04)'s pre-existing
+  bytes (the McCarthy Lisp/LANG77 backend's own shipped runtime
+  semantics) rather than renumbering to match the real GC spec exactly
+  — see `encode_gc_struct_array_instr`'s own doc comment for the full
+  byte table and why this is safe (this repo's `0xFB` bytecode never
+  round-trips through anything outside this crate's own parser +
+  `wasm-execution`'s decoder).
+- `array.new_data`/`array.new_elem`/`array.copy`/`array.fill`/etc. are
+  deliberately NOT wired — they need real data-/elem-segment
+  integration this slice does not attempt.
+- Added `ValueType::NonNullArrayAny` for `(ref array)` — needed by
+  `array.wast`'s own `array.len` helper param, used 4 times in the real
+  vendored text.
+- Fixed a real correctness bug in `dedup_type` (this slice's own earlier
+  change): `Iterator::position` stops at the first VALUE match
+  regardless of a trailing `.filter()`, so it could never continue past
+  a value-matching struct/array dummy placeholder to find a LATER real
+  func type that also matches — now finds the first index satisfying
+  both conditions together, in one pass.
+
+Full-corpus baseline re-run: `struct.wast` now passes 100% across every
+directive kind; `array.wast`'s basic-instructions/type-syntax sections
+likewise (its `array.new_data`/`array.new_elem` sections stay honestly
+not-yet-supported). `type-rec.wast`/`type-subtyping.wast` show a small
+number of new, individually-traced fails — all attributable to the
+pre-existing, already-documented (3b) canonical-type-group-equivalence
+gap and the separately-tracked "no instruction-level type checker"
+limitation, both now newly REACHABLE rather than newly broken. See
+`code/specs/W33-wasm-gc-recursive-type-subtyping.md`'s own addendum for
+the full accounting. 28 new unit tests; all 370 tests in this crate pass.
+
 ## 0.1.90 — 2026-08-31 — W33 second slice: `ref.test`/`ref.cast` TEXT-format parsing (item 4)
 
 Adds `ref.test`/`ref.test null`/`ref.cast`/`ref.cast null` (GC proposal)

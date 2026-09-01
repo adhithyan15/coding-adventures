@@ -297,6 +297,12 @@ impl WasmValue {
             | ValueType::ConcreteFuncRef(_)
             | ValueType::NonNullStructRef(_)
             | ValueType::NonNullConcreteFuncRef(_)
+            // W33 fourth slice: `ArrayRef`/`NonNullArrayRef` are nullable
+            // references at the runtime-value level too -- same "non-null is
+            // purely static" reasoning as `NonNullStructRef` right above.
+            | ValueType::ArrayRef(_)
+            | ValueType::NonNullArrayRef(_)
+            | ValueType::NonNullArrayAny
             | ValueType::Funcref
             | ValueType::Externref
             | ValueType::Exnref
@@ -1906,6 +1912,50 @@ pub fn evaluate_const_expr(
     globals: &[WasmValue],
     v128_heap: &mut Vec<[u8; 16]>,
 ) -> Result<WasmValue, TrapError> {
+    // W33 fourth slice: delegates to the GC-capable version with empty GC
+    // tables, matching this crate's established "don't widen a ~28-call-site
+    // signature, add a new function instead" precedent (see `ref.func`'s
+    // own `0xD2` arm doc comment above, which cites this exact concern for
+    // a DIFFERENT parameter). Every one of THIS function's existing callers
+    // that never evaluates a `struct.new`/`array.new`-shaped constant
+    // expression is completely unaffected -- an empty `gc_heap`/table set
+    // only matters the moment one of those opcodes is actually reached,
+    // which none of them do.
+    evaluate_const_expr_gc(expr, globals, v128_heap, &mut Vec::new(), &[], &[], &[])
+}
+
+/// GC-capable superset of [`evaluate_const_expr`] (W33 fourth slice):
+/// additionally allows `struct.new`/`struct.new_default`/`array.new`/
+/// `array.new_default`/`array.new_fixed` as constant instructions, per the
+/// real GC proposal's own extension to constant expressions -- confirmed
+/// directly against the vendored corpus, not assumed: `struct.wast`'s own
+/// `(global (export "g0") (ref $s) (struct.new $s ...))` (later read back
+/// via `global.get` from a SEPARATE, later top-level call in the SAME
+/// corpus file's "Packed field instructions" module) is the real, concrete
+/// reason this needs a REAL, persistent `gc_heap` (see
+/// `WasmExecutionEngine::gc_heap`'s own doc comment), not a throwaway one
+/// discarded after this single evaluation.
+///
+/// `array.new_data`/`array.new_elem` are deliberately NOT accepted here --
+/// `array.wast`'s own `assert_invalid "constant expression required"`
+/// cases probe exactly this, and `wasm-wast-parser` doesn't parse either
+/// instruction at all yet regardless (see `encode_gc_struct_array_instr`'s
+/// own doc comment), so a global using one fails to PARSE long before
+/// reaching this evaluator.
+///
+/// Allocation here is a plain, unconditional `gc_heap.push` (never a
+/// free-list reuse the way `gc::alloc`'s hot-path allocator is) -- this
+/// function runs at most once per global/segment, during instantiation,
+/// long before any real GC cycle could have tombstoned a slot to reuse.
+pub fn evaluate_const_expr_gc(
+    expr: &[u8],
+    globals: &[WasmValue],
+    v128_heap: &mut Vec<[u8; 16]>,
+    gc_heap: &mut Vec<Option<GcObject>>,
+    struct_field_counts: &[u32],
+    struct_field_storage: &[Vec<wasm_types::StorageType>],
+    array_element_storage: &[Option<wasm_types::StorageType>],
+) -> Result<WasmValue, TrapError> {
     let mut stack: Vec<WasmValue> = Vec::new();
     let mut pos: usize = 0;
 
@@ -2051,17 +2101,102 @@ pub fn evaluate_const_expr(
                 }
                 let sub = expr[pos];
                 pos += 1;
-                if sub != 0x1C {
-                    return Err(TrapError::new(format!(
-                        "illegal WasmGC sub-opcode 0x{:02X} in constant expression",
-                        sub
-                    )));
+                match sub {
+                    0x1C => {
+                        let v = match stack.pop() {
+                            Some(WasmValue::I32(v)) => v,
+                            _ => return Err(TrapError::new("ref.i31: expected an i32 operand")),
+                        };
+                        stack.push(WasmValue::I32(v & 0x7FFF_FFFF));
+                    }
+                    // struct.new / struct.new_default <type_idx> (W33
+                    // fourth slice) -- see this function's own doc comment
+                    // for why constant-expression allocation is real and
+                    // persistent, not a throwaway.
+                    0x00 | 0x01 => {
+                        let (type_idx, consumed) = decode_unsigned(expr, pos).map_err(|e| TrapError::new(e.message))?;
+                        pos += consumed;
+                        let fields = if sub == 0x00 {
+                            let n = *struct_field_counts.get(type_idx as usize).ok_or_else(|| {
+                                TrapError::new(format!("struct.new: no field count registered for struct type {type_idx}"))
+                            })? as usize;
+                            let mut fields = vec![WasmValue::I32(0); n];
+                            for slot in fields.iter_mut().rev() {
+                                *slot = stack.pop().ok_or_else(|| TrapError::new("struct.new: constant expression stack underflow"))?;
+                            }
+                            fields
+                        } else {
+                            let storage = struct_field_storage.get(type_idx as usize).ok_or_else(|| {
+                                TrapError::new(format!("struct.new_default: no field storage registered for struct type {type_idx}"))
+                            })?;
+                            storage.iter().map(|s| WasmValue::default_for(s.widened_type())).collect()
+                        };
+                        let handle = u32::try_from(gc_heap.len())
+                            .map_err(|_| TrapError::new("gc_heap exceeded u32::MAX live objects"))?;
+                        gc_heap.push(Some(GcObject::Struct(GcStruct { type_idx: type_idx as u32, fields })));
+                        stack.push(WasmValue::Ref(Some(handle)));
+                    }
+                    // array.new / array.new_default <type_idx> (W33 fourth
+                    // slice): pop [value?, i32 length].
+                    0x06 | 0x07 => {
+                        let (type_idx, consumed) = decode_unsigned(expr, pos).map_err(|e| TrapError::new(e.message))?;
+                        pos += consumed;
+                        let len = match stack.pop() {
+                            Some(WasmValue::I32(v)) => v as u32 as usize,
+                            _ => return Err(TrapError::new("array.new: expected an i32 length operand")),
+                        };
+                        if len > MAX_ARRAY_ALLOC {
+                            return Err(TrapError::new(format!("array.new: requested length {len} exceeds the maximum of {MAX_ARRAY_ALLOC}")));
+                        }
+                        let elements = if sub == 0x06 {
+                            let val = stack.pop().ok_or_else(|| TrapError::new("array.new: constant expression stack underflow"))?;
+                            vec![val; len]
+                        } else {
+                            let storage = array_element_storage.get(type_idx as usize).copied().flatten().ok_or_else(|| {
+                                TrapError::new(format!("array.new_default: no element storage registered for array type {type_idx}"))
+                            })?;
+                            vec![WasmValue::default_for(storage.widened_type()); len]
+                        };
+                        let handle = u32::try_from(gc_heap.len())
+                            .map_err(|_| TrapError::new("gc_heap exceeded u32::MAX live objects"))?;
+                        gc_heap.push(Some(GcObject::Array(GcArray { type_idx: type_idx as u32, elements })));
+                        stack.push(WasmValue::Ref(Some(handle)));
+                    }
+                    // array.new_fixed <type_idx> <count> (W33 fourth
+                    // slice): pop exactly `count` element values.
+                    0x08 => {
+                        let (type_idx, sz1) = decode_unsigned(expr, pos).map_err(|e| TrapError::new(e.message))?;
+                        pos += sz1;
+                        let (count, sz2) = decode_unsigned(expr, pos).map_err(|e| TrapError::new(e.message))?;
+                        pos += sz2;
+                        // Security review (W33 fourth slice): compare the
+                        // full-width u64 BEFORE narrowing to usize, mirroring
+                        // wasm-validator's equivalent check. Narrowing first
+                        // (`count as usize` then comparing) would let a
+                        // crafted count like `2^32 + 5` silently wrap to `5`
+                        // on a 32-bit target, defeating this guard's purpose
+                        // as a real defense-in-depth check independent of
+                        // the validator's own compile-time one.
+                        if count > MAX_ARRAY_ALLOC as u64 {
+                            return Err(TrapError::new(format!("array.new_fixed: element count {count} exceeds the maximum of {MAX_ARRAY_ALLOC}")));
+                        }
+                        let n = count as usize;
+                        let mut elements = vec![WasmValue::I32(0); n];
+                        for slot in elements.iter_mut().rev() {
+                            *slot = stack.pop().ok_or_else(|| TrapError::new("array.new_fixed: constant expression stack underflow"))?;
+                        }
+                        let handle = u32::try_from(gc_heap.len())
+                            .map_err(|_| TrapError::new("gc_heap exceeded u32::MAX live objects"))?;
+                        gc_heap.push(Some(GcObject::Array(GcArray { type_idx: type_idx as u32, elements })));
+                        stack.push(WasmValue::Ref(Some(handle)));
+                    }
+                    _ => {
+                        return Err(TrapError::new(format!(
+                            "illegal WasmGC sub-opcode 0x{:02X} in constant expression",
+                            sub
+                        )));
+                    }
                 }
-                let v = match stack.pop() {
-                    Some(WasmValue::I32(v)) => v,
-                    _ => return Err(TrapError::new("ref.i31: expected an i32 operand")),
-                };
-                stack.push(WasmValue::I32(v & 0x7FFF_FFFF));
             }
             // `ref.null <heap_type>` (`0xD0`, reference-types proposal --
             // real corpus vendoring pass, `ref_null.wast`'s own `(global
@@ -2239,23 +2374,37 @@ pub enum DecodedOperand {
     /// f64 constant.
     F64(f64),
     /// A WasmGC instruction's decoded immediates: the `0xFB` sub-opcode plus the
-    /// (up to two) index immediates it carries.  Unused indices are `0`.
+    /// (up to two) index immediates it carries, PLUS `extra` (W33 fourth
+    /// slice) for the one instruction whose second immediate is a literal
+    /// COUNT rather than an index (`array.new_fixed`). Unused fields are `0`.
     ///
-    /// | sub  | instruction  | type_idx | field_idx |
-    /// |------|--------------|----------|-----------|
-    /// | 0x00 | struct.new   | ✓        | —         |
-    /// | 0x02 | struct.get   | ✓        | ✓         |
-    /// | 0x04 | struct.set   | ✓        | ✓         |
-    /// | 0x1C | ref.i31      | —        | —         |
-    /// | 0x1D | i31.get_s    | —        | —         |
-    /// | 0x1E | i31.get_u    | —        | —         |
+    /// | sub  | instruction         | type_idx | field_idx | extra |
+    /// |------|---------------------|----------|-----------|-------|
+    /// | 0x00 | struct.new          | ✓        | —         | —     |
+    /// | 0x01 | struct.new_default  | ✓        | —         | —     |
+    /// | 0x02 | struct.get          | ✓        | ✓         | —     |
+    /// | 0x03 | struct.get_s        | ✓        | ✓         | —     |
+    /// | 0x04 | struct.set          | ✓        | ✓         | —     |
+    /// | 0x05 | struct.get_u        | ✓        | ✓         | —     |
+    /// | 0x06 | array.new           | ✓        | —         | —     |
+    /// | 0x07 | array.new_default   | ✓        | —         | —     |
+    /// | 0x08 | array.new_fixed     | ✓        | —         | ✓ (count) |
+    /// | 0x0B | array.get           | ✓        | —         | —     |
+    /// | 0x0C | array.get_s         | ✓        | —         | —     |
+    /// | 0x0D | array.get_u         | ✓        | —         | —     |
+    /// | 0x0E | array.set           | ✓        | —         | —     |
+    /// | 0x0F | array.len           | —        | —         | —     |
+    /// | 0x1C | ref.i31             | —        | —         | —     |
+    /// | 0x1D | i31.get_s           | —        | —         | —     |
+    /// | 0x1E | i31.get_u           | —        | —         | —     |
     ///
-    /// Carrying all three together (rather than a bare `Int(sub)`) lets the
+    /// Carrying all four together (rather than a bare `Int(sub)`) lets the
     /// single `0xFB` handler dispatch *and* read its indices from one place.
     Gc {
         sub: u8,
         type_idx: u32,
         field_idx: u32,
+        extra: u32,
     },
     /// An atomic memory operation's (WASM18) decoded immediates: the
     /// `0xFE` sub-opcode plus the memarg offset. Unlike `Gc` (which needs
@@ -2403,16 +2552,33 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
         // The MVP opcode table (`get_opcode`) is single-byte and doesn't know
         // the `0xFB` GC prefix, so we decode it explicitly: read the sub-opcode
         // byte, then any index immediates it carries, and bundle them in a
-        // `Gc { sub, type_idx, field_idx }` operand. The engine's `0xFB` handler
-        // dispatches on `sub` and reads the indices from there.
+        // `Gc { sub, type_idx, field_idx, extra }` operand. The engine's
+        // `0xFB` handler dispatches on `sub` and reads the indices from there.
         //
-        //   sub  instruction   immediates
-        //   0x00 struct.new    <type_idx>
-        //   0x02 struct.get    <type_idx> <field_idx>
-        //   0x04 struct.set    <type_idx> <field_idx>
+        //   sub  instruction         immediates
+        //   0x00 struct.new          <type_idx>
+        //   0x01 struct.new_default  <type_idx>                    (W33 fourth slice)
+        //   0x02 struct.get          <type_idx> <field_idx>
+        //   0x03 struct.get_s        <type_idx> <field_idx>        (W33 fourth slice)
+        //   0x04 struct.set          <type_idx> <field_idx>
+        //   0x05 struct.get_u        <type_idx> <field_idx>        (W33 fourth slice; NOT the real spec's own 0x05=set)
+        //   0x06 array.new           <type_idx>                    (W33 fourth slice)
+        //   0x07 array.new_default   <type_idx>                    (W33 fourth slice)
+        //   0x08 array.new_fixed     <type_idx> <extra=count>      (W33 fourth slice)
+        //   0x0B array.get           <type_idx>                    (W33 fourth slice)
+        //   0x0C array.get_s        <type_idx>                    (W33 fourth slice)
+        //   0x0D array.get_u        <type_idx>                    (W33 fourth slice)
+        //   0x0E array.set          <type_idx>                    (W33 fourth slice)
+        //   0x0F array.len          (none -- no type immediate)   (W33 fourth slice)
         //   0x1C ref.i31       (none)
         //   0x1D i31.get_s     (none)
         //   0x1E i31.get_u     (none, W20)
+        //
+        // See `wasm-wast-parser::encode_gc_struct_array_instr`'s own doc
+        // comment for why this repo's OWN sub-opcode numbering deliberately
+        // deviates from the real GC spec's for struct.set/struct.get_u
+        // specifically (preserving this engine's pre-existing, already-
+        // shipped struct.set = 0x04 byte-for-byte).
         if opcode_byte == 0xFB {
             let sub = if offset < code.len() {
                 let s = code[offset];
@@ -2421,12 +2587,13 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
             } else {
                 0
             };
-            let (type_idx, field_idx) = match sub {
-                // struct.new: one index immediate (the struct type).
-                0x00 => {
+            let (type_idx, field_idx, extra) = match sub {
+                // struct.new / struct.new_default: one index immediate (the
+                // struct type).
+                0x00 | 0x01 => {
                     let (t, sz) = decode_leb_u32(code, offset);
                     offset += sz;
-                    (t, 0)
+                    (t, 0, 0)
                 }
                 // ref.test (0x14) / ref.test null (0x15) / ref.cast (0x16) /
                 // ref.cast null (0x17): one heap-type immediate each (LANG77
@@ -2442,22 +2609,45 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                 0x14..=0x17 => {
                     let (t, sz) = decode_leb_u32(code, offset);
                     offset += sz;
-                    (t, 0)
+                    (t, 0, 0)
                 }
-                // struct.get / struct.set: two index immediates (type, field).
-                0x02 | 0x04 => {
+                // struct.get / struct.get_s / struct.get_u / struct.set: two
+                // index immediates (type, field).
+                0x02..=0x05 => {
                     let (t, sz1) = decode_leb_u32(code, offset);
                     let (f, sz2) = decode_leb_u32(code, offset + sz1);
                     offset += sz1 + sz2;
-                    (t, f)
+                    (t, f, 0)
                 }
+                // array.new / array.new_default / array.get / array.get_s /
+                // array.get_u / array.set: one index immediate (the array
+                // type) -- W33 fourth slice.
+                0x06 | 0x07 | 0x0B | 0x0C | 0x0D | 0x0E => {
+                    let (t, sz) = decode_leb_u32(code, offset);
+                    offset += sz;
+                    (t, 0, 0)
+                }
+                // array.new_fixed: type index PLUS a literal element count
+                // (carried in `extra`, unlike every other immediate here
+                // which is an index) -- W33 fourth slice.
+                0x08 => {
+                    let (t, sz1) = decode_leb_u32(code, offset);
+                    let (n, sz2) = decode_leb_u32(code, offset + sz1);
+                    offset += sz1 + sz2;
+                    (t, 0, n)
+                }
+                // array.len: NO type immediate at all -- an array's length
+                // is a property of the heap object itself (W33 fourth
+                // slice; see `wasm-wast-parser::encode_array_len`'s own doc
+                // comment for the real spec rationale).
+                0x0F => (0, 0, 0),
                 // ref.i31 / i31.get_s / i31.get_u (W20) (and any unknown
                 // sub-opcode): no immediates.
-                _ => (0, 0),
+                _ => (0, 0, 0),
             };
             instructions.push(DecodedInstruction {
                 opcode: 0xFB,
-                operand: DecodedOperand::Gc { sub, type_idx, field_idx },
+                operand: DecodedOperand::Gc { sub, type_idx, field_idx, extra },
             });
             continue;
         }
@@ -3318,6 +3508,49 @@ pub struct GcStruct {
     pub fields: Vec<WasmValue>,
 }
 
+/// A heap-allocated WasmGC array object (W33 fourth slice) — the array
+/// counterpart of [`GcStruct`]. Unlike a struct's fixed, per-TYPE field
+/// count, an array's length varies per-INSTANCE (declared at `array.new`/
+/// `array.new_default`/`array.new_fixed` time), so it lives directly on the
+/// heap object rather than needing a separate lookup table the way
+/// `struct_field_counts` does for structs.
+#[derive(Debug, Clone, PartialEq)]
+pub struct GcArray {
+    /// The array type index this object was allocated with.
+    pub type_idx: u32,
+    /// The element values, in index order. `elements.len()` IS this
+    /// array's length (`array.len`'s entire job).
+    pub elements: Vec<WasmValue>,
+}
+
+/// One GC heap object: either a [`GcStruct`] or a [`GcArray`] (W33 fourth
+/// slice). Unifying both kinds into a single `gc_heap: Vec<Option<GcObject>>`
+/// (rather than a second, separate `array_heap`) means a `WasmValue::
+/// Ref(Some(handle))` unambiguously indexes ONE heap regardless of which
+/// kind of object it names — no handle-tagging scheme is needed to tell a
+/// struct handle from an array handle apart, and the mark-sweep collector
+/// (`crate::gc`) only needs ONE root-walk/sweep implementation that already
+/// naturally traces cross-references in EITHER direction (an array element
+/// holding a struct ref, or a struct field holding an array ref — both
+/// real, vendored shapes: `array.wast`'s own `(type $vec (array (ref
+/// $bvec)))`).
+#[derive(Debug, Clone, PartialEq)]
+pub enum GcObject {
+    Struct(GcStruct),
+    Array(GcArray),
+}
+
+impl GcObject {
+    /// This object's own child references, for the mark phase's root walk
+    /// — a struct's fields or an array's elements, uniformly.
+    fn children(&self) -> &[WasmValue] {
+        match self {
+            GcObject::Struct(s) => &s.fields,
+            GcObject::Array(a) => &a.elements,
+        }
+    }
+}
+
 /// The WASM execution context — all runtime state for WASM instructions.
 pub struct WasmExecutionContext {
     /// Every memory this instance declared/imported, in index order
@@ -3381,14 +3614,16 @@ pub struct WasmExecutionContext {
     /// below, which holds live runtime *values*, not decoded bytecode
     /// literals.
     pub simd_consts: Vec<[u8; 16]>,
-    /// The WasmGC object heap (LANG77 L3b-3a-3b) — a real, collected
-    /// mark-sweep arena (W04): `Some` is a live object, `None` is a
-    /// tombstoned/reclaimed slot available for reuse (see the
+    /// The WasmGC object heap (LANG77 L3b-3a-3b; W33 fourth slice widened
+    /// this from struct-only to [`GcObject`], see that enum's own doc
+    /// comment for why one unified heap rather than a second `array_heap`)
+    /// — a real, collected mark-sweep arena (W04): `Some` is a live object,
+    /// `None` is a tombstoned/reclaimed slot available for reuse (see the
     /// [`gc`](crate::gc) module). A `WasmValue::Ref(Some(h))` indexes into
     /// this Vec.  **Module-global**: it persists across calls within one run
     /// (a cons built in a callee and returned stays live), so it is *not*
     /// saved/restored per call.
-    pub gc_heap: Vec<Option<GcStruct>>,
+    pub gc_heap: Vec<Option<GcObject>>,
     /// The v128 lane-vector heap (SIMD, see `code/specs/
     /// W13-wasm-simd-v128-first-slice.md`). A `WasmValue::V128(h)` indexes
     /// into this Vec. Unlike `gc_heap`, v128 values need no mark-sweep
@@ -3422,6 +3657,28 @@ pub struct WasmExecutionContext {
     /// surface struct type definitions to the engine); empty by default, in
     /// which case any `struct.*` op is a clean trap.  Module-global / constant.
     pub struct_field_counts: Vec<u32>,
+    /// Per-field [`wasm_types::StorageType`], flat-indexed by struct type
+    /// index exactly like `struct_field_counts` (W33 fourth slice). Needed
+    /// for two things `struct_field_counts` alone can't provide: (1)
+    /// `struct.new_default`'s per-field zero value (an `f32` field defaults
+    /// to `F32(0.0)`, not `I32(0)`) — `struct.new` itself needs no such
+    /// table, since its field values always come from the operand stack,
+    /// already correctly typed by whatever pushed them; (2) `struct.get_s`/
+    /// `struct.get_u`'s sign/zero-extension width for a PACKED (`i8`/`i16`)
+    /// field — see those opcodes' own handler doc comment for why
+    /// `struct.new`/`struct.set` themselves need no truncation logic at
+    /// all (masking purely at READ time is sufficient and simpler).
+    /// Non-struct type indices, and any struct index this table doesn't
+    /// cover, get an empty `Vec` — harmless, since nothing ever indexes
+    /// into it without also bounds-checking against `struct_field_counts`.
+    pub struct_field_storage: Vec<Vec<wasm_types::StorageType>>,
+    /// The WasmGC array-element analogue of `struct_field_storage` (W33
+    /// fourth slice): `array_element_storage[type_idx]` is `Some(storage)`
+    /// for an array type, `None` for anything else (including an
+    /// out-of-range index) — used by `array.new_default`'s zero value and
+    /// `array.get_s`/`array.get_u`'s extension width, the same two roles
+    /// `struct_field_storage` plays for structs.
+    pub array_element_storage: Vec<Option<wasm_types::StorageType>>,
     /// GC bookkeeping (free list, live count, adaptive threshold, profile)
     /// alongside `gc_heap` — see [`gc::GcState`](crate::gc::GcState).
     /// Module-global for the same reason `gc_heap` is.
@@ -3853,10 +4110,13 @@ impl<T> AssertSend<T> {
 pub struct GcOp {
     /// The `0xFB` sub-opcode (e.g. `0x00` struct.new, `0x02` struct.get).
     pub sub: u8,
-    /// The struct type index immediate (0 when the op carries none).
+    /// The struct/array type index immediate (0 when the op carries none).
     pub type_idx: u32,
     /// The field index immediate (0 when the op carries none).
     pub field_idx: u32,
+    /// `array.new_fixed`'s literal element-count immediate (W33 fourth
+    /// slice; 0 for every other op, which has no count immediate at all).
+    pub extra: u32,
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -3923,12 +4183,13 @@ fn convert_operand(
             br_table_targets.push(table);
             Some(Operand::Index(idx))
         }
-        DecodedOperand::Gc { sub, type_idx, field_idx } => {
+        DecodedOperand::Gc { sub, type_idx, field_idx, extra } => {
             let idx = gc_ops.len();
             gc_ops.push(GcOp {
                 sub: *sub,
                 type_idx: *type_idx,
                 field_idx: *field_idx,
+                extra: *extra,
             });
             Some(Operand::Index(idx))
         }
@@ -4082,12 +4343,90 @@ fn pop_struct_ref(vm: &mut GenericVM, op: &str) -> Result<u32, VMError> {
     match pop_wasm(vm)? {
         WasmValue::Ref(Some(h)) => Ok(h),
         WasmValue::Ref(None) => Err(VMError::GenericError(format!(
-            "{op}: null reference (cannot access a field of nil)"
+            "{op}: null structure reference (cannot access a field of nil)"
         ))),
         other => Err(VMError::GenericError(format!(
             "{op}: expected a struct reference, got {other:?}"
         ))),
     }
+}
+
+// ── Helper: pop a *non-null* array reference handle (W33 fourth slice) ────
+//
+// The array-hierarchy mirror of `pop_struct_ref` above — same null-deref
+// and type-mismatch clean-trap reasoning, just named for `array.wast`'s
+// own vendored trap text ("null array reference").
+fn pop_array_ref(vm: &mut GenericVM, op: &str) -> Result<u32, VMError> {
+    match pop_wasm(vm)? {
+        WasmValue::Ref(Some(h)) => Ok(h),
+        WasmValue::Ref(None) => Err(VMError::GenericError(format!(
+            "{op}: null array reference (cannot access an element of nil)"
+        ))),
+        other => Err(VMError::GenericError(format!(
+            "{op}: expected an array reference, got {other:?}"
+        ))),
+    }
+}
+
+// ── Helper: pop `array.new`/`array.new_default`'s i32 length operand,
+// bounds-checked against a DoS ceiling BEFORE any allocation (W33 fourth
+// slice) ──────────────────────────────────────────────────────────────────
+//
+// Unlike `array.new_fixed`'s `extra` immediate (a fixed, bytecode-baked
+// count `wasm-validator` already caps at MODULE-VALIDATION time via its own
+// `MAX_ARRAY_NEW_FIXED_COUNT`), this length comes from the OPERAND STACK —
+// a runtime i32 value a malformed or adversarial module can set to
+// `i32::MAX` regardless of what validation ran beforehand (this engine's
+// own threat model treats bytecode as untrusted independently of whether a
+// separate validation pass happened to run first — see `MAX_CALL_DEPTH`'s
+// own doc comment for the same "defense in depth, not merely a validator
+// gate" reasoning). Rejecting with a clean trap here, BEFORE `vec![value;
+// len]` ever runs, is exactly the guard that call site needs: a `usize`
+// cast of a huge `i32` (reinterpreted as `u32`) would otherwise attempt a
+// multi-gigabyte allocation before any element is even read.
+fn pop_array_length(vm: &mut GenericVM, op: &str) -> Result<usize, VMError> {
+    let len = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+    if len > MAX_ARRAY_ALLOC {
+        return Err(VMError::GenericError(format!("{op}: requested length {len} exceeds the maximum of {MAX_ARRAY_ALLOC}")));
+    }
+    Ok(len)
+}
+
+/// Ceiling on how many elements a single `array.new`/`array.new_default`/
+/// `array.new_fixed` will actually allocate (W33 fourth slice) — see
+/// [`pop_array_length`]'s own doc comment for why this guard belongs in
+/// the runtime itself, not only in `wasm-validator`.
+const MAX_ARRAY_ALLOC: usize = 1_000_000;
+
+/// Extend a raw stored field/element value to its full `i32` width, per
+/// `struct.get`/`struct.get_s`/`struct.get_u` (and the array equivalents')
+/// own rules (W33 fourth slice): a NON-packed storage type (or an unknown
+/// one — `storage: None`, meaning the embedder never registered field/
+/// element storage for this type, a permissive fallback matching this
+/// crate's established "missing metadata is never a hard error" convention)
+/// passes `raw` through completely unchanged, regardless of `signed`. A
+/// packed (`i8`/`i16`) storage type masks `raw` to its declared bit width,
+/// then either sign-extends (`signed == true`, `get_s`) or leaves it
+/// zero-extended (`signed == false`, `get_u`) back out to a full `i32`.
+///
+/// `raw` is expected to be `WasmValue::I32` for a packed field (the only
+/// storage kind packing ever applies to); any other `WasmValue` variant
+/// reaching here (a `struct.get`/`array.get` on a non-packed field) is
+/// returned unchanged regardless of `storage`, matching `struct.get`'s own
+/// documented "no truncation ever needed for a non-packed field" design.
+fn extend_packed_value(raw: WasmValue, storage: Option<wasm_types::StorageType>, signed: bool) -> Result<WasmValue, VMError> {
+    let bits = match storage {
+        Some(wasm_types::StorageType::I8) => 8,
+        Some(wasm_types::StorageType::I16) => 16,
+        _ => return Ok(raw),
+    };
+    let WasmValue::I32(v) = raw else {
+        return Ok(raw);
+    };
+    let shift = 32 - bits;
+    let masked = ((v as u32) << shift) >> shift; // zero-extend into the low `bits` bits, high bits clear
+    let extended = if signed { (masked << shift) as i32 >> shift } else { masked as i32 };
+    Ok(WasmValue::I32(extended))
 }
 
 // ── Helper: real dynamic type check for ref.test/ref.cast (W33 second slice) ──
@@ -4719,7 +5058,8 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 push_wasm(vm, WasmValue::I32(v & 0x7FFF_FFFF));
             }
 
-            // struct.new <type_idx>: allocate a cons-like object.
+            // struct.new <type_idx>: allocate a struct object, popping one
+            // value per declared field from the stack (last field on top).
             0x00 => {
                 let n = *ctx
                     .struct_field_counts
@@ -4737,53 +5077,191 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 for slot in fields.iter_mut().rev() {
                     *slot = pop_wasm(vm)?;
                 }
-                let obj = GcStruct { type_idx: op.type_idx, fields };
-                let handle = gc::alloc(ctx, obj)?;
+                let handle = gc::alloc(ctx, GcObject::Struct(GcStruct { type_idx: op.type_idx, fields }))?;
                 push_wasm(vm, WasmValue::Ref(Some(handle)));
             }
 
-            // struct.get <type_idx> <field_idx>: read a field. A `None` slot
-            // (out-of-range *or* tombstoned by a collection) is the same
-            // clean-trap case — both mean "not a live object".
-            0x02 => {
+            // struct.new_default <type_idx> (W33 fourth slice): allocate a
+            // struct object with every field set to ITS OWN type's zero
+            // value (an `f32` field defaults to `F32(0.0)`, a reference
+            // field to `Ref(None)`, etc. — never a blind `I32(0)`) rather
+            // than popping anything from the stack.
+            0x01 => {
+                let storage = ctx.struct_field_storage.get(op.type_idx as usize).ok_or_else(|| {
+                    VMError::GenericError(format!(
+                        "struct.new_default: no field storage registered for struct type {} \
+                         (call set_struct_field_storage)",
+                        op.type_idx
+                    ))
+                })?;
+                let fields: Vec<WasmValue> = storage.iter().map(|s| WasmValue::default_for(s.widened_type())).collect();
+                let handle = gc::alloc(ctx, GcObject::Struct(GcStruct { type_idx: op.type_idx, fields }))?;
+                push_wasm(vm, WasmValue::Ref(Some(handle)));
+            }
+
+            // struct.get / struct.get_s / struct.get_u <type_idx> <field_idx>
+            // (W33 fourth slice adds the two packed-field variants): read a
+            // field. A `None` slot (out-of-range *or* tombstoned by a
+            // collection) is the same clean-trap case — both mean "not a
+            // live object".
+            //
+            // Packed (`i8`/`i16`) fields need NO special handling in
+            // `struct.new`/`struct.set` above/below at all — masking
+            // PURELY at read time here is sufficient and simpler: an `i8`
+            // field storing a raw, never-truncated `i32` (e.g. `257`) reads
+            // back identically to one that WAS truncated at write time,
+            // because `x & 0xFF` (or sign-extending from the resulting low
+            // byte) only ever depends on the value's low bits, which
+            // truncating-at-write vs. masking-at-read both preserve
+            // identically. Verified directly against `struct.wast`'s own
+            // "Packed field instructions" module (e.g. `set_get_packed_g0_1`
+            // writes `257` to an `i8` field, expects both `get_s`/`get_u`
+            // to read back `1`).
+            0x02 | 0x03 | 0x05 => {
                 let handle = pop_struct_ref(vm, "struct.get")?;
-                let obj = ctx
-                    .gc_heap
-                    .get(handle as usize)
-                    .and_then(|slot| slot.as_ref())
-                    .ok_or_else(|| {
-                        VMError::GenericError(format!("struct.get: dangling handle {handle}"))
-                    })?;
-                let val = *obj.fields.get(op.field_idx as usize).ok_or_else(|| {
+                let obj = ctx.gc_heap.get(handle as usize).and_then(|slot| slot.as_ref()).ok_or_else(|| {
+                    VMError::GenericError(format!("struct.get: dangling handle {handle}"))
+                })?;
+                let GcObject::Struct(s) = obj else {
+                    return Err(VMError::GenericError(format!("struct.get: handle {handle} is not a struct")));
+                };
+                let raw = *s.fields.get(op.field_idx as usize).ok_or_else(|| {
                     VMError::GenericError(format!(
                         "struct.get: field {} out of range for struct with {} field(s)",
                         op.field_idx,
-                        obj.fields.len()
+                        s.fields.len()
                     ))
                 })?;
+                let storage = ctx
+                    .struct_field_storage
+                    .get(op.type_idx as usize)
+                    .and_then(|fs| fs.get(op.field_idx as usize))
+                    .copied();
+                let val = extend_packed_value(raw, storage, op.sub == 0x03)?;
                 push_wasm(vm, val);
             }
 
             // struct.set <type_idx> <field_idx>: write a field. Same
-            // None-slot clean-trap reasoning as struct.get above.
+            // None-slot clean-trap reasoning as struct.get above. No
+            // truncation needed at write time -- see struct.get's own doc
+            // comment on this arm above.
             0x04 => {
                 // Stack order: ... ref, value (value on top).
                 let val = pop_wasm(vm)?;
                 let handle = pop_struct_ref(vm, "struct.set")?;
-                let obj = ctx
-                    .gc_heap
-                    .get_mut(handle as usize)
-                    .and_then(|slot| slot.as_mut())
-                    .ok_or_else(|| {
-                        VMError::GenericError(format!("struct.set: dangling handle {handle}"))
-                    })?;
-                let slot = obj.fields.get_mut(op.field_idx as usize).ok_or_else(|| {
+                let obj = ctx.gc_heap.get_mut(handle as usize).and_then(|slot| slot.as_mut()).ok_or_else(|| {
+                    VMError::GenericError(format!("struct.set: dangling handle {handle}"))
+                })?;
+                let GcObject::Struct(s) = obj else {
+                    return Err(VMError::GenericError(format!("struct.set: handle {handle} is not a struct")));
+                };
+                let slot = s.fields.get_mut(op.field_idx as usize).ok_or_else(|| {
                     VMError::GenericError(format!(
                         "struct.set: field {} out of range",
                         op.field_idx
                     ))
                 })?;
                 *slot = val;
+            }
+
+            // array.new <type_idx> (W33 fourth slice): pop [value, i32
+            // length], allocate an array of `length` copies of `value`.
+            0x06 => {
+                let len = pop_array_length(vm, "array.new")?;
+                let val = pop_wasm(vm)?;
+                let elements = vec![val; len];
+                let handle = gc::alloc(ctx, GcObject::Array(GcArray { type_idx: op.type_idx, elements }))?;
+                push_wasm(vm, WasmValue::Ref(Some(handle)));
+            }
+
+            // array.new_default <type_idx> (W33 fourth slice): pop [i32
+            // length], allocate an array of `length` copies of the
+            // element type's own zero value.
+            0x07 => {
+                let len = pop_array_length(vm, "array.new_default")?;
+                let storage = ctx.array_element_storage.get(op.type_idx as usize).copied().flatten().ok_or_else(|| {
+                    VMError::GenericError(format!(
+                        "array.new_default: no element storage registered for array type {} \
+                         (call set_array_element_storage)",
+                        op.type_idx
+                    ))
+                })?;
+                let elements = vec![WasmValue::default_for(storage.widened_type()); len];
+                let handle = gc::alloc(ctx, GcObject::Array(GcArray { type_idx: op.type_idx, elements }))?;
+                push_wasm(vm, WasmValue::Ref(Some(handle)));
+            }
+
+            // array.new_fixed <type_idx> <count=extra> (W33 fourth slice):
+            // pop exactly `extra` element values off the stack (last
+            // element on top, same convention as struct.new's fields).
+            0x08 => {
+                let n = op.extra as usize;
+                if n > MAX_ARRAY_ALLOC {
+                    return Err(VMError::GenericError(format!(
+                        "array.new_fixed: element count {n} exceeds the maximum of {MAX_ARRAY_ALLOC}"
+                    )));
+                }
+                let mut elements = vec![WasmValue::I32(0); n];
+                for slot in elements.iter_mut().rev() {
+                    *slot = pop_wasm(vm)?;
+                }
+                let handle = gc::alloc(ctx, GcObject::Array(GcArray { type_idx: op.type_idx, elements }))?;
+                push_wasm(vm, WasmValue::Ref(Some(handle)));
+            }
+
+            // array.get / array.get_s / array.get_u <type_idx> (W33 fourth
+            // slice): pop [arrayref, i32 index], push the element's --
+            // possibly sign/zero-extended, see struct.get's own doc
+            // comment on why masking purely at read time suffices --
+            // value. Out-of-range index is "out of bounds array access",
+            // matching `array.wast`'s own vendored trap text (grading
+            // doesn't string-match trap text, see `wasm-conformance`'s own
+            // `assert_trap` doc comment, but the real, precise message
+            // still belongs here for anyone reading a real trap).
+            0x0B..=0x0D => {
+                let idx = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let handle = pop_array_ref(vm, "array.get")?;
+                let obj = ctx.gc_heap.get(handle as usize).and_then(|slot| slot.as_ref()).ok_or_else(|| {
+                    VMError::GenericError(format!("array.get: dangling handle {handle}"))
+                })?;
+                let GcObject::Array(a) = obj else {
+                    return Err(VMError::GenericError(format!("array.get: handle {handle} is not an array")));
+                };
+                let raw = *a.elements.get(idx).ok_or_else(|| VMError::GenericError(format!("out of bounds array access: index {idx}, length {}", a.elements.len())))?;
+                let storage = ctx.array_element_storage.get(op.type_idx as usize).copied().flatten();
+                let val = extend_packed_value(raw, storage, op.sub == 0x0C)?;
+                push_wasm(vm, val);
+            }
+
+            // array.set <type_idx> (W33 fourth slice): pop [arrayref, i32
+            // index, value], write the element. No truncation needed at
+            // write time -- see struct.get's own doc comment.
+            0x0E => {
+                let val = pop_wasm(vm)?;
+                let idx = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let handle = pop_array_ref(vm, "array.set")?;
+                let obj = ctx.gc_heap.get_mut(handle as usize).and_then(|slot| slot.as_mut()).ok_or_else(|| {
+                    VMError::GenericError(format!("array.set: dangling handle {handle}"))
+                })?;
+                let GcObject::Array(a) = obj else {
+                    return Err(VMError::GenericError(format!("array.set: handle {handle} is not an array")));
+                };
+                let len = a.elements.len();
+                let slot = a.elements.get_mut(idx).ok_or_else(|| VMError::GenericError(format!("out of bounds array access: index {idx}, length {len}")))?;
+                *slot = val;
+            }
+
+            // array.len (W33 fourth slice): NO type immediate. Pop an
+            // arrayref, push its length as i32.
+            0x0F => {
+                let handle = pop_array_ref(vm, "array.len")?;
+                let obj = ctx.gc_heap.get(handle as usize).and_then(|slot| slot.as_ref()).ok_or_else(|| {
+                    VMError::GenericError(format!("array.len: dangling handle {handle}"))
+                })?;
+                let GcObject::Array(a) = obj else {
+                    return Err(VMError::GenericError(format!("array.len: handle {handle} is not an array")));
+                };
+                push_wasm(vm, WasmValue::I32(a.elements.len() as i32));
             }
 
             // ref.test (0x14) / ref.test null (0x15): pop a reference, push i32
@@ -11360,6 +11838,12 @@ pub struct WasmEngineState {
     /// all need updating), written back here so the caller can restore it
     /// onto the owning `WasmInstance`.
     pub v128_heap: Vec<[u8; 16]>,
+    /// The instance's persistent GC object heap after this call (W33 fourth
+    /// slice) -- same round-trip shape as `v128_heap` above, for the same
+    /// "a global initializer's own struct/array must survive into a later
+    /// call" reason. Set via [`WasmExecutionEngine::set_gc_heap`] before
+    /// the call.
+    pub gc_heap: Vec<Option<GcObject>>,
     /// Each data segment's "already dropped" state after this call (task
     /// #95) -- set via [`WasmExecutionEngine::set_dropped_data_segments`]
     /// before the call, written back here so the caller can restore it
@@ -11394,6 +11878,14 @@ pub struct WasmExecutionEngine {
     /// set with [`WasmExecutionEngine::set_struct_field_counts`].  Flows into the
     /// execution context so `struct.new N` knows how many fields to pop.
     struct_field_counts: Vec<u32>,
+    /// Per-field storage types, flat-indexed like `struct_field_counts`
+    /// (W33 fourth slice). Empty by default; set with
+    /// [`WasmExecutionEngine::set_struct_field_storage`].
+    struct_field_storage: Vec<Vec<wasm_types::StorageType>>,
+    /// Per-array-type element storage type, flat-indexed (W33 fourth
+    /// slice). Empty by default; set with
+    /// [`WasmExecutionEngine::set_array_element_storage`].
+    array_element_storage: Vec<Option<wasm_types::StorageType>>,
     /// The module's raw type section, indexed by **type index** — distinct
     /// from `func_types`, which is indexed by *function* index (one entry
     /// per function, resolved to whichever type that function declares).
@@ -11439,6 +11931,17 @@ pub struct WasmExecutionEngine {
     /// `type_section`) when the embedder has a persistent instance to
     /// thread it from.
     v128_heap: Vec<[u8; 16]>,
+    /// The instance's persistent GC object heap (W33 fourth slice) --
+    /// needed because a GLOBAL initializer can itself allocate a struct/
+    /// array (`struct.wast`'s own `(global (ref $s) (struct.new $s ...))`,
+    /// later read back via `global.get` from a SEPARATE, later top-level
+    /// call), so the object it creates must survive past the instantiation
+    /// call that created it -- exactly the same "persists across calls"
+    /// requirement `v128_heap` already has, for the identical reason
+    /// (`v128.const` in a global initializer). Defaults empty; set for
+    /// real via [`Self::set_gc_heap`] (same optional-setter pattern as
+    /// `v128_heap`/`struct_field_counts`).
+    gc_heap: Vec<Option<GcObject>>,
     /// The module's data segments' raw bytes (task #95) -- see
     /// `WasmExecutionContext::data_segments`'s own doc comment. Immutable
     /// content, so unlike `dropped_data_segments` below there is no
@@ -11478,6 +11981,8 @@ impl WasmExecutionEngine {
             func_bodies: config.func_bodies,
             host_functions: config.host_functions,
             struct_field_counts: Vec::new(),
+            struct_field_storage: Vec::new(),
+            array_element_storage: Vec::new(),
             type_section: Vec::new(),
             type_subtyping: Vec::new(),
             func_type_indices: Vec::new(),
@@ -11485,6 +11990,7 @@ impl WasmExecutionEngine {
             tag_identities: Vec::new(),
             last_gc_state: gc::GcState::default(),
             v128_heap: vec![[0u8; 16]],
+            gc_heap: Vec::new(),
             data_segments: Vec::new(),
             dropped_data_segments: Vec::new(),
             elements: Vec::new(),
@@ -11500,6 +12006,27 @@ impl WasmExecutionEngine {
     /// module once that lands, L3b-3a-3c).  Returns `&mut self` for chaining.
     pub fn set_struct_field_counts(&mut self, counts: Vec<u32>) -> &mut Self {
         self.struct_field_counts = counts;
+        self
+    }
+
+    /// Register each struct type's per-field [`wasm_types::StorageType`],
+    /// flat-indexed exactly like `set_struct_field_counts` (W33 fourth
+    /// slice) — `storage[N][k]` is field `k`'s storage type for struct
+    /// type `N`. Needed for `struct.new_default`'s per-field zero value and
+    /// `struct.get_s`/`struct.get_u`'s packed-field sign/zero-extension
+    /// width — see [`WasmExecutionContext::struct_field_storage`]'s own doc
+    /// comment. Returns `&mut self` for chaining.
+    pub fn set_struct_field_storage(&mut self, storage: Vec<Vec<wasm_types::StorageType>>) -> &mut Self {
+        self.struct_field_storage = storage;
+        self
+    }
+
+    /// Register each array type's element [`wasm_types::StorageType`],
+    /// flat-indexed like `set_struct_field_counts` (W33 fourth slice) —
+    /// `storage[N]` is `Some(element storage)` for array type `N`, `None`
+    /// for a non-array type index. Returns `&mut self` for chaining.
+    pub fn set_array_element_storage(&mut self, storage: Vec<Option<wasm_types::StorageType>>) -> &mut Self {
+        self.array_element_storage = storage;
         self
     }
 
@@ -11599,6 +12126,16 @@ impl WasmExecutionEngine {
         self
     }
 
+    /// Seed the engine's persistent GC object heap (W33 fourth slice) --
+    /// same optional-setter/persistence shape as [`Self::set_v128_heap`],
+    /// for the identical "a global initializer's own allocation must
+    /// survive into a later, separate top-level call" reason. Returns
+    /// `&mut self` for chaining.
+    pub fn set_gc_heap(&mut self, heap: Vec<Option<GcObject>>) -> &mut Self {
+        self.gc_heap = heap;
+        self
+    }
+
     /// Register the module's data segments' raw bytes, indexed by data-
     /// segment index (task #95) -- `memory.init`'s source. Same optional-
     /// setter pattern as `set_struct_field_counts`/`set_type_section`:
@@ -11666,6 +12203,7 @@ impl WasmExecutionEngine {
             globals: self.globals,
             host_functions: self.host_functions,
             v128_heap: self.v128_heap,
+            gc_heap: self.gc_heap,
             dropped_data_segments: self.dropped_data_segments,
             dropped_elements: self.dropped_elements,
         }
@@ -11781,12 +12319,19 @@ impl WasmExecutionEngine {
             br_table_targets: Vec::new(),
             gc_ops: Vec::new(),
             simd_consts: Vec::new(),
-            // The GC heap starts empty and grows as `struct.new` allocates; it
-            // lives for the whole call so a cons built in a callee survives.
-            // Real mark-sweep collection now runs against it (W04) at loop
-            // back-edges and calls, so a long call no longer grows it
-            // without bound.
-            gc_heap: Vec::new(),
+            // W33 fourth slice: cloned from `self.gc_heap`, NOT reseeded to
+            // `Vec::new()` -- the identical `v128_heap` fix just below
+            // applies here for the identical reason: a struct/array a
+            // GLOBAL initializer allocated (`struct.wast`'s own `(global
+            // (ref $s) (struct.new $s ...))`, later read via `global.get`
+            // from a SEPARATE top-level call) would otherwise become a
+            // dangling handle the moment this heap was thrown away and
+            // rebuilt empty on the very next call. Real mark-sweep
+            // collection (W04) still runs against it at loop back-edges and
+            // calls within THIS call, so a long call still doesn't grow it
+            // without bound; cross-call growth is bounded by however many
+            // distinct GC objects the module's globals/data ever need.
+            gc_heap: self.gc_heap.clone(),
             // Cloned from `self.v128_heap`, NOT reseeded to
             // `vec![[0u8; 16]]` -- see `code/specs/
             // W15-wasm-v128-persistent-storage.md`. Reseeding here was
@@ -11795,6 +12340,8 @@ impl WasmExecutionEngine {
             // into was thrown away and rebuilt from scratch every call.
             v128_heap: self.v128_heap.clone(),
             struct_field_counts: self.struct_field_counts.clone(),
+            struct_field_storage: self.struct_field_storage.clone(),
+            array_element_storage: self.array_element_storage.clone(),
             gc_state: gc::GcState::default(),
             call_depth: 0,
             pending_tail_call: None,
@@ -12122,6 +12669,11 @@ impl WasmExecutionEngine {
         // `ctx.v128_heap` after this point -- moving it out now would be
         // a use-after-move compile error.
         self.v128_heap = ctx.v128_heap.clone();
+        // Same unconditional-writeback reasoning as `v128_heap` just above
+        // (W33 fourth slice): a struct/array allocated before a later trap
+        // must not vanish either -- cloned (not moved) for the identical
+        // "still borrowed below" reason `v128_heap` is.
+        self.gc_heap = ctx.gc_heap.clone();
         // Same unconditional-writeback reasoning as `v128_heap` just above
         // (task #95): a `data.drop` from a call that later traps must
         // still stick -- the drop already happened before the trap, and a
@@ -13449,11 +14001,11 @@ mod tests {
         ));
         assert!(matches!(
             instrs[1].operand,
-            DecodedOperand::Gc { sub: 0x02, type_idx: 0, field_idx: 1 }
+            DecodedOperand::Gc { sub: 0x02, type_idx: 0, field_idx: 1, .. }
         ));
         assert!(matches!(
             instrs[2].operand,
-            DecodedOperand::Gc { sub: 0x04, type_idx: 0, field_idx: 1 }
+            DecodedOperand::Gc { sub: 0x04, type_idx: 0, field_idx: 1, .. }
         ));
         assert_eq!(instrs[3].opcode, 0x0B);
     }
@@ -13642,6 +14194,275 @@ mod tests {
             0x0B,
         ];
         let mut engine = gc_engine(code, vec![ValueType::I32], vec![2]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    // ── W33 fourth slice: struct.new_default / struct.get_s / struct.get_u ──
+
+    /// Helper: build a single-function engine with struct field STORAGE
+    /// registered (not just counts) -- needed for `struct.new_default`'s
+    /// per-field zero value and `struct.get_s`/`struct.get_u`'s packed
+    /// extension width.
+    fn gc_engine_with_storage(
+        code: Vec<u8>,
+        results: Vec<ValueType>,
+        struct_field_counts: Vec<u32>,
+        struct_field_storage: Vec<Vec<wasm_types::StorageType>>,
+    ) -> WasmExecutionEngine {
+        let mut engine = gc_engine(code, results, struct_field_counts);
+        engine.set_struct_field_storage(struct_field_storage);
+        engine
+    }
+
+    #[test]
+    fn test_struct_new_default_zero_initializes_every_field_by_its_own_type() {
+        use wasm_types::StorageType;
+        // A 3-field struct: f32, i32, f64 -- struct.new_default must push
+        // TYPE-correct zeros (F32(0.0)/I32(0)/F64(0.0)), never a blind
+        // I32(0) for every slot.
+        let code = vec![
+            0xFB, 0x01, 0x00, // struct.new_default 0
+            0xFB, 0x02, 0x00, 0x00, // struct.get 0 0 (f32 field)
+            0x0B,
+        ];
+        let storage = vec![vec![StorageType::Val(ValueType::F32), StorageType::Val(ValueType::I32), StorageType::Val(ValueType::F64)]];
+        let mut engine = gc_engine_with_storage(code, vec![ValueType::F32], vec![3], storage);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::F32(0.0)]);
+    }
+
+    #[test]
+    fn test_struct_get_s_and_get_u_sign_and_zero_extend_a_packed_i8_field() {
+        use wasm_types::StorageType;
+        // struct.new with a raw, UN-truncated i32 254 into a packed i8
+        // field, then read it back both ways -- mirrors struct.wast's own
+        // "Packed field instructions" module: get_s(254) == -2, get_u(254) == 254.
+        // Two separate calls (one per read variant) rather than juggling a
+        // local to read the same struct twice in one raw bytecode body.
+        let get_s_code = vec![
+            0x41, 254, 0x01, // i32.const 254
+            0xFB, 0x00, 0x00, // struct.new 0
+            0xFB, 0x03, 0x00, 0x00, // struct.get_s 0 0
+            0x0B,
+        ];
+        let get_u_code = vec![
+            0x41, 254, 0x01, // i32.const 254
+            0xFB, 0x00, 0x00, // struct.new 0
+            0xFB, 0x05, 0x00, 0x00, // struct.get_u 0 0
+            0x0B,
+        ];
+        let storage = vec![vec![StorageType::I8]];
+        let mut s_engine = gc_engine_with_storage(get_s_code, vec![ValueType::I32], vec![1], storage.clone());
+        assert_eq!(s_engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(-2)], "get_s(254) as i8 == -2");
+        let mut u_engine = gc_engine_with_storage(get_u_code, vec![ValueType::I32], vec![1], storage);
+        assert_eq!(u_engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(254)], "get_u(254) as i8 == 254");
+    }
+
+    #[test]
+    fn test_struct_get_s_and_get_u_sign_and_zero_extend_a_packed_i16_field() {
+        use wasm_types::StorageType;
+        // 65535 truncated to i16 is -1 (get_s) / 65535 (get_u) -- mirrors
+        // struct.wast's own get_packed_g1_3 case exactly.
+        let get_s_code = vec![
+            0x41, 0xFF, 0xFF, 0x03, // i32.const 65535 (unsigned LEB128)
+            0xFB, 0x00, 0x00, // struct.new 0
+            0xFB, 0x03, 0x00, 0x00, // struct.get_s 0 0
+            0x0B,
+        ];
+        let get_u_code = vec![
+            0x41, 0xFF, 0xFF, 0x03, // i32.const 65535
+            0xFB, 0x00, 0x00, // struct.new 0
+            0xFB, 0x05, 0x00, 0x00, // struct.get_u 0 0
+            0x0B,
+        ];
+        let storage = vec![vec![StorageType::I16]];
+        let mut s_engine = gc_engine_with_storage(get_s_code, vec![ValueType::I32], vec![1], storage.clone());
+        assert_eq!(s_engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(-1)]);
+        let mut u_engine = gc_engine_with_storage(get_u_code, vec![ValueType::I32], vec![1], storage);
+        assert_eq!(u_engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(65535)]);
+    }
+
+    // ── W33 fourth slice: array.new / array.new_default / array.new_fixed /
+    // array.get / array.get_s / array.get_u / array.set / array.len ────────
+
+    /// Helper: build a single-function engine with array element storage
+    /// registered, mirroring `gc_engine_with_storage` for structs.
+    fn array_engine(
+        code: Vec<u8>,
+        results: Vec<ValueType>,
+        array_element_storage: Vec<Option<wasm_types::StorageType>>,
+    ) -> WasmExecutionEngine {
+        let func_type = FuncType { params: vec![], results };
+        let body = FunctionBody { locals: vec![], code };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.set_array_element_storage(array_element_storage);
+        engine
+    }
+
+    #[test]
+    fn test_array_new_replicates_value_and_len_reads_it_back() {
+        use wasm_types::StorageType;
+        let code = vec![
+            0x41, 7, // i32.const 7 (element value)
+            0x41, 3, // i32.const 3 (length)
+            0xFB, 0x06, 0x00, // array.new 0
+            0x0B,
+        ];
+        let mut engine = array_engine(code, vec![ValueType::Anyref], vec![Some(StorageType::Val(ValueType::I32))]);
+        let result = engine.call_function(0, &[]).unwrap();
+        assert!(matches!(result[0], WasmValue::Ref(Some(_))), "array.new pushes a real arrayref");
+    }
+
+    #[test]
+    fn test_array_new_default_then_len_reports_the_requested_length() {
+        use wasm_types::StorageType;
+        let code = vec![
+            0x41, 5, // i32.const 5 (length)
+            0xFB, 0x07, 0x00, // array.new_default 0
+            0xFB, 0x0F, // array.len (no type immediate)
+            0x0B,
+        ];
+        let mut engine = array_engine(code, vec![ValueType::I32], vec![Some(StorageType::Val(ValueType::F32))]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(5)]);
+    }
+
+    #[test]
+    fn test_array_new_fixed_pops_exactly_n_elements_in_order() {
+        use wasm_types::StorageType;
+        // array.new_fixed 0 2 (i32.const 10) (i32.const 20) -- element 0
+        // should read back 10 (first-pushed is deepest/lowest index).
+        let code = vec![
+            0x41, 10, // i32.const 10
+            0x41, 20, // i32.const 20
+            0xFB, 0x08, 0x00, 0x02, // array.new_fixed 0, count=2
+            0x41, 0, // i32.const 0 (index)
+            0xFB, 0x0B, 0x00, // array.get 0
+            0x0B,
+        ];
+        let mut engine = array_engine(code, vec![ValueType::I32], vec![Some(StorageType::Val(ValueType::I32))]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(10)]);
+    }
+
+    #[test]
+    fn test_array_set_then_get_round_trips_a_mutated_element() {
+        use wasm_types::StorageType;
+        // array.set CONSUMES the arrayref (it's not left on the stack, per
+        // its `[arrayref, index, value] -> []` real stack effect), so a
+        // second access needs a local to hold onto it -- unlike the other
+        // array tests above, this one builds its engine directly rather
+        // than via `array_engine` (which hardcodes zero locals).
+        let code = vec![
+            0x41, 3, // length 3
+            0xFB, 0x07, 0x00, // array.new_default 0
+            0x21, 0x00, // local.set 0 (stash the arrayref)
+            0x20, 0x00, // local.get 0
+            0x41, 1, // index 1
+            0x41, 0xE3, 0x00, // i32.const 99 (sLEB128: 99 needs 2 bytes since it's past the single-byte -64..63 range)
+            0xFB, 0x0E, 0x00, // array.set 0  (pops value, index, ref -- [ref, index, value] order)
+            0x20, 0x00, // local.get 0
+            0x41, 1, // index 1
+            0xFB, 0x0B, 0x00, // array.get 0
+            0x0B,
+        ];
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let body = FunctionBody { locals: vec![ValueType::Anyref], code };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.set_array_element_storage(vec![Some(StorageType::Val(ValueType::I32))]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(99)]);
+    }
+
+    #[test]
+    fn test_array_get_out_of_bounds_traps_cleanly() {
+        use wasm_types::StorageType;
+        let code = vec![
+            0x41, 3, // length 3
+            0xFB, 0x07, 0x00, // array.new_default 0
+            0x41, 10, // index 10 (out of range)
+            0xFB, 0x0B, 0x00, // array.get 0
+            0x0B,
+        ];
+        let mut engine = array_engine(code, vec![ValueType::I32], vec![Some(StorageType::Val(ValueType::I32))]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_array_get_on_null_traps_cleanly() {
+        let code = vec![
+            0xD0, 0x0F, // ref.null
+            0x41, 0, // index 0
+            0xFB, 0x0B, 0x00, // array.get 0
+            0x0B,
+        ];
+        let mut engine = array_engine(code, vec![ValueType::I32], vec![]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_array_get_s_and_get_u_sign_and_zero_extend_a_packed_i8_element() {
+        use wasm_types::StorageType;
+        let get_s_code = vec![
+            0x41, 254, 0x01, // i32.const 254
+            0x41, 1, // length 1
+            0xFB, 0x06, 0x00, // array.new 0
+            0x41, 0, // index 0
+            0xFB, 0x0C, 0x00, // array.get_s 0
+            0x0B,
+        ];
+        let get_u_code = vec![
+            0x41, 254, 0x01, // i32.const 254
+            0x41, 1, // length 1
+            0xFB, 0x06, 0x00, // array.new 0
+            0x41, 0, // index 0
+            0xFB, 0x0D, 0x00, // array.get_u 0
+            0x0B,
+        ];
+        let mut s_engine = array_engine(get_s_code, vec![ValueType::I32], vec![Some(StorageType::I8)]);
+        assert_eq!(s_engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(-2)]);
+        let mut u_engine = array_engine(get_u_code, vec![ValueType::I32], vec![Some(StorageType::I8)]);
+        assert_eq!(u_engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(254)]);
+    }
+
+    #[test]
+    fn test_array_new_fixed_over_the_dos_guard_ceiling_traps_instead_of_allocating() {
+        // A hand-crafted count past MAX_ARRAY_ALLOC, well beyond anything
+        // wasm-validator would let through -- confirms the RUNTIME guard is
+        // real defense-in-depth, not just a validator-side check.
+        let code = vec![
+            0xFB, 0x08, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, // array.new_fixed 0, count=u32::MAX
+            0x0B,
+        ];
+        let mut engine = array_engine(code, vec![ValueType::Anyref], vec![]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_array_new_with_a_huge_stack_length_traps_instead_of_allocating() {
+        // array.new's length comes from the OPERAND STACK, not a bytecode
+        // immediate -- a huge i32 there must ALSO trip the same guard
+        // BEFORE any allocation, independent of array.new_fixed's own
+        // immediate-based check above.
+        let code = vec![
+            0x41, 0, // element value
+            0x41, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, // i32.const -1 (as u32: 0xFFFFFFFF)
+            0xFB, 0x06, 0x00, // array.new 0
+            0x0B,
+        ];
+        let mut engine = array_engine(code, vec![ValueType::Anyref], vec![Some(wasm_types::StorageType::Val(ValueType::I32))]);
         assert!(engine.call_function(0, &[]).is_err());
     }
 

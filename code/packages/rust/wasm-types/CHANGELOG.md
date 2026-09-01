@@ -2,6 +2,60 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.17] - 2026-09-01 (W33 fourth slice — struct/array TEXT-format representation)
+
+Adds the type-system vocabulary `wasm-wast-parser`'s struct/array TEXT-format
+grammar needs, closing the gap the first three W33 slices' own addenda all
+independently confirmed as the real remaining blocker (`code/specs/
+W33-wasm-gc-recursive-type-subtyping.md`'s addenda):
+
+- **`StorageType`** (`Val(ValueType) | I8 | I16`) — the GC proposal's real
+  `storagetype` grammar, previously entirely unmodeled (`FieldType.val_type`
+  was a bare `ValueType` with no way to express packed 8/16-bit field
+  storage at all). `FieldType.val_type` is renamed to `FieldType.storage:
+  StorageType` — a breaking rename, fixed at every call site in this
+  workspace (`wasm-module-parser`, `wasm-module-encoder`, `iir-to-wasm`,
+  this crate's own tests); `FieldType::plain(val_type, mutable)` is a new
+  convenience constructor matching the old `{ val_type, mutable }` literal
+  shape for the (overwhelming majority) non-packed case.
+- **`ArrayType`** (`{ element: FieldType }`) — did not exist anywhere in this
+  repo before this slice (confirmed via a repo-wide grep, not assumed); a
+  new `WasmModule::array_types: Vec<ArrayType>` field holds them, alongside
+  the pre-existing `struct_types`.
+- **`TypeKind`** (`Func | Struct(u32) | Array(u32)`) and a new
+  `WasmModule::type_kinds: Vec<TypeKind>` parallel ledger — needed because
+  real WAT text freely interleaves `(type $t (struct ...))` among
+  `(type $t (func ...))` declarations, and `wasm-wast-parser`'s own two-pass
+  design can append MORE func types to `types` in its second pass (`dedup_
+  type`, for an inline-only function signature) strictly AFTER a struct/array
+  type earlier in the SAME module has already been assigned its flat
+  type-section index — breaking the pre-existing `types.len() + k` offset
+  formula the very first time either happens (both are real, common shapes
+  in `struct.wast`/`array.wast`'s own vendored text, not hypothetical edge
+  cases). `WasmModule::struct_type_at`/`array_type_at` resolve a flat index
+  `type_kinds`-aware first, falling back to the legacy offset formula when
+  `type_kinds` is empty — so every pre-existing binary-decoded or hand-built
+  `WasmModule` (which never populates `type_kinds`) is completely unaffected.
+- **`ValueType::ArrayRef(u32)`/`NonNullArrayRef(u32)`** — the array-hierarchy
+  analogues of the existing `StructRef`/`NonNullStructRef`, same two-byte
+  `0x63`/`0x64` encoding (disambiguated by index space, not by tag byte,
+  exactly like `StructRef`/`ConcreteFuncRef` already are). Wired into
+  `is_bottom_subtype_of` (`NullRef <: ArrayRef(_)`, any index) and
+  `is_non_null_subtype_of` (`NonNullArrayRef(i) <: ArrayRef(i)` same index,
+  `NonNullArrayRef(_) <: Anyref` any index) — the array-hierarchy mirror of
+  every rule `StructRef`/`NonNullStructRef` already had.
+
+11 new unit tests (`StorageType`/`ArrayType`/`TypeKind`/`struct_type_at`/
+`array_type_at`/`ArrayRef` subtyping and encoding); all 78 tests in this
+crate pass. Binary-format array/packed-field encoding (`wasm-module-parser`/
+`wasm-module-encoder`) is deliberately NOT extended by this slice — this
+repo's WASM conformance harness runs entirely through the TEXT-format
+pipeline (`wasm-wast-parser` → `WasmModule` → `wasm-execution`, never through
+a binary round-trip for a plain `(module ...)` script directive; see
+`wasm-conformance`'s own pipeline doc comment), so it isn't required for
+`struct.wast`/`array.wast` conformance and is out of scope here — recorded
+as a real, still-open gap in this slice's own spec addendum.
+
 ## [0.1.16] - 2026-08-31 (W33 second slice — real dynamic dispatch, item 4)
 
 Extracts the nominal reflexive/transitive subtype-chain walk out of

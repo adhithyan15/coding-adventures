@@ -2,6 +2,36 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.79] - 2026-09-01 (W33 fourth slice — static struct/array instruction checks)
+
+Adds real static type-checking for `struct.new_default`/`struct.get_s`/
+`struct.get_u` and the whole `array.*` instruction family, previously
+falling into the `0xFB` catch-all (immediates not consumed, byte-
+desyncing every later instruction the moment `wasm-wast-parser` could
+emit them).
+
+- `struct_field_count`/`array_element_field`/`struct_field` resolve via
+  `WasmModule::struct_type_at`/`array_type_at` (`type_kinds`-aware)
+  rather than the legacy `types.len() + k` offset, needed now that a
+  TEXT-format module can interleave struct/func/array declarations.
+- `struct.set`/`array.set` now reject an immutable field/element
+  (`struct.wast`'s/`array.wast`'s own "immutable field"/"immutable
+  array" `assert_invalid` cases).
+- `array.new_fixed`'s literal element-count immediate is capped at
+  `MAX_ARRAY_NEW_FIXED_COUNT` (1,000,000) before the pop loop runs — an
+  unbounded loop over an attacker-controlled count is a real
+  algorithmic DoS even though no single iteration allocates memory.
+- `const_expr_type` (the global-initializer/segment-offset checker) now
+  accepts `struct.new`/`struct.new_default`/`array.new`/
+  `array.new_default`/`array.new_fixed` as real constant instructions,
+  matching the real GC proposal's own extension to constant
+  expressions — `struct.wast`'s/`array.wast`'s own module-level globals
+  use exactly this shape. `array.new_data`/`array.new_elem` are
+  deliberately not accepted.
+
+11 new integration tests in `tests/type_check.rs`. All 465 tests in
+this crate pass.
+
 ## [0.2.78] - 2026-08-31 (W33 second slice — `ref.cast` byte-layout fix, item 4)
 
 ### Fixed

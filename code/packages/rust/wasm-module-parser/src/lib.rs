@@ -870,10 +870,7 @@ fn parse_struct_type(p: &mut Parser) -> Result<StructType, WasmParseError> {
     for _ in 0..field_count {
         let val_type = read_value_type(p)?;
         let mutability = p.read_u8()?;
-        fields.push(FieldType {
-            val_type,
-            mutable: decode_mutability(mutability, p.offset() - 1)?,
-        });
+        fields.push(FieldType::plain(val_type, decode_mutability(mutability, p.offset() - 1)?));
     }
     Ok(StructType { fields })
 }
@@ -1647,6 +1644,7 @@ impl WasmModuleParser {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use wasm_types::StorageType;
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
@@ -1769,9 +1767,9 @@ mod tests {
         assert_eq!(m.struct_types.len(), 1, "the $LispyPair struct is recovered");
         let st = &m.struct_types[0];
         assert_eq!(st.fields.len(), 2);
-        assert_eq!(st.fields[0].val_type, ValueType::Anyref);
+        assert_eq!(st.fields[0].storage, StorageType::Val(ValueType::Anyref));
         assert!(st.fields[0].mutable);
-        assert_eq!(st.fields[1].val_type, ValueType::Anyref);
+        assert_eq!(st.fields[1].storage, StorageType::Val(ValueType::Anyref));
         assert!(st.fields[1].mutable);
     }
 
@@ -1812,9 +1810,9 @@ mod tests {
         let m = WasmModuleParser::parse(&data).unwrap();
 
         let st = &m.struct_types[0];
-        assert_eq!(st.fields[0].val_type, ValueType::I31ref);
+        assert_eq!(st.fields[0].storage, StorageType::Val(ValueType::I31ref));
         assert!(!st.fields[0].mutable, "field 0 is immutable");
-        assert_eq!(st.fields[1].val_type, ValueType::StructRef(0));
+        assert_eq!(st.fields[1].storage, StorageType::Val(ValueType::StructRef(0)));
         assert!(st.fields[1].mutable, "field 1 is mutable");
     }
 
@@ -1835,9 +1833,9 @@ mod tests {
         let m = WasmModuleParser::parse(&data).unwrap();
 
         let st = &m.struct_types[0];
-        assert_eq!(st.fields[0].val_type, ValueType::NonNullStructRef(0));
+        assert_eq!(st.fields[0].storage, StorageType::Val(ValueType::NonNullStructRef(0)));
         assert!(st.fields[0].mutable);
-        assert_eq!(st.fields[1].val_type, ValueType::NonNullStructRef(1));
+        assert_eq!(st.fields[1].storage, StorageType::Val(ValueType::NonNullStructRef(1)));
         assert!(!st.fields[1].mutable);
     }
 
