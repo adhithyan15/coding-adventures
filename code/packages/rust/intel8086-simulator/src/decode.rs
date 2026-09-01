@@ -1,4 +1,8 @@
-//! Fetch + decode for the curated Intel 8086 instruction subset.
+//! Focused decoder retained for the original register-only compatibility API.
+//!
+//! The complete top-level simulator uses its integrated variable-length
+//! decoder in `simulator.rs`; this module remains public for existing callers
+//! and for small, independently testable register-form decoding helpers.
 //!
 //! # Segmented fetch — `CS:IP`, not a flat program counter
 //!
@@ -15,9 +19,7 @@
 //! ```
 //!
 //! This is not a decode nicety — it is *the* structural feature that
-//! makes the 8086 the 8086 (see `simulator.rs`'s module doc for why this
-//! can't be deferred the way, say, `mos6502-backend`'s full addressing-
-//! mode support was deferred). [`fetch_decode`] therefore takes `cs`
+//! makes the 8086 the 8086. [`fetch_decode`] therefore takes `cs`
 //! explicitly and reads through [`crate::simulator::phys_addr`] for every
 //! byte, including the opcode byte itself.
 //!
@@ -28,8 +30,8 @@
 //! `[BX+SI+disp8]`). Effective-address computation is real work (base+
 //! index selection, displacement sign-extension, segment-override
 //! prefixes, the `mod=00,rm=110` "just `[disp16]`" special case) that is
-//! out of scope for this lane's curated core (see `opcodes.rs`'s module
-//! doc). [`fetch_decode`] decodes the ModRM byte fully (so callers get a
+//! outside this compatibility decoder's scope. [`fetch_decode`] decodes the
+//! ModRM byte fully (so callers get a
 //! clear diagnostic distinguishing "register operand" from "memory
 //! operand, unsupported") but only *resolves* the register case —
 //! `mod != 0b11` is a decode error, not a silent misinterpretation.
@@ -39,7 +41,7 @@ use cpu_simulator::Memory;
 use crate::opcodes::{self, lookup, Format};
 use crate::simulator::phys_addr;
 
-/// A fully decoded instruction from this crate's curated subset.
+/// A fully decoded instruction from the compatibility subset.
 ///
 /// Field meaning depends on `format`:
 ///
@@ -75,11 +77,11 @@ fn read_pc16(mem: &Memory, cs: u16, ip: &mut u16) -> u16 {
 /// Fetch the opcode byte at `CS:*ip`, look it up, and decode whatever
 /// further bytes its [`Format`] requires — advancing `*ip` past the
 /// whole instruction (still relative to the fixed `cs` in effect for
-/// this fetch; this crate does not port segment-override prefixes, so a
+/// this compatibility fetch; this helper does not accept prefixes, so a
 /// single instruction never changes which segment it fetches from
 /// mid-decode).
 ///
-/// Returns `Err` for a byte outside this crate's curated opcode subset,
+/// Returns `Err` for a byte outside this compatibility opcode subset,
 /// or for a `ModRegOnly16`-format instruction whose ModRM byte specifies
 /// a memory operand (`mod != 0b11`) — see the module doc for why the
 /// latter is out of scope rather than silently misdecoded.
@@ -161,9 +163,8 @@ pub fn fetch_decode(mem: &Memory, cs: u16, ip: &mut u16) -> Result<Decoded, Stri
             if mod_bits != 0b11 {
                 return Err(format!(
                     "{mnemonic} with ModRM mod={mod_bits:#04b} (memory operand) is not \
-                     supported by this minimal-viable Intel 8086 simulator -- only \
-                     register-to-register (mod=11) forms are ported; full effective-\
-                     address computation ([BX+SI] etc.) is deferred to a future increment"
+                     supported by the focused compatibility decoder -- use \
+                     Intel8086Simulator::step for complete effective-address execution"
                 ));
             }
             Ok(Decoded {

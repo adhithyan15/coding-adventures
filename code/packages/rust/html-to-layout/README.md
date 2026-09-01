@@ -41,6 +41,9 @@ typography, decoration, fixed and percentage dimensions, `em`/`rem` values,
 min/max constraints, `auto` horizontal margins, border/content box sizing,
 per-side spacing and borders, text alignment, and white-space flow. Parsed
 `@import` metadata remains transport-neutral for browser schedulers.
+Table display roles and HTML span/section metadata map to a typed table
+contract alongside computed layout mode, border model/spacing, caption side,
+and cell vertical alignment.
 
 This bridge intentionally keeps CSS syntax in `css-parser`, browser loading in
 `venture-browser-core`, and inline geometry in the layout engines. It projects

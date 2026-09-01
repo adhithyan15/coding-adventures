@@ -2,6 +2,11 @@
 
 ## 2026-08-31
 
+- Registered the three exact Rust Engram WASM BUILD inputs for that package
+  root only and added a neutral source-collection case covering exact
+  selection, near-name, rename, and cross-package exclusion, case sensitivity,
+  and tracked Git-blob digests without adding broad JavaScript, WebAssembly,
+  generated-output, or directory authority.
 - Added the closed repository source-input boundary registry for 18 reviewed
   boundaries, 21 input registrations over 19 tracked inputs, 482 consumer
   scopes, and 485 authorizations. It distinguishes shared ancestors, generated-

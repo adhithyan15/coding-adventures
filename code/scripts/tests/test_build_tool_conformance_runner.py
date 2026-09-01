@@ -131,7 +131,7 @@ class CorpusTests(unittest.TestCase):
         summary = runner.validate_corpus(FIXTURE_ROOT)
 
         self.assertEqual(summary["schema_version"], 1)
-        self.assertEqual(summary["case_count"], 131)
+        self.assertEqual(summary["case_count"], 132)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -337,6 +337,27 @@ class CorpusTests(unittest.TestCase):
                 if rule["id"] == "rust-template-source-inputs"
             )["suffixes"],
         )
+        self.assertNotIn(
+            "js/smoke.mjs",
+            by_language["rust"]["root_exact_relative_paths"],
+        )
+        engram_inputs = next(
+            item
+            for item in by_language["rust"]["package_exact_inputs"]
+            if item["id"] == "rust-engram-wasm-build-inputs"
+        )
+        self.assertEqual(
+            engram_inputs["package_root"],
+            "code/packages/rust/engram-wasm",
+        )
+        self.assertEqual(
+            engram_inputs["paths"],
+            [
+                "js/engram-mosaic-host-wasm.mjs",
+                "js/smoke.mjs",
+                "pkg/engram_engine.wasm",
+            ],
+        )
         self.assertIn(
             ".csproj",
             next(
@@ -411,7 +432,7 @@ class CorpusTests(unittest.TestCase):
         )
         self.assertEqual(
             runner.repository_source_input_boundary_digest(boundary),
-            "8659cc03e419c1560bd2eb990b954cad0dcd9b6d1b36c52ba13a5d31e4b428d7",
+            "963cc4090e165752fd3a62921b699dfff8f0677b49d7236812398a8abed0a25f",
         )
         by_id = {entry["id"]: entry for entry in boundary["boundaries"]}
         self.assertEqual(
@@ -1191,6 +1212,21 @@ class CorpusTests(unittest.TestCase):
                 "tests/fixtures/echo_agent.py",
             ),
             (
+                "rust",
+                "code/packages/rust/engram-wasm/js/engram-mosaic-host-wasm.mjs",
+                "js/engram-mosaic-host-wasm.mjs",
+            ),
+            (
+                "rust",
+                "code/packages/rust/engram-wasm/js/smoke.mjs",
+                "js/smoke.mjs",
+            ),
+            (
+                "rust",
+                "code/packages/rust/engram-wasm/pkg/engram_engine.wasm",
+                "pkg/engram_engine.wasm",
+            ),
+            (
                 "swift",
                 "code/packages/swift/grammar-tools/regen-embedded-grammars.sh",
                 "regen-embedded-grammars.sh",
@@ -1215,9 +1251,11 @@ class CorpusTests(unittest.TestCase):
         for language, repository_path, package_path in samples:
             with self.subTest(language=language, path=repository_path):
                 self.assertTrue((runner.REPO_ROOT / repository_path).is_file())
+                package_root = repository_path[: -(len(package_path) + 1)]
                 actual = runner._expected_source_collection(
                     {
                         "language": language,
+                        "package_root": package_root,
                         "mode": "extension",
                         "registry_sha256": registry_sha256,
                         "declared_srcs": [],
@@ -1235,6 +1273,75 @@ class CorpusTests(unittest.TestCase):
                     actual,
                     [{"path": package_path, "digest": expected_digest}],
                 )
+
+    def test_engram_wasm_registry_projects_exact_tracked_bytes(self) -> None:
+        registry = runner.load_document(
+            FIXTURE_ROOT / "language-source-input-registry.json"
+        )
+        registry_sha256 = runner.source_input_registry_digest(registry)
+        package_root = "code/packages/rust/engram-wasm"
+        package_paths = [
+            "js/engram-mosaic-host-wasm.mjs",
+            "js/smoke.mjs",
+            "pkg/engram_engine.wasm",
+        ]
+
+        def tracked_blob(repository_path: str) -> bytes:
+            stage_record = subprocess.check_output(
+                ["git", "ls-files", "--stage", "-z", "--", repository_path],
+                cwd=runner.REPO_ROOT,
+            )
+            entries = [entry for entry in stage_record.split(b"\0") if entry]
+            self.assertEqual(len(entries), 1)
+            metadata, staged_path = entries[0].split(b"\t", 1)
+            mode, object_id, stage = metadata.decode("ascii").split()
+            self.assertEqual(mode, "100644")
+            self.assertEqual(stage, "0")
+            self.assertEqual(staged_path.decode("utf-8"), repository_path)
+            return subprocess.check_output(
+                ["git", "cat-file", "blob", object_id],
+                cwd=runner.REPO_ROOT,
+            )
+
+        candidates = []
+        expected = []
+        tracked_bodies: dict[str, bytes] = {}
+        for package_path in package_paths:
+            repository_path = f"{package_root}/{package_path}"
+            body = tracked_blob(repository_path)
+            tracked_bodies[package_path] = body
+            candidates.append(
+                {"path": package_path, "kind": "file", "content_hex": body.hex()}
+            )
+            expected.append(
+                {"path": package_path, "digest": hashlib.sha256(body).hexdigest()}
+            )
+
+        self.assertEqual(
+            runner._expected_source_collection(
+                {
+                    "language": "rust",
+                    "package_root": package_root,
+                    "mode": "extension",
+                    "registry_sha256": registry_sha256,
+                    "declared_srcs": [],
+                    "candidates": candidates,
+                },
+                registry,
+            ),
+            expected,
+        )
+        build_text = tracked_blob(f"{package_root}/BUILD").decode("utf-8")
+        smoke_text = tracked_bodies["js/smoke.mjs"].decode("utf-8")
+        self.assertIn("node js/smoke.mjs", build_text.splitlines())
+        self.assertIn(
+            'from "./engram-mosaic-host-wasm.mjs"',
+            smoke_text,
+        )
+        self.assertIn(
+            'readFileSync(join(here, "..", "pkg", "engram_engine.wasm"))',
+            smoke_text,
+        )
 
     def test_language_source_input_registry_rejects_drift_and_collisions(self) -> None:
         schema = runner.load_document(
@@ -1301,6 +1408,251 @@ class CorpusTests(unittest.TestCase):
         generated_scope["languages"][3]["scoped_inputs"][0]["path_prefix"] = "build"
         mutations.append(
             ("generated-scope", generated_scope, "SOURCE_INPUT_PATH_UNSAFE")
+        )
+
+        package_language = copy.deepcopy(canonical)
+        rust_entry = next(
+            entry for entry in package_language["languages"]
+            if entry["language"] == "rust"
+        )
+        rust_entry["package_exact_inputs"][0]["package_root"] = (
+            "code/packages/typescript/engram-wasm"
+        )
+        mutations.append(
+            (
+                "package-root-language-mismatch",
+                package_language,
+                "SOURCE_INPUT_PACKAGE_ROOT_LANGUAGE_MISMATCH",
+            )
+        )
+
+        duplicate_package_id = copy.deepcopy(canonical)
+        rust_entry = next(
+            entry for entry in duplicate_package_id["languages"]
+            if entry["language"] == "rust"
+        )
+        rust_entry["package_exact_inputs"].append(
+            copy.deepcopy(rust_entry["package_exact_inputs"][0])
+        )
+        mutations.append(
+            (
+                "duplicate-package-id",
+                duplicate_package_id,
+                "SOURCE_INPUT_NOT_CANONICAL",
+            )
+        )
+
+        unsafe_package_root = copy.deepcopy(canonical)
+        rust_entry = next(
+            entry for entry in unsafe_package_root["languages"]
+            if entry["language"] == "rust"
+        )
+        rust_entry["package_exact_inputs"][0]["package_root"] = (
+            "code/packages/rust/engram-wasm."
+        )
+        mutations.append(
+            (
+                "unsafe-package-root",
+                unsafe_package_root,
+                "SOURCE_INPUT_PATH_UNSAFE",
+            )
+        )
+
+        duplicate_package_root = copy.deepcopy(canonical)
+        rust_entry = next(
+            entry for entry in duplicate_package_root["languages"]
+            if entry["language"] == "rust"
+        )
+        second_rule = copy.deepcopy(rust_entry["package_exact_inputs"][0])
+        second_rule["id"] = "rust-engram-wasm-second-inputs"
+        rust_entry["package_exact_inputs"].append(second_rule)
+        rust_entry["package_exact_inputs"].sort(
+            key=lambda item: item["id"].encode("utf-8")
+        )
+        mutations.append(
+            (
+                "duplicate-package-root",
+                duplicate_package_root,
+                "SOURCE_INPUT_SELECTOR_COLLISION",
+            )
+        )
+
+        unsorted_package_paths = copy.deepcopy(canonical)
+        rust_entry = next(
+            entry for entry in unsorted_package_paths["languages"]
+            if entry["language"] == "rust"
+        )
+        rust_entry["package_exact_inputs"][0]["paths"].reverse()
+        mutations.append(
+            (
+                "unsorted-package-paths",
+                unsorted_package_paths,
+                "SOURCE_INPUT_NOT_CANONICAL",
+            )
+        )
+
+        unsafe_package_path = copy.deepcopy(canonical)
+        rust_entry = next(
+            entry for entry in unsafe_package_path["languages"]
+            if entry["language"] == "rust"
+        )
+        rust_entry["package_exact_inputs"][0]["paths"].append("js/smoke.mjs.")
+        rust_entry["package_exact_inputs"][0]["paths"].sort(
+            key=lambda value: value.encode("utf-8")
+        )
+        mutations.append(
+            (
+                "unsafe-package-path",
+                unsafe_package_path,
+                "SOURCE_INPUT_PATH_UNSAFE",
+            )
+        )
+
+        generated_package_path = copy.deepcopy(canonical)
+        rust_entry = next(
+            entry for entry in generated_package_path["languages"]
+            if entry["language"] == "rust"
+        )
+        rust_entry["package_exact_inputs"][0]["paths"].append(
+            ".build/generated.wasm"
+        )
+        rust_entry["package_exact_inputs"][0]["paths"].sort(
+            key=lambda value: value.encode("utf-8")
+        )
+        mutations.append(
+            (
+                "generated-package-path",
+                generated_package_path,
+                "SOURCE_INPUT_PATH_UNSAFE",
+            )
+        )
+
+        package_prefix_collision = copy.deepcopy(canonical)
+        rust_entry = next(
+            entry for entry in package_prefix_collision["languages"]
+            if entry["language"] == "rust"
+        )
+        rust_entry["package_exact_inputs"][0]["paths"] = ["a", "a/b"]
+        mutations.append(
+            (
+                "package-prefix-collision",
+                package_prefix_collision,
+                "SOURCE_INPUT_SELECTOR_COLLISION",
+            )
+        )
+
+        package_global_prefix_collision = copy.deepcopy(canonical)
+        rust_entry = next(
+            entry for entry in package_global_prefix_collision["languages"]
+            if entry["language"] == "rust"
+        )
+        rust_entry["root_exact_relative_paths"].append("js")
+        rust_entry["root_exact_relative_paths"].sort(
+            key=lambda value: value.encode("utf-8")
+        )
+        mutations.append(
+            (
+                "package-global-prefix-collision",
+                package_global_prefix_collision,
+                "SOURCE_INPUT_SELECTOR_COLLISION",
+            )
+        )
+
+        for index, sensitive_package_path in enumerate(
+            (
+                ".env",
+                "credentials.json",
+                "local.properties",
+                "secrets/data.json",
+                "signing.key",
+                "token.txt",
+            )
+        ):
+            sensitive_package_input = copy.deepcopy(canonical)
+            rust_entry = next(
+                entry for entry in sensitive_package_input["languages"]
+                if entry["language"] == "rust"
+            )
+            rust_entry["package_exact_inputs"][0]["paths"] = [
+                sensitive_package_path
+            ]
+            mutations.append(
+                (
+                    f"sensitive-package-path-{index}",
+                    sensitive_package_input,
+                    "SOURCE_INPUT_SENSITIVE_PATH",
+                )
+            )
+
+        for index, sensitive_root_component in enumerate(
+            (".env", "credentials", "local", "secrets", "signing", "token")
+        ):
+            sensitive_package_root = copy.deepcopy(canonical)
+            rust_entry = next(
+                entry for entry in sensitive_package_root["languages"]
+                if entry["language"] == "rust"
+            )
+            rust_entry["package_exact_inputs"][0]["package_root"] = (
+                f"code/packages/rust/{sensitive_root_component}"
+            )
+            rust_entry["package_exact_inputs"][0]["paths"] = ["README.md"]
+            mutations.append(
+                (
+                    f"sensitive-package-root-{index}",
+                    sensitive_package_root,
+                    "SOURCE_INPUT_SENSITIVE_PATH",
+                )
+            )
+
+        package_global_collision = copy.deepcopy(canonical)
+        rust_entry = next(
+            entry for entry in package_global_collision["languages"]
+            if entry["language"] == "rust"
+        )
+        rust_entry["root_exact_relative_paths"].append("js/smoke.mjs")
+        rust_entry["root_exact_relative_paths"].sort(
+            key=lambda value: value.encode("utf-8")
+        )
+        mutations.append(
+            (
+                "package-global-collision",
+                package_global_collision,
+                "SOURCE_INPUT_SELECTOR_COLLISION",
+            )
+        )
+
+        package_global_casefold_collision = copy.deepcopy(canonical)
+        rust_entry = next(
+            entry for entry in package_global_casefold_collision["languages"]
+            if entry["language"] == "rust"
+        )
+        rust_entry["root_exact_relative_paths"].append("js/Smoke.mjs")
+        rust_entry["root_exact_relative_paths"].sort(
+            key=lambda value: value.encode("utf-8")
+        )
+        mutations.append(
+            (
+                "package-global-casefold-collision",
+                package_global_casefold_collision,
+                "SOURCE_INPUT_SELECTOR_COLLISION",
+            )
+        )
+
+        package_casefold_collision = copy.deepcopy(canonical)
+        rust_entry = next(
+            entry for entry in package_casefold_collision["languages"]
+            if entry["language"] == "rust"
+        )
+        rust_entry["package_exact_inputs"][0]["paths"].append("js/Smoke.mjs")
+        rust_entry["package_exact_inputs"][0]["paths"].sort(
+            key=lambda value: value.encode("utf-8")
+        )
+        mutations.append(
+            (
+                "package-casefold-collision",
+                package_casefold_collision,
+                "SOURCE_INPUT_SELECTOR_COLLISION",
+            )
         )
 
         scoped_collision = copy.deepcopy(canonical)
@@ -1460,6 +1812,52 @@ class CorpusTests(unittest.TestCase):
             ):
                 runner._validate_source_input_registry(registry, schema)
             self.assertEqual(raised.exception.code, expected_code)
+
+        allowed_near_names = copy.deepcopy(canonical)
+        rust_entry = next(
+            entry for entry in allowed_near_names["languages"]
+            if entry["language"] == "rust"
+        )
+        rust_entry["package_exact_inputs"][0]["paths"] = sorted(
+            [
+                ".env-example",
+                "credentials-guide.json",
+                "localization.properties",
+                "secretary-notes.txt",
+                "signature-guide.md",
+                "tokenizer.json",
+            ],
+            key=lambda value: value.encode("utf-8"),
+        )
+        self.assertEqual(
+            runner._validate_source_input_registry(allowed_near_names, schema)[
+                "language_count"
+            ],
+            23,
+        )
+        for allowed_root_component in (
+            "credential-custody",
+            "environment",
+            "localization",
+            "signature",
+            "tokenizer",
+        ):
+            with self.subTest(allowed_root_component=allowed_root_component):
+                allowed_root = copy.deepcopy(canonical)
+                rust_entry = next(
+                    entry for entry in allowed_root["languages"]
+                    if entry["language"] == "rust"
+                )
+                rust_entry["package_exact_inputs"][0]["package_root"] = (
+                    f"code/packages/rust/{allowed_root_component}"
+                )
+                rust_entry["package_exact_inputs"][0]["paths"] = ["README.md"]
+                self.assertEqual(
+                    runner._validate_source_input_registry(allowed_root, schema)[
+                        "language_count"
+                    ],
+                    23,
+                )
 
     def test_expected_results_are_checked_in_canonical_order(self) -> None:
         for case_path in sorted(CASES_ROOT.glob("*.json")):
@@ -2557,6 +2955,57 @@ class PureDomainValidationTests(unittest.TestCase):
         self.assertNotIn("android/key.properties", included)
         self.assertNotIn("android/local.properties", included)
 
+        engram_case = load_case("source-collection-engram-wasm-exact-inputs.json")
+        engram_options = engram_case["input"]["options"]
+        self.assertEqual(engram_options["registry_sha256"], registry_digest)
+        self.assertEqual(
+            runner._expected_source_collection(engram_options, registry),
+            engram_case["expected"]["result"]["files"],
+        )
+        engram_included = {
+            entry["path"]
+            for entry in engram_case["expected"]["result"]["files"]
+        }
+        self.assertNotIn("js/sibling.mjs", engram_included)
+        self.assertNotIn("pkg/engram_engine_copy.wasm", engram_included)
+        declared_engram = copy.deepcopy(engram_options)
+        declared_engram["mode"] = "declared_sources"
+        declared_engram["declared_srcs"] = ["unrelated/**"]
+        self.assertEqual(
+            runner._expected_source_collection(declared_engram, registry),
+            engram_case["expected"]["result"]["files"],
+        )
+        case_variants = copy.deepcopy(engram_options)
+        case_variants["candidates"] = [
+            {
+                "path": "js/Smoke.mjs",
+                "kind": "file",
+                "content_hex": "736f757263650a",
+            },
+            {
+                "path": "pkg/Engram_engine.wasm",
+                "kind": "file",
+                "content_hex": "736f757263650a",
+            },
+        ]
+        self.assertEqual(
+            runner._expected_source_collection(case_variants, registry),
+            [],
+        )
+        other_rust_package = copy.deepcopy(engram_options)
+        other_rust_package["package_root"] = "code/packages/rust/task-wasm"
+        other_rust_package["candidates"] = [
+            {
+                "path": "js/smoke.mjs",
+                "kind": "file",
+                "content_hex": "736f757263650a",
+            }
+        ]
+        self.assertEqual(
+            runner._expected_source_collection(other_rust_package, registry),
+            [],
+        )
+
         wrong_digest = copy.deepcopy(role_options)
         wrong_digest["registry_sha256"] = "0" * 64
         with self.assertRaises(runner.ConformanceError) as raised:
@@ -2947,7 +3396,7 @@ class CommandLineTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
-        self.assertEqual(summary["case_count"], 131)
+        self.assertEqual(summary["case_count"], 132)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

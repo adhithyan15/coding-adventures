@@ -30,6 +30,7 @@ pub const INTERNATIONAL_FIXTURE_PATH: &str = "/international.html";
 pub const FLEX_FIXTURE_PATH: &str = "/flex.html";
 pub const GRID_FIXTURE_PATH: &str = "/grid.html";
 pub const POSITIONED_FIXTURE_PATH: &str = "/positioned.html";
+pub const TABLE_FIXTURE_PATH: &str = "/table.html";
 pub const VIEWPORT_WIDTH: f64 = 240.0;
 pub const VIEWPORT_HEIGHT: f64 = 120.0;
 pub const GPU_LAYER_FIXTURE_WIDTH: u32 = 16;
@@ -89,6 +90,9 @@ pub const GRID_FIXTURE_HTML: &str = r#"<!doctype html><html><body><div id="grid-
 
 /// Compact positioning, stacking, clipping, and viewport-scroll fixture.
 pub const POSITIONED_FIXTURE_HTML: &str = r#"<!doctype html><html><body><div style="height:0"><a id="fixed-link" href="fixed.html" style="position:fixed;top:4px;right:8px;width:64px;height:18px;z-index:9;background:red">Fixed</a></div><div id="clip-stage" style="position:relative;width:120px;height:42px;overflow:hidden;background:green"><a id="clipped-link" href="clip.html" style="position:absolute;left:96px;top:8px;width:60px;height:18px;background:blue">Clip</a></div><div style="height:60px">Spacer</div><a id="sticky-link" href="sticky.html" style="position:sticky;top:5px;height:18px;background:blue">Sticky</a><div style="height:220px">Scrollable tail</div></body></html>"#;
+
+/// Compact table normalization, sizing, span, caption, and paint fixture.
+pub const TABLE_FIXTURE_HTML: &str = r#"<!doctype html><html><body><table id="table-deck" style="width:224px;table-layout:fixed;border-spacing:4px 6px;caption-side:bottom"><tfoot><tr id="table-foot"><td colspan="2" style="background:blue">Total</td></tr></tfoot><tbody><tr id="table-body-a"><td id="table-span" rowspan="2" style="background:green">Tea</td><td>$4</td></tr><tr id="table-body-b"><td>$5</td></tr></tbody><thead><tr id="table-head"><th style="width:70px;background:red">Item</th><th>Price</th></tr></thead><caption id="table-caption">Menu</caption></table></body></html>"#;
 
 /// A compact backend-neutral oracle for isolated GPU composition.
 ///
@@ -483,6 +487,7 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
     let flex_url = format!("{origin}{FLEX_FIXTURE_PATH}");
     let grid_url = format!("{origin}{GRID_FIXTURE_PATH}");
     let positioned_url = format!("{origin}{POSITIONED_FIXTURE_PATH}");
+    let table_url = format!("{origin}{TABLE_FIXTURE_PATH}");
     match requested_url {
         url if url == page_url => Ok(BrowserFetchResponse::new(
             url,
@@ -531,6 +536,12 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
             200,
             Some("text/html; charset=utf-8".into()),
             POSITIONED_FIXTURE_HTML.as_bytes().to_vec(),
+        )),
+        url if url == table_url => Ok(BrowserFetchResponse::new(
+            url,
+            200,
+            Some("text/html; charset=utf-8".into()),
+            TABLE_FIXTURE_HTML.as_bytes().to_vec(),
         )),
         url if url == format!("{origin}{MISSING_IMAGE_PATH}") => {
             Err("intentional visual fixture image failure".into())
@@ -607,6 +618,23 @@ pub fn load_positioned_page(origin: &str) -> Result<BrowserPage, String> {
         &text,
     );
     let url = format!("{}{POSITIONED_FIXTURE_PATH}", origin.trim_end_matches('/'));
+    pipeline
+        .load(&url, &|requested: &str| fixture_response(origin, requested))
+        .map_err(|error| error.to_string())
+}
+
+pub fn load_table_page(origin: &str) -> Result<BrowserPage, String> {
+    let theme = mosaic_html_theme();
+    let text = DeterministicText;
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, 1.0),
+        &text,
+        &text,
+        &text,
+        &text,
+    );
+    let url = format!("{}{TABLE_FIXTURE_PATH}", origin.trim_end_matches('/'));
     pipeline
         .load(&url, &|requested: &str| fixture_response(origin, requested))
         .map_err(|error| error.to_string())
@@ -1219,6 +1247,24 @@ mod tests {
             (deck.children[2].width, deck.children[2].height),
             (150.0, 60.0)
         );
+        assert!(!page.paint.scene.instructions.is_empty());
+    }
+
+    #[test]
+    fn table_fixture_converges_sections_spans_geometry_and_paint_for_every_host() {
+        let page = load_table_page("http://venture.test").expect("table fixture page");
+        let deck = find_positioned_id(&page.paint.positioned, "table-deck").expect("table deck");
+        assert_eq!(deck.width, 224.0);
+        assert_eq!(deck.children[0].id.as_deref(), Some("table-head"));
+        assert_eq!(deck.children[1].id.as_deref(), Some("table-body-a"));
+        assert_eq!(deck.children[2].id.as_deref(), Some("table-body-b"));
+        assert_eq!(deck.children[3].id.as_deref(), Some("table-foot"));
+        assert_eq!(deck.children[4].id.as_deref(), Some("table-caption"));
+        assert_eq!(deck.children[0].children[0].width, 70.0);
+        assert_eq!(deck.children[0].children[1].x, 78.0);
+        assert!(deck.children[1].children[0].height > deck.children[1].height);
+        assert_eq!(deck.children[2].children[0].x, 78.0);
+        assert_eq!(deck.children[3].children[0].width, 216.0);
         assert!(!page.paint.scene.instructions.is_empty());
     }
 

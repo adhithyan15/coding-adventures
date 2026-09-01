@@ -60,6 +60,7 @@ use layout_ir::{
     TextContent, TextMeasurer,
 };
 use layout_positioned::{stable_stack, PositionedStyle};
+use layout_table::layout_table_with;
 
 pub const VERSION: &str = "0.3.0";
 
@@ -252,6 +253,37 @@ fn lay_out_normal<M: TextMeasurer>(
         let mut positioned = layout_grid_with(
             node,
             grid_constraints,
+            measurer,
+            |child, child_constraints| {
+                lay_out_any(
+                    child,
+                    child_constraints,
+                    measurer,
+                    0.0,
+                    0.0,
+                    LayoutContext {
+                        parent_abs_x: context.parent_abs_x + x,
+                        parent_abs_y: context.parent_abs_y + y,
+                        ..context
+                    },
+                )
+            },
+        );
+        positioned.x = x;
+        positioned.y = y;
+        return positioned;
+    }
+
+    if is_table_container(display_value(node)) {
+        let table_constraints = Constraints {
+            min_width: constraints.min_width,
+            max_width: outer_max_width,
+            min_height: constraints.min_height,
+            max_height: constraints.max_height,
+        };
+        let mut positioned = layout_table_with(
+            node,
+            table_constraints,
             measurer,
             |child, child_constraints| {
                 lay_out_any(
@@ -491,7 +523,14 @@ fn display_value(node: &LayoutNode) -> Option<&str> {
 fn is_inline_level(display: Option<&str>) -> bool {
     matches!(
         display,
-        Some("inline" | "inline-text" | "inline-replaced" | "inline-flex" | "inline-grid")
+        Some(
+            "inline"
+                | "inline-text"
+                | "inline-replaced"
+                | "inline-flex"
+                | "inline-grid"
+                | "inline-table"
+        )
     )
 }
 
@@ -501,6 +540,10 @@ fn is_flex_container(display: Option<&str>) -> bool {
 
 fn is_grid_container(display: Option<&str>) -> bool {
     matches!(display, Some("grid" | "inline-grid"))
+}
+
+fn is_table_container(display: Option<&str>) -> bool {
+    matches!(display, Some("table" | "inline-table"))
 }
 
 fn block_bool(node: &LayoutNode, key: &str) -> bool {

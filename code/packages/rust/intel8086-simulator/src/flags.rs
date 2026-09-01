@@ -18,7 +18,7 @@
 //! | OF | Overflow — signed result lies outside the representable range |
 //!
 //! `word` selects 8-bit vs 16-bit width (MSB/mask position). This crate's
-//! curated opcode subset (see `opcodes.rs`) only ever calls these with
+//! compatibility opcode subset (see `opcodes.rs`) only ever calls these with
 //! `word=true` (16-bit `AX`/general-purpose-register operands) — the
 //! `word` parameter is kept for fidelity with the Python original and so
 //! a future 8-bit-ALU increment doesn't need to touch this module.

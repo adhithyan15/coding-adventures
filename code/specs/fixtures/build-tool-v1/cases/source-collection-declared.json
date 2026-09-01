@@ -18,8 +18,9 @@
     "operation": "source_collection",
     "options": {
       "language": "ocaml",
+      "package_root": "code/packages/ocaml/source-collection-fixture",
       "mode": "declared_sources",
-      "registry_sha256": "a64e491e7be2d1e2985cebb7dd1576607c2525ab6590a31af3e98cb2329c55d0",
+      "registry_sha256": "f49bfe8c7c9c0fb9b534ecc9ca4a614f3684abe32bdb0edac82d99bdc806fb70",
       "declared_srcs": [
         "*.opam",
         "**/*.ml",

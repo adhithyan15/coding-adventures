@@ -39,7 +39,7 @@ emerging OCaml lane. It records front-door and shared-engine state but contains
 no executable commands. Every adapter is currently marked missing, so a valid
 inventory is not reported as conformance success.
 
-The 131-case bootstrap corpus covers every process-free v1 domain:
+The 132-case bootstrap corpus covers every process-free v1 domain:
 
 - canonical package and program membership, language-registry classification
   with paired C#, F#, Haskell, Java, Kotlin, and OCaml package/program
@@ -72,8 +72,11 @@ The 131-case bootstrap corpus covers every process-free v1 domain:
   inclusion-only path-scoped host resources and native companions, exact
   BUILD-invoked and reviewed package build scripts, shared Unix command
   specifications, conventional test fixtures and package resources, a
-  representative tracked-repository projection, extension and declared-source
-  selection modes, exact near-name
+  representative tracked-repository projection, the exact Rust Engram WASM
+  smoke script, imported host module, and checked-in module bytes for that
+  package root only without widening other Rust packages or JavaScript and
+  WebAssembly suffix authority, extension and declared-
+  source selection modes, exact near-name
   retention, inert symlink/reparse boundaries, Android signing/SDK-property
   exclusion, and per-file SHA-256 digests. Shared ancestors, tracked generated-
   pruned inputs, and exact cross-package inputs remain outside this package-

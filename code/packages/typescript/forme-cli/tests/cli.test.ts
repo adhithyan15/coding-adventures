@@ -1,4 +1,4 @@
-import { access, mkdir, rm, writeFile } from "node:fs/promises";
+import { access, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { execFile } from "node:child_process";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
@@ -77,6 +77,7 @@ function services(
   loaded: PipelineConfig,
   result: RunResult = successfulResult(),
   onBuild?: (value: PipelineConfig) => void,
+  onCreate?: (cacheRoot: string | null) => void,
 ): CliServices {
   const pipeline = (value: PipelineConfig): Pipeline => ({
     config: value,
@@ -89,15 +90,18 @@ function services(
   }) as never;
   return {
     loadConfig: async () => loaded,
-    createOrchestrator: () => ({
-      buildPipeline: async value => {
-        onBuild?.(value);
-        return pipeline(value);
-      },
-      runOnce: async () => result,
-      watch: () => { throw new Error("watch not expected"); },
-      dispose: async () => {},
-    } satisfies Orchestrator),
+    createOrchestrator: cacheRoot => {
+      onCreate?.(cacheRoot);
+      return {
+        buildPipeline: async value => {
+          onBuild?.(value);
+          return pipeline(value);
+        },
+        runOnce: async () => result,
+        watch: () => { throw new Error("watch not expected"); },
+        dispose: async () => {},
+      } satisfies Orchestrator;
+    },
     startDevServer: async () => { throw new Error("dev server not expected"); },
     watchProject: () => { throw new Error("project watcher not expected"); },
   };
@@ -136,7 +140,7 @@ describe("argument and diagnostic contracts", () => {
 
     const version = makeIO();
     expect(await run(["--version"], version)).toBe(EXIT_OK);
-    expect(version.stdoutText).toBe("0.2.0\n");
+    expect(version.stdoutText).toBe("0.3.0\n");
   });
 
   it("rejects unknown commands, missing flag values, and invalid clean options", async () => {
@@ -378,6 +382,17 @@ describe("build and check", () => {
     const bytes = new TextEncoder().encode("hello");
     const reported: RunResult = {
       ...successfulResult(),
+      stages: [{
+        instanceId: "render",
+        stageName: "@fixture/render",
+        itemsConsumed: 1,
+        itemsProduced: 1,
+        elapsedMs: 5,
+        cacheHits: 1,
+        cacheMisses: 0,
+        outcome: "success",
+        errorCount: 0,
+      }],
       outputs: {
         site: {
           variant: { kind: "dist-tree" },
@@ -394,8 +409,40 @@ describe("build and check", () => {
     )).toBe(EXIT_OK);
     const report = io.written.get("/project/dist/report.json");
     expect(report).toContain('"schemaVersion": 1');
+    expect(report).toContain('"cacheHits": 1');
+    expect(report).not.toContain('"elapsedMs"');
     expect(report).toContain('"path": "index.html"');
     expect(report).toContain('"sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"');
+  });
+
+  it("resolves configured cache roots beneath the project and preserves null", async () => {
+    const roots: Array<string | null> = [];
+    expect(await run(["check"], makeIO(), {}, services(
+      config({ settings: { ...config().settings, cacheDir: ".forme/cache" } }),
+      successfulResult(),
+      undefined,
+      value => roots.push(value),
+    ))).toBe(EXIT_OK);
+    expect(await run(["check"], makeIO(), {}, services(
+      config(),
+      successfulResult(),
+      undefined,
+      value => roots.push(value),
+    ))).toBe(EXIT_OK);
+    expect(roots).toEqual(["/project/.forme/cache", null]);
+  });
+
+  it("refuses an outside-project cache before constructing the orchestrator", async () => {
+    const io = makeIO();
+    let constructed = false;
+    expect(await run(["build"], io, {}, services(
+      config({ settings: { ...config().settings, cacheDir: "../escape" } }),
+      successfulResult(),
+      undefined,
+      () => { constructed = true; },
+    ))).toBe(EXIT_USAGE_OR_CONFIG);
+    expect(constructed).toBe(false);
+    expect(io.stderrText).toContain("refusing to use unsafe cache path");
   });
 
   it("returns the build-failure exit and stable stage diagnostics", async () => {
@@ -521,6 +568,44 @@ describe("installed-project shape", () => {
     expect(built.stderr).toBe("");
     expect(built.stdout).toContain("external-project success");
   });
+
+  it("reuses pure stages across CLI processes and clean invalidates the project cache", async () => {
+    const root = await mkdtemp(join(tmpdir(), "forme-cli-cache-"));
+    roots.push(root);
+    const configPath = join(root, "forme.config.mjs");
+    const bin = fileURLToPath(new URL("../bin/forme.mjs", import.meta.url));
+    const build = async (report: string) => {
+      const result = await execFileAsync(process.execPath, [bin, "build", "--report", report], { cwd: root });
+      expect(result.stderr).toBe("");
+      return JSON.parse(await readFile(join(root, report), "utf8")) as {
+        stages: Array<{ instanceId: string; cacheHits: number; cacheMisses: number }>;
+      };
+    };
+    const stage = (report: Awaited<ReturnType<typeof build>>, id: string) =>
+      report.stages.find(value => value.instanceId === id)!;
+
+    await writeFile(configPath, persistentCacheConfigSource("hello"), "utf8");
+    const first = await build("first.json");
+    expect(stage(first, "transform")).toMatchObject({ cacheHits: 0, cacheMisses: 1 });
+    expect(stage(first, "emit")).toMatchObject({ cacheHits: 0, cacheMisses: 1 });
+    await access(join(root, ".forme/cache"));
+
+    const second = await build("second.json");
+    expect(stage(second, "transform")).toMatchObject({ cacheHits: 1, cacheMisses: 0 });
+    expect(stage(second, "emit")).toMatchObject({ cacheHits: 1, cacheMisses: 0 });
+
+    await writeFile(configPath, persistentCacheConfigSource("changed"), "utf8");
+    const changed = await build("changed.json");
+    expect(stage(changed, "transform")).toMatchObject({ cacheHits: 0, cacheMisses: 1 });
+    expect(stage(changed, "emit")).toMatchObject({ cacheHits: 0, cacheMisses: 1 });
+
+    const cleaned = await execFileAsync(process.execPath, [bin, "clean"], { cwd: root });
+    expect(cleaned.stderr).toBe("");
+    await expect(access(join(root, ".forme/cache"))).rejects.toThrow();
+    const afterClean = await build("after-clean.json");
+    expect(stage(afterClean, "transform")).toMatchObject({ cacheHits: 0, cacheMisses: 1 });
+    expect(stage(afterClean, "emit")).toMatchObject({ cacheHits: 0, cacheMisses: 1 });
+  });
 });
 
 function externalConfigSource(): string {
@@ -555,6 +640,61 @@ export default {
     maxConcurrency: null, logLevel: "info", bestEffort: false, deadlineMs: null,
   },
   stages: [{ id: "emit", stage: emit, config: { outDir: "dist" } }],
+  outputs: [{ fromInstance: "emit", name: "site" }],
+};
+`;
+}
+
+function persistentCacheConfigSource(value: string): string {
+  return `
+const contentSource = { name: "ContentSource", version: "1.0" };
+const source = {
+  name: "@fixture/cache-source", version: "0.1.0", apiVersion: 1,
+  description: "external cache source", consumes: { name: "Void", version: "1.0" },
+  produces: { name: "Stream", version: "1.0", inner: contentSource },
+  capabilities: [], configSchema: null,
+  async *run() {
+    const value = ${JSON.stringify(value)};
+    yield {
+      path: "page.txt", bytes: new TextEncoder().encode(value), mimeType: "text/plain",
+      identity: "01952c0d-7e63-7000-8000-000000000000",
+      revision: "blake2b:" + value, providerMeta: {},
+    };
+  },
+};
+const transform = {
+  name: "@fixture/cache-transform", version: "0.1.0", apiVersion: 1,
+  description: "pure cache transform", consumes: contentSource, produces: contentSource,
+  capabilities: [], configSchema: null,
+  async run(input) { return { ...input, path: input.path.toUpperCase() }; },
+};
+const emit = {
+  name: "@fixture/cache-emit", version: "0.1.0", apiVersion: 1,
+  description: "pure in-memory emitter", consumes: contentSource,
+  produces: { name: "DeployArtifact", version: "1.0" }, capabilities: [],
+  configSchema: { type: "object", required: ["outDir"], properties: { outDir: { type: "string" } } },
+  async run(input) {
+    return {
+      variant: { kind: "dist-tree" }, files: { [input.path]: input.bytes },
+      manifest: { routes: [], assets: [], buildTime: "fixed", buildId: "blake2b:fixture" },
+    };
+  },
+};
+export default {
+  name: "persistent-cache-project",
+  settings: {
+    storageRoot: ".", cacheDir: ".forme/cache", reproducibleBuild: true,
+    maxConcurrency: null, logLevel: "info", bestEffort: false, deadlineMs: null,
+  },
+  stages: [
+    { id: "source", stage: source },
+    { id: "transform", stage: transform },
+    { id: "emit", stage: emit, config: { outDir: "dist" } },
+  ],
+  wires: [
+    { from: { id: "source" }, to: { id: "transform" } },
+    { from: { id: "transform" }, to: { id: "emit" } },
+  ],
   outputs: [{ fromInstance: "emit", name: "site" }],
 };
 `;

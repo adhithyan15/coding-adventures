@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Lower BJT `VAF` with `VA` fallback into the engine forward-Early-voltage
+  field and reject invalid values before element lowering.
 - Lower positive finite BJT `EG` model-card values into the engine energy-gap
   field and reject invalid values before element lowering.
 - Lower finite BJT `XTI` model-card values into the engine saturation-current

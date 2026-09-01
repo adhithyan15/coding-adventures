@@ -8,7 +8,7 @@
 //! little-endian for multi-byte immediates, the 8086's native byte
 //! order), and [`assemble`] is a trivial concatenation.
 //!
-//! Only the subset of mnemonics this crate's curated opcode table
+//! Only the subset of mnemonics the compatibility opcode table
 //! (`opcodes.rs`) covers gets an `encode_*` helper — mirrors how
 //! `mos6502_encoder`/`arm1_encoder` only re-export the mnemonics their
 //! consuming backend needs, not the full opcode table.
@@ -73,7 +73,10 @@ pub fn encode_hlt() -> Vec<u8> {
 /// endianness conversion at the assembly level — each `encode_*` helper
 /// already produced its bytes in wire order).
 pub fn assemble(instructions: &[Vec<u8>]) -> Vec<u8> {
-    instructions.iter().flat_map(|i| i.iter().copied()).collect()
+    instructions
+        .iter()
+        .flat_map(|i| i.iter().copied())
+        .collect()
 }
 
 #[cfg(test)]

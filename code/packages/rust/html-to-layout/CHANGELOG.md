@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Project CSS table layout, border spacing/collapse, caption side, vertical
+  alignment, section kinds, and HTML row/column spans into `ext["table"]`.
+
+## Unreleased
+
 - Project computed position, inset, z-index, and overflow values into the
   reusable `layout-positioned` extension contract.
 

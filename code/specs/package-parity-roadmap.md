@@ -12357,6 +12357,130 @@ canonical collisions and unknown buckets remain zero. The complete
 637-owner/1,006-edge graph remains dependency-complete, unique, and acyclic at
 198 merged, 438 pending, and exactly this owner in progress.
 
+### Post-PR #13748 refresh and Engram WASM registry-repair selection
+
+PR #13748 completed all 40 checks on final head
+`d55689a89f1d64c037307c623ac990978c0a53ed` acceptably: 33 succeeded and
+seven were expected skips. GitHub reported the head clean and mergeable, then
+executed guarded squash auto-merge without a plain manual merge command at
+2026-08-31T22:48:23Z. The merge commit is
+`0db04dd61fbfeccf674c677eefe71dd60d63ed6c`.
+
+After fetching exact current `origin/main`
+`d5f6d1c950d0e817bea77c2a73aa6ca36a593758`, the collision-checked schema-3
+inventory reports 15 established lanes, 1,396 implementation identities,
+4,611 implementation slots, and 1,435 all-reported identities. Its bands are
+175 packages with 265 missing slots, 123/934, 171/2,152, and 927/12,978.
+Rust has 739 singletons, OCaml remains at zero packages, and canonical
+collisions and unknown buckets remain zero. The later MOS 6502 functional
+audit changes only an existing package and its tests.
+
+Merged PR #13744 adds Rust `layout-flexbox` beside the existing TypeScript
+implementation. It adds one slot without adding an identity and moves the
+package from the singleton band into the two-to-four-lane band. New pending
+owner `layout-flexbox-two-lane-classification` compares the two pure UI03
+implementations and their shared `layout-ir` dependency, defines neutral
+fixtures for direction, wrap, gaps, ordering, flex sizing, alignment,
+automatic minimum sizes, malformed inputs, numeric behavior, and resource
+ceilings, then decomposes applicable-lane rollout or records narrow reviewed
+exceptions. Fonts, shaping, DOM, windows, render devices, and host measurement
+remain outside the portable layout core.
+
+The dependency/leverage pass selects
+`build-tool-engram-wasm-package-source-input-registry-repair` on fresh clean
+branch `codex/build-tool-engram-wasm-source-input-registry-repair`. Merged PR
+#13732 makes the Rust Engram WASM BUILD front execute `js/smoke.mjs`; that
+script imports `js/engram-mosaic-host-wasm.mjs` and reads the checked-in
+`pkg/engram_engine.wasm`, but the canonical Rust source-input registry omits
+all three exact package-owned inputs. This bounded repair will register only
+those evidenced paths, pin tracked bytes and drift or rename rejection, and
+regenerate the domain-separated registry digest without admitting broad
+JavaScript, generated, build-output, or binary-suffix authority. It directly
+unblocks eleven engine adoptions and reaches eighteen unfinished descendants;
+higher raw graph ranks are heterogeneous classifiers or selection-blocked
+native and network authority reviews. All twelve live PRs have zero exact path
+overlap with the expected registry, fixture, test, specification,
+documentation, state, roadmap, and changelog surfaces. After lifecycle
+reconciliation, classification, and selection, the complete state has 638
+unique owners and 1,006 dependency edges: 199 merged, 438 pending, and exactly
+this owner in progress.
+
+### Engram WASM package-scoped source-input repair validation
+
+The selected repair now introduces a seventh neutral source-input role,
+`package_exact_inputs`, because the three Engram paths are required only by the
+exact `code/packages/rust/engram-wasm` BUILD front. Keeping them in Rust's
+language-wide exact-path set would incorrectly hash the same relative smoke
+path in unrelated Rust WASM packages. The rule therefore admits only
+`js/engram-mosaic-host-wasm.mjs`, `js/smoke.mjs`, and
+`pkg/engram_engine.wasm` at that exact package root in both extension and
+declared-source modes. The registry rejects unsafe roots, foreign lanes,
+duplicate or case-folding identities, impossible path prefixes, overlaps with
+language-wide or scoped selectors, generated components, credentials, secrets,
+signing material, and machine-local configuration.
+
+The checked regression reads stage-zero regular-file bytes from Git objects,
+not mutable worktree paths. It also pins the concrete BUILD-to-smoke,
+smoke-to-host-module, and smoke-to-WASM-read edges, excludes near names and
+case variants, and proves that `code/packages/rust/task-wasm/js/smoke.mjs`
+does not inherit Engram authority. The complete 132-case, 283-file corpus is
+valid with registry digest
+`f49bfe8c7c9c0fb9b534ecc9ca4a614f3684abe32bdb0edac82d99bdc806fb70`
+and boundary digest
+`963cc4090e165752fd3a62921b699dfff8f0677b49d7236812398a8abed0a25f`.
+The conformance family passes 192 tests and 355 subtests with 23 expected
+platform skips; the final semantic runner passes 72 tests and 233 subtests.
+Branch-aware coverage is 90% for the runner, 99% for its direct tests, and 93%
+combined. Eight native Engram tests, 28 checked-in-WASM smoke assertions,
+strict Clippy, the complete Go oracle test/vet/build gates, a real 5,122-package
+dry build-file validation, ten package-parity tests, and a zero-collision
+schema-3 inventory also pass. RustSec reports no vulnerability among 1,537
+locked dependencies and retains two existing allowed unmaintained warnings.
+
+After the final rebase onto exact `origin/main`
+`8e2b2933797acda0bfa166ecb4794377e9518521`, the refreshed inventory has 15
+established lanes, 1,399 implementation identities, 4,615 implementation
+slots, and 1,438 all-reported identities. Its bands are 175/265, 123/934,
+172/2,165, and 929/13,006; Rust has 740 singletons, OCaml remains at zero,
+and canonical collisions and unknown buckets remain zero. The merged
+TypeScript-only `forme-cli` identity stays under
+`forme-portable-core-family-classification`. Dedicated PR #13768 has merged
+the corresponding shared TypeScript base-config boundary correction, so that
+owner is unblocked and this Engram branch absorbs the correction from `main`
+without duplicating unrelated Forme work. Merged PR #13765 adds TypeScript-only
+`forme-dev-server`, which remains inside the same Forme family owner; the
+Engram branch absorbs its boundary registration and digest cascade without
+duplicating that package root. Intervening Mermaid timeline, SPICE JFET,
+Dartmouth parser, Hindi curriculum, and HTML recovery work add no newly unowned
+identity. Later ALGOL tracked-exponent work changes existing Rust packages only.
+Merged PR #13761 adds Rust `layout-grid` beside TypeScript,
+moving the identity into the two-to-four band. New pending owner
+`layout-grid-two-lane-classification` now owns its pure UI08 conformance,
+dependency order, and missing applicable-lane review. The resulting state has
+640 unique owners and 1,006 dependency edges: 199 merged, 440 pending, and
+exactly this Engram owner in progress.
+
+Merged PR #13774 adds the Rust-only `layout-positioned` identity and its
+host-neutral UI10 positioning and clipping contract. New pending owner
+`layout-positioned-portable-core-classification` owns tolerant positioned
+metadata, insets, flow participation, z-order, overflow and scroll extents,
+paint clips, hit-region intersection, fixed viewport coordinates, sticky
+clamping, malformed inputs, numeric behavior, resource limits, applicable-lane
+rollout, and reviewed exceptions. HTML/CSS parsing, DOM and window authority,
+toolkit rendering, transformed containing blocks, writing modes, nested
+interactive scrolling, complete stacking contexts, floats, and fragmentation
+remain outside that portable core. The other intervening Mermaid, SPICE, Z80,
+Hindi, Mosaic accessibility, and existing-package changes add no identity or
+unowned portable contract and do not overlap this Engram implementation.
+Merged PR #13773 changes only BUILD fronts for existing TypeScript packages to
+isolate frontend build directories; it adds no package identity, source-input
+boundary, ownership gap, or overlap with this implementation.
+Merged PR #13777 extends the existing `forme-orchestrator` root with
+deterministic persistent-cache behavior plus package metadata and dependency
+lockfiles. It remains covered by `forme-portable-core-family-classification`
+and adds no package identity, source-input boundary, ownership gap, or Engram
+overlap.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

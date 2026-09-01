@@ -1,94 +1,60 @@
 # Intel 8086 Simulator (Rust)
 
-Behavioral simulator for the Intel 8086 (1978) — the 16-bit extension of
-the 8080 architecture (NOT source- or binary-compatible with it, despite
-the lineage) that introduced the segmented memory model and the ModRM
-addressing byte. The IBM PC (1981) shipped with its cheaper 8-bit-bus
-sibling, the 8088, founding the "PC-compatible" industry and making the
-8086 the direct architectural ancestor of every x86 CPU made since. Rust
-port of `code/packages/python/intel-8086-simulator` (Layer 07m); see
-[`code/specs/07m-intel-8086-simulator.md`](../../../specs/07m-intel-8086-simulator.md)
-for the full ISA writeup.
+Complete behavioral simulator for the Intel 8086 (1978), ported from the
+repository's Python oracle. The 8086 introduced the segmented memory and ModRM
+addressing model inherited by every later x86 generation.
 
-Ninth and **final** lane of the 9-architecture expansion documented in
-[`HISTORICAL-ARCH-BACKEND-MIGRATION.md`](../../../specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md).
+## Architectural surface
 
-## Curated instruction subset (deliberately scoped — not the full ISA)
+The simulator implements the oracle's complete specified instruction surface:
 
-The Python reference implements essentially the full 8086 instruction
-set in ~1670 lines. This crate ports a curated core instead:
+- all 24 ModRM effective-address forms, byte/word register and memory operands,
+  direct addresses, and ES/CS/SS/DS overrides;
+- MOV, XCHG, segment-register moves, LEA, LDS, LES, XLAT, CBW/CWD, LAHF/SAHF;
+- ADD/ADC/SUB/SBB/CMP, AND/OR/XOR/TEST, INC/DEC, NEG/NOT, shifts and rotates,
+  MUL/IMUL/DIV/IDIV, and all six BCD/ASCII adjust instructions;
+- PUSH/POP/PUSHF/POPF, near/far CALL/JMP/RET, all sixteen conditional jumps,
+  LOOP/LOOPE/LOOPNE/JCXZ, IRET, and the oracle's halt-on-INT convention;
+- MOVS/CMPS/STOS/LODS/SCAS with REP/REPE/REPNE and direction control;
+- HLT, WAIT, LOCK, carry/direction/interrupt flag controls, and byte/word I/O.
 
-- **Data transfer**: `MOV reg16,imm16` / `MOV reg8,imm8` (register-
-  immediate), `MOV reg16,r/m16` (register-to-register only — ModRM
-  `mod=11`).
-- **Arithmetic/logical**: `ADD`/`SUB`/`AND`/`OR`/`XOR`/`CMP`, both as
-  `AX,imm16` (accumulator-immediate) and `reg16,r/m16` (register-to-
-  register, ModRM `mod=11` only).
-- **Increment/decrement**: `INC reg16` / `DEC reg16` (preserve CF, per
-  real 8086 semantics).
-- **Halt**: `HLT` (`0xF4`) — a genuine single-byte hardware halt
-  instruction, not a repurposed opcode or invented pseudo-halt.
-- **Other**: `NOP` (`0x90`).
-
-See `opcodes.rs`'s and `lib.rs`'s module docs for the full list of what's
-**deferred**: memory-operand addressing (`[BX+SI]` and friends), segment-
-override prefixes, string ops, stack ops, control flow, `MUL`/`DIV`,
-shift/rotate, BCD adjust, I/O ports, and more.
-
-## Segmented memory — the defining, structural feature
-
-Every physical memory access goes through:
+All instruction fetch and data access uses the real 20-bit segmented formula:
 
 ```text
-physical_address = (segment_register << 4) + offset    (masked to 20 bits)
+physical = ((segment << 4) + offset) & 0xFFFFF
 ```
 
-giving a 1 MiB address space built from 16-bit segment×offset pairs
-across four segment registers (`CS`/`DS`/`SS`/`ES`). Instruction fetch
-always uses `CS:IP`. This is **not deferrable** — even the trivial
-`MOV AX,imm16; HLT` program this crate's `intel8086-backend` smoke test
-compiles has its first opcode byte fetched through segmented addressing.
-See `simulator.rs`'s module doc and `simulator::phys_addr` for the full
-derivation.
-
-## Architecture
-
-```
-opcodes.rs   -- curated opcode table (mnemonic, decode Format) +
-                register-index constants + HLT_OPCODE
-flags.rs     -- CF/PF/AF/ZF/SF/OF computation, ported from flags.py
-decode.rs    -- fetch + operand decode (register-only ModRM -- memory
-                operands are a decode error, not a silent misdecode)
-execute.rs   -- instruction executor (methods over
-                &mut Intel8086Simulator, mirroring mos6502-simulator's
-                shape)
-simulator.rs -- top-level Intel8086Simulator: segmented CS:IP fetch,
-                registers, fetch-decode-execute loop, phys_addr()
-encoding.rs  -- encode_* helpers (subset used by tests / intel8086-encoder)
-```
+The machine always owns the architectural 1 MiB memory and two 256-byte port
+banks. Checked APIs provide atomic loads, complete snapshot/restore, typed
+invalid-opcode/range/port failures, transactional bounded runs, and complete
+before/after traces including prefixes and operand bytes. The legacy
+`run(&[u8])` and `step() -> String` entry points remain source-compatible with
+existing encoder/backend consumers.
 
 ## Usage
 
 ```rust
 use intel8086_simulator::Intel8086Simulator;
 
-let mut sim = Intel8086Simulator::new(65536);
-sim.run(&[
-    0xB8, 42, 0x00, // MOV AX, 42
+let mut sim = Intel8086Simulator::new(1 << 20);
+let result = sim.run_checked(&[
+    0xB8, 42, 0x00, // MOV AX,42
     0xF4,           // HLT
-]);
-assert_eq!(sim.ax, 42);
-assert!(sim.halted);
+], 10)?;
+assert!(result.halted);
+assert_eq!(result.final_state.ax, 42);
+# Ok::<(), intel8086_simulator::Intel8086Error>(())
 ```
 
-## Tests
+## Verification
 
-87 tests total across this lane's three crates (61 in this crate alone)
-covering: the opcode table, flag computation against the Python
-reference's documented examples, decode of every supported instruction
-shape (including the register-only ModRM rejection of memory operands),
-execute-level behaviour (including CF preservation across `INC`/`DEC`),
-the segmented physical-address formula itself (including its 20-bit
-wraparound), and simulator-level integration — including the canonical
-`MOV AX,42; HLT` "load immediate into the accumulator + halt" sequence
-the `intel8086-backend` smoke test relies on.
+The ordinary unit and lifecycle suites are joined by 461 deterministic
+full-state differential vectors generated from
+`code/packages/python/intel-8086-simulator`. They classify all 256 first bytes,
+exercise every extension of dense opcode groups, cover all effective-address
+forms and widths/directions, and cover prefixes, strings, control flow, stack,
+and I/O. Each vector compares every register and flag plus hashes of all 1 MiB
+of memory and both port banks. The generator is checked in beside the fixture.
+
+See [`code/specs/07m-intel-8086-simulator.md`](../../../specs/07m-intel-8086-simulator.md)
+for the normative ISA contract.

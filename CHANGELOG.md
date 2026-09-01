@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Venture table formatting context
+
+- Added a reusable `layout-table` engine for anonymous table boxes,
+  header/body/footer ordering, captions, fixed/auto intrinsic column sizing,
+  column hints, row/column spans, border spacing/collapse, vertical alignment,
+  overflow-safe minimums, and producer diagnostics.
+- Integrated computed CSS and HTML span metadata through shared recursive
+  layout and paint, with a deterministic browser fixture consumed by the same
+  native and generated host pipeline.
+
 ### Venture positioned formatting and clipping
 
 - Added a reusable `layout-positioned` contract for relative, absolute, fixed,
@@ -36,6 +46,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Build-tool language source-input registry
 
+- Registered the exact Engram WASM BUILD inputs for that package root only: the
+  smoke script, its imported host module, and the checked-in WebAssembly bytes.
+  Added a language-neutral exact-path fixture and tracked Git-blob projection
+  while keeping other Rust packages, `.mjs`, `.js`, `.wasm`, generated-output,
+  and directory-wide authority closed.
 - Added a closed versioned source-input registry for all 23 canonical build-
   tool language keys. It distinguishes recursive sources and metadata,
   package-root exact and variable manifests, fixed relative inputs, and

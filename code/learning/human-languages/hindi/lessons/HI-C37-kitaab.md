@@ -8,8 +8,8 @@ spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 1010
 chapter: 37
 type: word
-headword: किताब
-gloss: book — feminine, built on the Arabic root for writing, and one of three Hindi words for a book that differ by register
+headword: किताब / पुस्तक / पोथा
+gloss: book — ordinary किताब, formal पुस्तक, and old or homely पोथा form a three-register set
 concept_tag: HI-OBJECT-BOOK
 prerequisites: [HI-C37-khaana, HI-W03-preposed-i, HI-W02-ka-ta-mouth-order]
 sounds: [matra-i-preposed, devanagari-long-aa]
