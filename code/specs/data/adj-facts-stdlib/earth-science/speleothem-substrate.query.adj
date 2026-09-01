@@ -1,0 +1,36 @@
+% ============================================================================
+% speleothem-substrate.query.adj — worked recall over the
+% speleothem-substrate library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to answer "where do helictites
+% grow?" (direct, SIX substrates), "what grows on cave walls?" (REVERSE,
+% and the question nothing in this stdlib could answer before), or "do
+% helictites grow on cave floors?" (abstain — the source says they do so
+% LESS OFTEN, the hedge rides in the atom, so the unqualified query finds
+% nothing).
+%
+% It states no fact of its own — it only `import`s the grounded table and
+% asks binding queries.
+%
+% The reverse query on `cave_wall` is the one that shows this is a real
+% axis rather than a wrapper around one sentence: it returns BOTH
+% helictite and frostwork, from two different sentences.
+%
+% NOTE ON THE ABSTAIN QUERIES: they are written in VARIABLE form. A
+% fully-bound query that matches nothing produces NO recall entry at all
+% rather than an abstention, so the ground form would silently prove
+% nothing.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli speleothem-substrate.query.adj
+% ============================================================================
+
+import "speleothem-substrate.adj"
+
+? speleothem_substrate(helictite, $S)             % expect cave_ceiling, cave_wall, cave_floor_less_often, carbonate_coating, crust, soda_straw_sometimes
+? speleothem_substrate(frostwork, $S)             % expect stalactite, cave_wall, cave_ceiling, ledge, cave_floor_less_occasionally -- its OWN hedge wording, not normalised
+? speleothem_substrate($P, cave_wall)             % expect helictite AND frostwork (reverse) -- two speleothems, two sentences
+? speleothem_substrate($P, ledge)                 % expect frostwork (reverse)
+? speleothem_substrate($P, cave_floor)            % expect abstain -- the UNHEDGED floor; both sentences say less often / less occasionally
+? speleothem_substrate(stalagmite, $S)            % expect abstain -- this page never says what a stalagmite grows ON
+? speleothem_substrate($P, slanted_surface)       % expect abstain -- a shape of surface, not an identifiable thing in a cave
