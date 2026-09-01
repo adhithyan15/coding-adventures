@@ -13,7 +13,7 @@ use std::collections::{HashMap, HashSet};
 
 use diagram_ir::{
     DiagramDirection, DiagramLabel, DiagramShape, DiagramStyle, EdgeKind, GraphDiagram, GraphEdge,
-    GraphGroup, GraphLink, GraphNode,
+    GraphGroup, GraphLink, GraphNode, GridCell, GridConnection, GridDiagram,
 };
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
@@ -22,7 +22,8 @@ use mermaid_lexer::{
     tokenize_mermaid_pie, tokenize_mermaid_sankey, tokenize_mermaid_sequence,
     tokenize_mermaid_state, try_tokenize_mermaid_gantt, try_tokenize_mermaid_journey,
     try_tokenize_mermaid_quadrant, try_tokenize_mermaid_requirement,
-    try_tokenize_mermaid_mindmap, try_tokenize_mermaid_timeline, try_tokenize_mermaid_xychart,
+    try_tokenize_mermaid_block, try_tokenize_mermaid_mindmap, try_tokenize_mermaid_timeline,
+    try_tokenize_mermaid_xychart,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
@@ -46,6 +47,8 @@ const TIMELINE_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/timeline.grammar");
 const MINDMAP_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/mindmap.grammar");
+const BLOCK_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/block.grammar");
 const REQUIREMENT_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.grammar");
 const XYCHART_PARSER_GRAMMAR_SOURCE: &str =
@@ -632,6 +635,7 @@ impl MermaidDiagramType {
                 | Self::GitGraph
                 | Self::Journey
                 | Self::Mindmap
+                | Self::Block
                 | Self::Timeline
                 | Self::Requirement
                 | Self::Pie
@@ -652,6 +656,7 @@ pub enum MermaidDiagram {
     Sequence(SequenceDiagram),
     Structural(StructuralDiagram),
     Temporal(TemporalDiagram),
+    Grid(GridDiagram),
 }
 
 /// Detect a Mermaid 11.16.1 diagram family from its header.
@@ -772,6 +777,7 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
             })
         }),
         MermaidDiagramType::Mindmap => parse_mindmap(source).map(MermaidDiagram::Graph),
+        MermaidDiagramType::Block => parse_block(source).map(MermaidDiagram::Grid),
         unsupported => Err(ParseError {
             message: format!(
                 "Mermaid {} diagram family {:?} is recognized but not implemented",
@@ -782,6 +788,177 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
             col: 1,
         }),
     }
+}
+
+/// Parse the grammar-backed flat Mermaid block subset into grid semantic IR.
+pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
+    let prepared = prepare_line_grammar_source(source)?;
+    let tokens = try_tokenize_mermaid_block(&prepared).map_err(|message| ParseError {
+        message,
+        line: 1,
+        col: 1,
+    })?;
+    let grammar = parse_parser_grammar(BLOCK_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|error| panic!("Failed to parse block.grammar: {error}"));
+    let mut grammar_parser =
+        GrammarParser::new(tokens.clone(), grammar).with_max_depth(MAX_RULE_DEPTH);
+    grammar_parser.parse().map_err(|error| ParseError {
+        message: error.message,
+        line: error.token.line,
+        col: error.token.column,
+    })?;
+
+    let mut columns = 1usize;
+    let mut title = None;
+    let mut accessibility_title = None;
+    let mut accessibility_description = None;
+    let mut cells = Vec::new();
+    let mut connections = Vec::new();
+    let mut ids = HashSet::new();
+    let mut space_count = 0usize;
+
+    for token in tokens
+        .iter()
+        .filter(|token| token.type_name.as_deref() == Some("STATEMENT_LINE"))
+    {
+        let line = token.value.trim();
+        if let Some(value) = line.strip_prefix("columns ") {
+            columns = value
+                .trim()
+                .parse::<usize>()
+                .ok()
+                .filter(|value| *value > 0)
+                .ok_or_else(|| token_error(token, "block columns must be a positive integer"))?;
+            continue;
+        }
+        if let Some(value) = line.strip_prefix("title ") {
+            title = Some(normalize_mermaid_line_breaks(value.trim()));
+            continue;
+        }
+        if let Some((_, value)) = line.strip_prefix("accTitle").and_then(|line| line.split_once(':')) {
+            accessibility_title = Some(value.trim().to_string());
+            continue;
+        }
+        if let Some((_, value)) = line.strip_prefix("accDescr").and_then(|line| line.split_once(':')) {
+            accessibility_description = Some(value.trim().to_string());
+            continue;
+        }
+        if let Some((from, rest)) = line.split_once("-->") {
+            let (to, label) = if let Some(rest) = rest.trim().strip_prefix('|') {
+                let (label, to) = rest
+                    .split_once('|')
+                    .ok_or_else(|| token_error(token, "unterminated block connection label"))?;
+                (to.trim(), Some(DiagramLabel::new(label.trim())))
+            } else {
+                (rest.trim(), None)
+            };
+            connections.push(GridConnection {
+                from: from.trim().to_string(),
+                to: to.to_string(),
+                label,
+            });
+            continue;
+        }
+
+        for item in split_block_items(line) {
+            if item.eq_ignore_ascii_case("space") {
+                space_count += 1;
+                cells.push(GridCell {
+                    id: format!("__space{space_count}"),
+                    label: DiagramLabel::new(""),
+                    shape: DiagramShape::Rect,
+                    visible: false,
+                    style: None,
+                });
+                continue;
+            }
+            let (id, label, shape) = parse_block_node(item);
+            if id.is_empty() || !ids.insert(id.clone()) {
+                return Err(token_error(token, format!("duplicate or empty block id {id:?}")));
+            }
+            cells.push(GridCell {
+                id,
+                label: DiagramLabel::new(normalize_mermaid_line_breaks(&label)),
+                shape,
+                visible: true,
+                style: None,
+            });
+        }
+    }
+
+    for connection in &connections {
+        if !ids.contains(&connection.from) || !ids.contains(&connection.to) {
+            return Err(ParseError {
+                message: format!("block connection references an unknown node: {} --> {}", connection.from, connection.to),
+                line: 1,
+                col: 1,
+            });
+        }
+    }
+    if cells.iter().all(|cell| !cell.visible) {
+        return Err(ParseError { message: "block diagram requires a visible node".into(), line: 1, col: 1 });
+    }
+
+    Ok(GridDiagram {
+        columns,
+        title,
+        accessibility_title,
+        accessibility_description,
+        cells,
+        connections,
+    })
+}
+
+fn prepare_line_grammar_source(source: &str) -> Result<String, ParseError> {
+    let source = blank_mermaid_front_matter(source)?;
+    let source = String::from_utf8(source).expect("front matter blanking preserves UTF-8");
+    Ok(source
+        .lines()
+        .map(|line| {
+            let trimmed = line.trim();
+            if trimmed.is_empty() || trimmed.starts_with("%%") { "" } else { line }
+        })
+        .collect::<Vec<_>>()
+        .join("\n"))
+}
+
+fn split_block_items(line: &str) -> Vec<&str> {
+    let mut items = Vec::new();
+    let mut start = 0;
+    let mut depth = 0usize;
+    for (index, character) in line.char_indices() {
+        match character {
+            '[' | '(' | '{' => depth += 1,
+            ']' | ')' | '}' => depth = depth.saturating_sub(1),
+            character if character.is_whitespace() && depth == 0 => {
+                if start < index { items.push(&line[start..index]); }
+                start = index + character.len_utf8();
+            }
+            _ => {}
+        }
+    }
+    if start < line.len() { items.push(&line[start..]); }
+    items
+}
+
+fn parse_block_node(source: &str) -> (String, String, DiagramShape) {
+    for (open, close, shape) in [
+        ("((", "))", DiagramShape::Ellipse),
+        ("[", "]", DiagramShape::Rect),
+        ("(", ")", DiagramShape::RoundedRect),
+        ("{{", "}}", DiagramShape::Diamond),
+    ] {
+        if let Some(index) = source.find(open) {
+            if source.ends_with(close) {
+                return (
+                    source[..index].trim().to_string(),
+                    source[index + open.len()..source.len() - close.len()].trim().to_string(),
+                    shape,
+                );
+            }
+        }
+    }
+    (source.to_string(), source.to_string(), DiagramShape::RoundedRect)
 }
 
 /// Parse the grammar-backed Mermaid mindmap subset into graph semantic IR.
@@ -6897,6 +7074,28 @@ fn parse_duration(s: &str) -> Option<GanttDuration> {
 #[cfg(test)]
 mod tests_dg04 {
     use super::*;
+
+    #[test]
+    fn block_parses_grid_cells_spaces_shapes_and_connections() {
+        let diagram = parse_block(
+            "block-beta\ncolumns 3\nA[Parser] space B(IR)\nC((Paint))\nA -->|lower| C",
+        )
+        .unwrap();
+        assert_eq!(diagram.columns, 3);
+        assert_eq!(diagram.cells.len(), 4);
+        assert!(!diagram.cells[1].visible);
+        assert_eq!(diagram.cells[2].shape, DiagramShape::RoundedRect);
+        assert_eq!(diagram.cells[3].shape, DiagramShape::Ellipse);
+        assert_eq!(diagram.connections[0].label.as_ref().unwrap().text, "lower");
+    }
+
+    #[test]
+    fn dispatch_block_to_grid_ir() {
+        match parse_any_mermaid("block-beta\ncolumns 2\nA B").unwrap() {
+            MermaidDiagram::Grid(diagram) => assert_eq!(diagram.cells.len(), 2),
+            _ => panic!("expected block grid"),
+        }
+    }
 
     #[test]
     fn mindmap_parses_indented_tree_shapes_and_unique_ids() {

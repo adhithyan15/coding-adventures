@@ -120,6 +120,7 @@ members = [
     "diagram-layout-structural",
     "diagram-layout-temporal",
     "diagram-layout-graph",
+    "diagram-layout-grid",
     "diagram-layout-sequence",
     "diagram-to-paint",
     "directed-graph",

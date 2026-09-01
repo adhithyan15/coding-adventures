@@ -15,6 +15,7 @@ text-interfaces = { path = "../text-interfaces" }
 dot-parser = { path = "../dot-parser" }
 mermaid-parser = { path = "../mermaid-parser" }
 diagram-layout-graph = { path = "../diagram-layout-graph" }
+diagram-layout-grid = { path = "../diagram-layout-grid" }
 paint-metal = { path = "../paint-metal" }
 paint-codec-png = { path = "../paint-codec-png" }
 text-native-coretext = { path = "../text-native-coretext" }

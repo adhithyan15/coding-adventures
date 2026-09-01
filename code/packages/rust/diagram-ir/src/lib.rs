@@ -152,6 +152,33 @@ pub struct GraphDiagram {
     pub edges: Vec<GraphEdge>,
 }
 
+// GRID FAMILY
+#[derive(Clone, Debug, PartialEq)]
+pub struct GridCell {
+    pub id: String,
+    pub label: DiagramLabel,
+    pub shape: DiagramShape,
+    pub visible: bool,
+    pub style: Option<DiagramStyle>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct GridConnection {
+    pub from: String,
+    pub to: String,
+    pub label: Option<DiagramLabel>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct GridDiagram {
+    pub columns: usize,
+    pub title: Option<String>,
+    pub accessibility_title: Option<String>,
+    pub accessibility_description: Option<String>,
+    pub cells: Vec<GridCell>,
+    pub connections: Vec<GridConnection>,
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct Point {
     pub x: f64,

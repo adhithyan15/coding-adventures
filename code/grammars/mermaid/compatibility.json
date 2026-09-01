@@ -128,7 +128,7 @@
     {
       "id": "block",
       "headers": ["block", "block-beta"],
-      "status": "detected",
+      "status": "partial",
       "ir": "grid",
       "smoke_source": "block-beta\ncolumns 2\nA B"
     },
