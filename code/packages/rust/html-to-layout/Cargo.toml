@@ -8,6 +8,7 @@ description = "Converts html-parser browser render trees into the shared Layout 
 coding-adventures-css-parser = { path = "../css-parser" }
 coding-adventures-html-parser = { path = "../html-parser" }
 layout-ir = { path = "../layout-ir" }
+layout-float = { path = "../layout-float" }
 layout-flexbox = { path = "../layout-flexbox" }
 layout-grid = { path = "../layout-grid" }
 layout-table = { path = "../layout-table" }

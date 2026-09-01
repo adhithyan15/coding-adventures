@@ -31,6 +31,7 @@ pub const FLEX_FIXTURE_PATH: &str = "/flex.html";
 pub const GRID_FIXTURE_PATH: &str = "/grid.html";
 pub const POSITIONED_FIXTURE_PATH: &str = "/positioned.html";
 pub const TABLE_FIXTURE_PATH: &str = "/table.html";
+pub const FLOAT_FIXTURE_PATH: &str = "/float.html";
 pub const VIEWPORT_WIDTH: f64 = 240.0;
 pub const VIEWPORT_HEIGHT: f64 = 120.0;
 pub const GPU_LAYER_FIXTURE_WIDTH: u32 = 16;
@@ -93,6 +94,9 @@ pub const POSITIONED_FIXTURE_HTML: &str = r#"<!doctype html><html><body><div sty
 
 /// Compact table normalization, sizing, span, caption, and paint fixture.
 pub const TABLE_FIXTURE_HTML: &str = r#"<!doctype html><html><body><table id="table-deck" style="width:224px;table-layout:fixed;border-spacing:4px 6px;caption-side:bottom"><tfoot><tr id="table-foot"><td colspan="2" style="background:blue">Total</td></tr></tfoot><tbody><tr id="table-body-a"><td id="table-span" rowspan="2" style="background:green">Tea</td><td>$4</td></tr><tr id="table-body-b"><td>$5</td></tr></tbody><thead><tr id="table-head"><th style="width:70px;background:red">Item</th><th>Price</th></tr></thead><caption id="table-caption">Menu</caption></table></body></html>"#;
+
+/// Compact float, exclusion, shrink-to-fit, and clearance fixture.
+pub const FLOAT_FIXTURE_HTML: &str = r#"<!doctype html><html><body><div id="float-stage" style="width:224px"><div id="float-left" style="float:left;width:72px;height:48px;background:red">Left</div><div id="float-right" style="float:right;width:52px;height:36px;background:blue">Right</div><p id="float-flow" style="margin:0;background:green">Text wraps inside the shared exclusion band.</p><div id="float-clear" style="clear:both;height:18px;background:red">Clear</div><div id="float-auto" style="float:right;background:blue">shrink</div></div></body></html>"#;
 
 /// A compact backend-neutral oracle for isolated GPU composition.
 ///
@@ -488,6 +492,7 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
     let grid_url = format!("{origin}{GRID_FIXTURE_PATH}");
     let positioned_url = format!("{origin}{POSITIONED_FIXTURE_PATH}");
     let table_url = format!("{origin}{TABLE_FIXTURE_PATH}");
+    let float_url = format!("{origin}{FLOAT_FIXTURE_PATH}");
     match requested_url {
         url if url == page_url => Ok(BrowserFetchResponse::new(
             url,
@@ -542,6 +547,12 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
             200,
             Some("text/html; charset=utf-8".into()),
             TABLE_FIXTURE_HTML.as_bytes().to_vec(),
+        )),
+        url if url == float_url => Ok(BrowserFetchResponse::new(
+            url,
+            200,
+            Some("text/html; charset=utf-8".into()),
+            FLOAT_FIXTURE_HTML.as_bytes().to_vec(),
         )),
         url if url == format!("{origin}{MISSING_IMAGE_PATH}") => {
             Err("intentional visual fixture image failure".into())
@@ -635,6 +646,23 @@ pub fn load_table_page(origin: &str) -> Result<BrowserPage, String> {
         &text,
     );
     let url = format!("{}{TABLE_FIXTURE_PATH}", origin.trim_end_matches('/'));
+    pipeline
+        .load(&url, &|requested: &str| fixture_response(origin, requested))
+        .map_err(|error| error.to_string())
+}
+
+pub fn load_float_page(origin: &str) -> Result<BrowserPage, String> {
+    let theme = mosaic_html_theme();
+    let text = DeterministicText;
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, 1.0),
+        &text,
+        &text,
+        &text,
+        &text,
+    );
+    let url = format!("{}{FLOAT_FIXTURE_PATH}", origin.trim_end_matches('/'));
     pipeline
         .load(&url, &|requested: &str| fixture_response(origin, requested))
         .map_err(|error| error.to_string())
@@ -1265,6 +1293,27 @@ mod tests {
         assert!(deck.children[1].children[0].height > deck.children[1].height);
         assert_eq!(deck.children[2].children[0].x, 78.0);
         assert_eq!(deck.children[3].children[0].width, 216.0);
+        assert!(!page.paint.scene.instructions.is_empty());
+    }
+
+    #[test]
+    fn float_fixture_converges_exclusions_clearance_and_paint_for_every_host() {
+        let page = load_float_page("http://venture.test").expect("float fixture page");
+        let stage = find_positioned_id(&page.paint.positioned, "float-stage").expect("float stage");
+        let left = find_positioned_id(stage, "float-left").expect("left float");
+        let right = find_positioned_id(stage, "float-right").expect("right float");
+        let flow = find_positioned_id(stage, "float-flow").expect("flow block");
+        let clear = find_positioned_id(stage, "float-clear").expect("clear block");
+        let auto = find_positioned_id(stage, "float-auto").expect("auto float");
+        assert_eq!((left.x, left.y, left.width), (0.0, 0.0, 72.0));
+        assert_eq!(
+            (right.x, right.y, right.width),
+            (stage.width - 52.0, 0.0, 52.0)
+        );
+        assert!(flow.x >= 72.0);
+        assert!(flow.x + flow.width <= stage.width - 52.0);
+        assert!(clear.y >= 48.0);
+        assert!(auto.width < stage.width);
         assert!(!page.paint.scene.instructions.is_empty());
     }
 

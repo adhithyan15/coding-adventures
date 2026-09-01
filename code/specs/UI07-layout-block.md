@@ -38,7 +38,7 @@ BlockExt {
   display:     "block" | "inline" | "inline-text"
              | "inline-replaced" | "line-break" // default: "block"
   // Block-specific
-  float:       "none" | "left" | "right"   // default: "none" (future)
+  float:       "none" | "left" | "right"   // default: "none"; UI43 contract
   clear:       "none" | "left" | "right" | "both"  // default: "none" (future)
   // Inline-specific
   verticalAlign: "baseline" | "top" | "middle" | "bottom"  // default: "baseline"
@@ -181,7 +181,8 @@ not parent-child margins.
 
 ## What this package does NOT do
 
-- Does not implement `float` or `clear` — those are marked as future
+- Float and clear geometry is delegated to the reusable UI43 formatting
+  context rather than being encoded in this block stacking specification.
 - Does not implement positioned layout (`position: absolute/fixed/sticky`)
 - Does not implement bidirectional text (RTL)
 - Does not implement CSS columns or multi-column layout

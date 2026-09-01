@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Venture float and exclusion formatting
+
+- Added a reusable `layout-float` contract for left/right floats, side-specific
+  clearance, exclusion bands, intrinsic shrink-to-fit widths, margin
+  footprints, containment extents, and producer diagnostics.
+- Integrated computed CSS, shared recursive block/inline layout, paint and hit
+  geometry, and a deterministic float fixture consumed by every Venture host.
+
 ### Venture table formatting context
 
 - Added a reusable `layout-table` engine for anonymous table boxes,

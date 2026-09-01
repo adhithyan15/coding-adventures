@@ -1,0 +1,8 @@
+[package]
+name = "layout-float"
+version = "0.1.0"
+edition = "2021"
+description = "Reusable CSS float, clear, shrink-to-fit, and exclusion geometry over layout-ir"
+
+[dependencies]
+layout-ir = { path = "../layout-ir" }

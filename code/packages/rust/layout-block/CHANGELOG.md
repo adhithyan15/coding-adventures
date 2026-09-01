@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Integrate the reusable `layout-float` context for left/right placement,
+  exclusion bands, clear-side advancement, margin footprints, shrink-to-fit
+  widths, and float containment.
 - Dispatch `table` and `inline-table` containers through the reusable
   `layout-table` formatting context while retaining recursive cell content.
 
