@@ -7589,6 +7589,12 @@ impl HtmlParser {
                 )
                 .at_emission(self.current_token_emission_position),
             );
+            while self.current_namespace().is_some()
+                && !self.current_node_is_svg_html_integration_point()
+                && !self.current_node_is_mathml_integration_point()
+            {
+                self.open_elements.pop();
+            }
             self.append_node(Node::element("p".to_string(), Vec::new()));
             return;
         }
@@ -34372,6 +34378,28 @@ mod tests {
             vec![Node::element("p", Vec::new()), Node::text("X")]
         );
 
+        for source in [
+            "<!doctype html><svg><foreignObject id=boundary><svg><g></p>X</foreignObject></svg>",
+            "<!doctype html><math><mtext id=boundary><svg><g></p>X</mtext></math>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![
+                    generic_foreign_end_tag_mismatch(source, "p"),
+                    unexpected_p_end_tag(source),
+                ],
+                "source {source:?}"
+            );
+            let boundary = find_element_by_id(&output.document.children, "boundary").unwrap();
+            assert_eq!(boundary.children.len(), 3, "source {source:?}");
+            let nested_svg = element(&boundary.children[0]);
+            assert_eq!(nested_svg.namespace.as_deref(), Some("svg"));
+            assert_eq!(element(&nested_svg.children[0]).name, "g");
+            assert_eq!(boundary.children[1], Node::element("p", Vec::new()));
+            assert_eq!(boundary.children[2], Node::text("X"));
+        }
+
         let matching_foreign =
             parse_html_fragment_for_context_with_diagnostics("</p>X", "svg p").unwrap();
         assert_eq!(matching_foreign.nodes, vec![Node::text("X")]);
@@ -34400,7 +34428,8 @@ mod tests {
 
     #[test]
     fn positions_paragraph_foreign_end_tag_mismatches_at_token_emission() {
-        let source = "<!doctype html><!--é-->\r\n<p><math><mi></p>X</mi></math></p>";
+        let source =
+            "<!doctype html><!--é-->\r\n<svg><foreignObject><svg><g></p>X</foreignObject></svg>";
         let output = parse_html_with_diagnostics(source).unwrap();
         assert_eq!(
             output.parser_diagnostics,
@@ -34441,9 +34470,20 @@ mod tests {
                 attributes: Vec::new(),
                 self_closing: false,
             },
+            Token::StartTag {
+                name: "svg".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "g".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
             Token::EndTag {
                 name: "p".to_string(),
             },
+            Token::Text("X".to_string()),
             Token::Eof,
         ] {
             unpositioned.process_token(token);
@@ -34459,6 +34499,14 @@ mod tests {
             .unwrap();
         assert_eq!(foreign.position, None);
         assert_eq!(companion.position, None);
+        let document = unpositioned.finish_document();
+        let outer_svg = element(&body(&document).children[0]);
+        let boundary = element(&outer_svg.children[0]);
+        assert_eq!(boundary.name, "foreignObject");
+        assert_eq!(boundary.children.len(), 3);
+        assert_eq!(element(&boundary.children[0]).name, "svg");
+        assert_eq!(boundary.children[1], Node::element("p", Vec::new()));
+        assert_eq!(boundary.children[2], Node::text("X"));
     }
 
     #[test]
