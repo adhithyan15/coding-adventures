@@ -118,15 +118,13 @@ Completed convergence foundations: exact zero-missing HTML tokenizer/tree
 construction ratchets; native generated-host interaction gates; shared
 scrollbars, hover status, and cursors; reusable fragmented/international inline
 layout; deterministic real-page visual acceptance; and host-neutral flex,
-grid, positioned/clipped, table, and float formatting contexts.
+grid, positioned/clipped, table, float, and fragmented inline-box formatting
+contexts.
 
-1. **P1 — richer inline box edges.** Preserve padding, margins, borders, and
-   decoration continuation policy across semantic wrapper fragments before
-   expanding the supported CSS surface.
-2. **P1 — intrinsic replaced sizing.** Resolve image intrinsic dimensions,
+1. **P1 — intrinsic replaced sizing.** Resolve image intrinsic dimensions,
    aspect ratios, min/max constraints, and object-fit geometry before layout so
    normal, flex, grid, table, and floated replaced boxes share one answer.
-3. **P2 — generated and marker boxes.** Add reusable list-marker and generated
+2. **P2 — generated and marker boxes.** Add reusable list-marker and generated
    content boxes without teaching HTML, paint, or native hosts special cases.
 
 Completed in the visited-link convergence phase: `browser-navigation` owns
