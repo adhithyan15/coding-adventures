@@ -68,15 +68,32 @@ const CurrentSchemaVersion = 1
 // DefaultRegistryPath is the registry's home, relative to the repo root.
 const DefaultRegistryPath = "code/specs/data/ci-gates.json"
 
-// CIWorkflowPath and RegistryPath are the two self-test sentinels: when either
-// changes, every gate fires. Editing the gating machinery should run everything
-// the machinery gates, so a mistake in it shows up on the pull request that
+// CIWorkflowPath and RegistryPath are self-test sentinels: when either changes,
+// every gate fires. Editing the gating machinery should run everything the
+// machinery gates, so a mistake in it shows up on the pull request that
 // introduces it rather than three merges later. This mirrors the workflow_changed()
 // escape hatch the six code/scripts/*_ci_acceptance.py scripts already use.
 const (
 	CIWorkflowPath = ".github/workflows/ci.yml"
 	RegistryPath   = DefaultRegistryPath
 )
+
+// machineryPrefixes extends those sentinels to the code that computes the
+// verdicts. CI compiles the build tool from the pull request's own source, so a
+// change to this package — or to the glob matcher it delegates to, or to the
+// main.go that wires them up — changes the evaluator being trusted to decide
+// what runs.
+//
+// Without this, one pull request could make Evaluate return false for
+// everything: all gated jobs would skip, ci-gate would treat "skipped" as
+// passing, and the run would be green. The gate that would otherwise notice a
+// build-tool change is itself computed by the modified evaluator, so that check
+// is circular and cannot be relied on.
+var machineryPrefixes = []string{
+	"code/programs/go/build-tool/internal/cigates/",
+	"code/programs/go/build-tool/internal/globmatch/",
+	"code/programs/go/build-tool/main.go",
+}
 
 // Scope distinguishes a gate that controls a whole workflow job from one that
 // controls a single step inside a job. Only job-scoped gates are required to
@@ -268,12 +285,18 @@ func Evaluate(
 	return result
 }
 
-// touchesGatingMachinery reports whether the change edits ci.yml or the registry
-// itself. Either one invalidates our ability to reason about the others.
+// touchesGatingMachinery reports whether the change edits ci.yml, the registry,
+// or the code that evaluates it. Any of those invalidates our ability to reason
+// about the rest.
 func touchesGatingMachinery(changedFiles []string) bool {
 	for _, file := range changedFiles {
 		if file == CIWorkflowPath || file == RegistryPath {
 			return true
+		}
+		for _, prefix := range machineryPrefixes {
+			if file == prefix || strings.HasPrefix(file, prefix) {
+				return true
+			}
 		}
 	}
 	return false

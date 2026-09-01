@@ -98,6 +98,38 @@ func TestRegistryChangeSelfTestsEveryGate(t *testing.T) {
 	assertAll(t, got, true, "registry changed")
 }
 
+// CI compiles the build tool from the pull request's own source, so a change to
+// the evaluator changes what decides the verdicts. Without this, one PR could
+// make Evaluate return false for everything: every gated job would skip and
+// ci-gate, which treats "skipped" as passing, would still report green. The
+// gate that would otherwise catch a build-tool change is itself computed by the
+// modified evaluator, so that check is circular.
+func TestGatingImplementationChangeSelfTestsEveryGate(t *testing.T) {
+	for _, file := range []string{
+		"code/programs/go/build-tool/internal/cigates/cigates.go",
+		"code/programs/go/build-tool/internal/cigates/cigates_test.go",
+		"code/programs/go/build-tool/internal/globmatch/globmatch.go",
+		"code/programs/go/build-tool/main.go",
+	} {
+		t.Run(file, func(t *testing.T) {
+			got := Evaluate(testRegistry(), map[string]bool{}, []string{file}, false)
+			assertAll(t, got, true, "gating implementation changed")
+		})
+	}
+}
+
+// The sentinel must not swallow the whole build tool: an unrelated change to,
+// say, the reporter should still be gated normally.
+func TestUnrelatedBuildToolChangeIsNotASentinel(t *testing.T) {
+	got := Evaluate(
+		testRegistry(),
+		map[string]bool{},
+		[]string{"code/programs/go/build-tool/internal/reporter/reporter.go"},
+		false,
+	)
+	assertAll(t, got, false, "unrelated build-tool change")
+}
+
 // ---------------------------------------------------------------------------
 // The two clauses
 // ---------------------------------------------------------------------------
@@ -362,6 +394,71 @@ func TestUnicodeGeneratorChangeFiresAllFiveUnicodeGates(t *testing.T) {
 		id := "unicode17-" + lang + "-conformance"
 		if !got[id] {
 			t.Errorf("gate %q must fire when the Unicode 17 generator changes", id)
+		}
+	}
+}
+
+// The macOS and Windows build legs run only on pull requests -- main builds
+// from ubuntu shards -- so trimming a leg has no main-merge safety net. Both
+// legs carry suites gated on runner.os alone, with no toolchain flag, and these
+// gates are what keep them from disappearing on the very change that touches
+// the code they cover.
+func TestContainmentChangeKeepsBothOSLegs(t *testing.T) {
+	reg := loadRealRegistry(t)
+	got := Evaluate(reg, map[string]bool{}, []string{"code/scripts/adj_stdlib_provenance.py"}, false)
+
+	for _, id := range []string{"build-macos-os-suites", "build-windows-os-suites"} {
+		if !got[id] {
+			t.Errorf("gate %q must fire when ADJ containment code changes", id)
+		}
+	}
+}
+
+func TestMSVCBootstrapChangeKeepsWindowsLeg(t *testing.T) {
+	reg := loadRealRegistry(t)
+	got := Evaluate(reg, map[string]bool{}, []string{"code/scripts/setup_msvc_dev_cmd.py"}, false)
+
+	if !got["build-windows-os-suites"] {
+		t.Error("build-windows-os-suites must fire when the MSVC bootstrap changes")
+	}
+	if got["build-macos-os-suites"] {
+		t.Error("build-macos-os-suites should not fire on an MSVC-only change")
+	}
+}
+
+func TestCapabilitySchemaChangeFiresCapabilityCageGate(t *testing.T) {
+	reg := loadRealRegistry(t)
+	// test_capability_taxonomy.py validates all three capability schemas; it is
+	// what proves the capability model is closed. code/specs maps to no package,
+	// so only the path clause can see a schema being widened.
+	for _, schema := range []string{
+		"code/specs/schemas/capability_taxonomy.schema.json",
+		"code/specs/schemas/required_capabilities.schema.json",
+		"code/specs/schemas/agent_manifest.schema.json",
+	} {
+		t.Run(schema, func(t *testing.T) {
+			got := Evaluate(reg, map[string]bool{}, []string{schema}, false)
+			if !got["contracts-capability-cage"] {
+				t.Errorf("contracts-capability-cage must fire when %s changes", schema)
+			}
+		})
+	}
+}
+
+// The package clause depends on the BUILD dependency graph being complete, and
+// this repo has documented cases of missing deps= edges leaving dependents dark.
+// A directory glob is filesystem truth and cannot be defeated that way.
+func TestCryptoSourceChangeFiresWithoutAnyGraphEdge(t *testing.T) {
+	reg := loadRealRegistry(t)
+	got := Evaluate(
+		reg,
+		map[string]bool{}, // empty closure: pretend every graph edge is missing
+		[]string{"code/packages/elixir/chief-of-staff-channel-crypto/lib/crypto.ex"},
+		false,
+	)
+	for _, id := range []string{"d18f-message-conformance", "d18q-channel-key-grant-conformance"} {
+		if !got[id] {
+			t.Errorf("gate %q must fire from its path clause even with an empty affected closure", id)
 		}
 	}
 }

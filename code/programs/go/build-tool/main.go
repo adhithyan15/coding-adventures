@@ -1105,31 +1105,49 @@ func outputLanguageFlags(needed map[string]bool) int {
 // outputCIGateFlags publishes one "run_<gate>=true|false" line per registry gate
 // to stdout and $GITHUB_OUTPUT, so ci.yml can use them as job-level `if:`
 // conditions. Emitted in sorted order so run logs diff cleanly.
+// Unlike outputLanguageFlags, a write failure here is fatal rather than a
+// warning. A missing needs_<lang> flag produces a loud build failure from an
+// absent toolchain; a missing run_<gate> flag makes every gated job's `if:`
+// compare against the empty string, so every one of them skips and ci-gate —
+// which treats "skipped" as passing — still reports green. Failing open here
+// would mean CI doing nothing and saying it passed.
 func outputCIGateFlags(verdicts map[string]bool) int {
-	ghOutput := os.Getenv("GITHUB_OUTPUT")
-	var ghFile *os.File
-	if ghOutput != "" {
-		var err error
-		ghFile, err = os.OpenFile(ghOutput, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Warning: could not open $GITHUB_OUTPUT: %v\n", err)
-		} else {
-			defer ghFile.Close()
-		}
-	}
-
 	ids := make([]string, 0, len(verdicts))
 	for id := range verdicts {
 		ids = append(ids, id)
 	}
 	sort.Strings(ids)
 
+	lines := make([]string, 0, len(ids))
 	for _, id := range ids {
 		line := fmt.Sprintf("%s=%t", cigates.OutputName(id), verdicts[id])
 		fmt.Println(line)
-		if ghFile != nil {
-			fmt.Fprintln(ghFile, line)
+		lines = append(lines, line)
+	}
+
+	ghOutput := os.Getenv("GITHUB_OUTPUT")
+	if ghOutput == "" {
+		// Not running under Actions; stdout is the whole contract.
+		return 0
+	}
+
+	ghFile, err := os.OpenFile(ghOutput, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: could not open $GITHUB_OUTPUT to publish CI gate verdicts: %v\n", err)
+		return 1
+	}
+
+	for _, line := range lines {
+		if _, err := fmt.Fprintln(ghFile, line); err != nil {
+			ghFile.Close()
+			fmt.Fprintf(os.Stderr, "Error: could not write CI gate verdict %q: %v\n", line, err)
+			return 1
 		}
+	}
+
+	if err := ghFile.Close(); err != nil {
+		fmt.Fprintf(os.Stderr, "Error: could not flush CI gate verdicts to $GITHUB_OUTPUT: %v\n", err)
+		return 1
 	}
 
 	return 0

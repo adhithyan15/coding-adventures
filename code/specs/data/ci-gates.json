@@ -15,7 +15,6 @@
         "code/scripts/tests/test_phy00_phy01_fixtures.py"
       ]
     },
-
     "d18f-message-conformance": {
       "scope": "job",
       "description": "Six-language D18F chief-of-staff message manifest conformance and regeneration.",
@@ -29,13 +28,13 @@
       ],
       "paths": [
         "code/fixtures/chief-of-staff-message/**",
+        "code/packages/*/chief-of-staff-channel-crypto/**",
         "code/scripts/validate_d18f_message_conformance.py",
         "code/scripts/tests/test_d18f_message_conformance.py",
         "code/packages/rust/Cargo.toml",
         "code/packages/rust/Cargo.lock"
       ]
     },
-
     "d18p-channel-conformance": {
       "scope": "job",
       "description": "Six-language D18P durable-channel manifest conformance and regeneration.",
@@ -50,13 +49,15 @@
       ],
       "paths": [
         "code/fixtures/chief-of-staff-channel/**",
+        "code/packages/*/chief-of-staff-channel-crypto/**",
+        "code/packages/rust/chief-of-staff-channel-endpoints/**",
+        "code/packages/*/chief-of-staff-channel-store/**",
         "code/scripts/validate_d18p_channel_conformance.py",
         "code/scripts/tests/test_d18p_channel_conformance.py",
         "code/packages/rust/Cargo.toml",
         "code/packages/rust/Cargo.lock"
       ]
     },
-
     "d18q-channel-key-grant-conformance": {
       "scope": "job",
       "description": "Six-language D18Q channel-key grant manifest conformance and regeneration.",
@@ -70,13 +71,13 @@
       ],
       "paths": [
         "code/fixtures/chief-of-staff-channel-key-grant/**",
+        "code/packages/*/chief-of-staff-channel-crypto/**",
         "code/scripts/validate_d18q_channel_key_grant_conformance.py",
         "code/scripts/tests/test_d18q_channel_key_grant_conformance.py",
         "code/packages/rust/Cargo.toml",
         "code/packages/rust/Cargo.lock"
       ]
     },
-
     "d18t-durable-epoch-activation-conformance": {
       "scope": "job",
       "description": "Six-language D18T durable epoch-activation manifest conformance and regeneration.",
@@ -90,13 +91,16 @@
       ],
       "paths": [
         "code/fixtures/chief-of-staff-channel-epoch-activation/**",
+        "code/packages/rust/chief-of-staff-channel-endpoints/**",
+        "code/packages/*/chief-of-staff-channel-crypto/**",
+        "code/packages/*/chief-of-staff-channel-store/**",
+        "code/packages/*/chief-of-staff-channel-epoch-activation/**",
         "code/scripts/validate_d18t_durable_epoch_activation_conformance.py",
         "code/scripts/tests/test_d18t_durable_epoch_activation_conformance.py",
         "code/packages/rust/Cargo.toml",
         "code/packages/rust/Cargo.lock"
       ]
     },
-
     "ruby-grammar-regen-check": {
       "scope": "job",
       "description": "Regenerates every Ruby _grammar.rb from its .tokens/.grammar source and rejects a stale committed file.",
@@ -149,32 +153,11 @@
         "ruby/xml_lexer"
       ],
       "paths": [
-        "code/grammars/brainfuck/**",
-        "code/grammars/csharp/**",
-        "code/grammars/css/**",
-        "code/grammars/dartmouth_basic/**",
-        "code/grammars/ecmascript/**",
-        "code/grammars/excel/**",
-        "code/grammars/java/**",
-        "code/grammars/javascript/**",
-        "code/grammars/json/**",
-        "code/grammars/lattice/**",
-        "code/grammars/lisp/**",
-        "code/grammars/mosaic/**",
-        "code/grammars/nib/**",
-        "code/grammars/python/**",
-        "code/grammars/ruby/**",
-        "code/grammars/sql/**",
-        "code/grammars/starlark/**",
-        "code/grammars/toml/**",
-        "code/grammars/typescript/**",
-        "code/grammars/verilog/**",
-        "code/grammars/vhdl/**",
-        "code/grammars/xml/**",
+        "code/grammars/**",
+        "code/programs/ruby/grammar-tools/**",
         "code/specs/grammar-tools.json"
       ]
     },
-
     "unicode17-elixir-conformance": {
       "scope": "job",
       "description": "Generated Elixir Unicode 17 tables against every official normalization/casing vector.",
@@ -197,7 +180,6 @@
         "code/specs/fixtures/build-tool-v1/UNICODE-LICENSE.txt"
       ]
     },
-
     "unicode17-lua-conformance": {
       "scope": "job",
       "description": "Generated Lua Unicode 17 tables against every official normalization/casing vector.",
@@ -222,7 +204,6 @@
         "code/scripts/tests/test_setup_lua.py"
       ]
     },
-
     "unicode17-perl-conformance": {
       "scope": "job",
       "description": "Generated Perl Unicode 17 tables against every official normalization/casing vector.",
@@ -245,7 +226,6 @@
         "code/specs/fixtures/build-tool-v1/UNICODE-LICENSE.txt"
       ]
     },
-
     "unicode17-haskell-conformance": {
       "scope": "job",
       "description": "Generated Haskell Unicode 17 tables against every official normalization/casing vector.",
@@ -268,7 +248,6 @@
         "code/specs/fixtures/build-tool-v1/UNICODE-LICENSE.txt"
       ]
     },
-
     "unicode17-swift-conformance": {
       "scope": "job",
       "description": "Generated Swift Unicode 17 tables against every official normalization/casing vector.",
@@ -291,7 +270,6 @@
         "code/specs/fixtures/build-tool-v1/UNICODE-LICENSE.txt"
       ]
     },
-
     "contracts-adj-stdlib": {
       "scope": "step",
       "description": "ADJ stdlib report/manifest/provenance, and the two adj-lang-cli binaries they need.",
@@ -314,7 +292,6 @@
         "code/scripts/tests/**"
       ]
     },
-
     "contracts-build-tool-conformance": {
       "scope": "step",
       "description": "Build-tool conformance corpus and execution contract validation.",
@@ -331,7 +308,6 @@
         "code/programs/go/build-tool/**"
       ]
     },
-
     "contracts-capability-cage": {
       "scope": "step",
       "description": "Capability taxonomy plus the Go and Rust capability-cage suites.",
@@ -344,7 +320,33 @@
       "paths": [
         "code/specs/fixtures/capability-security-v1/**",
         "code/specs/schemas/capability_taxonomy.schema.json",
-        "code/scripts/tests/test_capability_taxonomy.py"
+        "code/specs/schemas/required_capabilities.schema.json",
+        "code/specs/schemas/agent_manifest.schema.json",
+        "code/scripts/tests/test_capability_taxonomy.py",
+        "code/packages/go/capability-cage/**",
+        "code/packages/go/ca-capability-analyzer/**",
+        "code/packages/rust/capability-cage/**",
+        "code/programs/go/capability-cage-generator/**"
+      ]
+    },
+    "build-macos-os-suites": {
+      "scope": "step",
+      "description": "Suites that run only on the macOS build leg, independent of any toolchain flag.",
+      "packages": [],
+      "paths": [
+        "code/scripts/adj_stdlib_provenance.py",
+        "code/scripts/tests/test_adj_stdlib_provenance.py"
+      ]
+    },
+    "build-windows-os-suites": {
+      "scope": "step",
+      "description": "Suites that run only on the Windows build leg, independent of any toolchain flag.",
+      "packages": [],
+      "paths": [
+        "code/scripts/adj_stdlib_provenance.py",
+        "code/scripts/tests/test_adj_stdlib_provenance.py",
+        "code/scripts/setup_msvc_dev_cmd.py",
+        "code/scripts/tests/test_setup_msvc_dev_cmd.py"
       ]
     }
   }

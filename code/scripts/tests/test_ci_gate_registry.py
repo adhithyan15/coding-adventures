@@ -23,8 +23,9 @@ WORKFLOW = REPO_ROOT / ".github" / "workflows" / "ci.yml"
 
 # Job keys sit at exactly two spaces of indentation under `jobs:`.
 JOB_KEY = re.compile(r"^  ([a-z0-9][a-z0-9-]*):$", re.MULTILINE)
-# Every flag reference of the form needs.detect.outputs.run_<something>.
-FLAG_REFERENCE = re.compile(r"needs\.detect\.outputs\.(run_[a-z0-9_]+)")
+# Every flag reference. Jobs downstream of detect read `needs.detect.outputs`;
+# steps inside the detect job itself read `steps.detect.outputs`.
+FLAG_REFERENCE = re.compile(r"(?:needs|steps)\.detect\.outputs\.(run_[a-z0-9_]+)")
 # Every flag the detect job declares as an output.
 FLAG_DECLARATION = re.compile(r"^      (run_[a-z0-9_]+):", re.MULTILINE)
 

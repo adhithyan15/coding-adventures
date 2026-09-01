@@ -113,6 +113,8 @@ jobs:
       run_contracts_adj_stdlib: ${{ steps.detect.outputs.run_contracts_adj_stdlib }}
       run_contracts_build_tool_conformance: ${{ steps.detect.outputs.run_contracts_build_tool_conformance }}
       run_contracts_capability_cage: ${{ steps.detect.outputs.run_contracts_capability_cage }}
+      run_build_macos_os_suites: ${{ steps.detect.outputs.run_build_macos_os_suites }}
+      run_build_windows_os_suites: ${{ steps.detect.outputs.run_build_windows_os_suites }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -336,6 +338,8 @@ jobs:
           NEEDS_VENTURE_WINDOWS: ${{ steps.venture-windows.outputs.required }}
           NEEDS_MOSAIC_XAML_WINDOWS: ${{ steps.mosaic-xaml-windows.outputs.required }}
           NEEDS_MOSAIC_SWIFT_RUNTIME: ${{ steps.mosaic-swift-runtime.outputs.required }}
+          RUN_MACOS_OS_SUITES: ${{ steps.detect.outputs.run_build_macos_os_suites }}
+          RUN_WINDOWS_OS_SUITES: ${{ steps.detect.outputs.run_build_windows_os_suites }}
         run: |
           python3 - <<'PY' >> "$GITHUB_OUTPUT"
           import json
@@ -362,7 +366,16 @@ jobs:
 
           def needs_macos(plan):
             """macOS re-runs the whole affected build. It earns its runner only
-            when the change could behave differently there."""
+            when the change could behave differently there.
+
+            These legs exist ONLY on pull requests -- main builds from ubuntu
+            shards -- so unlike the job gates there is no main-merge safety net.
+            Dropping a leg removes that coverage from the repo entirely, which
+            is why the OS-only suites below get an explicit gate."""
+            # The macOS leg carries one suite gated on runner.os alone, with no
+            # toolchain condition: the ADJ POSIX process-tree containment tests.
+            if flag("RUN_MACOS_OS_SUITES"):
+              return True
             if flag("NEEDS_MOSAIC_SWIFT_RUNTIME") or flag("NEEDS_VENTURE_WINDOWS"):
               return True
             if plan is None:
@@ -382,11 +395,15 @@ jobs:
             return any(language_of.get(name, "") in PLATFORM_SENSITIVE for name in darwin)
 
           def needs_windows():
-            """The Windows leg's build step is already guarded to Swift/Elixir,
-            and its other steps to venture/XAML/Rust-clippy. With none of those
-            set it installs toolchains and builds nothing."""
+            """The Windows leg's *build* step is guarded to Swift/Elixir and its
+            other build steps to venture/XAML/Rust-clippy -- but it also carries
+            two suites gated on runner.os alone: the ADJ Windows Job-object
+            containment tests and the MSVC bootstrap test. Those have no
+            toolchain flag, so they need their own gate, or a change to the
+            containment code would drop the only tests that cover it."""
             return (
-              flag("NEEDS_SWIFT")
+              flag("RUN_WINDOWS_OS_SUITES")
+              or flag("NEEDS_SWIFT")
               or flag("NEEDS_ELIXIR")
               or flag("NEEDS_RUST")
               or flag("NEEDS_VENTURE_WINDOWS")
