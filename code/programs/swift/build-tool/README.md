@@ -125,16 +125,27 @@ Source collection has its own exact generated-output boundary: `.git`, `.hg`,
 names are case-sensitive whole path components. Near names and the
 discovery-only `specs` directory remain hashable source.
 
-Legacy packages collect the registered sources and metadata for every
-established lane. Starlark packages use strict `srcs` glob matching while
-retaining supported BUILD fronts, fixed-name package metadata, and root-only
-variable manifests: `.gemspec`, `.rockspec`, `.cabal`, `.opam`, `.csproj`, and
-`.fsproj`. Nested variable manifests require an explicit glob. OCaml packages
-recognize `.ml`, `.mli`, `.opam`, `.ocamlformat`, `dune`, and `dune-project`.
-This is the primary/reference lane registry. Hybrid native companions,
-tool scripts, wrappers, resources, and generated-versus-authored binary inputs
-remain under a separate language-neutral registry audit rather than being
-silently guessed by this engine.
+The production collector uses a generated, source-embedded projection of the
+complete checked 23-language registry. It does not read a fixture, environment
+variable, or command-line registry path at runtime. Tests decode the canonical
+JSON and compare its complete raw object with the production serialization, so
+missing selectors, undeclared extras, scoped-rule metadata, and ownership drift
+all fail together.
+
+Extension mode resolves recursive sources and exact metadata plus bounded
+native-companion and resource scopes. Declared mode instead applies strict
+portable `srcs` globs. Both modes retain the five universal BUILD fronts,
+root-only `required_capabilities.json`, lane root metadata and variable
+manifests, fixed relative inputs, and exact package-specific inputs. This
+includes SwiftPM C-family targets below `Sources`, reviewed Rust companions,
+resources and scripts, and only the three exact Engram WASM BUILD inputs for
+the canonical Engram package root. Unknown languages, non-portable paths,
+NFC/full-casefold aliases, oversized inputs, and selector widening fail closed.
+
+Package collection deliberately remains below the package root. The separate
+repository-relative boundary registry, tracked-file proof, and reverse diff
+index have their own parity owner; they are not approximated by traversing
+ancestors or unpruning generated directories here.
 
 Package hashing sorts portable repository-relative paths by UTF-8 bytes and
 feeds this byte stream to the repository-local pure Swift SHA-256 package for

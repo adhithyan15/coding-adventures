@@ -12511,6 +12511,35 @@ checked filesystem boundary. Reconciliation and selection leave 640 unique
 owners and 1,006 dependency edges: 200 merged, 439 pending, and exactly this
 Swift owner in progress.
 
+### Swift package-registry scope correction
+
+Independent conformance and security reviews of the selected Swift work found
+one ownership distinction that the neutral audit had described normatively but
+the backlog had not modeled explicitly. The language registry is package-root
+relative; the separate repository boundary registry owns exact shared inputs,
+cross-package BUILD inputs, and tracked exceptions hidden by generated-path
+pruning. Swift must also reverse-index those boundary inputs for diff selection,
+so folding both contracts into one package-map replacement would conceal a
+second scheduling and tracked-file authority change.
+
+The selected owner is therefore narrowed truthfully to the complete
+package-local projection: all 23 language entries, seven selector roles,
+universal BUILD and capability inputs, scoped companions/resources, exact
+Engram inputs, unknown-language rejection, portable path identity, and finite
+candidate/result/byte bounds. New pending owner
+`build-tool-swift-repository-source-input-boundary-adoption` depends on that
+projection and the merged neutral boundary contract. It owns the exact 18-rule
+and 21-registration projection, secure tracked-file hashing, all neutral
+boundary fixtures, the nine exact Swift consumers of the Rust workspace
+manifest, near-root rejection, and boundary-only diff closure. The remaining-
+engine hashing aggregate now depends on that boundary owner instead of claiming
+Swift completion from package-local equality alone.
+
+This classification adds one owner and two dependency edges without changing
+the active implementation slice. The graph now has 641 unique owners and 1,008
+dependency edges: 200 merged, 440 pending, and exactly the Swift package-local
+registry owner in progress.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
