@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Changed — declare both Hindi parent-register pairs
+
+- Chapter 12 now declares **पिता / माता / बाप / माँ** as its headword instead
+  of naming only the respectable **पिता / माता** pair. The lesson already
+  defines **बाप / माँ** as the everyday spoken pair, practises both registers,
+  and asks learners to recall the everyday forms; its metadata now exposes the
+  complete assessed contrast.
+
 ### Changed — declare Hindi's time-telling verb
 
 - Chapter 18 now declares **घंटा / बजना** as its headword instead of naming

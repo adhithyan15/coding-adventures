@@ -4,22 +4,22 @@
   "chapter": 12,
   "title": "Family",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:7783a6f323724369",
+  "sourceHash": "fnv1a64:176a67f8ab3a76f7",
   "lessons": [
     {
       "id": "HI-C12-pitaa-maataa",
       "sequence": 570,
       "title": "पिता, माता (pitā, mātā) — father and mother, cousins across a huge family",
-      "headword": "पिता माता",
+      "headword": "पिता / माता / बाप / माँ",
       "romanization": "",
-      "gloss": "father and mother — Sanskrit cousins of Latin pater/mater and English father/mother",
+      "gloss": "father and mother — respectable पिता and माता, everyday spoken बाप and माँ",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d70f58c0d7ff6410",
+      "sourceHash": "fnv1a64:805b638502c83ac0",
       "notice": null,
       "blocks": [
         {

@@ -8,8 +8,8 @@ spine_node: SPINE-EXCHANGE-NAMES
 sequence: 570
 chapter: 12
 type: word
-headword: पिता माता
-gloss: father and mother — Sanskrit cousins of Latin pater/mater and English father/mother
+headword: पिता / माता / बाप / माँ
+gloss: father and mother — respectable पिता and माता, everyday spoken बाप and माँ
 concept_tag: HI-FAMILY-PARENTS
 prerequisites: [HI-C11-laal-niila]
 sounds: [devanagari-long-aa, retroflex-vs-dental-ta]
