@@ -22,20 +22,25 @@ interface SourceFsConfig {
   readonly glob: string;
   /** Directory to search; defaults to process.cwd(). */
   readonly root?: string;
+  /** Create/read stable adjacent identity sidecars. Defaults to true. */
+  readonly persistIdentities?: boolean;
 }
 ```
 
 ## v0 simplifications
 
 - **Glob is `**/*.<ext>` only.** No brace expansion, no negation, no character classes. Uses a tiny hand-rolled walker (`src/walker.ts`) instead of pulling in `fast-glob` or `picomatch`. Patterns like `posts/**/*.md` are not supported in v0 — set `root: "posts"` and `glob: "**/*.md"` instead.
-- **Reads via `node:fs` directly**, not through `ctx.storage`. See "Capability discipline" below.
-- **No watching.** `forme watch` mode (FM03 §7) lives in a future package.
+- **Reads and creates identity sidecars via `node:fs` directly**, not through `ctx.storage`. See "Capability discipline" below.
+- **Each invocation is a one-shot scan.** The product CLI owns `forme watch`
+  and reruns the pipeline when project files change.
 
 ## Capability discipline
 
 Source stages have a chicken-and-egg problem with `ctx.storage`: the storage API is supposed to be the orchestrator-supplied implementation, but **for the source-fs stage to read disk, *something* has to be that implementation**. We are.
 
-The pragmatic v0 resolution: source-fs declares `storage:read` in its `required_capabilities.json` (so the manifest layer audits it correctly) and reads via `node:fs/promises` directly. When the FM02 plugin host lands and the orchestrator wires real `StorageApi`s around stages, source-fs will be one of the storage *implementations* rather than a consumer.
+The pragmatic v0 resolution: source-fs declares `storage:read` and `storage:write` in its `required_capabilities.json` and accesses the filesystem via `node:fs/promises`. The write capability is limited to exclusive creation of missing `.<basename>.id.json` sidecars; existing metadata is never replaced. When the FM02 plugin host lands and the orchestrator wires real `StorageApi`s around stages, source-fs will be one of the storage *implementations* rather than a consumer.
+
+With `persistIdentities` enabled, first encounter creates a UUIDv7 sidecar atomically. Concurrent builds converge on the winning file. An existing malformed sidecar fails the build so published identity cannot silently change; delete or repair it explicitly. Set `persistIdentities: false` for an ephemeral, write-free source.
 
 Documented as a stage-level exception both in this README and in the source.
 
@@ -48,8 +53,8 @@ For each matching file:
   path: <relative to root>,
   bytes: <Uint8Array of file contents>,
   mimeType: "text/markdown",   // for .md/.mdx/.markdown; null for unrecognised exts
-  identity: <fresh UUIDv7>,    // generateLogicalId() — TODO: persist + read from id.json
-  revision: <blake2b:...>,     // computeRevisionId({ path, bytes })
+  identity: <stable UUIDv7>,   // read or atomically created in .<name>.id.json
+  revision: <blake2b:...>,     // binary content hash; unchanged by rename
   providerMeta: {
     mtimeMs: <file mtime>,
     sizeBytes: <file size>,
