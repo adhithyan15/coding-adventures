@@ -116,6 +116,13 @@ cross-platform proving application. Items are ordered by risk and dependency.
   recursive block/inline dispatch, intrinsic text minimums, reverse and wrapped
   axes, complete content distribution, and one browser fixture shared by the
   native and web host pipelines.
+- [x] **P2 CSS convergence — grid formatting context.** Add a reusable grid
+  container/item contract with explicit and implicit tracks, named areas,
+  sparse and dense auto-placement, spans, gaps, intrinsic/`fr`/`minmax()`
+  sizing, order, and two-axis item/content alignment. Completed with a
+  host-neutral Rust grid engine, tolerant typed diagnostics, computed CSS
+  longhand/shorthand mapping, recursive `grid`/`inline-grid` dispatch, and a
+  deterministic geometry-and-paint fixture shared by every Venture host.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a

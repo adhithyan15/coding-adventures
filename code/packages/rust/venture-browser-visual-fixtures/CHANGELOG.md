@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add a named-area grid fixture that ratchets shared track geometry, ordering,
+  gaps, implicit recursive layout, and paint across all Venture host pipelines.
 - Add a deterministic wrapped flex fixture and shared geometry oracle.
 
 ## 0.1.1

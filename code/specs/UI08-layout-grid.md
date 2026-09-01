@@ -2,8 +2,8 @@
 
 ## Overview
 
-`layout-grid` implements the CSS Grid Layout specification — the subset needed
-for table-like structures, magazine layouts, and card grids. It reads
+`layout-grid` implements the CSS Grid Layout specification profile needed for
+table-like structures, magazine layouts, card grids, and browser pages. It reads
 `GridExt` from each node's `ext["grid"]` and produces a `PositionedNode` tree
 with all grid items placed in their resolved cells.
 
@@ -13,9 +13,10 @@ LayoutNode[] + Constraints + TextMeasurer
 PositionedNode[]
 ```
 
-The primary initial consumer is `document-ast-to-layout` (for table rendering).
-Future consumers include Mosaic grid components and any producer that generates
-grid-based layouts.
+The original TypeScript implementation remains useful to document-oriented
+consumers. The Rust implementation is the shared Venture formatting context;
+`html-to-layout` computes its typed extension contract and `layout-block`
+dispatches both `grid` and atomic `inline-grid` containers through it.
 
 ---
 
@@ -41,9 +42,12 @@ GridContainerExt {
   rowGap:           float        // gap between rows, default 0
   autoRows:         TrackSize    // size for implicitly created rows, default "auto"
   autoColumns:      TrackSize    // size for implicitly created columns, default "auto"
-  autoFlow:         "row" | "column" | "dense"   // default "row"
+  autoFlow:         "row" | "column" | "row dense" | "column dense"
   alignItems:       "start" | "center" | "end" | "stretch"   // default "stretch"
   justifyItems:     "start" | "center" | "end" | "stretch"   // default "stretch"
+  alignContent:     ContentAlignment
+  justifyContent:   ContentAlignment
+  templateAreas:    list<list<string | ".">>
 }
 ```
 
@@ -135,6 +139,10 @@ rowEnd, columnEnd)` — all 1-based line numbers.
 
 ### Step 3 — Create implicit tracks
 
+Named `grid-template-areas` are resolved to rectangular explicit placements
+before sparse or dense auto-placement. `order` changes placement and paint order
+without leaking source-tree policy into host adapters.
+
 If any item's placement references a row or column beyond the explicit track
 count, create implicit tracks using `autoRows` / `autoColumns` definitions.
 
@@ -194,11 +202,8 @@ PositionedNode {
 
 ## What this package does NOT do
 
-- Does not implement `grid-template-areas` (named areas)
-- Does not implement `grid-auto-flow: dense` with complex gap-filling
-  (basic dense is supported, full CSS dense algorithm is future)
-- Does not implement `align-content` / `justify-content` (container alignment
-  of the grid within its containing block)
-- Does not implement subgrid
-- Does not validate that items do not overlap (overlap is the caller's
-  responsibility)
+- Does not implement subgrid, masonry tracks, or writing-mode axis remapping
+- Does not implement the complete CSS Grid multi-pass spanning contribution
+  algorithm; the reusable profile distributes spanning intrinsic deficits
+  deterministically across growable tracks
+- Explicitly overlapping items are retained in order rather than rejected
