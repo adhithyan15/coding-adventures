@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-cli",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Headless Forme build, persistent incremental cache, check, clean, watch/preview, and local-workspace bootstrap CLI.",
   "type": "module",
   "main": "src/index.ts",
