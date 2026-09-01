@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Preserve table, row, cell, and caption box decorations through the existing
+  recursive positioned-tree painter, including overflowing span geometry.
+
+## Unreleased
+
 - Emit overflow clips plus fixed and sticky paint groups from positioned
   extension data while preserving the iterative hostile-tree-safe traversal.
 

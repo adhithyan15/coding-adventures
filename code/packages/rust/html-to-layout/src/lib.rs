@@ -24,6 +24,10 @@ use layout_ir::{
     TextDecoration,
 };
 use layout_positioned::{positioned_ext, Overflow, Position, PositionedStyle};
+use layout_table::{
+    table_ext, BorderCollapse, CaptionSide, TableContainerStyle, TableItemStyle, TableLayout,
+    VerticalAlign,
+};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
 pub const VERSION: &str = "0.4.0";
@@ -148,6 +152,8 @@ pub struct HtmlComputedStyle {
     pub flex_item: FlexItemStyle,
     pub grid_container: GridContainerStyle,
     pub grid_item: GridItemStyle,
+    pub table_container: TableContainerStyle,
+    pub table_item: TableItemStyle,
     pub positioned: PositionedStyle,
     pub custom_properties: HashMap<String, Vec<String>>,
 }
@@ -325,6 +331,10 @@ where
         "grid".into(),
         grid_ext(&style.grid_container, &style.grid_item),
     );
+    layout.ext.insert(
+        "table".into(),
+        table_ext(style.table_container, &table_item_for_node(node, &style)),
+    );
     layout
         .ext
         .insert("positioned".into(), positioned_ext(style.positioned));
@@ -445,6 +455,8 @@ where
     style.flex_item = FlexItemStyle::default();
     style.grid_container = GridContainerStyle::default();
     style.grid_item = GridItemStyle::default();
+    style.table_container = TableContainerStyle::default();
+    style.table_item = TableItemStyle::default();
     style.positioned = PositionedStyle::default();
     if node.role == "heading" {
         let level = node.heading_level.unwrap_or(1).clamp(1, 6);
@@ -587,6 +599,8 @@ fn root_computed_style(context: &HtmlStyleContext) -> HtmlComputedStyle {
         flex_item: FlexItemStyle::default(),
         grid_container: GridContainerStyle::default(),
         grid_item: GridItemStyle::default(),
+        table_container: TableContainerStyle::default(),
+        table_item: TableItemStyle::default(),
         positioned: PositionedStyle::default(),
         custom_properties: HashMap::new(),
     };
@@ -781,6 +795,38 @@ fn apply_declaration_winners(
             }
             "overflow-x" => style.positioned.overflow_x = parse_overflow(&value),
             "overflow-y" => style.positioned.overflow_y = parse_overflow(&value),
+            "table-layout" => {
+                style.table_container.layout =
+                    if value.first().is_some_and(|value| value == "fixed") {
+                        TableLayout::Fixed
+                    } else {
+                        TableLayout::Auto
+                    }
+            }
+            "border-collapse" => {
+                style.table_container.border_collapse =
+                    if value.first().is_some_and(|value| value == "collapse") {
+                        BorderCollapse::Collapse
+                    } else {
+                        BorderCollapse::Separate
+                    }
+            }
+            "border-spacing" => apply_border_spacing(style, &value, context),
+            "caption-side" => {
+                style.table_container.caption_side =
+                    if value.first().is_some_and(|value| value == "bottom") {
+                        CaptionSide::Bottom
+                    } else {
+                        CaptionSide::Top
+                    }
+            }
+            "vertical-align" => {
+                style.table_item.vertical_align = match value.first().map(String::as_str) {
+                    Some("top" | "text-top") => VerticalAlign::Top,
+                    Some("bottom" | "text-bottom") => VerticalAlign::Bottom,
+                    _ => VerticalAlign::Middle,
+                }
+            }
             "flex-direction" => {
                 style.flex_container.direction = match value.first().map(String::as_str) {
                     Some("row-reverse") => FlexDirection::RowReverse,
@@ -1046,6 +1092,37 @@ fn parse_overflow(value: &[String]) -> Overflow {
         Some("scroll") => Overflow::Scroll,
         _ => Overflow::Visible,
     }
+}
+
+fn apply_border_spacing(
+    style: &mut HtmlComputedStyle,
+    value: &[String],
+    context: &HtmlStyleContext,
+) {
+    let tokens: Vec<_> = value.iter().filter(|token| token.as_str() != ",").collect();
+    let Some(horizontal) = tokens.first().and_then(|token| {
+        parse_box_length(
+            std::slice::from_ref(*token),
+            style,
+            context,
+            context.viewport_width,
+        )
+    }) else {
+        return;
+    };
+    let vertical = tokens
+        .get(1)
+        .and_then(|token| {
+            parse_box_length(
+                std::slice::from_ref(*token),
+                style,
+                context,
+                context.viewport_height,
+            )
+        })
+        .unwrap_or(horizontal);
+    style.table_container.border_spacing_x = horizontal;
+    style.table_container.border_spacing_y = vertical;
 }
 
 fn parse_grid_alignment(value: &[String]) -> GridAlignment {
@@ -2316,6 +2393,27 @@ fn parse_dimension(value: Option<&str>) -> Option<f64> {
         .filter(|value| value.is_finite() && *value >= 0.0)
 }
 
+fn table_item_for_node(node: &BrowserRenderNode, style: &HtmlComputedStyle) -> TableItemStyle {
+    let mut item = style.table_item.clone();
+    item.column_span = positive_attribute(node.colspan.as_deref())
+        .or_else(|| positive_attribute(node.span.as_deref()))
+        .unwrap_or(item.column_span)
+        .min(1024);
+    item.row_span = positive_attribute(node.rowspan.as_deref())
+        .unwrap_or(item.row_span)
+        .min(65_534);
+    item.section_kind = node.table_section_kind.clone();
+    item
+}
+
+fn positive_attribute(value: Option<&str>) -> Option<usize> {
+    value?
+        .trim()
+        .parse::<usize>()
+        .ok()
+        .filter(|value| *value > 0)
+}
+
 fn html_ext(node: &BrowserRenderNode) -> ExtValue {
     let mut values = HashMap::new();
     values.insert("role".into(), ExtValue::Str(node.role.clone()));
@@ -2330,6 +2428,13 @@ fn html_ext(node: &BrowserRenderNode) -> ExtValue {
     insert_optional(&mut values, "lang", node.lang.as_deref());
     insert_optional(&mut values, "dir", node.dir.as_deref());
     insert_optional(&mut values, "alt", node.alt.as_deref());
+    insert_optional(&mut values, "colspan", node.colspan.as_deref());
+    insert_optional(&mut values, "rowspan", node.rowspan.as_deref());
+    insert_optional(
+        &mut values,
+        "sectionKind",
+        node.table_section_kind.as_deref(),
+    );
     ExtValue::Map(values)
 }
 
@@ -2725,6 +2830,49 @@ mod tests {
         assert_eq!((grid.children[1].x, grid.children[1].y), (0.0, 0.0));
         assert_eq!((grid.children[2].x, grid.children[2].y), (0.0, 50.0));
         assert_eq!(grid.children[2].width, 190.0);
+    }
+
+    #[test]
+    fn computed_table_values_drive_sections_spans_and_caption_geometry() {
+        let render = parse_browser_render_tree(
+            "<table id='prices'><tfoot><tr id='foot'><td id='total' colspan='2'>Total</td></tr></tfoot>\
+             <tbody><tr id='body'><td id='item'>Tea</td><td>$4</td></tr></tbody>\
+             <thead><tr id='head'><th id='label'>Item</th><th>Price</th></tr></thead>\
+             <caption id='caption'>Menu</caption></table>",
+        )
+        .unwrap();
+        let context = HtmlStyleContext::with_author_stylesheets(
+            mosaic_html_theme(),
+            [
+                "#prices { width: 240px; table-layout: fixed; border-collapse: separate; \
+                border-spacing: 4px 6px; caption-side: bottom; } \
+              #label { width: 80px; } td { vertical-align: bottom; }",
+            ],
+        )
+        .unwrap();
+        let layout =
+            html_render_tree_to_layout_with_style_context(&render, &context, &never_visited);
+        let table = find_by_id(&layout, "prices").unwrap();
+        let table_style = TableContainerStyle::from_node(table);
+        assert_eq!(table_style.layout, TableLayout::Fixed);
+        assert_eq!(table_style.border_spacing_x, 4.0);
+        assert_eq!(table_style.border_spacing_y, 6.0);
+        assert_eq!(
+            TableItemStyle::from_node(find_by_id(&layout, "total").unwrap()).column_span,
+            2
+        );
+
+        let positioned = layout_block(&layout, constraints_width(640.0), &TestMeasurer);
+        let table = find_positioned_by_id(&positioned, "prices").unwrap();
+        assert_eq!(table.width, 240.0);
+        assert_eq!(table.children[0].id.as_deref(), Some("head"));
+        assert_eq!(table.children[1].id.as_deref(), Some("body"));
+        assert_eq!(table.children[2].id.as_deref(), Some("foot"));
+        assert_eq!(table.children[3].id.as_deref(), Some("caption"));
+        let head = &table.children[0];
+        assert_eq!(head.children[0].width, 80.0);
+        assert_eq!(head.children[1].x, 88.0);
+        assert_eq!(table.children[2].children[0].width, 232.0);
     }
 
     #[test]

@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Venture table formatting context
+
+- Added a reusable `layout-table` engine for anonymous table boxes,
+  header/body/footer ordering, captions, fixed/auto intrinsic column sizing,
+  column hints, row/column spans, border spacing/collapse, vertical alignment,
+  overflow-safe minimums, and producer diagnostics.
+- Integrated computed CSS and HTML span metadata through shared recursive
+  layout and paint, with a deterministic browser fixture consumed by the same
+  native and generated host pipeline.
+
 ### Venture positioned formatting and clipping
 
 - Added a reusable `layout-positioned` contract for relative, absolute, fixed,

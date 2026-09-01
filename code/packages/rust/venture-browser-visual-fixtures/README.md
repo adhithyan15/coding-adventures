@@ -3,6 +3,9 @@
 Reusable deterministic visual acceptance for Venture's shared browser
 pipeline and generated hosts.
 
+Compact convergence pages cover flex, grid, positioned/clipped, and CSS table
+formatting through one geometry-and-paint oracle shared by every host.
+
 The crate owns one versioned Mosaic-era page and its resources, deterministic
 text measurement/shaping services, element and link geometry capture, full
 RGBA screenshots, and exact structural screenshots. Structural screenshots
