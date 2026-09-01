@@ -1,0 +1,25 @@
+% ============================================================================
+% zone-water-table-position.query.adj — worked recall over the
+% zone-water-table-position library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to answer "is the zone of
+% aeration above or below the water table?" (direct), "which zone is below
+% it?" (reverse), or "is the vadose zone above it?" (abstain — this source
+% never uses that word). It states no fact of its own — it only `import`s
+% the grounded table and asks binding queries.
+%
+% The two-hop chain (process → zone → position) is NOT here. A query in
+% this language is a single term, so composition lives in a rule body: see
+% the sibling `karst-process-water-table-position.query.adj`.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli zone-water-table-position.query.adj
+% ============================================================================
+
+import "zone-water-table-position.adj"
+
+? zone_water_table_position(zone_of_aeration, $P)      % expect above_the_water_table
+? zone_water_table_position(zone_of_saturation, $P)    % expect below_the_water_table
+? zone_water_table_position($Z, below_the_water_table) % expect zone_of_saturation (reverse)
+? zone_water_table_position(vadose_zone, $P)           % expect abstain -- the standard synonym, which this source never uses
+? zone_water_table_position(capillary_fringe, $P)      % expect abstain -- a real hydrology subdivision this sentence does not name

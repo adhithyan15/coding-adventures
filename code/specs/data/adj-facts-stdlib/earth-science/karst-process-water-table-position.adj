@@ -1,0 +1,99 @@
+% ============================================================================
+% karst-process-water-table-position — where a karst process happens
+% relative to the water table, DERIVED by composing two shipped tables
+% (adj-facts-stdlib, EARTH-SCIENCE).
+% ============================================================================
+% Recall is a binding query:
+%
+%     ? karst_process_water_table_position(speleothem_deposition, $P)
+%       % above_the_water_table
+%
+% No table states this. It is DERIVED, by a `rule` whose body chains the
+% two shipped tables:
+%
+%     karst_process_zone(speleothem_deposition, zone_of_aeration)
+%       -- which zone the process happens in
+%     zone_water_table_position(zone_of_aeration, above_the_water_table)
+%       -- where that zone sits relative to the water table
+%     ---------------------------------------------------------------
+%     karst_process_water_table_position(speleothem_deposition,
+%                                        above_the_water_table)
+%
+% The chain has to be a RULE rather than a two-goal query: a query in this
+% language is a single term, so composition lives in a rule body. Same
+% shape as `civics/chamber-branch.adj`, which composes `congress_chamber`
+% with `government_branch_member`. Provenance of the conclusion is the
+% COMPOSITION of the premises' provenance — an answer here carries the
+% citations of both facts that produced it, which is the whole reason the
+% derivation is worth having as a library rather than as prose.
+%
+% A reader running this will see the SAME sentence cited twice in the one
+% answer, which looks like duplication and is not. Both premise tables
+% happen to be grounded in that single NPS sentence, so the composition
+% honestly reports two premises that share a source. The proof trace
+% distinguishes them: a `rule` step for the head, then one `fact` step per
+% body goal, each naming which relation it discharged.
+%
+% *** THE RULE DELIBERATELY DERIVES ONLY ONE OF THE TWO PROCESSES. ***
+%
+% `karst_process_zone` has two rows. Only the deposition row chains. The
+% cave-formation row binds the HEDGED atom `zone_of_saturation_typically`,
+% because the source says caves TYPICALLY form below the water table while
+% saying speleothem deposition IS NOT POSSIBLE UNTIL they are above it —
+% a tendency versus a stated precondition. That hedged atom does not unify
+% with the bare `zone_of_saturation` that `zone_water_table_position`
+% keys on, so the rule body fails for cave formation and a recall on it
+% ABSTAINS.
+%
+% That is the system working, and it is the reason this library exists.
+% Had the hedge been dropped when the atom was authored, this rule would
+% happily conclude "cave formation happens below the water table" as a
+% flat, unqualified fact — precisely the claim the source declines to
+% make. A qualifier that survives direct recall but silently evaporates
+% the moment something reasons across two tables is not a qualifier at
+% all; it is a comment. Here it survives the join, because it is part of
+% the value rather than a note attached to it.
+%
+% The two consequences are asserted as a MATCHED PAIR in
+% `facts_karstprocesswatertableposition_e2e.rs` — the identical chain that
+% resolves for deposition must return `"abstained":true` for cave
+% formation. If that abstention ever turns into a binding, a tendency has
+% been promoted to a rule and the pair fails loudly.
+%
+% The FIX, if someone ever wants the cave-formation answer, is NOT to bare
+% the atom. It is to find a source that states the unhedged claim, and
+% cite that. Grounded libraries get new answers by finding sources, never
+% by loosening existing ones.
+%
+% Provenance: the rule's own envelope cites the single sentence that
+% grounds both premise tables, on the U.S. National Park Service's
+% "Speleothems" page:
+%
+%     "Although the formation of caves typically takes place below the
+%      water table in the zone of saturation, the deposition of
+%      speleothems is not possible until caves are above the water table
+%      in the zone of aeration."
+%
+% `trust authoritative` — the National Park Service is a first-party .gov
+% publisher, the same source both premise tables cite.
+%
+% Honest abstention (inherited from the premises, not restated here):
+%
+%   - `cave_formation`, for the hedge reason above — the headline case.
+%   - Any process `karst_process_zone` does not place (`dissolution`,
+%     `speleogenesis`, …) has no zone to chain through, so it abstains
+%     here too. A derived relation cannot be better grounded than its
+%     premises, and this one does not pretend otherwise.
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+import "karst-process-zone.adj"
+import "zone-water-table-position.adj"
+
+rule { head: karst_process_water_table_position($Process, $Position)
+       when: karst_process_zone($Process, $Zone), zone_water_table_position($Zone, $Position)
+       source "Although the formation of caves typically takes place below the water table in the zone of saturation, the deposition of speleothems is not possible until caves are above the water table in the zone of aeration."
+       locator "https://www.nps.gov/subjects/caves/speleothems.htm"
+       trust authoritative }
