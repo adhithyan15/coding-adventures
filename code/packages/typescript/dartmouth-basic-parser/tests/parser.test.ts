@@ -436,6 +436,21 @@ describe("READ, DATA, and RESTORE statements", () => {
     expect(numberTokens.length).toBeGreaterThanOrEqual(3);
   });
 
+  it("parses DATA with mixed numeric and string values", () => {
+    /**
+     * DATA is one ordered stream even when its values have different types.
+     * Keep this regression in the Dartmouth package's own suite so grammar
+     * changes cannot be hidden by accidentally running the generic parser
+     * package instead.
+     */
+    const ast = parseDartmouthBasic('10 DATA 1, "ALPHA", 2.5\n');
+    expect(hasRule(ast, "data_stmt")).toBe(true);
+
+    const tokens = findTokens(ast);
+    expect(tokens.filter((t) => t.type === "NUMBER")).toHaveLength(2);
+    expect(tokens.filter((t) => t.type === "STRING")).toHaveLength(1);
+  });
+
   it("parses RESTORE", () => {
     /**
      * RESTORE resets the DATA pool pointer to the beginning, so the
