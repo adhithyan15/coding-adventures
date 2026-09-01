@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "id": "source-collection/rust-engram-wasm-exact-build-inputs",
+  "domain": "source_collection",
+  "summary": "Rust source collection retains only the three exact Engram WASM BUILD inputs without admitting JavaScript or WebAssembly suffix families.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["source_collection"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "source_collection",
+    "options": {
+      "language": "rust",
+      "package_root": "code/packages/rust/engram-wasm",
+      "mode": "extension",
+      "registry_sha256": "f49bfe8c7c9c0fb9b534ecc9ca4a614f3684abe32bdb0edac82d99bdc806fb70",
+      "declared_srcs": [],
+      "candidates": [
+        {"path": "BUILD", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "js/engram-mosaic-host-wasm.js", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "js/engram-mosaic-host-wasm.mjs", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "js/sibling.mjs", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "js/smoke.js", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "js/smoke.mjs", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "pkg/engram_engine.wasm", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "pkg/engram_engine_copy.wasm", "kind": "file", "content_hex": "736f757263650a"}
+      ]
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "source-collection/rust-engram-wasm-exact-build-inputs",
+    "domain": "source_collection",
+    "outcome": "ok",
+    "result": {
+      "files": [
+        {"path": "BUILD", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "js/engram-mosaic-host-wasm.mjs", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "js/smoke.mjs", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "pkg/engram_engine.wasm", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"}
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

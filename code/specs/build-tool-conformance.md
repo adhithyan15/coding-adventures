@@ -636,7 +636,7 @@ exact registry, prove complete equality with its production lookup, reject
 missing and undeclared-extra selectors, and exercise the production lookup
 rather than a test-only copy.
 
-The registry has six non-overlapping input roles:
+The registry has seven non-overlapping input roles:
 
 - `recursive_suffixes` are primary-language suffixes accepted below any
   retained directory;
@@ -645,10 +645,24 @@ The registry has six non-overlapping input roles:
 - `root_exact_basenames` apply only to a file directly in the package root;
 - `root_variable_suffixes` are variable-name manifests accepted only in the
   package root;
-- `root_exact_relative_paths` are reviewed fixed package-relative inputs; and
+- `root_exact_relative_paths` are reviewed fixed package-relative inputs that
+  apply to every package in the language lane;
+- `package_exact_inputs` bind a closed set of fixed package-relative paths to
+  one exact repository-relative package root; and
 - `scoped_inputs` are bounded `native_companion` or `resource` selectors made
   from one exact relative directory prefix plus closed suffix and exact-name
   sets. They never behave as regular expressions or arbitrary globs.
+
+Every fixed-path entry names one complete package-relative path and matches
+only that spelling. Language-wide `root_exact_relative_paths` are appropriate
+only when every same-lane package with that exact path consumes the same role.
+`package_exact_inputs` require an exact canonical package root, a durable owner
+and reason, a tracked-file projection, and a concrete source or BUILD consumer.
+Near names, renamed paths, sibling files, the same relative path in another
+package, and other files sharing the registered suffix remain excluded. Both
+fixed-path roles apply in extension and declared-source modes because an
+explicit declared-source glob cannot safely erase an independently consumed
+BUILD input.
 
 Every scoped rule is inclusion-only. A registry rule MUST NOT mask a primary
 source or metadata input. Exact generated-component pruning is the only v1
@@ -705,6 +719,15 @@ unknown-language, and collision behavior in memory. Symlink, junction,
 reparse, hardlink, handle-race, and real filesystem enforcement remain required
 in each native engine-adoption child and are not inferred from the neutral
 snapshot.
+
+For the exact Rust `code/packages/rust/engram-wasm` package root, one
+`package_exact_inputs` rule includes the BUILD-executed `js/smoke.mjs`, its
+exact `js/engram-mosaic-host-wasm.mjs` import, and the exact
+`pkg/engram_engine.wasm` bytes that the smoke host loads. This registration
+does not authorize JavaScript, module, WebAssembly, generated-output, `js/`, or
+`pkg/` suffix/directory families. A conforming projection includes those three
+tracked paths and rejects case variants, renamed modules, sibling scripts, the
+same relative path under another Rust package, and other `.wasm` files.
 
 #### Repository source-input boundary v1
 

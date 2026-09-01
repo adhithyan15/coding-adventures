@@ -13,6 +13,7 @@
       "root_exact_basenames": [],
       "root_variable_suffixes": [],
       "root_exact_relative_paths": ["lib/iso-lib.ps1", "lib/iso-lib.sh", "lib/platform-lib.ps1", "lib/platform-lib.sh", "tools/run.ps1", "tools/run.sh", "tools/selftest.ps1", "tools/selftest.sh"],
+      "package_exact_inputs": [],
       "case_alias_groups": [[".S", ".s"]],
       "scoped_inputs": [
         {
@@ -35,6 +36,7 @@
       "root_exact_basenames": [],
       "root_variable_suffixes": [],
       "root_exact_relative_paths": ["tools/run-tests.sh", "tools/run.ps1", "tools/run.sh"],
+      "package_exact_inputs": [],
       "case_alias_groups": [],
       "scoped_inputs": [
         {
@@ -67,6 +69,7 @@
     "root_exact_basenames": ["NuGet.Config", "global.json", "nuget.config"],
     "root_variable_suffixes": [".csproj"],
     "root_exact_relative_paths": ["tools/run-tests.sh"],
+    "package_exact_inputs": [],
     "case_alias_groups": [["NuGet.Config", "nuget.config"]],
     "scoped_inputs": [
       {
@@ -111,6 +114,7 @@
       "root_exact_basenames": ["analysis_options.yaml", "pubspec.lock", "pubspec.yaml", "scaffold-generator.json"],
       "root_variable_suffixes": [],
     "root_exact_relative_paths": ["android/gradle.properties", "android/gradle/wrapper/gradle-wrapper.properties", "tools/run-tests.sh"],
+    "package_exact_inputs": [],
       "case_alias_groups": [],
       "scoped_inputs": [
         {
@@ -187,6 +191,7 @@
       "root_exact_basenames": ["NuGet.Config", "global.json", "nuget.config"],
       "root_variable_suffixes": [".csproj", ".fsproj"],
       "root_exact_relative_paths": [],
+      "package_exact_inputs": [],
       "case_alias_groups": [["NuGet.Config", "nuget.config"]],
     "scoped_inputs": [
       {
@@ -231,6 +236,7 @@
       "root_exact_basenames": ["basename.json", "cat.json", "chmod.json", "chown.json", "cmp.json", "comm.json", "cp.json", "cut.json", "df.json", "diff.json", "dirname.json", "du.json", "echo.json", "env.json", "expand.json", "false.json", "fold.json", "grep.json", "groups.json", "head.json", "id.json", "join.json", "ln.json", "logname.json", "ls.json", "md5sum.json", "mix.lock", "mkdir.json", "mv.json", "nl.json", "nproc.json", "paste.json", "printenv.json", "pwd.json", "realpath.json", "rev.json", "rm.json", "rmdir.json", "seq.json", "sha256sum.json", "sleep.json", "sort.json", "split.json", "tail.json", "tar.json", "tee.json", "touch.json", "tr.json", "true.json", "tty.json", "uname.json", "unexpand.json", "uniq.json", "wc.json", "whoami.json", "xargs.json", "yes.json"],
       "root_variable_suffixes": [],
       "root_exact_relative_paths": [],
+      "package_exact_inputs": [],
       "case_alias_groups": [],
       "scoped_inputs": [
         {
@@ -264,6 +270,7 @@
       "root_exact_basenames": ["NuGet.Config", "global.json", "nuget.config"],
       "root_variable_suffixes": [".fsproj"],
       "root_exact_relative_paths": ["tools/run-tests.sh"],
+      "package_exact_inputs": [],
       "case_alias_groups": [["NuGet.Config", "nuget.config"]],
     "scoped_inputs": [
       {
@@ -297,6 +304,7 @@
       "root_exact_basenames": ["basename.json", "benchmark-tool.json", "cat.json", "chmod.json", "chown.json", "cmp.json", "comm.json", "cp.json", "cut.json", "df.json", "diff.json", "dirname.json", "du.json", "echo.json", "env.json", "expand.json", "false.json", "fold.json", "go.mod", "go.sum", "grep.json", "groups.json", "head.json", "id.json", "join.json", "ln.json", "logname.json", "ls.json", "md5sum.json", "mkdir.json", "mv.json", "nl.json", "nproc.json", "paste.json", "printenv.json", "pwd.json", "realpath.json", "rev.json", "rm.json", "rmdir.json", "scaffold-generator.json", "seq.json", "sha256sum.json", "sleep.json", "sort.json", "spec.json", "split.json", "tail.json", "tar.json", "tee.json", "touch.json", "tr.json", "true.json", "tty.json", "uname.json", "unexpand.json", "uniq.json", "wc.json", "whoami.json", "xargs.json", "yes.json"],
       "root_variable_suffixes": [],
       "root_exact_relative_paths": ["tools/run-tests.sh"],
+      "package_exact_inputs": [],
       "case_alias_groups": [],
       "scoped_inputs": [
         {
@@ -330,6 +338,7 @@
       "root_exact_basenames": ["cabal.project"],
       "root_variable_suffixes": [".cabal"],
       "root_exact_relative_paths": ["tools/run-tests.sh"],
+      "package_exact_inputs": [],
       "case_alias_groups": [],
       "scoped_inputs": []
     },
@@ -340,6 +349,7 @@
       "root_exact_basenames": ["build.gradle.kts", "gradle.properties", "settings.gradle.kts"],
       "root_variable_suffixes": [],
       "root_exact_relative_paths": ["gradle/libs.versions.toml"],
+      "package_exact_inputs": [],
       "case_alias_groups": [],
       "scoped_inputs": [
         {
@@ -373,6 +383,7 @@
     "root_exact_basenames": ["gradle.properties", "gradlew", "gradlew.bat"],
     "root_variable_suffixes": [],
     "root_exact_relative_paths": ["gradle/libs.versions.toml", "gradle/wrapper/gradle-wrapper.jar", "gradle/wrapper/gradle-wrapper.properties"],
+    "package_exact_inputs": [],
     "case_alias_groups": [],
     "scoped_inputs": [
       {
@@ -417,6 +428,7 @@
       "root_exact_basenames": [".luacov"],
       "root_variable_suffixes": [".rockspec"],
       "root_exact_relative_paths": [],
+      "package_exact_inputs": [],
       "case_alias_groups": [],
       "scoped_inputs": [
         {
@@ -471,6 +483,7 @@
       "root_exact_basenames": ["mosaic-package.toml"],
       "root_variable_suffixes": [],
     "root_exact_relative_paths": ["scripts/build-all.ps1", "scripts/build-all.sh", "scripts/build-web.sh"],
+    "package_exact_inputs": [],
     "case_alias_groups": [],
     "scoped_inputs": [
       {
@@ -536,6 +549,7 @@
       "root_exact_basenames": [".ocamlformat", "dune-project"],
       "root_variable_suffixes": [".opam"],
       "root_exact_relative_paths": [],
+      "package_exact_inputs": [],
       "case_alias_groups": [],
       "scoped_inputs": []
     },
@@ -546,6 +560,7 @@
       "root_exact_basenames": ["Build.PL", "MANIFEST", "META.json", "META.yml", "Makefile.PL", "cpanfile"],
       "root_variable_suffixes": [],
       "root_exact_relative_paths": [],
+      "package_exact_inputs": [],
       "case_alias_groups": [],
       "scoped_inputs": [
         {
@@ -589,6 +604,7 @@
       "root_exact_basenames": ["basename.json", "cat.json", "chmod.json", "chown.json", "cmp.json", "comm.json", "cp.json", "cut.json", "df.json", "diff.json", "dirname.json", "du.json", "echo.json", "env.json", "expand.json", "false.json", "fold.json", "grep.json", "groups.json", "head.json", "id.json", "join.json", "ln.json", "logname.json", "ls.json", "md5sum.json", "mkdir.json", "mv.json", "nl.json", "nproc.json", "paste.json", "printenv.json", "pwd.json", "pyproject.toml", "realpath.json", "rev.json", "rm.json", "rmdir.json", "seq.json", "setup.cfg", "sha256sum.json", "sleep.json", "sort.json", "split.json", "tail.json", "tar.json", "tee.json", "touch.json", "tr.json", "true.json", "tty.json", "uname.json", "unexpand.json", "uniq.json", "wc.json", "whoami.json", "xargs.json", "yes.json"],
       "root_variable_suffixes": [],
       "root_exact_relative_paths": [],
+      "package_exact_inputs": [],
     "case_alias_groups": [],
     "scoped_inputs": [
       {
@@ -654,6 +670,7 @@
       "root_exact_basenames": ["Gemfile", "Rakefile", "basename.json", "cat.json", "chmod.json", "chown.json", "cmp.json", "comm.json", "cp.json", "cut.json", "df.json", "diff.json", "dirname.json", "du.json", "echo.json", "env.json", "expand.json", "false.json", "fold.json", "grep.json", "groups.json", "head.json", "id.json", "join.json", "ln.json", "logname.json", "ls.json", "md5sum.json", "mkdir.json", "mv.json", "nl.json", "nproc.json", "paste.json", "printenv.json", "pwd.json", "realpath.json", "rev.json", "rm.json", "rmdir.json", "seq.json", "sha256sum.json", "sleep.json", "sort.json", "split.json", "tail.json", "tar.json", "tee.json", "touch.json", "tr.json", "true.json", "tty.json", "uname.json", "unexpand.json", "uniq.json", "wc.json", "whoami.json", "xargs.json", "yes.json"],
       "root_variable_suffixes": [".gemspec"],
       "root_exact_relative_paths": [],
+      "package_exact_inputs": [],
       "case_alias_groups": [],
       "scoped_inputs": [
         {
@@ -687,6 +704,15 @@
       "root_exact_basenames": ["Cargo.lock", "Cargo.toml", "basename.json", "cat.json", "chmod.json", "chown.json", "cli.spec.json", "cmp.json", "comm.json", "cp.json", "cut.json", "df.json", "diff.json", "dirname.json", "du.json", "echo.json", "env.json", "expand.json", "false.json", "fold.json", "grep.json", "groups.json", "head.json", "html-skeleton.lexer.states.toml", "html1.lexer.states.toml", "id.json", "join.json", "ln.json", "logname.json", "ls.json", "md5sum.json", "mkdir.json", "mv.json", "nl.json", "nproc.json", "paste.json", "printenv.json", "pwd.json", "realpath.json", "rev.json", "rm.json", "rmdir.json", "ruby-1.8.lexer.states.toml", "seq.json", "sha256sum.json", "sleep.json", "sort.json", "split.json", "tail.json", "tar.json", "tee.json", "touch.json", "tr.json", "true.json", "tty.json", "uname.json", "unexpand.json", "uniq.json", "wc.json", "whoami.json", "xargs.json", "yes.json"],
       "root_variable_suffixes": [],
       "root_exact_relative_paths": ["build-wasm.sh"],
+      "package_exact_inputs": [
+        {
+          "id": "rust-engram-wasm-build-inputs",
+          "package_root": "code/packages/rust/engram-wasm",
+          "paths": ["js/engram-mosaic-host-wasm.mjs", "js/smoke.mjs", "pkg/engram_engine.wasm"],
+          "reason": "The Engram WASM BUILD runs the exact smoke module, which imports one exact host module and reads one exact checked-in WebAssembly artifact.",
+          "owner": "build-tool-engram-wasm-package-source-input-registry-repair"
+        }
+      ],
       "case_alias_groups": [],
       "scoped_inputs": [
         {
@@ -797,6 +823,7 @@
       "root_exact_basenames": [],
       "root_variable_suffixes": [],
       "root_exact_relative_paths": [],
+      "package_exact_inputs": [],
       "case_alias_groups": [],
       "scoped_inputs": []
     },
@@ -807,6 +834,7 @@
       "root_exact_basenames": [],
       "root_variable_suffixes": [],
       "root_exact_relative_paths": ["regen-embedded-grammars.sh"],
+      "package_exact_inputs": [],
       "case_alias_groups": [],
       "scoped_inputs": [
         {
@@ -829,6 +857,7 @@
       "root_exact_basenames": [],
       "root_variable_suffixes": [],
       "root_exact_relative_paths": [],
+      "package_exact_inputs": [],
       "case_alias_groups": [],
       "scoped_inputs": []
     },
@@ -839,6 +868,7 @@
       "root_exact_basenames": ["basename.json", "cat.json", "chmod.json", "chown.json", "cmp.json", "comm.json", "cp.json", "cut.json", "df.json", "diff.json", "dirname.json", "du.json", "echo.json", "env.json", "expand.json", "false.json", "fold.json", "grep.json", "groups.json", "head.json", "id.json", "index.html", "join.json", "ln.json", "logname.json", "ls.json", "md5sum.json", "mkdir.json", "mv.json", "nl.json", "nproc.json", "package-lock.json", "package.json", "paste.json", "printenv.json", "pwd.json", "realpath.json", "rev.json", "rm.json", "rmdir.json", "seq.json", "sha256sum.json", "sleep.json", "sort.json", "split.json", "tail.json", "tar.json", "tee.json", "touch.json", "tr.json", "true.json", "tsconfig.json", "tsconfig.test.json", "tty.json", "uname.json", "unexpand.json", "uniq.json", "wc.json", "whoami.json", "xargs.json", "yes.json"],
       "root_variable_suffixes": [],
       "root_exact_relative_paths": [],
+      "package_exact_inputs": [],
     "case_alias_groups": [],
     "scoped_inputs": [
         {
@@ -937,6 +967,7 @@
       "root_exact_basenames": [],
       "root_variable_suffixes": [],
       "root_exact_relative_paths": [],
+      "package_exact_inputs": [],
       "case_alias_groups": [],
       "scoped_inputs": [
         {

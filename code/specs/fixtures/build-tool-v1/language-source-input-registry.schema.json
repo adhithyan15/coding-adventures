@@ -122,13 +122,42 @@
         }
       ]
     },
+    "package_exact_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "package_root", "paths", "reason", "owner"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 96,
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "package_root": {"$ref": "#/$defs/safe_relative_path"},
+        "paths": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/safe_relative_path"}
+        },
+        "reason": {"type": "string", "minLength": 1, "maxLength": 512},
+        "owner": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160,
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        }
+      }
+    },
     "language_entry": {
       "type": "object",
       "additionalProperties": false,
       "required": [
         "language", "recursive_suffixes", "recursive_exact_basenames",
         "root_exact_basenames", "root_variable_suffixes",
-        "root_exact_relative_paths", "case_alias_groups", "scoped_inputs"
+        "root_exact_relative_paths", "package_exact_inputs",
+        "case_alias_groups", "scoped_inputs"
       ],
       "properties": {
         "language": {"$ref": "#/$defs/language"},
@@ -137,6 +166,11 @@
         "root_exact_basenames": {"$ref": "#/$defs/basename_array"},
         "root_variable_suffixes": {"$ref": "#/$defs/suffix_array"},
         "root_exact_relative_paths": {"$ref": "#/$defs/path_array"},
+        "package_exact_inputs": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {"$ref": "#/$defs/package_exact_input"}
+        },
         "case_alias_groups": {
           "type": "array",
           "maxItems": 32,

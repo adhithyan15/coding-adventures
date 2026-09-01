@@ -12,35 +12,35 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 13748,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13748",
-    "branch": "codex/build-tool-shared-generated-boundary-source-input-contract",
-    "item_id": "build-tool-shared-and-generated-boundary-source-input-contract",
-    "opened_at": "2026-08-31T22:07:21Z",
-    "opened_revision": "9d6c9bacf10c2d367b904e23ee81c48765a09f21"
+    "number": 13783,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/13783",
+    "branch": "codex/build-tool-engram-wasm-source-input-registry-repair",
+    "item_id": "build-tool-engram-wasm-package-source-input-registry-repair",
+    "opened_at": "2026-09-01T01:37:43Z",
+    "opened_revision": "060150218fac3914a565e76da44a0496ce14ec09"
   },
   "last_ci_action": {
-    "observed_at": "2026-08-31T22:07:25Z",
-    "pr_number": 13748,
+    "observed_at": "2026-09-01T01:37:47Z",
+    "pr_number": 13783,
     "status": "pending",
-    "notes": "Ready-for-review PR #13748 is open at exact initial head 9d6c9bacf10c2d367b904e23ee81c48765a09f21. GitHub reports the branch mergeable and conflict-free while CI and CodeQL checks are queued or pending; guarded auto-merge remains disabled until every required check is terminal and acceptable."
+    "notes": "Ready-for-review PR #13783 is open at exact initial head 060150218fac3914a565e76da44a0496ce14ec09. GitHub reports the branch mergeable and conflict-free while CI, CodeQL, and book checks are queued; guarded auto-merge remains disabled until every required check is terminal and acceptable."
   },
   "last_inventory": {
-    "revision": "c3903521e56d6b2dc747ef682d21b0861488aed3",
+    "revision": "8e2b2933797acda0bfa166ecb4794377e9518521",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1396,
-    "implementation_package_slots": 4610,
-    "all_reported_identities": 1435,
+    "implementation_identities": 1399,
+    "implementation_package_slots": 4615,
+    "all_reported_identities": 1438,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 265,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
-    "two_to_four_packages": 170,
-    "two_to_four_missing_slots": 2139,
-    "singleton_packages": 928,
-    "singleton_missing_slots": 12992,
-    "rust_singletons": 739,
+    "two_to_four_packages": 172,
+    "two_to_four_missing_slots": 2165,
+    "singleton_packages": 929,
+    "singleton_missing_slots": 13006,
+    "rust_singletons": 740,
     "ocaml_packages": 0,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -879,13 +879,17 @@
     {
       "id": "build-tool-shared-and-generated-boundary-source-input-contract",
       "title": "Define exact shared and generated-boundary source inputs for build tools",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit"],
       "branch": "codex/build-tool-shared-generated-boundary-source-input-contract",
       "pr_number": 13748,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13748",
       "opened_at": "2026-08-31T22:07:21Z",
       "opened_revision": "9d6c9bacf10c2d367b904e23ee81c48765a09f21",
+      "merged_head_revision": "d55689a89f1d64c037307c623ac990978c0a53ed",
+      "merged_at": "2026-08-31T22:48:23Z",
+      "merge_revision": "0db04dd61fbfeccf674c677eefe71dd60d63ed6c",
+      "merge_notes": "All 40 final-head checks reached terminal acceptable conclusions: 33 successes and seven expected skips. GitHub reported exact head d55689a89f1d64c037307c623ac990978c0a53ed clean and mergeable; guarded squash auto-merge completed without a plain manual merge command.",
       "selection_revision": "f5fdd88526315bf32b616b95b5bb76a04e7363bb",
       "selection_notes": "Selected only after PR #13707 completed 40 acceptable final-head checks and merged through guarded squash auto-merge as 26e1527a03e1c89735e90d04d9101d5a5da7eefa, followed by a collision-checked refresh at exact current origin/main f5fdd88526315bf32b616b95b5bb76a04e7363bb. The intervening PR #13710 changes only the existing Rust spice-netlist-parser root and SPICE plan, so it adds no package identity or build-tool topology. The schema-3 inventory now reports 15 established lanes, 1,395 implementation identities, 4,609 slots, 1,434 all-reported identities, bands 175/265, 123/934, 170/2,139, and 927/12,978, 738 Rust singletons, zero OCaml packages, zero canonical collisions, and zero unknown buckets. The two new Rust-only identities dsmr-p1-protocol and smart-home-dsmr-p1-integration are fully classified, and the pre-existing reusable smart-home-event-streams prerequisite is now explicitly owned. Four new DSMR, event-stream, portable-integration, and selection-blocked serial-authority owners were added before selection. The resulting 634-owner/991-edge graph is unique, dependency-complete, and acyclic. This item is the highest-leverage coherent eligible continuation: it has eleven direct unfinished engine dependents and eighteen unfinished transitive descendants, while higher raw ranks are heterogeneous classifiers or selection-blocked native and network authority reviews. The clean worktree and fresh branch were created only after their local and remote identities were verified absent and now exactly match current origin/main. Reconciliation plus selection leaves 198 merged, 435 pending, and exactly this owner in progress.",
       "implementation_revision": "19a9a51ea04181abbf3fa07395791fa04ad4362f",
@@ -911,10 +915,22 @@
     {
       "id": "build-tool-engram-wasm-package-source-input-registry-repair",
       "title": "Register exact Engram WASM BUILD inputs",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/build-tool-engram-wasm-source-input-registry-repair",
+      "pr_number": 13783,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13783",
+      "opened_at": "2026-09-01T01:37:43Z",
+      "opened_revision": "060150218fac3914a565e76da44a0496ce14ec09",
+      "selection_revision": "d5f6d1c950d0e817bea77c2a73aa6ca36a593758",
+      "selection_notes": "Selected after PR #13748 completed 40 acceptable final-head checks and merged through guarded squash auto-merge as 0db04dd61fbfeccf674c677eefe71dd60d63ed6c, followed by package-neutral MOS 6502 audit PR #13747 on exact current origin/main d5f6d1c950d0e817bea77c2a73aa6ca36a593758. The refreshed collision-checked schema-3 inventory records 15 established lanes, 1,396 implementation identities, 4,611 slots, 1,435 all-reported identities, bands 175/265, 123/934, 171/2,152, and 927/12,978, 739 Rust singletons, zero OCaml packages, zero canonical collisions, and zero unknown buckets. Merged PR #13744 adds Rust layout-flexbox beside TypeScript, moving that identity from singleton to the two-to-four band; layout-flexbox-two-lane-classification now owns its deterministic UI03 contract and missing applicable-lane review. The resulting 638-owner/1,006-edge graph is unique, dependency-complete, and acyclic. This bounded registry repair is the highest-leverage ready eligible item: it directly unblocks eleven engine adoptions and reaches eighteen unfinished descendants, while higher raw ranks are heterogeneous classifiers or selection-blocked native/network authority reviews. The target local branch, remote branch, prior PR, and fresh worktree path were absent before creating this clean exact-main branch, and all twelve live PRs have zero exact overlap with its expected registry, fixture, test, documentation, state, roadmap, and changelog surfaces. Reconciliation, classification, and selection leave 199 merged, 438 pending, and exactly this owner in progress.",
+      "implementation_revision": "245dfa9fc9ce1995a79645a4af9c72f5a4be1799",
+      "rebase_notes": "The final implementation is rebased onto exact origin/main 8e2b2933797acda0bfa166ecb4794377e9518521. The branch absorbs merged PRs #13768 and #13765's unrelated Forme CLI and forme-dev-server TypeScript-root registrations and resolves only the expected registry-digest cascade; the final Engram diff does not duplicate either Forme root. Intervening Mermaid, SPICE, Venture layout-grid and positioned-layout, Dartmouth parser, Hindi curriculum, HTML recovery, Z80, Mosaic accessibility, ALGOL, TypeScript frontend BUILD-directory, and Forme cache work do not overlap the Engram registry semantics. Merged PR #13761 adds Rust layout-grid beside TypeScript, so pending owner layout-grid-two-lane-classification owns its UI08 conformance and remaining applicable-lane review. Merged PR #13765 adds TypeScript-only forme-dev-server, which remains classified under the existing Forme family owner. Merged PR #13774 adds the new Rust-only layout-positioned identity; pending owner layout-positioned-portable-core-classification now owns its host-neutral UI10 contract and applicable-lane review. Merged PR #13773 changes BUILD fronts for existing TypeScript packages only, adding no package identity, source-input boundary, or ownership gap. Merged PR #13777 extends the existing forme-orchestrator root with deterministic persistent-cache behavior, package metadata, and dependency lockfiles; it stays under forme-portable-core-family-classification and adds no package identity or source-input boundary. The refreshed collision-checked schema-3 inventory records 15 established lanes, 1,399 implementation identities, 4,615 slots, 1,438 all-reported identities, bands 175/265, 123/934, 172/2,165, and 929/13,006, 740 Rust singletons, zero OCaml packages, zero canonical collisions, and zero unknown buckets. The complete 640-owner/1,006-edge graph is unique, dependency-complete, and acyclic at 199 merged, 440 pending, and exactly this owner in progress.",
+      "validation_revision": "245dfa9fc9ce1995a79645a4af9c72f5a4be1799",
+      "validation_notes": "The rebased neutral corpus validates all 132 cases and 283 files with 23 registry languages, 18 repository boundaries, 21 repository inputs, registry digest f49bfe8c7c9c0fb9b534ecc9ca4a614f3684abe32bdb0edac82d99bdc806fb70, and cascaded boundary digest 963cc4090e165752fd3a62921b699dfff8f0677b49d7236812398a8abed0a25f. The complete conformance family passes 192 tests and 355 subtests with 23 expected platform skips; the full 72-test semantic runner passes with 233 subtests after exact-root security hardening. Branch-aware coverage reports 90% for build_tool_conformance.py, 99% for the runner tests, and 93% combined. The Engram package passes eight Rust tests, all 28 checked-in-WASM smoke assertions, and strict all-target Clippy. The Go oracle passes all package tests, vet, and trimpath build; a real dry build-file validation evaluates the Starlark corpus, discovers 5,122 packages, validates the orphan ledger, and skips all packages because no package source changed. Ten package-parity tests pass, and the regenerated schema-3 report has zero canonical collisions or unknown lanes. cargo audit scans 1,537 locked dependencies with no vulnerability and two existing allowed unmaintained warnings. Python byte compilation and diff checks pass; Ruff reports only the same three unchanged origin/main recommendations outside added lines. Independent security review cleared sensitive roots, selector prefix and case-fold collisions, dependency scope, and authority boundaries with no blocker.",
+      "final_review_revision": "060150218fac3914a565e76da44a0496ce14ec09",
+      "final_review_notes": "Three independent read-only audits repeatedly cleared the byte-identical Engram implementation through the final rebases. They reproduced the 132-case/283-file corpus and f49bfe8c/963cc409 registry/boundary digests; confirmed the exact package-root authority admits only the smoke script, host module, and checked-in WASM; validated the 1,399-identity/4,615-slot/1,438-all-reported collision-free inventory and 640-owner/1,006-edge complete acyclic graph; confirmed the new layout-positioned owner and existing Forme family ownership; and found no dependency, workflow, security, source-boundary, or live-overlap blocker. The final local publication gate confirmed exact origin/main 8e2b2933797acda0bfa166ecb4794377e9518521, a clean 25-path diff, and zero exact overlap across all eleven then-open PRs.",
+      "publication_notes": "Opened ready-for-review PR #13783 from clean validated head 060150218fac3914a565e76da44a0496ce14ec09 after a normal first push from exact origin/main 8e2b2933797acda0bfa166ecb4794377e9518521. Immediately before publication, the target remote branch and prior PR were absent, no parity PR was active, all 25 changed paths had zero exact overlap across eleven open PRs, and corpus, schema, runner, coverage, Engram, Go, build-file, parity, state-DAG, security, diff, and independent review gates were acceptable. GitHub reports the PR ready for review and mergeable while checks are queued; auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
       "notes": "Discovered after merged PR #13732 made code/packages/rust/engram-wasm/BUILD execute node js/smoke.mjs against checked-in package artifacts. The Rust source-input registry currently omits the exact script, its imported js/engram-mosaic-host-wasm.mjs module, and pkg/engram_engine.wasm read by the smoke test. Add narrowly scoped exact package inputs, tracked-byte projection fixtures, drift/rename regressions, and the canonical registry digest update without admitting broad JavaScript, build output, generated, or binary suffix authority. Every engine adoption remains dependent on this repair so no implementation can claim equality with an incomplete neutral registry."
     },
     {
@@ -2715,8 +2731,8 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "selection_blocked": true,
-      "notes": "The roadmap already records the TypeScript-led forme-* static-site family, and merged fan-out/routed-blog expansions make its pure graph, routing, content-model, rendering, and provenance kernels concrete enough for a dedicated owner rather than indefinite retention under the singleton umbrella. Inventory the family, separate deterministic graph, routing, rendering, content-model, provenance, immutable classless-theme behavior, and asset/MIME derivation from browser, Vite, filesystem, and UI authority, define fixtures and dependency order, and record narrow applicability exceptions before any port. PRs #13244, #13251, #13268, #13368, #13395, #13401, #13409, and #13420 are merged. The collision-clean inventory includes TypeScript-only `forme-load-assets-fs`, `forme-theme-classless`, `forme-resolve-asset-refs-fs`, and `forme-emit-site-fs`; all remain covered by this family rather than creating duplicate singleton owners. Live PR #13455 prospectively adds TypeScript-only `forme-cli` under this existing family owner, so selection is blocked until that overlap clears; no duplicate owner is needed."
+      "selection_blocked": false,
+      "notes": "The roadmap already records the TypeScript-led forme-* static-site family, and merged fan-out/routed-blog expansions make its pure graph, routing, content-model, rendering, and provenance kernels concrete enough for a dedicated owner rather than indefinite retention under the singleton umbrella. Inventory the family, separate deterministic graph, routing, rendering, content-model, provenance, immutable classless-theme behavior, and asset/MIME derivation from browser, Vite, filesystem, and UI authority, define fixtures and dependency order, and record narrow applicability exceptions before any port. PRs #13244, #13251, #13268, #13368, #13395, #13401, #13409, #13420, #13455, and #13765 are merged. The collision-clean inventory includes TypeScript-only `forme-load-assets-fs`, `forme-theme-classless`, `forme-resolve-asset-refs-fs`, `forme-emit-site-fs`, `forme-cli`, and `forme-dev-server`; all remain covered by this family rather than creating duplicate singleton owners. Dedicated PR #13768 merged the missing shared TypeScript base-config boundary registration, and #13765 registered forme-dev-server under that boundary, so this family owner remains unblocked for future dependency/leverage selection."
     },
     {
       "id": "rust-singletons-20260730-classification",
@@ -7709,6 +7725,33 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the collision-clean e6d99bc699 inventory after the Rust-only venture-browser-visual-fixtures identity appeared. Separate reusable deterministic HTML/resources, text measurement, geometry, RGBA, structural screenshot oracles, and resource bounds from Rust Venture integration plus Cairo, WGPU, and Apple native capture adapters. Define the language-neutral fixture contract and explicit applicable-lane exceptions; do not manufacture native screenshot hosts in every lane. PRs #13371, #13390, and #13403 are merged and remain inside this owner, so the former live-path block is cleared."
+    },
+    {
+      "id": "layout-flexbox-two-lane-classification",
+      "title": "Classify layout-flexbox portability across Rust and TypeScript",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean d5f6d1c950 inventory after merged PR #13744 added code/packages/rust/layout-flexbox beside the existing TypeScript implementation. The new directory adds one established-lane slot without adding an identity, moves layout-flexbox from the singleton band into the two-to-four-lane band, and leaves thirteen established lanes without classified coverage. Compare both pure UI03 implementations against their shared layout-ir contract; pin direction, reversal, wrap, gap, order, grow/shrink/basis, justify/align, automatic minimum size, malformed-extension, numeric, overflow, and resource-limit behavior in language-neutral fixtures; then decompose applicable-lane rollout or record narrow reviewed exceptions. Keep fonts, shaping, DOM, windows, rendering devices, and host measurement outside the portable layout core."
+    },
+    {
+      "id": "layout-grid-two-lane-classification",
+      "title": "Classify layout-grid portability across Rust and TypeScript",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean 98a9bd0353 inventory after merged PR #13761 added code/packages/rust/layout-grid beside the existing TypeScript implementation. The new directory adds one established-lane slot without adding an identity, moves layout-grid from the singleton band into the two-to-four-lane band, and leaves thirteen established lanes without classified coverage. Compare both pure UI08 implementations against their shared layout-ir and layout-block contracts; pin explicit and implicit tracks, minmax and fractional sizing, auto placement, dense flow, spanning, gaps, alignment, intrinsic constraints, malformed extensions, numeric behavior, overflow, and resource limits in language-neutral fixtures; then decompose applicable-lane rollout or record narrow reviewed exceptions. Keep DOM, windows, rendering devices, fonts, shaping, and host measurement outside the portable layout core."
+    },
+    {
+      "id": "layout-positioned-portable-core-classification",
+      "title": "Classify the portable layout-positioned core across applicable lanes",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean e5d7e1aae inventory after merged PR #13774 added the Rust-only layout-positioned identity. Separate the host-neutral UI10 contract from browser and rendering hosts; pin tolerant positioned-extension decoding, diagnostics, static/relative/absolute/fixed/sticky insets, normal-flow participation, stable z-order, overflow policy, scroll extents, rectangular paint clips, hit-region intersection, fixed viewport coordinates, sticky clamping, malformed inputs, numeric behavior, and resource limits in language-neutral fixtures. Then decompose applicable-lane rollout or record narrow reviewed exceptions. Keep HTML parsing, CSS computation, DOM and window authority, toolkit rendering, transformed containing blocks, writing modes, nested interactive scrolling, full stacking contexts, floats, and fragmentation outside this portable core."
     }
   ]
 }

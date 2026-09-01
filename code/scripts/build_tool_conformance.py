@@ -659,7 +659,18 @@ def _repository_source_sensitive_path(path: str) -> bool:
         "secrets.toml",
         "signing.properties",
     }
-    blocked_components = {".aws", ".azure", ".gnupg", ".ssh", "secrets"}
+    blocked_components = {
+        ".aws",
+        ".azure",
+        ".env",
+        ".gnupg",
+        ".ssh",
+        "credentials",
+        "local",
+        "secrets",
+        "signing",
+        "token",
+    }
     blocked_suffixes = (".jks", ".key", ".keystore", ".p12", ".pem", ".pfx")
     sensitive_word = re.compile(
         r"(?:^|[._-])(credential|password|private[-_]?key|secret|signing|token)(?:[._-]|$)"
@@ -891,6 +902,106 @@ def _validate_source_input_registry(
                     f"{language} exact relative paths have a prefix collision",
                 )
 
+        package_exact_inputs = entry["package_exact_inputs"]
+        package_ids = [item["id"] for item in package_exact_inputs]
+        if package_ids != _utf8_sorted(package_ids) or len(package_ids) != len(
+            set(package_ids)
+        ):
+            raise ConformanceError(
+                "SOURCE_INPUT_NOT_CANONICAL",
+                f"{language} package-exact inputs are not in unique id order",
+            )
+        package_root_identities: set[str] = set()
+        for item in package_exact_inputs:
+            package_root = item["package_root"]
+            if portable_path_error(package_root) or _source_input_text_error(
+                package_root
+            ):
+                raise ConformanceError(
+                    "SOURCE_INPUT_PATH_UNSAFE",
+                    f"unsafe package-exact source-input root {package_root!r}",
+                )
+            root_components = package_root.split("/")
+            if (
+                len(root_components) < 4
+                or root_components[0] != "code"
+                or root_components[1] not in {"packages", "programs"}
+                or root_components[2] != language
+            ):
+                raise ConformanceError(
+                    "SOURCE_INPUT_PACKAGE_ROOT_LANGUAGE_MISMATCH",
+                    f"{language} package-exact root belongs to another lane: {package_root}",
+                )
+            root_identity = package_root.casefold()
+            if root_identity in package_root_identities:
+                raise ConformanceError(
+                    "SOURCE_INPUT_SELECTOR_COLLISION",
+                    f"{language} repeats package-exact root {package_root}",
+                )
+            package_root_identities.add(root_identity)
+            if not item["owner"] or not item["reason"]:
+                raise ConformanceError(
+                    "SOURCE_INPUT_SCOPE_CLASSIFICATION_INVALID",
+                    "package-exact source inputs require a durable owner and reason",
+                )
+            item_paths = item["paths"]
+            if item_paths != _utf8_sorted(item_paths) or len(item_paths) != len(
+                set(item_paths)
+            ):
+                raise ConformanceError(
+                    "SOURCE_INPUT_NOT_CANONICAL",
+                    f"{language} package-exact input {item['id']} paths are not canonical",
+                )
+            if len({path.casefold() for path in item_paths}) != len(item_paths):
+                raise ConformanceError(
+                    "SOURCE_INPUT_SELECTOR_COLLISION",
+                    f"{language} package-exact input {item['id']} paths collide after case folding",
+                )
+            folded_item_paths = [path.casefold() for path in item_paths]
+            for index, path in enumerate(folded_item_paths):
+                if any(
+                    path.startswith(f"{other}/") or other.startswith(f"{path}/")
+                    for other in folded_item_paths[index + 1 :]
+                ):
+                    raise ConformanceError(
+                        "SOURCE_INPUT_SELECTOR_COLLISION",
+                        f"{language} package-exact input {item['id']} paths have a prefix collision",
+                    )
+            for path in item_paths:
+                if error := _source_input_selector_error(
+                    path,
+                    "root_exact_relative_paths",
+                ):
+                    raise ConformanceError(
+                        "SOURCE_INPUT_PATH_UNSAFE",
+                        f"unsafe package-exact source-input path {path!r}: {error}",
+                    )
+                if any(
+                    component in SOURCE_COLLECTION_SKIP_COMPONENTS
+                    for component in path.split("/")
+                ):
+                    raise ConformanceError(
+                        "SOURCE_INPUT_PATH_UNSAFE",
+                        f"{language} package-exact path enters a generated component: {path}",
+                    )
+                if _repository_source_sensitive_path(f"{package_root}/{path}"):
+                    raise ConformanceError(
+                        "SOURCE_INPUT_SENSITIVE_PATH",
+                        "package-exact source inputs cannot authorize credentials, secrets, signing material, or machine-local configuration",
+                    )
+                folded_path = path.casefold()
+                if any(
+                    folded_path.startswith(f"{global_path.casefold()}/")
+                    or global_path.casefold().startswith(f"{folded_path}/")
+                    for global_path in paths
+                ):
+                    raise ConformanceError(
+                        "SOURCE_INPUT_SELECTOR_COLLISION",
+                        f"{language} package-exact path {path!r} has a prefix collision with a language-wide exact path",
+                    )
+            selector_count += len(item_paths)
+            enforce_selector_limit()
+
         scoped_ids = [item["id"] for item in entry["scoped_inputs"]]
         if scoped_ids != _utf8_sorted(scoped_ids) or len(scoped_ids) != len(
             set(scoped_ids)
@@ -1120,6 +1231,21 @@ def _validate_source_input_registry(
             if left_matcher == "basename":
                 return left.endswith(right)
             return right.endswith(left)
+
+        for item in package_exact_inputs:
+            for path in item["paths"]:
+                basename = posixpath.basename(path)
+                for role, scope, prefix, matcher, value in selectors:
+                    if path_in_scope(path, scope, prefix) and matchers_overlap(
+                        "basename",
+                        basename.casefold(),
+                        matcher,
+                        value.casefold(),
+                    ):
+                        raise ConformanceError(
+                            "SOURCE_INPUT_SELECTOR_COLLISION",
+                            f"{language} package-exact path {path!r} overlaps {role}",
+                        )
 
         for index, left in enumerate(selectors):
             left_role, left_scope, left_prefix, left_matcher, left_value = left
@@ -2354,6 +2480,26 @@ def _validate_pure_case_semantics(
                 "CASE_SOURCE_REGISTRY_DIGEST_MISMATCH",
                 "source-collection case does not pin the validated registry snapshot",
             )
+        else:
+            package_root = options["package_root"]
+            if portable_path_error(package_root) or _source_input_text_error(
+                package_root
+            ):
+                raise ConformanceError(
+                    "CASE_SOURCE_ROOT_UNSAFE",
+                    f"source package root is not portable NFC: {package_root!r}",
+                )
+            root_components = package_root.split("/")
+            if (
+                len(root_components) < 4
+                or root_components[0] != "code"
+                or root_components[1] not in {"packages", "programs"}
+                or root_components[2] != options["language"]
+            ):
+                raise ConformanceError(
+                    "CASE_SOURCE_ROOT_LANGUAGE_MISMATCH",
+                    "source package root does not belong to the declared consumer language",
+                )
         candidate_paths: dict[str, tuple[str, str]] = {}
         for candidate in options["candidates"]:
             path = candidate["path"]
@@ -2683,6 +2829,12 @@ def _expected_source_collection(
             "source-collection case does not pin the validated registry snapshot",
         )
     language_inputs = _source_input_entry(registry, options["language"])
+    package_exact_paths = {
+        path
+        for item in language_inputs["package_exact_inputs"]
+        if item["package_root"] == options["package_root"]
+        for path in item["paths"]
+    }
     universal = registry["universal_inputs"]
     link_roots = {
         candidate["path"]
@@ -2717,6 +2869,8 @@ def _expected_source_collection(
         ):
             included = True
         if path in set(language_inputs["root_exact_relative_paths"]):
+            included = True
+        if path in package_exact_paths:
             included = True
 
         if options["mode"] == "extension":
