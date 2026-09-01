@@ -2,11 +2,11 @@
 
 use std::collections::HashMap;
 
-pub const CSR_MSTATUS: u32  = 0x300;
-pub const CSR_MTVEC: u32    = 0x305;
+pub const CSR_MSTATUS: u32 = 0x300;
+pub const CSR_MTVEC: u32 = 0x305;
 pub const CSR_MSCRATCH: u32 = 0x340;
-pub const CSR_MEPC: u32     = 0x341;
-pub const CSR_MCAUSE: u32   = 0x342;
+pub const CSR_MEPC: u32 = 0x341;
+pub const CSR_MCAUSE: u32 = 0x342;
 
 pub const MIE: u32 = 1 << 3;
 pub const CAUSE_ECALL_M_MODE: u32 = 11;
@@ -18,7 +18,9 @@ pub struct CSRFile {
 
 impl CSRFile {
     pub fn new() -> Self {
-        Self { regs: HashMap::new() }
+        Self {
+            regs: HashMap::new(),
+        }
     }
 
     pub fn read(&self, addr: u32) -> u32 {

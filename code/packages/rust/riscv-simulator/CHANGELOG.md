@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- Added the normative `Rv32ISimulator` machine boundary with exact 64 KiB
+  state, five M-mode CSRs, checked origin-aware loading and restore/direct
+  access, typed fail-closed faults, complete transition traces, atomic steps,
+  and transactional bounded runs while preserving every legacy consumer API.
+- Added seven lifecycle/fault suites and a reproducible 256-case Python
+  full-state differential corpus spanning every RV32I/CSR/MRET decode family.
+- Corrected the checked boundary to reject malformed funct fields, selected
+  RV32M encodings, non-ECALL privileged words, and unsupported CSRs instead of
+  silently advancing them as unknown operations.
+- Formatted the existing Rust package and established 91.46% line coverage
+  (1,125/1,230) with strict Rustfmt, Clippy, and rustdoc checks green.
 - Kept ECALL halt-token classification warning-free under the current stable
   Clippy without changing trap behavior.
 - Added the standard RV32M `mul`, `mulhu`, `div`, `divu`, `rem`, and `remu`
