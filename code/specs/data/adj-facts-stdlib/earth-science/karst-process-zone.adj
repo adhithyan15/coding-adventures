@@ -1,0 +1,102 @@
+% ============================================================================
+% karst-process-zone — which groundwater zone a named karst process happens
+% in (adj-facts-stdlib, EARTH-SCIENCE).
+% ============================================================================
+% A cave and its decorations are not made at the same time, and — the part
+% that surprises people — not even in the same place relative to the water
+% table. Recall is a binding query:
+%
+%     ? karst_process_zone(speleothem_deposition, $Z)
+%       % zone_of_aeration
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `karst_process_zone(process, zone)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the zone WITH its source, on the CPU, with zero model
+% calls, and abstains on any process the source does not place. The query
+% also runs BACKWARD, recovering which process happens in a named zone.
+%
+% SECOND cave/karst library, sibling to `speleothem-growth-surface.adj`
+% (which holds stalactite -> cave_ceiling, stalagmite -> cave_floor from
+% the same NPS article). That one answers WHERE ON THE CAVE a speleothem
+% grows; this one answers WHERE RELATIVE TO THE WATER TABLE the process
+% can happen at all. Different axis, no overlap: a full-tree grep for
+% `water_table`, `aeration`, `saturation`, `karst`, `vadose` and
+% `phreatic` found no table on this axis (the shipped `pond_zone` and
+% `ocean_zone` families are depth zones within a body of water, a
+% different sense of the word).
+%
+% Provenance: both rows come from a SINGLE sentence of the U.S. National
+% Park Service's "Speleothems" article, which states the contrast
+% directly:
+%
+%     "Although the formation of caves typically takes place below the
+%      water table in the zone of saturation, the deposition of
+%      speleothems is not possible until caves are above the water table
+%      in the zone of aeration."
+%
+%     process (this table's atom)   zone (this table's atom)
+%     ---------------------------   ------------------------------
+%     cave_formation                zone_of_saturation_typically
+%     speleothem_deposition         zone_of_aeration
+%
+% The sentence also states each zone's position relative to the water
+% table — the zone of saturation is BELOW it, the zone of aeration ABOVE
+% it. That is a fact about the ZONE rather than about the process, so it
+% is deliberately not a third column here (it would repeat once per
+% process row rather than adding an axis); it is available from the same
+% sentence for a future `zone -> water_table_position` sibling.
+%
+% curl-fetched the raw page and read it byte-for-byte before writing this
+% file, and the page was CONTENT-verified rather than merely
+% status-checked — 200, no soft-404 markers, 118 substantive sentences,
+% zero hub/navigation markers. `trust authoritative` — the National Park
+% Service is a first-party .gov publisher of exactly the fact recalled,
+% the same source `speleothem-growth-surface.adj` and
+% `weathering-cause-type.adj` already cite.
+%
+% THE HEDGE IS ASYMMETRIC, AND THAT ASYMMETRY IS FAITHFUL. The source
+% hedges ONE side and not the other: caves "TYPICALLY" form below the
+% water table, whereas speleothem deposition "IS NOT POSSIBLE UNTIL"
+% caves are above it — a typical tendency versus a stated precondition.
+% Following the placement rule this stdlib already applies in
+% `veto-override.adj` (a qualifier that modifies ONE VALUE lives inside
+% that value's atom; a qualifier that modifies the WHOLE FACT lives in the
+% citation, as in `electoral-college-count.adj`'s "currently"), the
+% tendency is carried in the atom itself: `zone_of_saturation_typically`.
+% The deposition row carries no such suffix because its own clause carries
+% no hedge. A reader who binds the cave-formation row therefore cannot
+% mistake a tendency for a rule, and a reverse query for a bare
+% `zone_of_saturation` correctly finds nothing — the source never says
+% caves form there ALWAYS.
+%
+% Honest abstention:
+%
+%   - `cave_decoration` as a process distinct from speleothem deposition
+%     is NOT a row. The same paragraph does say "the stage is set for the
+%     decoration phase of cave building to begin" once the chamber fills
+%     with air, but it names decoration as a PHASE beginning at that
+%     moment rather than assigning it a zone of its own, and treating it
+%     as a separate zoned process would double-count the deposition row.
+%   - `dissolution`, `speleogenesis` and other named karst processes are
+%     not rows: this source does not place them relative to the water
+%     table, and inferring their zone from general karst knowledge is
+%     exactly what a grounded recall library must not do.
+%   - The water-table POSITION of each zone is not a value of this
+%     relation (see above) — a query for it abstains here rather than
+%     being answered from the wrong table.
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table karst_process_zone {
+    columns process, zone
+
+    row (cave_formation, zone_of_saturation_typically)
+    row (speleothem_deposition, zone_of_aeration)
+
+    source "Although the formation of caves typically takes place below the water table in the zone of saturation, the deposition of speleothems is not possible until caves are above the water table in the zone of aeration."
+    locator "https://www.nps.gov/subjects/caves/speleothems.htm"
+    trust authoritative
+}

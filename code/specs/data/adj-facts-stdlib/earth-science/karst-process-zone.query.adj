@@ -1,0 +1,23 @@
+% ============================================================================
+% karst-process-zone.query.adj — worked recall over the karst-process-zone
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "where can speleothems
+% actually form?" (direct), "which process happens in the zone of
+% aeration?" (reverse), or "do caves always form below the water table?"
+% (abstain — the source says TYPICALLY, and the hedge lives in the atom, so
+% a query for the unhedged zone correctly finds nothing) — it states no
+% fact of its own — it only `import`s the grounded table and asks binding
+% queries.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli karst-process-zone.query.adj
+% ============================================================================
+
+import "karst-process-zone.adj"
+
+? karst_process_zone(speleothem_deposition, $Z)      % expect zone_of_aeration -- deposition "is not possible until" caves are above the water table
+? karst_process_zone(cave_formation, $Z)             % expect zone_of_saturation_typically -- the hedge rides in the atom, not dropped
+? karst_process_zone($P, zone_of_aeration)           % expect speleothem_deposition (reverse)
+? karst_process_zone($P, zone_of_saturation)         % expect abstain -- the UNHEDGED zone is not a value here; the source says caves form there TYPICALLY, never always
+? karst_process_zone(dissolution, $Z)                % expect abstain -- a real karst process this source never places relative to the water table
