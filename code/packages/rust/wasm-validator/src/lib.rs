@@ -30,7 +30,7 @@
 
 use std::collections::HashSet;
 use std::rc::Rc;
-use wasm_types::{CanonicalGroup, ExternalKind, ImportTypeInfo, ValueType, WasmModule, canonicalize_types};
+use wasm_types::{CanonicalGroup, ExternalKind, ImportTypeInfo, ValueType, WasmModule};
 
 mod type_check;
 
@@ -176,10 +176,21 @@ impl ValidatedModule {
     /// `validate()` entry point, not just through the lower-level
     /// `wasm_types::canonicalize_types` free function.
     pub fn canonically_equivalent(&self, i: u32, j: u32) -> bool {
-        match (self.canonical_type_at(i), self.canonical_type_at(j)) {
-            (Some(a), Some(b)) => a == b,
-            _ => false,
-        }
+        wasm_types::canonical_types_equivalent(&self.canonical_types, i, j)
+    }
+
+    /// The whole per-flat-index canonical-type table (W34 third slice) --
+    /// exposed as a slice so a downstream crate that needs to CARRY this
+    /// data further (`wasm-runtime::instantiate`, threading it into
+    /// `WasmInstance::canonical_types` for `wasm-execution`'s own runtime
+    /// dispatch -- see that crate's own doc comments) can clone it once,
+    /// rather than reconstructing an equivalent Vec index-by-index via
+    /// repeated [`Self::canonical_type_at`] calls. Read-only: there is no
+    /// way to construct a `ValidatedModule` (and therefore no way to reach
+    /// this slice) other than [`validate`] succeeding, the same guarantee
+    /// [`Self::module`] already relies on.
+    pub fn canonical_types(&self) -> &[Option<(Rc<CanonicalGroup>, u32)>] {
+        &self.canonical_types
     }
 }
 
@@ -817,17 +828,23 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
     }
 
     // ── Check 11: Instruction-level type checking (WASM06/W02 Phase 2) ──
-    type_check::type_check_module(module)?;
-
-    // W34 first slice (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`):
-    // canonicalize singleton `rec` groups now that Check 11 (which runs
-    // `check_type_subtyping_is_acyclic`) has confirmed the module's
-    // `sub`/`rec` reference ordering is well-founded -- see
-    // `ValidatedModule::canonical_types`'s own doc comment for why this is
-    // the right place, and `wasm_types::canonicalize_types`'s own doc
-    // comment for why the ordering guarantee matters even though this
-    // function itself never recurses.
-    let canonical_types = canonicalize_types(module);
+    //
+    // W34 first slice (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`),
+    // updated by the third slice: `type_check_module` itself now computes
+    // and returns this module's own canonicalized type-group forms as a
+    // side product of Check 11 -- it needs them internally anyway (wired
+    // into `is_assignable`/`call_indirect`'s static checks via
+    // `ModuleContext`/`TypeContext`, see that crate-internal module's own
+    // doc comments), computed right after `check_type_subtyping` (which
+    // runs `check_type_subtyping_is_acyclic` as its own first step) has
+    // confirmed the module's `sub`/`rec` reference ordering is well-founded
+    // -- see `wasm_types::canonicalize_types`'s own doc comment for why
+    // that ordering guarantee matters even though this function itself
+    // never recurses. Reusing the same computation here (rather than
+    // calling `canonicalize_types` a second time) keeps this a true
+    // "computed exactly once per module" cache, matching `ValidatedModule::
+    // canonical_types`'s own doc comment.
+    let canonical_types = type_check::type_check_module(module)?;
 
     Ok(ValidatedModule {
         module: module.clone(),
@@ -1984,15 +2001,31 @@ mod tests {
     fn call_argument_rejects_an_unrelated_concrete_func_ref() {
         // The negative counterpart: `$t1`/`$t2` are declared with NO `sub`
         // relationship between them at all (two independent, final types)
-        // -- passing a `(ref $t2)` where `(ref $t1)` is expected must be
-        // rejected. This is deliberately NOT the same as the positive
-        // test's types (no `sub` declared here), proving the new
-        // assignability arms require a REAL declared chain, not just "any
-        // two concrete func ref types."
+        // AND a genuinely different shape (`$t2` takes an `i32` param
+        // `$t1` doesn't) -- passing a `(ref $t2)` where `(ref $t1)` is
+        // expected must be rejected. This is deliberately NOT the same as
+        // the positive test's types (no `sub` declared here), proving the
+        // assignability arms require a REAL declared chain OR real
+        // canonical equivalence, not just "any two concrete func ref
+        // types."
+        //
+        // W34 third slice (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`):
+        // this test USED to give `$t1`/`$t2` the SAME empty shape, on the
+        // premise that byte-identical-but-undeclared-`sub` types stay
+        // unrelated -- exactly the gap this slice closes (see the real GC
+        // proposal's own "subtyping is nominal modulo canonicalization"
+        // rule). That premise is now WRONG (two structurally-identical
+        // types genuinely ARE the same canonical type, `sub` or not), so
+        // this test's shapes were changed to be genuinely different
+        // instead of merely un-declared-as-related, preserving its real
+        // purpose (an honest reclassification, not a regression -- see
+        // `call_argument_accepts_a_canonically_equivalent_but_nominally_
+        // unrelated_concrete_func_ref` just below for the case this test
+        // used to, incorrectly, also cover).
         let module = WasmModule {
             types: vec![
                 FuncType { params: vec![], results: vec![] },                                      // 0: $t1
-                FuncType { params: vec![], results: vec![] },                                      // 1: $t2 (unrelated to $t1)
+                FuncType { params: vec![ValueType::I32], results: vec![] },                        // 1: $t2 (genuinely different shape, unrelated to $t1)
                 FuncType { params: vec![ValueType::NonNullConcreteFuncRef(0)], results: vec![] },   // 2: $f1's type -- param (ref $t1)
                 FuncType { params: vec![ValueType::NonNullConcreteFuncRef(1)], results: vec![] },   // 3: $f2's type -- param (ref $t2)
             ],
@@ -2005,6 +2038,35 @@ mod tests {
         };
         let err = validate(&module).unwrap_err();
         assert!(matches!(err, ValidationError::Other(_)), "{err:?}");
+    }
+
+    /// W34 third slice: the positive case the PREVIOUS version of
+    /// `call_argument_rejects_an_unrelated_concrete_func_ref` (just above)
+    /// used to (incorrectly, per the real GC proposal) also reject --
+    /// `$t1`/`$t2` are byte-identical (`(func)`, no params/results) and
+    /// declare NO `sub` relationship at all, yet are canonically the SAME
+    /// type, so a `(ref $t2)` argument flowing into a `(ref $t1)` param at
+    /// a real `call` site must now be ACCEPTED. This is the direct,
+    /// end-to-end (`validate()`, not just `is_assignable`/`canonicalize_
+    /// types` in isolation) proof this slice's own wiring reaches a real
+    /// validation decision.
+    #[test]
+    fn call_argument_accepts_a_canonically_equivalent_but_nominally_unrelated_concrete_func_ref() {
+        let module = WasmModule {
+            types: vec![
+                FuncType { params: vec![], results: vec![] },                                      // 0: $t1
+                FuncType { params: vec![], results: vec![] },                                      // 1: $t2 (canonically == $t1, no `sub` declared)
+                FuncType { params: vec![ValueType::NonNullConcreteFuncRef(0)], results: vec![] },   // 2: $f1's type -- param (ref $t1)
+                FuncType { params: vec![ValueType::NonNullConcreteFuncRef(1)], results: vec![] },   // 3: $f2's type -- param (ref $t2)
+            ],
+            functions: vec![2, 3],
+            code: vec![
+                FunctionBody { locals: vec![], code: vec![0x0B] },
+                FunctionBody { locals: vec![], code: vec![0x20, 0x00, 0x10, 0x00, 0x0B] }, // local.get 0; call 0; end
+            ],
+            ..Default::default()
+        };
+        validate(&module).expect("canonically equivalent concrete func refs must be assignable even with no declared `sub` chain");
     }
 
     // ────────────────────────────────────────────────────────────────────

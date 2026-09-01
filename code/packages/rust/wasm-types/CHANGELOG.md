@@ -2,6 +2,97 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.20] - 2026-09-01 (W34 third slice — wire canonical equivalence into within-module subtyping)
+
+`nominal_subtype_chain` (the shared, security-reviewed `sub`-chain walk
+`wasm-validator`'s static `is_assignable` and `wasm-execution`'s runtime
+`call_indirect`/`ref.cast`/`ref.test` dispatch both call) now upgrades its
+reflexive base case AND every hop's own termination check from raw type-
+index equality to real canonical equivalence, per the GC proposal's own
+rule: "subtyping is nominal modulo type canonicalisation" — exactly the
+one line of `MVP.md` this whole spec has been building toward.
+
+- **Breaking change to `nominal_subtype_chain`'s signature**: gains a new
+  `canonical_types: &[Option<(Rc<CanonicalGroup>, u32)>]` parameter
+  (second position, matching `ValidatedModule::canonical_types`'/
+  `WasmExecutionContext::canonical_types`'s own shape). Every existing
+  caller either already has real canonical data to pass (`wasm-validator`,
+  `wasm-execution` — see their own CHANGELOGs) or passes `&[]` (`WasmModule::
+  func_type_is_nominal_subtype`, which never carried canonical data and
+  stays nominal-only by design — see that method's own doc comment). An
+  empty slice is a strict, zero-behavior-change superset of the pre-W34
+  nominal-only rule: `canonical_types_equivalent` on an empty/too-short
+  slice always reports `false`, proven by a new regression test
+  (`nominal_subtype_chain_with_empty_canonical_table_matches_old_nominal_
+  only_behavior`).
+- **New `canonical_types_equivalent` free function** — the one shared
+  comparison both `nominal_subtype_chain` and `wasm-validator::
+  ValidatedModule::canonically_equivalent` now use, so the two copies of
+  this comparison (chain-walk termination, public post-validation
+  accessor) can never drift apart. `false`, conservatively, whenever
+  either side is out of range or uncanonicalized (`None`) — never a wrong
+  `true`.
+- **3 new unit tests**: a positive case (two independently-declared,
+  nominally-unrelated but canonically-equivalent types, accepted in both
+  directions once real canonical data is supplied, correctly REJECTED by
+  the nominal-only `func_type_is_nominal_subtype` on the same pair); a
+  negative case (genuinely different shapes, still rejected even with
+  real canonical data present); and the empty-table backward-compatibility
+  proof above.
+
+### Security fix (found by this slice's own review, fixed before push)
+
+Wiring canonical equivalence into per-instruction call sites (`is_
+assignable`, `call_indirect_type_matches`) turned a real, previously-
+unreachable cost into a reachable one: `canonical_types_equivalent`
+compared two `Rc<CanonicalGroup>`s via derived `PartialEq`, which walks
+the FULL tree by CONTENT (never by pointer) whenever the two `Rc`s are
+different allocations -- true for every pair of independently-declared,
+canonically-equivalent-but-unrelated groups, exactly the case this slice
+exists to accept. A security-review sub-agent built a real reproduction:
+two ~19-level "doubling" `rec` chains (each near `MAX_CANONICAL_TREE_
+WEIGHT`) referenced from two locals, with a function body repeatedly
+flowing a value between them -- `validate()` took **over a minute** on a
+~130KB crafted module (~123,000x slower than an equal-sized module that
+never triggers the deep comparison), an entirely real, previously-
+unreachable algorithmic-complexity DoS (this cost did not exist before
+this slice wired canonical checks into per-instruction validation).
+
+Fixed by interning: `canonicalize_types` now deduplicates content-
+identical groups it produces WITHIN one call into a single shared `Rc`
+allocation (a `HashSet<Rc<CanonicalGroup>>`, queried by borrowed
+`&CanonicalGroup` content via `Rc<T>: Borrow<T>`, so no redundant clone
+is needed just to look up a candidate), and `canonical_types_equivalent`
+tries `Rc::ptr_eq` FIRST before falling back to full structural `==`.
+Since interning guarantees identical content built by the SAME
+`canonicalize_types` call always shares one allocation, this makes the
+actually-reachable within-module case (everything this slice's own
+call sites use) a genuine O(1) check after the first comparison, matching
+`MVP.md`'s own Note 2 ("canonicalising them bottom-up in linear time
+upfront... constant-time" comparison) precisely rather than only in
+spirit. Interning itself costs at most one extra hash+lookup per group --
+the same order of work `canonicalize_types` already pays to BUILD that
+group, so this is a constant-factor addition, not a new algorithmic-
+complexity class, and every existing `CanonicalCost` cap still bounds it
+exactly as before. Cross-module comparison (two SEPARATE `canonicalize_
+types` calls) is deliberately unaffected -- this cache is local to one
+call, not a global/thread-shared interner, since no reachable call site
+in this slice needs cross-module comparability yet (revisit if slice 4's
+cross-module wiring measures a real need).
+
+Verified empirically, not just reasoned about: a scaled-down reproduction
+of the review's own attack shape (two 19-level doubling chains, 4,000
+repeated cross-assignments) took **15.4s** with interning/the `Rc::ptr_eq`
+fast path disabled and **~100ms** with them restored — confirmed by
+temporarily reverting each fix in turn and re-running, not merely
+asserted. New regression test
+`identical_groups_within_one_module_intern_to_the_same_rc_allocation`
+proves the mechanism directly (`Rc::ptr_eq`, not merely `==`, on two
+independently-declared, differently-indexed, `sub`-unrelated identical
+multi-member groups). Full conformance baseline re-confirmed byte-for-
+byte identical before and after this fix (a pure performance change, zero
+behavior change).
+
 ## [0.1.19] - 2026-09-01 (W34 second slice — canonical type-group equivalence, real multi-member `rec` groups)
 
 Lifts the first slice's `rec_group_size == 1` restriction: `canonicalize_

@@ -279,6 +279,7 @@ mod tests {
             func_types: Vec::new(),
             types: Vec::new(),
             type_subtyping: Vec::new(),
+            canonical_types: Vec::new(),
             func_type_indices: Vec::new(),
             func_bodies: Vec::new(),
             host_functions: Vec::new(),

@@ -33,6 +33,7 @@ fn instance_with_v128_const(lanes: [i32; 4]) -> wasm_runtime::WasmInstance {
         global_types: vec![],
         func_types: vec![func_type],
         func_type_indices: vec![0],
+        canonical_types: vec![],
         func_bodies: vec![Some(FunctionBody { locals: vec![], code })],
         host_functions,
         tags: vec![],

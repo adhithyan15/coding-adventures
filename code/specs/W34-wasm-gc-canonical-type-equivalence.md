@@ -1237,3 +1237,311 @@ equivalent`'s existing `(Some, Some) => a == b, _ => false` shape already
 handles that correctly today, confirmed by this slice's own different-
 wiring non-equivalence test. No other correction to slice 3's or slice
 4's own scope was found necessary.
+
+## Addendum — third slice shipped (canonical equivalence wired into within-module checks)
+
+Re-verified this spec's own citations fresh against the pinned SHA
+(`28864811cf03bdbf880733786148feaba339582d`) before writing any code, per
+this campaign's discipline: `type-rec.wast`, `type-equivalence.wast`,
+`type-subtyping.wast`, and `type-canon.wast` were all re-fetched from the
+vendored, pinned-SHA corpus and re-read directly (not from memory of the
+first two addenda's own citations). Two claims from the "What already
+exists" section and the first/second addenda needed correction, found
+by this direct re-reading, not assumed:
+
+1. **`is_assignable` really did have zero `StructRef`/`ArrayRef` arms** —
+   confirmed by direct read of the whole function before touching it.
+   Fixed as part of this slice (see "What shipped" below), not deferred —
+   the spec's own "Explicitly out of scope" section had flagged this as
+   "separable," but this slice's own §3 design already needed to touch
+   `is_assignable` regardless, so fixing it in the same pass avoided a
+   second, redundant edit to the same function.
+2. **`check_type_subtyping` really was func-only**, checking a struct/
+   array-kind child's declared `sub` relationship against two empty dummy
+   `FuncType`s. Fixed as part of this slice too, per this task's own
+   explicit instruction to verify and fix if still true — this is a wider
+   scope than the spec's own "Explicitly out of scope" section originally
+   drew (which called this "orthogonal to canonical equivalence... not
+   fully traced"), but the task's own re-verification discipline applies
+   regardless of which document first drew the boundary, and fixing it
+   turned out to be NECESSARY for this slice's own within-module wiring to
+   pass the real corpus (see finding 4 below) — not merely a nice-to-have
+   bundled in.
+
+Beyond those two, direct re-reading surfaced two ADDITIONAL gaps neither
+prior addendum recorded, found only by tracing actual corpus failures
+end to end rather than trusting the design sketch:
+
+3. **A real, previously-undiscovered PARSER-level gap**: `wasm-wast-
+   parser::parse_composite_body`'s `(sub ...)` branch unconditionally
+   rejected any body that wasn't `(func ...)` — struct/array bodies inside
+   `sub` were a hard parse error, by design, since W33's fourth slice
+   (that slice's own doc comment: "`sub` stays FUNC-only... `type-
+   subtyping.wast`'s struct-in-`sub` cases are this spec's OWN still-open
+   canonical-equivalence gap, not attempted here" — i.e., explicitly
+   deferred to whichever slice of W34 got here first, not merely
+   "deferred and forgotten"). Since `type-subtyping.wast`'s own
+   "Definitions"/"Invalid subtyping definitions" sections declare
+   struct/array `sub` relationships extensively, EVERY one of those
+   modules failed to parse at all before this fix — finding 2's own
+   `check_type_subtyping` fix would have been unreachable from any real
+   `.wast` source without this companion fix landing in the same slice.
+   A companion bug surfaced by the SAME investigation: the phase-B struct/
+   array write step silently discarded the parsed `supertype`/`is_final`
+   entirely (harmless before this fix, since `sub` was func-only so a
+   struct/array `ParsedComposite` could never carry anything else; load-
+   bearing the moment finding 3's own fix made it possible to carry real
+   values). Both fixed in `wasm-wast-parser` — see that crate's own
+   CHANGELOG.
+4. **A design correction found mid-implementation, not assumed**: this
+   spec's own Design §3 predicted composite-type structural-subtype
+   variance (`check_type_subtyping`'s own job) was "orthogonal to
+   canonicalization itself." Running the full conformance baseline diff
+   and individually investigating a `check_type_subtyping` false-reject
+   proved that prediction wrong: `type-subtyping.wast`'s own "Static
+   matching of recursive types" module declares `$f1`/`$f2` as two
+   separate, differently-indexed, multi-member `rec` groups with NO
+   shared `sub` relationship at all, yet structurally identical shapes —
+   a later struct's declared `sub $s2 (struct (field (ref $f1) ...))`
+   relationship's own field-covariance check can only be satisfied by
+   real canonical equivalence between `$f1`/`$f2` (there is no nominal
+   chain between them to fall back on). Fixed by hoisting `check_type_
+   subtyping_is_acyclic` out of `check_type_subtyping` and into `type_
+   check_module`, so `canonicalize_types` can run BEFORE (not after)
+   `check_type_subtyping`'s own structural checks, and threading the REAL
+   canonical-types table through instead of an empty one. `func_is_
+   structural_subtype`'s own func-only variance check inherits this too,
+   automatically, since it shares `is_assignable`.
+5. **A real, previously-undiscovered gap in `wasm-execution`'s own
+   `call_indirect_type_matches`**, found the same way (a corpus assert_
+   return failure traced to its root cause, not assumed from the design):
+   a module that never declares `sub` anywhere took ONLY the plain-
+   structural-equality path, with no fallback to canonical equivalence at
+   all — wrong for `type-equivalence.wast`'s own "Indirect types"/
+   "Recursive types" modules, which reference OTHER separately-declared,
+   canonically-(but not raw-index-)identical types INSIDE a signature
+   (e.g. two params `(ref $s1)`/`(ref $s2)`, `$s1`/`$s2` byte-identical
+   singleton types at different indices) — plain `FuncType` equality
+   compares those inner indices raw, so it wrongly rejected a legal call.
+   Fixed by falling through to the nominal/canonical chain check whenever
+   plain structural equality fails, even in the "no `sub` anywhere"
+   branch — proven safe (see `wasm-execution`'s own CHANGELOG) because
+   that branch is only reached when there is no nominal `sub` chain
+   anywhere in the module for canonical equivalence to wrongly conflate
+   with.
+
+None of these five findings changes this slice's own SCOPE (all five are
+within-module wiring, the third slice's own job) — they changed WHERE
+within that scope the real work was, which is exactly the value of
+re-verifying against the actual corpus/code rather than the design
+sketch alone.
+
+**What shipped** (`wasm-types` 0.1.19 → 0.1.20, `wasm-validator` 0.2.81 →
+0.2.82, `wasm-wast-parser` 0.1.91 → 0.1.92, `wasm-execution` 0.9.83 →
+0.9.84, `wasm-runtime` 0.6.19 → 0.6.20):
+
+- `wasm_types::nominal_subtype_chain` gains a `canonical_types` parameter
+  and upgrades both its reflexive base case and every hop's own
+  termination check to real canonical equivalence, per MVP.md's own
+  "subtyping is nominal modulo type canonicalisation" rule. New shared
+  `canonical_types_equivalent` free function backs both this and
+  `ValidatedModule::canonically_equivalent`. `WasmModule::func_type_is_
+  nominal_subtype` stays nominal-only by design (passes `&[]`) since
+  `WasmModule` never carries canonical data.
+- `wasm-validator::type_check::is_assignable` gains the missing
+  `StructRef`/`NonNullStructRef`/`ArrayRef`/`NonNullArrayRef` arms (six
+  new arms; zero existed before) and upgrades all nine reference-type
+  arms (three pre-existing func arms plus the six new ones) to the
+  nominal-or-canonical termination. Threaded via a new `TypeContext<'a>`
+  wrapper (`Copy`, `Deref<Target = WasmModule>`) through this file's
+  ~150 existing internal call sites with zero call-site syntax changes.
+- `wasm-validator::type_check::check_type_subtyping`'s structural checker
+  now dispatches on real `TypeKind` (struct/array bodies checked for
+  real, not against dummy `FuncType`s), with new `field_is_structural_
+  subtype`/`struct_is_structural_subtype`/`array_is_structural_subtype`
+  implementing the real GC-proposal width/covariance/invariance rules,
+  and real canonical data (not an empty table — see finding 4 above).
+  Cross-kind `sub` declarations are rejected outright.
+- `wasm-validator::ValidatedModule` gains a public `canonical_types()`
+  slice accessor (alongside the existing per-index `canonical_type_at`)
+  for `wasm-runtime` to clone from.
+- `wasm-wast-parser::parse_composite_body` allows struct/array bodies
+  inside `sub` (finding 3 above), with the companion supertype/is_final
+  write-through fix.
+- `wasm-execution::WasmExecutionContext`/`WasmExecutionEngine` gain a
+  `canonical_types` field/`set_canonical_types` setter (same "parallel
+  slice, never a whole `WasmModule`" pattern `type_subtyping` already
+  uses), threaded into `call_indirect_type_matches` (with the finding-5
+  fallthrough fix) and `ref_matches_concrete_type`'s funcref path.
+- `wasm-runtime::WasmInstance` gains a `canonical_types` field, cloned
+  once from `ValidatedModule::canonical_types()` at `instantiate()` time
+  and threaded into `wasm-execution` via `build_engine`.
+- New tests at every wired call site: `wasm_types` (3 tests: canonical-
+  equivalence-aware `nominal_subtype_chain` positive/negative/empty-table
+  backward-compat); `wasm-validator` (struct/array `is_assignable` arms,
+  positive+negative, at a real `call` site; struct/array `sub`-declaration
+  structural tests grounded in `type-subtyping.wast`'s own text; two
+  pre-existing tests reshaped — see below); `wasm-wast-parser` (3 tests
+  for the new struct/array-in-`sub` parsing); `wasm-execution`
+  (`wasm34_canonical_call_indirect.rs`, 3 tests, confirmed to actually
+  fail against the pre-fix code, not merely pass vacuously, by temporarily
+  reverting the fix and re-running).
+- **Two pre-existing tests' own premise deliberately overturned, rewritten
+  not deleted** (the same "honest reclassification" pattern this
+  campaign has used before): `wasm-validator::call_argument_rejects_an_
+  unrelated_concrete_func_ref` and `invalid_global_ref_t_initialized_
+  with_ref_func_of_an_unrelated_type_is_rejected` both used two byte-
+  identical, `sub`-less types as their own "unrelated" negative case —
+  exactly the case canonical equivalence now correctly ACCEPTS. Both
+  reshaped to use genuinely different types instead (preserving the real
+  negative-case intent), with a new sibling positive test each proving
+  the overturned case.
+
+**Corpus impact: real, measured, individually investigated — not
+asserted.** `--write-baseline` was re-run and diffed programmatically
+against the pre-slice baseline across all 257 files. Exactly 3 files
+changed (a fourth, `type-canon.wast`, was re-confirmed unchanged, exactly
+as predicted, since it has no assertions to move):
+
+| File | Category | Before | After |
+|---|---|---|---|
+| `type-equivalence.wast` | `module` | 12 pass / 8 fail | 20 pass / 0 fail |
+| `type-equivalence.wast` | `assert_return` | 1 pass / 3 fail | 4 pass / 0 fail |
+| `type-rec.wast` | `module` | 9 pass / 2 fail | 11 pass / 0 fail |
+| `type-rec.wast` | `assert_return` | 0 pass / 1 fail | 1 pass / 0 fail |
+| `type-subtyping.wast` | `module` | 21 pass / 1 fail / 24 NYS | 36 pass / 0 fail / 10 NYS |
+| `type-subtyping.wast` | `register` | 7 pass / 4 NYS | 9 pass / 2 NYS |
+| `type-subtyping.wast` | `assert_return` | 12 pass / 1 fail / 4 NYS | 15 pass / 0 fail / 2 NYS |
+
+Every one of these 34 directive-level changes is an improvement (a fail
+or not-yet-supported becoming a pass); zero regressions (nothing that
+passed before now fails or is newly not-yet-supported). No OTHER file's
+tally changed at all, confirmed by diffing all 257 files' full tallies
+programmatically, exactly matching this document's own "Verification
+plan" prediction.
+
+Every changed tally was individually investigated, not just summed:
+
+- Every `module`/`assert_return`/`register` improvement in `type-
+  equivalence.wast` and `type-rec.wast` traced directly to `is_assignable`'s
+  new canonical-equivalence termination (static validation) and `call_
+  indirect_type_matches`'s new fallthrough (runtime dispatch) — confirmed
+  by building a throwaway per-directive debug harness against `wasm_
+  conformance::run_wast_source` and reading each formerly-failing
+  directive's exact failure reason before and after each fix.
+- `type-subtyping.wast`'s larger jump (24 → 10 `not_yet_supported`
+  modules) is explained by finding 3 above: 14 modules that previously
+  failed to PARSE AT ALL (struct/array bodies inside `sub`) now parse; of
+  those, some pass and some genuinely fail for real, DIFFERENT reasons —
+  which is why `module.fail` also moved (1 → 0) rather than staying flat:
+  the ONE pre-existing genuine fail was itself one of finding 4's own
+  false-rejects, fixed by the canonical-data-in-check_type_subtyping
+  correction, and every one of the newly-unlocked modules that could
+  legitimately validate now does. The REMAINING 10 `not_yet_supported`
+  entries in `type-subtyping.wast` (verified individually, not assumed
+  unchanged) split into two pre-existing, unrelated gaps: non-null
+  ABSTRACT heap types (`(ref any)`/`(ref func)`) as a func result type — a
+  deliberate, pre-existing `wasm-wast-parser` limitation predating W34
+  entirely (documented in that crate's own doc comments, e.g. `ref.wast`'s
+  own tests) — and two cross-module `assert_unlinkable`-adjacent `module`
+  directives whose own linking failure ("incompatible import type"/
+  "unknown import") is slice 4's own scope, not this slice's.
+- `type-subtyping.wast`'s `assert_unlinkable` tally is BYTE-FOR-BYTE
+  UNCHANGED (5 pass / 3 fail, both before and after) — individually
+  re-verified via the same per-directive harness: all 3 remaining fails
+  are the pre-existing `M10`/`M11`-family cross-module topology-mismatch
+  cases the first slice's own addendum already named as present "since
+  the first slice," entirely untouched by this slice's within-module-only
+  wiring, exactly as this document's own "Verification plan" predicted
+  slice 3 would leave them for slice 4.
+
+**Security review**: a dedicated security-review sub-agent was briefed on
+this slice's diff (`git diff origin/main...HEAD`) and asked, per this
+document's own established pattern, about (a) whether wiring canonical
+equivalence into hot validation/dispatch call sites (`is_assignable`,
+`check_type_subtyping`, `call_indirect_type_matches`, `ref_matches_
+concrete_type`) introduces a new per-call-site cost that could be
+quadratic-or-worse across a module with many types/instructions, distinct
+from the second slice's already-fixed construction-time (`CanonicalCost`)
+cost, and (b) whether any new threading of canonical data into `wasm-
+execution`'s context (`WasmExecutionContext::canonical_types`,
+`WasmInstance::canonical_types`, the new `TypeContext` wrapper in
+`wasm-validator`) could be constructed in a way that bypasses
+`ValidatedModule`'s validation guarantee.
+
+**Result: one real HIGH-severity finding, fixed before push** — this
+epic's third consecutive slice with a genuine finding in its own review
+(slice 1: stack-overflow-via-`Drop`; slice 2: a branching-cost DoS; now
+this). Question (a) was the load-bearing one: `canonical_types_equivalent`
+compares two `Rc<CanonicalGroup>`s via derived `PartialEq`, which walks
+the FULL tree by content whenever the two `Rc`s are different allocations
+— true for every pair of independently-declared, canonically-equivalent-
+but-unrelated groups, exactly `is_assignable`'s own new arms' intended
+case. Before this slice, `canonicalize_types`'s output was reachable only
+through `ValidatedModule`'s own public accessors, called at most a
+handful of times; this slice made the SAME comparison reachable from
+`is_assignable`, called per stack-pop, across every instruction in every
+function body. The reviewer built a real reproduction (two ~19-level
+"doubling" `rec` chains, each near `MAX_CANONICAL_TREE_WEIGHT`, referenced
+from two locals a function body repeatedly flows a value between) and
+measured `validate()` taking **over a minute** on a ~130KB crafted module
+— a ~123,000x amplification versus an equal-sized module that never
+triggers the deep comparison, confirmed as a genuinely NEW cost this
+slice introduced, not a pre-existing one merely made visible.
+
+Fixed by interning: `canonicalize_types` now deduplicates content-
+identical groups it produces WITHIN one call into a single shared `Rc`
+allocation, and `canonical_types_equivalent` tries `Rc::ptr_eq` first,
+falling back to full structural `==` only when the two `Rc`s come from
+genuinely different `canonicalize_types` calls (the cross-module case,
+which stays correct but unoptimized — no reachable call site in this
+slice needs it fast yet). This makes the actually-reachable within-module
+case a real O(1) check after the first comparison, matching MVP.md's own
+Note 2 ("canonicalising them bottom-up in linear time upfront...
+constant-time" comparison) precisely rather than only in the doc
+comments' prose. Interning costs at most one extra hash+lookup per
+group — the same order of work construction already pays — so every
+existing `CanonicalCost` cap still bounds the added cost exactly as
+before; nothing about this fix changes canonicalization's own asymptotic
+class, only closes the NEW per-comparison one this slice's wiring opened.
+Verified empirically, not just reasoned about: a scaled-down reproduction
+of the reviewer's own attack shape took 15.4s with the fix's two pieces
+(interning, `Rc::ptr_eq`) temporarily reverted and ~100ms restored — see
+`wasm-types`'s own CHANGELOG for the full account and the new
+`identical_groups_within_one_module_intern_to_the_same_rc_allocation`
+regression test. Full conformance baseline re-confirmed byte-for-byte
+identical before and after this fix, since it changes performance only,
+never behavior.
+
+Question (b) (bypass of `ValidatedModule`'s guarantee) and the remaining
+checklist items (the `array_element_field`/`struct_field` lifetime
+workaround, the new struct/array-in-`sub` parser path, hardcoded secrets,
+`unsafe` blocks, integer overflow) all came back clean: no bypass exists
+in the diff (`WasmExecutionContext.canonical_types` is reachable only
+through `wasm-runtime::instantiate`, which requires an already-`validate`d
+`ValidatedModule`; an embedder COULD call `set_canonical_types` with
+unrelated data directly, exactly the same pre-existing power `set_type_
+subtyping` already had, and the worst consequence traced is a wrong-arity
+call surfacing as an ordinary `VMError`, never memory unsafety); the
+`TypeContext<'a>` wrapper is private with exactly two construction sites,
+both fed the SAME module's own freshly-computed `canonical_types`; the
+`array_element_field`/`struct_field` fix is a real lifetime issue the
+borrow checker would otherwise reject outright, not a masked hazard, and
+there is no `unsafe` anywhere in this slice's diff; the new parser path
+delegates to pre-existing, already-adversarially-exercised `parse_struct_
+body`/`parse_array_body` with no new unbounded recursion or arithmetic.
+
+**Slice 4 plan**: confirmed unchanged in scope (`HostFunction::
+canonical_type()`, `CrossModuleFunction`'s implementation of it,
+`wasm-runtime`'s import-compatibility check replacing its three-part
+conservative guard), with one concrete refinement this slice's own work
+surfaces: slice 4 can lean on `ValidatedModule::canonical_types()` (this
+slice's new public accessor) directly for whichever crate needs to read a
+whole module's canonical-type table during cross-module linking, rather
+than needing to invent a new accessor of its own. The 3 `M10`/`M11`-family
+`assert_unlinkable` fails in `type-subtyping.wast` (confirmed byte-for-
+byte unchanged by this slice, see above) and `type-equivalence.wast`'s
+full "Semantic types (link time)" section remain slice 4's own, still
+entirely open, target — nothing in this slice touched cross-module
+linking at all, and this slice's own conformance re-verification found no
+evidence suggesting otherwise.

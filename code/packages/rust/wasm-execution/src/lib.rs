@@ -61,7 +61,7 @@ use virtual_machine::{
 };
 use wasm_leb128::{decode_signed, decode_unsigned, decode_unsigned_bounded};
 use wasm_opcodes::get_opcode;
-use wasm_types::{FuncType, FunctionBody, GlobalType, TypeSubtyping, ValueType};
+use wasm_types::{CanonicalGroup, FuncType, FunctionBody, GlobalType, TypeSubtyping, ValueType};
 
 // ══════════════════════════════════════════════════════════════════════════════
 // Section 1: WasmValue — Typed WASM values
@@ -3577,6 +3577,23 @@ pub struct WasmExecutionContext {
     /// fallback, rather than an empty-means-"no nominal relation exists"
     /// reading, is the SAFE default for every pre-GC module.
     pub type_subtyping: Vec<TypeSubtyping>,
+    /// Per-`types`-entry canonicalized type-group form (W34 third slice,
+    /// `code/specs/W34-wasm-gc-canonical-type-equivalence.md`) — one
+    /// `Option<(Rc<CanonicalGroup>, u32)>` per flat type-section index,
+    /// exactly [`wasm_types::canonicalize_types`]'s own output shape (or
+    /// `ValidatedModule::canonical_types`'s, which `wasm-runtime` clones
+    /// from). Empty unless the embedder set it (or the module never uses
+    /// `sub`/`rec`, or every one of its types canonicalizes to `None`),
+    /// same "empty means fall back to the pre-W34 rule" contract as
+    /// `type_subtyping` above — [`nominal_subtype_chain`](wasm_types::nominal_subtype_chain)'s
+    /// own doc comment guarantees an empty slice here is behaviorally
+    /// identical to never having wired canonical equivalence in at all,
+    /// never a new false accept. Set with [`WasmExecutionEngine::
+    /// set_canonical_types`], threaded the SAME "parallel slice, not a
+    /// whole `WasmModule`" way `type_subtyping` already is (this struct
+    /// deliberately never holds a full `WasmModule` -- see this struct's
+    /// own module-level doc comment).
+    pub canonical_types: Vec<Option<(Rc<CanonicalGroup>, u32)>>,
     /// Each FUNCTION's own declared type-SECTION index (parallel to
     /// `func_types`, which holds the resolved `FuncType` shape instead) —
     /// see [`WasmExecutionEngine::set_func_type_indices`]'s doc comment.
@@ -4475,7 +4492,7 @@ fn ref_matches_concrete_type(ctx: &WasmExecutionContext, type_idx: u32, payload:
     }
     if (type_idx as usize) < ctx.types.len() {
         match ctx.func_type_indices.get(payload as usize) {
-            Some(&actual_type_idx) => wasm_types::nominal_subtype_chain(&ctx.type_subtyping, actual_type_idx, type_idx),
+            Some(&actual_type_idx) => wasm_types::nominal_subtype_chain(&ctx.type_subtyping, &ctx.canonical_types, actual_type_idx, type_idx),
             None => false,
         }
     } else {
@@ -11231,10 +11248,8 @@ fn register_control(vm: &mut GenericVM) {
     /// Whether calling through declared type `type_idx` against a callee
     /// whose OWN declared type index is `actual_type_idx` (with resolved
     /// shape `actual`) is a real match, per `call_indirect`/`return_call_
-    /// indirect`'s dynamic dispatch check (W33 second slice, item 4).
-    ///
-    /// Two DIFFERENT rules apply depending on whether this module uses
-    /// the GC proposal's `sub`/`rec` nominal typing at all:
+    /// indirect`'s dynamic dispatch check (W33 second slice, item 4; W34
+    /// third slice adds real canonical equivalence, see below).
     ///
     /// - **No `sub`/`rec` anywhere** (`!wasm_types::any_declares_subtyping
     ///   (&ctx.type_subtyping)` — NOT the same thing as `ctx.type_subtyping.
@@ -11242,43 +11257,55 @@ fn register_control(vm: &mut GenericVM) {
     ///   default()` placeholder for EVERY type it declares, `sub`-declared or
     ///   not, so the vector is fully populated for nearly every real module;
     ///   `any_declares_subtyping` checks whether any entry is non-default,
-    ///   the real signal — true for every pre-GC module and the overwhelming
-    ///   majority of the conformance corpus): this engine's original, pre-W33 rule —
-    ///   plain structural equality of `params`/`results`. Pre-GC WASM has
-    ///   no nominal type identity at all; two separately-declared type-
-    ///   section entries with identical shape ARE the same type. Keeping
-    ///   this path byte-for-byte the same as before this slice is a
-    ///   deliberate choice, not an oversight: it's the only way to
-    ///   guarantee zero risk of regressing any of the other 256 vendored
-    ///   corpus files that never touch `sub`.
+    ///   the real signal): plain structural equality of `params`/`results`
+    ///   is tried FIRST as a fast, always-safe accept (this engine's
+    ///   original, pre-W33 rule — pre-GC WASM has no nominal type identity
+    ///   at all, so two separately-declared type-section entries with
+    ///   identical shape ARE the same type). **W34 third slice**: if THAT
+    ///   fails, this branch now ALSO falls through to the nominal-or-
+    ///   canonical chain check below, rather than stopping there — a real,
+    ///   previously-open gap this slice's own corpus re-verification found:
+    ///   `type-equivalence.wast`'s "Indirect types"/"Recursive types"
+    ///   "Semantic types (run time)" modules declare NO `sub` anywhere, yet
+    ///   reference OTHER separately-declared, canonically-(but not
+    ///   raw-index-)identical types inside their own signatures (e.g. two
+    ///   params `(ref $s1)`/`(ref $s2)` where `$s1`/`$s2` are byte-identical
+    ///   singleton types at different indices) — plain `FuncType` equality
+    ///   compares those inner `ConcreteFuncRef` indices RAW, so it correctly
+    ///   fails, but the call is still legal under real canonical
+    ///   equivalence. Falling through here is SAFE precisely because this
+    ///   branch is only reached when `any_declares_subtyping` is false —
+    ///   there is no nominal `sub` chain anywhere in this module for
+    ///   canonical equivalence to wrongly short-circuit past (see the next
+    ///   branch for the case where that risk IS real).
     /// - **This module uses `sub`/`rec` somewhere**: type identity is
-    ///   NOMINAL, per the real GC proposal — `type-subtyping.wast` lines
-    ///   373-401 is the corpus proof: `$t1`/`$t2`/`$t3` are three
-    ///   DISTINCT types related only by a `sub` chain, all with the
-    ///   IDENTICAL structural shape `(func)`. Structural equality alone
-    ///   would (wrongly) accept every cross-type call among them; the
-    ///   real rule is reflexive index equality OR a genuine declared
-    ///   subtype relationship (`actual_type_idx <: type_idx`), nothing
-    ///   else — `nominal_subtype_chain` (shared with `wasm-validator`'s
-    ///   static `is_assignable` check and originally security-reviewed
-    ///   there for cycle-safety, W33 first slice) does exactly this walk.
+    ///   NOMINAL (modulo canonical equivalence), per the real GC proposal —
+    ///   `type-subtyping.wast` lines 373-401 is the corpus proof: `$t1`/
+    ///   `$t2`/`$t3` are three DISTINCT types related only by a `sub`
+    ///   chain, all with the IDENTICAL structural shape `(func)`.
+    ///   Structural equality alone would (wrongly) accept every cross-type
+    ///   call among them, so this branch skips it entirely and goes
+    ///   straight to the chain check — `nominal_subtype_chain` (shared with
+    ///   `wasm-validator`'s static `is_assignable` check, W33 first slice
+    ///   for the nominal half, W34 third slice for the canonical half) does
+    ///   the real walk: reflexive index equality, OR canonical equivalence
+    ///   at any hop, OR a genuine declared subtype relationship
+    ///   (`actual_type_idx <: type_idx`).
     ///
     /// `func_type_indices` not covering `func_index` (an embedder that
     /// set `type_subtyping` without also setting `func_type_indices` —
     /// `wasm-runtime` always sets both together, so this is an
     /// inconsistent hand-built setup, not a real caller) fails closed
-    /// (`false`) rather than silently falling back to the structural
-    /// check, which would be WRONG once this module is known to use
-    /// `sub`.
+    /// (`false`) in both branches.
     fn call_indirect_type_matches(ctx: &WasmExecutionContext, type_idx: usize, func_index: usize, actual: &FuncType) -> bool {
         let Some(expected) = ctx.types.get(type_idx) else {
             return true; // no type info at all: permissive, matches pre-W33 behavior.
         };
-        if !wasm_types::any_declares_subtyping(&ctx.type_subtyping) {
-            return expected.params == actual.params && expected.results == actual.results;
+        if !wasm_types::any_declares_subtyping(&ctx.type_subtyping) && expected.params == actual.params && expected.results == actual.results {
+            return true;
         }
         match ctx.func_type_indices.get(func_index) {
-            Some(&actual_type_idx) => wasm_types::nominal_subtype_chain(&ctx.type_subtyping, actual_type_idx, type_idx as u32),
+            Some(&actual_type_idx) => wasm_types::nominal_subtype_chain(&ctx.type_subtyping, &ctx.canonical_types, actual_type_idx, type_idx as u32),
             None => false,
         }
     }
@@ -11899,6 +11926,10 @@ pub struct WasmExecutionEngine {
     /// (W33 second slice) — see [`Self::set_type_subtyping`]'s doc
     /// comment. Empty by default.
     type_subtyping: Vec<TypeSubtyping>,
+    /// Per-`type_section`-entry canonicalized type-group form (W34 third
+    /// slice) — see [`Self::set_canonical_types`]'s doc comment. Empty by
+    /// default.
+    canonical_types: Vec<Option<(Rc<CanonicalGroup>, u32)>>,
     /// Each FUNCTION's own declared type-section index, parallel to
     /// `func_types` — see [`Self::set_func_type_indices`]'s doc comment.
     /// Empty by default.
@@ -11985,6 +12016,7 @@ impl WasmExecutionEngine {
             array_element_storage: Vec::new(),
             type_section: Vec::new(),
             type_subtyping: Vec::new(),
+            canonical_types: Vec::new(),
             func_type_indices: Vec::new(),
             tags: Vec::new(),
             tag_identities: Vec::new(),
@@ -12060,6 +12092,25 @@ impl WasmExecutionEngine {
     /// chaining.
     pub fn set_type_subtyping(&mut self, type_subtyping: Vec<TypeSubtyping>) -> &mut Self {
         self.type_subtyping = type_subtyping;
+        self
+    }
+
+    /// Register the module's per-type-section-entry canonicalized
+    /// type-group forms (W34 third slice: `code/specs/
+    /// W34-wasm-gc-canonical-type-equivalence.md`) — same optional-setter
+    /// pattern, and same index space, as [`Self::set_type_subtyping`]
+    /// (`canonical_types[N]` describes `type_section[N]`, exactly
+    /// `wasm_types::canonicalize_types`'s own output shape, or
+    /// `wasm_validator::ValidatedModule::canonical_types`'s, which
+    /// `wasm-runtime` clones from at instantiation time). Left unset
+    /// (empty), `call_indirect_type_matches`/`ref_matches_concrete_type`
+    /// fall back to nominal-only dispatch (their pre-W34 behavior) --
+    /// `nominal_subtype_chain`'s own doc comment guarantees an empty slice
+    /// here changes nothing for a module that predates this slice, or
+    /// that never declares a `sub`/`rec` shape canonical equivalence
+    /// alone could bridge. Returns `&mut self` for chaining.
+    pub fn set_canonical_types(&mut self, canonical_types: Vec<Option<(Rc<CanonicalGroup>, u32)>>) -> &mut Self {
+        self.canonical_types = canonical_types;
         self
     }
 
@@ -12308,6 +12359,7 @@ impl WasmExecutionEngine {
             func_types: self.func_types.clone(),
             types: self.type_section.clone(),
             type_subtyping: self.type_subtyping.clone(),
+            canonical_types: self.canonical_types.clone(),
             func_type_indices: self.func_type_indices.clone(),
             func_bodies: self.func_bodies.clone(),
             host_functions,
