@@ -9876,7 +9876,7 @@ expected skips. GitHub merged validated head
 manual merge command. The state therefore advances the F# owner from
 `pr-open` to `merged` and clears the sole active parity PR.
 
-The collision-checked schema-3 inventory at exact current `origin/main`
+The collision-checked schema-3 inventory at selection-time `origin/main`
 `ee5068fe7b8161fa549a0d9891372706baa80c40` remains unchanged at 15 established
 lanes, 1,388 implementation identities, 4,602 package slots, and 1,427
 all-reported identities. The four completion bands remain 175/265, 123/934,
@@ -12593,6 +12593,13 @@ fragment-edge continuation, decoration geometry, descendant shifts, border
 metadata, and hit testing. The layout owners exclude HTML/CSS parsing, DOM and
 window authority, text-measurement and paint hosts, native toolkits, and device
 capture. No eligible identity remains unowned.
+
+Immediately before publication, `origin/main` advanced by six unrelated human-
+language and Forme commits to
+`480fef07809cccf4f25173f115907426b88afc37`. The implementation rebased cleanly
+with no overlapping paths. A fresh collision-checked inventory retained the
+exact counts above, zero canonical collisions, zero unknown buckets, and no new
+unowned identity.
 
 Both prerequisites of
 `build-tool-swift-repository-source-input-boundary-adoption` are now merged.
