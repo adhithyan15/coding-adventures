@@ -23,6 +23,7 @@ export { createWatchSession } from "./watch.js";
 export { buildDag } from "./dag.js";
 export { areKindsCompatible } from "./typecheck.js";
 export { REPRO_BUILD_FROZEN_TIMESTAMP_MS } from "./scheduler.js";
+export { revisionLedgerKey } from "./revision-ledger.js";
 
 export type {
   Orchestrator,
@@ -36,5 +37,10 @@ export type {
   WatchOptions,
   WatchSession,
 } from "./types.js";
+
+export type {
+  InstanceRevisionState,
+  PipelineRevisionLedger,
+} from "./revision-ledger.js";
 
 export type { PipelineDag, ResolvedInstance } from "./dag.js";
