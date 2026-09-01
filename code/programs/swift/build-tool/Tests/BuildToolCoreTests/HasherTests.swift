@@ -104,6 +104,56 @@ struct HasherTests {
         let expected: Expected
     }
 
+    private struct RepositorySourceCollectionFixture: Decodable {
+        struct Input: Decodable {
+            struct Options: Decodable {
+                struct Candidate: Decodable {
+                    let path: String
+                    let kind: String
+                    let tracked: Bool
+                    let contentHex: String?
+
+                    enum CodingKeys: String, CodingKey {
+                        case path
+                        case kind
+                        case tracked
+                        case contentHex = "content_hex"
+                    }
+                }
+
+                let language: String
+                let packageRoot: String
+                let boundarySHA256: String
+                let candidates: [Candidate]
+
+                enum CodingKeys: String, CodingKey {
+                    case language
+                    case packageRoot = "package_root"
+                    case boundarySHA256 = "boundary_sha256"
+                    case candidates
+                }
+            }
+
+            let options: Options
+        }
+
+        struct Expected: Decodable {
+            struct Result: Decodable {
+                struct File: Decodable, Equatable {
+                    let path: String
+                    let digest: String
+                }
+
+                let files: [File]
+            }
+
+            let result: Result
+        }
+
+        let input: Input
+        let expected: Expected
+    }
+
     private func fixtureURL(_ name: String) -> URL {
         URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()
@@ -119,6 +169,14 @@ struct HasherTests {
             .deletingLastPathComponent()
             .deletingLastPathComponent()
             .appendingPathComponent("language-source-input-registry.json")
+            .standardizedFileURL
+    }
+
+    private func repositoryBoundaryURL() -> URL {
+        fixtureURL("unused")
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("repository-source-input-boundary.json")
             .standardizedFileURL
     }
 
@@ -236,6 +294,223 @@ struct HasherTests {
         #expect(
             try Hasher.canonicalLanguageSourceInputRegistryDigest(from: checkedData)
                 == Hasher.languageSourceInputRegistryDigest
+        )
+    }
+
+    @Test
+    func productionRepositoryBoundaryExactlyEqualsCheckedNeutralRegistry() throws {
+        let checkedData = try Data(contentsOf: repositoryBoundaryURL())
+        let checked = try JSONDecoder().decode(
+            RepositorySourceInputBoundaryRegistry.self,
+            from: checkedData
+        )
+        let checkedObject = try #require(
+            JSONSerialization.jsonObject(with: checkedData) as? NSDictionary
+        )
+        let productionObject = try #require(
+            JSONSerialization.jsonObject(
+                with: JSONEncoder().encode(Hasher.repositorySourceInputBoundaryRegistry)
+            ) as? NSDictionary
+        )
+
+        #expect(checkedObject.isEqual(productionObject))
+        #expect(checked.boundaries.count == 18)
+        #expect(checked.boundaries.flatMap(\.inputs).count == 21)
+        #expect(Set(checked.boundaries.flatMap(\.inputs).map(\.path)).count == 19)
+        #expect(
+            Hasher.repositorySourceInputBoundaryDigest
+                == "963cc4090e165752fd3a62921b699dfff8f0677b49d7236812398a8abed0a25f"
+        )
+        #expect(
+            try Hasher.canonicalRepositorySourceInputBoundaryDigest(from: checkedData)
+                == Hasher.repositorySourceInputBoundaryDigest
+        )
+        #expect(
+            checked.languageSourceInputRegistrySHA256
+                == Hasher.languageSourceInputRegistryDigest
+        )
+    }
+
+    @Test(arguments: [
+        "source-collection-repository-cross-language-workspace.json",
+        "source-collection-repository-direct-build-inputs.json",
+        "source-collection-repository-link-boundaries.json",
+        "source-collection-repository-python-workspace.json",
+        "source-collection-repository-rust-boundary.json",
+        "source-collection-repository-starlark-load.json",
+        "source-collection-repository-typescript-program-shared.json",
+        "source-collection-repository-typescript-shared.json",
+        "source-collection-repository-visicalc-deno-cross-package.json",
+    ])
+    func consumesNeutralRepositoryBoundaryFixture(_ name: String) throws {
+        let fixture = try JSONDecoder().decode(
+            RepositorySourceCollectionFixture.self,
+            from: Data(contentsOf: fixtureURL(name))
+        )
+        let options = fixture.input.options
+        let actual = try Hasher.selectRepositoryBoundaryCandidates(
+            language: options.language,
+            packageRoot: options.packageRoot,
+            boundaryDigest: options.boundarySHA256,
+            candidates: try options.candidates.map {
+                RepositoryBoundaryCandidate(
+                    path: $0.path,
+                    kind: $0.kind,
+                    tracked: $0.tracked,
+                    content: try decodeHex($0.contentHex ?? "")
+                )
+            }
+        )
+
+        #expect(
+            actual.map { RepositorySourceCollectionFixture.Expected.Result.File(
+                path: $0.path,
+                digest: $0.digest
+            ) } == fixture.expected.result.files
+        )
+    }
+
+    @Test
+    func rustWorkspaceBoundaryHasExactlyNineSwiftConsumers() {
+        let consumers = Set(
+            Hasher.repositorySourceInputBoundaryRegistry.boundaries
+                .filter { $0.inputs.contains { $0.path == "code/packages/rust/Cargo.toml" } }
+                .flatMap(\.appliesTo.exactRoots)
+                .filter { $0.hasPrefix("code/packages/swift/") || $0.hasPrefix("code/programs/swift/") }
+        )
+
+        #expect(consumers == Set([
+            "code/packages/swift/Barcode1D",
+            "code/packages/swift/IrcServerNative",
+            "code/packages/swift/PaintCodecPNGNative",
+            "code/packages/swift/PaintVmDirect2DNative",
+            "code/packages/swift/PaintVmMetalNative",
+            "code/packages/swift/conduit",
+            "code/packages/swift/md5-native",
+            "code/packages/swift/sha256-native",
+            "code/programs/swift/conduit-hello",
+        ]))
+    }
+
+    @Test
+    func boundaryOnlyDiffSelectsEveryExactSwiftConsumer() {
+        let root = "/repo"
+        let roots = [
+            "code/packages/swift/Barcode1D",
+            "code/packages/swift/IrcServerNative",
+            "code/packages/swift/PaintCodecPNGNative",
+            "code/packages/swift/PaintVmDirect2DNative",
+            "code/packages/swift/PaintVmMetalNative",
+            "code/packages/swift/conduit",
+            "code/packages/swift/md5-native",
+            "code/packages/swift/sha256-native",
+            "code/programs/swift/conduit-hello",
+        ]
+        let packages = roots.map { relativeRoot in
+            BuildPackage(
+                name: "swift/\((relativeRoot as NSString).lastPathComponent)",
+                path: "\(root)/\(relativeRoot)",
+                language: "swift"
+            )
+        }
+        let packagePaths = Dictionary(
+            uniqueKeysWithValues: packages.map { ($0.name, $0.path) }
+        )
+
+        let selected = GitDiff.mapFilesToPackages(
+            changedFiles: ["code/packages/rust/Cargo.toml"],
+            packagePaths: packagePaths,
+            repoRoot: root,
+            packages: packages
+        )
+        #expect(selected == Set(packages.map(\.name)))
+
+        let nearPath = GitDiff.mapFilesToPackages(
+            changedFiles: ["code/packages/rust/Cargo.toml.copy"],
+            packagePaths: packagePaths,
+            repoRoot: root,
+            packages: packages
+        )
+        #expect(nearPath.isEmpty)
+    }
+
+    @Test
+    func packageHashIncludesOnlyTrackedExactRepositoryBoundaryInputs() throws {
+        let root = try makeTempDirectory(label: "hasher_repository_boundary")
+        defer { try? FileManager.default.removeItem(atPath: root) }
+        let packageRoot = (root as NSString).appendingPathComponent(
+            "code/packages/swift/Barcode1D"
+        )
+        let cargoManifest = (root as NSString).appendingPathComponent(
+            "code/packages/rust/Cargo.toml"
+        )
+        try writeFile(
+            (packageRoot as NSString).appendingPathComponent("Sources/Main.swift"),
+            "let value = 1\n"
+        )
+        try writeFile(cargoManifest, "[workspace]\n")
+        let package = BuildPackage(
+            name: "swift/Barcode1D",
+            path: packageRoot,
+            language: "swift"
+        )
+
+        #expect(throws: (any Error).self) {
+            _ = try Hasher.hashPackage(package, repositoryRoot: root)
+        }
+
+        let first = try Hasher.hashPackage(
+            package,
+            repositoryRoot: root,
+            trackedRepositoryPaths: ["code/packages/rust/Cargo.toml"]
+        )
+        try writeFile(cargoManifest, "[workspace]\nmembers = []\n")
+        let second = try Hasher.hashPackage(
+            package,
+            repositoryRoot: root,
+            trackedRepositoryPaths: ["code/packages/rust/Cargo.toml"]
+        )
+        #expect(first != second)
+
+        let untracked = try Hasher.hashPackage(
+            package,
+            repositoryRoot: root,
+            trackedRepositoryPaths: []
+        )
+        try writeFile(cargoManifest, "[workspace]\nresolver = \"2\"\n")
+        #expect(
+            try Hasher.hashPackage(
+                package,
+                repositoryRoot: root,
+                trackedRepositoryPaths: []
+            ) == untracked
+        )
+    }
+
+    @Test
+    func trackedRepositoryEvidenceUsesOnlyStageZeroRegularFiles() throws {
+        let root = try makeTempDirectory(label: "tracked_repository_evidence")
+        defer { try? FileManager.default.removeItem(atPath: root) }
+        let manifest = "code/packages/rust/Cargo.toml"
+        let config = "code/packages/rust/.cargo/config.toml"
+        try runGitCommand(["init", "--quiet"], in: root)
+        try writeFile((root as NSString).appendingPathComponent(manifest), "[workspace]\n")
+        try writeFile((root as NSString).appendingPathComponent(config), "[build]\n")
+        try runGitCommand(["add", "--", manifest], in: root)
+
+        #expect(
+            try GitDiff.getTrackedRegularFiles(
+                repoRoot: root,
+                exactPaths: [config, manifest]
+            ) == [manifest]
+        )
+
+        try runGitCommand(["add", "--", config], in: root)
+        #expect(
+            try GitDiff.getTrackedRegularFiles(
+                repoRoot: root,
+                exactPaths: [config, manifest]
+            ) == Set([config, manifest])
         )
     }
 

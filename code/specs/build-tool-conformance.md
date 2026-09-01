@@ -821,7 +821,7 @@ inputs per boundary, 8,192 aggregate consumer scopes, and 32,768 aggregate
 input-to-scope authorizations.
 
 The reviewed v1 projection has 18 boundaries, 21 input registrations, 19
-unique tracked paths, 482 consumer scopes, and 485 authorizations. It covers
+unique tracked paths, 483 consumer scopes, and 486 authorizations. It covers
 only real consumers of the Haskell Cabal project, Lua lint config, Python uv
 workspace manifest, Rust workspace manifest, Cargo target config, and Windows
 launcher; exact cross-language Rust-workspace consumers; all direct TypeScript
@@ -846,6 +846,18 @@ registry and digest are identity, not filesystem, Git, execution, credential,
 or host authority. Native engine-adoption children still own no-follow file
 opening, repository-root handle retention, regular-file and tracked-state
 proof, race defense, bounded reads, and redacted failures.
+
+The Swift v1 adopter embeds a typed projection equal to the complete checked
+boundary registry and verifies its pinned language-registry and boundary
+digests. One bounded stage-zero Git-index snapshot proves that each applicable
+input is tracked with regular mode `100644` or `100755`; a second identical
+snapshot after batch hashing rejects index mutation. Package-local and exact
+repository-boundary inputs are deduplicated and raw-UTF-8 sorted by canonical
+repository path before the existing length-framed path/content hash. The same
+projection supplies an exact boundary-input reverse index for Git diffs, so a
+boundary-only modification, deletion, or rename selects every registered
+consumer before ordinary dependent and prerequisite closure. Swift never
+widens traversal into a generated directory to reach an exception.
 
 ### 6. Starlark
 

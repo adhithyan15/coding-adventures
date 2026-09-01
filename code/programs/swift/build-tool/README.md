@@ -146,10 +146,25 @@ name, oversized inputs, and selector widening fail closed. Immediate directory
 entries are enumerated incrementally into the candidate ceiling before bounded
 sorting, so a single large directory cannot bypass the package-wide limit.
 
-Package collection deliberately remains below the package root. The separate
-repository-relative boundary registry, tracked-file proof, and reverse diff
-index have their own parity owner; they are not approximated by traversing
-ancestors or unpruning generated directories here.
+Package-tree traversal deliberately remains below the package root. A second
+generated, source-embedded projection consumes the complete checked repository-
+relative boundary registry: 18 reviewed boundaries, 21 registrations, and 19
+exact tracked paths. The engine verifies both pinned registry digests, maps only
+exact or strict-descendant consumers with exact exclusions, and reaches a
+generated-pruning exception by its registered path without unpruning or walking
+the surrounding directory.
+
+Before one batch of package hashes, Git supplies a bounded NUL-delimited stage-
+zero snapshot for only the applicable registered paths. Only modes `100644` and
+`100755` become tracked evidence; a second identical snapshot after hashing
+rejects index mutation. Applicable tracked boundary inputs and package-local
+inputs are deduplicated and UTF-8 sorted by their complete repository-relative
+paths before the same framed hash. The projection also provides an exact reverse
+index to diff selection, so modifying, deleting, or renaming a boundary input
+selects every registered consumer before dependent and prerequisite closure.
+Near paths, case variants, untracked files, symlinks, reparses, submodules,
+conflict stages, ambient ancestors, credentials, secrets, and directory-wide
+authority remain excluded.
 
 Package hashing sorts portable repository-relative paths by UTF-8 bytes and
 feeds this byte stream to the repository-local pure Swift SHA-256 package for
@@ -215,4 +230,8 @@ front with controlled success, failure, and absent-toolchain fixtures.
 cd code/programs/swift/build-tool
 swift test
 swift run build-tool --help
+
+# Regenerate checked source-input projections after changing their fixtures
+pwsh tools/generate-language-source-input-registry.ps1
+pwsh tools/generate-repository-source-input-boundary.ps1
 ```
