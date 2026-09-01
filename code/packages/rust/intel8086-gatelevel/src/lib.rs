@@ -21,7 +21,7 @@
 //! alu.rs       — AluResult8086: all ALU operations through gate primitives
 //!                add/sub/and/or/xor/inc/dec/neg/not, shifts, rotates, BCD, MUL/DIV
 //! registers.rs — RegisterFile8086: all 14 registers + FLAGS + physical_address()
-//! cpu.rs       — Cpu8086: full fetch-decode-execute loop, ~120 opcodes
+//! cpu.rs       — Cpu8086: complete specified fetch-decode-execute surface
 //! ```
 //!
 //! ## Design constraints
@@ -29,10 +29,10 @@
 //! | Area              | Constraint |
 //! |-------------------|-----------|
 //! | Data path         | Every +/–/AND/OR/XOR goes through `full_adder` / gate functions |
-//! | MUL/DIV           | Host arithmetic — gate-level ×16 multiplier is out of scope |
+//! | MUL/DIV           | Fixed partial-product multiply and restoring divide networks |
 //! | Segment × 16      | Bit rewiring — not computed |
 //! | Address bus       | 20-bit via `add_20bit()` ripple-carry chain |
-//! | Memory            | 1 MB flat `Box<[u8; 1_048_576]>` |
+//! | Memory            | 1 MiB stored in 8,388,608 D flip-flops |
 //!
 //! ## Example
 //!
@@ -56,5 +56,7 @@ pub mod alu;
 pub mod bits;
 pub mod cpu;
 pub mod registers;
+mod state;
 
-pub use cpu::{Cpu8086, CpuState};
+pub use cpu::{Cpu8086, CpuState, FLIP_FLOP_COUNT};
+pub use intel8086_simulator::{ExecutionResult, Intel8086Error, Intel8086State, StepTrace};

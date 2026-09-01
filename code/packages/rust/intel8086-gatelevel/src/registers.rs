@@ -46,9 +46,9 @@
 //! Segment:   0=ES 1=CS 2=SS 3=DS
 //! ```
 
+use crate::state::StateRegister;
 use arithmetic::adders::full_adder;
 use logic_gates::gates::{and_gate, or_gate};
-
 
 // ─── Register file struct ─────────────────────────────────────────────────────
 
@@ -94,20 +94,75 @@ pub struct RegisterFile8086 {
     pub flag_if: u8, // interrupt enable
     pub flag_df: u8, // direction
     pub flag_of: u8, // overflow
+    register_state: [StateRegister; 13],
+    flag_state: [StateRegister; 9],
 }
 
 impl RegisterFile8086 {
     /// Create a new register file with all registers initialised to 0.
     pub fn new() -> Self {
-        RegisterFile8086 {
-            ax: 0, bx: 0, cx: 0, dx: 0,
-            si: 0, di: 0, sp: 0, bp: 0,
-            cs: 0, ds: 0, ss: 0, es: 0,
+        let mut registers = RegisterFile8086 {
+            ax: 0,
+            bx: 0,
+            cx: 0,
+            dx: 0,
+            si: 0,
+            di: 0,
+            sp: 0,
+            bp: 0,
+            cs: 0,
+            ds: 0,
+            ss: 0,
+            es: 0,
             ip: 0,
-            flag_cf: 0, flag_pf: 0, flag_af: 0, flag_zf: 0,
-            flag_sf: 0, flag_tf: 0, flag_if: 0, flag_df: 0,
+            flag_cf: 0,
+            flag_pf: 0,
+            flag_af: 0,
+            flag_zf: 0,
+            flag_sf: 0,
+            flag_tf: 0,
+            flag_if: 0,
+            flag_df: 0,
             flag_of: 0,
+            register_state: std::array::from_fn(|_| StateRegister::new(16)),
+            flag_state: std::array::from_fn(|_| StateRegister::new(1)),
+        };
+        registers.clock_wires_into_state();
+        registers
+    }
+
+    /// Clock the public register/flag input wires into their D flip-flops.
+    pub(crate) fn clock_wires_into_state(&mut self) {
+        let values = [
+            self.ax, self.bx, self.cx, self.dx, self.si, self.di, self.sp, self.bp, self.cs,
+            self.ds, self.ss, self.es, self.ip,
+        ];
+        for (state, value) in self.register_state.iter_mut().zip(values) {
+            state.write(value);
         }
+        let flags = [
+            self.flag_cf,
+            self.flag_pf,
+            self.flag_af,
+            self.flag_zf,
+            self.flag_sf,
+            self.flag_tf,
+            self.flag_if,
+            self.flag_df,
+            self.flag_of,
+        ];
+        for (state, value) in self.flag_state.iter_mut().zip(flags) {
+            state.write(u16::from(value));
+        }
+    }
+
+    /// Read all latched register and flag values for topology tests.
+    #[cfg(test)]
+    pub(crate) fn latched_values(&self) -> ([u16; 13], [u8; 9]) {
+        (
+            std::array::from_fn(|index| self.register_state[index].read()),
+            std::array::from_fn(|index| self.flag_state[index].read() as u8),
+        )
     }
 
     // ── ModRM 16-bit register read/write ──────────────────────────────────────
@@ -118,18 +173,28 @@ impl RegisterFile8086 {
     /// Read a 16-bit general or index register by ModRM code (0–7).
     pub fn read16(&self, code: u8) -> u16 {
         match code & 7 {
-            0 => self.ax, 1 => self.cx, 2 => self.dx, 3 => self.bx,
-            4 => self.sp, 5 => self.bp, 6 => self.si, _ => self.di,
+            0 => self.ax,
+            1 => self.cx,
+            2 => self.dx,
+            3 => self.bx,
+            4 => self.sp,
+            5 => self.bp,
+            6 => self.si,
+            _ => self.di,
         }
     }
 
     /// Write a 16-bit general or index register by ModRM code (0–7).
     pub fn write16(&mut self, code: u8, value: u16) {
         match code & 7 {
-            0 => self.ax = value, 1 => self.cx = value,
-            2 => self.dx = value, 3 => self.bx = value,
-            4 => self.sp = value, 5 => self.bp = value,
-            6 => self.si = value, _ => self.di = value,
+            0 => self.ax = value,
+            1 => self.cx = value,
+            2 => self.dx = value,
+            3 => self.bx = value,
+            4 => self.sp = value,
+            5 => self.bp = value,
+            6 => self.si = value,
+            _ => self.di = value,
         }
     }
 
@@ -203,15 +268,20 @@ impl RegisterFile8086 {
     /// Read a segment register by ModRM segment field (0–3).
     pub fn read_seg(&self, code: u8) -> u16 {
         match code & 3 {
-            0 => self.es, 1 => self.cs, 2 => self.ss, _ => self.ds,
+            0 => self.es,
+            1 => self.cs,
+            2 => self.ss,
+            _ => self.ds,
         }
     }
 
     /// Write a segment register by ModRM segment field (0–3).
     pub fn write_seg(&mut self, code: u8, value: u16) {
         match code & 3 {
-            0 => self.es = value, 1 => self.cs = value,
-            2 => self.ss = value, _ => self.ds = value,
+            0 => self.es = value,
+            1 => self.cs = value,
+            2 => self.ss = value,
+            _ => self.ds = value,
         }
     }
 
@@ -293,41 +363,75 @@ impl RegisterFile8086 {
     // ── Named-register helpers (convenience, not ModRM) ───────────────────────
 
     /// Read AL (AX low byte).
-    pub fn al(&self) -> u8 { self.read8_low(0) }
+    pub fn al(&self) -> u8 {
+        self.read8_low(0)
+    }
     /// Write AL.
-    pub fn set_al(&mut self, v: u8) { self.write8_low(0, v); }
+    pub fn set_al(&mut self, v: u8) {
+        self.write8_low(0, v);
+    }
     /// Read AH (AX high byte).
-    pub fn ah(&self) -> u8 { self.read8_high(0) }
+    pub fn ah(&self) -> u8 {
+        self.read8_high(0)
+    }
     /// Write AH.
-    pub fn set_ah(&mut self, v: u8) { self.write8_high(0, v); }
+    pub fn set_ah(&mut self, v: u8) {
+        self.write8_high(0, v);
+    }
     /// Read BL.
-    pub fn bl(&self) -> u8 { self.read8_low(3) }
+    pub fn bl(&self) -> u8 {
+        self.read8_low(3)
+    }
     /// Write BL.
-    pub fn set_bl(&mut self, v: u8) { self.write8_low(3, v); }
+    pub fn set_bl(&mut self, v: u8) {
+        self.write8_low(3, v);
+    }
     /// Read BH.
-    pub fn bh(&self) -> u8 { self.read8_high(3) }
+    pub fn bh(&self) -> u8 {
+        self.read8_high(3)
+    }
     /// Write BH.
-    pub fn set_bh(&mut self, v: u8) { self.write8_high(3, v); }
+    pub fn set_bh(&mut self, v: u8) {
+        self.write8_high(3, v);
+    }
     /// Read CL.
-    pub fn cl(&self) -> u8 { self.read8_low(1) }
+    pub fn cl(&self) -> u8 {
+        self.read8_low(1)
+    }
     /// Write CL.
-    pub fn set_cl(&mut self, v: u8) { self.write8_low(1, v); }
+    pub fn set_cl(&mut self, v: u8) {
+        self.write8_low(1, v);
+    }
     /// Read CH.
-    pub fn ch(&self) -> u8 { self.read8_high(1) }
+    pub fn ch(&self) -> u8 {
+        self.read8_high(1)
+    }
     /// Write CH.
-    pub fn set_ch(&mut self, v: u8) { self.write8_high(1, v); }
+    pub fn set_ch(&mut self, v: u8) {
+        self.write8_high(1, v);
+    }
     /// Read DL.
-    pub fn dl(&self) -> u8 { self.read8_low(2) }
+    pub fn dl(&self) -> u8 {
+        self.read8_low(2)
+    }
     /// Write DL.
-    pub fn set_dl(&mut self, v: u8) { self.write8_low(2, v); }
+    pub fn set_dl(&mut self, v: u8) {
+        self.write8_low(2, v);
+    }
     /// Read DH.
-    pub fn dh(&self) -> u8 { self.read8_high(2) }
+    pub fn dh(&self) -> u8 {
+        self.read8_high(2)
+    }
     /// Write DH.
-    pub fn set_dh(&mut self, v: u8) { self.write8_high(2, v); }
+    pub fn set_dh(&mut self, v: u8) {
+        self.write8_high(2, v);
+    }
 }
 
 impl Default for RegisterFile8086 {
-    fn default() -> Self { Self::new() }
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 // ─── 20-bit ripple-carry adder ────────────────────────────────────────────────
@@ -433,7 +537,10 @@ mod tests {
         assert_eq!(rf.physical_address(0x1000, 0x0100), 0x10100);
         // Wrap around: 0xFFFF * 16 + 0xFFFF = 0xFFFF0 + 0xFFFF = 0x1FFEF → masked to 0xFFEF
         // Actually: 0xFFFF0 + 0xFFFF = 0x1FFFEF, masked to 0xFFEF
-        assert_eq!(rf.physical_address(0xFFFF, 0xFFFF) & 0xFFFFF, (0xFFFF0u32 + 0xFFFFu32) & 0xFFFFF);
+        assert_eq!(
+            rf.physical_address(0xFFFF, 0xFFFF) & 0xFFFFF,
+            (0xFFFF0u32 + 0xFFFFu32) & 0xFFFFF
+        );
     }
 
     #[test]

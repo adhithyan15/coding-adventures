@@ -2,9 +2,14 @@
 name = "coding-adventures-intel8086-gatelevel"
 version = "0.1.0"
 edition = "2021"
-description = "Intel 8086 gate-level simulator — every operation routes through real logic gates"
+description = "Complete Intel 8086 gate-level simulator with 8,392,922 DFFs, fixed gate datapaths, checked lifecycle, and functional full-state differentials."
 license = "MIT"
 
 [dependencies]
 logic-gates = { path = "../logic-gates" }
 arithmetic = { path = "../arithmetic" }
+intel8086-simulator = { path = "../intel8086-simulator" }
+
+[dev-dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

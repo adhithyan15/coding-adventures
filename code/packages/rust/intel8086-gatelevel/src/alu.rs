@@ -26,9 +26,9 @@
 //! |------|---------------------|----------------------|-----------|
 //! | CF   | adder carry out      | NOT(adder carry out) | 0         |
 //! | OF   | XOR(c_in15, c_out15) | XOR(c_in15, c_out15) | 0         |
-//! | AF   | carries[3]           | nibble_borrow(a,b,b) | 0         |
+//! | AF   | `carries[3]`         | nibble_borrow(a,b,b) | 0         |
 //! | ZF   | NOR tree             | NOR tree             | NOR tree  |
-//! | SF   | result[MSB]          | result[MSB]          | result[MSB]|
+//! | SF   | `result[MSB]`        | `result[MSB]`        | `result[MSB]`|
 //! | PF   | XOR tree + NOT       | XOR tree + NOT       | XOR tree  |
 //!
 //! INC/DEC do not modify CF — the caller preserves the old CF value.
@@ -36,9 +36,8 @@
 use logic_gates::gates::{and_gate, not_gate, or_gate, xor_gate};
 
 use crate::bits::{
-    add_8bit, add_8bit_full, add_16bit_full, bits_to_u8, bits_to_u16,
-    compute_parity, compute_zero, int_to_bits8, int_to_bits16, invert_8bit, invert_16bit,
-    nibble_borrow,
+    add_16bit_full, add_8bit, add_8bit_full, bits_to_u16, bits_to_u8, compute_parity, compute_zero,
+    int_to_bits16, int_to_bits8, invert_16bit, invert_8bit, nibble_borrow,
 };
 
 // ─── Result type ─────────────────────────────────────────────────────────────
@@ -132,7 +131,8 @@ pub fn and16(a: u16, b: u16) -> AluResult8086 {
     let result = bits_to_u16(&r);
     AluResult8086 {
         result,
-        flag_cf: 0, flag_of: 0,
+        flag_cf: 0,
+        flag_of: 0,
         flag_sf: r[15],
         flag_zf: compute_zero(&r),
         flag_af: 0,
@@ -148,7 +148,8 @@ pub fn or16(a: u16, b: u16) -> AluResult8086 {
     let result = bits_to_u16(&r);
     AluResult8086 {
         result,
-        flag_cf: 0, flag_of: 0,
+        flag_cf: 0,
+        flag_of: 0,
         flag_sf: r[15],
         flag_zf: compute_zero(&r),
         flag_af: 0,
@@ -164,7 +165,8 @@ pub fn xor16(a: u16, b: u16) -> AluResult8086 {
     let result = bits_to_u16(&r);
     AluResult8086 {
         result,
-        flag_cf: 0, flag_of: 0,
+        flag_cf: 0,
+        flag_of: 0,
         flag_sf: r[15],
         flag_zf: compute_zero(&r),
         flag_af: 0,
@@ -250,7 +252,8 @@ pub fn and8(a: u8, b: u8) -> AluResult8086 {
     let result = bits_to_u8(&r);
     AluResult8086 {
         result: result as u16,
-        flag_cf: 0, flag_of: 0,
+        flag_cf: 0,
+        flag_of: 0,
         flag_sf: r[7],
         flag_zf: compute_zero(&r),
         flag_af: 0,
@@ -266,7 +269,8 @@ pub fn or8(a: u8, b: u8) -> AluResult8086 {
     let result = bits_to_u8(&r);
     AluResult8086 {
         result: result as u16,
-        flag_cf: 0, flag_of: 0,
+        flag_cf: 0,
+        flag_of: 0,
         flag_sf: r[7],
         flag_zf: compute_zero(&r),
         flag_af: 0,
@@ -282,7 +286,8 @@ pub fn xor8(a: u8, b: u8) -> AluResult8086 {
     let result = bits_to_u8(&r);
     AluResult8086 {
         result: result as u16,
-        flag_cf: 0, flag_of: 0,
+        flag_cf: 0,
+        flag_of: 0,
         flag_sf: r[7],
         flag_zf: compute_zero(&r),
         flag_af: 0,
@@ -336,13 +341,20 @@ pub fn shl(value: u16, count: u8, width: u8) -> (u16, u8) {
     let w = width as usize;
     let mask: u16 = if width == 16 { 0xFFFF } else { 0xFF };
     let cnt = (count & 0x1F) as usize;
-    if cnt == 0 { return (value & mask, 0); }
+    if cnt == 0 {
+        return (value & mask, 0);
+    }
     let bits: Vec<u8> = (0..w).map(|i| ((value >> i) & 1) as u8).collect();
-    if cnt >= w { return (0, 0); }
+    if cnt >= w {
+        return (0, 0);
+    }
     let cf = bits[w - cnt];
     let mut rb = vec![0u8; w];
     rb[cnt..w].copy_from_slice(&bits[0..w - cnt]);
-    let result = rb.iter().enumerate().fold(0u16, |acc, (i, &b)| acc | ((b as u16) << i));
+    let result = rb
+        .iter()
+        .enumerate()
+        .fold(0u16, |acc, (i, &b)| acc | ((b as u16) << i));
     (result & mask, cf)
 }
 
@@ -353,13 +365,20 @@ pub fn shr(value: u16, count: u8, width: u8) -> (u16, u8) {
     let w = width as usize;
     let mask: u16 = if width == 16 { 0xFFFF } else { 0xFF };
     let cnt = (count & 0x1F) as usize;
-    if cnt == 0 { return (value & mask, 0); }
+    if cnt == 0 {
+        return (value & mask, 0);
+    }
     let bits: Vec<u8> = (0..w).map(|i| ((value >> i) & 1) as u8).collect();
-    if cnt >= w { return (0, 0); }
+    if cnt >= w {
+        return (0, 0);
+    }
     let cf = bits[cnt - 1];
     let mut rb = vec![0u8; w];
     rb[0..w - cnt].copy_from_slice(&bits[cnt..w]);
-    let result = rb.iter().enumerate().fold(0u16, |acc, (i, &b)| acc | ((b as u16) << i));
+    let result = rb
+        .iter()
+        .enumerate()
+        .fold(0u16, |acc, (i, &b)| acc | ((b as u16) << i));
     (result & mask, cf)
 }
 
@@ -370,7 +389,9 @@ pub fn sar(value: u16, count: u8, width: u8) -> (u16, u8) {
     let w = width as usize;
     let mask: u16 = if width == 16 { 0xFFFF } else { 0xFF };
     let cnt = (count & 0x1F) as usize;
-    if cnt == 0 { return (value & mask, 0); }
+    if cnt == 0 {
+        return (value & mask, 0);
+    }
     let bits: Vec<u8> = (0..w).map(|i| ((value >> i) & 1) as u8).collect();
     let sign = bits[w - 1];
     let (cf, rb) = if cnt >= w {
@@ -381,7 +402,10 @@ pub fn sar(value: u16, count: u8, width: u8) -> (u16, u8) {
         rb[0..w - cnt].copy_from_slice(&bits[cnt..w]);
         (cf, rb)
     };
-    let result = rb.iter().enumerate().fold(0u16, |acc, (i, &b)| acc | ((b as u16) << i));
+    let result = rb
+        .iter()
+        .enumerate()
+        .fold(0u16, |acc, (i, &b)| acc | ((b as u16) << i));
     (result & mask, cf)
 }
 
@@ -394,13 +418,18 @@ pub fn rol(value: u16, count: u8, width: u8) -> (u16, u8) {
     let mask: u16 = if width == 16 { 0xFFFF } else { 0xFF };
     let cnt = (count as usize) % w;
     let bits: Vec<u8> = (0..w).map(|i| ((value >> i) & 1) as u8).collect();
-    if cnt == 0 { return (value & mask, bits[0]); }
+    if cnt == 0 {
+        return (value & mask, bits[0]);
+    }
     // result_bits = bits[w - cnt ..] ++ bits[.. w - cnt]
     let mut rb = Vec::with_capacity(w);
     rb.extend_from_slice(&bits[w - cnt..]);
     rb.extend_from_slice(&bits[..w - cnt]);
     let cf = rb[0]; // new bit 0
-    let result = rb.iter().enumerate().fold(0u16, |acc, (i, &b)| acc | ((b as u16) << i));
+    let result = rb
+        .iter()
+        .enumerate()
+        .fold(0u16, |acc, (i, &b)| acc | ((b as u16) << i));
     (result & mask, cf)
 }
 
@@ -412,13 +441,18 @@ pub fn ror(value: u16, count: u8, width: u8) -> (u16, u8) {
     let mask: u16 = if width == 16 { 0xFFFF } else { 0xFF };
     let cnt = (count as usize) % w;
     let bits: Vec<u8> = (0..w).map(|i| ((value >> i) & 1) as u8).collect();
-    if cnt == 0 { return (value & mask, bits[w - 1]); }
+    if cnt == 0 {
+        return (value & mask, bits[w - 1]);
+    }
     // result_bits = bits[cnt ..] ++ bits[.. cnt]
     let mut rb = Vec::with_capacity(w);
     rb.extend_from_slice(&bits[cnt..]);
     rb.extend_from_slice(&bits[..cnt]);
     let cf = rb[w - 1]; // new MSB
-    let result = rb.iter().enumerate().fold(0u16, |acc, (i, &b)| acc | ((b as u16) << i));
+    let result = rb
+        .iter()
+        .enumerate()
+        .fold(0u16, |acc, (i, &b)| acc | ((b as u16) << i));
     (result & mask, cf)
 }
 
@@ -434,14 +468,20 @@ pub fn rcl(value: u16, count: u8, width: u8, cf_in: u8) -> (u16, u8) {
     let mut bits: Vec<u8> = (0..w).map(|i| ((value >> i) & 1) as u8).collect();
     bits.push(cf_in);
     if cnt == 0 {
-        let result = bits[..w].iter().enumerate().fold(0u16, |acc, (i, &b)| acc | ((b as u16) << i));
+        let result = bits[..w]
+            .iter()
+            .enumerate()
+            .fold(0u16, |acc, (i, &b)| acc | ((b as u16) << i));
         return (result & mask, cf_in);
     }
     let mut rb = Vec::with_capacity(total);
     rb.extend_from_slice(&bits[total - cnt..]);
     rb.extend_from_slice(&bits[..total - cnt]);
     let new_cf = rb[w];
-    let result = rb[..w].iter().enumerate().fold(0u16, |acc, (i, &b)| acc | ((b as u16) << i));
+    let result = rb[..w]
+        .iter()
+        .enumerate()
+        .fold(0u16, |acc, (i, &b)| acc | ((b as u16) << i));
     (result & mask, new_cf)
 }
 
@@ -454,14 +494,20 @@ pub fn rcr(value: u16, count: u8, width: u8, cf_in: u8) -> (u16, u8) {
     let mut bits: Vec<u8> = (0..w).map(|i| ((value >> i) & 1) as u8).collect();
     bits.push(cf_in);
     if cnt == 0 {
-        let result = bits[..w].iter().enumerate().fold(0u16, |acc, (i, &b)| acc | ((b as u16) << i));
+        let result = bits[..w]
+            .iter()
+            .enumerate()
+            .fold(0u16, |acc, (i, &b)| acc | ((b as u16) << i));
         return (result & mask, cf_in);
     }
     let mut rb = Vec::with_capacity(total);
     rb.extend_from_slice(&bits[cnt..]);
     rb.extend_from_slice(&bits[..cnt]);
     let new_cf = rb[w];
-    let result = rb[..w].iter().enumerate().fold(0u16, |acc, (i, &b)| acc | ((b as u16) << i));
+    let result = rb[..w]
+        .iter()
+        .enumerate()
+        .fold(0u16, |acc, (i, &b)| acc | ((b as u16) << i));
     (result & mask, new_cf)
 }
 
@@ -546,36 +592,98 @@ pub fn aas(al: u8, ah: u8, flag_af: u8) -> (u8, u8, u8) {
 /// AAM — ASCII Adjust after Multiply.
 ///
 /// Returns `(new_ah, new_al)`. AH = AL ÷ base, AL = AL mod base.
-/// Note: host division used (gate-level divider out of scope).
+/// Uses the fixed restoring gate-divider network.
 pub fn aam(al: u8, base: u8) -> (u8, u8) {
-    if base == 0 { return (0, 0); }
-    (al / base, al % base)
+    gate_unsigned_divide(u64::from(al), u64::from(base), 8)
+        .map_or((0, 0), |(quotient, remainder)| {
+            (quotient as u8, remainder as u8)
+        })
 }
 
 /// AAD — ASCII Adjust before Division.
 ///
 /// AL = AH × base + AL (AH set to 0 by caller). Returns new AL.
 pub fn aad(ah: u8, al: u8, base: u8) -> u8 {
-    let product = ((ah as u16) * (base as u16)) & 0xFF;
+    let product = gate_unsigned_multiply(u64::from(ah), u64::from(base), 8);
     let (result, _, _) = add_8bit(product as u8, al, 0);
     result
 }
 
-// ─── Multiply / Divide (host arithmetic) ─────────────────────────────────────
-//
-// A gate-level 16×16-bit multiplier requires ~1000 gates and is out of scope
-// for this educational simulator. Host integer arithmetic is used instead.
+// ─── Fixed gate-level multiply / divide networks ─────────────────────────────
+
+fn width_mask(width: usize) -> u64 {
+    if width == 64 {
+        u64::MAX
+    } else {
+        (1u64 << width) - 1
+    }
+}
+
+fn gate_add_width(a: u64, b: u64, carry_in: u8, width: usize) -> (u64, u8) {
+    let mut result = 0u64;
+    let mut carry = carry_in;
+    for bit in 0..width {
+        let a_bit = ((a >> bit) & 1) as u8;
+        let b_bit = ((b >> bit) & 1) as u8;
+        let (sum, next) = arithmetic::adders::full_adder(a_bit, b_bit, carry);
+        result |= u64::from(sum) << bit;
+        carry = next;
+    }
+    (result & width_mask(width), carry)
+}
+
+fn gate_negate_width(value: u64, width: usize) -> u64 {
+    let mut inverted = 0u64;
+    for bit in 0..width {
+        inverted |= u64::from(not_gate(((value >> bit) & 1) as u8)) << bit;
+    }
+    gate_add_width(inverted, 0, 1, width).0
+}
+
+fn gate_unsigned_multiply(left: u64, right: u64, width: usize) -> u64 {
+    let product_width = width * 2;
+    let mut product = 0u64;
+    for right_bit in 0..width {
+        let selector = ((right >> right_bit) & 1) as u8;
+        let mut partial = 0u64;
+        for left_bit in 0..width {
+            let bit = and_gate(((left >> left_bit) & 1) as u8, selector);
+            partial |= u64::from(bit) << (left_bit + right_bit);
+        }
+        product = gate_add_width(product, partial, 0, product_width).0;
+    }
+    product
+}
+
+fn gate_unsigned_divide(dividend: u64, divisor: u64, width: usize) -> Option<(u64, u64)> {
+    if divisor == 0 {
+        return None;
+    }
+    let remainder_width = width + 1;
+    let mut quotient = 0u64;
+    let mut remainder = 0u64;
+    for bit in (0..width).rev() {
+        remainder = ((remainder << 1) | ((dividend >> bit) & 1)) & width_mask(remainder_width);
+        let inverted = gate_negate_width(divisor, remainder_width);
+        let (difference, no_borrow) = gate_add_width(remainder, inverted, 0, remainder_width);
+        if no_borrow == 1 {
+            remainder = difference;
+            quotient |= 1u64 << bit;
+        }
+    }
+    Some((quotient, remainder))
+}
 
 /// Unsigned 8-bit multiply: `AX = AL × operand`. Returns `(ax, cf_of)`.
 pub fn mul8(al: u8, operand: u8) -> (u16, u8) {
-    let ax = (al as u16) * (operand as u16);
+    let ax = gate_unsigned_multiply(u64::from(al), u64::from(operand), 8) as u16;
     let cf_of = if (ax >> 8) != 0 { 1 } else { 0 };
     (ax, cf_of)
 }
 
 /// Unsigned 16-bit multiply: `DX:AX = AX × operand`. Returns `(dx, ax, cf_of)`.
 pub fn mul16(ax: u16, operand: u16) -> (u16, u16, u8) {
-    let r32 = (ax as u32) * (operand as u32);
+    let r32 = gate_unsigned_multiply(u64::from(ax), u64::from(operand), 16) as u32;
     let new_ax = (r32 & 0xFFFF) as u16;
     let new_dx = ((r32 >> 16) & 0xFFFF) as u16;
     let cf_of = if new_dx != 0 { 1 } else { 0 };
@@ -584,22 +692,60 @@ pub fn mul16(ax: u16, operand: u16) -> (u16, u16, u8) {
 
 /// Signed 8-bit multiply: `AX = AL_signed × operand_signed`. Returns `(ax, cf_of)`.
 pub fn imul8(al: u8, operand: u8) -> (u16, u8) {
-    let a = (al as i8) as i16;
-    let b = (operand as i8) as i16;
-    let result = (a * b) as u16;
+    let sign_a = (al >> 7) & 1;
+    let sign_b = (operand >> 7) & 1;
+    let a = if sign_a == 1 {
+        gate_negate_width(u64::from(al), 8)
+    } else {
+        u64::from(al)
+    };
+    let b = if sign_b == 1 {
+        gate_negate_width(u64::from(operand), 8)
+    } else {
+        u64::from(operand)
+    };
+    let magnitude = gate_unsigned_multiply(a, b, 8);
+    let result = if xor_gate(sign_a, sign_b) == 1 {
+        gate_negate_width(magnitude, 16) as u16
+    } else {
+        magnitude as u16
+    };
     let expected_hi = if (result & 0x80) != 0 { 0xFF_u16 } else { 0 };
-    let cf_of = if ((result >> 8) & 0xFF) != expected_hi { 1 } else { 0 };
+    let cf_of = if ((result >> 8) & 0xFF) != expected_hi {
+        1
+    } else {
+        0
+    };
     (result, cf_of)
 }
 
 /// Signed 16-bit multiply: `DX:AX = AX_signed × operand_signed`. Returns `(dx, ax, cf_of)`.
 pub fn imul16(ax: u16, operand: u16) -> (u16, u16, u8) {
-    let a = (ax as i16) as i32;
-    let b = (operand as i16) as i32;
-    let r32 = (a * b) as u32;
+    let sign_a = ((ax >> 15) & 1) as u8;
+    let sign_b = ((operand >> 15) & 1) as u8;
+    let a = if sign_a == 1 {
+        gate_negate_width(u64::from(ax), 16)
+    } else {
+        u64::from(ax)
+    };
+    let b = if sign_b == 1 {
+        gate_negate_width(u64::from(operand), 16)
+    } else {
+        u64::from(operand)
+    };
+    let magnitude = gate_unsigned_multiply(a, b, 16);
+    let r32 = if xor_gate(sign_a, sign_b) == 1 {
+        gate_negate_width(magnitude, 32) as u32
+    } else {
+        magnitude as u32
+    };
     let new_ax = (r32 & 0xFFFF) as u16;
     let new_dx = ((r32 >> 16) & 0xFFFF) as u16;
-    let expected_hi = if (new_ax & 0x8000) != 0 { 0xFFFF_u16 } else { 0 };
+    let expected_hi = if (new_ax & 0x8000) != 0 {
+        0xFFFF_u16
+    } else {
+        0
+    };
     let cf_of = if new_dx != expected_hi { 1 } else { 0 };
     (new_dx, new_ax, cf_of)
 }
@@ -608,38 +754,68 @@ pub fn imul16(ax: u16, operand: u16) -> (u16, u16, u8) {
 ///
 /// Returns `None` if operand is zero (INT 0 in real hardware).
 pub fn div8(ax: u16, operand: u8) -> Option<(u8, u8)> {
-    if operand == 0 { return None; }
-    let q = ax / operand as u16;
-    let r = ax % operand as u16;
-    Some((q as u8, r as u8))
+    gate_unsigned_divide(u64::from(ax), u64::from(operand), 16)
+        .map(|(quotient, remainder)| (quotient as u8, remainder as u8))
 }
 
 /// Unsigned 16-bit divide: `AX = DX:AX ÷ operand, DX = DX:AX mod operand`.
 pub fn div16(dx_ax: u32, operand: u16) -> Option<(u16, u16)> {
-    if operand == 0 { return None; }
-    let q = dx_ax / operand as u32;
-    let r = dx_ax % operand as u32;
-    Some((q as u16, r as u16))
+    gate_unsigned_divide(u64::from(dx_ax), u64::from(operand), 32)
+        .map(|(quotient, remainder)| (quotient as u16, remainder as u16))
 }
 
 /// Signed 8-bit divide. Returns `None` on division by zero.
 pub fn idiv8(ax: u16, operand: u8) -> Option<(u8, u8)> {
-    if operand == 0 { return None; }
-    let dividend = ax as i16;
-    let divisor = (operand as i8) as i16;
-    let q = dividend / divisor;
-    let r = dividend % divisor;
-    Some((q as u8, r as u8))
+    if operand == 0 {
+        return None;
+    }
+    let sign_dividend = ((ax >> 15) & 1) as u8;
+    let sign_divisor = (operand >> 7) & 1;
+    let dividend = if sign_dividend == 1 {
+        gate_negate_width(u64::from(ax), 16)
+    } else {
+        u64::from(ax)
+    };
+    let divisor = if sign_divisor == 1 {
+        gate_negate_width(u64::from(operand), 8)
+    } else {
+        u64::from(operand)
+    };
+    let (mut quotient, mut remainder) = gate_unsigned_divide(dividend, divisor, 16)?;
+    if xor_gate(sign_dividend, sign_divisor) == 1 {
+        quotient = gate_negate_width(quotient, 8);
+    }
+    if sign_dividend == 1 {
+        remainder = gate_negate_width(remainder, 8);
+    }
+    Some((quotient as u8, remainder as u8))
 }
 
 /// Signed 16-bit divide. Returns `None` on division by zero.
 pub fn idiv16(dx_ax: u32, operand: u16) -> Option<(u16, u16)> {
-    if operand == 0 { return None; }
-    let dividend = dx_ax as i32;
-    let divisor = (operand as i16) as i32;
-    let q = dividend / divisor;
-    let r = dividend % divisor;
-    Some((q as u16, r as u16))
+    if operand == 0 {
+        return None;
+    }
+    let sign_dividend = ((dx_ax >> 31) & 1) as u8;
+    let sign_divisor = ((operand >> 15) & 1) as u8;
+    let dividend = if sign_dividend == 1 {
+        gate_negate_width(u64::from(dx_ax), 32)
+    } else {
+        u64::from(dx_ax)
+    };
+    let divisor = if sign_divisor == 1 {
+        gate_negate_width(u64::from(operand), 16)
+    } else {
+        u64::from(operand)
+    };
+    let (mut quotient, mut remainder) = gate_unsigned_divide(dividend, divisor, 32)?;
+    if xor_gate(sign_dividend, sign_divisor) == 1 {
+        quotient = gate_negate_width(quotient, 16);
+    }
+    if sign_dividend == 1 {
+        remainder = gate_negate_width(remainder, 16);
+    }
+    Some((quotient as u16, remainder as u16))
 }
 
 // ─── Tests ───────────────────────────────────────────────────────────────────
@@ -797,7 +973,7 @@ mod tests {
         // 0x09 + 0x09 = 0x12 in BCD
         let (r, _af, _cf) = daa(0x12, 0, 0);
         assert_eq!(r, 0x12); // already valid BCD, no adjust needed
-        // Force correction: 0x0A (10) should adjust to 0x10 (BCD for 10)
+                             // Force correction: 0x0A (10) should adjust to 0x10 (BCD for 10)
         let (r2, _, _) = daa(0x0A, 0, 0);
         assert_eq!(r2, 0x10);
     }
@@ -826,5 +1002,50 @@ mod tests {
     #[test]
     fn div8_zero() {
         assert!(div8(100, 0).is_none());
+    }
+
+    #[test]
+    fn gate_multiplier_is_exhaustive_for_all_byte_pairs() {
+        for left in 0u16..=255 {
+            for right in 0u16..=255 {
+                let (product, overflow) = mul8(left as u8, right as u8);
+                let expected = left * right;
+                assert_eq!(product, expected);
+                assert_eq!(overflow, u8::from(expected > 0xff));
+            }
+        }
+    }
+
+    #[test]
+    fn signed_gate_multiply_covers_edges() {
+        for left in [i8::MIN, -127, -17, -1, 0, 1, 17, 126, i8::MAX] {
+            for right in [i8::MIN, -31, -1, 0, 1, 31, i8::MAX] {
+                let (product, _) = imul8(left as u8, right as u8);
+                assert_eq!(
+                    product,
+                    i16::from(left).wrapping_mul(i16::from(right)) as u16
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn gate_word_multiply_and_divide_seeded_vectors() {
+        let mut seed = 0x1357_9bdfu32;
+        for _ in 0..512 {
+            seed = seed.wrapping_mul(1_664_525).wrapping_add(1_013_904_223);
+            let left = seed as u16;
+            seed = seed.wrapping_mul(1_664_525).wrapping_add(1_013_904_223);
+            let right = seed as u16;
+            let expected = u32::from(left) * u32::from(right);
+            let (high, low, _) = mul16(left, right);
+            assert_eq!((u32::from(high) << 16) | u32::from(low), expected);
+
+            let divisor = right | 1;
+            let dividend = seed;
+            let (quotient, remainder) = div16(dividend, divisor).unwrap();
+            assert_eq!(quotient, (dividend / u32::from(divisor)) as u16);
+            assert_eq!(remainder, (dividend % u32::from(divisor)) as u16);
+        }
     }
 }
