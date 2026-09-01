@@ -1,7 +1,7 @@
 # diagram-to-paint
 
-DG03 — Converts layouted graph, chart, structural, temporal, sequence, and
-geometric diagrams into a `PaintScene` for rendering by `paint-metal` and other
+DG03 — Converts layouted graph, chart, structural, temporal, sequence, packet,
+and geometric diagrams into a `PaintScene` for rendering by `paint-metal` and other
 backends. Text rendering is **delegated to `layout-to-paint`**
 so every paint backend receives real glyph IDs from the TXT00 shaping pipeline.
 

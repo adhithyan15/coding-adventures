@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.97.0
+
+- Add typed packet field semantic IR and backend-neutral layout geometry.
+
 ## 0.92.0
 
 - Represent Gantt signed variable-width years as a typed date-format part.
