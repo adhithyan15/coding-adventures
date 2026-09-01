@@ -2,6 +2,95 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.83] - 2026-09-01 (fix: `br_table.wast` total-failure regression — two independent bugs)
+
+While prioritizing the vendored testsuite corpus for a fresh pass, found
+that `br_table.wast` — a foundational MVP-level control-flow file, no
+GC-proposal syntax involved — was TOTALLY failing: `module 0/1`,
+`assert_return 0/161 fail`, all cascading from the one module failing to
+validate. The baseline-diff mechanism only detects CHANGES from a prior
+baseline, not absolute correctness, so this had been silently broken and
+un-investigated for a while. A probe (`run_wast_source` against the raw
+file) reported: `ValidationError: TypeMismatch: expected
+ConcreteFuncRef(1), found Funcref` on `(table $t (ref null $t) (elem
+$tf))` (line ~1019) — about as ordinary a construct as the corpus has,
+no struct/array GC syntax anywhere near it. The initial hypothesis (an
+`is_assignable` direction swap) turned out to be wrong; root-causing it
+properly surfaced TWO independent, real bugs that both had to be fixed
+before the file passed:
+
+- **Bug 1 — `table.get`/`table.set` couldn't see a table's CONCRETE
+  element type.** `table_element_types` used to be a `Vec<u8>` (just the
+  raw `0x70`/`0x6F` tag), with every opcode arm doing `0x6F => Externref,
+  _ => Funcref` — so a table declared `(ref null $t)` looked identical to
+  a plain generic-`funcref` table to `table.get`/`table.set`/
+  `table.grow`/`table.fill`. `table.get $t` pushed generic `Funcref`
+  unconditionally, discarding the real declared type. Fixed by changing
+  `table_element_types` to `Vec<ValueType>` (see `wasm-types`'s CHANGELOG
+  for the new `WasmModule::table_concrete_element_types` field this reads
+  from, falling back to the byte tag when the module doesn't populate
+  it) — all four opcode arms (`table.get`/`table.set`/`table.grow`/
+  `table.fill`) collapse to a single `ctx.table_element_types[idx]` read,
+  no more inline byte match.
+- **Bug 2 — `br_table`'s multi-target type check was ORDER-DEPENDENT,
+  which the real WASM typing rule is not.** `br_table` requires that the
+  SAME operand value(s) be simultaneously assignable to every listed
+  target AND the default target — a "meet" over all of them. The old
+  algorithm instead checked each target in LISTED order and re-pushed
+  that target's OWN declared type before checking the next one (a
+  left-to-right chain, not an independent check) — so checking a WIDER
+  target (e.g. `(ref null func)`) before a NARROWER one (e.g. `(ref null
+  $t)`) irreversibly widened the value away, and the narrower target's
+  check then failed even though the actual value is genuinely assignable
+  to both. `meet-funcref-1`'s label list `$l1 $l1 $l2` (wide targets
+  before the narrow default) hits this exactly; `meet-funcref-2`'s `$l2
+  $l2 $l1` (narrow first) happened to pass even on the old code, which is
+  why this needed its own dedicated order-sensitive test rather than
+  trusting one passing permutation. Fixed by popping the default target's
+  own arity worth of values from the real stack exactly ONCE into a small
+  `operands` vec, then checking every target (labels AND default) against
+  that SAME fixed snapshot via a new `check_stacktype_assignable` helper
+  (factored out of `pop_expect`) — no target's check can influence any
+  other's, and the real `stack` is only ever touched by that one pop.
+  **Security-hardened during review**: an earlier draft of this fix
+  instead cloned the WHOLE operand stack once per target — correct, but
+  `O(target_count * stack_depth)`, and `br_table`'s target count and the
+  operand stack's depth are BOTH independently attacker-controlled within
+  a single instruction, making that a real quadratic-blowup DoS vector.
+  The `operands`-snapshot approach is `O(target_count * arity)` instead —
+  the exact same asymptotic cost the original (order-dependent, but not
+  DoS-prone) implementation already had, so this fix adds no new
+  complexity-attack surface.
+- Bug 2 alone would NOT have fixed `br_table.wast` (bug 1 had to land
+  first so `table.get` had a concrete type to hand `br_table` in the
+  first place) — confirmed by reverting each fix independently and
+  re-running the new regression tests below; both fail with the original
+  `TypeMismatch` when either fix alone is reverted.
+- **2 new regression tests** in `tests/type_check.rs` (this crate's
+  established `assert_valid`/`assert_invalid`-over-real-`.wat`-text
+  convention): `valid_br_table_targets_type_check_regardless_of_listed_
+  order` (bug 2, using `br_table.wast`'s own `meet-multi-ref` shape) and
+  `valid_table_get_on_a_concrete_funcref_table_keeps_its_concrete_type`
+  (bug 1). Also added
+  `valid_generic_funcref_table_with_an_elem_segment_naming_a_concrete_
+  function` — the literal "table declared generic `funcref`, elem segment
+  names a concrete function" shape this session's regression report
+  first hypothesized as the bug; it turns out this exact shape already
+  validated correctly even before this fix (`lib.rs`'s own
+  `valid_element_segment` unit test already covered it at the
+  `WasmModule`-struct level), so this is a same-shape end-to-end
+  confirmation from real text, not a new fix.
+- **Full corpus impact**: baseline regenerated and diffed programmatically
+  against the pre-fix `testsuite-status.json` across all 257 files — see
+  `wasm-conformance`'s own CHANGELOG for the diff. Exactly one file's
+  tally changed (`br_table.wast`, `module`/`assert_return` both going
+  from total failure to 100%); every other file that also uses a
+  `(table ... (ref ...) ...)`-shaped declaration (`table.wast`, `elem.wast`,
+  `type-subtyping.wast`, `ref.wast`, etc.) already hit an EARLIER
+  `NotYetSupported` gate for unrelated reasons and so was untouched by
+  either fix — confirmed by inspecting each one's before/after entry, not
+  assumed from the aggregate.
+
 ## [0.2.82] - 2026-09-01 (W34 third slice — wire canonical equivalence into within-module checks)
 
 Canonicalization (built by the first two slices, consumed by nothing)

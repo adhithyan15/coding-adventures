@@ -1263,6 +1263,104 @@ mod tests {
         assert!(matches!(results[1].1, DirectiveOutcome::Fail(_)));
     }
 
+    /// Regression test for a real, previously-shipped bug found while
+    /// prioritizing the vendored testsuite corpus: `br_table.wast` (a
+    /// foundational MVP-level control-flow file, no GC-proposal syntax
+    /// involved) was TOTALLY failing -- `module 0/1`, `assert_return
+    /// 0/161` -- with `ValidationError: TypeMismatch: expected
+    /// ConcreteFuncRef(1), found Funcref` on an entirely ordinary `(table
+    /// funcref (elem $f))`-style construct
+    /// (`code/packages/rust/wasm-conformance/tests/fixtures/testsuite/
+    /// br_table.wast`'s own `meet-funcref-1`, vendored unchanged from the
+    /// official spec testsuite).
+    ///
+    /// This is the simplest possible reproduction of the FIRST of the
+    /// bug's two root causes: `(table $t (ref null $t) (elem $tf))`
+    /// declares a table whose element type is the CONCRETE function type
+    /// `$t`, not generic `funcref` -- but `wasm-wast-parser` used to
+    /// silently discard that reftype entirely (see the removed comment
+    /// this fix replaced, "this crate only tracks FUNCREF tables"),
+    /// leaving `table.get $t` with no way to know the table was anything
+    /// but generic `funcref`. A `br_table` branching to a label that
+    /// genuinely requires the NARROWER `$t` type then failed even though
+    /// the actual value in the table (`$tf`, of type `$t`) is exactly
+    /// right.
+    #[test]
+    fn table_get_on_a_concrete_funcref_table_keeps_its_concrete_type() {
+        // The exported function's declared result is the CONCRETE type
+        // `(ref null $t)`, not generic `funcref` -- its implicit-return
+        // check (every function body's own final assignability check
+        // against its declared results) only passes if `table.get $t`
+        // really did push `$t`'s concrete type. Before this fix it pushed
+        // generic `Funcref` instead, which is NOT assignable to a
+        // concrete-typed result slot (the opposite direction from
+        // `ConcreteFuncRef <: Funcref`), so this alone reproduces the
+        // regression without needing a value-comparing `assert_return`.
+        let results = outcomes(
+            r#"
+            (module
+              (type $t (func))
+              (func $tf)
+              (table $t (ref null $t) (elem $tf))
+              (func (export "get-as-concrete") (result (ref null $t))
+                (table.get $t (i32.const 0))
+              )
+            )
+            "#,
+        );
+        assert_eq!(results[0], (DirectiveKind::Module, DirectiveOutcome::Pass));
+    }
+
+    /// The SECOND of the two root causes behind the `br_table.wast`
+    /// regression `table_get_on_a_concrete_funcref_table_keeps_its_
+    /// concrete_type` above documents: even once `table.get` correctly
+    /// pushes the table's own concrete type, `br_table`'s multi-target
+    /// type check was ORDER-DEPENDENT, which the real spec is not.
+    ///
+    /// `br_table`'s typing rule requires that the SAME operand value(s)
+    /// be simultaneously assignable to every listed target AND the
+    /// default target -- a "meet" over all of them, not a left-to-right
+    /// chain. The old implementation instead re-pushed each target's OWN
+    /// declared type after checking it, so checking a WIDER target (here,
+    /// `$l1`'s generic `(ref null func)`) before a NARROWER one (`$l2`'s
+    /// concrete `(ref null $t)`) irreversibly widened the value away,
+    /// and the narrower target's check then failed spuriously -- even
+    /// though the actual value is perfectly assignable to BOTH.
+    ///
+    /// This is `br_table.wast`'s own `meet-funcref-1` (vendored
+    /// unchanged): its label list `$l1 $l1 $l2` deliberately checks the
+    /// generic target ($l1, twice) before the concrete one ($l2, the
+    /// default) -- exactly the ordering the old chain-based algorithm got
+    /// wrong. `meet-funcref-2` (`$l2 $l2 $l1`, concrete first) already
+    /// passed even before this fix, which is WHY this needed a dedicated
+    /// order-sensitive test rather than trusting one passing permutation.
+    #[test]
+    fn br_table_targets_type_check_regardless_of_which_order_they_are_listed_in() {
+        let module = r#"
+            (module
+              (type $t (func))
+              (func $tf)
+              (table $t (ref null $t) (elem $tf))
+              (func (export "meet-wide-target-first") (param i32) (result (ref null func))
+                (block $l1 (result (ref null func))
+                  (block $l2 (result (ref null $t))
+                    (br_table $l1 $l1 $l2 (table.get $t (i32.const 0)) (local.get 0))
+                  )
+                )
+              )
+              (func (export "meet-narrow-target-first") (param i32) (result (ref null func))
+                (block $l1 (result (ref null func))
+                  (block $l2 (result (ref null $t))
+                    (br_table $l2 $l2 $l1 (table.get $t (i32.const 0)) (local.get 0))
+                  )
+                )
+              )
+            )
+        "#;
+        let results = outcomes(module);
+        assert_eq!(results[0], (DirectiveKind::Module, DirectiveOutcome::Pass));
+    }
+
     #[test]
     fn assert_return_grades_bit_exact_not_lossy() {
         // 3.5 truncates to 3 via `as i64` -- if this harness went through

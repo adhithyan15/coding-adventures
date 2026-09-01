@@ -2,6 +2,41 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.22] - 2026-09-01 (fix: tables can now carry a concrete element type)
+
+Found while root-causing a real, previously-shipped regression: the whole
+vendored `br_table.wast` corpus file (a foundational MVP-level control-
+flow test, no GC-proposal syntax) was failing every single directive —
+see `wasm-validator`'s and `wasm-conformance`'s own CHANGELOGs for the
+full root-cause writeup and corpus-impact diff. This package's own piece
+of the fix: `TableType::element_type` is only a `u8` tag (`0x70` funcref
+/ `0x6F` externref) — there was no way to represent "this table holds
+references to exactly function type `$t`" (the function-references
+proposal's `(table $t (ref null $t) ...)`), only "this table holds some
+funcref".
+
+- **New `WasmModule::table_concrete_element_types: Vec<Option<ValueType>>`**
+  — parallel to `tables`, same "allowed to be shorter than, or entirely
+  absent from, the vec it augments" convention `type_kinds`/
+  `type_subtyping` already established. `None` (or an index past the end)
+  means the table's `element_type` byte is authoritative, exactly as
+  before this field existed; `Some(vt)` (`vt` always `ConcreteFuncRef`/
+  `NonNullConcreteFuncRef` in this crate's text format) is the table's
+  REAL declared element type. Only module-DEFINED tables get an entry
+  here — import tables have no concrete-typed-table text syntax in this
+  crate, mirroring `functions: Vec<u32>`'s own "imports live in
+  `imports`" convention.
+  Purely additive: `element_type` keeps holding `FUNCREF` alongside a
+  concrete entry (every concrete function reference is still funcref-
+  family), so any pre-existing consumer that only reads the byte tag
+  keeps working unchanged.
+- `WasmModule` derives `Default`, so this field defaults to an empty
+  `Vec` and every existing `WasmModule { ..., ..Default::default() }`
+  test literal across the workspace kept compiling unchanged. The two
+  spots that build a `WasmModule` with every field spelled out (this
+  crate's own `wasm_module_has_all_fields` test, and `wasm-runtime`'s
+  `tests/v128_persistent_storage.rs`) needed one line each added.
+
 ## [0.1.21] - 2026-09-01 (W34 fourth slice — cross-module canonical equivalence, epic closed)
 
 Two new free functions supporting `wasm-runtime`'s cross-module

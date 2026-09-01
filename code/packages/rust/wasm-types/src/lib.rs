@@ -1566,6 +1566,52 @@ pub struct WasmModule {
     pub functions: Vec<u32>,
     /// Table section (§4): function-reference tables.
     pub tables: Vec<TableType>,
+    /// Per-`tables`-entry CONCRETE element type (function-references
+    /// proposal: a table declared `(ref null $t)`/`(ref $t)` rather than
+    /// the plain `funcref`/`externref` keyword), parallel to `tables`
+    /// itself -- same "allowed to be shorter than, or entirely absent
+    /// from, the vec it augments" convention `type_kinds`/`type_subtyping`
+    /// already establish (see those fields' own doc comments), needed
+    /// here because `TableType::element_type` is only a `u8` tag (`0x70`
+    /// funcref / `0x6F` externref) with no room for a type INDEX -- it
+    /// cannot represent "this table holds references to exactly function
+    /// type `$t`" at all, only "this table holds some funcref".
+    ///
+    /// `None` at index `i` (or `i` past this vec's end, or the vec empty)
+    /// means table `i` has no concrete element type -- its `element_type`
+    /// byte alone is authoritative, exactly as for every WASM 1.0/
+    /// multi-table/table64 table that predates the function-references
+    /// proposal. `Some(vt)` means `vt` (always `ConcreteFuncRef`/
+    /// `NonNullConcreteFuncRef` in this crate's text format -- see
+    /// `ValueType::ConcreteFuncRef`'s own doc comment for why no struct/
+    /// array-typed table can arise here) is the table's REAL declared
+    /// element type; `element_type` still holds `FUNCREF` alongside it
+    /// (every concrete function reference is funcref-family), so any
+    /// consumer that only reads `element_type` keeps working exactly as
+    /// before and only a consumer that also wants the concrete type needs
+    /// to know this field exists.
+    ///
+    /// Import tables have no entry here -- only MODULE-DEFINED tables can
+    /// name a concrete type in this crate's text format (mirrors
+    /// `functions: Vec<u32>`'s own "imports live in `imports`, this Vec is
+    /// only the module-defined ones" convention, see that field's doc
+    /// comment) -- `wasm-validator`'s combined imports-then-declared
+    /// `table_element_types`/`table_is64`-style index space accounts for
+    /// this by treating every IMPORTED table as `None` here regardless of
+    /// its own declared type.
+    ///
+    /// A real, previously-open gap this field closes: `br_table.wast`'s
+    /// own `meet-funcref-*`/`meet-multi-ref` tests declare `(table $t
+    /// (ref null $t) (elem $tf))` and then `br_table` across labels typed
+    /// `(ref null func)`/`(ref null $t)`/`(ref $t)` -- before this field
+    /// existed, `table.get $t` had no way to know `$t`'s table was
+    /// anything but generic `funcref`, so it pushed `ValueType::Funcref`
+    /// unconditionally; a `br_table` label requiring the NARROWER concrete
+    /// type then failed with a `TypeMismatch` on an entirely ordinary,
+    /// MVP-adjacent construct (see `code/packages/rust/wasm-validator/src/
+    /// type_check.rs`'s `table.get`/`table.set` opcode arms, which now
+    /// consult this field instead of assuming `Funcref`).
+    pub table_concrete_element_types: Vec<Option<ValueType>>,
     /// Memory section (§5): linear memory declarations.
     pub memories: Vec<MemoryType>,
     /// Global section (§6): module-defined global variables.
@@ -3265,6 +3311,7 @@ mod tests {
             imports: vec![],
             functions: vec![0],
             tables: vec![],
+            table_concrete_element_types: vec![],
             memories: vec![MemoryType { limits: Limits { min: 1, max: None }, shared: false, is64: false }],
             globals: vec![],
             exports: vec![Export { name: "main".to_string(), kind: ExternalKind::Function, index: 0 }],
