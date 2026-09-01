@@ -187,6 +187,39 @@ jobs:
             -emit-plan build-plan.json \
             "${shard_flags[@]}"
 
+      # Guard against the one failure mode gating introduces: if the build tool
+      # emitted no verdicts (registry disabled, flag typo, plan written by an
+      # older binary), every `if:` would compare against an empty string, every
+      # gated job would skip, and `CI gate` would still report green. Silence is
+      # indistinguishable from success here, so assert the verdicts exist.
+      - name: Verify CI gate verdicts were emitted
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          import sys
+
+          with open("build-plan.json", encoding="utf-8") as handle:
+            plan = json.load(handle)
+          with open("code/specs/data/ci-gates.json", encoding="utf-8") as handle:
+            registry = json.load(handle)
+
+          expected = set(registry["gates"])
+          verdicts = plan.get("ci_jobs") or {}
+          missing = sorted(expected - set(verdicts))
+          if missing:
+            print("::error::build plan is missing CI gate verdicts: " + ", ".join(missing))
+            print("Every job gated on a missing verdict would silently skip while CI stayed green.")
+            sys.exit(1)
+
+          required = sorted(gate for gate, needed in verdicts.items() if needed)
+          print(f"{len(required)}/{len(expected)} CI gates required by this change.")
+          for gate in required:
+            print(f"  run  {gate}")
+          for gate in sorted(expected - set(required)):
+            print(f"  skip {gate}")
+          PY
+
       - name: Detect Venture native-shell acceptance
         id: venture-windows
         shell: bash
