@@ -12428,26 +12428,27 @@ valid with registry digest
 `f49bfe8c7c9c0fb9b534ecc9ca4a614f3684abe32bdb0edac82d99bdc806fb70`
 and boundary digest
 `cb721c2652d45a97fad300c85699ea440aa9f9b3bbe015e1e44dca3856d0b7e8`.
-The conformance family passes 192 tests and 329 subtests with 23 expected
-platform skips; the final semantic runner passes 72 tests and 222 subtests.
-Branch-aware coverage is 89% for the runner, 99% for its direct tests, and 92%
+The conformance family passes 192 tests and 355 subtests with 23 expected
+platform skips; the final semantic runner passes 72 tests and 233 subtests.
+Branch-aware coverage is 90% for the runner, 99% for its direct tests, and 93%
 combined. Eight native Engram tests, 28 checked-in-WASM smoke assertions,
 strict Clippy, the complete Go oracle test/vet/build gates, a real 5,122-package
 dry build-file validation, ten package-parity tests, and a zero-collision
 schema-3 inventory also pass. RustSec reports no vulnerability among 1,537
 locked dependencies and retains two existing allowed unmaintained warnings.
 
-After conflict-free rebases onto exact `origin/main`
-`fb02d844c14b8477335825b4e00a6658822d5eee`, the refreshed inventory has 15
+After the final rebase onto exact `origin/main`
+`4cc3bf419f76c03e5380626ca334a3faaf2264ab`, the refreshed inventory has 15
 established lanes, 1,397 implementation identities, 4,612 implementation
 slots, and 1,436 all-reported identities. Its bands are 175/265, 123/934,
 171/2,152, and 928/12,992; Rust has 739 singletons, OCaml remains at zero,
 and canonical collisions and unknown buckets remain zero. The merged
 TypeScript-only `forme-cli` identity stays under
-`forme-portable-core-family-classification`. Dedicated auto-merge PR #13768
-owns the corresponding shared TypeScript base-config boundary correction; this
-Engram branch will absorb that correction from `main` before publication so a
-coherent package-scoped repair does not duplicate unrelated Forme work.
+`forme-portable-core-family-classification`. Dedicated PR #13768 has merged
+the corresponding shared TypeScript base-config boundary correction, so that
+owner is unblocked and this Engram branch absorbs the correction from `main`
+without duplicating unrelated Forme work. Intervening Mermaid timeline work
+changes existing package roots only and adds no newly unowned identity.
 
 ## Autonomous Loop Protocol
 
