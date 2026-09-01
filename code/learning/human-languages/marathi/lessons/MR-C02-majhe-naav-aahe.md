@@ -4,6 +4,7 @@ sequence: 75
 chapter: 5
 type: phrase
 headword: माझं नाव … आहे
+romanization: "mājhaṁ nāv … āhe"
 gloss: my name is… (mājhaṁ nāv … āhe)
 concept_tag: INTRO-MY-NAME-IS
 prerequisites: [MR-C02-majhe, MR-C02-naav, MR-C02-aahe]

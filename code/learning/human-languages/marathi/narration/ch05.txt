@@ -102,8 +102,8 @@ Now assemble the three atoms you just met into your first full sentence about yo
 The phrase, assembled.
 माझं (mājhaṁ, my) + नाव (nāv, name) + [your name] + आहे (āhe, is) becomes माझं नाव मीरा आहे (mājhaṁ nāv Mīrā āhe) — "my name is Mira."
 Notice the shape:
-माझं is neuter, agreeing with the neuter नाव.
-The verb आहे comes last — "my name Mira is."
+माझं (mājhaṁ) is neuter, agreeing with the neuter नाव (nāv).
+The verb आहे (āhe) comes last — "my name Mira is."
 A man or a woman says it the same way here; the gender lived in mājhaṁ (matching nāv), which is settled.
 
 Why it's said this way.
@@ -191,7 +191,7 @@ Warm-up.
 Now turn the question outward — ask someone else's name.
 
 The phrase, assembled.
-तुमचं (tumchaṁ, "your," neuter to match nāv) + नाव (nāv, name) + काय (kāy, what) + आहे (āhe, is) becomes तुमचं नाव काय आहे? — literally "your name what is?", verb last.
+तुमचं (tumchaṁ, "your," neuter to match nāv) + नाव (nāv, name) + काय (kāy, what) + आहे (āhe, is) becomes तुमचं नाव काय आहे? (tumchaṁ nāv kāy āhe?) — literally "your name what is?", verb last.
 The "your" mirrors the "my" set you learned:
 माझं (mājhaṁ) — my.
 तुमचं (tumchaṁ) — your (respectful, from tumhī).

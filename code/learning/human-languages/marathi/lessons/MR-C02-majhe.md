@@ -4,6 +4,7 @@ sequence: 65
 chapter: 5
 type: word
 headword: माझं
+romanization: "mājhaṁ"
 gloss: my (mājhaṁ, neuter)
 concept_tag: PRONOUN-MY
 prerequisites: [MR-C02-naav]

@@ -4,6 +4,7 @@ sequence: 85
 chapter: 5
 type: word
 headword: काय
+romanization: "kāy"
 gloss: what (kāy)
 concept_tag: QUESTION-WHAT
 prerequisites: [MR-C02-tu-tumhi]

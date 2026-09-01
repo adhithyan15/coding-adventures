@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "MR-C22-thevne",
+    "language": "marathi",
+    "chapter": 22,
+    "sequence": 900,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:403761061b9369e9",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

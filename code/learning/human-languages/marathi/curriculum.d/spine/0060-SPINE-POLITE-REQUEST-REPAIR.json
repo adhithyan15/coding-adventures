@@ -1,6 +1,7 @@
 {
   "segments": [
-    "MR-PATH-015"
+    "MR-PATH-015",
+    "MR-PATH-024"
   ],
   "omits": [
     "COURTESY-PLEASE",

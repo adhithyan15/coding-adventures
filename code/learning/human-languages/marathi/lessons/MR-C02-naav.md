@@ -4,6 +4,7 @@ sequence: 60
 chapter: 5
 type: word
 headword: नाव
+romanization: "nāv"
 gloss: name (nāv)
 concept_tag: WORD-NAME
 prerequisites: [MR-C01-namaskar]

@@ -13,7 +13,12 @@ it("pins Marathi continuity", () => expectLanguageContinuity("marathi"));
 it("pins Marathi modality", () => expectLanguageModality("marathi"));
 it("pins Marathi lesson-content budgets", () =>
   expectLanguageLessonBudgets("marathi", {
-    lessons: 123,
+    // 123 -> 142: the pre-A1 verb tranche (chapters 22-25) adds nineteen
+    // schema-v2 lessons. None declares an idiom, a sense or a culture claim, so
+    // only the reviewed-lesson count moves; the three content counters below are
+    // unchanged, which is the evidence that the tranche declared nothing new
+    // against those budgets rather than that nobody looked.
+    lessons: 142,
     idioms: 5,
     senses: 4,
     cultureClaims: 7,
@@ -98,6 +103,14 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     ["19", 10],
     ["20", 18],
     ["21", 10],
+    // Chapters 22-25 are the pre-A1 verb tranche. They sit AFTER the A1 writing
+    // runways in book order while realizing pre-A1 spine nodes, which is the
+    // shape the other Indic tracks already use: a node's level is a property of
+    // the node, not of where the chapter falls in the book.
+    ["22", 5],
+    ["23", 5],
+    ["24", 5],
+    ["25", 4],
   ]);
 });
 

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:05b0dd391ee0a3d4",
+  "lessonIds": [
+    "MR-C24-sangne",
+    "MR-C24-mhanne",
+    "MR-C24-shikne",
+    "MR-C24-milne",
+    "MR-R24-passing-verbs"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "marathi/narration/ch24.txt",
+  "json": "marathi/narration/ch24.json",
+  "textHash": "fnv1a64:2157f621ec722249",
+  "jsonHash": "fnv1a64:2475e51a40861b18",
+  "findings": []
+}

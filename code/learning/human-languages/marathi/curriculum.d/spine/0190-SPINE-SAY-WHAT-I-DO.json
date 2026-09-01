@@ -10,19 +10,20 @@
   "omits": [
     "VERB-INFINITIVE",
     "VERB-PRESENT-HABITUAL",
-    "VERB-SAY",
     "VERB-SPEAK",
     "VERB-HEAR",
-    "VERB-LEARN",
-    "VERB-GET",
-    "VERB-SLEEP",
     "VERB-LIVE",
     "VERB-WORK",
     "VERB-PLAY",
     "VERB-RUN",
-    "VERB-SIT",
     "VERB-ANSWER",
     "VERB-MEET"
   ],
-  "relocates": {}
+  "relocates": {
+    "VERB-SIT": "SPINE-CHECK-WELLBEING",
+    "VERB-SLEEP": "SPINE-CHECK-WELLBEING",
+    "VERB-GET": "SPINE-EXCHANGE-NAMES",
+    "VERB-SAY": "SPINE-EXCHANGE-NAMES",
+    "VERB-LEARN": "SPINE-EXCHANGE-NAMES"
+  }
 }
