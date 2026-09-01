@@ -43,7 +43,7 @@ one fresh worktree and one PR; remove the worktree after merge.
 | — | VM-022 | done ([#13762](https://github.com/adhithyan15/coding-adventures/pull/13762)) | Repair the TypeScript Dartmouth BASIC parser `BUILD` so it runs that package's tests instead of ending in the generic parser package. | `BUILD` executes the Dartmouth parser suite itself and includes a mixed numeric/string `DATA` regression. |
 | — | VM-023 | done ([#13773](https://github.com/adhithyan15/coding-adventures/pull/13773)) | Audit and repair the same stateful-directory build defect across non-ALGOL TypeScript parser and lexer frontends. | Every affected package's normal and Windows build scripts run that package's own tests, with an automated guard against ending in a dependency directory. |
 | — | VM-012 | done ([#13785](https://github.com/adhithyan15/coding-adventures/pull/13785)) | Implement Nib BCD storage semantics and Intel-4004 RAM mapping. | Hardware-faithful programs agree across the portable matrix and the 4004 simulator. |
-| 1 | VM-018 | in progress | Define and implement portable Dartmouth BASIC `RND` semantics. | The accepted seed/repeatability contract is documented and executed consistently across all standard backends. |
+| 1 | VM-018 | in review ([#13802](https://github.com/adhithyan15/coding-adventures/pull/13802)) | Define and implement portable Dartmouth BASIC `RND` semantics. | The accepted seed/repeatability contract is documented and executed consistently across all standard backends. |
 | 2 | VM-013 | decision required | Define portable semantics for Oct's Intel-8008 intrinsics (`in`, `adc`, `sbb`, rotations, carry, parity). | The accepted semantics are documented and every intrinsic has executed portable and 8008 proofs. |
 
 ## Discovery log
