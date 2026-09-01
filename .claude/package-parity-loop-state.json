@@ -20,10 +20,10 @@
     "opened_revision": "704ae78bc80e5037dbb8a895095239060894d1bf"
   },
   "last_ci_action": {
-    "observed_at": "2026-09-01T03:16:30Z",
+    "observed_at": "2026-09-01T03:40:00Z",
     "pr_number": 13799,
     "status": "pending",
-    "notes": "Ready-for-review PR #13799 is open at exact initial head 704ae78bc80e5037dbb8a895095239060894d1bf. GitHub reports the branch mergeable and conflict-free while CI, CodeQL, Swift-app, and book checks are queued; guarded auto-merge remains disabled until every required check is terminal and acceptable."
+    "notes": "The macOS build log at run 33465663280 job 99727852278 showed JSONSerialization.WritingOptions.withoutEscapingSlashes requires macOS 10.15 while the Swift package keeps its older deployment target. Commit 2bf71f627d replaces that availability-bound option with exact escaped-slash normalization, adds a literal-backslash regression, and is pushed to the existing PR branch. Focused HasherTests passed 22 tests, the complete suite passed 75 tests before the added regression, and the release build plus diff check passed; fresh CI is pending, so guarded auto-merge remains disabled."
   },
   "last_inventory": {
     "revision": "7a5cf02e7dafcad6b857f5e66c7204a66e809d63",
