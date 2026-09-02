@@ -510,7 +510,8 @@ fn is_currently_buried(progress: &CardProgress, now: u64) -> bool {
 
     progress.state == CardState::Buried
         && progress
-            .buried_until.is_none_or(|buried_until| buried_until > now)
+            .buried_until
+            .is_none_or(|buried_until| buried_until > now)
 }
 
 pub fn is_deck_caught_up(

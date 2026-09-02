@@ -2023,22 +2023,21 @@ fn engram_app_props_for_state(
     // rebuilds its card-progress and imported-schedule indexes on each call, so
     // calling it per deck cost O(decks x cards) on EVERY event -- measured at
     // 12ms for one deck and 48ms for a hundred over the same 20k cards.
-    let deck_stats_by_id: std::collections::HashMap<String, engram_core::DeckStats> =
-        engram_core::get_deck_stats_for_all_decks(state, now)
-            .into_iter()
-            .collect();
+    //
+    // Zipped rather than looked up by id: the walk yields one entry per deck in
+    // `state.decks` order, so pairing them positionally needs no map and cannot
+    // miss. A lookup would need an `expect` for a case that cannot happen, and
+    // an unreachable panic in wasm is still a panic.
     let deck_rows = state
         .decks
         .iter()
-        .map(|deck| {
+        .zip(engram_core::get_deck_stats_for_all_decks(state, now))
+        .map(|(deck, (_id, deck_stats))| {
             let name = if deck.name.trim().is_empty() {
                 deck.id.clone()
             } else {
                 deck.name.clone()
             };
-            let deck_stats = deck_stats_by_id
-                .get(&deck.id)
-                .expect("every deck in state.decks gets a row");
             vec![
                 name,
                 // Empty rather than "0 due": a deck with nothing waiting should
@@ -3412,9 +3411,7 @@ fn browser_card_flag(
         .unwrap_or("none")
 }
 
-fn browser_card_sources_by_id(
-    state: &AppState,
-) -> HashMap<&str, Vec<&ExternalSourceRecord>> {
+fn browser_card_sources_by_id(state: &AppState) -> HashMap<&str, Vec<&ExternalSourceRecord>> {
     let mut sources_by_id: HashMap<&str, Vec<&ExternalSourceRecord>> = HashMap::new();
     for source in &state.external_sources {
         if source.target == ExternalSourceTarget::Card && source.source == "anki-v11" {
@@ -5449,10 +5446,7 @@ fn apply_deck_option_text_change(
 }
 
 fn parse_leech_action(value: &str) -> Result<LeechAction, String> {
-    let normalized = value
-        .trim()
-        .to_ascii_lowercase()
-        .replace(['_', ' '], "-");
+    let normalized = value.trim().to_ascii_lowercase().replace(['_', ' '], "-");
     match normalized.as_str() {
         "suspend" | "0" => Ok(LeechAction::Suspend),
         "tag-only" | "tagonly" | "tag" | "1" => Ok(LeechAction::TagOnly),

@@ -18,7 +18,7 @@ component EngramApp {
   slot host-status-message : text ;
   slot deck-name : text ;
   slot deck-list-label : text ;
-  // [ display-name, due, new ] per deck — see DeckStatsPanel.mil.
+  // [ display-name, due, new ] per deck -- see DeckStatsPanel.mil.
   slot deck-rows : list<list<text>> ;
   slot deck-stats-label : text ;
   slot deck-total-label : text ;
