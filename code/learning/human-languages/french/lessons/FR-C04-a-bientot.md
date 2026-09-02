@@ -38,12 +38,12 @@ variety: standard-contemporary
 
 [PAUSE 2s] For when you'll genuinely meet again shortly: **à bientôt**, "see you
 soon" — the French twin of Spanish *hasta pronto*. It hides a word you already
-know from Chapter 1: **bien**.
+know from your first greetings: **bien**.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[FR-LEX-ABIENTOT-04]; assesses=[] -->
 
-- `nasal-in` — **bien** = *byan*, nasal (your Chapter 1 sound).
+- `nasal-in` — **bien** = *byan*, nasal (the sound you met in your first greetings).
 - **bientôt** = *byan-TOH*; the circumflex on *ô* just marks a long *o*, and the
   final *t* is silent. Whole phrase: *ah byan-TOH*.
 
@@ -54,7 +54,7 @@ know from Chapter 1: **bien**.
 
 - **à** = "to" (the farewell preposition again).
 - **bientôt** = "soon," and it's a compound you can pull apart:
-  - **bien** = "well" (Chapter 1 — from Latin *bene*, the *bene* of *benefit*).
+  - **bien** = "well" (from Latin *bene*, the *bene* of *benefit*).
   - **tôt** = "early / soon."
   - Together, *bien + tôt* = "**well-soon**" → *quite soon*. (French loves gluing
     *bien* onto words for emphasis — *bientôt* "soon", *bienvenue* "welcome" =

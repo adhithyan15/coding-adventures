@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Coffee, Tea, Milk, Sugar",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:54b100e927f7b738",
+  "sourceHash": "fnv1a64:1f4507b2ea6abc38",
   "lessons": [
     {
       "id": "FR-C28-cafe",
@@ -420,7 +420,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0503621fe65d9cf",
+      "sourceHash": "fnv1a64:af9c69e942317355",
       "notice": null,
       "blocks": [
         {
@@ -488,7 +488,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Chapter 18's si — the \"yes\" for contradicting a negative — fits this table exactly:"
+              "text": "The si you learned — the \"yes\" for contradicting a negative — fits this table exactly:"
             },
             {
               "kind": "speech",

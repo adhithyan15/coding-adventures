@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Family",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:775d82c740dc2d99",
+  "sourceHash": "fnv1a64:ca42e85481425e50",
   "lessons": [
     {
       "id": "FR-C10-parents",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8324934c578d1137",
+      "sourceHash": "fnv1a64:c1067a2a202bca91",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "Note the articles: le père (masculine), la mère (feminine) — the gender you have been tracking since Chapter 1."
+              "text": "Note the articles: le père (masculine), la mère (feminine) — the gender you have been tracking since your first lesson."
             }
           ]
         },

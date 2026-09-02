@@ -1,5 +1,66 @@
 # Changelog
 
+## French joins Spanish at zero cross-chapter number references, before the split
+
+Three of the remaining hand-written French chapters cannot be authored inside
+`maxNewAtomsPerChapter` at one atom per new word: chapter 9 carries **twelve
+months and four seasons**, chapter 12 carries **ten numbers**, and chapter 16
+carries a **six-person paradigm plus the verb list that selects it**. Length is
+never a cost here — `chapter-policy.json` says so in its own note — so those
+become **more chapters** rather than denser ones, and every French chapter after
+a split point renumbers.
+
+`chapter-references.test.ts` says what to do about that, and says it plainly:
+
+> Spanish is held at ZERO because Spanish is the track that actually renumbers …
+> **When a track starts splitting chapters, clear it first and move it to zero.**
+
+French was at **32**. It is now at **0**, cleared *before* the first split rather
+than after the first rot.
+
+### The fix is never a fresher number
+
+A sentence like *"you learned this in Chapter 14"* is correct when written and
+wrong three renumbers later, and **nothing fails** — the reader simply follows a
+pointer into the wrong chapter. So every one of the 32 was rewritten to **name
+the thing**:
+
+| was | is |
+|---|---|
+| "from Chapter 1: **bien**" | "from your first greetings: **bien**" |
+| "the *tu/vous* choice you learned in Chapter 2" | "the *tu/vous* choice you learned when you gave your name" |
+| "in Chapter 5 you learned **habiter**" | "among your first verbs you learned **habiter**" |
+| "Chapter 28 handed you *le lait* and *le sucre*" | "the café chapter handed you *le lait* and *le sucre*" |
+| "the nasal vowel from Chapter 11's *pain*" | "the nasal vowel of *pain*, the bread" |
+| "(Chapter 17), was Roman soldiers' slang for a pot" | "was Roman soldiers' slang for a pot" |
+
+Where the number was pure decoration it is simply gone; where it was doing work,
+the work is now done by a description that cannot go stale.
+
+French is additionally pinned with its own `toBe(0)` rather than left to the
+shared ceiling. A ceiling of zero and an assertion of zero are the same number
+today and different promises: the assertion says the track is **cleared**, not
+merely not-growing.
+
+### Reading the page caught what the gate could not
+
+The gate counts `Chapter \d+` and cannot read. Two rewrites were wrong and only
+the compiled book showed it:
+
+- `FR-C31-ventre` glossed **oui** as *"(the plain no)"* — the replacement for a
+  bare "(Chapter 18)" pointer. *oui* is **yes**. The parenthetical carried no
+  information the sentence lacked and is deleted.
+- `FR-C14-avoir` read *"the aqua → eau you met with water"*, which is circular:
+  *eau* **is** water. Now "the *aqua* → **eau** behind the word for water."
+
+### Measured
+
+- French cross-chapter prose references: **32 -> 0**.
+- 26 lessons edited across chapters 2, 3, 4, 10, 12, 14, 15, 16, 17, 27, 28, 29,
+  30 and 31. No lesson ids, atoms, chapter numbers or ledger entries move: this
+  changes prose only, and is deliberately separable from the split it unblocks.
+- The book compiles under XeLaTeX with `missing_character = 0`, and the rewritten
+  pages were read.
 ## Chapter 7 is generated, and the week arrives one day at a time
 
 Chapter 7 was hand-written LaTeX built from two schema-v1 lessons: one taught
