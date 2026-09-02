@@ -1,18 +1,19 @@
 {
   "language": "punjabi",
   "chapter": 11,
-  "sourceHash": "fnv1a64:e9d4766614bc4475",
+  "sourceHash": "fnv1a64:aac58dd31c831bad",
   "lessonIds": [
     "PA-C11-dost",
     "PA-C11-parivar",
     "PA-C11-bhara",
-    "PA-C11-bhain"
+    "PA-C11-bhain",
+    "PA-S11-bhabbha"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "punjabi/narration/ch11.txt",
   "json": "punjabi/narration/ch11.json",
-  "textHash": "fnv1a64:3d762a82365f5292",
-  "jsonHash": "fnv1a64:0da36efe19870db0",
+  "textHash": "fnv1a64:ec8e5df08c95ad7a",
+  "jsonHash": "fnv1a64:646d822230eb4417",
   "findings": []
 }

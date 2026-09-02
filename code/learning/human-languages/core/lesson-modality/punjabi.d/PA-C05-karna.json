@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "PA-C05-karna",
+    "language": "punjabi",
+    "chapter": 5,
+    "sequence": 295,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2b8a8539d7507d95",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

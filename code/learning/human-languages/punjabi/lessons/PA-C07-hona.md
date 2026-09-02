@@ -9,27 +9,27 @@ headword: ਹੋਣਾ
 romanization: hoṇā
 gloss: to be — the infinitive that sounds nothing like ਹੈ, because two ancient verbs are braided inside it
 concept_tag: VERB-BE
-prerequisites: [PA-C06-panj-convergence]
+prerequisites: [PA-C06-panj-convergence, PA-S05-babba-lalla-hora]
 sounds: [hora-o, retroflex-na, kanna-aa]
 roots: [sanskrit-bhavati, pie-bhuh, asti-sanskrit]
 etymology_hook: hoṇā comes from Sanskrit bhavati (PIE *bʰuH-, English be); its own present hai comes from asti (English is) — one verb, two roots.
 duration:
   max_seconds: 270
 requires:
-  knowledge: []
+  knowledge: [PA-SCRIPT-RECOG-HORA-01]
 introduces:
   knowledge: [PA-LEX-HONA, PA-GRAMMAR-NA-INFINITIVE, PA-ETYMON-HONA-BHU, PA-GRAMMAR-BE-TWO-ROOTS]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-LEX-HONA, PA-GRAMMAR-NA-INFINITIVE, PA-ETYMON-HONA-BHU, PA-GRAMMAR-BE-TWO-ROOTS]
+  knowledge: [PA-LEX-HONA, PA-GRAMMAR-NA-INFINITIVE, PA-ETYMON-HONA-BHU, PA-GRAMMAR-BE-TWO-ROOTS, PA-SCRIPT-RECOG-HORA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [PA-C02-hai, PA-C05-bolna]
+reviews_of: [PA-C02-hai, PA-C05-bolna, PA-S05-babba-lalla-hora]
 ---
 
 # ਹੋਣਾ — “to be,” and the two old verbs braided inside it
@@ -88,7 +88,7 @@ English braids the very same two, at the very same seam, and nobody notices:
 - [YOU CONNECT: **hai** ← *asti* → English **is**]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-HONA, PA-GRAMMAR-NA-INFINITIVE, PA-ETYMON-HONA-BHU, PA-GRAMMAR-BE-TWO-ROOTS] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-HONA, PA-GRAMMAR-NA-INFINITIVE, PA-ETYMON-HONA-BHU, PA-GRAMMAR-BE-TWO-ROOTS, PA-SCRIPT-RECOG-HORA-01] -->
 
 [PAUSE 3s] Which ending names a Punjabi verb, and what is left of *hoṇā* once
 you take it off? (**-ṇā**; the stem **ho-**.) And why do *hoṇā* and *hai* not

@@ -55,7 +55,7 @@ Hindi *merā*. The Punjabi "my" and the English "my" are, at the root, one word.
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-MERA-02] -->
 
 Punjabi possessives change to match what is owned: **ਮੇਰਾ** (*merā*, masculine),
-**ਮੇਰੀ** (*merī*, feminine), **ਮੇਰੇ** (*mere*, plural). *nāṁ* ("name") is
+*merī* (feminine), *mere* (plural). *nāṁ* ("name") is
 masculine, so it takes *merā*: *merā nāṁ*. (You will meet *merī* the first time
 you own a feminine noun.)
 

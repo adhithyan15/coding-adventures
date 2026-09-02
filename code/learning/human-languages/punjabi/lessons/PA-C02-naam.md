@@ -48,7 +48,9 @@ dot) → **ਨਾਂ** (*nāṁ*). A single nasalised syllable.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[PA-LEX-NAAM-02]; assesses=[] -->
 
-**ਨਾਂ** (*nāṁ*, "name") ← Sanskrit **ਨਾਮਨ੍** (*nāman*), from Proto-Indo-European
+**ਨਾਂ** (*nāṁ*, "name") ← Sanskrit *nāman* (a Sanskrit word, so it is written
+here the way Sanskrit is written in this book — in roman letters, not in
+Gurmukhi), from Proto-Indo-European
 **\*h₃nómn** (with a syllabic final *n*) — the *same* ancient root as English
 **name**, Latin *nōmen*
 (English **noun**, **nom**inate), and Greek *onoma*. So Punjabi *nāṁ* and English

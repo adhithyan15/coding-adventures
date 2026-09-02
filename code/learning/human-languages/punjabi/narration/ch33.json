@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Please and Sorry",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e84a87992b28c01b",
+  "sourceHash": "fnv1a64:3aa2f772630e999f",
   "lessons": [
     {
       "id": "PA-C33-miharbani-karke",
@@ -218,7 +218,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9225f83a77db07eb",
+      "sourceHash": "fnv1a64:f9f3eb4e828c3f95",
       "notice": {
         "modality": "pen",
         "needs": [

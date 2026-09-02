@@ -1,0 +1,14 @@
+{
+  "id": "PA-PATH-011-B",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "PA-S07-naana-jajja-vavva",
+    "PA-C07-auna",
+    "PA-S07-rara-ghagga-dadda"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-049-PREA1-SCRIPT-RUNWAY-C7"
+  ],
+  "after": []
+}

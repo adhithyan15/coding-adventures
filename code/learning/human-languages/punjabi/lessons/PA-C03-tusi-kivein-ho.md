@@ -9,26 +9,26 @@ headword: ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ?
 romanization: "tusī̃ kivēṁ ho?"
 gloss: "how are you? — respectful"
 concept_tag: STATE-HOW-ARE-YOU
-prerequisites: [PA-C03-kivein, PA-C02-tu-tusi]
+prerequisites: [PA-C03-kivein, PA-C02-tu-tusi, PA-S02-mamma-rara-lava, PA-S02-sassa-tatta-sihari, PA-S03-nanna-bihari-dulava]
 sounds: []
 roots: [asti-sanskrit]
 duration:
   max_seconds: 220
 requires:
-  knowledge: [PA-LEX-KIVEIN-03, PA-LEX-YOU-REGISTER-02]
+  knowledge: [PA-LEX-KIVEIN-03, PA-LEX-YOU-REGISTER-02, PA-SCRIPT-RECOG-BIHARI-01, PA-SCRIPT-RECOG-KA-01, PA-SCRIPT-RECOG-LAVA-01, PA-SCRIPT-RECOG-TA-01]
 introduces:
   knowledge: [PA-PHRASE-HOW-ARE-YOU-03, PA-GRAMMAR-TUSI-HO-03]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-LEX-KIVEIN-03, PA-LEX-YOU-REGISTER-02, PA-PHRASE-HOW-ARE-YOU-03, PA-GRAMMAR-TUSI-HO-03]
+  knowledge: [PA-LEX-KIVEIN-03, PA-LEX-YOU-REGISTER-02, PA-PHRASE-HOW-ARE-YOU-03, PA-GRAMMAR-TUSI-HO-03, PA-SCRIPT-RECOG-BIHARI-01, PA-SCRIPT-RECOG-KA-01, PA-SCRIPT-RECOG-LAVA-01, PA-SCRIPT-RECOG-TA-01]
 skills: [listening, speaking]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: respectful
 variety: standard-punjabi
-reviews_of: [PA-C03-kivein, PA-C02-tu-tusi]
+reviews_of: [PA-C03-kivein, PA-C02-tu-tusi, PA-S02-mamma-rara-lava, PA-S02-sassa-tatta-sihari, PA-S03-nanna-bihari-dulava]
 ---
 
 # ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ? (tusī̃ kivēṁ ho?) — "how are you?"
@@ -51,8 +51,8 @@ with *tusī̃* — its whole set is *maiṁ hāṁ* (I am), *tū̃ haiṁ* (you 
 ## Grammar Lens: match the "you" to the verb
 <!-- hl-knowledge: introduces=[]; assesses=[PA-PHRASE-HOW-ARE-YOU-03, PA-GRAMMAR-TUSI-HO-03] -->
 
-To an elder or stranger: **ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ?** To a friend (*tū̃*): **ਤੂੰ ਕਿਵੇਂ
-ਹੈਂ?** (*tū̃ kivēṁ haiṁ?*). Respect takes the plural-shaped *tusī̃ … ho*.
+To an elder or stranger: *tusī̃ kivēṁ ho?* To a friend: *tū̃ kivēṁ haiṁ?*
+Respect takes the plural-shaped *tusī̃ … ho*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-PHRASE-HOW-ARE-YOU-03, PA-GRAMMAR-TUSI-HO-03] -->
@@ -63,7 +63,7 @@ To an elder or stranger: **ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ?** To a friend
 - [YOU SAY: where the verb sits (at the end)]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-PHRASE-HOW-ARE-YOU-03, PA-GRAMMAR-TUSI-HO-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-PHRASE-HOW-ARE-YOU-03, PA-GRAMMAR-TUSI-HO-03, PA-SCRIPT-RECOG-BIHARI-01, PA-SCRIPT-RECOG-KA-01, PA-SCRIPT-RECOG-LAVA-01, PA-SCRIPT-RECOG-TA-01] -->
 <!-- hl-activity: {"id":"PA-C03-tusi-kivein-ho-speaking","kind":"text","assesses":["PA-PHRASE-HOW-ARE-YOU-03","PA-GRAMMAR-TUSI-HO-03"],"prompt":"Ask how someone is respectfully aloud, then type the romanized words you said.","answer":"tusī̃ kivēṁ ho?","accepted":["tusi kivein ho","tusi kiven ho"],"feedback":{"correct":"Speaking score: respectful tusī̃ pairs with ho.","incorrect":"Say tusī̃ kivēṁ ho: respectful you, how, are."},"response_seconds":12} -->
 
 [PAUSE 3s] Ask "how are you?" respectfully, and say where the verb goes. (*Tusī̃

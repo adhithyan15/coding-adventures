@@ -49,8 +49,7 @@ in *shukrīā* (Chapter 1).
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[PA-PHRASE-KHUSHI-HOI-02, PA-ETYMON-KHUSH-PERSIAN-02]; assesses=[PA-LEX-SHUKRIYA-01] -->
 
-The Punjabi "pleased to meet you" is **ਤੁਹਾਨੂੰ ਮਿਲ ਕੇ ਖ਼ੁਸ਼ੀ ਹੋਈ** (*tuhānū̃ mil
-ke khushī hoī*) — literally "**having met you, happiness happened**." The key word
+The Punjabi "pleased to meet you" is *tuhānū̃ mil ke khushī hoī* — literally "**having met you, happiness happened**." The key word
 **ਖ਼ੁਸ਼ੀ** (*khushī*, "happiness") is **not** Sanskrit — it is **Persian**
 (*khush*, "happy, pleasant"), one of the thousands of Persian words woven through
 Punjabi. So even introducing yourself draws on Punjabi's **two vocabularies**:

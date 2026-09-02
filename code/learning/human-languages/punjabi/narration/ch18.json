@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Build the Residence Label and Values",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e859596b9790e231",
+  "sourceHash": "fnv1a64:45cb810db4b8b39a",
   "lessons": [
     {
       "id": "PA-W04-ra",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:968a28d841acd023",
+      "sourceHash": "fnv1a64:8bee6ba06bebbae5",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -290,7 +290,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7ecb35ef692342da",
+      "sourceHash": "fnv1a64:d5ab34a042707dde",
       "notice": {
         "modality": "pen",
         "needs": [

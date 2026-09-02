@@ -9,27 +9,27 @@ headword: ਲੈਣਾ
 romanization: laiṇā
 gloss: to take — a verb that lost a whole consonant on the way here
 concept_tag: VERB-TAKE
-prerequisites: [PA-C08-likhna]
+prerequisites: [PA-C08-likhna, PA-S07-naana-jajja-vavva]
 sounds: [dulankar-ai, retroflex-na]
 roots: [sanskrit-labhate, prakrit-lahai, pie-lebh]
 etymology_hook: laiṇā comes through Prakrit lahaï from Sanskrit labhate “takes, obtains”, on PIE *lebʰ- “to gain” — Greek láphura “spoils”, Lithuanian lõbis “treasure”, no secure English cousin; the Sanskrit bh thinned to h and then to nothing, which is one more fate a consonant can meet.
 duration:
   max_seconds: 265
 requires:
-  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-LIKHNA, PA-LEX-PARHNA, PA-LEX-JANA, PA-SOUND-Y-TO-J, PA-SOUND-TONE-FALLING]
+  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-LIKHNA, PA-LEX-PARHNA, PA-LEX-JANA, PA-SOUND-Y-TO-J, PA-SOUND-TONE-FALLING, PA-SCRIPT-RECOG-JA-01, PA-SCRIPT-RECOG-NAANA-01]
 introduces:
   knowledge: [PA-LEX-LAINA, PA-ETYMON-LAINA-LABH]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-LEX-LAINA, PA-ETYMON-LAINA-LABH, PA-GRAMMAR-NA-INFINITIVE, PA-LEX-LIKHNA, PA-ETYMON-LIKH-SCRATCH, PA-LEX-PARHNA, PA-SOUND-TONE-FALLING, PA-LEX-JANA, PA-ETYMON-JANA-YATI, PA-SOUND-Y-TO-J]
+  knowledge: [PA-LEX-LAINA, PA-ETYMON-LAINA-LABH, PA-GRAMMAR-NA-INFINITIVE, PA-LEX-LIKHNA, PA-ETYMON-LIKH-SCRATCH, PA-LEX-PARHNA, PA-SOUND-TONE-FALLING, PA-LEX-JANA, PA-ETYMON-JANA-YATI, PA-SOUND-Y-TO-J, PA-SCRIPT-RECOG-JA-01, PA-SCRIPT-RECOG-NAANA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [PA-C08-likhna, PA-C08-parhna, PA-C07-jana]
+reviews_of: [PA-C08-likhna, PA-C08-parhna, PA-C07-jana, PA-S07-naana-jajja-vavva]
 ---
 
 # ਲੈਣਾ — “to take,” worn down to almost nothing
@@ -50,7 +50,7 @@ The shortest stem you have met: **lai-**, one syllable and no consonant after th
 vowel at all.
 
 ## The letters in this word
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-RECOG-JA-01, PA-SCRIPT-RECOG-NAANA-01] -->
 
 **ਲ** *l*, carrying the **ੈ** sign for *ai* — two short strokes above the letter,
 the *dulaṅkaṛ*. It is the same sign that sits on **ਮੈਂ** *maiṁ*, “I.” Then the

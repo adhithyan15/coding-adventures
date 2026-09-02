@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Good and So-So",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7ea138477100ab84",
+  "sourceHash": "fnv1a64:002082712c34f574",
   "lessons": [
     {
       "id": "PA-C32-changa",
@@ -181,7 +181,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1af2b5877883167e",
+      "sourceHash": "fnv1a64:2a34d0b9fce5bf4e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -450,7 +450,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f6c999167f94507d",
+      "sourceHash": "fnv1a64:e3e0d21f18f60acd",
       "notice": {
         "modality": "pen",
         "needs": [

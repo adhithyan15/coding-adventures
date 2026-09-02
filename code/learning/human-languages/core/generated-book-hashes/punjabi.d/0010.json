@@ -1,12 +1,14 @@
 {
   "language": "punjabi",
   "chapter": 10,
-  "sourceHash": "fnv1a64:b506df6a4e60ed91",
+  "sourceHash": "fnv1a64:256a90394a392134",
   "lessonIds": [
     "PA-C10-paani",
     "PA-C10-chaa",
+    "PA-S10-chachcha",
     "PA-C10-dudh",
-    "PA-C10-roti"
+    "PA-C10-roti",
+    "PA-S10-addak-dhadda"
   ],
   "tex": "punjabi/book/chapters/ch10-request-food-drink.tex"
 }
