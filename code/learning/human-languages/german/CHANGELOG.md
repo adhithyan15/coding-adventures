@@ -64,6 +64,24 @@ that makes four, its own lesson.
 conjugation lesson can name *du* and *Sie* without borrowing them from later in
 the chapter.
 
+### One defect the parity gate could not see
+
+Reading the generated chapter against its hand-written original — the step a
+block count cannot do for you — caught a rendering fault. The High German
+Consonant Shift table in `GE-C01-gut` and the day-roots list in `GE-C01-tag`
+were written *inside* a markdown blockquote, and the book renderer does not nest
+block structure inside a quote. Both collapsed into one unreadable run-on line
+with stray `>` markers left in the LaTeX:
+
+```
+| English | German | |---|---| | good | gut | | day | Tag | ...
+```
+
+Un-nesting them, prose untouched, gives the generator what it can render: a real
+`tabularx` for the four shift pairs and an `itemize` for the two day-roots. No
+other German lesson nests a list or table in a blockquote, and no other
+generated German chapter carries the artifact.
+
 ### What this reveals, and does not fix
 
 Making these chapters measurable makes them measured. Chapter 1 introduces 31
