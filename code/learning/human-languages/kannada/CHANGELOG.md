@@ -56,8 +56,9 @@ One genuine discrepancy surfaced: the hand-written book romanised Tamil
 எப்படி as *eppaṭi*, the lessons as *eppaḍi*. The book's form is restored, in
 three places — a deliberate three-character change the census reports exactly.
 
-Counted against the merged tree, never derived: `handwritten.d` holds **37**
-entries on `origin/main` and **35** on this branch.
+Counted against the merged tree after merging it, never derived: `handwritten.d`
+holds **35** entries on `origin/main` (sibling PRs retired a French and a German
+chapter while this was in flight) and **33** on this branch.
 
 Verified: human-language-data 124 test files / 1730 tests, all eleven `check:*`
 gates, language-ladder 39 files / 442 tests, and the whole Kannada book compiled
