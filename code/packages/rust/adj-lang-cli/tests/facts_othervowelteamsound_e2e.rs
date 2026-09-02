@@ -80,6 +80,16 @@ fn other_vowel_team_sound_recall_binds_the_sound_with_citation() {
 
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
+    // FULL ANCHORED CITATION PIN. A fragment needle elsewhere in this
+    // file matched only part of the sentence, which let the citation be
+    // truncated AT that point -- deleting everything after it -- while
+    // the test stayed green. Anchoring on the `"source":"` key and
+    // closing on the terminating quote pins head, tail, punctuation and
+    // length at once. See issues #13916 and #13918.
+    assert!(
+        out.contains("\"source\":\"A vowel team is a combination of letters that represents a vowel sound. These lessons focus on vowel teams that represent a new sound (e.g., draw, book) and vowel teams that include letters that aren't vowels (e.g., dew, high). Other Vowel Teams Unit Resources (Lessons 89-94): 89 u /oo/, oo /oo/, 90 oo /ū/, 91 ew /ū/, ui /ū/, ue /ū/, 93 au /aw/, aw /aw/, augh /aw/, 94 ea /ĕ/, a /ŏ/.\""),
+        "the citation is the whole source sentence, exactly: {out}"
+    );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     assert!(
         out.contains("\"Sound\":\"aw_sound\""),

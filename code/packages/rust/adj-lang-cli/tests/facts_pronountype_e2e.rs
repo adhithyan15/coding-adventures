@@ -47,6 +47,16 @@ fn pronoun_type_recall_binds_the_description_directly() {
 
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
+    // THE WHOLE CITATION, anchored on its JSON key and closed by the
+    // terminating quote. This sentence carries a qualifier, so a
+    // truncation would silently drop meaning -- the defect issue #13916
+    // shipped. Pinning a fragment narrows that hole rather than closing
+    // it, because `contains` on a fragment cannot see what precedes or
+    // follows it. See issue #13918.
+    assert!(
+        out.contains("\"source\":\"Personal pronouns are pronouns that change form based on their grammatical person—that is, based on whether they refer to the person speaking or writing (the first person), the person or thing being spoken to (the second person), or the person or thing being spoken about (the third person).\""),
+        "the citation is the whole source sentence, exactly: {out}"
+    );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     assert!(
         out.contains("\"D\":\"used_in_questions\""),

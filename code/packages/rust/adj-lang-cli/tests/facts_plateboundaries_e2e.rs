@@ -50,6 +50,16 @@ fn earth_science_plate_boundaries_recall_binds_motion_with_citation() {
 
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
+    // FULL ANCHORED CITATION PIN. A fragment needle elsewhere in this
+    // file matched only part of the sentence, which let the citation be
+    // truncated AT that point -- deleting everything after it -- while
+    // the test stayed green. Anchoring on the `"source":"` key and
+    // closing on the terminating quote pins head, tail, punctuation and
+    // length at once. See issues #13916 and #13918.
+    assert!(
+        out.contains("\"source\":\"Plates rip apart at a divergent plate boundary, causing volcanic activity and shallow earthquakes.\""),
+        "the citation is the whole source sentence, exactly: {out}"
+    );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     // Plates rip apart at a divergent boundary, one plate subducts at a
     // convergent boundary, and plates slide past at a transform boundary — the

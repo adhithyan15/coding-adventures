@@ -50,6 +50,16 @@ fn geometry_quadrilateral_types_recall_binds_property_with_citation() {
 
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
+    // THE WHOLE CITATION, anchored on its JSON key and closed by the
+    // terminating quote. This sentence carries a qualifier, so a
+    // truncation would silently drop meaning -- the defect issue #13916
+    // shipped. Pinning a fragment narrows that hole rather than closing
+    // it, because `contains` on a fragment cannot see what precedes or
+    // follows it. See issue #13918.
+    assert!(
+        out.contains("\"source\":\"The term 'square' can be used to mean either a square number or a geometric figure consisting of a convex quadrilateral with sides of equal length that are positioned at right angles to each other as illustrated above.\""),
+        "the citation is the whole source sentence, exactly: {out}"
+    );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     // A rhombus has all sides the same length, a parallelogram has opposite
     // sides parallel, a trapezoid has two sides parallel — the recalled

@@ -73,6 +73,16 @@ fn helictites_grow_on_six_named_substrates() {
 
     let (ok, out) = run(&program);
     assert!(ok, "cli should succeed: {out}");
+    // FULL ANCHORED CITATION PIN. A fragment needle elsewhere in this
+    // file matched only part of the sentence, which let the citation be
+    // truncated AT that point -- deleting everything after it -- while
+    // the test stayed green. Anchoring on the `"source":"` key and
+    // closing on the terminating quote pins head, tail, punctuation and
+    // length at once. See issues #13916 and #13918.
+    assert!(
+        out.contains("\"source\":\"Helictites grow on cave ceilings, walls, and less often on cave floors. They typically grow on other speleothems, such as carbonate coatings, crusts, and sometimes on soda straws.\""),
+        "the citation is the whole source sentence, exactly: {out}"
+    );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     for s in [
         "cave_ceiling",

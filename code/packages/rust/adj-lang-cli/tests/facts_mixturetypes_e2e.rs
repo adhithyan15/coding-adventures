@@ -48,6 +48,16 @@ fn chemistry_mixture_example_recall_binds_example_with_citation() {
 
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
+    // THE WHOLE CITATION, anchored on its JSON key and closed by the
+    // terminating quote. This sentence carries a qualifier, so a
+    // truncation would silently drop meaning -- the defect issue #13916
+    // shipped. Pinning a fragment narrows that hole rather than closing
+    // it, because `contains` on a fragment cannot see what precedes or
+    // follows it. See issue #13918.
+    assert!(
+        out.contains("\"source\":\"The salt water described above is homogeneous because the dissolved salt is evenly distributed throughout the entire salt water sample. … When the salt is thoroughly mixed into the water in this glass, it will form a solution. … Vegetable soup is a heterogeneous mixture. … The salad dressing in this bottle is a suspension. … Homogenized milk is a colloid.\""),
+        "the citation is the whole source sentence, exactly: {out}"
+    );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     // A colloid's everyday example is milk; a suspension's is salad dressing —
     // the recalled example values (forward binds).

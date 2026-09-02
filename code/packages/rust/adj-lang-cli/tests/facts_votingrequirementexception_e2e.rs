@@ -67,6 +67,16 @@ fn voting_requirement_exception_recalls_the_carve_out_a_summary_would_drop() {
 
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
+    // FULL ANCHORED CITATION PIN. A fragment needle elsewhere in this
+    // file matched only part of the sentence, which let the citation be
+    // truncated AT that point -- deleting everything after it -- while
+    // the test stayed green. Anchoring on the `"source":"` key and
+    // closing on the terminating quote pins head, tail, punctuation and
+    // length at once. See issues #13916 and #13918.
+    assert!(
+        out.contains("\"source\":\"North Dakota does not require voter registration.\""),
+        "the citation is the whole source sentence, exactly: {out}"
+    );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     // "You must register to vote" is what a confident summary produces.
     // The source says North Dakota does not require registration at all.

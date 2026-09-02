@@ -50,6 +50,16 @@ fn physics_friction_types_recall_binds_context_with_citation() {
 
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
+    // THE WHOLE CITATION, anchored on its JSON key and closed by the
+    // terminating quote. This sentence carries a qualifier, so a
+    // truncation would silently drop meaning -- the defect issue #13916
+    // shipped. Pinning a fragment narrows that hole rather than closing
+    // it, because `contains` on a fragment cannot see what precedes or
+    // follows it. See issue #13918.
+    assert!(
+        out.contains("\"source\":\"It is the type of frictional force which acts between the surfaces of two objects when they are kept at rest about each other.\""),
+        "the citation is the whole source sentence, exactly: {out}"
+    );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     // Static friction acts on objects kept at rest, rolling friction on a
     // spherical object (wheel/ball), fluid friction between layers of a fluid —

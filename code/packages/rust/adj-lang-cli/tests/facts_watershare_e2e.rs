@@ -66,6 +66,16 @@ fn a_share_always_arrives_with_its_denominator() {
 
     let (ok, out) = run(&program);
     assert!(ok, "cli should succeed: {out}");
+    // FULL ANCHORED CITATION PIN. A fragment needle elsewhere in this
+    // file matched only part of the sentence, which let the citation be
+    // truncated AT that point -- deleting everything after it -- while
+    // the test stayed green. Anchoring on the `"source":"` key and
+    // closing on the terminating quote pins head, tail, punctuation and
+    // length at once. See issues #13916 and #13918.
+    assert!(
+        out.contains("\"source\":\"Notice how of the world's total water supply of about 332.5 million cubic miles of water, over 96 percent is saline. And, of the total freshwater, over 68 percent is locked up in ice and glaciers. Another 30 percent of freshwater is in the ground.\""),
+        "the citation is the whole source sentence, exactly: {out}"
+    );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     // ONE JOINT NEEDLE, NOT TWO INDEPENDENT SCANS. Asserting
     // out.contains("S":"...") and out.contains("B":"...") separately does
