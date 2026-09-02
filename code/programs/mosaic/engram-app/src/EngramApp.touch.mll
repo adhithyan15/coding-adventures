@@ -121,7 +121,7 @@ layout EngramApp {
             deck-label : slot: deck-stats-label ,
             deck-name : slot: deck-name ,
             deck-list-label : slot: deck-list-label ,
-            deck-names : slot: deck-names ,
+            deck-rows : slot: deck-rows ,
             total-label : slot: deck-total-label ,
             total-value : slot: deck-total-value ,
             new-label : slot: deck-new-label ,

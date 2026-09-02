@@ -11,12 +11,20 @@ layout DeckStatsPanel {
     Text [ deck-list-label ] (
       content : slot: deck-list-label
     )
-    Row [ deck-list-row ] {
-      For ( each: slot: deck-names , as: deck-option , index: i ) {
-        HostButton [ deck-option-button ] (
-          label : deck-option ,
-          onClick : emit: onSelectDeck
-        )
+    Column [ deck-list-rows ] {
+      For ( each: slot: deck-rows , as: d , index: i ) {
+        Row [ deck-list-entry ] {
+          HostButton [ deck-option-button ] (
+            label : ( d[0] ) ,
+            onClick : emit: onSelectDeck
+          )
+          Text [ deck-row-due ] (
+            content : ( d[1] )
+          )
+          Text [ deck-row-new ] (
+            content : ( d[2] )
+          )
+        }
       }
     }
     Row [ deck-stats-grid ] {

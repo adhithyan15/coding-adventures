@@ -1953,13 +1953,16 @@ CREATE TABLE graves (
             assert_eq!(props["props"]["deck-name"], "Tamil::Script and Roots");
             assert_eq!(props["props"]["deck-total-value"], "2");
             assert_eq!(props["props"]["collection-note-count-value"], "5");
+            // [ name, due, new ] per deck. The C ABI is what the Qt, SwiftUI,
+            // Compose, XAML and Flutter hosts actually call, so the native apps
+            // get the counts only if they come through here.
             assert_eq!(
-                props["props"]["deck-names"],
+                props["props"]["deck-rows"],
                 json!([
-                    "Tamil::Script and Roots",
-                    "Hindi::Devanagari",
-                    "Kannada::Script",
-                    "Spanish::Latin Roots"
+                    ["Tamil::Script and Roots", "1 due", "1 new"],
+                    ["Hindi::Devanagari", "", "1 new"],
+                    ["Kannada::Script", "", "1 new"],
+                    ["Spanish::Latin Roots", "", "1 new"]
                 ])
             );
             assert_eq!(
