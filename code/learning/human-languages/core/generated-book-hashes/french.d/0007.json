@@ -1,0 +1,17 @@
+{
+  "language": "french",
+  "chapter": 7,
+  "sourceHash": "fnv1a64:2f28e776e4ad4a64",
+  "lessonIds": [
+    "FR-C07-lune",
+    "FR-C07-lundi",
+    "FR-C07-mardi",
+    "FR-C07-mercredi",
+    "FR-C07-jeudi",
+    "FR-C07-vendredi",
+    "FR-C07-samedi",
+    "FR-C07-dimanche",
+    "FR-C07-practice"
+  ],
+  "tex": "french/book/chapters/ch07-days.tex"
+}

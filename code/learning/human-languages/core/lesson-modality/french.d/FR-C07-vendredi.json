@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "FR-C09-mois",
+    "id": "FR-C07-vendredi",
     "language": "french",
-    "chapter": 9,
-    "sequence": 235,
+    "chapter": 7,
+    "sequence": 219,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:95f72ac883fd4fa6"
+    "sourceHash": "fnv1a64:f9e876779322b81c"
   },
   "findings": []
 }
