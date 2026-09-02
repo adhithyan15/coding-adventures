@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 1,
-  "sourceHash": "fnv1a64:83e5f2b0fec6192b",
+  "sourceHash": "fnv1a64:903c1fb1709e2937",
   "lessonIds": [
     "PT-C01-ola",
     "PT-W01-ola-guided-copy",
@@ -14,11 +14,5 @@
     "PT-C01-obrigado",
     "PT-C01-practice"
   ],
-  "voiceLessons": 8,
-  "drivablePrefix": 0,
-  "text": "portuguese/narration/ch01.txt",
-  "json": "portuguese/narration/ch01.json",
-  "textHash": "fnv1a64:172529c60e43e9c2",
-  "jsonHash": "fnv1a64:6d5bc8f29e2c7921",
-  "findings": []
+  "tex": "portuguese/book/chapters/ch01-greetings.tex"
 }
