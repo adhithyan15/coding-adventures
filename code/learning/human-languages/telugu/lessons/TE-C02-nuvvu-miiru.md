@@ -58,8 +58,7 @@ first meeting, **mīru**.
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-నువ్వు (*nuvvu*); మీరు (*m\=\i ru*, మీ m\=\i\ + రు
-ru).
+నువ్వు (*nuvvu*); మీరు (*mīru*, మీ *mī* + రు *ru*).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C02-NUVVU-MIIRU-01, TE-ETYMON-C02-NUVVU-MIIRU-02, TE-GRAMMAR-C02-NUVVU-MIIRU-03] -->

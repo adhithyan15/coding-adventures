@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:dc61358d8714356d",
+  "sourceHash": "fnv1a64:65c50d5956a97964",
   "lessons": [
     {
       "id": "TE-C02-peru",
@@ -895,7 +895,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:adaeed279900f768",
+      "sourceHash": "fnv1a64:ab6ae7db4c2de91c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -968,7 +968,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "నువ్వు (nuvvu); మీరు (m=i ru, మీ m=i + రు ru)."
+              "text": "నువ్వు (nuvvu); మీరు (mīru, మీ mī + రు ru)."
             }
           ]
         },
