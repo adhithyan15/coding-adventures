@@ -4,6 +4,30 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — `MathVariants`: how a delimiter grows
+
+`glyph_construction(font, glyph_id, axis)` and `min_connector_overlap(font)`.
+This is what makes `\left(` wrap a tall fraction instead of staying the size of
+an ordinary parenthesis, and TEX-3 cannot lay out a delimited group without it.
+
+Two mechanisms, and a renderer needs both. **Variants** are complete larger
+glyphs the designer drew; **assembly** is for when none is big enough — pieces
+stacked with overlap, which is how a brace spanning half a page is built from a
+top, a bottom, a middle cusp and a repeated extender.
+
+Checked against fontTools reading STIX Two Math, like the constants: a
+parenthesis's 13 variants and 3-part assembly, a brace's 5-part assembly with
+two extenders, and that asking on the wrong axis returns nothing rather than an
+unrelated construction.
+
+The oracle earned it twice. The `MathVariants` offset is at byte 8 of the MATH
+header, not 6 — 6 is `MathGlyphInfo`, and reading it there does not fail, it
+returns plausible numbers from the wrong table (a minimum connector overlap of
+8, which is itself an offset). And mutating the assembly's italics correction
+to a bare `int16` — the `MathValue` stride trap this module already documents
+for `MathConstants` — shifts every part record two bytes early and empties the
+assembly.
+
 ### Added — raw table access for FNT02
 
 `FontFile::data`, `FontFile::table`, `FontFile::index_to_loc_format` and
