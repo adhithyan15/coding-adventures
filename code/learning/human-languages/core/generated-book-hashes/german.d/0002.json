@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 2,
-  "sourceHash": "fnv1a64:44f8bbeac400dc13",
+  "sourceHash": "fnv1a64:4a03256dd640c9d4",
   "lessonIds": [
     "GE-C02-ich",
     "GE-C02-du-sie",
@@ -14,11 +14,5 @@
     "GE-C02-freut-mich",
     "GE-C02-practice"
   ],
-  "voiceLessons": 10,
-  "drivablePrefix": 10,
-  "text": "german/narration/ch02.txt",
-  "json": "german/narration/ch02.json",
-  "textHash": "fnv1a64:5bcf279f3b569356",
-  "jsonHash": "fnv1a64:b080831dae914899",
-  "findings": []
+  "tex": "german/book/chapters/ch02-introductions.tex"
 }

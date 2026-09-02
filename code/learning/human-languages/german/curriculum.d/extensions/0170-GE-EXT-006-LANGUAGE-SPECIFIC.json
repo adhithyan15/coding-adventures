@@ -1,0 +1,11 @@
+{
+  "id": "GE-EXT-006-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can put any German noun into the plural article die, whatever its gender.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C01-die-plural"
+  ]
+}
