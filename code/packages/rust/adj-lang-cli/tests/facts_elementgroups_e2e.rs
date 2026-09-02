@@ -109,7 +109,25 @@ fn chemistry_element_group_family_extension_recalls_newly_added_elements() {
             "noble_gas recalls {gas} (krypton/xenon/radon added this cycle): {out}"
         );
     }
-    assert!(!out.contains("oganesson"), "oganesson stays excluded: {out}");
+    // oganesson is deliberately NOT a row. Assert that STRUCTURALLY -- no
+    // binding and no governing term -- rather than as a bare substring
+    // absence over the whole blob.
+    //
+    // The previous form was `!out.contains("oganesson")`, which also forbade
+    // the word appearing inside quoted EVIDENCE. Encoding the Wikipedia
+    // noble-gas sentence puts "oganesson (Og)" into the citation text, so
+    // that assertion failed while the property it cares about still held.
+    // Note the sentence it tripped on is the same one this test's comment
+    // cites as its justification ("hedges it in some cases") -- the check
+    // forbade the output carrying the evidence for its own reasoning.
+    assert!(
+        !out.contains("element_group_family(oganesson, noble_gas)"),
+        "oganesson is never a governing term: {out}"
+    );
+    assert!(
+        !out.contains("\"E\":\"oganesson\""),
+        "oganesson is never bound as an answer: {out}"
+    );
     assert!(
         out.contains("\"Family\":\"alkali_metal\""),
         "caesium → alkali_metal (added this cycle): {out}"
@@ -117,5 +135,67 @@ fn chemistry_element_group_family_extension_recalls_newly_added_elements() {
     assert!(
         out.contains("\"Family\":\"transition_metal\""),
         "cobalt → transition_metal (added this cycle): {out}"
+    );
+}
+
+const EG_PREFIX_PIN: &str = r#""bindings":{"Family":"halogen"},"citations":[{"source":"The alkali metals consist of the chemical elements lithium (Li), sodium (Na), potassium (K), rubidium (Rb), caesium (Cs), and francium (Fr).","locator":"https://en.wikipedia.org/wiki/Alkali_metal","trust":"consensus","corroborations":[{"source":"They are beryllium (Be), magnesium (Mg), calcium (Ca), strontium (Sr), barium (Ba), and radium (Ra).","locator":"https://en.wikipedia.org/wiki/Alkaline_earth_metal""#;
+
+const EG_ALL_PIN: &str = r#""bindings":{"E":"helium"},"citations":[{"source":"The alkali metals consist of the chemical elements lithium (Li), sodium (Na), potassium (K), rubidium (Rb), caesium (Cs), and francium (Fr).","locator":"https://en.wikipedia.org/wiki/Alkali_metal","trust":"consensus","corroborations":[{"source":"They are beryllium (Be), magnesium (Mg), calcium (Ca), strontium (Sr), barium (Ba), and radium (Ra).","locator":"https://en.wikipedia.org/wiki/Alkaline_earth_metal"},{"source":"The halogens are a group in the periodic table consisting of six chemically related elements, fluorine (F), chlorine (Cl), bromine (Br), iodine (I), and the radioactive elements astatine (At) and tennessine (Ts), though some authors[1] would exclude tennessine as its chemistry is unknown and is theoretically expected to be more like that of gallium.","locator":"https://en.wikipedia.org/wiki/Halogen"},{"source":"The noble gases (historically the inert gases, sometimes referred to as aerogens[1]) are the members of group 18 of the periodic table: helium (He), neon (Ne), argon (Ar), krypton (Kr), xenon (Xe), radon (Rn) and, in some cases, oganesson (Og).","locator":"https://en.wikipedia.org/wiki/Noble_gas""#;
+
+#[test]
+fn element_group_halogen_answer_carries_its_wikipedia_corroboration_intact() {
+    let dir = scratch("cite_halogen");
+    std::fs::copy(
+        facts_stdlib().join("chemistry/element-groups.adj"),
+        dir.join("element-groups.adj"),
+    )
+    .expect("copy shipped element-groups.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"element-groups.adj\"\n? element_group_family(chlorine, $Family)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert!(
+        out.contains(EG_PREFIX_PIN),
+        "halogen's answer carries the alkaline-earth corroboration intact: {out}"
+    );
+}
+
+#[test]
+fn element_group_noble_gas_answer_keeps_the_halogen_tennessine_caveat() {
+    let dir = scratch("cite_noble");
+    std::fs::copy(
+        facts_stdlib().join("chemistry/element-groups.adj"),
+        dir.join("element-groups.adj"),
+    )
+    .expect("copy shipped element-groups.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"element-groups.adj\"\n? element_group_family($E, noble_gas)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // This whole-list pin exists mainly to hold ONE clause in place.
+    //
+    // The halogen sentence ends "...and tennessine (Ts), though some authors[1]
+    // would exclude tennessine as its chemistry is unknown...". The library's
+    // header previously truncated immediately before that clause -- while the
+    // table ships `row (tennessine, halogen)`. Truncating right before the
+    // qualification that bears on your own row is the same defect found in
+    // brain-parts' hippocampus quote. Pinning the full sentence is what stops
+    // the caveat being trimmed back off.
+    //
+    // `transition_metal` deliberately has NO corroboration: its header
+    // sentence is not on the live page under any extractor fix, and the
+    // nearest candidate names only iron, indirectly, for a row set of
+    // iron/cobalt/nickel. Category, not value.
+    assert!(
+        out.contains(EG_ALL_PIN),
+        "noble_gas's answer carries all three corroborations, caveat included: {out}"
     );
 }
