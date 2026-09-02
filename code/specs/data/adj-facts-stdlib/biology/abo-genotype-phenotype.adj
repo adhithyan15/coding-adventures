@@ -11,7 +11,7 @@
 % `biology/heredity-term.adj` already defines the abstract vocabulary this
 % table puts to work — "dominant" ("one allele is expressed and the effect
 % of the other allele is masked"), "genotype" ("the type of variant present
-% at a given location"), "phenotype" ("an individual's observable traits") —
+% at a given location"), "phenotype" ("an individual’s observable traits") —
 % but that table's own header explicitly documents checking twice for a
 % composable second table and finding the search dry: no other shipped table
 % has `gene`, `allele`, `dominant`, `recessive`, `genotype`, or `phenotype`

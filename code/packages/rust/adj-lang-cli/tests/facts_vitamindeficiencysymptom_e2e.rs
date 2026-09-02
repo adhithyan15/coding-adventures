@@ -104,3 +104,36 @@ fn vitamin_deficiency_symptom_abstains_on_vitamin_c() {
         "vitamin_c's cited span names scurvy but states no symptom -- honest abstention expected: {out}"
     );
 }
+
+const VITAMIN_DEFICIENCY_SYMPTOM_PIN: &str = r#""bindings":{"Symptom":"inability_to_see_in_low_light"},"citations":[{"source":"Xerophthalmia is the inability to see in low light, and it can lead to blindness if it isn’t treated.","locator":"https://ods.od.nih.gov/factsheets/VitaminA-Consumer/","trust":"authoritative""#;
+
+#[test]
+fn vitamin_deficiency_symptom_citation_matches_its_page_glyph_for_glyph() {
+    let dir = scratch("glyph");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"vitamin-deficiency-symptom.adj\"
+? vitamin_deficiency_symptom(vitamin_a, $Symptom)
+",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // THIS PIN QUERIES vitamin_a, NOT vitamin_d. The table ships ONE envelope
+    // for five rows, and that envelope is the xerophthalmia/night-blindness
+    // sentence -- which grounds vitamin_a and NOT vitamin_d. Pinning vitamin_d
+    // would pair an answer about bone deformity with a citation about vision,
+    // and freeze it in a test. That is #14124's defect class; the one-envelope
+    // shape here is pre-existing and tracked there.
+    //
+    // This site was reported CLEAN by installment 3a's collector, which
+    // could not complete TLS to its host and swallowed the error -- so an
+    // UNCHECKED site was indistinguishable from a checked one. It came back
+    // reachable AND flattened once fetch failures were printed instead.
+    assert!(
+        out.contains(VITAMIN_DEFICIENCY_SYMPTOM_PIN),
+        "the vitamin deficiency symptom citation matches its page: {out}"
+    );
+}

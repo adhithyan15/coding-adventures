@@ -22,7 +22,7 @@
 %
 %   "Next are the secondary consumers, which eat primary consumers.
 %    Secondary consumers are mostly carnivores, from the Latin words meaning
-%    'meat eater.'"
+%    “meat eater.”"
 %
 %   "Ecosystems can also have tertiary consumers, carnivores that eat other
 %    carnivores."
@@ -125,6 +125,6 @@ table consumer_trophic_level {
     locator "https://education.nationalgeographic.org/resource/consumers/"
     trust consensus
 
-    cites "Next are the secondary consumers, which eat primary consumers. Secondary consumers are mostly carnivores, from the Latin words meaning \"meat eater.\"" locator "https://education.nationalgeographic.org/resource/consumers/"
+    cites "Next are the secondary consumers, which eat primary consumers. Secondary consumers are mostly carnivores, from the Latin words meaning “meat eater.”" locator "https://education.nationalgeographic.org/resource/consumers/"
     cites "Ecosystems can also have tertiary consumers, carnivores that eat other carnivores." locator "https://education.nationalgeographic.org/resource/consumers/"
 }
