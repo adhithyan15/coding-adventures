@@ -2008,15 +2008,42 @@ fn engram_app_props_for_state(
     };
     let hidden_count = stats.suspended_count + stats.buried_count;
     let media_analysis = analyze_media_references(state);
-    let deck_names = state
+    // One row per deck: [ display-name, due, new ].
+    //
+    // The list used to be names alone, so a deck with forty cards waiting
+    // looked exactly like an empty one -- which defeats the point of a
+    // flashcard app's home screen. `get_deck_stats_for_state` already computed
+    // these counts for the SELECTED deck; this asks it per deck.
+    //
+    // The counts are formatted here rather than in the component, matching the
+    // "fat engine, dumb UI" contract the other packages follow: the UI renders
+    // strings and does no counting, so all five backends show the same thing
+    // without reimplementing the arithmetic.
+    let deck_rows = state
         .decks
         .iter()
         .map(|deck| {
-            if deck.name.trim().is_empty() {
+            let name = if deck.name.trim().is_empty() {
                 deck.id.clone()
             } else {
                 deck.name.clone()
-            }
+            };
+            let deck_stats = get_deck_stats_for_state(state, &deck.id, now);
+            vec![
+                name,
+                // Empty rather than "0 due": a deck with nothing waiting should
+                // say nothing, so the rows that DO have work catch the eye.
+                if deck_stats.due_count > 0 {
+                    format!("{} due", deck_stats.due_count)
+                } else {
+                    String::new()
+                },
+                if deck_stats.new_count > 0 {
+                    format!("{} new", deck_stats.new_count)
+                } else {
+                    String::new()
+                },
+            ]
         })
         .collect::<Vec<_>>();
     let browser_props = engram_browser_props_for_state(
@@ -2071,7 +2098,7 @@ fn engram_app_props_for_state(
         "show-options-screen": active_screen == EngramAppScreen::Options,
         "deck-name": deck_name,
         "deck-list-label": "Decks",
-        "deck-names": deck_names,
+        "deck-rows": deck_rows,
         "deck-stats-label": "Deck stats",
         "deck-total-label": "Total",
         "deck-total-value": stats.total.to_string(),
@@ -7726,12 +7753,16 @@ mod tests {
         assert_eq!(value["props"]["collection-note-type-count-value"], "1");
         assert_eq!(value["props"]["collection-media-count-value"], "0");
         assert_eq!(
-            value["props"]["deck-names"],
+            value["props"]["deck-rows"],
+            // [ name, due, new ]. Every deck here has new cards; only Tamil has
+            // anything DUE, and only its row shows a due count. That asymmetry
+            // is the point -- a deck with nothing waiting says nothing in that
+            // column, so the rows with work are the ones that catch the eye.
             json!([
-                "Tamil::Script and Roots",
-                "Hindi::Devanagari",
-                "Kannada::Script",
-                "Spanish::Latin Roots"
+                ["Tamil::Script and Roots", "1 due", "1 new"],
+                ["Hindi::Devanagari", "", "1 new"],
+                ["Kannada::Script", "", "1 new"],
+                ["Spanish::Latin Roots", "", "1 new"]
             ])
         );
         assert_eq!(
@@ -10718,11 +10749,21 @@ mod tests {
 
         let initial: Value = serde_json::from_str(&session.engram_app_props("", NOW)).unwrap();
         assert_eq!(initial["props"]["deck-name"], "Tamil");
-        assert_eq!(initial["props"]["deck-names"], json!(["Tamil", "Spanish"]));
+        assert_eq!(
+            initial["props"]["deck-rows"],
+            json!([["Tamil", "", "2 new"], ["Spanish", "", "1 new"]])
+        );
         assert_eq!(initial["props"]["deck-total-value"], "2");
 
+        // The deck list emits an INDEX, not a name. It has to: a row renders
+        // three strings and MLL cannot hand an emit a computed value like
+        // `row[0]`, so the button carries the row's position and the engine
+        // resolves it. `deck-rows` above and this index both walk `state.decks`
+        // in order, which is what makes position a safe identifier -- and is
+        // the thing worth pinning, because a change to either ordering would
+        // silently start selecting the wrong deck.
         let selected: Value = serde_json::from_str(&session.handle_engram_app_event(
-            r#"{"event":"onSelectDeck","value":"Spanish"}"#,
+            r#"{"event":"onSelectDeck","index":1}"#,
             "",
             NOW + 1,
         ))
@@ -10731,6 +10772,25 @@ mod tests {
         assert_eq!(selected["event"], "onSelectDeck");
         assert_eq!(selected["props"]["deck-name"], "Spanish");
         assert_eq!(selected["props"]["deck-total-value"], "1");
+
+        // Selecting by name still works. Nothing in the UI emits this shape any
+        // more, but the engine's event surface is also the scripting surface,
+        // and a name is the stable identifier across a reordering.
+        let by_name: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onSelectDeck","value":"Tamil"}"#,
+            "",
+            NOW + 1,
+        ))
+        .unwrap();
+        assert_eq!(by_name["props"]["deck-name"], "Tamil");
+
+        let selected: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onSelectDeck","index":1}"#,
+            "",
+            NOW + 1,
+        ))
+        .unwrap();
+        assert_eq!(selected["props"]["deck-name"], "Spanish");
 
         let persisted: Value =
             serde_json::from_str(&session.engram_app_props("", NOW + 2)).unwrap();

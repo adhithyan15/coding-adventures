@@ -18,7 +18,8 @@ component EngramApp {
   slot host-status-message : text ;
   slot deck-name : text ;
   slot deck-list-label : text ;
-  slot deck-names : list<text> ;
+  // [ display-name, due, new ] per deck — see DeckStatsPanel.mil.
+  slot deck-rows : list<list<text>> ;
   slot deck-stats-label : text ;
   slot deck-total-label : text ;
   slot deck-total-value : text ;
@@ -267,7 +268,7 @@ component EngramApp {
   emit onShowStats ;
   emit onShowOptions ;
   emit onReveal ;
-  emit onSelectDeck ( value : text ) ;
+  emit onSelectDeck ( index : number ) ;
   emit onAgain ;
   emit onHard ;
   emit onGood ;
