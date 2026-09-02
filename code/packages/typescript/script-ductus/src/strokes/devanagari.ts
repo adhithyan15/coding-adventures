@@ -607,6 +607,138 @@ export const entries: DuctusEntry[] = [
       source: devanagariAlphabetSource("ऊ"),
     },
   ],
+  // The four Commons panels are one pen-down run each: the left arm, then the
+  // right body looped ANTICLOCKWISE round its little ball (panel 2's solid arrow
+  // crosses the top of the ball leftwards, and its dotted half climbs the hidden
+  // right side), then the stem, then the shirorekha -- four strokes, three lifts.
+  [
+    "devanagari:ऋ",
+    {
+      script: "devanagari",
+      glyph: "ऋ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "sweep right along the short upper shoulder",
+              path: [
+                { x: 41, y: 381 },
+                { x: 111, y: 408 },
+                { x: 180, y: 418 },
+                { x: 240, y: 407 },
+                { x: 293, y: 369 },
+                { x: 334, y: 322 },
+                { x: 382, y: 266 },
+              ],
+            },
+            {
+              label: "turn back down-left through the long diagonal",
+              path: [
+                { x: 382, y: 266 },
+                { x: 310, y: 225 },
+                { x: 234, y: 185 },
+                { x: 157, y: 145 },
+                { x: 80, y: 105 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then carry the short arm out to the right",
+              path: [
+                { x: 444, y: 278 },
+                { x: 500, y: 285 },
+                { x: 545, y: 294 },
+                { x: 590, y: 309 },
+                { x: 620, y: 325 },
+              ],
+            },
+            {
+              label:
+                "loop anticlockwise round the little ball: up its right side and back over the top",
+              path: [
+                { x: 620, y: 325 },
+                { x: 655, y: 333 },
+                { x: 681, y: 340 },
+                { x: 700, y: 359 },
+                { x: 707, y: 385 },
+                { x: 700, y: 411 },
+                { x: 681, y: 430 },
+                { x: 655, y: 437 },
+                { x: 629, y: 430 },
+                { x: 610, y: 411 },
+                { x: 603, y: 385 },
+                { x: 610, y: 359 },
+                { x: 629, y: 340 },
+                { x: 650, y: 331 },
+                { x: 672, y: 315 },
+              ],
+            },
+            {
+              label: "come down and out to the right",
+              path: [
+                { x: 672, y: 315 },
+                { x: 690, y: 270 },
+                { x: 710, y: 225 },
+                { x: 728, y: 190 },
+              ],
+            },
+            {
+              label:
+                "swing the bowl left, round the bottom, and up to the right",
+              path: [
+                { x: 728, y: 190 },
+                { x: 667, y: 194 },
+                { x: 620, y: 172 },
+                { x: 593, y: 141 },
+                { x: 584, y: 98 },
+                { x: 592, y: 56 },
+                { x: 618, y: 25 },
+                { x: 657, y: 6 },
+                { x: 706, y: 0 },
+                { x: 739, y: 2 },
+                { x: 770, y: 9 },
+                { x: 799, y: 19 },
+                { x: 826, y: 34 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "lift, then drop the right stem from the headline to the foot",
+              path: [
+                { x: 422, y: 548 },
+                { x: 422, y: 400 },
+                { x: 422, y: 250 },
+                { x: 422, y: 100 },
+                { x: 422, y: 8 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw the shirorekha left-to-right",
+              path: [
+                { x: 12, y: 586 },
+                { x: 220, y: 586 },
+                { x: 440, y: 586 },
+                { x: 660, y: 586 },
+                { x: 855, y: 586 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: devanagariAlphabetSource("ऋ"),
+    },
+  ],
   // The three Commons panels draw the long left stem and tail continuously,
   // then place the shorter hooked stem and headline as separate runs.
   [
