@@ -1326,17 +1326,23 @@ jobs:
       #
       # It FAILS when poppler is absent, for the same reason the qpdf gate
       # does: an oracle that skips reports green while checking nothing.
+      #
+      # Linux and macOS only. The rendering oracle checks where ink lands on a
+      # page, and the PDF bytes it rasterises are byte-identical on every
+      # platform -- so a third rasteriser adds no coverage, while poppler has
+      # no reliable Chocolatey package (`choco install poppler` fails on
+      # windows-2025). The tests are correspondingly compiled out on Windows,
+      # so this is a stated scope rather than a silent skip: everywhere the
+      # gate runs, a missing poppler still fails the build.
       - name: Install poppler for the PDF rendering oracle
-        if: needs.detect.outputs.needs_rust == 'true'
+        if: needs.detect.outputs.needs_rust == 'true' && runner.os != 'Windows'
         shell: bash
         run: |
           set -euo pipefail
           if [ "$RUNNER_OS" = "Linux" ]; then
             sudo apt-get install -y poppler-utils
-          elif [ "$RUNNER_OS" = "macOS" ]; then
-            brew install poppler
           else
-            choco install poppler -y --no-progress
+            brew install poppler
           fi
           pdftoppm -v
 

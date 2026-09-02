@@ -39,7 +39,10 @@ throughout; the rendering oracle caught it on its first run.
 ### Testing — a second, independent renderer
 
 `tests/render_gate.rs` rasterises with poppler (`pdftoppm`) and asserts where
-the ink landed. Structural validation cannot see an upside-down page, because
+the ink landed. Linux and macOS only: the bytes are identical on every
+platform, so a third rasteriser adds no coverage and poppler has no reliable
+Chocolatey package. That is a stated scope, not a skip -- everywhere it runs, a
+missing poppler fails the build. Structural validation cannot see an upside-down page, because
 nothing about it is structurally wrong. Mutation-checked: dropping the y
 conversion fails three of the four rendering tests, while the PDF-space control
 keeps passing — so the suite distinguishes the two coordinate spaces rather

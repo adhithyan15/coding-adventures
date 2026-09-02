@@ -22,6 +22,16 @@
 //! and for the same reason: a skipped oracle reports green while checking
 //! nothing, which is worse than no oracle at all because it looks like
 //! coverage.
+//!
+//! ## Not on Windows
+//!
+//! The whole file is compiled out there, and that is a stated scope rather
+//! than a skip. The bytes being rasterised are identical on every platform --
+//! this crate writes the same PDF everywhere -- so a third rasteriser adds no
+//! coverage, and poppler has no reliable Chocolatey package. Everywhere the
+//! gate does run, a missing poppler still fails the build rather than passing
+//! quietly, which is the property that matters.
+#![cfg(not(target_os = "windows"))]
 
 use std::process::Command;
 
