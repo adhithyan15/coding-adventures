@@ -1,0 +1,6 @@
+{
+  "language": "malayalam",
+  "chapter": 1,
+  "output": "malayalam/book/chapters/ch01-greetings.tex",
+  "scriptSet": "malayalam-comparisons"
+}

@@ -217,10 +217,101 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
+  build-desktop:
+    name: Build the desktop app (${{ matrix.platform }})
+    needs: validate
+    strategy:
+      # One platform failing should not hide whether the others work. The
+      # publish job asserts the FULL payload set anyway, so a partial matrix
+      # cannot produce a release that quietly ships less than it claims.
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux
+            runner: ubuntu-latest
+          - platform: macos
+            runner: macos-latest
+          - platform: windows
+            runner: windows-latest
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Checkout the validated release commit
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.validate.outputs.commit }}
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      # `mosaic-compile` links `cairo-sys-rs` through the paint backend.
+      - name: Install Linux build dependencies
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y libcairo2-dev
+
+      # The emit and packaging steps are a bash script, which the Windows runner
+      # runs through Git Bash. `shell: bash` selects it explicitly rather than
+      # relying on the default, which is PowerShell there.
+      - name: Build and package the desktop app
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash code/programs/mosaic/engram-app/scripts/build-electron.sh \
+            --output "$RUNNER_TEMP/engram-desktop" --package
+
+      # electron-builder names its output after the app and version; the
+      # release names it after the platform. Renaming here rather than
+      # configuring electron-builder to match keeps one source of truth for
+      # published names -- `engram_release.py` -- which is what the publish
+      # job's payload-set assertion compares against.
+      - name: Name the artifact for publication
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+          PLATFORM: ${{ matrix.platform }}
+        run: |
+          set -euo pipefail
+          target="$(python code/scripts/engram_release.py desktop-name \
+            --version "$RELEASE_VERSION" --platform "$PLATFORM")"
+          extension="${target##*.}"
+          release_dir="$RUNNER_TEMP/engram-desktop/electron/release"
+          built="$(find "$release_dir" -maxdepth 1 -name "*.$extension" -print -quit)"
+          if [ -z "$built" ]; then
+            echo "no .$extension in $release_dir" >&2
+            ls -la "$release_dir" >&2
+            exit 1
+          fi
+          mkdir -p release-assets
+          cp "$built" "release-assets/$target"
+          ls -la release-assets
+
+      - name: Upload the desktop payload
+        uses: actions/upload-artifact@v7
+        with:
+          name: engram-desktop-${{ matrix.platform }}
+          path: release-assets/*
+          if-no-files-found: error
+          retention-days: 7
+
   publish:
     name: Publish one Engram release
     if: github.event_name == 'workflow_dispatch'
-    needs: [validate, build-web]
+    needs: [validate, build-web, build-desktop]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -252,7 +343,7 @@ jobs:
         run: |
           set -euo pipefail
           expected="$(python code/scripts/engram_release.py artifact-names --version "$RELEASE_VERSION" | sort)"
-          actual="$(cd release-assets && ls -1 ./*.zip | sed 's|^\./||' | sort)"
+          actual="$(cd release-assets && ls -1 | sort)"
           if [[ "$expected" != "$actual" ]]; then
             echo "release payload mismatch" >&2
             diff <(echo "$expected") <(echo "$actual") >&2 || true
@@ -265,10 +356,10 @@ jobs:
         with:
           tag_name: ${{ needs.validate.outputs.tag }}
           target_commitish: ${{ needs.validate.outputs.commit }}
-          files: release-assets/*.zip
+          files: release-assets/*
           fail_on_unmatched_files: true
           body: |
-            Engram ${{ needs.validate.outputs.version }} — web build.
+            Engram ${{ needs.validate.outputs.version }} — web and desktop.
 
             The browser app, built from the Mosaic package on the Rust core.
             **Anki import and export run in the browser** — legacy `.apkg` and
@@ -277,7 +368,14 @@ jobs:
 
             Media import is capped at 32 MiB in the browser.
 
-            Native installers are not part of this release.
+            **Desktop builds are included** for Linux (AppImage), macOS (zip)
+            and Windows (portable exe), built from the same Mosaic package on
+            the same Rust core as the web build.
+
+            The macOS and Windows builds are **unsigned**. macOS will refuse to
+            open the app on first launch; right-click and choose Open, or clear
+            the quarantine attribute. A signed build needs an Apple Developer
+            certificate this project does not have.
 
             Built from ${{ needs.validate.outputs.commit }}.
         env:

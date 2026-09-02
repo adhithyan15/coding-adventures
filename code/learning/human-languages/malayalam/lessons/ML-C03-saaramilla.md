@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: ML-C03-saaramilla
+spine_node: SPINE-COURTESY-THANK
 sequence: 200
 chapter: 3
 type: phrase
@@ -10,23 +12,38 @@ concept_tag: COURTESY-YOUREWELCOME
 prerequisites: [ML-C01-illa, ML-C01-nandi]
 sounds: [illa-negative]
 roots: [saara-sanskrit, illa-not-dravidian]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ML-LEX-ILLA-01]
+introduces:
+  knowledge: [ML-LEX-SAARAMILLA-01]
+practises:
+  knowledge: [ML-LEX-SAARAMILLA-01, ML-CONCEPT-C01-NEGATIVE-EXISTENCE-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [ML-C01-illa]
 ---
 
 # സാരമില്ല (sāramilla) — "it doesn't matter"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] When someone thanks you — or apologises — this is the easy, gracious
 reply, and it fuses Malayalam's two heritages in one word.
 
 ## The letters in this word
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **സാരം** (*sāraṁ*, "substance, matter") + **ഇല്ല** (*illa*, "is not") →
 **സാരമില്ല** (*sāramilla*).
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[ML-LEX-SAARAMILLA-01]; assesses=[] -->
 
 **സാരമില്ല** means "**there's no matter to it / it doesn't matter**" — used for
 "never mind / no worries / you're welcome." It is a perfect little emblem of
@@ -37,12 +54,14 @@ same "is-not" shared across **Malayalam, Tamil, and Kannada** — one of the dee
 bonds of the south (Telugu alone diverges, to *lēdu*).
 
 ## Grammar Lens: ഇല്ല, the all-purpose "no"
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C01-NEGATIVE-EXISTENCE-01] -->
 
 *Illa* negates existence and stands alone as "no": *paṇam illa* ("there's no
 money"), *ñān illa* ("it's not me / I'm not [there]"). It is the negative twin of
 the copula *āṇŭ* ("is") you learned in Chapter 2 — *āṇŭ* affirms, *illa* denies.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-SAARAMILLA-01, ML-CONCEPT-C01-NEGATIVE-EXISTENCE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "sāramilla"]
@@ -50,6 +69,7 @@ the copula *āṇŭ* ("is") you learned in Chapter 2 — *āṇŭ* affirms, *ill
 - [YOU SAY: the *āṇŭ* / *illa* pair — "is" and "is-not"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-SAARAMILLA-01, ML-CONCEPT-C01-NEGATIVE-EXISTENCE-01] -->
 
 [PAUSE 3s] What does *sāramilla* literally say, and which of its two words is
 Sanskrit? ("There's no matter / it doesn't matter"; *sāraṁ* "substance" is

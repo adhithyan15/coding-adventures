@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "The Heart",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:80942f2aa1e528af",
+  "sourceHash": "fnv1a64:914a1ca9b4ad9093",
   "lessons": [
     {
       "id": "UR-C11-dil",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ecf4de0987b43abc",
+      "sourceHash": "fnv1a64:d8cee9713ca84984",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Recall منہ: its plain ن marked a nasal vowel, and its possible tie to Greek mŷthos was held loosely. Recall also پوچھنا: one root, two roads into Urdu — inherited pūchhnā and borrowed pursish, cousins by two different paths. This chapter's single word runs that same two-roads shape one level deeper, on the body's most-named part."
+              "text": "Recall منہ: its plain ن marked a nasal vowel, and its possible tie to Greek mŷthos was held loosely. Recall also pūchhnā: one root, two roads into Urdu — inherited pūchhnā and borrowed pursish, cousins by two different paths. This chapter's single word runs that same two-roads shape one level deeper, on the body's most-named part."
             }
           ]
         },
@@ -65,7 +65,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "دل is Persian — borrowed into Urdu from Middle Persian dil, by the same road as خدا back in Chapter 5. But unlike خدا, whose Sanskrit side this book never named, دل has one, and it is worth naming precisely."
+              "text": "دل is Persian — borrowed into Urdu from Middle Persian dil, by the same road as khudā back in Chapter 5. But unlike khudā, whose Sanskrit side this book never named, دل has one, and it is worth naming precisely."
             },
             {
               "kind": "speech",

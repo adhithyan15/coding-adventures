@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "People You'd Introduce",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5658223eb1ee6ed3",
+  "sourceHash": "fnv1a64:d52d0f5d443af79d",
   "lessons": [
     {
       "id": "UR-C09-bhai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d9eb8148c2eff2eb",
+      "sourceHash": "fnv1a64:f2b9198d56225dbb",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -78,7 +78,7 @@
             },
             {
               "kind": "speech",
-              "text": "ئ is new: ye with hamza above. It is a fourth shape in the ye family, alongside consonantal y in کیا, long ī in جی, and broad final e in کیسے. Its job is narrower than any of those: it marks a glide between two vowels that would otherwise collide — here, between ā and ī. بھ is new too, extending the two-eyed he you already know from جھ, ٹھ, ڑھ and چھ to a fifth base letter, ب."
+              "text": "ئ is new: ye with hamza above. It is a fourth shape in the ye family, alongside consonantal y in کیا, long ī in jī, and broad final e in کیسے. Its job is narrower than any of those: it marks a glide between two vowels that would otherwise collide — here, between ā and ī. بھ is new too, extending the two-eyed he you already know from jh, ṭh, ṛh and chh to a fifth base letter, ب."
             }
           ]
         },
@@ -100,7 +100,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "bhāī comes from Sanskrit bhrā́tṛ, \"brother,\" from Proto-Indo-Iranian bʰráHtā, from Proto-Indo-European bʰréh₂tēr. English brother comes from the very same root. Unlike پسند's disputed link to candēre two lessons ago, this one is settled: Sanskrit and English are both Indo-European, so bhāī and brother are real relatives, not two languages landing on the same idea by accident."
+              "text": "bhāī comes from Sanskrit bhrā́tṛ, \"brother,\" from Proto-Indo-Iranian bʰráHtā, from Proto-Indo-European bʰréh₂tēr. English brother comes from the very same root. Unlike pasand's disputed link to candēre two lessons ago, this one is settled: Sanskrit and English are both Indo-European, so bhāī and brother are real relatives, not two languages landing on the same idea by accident."
             }
           ]
         },
@@ -183,7 +183,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6bce4b8aed4806f0",
+      "sourceHash": "fnv1a64:5315e835977c4062",
       "notice": null,
       "blocks": [
         {
@@ -233,7 +233,7 @@
             },
             {
               "kind": "speech",
-              "text": "میرا بھائی، میری بہن۔ — merā bhāī, merī bahan. — my brother, my sister."
+              "text": "merā bhāī, merī bahan. — my brother, my sister."
             },
             {
               "kind": "speech",
@@ -248,7 +248,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "bahan continues Sanskrit bhaginī, traditionally connected to bhaj-, \"to share, to portion out\" — a sister pictured as a co-heir, sharing the family's portion. Specialists flag a real problem with the sound history, though: the aspiration in bhaginī does not shift the way this derivation needs it to. Hold this one loosely, the way پسند's candēre link was held loosely — a plausible story, not a settled one like bhāī's."
+              "text": "bahan continues Sanskrit bhaginī, traditionally connected to bhaj-, \"to share, to portion out\" — a sister pictured as a co-heir, sharing the family's portion. Specialists flag a real problem with the sound history, though: the aspiration in bhaginī does not shift the way this derivation needs it to. Hold this one loosely, the way pasand's candēre link was held loosely — a plausible story, not a settled one like bhāī's."
             }
           ]
         },
@@ -350,7 +350,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d66254282e0e1ab",
+      "sourceHash": "fnv1a64:a0a1e1aa3beb49e5",
       "notice": null,
       "blocks": [
         {
@@ -392,7 +392,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "بھائی (bhāī) was masculine and needed merā. بہن (bahan) was feminine and needed merī. دوست breaks the pattern on purpose: it takes the same form for a male or a female friend, and merā dost works for either. Native Urdu nouns almost always commit to a gender; this Persian loan simply does not carry the machinery that would make it agree."
+              "text": "bhāī was masculine and needed merā. bahan was feminine and needed merī. دوست breaks the pattern on purpose: it takes the same form for a male or a female friend, and merā dost works for either. Native Urdu nouns almost always commit to a gender; this Persian loan simply does not carry the machinery that would make it agree."
             }
           ]
         },
@@ -407,7 +407,7 @@
             },
             {
               "kind": "speech",
-              "text": "Persian's own word for \"ask,\" porsīdan, turned out to share one root with Urdu's inherited پوچھنا. دوست (dost) is not that kind of cousin — Urdu has no inherited word from ǵews- to compare it against — but it is the same general shape: an old Indo-European root, arriving in Urdu by the Persian road alone."
+              "text": "Persian's own word for \"ask,\" porsīdan, turned out to share one root with Urdu's inherited pūchhnā. دوست (dost) is not that kind of cousin — Urdu has no inherited word from ǵews- to compare it against — but it is the same general shape: an old Indo-European root, arriving in Urdu by the Persian road alone."
             }
           ]
         },
@@ -501,7 +501,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:90d1a109303342d1",
+      "sourceHash": "fnv1a64:61e5abcce08cfe6f",
       "notice": null,
       "blocks": [
         {
@@ -536,7 +536,7 @@
             },
             {
               "kind": "speech",
-              "text": "خاندان (khāndān) is grammatically masculine, so merā stays unchanged — the same class as بھائی (bhāī)."
+              "text": "خاندان (khāndān) is grammatically masculine, so merā stays unchanged — the same class as bhāī."
             }
           ]
         },
@@ -547,11 +547,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "خاندان (khāndān) is Classical Persian, borrowed into Urdu whole. Unlike خدا حافظ, whose Persian khudā and Arabic-rooted hāfiz this book could pull apart piece by piece, no source here commits to what خاندان (khāndān) is built from internally — so this one stays a single unanalyzed loan, not a compound to take apart."
+              "text": "خاندان (khāndān) is Classical Persian, borrowed into Urdu whole. Unlike khudā hāfiz, whose Persian khudā and Arabic-rooted hāfiz this book could pull apart piece by piece, no source here commits to what خاندان (khāndān) is built from internally — so this one stays a single unanalyzed loan, not a compound to take apart."
             },
             {
               "kind": "speech",
-              "text": "Line up this chapter's four nouns by where they came from. بھائی (bhāī) and بہن (bahan) are inherited, straight from Sanskrit, the same road as every kin word before them. دوست (dost) and خاندان (khāndān) are Persian, the same road as خدا and حافظ back in Chapter 5. The people you would point to and name stayed native; the words for choosing them as friends and grouping them as family reached outside the language."
+              "text": "Line up this chapter's four nouns by where they came from. bhāī and bahan are inherited, straight from Sanskrit, the same road as every kin word before them. dost and خاندان (khāndān) are Persian, the same road as خدا and hāfiz back in Chapter 5. The people you would point to and name stayed native; the words for choosing them as friends and grouping them as family reached outside the language."
             }
           ]
         },
@@ -611,7 +611,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which two of this chapter's nouns are inherited from Sanskrit, and which two are Persian loans? (بھائی (bhāī), بہن (bahan) inherited; دوست (dost), خاندان (khāndān) Persian.) Say all four people-words with merā or merī correctly chosen for each."
+              "text": "Which two of this chapter's nouns are inherited from Sanskrit, and which two are Persian loans? (bhāī, bahan inherited; dost, خاندان (khāndān) Persian.) Say all four people-words with merā or merī correctly chosen for each."
             },
             {
               "kind": "speech",
@@ -621,7 +621,7 @@
               "kind": "activity",
               "scored": true,
               "id": "UR-C09-khandan-sort",
-              "prompt": "Type the Urdu word for 'family' — the loan that groups بھائی (bhāī) and بہن (bahan) together.",
+              "prompt": "Type the Urdu word for 'family' — the loan that groups bhāī and bahan together.",
               "assesses": [
                 "UR-ETYMON-KHANDAN-PERSIAN"
               ],
@@ -632,7 +632,7 @@
                 "khāndān"
               ],
               "feedback": {
-                "correct": "Right: خاندان — Persian, like دوست, خدا and حافظ.",
+                "correct": "Right: خاندان — Persian, like dost, khudā and hāfiz.",
                 "incorrect": "Use خاندان — khāndān."
               }
             }
