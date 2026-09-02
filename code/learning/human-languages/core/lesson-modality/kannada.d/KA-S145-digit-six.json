@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S145-digit-six",
+    "language": "kannada",
+    "chapter": 14,
+    "sequence": 427,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:265108884707180e",
+    "detachableSegments": [
+      "Script you'll notice: ೬",
+      "Writing: ೬ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

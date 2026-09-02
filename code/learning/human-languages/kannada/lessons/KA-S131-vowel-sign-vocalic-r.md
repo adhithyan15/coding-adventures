@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S131-vowel-sign-vocalic-r
 spine_node: SPINE-MEET-GREET
-sequence: 791
+sequence: 605
 delivery: script
-chapter: 36
+chapter: 31
 type: writing
 headword: "ೃ"
 gloss: the single character ೃ — the riding half of ಋ, the pair learned the other way round

@@ -1,11 +1,11 @@
 {
   "language": "kannada",
   "chapter": 9,
-  "sourceHash": "fnv1a64:ec35d557249d21ff",
+  "sourceHash": "fnv1a64:3a542f447b73b4c2",
   "lessonIds": [
     "KA-C09-kshamisi",
-    "KA-S04-vowel-sign-i",
-    "KA-S113-letter-lla"
+    "KA-S118-letter-dda",
+    "KA-S140-digit-one"
   ],
   "tex": "kannada/book/chapters/ch09-sorry.tex"
 }

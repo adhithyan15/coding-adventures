@@ -48,7 +48,7 @@ Measured with `measureScriptClosure` before and after:
 |---|---|---|
 | Sanskrit lessons decoding an untaught character | **31** | **21** |
 | of those, in chapters 1–5 | **10** | **0** |
-| corpus-wide | 417 | **407** |
+| corpus-wide | 397 | **387** |
 | lessons that cannot be measured for atom pace | 30 | **0** |
 | glyph-step spikes | 6 | **4** |
 

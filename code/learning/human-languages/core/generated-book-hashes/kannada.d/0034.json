@@ -1,13 +1,12 @@
 {
   "language": "kannada",
   "chapter": 34,
-  "sourceHash": "fnv1a64:3a5da1159ddae88b",
+  "sourceHash": "fnv1a64:77fdfb2cd2730f1e",
   "lessonIds": [
     "KA-C34-tegeduko",
     "KA-C34-keelu",
     "KA-C34-sahaya-maadu",
-    "KA-C34-ishta",
-    "KA-S125-letter-oo"
+    "KA-C34-ishta"
   ],
   "tex": "kannada/book/chapters/ch34-social-verbs.tex"
 }

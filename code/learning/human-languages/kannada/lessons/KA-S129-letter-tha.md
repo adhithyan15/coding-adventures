@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S129-letter-tha
 spine_node: SPINE-MEET-GREET
-sequence: 571
+sequence: 525
 delivery: script
-chapter: 28
+chapter: 23
 type: writing
 headword: "ಥ"
 gloss: the single character ಥ — the breathed partner of ತ, the last gap in the pattern

@@ -1,18 +1,26 @@
 {
   "language": "kannada",
   "chapter": 7,
-  "sourceHash": "fnv1a64:2295ba513f28ffd2",
+  "sourceHash": "fnv1a64:cf18af1248ec6ab2",
   "lessonIds": [
-    "KA-C07-numbers-1-5",
-    "KA-C07-numbers-6-10",
-    "KA-S02-vowel-sign-u",
-    "KA-S111-vowel-sign-e"
+    "KA-C07-ondu",
+    "KA-C07-eradu",
+    "KA-C07-muuru",
+    "KA-S07-letter-ra",
+    "KA-C07-naalku",
+    "KA-C07-aidu",
+    "KA-C07-aaru",
+    "KA-S116-letter-ka",
+    "KA-C07-eelu",
+    "KA-C07-entu",
+    "KA-C07-ombattu",
+    "KA-C07-hattu"
   ],
-  "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "voiceLessons": 10,
+  "drivablePrefix": 3,
   "text": "kannada/narration/ch07.txt",
   "json": "kannada/narration/ch07.json",
-  "textHash": "fnv1a64:648be8799b5b74f7",
-  "jsonHash": "fnv1a64:c86f9a35a12c62c5",
+  "textHash": "fnv1a64:4c19606dce7913a0",
+  "jsonHash": "fnv1a64:1cdbc03ad3ab825f",
   "findings": []
 }

@@ -217,10 +217,12 @@ describe("the real corpus", () => {
     expect(paceViolations).toBeGreaterThan(0);
     expect(report.summary.violations).toBeGreaterThan(paceViolations * 5);
     // And a CEILING on the absolute debt, so it may fall and never grow.
-    // 498 as of the Marathi runway; 407 once Sanskrit's hand-written chapters 1-5
-    // became generated and their prose was romanized (the track went 31 -> 21, and
-    // its chapters 1-5 to zero). Whoever raises it writes down why.
-    expect(report.summary.violations).toBeLessThanOrEqual(407);
+    // 498 as of the Marathi runway; 397 once Kannada's letter ladder was reseated
+    // to run from chapter 1 rather than chapter 6, taking that track 30 -> 10; and
+    // 387 once Sanskrit's hand-written chapters 1-5 became generated and their
+    // prose was romanized, taking that track 31 -> 21 and its chapters 1-5 to
+    // zero. Whoever raises it writes down why.
+    expect(report.summary.violations).toBeLessThanOrEqual(387);
     // Was `toBeGreaterThan(5)`, asserting the debt was large. It has stopped being
     // a fact about the corpus and started being a fact about how much of it has
     // been fixed: the Chinese, Japanese and Gujarati script tranches each removed

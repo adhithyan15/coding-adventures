@@ -1,157 +1,342 @@
-Kannada, chapter 7: Numbers One to Ten.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Kannada, chapter 7: Counting One to Ten.
+12 lessons. You can do the first 3 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 4.
-ಒಂದು, ಎರಡು, ಮೂರು, ನಾಲ್ಕು, ಐದು — one to five.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called You'll want to know: The five until you have stopped, and I will say so again when we reach it.
+Lesson 1 of 12.
+ಒಂದು (ondu) — one, and the nasal that borrows its sound.
 
 Warm-up.
 [pause 2 seconds]
-If you walked here through Tamil, you already know these numbers — Kannada just says them with its own accent.
+Six chapters of letters have gone by. Every shape in the word below is one you have already met, so this is the first word you read rather than recognise.
 
-You'll want to know: The five.
-There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, numeral, word, said. Come back and look at it when you have stopped.
-The single symbols ೧ ೨ ೩ ೪ ೫ are Kannada's own digits — you'll meet them on bus numbers and prices, distinct from the words above.
-
-The word, taken apart: The family stays together.
-These are native Dravidian numbers, not Sanskrit borrowings — the same word-stock Tamil kept. Line them up against Tamil and they are plainly the same word wearing a Kannada coat:
-[a table of 4 rows, read aloud]
-2. Tamil: iraṇṭu. Kannada: eraḍu.
-3. Tamil: mūṉṟu. Kannada: mūru.
-4. Tamil: nāṉku. Kannada: nālku.
-5. Tamil: aintu. Kannada: aidu.
-One is the family's odd number: Tamil oṉṟu and Kannada ondu are cousins (from an old oṉ-), but Telugu will break rank with okaṭi when you get there. So learn ondu now, but expect Telugu's "one" to surprise you.
-
-Grammar Lens: A Kannada habit to notice.
-The anusvara — the small circle ಂ in ಒಂದು (on-du) — is a nasal that takes its colour from the letter after it: an n before d in ondu, an m before b later in ombattu (nine). One mark, whatever nasal the next consonant needs. You'll see it constantly.
+You'll want to know: ಒಂದು.
+ಒಂದು (ondu) — "one."
+Tamil says oṉṟu. Both come down from an older oṉ-, and the family resemblance is easy to hear once you know to listen for it.
+Telugu will not join in: its "one" is okaṭi, from somewhere else entirely. Of the ten numbers you are about to learn, this is the one that wanders.
+The small circle ಂ sitting on ಒ is the anusvara — a nasal with no fixed sound of its own. Here it borrows n from the ದ that follows.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ondu, eraḍu, mūru, nālku, aidu"]
+[your turn — say: "ondu"]
 [pause 8 seconds for the answer]
-[your turn — say: the Tamil becomes Kannada shift — "iraṇṭu becomes eraḍu", same number, new coat]
+[your turn — look: at ಒಂದು (ondu) and find the ದ you learned as a letter]
 [pause 8 seconds for the answer]
-[your turn — say: read the digits — ೧ ೨ ೩ ೪ ೫]
+[your turn — say: "Tamil oṉṟu, Kannada ondu — same word, new coat"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Count to five in Kannada. (Ondu, eraḍu, mūru, nālku, aidu.) Are these borrowed from Sanskrit? (No — native Dravidian, shared with Tamil.) Which number will Telugu form differently? (One — okaṭi, vs Kannada ondu.) What does the ಂ anusvara do in ondu? (Stands for the nasal the next consonant needs — here n before d.) Next: six to ten.
+What is "one" in Kannada? (Ondu.) Which sister language leaves the family here? (Telugu — okaṭi.) What sound is the ಂ carrying in ಒಂದು (ondu)? (An n, borrowed from the ದ after it.)
 
 
-Lesson 2 of 4.
-ಆರು, ಏಳು, ಎಂಟು, ಒಂಬತ್ತು, ಹತ್ತು — six to ten.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called You'll want to know: The five until you have stopped, and I will say so again when we reach it.
+Lesson 2 of 12.
+ಎರಡು (eraḍu) — two, and the softening that runs through Kannada.
 
 Warm-up.
 [pause 2 seconds]
-Five more — and the last one shows the single sound-change that most makes Kannada sound like Kannada.
+One was ondu. Say it before you meet the next one.
 
-You'll want to know: The five.
-There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, numeral, word, said. Come back and look at it when you have stopped.
-(Ten needs two digits — ೧೦, a one and a zero — just like 10.)
-
-The word, taken apart: Ten reveals the p becomes h shift.
-Put ten beside Tamil:
-Tamil pattu becomes Kannada hattu.
-Kannada systematically softened an old word-initial p‑ into h‑. It isn't a one-off: it runs right through the language —.
-[a table of 3 rows, read aloud]
-ten. Tamil: pattu. Kannada: hattu.
-milk. Tamil: pāl. Kannada: hālu.
-tooth. Tamil: pal. Kannada: hallu.
-Once you know the rule, a Kannada h‑ word often hands you its Tamil cousin for free: hide the h‑, restore a p‑.
-
-The word, taken apart: Where the family parts.
-Six and seven stay close cousins (Tamil āṟu / Kannada āru; Tamil ēḻu / Kannada ēḷu — note Kannada hardened Tamil's rare ḻ into an ordinary retroflex ḷ). Eight and nine wander more: Kannada eṇṭu and ombattu are still relatives of Tamil eṭṭu and oṉpatu, but Telugu leaves the family entirely there (enimidi, tommidi) — so treat 8–9 as the loose cells.
+You'll want to know: ಎರಡು.
+ಎರಡು (eraḍu) — "two."
+Tamil says iraṇṭu. Hold the two beside each other and one difference does all the work: where Tamil keeps a hard cluster ṇṭ, Kannada wears it down to a single soft ḍ.
+That softening is not a one-off for "two". It is a habit of the language, and you will hear it again at aidu — "five" — in three lessons.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "āru, ēḷu, eṇṭu, ombattu, hattu"]
+[your turn — say: "eraḍu"]
 [pause 8 seconds for the answer]
-[your turn — say: the shift — "pattu becomes hattu", "pāl becomes hālu": hide the h, find the p]
+[your turn — look: at ಎರಡು (eraḍu) and find the ು that ends it, as it ended ondu]
 [pause 8 seconds for the answer]
-[your turn — say: read the digits — ೬ ೭ ೮ ೯ ೧೦]
+[your turn — say: the count so far — "ondu, eraḍu"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Count six to ten in Kannada. (Āru, ēḷu, eṇṭu, ombattu, hattu.) What regular shift turns Tamil pattu into Kannada hattu? (Word-initial p‑ becomes h‑ — also pāl becomes hālu.) What happened to Tamil's rare ḻ in Kannada ēḷu? (It hardened into an ordinary retroflex ḷ.) Which numbers should you trust least as family cousins? (Eight and nine — Telugu especially wanders.)
+Count to two. (Ondu, eraḍu.) What happened to Tamil's ṇṭ on the way into Kannada? (It softened to a single ḍ.) Which later number will show you the same softening? (Five — aidu.)
 
 
-Lesson 3 of 4.
-◌ು — one character, met inside words you already say.
+Lesson 3 of 12.
+ಮೂರು (mūru) — three, the number nobody argued about.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ು and Guided Practice until you have stopped, and I will say so again when we reach it.
+Warm-up.
+[pause 2 seconds]
+Two was eraḍu, with the softened ḍ. Say it once more.
+
+You'll want to know: ಮೂರು.
+ಮೂರು (mūru) — "three."
+Tamil mūṉṟu, Kannada mūru, Telugu mūḍu. The endings drift, but the long ū at the front holds firm in all three. Three is the number the family never quarrelled over, and it is a useful anchor: when you meet a Dravidian language you have never studied, look for a word that starts mū-.
+The long vowel is written with the sign ೂ hanging under ಮ.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "mūru" — hold the ū long]
+[pause 8 seconds for the answer]
+[your turn — look: at ಮೂರು (mūru) and find the long ೂ under the first letter]
+[pause 8 seconds for the answer]
+[your turn — say: the count so far — "ondu, eraḍu, mūru"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Count to three. (Ondu, eraḍu, mūru.) What do Tamil, Kannada and Telugu all keep in "three"? (The long ū at the front.)
+
+
+Lesson 4 of 12.
+ರ — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ರ and Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 1 second]
-Before the new one: ನ — what does it do?
+Before the new one: ದ — what does it do?
 [pause 2 seconds]
 One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was.
 
-Script you'll notice: ◌ು.
-◌ು — u.
-It is a vowel sign. It is not a letter and never stands alone: it attaches to a consonant and replaces the a built into it with u. Replaces, not adds — the a is gone.
-You already say these, and every one of them has ◌ು somewhere inside it:
-ಹೌದು haudu — yes (haudu).
+Script you'll notice: ರ.
+ರ — ra.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not r, it is ra.
+You already say these, and every one of them has ರ (ra) somewhere inside it:
+ನಮಸ್ಕಾರ namaskāra — hello / greetings (namaskāra — "a making of a bow").
+ಸರಿ sari — okay / alright / correct (sari).
 ಹೆಸರು hesaru — name.
-ನೀನು / ನೀವು nīnu / nīvu — you (familiar / respectful).
-ಏನು ēnu — what.
+ನೀವು ಹೇಗಿದ್ದೀರಾ? nīvu hēgiddīrā — how are you? (respectful).
 
-Writing: ◌ು — copy what you see.
-Put your pen on ◌ು and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
+Writing: ರ — copy what you see.
+Put your pen on ರ (ra) and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
 This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
 
 Guided Practice.
 [pause 1 second]
-[your turn — look: at these words, and find ◌ು (u) in the ones that have it]
+[your turn — look: at these words, and find ರ (ra) in the ones that have it]
 [pause 8 seconds for the answer]
-ಹೌದು, ಹೆಸರು, ನಮಸ್ಕಾರ.
-[once you have stopped driving — trace: ◌ು three times, saying u as you finish each one]
-[your turn — look: back at any page of this chapter and find ◌ು (u) once more]
+ನಮಸ್ಕಾರ, ಸರಿ, ಧನ್ಯವಾದ.
+[once you have stopped driving — trace: ರ three times, saying ra as you finish each one]
+[your turn — look: back at any page of this chapter and find ರ (ra) once more]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which character is this — ◌ು? What vowel does it put on the consonant it attaches to — and what does it take off? (Puts u on; takes the built-in a off.) Name one word you already say that contains it.
+Which character is this — ರ? What sound does it carry? (ra.) Name one word you already say that contains it.
 
 
-Lesson 4 of 4.
-◌ೆ — one character, met inside words you already say.
+Lesson 5 of 12.
+ನಾಲ್ಕು (nālku) — four, held together by a mark you know.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ೆ and Guided Practice until you have stopped, and I will say so again when we reach it.
+Warm-up.
+[pause 2 seconds]
+Three was mūru. And the small slanting mark ್ — what did it do to the letter under it?
+
+You'll want to know: ನಾಲ್ಕು.
+ನಾಲ್ಕು (nālku) — "four."
+Tamil says nāṉku. Kannada turned that middle ṉ into an l, and left everything else alone.
+Read the word slowly: ನಾ (nā), ಲ್ (l, with your virama stripping the vowel away), ಕು (ku). Four is where the virama earns its keep — it is what lets l and k sit together with no vowel between them.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "nālku"]
+[pause 8 seconds for the answer]
+[your turn — look: at ನಾಲ್ಕು (nālku) and find the ್ that joins ಲ to ಕ (ka)]
+[pause 8 seconds for the answer]
+[your turn — say: the count so far — "ondu, eraḍu, mūru, nālku"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Count to four. (Ondu, eraḍu, mūru, nālku.) Which Tamil consonant became Kannada's l? (The ṉ of nāṉku.) What is the ್ doing inside ನಾಲ್ಕು? (Taking the vowel off ಲ so it can lean on ಕ (ka).)
+
+
+Lesson 6 of 12.
+ಐದು (aidu) — five, and a rule you have now seen twice.
+
+Warm-up.
+[pause 2 seconds]
+Two lessons ago Tamil's ṇṭ softened into Kannada's ḍ. Hold that in mind.
+
+You'll want to know: ಐದು.
+ಐದು (aidu) — "five."
+Tamil says aintu. Kannada says aidu. The hard nt in the middle has worn down to a soft d — the same wearing-down you met in iraṇṭu becomes eraḍu.
+Twice is enough to call it a pattern rather than a coincidence. When a Tamil word you know has a hard cluster in the middle, guess that Kannada softened it, and you will be right more often than not.
+ಐ is an independent vowel: the shape ai takes when it opens a word.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "aidu"]
+[pause 8 seconds for the answer]
+[your turn — look: at ಐದು (aidu) and find the ದು that also closes ondu]
+[pause 8 seconds for the answer]
+[your turn — say: the count so far — "ondu, eraḍu, mūru, nālku, aidu"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Count to five. (Ondu, eraḍu, mūru, nālku, aidu.) Which two numbers show the same softening? (Two and five — iraṇṭu becomes eraḍu, aintu becomes aidu.)
+
+
+Lesson 7 of 12.
+ಆರು (āru) — six, and you are halfway.
+
+Warm-up.
+[pause 2 seconds]
+Count from one to five before you add to it.
+
+You'll want to know: ಆರು.
+ಆರು (āru) — "six."
+Tamil says āṟu, with a rare trilled ṟ that Tamil keeps and almost nobody else does. Kannada flattened it into an ordinary r — the one you learned as the letter ರ a few lessons back.
+So the two words are the same word, and the only difference is a consonant Kannada stopped distinguishing.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "āru" — long ā, ordinary r]
+[pause 8 seconds for the answer]
+[your turn — look: at ಆರು (āru) and find the ರ (ra) you met as a letter]
+[pause 8 seconds for the answer]
+[your turn — say: the count so far — "ondu, eraḍu, mūru, nālku, aidu, āru"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Count to six. What did Kannada do with Tamil's rare ṟ in āṟu? (Flattened it into an ordinary r.)
+
+
+Lesson 8 of 12.
+ಕ (ka) — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಕ and Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 1 second]
-Before the new one: ಬ — what does it do?
+Before the new one: ಇ — what does it do?
 [pause 2 seconds]
 One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was.
 
-Script you'll notice: ◌ೆ.
-◌ೆ — e.
-It is a vowel sign. It is not a letter and never stands alone: it attaches to a consonant and replaces the a built into it with e. Replaces, not adds — the a is gone.
-You already say these, and every one of them has ◌ೆ somewhere inside it:
-ಹೆಸರು hesaru — name.
-ಹೇಗೆ hēge — how.
-ಚೆನ್ನಾಗಿ cennāgi — well, nicely — and the reply "ನಾನು ಚೆನ್ನಾಗಿದ್ದೇನೆ.
-ಹೋಗಿ ಬರುತ್ತೇನೆ hōgi baruttēne — goodbye (lit. "I'll go and come back").
+Script you'll notice: ಕ.
+ಕ — ka.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not k, it is ka.
+You already say these, and every one of them has ಕ (ka) somewhere inside it:
+ನಮಸ್ಕಾರ namaskāra — hello / greetings (namaskāra — "a making of a bow").
+ಕೆಲಸ ಮಾಡು kelasa māḍu — to work (lit. "work-do").
+ನಾಲ್ಕು nālku — four.
 
-Writing: ◌ೆ — copy what you see.
-Put your pen on ◌ೆ and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
+Writing: ಕ — copy what you see.
+Put your pen on ಕ (ka) and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
 This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
 
 Guided Practice.
 [pause 1 second]
-[your turn — look: at these words, and find ◌ೆ in the ones that have it]
+[your turn — look: at these words, and find ಕ (ka) in the ones that have it]
 [pause 8 seconds for the answer]
-ಹೆಸರು, ಹೇಗೆ, ನಮಸ್ಕಾರ.
-[once you have stopped driving — trace: ◌ೆ three times, saying e as you finish each one]
-[your turn — look: back at any page of this chapter and find ◌ೆ once more]
+ನಮಸ್ಕಾರ, ಧನ್ಯವಾದ.
+[once you have stopped driving — trace: ಕ three times, saying ka as you finish each one]
+[your turn — look: back at any page of this chapter and find ಕ (ka) once more]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which character is this — ◌ೆ? What vowel does it put on the consonant it attaches to — and what does it take off? (Puts e on; takes the built-in a off.) Name one word you already say that contains it.
+Which character is this — ಕ? What sound does it carry? (ka.) Name one word you already say that contains it.
+
+
+Lesson 9 of 12.
+ಏಳು (ēḷu) — seven, and the letter that replaced Tamil's rarest sound.
+
+Warm-up.
+[pause 2 seconds]
+Six was āru. And the letter ಳ — say the sound it carries.
+
+You'll want to know: ಏಳು.
+ಏಳು (ēḷu) — "seven."
+Tamil's word is ēḻu, and that ḻ is the sound Tamil is famous for: a curled, almost swallowed sound with no equivalent in most languages.
+Kannada let it go. Where Tamil curls, Kannada uses the plain retroflex ḷ — which is exactly the letter ಳ you have already been reading.
+That trade happened across the whole vocabulary, not only in "seven". A Tamil word with ḻ will usually turn up in Kannada with ಳ.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "ēḷu" — tongue curled back for the ḷ]
+[pause 8 seconds for the answer]
+[your turn — look: at ಏಳು (ēḷu) and find the ಳ]
+[pause 8 seconds for the answer]
+[your turn — say: the count so far — "…aidu, āru, ēḷu"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is "seven"? (ēḷu.) Which Tamil sound did Kannada give up here, and what took its place? (Tamil's ḻ, replaced by the ordinary retroflex ḷ, written ಳ.)
+
+
+Lesson 10 of 12.
+ಎಂಟು (eṇṭu) — eight, and the loose end of the family.
+
+Warm-up.
+[pause 2 seconds]
+Seven was ēḷu, with the letter ಳ. Say one to seven.
+
+You'll want to know: ಎಂಟು.
+ಎಂಟು (eṇṭu) — "eight."
+Kannada eṇṭu and Tamil eṭṭu are still relatives — near enough to guess at. But Telugu walks away here: its "eight" is enimidi, and its "nine" will be tommidi. Neither is recognisable from the other two.
+So eight and nine are the loose cells. Everywhere else in this chapter, knowing one Dravidian language hands you the next; at eight and nine it stops doing that, and you have to learn each language on its own terms.
+Here the anusvara ಂ borrows an ṇ from the retroflex ಟ after it — the same borrowing you saw in ondu, taking a different sound.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "eṇṭu"]
+[pause 8 seconds for the answer]
+[your turn — look: at ಎಂಟು (eṇṭu) and find the ಂ — the same mark ondu carries, a different sound]
+[pause 8 seconds for the answer]
+[your turn — say: the count so far — "…āru, ēḷu, eṇṭu"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which two numbers should you trust least as family cousins? (Eight and nine — Telugu leaves with enimidi and tommidi.) What nasal is the ಂ carrying in ಎಂಟು (eṇṭu)? (An ṇ, taken from the ಟ.)
+
+
+Lesson 11 of 12.
+ಒಂಬತ್ತು (ombattu) — nine, and the anusvara's third face.
+
+Warm-up.
+[pause 2 seconds]
+In ondu the ಂ said n. In eṇṭu it said ṇ. Watch what it does next.
+
+You'll want to know: ಒಂಬತ್ತು.
+ಒಂಬತ್ತು (ombattu) — "nine." Tamil's oṉpatu is the same word underneath.
+Now the ಂ sits in front of ಬ, and a nasal made with the lips is what a b wants next to it — so it says m. One written mark, three sounds so far, each one decided by the letter after it and never by the mark itself.
+That is the whole rule, and it holds everywhere in Kannada: read the ಂ forwards.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "ombattu" — the m comes from the ಬ]
+[pause 8 seconds for the answer]
+[your turn — look: at ಒಂಬತ್ತು (ombattu) and find the ಂ — the same mark ondu and eṇṭu carry]
+[pause 8 seconds for the answer]
+[your turn — say: the count so far — "…ēḷu, eṇṭu, ombattu"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is "nine"? (Ombattu.) Why does the ಂ say m here and n in ondu? (It takes the nasal the next letter asks for — ಬ wants m, ದ wants n.)
+
+
+Lesson 12 of 12.
+ಹತ್ತು (hattu) — ten, and the p that turned into h.
+
+Warm-up.
+[pause 2 seconds]
+Nine was ombattu. One number left, and it carries the change that most makes Kannada sound like Kannada.
+
+You'll want to know: ಹತ್ತು.
+ಹತ್ತು (hattu) — "ten." Tamil says pattu.
+Kannada softened an old word-initial p- into h-, and did it right across the language: pāl became hālu ("milk"), pal became hallu ("tooth").
+Once you know the rule it runs backwards for you. Meet a Kannada word starting h-, take the h off, put a p on, and you often have its Tamil cousin.
+Every letter in ಹತ್ತು (hattu) is one you have learned: ಹ, ತ, the virama ್, and ು.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "hattu" — then "pattu", and hear the trade]
+[pause 8 seconds for the answer]
+[your turn — look: at ಹತ್ತು (hattu) and read it letter by letter]
+[pause 8 seconds for the answer]
+[your turn — say: all ten — "ondu, eraḍu, mūru, nālku, aidu, āru, ēḷu, eṇṭu, ombattu, hattu"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Count from one to ten in Kannada. What regular change turns Tamil pattu into Kannada hattu? (Word-initial p- to h- — also pāl to hālu.) Which number wandered off at the start of the chapter, and which two wandered off near the end? (One, then eight and nine.)
