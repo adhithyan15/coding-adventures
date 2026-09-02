@@ -1,20 +1,20 @@
 {
   "language": "sanskrit",
   "chapter": 9,
-  "sourceHash": "fnv1a64:80d7f0b650fb41a6",
+  "sourceHash": "fnv1a64:96712e35ffcf53f4",
   "lessonIds": [
     "SA-C09-grhnati",
+    "SA-S107-letter-ta",
     "SA-C09-prcchati",
     "SA-C09-sahayyam-karoti",
-    "SA-C09-snihyati",
-    "SA-S02-letter-na",
-    "SA-S108-letter-sa"
+    "SA-S209-sign-anusvara",
+    "SA-C09-snihyati"
   ],
   "voiceLessons": 4,
-  "drivablePrefix": 4,
+  "drivablePrefix": 1,
   "text": "sanskrit/narration/ch09.txt",
   "json": "sanskrit/narration/ch09.json",
-  "textHash": "fnv1a64:b3d646d7371bdaeb",
-  "jsonHash": "fnv1a64:e7b1a29e143e5825",
+  "textHash": "fnv1a64:4c32717da0e2fcea",
+  "jsonHash": "fnv1a64:499cc6098ae7c916",
   "findings": []
 }

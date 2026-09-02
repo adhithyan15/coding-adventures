@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "SA-S202-letter-bha",
+    "language": "sanskrit",
+    "chapter": 2,
+    "sequence": 121,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:98be5aee4ba19e35",
+    "detachableSegments": [
+      "Script you'll notice: भ",
+      "Writing: भ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

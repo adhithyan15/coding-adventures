@@ -2,8 +2,8 @@
   "lesson": {
     "id": "SA-S120-letter-ja",
     "language": "sanskrit",
-    "chapter": 19,
-    "sequence": 951,
+    "chapter": 16,
+    "sequence": 781,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:42736f7fd76ee076",
+    "sourceHash": "fnv1a64:d38b7b31fb8d163e",
     "detachableSegments": [
       "Script you'll notice: ज",
       "Writing: ज"

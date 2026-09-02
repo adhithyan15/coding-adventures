@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "SA-S218-letter-ga",
+    "language": "sanskrit",
+    "chapter": 16,
+    "sequence": 761,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:00da0ca75f2ee9f0",
+    "detachableSegments": [
+      "Script you'll notice: ग",
+      "Writing: ग"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

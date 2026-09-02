@@ -1,18 +1,19 @@
 {
   "language": "sanskrit",
   "chapter": 22,
-  "sourceHash": "fnv1a64:98cbd50d4dee1376",
+  "sourceHash": "fnv1a64:bc0860bb2af59ffc",
   "lessonIds": [
     "SA-C22-hear",
     "SA-C22-lead",
     "SA-C22-play",
-    "SA-C22-burn"
+    "SA-C22-burn",
+    "SA-S221-letter-dda"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 4,
   "text": "sanskrit/narration/ch22.txt",
   "json": "sanskrit/narration/ch22.json",
-  "textHash": "fnv1a64:7427cc6649dd2055",
-  "jsonHash": "fnv1a64:1fb8973135b17d40",
+  "textHash": "fnv1a64:83b47eaefc9f053a",
+  "jsonHash": "fnv1a64:d2fe14f69e66a6d2",
   "findings": []
 }
