@@ -2,6 +2,73 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.91] - 2026-09-02 - `array.new_elem`/`array.init_elem` type-checking + an `Element::declared_type` bounds-check fix -- W38 slices 4/5
+
+Per `code/specs/W38-wasm-gc-array-bulk-ops.md`.
+
+**Slice 5**: two new `0xFB` match arms in the per-function byte-layout
+stack-effect pass --
+
+- `0x0A` (`array.new_elem`): the array-hierarchy mirror of `array.new_
+  data`'s (`0x09`) "numeric or vector" check, exactly inverted -- "must
+  be a reference type" (`!is_numeric_or_vector(field.storage.widened_
+  type())`) -- plus a real, compile-time out-of-range `elem_idx` check
+  (`ctx.module.elements.len()`), plus the real spec's own `match-reftype`
+  rule: the elem segment's own `declared_type` must be `is_assignable` to
+  the array's element type -- zero new subtyping logic, direct reuse of
+  the same `is_assignable` relation this crate's existing W32/W33/W34
+  infrastructure already provides (the identical "reuse, don't
+  reinvent" pattern this spec's own `array.copy` validation already
+  established via `storage_type_matches`).
+- `0x13` (`array.init_elem`): the same three checks as `0x0A` above, PLUS
+  a real destination-mutability check. `array_init_elem.wast`'s own
+  vendored `assert_invalid` cases ("immutable array", and TWO "type
+  mismatch" cases -- one for a non-reference storage type, one for a
+  genuine segment/array reftype mismatch) probe exactly these rules.
+
+**A real, corpus-caught structural-validation gap fixed in the same PR,
+in a general Check 4c walk this spec doesn't otherwise touch**: `Element::
+declared_type` (new in `wasm-types` 0.1.27) can carry a `ConcreteFuncRef`/
+`NonNullConcreteFuncRef` with an out-of-range type index (`resolve_idx`
+on a bare numeric elem-segment reftype tag never bounds-checks it, the
+same root cause Check 4c's own W11-addendum/W32-second-slice history
+already exists for -- see that section's own doc comment). Found by
+re-probing the FULL 257-file corpus after `wasm-wast-parser`'s Layer 1 fix
+landed: `ref.wast`'s own `(module (elem $elem-invalid (ref 1)))`,
+`assert_invalid "unknown type"`, used to fail to even PARSE (`(ref 1)`
+was entirely unrecognized as a reftype tag before Layer 1) -- a lucky
+parse-failure `Pass`, not a real check -- and would have silently
+downgraded to `NotYetSupported` once Layer 1 correctly accepts it, absent
+this fix. Check 4c's existing `out_of_range_concrete_func_ref` helper is
+reused verbatim, extended with one more walk over `module.elements`.
+
+Both new `0x0A`/`0x13` arms decode their own immediates mirroring `wasm-
+execution`'s decode shape exactly (same established discipline as slices
+2/3's own arms).
+
+**Corpus re-verification, full 257-file diff (programmatic, before vs.
+after)**: `array.wast` 40→53 pass (1 remaining NYS, the pre-existing,
+out-of-scope `(ref struct)` case); `array_init_elem.wast` 3→32 pass (13
+remaining NYS, all `ref.eq` -- already flagged out of scope by W37, not
+this spec's own instructions); `array_new_elem.wast` 0→22 pass (2
+remaining NYS, also `ref.eq`); `global.wast`/`ref_is_null.wast` gain
+pure, incidental improvements from the same Layer 1 generalization
+(unrelated pre-existing NYS cases newly parse and pass); `ref.wast`
+regressed then was fixed BY this exact bounds-check addition (net zero
+change vs. the pre-slice baseline); `elem.wast` -- see this crate's own
+PR description / `wasm-runtime`'s CHANGELOG for the one genuinely
+out-of-scope residual (a pre-existing, W35-documented cross-instance-
+funcref-through-an-imported-global limitation, unrelated to array bulk
+ops, newly exposed rather than newly introduced). Zero regressions
+elsewhere across all 257 files.
+
+New unit tests: exercised end-to-end via `wasm-runtime`'s own new
+integration test file (`tests/array_init_elem_new_elem.rs`), including a
+direct validation-error test for the out-of-range `$elem_idx` case
+(`array_new_elem_out_of_range_elem_idx_is_a_validation_error_not_a_trap`).
+
+`cargo test -p wasm-validator`: 431 passed, 0 failed.
+
 ## [0.2.90] - 2026-09-02 - `array.new_data`/`array.init_data` type-checking + a real `array.copy` bug fix -- W38 slice 3
 
 Per `code/specs/W38-wasm-gc-array-bulk-ops.md`.

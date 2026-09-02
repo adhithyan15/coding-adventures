@@ -1498,29 +1498,50 @@ pub struct Element {
     /// segments -- only `elem.drop`/consuming `table.init` calls change a
     /// genuinely-passive segment's dropped state, never this flag.
     pub is_declarative: bool,
-    /// One raw constant-expression byte sequence per item (W38 slice 0,
-    /// Correction 2: `code/specs/W38-wasm-gc-array-bulk-ops.md`) --
-    /// `Some`-shaped entry for every item, evaluated ONCE at
-    /// instantiation time via `evaluate_const_expr_gc` (mirroring a
-    /// global's `init_expr`) into this segment's own `element_values`
+    /// One raw constant-expression byte sequence per item (W38 slices 0
+    /// and 4, Correction 2: `code/specs/W38-wasm-gc-array-bulk-ops.md`) --
+    /// a real, non-empty entry for every item as of slice 4, evaluated
+    /// ONCE at instantiation time via `evaluate_const_expr_gc` (mirroring
+    /// a global's `init_expr`) into this segment's own `element_values`
     /// runtime-side table (see `wasm-execution`/`wasm-runtime`). A plain
     /// `ref.func $f`/`ref.null` item still round-trips through here too
     /// (its bytes ARE `[0xD2, <funcidx>, 0x0B]`/`[0xD0, <heaptype>,
     /// 0x0B]`) -- `function_indices` stays purely a FAST-PATH cache for
     /// `table.init`/`table.copy`'s pre-existing consumers, not the source
-    /// of truth for a segment's real content once this field is
-    /// populated. Always the same length as `function_indices` for any
-    /// segment this crate builds.
+    /// of truth for a segment's real content now that this field is
+    /// populated for real. Always the same length as `function_indices`
+    /// for any segment this crate builds.
     ///
-    /// This W38 slice 0 addition is purely additive and, for now, always
-    /// empty (`vec![]`) at every construction site in this crate's own
-    /// dependents -- no consumer reads it yet. Populating it for real
-    /// (Layers 1-2 of the elem-segment three-layer fix: `build_elem`'s
-    /// reftype-tag recognition and `resolve_elem_expr_entry`'s rewrite to
-    /// capture raw bytes instead of eagerly resolving a function index)
-    /// is a later W38 slice's own work, not this one's -- see that spec's
-    /// "Recommended slice decomposition" §4.
+    /// Populated UNCONDITIONALLY for every element segment this crate
+    /// builds (`wasm-wast-parser::module::build_elem`'s own explicit
+    /// choice, per this spec's design section 2d's own noted tradeoff) --
+    /// including ordinary funcref/externref-list segments, whose items
+    /// simply encode as `ref.func`/`ref.null` bytes, so `element_values`
+    /// (once evaluated) matches `function_indices`' own reading exactly
+    /// for those segments, with zero divergence between the two parallel
+    /// representations.
     pub item_exprs: Vec<Vec<u8>>,
+    /// This segment's own declared reference type (W38 slice 4,
+    /// Correction 2 / Design §6): the reftype tag written on the segment
+    /// itself (`funcref`/`externref`/`i31ref`/`arrayref`/`(ref $t)`/etc.),
+    /// or `ValueType::Funcref` for a plain funcidx-list segment (binary
+    /// modes 0-3, or this crate's `(table funcref (elem ...))` inline
+    /// shorthand) -- the real spec's own implicit "elemkind" default.
+    /// Lets `array.init_elem`/`array.new_elem`'s own validator arms
+    /// statically enforce the real spec's `match-reftype` rule ("the
+    /// element segment's reference type `rt'` must match the array's
+    /// declared element type `rt`") via `wasm-validator`'s existing
+    /// `is_assignable` relation -- zero new subtyping logic needed, the
+    /// same reuse this spec's own `array.copy` validation already
+    /// established for `storage_type_matches`. Real, corpus-driven:
+    /// `array_init_elem.wast`'s own `array.init_elem-invalid-2` case
+    /// declares a `(mut funcref)` array fed from an `externref`-tagged
+    /// segment and expects `assert_invalid "type mismatch"` -- a case
+    /// this repo's `assert_invalid` grading (structural-rejection-only,
+    /// no instruction-level type-checker for anything else) can only ever
+    /// pass with a real, static check like this one, per `wasm-
+    /// conformance`'s own `grade_assert_invalid` doc comment.
+    pub declared_type: ValueType,
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -3449,6 +3470,7 @@ mod tests {
             is_passive: false,
             is_declarative: false,
             item_exprs: vec![],
+            declared_type: ValueType::Funcref,
         };
         assert_eq!(elem.table_index, 0);
         assert_eq!(elem.function_indices, vec![Some(1), Some(3), Some(5), Some(7)]);

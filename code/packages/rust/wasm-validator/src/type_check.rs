@@ -2376,6 +2376,57 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // s
                         stack.push(StackType::Unknown);
                     }
+                    0x0A => {
+                        // array.new_elem <type_idx> <elem_idx> (W38 slice
+                        // 5: `code/specs/W38-wasm-gc-array-bulk-ops.md`):
+                        // pops [i32 s, i32 n], pushes one arrayref. Real
+                        // spec validation rule: identical element-type and
+                        // elem-segment preconditions as `array.init_elem`
+                        // (`0x13` below, this spec's other elem-segment-
+                        // sourced instruction), minus a mutability
+                        // requirement (a freshly allocated array is always
+                        // writable at construction). "The storagetype must
+                        // be [a] reference type rt" -- the array-hierarchy
+                        // mirror of `array.new_data`'s (`0x09` above)
+                        // "numeric or vector" rule, exactly inverted -- and
+                        // the elem segment's own declared reference type
+                        // `rt'` must MATCH (be assignable to) `rt`, per the
+                        // real spec's own `match-reftype` relation --
+                        // `is_assignable` (W32/W33/W34 infrastructure) is
+                        // exactly this relation for two `ValueType`s, zero
+                        // new subtyping logic needed (the same reuse
+                        // `array.copy`'s own `storage_type_matches` check
+                        // already established for this spec's OTHER new
+                        // instruction, `code/specs/
+                        // W38-wasm-gc-array-bulk-ops.md`'s Design §6).
+                        // `array_init_elem.wast`'s own `array.init_elem-
+                        // invalid-2` case (an `assert_invalid` this repo's
+                        // `assert_invalid` grading can ONLY pass via a real
+                        // static check like this one, per `wasm-
+                        // conformance::grade_assert_invalid`'s own doc
+                        // comment) is the corpus-grounded reason this check
+                        // is real, not deferred.
+                        let (type_idx, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad array.new_elem type index: {e}")))?;
+                        let (elem_idx, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad array.new_elem elem index: {e}")))?;
+                        offset += sz1 + sz2;
+                        let field = *array_element_field(ctx.module, type_idx as u32)?; // real bounds check
+                        let elem_vt = field.storage.widened_type();
+                        if is_numeric_or_vector(elem_vt) {
+                            return Err(ValidationError::Other(format!("array.new_elem: array type is not a reference type (type {type_idx})")));
+                        }
+                        if elem_idx as usize >= ctx.module.elements.len() {
+                            return Err(ValidationError::Other(format!("array.new_elem: elem segment index {elem_idx} out of bounds")));
+                        }
+                        let declared = ctx.module.elements[elem_idx as usize].declared_type;
+                        if !is_assignable(declared, elem_vt, ctx.module) {
+                            return Err(ValidationError::Other(format!(
+                                "array.new_elem: elem segment {elem_idx} reference type {declared:?} does not match array type {type_idx} element type {elem_vt:?}"
+                            )));
+                        }
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // n
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // s
+                        stack.push(StackType::Unknown);
+                    }
                     0x0B..=0x0D => {
                         // array.get / array.get_s / array.get_u <type_idx>
                         // (W33 fourth slice): pops [arrayref, i32 index],
@@ -2501,6 +2552,49 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         }
                         if data_idx as usize >= ctx.module.data.len() {
                             return Err(ValidationError::Other(format!("array.init_data: data segment index {data_idx} out of bounds")));
+                        }
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // n
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // s
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // d
+                        pop_val(&mut stack, frame!())?; // arrayref
+                    }
+                    0x13 => {
+                        // array.init_elem <type_idx> <elem_idx> (W38 slice
+                        // 5): pops [arrayref, i32 d, i32 s, i32 n], pushes
+                        // nothing. Real spec validation rule: "Array type
+                        // must expand with `var` mutability" (same
+                        // destination-mutability check as `array.fill`/
+                        // `array.copy`/`array.init_data` above) plus "The
+                        // storagetype must be [a] reference type rt" and
+                        // the elem segment's own declared reference type
+                        // `rt'` must MATCH `rt` -- see `array.new_elem`
+                        // (`0x0A` above) for the identical element-type/
+                        // elem-segment checks, plus the mutability
+                        // requirement that instruction doesn't need.
+                        // `array_init_elem.wast`'s own vendored `assert_
+                        // invalid` cases probe all three rules directly
+                        // ("immutable array", "type mismatch" x2 -- one for
+                        // a non-reference storage type, one for a genuine
+                        // segment/array reftype mismatch).
+                        let (type_idx, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad array.init_elem type index: {e}")))?;
+                        let (elem_idx, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad array.init_elem elem index: {e}")))?;
+                        offset += sz1 + sz2;
+                        let field = *array_element_field(ctx.module, type_idx as u32)?; // real bounds check
+                        if !field.mutable {
+                            return Err(ValidationError::Other(format!("array.init_elem: immutable array (type {type_idx})")));
+                        }
+                        let elem_vt = field.storage.widened_type();
+                        if is_numeric_or_vector(elem_vt) {
+                            return Err(ValidationError::Other(format!("array.init_elem: array type is not a reference type (type {type_idx})")));
+                        }
+                        if elem_idx as usize >= ctx.module.elements.len() {
+                            return Err(ValidationError::Other(format!("array.init_elem: elem segment index {elem_idx} out of bounds")));
+                        }
+                        let declared = ctx.module.elements[elem_idx as usize].declared_type;
+                        if !is_assignable(declared, elem_vt, ctx.module) {
+                            return Err(ValidationError::Other(format!(
+                                "array.init_elem: elem segment {elem_idx} reference type {declared:?} does not match array type {type_idx} element type {elem_vt:?}"
+                            )));
                         }
                         pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // n
                         pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // s

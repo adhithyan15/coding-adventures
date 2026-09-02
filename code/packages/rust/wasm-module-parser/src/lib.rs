@@ -1205,16 +1205,31 @@ fn parse_element_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), 
                 function_indices.push(Some(p.read_u32leb()?));
             }
         }
-        // W38 slice 0: `item_exprs` has no consumer in this binary decoder
-        // (binary-format encoding of the six new array bulk-ops
-        // instructions is explicitly out of scope for W38, and this
-        // field's own real population -- Layers 1-2 of the elem-segment
-        // three-layer fix -- is a later W38 slice's TEXT-parser-only work,
-        // see `wasm_types::Element::item_exprs`'s own doc comment) --
-        // always empty here, one entry per `function_indices` entry to
-        // keep the "always the same length" invariant that field's own
-        // doc comment documents.
-        let item_exprs = vec![Vec::new(); function_indices.len()];
+        // W38 slice 4 (`code/specs/W38-wasm-gc-array-bulk-ops.md`,
+        // Correction 2): binary-format encoding of `array.init_elem`/
+        // `array.new_elem` themselves is still explicitly out of scope for
+        // this decoder (confirmed by corpus grep: no file in the cluster
+        // uses `(module binary ...)` for these two instructions), but
+        // `item_exprs` is populated for real anyway, purely so this
+        // decoder's own segments satisfy the field's documented "always a
+        // real byte sequence, same length as `function_indices`"
+        // invariant identically to the text parser's -- this decoder only
+        // ever accepts funcref-family entries (modes 0/1/2/5, the `reftype
+        // != 0x70` check above already rejects anything else), so every
+        // entry re-encodes as a plain `ref.func`/`ref.null func` constant
+        // expression, exactly what `function_indices` already says it is.
+        let item_exprs: Vec<Vec<u8>> = function_indices
+            .iter()
+            .map(|entry| match entry {
+                Some(idx) => {
+                    let mut bytes = vec![0xD2];
+                    bytes.extend(wasm_leb128::encode_unsigned(*idx as u64));
+                    bytes.push(0x0B);
+                    bytes
+                }
+                None => vec![0xD0, 0x70, 0x0B], // ref.null func; end
+            })
+            .collect();
         module.elements.push(Element {
             table_index,
             offset_expr,
@@ -1225,6 +1240,12 @@ fn parse_element_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), 
             // clean parse error, never reach this push. Always `false`.
             is_declarative: false,
             item_exprs,
+            // This decoder only ever accepts funcref-family entries (see
+            // this block's own doc comment above) -- always the implicit
+            // funcref elemkind, matching the real spec's own binary-format
+            // default and `wasm-wast-parser`'s identical convention for a
+            // plain funcidx-list segment.
+            declared_type: ValueType::Funcref,
         });
     }
     Ok(())

@@ -3109,9 +3109,11 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
         //   0x0E array.set          <type_idx>                    (W33 fourth slice)
         //   0x0F array.len          (none -- no type immediate)   (W33 fourth slice)
         //   0x09 array.new_data      <type_idx> <data_idx>          (W38 slice 3; SECOND index (data_idx) carried in `field_idx`, repurposed -- same convention as array.copy's `0x11` below)
+        //   0x0A array.new_elem      <type_idx> <elem_idx>          (W38 slice 5; same `field_idx`-carries-second-index convention as `0x09`, just an elem_idx instead of a data_idx)
         //   0x10 array.fill         <type_idx>                    (W38 slice 2)
         //   0x11 array.copy         <dest_type_idx> <src_type_idx> (W38 slice 2; SECOND index carried in `field_idx`, repurposed -- see `GcOp::field_idx`'s own doc comment)
         //   0x12 array.init_data     <type_idx> <data_idx>          (W38 slice 3; same `field_idx`-carries-data_idx convention as `0x09` above)
+        //   0x13 array.init_elem     <type_idx> <elem_idx>          (W38 slice 5; same `field_idx`-carries-second-index convention as `0x12`, just an elem_idx instead of a data_idx)
         //   0x1C ref.i31       (none)
         //   0x1D i31.get_s     (none)
         //   0x1E i31.get_u     (none, W20)
@@ -3197,6 +3199,17 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                     offset += sz1 + sz2;
                     (t, data_idx, 0)
                 }
+                // array.new_elem <type_idx> <elem_idx> (W38 slice 5:
+                // `code/specs/W38-wasm-gc-array-bulk-ops.md`): same
+                // two-index decode shape as `array.new_data` (`0x09`)
+                // immediately above -- the elem-segment index rides in
+                // `field_idx` (repurposed, same convention).
+                0x0A => {
+                    let (t, sz1) = decode_leb_u32(code, offset);
+                    let (elem_idx, sz2) = decode_leb_u32(code, offset + sz1);
+                    offset += sz1 + sz2;
+                    (t, elem_idx, 0)
+                }
                 // array.fill: one index immediate (the array type) -- W38
                 // slice 2, same one-index decode shape as `0x06 | 0x07`
                 // above.
@@ -3226,6 +3239,16 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                     let (data_idx, sz2) = decode_leb_u32(code, offset + sz1);
                     offset += sz1 + sz2;
                     (t, data_idx, 0)
+                }
+                // array.init_elem <type_idx> <elem_idx> (W38 slice 5): same
+                // two-index decode shape as `array.init_data` (`0x12`)
+                // immediately above -- the elem-segment index again rides
+                // in `field_idx`.
+                0x13 => {
+                    let (t, sz1) = decode_leb_u32(code, offset);
+                    let (elem_idx, sz2) = decode_leb_u32(code, offset + sz1);
+                    offset += sz1 + sz2;
+                    (t, elem_idx, 0)
                 }
                 // ref.i31 / i31.get_s / i31.get_u (W20) (and any unknown
                 // sub-opcode): no immediates.
@@ -4382,6 +4405,30 @@ pub struct WasmExecutionContext {
     /// `table.init` on a dropped segment traps. Module-global and
     /// persistent across calls, never reset per call.
     pub dropped_elements: Vec<bool>,
+    /// Per-elem-segment index, PARALLEL to `elements` (W38 slice 4/5,
+    /// Correction 2: `code/specs/W38-wasm-gc-array-bulk-ops.md`) -- each
+    /// entry's REAL evaluated constant value, computed ONCE at
+    /// instantiation time from `wasm_types::Element::item_exprs` via
+    /// `evaluate_const_expr_gc` (mirroring a global's own `init_expr`
+    /// evaluation) -- the array-bulk-op analogue of `data_segments`, but
+    /// holding real [`WasmValue`]s (which may themselves be fresh
+    /// `gc_heap` handles) instead of raw bytes, because an elem segment's
+    /// items are constant EXPRESSIONS, not a flat byte blob.
+    /// `array.init_elem`/`array.new_elem` read from here; `table.init`/
+    /// `table.copy` are UNCHANGED, still reading `elements` (the
+    /// pre-existing `Vec<Vec<Option<u32>>>`) directly -- two parallel,
+    /// independently-populated views of the SAME underlying segments, not
+    /// one migrated to the other, so zero regression risk to the
+    /// already-shipped table-bulk-ops path. Populated once via
+    /// [`WasmExecutionEngine::set_element_values`] (mirroring `set_
+    /// elements`'s own setter pattern), by `wasm-runtime::instantiate()`.
+    ///
+    /// Shares `dropped_elements` above for bounds/drop-state purposes --
+    /// a dropped segment's `element_values` entry is treated as length-0
+    /// identically to its `elements` entry (both are ALWAYS the same
+    /// length and drop together, since they're two views of one segment
+    /// list), never a second, independent dropped-flag array.
+    pub element_values: Vec<Vec<WasmValue>>,
     /// The module's tag section, indexed by the combined imported+defined
     /// tag index space (W21's `wasm_types::WasmModule::tags` shape,
     /// mirrored here): `tags[N]` is tag `N`'s function-type index into
@@ -5503,6 +5550,49 @@ fn decode_array_element_from_bytes(bytes: &[u8], storage: wasm_types::StorageTyp
     })
 }
 
+// ── Helper: `array.init_elem`/`array.new_elem` (W38 slice 5, `code/specs/
+// W38-wasm-gc-array-bulk-ops.md`) -- the ELEMENT-segment-sourced mirror of
+// [`resolve_array_data_segment`] immediately above. Reads from `ctx.
+// element_values`/`ctx.dropped_elements` (Correction 2's `element_values`
+// side table, populated once at instantiation time -- see
+// `WasmExecutionContext::element_values`'s own doc comment), NOT `ctx.
+// elements` (the pre-existing `Vec<Vec<Option<u32>>>` `table.init`/
+// `table.copy` keep reading exclusively) -- two parallel views of the same
+// underlying segment list, so this never disturbs the already-shipped
+// table-bulk-ops path. ──
+
+/// Resolve an elem-segment index to its evaluated constant values for
+/// `array.init_elem`/`array.new_elem` -- the elem-segment analogue of
+/// [`resolve_array_data_segment`]. An out-of-range `idx` is a hard
+/// defensive error (never trusted at runtime regardless of what `wasm-
+/// validator`'s own `0x0A`/`0x13` arms should have already caught,
+/// mirroring `resolve_array_data_segment`'s own identical defensive
+/// check); an in-range but DROPPED segment (`elem.drop` already ran, OR
+/// this was an active/declarative segment already consumed/never-live --
+/// `ctx.dropped_elements[idx]` covers all three, exactly as it already
+/// does for `table.init`) degrades to a real, empty (length-0) slice --
+/// never a separate error path -- mirroring `table.init`'s own
+/// already-implemented "a dropped segment behaves as length-0" rule
+/// (real spec text, `array.init_elem`'s own trap-condition table in this
+/// spec: "A dropped elem segment behaves as length-0").
+///
+/// Bounds-checked against BOTH `element_values.len()` and `dropped_
+/// elements.len()` -- the two Vecs are always built with identical length
+/// (one entry per module elem segment, populated together by `wasm-
+/// runtime::instantiate()`), but checking both defensively costs nothing
+/// and matches `table.init`'s own existing dual check at its own read
+/// site.
+fn resolve_array_elem_segment<'a>(ctx: &'a WasmExecutionContext, idx: usize, op: &str) -> Result<&'a [WasmValue], VMError> {
+    if idx >= ctx.element_values.len() || idx >= ctx.dropped_elements.len() {
+        return Err(VMError::GenericError(format!("{op}: elem segment index {idx} out of bounds")));
+    }
+    if ctx.dropped_elements[idx] {
+        Ok(&[])
+    } else {
+        Ok(ctx.element_values[idx].as_slice())
+    }
+}
+
 // ── Helper: real dynamic type check for ref.test/ref.cast (W33 second slice) ──
 //
 // Whether a NON-NULL reference whose raw payload is `payload` is a genuine
@@ -6372,6 +6462,48 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 push_wasm(vm, WasmValue::Ref(Some(handle)));
             }
 
+            // array.new_elem <type_idx> <elem_idx> (W38 slice 5: `code/
+            // specs/W38-wasm-gc-array-bulk-ops.md`): pop [i32 s, i32 n],
+            // allocate a NEW array of `n` elements read directly from elem
+            // segment `elem_idx`'s own pre-evaluated `element_values`
+            // (Correction 2) starting at entry `s` -- this is `array.new`
+            // + `array.init_elem` fused (no destination array exists yet,
+            // so there is no destination-side bounds check, only the
+            // segment-side one), mirroring `array.new_data` (`0x09`
+            // immediately above) exactly, just reading already-typed
+            // `WasmValue`s directly instead of raw bytes needing
+            // reinterpretation -- an elem segment's items are constant
+            // EXPRESSIONS, already evaluated to real values (possibly
+            // fresh `gc_heap` handles) at instantiation time, so no
+            // byte-width/storage-type decoding is needed or possible here.
+            //
+            // SECURITY: `n` is bounded by `MAX_ARRAY_ALLOC` via `pop_
+            // array_length` BEFORE any segment read or allocation happens
+            // -- same established convention as `array.new_data`
+            // immediately above and explicitly required by this spec's
+            // own "Execution / trap semantics" section: an attacker-
+            // controlled huge `n` must never reach a segment-bounds
+            // computation, let alone a real allocation, before this check
+            // runs. The segment-bounds check (`checked_add`) runs
+            // strictly AFTER, so a trap there never leaves a
+            // partially-allocated array behind (no array is allocated at
+            // all until every check has passed).
+            0x0A => {
+                let n = pop_array_length(vm, "array.new_elem")?;
+                let s = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let segment = resolve_array_elem_segment(ctx, op.field_idx as usize, "array.new_elem")?;
+                let end = s.checked_add(n).filter(|&e| e <= segment.len()).ok_or_else(|| {
+                    VMError::GenericError(format!(
+                        "out of bounds table access: array.new_elem elem_idx={}, src={s}, count={n}, segment_size={}",
+                        op.field_idx,
+                        segment.len()
+                    ))
+                })?;
+                let elements = segment[s..end].to_vec();
+                let handle = gc::alloc(ctx, GcObject::Array(GcArray { type_idx: op.type_idx, elements }))?;
+                push_wasm(vm, WasmValue::Ref(Some(handle)));
+            }
+
             // array.get / array.get_s / array.get_u <type_idx> (W33 fourth
             // slice): pop [arrayref, i32 index], push the element's --
             // possibly sign/zero-extended, see struct.get's own doc
@@ -6617,6 +6749,71 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                     return Err(VMError::GenericError(format!("array.init_data: handle {handle} is not an array")));
                 };
                 a.elements[d..dest_end].clone_from_slice(&elements);
+            }
+
+            // array.init_elem <type_idx> <elem_idx> (W38 slice 5: `code/
+            // specs/W38-wasm-gc-array-bulk-ops.md`): pop [arrayref, i32
+            // dest_offset `d`, i32 elem_offset `s`, i32 count `n`], copy
+            // `n` values from elem segment `elem_idx`'s own pre-evaluated
+            // `element_values` (Correction 2, starting at entry `s`) into
+            // the array starting at element `d`. Unlike `array.init_data`,
+            // this copies REFERENCE values directly -- no byte-
+            // reinterpretation at all, since an elem segment's items are
+            // already real, typed `WasmValue`s (which may themselves be
+            // fresh `gc_heap` handles), evaluated ONCE at instantiation
+            // time (see `element_values`'s own doc comment for why this
+            // makes the corpus's own "not re-evaluated on every `array.
+            // init_elem`" requirement fall out automatically -- this
+            // handler never triggers evaluation itself, only ever reads
+            // an already-evaluated entry). Mutability is a static,
+            // VALIDATOR-enforced property (mirrors `array.init_data`'s
+            // own division of responsibility) -- this handler enforces
+            // the null-deref, destination-bounds, and segment-bounds
+            // checks only.
+            //
+            // SECURITY: same ordering discipline as `array.init_data`
+            // immediately above -- the destination-array bounds check
+            // runs FIRST, entirely via an IMMUTABLE peek at the array's
+            // current length (matching `array_init_elem.wast`'s own
+            // corpus expectation that an out-of-range `d`/`n` traps even
+            // when `s`/`n` would ALSO be out of range against the
+            // segment), before any segment read; the segment-bounds check
+            // (`checked_add`, never a bare `+`) runs second, entirely
+            // before the FINAL mutable borrow that actually writes
+            // `elements[d..d+n]` -- so a trap on either check leaves the
+            // array completely unmodified.
+            0x13 => {
+                let n = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let s = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let d = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let handle = pop_array_ref(vm, "array.init_elem")?;
+                let dest_end = {
+                    let obj = ctx.gc_heap.get(handle as usize).and_then(|slot| slot.as_ref()).ok_or_else(|| {
+                        VMError::GenericError(format!("array.init_elem: dangling handle {handle}"))
+                    })?;
+                    let GcObject::Array(a) = obj else {
+                        return Err(VMError::GenericError(format!("array.init_elem: handle {handle} is not an array")));
+                    };
+                    d.checked_add(n)
+                        .filter(|&e| e <= a.elements.len())
+                        .ok_or_else(|| VMError::GenericError(format!("out of bounds array.init_elem: offset={d}, count={n}, array_length={}", a.elements.len())))?
+                };
+                let segment = resolve_array_elem_segment(ctx, op.field_idx as usize, "array.init_elem")?;
+                let src_end = s.checked_add(n).filter(|&e| e <= segment.len()).ok_or_else(|| {
+                    VMError::GenericError(format!(
+                        "out of bounds table access: array.init_elem elem_idx={}, src={s}, count={n}, segment_size={}",
+                        op.field_idx,
+                        segment.len()
+                    ))
+                })?;
+                let values = segment[s..src_end].to_vec();
+                let obj = ctx.gc_heap.get_mut(handle as usize).and_then(|slot| slot.as_mut()).ok_or_else(|| {
+                    VMError::GenericError(format!("array.init_elem: dangling handle {handle}"))
+                })?;
+                let GcObject::Array(a) = obj else {
+                    return Err(VMError::GenericError(format!("array.init_elem: handle {handle} is not an array")));
+                };
+                a.elements[d..dest_end].clone_from_slice(&values);
             }
 
             // ref.test (0x14) / ref.test null (0x15): pop a reference, push i32
@@ -13783,6 +13980,12 @@ pub struct WasmExecutionEngine {
     /// Persistent across calls, same `set`-before/writeback-after pattern
     /// as `dropped_data_segments`.
     dropped_elements: Vec<bool>,
+    /// Each element segment's real evaluated constant values (W38 slice
+    /// 4/5) -- see `WasmExecutionContext::element_values`'s own doc
+    /// comment. Immutable content once set (like `elements`/`data_
+    /// segments` above), so no writeback is needed; set once via
+    /// [`Self::set_element_values`].
+    element_values: Vec<Vec<WasmValue>>,
     /// Canonical, cross-instance-safe function identity per combined
     /// func-index-space entry (W35 third slice) — same optional-setter
     /// pattern as `tag_identities` above, for the identical reason. Empty
@@ -13837,6 +14040,7 @@ impl WasmExecutionEngine {
             dropped_data_segments: Vec::new(),
             elements: Vec::new(),
             dropped_elements: Vec::new(),
+            element_values: Vec::new(),
             func_identities: Vec::new(),
             instance_identity: 0,
             self_resolver: None,
@@ -14096,6 +14300,21 @@ impl WasmExecutionEngine {
         self
     }
 
+    /// Register each element segment's REAL evaluated constant values
+    /// (W38 slice 4/5, Correction 2: `code/specs/
+    /// W38-wasm-gc-array-bulk-ops.md`), same index space as
+    /// [`Self::set_elements`] above -- `array.init_elem`/`array.new_elem`'s
+    /// own source, computed ONCE at instantiation time from `wasm_types::
+    /// Element::item_exprs` via `evaluate_const_expr_gc` (see `wasm-
+    /// runtime::instantiate()`). Same optional-setter pattern as
+    /// [`Self::set_elements`]: left unset, `array.init_elem`/`array.
+    /// new_elem` see an empty `element_values`, so any real elem-segment
+    /// index is cleanly out-of-bounds (a trap, not a panic).
+    pub fn set_element_values(&mut self, values: Vec<Vec<WasmValue>>) -> &mut Self {
+        self.element_values = values;
+        self
+    }
+
     /// Live `gc_heap` object count as of the most recently completed
     /// [`Self::call_function`] (W04). `gc_heap` itself resets every call, so
     /// this reflects only that one call's allocation/collection activity,
@@ -14273,6 +14492,7 @@ impl WasmExecutionEngine {
             dropped_data_segments: self.dropped_data_segments.clone(),
             elements: self.elements.clone(),
             dropped_elements: self.dropped_elements.clone(),
+            element_values: self.element_values.clone(),
             tags: self.tags.clone(),
             tag_identities: self.tag_identities.clone(),
             try_table_infos: Vec::new(),
@@ -17087,6 +17307,204 @@ mod tests {
         assert!(engine.call_function(0, &[]).is_err());
     }
 
+    // ── W38 slice 5 (`code/specs/W38-wasm-gc-array-bulk-ops.md`):
+    // array.new_elem / array.init_elem -- opcode-level coverage
+    // complementing `wasm-runtime/tests/array_init_elem_new_elem.rs`'s own
+    // end-to-end (text-parser + validator + real instantiation) tests for
+    // the happy path, the dropped-segment/OOB-segment traps, and the
+    // corpus's own "not re-evaluated" invariant. These focus on the two
+    // things only reachable by hand-building bytecode directly (mirroring
+    // `array.new_data`/`array.init_data`'s own test suite immediately
+    // above): the `MAX_ARRAY_ALLOC` DoS guard (checked BEFORE any segment
+    // read, per this spec's own explicit security requirement) and the
+    // runtime's own DEFENSIVE out-of-range `elem_idx` check (distinct from
+    // -- and never reached when -- `wasm-validator`'s compile-time one
+    // already rejects it; this is "never trust a decoded module at
+    // runtime regardless of what validation should have caught",
+    // `resolve_array_data_segment`'s own established convention, applied
+    // to `resolve_array_elem_segment`). ────────────────────────────────
+
+    #[test]
+    fn test_array_new_elem_reads_values_directly_from_element_values_no_byte_decoding() {
+        // Unlike `array.new_data`, an elem segment's items are already
+        // real, typed `WasmValue`s (evaluated once at instantiation time)
+        // -- `array.new_elem` copies them verbatim, no byte-width/storage-
+        // type reinterpretation involved at all.
+        let code = vec![
+            0x41, 0, // s = 0
+            0x41, 2, // n = 2
+            0xFB, 0x0A, 0x00, 0x00, // array.new_elem type=0 elem=0
+            0x21, 0x00, // local.set 0 (stash arrayref)
+            0x20, 0x00,
+            0x41, 0, // index 0
+            0xFB, 0x0B, 0x00, // array.get 0
+            0x20, 0x00,
+            0x41, 1, // index 1
+            0xFB, 0x0B, 0x00, // array.get 0
+            0x0B,
+        ];
+        let mut engine = array_engine_with_locals(code, vec![ValueType::Anyref, ValueType::Anyref], vec![ValueType::Anyref], vec![Some(wasm_types::StorageType::Val(ValueType::Funcref))]);
+        engine.set_element_values(vec![vec![WasmValue::Ref(Some(7)), WasmValue::Ref(Some(9))]]);
+        engine.set_dropped_elements(vec![false]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::Ref(Some(7)), WasmValue::Ref(Some(9))]);
+    }
+
+    #[test]
+    fn test_array_new_elem_out_of_bounds_segment_content_traps() {
+        // segment has 2 entries; `s=0, n=3` overruns it -- a runtime TRAP,
+        // distinct from the compile-time `elem_idx`-range check.
+        let code = vec![
+            0x41, 0, // s = 0
+            0x41, 3, // n = 3
+            0xFB, 0x0A, 0x00, 0x00, // array.new_elem type=0 elem=0
+            0x0B,
+        ];
+        let mut engine = array_engine(code, vec![], vec![Some(wasm_types::StorageType::Val(ValueType::Funcref))]);
+        engine.set_element_values(vec![vec![WasmValue::Ref(Some(1)), WasmValue::Ref(Some(2))]]);
+        engine.set_dropped_elements(vec![false]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_array_new_elem_over_the_dos_guard_ceiling_traps_before_reading_the_segment() {
+        // A hand-crafted count past `MAX_ARRAY_ALLOC`, checked BEFORE any
+        // segment read or allocation -- same established convention as
+        // `array.new_data`'s own identical guard test above, and this
+        // spec's own explicit "n must be bounded before allocation"
+        // security requirement. The segment itself is EMPTY, so if the
+        // guard fired only after (or instead of) checking segment bounds,
+        // this would still trap either way -- what this test actually
+        // pins down is that the huge `n` itself is rejected, not merely
+        // that SOME trap happens to fire.
+        let code = vec![
+            0x41, 0, // s = 0
+            0x41, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, // n = u32::MAX
+            0xFB, 0x0A, 0x00, 0x00, // array.new_elem type=0 elem=0
+            0x0B,
+        ];
+        let mut engine = array_engine(code, vec![], vec![Some(wasm_types::StorageType::Val(ValueType::Funcref))]);
+        engine.set_element_values(vec![vec![]]);
+        engine.set_dropped_elements(vec![false]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_array_new_elem_out_of_range_elem_idx_is_a_defensive_runtime_error() {
+        // Bypasses `wasm-validator` entirely (hand-built bytecode, same
+        // shape as `array.new_data`'s own identical test above) to confirm
+        // the RUNTIME's own defensive check also rejects cleanly --
+        // `elem_idx=5` but zero segments are registered.
+        let code = vec![
+            0x41, 0, // s = 0
+            0x41, 0, // n = 0
+            0xFB, 0x0A, 0x00, 0x05, // array.new_elem type=0 elem=5 (out of range)
+            0x0B,
+        ];
+        let mut engine = array_engine(code, vec![], vec![Some(wasm_types::StorageType::Val(ValueType::Funcref))]);
+        engine.set_element_values(vec![]);
+        engine.set_dropped_elements(vec![]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_array_init_elem_writes_into_existing_array_leaving_other_elements_untouched() {
+        // array [null, null, null, null] (via array.new_default), then
+        // array.init_elem writes 2 elements starting at index 1 -- expect
+        // indices 0 and 3 to stay null, mirroring `array.init_data`'s own
+        // identical "leaving other elements untouched" test shape above.
+        let code = vec![
+            0x41, 4, // length 4
+            0xFB, 0x07, 0x00, // array.new_default 0
+            0x21, 0x00, // local.set 0 (stash arrayref)
+            0x20, 0x00, // arrayref
+            0x41, 1, // d = 1
+            0x41, 0, // s = 0
+            0x41, 2, // n = 2
+            0xFB, 0x13, 0x00, 0x00, // array.init_elem type=0 elem=0
+            0x20, 0x00,
+            0x41, 0, // index 0
+            0xFB, 0x0B, 0x00,
+            0x20, 0x00,
+            0x41, 1, // index 1
+            0xFB, 0x0B, 0x00,
+            0x20, 0x00,
+            0x41, 2, // index 2
+            0xFB, 0x0B, 0x00,
+            0x20, 0x00,
+            0x41, 3, // index 3
+            0xFB, 0x0B, 0x00,
+            0x0B,
+        ];
+        let mut engine = array_engine_with_locals(
+            code,
+            vec![ValueType::Anyref, ValueType::Anyref, ValueType::Anyref, ValueType::Anyref],
+            vec![ValueType::Anyref],
+            vec![Some(wasm_types::StorageType::Val(ValueType::Funcref))],
+        );
+        engine.set_element_values(vec![vec![WasmValue::Ref(Some(11)), WasmValue::Ref(Some(22))]]);
+        engine.set_dropped_elements(vec![false]);
+        assert_eq!(
+            engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::Ref(None), WasmValue::Ref(Some(11)), WasmValue::Ref(Some(22)), WasmValue::Ref(None)]
+        );
+    }
+
+    #[test]
+    fn test_array_init_elem_null_array_reference_traps() {
+        // Mirrors `array.init_data`'s own identical null-check convention
+        // (`pop_array_ref`'s unconditional null check).
+        let code = vec![
+            0xD0, 0x0F, // ref.null (arrayref)
+            0x41, 0, // d = 0
+            0x41, 0, // s = 0
+            0x41, 0, // n = 0
+            0xFB, 0x13, 0x00, 0x00, // array.init_elem type=0 elem=0
+            0x0B,
+        ];
+        let mut engine = array_engine(code, vec![], vec![Some(wasm_types::StorageType::Val(ValueType::Funcref))]);
+        engine.set_element_values(vec![vec![]]);
+        engine.set_dropped_elements(vec![false]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_array_init_elem_dropped_segment_with_zero_count_succeeds_but_nonzero_traps() {
+        // The elem-segment analogue of `array_init_data`'s own dropped-
+        // segment pair above -- a dropped segment behaves as length-0, so
+        // `n=0` still succeeds regardless, but `n>0` traps.
+        let zero_code = vec![
+            0x41, 2, // length 2
+            0xFB, 0x07, 0x00, // array.new_default 0
+            0x21, 0x00,
+            0x20, 0x00,
+            0x41, 0, // d = 0
+            0x41, 0, // s = 0
+            0x41, 0, // n = 0
+            0xFB, 0x13, 0x00, 0x00, // array.init_elem type=0 elem=0
+            0x0B,
+        ];
+        let mut zero_engine = array_engine_with_locals(zero_code, vec![], vec![ValueType::Anyref], vec![Some(wasm_types::StorageType::Val(ValueType::Funcref))]);
+        zero_engine.set_element_values(vec![vec![WasmValue::Ref(Some(1)), WasmValue::Ref(Some(2))]]);
+        zero_engine.set_dropped_elements(vec![true]);
+        assert!(zero_engine.call_function(0, &[]).is_ok(), "a dropped segment degrades to length-0, but n=0 must still succeed");
+
+        let nonzero_code = vec![
+            0x41, 2, // length 2
+            0xFB, 0x07, 0x00, // array.new_default 0
+            0x21, 0x00,
+            0x20, 0x00,
+            0x41, 0, // d = 0
+            0x41, 0, // s = 0
+            0x41, 1, // n = 1
+            0xFB, 0x13, 0x00, 0x00, // array.init_elem type=0 elem=0
+            0x0B,
+        ];
+        let mut nonzero_engine = array_engine_with_locals(nonzero_code, vec![], vec![ValueType::Anyref], vec![Some(wasm_types::StorageType::Val(ValueType::Funcref))]);
+        nonzero_engine.set_element_values(vec![vec![WasmValue::Ref(Some(1)), WasmValue::Ref(Some(2))]]);
+        nonzero_engine.set_dropped_elements(vec![true]);
+        assert!(nonzero_engine.call_function(0, &[]).is_err());
+    }
+
     // ── W04: real GC — end-to-end reclamation through real dispatch ────────
     //
     // These drive an actual loop through the real `execute_branch`/`br_if`
@@ -17742,6 +18160,7 @@ mod tests {
             dropped_data_segments: Vec::new(),
             elements: Vec::new(),
             dropped_elements: Vec::new(),
+            element_values: Vec::new(),
             tags: Vec::new(),
             tag_identities: Vec::new(),
             try_table_infos: Vec::new(),

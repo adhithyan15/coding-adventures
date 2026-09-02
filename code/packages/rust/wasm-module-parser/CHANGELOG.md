@@ -2,6 +2,23 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.18] — 2026-09-02 — real `item_exprs`/`declared_type` population (W38 slices 4/5)
+
+`wasm-types` 0.1.27 added `Element::declared_type` and changed `item_
+exprs`'s own contract from "always empty" to "populated for real" (see
+that crate's own CHANGELOG). This crate's binary element-segment decoder
+still only ever accepts funcref-family entries (modes 0/1/2/5; the
+existing `reftype != 0x70` check already rejects anything else), so both
+new fields are cheap, mechanical, and always the SAME implicit value
+here: every entry re-encodes as a plain `ref.func`/`ref.null func`
+constant expression (`item_exprs`), and `declared_type` is always
+`ValueType::Funcref` -- binary-format encoding of `array.init_elem`/
+`array.new_elem` themselves remains explicitly out of scope for this
+spec (confirmed by corpus grep: no file in the cluster uses `(module
+binary ...)` for either instruction).
+
+`cargo test -p wasm-module-parser`: 69 passed, 0 failed.
+
 ## [0.2.17] — 2026-09-02 — mechanical fallout of `wasm_types::Element::item_exprs` (W38 slice 0)
 
 `wasm-types` 0.1.26 added `Element::item_exprs: Vec<Vec<u8>>` (see that

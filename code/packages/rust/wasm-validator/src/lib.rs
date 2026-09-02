@@ -645,6 +645,40 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
             }
         }
     }
+    // W38 slice 4 (`code/specs/W38-wasm-gc-array-bulk-ops.md`, Correction
+    // 2): an element segment's own `declared_type` (its reftype tag,
+    // `wasm_types::Element::declared_type`'s own doc comment) is a NEW
+    // surface this same out-of-range-`ConcreteFuncRef` gap applies to,
+    // now that `wasm-wast-parser::build_elem`'s Layer 1 fix generalizes
+    // reftype-tag recognition to ANY successfully-parsed `ValueType` via
+    // `parse_value_type` -- including a bare NUMERIC `(ref N)`/`(ref null
+    // N)` tag, which `resolve_idx` never bounds-checks (same root cause
+    // this whole Check 4c section already exists for). Real corpus
+    // regression, caught by re-probing the FULL 257-file corpus after
+    // this spec's own Layer 1 fix landed (`ref.wast`'s own `(module (elem
+    // $elem-invalid (ref 1)))`, `assert_invalid "unknown type"`): this
+    // module used to fail to even PARSE (`(ref 1)` was entirely
+    // unrecognized as a reftype tag before Layer 1, so it was
+    // misinterpreted as an offset-expression instruction and rejected
+    // outright) -- a lucky parse-failure `Pass`, not a real check, per
+    // this same pattern's own precedent (see this function's `W32 second
+    // slice` doc comment on the identical `(ref $t)`-in-signature-
+    // position regression that motivated this whole Check 4c section).
+    // Without this arm, that module would newly PARSE (Layer 1 accepts
+    // ANY value type, including an out-of-range numeric one, exactly like
+    // every other `parse_value_type` call site already does) and
+    // structurally VALIDATE (nothing else checks `declared_type`'s own
+    // bounds unless `array.init_elem`/`array.new_elem` actually consumes
+    // this segment, which this particular module never does), silently
+    // downgrading a real `Pass` to `NotYetSupported`.
+    for (i, elem) in module.elements.iter().enumerate() {
+        if let Some(idx) = out_of_range_concrete_func_ref(&elem.declared_type, module.types.len()) {
+            return Err(ValidationError::TypeIndexOutOfBounds(format!(
+                "element segment #{i}'s own declared reftype references type index {idx}, but only {} types exist",
+                module.types.len()
+            )));
+        }
+    }
 
     // ── Check 5: Code/function count match ──────────────────────────────
     if module.code.len() != module.functions.len() {
@@ -1701,6 +1735,7 @@ mod tests {
                 is_passive: false,
                 is_declarative: false,
                 item_exprs: vec![],
+                declared_type: ValueType::Funcref,
             }],
             ..Default::default()
         };
@@ -1725,6 +1760,7 @@ mod tests {
                 is_passive: false,
                 is_declarative: false,
                 item_exprs: vec![],
+                declared_type: ValueType::Funcref,
             }],
             ..Default::default()
         };
@@ -1749,6 +1785,7 @@ mod tests {
                 is_passive: false,
                 is_declarative: false,
                 item_exprs: vec![],
+                declared_type: ValueType::Funcref,
             }],
             ..Default::default()
         };
@@ -1773,6 +1810,7 @@ mod tests {
                 is_passive: false,
                 is_declarative: false,
                 item_exprs: vec![],
+                declared_type: ValueType::Funcref,
             }],
             ..Default::default()
         };
