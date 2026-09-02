@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:597d17b2e7927ba5",
+  "sourceHash": "fnv1a64:71f494dbecd5fd6d",
   "lessons": [
     {
       "id": "TA-C05-pesu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8cffed7ec5dda841",
+      "sourceHash": "fnv1a64:5efe1bb606fe49b2",
       "notice": null,
       "blocks": [
         {
@@ -50,11 +50,11 @@
             },
             {
               "kind": "speech",
-              "text": "pēsu- (speak) + -giṟ- (present) + -ēṉ (\"I\") becomes பேசுகிறேன் (pēsugiṟēṉ), \"I speak.\""
+              "text": "pēsu- (speak) + -giṟ- (present) + -ēṉ (\"I\") becomes pēsugiṟēṉ, \"I speak.\""
             },
             {
               "kind": "speech",
-              "text": "The -ஏன் (-ēṉ) ending is \"I\" — so, as with irukkiṟēṉ, you rarely need the word nāṉ. Change the ending, change the person: pēsugiṟāṉ (\"he speaks\"), pēsugiṟāḷ (\"she speaks\"), pēsugiṟārgaḷ (\"they/you-respectful speak\")."
+              "text": "The -ēṉ ending is \"I\" — so, as with irukkiṟēṉ, you rarely need the word nāṉ. Change the ending, change the person: pēsugiṟāṉ (\"he speaks\"), pēsugiṟāḷ (\"she speaks\"), pēsugiṟārgaḷ (\"they/you-respectful speak\")."
             }
           ]
         },
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0cce51304bfb7ef8",
+      "sourceHash": "fnv1a64:003cabfcb6370a5d",
       "notice": null,
       "blocks": [
         {
@@ -453,7 +453,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9b65e09a8722fe40",
+      "sourceHash": "fnv1a64:fc2799a91500d74f",
       "notice": null,
       "blocks": [
         {
@@ -480,11 +480,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "வாழ் (vāḻ, \"to live, to flourish, to thrive\") is native Dravidian, and carries more warmth than a plain \"to reside.\" From it grow வாழ்க்கை (vāḻkkai, \"life\") and the blessing வாழ்க (vāḻga, \"may you live / long live\"), heard in vāḻga tamiḻ (\"long live Tamil\"). To say \"I live,\" add the familiar ending: நான் … வாழ்கிறேன் (nāṉ … vāḻgiṟēṉ), stem + present -giṟ-."
-            },
-            {
-              "kind": "speech",
-              "text": "\"I\" -ēṉ, exactly like pēsugiṟēṉ."
+              "text": "வாழ் (vāḻ, \"to live, to flourish, to thrive\") is native Dravidian, and carries more warmth than a plain \"to reside.\" From it grow vāḻkkai (\"life\") and the blessing vāḻga (\"may you live / long live\"), heard in vāḻga tamiḻ (\"long live Tamil\"). To say \"I live,\" add the familiar ending: nāṉ … vāḻgiṟēṉ, stem + present -giṟ- + \"I\" -ēṉ, exactly like pēsugiṟēṉ."
             }
           ]
         },
@@ -571,7 +567,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f253c9fea41fd91d",
+      "sourceHash": "fnv1a64:f174dedb275bcef4",
       "notice": null,
       "blocks": [
         {
@@ -610,11 +606,11 @@
             },
             {
               "kind": "speech",
-              "text": "உதவி செய் (udavi sey) = \"to help\"."
+              "text": "udavi sey = \"to help\"."
             },
             {
               "kind": "speech",
-              "text": "So \"I work\" is நான் வேலை செய்கிறேன் (nāṉ vēlai seygiṟēṉ) — sey- + -giṟ-."
+              "text": "So \"I work\" is nāṉ vēlai seygiṟēṉ — sey- + -giṟ-."
             },
             {
               "kind": "speech",
@@ -705,7 +701,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7672680a71915ae9",
+      "sourceHash": "fnv1a64:6b0a8d61d2ea5f7c",
       "notice": null,
       "blocks": [
         {
@@ -727,8 +723,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Build the sentences",
+          "type": "guided-production",
+          "title": "Guided Practice — build the sentences",
           "segments": [
             {
               "kind": "pause",
@@ -776,8 +772,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The engine",
+          "type": "grammar",
+          "title": "Grammar lens — the engine",
           "segments": [
             {
               "kind": "pause",
@@ -816,8 +812,8 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Roots you now carry",
+          "type": "notice",
+          "title": "What you've built — roots you now carry",
           "segments": [
             {
               "kind": "pause",

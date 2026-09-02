@@ -1,0 +1,16 @@
+{
+  "language": "tamil",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:8cf793e1b785a9fe",
+  "lessonIds": [
+    "TA-C02-peyar",
+    "TA-C02-en",
+    "TA-C02-en-peyar",
+    "TA-C02-nii-niingal",
+    "TA-C02-enna",
+    "TA-C02-ungal-peyar-enna",
+    "TA-C02-magizhcci",
+    "TA-C02-practice"
+  ],
+  "tex": "tamil/book/chapters/ch02-introductions.tex"
+}

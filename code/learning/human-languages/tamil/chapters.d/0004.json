@@ -10,8 +10,13 @@
   "payoff": {
     "lesson": "TA-C04-practice",
     "kind": "task",
-    "summary": "Complete TA-C04-practice, the canonical closing checkpoint, and demonstrate the chapter promise: end a Tamil conversation politely and choose a farewell that fits the situation.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Close a conversation the Tamil way out loud: promise to go and come back, answer the same promise, and choose between tomorrow and next-time.",
+    "assesses": [
+      "TA-LEX-C04-PO-01",
+      "TA-LEX-C04-POY-VARUGIREN-01",
+      "TA-LEX-C04-NAALAI-01",
+      "TA-LEX-C04-MINDUM-SANDIPPOM-01",
+      "TA-LEX-C04-PRACTICE-01"
+    ]
   }
 }

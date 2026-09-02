@@ -45,8 +45,8 @@ Take a noun you know and add **-உக்கு**:
 
 | word | + the dative | meaning |
 |---|---|---|
-| பெயர் *peyar* — name | **பெயருக்கு** *peyar**ukku*** | to/for the name |
-| வேலை *vēlai* — work | வேலை**க்கு** *vēlai**kku*** | for work |
+| *peyar* — name | *peyar**ukku*** | to/for the name |
+| *vēlai* — work | *vēlai**kku*** | for work |
 
 The suffix has two shapes — **-உக்கு** *-ukku* and **-க்கு** *-kku* — chosen by the
 sound the noun ends in. One case, two forms; the seam still shows.
@@ -54,7 +54,7 @@ sound the noun ends in. One case, two forms; the seam still shows.
 And with "I" — this one is irregular and worth memorising, because you'll use it
 constantly:
 
-> **நான்** *nāṉ* ("I") → **எனக்கு** *enakku* ("to me")
+> *nāṉ* ("I") → *enakku* ("to me")
 
 The pronoun changes its body (*nāṉ* → *en-*) before the suffix lands. Nouns don't
 — they just take the ending.
@@ -65,13 +65,13 @@ The pronoun changes its body (*nāṉ* → *en-*) before the suffix lands. Nouns
 [PAUSE 1s]
 - [YOU SAY: "*peyar* … *peyarukku*"]
 - [YOU SAY: "*nāṉ* … *enakku*" — "I" … "to me"]
-- [YOU SAY: "*vēlaikku*" — "for work," from Ch. 5's வேலை]
+- [YOU SAY: "*vēlaikku*" — "for work," from Ch. 5's *vēlai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-DATIVE-UKKU-01] -->
 
 [PAUSE 3s] What does **-உக்கு** mean? ("**To**" or "**for**.") Where does it go?
 (**On the end** of the noun — Tamil adds, it doesn't put a word in front.) What is
-"to me"? (**எனக்கு** *enakku* — the pronoun's body changes to *en-* first.) Why does
+"to me"? (***enakku*** — the pronoun's body changes to *en-* first.) Why does
 the suffix show up as *-ukku* and *-kku*? (**One case, two shapes**, chosen by the
 noun's ending.) Next: two more letters — ம and retroflex ண.

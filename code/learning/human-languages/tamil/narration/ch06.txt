@@ -12,11 +12,11 @@ Your first case ending. English says "to me" with a separate word in front. Tami
 Grammar Lens: Adding it on.
 Take a noun you know and add -உக்கு (-ukku):
 [a table of 2 rows, read aloud]
-word: பெயர் peyar — name. + the dative: பெயருக்கு peyarukku. meaning: to/for the name.
-word: வேலை vēlai — work. + the dative: வேலைக்கு vēlaikku. meaning: for work.
+word: peyar — name. + the dative: peyarukku. meaning: to/for the name.
+word: vēlai — work. + the dative: vēlaikku. meaning: for work.
 The suffix has two shapes — -உக்கு -ukku and -க்கு -kku — chosen by the sound the noun ends in. One case, two forms; the seam still shows.
 And with "I" — this one is irregular and worth memorising, because you'll use it constantly:
-நான் nāṉ ("I") becomes எனக்கு enakku ("to me").
+nāṉ ("I") becomes enakku ("to me").
 The pronoun changes its body (nāṉ becomes en-) before the suffix lands. Nouns don't — they just take the ending.
 
 Guided Practice.
@@ -25,12 +25,12 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: "nāṉ … enakku" — "I" … "to me"]
 [pause 8 seconds for the answer]
-[your turn — say: "vēlaikku" — "for work," from Ch. 5's வேலை]
+[your turn — say: "vēlaikku" — "for work," from Ch. 5's vēlai]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does -உக்கு mean? ("To" or "for.") Where does it go? (On the end of the noun — Tamil adds, it doesn't put a word in front.) What is "to me"? (எனக்கு enakku — the pronoun's body changes to en- first.) Why does the suffix show up as -ukku and -kku? (One case, two shapes, chosen by the noun's ending.) Next: two more letters — ம and retroflex ண (ṇa).
+What does -உக்கு mean? ("To" or "for.") Where does it go? (On the end of the noun — Tamil adds, it doesn't put a word in front.) What is "to me"? (enakku — the pronoun's body changes to en- first.) Why does the suffix show up as -ukku and -kku? (One case, two shapes, chosen by the noun's ending.) Next: two more letters — ம and retroflex ண (ṇa).
 
 
 Lesson 2 of 9.
@@ -147,7 +147,7 @@ Lesson 5 of 9.
 
 Warm-up.
 [pause 2 seconds]
-In Chapter 5 you said நான் தமிழ் பேசுகிறேன் — "I speak Tamil," with nāṉ as the subject. Now say "I know Tamil." Tamil will not let you use nāṉ.
+In Chapter 5 you said nāṉ tamiḻ pēsugiṟēṉ — "I speak Tamil," with nāṉ as the subject. Now say "I know Tamil." Tamil will not let you use nāṉ.
 
 You'll want to know: The sentence.
 எனக்குத் தமிழ் தெரியும் (enakkut tamiḻ teriyum). enakku tamiḻ teriyum. literally: "to-me Tamil is-known."

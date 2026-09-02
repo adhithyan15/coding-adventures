@@ -1,0 +1,11 @@
+{
+  "id": "TA-EXT-011-CONSOLIDATION",
+  "stage": "pre-A1",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can retrieve and combine the Chapter 3 how-are-you exchange from atoms I already own.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C03-practice"
+  ]
+}

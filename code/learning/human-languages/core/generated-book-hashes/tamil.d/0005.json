@@ -1,0 +1,14 @@
+{
+  "language": "tamil",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:667de12c9934c080",
+  "lessonIds": [
+    "TA-C05-pesu",
+    "TA-C05-naan-tamizh-pesugiren",
+    "TA-W01-abugida-va-ka",
+    "TA-C05-vaazh",
+    "TA-C05-velai-sey",
+    "TA-C05-practice"
+  ],
+  "tex": "tamil/book/chapters/ch05-first-verbs.tex"
+}

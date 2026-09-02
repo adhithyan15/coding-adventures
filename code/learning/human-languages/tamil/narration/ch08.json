@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Please",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:7c72931baba25ce5",
+  "sourceHash": "fnv1a64:9a6a94e3ce409051",
   "lessons": [
     {
       "id": "TA-C08-tayavuseytu",
@@ -1193,6 +1193,175 @@
             {
               "kind": "speech",
               "text": "Which character is this — எ? What sound does it carry? (e.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-S125-letter-u",
+      "sequence": 492,
+      "title": "உ — the letter behind a sign you have used for chapters",
+      "headword": "உ",
+      "romanization": "u",
+      "gloss": "the single character உ — the last independent vowel with no lesson of its own",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:75203be08d72c0f2",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: உ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: உ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: எ — what sound does it carry?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character again. This one closes a gap you have been walking past since Chapter 4."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: உ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உ — u."
+            },
+            {
+              "kind": "speech",
+              "text": "You already know its sign, ◌ு, the little tail that hangs off a consonant inside a word. This is the other half of the same vowel: the independent shape, used when a word begins with the sound."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole Tamil pattern, met once more. Every vowel has two bodies — a free-standing letter for the front of a word, and a sign for inside one — and you have been using this vowel's sign for chapters without ever meeting the letter it belongs to."
+            },
+            {
+              "kind": "speech",
+              "text": "Every one of these begins with it, and every other shape in them you can already read:"
+            },
+            {
+              "kind": "speech",
+              "text": "உங்கள் uṅgaḷ — your, which you have been saying for a while."
+            },
+            {
+              "kind": "speech",
+              "text": "உம் um — the \"also / and\" ending, which the next apology needs."
+            },
+            {
+              "kind": "speech",
+              "text": "உண் uṇ — the old verb \"to eat\", waiting in the verbs to come."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: உ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on உ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these two, and say which is the letter and which is the sign",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these two, and say which is the letter and which is the sign]"
+            },
+            {
+              "kind": "speech",
+              "text": "உ (u), ◌ு."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "உ three times, saying u as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: உ three times, saying *u* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "உங்கள் — every shape in it is one you have met",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: உங்கள் — every shape in it is one you have met]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — உ? What sound does it carry? (u.) Where does the letter go, and where does the sign ◌ு go? (Letter at the start of a word; sign on a consonant inside one.)"
             }
           ]
         }

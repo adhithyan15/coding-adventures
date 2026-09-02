@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: TA-C05-practice
+spine_node: SPINE-EXCHANGE-NAMES
 chapter: 5
 sequence: 350
 type: practice
@@ -9,18 +11,33 @@ concept_tag: REVIEW
 prerequisites: [TA-C05-pesu, TA-C05-naan-tamizh-pesugiren, TA-C05-vaazh, TA-C05-velai-sey]
 sounds: []
 roots: []
-est_minutes: 4
 reviews_of: [TA-C05-pesu, TA-C05-naan-tamizh-pesugiren, TA-C05-vaazh, TA-C05-velai-sey, TA-C03-naan]
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TA-LEX-C05-PESU-01, TA-LEX-C05-NAAN-TAMIZH-PESUGIREN-01, TA-LEX-C05-VAAZH-01, TA-LEX-C05-VELAI-SEY-01]
+introduces:
+  knowledge: [TA-LEX-C05-PRACTICE-01]
+practises:
+  knowledge: [TA-LEX-C05-PRACTICE-01, TA-LEX-C05-PESU-01, TA-LEX-C05-NAAN-TAMIZH-PESUGIREN-01, TA-LEX-C05-VAAZH-01, TA-LEX-C05-VELAI-SEY-01]
+skills: [listening, speaking]
+modes: [interpersonal, presentational]
+strands: [meaning-output, fluency]
+register: neutral
+variety: standard-colloquial
 ---
+
 
 # Chapter 5 — The first verbs
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[TA-LEX-C05-PRACTICE-01]; assesses=[] -->
 
 [PAUSE 2s] No new words. Three verbs, one engine — build real sentences about
 yourself.
 
-## Build the sentences
+## Guided Practice — build the sentences
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C05-PRACTICE-01, TA-LEX-C05-PESU-01, TA-LEX-C05-VAAZH-01] -->
 
 [PAUSE 1s each]
 - [YOU SAY: "I speak Tamil" — *nāṉ tamiḻ pēsugiṟēṉ*]
@@ -28,14 +45,16 @@ yourself.
 - [YOU SAY: "I work" — *nāṉ vēlai seygiṟēṉ*]
 - [YOU SAY: "he speaks" vs. "she speaks" — *pēsugiṟāṉ* / *pēsugiṟāḷ*]
 
-## The engine
+## Grammar lens — the engine
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C05-PRACTICE-01] -->
 
 [PAUSE 2s]
 - [YOU SAY: the three stacked pieces of every Tamil verb (stem + tense + person)]
 - [YOU SAY: the ending that means "I" (*-ēṉ*)]
 - [YOU SAY: where Tamil marks gender — and where it doesn't (3rd person only)]
 
-## Roots you now carry
+## What you've built — roots you now carry
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C05-NAAN-TAMIZH-PESUGIREN-01, TA-LEX-C05-VELAI-SEY-01] -->
 
 [PAUSE 2s]
 - *pēsu* "to speak" (native Dravidian)
@@ -44,6 +63,7 @@ yourself.
 - *tamiḻ* — the language, and its signature retroflex *ḻ*
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C05-PRACTICE-01] -->
 
 [PAUSE 3s] In one breath, say your language and your work in Tamil, then bless
 someone with the *vāḻ* verb. (*Nāṉ tamiḻ pēsugiṟēṉ. Nāṉ vēlai seygiṟēṉ. Vāḻga!*)
