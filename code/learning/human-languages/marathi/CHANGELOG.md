@@ -42,6 +42,13 @@ sitting between generated chapters 1–8 and 13–29.
   promise in the runway retrieval that the same six signs come back twice more;
   and — the reverse — the `.tex`'s pointer to "Chapter 4's *punhā bheṭū*",
   which is stale, the lesson's "Chapter 11" being right.
+- **`ळ` is back in the runway retrieval, and the reason it was dropped was
+  wrong.** The `.tex` printed the curled *ḷa* as the answer's confirmation; the
+  lesson had only the words for it. It was left out on the belief that no
+  lesson taught the shape — but `MR-W03-lla` owns `MR-SCRIPT-LLA-01` in
+  **chapter 3, sequence 31**, 270 positions earlier. The glyph is restored and
+  the atom declared, which closes its R3 reinforcement window: script-closure
+  violations do not move and `reinforcementWindowMisses` falls by one.
 - **Two defects only the generated book could show.**
   `MR-C02-naav` cited PIE **\*h₃nómn̥** with U+0325, COMBINING RING BELOW.
   Latin Modern Roman does not have that glyph — verified by reading the cmap of
@@ -81,8 +88,10 @@ Counters, each re-measured against the tree:
   lesson limit of 3; the chapter is genuinely where the whole introduction
   exchange lands. Declaring fewer would mean under-declaring what the lessons
   assess, so the report-only gate records it.
-- `reinforcementWindowMisses` **218 → 271**, also a legitimate rise: newly
+- `reinforcementWindowMisses` **218 → 267**, also a legitimate rise: newly
   declared atoms are newly measured ones, and the debt predates the declaration.
+  Re-measured against the merged tree; an earlier pre-merge reading of 271 was
+  three too high, which is what "never derive a counter" is there to prevent.
 - `atomsNeverRevisited` is back to its pre-existing **1**. It went to 4 first,
   and each of the three was a real gap the recap already closed in prose but
   not in its directives — the *m*→*v* softening, the respectful possessive, and

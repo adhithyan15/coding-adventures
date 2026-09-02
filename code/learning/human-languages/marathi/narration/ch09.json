@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:17907fd82b2ecd60",
+  "sourceHash": "fnv1a64:691054fb1a1b51d6",
   "lessons": [
     {
       "id": "MR-C02-naav",
@@ -1151,7 +1151,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:68b7f68b8d8353a5",
+      "sourceHash": "fnv1a64:6b060048086b4d13",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1189,7 +1189,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which l does Marathi keep that Hindi does not? (The curled one.)"
+              "text": "Which l does Marathi keep that Hindi does not? (The curled one, ळ.)"
             },
             {
               "kind": "pause",
@@ -1227,6 +1227,7 @@
               "id": "MR-R09-runway-tail-r2-check",
               "prompt": "A chapter after learning them, name the plain l beside the curled one, the two sibilants written apart but said alike, and the three vowels that stand alone as well as leaning.",
               "assesses": [
+                "MR-SCRIPT-LLA-01",
                 "MR-SCRIPT-LA-01",
                 "MR-SCRIPT-SHA-01",
                 "MR-SCRIPT-SSA-01",
