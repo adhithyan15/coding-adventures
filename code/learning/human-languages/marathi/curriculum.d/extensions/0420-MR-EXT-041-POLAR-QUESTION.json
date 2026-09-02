@@ -1,0 +1,15 @@
+{
+  "id": "MR-EXT-041-POLAR-QUESTION",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can turn any statement I own into a yes-or-no question, hear one carried by the voice alone, and write it with the single trailing mark.",
+  "prerequisites": [
+    "MR-EXT-040-SENTENCE-NEGATION"
+  ],
+  "lessons": [
+    "MR-C33-kaa-polar",
+    "MR-W33-question-mark",
+    "MR-R33-ask-and-answer"
+  ]
+}

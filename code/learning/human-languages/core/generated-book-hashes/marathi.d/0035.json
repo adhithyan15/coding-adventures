@@ -1,0 +1,11 @@
+{
+  "language": "marathi",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:08c8549b30eec983",
+  "lessonIds": [
+    "MR-C35-kii",
+    "MR-C35-saathi",
+    "MR-R35-inside"
+  ],
+  "tex": "marathi/book/chapters/ch35-clause-inside-clause.tex"
+}

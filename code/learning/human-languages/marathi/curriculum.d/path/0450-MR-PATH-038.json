@@ -1,0 +1,15 @@
+{
+  "id": "MR-PATH-038",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "MR-C36-jevha",
+    "MR-C36-lyaavar",
+    "MR-C36-sudhaa",
+    "MR-R36-joined"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-044-TIME-JOINS"
+  ],
+  "after": []
+}

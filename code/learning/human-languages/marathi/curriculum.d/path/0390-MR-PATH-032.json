@@ -1,0 +1,15 @@
+{
+  "id": "MR-PATH-032",
+  "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+  "lessons": [
+    "MR-C30-aani",
+    "MR-C30-kinva",
+    "MR-C30-pan",
+    "MR-R30-three-joins"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-038-FLAT-JOINS"
+  ],
+  "after": []
+}

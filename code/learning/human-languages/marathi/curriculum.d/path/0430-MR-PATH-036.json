@@ -1,0 +1,15 @@
+{
+  "id": "MR-PATH-036",
+  "spine_node": "SPINE-SAY-WHY",
+  "lessons": [
+    "MR-C34-kaa-why",
+    "MR-C34-kaaran",
+    "MR-W34-comma",
+    "MR-R34-reasons"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-042-WHY-AND-BECAUSE"
+  ],
+  "after": []
+}

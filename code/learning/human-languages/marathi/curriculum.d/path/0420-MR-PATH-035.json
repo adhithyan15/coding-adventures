@@ -1,0 +1,14 @@
+{
+  "id": "MR-PATH-035",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "lessons": [
+    "MR-C33-kaa-polar",
+    "MR-W33-question-mark",
+    "MR-R33-ask-and-answer"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-041-POLAR-QUESTION"
+  ],
+  "after": []
+}

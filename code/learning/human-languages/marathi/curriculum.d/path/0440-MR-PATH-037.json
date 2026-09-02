@@ -1,0 +1,14 @@
+{
+  "id": "MR-PATH-037",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "MR-C35-kii",
+    "MR-C35-saathi",
+    "MR-R35-inside"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-043-CLAUSE-INSIDE-CLAUSE"
+  ],
+  "after": []
+}

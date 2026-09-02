@@ -1,8 +1,8 @@
 {
-  "segments": [],
-  "omits": [
-    "VERB-NEGATE",
-    "QUESTION-POLAR"
+  "segments": [
+    "MR-PATH-034",
+    "MR-PATH-035"
   ],
+  "omits": [],
   "relocates": {}
 }

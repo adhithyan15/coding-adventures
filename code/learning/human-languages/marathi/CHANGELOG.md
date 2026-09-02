@@ -1,5 +1,67 @@
 # Changelog
 
+## 2026-09-02 — The joining column: 88 → 111 of 301 A1 points
+
+- **Chapters 30–36 teach Marathi's joining words, and A1 exam coverage moves
+  88/301 (29%) → 111/301 (37%).** The measurement is `measureExamCoverage`
+  against `core/exam-inventory-marathi-a1.json`, before and after, on the merged
+  tree — not arithmetic on the deltas. **Coordination went 0/5 → 5/5** and
+  **Subordination 1/7 → 5/7**.
+- **Seventeen items closed twenty-three points, because a conjunction is a tool
+  and not a topic.** Twelve of the twenty-three fell in columns this tranche was
+  not aimed at: sentence negation closed four function points (disapproval,
+  scepticism, refusing permission, declining an offer), the polar particle **का**
+  closed three more (asking whether somebody knows, granting permission,
+  yes-or-no questions), **की** closed the uncertainty half of a notion point, and
+  the two punctuation marks closed their own. Choosing against the inventory
+  rather than by topic is what produced that ratio.
+- **What is taught, one item per lesson:**
+
+  | ch. | items |
+  |---|---|
+  | 30 | **आणि** and · **किंवा** or · **पण** but |
+  | 31 | **ना … ना** neither/nor · **… ना?** the confirmation tag · **दुसरा** the other |
+  | 32 | **… नाही** sentence negation, and **मला माहीत नाही** · **नको** the refusal |
+  | 33 | **… का?** the polar particle and the rising voice · **?** and **!** |
+  | 34 | **का …?** why · **कारण** because · **,** the comma |
+  | 35 | **की** that · **-ण्यासाठी** in order to |
+  | 36 | **जेव्हा … तेव्हा** when/then · **-ल्यावर** after doing · **सुद्धा** too, not even |
+
+- **Two spine nodes stop being omitted.** `SPINE-SAY-WHY` realizes
+  `CONNECTIVE-BECAUSE` (MR-C34-kaaran) and `SPINE-NEGATE-AND-ASK` realizes both
+  `VERB-NEGATE` (MR-C32-nahi-verb) and `QUESTION-POLAR` (MR-C33-kaa-polar).
+  Their omission ledgers are now empty.
+- **Zero new glyphs.** Every one of the seventeen items is written entirely in
+  Devanagari the second script runway already taught, so `scriptClosureViolations`
+  and `neverTaughtGlyphs` both stay at 0. That was not luck: the candidate list
+  was filtered against the track's taught-glyph set before anything was written.
+- **The tranche's own reinforcement debt is zero.** `atomsNeverRevisited` is
+  unchanged at 1, and no atom introduced by these twenty-five lessons misses any
+  window it was long enough to have. Getting there took two passes: a first draft
+  left nine defects — three atoms never revisited at all — and each was closed by
+  putting the atom back into a named later lesson at the right distance rather
+  than by moving a ceiling.
+- **`reinforcementWindowMisses` 218 → 239, and every one of the 21 is
+  pre-existing debt this tranche EXPOSED rather than created.** The R3 window is
+  20–60 lessons after an atom is introduced; twenty-one older Marathi atoms sat
+  close enough to the end of the track that the window did not fit, so it was
+  never counted against them. Twenty-five more lessons made it fit. The
+  distinction matters and is why the two numbers are reported apart: none of the
+  21 is on a lesson in this tranche.
+- **Seven chapters, not three.** `chapter-policy.json` caps a lesson at three new
+  atoms; where the material did not fit, the chapter was split rather than
+  crammed, and every one of the seven closes on a review. Length is never a cost
+  here.
+- **What was deliberately left uncovered, with the reason written into the
+  inventory:** `MR-A1-F2-07` (disagreeing with an interlocutor is a discourse
+  move, not sentence negation, and no lesson supplies it), `MR-A1-F2-13` (the
+  question half now exists, the ability half needs `-ऊ शकणे`, and half a pair
+  buys nothing), `MR-A1-V-19` (**नको** now has an atom and closes the refusal
+  points; *पाहिजे* and *हवा* do not exist, and one of three is not that point),
+  `MR-A1-NG1-01` (non-existence can now be said; existence in a place still needs
+  the locative), and `MR-A1-SUB-04` (MR-C36-jevha *names* the ja-/ta- stems that
+  **जो/तो** share, and naming a shape is not teaching the relative clause).
+
 ## 2026-09-01 — The A1 exam inventory: borrowing a level, and 88 of 301
 
 - **Marathi now has an A1 target list, and the corpus covers 88 of its 301 points

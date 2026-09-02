@@ -21,7 +21,11 @@ it("pins Marathi lesson-content budgets", () =>
     // reviewed-lesson count moves and the three content counters below are
     // unchanged. That is the evidence the runway declared nothing new against
     // those budgets rather than that nobody looked.
-    lessons: 179,
+    // 179 -> 204: the joining tranche (chapters 30-36) adds twenty-five
+    // lessons -- seventeen items, two punctuation marks and seven reviews. Not
+    // one declares an idiom, a sense or a culture claim, so only the
+    // reviewed-lesson count moves and the three counters below are unchanged.
+    lessons: 204,
     idioms: 5,
     senses: 4,
     cultureClaims: 7,
@@ -178,6 +182,19 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     ["27", 5],
     ["28", 5],
     ["29", 4],
+    // Chapters 30-36 are the joining tranche: three flat conjunctions, three
+    // paired shapes, sentence negation, the polar particle, why and because,
+    // and clause subordination. Seven chapters rather than three, because at
+    // three new atoms per lesson the material does not fit in fewer -- and
+    // because every one of them closes on a review, which is what held the
+    // tranche's own reinforcement misses at zero while the track grew by 25.
+    ["30", 4],
+    ["31", 4],
+    ["32", 3],
+    ["33", 3],
+    ["34", 4],
+    ["35", 3],
+    ["36", 4],
   ]);
 });
 

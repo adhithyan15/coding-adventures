@@ -174,7 +174,11 @@ describe("the plan CLI", () => {
     // 530 -> 529: retiring hand-written French chapter 6 closed A1-PRON-03,
     // obligatory liaison, which the generated chapter teaches as a named rule
     // with its own atom instead of two passing mentions inside `sounds` blocks.
-    expect(out).toMatch(/686 uncovered point\(s\) across 7 written/);
+    // 686 -> 663: the Marathi joining tranche (chapters 30-36) closed
+    // twenty-three of Marathi's own 213. This is the number that has to fall,
+    // and a target list is the only thing that can make it fall -- adding
+    // lessons on something no inventory asks for leaves it exactly where it was.
+    expect(out).toMatch(/663 uncovered point\(s\) across 7 written/);
     // 190 -> 403, and 4 -> 5 written. Marathi's own A1 inventory enumerates 301
     // points and the corpus covers 88, so it contributes 213. Nothing regressed:
     // a twentieth track stopped being unmeasurable, and the backlog grew by
@@ -183,7 +187,7 @@ describe("the plan CLI", () => {
     // one, which is the only DELE-sourced set here, so its denominator is what an
     // attributable A1 inventory actually asks for rather than what a
     // descriptor-led guess remembered to include.
-    expect(out).toMatch(/686 uncovered point\(s\) across 7 written/);
+    expect(out).toMatch(/663 uncovered point\(s\) across 7 written/);
     // 529 -> 686, and 6 -> 7 written. `core/exam-inventory-telugu-a1.json`
     // enumerates 326 A1 points and the corpus covers 169, so Telugu contributes
     // its 157 unmapped points. The unmeasured remainder falls 18 -> 17 for the

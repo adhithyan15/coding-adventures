@@ -1,0 +1,16 @@
+{
+  "id": "MR-EXT-042-WHY-AND-BECAUSE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can ask why in Marathi and answer it with a reason clause, and I can punctuate a written list and a named reader with the comma.",
+  "prerequisites": [
+    "MR-EXT-041-POLAR-QUESTION"
+  ],
+  "lessons": [
+    "MR-C34-kaa-why",
+    "MR-C34-kaaran",
+    "MR-W34-comma",
+    "MR-R34-reasons"
+  ]
+}

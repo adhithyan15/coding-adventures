@@ -1,0 +1,12 @@
+{
+  "language": "marathi",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:520416c554932b56",
+  "lessonIds": [
+    "MR-C34-kaa-why",
+    "MR-C34-kaaran",
+    "MR-W34-comma",
+    "MR-R34-reasons"
+  ],
+  "tex": "marathi/book/chapters/ch34-why-because.tex"
+}
