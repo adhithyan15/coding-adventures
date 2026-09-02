@@ -1,12 +1,10 @@
 {
   "language": "bengali",
   "chapter": 19,
-  "sourceHash": "fnv1a64:b2f51b9ea25b9d43",
+  "sourceHash": "fnv1a64:af7157b42629992e",
   "lessonIds": [
-    "BN-C13-doya-kore",
-    "BN-C13-dukkhito",
-    "BN-C13-maf-korben",
-    "BN-C13-sbagotom"
+    "BN-W04-poribar-read",
+    "BN-W04-bhai-read"
   ],
-  "tex": "bengali/book/chapters/ch19-please-sorry-welcome.tex"
+  "tex": "bengali/book/chapters/ch19-family-on-the-page.tex"
 }

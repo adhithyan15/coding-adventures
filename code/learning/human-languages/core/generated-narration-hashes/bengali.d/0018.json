@@ -1,18 +1,18 @@
 {
   "language": "bengali",
   "chapter": 18,
-  "sourceHash": "fnv1a64:7a6e888a6c982246",
+  "sourceHash": "fnv1a64:4bcf1adc2ea7c3ca",
   "lessonIds": [
-    "BN-C12-chokh",
-    "BN-C12-mukh",
-    "BN-C12-nak",
-    "BN-C12-hridoy"
+    "BN-C11-bondhu",
+    "BN-C11-poribar",
+    "BN-C11-bhai",
+    "BN-C11-bon"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "bengali/narration/ch18.txt",
   "json": "bengali/narration/ch18.json",
-  "textHash": "fnv1a64:fd8639dec12a9165",
-  "jsonHash": "fnv1a64:c5555a77fcf90913",
+  "textHash": "fnv1a64:d5196d06718e721c",
+  "jsonHash": "fnv1a64:e93a23ade80bda52",
   "findings": []
 }

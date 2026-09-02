@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cddbddb544d77b46",
+  "sourceHash": "fnv1a64:fbfe7a4a41c2f02a",
   "lessons": [
     {
       "id": "BN-C02-naam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5fedbfdb0311e7fa",
+      "sourceHash": "fnv1a64:b18c0007021dbb80",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -66,7 +66,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "নাম (nām, \"name\") from Sanskrit নামন্ (nāman), from Proto-Indo-European h₃nómn (its final n syllabic) — the same ancient root as English name, Latin nōmen (English noun, nominate), and Greek onoma. Bengali nām and English name are cousins from before either language existed — one of the clearest threads tying the Indian and European branches of one family."
+              "text": "নাম (nām, \"name\") from Sanskrit nāman, from Proto-Indo-European h₃nómn (its final n syllabic) — the same ancient root as English name, Latin nōmen (English noun, nominate), and Greek onoma. Bengali nām and English name are cousins from before either language existed — one of the clearest threads tying the Indian and European branches of one family."
             }
           ]
         },

@@ -1,18 +1,14 @@
 {
   "language": "bengali",
   "chapter": 8,
-  "sourceHash": "fnv1a64:04934229f95c5cd5",
+  "sourceHash": "fnv1a64:bcde04a4f6b87e7d",
   "lessonIds": [
     "BN-W03-ba",
     "BN-W03-abar-read",
     "BN-W03-bha",
     "BN-W03-bhalo-read",
     "BN-W03-kha",
-    "BN-W04-pa",
-    "BN-W03-da",
-    "BN-W03-dha",
-    "BN-W04-cha",
-    "BN-W04-ja"
+    "BN-W03-ga"
   ],
   "tex": "bengali/book/chapters/ch08-breath-is-a-letter.tex"
 }

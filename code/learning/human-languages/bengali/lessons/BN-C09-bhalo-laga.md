@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C09-bhalo-laga
 spine_node: SPINE-SAY-WHAT-I-LIKE
-sequence: 770
-chapter: 13
+sequence: 860
+chapter: 15
 type: word
 headword: ভালো লাগা
 romanization: bhālo lāgā
@@ -53,12 +53,12 @@ does not.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**লাগা** is Sanskrit **√লগ্** (*√lag*), "to attach, to stick": *āmār bhālo lāge*
+**লাগা** is Sanskrit *√lag*, "to attach, to stick": *āmār bhālo lāge*
 says, literally, **"good sticks to me."**
 
 **ভালোবাসা** (*bhālobāsā*), "to love," is ভালো plus **বাসা**, a verb no longer
 used alone. Its origin is genuinely disputed; the commonest proposal is
-Sanskrit **√বস্** (*√vas*), "to dwell" — love as housed in goodness. If so it
+Sanskrit *√vas*, "to dwell" — love as housed in goodness. If so it
 carries a startling cousin, since *√vas* is PIE *\*h₂wes-*, "to stay," which
 became Old English *wesan* and so English **was**. That "if" is real, and stays
 open.

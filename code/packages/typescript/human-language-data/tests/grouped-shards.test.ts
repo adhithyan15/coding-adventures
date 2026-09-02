@@ -265,7 +265,7 @@ describe("the chapter-owned real book-generation ledger", () => {
     );
     // The split, pinned. A chapter moved from `handwritten` to `targets` keeps
     // the COMBINED set identical, so only this literal sees the flip.
-    expect(identities.handwritten.size).toBe(67);
+    expect(identities.handwritten.size).toBe(66);
     expect(identities.languages.size).toBe(
       loadLanguageRegistry(root).languages.length,
     );

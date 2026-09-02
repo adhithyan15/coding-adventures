@@ -1,0 +1,15 @@
+{
+  "language": "bengali",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:01929c4744297677",
+  "lessonIds": [
+    "BN-W02-lal-read",
+    "BN-W03-kalo-read",
+    "BN-W03-shada-read",
+    "BN-W04-ii-matra",
+    "BN-W04-nil-read",
+    "BN-W02-tin-read",
+    "BN-W04-ek-read"
+  ],
+  "tex": "bengali/book/chapters/ch24-last-sign-six-words.tex"
+}

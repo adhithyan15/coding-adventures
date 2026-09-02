@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W04-ek-read
 spine_node: SPINE-MEET-GREET
-sequence: 1110
+sequence: 1260
 delivery: script
-chapter: 21
+chapter: 24
 type: writing
 headword: এক
 romanization: "ek"

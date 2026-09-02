@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C08-pora
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 720
-chapter: 12
+sequence: 810
+chapter: 14
 type: word
 headword: পড়া
 romanization: pôṛā
@@ -56,13 +56,13 @@ middle of an American *ladder*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[BN-SOUND-C08-PORA-02]; assesses=[] -->
 
-**পড়া** is Sanskrit **√পঠ্** (*√paṭh*), "to recite aloud" — reading was reading
+**পড়া** is Sanskrit *√paṭh*, "to recite aloud" — reading was reading
 *out*, which is why পড়া still covers studying as well as reading. And *paṭhati*
 became *pôṛe* by a rule that runs through the whole language: **a single
 retroflex stop between two vowels softens into the flap ড়**. That is why the
 letter exists; Sanskrit, which never softened them, had no use for it.
 
-Watch it swallow a second verb whole. Sanskrit **√পত্** (*√pat*), "to fall," went
+Watch it swallow a second verb whole. Sanskrit *√pat*, "to fall," went
 the same road — *patati* → *pôṛe* — so Bengali's "he reads" and "he falls" are
 now spelled and said alike, and only the sentence tells them apart. Past
 Sanskrit, *paṭh* goes cold: no secure Indo-European pedigree, and none will be

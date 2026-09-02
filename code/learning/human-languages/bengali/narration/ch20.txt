@@ -1,172 +1,144 @@
-Bengali, chapter 20: Five Colors.
-5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Bengali, chapter 20: Eye, Mouth, Nose, and Heart.
+4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 5.
-লাল (lal) — "red," a gemstone's name first.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-A new small set of words: not people, not verbs, not places, but the colors of the things around you — starting with the one Bengali did not invent for itself.
-
-You'll want to know: লাল.
-লাল (lal) — lāl — red.
-লাল (lal) চা (lāl chā) — "red tea," the everyday way to ask for tea without milk.
-
-The letters in this word.
-লাল (lal) is ল (lô) with the vowel sign া (ā), plus a second ল (l, silent at the end): lāl, one long vowel between two of the same consonant.
-
-The word, taken apart.
-লাল (lal) is a Persian loan, from Persian la'l, which named one specific thing first: a deep-red gemstone, a ruby or a spinel. Only later did the gem's name widen into the ordinary word for the color itself. Bengali did not build this word out of its own materials, and it did not borrow it alone — Hindi's own word for red is this identical Persian loan, carried into both languages by the same jewelers' trade routes rather than independently invented twice.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "lāl" — red]
-[pause 8 seconds for the answer]
-[your turn — say: "lāl chā" — tea without milk]
-[pause 8 seconds for the answer]
-[your turn — say: what it named first — "a ruby, not a color"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What did লাল (lal) originally name, before it meant "red"? (A deep red gemstone.) Did Bengali and Hindi each invent this word separately? (No — both borrowed the identical Persian loan.) One more reach: give the polite excuse-me again, and its softening tense. (মাফ করবেন — the future, "you will do.")
-
-
-Lesson 2 of 5.
-নীল (nil) — "blue," and a word that only looks like "indigo".
+Lesson 1 of 4.
+চোখ (chokh) — "eye," built on the root of "to see".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-The last color was foreign, borrowed whole. This one is Sanskrit's own — and it comes with a famous false friend worth clearing up honestly.
+A new chapter, and a new use for Chapter 5's check-in — the parts of you that check-in is actually asking about.
 
-You'll want to know: নীল.
-নীল (nil) — nīl — blue.
-নীল (nil) জল (nīl jôl) — blue water.
+You'll want to know: চোখ.
+চোখ — chokh — eye.
+আমার চোখ (āmār chokh) — my eye.
 
 The letters in this word.
-নীল (nil) is ন (nô) with the vowel sign ী (a long ī, the same sound as the short ি but held longer), plus ল (l, silent at the end): nīl.
+চোখ is চ with the vowel sign ো (cho) plus খ (kh, the puffed sound you already own from খাওয়া), silent at the end — one bare consonant, so no trailing vowel: chokh, not chokho.
 
 The word, taken apart.
-নীল (nil) is Sanskrit নীল (nil) (nīla), "dark blue" — also the name of the indigo plant and the dye made from it, the same root Hindi's own nīlā carries. One difference is worth stating plainly: Hindi's nīlā changes shape, nīlā/nīlī, for the noun it describes; নীল (nil) never does, one form whether the water, the sky, or the dress is blue.
-Here is the honest, careful version of a famous connection. English "indigo" does not come from nīla by sound change. It comes from Greek indikón, simply "the Indian [thing]" — because Greek and Roman traders imported the dye from India and named it for its source. Nīla and "indigo" are not the same word wearing two disguises; they are two separate words for the same dye, linked by the history of trade, not by descent from a shared root.
+চোখ (chokh) traces to Sanskrit cakṣus, "eye" — a noun built directly on √cakṣ ("to see"), from PIE kʷeḱ-, "to appear, to see." The nearest named cousin outside Indo-Aryan is Persian čašm, "eye"; no secure English descendant is claimed for this one. And the word itself has travelled: Old Bengali softened cakṣus down through cakhu and coukh to today's চোখ (chokh) — half kept from Sanskrit, half worn smooth by three centuries of sound change, which is why this kind of word gets its own name, ardhatatsama, "half a tatsama."
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "nīl" — blue]
+[your turn — say: "chokh" — eye, no trailing vowel]
 [pause 8 seconds for the answer]
-[your turn — say: "nīl jôl" — blue water]
+[your turn — say: "āmār chokh" — my eye]
 [pause 8 seconds for the answer]
-[your turn — say: one form, always — "nīl," never nīlā or nīlī]
+[your turn — say: the verb it grew from — "cakṣ … cakṣus … chokh"]
+[pause 8 seconds for the answer]
+[your turn — say: the other "see" verb you already own — "dækhā"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Does নীল (nil) change shape for the noun it describes, the way Hindi's nīlā does? (No — one form, always.) Does English "indigo" come directly from নীল (nil)/nīla? (No — it is Greek indikón, "the Indian thing"; the two words are linked by trade, not by sound change.) Give "welcome" once more. (স্বাগতম.)
+Give "my eye" in Bengali. (আমার চোখ (chokh).) What Sanskrit verb is চোখ (chokh) built on? (√cakṣ, "to see.") Is চোখ (chokh) a tatsama, kept whole like বন্ধু, or fully worn down like ভাই? (Neither — an ardhatatsama, half of each.)
 
 
-Lesson 3 of 5.
-কালো (kalo) — "black," the same word as "time".
+Lesson 2 of 4.
+মুখ (mukh) — "mouth, face," a word two families both claim.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Blue carried a false friend. This color hides something bigger inside it: the very word Sanskrit uses for time itself, and for death.
+চোখ (chokh) was half old sound, half new. This word is a full tatsama again — and its own history is a real, unresolved argument among linguists.
 
-You'll want to know: কালো.
-কালো (kalo) — kālo — black.
-কালো (kalo) চা (kālo chā) — black tea.
+You'll want to know: মুখ.
+মুখ — mukh — mouth, face.
+আমার মুখ (āmār mukh) — my mouth, my face.
 
 The letters in this word.
-কালো (kalo) is ক (kô) with the vowel sign া (ā), plus ল (l) with the vowel sign ো (o): kā-lo.
+মুখ is ম with the vowel sign ু (mu) plus খ (kh), silent at the end — one bare consonant again: mukh, not mukho.
 
 The word, taken apart.
-কালো (kalo) is built on Sanskrit কাল (kāla), a word that covers both "black, dark" and "time." Sanskrit's own tradition ties the two together poetically — time devours everything, and that devouring is imagined as dark — and the same word names the fierce goddess Kālī ("the black/dark one") and stands as an epithet of Yama, the god of death. Hindi's own kālā carries the identical root and the identical story. Be honest, though: whether "black" and "time" are truly one and the same root, or two separate ancient words that poetry and theology later fused into a single idea, is a real, still-debated question among linguists — the cultural connection is certain; the precise etymology underneath it is not.
+মুখ is a tatsama, taken whole from Sanskrit মুখ (mukha) — a tadbhava twin, মু (mu), also exists, but only buried inside compound words, never standing alone. What makes মুখ worth pausing on is where mukha itself came from, and nobody fully agrees. One well-known account, Pokorny's, derives it from Dravidian, a language family with no Sanskrit or PIE connection at all. Another, Mayrhofer's, argues for an Indo-European source instead, pointing to the word's presence in the Rigveda and in Iranian languages as evidence it is old enough to be inherited rather than borrowed. Both scholars are serious; neither has won. The honest report is that মুখ's deepest root is still an open question.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "kālo" — black]
+[your turn — say: "mukh" — mouth, face]
 [pause 8 seconds for the answer]
-[your turn — say: "kālo chā" — black tea]
+[your turn — say: "āmār mukh" — my face]
 [pause 8 seconds for the answer]
-[your turn — say: what else কাল means — "time," and by extension, death]
+[your turn — say: the two rival accounts — "Dravidian … or Indo-European"]
+[pause 8 seconds for the answer]
+[your turn — say: an eye, then a mouth — "chokh … mukh"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does কালো (kalo)'s root, কাল, also mean, besides "black"? (Time — and by extension, death; the same word names the goddess Kālī and Yama's epithet Kāla.) Is it settled that "black" and "time" are the same root? (No — the cultural link is real and ancient, but linguists still debate whether it is one true root or two words later fused.)
+Give "my face" in Bengali. (আমার মুখ (mukh).) Is মুখ (mukh)'s ultimate origin settled? (No — genuinely disputed between a Dravidian and an Indo-European account.) What is মুখ (mukh)'s tadbhava twin, and where does it survive? (মু, only inside compound words, never alone.)
 
 
-Lesson 4 of 5.
-সাদা (shada) — "white," the color where the cousins part ways.
+Lesson 3 of 4.
+নাক (nāk) — "nose," the same word as English's, worn down differently.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Every color so far has matched Hindi's, word for word. This one does not — and it is the more interesting choice for it.
+মুখ (mukh)'s origin was an open argument. This one is settled, and it lands somewhere you have seen before.
 
-You'll want to know: সাদা.
-সাদা (shada) — shādā — white.
-সাদা (shada) দুধ (shādā dudh) — white milk.
+You'll want to know: নাক.
+নাক — nāk — nose.
+আমার নাক (āmār nāk) — my nose.
 
 The letters in this word.
-সাদা (shada) is স (sô, carrying its familiar tilt to sh) with the vowel sign া (ā), plus দ (dô) with the vowel sign া (ā) again: shā-dā.
+নাক is ন with the vowel sign া (nā) plus ক (k), silent at the end: nāk, not nāko.
 
 The word, taken apart.
-সাদা (shada) is usually traced to Sanskrit শ্বেত (śveta), "white," worn down through Middle Bengali into today's everyday word — a tadbhava, the same road মুখ's own twin travelled, only in reverse: here the tadbhava is the common word and the tatsama, শ্বেত (śveto), survives kept whole inside compounds, like শ্বেতাঙ্গ (śvetāngo), "pale-skinned."
-This is the one color where Bengali and Hindi genuinely part ways. Every other color word met so far — the borrowed gem-name, the indigo plant, the time-word — Bengali and Hindi share outright. For white, Hindi replaced its own Sanskrit-derived word with a Persian loan, safed. Bengali did not: it kept the native word as its everyday one, and the Persian loan never took hold here the way it did next door.
+নাক (nāk) is Sanskrit nas, inherited through Prakrit ṇakka — a tadbhava, like ভাই and বোন before it. Its PIE root is néh₂s-, and this one is as secure as roots get: it is the direct ancestor of English nose itself, and of Latin nāsus, which gives English nasal. Three languages, one inherited word, three different roads of sound change — Bengali's road ran the vowel through Prakrit's a, dropped Sanskrit's final -s, and doubled the k along the way.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "shādā" — white]
+[your turn — say: "nāk" — nose]
 [pause 8 seconds for the answer]
-[your turn — say: "shādā dudh" — white milk]
+[your turn — say: "āmār nāk" — my nose]
 [pause 8 seconds for the answer]
-[your turn — say: the compound cousin — "śveto … śvetāngo"]
+[your turn — say: the three cousins — "nāk … nose … nāsus"]
+[pause 8 seconds for the answer]
+[your turn — say: three of this chapter's words — "chokh … mukh … nāk"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is সাদা (shada) a tatsama, kept whole, or a tadbhava, worn down by sound change? (A tadbhava — its tatsama twin, শ্বেত, survives only in compounds, the same split মুখ's own twin showed.) Of the colors met so far, which one did Hindi replace with a Persian loan while Bengali kept the native word? (White — Hindi's safed against Bengali's সাদা (shada).)
+Give "my nose" in Bengali. (আমার নাক (nāk).) Which two English words share নাক (nāk)'s root directly? (Nose, and nasal by way of Latin nāsus.) Is that link as secure as মুখ (mukh)'s, or more so? (More — নাক (nāk)'s root is settled; মুখ (mukh)'s is still argued over.)
 
 
-Lesson 5 of 5.
-সবুজ (shobuj) — "green," and five colors, counted up.
+Lesson 4 of 4.
+হৃদয় (hridoy) — "heart," the oldest cousin this book has shown you.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-One color left, and it is a second loan from the same language that gave লাল (lal) its gem — but this time the loan travelled somewhere you already have a word for.
+Three body words, three different histories — half-worn, disputed, and settled. This last one closes the chapter on the most secure cousin of them all.
 
-You'll want to know: সবুজ.
-সবুজ (shobuj) — shôbuj — green.
-সবুজ (shobuj) চা (shôbuj chā) — green tea.
+You'll want to know: হৃদয়.
+হৃদয় — hridoy — heart.
+আমার হৃদয় (āmār hridoy) — my heart.
 
 The letters in this word.
-সবুজ (shobuj) is স (sô, tilted to sh, keeping its own inherent vowel since nothing joins it) plus ব (bô) with the vowel sign ু (u), plus জ (j, silent at the end): shô-bu-j.
+হৃদয় (hridoy) is হ with the vowel sign ৃ (hri, the "vocalic r" sign, a vowel Bengali keeps only in words borrowed from Sanskrit) plus দ (dô) plus য় (yô, a glide, not a plain stop — this is why the word ends audibly, -doy, rather than falling silent the way দুধ and নাক (nāk) did).
 
 The word, taken apart.
-সবুজ (shobuj) is borrowed from Persian sabz, "green" — the very same Persian word that gave Hindi and Urdu their word for "vegetable," sabzī, literally "the green things." লাল (lal)'s own Persian gem-name arrived by the same route, from the same trading world, into a different corner of the vocabulary.
-Step back and count the five colors this small set has taught: two Persian loans (লাল (lal), সবুজ (shobuj)), two Sanskrit words kept recognizably close to their root (নীল (nil), কালো (kalo)), and one worn down by sound change (সাদা (shada)). A more even split between inherited and borrowed than the food words or the family words showed — color, it turns out, came into Bengali from everywhere at once.
+হৃদয় (hridoy) is a tatsama, Sanskrit হৃদয় (hridoy) (hṛdaya) taken whole. A tadbhava twin also exists, হিয়া (hiya), but it lives in poetry and song rather than everyday speech — the reverse of মুখ (mukh)'s pair, where the tatsama is the everyday word. Inside হৃদয় (hridoy) sits hṛd, and its PIE root is ḱérd-, "heart" — the direct ancestor of English heart itself, Greek kardía (English cardiac), and Latin cor (English core, courage). Four languages, one root, and nowhere in this book has the family been so wide or so certain.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "shôbuj" — green]
+[your turn — say: "hridoy" — heart]
 [pause 8 seconds for the answer]
-[your turn — say: "shôbuj chā" — green tea]
+[your turn — say: "āmār hridoy" — my heart]
 [pause 8 seconds for the answer]
-[your turn — say: all five colors — "lāl, nīl, kālo, shādā, shôbuj"]
+[your turn — say: the wide family — "hṛd … heart, kardía, cor"]
 [pause 8 seconds for the answer]
-[your turn — say: the two Persian loans, then the two Sanskrit words, then the one worn down — "lāl, shôbuj … nīl, kālo … shādā"]
+[your turn — say: all four of this chapter's words — "chokh, mukh, nāk, hridoy"]
+[pause 8 seconds for the answer]
+[your turn — say: one more word from Chapter 18, sharing this lesson's warmth of feeling — "bhāi," brother]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Persian word gives both সবুজ (shobuj) and Hindi's word for "vegetable"? (sabz, "green" — Hindi's sabzī is literally "the green things.") Of the five colors, how many are Persian loans, how many are Sanskrit words, and how many are worn down by sound change? (Two, two, and one — লাল (lal) and সবুজ (shobuj); নীল (nil) and কালো (kalo); সাদা (shada).) Name all five colors, in order. (লাল (lal), নীল (nil), কালো (kalo), সাদা (shada), সবুজ (shobuj).)
+Give "my heart" in Bengali. (আমার হৃদয় (hridoy).) Name three English words that share হৃদয় (hridoy)'s root. (Heart, cardiac, core — or courage.) Two quick reaches further back: what does the dot under ড় tell you to do, the letter পড়া taught? (Flap it, curling the tongue back.) And what does the ending -আনো do to a verb, the way ভাবা showed on দেখা? (Hands the doing to someone else — দেখা "see" becomes দেখানো "show.")

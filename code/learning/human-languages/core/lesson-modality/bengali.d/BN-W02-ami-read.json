@@ -3,7 +3,7 @@
     "id": "BN-W02-ami-read",
     "language": "bengali",
     "chapter": 6,
-    "sequence": 370,
+    "sequence": 400,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:3ba3c0f2aa2804f9",
+    "sourceHash": "fnv1a64:4ffea3b94b9158c1",
     "detachableSegments": [
       "Script"
     ],

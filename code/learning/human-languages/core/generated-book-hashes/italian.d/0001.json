@@ -1,0 +1,18 @@
+{
+  "language": "italian",
+  "chapter": 1,
+  "sourceHash": "fnv1a64:7e7eded69c4d1746",
+  "lessonIds": [
+    "IT-C01-ciao",
+    "IT-W01-ciao-guided-copy",
+    "IT-C01-buono",
+    "IT-C01-il-la-lo",
+    "IT-C01-giorno",
+    "IT-C01-buongiorno",
+    "IT-C01-sera",
+    "IT-C01-notte",
+    "IT-C01-grazie",
+    "IT-C01-practice"
+  ],
+  "tex": "italian/book/chapters/ch01-greetings.tex"
+}

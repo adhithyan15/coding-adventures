@@ -1,48 +1,105 @@
-Bengali, chapter 10: Numbers One to Five.
-1 lesson. All 1 can be done entirely by ear.
+Bengali, chapter 10: Two Marks Inside a Verb.
+3 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 1.
-এক, দুই, তিন, চার, পাঁচ — one to five.
+Lesson 1 of 3.
+ও — the independent o.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Bengali writes in its own script, but the words underneath are the same family you'd hear in Delhi or Mumbai — with one number that preserves something both of them lost.
+Write এ, then write ো and say which letter it wraps around.
 
-You'll want to know: the five.
-[a table of 5 rows, read aloud]
-1. Bengali: এক. said: ek.
-2. Bengali: দুই. said: dui.
-3. Bengali: তিন. said: tin.
-4. Bengali: চার. said: chār.
-5. Bengali: পাঁচ. said: pā̃ch.
-The ঁ on pā̃ch is the chandrabindu, the same moon-dot Hindi uses, nasalising the vowel.
-
-The word, taken apart — দুই and the conservative two.
-[a table of 5 rows, read aloud]
-language: Sanskrit. 2: stem dvá- (masc. dváu, fem./neut. dvé).
-language: Prakrit. 2: do / duve.
-language: Hindi. 2: do.
-language: Marathi. 2: don.
-language: Bengali. 2: dui.
-Hindi and Marathi flattened the old form into a single o. Bengali kept a trace of the following -i, which is why it has two syllables where its neighbours have one.
-The dv- cluster itself is gone from the numeral in all of them. (Not from the languages — dv- is alive in words borrowed straight back out of Sanskrit, like Bengali দ্বার dvār "door." It's the everyday inherited word that simplified.)
-And Bengali isn't unique in keeping that vowel: Assamese, Odia and Nepali have dui too. Among the four languages in this chapter it stands alone; across the eastern Indo-Aryan languages it has plenty of company.
-
-Sounds you'll need: where Bengali's inherent ô does not appear.
-Bengali's inherent vowel leans toward o, not a — which is why the greeting from Chapter 1 is nomoshkar where Hindi says namaskār.
-You won't hear that in these five numbers, as it happens: এক opens with the independent vowel এ, and none of the others has a bare inherent-vowel syllable either. Mentioned so you don't go looking for it here — but keep it in mind the moment a word does have one.
-Don't let a neighbouring language's spelling tell you how Bengali sounds.
+Script.
+ও (o).
+The fourth vowel this book has shown you in both of its bodies, and by now the arrangement should feel less like a rule and more like a habit:
+আ stands alone, া rides a consonant.
+ই stands alone, ি rides a consonant.
+এ stands alone, ে rides a consonant.
+ও stands alone, ো rides a consonant.
+The choice is never about the sound. It is about whether the vowel has a consonant to sit on. Opening a word, or following another vowel, it has none, so it needs a body of its own. That is the entire distinction, and it is the same distinction Devanagari, Gujarati and Telugu all make — one of the genuinely portable facts about the scripts of South Asia.
+ও is also a word in its own right, the everyday and and also, which is a convenience the other three vowels do not offer.
+Say it long. The sign ো and the letter ও are the same o as in English go — but without the slide toward w that English adds. One steady vowel, not two.
+হ + ও becomes হও.
+The হ keeps its own inherent ô, and then ও is a second syllable standing on its own feet. Two letters, two syllables — which is exactly why the vowel could not have been written as a sign here.
 
 Guided Practice.
-[pause 1 second]
-[your turn — say: "ek, dui, tin, chār, pā̃ch"]
-[pause 8 seconds for the answer]
-[your turn — say: the twos — "dvá- … do … don … dui"]
-[pause 8 seconds for the answer]
-[your turn — say: the Ch. 1 echo — "nomoshkar, not namaskār"]
+[once you have stopped driving — write: ও (o)]
+[once you have stopped driving — write: আ ই এ ও (o)]
+[once you have stopped driving — write: হও]
+[your turn — read: কেমন]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Count to five in Bengali. (Ek, dui, tin, chār, pā̃ch.) What does দুই keep that Hindi and Marathi flattened away? (The following -i, which is why it has two syllables.) Is Bengali alone in that? (No — Assamese, Odia and Nepali have dui too; it's alone only among the four here.) Did the dv- cluster survive anywhere in the everyday numeral? (No — though dv- is alive in words re-borrowed from Sanskrit, like dvār "door".) What is the ঁ? (The chandrabindu, nasalising the vowel.) Next: six to ten.
+When does a vowel need its standing-alone letter? (When it has no consonant to ride — opening a word, or after another vowel.) Do ও and ো sound different? (No.) And how many syllables are in হও? (Two.)
+Source: Unicode Bengali chart.
+
+
+Lesson 2 of 3.
+় ((the dot below)) — the dot below.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write য and say what it sounds like standing alone. Then read হ্যাঁ.
+
+Script.
+় ((the dot below)).
+One dot, tucked under a letter. It adds no sound of its own. What it does is change the letter it sits under into a different letter, and Bengali uses it in exactly three places.
+The one you need today:
+য + ় ((the dot below)) becomes য়.
+য on its own says j. With the dot it stops being a stop altogether and becomes a glide — the y of yes between vowels, and the w of away when the vowel beside it is round. It is the sound the letter used to have before Bengali hardened it, given back by a dot.
+The other two are the same trick on another letter, and they are coming later in this book. What matters now is the shape of the idea: Bengali did not invent new letters for these sounds. It marked old ones. The dot is borrowed machinery — Persian scribes used it to bend Arabic letters into Persian sounds, and Indian scribes took the device rather than the letters.
+Where the dot goes on the page is worth watching, too. It hangs below the body of the letter, the same country as ু, and it is small. Two words can differ by this dot alone, so a reader who is skimming the head-line will read the wrong word rather than no word — the most expensive kind of mistake a script can offer.
+হ + ও + য় becomes হওয়.
+
+Guided Practice.
+[once you have stopped driving — write: ় ((the dot below))]
+[once you have stopped driving — write: য then য়]
+[your turn — say: jô then yô — stop, then glide]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: হওয়]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Does ় ((the dot below)) add a sound? (No — it changes the letter above it.) What does য become with it? (A glide, y or w.) And which mark sits above the head-line rather than below? (ঁ.)
+Source: Unicode Bengali chart.
+
+
+Lesson 3 of 3.
+হওয়া (hôwā) — to be, read whole.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write য়. Then write ও and say why it is not a sign.
+
+Script.
+হ + ও + য় + া becomes হওয়া (hôwā).
+হ — with its own inherent ô.
+ও — standing alone, because a vowel cannot ride a vowel.
+য় — the dotted glide, here doing the w job.
+া — the vowel sign, on the glide.
+hôwā — to be, to become. You met it romanized in the farewells chapter, as the verb hiding inside dækhā hôbe, "seeing will happen." Here it is on the page, and every one of its four pieces was bought in the last two chapters.
+Read it slowly and notice what is not there. No stacked letters. No killed vowels. Four pieces in a row, left to right, each one saying its own thing. This is what Bengali looks like when a word is made mostly of vowels: the spelling stops being a puzzle and becomes a transcript.
+Compare it with the word you read two chapters ago:
+হ্যাঁ — five pieces, one syllable হওয়া (hôwā) — four pieces, three syllables.
+Same first letter, opposite arrangements. A Bengali reader's real skill is telling those two shapes apart at a glance, and it is a skill of the eye rather than the memory: stacked pieces are one syllable, pieces in a row are several.
+
+Guided Practice.
+[your turn — read: হওয়া (hôwā)]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: হওয়া (hôwā)]
+[your turn — say: hôwā — three syllables, no cluster]
+[pause 8 seconds for the answer]
+[your turn — read: হবে]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How many syllables in হওয়া (hôwā)? (Three.) Why is the ও written standing alone? (A vowel cannot ride a vowel.) And what does the dot under the য do? (Turns it into a glide.)
+Source: Unicode Bengali chart.

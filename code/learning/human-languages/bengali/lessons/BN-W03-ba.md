@@ -2,7 +2,7 @@
 schema_version: 2
 id: BN-W03-ba
 spine_node: SPINE-MEET-GREET
-sequence: 480
+sequence: 510
 delivery: script
 chapter: 8
 type: writing

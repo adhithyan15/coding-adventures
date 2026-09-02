@@ -1,21 +1,22 @@
 {
   "chapter": 19,
-  "title": "Please, Sorry, and Welcome",
-  "label": "ch:bn-please-sorry-welcome",
-  "canDo": "I can say please and sorry in Bengali, excuse myself politely, and welcome someone with a word that carries the same 'hither' prefix already met on the verb for coming.",
+  "title": "Family, on the Page",
+  "label": "ch:bn-family-on-the-page",
+  "canDo": "I can read পরিবার and ভাই, and say why the i at the end of ভাই takes its full letter even though it is nowhere near the start of the word.",
   "spineNodes": [
-    "SPINE-POLITE-REQUEST-REPAIR",
     "SPINE-MEET-GREET"
   ],
   "payoff": {
-    "lesson": "BN-C13-sbagotom",
-    "kind": "production",
-    "summary": "The chapter closes on স্বাগতম, 'welcome', literally 'a good coming': su-, 'good' (PIE h1su-, cousin of Greek eu-), fused by ordinary sandhi onto āgata, 'arrived', which opens with the same ā- 'hither' prefix already met on āsā, this time riding √gam, PIE gʷem-, the secure direct ancestor of English come. The reader gives all four new words of the chapter — doya kore, dukkhito, maf korben, shbagotom — closing the two courtesy concepts, please and sorry, this book had never taught, and a third greeting concept, welcome.",
+    "lesson": "BN-W04-bhai-read",
+    "kind": "reading",
+    "summary": "Brother read as three pieces, with the independent-vowel rule doing work in an unexpected place — nothing to lean on turns out to mean what it says, not start of word.",
     "assesses": [
-      "BN-LEX-C13-DOYAKORE-01",
-      "BN-LEX-C13-DUKKHITO-01",
-      "BN-LEX-C13-MAFKORBEN-01",
-      "BN-LEX-C13-SBAGOTOM-01"
+      "BN-SCRIPT-AA-MATRA-01",
+      "BN-SCRIPT-BHA-01",
+      "BN-SCRIPT-BHAI-READ-01",
+      "BN-SCRIPT-BHALO-READ-01",
+      "BN-SCRIPT-I-INDEP-01",
+      "BN-SCRIPT-PORIBAR-READ-01"
     ]
   }
 }

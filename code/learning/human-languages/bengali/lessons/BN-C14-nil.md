@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C14-nil
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 1000
-chapter: 20
+sequence: 1160
+chapter: 23
 type: word
 headword: নীল
 romanization: nil

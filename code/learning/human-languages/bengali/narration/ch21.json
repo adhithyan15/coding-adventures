@@ -2,13 +2,308 @@
   "version": 1,
   "language": "bengali",
   "chapter": 21,
-  "title": "The Last Sign, and Seven Words Back",
+  "title": "The Face on the Page",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:82390ebc24d64c58",
+  "sourceHash": "fnv1a64:1884de7318dc7a7d",
   "lessons": [
     {
+      "id": "BN-W04-chokh-read",
+      "sequence": 1060,
+      "title": "চোখ (chokh) — eye, read",
+      "headword": "চোখ",
+      "romanization": "chokh",
+      "gloss": "eye — the organ that is doing the work, read with nothing new",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:0c627508b67abc28",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read ভাই. Then write চ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চ + ো + খ becomes চোখ (chokh)."
+            },
+            {
+              "kind": "speech",
+              "text": "চ wrapped in ো — cho."
+            },
+            {
+              "kind": "speech",
+              "text": "খ — the breathy k, and at the end of a word the breath is what a listener actually hears."
+            },
+            {
+              "kind": "speech",
+              "text": "chokh — eye. Three pieces, no new shapes, and it is the first word of the chapter on the face."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at the ো again. It is the one vowel sign that arrives in two halves, one on each side of its consonant, and the eye has to take the whole cluster in at once rather than reading left to right through it. That is a small demonstration of something true of the whole script: a Bengali syllable is a unit on the page, not a sequence. The letters inside it may be written before, after, above or below each other, and the reader assembles the syllable, not the strokes."
+            },
+            {
+              "kind": "speech",
+              "text": "It is worth noticing what this word is asking of you at the moment you read it. The organ named is the one doing the reading."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "চোখ (chokh)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: চোখ]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "চোখ (chokh)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: চোখ]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "চ ছ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: চ ছ]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chokh, letting the breath out at the end",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chokh*, letting the breath out at the end]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many pieces in চোখ (chokh)? (Three.) Which sign sits on both sides of its consonant? (ো.) And how many of the three shapes were new today? (None.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W04-nak-read",
+      "sequence": 1070,
+      "title": "নাক (nāk) — nose, read",
+      "headword": "নাক",
+      "romanization": "nāk",
+      "gloss": "nose — three pieces, two of them from the first script chapter",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:dfa4ea6bd84304df",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read চোখ (chokh). Then write ক."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ন + া + ক becomes নাক (nāk)."
+            },
+            {
+              "kind": "speech",
+              "text": "nāk — nose. Every piece of this word came out of the chapter that taught you to read the greeting, several thousand words ago. Nothing has been added since, and nothing needed to be."
+            },
+            {
+              "kind": "speech",
+              "text": "Two things about the last letter. ক ends the word, so its inherent ô is gone — the mouth closes and stops, with no vowel after it. And the closure is clean: no breath escapes, which is the whole difference between this letter and the খ that ended চোখ (chokh) a moment ago. Read the two words one after the other and the contrast is unmissable:"
+            },
+            {
+              "kind": "speech",
+              "text": "চোখ (chokh) — ends in air নাক (nāk) — ends in silence."
+            },
+            {
+              "kind": "speech",
+              "text": "That pair is the best short demonstration of aspiration this book can offer, because both words are things you can point at on your own face."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it and mean it. নাক (nāk) is a plain, unglamorous, everyday word, and being able to read one of those off the page without help is a better measure of progress than being able to read a beautiful one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "নাক (nāk)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: নাক]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "চোখ (chokh) নাক (nāk)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: চোখ নাক]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "নাক (nāk)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: নাক]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ক খ গ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ক খ গ]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chokh, then nāk — air, then silence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chokh*, then *nāk* — air, then silence]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What happens to ক's inherent vowel at the end of নাক (nāk)? (It is gone.) Which of চোখ (chokh) and নাক (nāk) ends in breath? (চোখ (chokh).) And which chapter's letters is নাক (nāk) built from? (The first script chapter's.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "BN-W03-mukh-read",
-      "sequence": 1040,
+      "sequence": 1080,
       "title": "মুখ (mukh) — mouth, read",
       "headword": "মুখ",
       "romanization": "mukh",
@@ -20,7 +315,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b935830975773dfb",
+      "sourceHash": "fnv1a64:f8667c2d497bba51",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -140,597 +435,33 @@
       ]
     },
     {
-      "id": "BN-W02-lal-read",
-      "sequence": 1050,
-      "title": "লাল (lāl) — red, and the day-word that runs both ways",
-      "headword": "লাল",
-      "romanization": "lāl",
-      "gloss": "red, and the day-word that runs both ways",
-      "script": "bengali",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:ab56391d5614f9a8",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write ল once, then say where the tongue sits for it."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ল + া + ল becomes লাল (lāl)."
-            },
-            {
-              "kind": "speech",
-              "text": "The same letter twice, with the mātrā between them. The first ল takes the sign and becomes lā; the second keeps its own inherent vowel, which at the end of a word is barely voiced at all. So the word comes out lāl — one syllable to an English ear, the colour red, the Persian gem-word from the chapter on colours."
-            },
-            {
-              "kind": "speech",
-              "text": "Swap the first shape for ক and you get another word already in your mouth:"
-            },
-            {
-              "kind": "speech",
-              "text": "ক + া + ল becomes কাল."
-            },
-            {
-              "kind": "speech",
-              "text": "kāl — the word that means tomorrow and yesterday both, and which the farewell chapter used in kāl dækhā hôbe. Bengali does not think the two days need separate names; the distance from today is what the word records, and the direction comes from the verb."
-            },
-            {
-              "kind": "speech",
-              "text": "Two words, three pieces each, one shape different between them. Reading is starting to be recombination rather than recognition."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "লাল (lāl)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: লাল]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "কাল",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: কাল]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "আমি",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: আমি]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "লাল (lāl)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: লাল]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Why is the second ল in লাল (lāl) not said lô? (Its inherent vowel is barely voiced at the end of a word.) And which two days does কাল cover? (Yesterday and tomorrow — both.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Bengali chart."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "BN-W03-kalo-read",
-      "sequence": 1060,
-      "title": "কালো (kālo) — black, read",
-      "headword": "কালো",
-      "romanization": "kālo",
-      "gloss": "black — a word wearing two different signs on two letters",
-      "script": "bengali",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:4d3cb4ed701ced6a",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write ো, and name the two signs it is made of."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ক + া + ল + ো becomes কালো (kālo)."
-            },
-            {
-              "kind": "speech",
-              "text": "ক with া after it — kā."
-            },
-            {
-              "kind": "speech",
-              "text": "ল with ো around it — lo."
-            },
-            {
-              "kind": "speech",
-              "text": "kālo — black, the colour that is the same word as Sanskrit kāla, \"time,\" and stands behind both Kālī and Yama."
-            },
-            {
-              "kind": "speech",
-              "text": "This is the first word in the book with two different vowel signs on two consecutive letters, and it is the moment the eye has to stop scanning and start parsing. There are three marks after the first ক and only two of them belong together. Work it as the last lesson said: find the consonant, then look around it."
-            },
-            {
-              "kind": "speech",
-              "text": "Set it beside the red from the last chapter and the two are nearly twins on the page:"
-            },
-            {
-              "kind": "speech",
-              "text": "লাল (lāl) and কালো (kālo)."
-            },
-            {
-              "kind": "speech",
-              "text": "Both open with a consonant plus া; both close on ল. What separates them is which letter the ল is and what is hanging on it."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "কালো (kālo)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: কালো]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "লাল (lāl)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: লাল]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "কেমন",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: কেমন]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "কালো (kālo)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: কালো]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which letter in কালো (kālo) is wearing the o-sign? (The ল — the second one.) And what else does the same Sanskrit word behind it mean? (Time.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Bengali chart."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "BN-W03-shada-read",
-      "sequence": 1070,
-      "title": "সাদা (shādā) — white, read",
-      "headword": "সাদা",
-      "romanization": "shādā",
-      "gloss": "white — the one colour Bengali kept where Hindi borrowed",
-      "script": "bengali",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:6cd027238b17e570",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write দ, and say what separates it from ত."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "স + া + দ + া becomes সাদা (shādā)."
-            },
-            {
-              "kind": "speech",
-              "text": "Two consonants, each wearing the same mātrā. As plain a spelling as this book has shown."
-            },
-            {
-              "kind": "speech",
-              "text": "shādā — white. And notice the first sound: the letter is the s-letter, and it is said sh. That was the news of the greeting back in the first script chapter, and it has not changed. In Bengali this letter is sh far more often than it is s, which is the second leg of the track's sound-fingerprint."
-            },
-            {
-              "kind": "speech",
-              "text": "Three colours are now readable:"
-            },
-            {
-              "kind": "speech",
-              "text": "লাল lāl — red কালো kālo — black সাদা shādā — white."
-            },
-            {
-              "kind": "speech",
-              "text": "White is the one of the three where Bengali and Hindi went different ways: Hindi took a Persian loan for it and Bengali kept its own word, where for red both took the same Persian gem-name. A page of Bengali colour words is a small map of who borrowed what."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "সাদা (shādā)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: সাদা]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "লাল (lāl) কালো (kālo) সাদা (shādā)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: লাল কালো সাদা]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "সাদা (shādā)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: সাদা]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The first letter of সাদা (shādā) is written s. How is it said? (sh.) And which of the three colours is the one Bengali kept where Hindi borrowed? (সাদা (shādā) — white.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Bengali chart."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "BN-W04-ii-matra",
-      "sequence": 1080,
-      "title": "ী (-i (long)) — the second i-sign",
-      "headword": "ী",
-      "romanization": "-i (long)",
-      "gloss": "the second i-sign — a different shape for a sound Bengali no longer distinguishes",
-      "script": "bengali",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:e2be6189a81d5ae2",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Read জল, then write ি and say which side it goes on."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ী (-i (long))."
-            },
-            {
-              "kind": "speech",
-              "text": "A second sign for i — and in modern Bengali speech it sounds exactly like the first one."
-            },
-            {
-              "kind": "speech",
-              "text": "Sanskrit distinguished a short i from a long ī, and held words apart by that length alone. Bengali gave the distinction up. The two signs survive because the spellings survive: a word inherited from Sanskrit keeps whichever sign it always had, and the reader learns it word by word rather than by ear."
-            },
-            {
-              "kind": "speech",
-              "text": "That is worth stating plainly rather than apologising for. A script records the history of a language as well as its present, and the cost of that is a handful of spellings a listener could never have guessed. English readers know the arrangement well — the k in know, the gh in night."
-            },
-            {
-              "kind": "speech",
-              "text": "The two signs sit on opposite sides:"
-            },
-            {
-              "kind": "speech",
-              "text": "ি goes before its consonant ী (-i (long)) goes after it, like া."
-            },
-            {
-              "kind": "speech",
-              "text": "So they are hard to confuse on the page even while being impossible to tell apart in the ear."
-            },
-            {
-              "kind": "speech",
-              "text": "ন + ী (-i (long)) becomes নী."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "ী (-i (long))",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: ী]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "নী",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: নী]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "জল",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: জল]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Do ি and ী (-i (long)) sound different in Bengali today? (No.) Did they in Sanskrit? (Yes — short and long.) And which side does ী (-i (long)) go on? (After its consonant.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Bengali chart."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "BN-W04-nil-read",
+      "id": "BN-W04-ri-matra",
       "sequence": 1090,
-      "title": "নীল (nīl) — blue, read",
-      "headword": "নীল",
-      "romanization": "nīl",
-      "gloss": "blue — the fourth colour, and a spelling that keeps a length nobody says",
+      "title": "ৃ (-ri) — the vowel that used to be an r",
+      "headword": "ৃ",
+      "romanization": "-ri",
+      "gloss": "the sign for a vowel that was once an r, and is now not one",
       "script": "bengali",
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:c5827a08afc160b4",
+      "sourceHash": "fnv1a64:f3ab03f07cca41e7",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [
           "Script",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -746,7 +477,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write ী (-i (long)), and say which side of its consonant it goes on."
+              "text": "Read মুখ (mukh). Then write ু and say which side of the head-line it hangs on."
             }
           ]
         },
@@ -757,27 +488,27 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ন + ী (-i (long)) + ল becomes নীল (nīl)."
+              "text": "ৃ (-ri)."
             },
             {
               "kind": "speech",
-              "text": "nīl — blue, the colour from Sanskrit nīla, the dye that gave English indigo its trade and gave the Bengal countryside its indigo plantations."
+              "text": "A hook hanging under its consonant, in the same country as ু. It is a vowel sign, and it says ri."
             },
             {
               "kind": "speech",
-              "text": "The sign in the middle is the long one, and that is not a choice a speaker could make. Sanskrit nīla had a long ī, so Bengali writes ী (-i (long)) — even though a Bengali speaker says it no differently from the short sign. The spelling is inherited, and the previous lesson's point is now something you have to act on rather than agree with."
+              "text": "The reason it is filed with the vowels and not with র is a piece of history worth two minutes. Sanskrit had a sound that behaved like a vowel and was made like an r: a syllable you could build a word around with no other vowel in it at all. English does this without noticing — the second syllable of butter has no vowel letter doing any work, only the r. Sanskrit wrote that syllable, and counted it among its vowels."
             },
             {
               "kind": "speech",
-              "text": "Four colours are now readable:"
+              "text": "Bengali kept the sign and gave up the sound. What a Bengali reader says today is plain ri. So the mark is a vowel that no longer sounds like the thing it is named after, and its position in the alphabet is a fossil."
             },
             {
               "kind": "speech",
-              "text": "লাল (lāl) — red কালো (kālo) — black সাদা (shādā) — white নীল (nīl) — blue."
+              "text": "হ + ৃ (-ri) becomes হৃ."
             },
             {
               "kind": "speech",
-              "text": "Of these, blue is the one whose spelling carries a fact about Sanskrit rather than about Bengali. Red is a Persian gem-name; black is the word for time; white is the homegrown one Hindi replaced. Four words, four different histories, and the page shows one of them."
+              "text": "Look at where it goes and what it does to the letter above it. On হ the hook is tucked into the letter's own tail, which is why this combination looks like a single new shape rather than a letter plus a mark. That is normal for this sign and it is the main difficulty it presents: ৃ (-ri) is a mark that hides."
             }
           ]
         },
@@ -788,30 +519,39 @@
           "segments": [
             {
               "kind": "prompt",
-              "action": "READ",
-              "instruction": "নীল (nīl)",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ৃ (-ri)",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: নীল]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "লাল (lāl) কালো (kālo) সাদা (shādā) নীল (nīl)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: লাল কালো সাদা নীল]"
+              "source": "[YOU WRITE: ৃ]"
             },
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "নীল (nīl)",
+              "instruction": "হৃ",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU WRITE: নীল]"
+              "source": "[YOU WRITE: হৃ]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ু then ৃ (-ri) — both below the line",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ু then ৃ — both below the line]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "নাক (nāk)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: নাক]"
             }
           ]
         },
@@ -828,7 +568,7 @@
             },
             {
               "kind": "speech",
-              "text": "Why does নীল take the long i-sign? (Because Sanskrit nīla had a long i.) Can a speaker hear the difference? (No.) And how many colours can you read now? (Four.)"
+              "text": "Is ৃ (-ri) a consonant or a vowel sign? (A vowel sign.) What does it say in Bengali today? (ri.) And is it the letter র? (No — a different mark, in a different place.)"
             },
             {
               "kind": "speech",
@@ -839,12 +579,12 @@
       ]
     },
     {
-      "id": "BN-W02-tin-read",
+      "id": "BN-W04-hridoy-read",
       "sequence": 1100,
-      "title": "তিন (tin) — three, read",
-      "headword": "তিন",
-      "romanization": "tin",
-      "gloss": "three — the numeral you can now read as well as count",
+      "title": "হৃদয় (hridoy) — heart, and the face read whole",
+      "headword": "হৃদয়",
+      "romanization": "hridoy",
+      "gloss": "heart — the chapter's last word, and the one that needed the last sign",
       "script": "bengali",
       "modality": "pen",
       "derivedModality": "pen",
@@ -852,7 +592,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:273a910dc7086144",
+      "sourceHash": "fnv1a64:76a679067cbc39b7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -879,7 +619,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write ত, then write ি, and say which side of a consonant the second one goes on."
+              "text": "Write হৃ. Then write দ."
             }
           ]
         },
@@ -890,35 +630,43 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ত + ি + ন becomes তিন (tin)."
+              "text": "হ + ৃ (-ri) + দ + য় becomes হৃদয় (hridoy)."
             },
             {
               "kind": "speech",
-              "text": "Read it the way the mouth needs it, not the way the eye meets it:"
+              "text": "হৃ — the breath with the hidden hook under it, hri."
             },
             {
               "kind": "speech",
-              "text": "ত — the dental t, tongue on the teeth."
+              "text": "দ — the dental d, carrying its inherent ô."
             },
             {
               "kind": "speech",
-              "text": "ি — leaning on that ত from the left, heard after it."
+              "text": "য় — the dotted glide, closing the word."
             },
             {
               "kind": "speech",
-              "text": "ন — nô, its inherent vowel almost silent at the end."
+              "text": "hridoy — heart. Four pieces, and three of the four are things this book bought for other words entirely: the দ came from milk, the য় came from the verb of being, and only the hook was bought for this word alone."
             },
             {
               "kind": "speech",
-              "text": "tin — three, counted since the numbers chapter."
+              "text": "That is the ordinary economy of a syllabary, and it is why a reader's progress accelerates. The first word cost nine lessons. This one cost one."
             },
             {
               "kind": "speech",
-              "text": "The hook in front of ত is the same trap as আমি, and it will keep being the same trap until the hand has written it twenty times. On the page: hook, t, n. In the mouth: t, i, n."
+              "text": "The spelling is also a small piece of evidence. হৃদয় (hridoy) is a tatsama — a word Bengali took out of Sanskrit whole rather than wearing it down over centuries — and you can see that in the letters. A worn-down word would have lost this hook long ago, the way ভাই lost the one its Sanskrit ancestor had. Spelling is where a language keeps its receipts."
             },
             {
               "kind": "speech",
-              "text": "This word is also about as old as words get. Sanskrit tri, Latin trēs, Greek treîs, English three — the numbers chapter set that out, and the point here is only that you can now meet it on a page in Kolkata instead of in a table."
+              "text": "Now the whole chapter, off the page:"
+            },
+            {
+              "kind": "speech",
+              "text": "চোখ (chokh), নাক (nāk), মুখ (mukh), হৃদয় (hridoy)."
+            },
+            {
+              "kind": "speech",
+              "text": "Four words, thirteen pieces, one new sign between them."
             }
           ]
         },
@@ -930,29 +678,38 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "তিন (tin)",
+              "instruction": "হৃদয় (hridoy)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: তিন]"
+              "source": "[YOU READ: হৃদয়]"
             },
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "লাল (lāl)",
+              "instruction": "চোখ (chokh) নাক (nāk) মুখ (mukh) হৃদয় (hridoy)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: লাল]"
+              "source": "[YOU READ: চোখ নাক মুখ হৃদয়]"
             },
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "তিন (tin)",
+              "instruction": "হৃদয় (hridoy)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU WRITE: তিন]"
+              "source": "[YOU WRITE: হৃদয়]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four, pointing at each",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four, pointing at each]"
             }
           ]
         },
@@ -969,169 +726,7 @@
             },
             {
               "kind": "speech",
-              "text": "In তিন (tin), is the hook read before or after the ত? (After — it is only written before.) And what does the word mean? (Three.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Bengali chart."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "BN-W04-ek-read",
-      "sequence": 1110,
-      "title": "এক (ek) — one, and the words this reader can now take off a page",
-      "headword": "এক",
-      "romanization": "ek",
-      "gloss": "one — and eighteen words a reader can now take off a page",
-      "script": "bengali",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:436f1482ea1f2335",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write এ and ই, and say what decides when a vowel gets its own letter."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "এ + ক becomes এক (ek)."
-            },
-            {
-              "kind": "speech",
-              "text": "ek — one. Two pieces, and the first of them is a vowel standing on its own because a word cannot open on a sign."
-            },
-            {
-              "kind": "speech",
-              "text": "The numbers chapter made a remark that could not be checked at the time: it said those five numerals were no good for showing off the inherent ô, because এক (ek) opens on an independent vowel. Here is what that meant. There is no consonant at the front of this word to carry a vowel, so there is no inherent vowel to hear. The claim is now something you can see rather than take on trust."
-            },
-            {
-              "kind": "speech",
-              "text": "And তিন (tin), read two lessons ago, is on the page too, so two of the five numerals are now shapes rather than sounds."
-            },
-            {
-              "kind": "speech",
-              "text": "Count the whole holding. Twenty-six pieces, gathered nine, four, four, eight and one across five script chapters. And with them, nineteen words:"
-            },
-            {
-              "kind": "speech",
-              "text": "নমস্কার the greeting, নাম name, তুমি you, আমি I, কেমন how."
-            },
-            {
-              "kind": "speech",
-              "text": "আবার again, ভালো good, চা tea, জল water, দুধ milk."
-            },
-            {
-              "kind": "speech",
-              "text": "পরিবার family, ভাই brother, মুখ (mukh) mouth, লাল (lāl) red, কালো (kālo) black."
-            },
-            {
-              "kind": "speech",
-              "text": "সাদা (shādā) white, নীল (nīl) blue, তিন (tin) three, এক (ek) one."
-            },
-            {
-              "kind": "speech",
-              "text": "with নাক, কি, আসি, আমার and কাল riding along free."
-            },
-            {
-              "kind": "speech",
-              "text": "Every one of them was in the mouth before it was on the page. That order was the whole design: hear a word, use it, and only then be shown what it looks like. A reader who had been handed the alphabet first would have spent twenty-six lessons decoding shapes that meant nothing yet. Every script chapter in this book sits between two chapters of speech for that reason."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "মুখ (mukh) লাল (lāl) কালো (kālo) সাদা (shādā) নীল (nīl)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: মুখ লাল কালো সাদা নীল]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "এক (ek) তিন (tin)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: এক তিন]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "এক (ek)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: এক]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "এ ই আ ী (-i (long)) ি া ে ো",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: এ ই আ ী ি া ে ো]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Why is there no inherent vowel to hear at the start of এক (ek)? (It opens on an independent vowel, not a consonant.) How many pieces do you hold now? (Twenty-six.) How many words? (Nineteen.) And which came first for every one of them — the sound or the shape? (The sound.)"
+              "text": "How many pieces in হৃদয় (hridoy)? (Four.) How many of them were bought for this word? (One — the hook.) Which letter is wearing a dot? (য়.) And name the four words of this chapter in Bengali. (চোখ (chokh), নাক (nāk), মুখ (mukh), হৃদয় (hridoy).)"
             },
             {
               "kind": "speech",

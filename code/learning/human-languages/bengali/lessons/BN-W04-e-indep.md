@@ -2,7 +2,7 @@
 schema_version: 2
 id: BN-W04-e-indep
 spine_node: SPINE-MEET-GREET
-sequence: 400
+sequence: 430
 delivery: script
 chapter: 6
 type: writing

@@ -4,11 +4,11 @@
   "chapter": 7,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2c3fb5ebe717305f",
+  "sourceHash": "fnv1a64:8c9f4a877c6aee6d",
   "lessons": [
     {
       "id": "BN-C04-abar",
-      "sequence": 430,
+      "sequence": 460,
       "title": "আবার (ābār) — \"again,\" the seed of \"see you again\"",
       "headword": "আবার",
       "romanization": "ābār",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:436ceb00540e0dcb",
+      "sourceHash": "fnv1a64:0eb8a80ffabb5096",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -122,7 +122,7 @@
     },
     {
       "id": "BN-C04-dekha-hobe",
-      "sequence": 440,
+      "sequence": 470,
       "title": "দেখা হবে (dækhā hôbe) — \"(we) will meet\"",
       "headword": "দেখা হবে",
       "romanization": "dækhā hôbe",
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:364d7b1d66f43212",
+      "sourceHash": "fnv1a64:afb2b5b5960fe99b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -256,7 +256,7 @@
     },
     {
       "id": "BN-C04-abar-dekha-hobe",
-      "sequence": 450,
+      "sequence": 480,
       "title": "আবার দেখা হবে (ābār dækhā hôbe) — \"we'll meet again\"",
       "headword": "আবার দেখা হবে",
       "romanization": "ābār dækhā hôbe",
@@ -267,7 +267,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f0398e4a091c148a",
+      "sourceHash": "fnv1a64:e5d7d5b835c3ebcd",
       "notice": null,
       "blocks": [
         {
@@ -359,7 +359,7 @@
     },
     {
       "id": "BN-C04-kal-dekha-hobe",
-      "sequence": 460,
+      "sequence": 490,
       "title": "কাল দেখা হবে (kāl dækhā hôbe) — \"see you tomorrow\"",
       "headword": "কাল দেখা হবে",
       "romanization": "kāl dækhā hôbe",
@@ -370,7 +370,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:36bc2de1c86603a2",
+      "sourceHash": "fnv1a64:0a43bc1df2fbaf99",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -482,7 +482,7 @@
     },
     {
       "id": "BN-C04-practice",
-      "sequence": 470,
+      "sequence": 500,
       "title": "Chapter 7 — The farewells",
       "headword": "(dialogue)",
       "romanization": "",
@@ -493,7 +493,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:837121a7ab6c3606",
+      "sourceHash": "fnv1a64:939546015db1b352",
       "notice": null,
       "blocks": [
         {

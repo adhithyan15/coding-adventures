@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "BN-W03-ga",
+    "language": "bengali",
+    "chapter": 8,
+    "sequence": 560,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0810f3ccc2ed9dae",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
