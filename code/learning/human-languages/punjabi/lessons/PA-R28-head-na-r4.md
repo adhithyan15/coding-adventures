@@ -9,27 +9,27 @@ headword: ਸਿਰ · ਨ
 romanization: sir · na
 gloss: retrieve head, its horn history, and the already-taught na shape at R4
 concept_tag: REVIEW
-prerequisites: [PA-R28-form-supported-r3, PA-C13-sir, PA-W01-na]
+prerequisites: [PA-R28-form-supported-r3, PA-C13-sir, PA-W01-na, PA-S04-phappha-gagga]
 sounds: [dental-sa]
 roots: [pie-kerh2-horn-head]
 etymology_hook: Sir remains inherited and shares its deep root with English horn, while na returns only as an already-taught recognition shape.
 duration:
   max_seconds: 200
 requires:
-  knowledge: [PA-LEX-SIR, PA-ETYMON-SIR-HORN, PA-SCRIPT-NA-01]
+  knowledge: [PA-LEX-SIR, PA-ETYMON-SIR-HORN, PA-SCRIPT-NA-01, PA-SCRIPT-RECOG-SIHARI-01]
 introduces:
   knowledge: []
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-LEX-SIR, PA-ETYMON-SIR-HORN, PA-SCRIPT-NA-01]
+  knowledge: [PA-LEX-SIR, PA-ETYMON-SIR-HORN, PA-SCRIPT-NA-01, PA-SCRIPT-RECOG-SIHARI-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus, fluency]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-C13-sir, PA-W01-na]
+reviews_of: [PA-C13-sir, PA-W01-na, PA-S04-phappha-gagga]
 ---
 
 # Head and na return separately at R4
@@ -52,6 +52,6 @@ Keep the two claims together: **sir** means head, and **horn** is its surprising
 Read **ਨ** once and say **na**. Do not copy it in this lesson.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-SIR, PA-ETYMON-SIR-HORN, PA-SCRIPT-NA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-SIR, PA-ETYMON-SIR-HORN, PA-SCRIPT-NA-01, PA-SCRIPT-RECOG-SIHARI-01] -->
 
 [PAUSE 4s] Say **sir — head — horn**, then point to **ਨ**. This lesson measures listening, speech, and recognition. It does not award independent Gurmukhi writing evidence.

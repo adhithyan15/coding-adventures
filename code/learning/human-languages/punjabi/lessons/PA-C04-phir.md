@@ -4,6 +4,7 @@ sequence: 220
 chapter: 4
 type: word
 headword: ਫਿਰ
+romanization: "phir"
 gloss: again, then
 concept_tag: PA-WORD-PHIR
 prerequisites: []

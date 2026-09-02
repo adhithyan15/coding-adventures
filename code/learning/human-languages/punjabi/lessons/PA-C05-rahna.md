@@ -4,6 +4,7 @@ sequence: 290
 chapter: 5
 type: word
 headword: ਰਹਿਣਾ
+romanization: "rahiṇā"
 gloss: to live, to stay
 concept_tag: PA-VERB-RAHNA
 prerequisites: [PA-C05-bolna]
@@ -27,14 +28,14 @@ ending* machine work again.
 
 ## The word, taken apart
 
-**ਰਹਿਣਾ** (*rahiṇā*, "to live, to remain, to stay") is from Sanskrit **ਰਹ੍**
-(*rah-*, "to remain") — the same verb as Hindi *rahnā*. It covers both "reside"
+**ਰਹਿਣਾ** (*rahiṇā*, "to live, to remain, to stay") is from Sanskrit
+*rah-* ("to remain") — the same verb as Hindi *rahnā*. It covers both "reside"
 and "keep on": *maiṁ Amritsar rahindā hāṁ* ("I live in Amritsar"). Stem *rahi-* +
 *-dā/-dī* + copula, exactly like *bolṇā*.
 
 ## Grammar Lens: "in" comes after the noun (or is dropped)
 
-**ਮੈਂ ਅੰਮ੍ਰਿਤਸਰ ਰਹਿੰਦਾ ਹਾਂ** (*maiṁ Amritsar rahindā hāṁ*, "I live in Amritsar").
+*maiṁ Amritsar rahindā hāṁ* — "I live in Amritsar."
 Punjabi, like Hindi, uses **post**positions (*vic*, "in") where English uses
 prepositions — and with a place-name it often drops "in" entirely. The verb, as
 ever, is last.

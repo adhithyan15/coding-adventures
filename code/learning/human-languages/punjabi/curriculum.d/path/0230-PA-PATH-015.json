@@ -5,11 +5,13 @@
     "PA-C11-dost",
     "PA-C11-parivar",
     "PA-C11-bhara",
-    "PA-C11-bhain"
+    "PA-C11-bhain",
+    "PA-S11-bhabbha"
   ],
   "before": [],
   "inline": [
-    "PA-EXT-015-LANGUAGE-SPECIFIC"
+    "PA-EXT-015-LANGUAGE-SPECIFIC",
+    "PA-EXT-054-PREA1-SCRIPT-RUNWAY-C11"
   ],
   "after": []
 }

@@ -1,0 +1,11 @@
+{
+  "id": "PA-EXT-055-PREA1-SCRIPT-RUNWAY-C12",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read koī, using a vowel that needs no consonant to lean on.",
+  "prerequisites": [],
+  "lessons": [
+    "PA-S12-eeri"
+  ]
+}

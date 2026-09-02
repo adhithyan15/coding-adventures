@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "PA-S04-phappha-gagga",
+    "language": "punjabi",
+    "chapter": 4,
+    "sequence": 255,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1d823347764bf19d",
+    "detachableSegments": [
+      "Script you'll notice: ਫ · ਗ · ਿ",
+      "Writing: copy what you can see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -12,7 +12,10 @@ before the whole; and a book you can read straight through.
   font renders it. Displaying a word is not treated as teaching its letters:
   the gentle reading-and-writing runway teaches each load-bearing sign before
   it is scored, while learners who already read Gurmukhi can skim those steps.
-  The remaining script-closure debt is tracked explicitly in #13068.
+  **Script closure is now 0**: #13068's recognition runway puts every
+  load-bearing Gurmukhi sign in front of the reader, one to three at a time, in
+  the chapter before the first lesson that decodes it, and no glyph the track
+  shows is left untaught.
 - **Two vocabularies, front and centre.** The recurring thread is Punjab's
   place on the road between Persia and India: "thank you" is both the
   Sanskritic **dhannavād** and the Perso-Arabic **shukrīā**, and the script

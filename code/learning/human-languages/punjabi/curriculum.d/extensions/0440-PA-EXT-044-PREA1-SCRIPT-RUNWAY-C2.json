@@ -1,0 +1,12 @@
+{
+  "id": "PA-EXT-044-PREA1-SCRIPT-RUNWAY-C2",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can recognize the six Gurmukhi pieces that spell the words of the introduction chapter, without being asked to write any of them.",
+  "prerequisites": [],
+  "lessons": [
+    "PA-S02-mamma-rara-lava",
+    "PA-S02-sassa-tatta-sihari"
+  ]
+}

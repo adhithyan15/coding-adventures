@@ -9,27 +9,27 @@ headword: ਨੱਕ
 romanization: nakk
 gloss: nose — the plainest possible cousin of the English word for the very same part
 concept_tag: PA-BODY-NOSE
-prerequisites: [PA-C12-munh]
+prerequisites: [PA-C12-munh, PA-S10-addak-dhadda]
 sounds: [addak-doubling]
 roots: [sanskrit-nakra, pie-nehas]
 etymology_hook: ਨੱਕ is inherited from Old Punjabi naku, ultimately from the same Proto-Indo-European root as English nose, *neh2s- — a straight, unbroken cousin, closing the chapter on a doubled consonant that, like akkh's, never traded itself for a tone.
 duration:
   max_seconds: 275
 requires:
-  knowledge: [PA-LEX-MUNH, PA-ETYMON-MUNH-MUKHA, PA-LEX-AKKH, PA-LEX-KANN, PA-SOUND-TONE-HIGH-LEVEL]
+  knowledge: [PA-LEX-MUNH, PA-ETYMON-MUNH-MUKHA, PA-LEX-AKKH, PA-LEX-KANN, PA-SOUND-TONE-HIGH-LEVEL, PA-SCRIPT-RECOG-ADDAK-01]
 introduces:
   knowledge: [PA-LEX-NAKK, PA-ETYMON-NAKK-NOSE]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-LEX-NAKK, PA-ETYMON-NAKK-NOSE, PA-LEX-MUNH, PA-ETYMON-MUNH-MUKHA, PA-LEX-AKKH, PA-LEX-KANN, PA-SOUND-TONE-HIGH-LEVEL]
+  knowledge: [PA-LEX-NAKK, PA-ETYMON-NAKK-NOSE, PA-LEX-MUNH, PA-ETYMON-MUNH-MUKHA, PA-LEX-AKKH, PA-LEX-KANN, PA-SOUND-TONE-HIGH-LEVEL, PA-SCRIPT-RECOG-ADDAK-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [PA-C12-munh, PA-C12-akkh, PA-C12-kann]
+reviews_of: [PA-C12-munh, PA-C12-akkh, PA-C12-kann, PA-S10-addak-dhadda]
 ---
 
 # ਨੱਕ — the whole face, run back
@@ -47,7 +47,7 @@ found yet.
 > **ਨੱਕ** — *nakk* — **nose**
 
 ## The letters in this word
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-RECOG-ADDAK-01] -->
 
 **ਨ** *n*, **ੱ** the addak, **ਕ** *k* — the same doubling mark as **ਅੱਖ**, and
 for the same reason: nothing here was ever breathy, so nothing here traded

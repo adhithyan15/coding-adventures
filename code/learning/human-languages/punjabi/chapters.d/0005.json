@@ -10,7 +10,11 @@
     "lesson": "PA-C05-practice",
     "kind": "task",
     "summary": "Complete PA-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense Punjabi sentences with the chapter's first verbs.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "assesses": [
+      "PA-SCRIPT-RECOG-BA-01",
+      "PA-SCRIPT-RECOG-LA-01",
+      "PA-SCRIPT-RECOG-HORA-01"
+    ],
+    "note": "This legacy schema-v1 chapter's oral content still carries no typed atoms; the three it does declare come from #13068's recognition session, and the payoff assesses all three. The v1 migration of the verb lessons remains outstanding."
   }
 }

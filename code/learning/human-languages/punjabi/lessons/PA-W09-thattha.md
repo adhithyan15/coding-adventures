@@ -9,32 +9,32 @@ type: writing
 headword: "ਠ"
 romanization: "ttha"
 gloss: "trace the Gurmukhi letter ththa, the curled-tongue th"
-prerequisites: [PA-C33-miharbani-karke]
+prerequisites: [PA-C33-miharbani-karke, PA-S03-retroflex-row]
 sounds: []
 roots: []
 duration:
   max_seconds: 155
 requires:
-  knowledge: [PA-SCRIPT-TA-01, PA-SCRIPT-DDA-01, PA-LEX-THIK-THAK]
+  knowledge: [PA-SCRIPT-TA-01, PA-SCRIPT-DDA-01, PA-LEX-THIK-THAK, PA-SCRIPT-RECOG-TTHA-01]
 introduces:
   knowledge: [PA-SCRIPT-TTHA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-SCRIPT-TA-01, PA-SCRIPT-DDA-01, PA-LEX-THIK-THAK, PA-SCRIPT-TTHA-01]
+  knowledge: [PA-SCRIPT-TA-01, PA-SCRIPT-DDA-01, PA-LEX-THIK-THAK, PA-SCRIPT-TTHA-01, PA-SCRIPT-RECOG-TTHA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-C32-thik-thak, PA-W04-dda, PA-W01-ta]
+reviews_of: [PA-C32-thik-thak, PA-W04-dda, PA-W01-ta, PA-S03-retroflex-row]
 ---
 
 # ਠ — the tongue curled back
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-TA-01, PA-SCRIPT-DDA-01, PA-LEX-THIK-THAK] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-TA-01, PA-SCRIPT-DDA-01, PA-LEX-THIK-THAK, PA-SCRIPT-RECOG-TTHA-01] -->
 
 [PAUSE 2s] Write **ਤ** once — the *t* made with the tongue against the teeth.
 Then write **ਡ**, whose sound is made with the tongue curled back against the

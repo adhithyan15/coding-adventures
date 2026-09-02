@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Peace and Welcome",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1ccfe8bea183f51c",
+  "sourceHash": "fnv1a64:605ecfefb4af78ed",
   "lessons": [
     {
       "id": "PA-C34-salaam",
@@ -192,7 +192,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:914b37e9f891b51b",
+      "sourceHash": "fnv1a64:b70795e641614e39",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -474,7 +474,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:38a8ec02464f5982",
+      "sourceHash": "fnv1a64:9885c31a60f3f550",
       "notice": {
         "modality": "pen",
         "needs": [

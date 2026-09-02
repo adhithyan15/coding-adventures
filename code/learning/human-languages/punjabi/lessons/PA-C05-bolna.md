@@ -4,6 +4,7 @@ sequence: 270
 chapter: 5
 type: word
 headword: ਬੋਲਣਾ
+romanization: "bolṇā"
 gloss: to speak
 concept_tag: PA-VERB-BOLNA
 prerequisites: [PA-C03-main]

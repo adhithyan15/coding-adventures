@@ -4,6 +4,7 @@ sequence: 230
 chapter: 4
 type: word
 headword: ਮਿਲਾਂਗੇ
+romanization: "milāṁge"
 gloss: (we) will meet
 concept_tag: PA-VERB-MILNA
 prerequisites: [PA-C03-main]
@@ -26,8 +27,8 @@ reviews_of: []
 
 ## The word, taken apart
 
-**ਮਿਲਾਂਗੇ** (*milāṁge*, "we will meet") is the future of **ਮਿਲਣਾ** (*milṇā*, "to
-meet, to be found"), from Sanskrit **ਮਿਲ੍** (*mil-*, "to join, unite") — the root
+**ਮਿਲਾਂਗੇ** (*milāṁge*, "we will meet") is the future of *milṇā* ("to
+meet, to be found"), from Sanskrit *mil-* ("to join, unite") — the root
 of *milāp* ("a union, meeting"). The ending **-ਾਂਗੇ** (*-āṁge*) is the plural
 future: *milāṁge* = "(we) will meet."
 

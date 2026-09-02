@@ -4,6 +4,7 @@ sequence: 300
 chapter: 5
 type: word
 headword: ਕੰਮ ਕਰਨਾ
+romanization: "kamm karnā"
 gloss: to work (lit. "work-do")
 concept_tag: PA-VERB-KARNA
 prerequisites: [PA-C05-bolna]
@@ -27,14 +28,14 @@ Chapter-1 word.
 
 ## The word, taken apart
 
-**ਕਰਨਾ** (*karnā*, "to do, to make") is from Sanskrit **√ਕ੍ਰੁ / ਕ੍ਰ** (*√kṛ*, "to
+**ਕਰਨਾ** (*karnā*, "to do, to make") is from the Sanskrit root *√kṛ* ("to
 do"), from PIE **\*kʷer-** — one of Sanskrit's most productive roots. You met its
 family in Chapter 1's **ਨਮਸਤੇ**/**ਨਮਸਕਾਰ** (*namaskār* = *namas* + *kār*, "the
 **making** of a bow") and in *karma* ("a thing **done**"). Like Hindi, Punjabi
 builds countless verbs as **noun + ਕਰਨਾ**:
 
 - **ਕੰਮ ਕਰਨਾ** (*kamm karnā*) = "work-do" = "**to work**" (*kamm*, "work")
-- **ਗੱਲ ਕਰਨਾ** (*gall karnā*) = "to have a chat" (*gall*, the "matter/talk" from
+- *gall karnā* = "to have a chat" (*gall*, the "matter/talk" from
   Chapter 3's *koī gall nahīṁ*)
 
 So *maiṁ kamm kardā hāṁ* = "I work." Learn *karnā* and a whole grammar of

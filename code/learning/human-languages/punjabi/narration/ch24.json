@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Old Action Families at R4",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:84027b0dffac658c",
+  "sourceHash": "fnv1a64:99adbd8feb99fcfb",
   "lessons": [
     {
       "id": "PA-R24-know-think-r4",
@@ -121,7 +121,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:34919e006ae5268b",
+      "sourceHash": "fnv1a64:466c1ef981bfc7bd",
       "notice": null,
       "blocks": [
         {

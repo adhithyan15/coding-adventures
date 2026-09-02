@@ -4,13 +4,16 @@
   "lessons": [
     "PA-C05-bolna",
     "PA-C05-main-punjabi-bolda-han",
+    "PA-S05-babba-lalla-hora",
+    "PA-S06-kakka-aira-aara",
     "PA-C06-numbers-1-5",
     "PA-C06-panj-convergence"
   ],
   "before": [],
   "inline": [
     "PA-EXT-010-LANGUAGE-SPECIFIC",
-    "PA-EXT-010-ETYMOLOGY"
+    "PA-EXT-010-ETYMOLOGY",
+    "PA-EXT-048-PREA1-SCRIPT-RUNWAY-C5C6"
   ],
   "after": []
 }

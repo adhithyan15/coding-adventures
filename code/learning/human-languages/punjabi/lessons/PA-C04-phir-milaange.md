@@ -4,6 +4,7 @@ sequence: 240
 chapter: 4
 type: phrase
 headword: ਫਿਰ ਮਿਲਾਂਗੇ
+romanization: "phir milāṁge"
 gloss: we'll meet again (goodbye)
 concept_tag: FAREWELL-LATER
 prerequisites: [PA-C04-phir, PA-C04-milaange]
@@ -23,8 +24,7 @@ formal one.
 ## The phrase, taken apart
 
 **ਫਿਰ ਮਿਲਾਂਗੇ** = **ਫਿਰ** (*phir*, "again") + **ਮਿਲਾਂਗੇ** (*milāṁge*, "we will
-meet") — "**we'll meet again**." Chapter 1 gave you **ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ** (*sat srī
-akāl*), the Sikh greeting that doubles as a formal goodbye; *phir milāṁge* is the
+meet") — "**we'll meet again**." Chapter 1 gave you *sat srī akāl*, the Sikh greeting that doubles as a formal goodbye; *phir milāṁge* is the
 everyday, hopeful one — the same "promise of return" the whole subcontinent
 prefers to a blunt farewell (Hindi *phir milenge*, Bengali *āshi*, Tamil *pōy
 varugiṟēṉ*). Even more casual: *phir mildē hāṁ* ("(we) meet again," present for a

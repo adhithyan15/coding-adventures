@@ -3,11 +3,14 @@
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
     "PA-C08-sochna",
-    "PA-C08-samajhna"
+    "PA-S08-khakkha-jhajja-pairin",
+    "PA-C08-samajhna",
+    "PA-S08-pappa"
   ],
   "before": [],
   "inline": [
-    "PA-EXT-012-MIND-VERBS"
+    "PA-EXT-012-MIND-VERBS",
+    "PA-EXT-050-PREA1-SCRIPT-RUNWAY-C8"
   ],
   "after": []
 }

@@ -4,6 +4,7 @@ sequence: 250
 chapter: 4
 type: phrase
 headword: ਰੱਬ ਰਾਖਾ
+romanization: "rabb rākhā"
 gloss: goodbye (lit. "God [be your] keeper")
 concept_tag: FAREWELL
 prerequisites: [PA-C04-phir-milaange]

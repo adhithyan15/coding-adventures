@@ -5,11 +5,13 @@
     "PA-C12-akkh",
     "PA-C12-kann",
     "PA-C12-munh",
-    "PA-C12-nakk"
+    "PA-C12-nakk",
+    "PA-S12-eeri"
   ],
   "before": [],
   "inline": [
-    "PA-EXT-016-LANGUAGE-SPECIFIC"
+    "PA-EXT-016-LANGUAGE-SPECIFIC",
+    "PA-EXT-055-PREA1-SCRIPT-RUNWAY-C12"
   ],
   "after": []
 }

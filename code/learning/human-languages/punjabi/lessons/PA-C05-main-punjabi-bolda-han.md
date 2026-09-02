@@ -4,6 +4,7 @@ sequence: 280
 chapter: 5
 type: phrase
 headword: ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ
+romanization: "maiṁ panjābī boldā hāṁ"
 gloss: I speak Punjabi (gendered)
 concept_tag: PA-WORD-PUNJABI
 prerequisites: [PA-C05-bolna, PA-C03-main]
@@ -32,8 +33,8 @@ present-habitual, masculine.
 object) + **ਬੋਲਦਾ** (*boldā*, "speak," m.) + **ਹਾਂ** (*hāṁ*, "am") — literally "**I
 Punjabi speaking am**," verb-frame last.
 
-The name **ਪੰਜਾਬੀ** (*panjābī*) is **Persian**: **ਪੰਜ** (*panj*, "five" — cousin
-of English **five**, Latin *quinque*, Greek *pente*!) + **ਆਬ** (*āb*, "water,
+The name **ਪੰਜਾਬੀ** (*panjābī*) is **Persian**: *panj* ("five" — cousin
+of English **five**, Latin *quinque*, Greek *pente*!) + *āb* ("water,
 river") = "**[the language] of the five rivers**," for the five great rivers of
 the Punjab. So the very name of the language is a little Persian geography lesson
 — and *panj* "five" is a distant cousin of English *five*, from the same

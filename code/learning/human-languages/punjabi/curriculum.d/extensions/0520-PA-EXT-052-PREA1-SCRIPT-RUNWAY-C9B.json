@@ -1,0 +1,11 @@
+{
+  "id": "PA-EXT-052-PREA1-SCRIPT-RUNWAY-C9B",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read mainū̃, the word that opens every sentence about what I like.",
+  "prerequisites": [],
+  "lessons": [
+    "PA-S09-dulainkar-oora"
+  ]
+}
