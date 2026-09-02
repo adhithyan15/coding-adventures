@@ -12,32 +12,32 @@ headword: "खेल"
 gloss: "a game"
 romanization: "khel"
 concept_tag: HI-NOUN-GAME
-prerequisites: [HI-C69-go]
+prerequisites: [HI-C69-go, HI-C69-ticket]
 sounds: []
 roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [HI-LEX-C69-GOING-05]
+  knowledge: [HI-LEX-C69-GOING-05, HI-LEX-C69-GOING-04]
 introduces:
   knowledge: [HI-LEX-C70-LEISURE-01]
 practises:
-  knowledge: [HI-LEX-C69-GOING-05, HI-LEX-C70-LEISURE-01]
+  knowledge: [HI-LEX-C69-GOING-05, HI-LEX-C70-LEISURE-01, HI-LEX-C69-GOING-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
 register: neutral
 variety: standard-colloquial
-reviews_of: [HI-C69-go]
+reviews_of: [HI-C69-go, HI-C69-ticket]
 ---
 
 # खेल (khel) — a game
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C69-GOING-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C69-GOING-05, HI-LEX-C69-GOING-04] -->
 
-[PAUSE 2s] Say the word for "to go". The next five words are what you do when
-you are not going anywhere.
+[PAUSE 2s] Two words back: what does *ṭikaṭ* mean, and what is **जाना**? The
+next five words are what you do when you are not going anywhere.
 
 ## You'll want to know: खेल
 <!-- hl-knowledge: introduces=[HI-LEX-C70-LEISURE-01]; assesses=[] -->
@@ -62,9 +62,10 @@ what separates खेल from क, and the difference changes the word.
 The first of five words for the hours after work.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-01, HI-LEX-C69-GOING-04, HI-LEX-C69-GOING-05] -->
 
 [PAUSE 1s]
+- [YOU RECALL: say *ṭikaṭ*, then read **जाना** and say what it means]
 - [YOU HEAR: *khel*, with the breath on the first sound]
 - [YOU SAY: *khel*]
 - [YOU CONTRAST: *khel* said with the puff, and the same shape said without it]

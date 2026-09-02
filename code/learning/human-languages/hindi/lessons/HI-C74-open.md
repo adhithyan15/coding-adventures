@@ -12,32 +12,32 @@ headword: "खुला"
 gloss: "open"
 romanization: "khulā"
 concept_tag: HI-ADJ-OPEN
-prerequisites: [HI-C73-drink]
+prerequisites: [HI-C73-drink, HI-C73-waiter]
 sounds: []
 roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [HI-LEX-C73-EATING-05]
+  knowledge: [HI-LEX-C73-EATING-05, HI-LEX-C73-EATING-04]
 introduces:
   knowledge: [HI-LEX-C74-SIGNS-01]
 practises:
-  knowledge: [HI-LEX-C73-EATING-05, HI-LEX-C74-SIGNS-01]
+  knowledge: [HI-LEX-C73-EATING-05, HI-LEX-C74-SIGNS-01, HI-LEX-C73-EATING-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
 register: neutral
 variety: standard-colloquial
-reviews_of: [HI-C73-drink]
+reviews_of: [HI-C73-drink, HI-C73-waiter]
 ---
 
 # खुला (khulā) — open
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C73-EATING-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C73-EATING-05, HI-LEX-C73-EATING-04] -->
 
-[PAUSE 2s] Say the word for "to drink". The last five words of this run are the
-ones painted on doors.
+[PAUSE 2s] Two words back: what does *veṭar* mean, and what is **पीना**? The
+last five words of this run are the ones painted on doors.
 
 ## You'll want to know: खुला
 <!-- hl-knowledge: introduces=[HI-LEX-C74-SIGNS-01]; assesses=[] -->
@@ -61,9 +61,10 @@ The ु under the ख is the short *u* matra, hanging below.
 The first of five words you read rather than say.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C74-SIGNS-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C74-SIGNS-01, HI-LEX-C73-EATING-04, HI-LEX-C73-EATING-05] -->
 
 [PAUSE 1s]
+- [YOU RECALL: say *veṭar*, then read **पीना** and say what it means]
 - [YOU READ: खुला, as though it were painted on a shutter]
 - [YOU SAY: *khulā*]
 - [YOU SAY: *khulā paisā*]

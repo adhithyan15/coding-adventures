@@ -12,32 +12,32 @@ headword: "पैसा"
 gloss: "money"
 romanization: "paisā"
 concept_tag: HI-NOUN-MONEY
-prerequisites: [HI-C71-why]
+prerequisites: [HI-C71-why, HI-C71-when]
 sounds: []
 roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [HI-LEX-C71-TODAY-05]
+  knowledge: [HI-LEX-C71-TODAY-05, HI-LEX-C71-TODAY-04]
 introduces:
   knowledge: [HI-LEX-C72-COST-01]
 practises:
-  knowledge: [HI-LEX-C71-TODAY-05, HI-LEX-C72-COST-01]
+  knowledge: [HI-LEX-C71-TODAY-05, HI-LEX-C72-COST-01, HI-LEX-C71-TODAY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
 register: neutral
 variety: standard-colloquial
-reviews_of: [HI-C71-why]
+reviews_of: [HI-C71-why, HI-C71-when]
 ---
 
 # पैसा (paisā) — money
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C71-TODAY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C71-TODAY-05, HI-LEX-C71-TODAY-04] -->
 
-[PAUSE 2s] Say the word for "why". The next five words are what you need at a
-counter.
+[PAUSE 2s] Two words back: what does *kab* mean, and what is **क्यों**? The
+next five words are what you need at a counter.
 
 ## You'll want to know: पैसा
 <!-- hl-knowledge: introduces=[HI-LEX-C72-COST-01]; assesses=[] -->
@@ -61,9 +61,10 @@ same one inside **कैसे**.
 The first of five words for buying something.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-COST-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-COST-01, HI-LEX-C71-TODAY-04, HI-LEX-C71-TODAY-05] -->
 
 [PAUSE 1s]
+- [YOU RECALL: say *kab*, then read **क्यों** and say what it means]
 - [YOU HEAR: *paisā*]
 - [YOU SAY: *paisā*]
 - [YOU READ: पैसा, and find the ै it shares with कैसे]

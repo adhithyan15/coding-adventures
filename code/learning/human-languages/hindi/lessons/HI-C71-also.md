@@ -12,23 +12,23 @@ headword: "भी"
 gloss: "also, too"
 romanization: "bhī"
 concept_tag: HI-WORD-ALSO
-prerequisites: [HI-C71-today]
+prerequisites: [HI-C71-today, HI-C70-rest]
 sounds: []
 roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [HI-LEX-C71-TODAY-01]
+  knowledge: [HI-LEX-C71-TODAY-01, HI-LEX-C70-LEISURE-05]
 introduces:
   knowledge: [HI-LEX-C71-TODAY-02]
 practises:
-  knowledge: [HI-LEX-C71-TODAY-01, HI-LEX-C71-TODAY-02]
+  knowledge: [HI-LEX-C71-TODAY-01, HI-LEX-C71-TODAY-02, HI-LEX-C70-LEISURE-05]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [HI-C71-today]
+reviews_of: [HI-C71-today, HI-C70-rest]
 ---
 
 # भी (bhī) — also, too
@@ -62,9 +62,10 @@ sitting inside it — but they are separate words with separate jobs, the way
 आज and भी, and a pair to keep apart.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C71-TODAY-01, HI-LEX-C71-TODAY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C71-TODAY-01, HI-LEX-C71-TODAY-02, HI-LEX-C70-LEISURE-05] -->
 
 [PAUSE 1s]
+- [YOU RECALL: read **आराम**, then say it without looking]
 - [YOU SAY: *maiṁ bhī*]
 - [YOU SAY: *āj bhī*]
 - [YOU WRITE: आज once more, then भी beside it]

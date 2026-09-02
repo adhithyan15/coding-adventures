@@ -4,7 +4,7 @@
   "chapter": 74,
   "title": "Words on the Door",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4260579d86acf98f",
+  "sourceHash": "fnv1a64:2985ec3db007726c",
   "lessons": [
     {
       "id": "HI-C74-open",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:110bf5e6d3e473bc",
+      "sourceHash": "fnv1a64:f3c3a63128673850",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say the word for \"to drink\". The last five words of this run are the ones painted on doors."
+              "text": "Two words back: what does veṭar mean, and what is पीना? The last five words of this run are the ones painted on doors."
             }
           ]
         },
@@ -83,6 +83,15 @@
               "seconds": 1,
               "perItem": false,
               "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say veṭar, then read पीना and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *veṭar*, then read **पीना** and say what it means]"
             },
             {
               "kind": "prompt",
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad386e5568739b10",
+      "sourceHash": "fnv1a64:cc222a81150df76c",
       "notice": null,
       "blocks": [
         {
@@ -205,6 +214,15 @@
               "seconds": 1,
               "perItem": false,
               "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read पीना, then say it without looking",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **पीना**, then say it without looking]"
             },
             {
               "kind": "prompt",

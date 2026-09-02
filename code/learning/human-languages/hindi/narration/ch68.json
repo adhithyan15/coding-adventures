@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "Where You Come From",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4e08b71445b451cd",
+  "sourceHash": "fnv1a64:699bc08d28194867",
   "lessons": [
     {
       "id": "HI-C68-country",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b6cac0e32ee49ba0",
+      "sourceHash": "fnv1a64:b41697e08a0f2018",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have filled in a नाम line without a model. A form asks for more than a name, and the next five words are what it asks for."
+              "text": "Two words back, from the last run of five: what does ghās mean, and what is कुआँ? You have since filled in a नाम line without a model, and a form asks for more than a name. The next five words are what it asks for."
             }
           ]
         },
@@ -83,6 +83,15 @@
               "seconds": 1,
               "perItem": false,
               "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ghās, then read कुआँ and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ghās*, then read **कुआँ** and say what it means]"
             },
             {
               "kind": "prompt",
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:44998829838845b6",
+      "sourceHash": "fnv1a64:fa4da7418440ec68",
       "notice": null,
       "blocks": [
         {
@@ -208,6 +217,15 @@
             },
             {
               "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read कुआँ, then say it without looking",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **कुआँ**, then say it without looking]"
+            },
+            {
+              "kind": "prompt",
               "action": "SAY",
               "instruction": "Bhārat",
               "spoken": true,
@@ -223,6 +241,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *Bhārat ek desh hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "a नाम line with no model, then देश (desh) on the line under it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: a नाम line with no model, then देश on the line under it]"
             },
             {
               "kind": "prompt",

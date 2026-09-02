@@ -52,6 +52,22 @@ chapter writes word 1 while hearing word 2, lesson 4 writes word 3, and the
 payoff lesson writes words 4 and 5 and says all five. Twenty-one of the
 thirty-five lessons carry `writing` alongside listening, speaking and reading.
 
+**Reinforcement went DOWN while 35 lessons went in: 54 -> 53 thin atoms at
+pre-A1.** A naive append does the opposite. Measured on the first draft, this
+tranche drove the count 54 -> 68, and the twelve extra were exactly the fourth
+and fifth atom of every chapter: within a chapter each word is retrieved by the
+lessons after it, so words 1-3 accumulate revisits and words 4-5 have nowhere
+left to go. The fix is structural, not a pin reseat. Every chapter-opening
+lesson now declares the TWO preceding words -- reaching across the chapter
+boundary -- and its Warm-up and Guided Practice retrieve both by name, and the
+second lesson of each chapter picks up the one that is still short. The two lessons
+that open chapter 68 reach back past the A1 name-field runway to `ghas` and
+`kuan`, the last two words of the previous vocabulary run, and pick up the
+runway's own payoff atom on the way -- three atoms that had been sitting at the
+end of the corpus with their windows unjudged. A side effect worth having: the
+retrieval lines alternate `[YOU RECALL: say ... then read ...]`, so the
+modalities intermix by construction rather than by scheduling.
+
 **Zero new Devanagari glyphs.** All 35 headwords, every example sentence and
 every citation are spelled from the 47 glyphs the track's own writing lessons
 teach. The corpus still shows 11 it has never taught and that number did not

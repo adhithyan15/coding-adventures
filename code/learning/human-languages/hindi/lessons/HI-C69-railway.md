@@ -12,23 +12,23 @@ headword: "रेल"
 gloss: "the railway"
 romanization: "rel"
 concept_tag: HI-NOUN-RAILWAY
-prerequisites: [HI-C69-vehicle]
+prerequisites: [HI-C69-vehicle, HI-C68-english]
 sounds: []
 roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [HI-LEX-C69-GOING-01]
+  knowledge: [HI-LEX-C69-GOING-01, HI-LEX-C68-ORIGIN-05]
 introduces:
   knowledge: [HI-LEX-C69-GOING-02]
 practises:
-  knowledge: [HI-LEX-C69-GOING-01, HI-LEX-C69-GOING-02]
+  knowledge: [HI-LEX-C69-GOING-01, HI-LEX-C69-GOING-02, HI-LEX-C68-ORIGIN-05]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [HI-C69-vehicle]
+reviews_of: [HI-C69-vehicle, HI-C68-english]
 ---
 
 # रेल (rel) — the railway
@@ -58,9 +58,10 @@ words you now hold combine into the third without anything new.
 गाड़ी and रेल, and the compound they make between them.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C69-GOING-01, HI-LEX-C69-GOING-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C69-GOING-01, HI-LEX-C69-GOING-02, HI-LEX-C68-ORIGIN-05] -->
 
 [PAUSE 1s]
+- [YOU RECALL: read **अंग्रेज़ी**, then say it without looking]
 - [YOU SAY: *rel*]
 - [YOU SAY: *rel*, then *gāṛī*, then *relgāṛī*]
 - [YOU WRITE: गाड़ी once more, without looking]

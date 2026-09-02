@@ -12,32 +12,32 @@ headword: "होटल"
 gloss: "an eating house"
 romanization: "hoṭal"
 concept_tag: HI-NOUN-EATING-HOUSE
-prerequisites: [HI-C72-buy]
+prerequisites: [HI-C72-buy, HI-C72-expensive]
 sounds: []
 roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [HI-LEX-C72-COST-05]
+  knowledge: [HI-LEX-C72-COST-05, HI-LEX-C72-COST-04]
 introduces:
   knowledge: [HI-LEX-C73-EATING-01]
 practises:
-  knowledge: [HI-LEX-C72-COST-05, HI-LEX-C73-EATING-01]
+  knowledge: [HI-LEX-C72-COST-05, HI-LEX-C73-EATING-01, HI-LEX-C72-COST-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
 register: neutral
 variety: standard-colloquial
-reviews_of: [HI-C72-buy]
+reviews_of: [HI-C72-buy, HI-C72-expensive]
 ---
 
 # होटल (hoṭal) — an eating house
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-COST-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-COST-05, HI-LEX-C72-COST-04] -->
 
-[PAUSE 2s] Say the word for "to buy". The next five words are for the place you
-buy a meal.
+[PAUSE 2s] Two words back: what does *mahãgā* mean, and what is **ख़रीदना**?
+The next five words are for the place you buy a meal.
 
 ## You'll want to know: होटल
 <!-- hl-knowledge: introduces=[HI-LEX-C73-EATING-01]; assesses=[] -->
@@ -64,9 +64,10 @@ The ो is the *o* matra, a single stroke above the headline with a tail.
 The first of five words for a meal you did not cook.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C73-EATING-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C73-EATING-01, HI-LEX-C72-COST-04, HI-LEX-C72-COST-05] -->
 
 [PAUSE 1s]
+- [YOU RECALL: say *mahãgā*, then read **ख़रीदना** and say what it means]
 - [YOU HEAR: *hoṭal*]
 - [YOU SAY: *hoṭal*]
 - [YOU SAY: *chāy hoṭal*]

@@ -4,7 +4,7 @@
   "chapter": 72,
   "title": "What It Costs",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:48ef4b868b22acfe",
+  "sourceHash": "fnv1a64:93e239d7ee24d5c2",
   "lessons": [
     {
       "id": "HI-C72-money",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f4c33e72dec6915",
+      "sourceHash": "fnv1a64:081238389a0576d1",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say the word for \"why\". The next five words are what you need at a counter."
+              "text": "Two words back: what does kab mean, and what is क्यों? The next five words are what you need at a counter."
             }
           ]
         },
@@ -83,6 +83,15 @@
               "seconds": 1,
               "perItem": false,
               "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kab, then read क्यों and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kab*, then read **क्यों** and say what it means]"
             },
             {
               "kind": "prompt",
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:07f5148e7e437ea9",
+      "sourceHash": "fnv1a64:8374d1145801727d",
       "notice": null,
       "blocks": [
         {
@@ -213,6 +222,15 @@
               "seconds": 1,
               "perItem": false,
               "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read क्यों, then say it without looking",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **क्यों**, then say it without looking]"
             },
             {
               "kind": "prompt",

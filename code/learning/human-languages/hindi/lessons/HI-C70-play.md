@@ -12,23 +12,23 @@ headword: "खेलना"
 gloss: "to play"
 romanization: "khelnā"
 concept_tag: VERB-PLAY
-prerequisites: [HI-C70-game]
+prerequisites: [HI-C70-game, HI-C69-go]
 sounds: []
 roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [HI-LEX-C70-LEISURE-01]
+  knowledge: [HI-LEX-C70-LEISURE-01, HI-LEX-C69-GOING-05]
 introduces:
   knowledge: [HI-LEX-C70-LEISURE-02]
 practises:
-  knowledge: [HI-LEX-C70-LEISURE-01, HI-LEX-C70-LEISURE-02]
+  knowledge: [HI-LEX-C70-LEISURE-01, HI-LEX-C70-LEISURE-02, HI-LEX-C69-GOING-05]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [HI-C70-game]
+reviews_of: [HI-C70-game, HI-C69-go]
 ---
 
 # खेलना (khelnā) — to play
@@ -60,9 +60,10 @@ made — the ending is a tool, not a list to memorise.
 A game, and the doing word that comes out of it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-01, HI-LEX-C70-LEISURE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-01, HI-LEX-C70-LEISURE-02, HI-LEX-C69-GOING-05] -->
 
 [PAUSE 1s]
+- [YOU RECALL: read **जाना**, then say it without looking]
 - [YOU SAY: *khel*, then *khelnā*]
 - [YOU SAY: *maiṁ kheltā hūṁ*]
 - [YOU WRITE: खेल, then add ना to the end of it]

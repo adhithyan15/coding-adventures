@@ -4,7 +4,7 @@
   "chapter": 71,
   "title": "Today, and How Much",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:9816a6e1bd324dda",
+  "sourceHash": "fnv1a64:a647836b5f5e7faf",
   "lessons": [
     {
       "id": "HI-C71-today",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:97e793b6311c7de5",
+      "sourceHash": "fnv1a64:84b9080bd88d02b9",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say the word for rest. The next five words are the small ones that hold a conversation together."
+              "text": "Two words back: what does gānā mean, and what is आराम? The next five words are the small ones that hold a conversation together."
             }
           ]
         },
@@ -83,6 +83,15 @@
               "seconds": 1,
               "perItem": false,
               "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say gānā, then read आराम and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *gānā*, then read **आराम** and say what it means]"
             },
             {
               "kind": "prompt",
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ef58a0ff5a8d5458",
+      "sourceHash": "fnv1a64:5f301897a72ba546",
       "notice": null,
       "blocks": [
         {
@@ -209,6 +218,15 @@
               "seconds": 1,
               "perItem": false,
               "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read आराम, then say it without looking",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **आराम**, then say it without looking]"
             },
             {
               "kind": "prompt",

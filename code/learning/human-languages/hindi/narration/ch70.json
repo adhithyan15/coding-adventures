@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "After the Work Is Done",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:f21e5c06d378c49c",
+  "sourceHash": "fnv1a64:752647519ecedf3f",
   "lessons": [
     {
       "id": "HI-C70-game",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:796fa8ae5afc9e86",
+      "sourceHash": "fnv1a64:651c188cfee3bdc0",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say the word for \"to go\". The next five words are what you do when you are not going anywhere."
+              "text": "Two words back: what does ṭikaṭ mean, and what is जाना? The next five words are what you do when you are not going anywhere."
             }
           ]
         },
@@ -83,6 +83,15 @@
               "seconds": 1,
               "perItem": false,
               "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ṭikaṭ, then read जाना and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ṭikaṭ*, then read **जाना** and say what it means]"
             },
             {
               "kind": "prompt",
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c988e0500adf2448",
+      "sourceHash": "fnv1a64:c1e4e780c0071fde",
       "notice": null,
       "blocks": [
         {
@@ -209,6 +218,15 @@
               "seconds": 1,
               "perItem": false,
               "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read जाना, then say it without looking",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **जाना**, then say it without looking]"
             },
             {
               "kind": "prompt",

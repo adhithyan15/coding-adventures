@@ -54,8 +54,8 @@ has one of its most-used pairs:
 > **खाना** — food, and to eat. **पीना** — to drink.
 
 **मैं चाय पीता हूँ** is "I drink tea", in the frame you have used all along. And
-when somebody asks **आपने खाना खाया?** they are using the word twice in one
-breath, once for the food and once for the eating.
+**मैं खाना खाता हूँ** puts the word into one breath twice — once for the food,
+once for the eating — with nothing between them but the ending.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

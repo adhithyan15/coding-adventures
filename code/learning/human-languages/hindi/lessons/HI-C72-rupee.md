@@ -12,23 +12,23 @@ headword: "रुपया"
 gloss: "a rupee"
 romanization: "rupayā"
 concept_tag: HI-NOUN-RUPEE
-prerequisites: [HI-C72-money]
+prerequisites: [HI-C72-money, HI-C71-why]
 sounds: []
 roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [HI-LEX-C72-COST-01]
+  knowledge: [HI-LEX-C72-COST-01, HI-LEX-C71-TODAY-05]
 introduces:
   knowledge: [HI-LEX-C72-COST-02]
 practises:
-  knowledge: [HI-LEX-C72-COST-01, HI-LEX-C72-COST-02]
+  knowledge: [HI-LEX-C72-COST-01, HI-LEX-C72-COST-02, HI-LEX-C71-TODAY-05]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [HI-C72-money]
+reviews_of: [HI-C72-money, HI-C71-why]
 ---
 
 # रुपया (rupayā) — a rupee
@@ -63,9 +63,10 @@ A price is said in रुपये: **दस रुपये**, and you have cou
 Money in general, and the unit it is counted in.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-COST-01, HI-LEX-C72-COST-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-COST-01, HI-LEX-C72-COST-02, HI-LEX-C71-TODAY-05] -->
 
 [PAUSE 1s]
+- [YOU RECALL: read **क्यों**, then say it without looking]
 - [YOU SAY: *rupayā*]
 - [YOU SAY: *das rupaye*]
 - [YOU WRITE: पैसा once more, then रुपया beside the printed model]

@@ -12,23 +12,23 @@ headword: "बंद"
 gloss: "closed"
 romanization: "band"
 concept_tag: HI-ADJ-CLOSED
-prerequisites: [HI-C74-open]
+prerequisites: [HI-C74-open, HI-C73-drink]
 sounds: []
 roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [HI-LEX-C74-SIGNS-01]
+  knowledge: [HI-LEX-C74-SIGNS-01, HI-LEX-C73-EATING-05]
 introduces:
   knowledge: [HI-LEX-C74-SIGNS-02]
 practises:
-  knowledge: [HI-LEX-C74-SIGNS-01, HI-LEX-C74-SIGNS-02]
+  knowledge: [HI-LEX-C74-SIGNS-01, HI-LEX-C74-SIGNS-02, HI-LEX-C73-EATING-05]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [HI-C74-open]
+reviews_of: [HI-C74-open, HI-C73-drink]
 ---
 
 # बंद (band) — closed
@@ -58,9 +58,10 @@ learn them as one pair and you have read half a street.
 The pair every shutter in the country is painted with.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C74-SIGNS-01, HI-LEX-C74-SIGNS-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C74-SIGNS-01, HI-LEX-C74-SIGNS-02, HI-LEX-C73-EATING-05] -->
 
 [PAUSE 1s]
+- [YOU RECALL: read **पीना**, then say it without looking]
 - [YOU SAY: *khulā*, then *band*]
 - [YOU READ: बंद, and check that it is not बंदर]
 - [YOU WRITE: खुला once more, then बंद beside it]

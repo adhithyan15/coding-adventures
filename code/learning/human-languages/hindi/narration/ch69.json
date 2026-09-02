@@ -4,7 +4,7 @@
   "chapter": 69,
   "title": "Ways of Going",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:413df7d824c462ae",
+  "sourceHash": "fnv1a64:9772495c041a01ab",
   "lessons": [
     {
       "id": "HI-C69-vehicle",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a0c65777ab98afe",
+      "sourceHash": "fnv1a64:44fa67ad78667cbe",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can say what शहर you live in. The next five words are how you leave it."
+              "text": "Two words back before anything new: what does bhāshā mean, and what is अंग्रेज़ी? The next five words are how you leave the शहर you live in."
             }
           ]
         },
@@ -83,6 +83,15 @@
               "seconds": 1,
               "perItem": false,
               "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bhāshā, then read अंग्रेज़ी and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bhāshā*, then read **अंग्रेज़ी** and say what it means]"
             },
             {
               "kind": "prompt",
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7041fdd0b5512103",
+      "sourceHash": "fnv1a64:e0dcdee183662a41",
       "notice": null,
       "blocks": [
         {
@@ -205,6 +214,15 @@
               "seconds": 1,
               "perItem": false,
               "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read अंग्रेज़ी, then say it without looking",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **अंग्रेज़ी**, then say it without looking]"
             },
             {
               "kind": "prompt",

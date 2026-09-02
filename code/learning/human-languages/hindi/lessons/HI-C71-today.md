@@ -12,32 +12,32 @@ headword: "आज"
 gloss: "today"
 romanization: "āj"
 concept_tag: HI-TIME-TODAY
-prerequisites: [HI-C70-rest]
+prerequisites: [HI-C70-rest, HI-C70-song]
 sounds: []
 roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [HI-LEX-C70-LEISURE-05]
+  knowledge: [HI-LEX-C70-LEISURE-05, HI-LEX-C70-LEISURE-04]
 introduces:
   knowledge: [HI-LEX-C71-TODAY-01]
 practises:
-  knowledge: [HI-LEX-C70-LEISURE-05, HI-LEX-C71-TODAY-01]
+  knowledge: [HI-LEX-C70-LEISURE-05, HI-LEX-C71-TODAY-01, HI-LEX-C70-LEISURE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
 register: neutral
 variety: standard-colloquial
-reviews_of: [HI-C70-rest]
+reviews_of: [HI-C70-rest, HI-C70-song]
 ---
 
 # आज (āj) — today
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-05, HI-LEX-C70-LEISURE-04] -->
 
-[PAUSE 2s] Say the word for rest. The next five words are the small ones that
-hold a conversation together.
+[PAUSE 2s] Two words back: what does *gānā* mean, and what is **आराम**? The
+next five words are the small ones that hold a conversation together.
 
 ## You'll want to know: आज
 <!-- hl-knowledge: introduces=[HI-LEX-C71-TODAY-01]; assesses=[] -->
@@ -61,9 +61,10 @@ that makes it about now rather than in general.
 The first of five small words that do a great deal of work.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C71-TODAY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C71-TODAY-01, HI-LEX-C70-LEISURE-04, HI-LEX-C70-LEISURE-05] -->
 
 [PAUSE 1s]
+- [YOU RECALL: say *gānā*, then read **आराम** and say what it means]
 - [YOU HEAR: *āj*, then *kal*, then *parsoṁ*]
 - [YOU SAY: *āj*]
 - [YOU SAY: *āj āp kaise haiṁ?*]

@@ -4,7 +4,7 @@
   "chapter": 73,
   "title": "The Eating House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:59338b30076b7e5d",
+  "sourceHash": "fnv1a64:b2b948fd67e3767e",
   "lessons": [
     {
       "id": "HI-C73-eating-house",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:edaa2765cd74928c",
+      "sourceHash": "fnv1a64:6e94057031c7a63e",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say the word for \"to buy\". The next five words are for the place you buy a meal."
+              "text": "Two words back: what does mahãgā mean, and what is ख़रीदना? The next five words are for the place you buy a meal."
             }
           ]
         },
@@ -87,6 +87,15 @@
               "seconds": 1,
               "perItem": false,
               "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mahãgā, then read ख़रीदना and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mahãgā*, then read **ख़रीदना** and say what it means]"
             },
             {
               "kind": "prompt",
@@ -149,7 +158,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:06470cab122d8340",
+      "sourceHash": "fnv1a64:90fd68eb08949acc",
       "notice": null,
       "blocks": [
         {
@@ -217,6 +226,15 @@
               "seconds": 1,
               "perItem": false,
               "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ख़रीदना, then say it without looking",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ख़रीदना**, then say it without looking]"
             },
             {
               "kind": "prompt",
@@ -531,7 +549,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b0ba34da997c3883",
+      "sourceHash": "fnv1a64:d3680e7b255b0377",
       "notice": null,
       "blocks": [
         {
@@ -574,7 +592,7 @@
             },
             {
               "kind": "speech",
-              "text": "मैं चाय पीता हूँ is \"I drink tea\", in the frame you have used all along. And when somebody asks आपने खाना खाया? they are using the word twice in one breath, once for the food and once for the eating."
+              "text": "मैं चाय पीता हूँ is \"I drink tea\", in the frame you have used all along. And मैं खाना खाता हूँ puts the word into one breath twice — once for the food, once for the eating — with nothing between them but the ending."
             }
           ]
         },

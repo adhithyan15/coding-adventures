@@ -42,6 +42,38 @@ The note rewrite is not optional politeness. `HI-A1-LEX-56` claimed "`desh` is
 not taught either"; leaving that sentence in place beside a filled probe is a
 file that contradicts itself, and the next author reads the note, not the array.
 
+### The other trap: appending five-word chapters costs reinforcement
+
+Measured on the first draft of this tranche: 35 lessons drove Hindi's pre-A1
+thin-atom count 54 -> 68. The +14 was not diffuse. Inside a five-lesson chapter
+each word is retrieved by the lessons that follow it, so words 1, 2 and 3
+accumulate revisits and words **4 and 5 have nowhere left to go** -- one later
+practise each, against the two the gate asks for. Twelve of the fourteen were
+exactly the fourth and fifth atom of chapters 68-73.
+
+The fix is not a pin reseat and not more drills inside the chapter, because the
+shortfall is at the boundary. Every chapter-OPENING lesson declares the two
+preceding words -- reaching across into the previous chapter -- and retrieves
+both by name in its Warm-up and Guided Practice; the second lesson of each
+chapter picks up the one still short. That is four frontmatter lines per lesson
+-- `prerequisites`, `requires.knowledge`, `practises.knowledge` and
+`reviews_of` -- plus one retrieval bullet, and a reworded Warm-up in each
+chapter opener. Twelve lessons, opening chapters 69 to 74: 68 -> 56.
+
+The last three came from the same rule applied one step further back, in the
+two lessons that open chapter 68. They reach past the A1 name-field runway to
+`ghas` and `kuan`, the final two words of the PREVIOUS vocabulary run, and pick
+up the runway's own payoff atom on the way. All three had been sitting at the
+end of the corpus with their windows unjudged and became judgeable the moment
+35 lessons were appended after them. 56 -> 53, below where the tranche
+started.
+
+Two general points fall out. **Appending makes previously-unjudged tail atoms
+judgeable**, so a tranche inherits the previous tranche's tail whether it wants
+to or not -- budget for it. And **the boundary between chapters is where
+reinforcement leaks**, so a tranche of N five-word chapters should expect to
+spend its retrieval budget at the openings, not spread evenly.
+
 ### Two smaller things worth carrying forward
 
 - **The taught-glyph filter is a hard constraint on word choice, and it is
