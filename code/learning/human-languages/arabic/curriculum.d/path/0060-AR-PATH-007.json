@@ -8,9 +8,12 @@
     "AR-C02-ismii",
     "AR-C02-maa",
     "AR-C02-maa-ismuka",
-    "AR-C02-tasharrafna"
+    "AR-C02-tasharrafna",
+    "AR-C02-practice"
   ],
   "before": [],
   "inline": [],
-  "after": []
+  "after": [
+    "AR-EXT-007-CONSOLIDATION"
+  ]
 }

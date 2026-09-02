@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: AR-W04-dots-family-nun-ta
+spine_node: SPINE-CHECK-WELLBEING
 sequence: 230
 chapter: 2
 type: writing
@@ -9,20 +11,37 @@ romanization: "nūn, tāʾ, thāʾ"
 prerequisites: [AR-W00-full-greeting-recall]
 sounds: [arabic-nun, arabic-ta, arabic-tha]
 roots: [phoenician-nun, phoenician-taw]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-W04-DOTS-FAMILY-01, AR-CONCEPT-W04-DOTS-FAMILY-02, AR-CONCEPT-W04-DOTS-FAMILY-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [AR-CONCEPT-W04-DOTS-FAMILY-01, AR-CONCEPT-W04-DOTS-FAMILY-02, AR-CONCEPT-W04-DOTS-FAMILY-03]
+skills: [speaking, reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: [AR-W00-alif-mim-salam, AR-W00-ba-family-marhaba, AR-C02-anta-anti, AR-C02-ism]
 ---
 
 # ن، ت، ث — one bowl, four dot-patterns
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] In Lesson 3 you drew **ب** (*bāʾ*) — a boat-bowl with **one dot
 below** — and met the idea that the **dots make the letter**. Now the promised
 payoff: the *same* bowl, with the dots moved and multiplied, gives you three more
 common letters. Learn the bowl once; the dots do the rest.
 
-## The bowl family — a truth-table
+## Script — The bowl family — a truth-table
+<!-- hl-knowledge: introduces=[AR-CONCEPT-W04-DOTS-FAMILY-01]; assesses=[] -->
 
 Every letter here is the **same shallow boat-bowl** you already draw for *bāʾ*.
 Only the dots change:
@@ -39,7 +58,8 @@ Read it as a dial: **below → 1 above → 2 above → 3 above**. The pen-stroke
 identical each time; your only real decision is *how many dots, and on which
 side*.
 
-## Draw them
+## Script — Draw them
+<!-- hl-knowledge: introduces=[AR-CONCEPT-W04-DOTS-FAMILY-02]; assesses=[] -->
 
 - **ن** (*nūn*) — the bowl, then **one dot above**. (*nūn* sits a little deeper
   than *bāʾ* when it stands alone, but joined, it is the shared skeleton + one
@@ -50,7 +70,8 @@ side*.
 - **ث** (*thāʾ*) — the bowl, then **three dots above** (drawn as a little
   triangle of dots).
 
-## Where you have seen them — أنت
+## Script — Where you have seen them — أنت
+<!-- hl-knowledge: introduces=[AR-CONCEPT-W04-DOTS-FAMILY-03]; assesses=[] -->
 
 The Chapter 2 word **أنت** (*anta / anti*, "you") is built from exactly these: an
 *alif* (with a small **hamza** seat you will meet in Lesson 6), then **ن** (*nūn*,
@@ -59,6 +80,7 @@ one dot above) joined to **ت** (*tāʾ*, two dots above). So *أنت* is, in do
 real word.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-W04-DOTS-FAMILY-01, AR-CONCEPT-W04-DOTS-FAMILY-02] -->
 
 [PAUSE 1s]
 - [YOU WRITE: the same bowl four times, then dot them — ب (1 below), ن (1 above),
@@ -67,6 +89,7 @@ real word.
 - [YOU WRITE: the joined pair **نت** (*nūn*→*tāʾ*), the core of *أنت*]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-W04-DOTS-FAMILY-01, AR-CONCEPT-W04-DOTS-FAMILY-03] -->
 
 [PAUSE 3s] What single feature separates **ب, ن, ت, ث**? (**The dots** — same
 bowl; one below / one above / two above / three above.) Which two of them build

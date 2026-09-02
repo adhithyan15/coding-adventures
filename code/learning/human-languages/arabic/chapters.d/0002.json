@@ -9,9 +9,11 @@
   ],
   "payoff": {
     "lesson": "AR-C02-practice",
-    "kind": "task",
-    "summary": "Complete AR-C02-practice, the canonical closing checkpoint, and demonstrate the chapter promise: introduce myself in Arabic, give my name, and understand the other person's name.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "kind": "dialogue",
+    "summary": "The whole introduction exchange, run once to a man and once to a woman: give a name, ask for one back, and close with tasharrafna.",
+    "assesses": [
+      "AR-CONCEPT-C02-PRACTICE-01",
+      "AR-CONCEPT-C02-PRACTICE-02"
+    ]
   }
 }

@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7dc54ac56410a626",
+  "sourceHash": "fnv1a64:5852c60e644321b2",
   "lessons": [
     {
       "id": "AR-C02-ism",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dc715ca1a66c3498",
+      "sourceHash": "fnv1a64:332e24bd54efbbeb",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b988e9d1cbfd8cf2",
+      "sourceHash": "fnv1a64:856e703a860fca49",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -247,7 +247,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:32ddedf7cab88e39",
+      "sourceHash": "fnv1a64:8cd02db0cc0418b9",
       "notice": null,
       "blocks": [
         {
@@ -269,8 +269,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
+          "type": "input",
+          "title": "You'll want to know — The phrase, assembled",
           "segments": [
             {
               "kind": "speech",
@@ -360,7 +360,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0282512439f77104",
+      "sourceHash": "fnv1a64:a8328f71159f0574",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -485,7 +485,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:87ddbb55d75eeb82",
+      "sourceHash": "fnv1a64:63a61ae219fb7f2a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -599,7 +599,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:83673cdfda088a5d",
+      "sourceHash": "fnv1a64:1fa1606ec3bf971f",
       "notice": null,
       "blocks": [
         {
@@ -621,8 +621,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
+          "type": "input",
+          "title": "You'll want to know — The phrase, assembled",
           "segments": [
             {
               "kind": "speech",
@@ -712,7 +712,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8eb0ac9f7834c6c3",
+      "sourceHash": "fnv1a64:b1fa9be32305060e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -826,13 +826,30 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3ce81a1896011ec",
+      "sourceHash": "fnv1a64:0a2921802553f8be",
       "notice": null,
       "blocks": [
         {
           "index": 0,
-          "type": "unknown",
-          "title": "The dialogue",
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You could already greet someone. Every lesson since has been building one short exchange: give your name, ask for theirs, close warmly. Here it is whole."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
@@ -852,7 +869,14 @@
                 "اسمي أرون. (ismī Arun) means My name is Arun.",
                 "تشرفنا. (tasharrafnā) means Pleased to meet you."
               ]
-            },
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know — the pieces",
+          "segments": [
             {
               "kind": "speech",
               "text": "Every piece from the root-and-suffix engine:"
@@ -876,7 +900,7 @@
           ]
         },
         {
-          "index": 1,
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -916,7 +940,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -949,18 +973,23 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-type"
+        "writing-type",
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:96048c9999bdc9da",
+      "sourceHash": "fnv1a64:65ff7d2e2e51da52",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
+          "Script — The bowl family — a truth-table",
+          "Script — Draw them",
+          "Script — Where you have seen them — أنت",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — The bowl family — a truth-table, Script — Draw them, Script — Where you have seen them — أنت and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -982,8 +1011,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The bowl family — a truth-table",
+          "type": "script",
+          "title": "Script — The bowl family — a truth-table",
           "segments": [
             {
               "kind": "speech",
@@ -1014,8 +1043,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "Draw them",
+          "type": "script",
+          "title": "Script — Draw them",
           "segments": [
             {
               "kind": "speech",
@@ -1033,8 +1062,8 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Where you have seen them — أنت",
+          "type": "script",
+          "title": "Script — Where you have seen them — أنت",
           "segments": [
             {
               "kind": "speech",
@@ -1112,18 +1141,22 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-type"
+        "writing-type",
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:9812c788ff106819",
+      "sourceHash": "fnv1a64:5b1c9db919e44810",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
+          "Script — ي (yāʾ) — two dots below",
+          "Script — Assemble — first اسم, then اسمي",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — ي (yāʾ) — two dots below, Script — Assemble — first اسم, then اسمي and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -1145,8 +1178,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "ي (yāʾ) — two dots below",
+          "type": "script",
+          "title": "Script — ي (yāʾ) — two dots below",
           "segments": [
             {
               "kind": "speech",
@@ -1168,8 +1201,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "Its three jobs",
+          "type": "input",
+          "title": "You'll want to know — Its three jobs",
           "segments": [
             {
               "kind": "speech",
@@ -1187,8 +1220,8 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Assemble — first اسم, then اسمي",
+          "type": "script",
+          "title": "Script — Assemble — first اسم, then اسمي",
           "segments": [
             {
               "kind": "speech",
@@ -1291,20 +1324,22 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
+        "script-block",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:9d255ebddacce98f",
+      "sourceHash": "fnv1a64:db3fd4a03bfd114e",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
           "your eyes for one table that cannot be read aloud"
         ],
         "waitUntilStopped": [
-          "The ḥarakāt — three short-vowel marks",
+          "Script — The ḥarakāt — three short-vowel marks",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the sections called The ḥarakāt — three short-vowel marks and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the sections called Script — The ḥarakāt — three short-vowel marks and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -1326,8 +1361,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The ḥarakāt — three short-vowel marks",
+          "type": "script",
+          "title": "Script — The ḥarakāt — three short-vowel marks",
           "segments": [
             {
               "kind": "speech",
@@ -1355,8 +1390,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The payoff — أنتَ vs أنتِ",
+          "type": "input",
+          "title": "You'll want to know — The payoff — أنتَ vs أنتِ",
           "segments": [
             {
               "kind": "speech",
@@ -1582,18 +1617,21 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-type"
+        "writing-type",
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:2b2be3970ae44451",
+      "sourceHash": "fnv1a64:7030933d57baf47b",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
+          "Script — The catch in “uh-oh”",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — The catch in “uh-oh” and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -1615,8 +1653,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The catch in “uh-oh”",
+          "type": "script",
+          "title": "Script — The catch in “uh-oh”",
           "segments": [
             {
               "kind": "speech",
