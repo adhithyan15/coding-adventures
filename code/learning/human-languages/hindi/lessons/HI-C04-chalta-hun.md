@@ -10,6 +10,7 @@ chapter: 4
 type: phrase
 headword: चलता हूँ
 gloss: I'll be off (lit. "I go"), gendered
+romanization: "chaltā hūṁ"
 concept_tag: FAREWELL-CASUAL
 prerequisites: [HI-C03-hun, HI-C03-main]
 sounds: [matra-a]
@@ -41,14 +42,14 @@ verb changes for a man or a woman speaking.
 ## The letters in this word
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C04-CHALTAHUN-01]; assesses=[HI-CONCEPT-C03-HUN-01, HI-CONCEPT-C03-MAIN-01] -->
 
-**च** (*ca*) + **ल** (*la*) + the long-*ā* mātrā → **चलता** (*caltā*); with
-**हूँ** (*hūṁ*, "am," from Chapter 3). Read *caltā hūṁ*.
+**च** (*ca*) + **ल** (*la*) + the long-*ā* mātrā → **चलता** (*chaltā*); with
+**हूँ** (*hūṁ*, "am," from Chapter 3). Read *chaltā hūṁ*.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C03-HUN-01, HI-CONCEPT-C03-MAIN-01, HI-CONCEPT-C04-CHALTAHUN-01] -->
 
 **चलता हूँ** literally means "**I go / I move**," used the way English says "I'll
-be off / I'll get going." The verb is **चलना** (*calnā*, "to move, walk, go"),
+be off / I'll get going." The verb is **चलना** (*chalnā*, "to move, walk, go"),
 from Sanskrit **चल्** (*cal-*, "to move, stir") — the root behind *cal* ("move!"),
 *calan* ("circulation"), and *cañcal* ("restless"). Like Bengali *āshi* ("I
 come") and Marathi *yeto*, Hindi prefers to leave by saying "I'm **moving**,"
@@ -57,8 +58,8 @@ never a blunt "I'm leaving."
 ## Grammar Lens: the verb agrees with the speaker's gender
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C03-HUN-01, HI-CONCEPT-C03-MAIN-01, HI-CONCEPT-C04-CHALTAHUN-01] -->
 
-- a man says **चलता हूँ** (*caltā hūṁ*)
-- a woman says **चलती हूँ** (*caltī hūṁ*)
+- a man says **चलता हूँ** (*chaltā hūṁ*)
+- a woman says **चलती हूँ** (*chaltī hūṁ*)
 
 The *-tā / -tī* ending marks the speaker's gender — a feature English has no trace
 of, and one you will meet again and again. (Compare Marathi *yeto* m. / *yete* f.)
@@ -73,12 +74,12 @@ of, and one you will meet again and again. (Compare Marathi *yeto* m. / *yete* f
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C03-HUN-01, HI-CONCEPT-C03-MAIN-01, HI-CONCEPT-C04-CHALTAHUN-01] -->
 
 [PAUSE 1s]
-- [YOU SAY (m.): *caltā hūṁ*  ·  (f.): *caltī hūṁ*]
-- [YOU SAY: the verb and root (*calnā* "to move," Sanskrit *cal-*)]
+- [YOU SAY (m.): *chaltā hūṁ*  ·  (f.): *chaltī hūṁ*]
+- [YOU SAY: the verb and root (*chalnā* "to move," Sanskrit *cal-*)]
 - [YOU SAY: why Hindi says "I move" and not "I leave" (the softer, non-final parting)]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C03-HUN-01, HI-CONCEPT-C03-MAIN-01, HI-CONCEPT-C04-CHALTAHUN-01] -->
 
 [PAUSE 3s] What does *chaltā hūṁ* literally mean, and how does a woman say it?
-("I go/move" = I'll be off; *caltī hūṁ*, with the feminine *-tī*.)
+("I go/move" = I'll be off; *chaltī hūṁ*, with the feminine *-tī*.)

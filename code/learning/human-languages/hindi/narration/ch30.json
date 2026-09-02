@@ -4,14 +4,14 @@
   "chapter": 30,
   "title": "Afternoon",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2eb906264e098781",
+  "sourceHash": "fnv1a64:a91b2b5aaf9e6373",
   "lessons": [
     {
       "id": "HI-C30-dopahar-widened",
       "sequence": 810,
-      "title": "दोपहर — the same word, a wider job than its etymology promised",
+      "title": "दोपहर (dopahar) — the same word, a wider job than its etymology promised",
       "headword": "दोपहर",
-      "romanization": "",
+      "romanization": "dopahar",
       "gloss": "\"afternoon\" — the same word already met meaning precisely \"noon\" (two pahars after sunrise, HI-C17), now widened in modern everyday usage to cover the whole afternoon stretch, not just the exact midday moment",
       "script": "devanagari",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:616c116886643eed",
+      "sourceHash": "fnv1a64:d5ba7960b9fe9703",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already know दोपहर means \"noon\" — two pahars after sunrise, precisely. This lesson's honest twist is that the word doesn't stay that precise in everyday use."
+              "text": "You already know दोपहर (dopahar) means \"noon\" — two pahars after sunrise, precisely. This lesson's honest twist is that the word doesn't stay that precise in everyday use."
             }
           ]
         },
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "This is worth sitting with: दोपहर's literal story still holds up the way Chapter 17 described it — \"two pahars,\" with noon falling around the end of the second — though, as that lesson itself noted, treat the exact pahar-count as the general shape of the story rather than a precisely dated fact. Either way, the word's job in the language has moved on well past that etymology. This kind of drift — a word for one precise instant loosening into a name for a whole surrounding stretch of time — isn't unique to Hindi, but here it's especially visible because Chapter 17 showed you exactly how tight the original math was."
+              "text": "This is worth sitting with: दोपहर (dopahar)'s literal story still holds up the way Chapter 17 described it — \"two pahars,\" with noon falling around the end of the second — though, as that lesson itself noted, treat the exact pahar-count as the general shape of the story rather than a precisely dated fact. Either way, the word's job in the language has moved on well past that etymology. This kind of drift — a word for one precise instant loosening into a name for a whole surrounding stretch of time — isn't unique to Hindi, but here it's especially visible because Chapter 17 showed you exactly how tight the original math was."
             }
           ]
         },
@@ -114,7 +114,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is दोपहर a new word, or the same one from Chapter 17? (The same word — \"two pahars.\") Does modern Hindi use दोपहर to mean only the exact instant of noon? (No — it's widened to cover the whole afternoon, roughly noon through late afternoon.) Has दोपहर's etymology itself changed to match this wider modern use? (No — the etymology still points precisely at noon; only the word's everyday job has widened.)"
+              "text": "Is दोपहर (dopahar) a new word, or the same one from Chapter 17? (The same word — \"two pahars.\") Does modern Hindi use दोपहर (dopahar) to mean only the exact instant of noon? (No — it's widened to cover the whole afternoon, roughly noon through late afternoon.) Has दोपहर (dopahar)'s etymology itself changed to match this wider modern use? (No — the etymology still points precisely at noon; only the word's everyday job has widened.)"
             }
           ]
         }

@@ -10,6 +10,7 @@ chapter: 11
 type: word
 headword: लाल नीला
 gloss: red and blue — a Persian gemstone-name, and the Sanskrit word behind the world's word for "indigo"
+romanization: "lāl nīlā"
 concept_tag: HI-COLOUR-RED-BLUE
 prerequisites: [HI-C11-kaalaa-safed]
 sounds: [devanagari-long-aa, retroflex-la-vs-dental]

@@ -10,6 +10,7 @@ chapter: 20
 type: phrase
 headword: मौसम / गर्मी है / ठंड है / बारिश हो रही है
 gloss: weather — the SAME root as English "monsoon"; rain has TWO words that sound alike but are NOT related, a real false-friend trap
+romanization: "mausam / garmī hai / ṭhanḍ hai / baarish ho rahī hai"
 concept_tag: HI-WEATHER
 prerequisites: [HI-C19-age-grammar]
 sounds: [devanagari-vowel-sign-au, devanagari-conjunct-rsha]

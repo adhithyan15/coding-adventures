@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3d4c1e973a761f7b",
+  "sourceHash": "fnv1a64:f7508e60c99f965e",
   "lessons": [
     {
       "id": "HI-C03-kaise",
@@ -156,7 +156,7 @@
       "sequence": 280,
       "title": "आप कैसे हैं? (āp kaise haiṁ?) — \"how are you?\"",
       "headword": "आप कैसे हैं?",
-      "romanization": "",
+      "romanization": "āp kaise haiṁ?",
       "gloss": "how are you? (respectful)",
       "script": "devanagari",
       "modality": "sight",
@@ -164,7 +164,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f39dd1712ae502b8",
+      "sourceHash": "fnv1a64:9529b6d2bc7f2e8d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -211,7 +211,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "आप कैसे हैं? = आप (āp, respectful \"you\") + कैसे (kaise, \"how\") + हैं (haiṁ, \"are\") — literally \"you how are?\" Hindi keeps the verb last, exactly as in Chapter 2's merā nām … hai. And because āp is grammatically plural (that is how Hindi shows respect), its verb is the plural haiṁ, not the singular hai."
+              "text": "आप कैसे हैं? (āp kaise haiṁ?) = आप (āp, respectful \"you\") + कैसे (kaise, \"how\") + हैं (haiṁ, \"are\") — literally \"you how are?\" Hindi keeps the verb last, exactly as in Chapter 2's merā nām … hai. And because āp is grammatically plural (that is how Hindi shows respect), its verb is the plural haiṁ, not the singular hai."
             }
           ]
         },
@@ -222,7 +222,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "To an elder or a stranger: आप कैसे हैं? To a friend (tum): तुम कैसे हो? (tum kaise ho? — ho is the familiar \"are\"). To no one in particular you would never drop to tū. Match the \"you\" to the verb: āp … haiṁ, tum … ho."
+              "text": "To an elder or a stranger: आप कैसे हैं? (āp kaise haiṁ?) To a friend (tum): तुम कैसे हो? (tum kaise ho? — ho is the familiar \"are\"). To no one in particular you would never drop to tū. Match the \"you\" to the verb: āp … haiṁ, tum … ho."
             }
           ]
         },
@@ -586,7 +586,7 @@
       "sequence": 310,
       "title": "ठीक (ṭhīk) — \"fine,\" and how to answer",
       "headword": "ठीक",
-      "romanization": "",
+      "romanization": "ṭhīk",
       "gloss": "fine, well, correct — and the reply \"मैं ठीक हूँ\"",
       "script": "devanagari",
       "modality": "sight",
@@ -594,7 +594,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8a7683db13cd5345",
+      "sourceHash": "fnv1a64:a7340138d459d6e1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -671,7 +671,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ठ (ṭha, a retroflex th — tongue curled to the roof of the mouth) + ी (long =i) + क (ka) becomes ठीक. The retroflex ट-ठ-ड series is a hallmark of Indian sound."
+              "text": "ठ (ṭha, a retroflex th — tongue curled to the roof of the mouth) + ी (long =i) + क (ka) becomes ठीक (ṭhīk). The retroflex ट-ठ-ड series is a hallmark of Indian sound."
             }
           ]
         },
@@ -739,7 +739,7 @@
       "sequence": 320,
       "title": "आपका स्वागत है (āpkā svāgat hai) — \"you're welcome\"",
       "headword": "आपका स्वागत है",
-      "romanization": "",
+      "romanization": "āpkā svāgat hai",
       "gloss": "you're welcome (also \"welcome!\")",
       "script": "devanagari",
       "modality": "sight",
@@ -747,7 +747,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a37fd05986719fd5",
+      "sourceHash": "fnv1a64:5a9e595d7b8783a3",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -794,7 +794,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "आपका स्वागत है = \"your welcome is\" becomes \"you are welcome.\" The heart of it, स्वागत (svāgat, \"welcome\"), is Sanskrit सु (su-, \"well, good\") + आगत (āgata, \"come\") — literally \"well come,\" exactly like English welcome. Two deep roots hide inside:"
+              "text": "आपका स्वागत है (āpkā svāgat hai) = \"your welcome is\" becomes \"you are welcome.\" The heart of it, स्वागत (svāgat, \"welcome\"), is Sanskrit सु (su-, \"well, good\") + आगत (āgata, \"come\") — literally \"well come,\" exactly like English welcome. Two deep roots hide inside:"
             },
             {
               "kind": "speech",

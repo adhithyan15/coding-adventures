@@ -4,14 +4,14 @@
   "chapter": 25,
   "title": "Day",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:de0d440f3de48ff6",
+  "sourceHash": "fnv1a64:2767572c28198ae5",
   "lessons": [
     {
       "id": "HI-C25-din",
       "sequence": 760,
       "title": "दिन (din) — \"day,\" the same root as diēs, a different branch",
       "headword": "दिन",
-      "romanization": "",
+      "romanization": "din",
       "gloss": "\"day\" — shares its ultimate PIE root with Latin's diēs, but through a separate derivational branch (din patterns with Baltic/Slavic \"day\"-words); Sanskrit's own दिव्/द्यु are actually the closer, more direct cousins of diēs",
       "script": "devanagari",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:725ce14eb868a85c",
+      "sourceHash": "fnv1a64:d22f8d7aa3282954",
       "notice": null,
       "blocks": [
         {

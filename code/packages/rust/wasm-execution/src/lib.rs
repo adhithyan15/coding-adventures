@@ -1885,15 +1885,35 @@ pub struct FuncRefTarget {
     /// design** (not present anywhere in the spec's own pseudocode):
     /// which `WasmInstance` (identified by its own process-wide-unique
     /// `instance_identity`, mirroring `func_identities`'/`tag_identities`'
-    /// own minting shape) `local_index` is meaningful for — `None` when
-    /// `local_index` is safe to dispatch through ANY ctx that reaches this
-    /// target (an import, always resolvable via `ctx.host_functions` in
-    /// whatever ctx currently holds it; or a [`LocalFunctionPlaceholder`]
-    /// fallback, only ever constructed FOR the ctx that's about to
-    /// dispatch it immediately). `Some(id)` when `local_index` is ONLY
-    /// meaningful for a ctx whose own `instance_identity` equals `id` —
-    /// the case a real [`SelfFunctionResolver`] (`wasm-runtime`'s
-    /// `LocalFunctionRef`) produces.
+    /// own minting shape) `local_index` is meaningful for. `Some(id)` means
+    /// `local_index` is ONLY meaningful for a ctx whose own
+    /// `instance_identity` equals `id`; `None` means it is safe to
+    /// dispatch through ANY ctx that reaches this target at all.
+    ///
+    /// **W35 fourth slice correction**: every PRODUCTION construction site
+    /// (the import branch and the [`LocalFunctionPlaceholder`] fallback of
+    /// `resolve_function_ref`/`resolve_function_ref_for_dispatch`, and
+    /// `wasm-runtime::resolve_func_ref_for_instance`'s own import branch)
+    /// now sets `Some(producing_ctx.instance_identity)`, NOT `None` as
+    /// slices 2/3 originally had it — a real, reproduced gap this slice's
+    /// own corpus verification found: an import's `local_index` is only
+    /// ever meaningful as an index into `ctx.host_functions` for the
+    /// SPECIFIC ctx that resolved it, not "whatever ctx currently holds
+    /// it" as the pre-fix comment claimed. That claim was accidentally
+    /// true for every case reachable before this slice (nothing could
+    /// durably store a resolved target somewhere a DIFFERENT instance
+    /// would later read it), but breaks the moment this slice's own
+    /// fixup pass (`wasm-conformance::resolve_owned_funcrefs`) makes
+    /// exactly that possible: `linking.wast`'s own `$Ot` imports `$Mt`'s
+    /// `h` export as `$Ot`'s combined-index-space slot 0, writes it into
+    /// `$Mt`'s SHARED table, and `$Mt`'s own later `call_indirect` through
+    /// that slot (a DIFFERENT `instance_identity`) used to misinterpret
+    /// `local_index: Some(0)` as ITS OWN slot 0 (`$g`, an unrelated local
+    /// function) — a silent wrong answer, confirmed and fixed. `None`
+    /// remains a valid, meaningful state on the type (this crate's own
+    /// unit tests construct it directly to exercise `effective_local_index`'s
+    /// "no owner recorded" branch) — it is simply no longer reachable from
+    /// any current production code path.
     ///
     /// **Why this exists**: a naive reading of the spec's own §4 design
     /// (`local_index: None` for every self-resolver-produced target,
@@ -4378,11 +4398,20 @@ impl WasmExecutionContext {
                 identity: hf.identity(),
                 callable: hf.clone(),
                 local_index: Some(idx),
-                // An import is always resolvable via `ctx.host_functions`
-                // in whatever ctx currently holds it -- no instance check
-                // needed. See `FuncRefTarget::owner_instance_identity`'s
-                // own doc comment.
-                owner_instance_identity: None,
+                // W35 fourth slice: `Some(self.instance_identity)`, NOT
+                // `None` (a real gap this slice's own corpus verification
+                // found and fixed -- see `wasm_runtime::
+                // resolve_func_ref_for_instance`'s identical fix for the
+                // full rationale/reproduced evidence, `linking.wast`'s own
+                // `$Ot`/`$Mt.h` example). `idx` here only means
+                // "`ctx.host_functions[idx]`" within THIS ctx's own
+                // combined index space -- it is safe to dispatch via
+                // `local_index` for ANY ctx sharing that exact
+                // `instance_identity` (this one), never universally "in
+                // whatever ctx currently holds it" the way the pre-fix
+                // comment claimed, once a target built here can be written
+                // into a table/global another instance later reads.
+                owner_instance_identity: Some(self.instance_identity),
             });
         }
         let identity = self.func_identities.get(idx as usize).copied().unwrap_or(0);
@@ -4448,11 +4477,32 @@ impl WasmExecutionContext {
                     identity,
                     callable: Rc::new(LocalFunctionPlaceholder { func_type: func_type.clone() }),
                     local_index: Some(idx),
-                    // Only ever constructed for the SAME ctx that's about
-                    // to dispatch it immediately -- no instance check
-                    // needed. See `FuncRefTarget::owner_instance_identity`'s
-                    // own doc comment.
-                    owner_instance_identity: None,
+                    // W35 fourth slice: `Some(self.instance_identity)`, not
+                    // `None` -- this doc comment used to claim "only ever
+                    // constructed for the SAME ctx that's about to dispatch
+                    // it immediately," which is true for every dispatch
+                    // site that calls `resolve_function_ref_for_dispatch`
+                    // directly, but this target is NOT necessarily
+                    // consumed immediately: a live `ref.func`, followed by
+                    // a live `table.set`/`global.set` in the SAME call,
+                    // durably stores exactly this placeholder-backed
+                    // target -- and if that table/global is shared with
+                    // another instance (no corpus case currently does
+                    // this, see this slice's own CHANGELOG/spec addendum),
+                    // a DIFFERENT ctx could dispatch it later. Tagging the
+                    // producing ctx's own identity here means a genuinely
+                    // cross-instance dispatch of a stray placeholder falls
+                    // through to `LocalFunctionPlaceholder::call`, which
+                    // fails LOUDLY and cleanly (its own doc comment) --
+                    // strictly better than the pre-fix `None`, which would
+                    // have silently mis-dispatched via the wrong ctx's own
+                    // `local_index` space instead (this repo's own "never
+                    // trade loud for silent" convention). Zero behavior
+                    // change for every SAME-instance dispatch (every case
+                    // any pre-slice-4 test reaches): `effective_local_index`
+                    // still takes the cheap `local_index` path whenever the
+                    // owner matches, which it always does here.
+                    owner_instance_identity: Some(self.instance_identity),
                 })
             }
         }
@@ -8322,11 +8372,44 @@ fn flatten_ref_for_durable_storage(ctx: &WasmExecutionContext, value: WasmValue)
 /// placeholder) is always safe; `Some(id)` is safe only when `id` matches
 /// `ctx.instance_identity` -- the same instance that produced this
 /// target is the one dispatching it right now.
+///
+/// **W35 fourth slice addition**: even when `owner_instance_identity`
+/// genuinely mismatches (a different instance resolved this target), this
+/// ctx may STILL have the exact same real function reachable in its OWN
+/// combined index space -- `target.identity` (a process-wide-unique
+/// value, verbatim-adopted across every import, per `WasmInstance::
+/// func_identities`'s own doc comment) is the only thing that can prove
+/// this without `wasm-execution` ever comparing `Rc` pointers (it can't
+/// name `WasmInstance` at all -- see this crate's own module-level design
+/// note). Reproduced directly, not theorized: `linking.wast`'s own `$Mt`
+/// exports `h`; `$Ot` imports it as `$Ot`'s OWN combined-index-space slot
+/// 0 and writes a `FuncRefTarget` for it (`owner_instance_identity:
+/// Some($Ot)`, per `resolve_func_ref_for_instance`'s own fourth-slice fix)
+/// into `$Mt`'s SHARED table. `$Mt`'s own later `call_indirect` through
+/// that slot has `ctx.instance_identity == $Mt`, mismatching the
+/// recorded `$Ot` owner -- falling all the way through to
+/// `target.callable.call(..)` would re-enter `CrossModuleFunction::call`,
+/// which does `self.instance.borrow_mut()` on `$Mt`'s OWN
+/// `Rc<RefCell<WasmInstance>>` (the ACTUAL exporting instance
+/// `CrossModuleFunction` was built against) -- but `$Mt`'s own instance is
+/// ALREADY mutably borrowed by the very call this dispatch is happening
+/// inside of, so this would be a GUARANTEED, immediate `RefCell` panic on
+/// this exact motivating corpus case, not the rare, genuinely-mutual
+/// cross-instance cycle `CrossModuleFunction`'s own doc comment already
+/// accepts as a known, out-of-scope risk. Scanning `ctx.func_identities`
+/// for `target.identity` finds `$Mt`'s own local `h` (index 1, the SAME
+/// process-wide identity `$Ot` adopted verbatim when it imported `h`) and
+/// dispatches through THAT index instead -- the pre-existing, cheap,
+/// already-`call_function`-based path, with no `Rc` re-borrow at all.
+/// `id != 0` excludes `HostFunction::identity`'s own reserved
+/// "no stable identity" default (every pre-existing WASI-shim import) --
+/// without this guard, two UNRELATED host functions that both report `0`
+/// would spuriously "match," dispatching to the wrong one.
 fn effective_local_index(target: &FuncRefTarget, ctx: &WasmExecutionContext) -> Option<u32> {
     match target.owner_instance_identity {
         None => target.local_index,
         Some(owner) if owner == ctx.instance_identity => target.local_index,
-        Some(_) => None,
+        Some(_) => ctx.func_identities.iter().position(|&id| id != 0 && id == target.identity).map(|i| i as u32),
     }
 }
 

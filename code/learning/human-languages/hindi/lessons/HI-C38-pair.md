@@ -10,6 +10,7 @@ chapter: 38
 type: word
 headword: पैर / पाँव
 gloss: foot — the two everyday forms descend from different Sanskrit stems, पैर from pad- and पाँव from pāda
+romanization: "pair / pāṁv"
 concept_tag: HI-BODY-FOOT
 prerequisites: [HI-C38-daant, HI-C13-haath, HI-C07-nahin]
 sounds: [matra-ai, spineless-ra]

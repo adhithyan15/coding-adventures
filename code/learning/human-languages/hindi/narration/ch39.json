@@ -4,14 +4,14 @@
   "chapter": 39,
   "title": "The People Around You",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cb3a111c1854f8c4",
+  "sourceHash": "fnv1a64:e6681413619479df",
   "lessons": [
     {
       "id": "HI-C39-dost",
       "sequence": 1060,
       "title": "दोस्त (dost) — the friend, who is \"the one chosen\"",
       "headword": "दोस्त",
-      "romanization": "",
+      "romanization": "dost",
       "gloss": "friend — a Persian word for \"the one chosen\", masculine by default but taking either possessive depending on who the friend is",
       "script": "devanagari",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:45092dfbd4f58b7d",
+      "sourceHash": "fnv1a64:99e5a0de313fece0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -63,7 +63,7 @@
             },
             {
               "kind": "speech",
-              "text": "So मेरा दोस्त is built entirely from strokes already yours."
+              "text": "So मेरा दोस्त (dost) is built entirely from strokes already yours."
             }
           ]
         },
@@ -78,11 +78,11 @@
             },
             {
               "kind": "speech",
-              "text": "But it bends. When the friend is a woman, ordinary modern Hindi says मेरी दोस्त. The word has not changed shape; the possessive followed the person. Both are current; neither is a mistake."
+              "text": "But it bends. When the friend is a woman, ordinary modern Hindi says मेरी दोस्त (dost). The word has not changed shape; the possessive followed the person. Both are current; neither is a mistake."
             },
             {
               "kind": "speech",
-              "text": "That is unlike everything so far. आँख is feminine whatever you mean. दोस्त takes its gender from who the friend is."
+              "text": "That is unlike everything so far. आँख is feminine whatever you mean. दोस्त (dost) takes its gender from who the friend is."
             }
           ]
         },
@@ -93,7 +93,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "दोस्त is Persian, دوست (dōst); Old Persian had dauštā, an agent noun, \"the one held dear.\""
+              "text": "दोस्त (dost) is Persian, دوست (dōst); Old Persian had dauštā, an agent noun, \"the one held dear.\""
             },
             {
               "kind": "speech",
@@ -182,7 +182,7 @@
             },
             {
               "kind": "speech",
-              "text": "How do you say \"my friend\" about a woman? (मेरी दोस्त — the possessive follows the person.) What did the root behind dōst first mean? (To taste, try, choose.) Why does Persian say d- where Avestan says z-? (A regular sound law.)"
+              "text": "How do you say \"my friend\" about a woman? (मेरी दोस्त (dost) — the possessive follows the person.) What did the root behind dōst first mean? (To taste, try, choose.) Why does Persian say d- where Avestan says z-? (A regular sound law.)"
             }
           ]
         }
@@ -236,7 +236,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is what दरवाज़ा and कुर्सी only hinted at: for this class of noun -ā/-ī is not a lean but the machinery, and the word changes with the person. Which is exactly what दोस्त would not do."
+              "text": "This is what दरवाज़ा and कुर्सी only hinted at: for this class of noun -ā/-ī is not a lean but the machinery, and the word changes with the person. Which is exactly what दोस्त (dost) would not do."
             },
             {
               "kind": "speech",
@@ -259,7 +259,7 @@
             },
             {
               "kind": "speech",
-              "text": "So Hindi holds both, the same ancient word by two roads — the pattern दरवाज़ा and द्वार showed you, running again, and the same Persian relay that brought दोस्त."
+              "text": "So Hindi holds both, the same ancient word by two roads — the pattern दरवाज़ा and द्वार showed you, running again, and the same Persian relay that brought दोस्त (dost)."
             },
             {
               "kind": "speech",
@@ -344,7 +344,7 @@
       "sequence": 1080,
       "title": "आदमी (ādmī) — the man, and the lean breaking backwards",
       "headword": "आदमी",
-      "romanization": "",
+      "romanization": "ādmī",
       "gloss": "man, person — masculine despite its -ī ending, and literally \"of Adam\"",
       "script": "devanagari",
       "modality": "voice",
@@ -352,7 +352,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:308e63fc18eb6718",
+      "sourceHash": "fnv1a64:d7cd7a3760e1b9a6",
       "notice": null,
       "blocks": [
         {
@@ -383,7 +383,7 @@
             },
             {
               "kind": "speech",
-              "text": "A warning before you reach for the possessive: मेरा आदमी is real Hindi but means what English's my man means. Keep एक आदमी."
+              "text": "A warning before you reach for the possessive: मेरा आदमी (ādmī) is real Hindi but means what English's my man means. Keep एक आदमी (ādmī)."
             },
             {
               "kind": "speech",
@@ -391,7 +391,7 @@
             },
             {
               "kind": "speech",
-              "text": "So the lean has failed in both directions: चाय and किताब feminine with no -ी, आदमी masculine with one."
+              "text": "So the lean has failed in both directions: चाय and किताब feminine with no -ी, आदमी (ādmī) masculine with one."
             }
           ]
         },
@@ -402,7 +402,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "आदमी is Arabic, آدمي (ādamī), and it came the Persian way — the road of कुर्सी and किताब."
+              "text": "आदमी (ādmī) is Arabic, آدمي (ādamī), and it came the Persian way — the road of कुर्सी and किताब."
             },
             {
               "kind": "speech",
@@ -484,7 +484,7 @@
             },
             {
               "kind": "speech",
-              "text": "कुर्सी and आदमी end alike — same gender? (No.) What is the -ī of ādamī doing? (Arabic \"belonging to\" — \"of Adam.\") Is ʾādām from the word for ground? (No — Genesis is making a deliberate pun; the root is usually connected to redness.)"
+              "text": "कुर्सी and आदमी (ādmī) end alike — same gender? (No.) What is the -ī of ādamī doing? (Arabic \"belonging to\" — \"of Adam.\") Is ʾādām from the word for ground? (No — Genesis is making a deliberate pun; the root is usually connected to redness.)"
             }
           ]
         }
@@ -495,7 +495,7 @@
       "sequence": 1090,
       "title": "औरत (aurat) — the word for \"woman,\" and which one to use",
       "headword": "औरत / महिला / स्त्री",
-      "romanization": "",
+      "romanization": "aurat / mahilā / strī",
       "gloss": "woman — everyday औरत, respectful public महिला, and literary स्त्री form a three-register set",
       "script": "devanagari",
       "modality": "voice",
@@ -503,7 +503,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e66a6731715629a",
+      "sourceHash": "fnv1a64:bea77af43c918456",
       "notice": null,
       "blocks": [
         {
@@ -530,15 +530,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "औरत (aurat) = \"woman,\" and it is feminine. Say एक औरत — and for the reason एक आदमी was the safe phrase, leave मेरी औरत alone: it means my woman, a wife. औ is one vowel letter, au, standing alone."
+              "text": "औरत (aurat) = \"woman,\" and it is feminine. Say एक औरत — and for the reason एक आदमी (ādmī) was the safe phrase, leave मेरी औरत alone: it means my woman, a wife. औ is one vowel letter, au, standing alone."
             },
             {
               "kind": "speech",
-              "text": "Consonant ending, feminine — as चाय, किताब and आँख were. Beside it आदमी: -ी ending, masculine. Neither adult's gender is reachable from spelling. Where you can hear the agreement is on the child: मेरा बच्चा (bacca), मेरी बच्ची, the yearling who takes the ending seriously."
+              "text": "Consonant ending, feminine — as चाय, किताब and आँख were. Beside it आदमी (ādmī): -ी ending, masculine. Neither adult's gender is reachable from spelling. Where you can hear the agreement is on the child: मेरा बच्चा (bacca), मेरी बच्ची, the yearling who takes the ending seriously."
             },
             {
               "kind": "speech",
-              "text": "The family: पिता, माता, भाई, बहन, बच्चा (bacca), आदमी, औरत — and the chosen one, दोस्त."
+              "text": "The family: पिता, माता, भाई, बहन, बच्चा (bacca), आदमी (ādmī), औरत — and the chosen one, दोस्त (dost)."
             }
           ]
         },
@@ -553,7 +553,7 @@
             },
             {
               "kind": "speech",
-              "text": "Then the fact that changes what you do with all that: Arabic ʿawra does not mean \"woman.\" That sense is a Persian development. Persian moved the noun to mean a woman or a wife and handed that to Hindi and Urdu, on record from around 1420 — the same Persian relay that carried दोस्त."
+              "text": "Then the fact that changes what you do with all that: Arabic ʿawra does not mean \"woman.\" That sense is a Persian development. Persian moved the noun to mean a woman or a wife and handed that to Hindi and Urdu, on record from around 1420 — the same Persian relay that carried दोस्त (dost)."
             },
             {
               "kind": "speech",

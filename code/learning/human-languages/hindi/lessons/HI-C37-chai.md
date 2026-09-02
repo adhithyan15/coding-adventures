@@ -10,6 +10,7 @@ chapter: 37
 type: phrase
 headword: एक चाय दीजिए
 gloss: tea — feminine, and one of the two names the world uses for the same leaf
+romanization: "ek chāy dījie"
 concept_tag: HI-DRINK-TEA
 prerequisites: [HI-C36-kursi, HI-C08-kripaya, HI-C09-maaf-kijiye, HI-C15-paani-roti, HI-C06-numbers-1-5]
 sounds: [devanagari-long-aa, semivowel-ya]

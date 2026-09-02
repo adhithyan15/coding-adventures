@@ -10,6 +10,7 @@ chapter: 4
 type: phrase
 headword: कल मिलते हैं
 gloss: see you tomorrow (and the कल puzzle)
+romanization: "kal milte haiṁ"
 concept_tag: FAREWELL-TOMORROW
 prerequisites: [HI-C04-milenge, HI-C02-hai]
 sounds: [matra-a]

@@ -10,6 +10,7 @@ chapter: 36
 type: word
 headword: घर
 gloss: house, home — masculine, and from a Sanskrit word that meant a fenced enclosure before it meant a building
+romanization: "ghar"
 concept_tag: HI-HOME-HOUSE
 prerequisites: [HI-C04-phir-milenge, HI-W04-write-mera-naam]
 sounds: [aspirated-gha, spineless-ra]

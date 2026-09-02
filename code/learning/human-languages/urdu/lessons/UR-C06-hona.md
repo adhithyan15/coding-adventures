@@ -37,9 +37,10 @@ reviews_of: [UR-C04-main-hun, UR-C04-aap-kaise-hain]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-HUN, UR-GRAMMAR-MAIN-HUN-FRAME] -->
 
-[PAUSE 2s] You can already close an Urdu sentence with **ہوں** *hūṅ* — “am.”
-That small word is a fragment of something larger. Here is the whole verb it
-was broken off.
+[PAUSE 2s] You can already close an Urdu sentence with *hūṅ* — “am.” It is
+still spoken rather than written: its last shape is a nūn with no dot, and that
+letter arrives in the very next lesson. That small word is a fragment of
+something larger. Here is the whole verb it was broken off.
 
 ## You'll want to know first — one word
 <!-- hl-knowledge: introduces=[UR-LEX-HONA]; assesses=[] -->

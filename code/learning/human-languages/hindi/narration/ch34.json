@@ -4,14 +4,14 @@
   "chapter": 34,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:71f727a767931627",
+  "sourceHash": "fnv1a64:4f422a8487beacf8",
   "lessons": [
     {
       "id": "HI-C34-sochna",
       "sequence": 860,
       "title": "सोचना (sochnā) — \"to think,\" and it used to mean \"to grieve\"",
       "headword": "सोचना / सोच",
-      "romanization": "",
+      "romanization": "sochnā / soch",
       "gloss": "to think — a verb that began life meaning \"to grieve,\" and still keeps the worry inside the noun सोच",
       "script": "devanagari",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:034f4efa69bf8920",
+      "sourceHash": "fnv1a64:59f20933137f66c1",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "sequence": 870,
       "title": "समझना (samajhnā) — \"to understand,\" which is to say \"to wake up\"",
       "headword": "समझना",
-      "romanization": "",
+      "romanization": "samajhnā",
       "gloss": "to understand — literally \"to wake up fully,\" on the same root as Buddha",
       "script": "devanagari",
       "modality": "sight",
@@ -149,7 +149,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2c5aea41c3dd0d03",
+      "sourceHash": "fnv1a64:abb9e04f5fba986b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -215,7 +215,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The standard derivation takes समझना back to Sanskrit सम् (sam-, \"fully, together\") + the root बुध् (budh-, \"to wake, to become aware\"). Older Hindi still says समुझना (samujhnā), and that surviving -u- is the fingerprint of budh- before it wore down."
+              "text": "The standard derivation takes समझना (samajhnā) back to Sanskrit सम् (sam-, \"fully, together\") + the root बुध् (budh-, \"to wake, to become aware\"). Older Hindi still says समुझना (samujhnā), and that surviving -u- is the fingerprint of budh- before it wore down."
             },
             {
               "kind": "speech",
@@ -303,7 +303,7 @@
       "sequence": 880,
       "title": "पढ़ना (paṛhnā) — \"to read,\" and just as often \"to study\"",
       "headword": "पढ़ना",
-      "romanization": "",
+      "romanization": "paṛhnā",
       "gloss": "to read — and equally \"to study\", because the Sanskrit verb underneath it meant \"to recite aloud\"",
       "script": "devanagari",
       "modality": "sight",
@@ -311,7 +311,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1bc5ed3d123e8ff6",
+      "sourceHash": "fnv1a64:1baac8ca514bbf2c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -457,7 +457,7 @@
       "sequence": 890,
       "title": "लिखना (likhnā) — \"to write,\" which everywhere means \"to scratch\"",
       "headword": "लिखना",
-      "romanization": "",
+      "romanization": "likhnā",
       "gloss": "to write — from a Sanskrit verb meaning \"to scratch\", the same picture five language families reached independently",
       "script": "devanagari",
       "modality": "sight",
@@ -465,7 +465,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ba57294ed2cc7ccd",
+      "sourceHash": "fnv1a64:f90787246fd2fdf3",
       "notice": {
         "modality": "sight",
         "needs": [

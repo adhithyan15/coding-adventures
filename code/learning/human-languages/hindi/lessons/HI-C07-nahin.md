@@ -10,6 +10,7 @@ chapter: 7
 type: word
 headword: नहीं
 gloss: no / not (nahīṃ)
+romanization: "nahīṃ"
 concept_tag: RESPONSE-NO
 prerequisites: [HI-C07-haan]
 sounds: [anusvara-nasal, vowel-ii]

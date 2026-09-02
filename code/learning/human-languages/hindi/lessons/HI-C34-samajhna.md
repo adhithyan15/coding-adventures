@@ -10,6 +10,7 @@ chapter: 34
 type: word
 headword: समझना
 gloss: to understand — literally "to wake up fully," on the same root as Buddha
+romanization: "samajhnā"
 concept_tag: VERB-UNDERSTAND
 prerequisites: [HI-C34-sochna, HI-C09-maaf-kijiye]
 sounds: [aspirated-jha, dental-na]

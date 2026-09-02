@@ -1,0 +1,11 @@
+{
+  "id": "UR-EXT-017D-SCRIPT-ALIF-MADDA",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write alif madda and say which spelling a long a takes at the start of a word and which inside it.",
+  "prerequisites": [],
+  "lessons": [
+    "UR-W07-alif-madda"
+  ]
+}

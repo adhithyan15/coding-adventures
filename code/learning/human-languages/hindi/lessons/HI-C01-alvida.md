@@ -10,6 +10,7 @@ chapter: 1
 type: word
 headword: अलविदा
 gloss: goodbye (alvidā — a final farewell, Persian/Arabic-derived)
+romanization: "alvidā"
 concept_tag: FAREWELL
 prerequisites: [HI-C01-shukriya]
 sounds: [devanagari-independent-vowel, matra-i, matra-aa]

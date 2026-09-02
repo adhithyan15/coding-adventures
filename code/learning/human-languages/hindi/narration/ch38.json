@@ -4,14 +4,14 @@
   "chapter": 38,
   "title": "Six Words for Where It Hurts",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cd4409f00bdd77b2",
+  "sourceHash": "fnv1a64:928d72c883992c4f",
   "lessons": [
     {
       "id": "HI-C38-aankh",
       "sequence": 1020,
       "title": "आँख (āṁkh) — the eye, which is the same word in English",
       "headword": "आँख",
-      "romanization": "",
+      "romanization": "āṁkh",
       "gloss": "eye — feminine, and a word-for-word cousin of English \"eye\" and Latin \"oculus\"",
       "script": "devanagari",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a1a00f842f065e3f",
+      "sourceHash": "fnv1a64:67abf285491def83",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -78,11 +78,11 @@
             },
             {
               "kind": "speech",
-              "text": "Third feminine noun, third consonant ending: चाय, किताब, आँख. If you were still hoping the spelling would rescue you, let this settle it."
+              "text": "Third feminine noun, third consonant ending: चाय, किताब, आँख (āṁkh). If you were still hoping the spelling would rescue you, let this settle it."
             },
             {
               "kind": "speech",
-              "text": "And it is worth the effort, because these are the words a doctor asks about. मेरी आँख ठीक नहीं है — \"my eye is not well.\""
+              "text": "And it is worth the effort, because these are the words a doctor asks about. मेरी आँख (āṁkh) ठीक नहीं है — \"my eye is not well.\""
             }
           ]
         },
@@ -93,7 +93,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "आँख comes from Sanskrit अक्षि (akṣi), \"eye\" — and akṣi comes from the root h₃ekʷ-, which is one of the securest words in the whole family."
+              "text": "आँख (āṁkh) comes from Sanskrit अक्षि (akṣi), \"eye\" — and akṣi comes from the root h₃ekʷ-, which is one of the securest words in the whole family."
             },
             {
               "kind": "speech",
@@ -261,11 +261,11 @@
             },
             {
               "kind": "speech",
-              "text": "Now put the two side by side. आँख and दाँत (danta): same long ā, same chandrabindu, same single final consonant, both parts of the body, both everyday. आँख is feminine. दाँत (danta) is masculine."
+              "text": "Now put the two side by side. आँख (āṁkh) and दाँत (danta): same long ā, same chandrabindu, same single final consonant, both parts of the body, both everyday. आँख (āṁkh) is feminine. दाँत (danta) is masculine."
             },
             {
               "kind": "speech",
-              "text": "There is no rule underneath that. There is no reasoning that gets you from one to the other. This is the pair to hold up whenever you are tempted to guess: मेरी आँख, मेरा दाँत (danta)."
+              "text": "There is no rule underneath that. There is no reasoning that gets you from one to the other. This is the pair to hold up whenever you are tempted to guess: मेरी आँख (āṁkh), मेरा दाँत (danta)."
             }
           ]
         },
@@ -382,7 +382,7 @@
       "sequence": 1040,
       "title": "पैर (pair) — the foot, and the ancestor it does not have",
       "headword": "पैर / पाँव",
-      "romanization": "",
+      "romanization": "pair / pāṁv",
       "gloss": "foot — the two everyday forms descend from different Sanskrit stems, पैर from pad- and पाँव from pāda",
       "script": "devanagari",
       "modality": "voice",
@@ -390,7 +390,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8b3bb4e08d480d62",
+      "sourceHash": "fnv1a64:e4e38a968398fa12",
       "notice": null,
       "blocks": [
         {
@@ -541,7 +541,7 @@
       "sequence": 1050,
       "title": "पेट (peṭ) — the belly, and a trail that genuinely stops",
       "headword": "पेट",
-      "romanization": "",
+      "romanization": "peṭ",
       "gloss": "stomach, belly — masculine, and the one word in this chapter with no clean ancestry at all",
       "script": "devanagari",
       "modality": "sight",
@@ -549,7 +549,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9f8fcb69efdd6921",
+      "sourceHash": "fnv1a64:5e492ae0bcc04f44",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -612,7 +612,7 @@
             },
             {
               "kind": "speech",
-              "text": "The sentence, with नहीं in its usual place just before है: मेरा पेट ठीक नहीं है — which, said in India, means what it says and rather more."
+              "text": "The sentence, with नहीं in its usual place just before है: मेरा पेट (peṭ) ठीक नहीं है — which, said in India, means what it says and rather more."
             }
           ]
         },
@@ -631,7 +631,7 @@
             },
             {
               "kind": "speech",
-              "text": "So: the origin of पेट is unsettled, with Dravidian leading — the honesty रोटी needed, one lesson away from पानी, whose story is exact. A language is made of what people said, and some of that came from neighbours speaking something else."
+              "text": "So: the origin of पेट (peṭ) is unsettled, with Dravidian leading — the honesty रोटी needed, one lesson away from पानी, whose story is exact. A language is made of what people said, and some of that came from neighbours speaking something else."
             },
             {
               "kind": "speech",
@@ -701,7 +701,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where does पेट come from? (Unsettled — Prakrit peṭṭa, most likely a Dravidian loan; the \"basket\" link is a resemblance.) Of your six body words, which takes मेरी? (आँख.) Which earlier word had the same honest dead end? (रोटी, beside पानी.)"
+              "text": "Where does पेट come from? (Unsettled — Prakrit peṭṭa, most likely a Dravidian loan; the \"basket\" link is a resemblance.) Of your six body words, which takes मेरी? (आँख (āṁkh).) Which earlier word had the same honest dead end? (रोटी, beside पानी.)"
             }
           ]
         }

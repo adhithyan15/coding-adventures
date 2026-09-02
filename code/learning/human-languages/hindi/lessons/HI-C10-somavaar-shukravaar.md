@@ -10,6 +10,7 @@ chapter: 10
 type: word
 headword: सोमवार मंगलवार बुधवार गुरुवार शुक्रवार / वार
 gloss: Monday–Friday — Hindi's own planet-week, independent of Rome's
+romanization: "somavār maṅgalvār budhvār guruvār śukravār"
 concept_tag: HI-DAYS-WEEKDAYS
 prerequisites: [HI-C06-paanch-nasal]
 sounds: [devanagari-conjunct-kra, anusvara]
