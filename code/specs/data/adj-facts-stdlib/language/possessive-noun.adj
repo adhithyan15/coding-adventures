@@ -4,7 +4,7 @@
 % (adj-facts-stdlib, LANGUAGE).
 % ============================================================================
 % A possessive noun shows ownership. English forms it three different ways
-% depending on the base noun: a singular noun adds 's ("the dog's collar"),
+% depending on the base noun: a singular noun adds 's ("the dog’s collar"),
 % a regular plural noun (already ending in s) adds only an apostrophe ("the
 % bottles' shelf"), and an irregular plural noun (one that doesn't end in s)
 % adds 's just like a singular noun would ("the geese's flock"). Recall is a
@@ -37,7 +37,7 @@
 %
 %     word (this table's atom label)   category               example sentence (verbatim)
 %     --------------------------------  ---------------------  ------------------------------------------------
-%     dog                                singular_possessive    "I adjusted the dog's collar."
+%     dog                                singular_possessive    "I adjusted the dog’s collar."
 %     bottles                            plural_possessive       "The glasses are under the bottles' shelf."
 %     geese                              irregular_possessive    "We followed them back to the geese's flock."
 %
@@ -60,7 +60,7 @@ table possessive_noun {
     row (bottles, plural_possessive)
     row (geese, irregular_possessive)
 
-    source "I adjusted the dog's collar."
+    source "I adjusted the dog’s collar."
     locator "https://www.grammarly.com/blog/parts-of-speech/possessive-nouns/"
     trust consensus
 }

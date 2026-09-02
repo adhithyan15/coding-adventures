@@ -36,9 +36,9 @@
 %   "I can say each syllable in a word and then I can blend the syllables to
 %    say the word. As I say each syllable, I will lay down a card. I will
 %    lay the cards left to right. Watch me. I say each syllable and put down
-%    a card: 'lap' [place a card] 'top' [place a card so it appears
+%    a card: ‘lap’ [place a card] ‘top’ [place a card so it appears
 %    left-to-right for students]. Now I sweep my finger below the cards and
-%    say the whole word: 'laptop' [sweep finger below the cards
+%    say the whole word: ‘laptop’ [sweep finger below the cards
 %    left-to-right]."
 %
 % `trust consensus` — the same tier this page's sibling sections already
@@ -60,7 +60,7 @@ table syllable_blending {
 
     row (lap, top, laptop)
 
-    source "I can say each syllable in a word and then I can blend the syllables to say the word. As I say each syllable, I will lay down a card. I will lay the cards left to right. Watch me. I say each syllable and put down a card: 'lap' [place a card] 'top' [place a card so it appears left-to-right for students]. Now I sweep my finger below the cards and say the whole word: 'laptop' [sweep finger below the cards left-to-right]."
+    source "I can say each syllable in a word and then I can blend the syllables to say the word. As I say each syllable, I will lay down a card. I will lay the cards left to right. Watch me. I say each syllable and put down a card: ‘lap’ [place a card] ‘top’ [place a card so it appears left-to-right for students]. Now I sweep my finger below the cards and say the whole word: ‘laptop’ [sweep finger below the cards left-to-right]."
     locator "https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice"
     trust consensus
 }

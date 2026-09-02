@@ -34,8 +34,8 @@
 % the four genuinely confirmed words below are shipped):
 %
 %   peanut -> 2
-%     "I say the whole word: 'Peanut'. I say each syllable and put down a
-%      card: 'pea' [place a card] 'nut' [place a card so it appears
+%     "I say the whole word: ‘Peanut’. I say each syllable and put down a
+%      card: ‘pea’ [place a card] ‘nut’ [place a card so it appears
 %      left-to-right for students]."
 %   pencil -> 2
 %     "The word is: 'pencil'. 'Pen' 'cil' [place a card for each syllable
@@ -69,7 +69,7 @@ table syllable_count {
     row (sunset, 2)
     row (laptop, 2)
 
-    source "I say the whole word: 'Peanut'. I say each syllable and put down a card: 'pea' [place a card] 'nut' [place a card so it appears left-to-right for students]."
+    source "I say the whole word: ‘Peanut’. I say each syllable and put down a card: ‘pea’ [place a card] ‘nut’ [place a card so it appears left-to-right for students]."
     locator "https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice"
     trust consensus
 }
