@@ -54,9 +54,20 @@ fn chemistry_mixture_example_recall_binds_example_with_citation() {
     // shipped. Pinning a fragment narrows that hole rather than closing
     // it, because `contains` on a fragment cannot see what precedes or
     // follows it. See issue #13918.
+    // THIS PIN USED TO ASSERT A FIVE-CLAUSE JOINED VALUE, AND IT WAS RIGHT TO.
+    // Its reasoning -- anchor on the JSON key, close on the terminating quote,
+    // never pin a fragment -- is the discipline used throughout this effort,
+    // and it caught a bad repair that replaced the join with a single block
+    // grounding NONE of the five rows.
+    //
+    // But what it was faithfully defending was a CONSTRUCTED SPAN: five real
+    // sentences joined with " … ", a string no page displays. An anchored pin
+    // defends whatever it is pointed at, including a defect. The join is now
+    // split into one `source` plus four `cites`, so each row has its own
+    // verbatim span, and the pin is repointed at the envelope.
     assert!(
-        out.contains("\"source\":\"The salt water described above is homogeneous because the dissolved salt is evenly distributed throughout the entire salt water sample. … When the salt is thoroughly mixed into the water in this glass, it will form a solution. … Vegetable soup is a heterogeneous mixture. … The salad dressing in this bottle is a suspension. … Homogenized milk is a colloid.\""),
-        "the citation is the whole source sentence, exactly: {out}"
+        out.contains("\"source\":\"A homogeneous mixture is a mixture in which the composition is uniform throughout the mixture. The salt water described above is homogeneous because the dissolved salt is evenly distributed throughout the entire salt water sample.\""),
+        "the envelope is one verbatim block, not a join: {out}"
     );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     // A colloid's everyday example is milk; a suspension's is salad dressing —
@@ -80,4 +91,64 @@ fn chemistry_mixture_example_recall_binds_example_with_citation() {
     );
     // "alloy" is not in the table — honest abstention, never a fabricated example.
     assert!(out.contains("\"abstained\":true"), "alloy abstains: {out}");
+}
+
+const MT_SUSP_PIN: &str = r#""bindings":{"Example":"salad_dressing"},"citations":[{"source":"A homogeneous mixture is a mixture in which the composition is uniform throughout the mixture. The salt water described above is homogeneous because the dissolved salt is evenly distributed throughout the entire salt water sample.","locator":"https://chem.libretexts.org/Courses/Mendocino_College/Introduction_to_Chemistry_(CHM_200)/09:_Solutions_and_Aqueous_Mixtures/9.01:_Mixtures","trust":"consensus","corroborations":[{"source":"When the salt is thoroughly mixed into the water in this glass, it will form a solution.","locator":"https://chem.libretexts.org/Courses/Mendocino_College/Introduction_to_Chemistry_(CHM_200)/09:_Solutions_and_Aqueous_Mixtures/9.01:_Mixtures"},{"source":"A heterogeneous mixture is a mixture in which the composition is not uniform throughout the mixture. Vegetable soup is a heterogeneous mixture.","locator":"https://chem.libretexts.org/Courses/Mendocino_College/Introduction_to_Chemistry_(CHM_200)/09:_Solutions_and_Aqueous_Mixtures/9.01:_Mixtures"},{"source":"The salad dressing in this bottle is a suspension.","locator":"https://chem.libretexts.org/Courses/Mendocino_College/Introduction_to_Chemistry_(CHM_200)/09:_Solutions_and_Aqueous_Mixtures/9.01:_Mixtures""#;
+
+const MT_ALL_PIN: &str = r#""bindings":{"Kind":"heterogeneous"},"citations":[{"source":"A homogeneous mixture is a mixture in which the composition is uniform throughout the mixture. The salt water described above is homogeneous because the dissolved salt is evenly distributed throughout the entire salt water sample.","locator":"https://chem.libretexts.org/Courses/Mendocino_College/Introduction_to_Chemistry_(CHM_200)/09:_Solutions_and_Aqueous_Mixtures/9.01:_Mixtures","trust":"consensus","corroborations":[{"source":"When the salt is thoroughly mixed into the water in this glass, it will form a solution.","locator":"https://chem.libretexts.org/Courses/Mendocino_College/Introduction_to_Chemistry_(CHM_200)/09:_Solutions_and_Aqueous_Mixtures/9.01:_Mixtures"},{"source":"A heterogeneous mixture is a mixture in which the composition is not uniform throughout the mixture. Vegetable soup is a heterogeneous mixture.","locator":"https://chem.libretexts.org/Courses/Mendocino_College/Introduction_to_Chemistry_(CHM_200)/09:_Solutions_and_Aqueous_Mixtures/9.01:_Mixtures"},{"source":"The salad dressing in this bottle is a suspension.","locator":"https://chem.libretexts.org/Courses/Mendocino_College/Introduction_to_Chemistry_(CHM_200)/09:_Solutions_and_Aqueous_Mixtures/9.01:_Mixtures"},{"source":"Homogenized milk is a colloid.","locator":"https://chem.libretexts.org/Courses/Mendocino_College/Introduction_to_Chemistry_(CHM_200)/09:_Solutions_and_Aqueous_Mixtures/9.01:_Mixtures""#;
+
+#[test]
+fn mixture_types_suspension_answer_carries_its_own_corroboration() {
+    let dir = scratch("cite_susp");
+    std::fs::copy(
+        facts_stdlib().join("chemistry/mixture-types.adj"),
+        dir.join("mixture-types.adj"),
+    )
+    .expect("copy shipped mixture-types.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"mixture-types.adj\"\n? mixture_example(suspension, $Example)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // suspension was the row whose evidence was hardest to find, and the one
+    // most likely to be grounded wrongly: the page's FIRST block mentioning
+    // salad dressing calls it a "liquid mixture" and never says suspension.
+    // The sentence that does is four blocks later. Reading every occurrence
+    // rather than the first match is what separated them.
+    //
+    // The pin runs through suspension's OWN corroboration (index 2), not
+    // corroborations[0] -- a prefix pin would bind the `solution` sentence
+    // while claiming to check this row.
+    assert!(
+        out.contains(MT_SUSP_PIN),
+        "suspension's answer carries the sentence that names it: {out}"
+    );
+}
+
+#[test]
+fn mixture_types_reverse_answer_carries_all_four_cites_in_order() {
+    let dir = scratch("cite_mtall");
+    std::fs::copy(
+        facts_stdlib().join("chemistry/mixture-types.adj"),
+        dir.join("mixture-types.adj"),
+    )
+    .expect("copy shipped mixture-types.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"mixture-types.adj\"\n? mixture_example($Kind, vegetable_soup)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // Spans the whole four-cite list. The five spans replaced ONE joined
+    // value, so a reorder or a dropped middle entry must fail here even
+    // though every sentence is still present somewhere in the blob.
+    assert!(
+        out.contains(MT_ALL_PIN),
+        "the answer carries all four corroborations in order: {out}"
+    );
 }
