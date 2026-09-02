@@ -164,25 +164,90 @@ becomes these components (§6).
 
 ---
 
+## 4.5 Where each backend can be verified
+
+Relevant because it decides what a developer can prove locally versus what must
+wait for CI. Verified against a working macOS checkout.
+
+| Backend | macOS | Linux | Windows |
+| --- | --- | --- | --- |
+| `react`, `html`, `webcomponent` | yes | yes | yes |
+| `qt` | yes | yes | yes |
+| `flutter` | yes | yes | yes |
+| `compose` | yes (JVM) | yes | yes |
+| `paint` | yes (cairo) | yes | yes |
+| `swiftui` | **yes — only here** | no | no |
+| iOS | **yes — only here** | no | no |
+| `xaml` / WinUI | **no** | no | **yes — only here** |
+
+**A Mac covers eight of the nine backends**, and is strictly better than a Linux
+box for this work because SwiftUI and the iOS simulator exist nowhere else.
+
+The one gap is WinUI. Installing .NET on macOS does not close it: WinUI 3 needs
+the Windows App SDK and a `net9.0-windows10.0.*` target framework, neither of
+which resolves off Windows. XAML is therefore CI-only, and every component's
+definition of done must treat the Windows leg as something proven by the
+release lane rather than by the author.
+
+---
+
 ## 5. Build order
 
-Strictly leaf to root. Each phase completes — stories, CI gate, package,
-published, test app released — before the next begins.
+Two tracks run in parallel, because they block on different things: Track A is
+release and distribution plumbing for components that already exist, and Track B
+is a small real app that proves the components are actually usable. Within each
+track, order is strictly leaf to root.
 
-- **Phase 0 — infrastructure.** The four gaps in §2 — MosaicBook in CI
-  ([#14012](https://github.com/adhithyan15/coding-adventures/issues/14012)), native previews ([#14013](https://github.com/adhithyan15/coding-adventures/issues/14013)), publishing
-  ([#14014](https://github.com/adhithyan15/coding-adventures/issues/14014)), the test-app lane ([#14015](https://github.com/adhithyan15/coding-adventures/issues/14015)). Nothing else
-  can be "done" until "done" is enforceable.
-- **Phase 1 — L1 atoms.** Retrofit the 23 existing toolkit components to the
-  full contract first ([#14017](https://github.com/adhithyan15/coding-adventures/issues/14017)); they are already written, so this
-  measures what the contract costs before it is imposed on new work. Then the
-  four missing atoms.
-- **Phase 2 — L0 gaps.** `HostNavigationSplit` and the host environment. Placed
-  after Phase 1 because both need real components to demonstrate against.
-- **Phase 3 — L2 molecules.** `SegmentedControl` first ([#14016](https://github.com/adhithyan15/coding-adventures/issues/14016)).
-- **Phase 4 — L3 organisms**, including folding in Checklist ([#14018](https://github.com/adhithyan15/coding-adventures/issues/14018)).
-- **Phase 5 — L4.** TaskApp is rebuilt on the tree. Only here does the app
-  stop being an empty screen.
+### Track A — make what exists visible
+
+Every component already built gets released with a test app that can be
+downloaded and run, and a showcase page that links to it. Nothing here requires
+a new component; it is entirely the "done" contract applied to existing work.
+
+- **A1 — the four Phase 0 gaps:** MosaicBook in CI ([#14012](https://github.com/adhithyan15/coding-adventures/issues/14012)),
+  native previews ([#14013](https://github.com/adhithyan15/coding-adventures/issues/14013)), publishing ([#14014](https://github.com/adhithyan15/coding-adventures/issues/14014)),
+  the test-app lane ([#14015](https://github.com/adhithyan15/coding-adventures/issues/14015)).
+- **A2 — a Mosaic section on GitHub Pages** ([#14026](https://github.com/adhithyan15/coding-adventures/issues/14026)). The repository already deploys 18
+  sub-sites this way (`destination_dir: arithmetic`, `engram`,
+  `language-ladder`, …), so this is a new `destination_dir: mosaic` and a
+  landing page, not new infrastructure. Each component links to its release
+  artifacts and its live web build.
+- **A3 — retrofit the existing 23 toolkit components** to the full §7 contract
+  ([#14017](https://github.com/adhithyan15/coding-adventures/issues/14017)), shipping each one's test app and showcase entry as it
+  lands.
+
+### Track B — Checklist as reference app one ([#14027](https://github.com/adhithyan15/coding-adventures/issues/14027))
+
+The Checklist app is the first release target, not TaskApp. It is a genuinely
+smaller consumer, and the gap is not marginal:
+
+| | Checklist needs | TaskApp needs |
+| --- | --- | --- |
+| Existing toolkit components | `Checkbox`, `Button`, `ListGroup`, `Accordion`, `Field`, `Input`, `Select`, `Modal`, `Badge`, `Alert` — all shipped | the same, plus much more |
+| Missing atoms | `EmptyState`, a progress indicator | `Chip`, `StatusPill`, `EmptyState`, `Icon`, `ProgressRing` |
+| Missing molecules | none — `Accordion` already covers branch disclosure | `SegmentedControl`, `Legend`, `ValidatedField`, `InlineEditForm`, `Composer`, `StatusPanel`, `Toolbar` |
+| New L3 | `ChecklistItem`, `DecisionNode`, `ChecklistRunner`, `TemplateEditor` | `TaskRow`, `TaskList`, `TaskDetail`, `Board`+`BoardColumn`+`BoardCard`, `GanttChart` |
+| Missing kernel primitives | none | `HostNavigationSplit`, host environment (#14003) |
+
+Checklist needs **two missing atoms and no new kernel primitives**. TaskApp
+needs five atoms, seven molecules, and two kernel primitives that do not exist.
+That is the whole argument for the order.
+
+- **B1 —** the two missing atoms Checklist needs.
+- **B2 —** the four Checklist L3 components, each in isolation.
+- **B3 —** the Checklist app itself, released, replacing the Electron version
+  ([#14018](https://github.com/adhithyan15/coding-adventures/issues/14018)).
+
+### Then TaskApp
+
+- **C1 —** remaining atoms and molecules, `SegmentedControl` first
+  ([#14016](https://github.com/adhithyan15/coding-adventures/issues/14016)).
+- **C2 —** the kernel gaps: `HostNavigationSplit`, host environment (#14003).
+- **C3 —** TaskApp's L3 organisms, then the app.
+
+Each phase completes — stories, CI gate, package, published, test app released —
+before the next begins.
+
 
 ---
 
