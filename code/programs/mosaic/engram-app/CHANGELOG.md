@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- The deck list on the home screen shows each deck's due and new counts, so the
+  screen answers "what should I study?" without selecting each deck in turn.
+- `onSelectDeck` carries a row index; see the `mosaic-pkg-deck-stats` changelog
+  for why.
+
 - **Fixed: the web bundle only worked when served from a domain root.** The
   React host's `WASM_URL` was `"/engram_engine.wasm"` — root-absolute — while
   its sibling `engram-host.mjs` had always used the relative form. The `.ts`

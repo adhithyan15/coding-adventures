@@ -408,9 +408,11 @@ mod tests {
             props.contains(r#""collection-note-count-value":"5""#),
             "{props}"
         );
+        // [ name, due, new ] per deck -- only Tamil has anything due, so only
+        // its row carries a due count.
         assert!(
             props.contains(
-                r#""deck-names":["Tamil::Script and Roots","Hindi::Devanagari","Kannada::Script","Spanish::Latin Roots"]"#
+                r#""deck-rows":[["Tamil::Script and Roots","1 due","1 new"],["Hindi::Devanagari","","1 new"],["Kannada::Script","","1 new"],["Spanish::Latin Roots","","1 new"]]"#
             ),
             "{props}"
         );

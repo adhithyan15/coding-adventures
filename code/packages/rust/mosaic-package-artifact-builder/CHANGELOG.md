@@ -10,6 +10,20 @@ the Qt, Compose and Flutter predicates it already used. SwiftUI lowers a
 qualifying run of sibling radios to a `Picker` (#13007), so the degradation is
 reported only for the groups it genuinely cannot resolve.
 
+### Fixed — a `list<list<text>>` slot never read the host
+
+A slot typed as a list of rows fell through the host-binding match to the
+*sample* value — a constant — while every neighbouring prop read from the host
+correctly. The generated shell therefore compiled, ran, and showed an **empty
+table** no matter what the host sent.
+
+Rows are how every table in Mosaic is modelled: Engram's deck list, TaskApp's
+project nav. So this was not an exotic corner, it was the one slot shape whose
+whole purpose is to carry data, silently bound to nothing.
+
+Adds a nested-list reader (`mosaicStringListList` / `MosaicHostValue.stringListList`)
+and the match arm that reaches it.
+
 **The emit report now records when a package overwrites generated files.** New
 `DegradationReport::replaced_generated_files` (`replacedGeneratedFiles` in the
 JSON), listing generated files a package's `[host_assets]` replaced.
