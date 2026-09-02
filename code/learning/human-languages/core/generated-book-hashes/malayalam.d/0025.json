@@ -1,9 +1,10 @@
 {
   "language": "malayalam",
   "chapter": 25,
-  "sourceHash": "fnv1a64:08f43823c074712b",
+  "sourceHash": "fnv1a64:de2fcd2a29ef63a6",
   "lessonIds": [
-    "ML-C25-shubha-rathri"
+    "ML-C25-shubha-rathri",
+    "ML-S129-letter-bha"
   ],
   "tex": "malayalam/book/chapters/ch25-good-night.tex"
 }

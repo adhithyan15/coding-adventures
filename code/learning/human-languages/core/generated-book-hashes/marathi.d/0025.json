@@ -1,12 +1,18 @@
 {
   "language": "marathi",
   "chapter": 25,
-  "sourceHash": "fnv1a64:17717a752838f9f1",
+  "sourceHash": "fnv1a64:299f7579b7b8b8aa",
   "lessonIds": [
-    "MR-R25-twelve-verbs",
-    "MR-R25-dative-frame",
-    "MR-R25-recognition-script",
-    "MR-R25-recognition-words"
+    "MR-A1F04-first-three-select",
+    "MR-A1F05-last-three-select",
+    "MR-A1F06-first-three-supported",
+    "MR-A1F07-first-three-spelling",
+    "MR-A1F08-last-three-supported",
+    "MR-A1F09-last-three-agreement",
+    "MR-A1F10-first-three-delayed",
+    "MR-A1F11-last-three-delayed",
+    "MR-A1F12-six-field-supported",
+    "MR-A1F13-six-field-independent"
   ],
-  "tex": "marathi/book/chapters/ch25-twelve-verbs-r2.tex"
+  "tex": "marathi/book/chapters/ch25-a1-practical-form.tex"
 }

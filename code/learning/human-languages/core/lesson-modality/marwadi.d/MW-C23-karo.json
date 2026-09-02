@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C23-karo",
+    "language": "marwadi",
+    "chapter": 28,
+    "sequence": 2250,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f4ce765e49ea682f"
+  },
+  "findings": []
+}

@@ -1,0 +1,16 @@
+{
+  "language": "gujarati",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:9ed942e54e9e444a",
+  "lessonIds": [
+    "GU-C28-hear-baarnun",
+    "GU-C28-hear-baari",
+    "GU-C28-hear-khurshi",
+    "GU-C28-hear-chaavi",
+    "GU-C28-hear-divo",
+    "GU-C28-house-five",
+    "GU-C28-baari",
+    "GU-R28-house-five-r1"
+  ],
+  "tex": "gujarati/book/chapters/ch32-inside-the-house.tex"
+}

@@ -209,8 +209,12 @@ impl ValidatedModule {
 ///    (imports + module); each memory's `min`/`max` also capped at the
 ///    real spec's 65536-page ceiling.
 /// 2. **Table count** -- at most `wasm_execution::MAX_TABLES`
-///    (imports + module); each table's `min` also capped at this
-///    interpreter's own `MAX_TABLE_ELEMENTS` resource limit.
+///    (imports + module). A table's declared `min` is NOT capped here
+///    (gap 2 of the W-next `elem.wast`/`table.wast` investigation pass --
+///    the real spec places no ceiling on merely declaring an oversized
+///    table; this interpreter's own `MAX_TABLE_ELEMENTS` resource limit
+///    is enforced only at actual instantiation/allocation time instead,
+///    in `wasm-runtime::instantiate`).
 /// 3. **Function type indices** -- Every entry in the function section must
 ///    reference a valid index in the type section.
 /// 4. **Import type indices** -- Function imports must reference valid types.
@@ -431,72 +435,54 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
         )));
     }
 
-    // ── Check 2b: Table limits ≤ MAX_TABLE_ELEMENTS ─────────────────────
+    // ── (Former) Check 2b: 32-bit table `min` ≤ MAX_TABLE_ELEMENTS ──────
     //
-    // Security review (task #96): unlike Check 1b above, this is NOT a
-    // real spec requirement for a 32-bit table -- WASM's own spec allows a
-    // 32-bit table `min` up to `2^32 - 1` -- it's this interpreter's own
-    // implementation-defined resource limit, matching `Table::new`'s eager
-    // `vec![None; min]` allocation cost. See `MAX_TABLE_ELEMENTS`'s own doc
-    // comment for the full reasoning, including why raising `MAX_TABLES`
-    // from 1 to 64 (this same task) made an unvalidated `min` a real
-    // amplified DoS vector worth closing now rather than leaving as a
-    // pre-existing gap.
+    // REMOVED (gap 2 of the W-next `elem.wast`/`table.wast` investigation
+    // pass, `code/specs/W07-wasm-post-mvp-epics.md`'s addendum) -- this
+    // check used to reject, AT STRUCTURAL VALIDATION TIME, any 32-bit
+    // table whose declared `min` exceeded this interpreter's own
+    // `MAX_TABLE_ELEMENTS` resource-limit heuristic (both per-table and,
+    // below, summed across every 32-bit table). Its own doc comment
+    // already said as much -- "unlike Check 1b above, this is NOT a real
+    // spec requirement... it's this interpreter's own implementation-
+    // defined resource limit" -- but that comment stopped short of the
+    // conclusion table.wast's real corpus makes unavoidable: an
+    // implementation MAY refuse to actually ALLOCATE an oversized table,
+    // but the real spec places no ceiling on merely DECLARING one, and a
+    // module that only declares (never instantiates) such a table is
+    // genuinely valid. `table.wast`'s own `(module definition (table
+    // 0xffff_ffff funcref))` -- a bare, unwrapped directive (no
+    // `assert_invalid` around it) -- is exactly this: the official
+    // testsuite itself asserts this declaration validates. `wasm-
+    // validator` rejecting it here was a real conformance bug, not a
+    // defensible implementation choice, exactly the same "declare freely,
+    // refuse only at real allocation time" shape `is64` tables and BOTH
+    // `is64`/32-bit MEMORIES already use elsewhere in this same function
+    // (Check 1b above defers a 64-bit memory's own, much larger, spec
+    // ceiling to `wasm-runtime::instantiate`'s `LinearMemory::
+    // new_with_is64`; `is64` tables already deferred to `Table::
+    // new_with_is64` the same way -- this fix just extends that same
+    // discipline to 32-bit tables' `min`, closing the inconsistency
+    // rather than leaving it as a 32-bit-only special case).
     //
-    // W26 (table64 proposal): an `is64` table's REAL spec ceiling is
-    // `u64::MAX` (verified live against the reference interpreter's own
-    // `interpreter/valid/valid.ml::check_tabletype` -- table64's ceiling is
-    // NOT the same `2^48`-page bound memory64 uses; tables aren't measured
-    // in byte-multiplying "pages", so the proposal imposes no equivalent
-    // artificial cap). No `u64` value can ever exceed `u64::MAX`, so this
-    // per-item check is unconditionally satisfied for `is64` tables --
-    // skipped explicitly below (not silently applied and coincidentally
-    // passing) -- and `is64` tables are excluded from the 32-bit aggregate
-    // for the same reason `W25`'s Check 1b excludes `is64` memories: the
-    // aggregate is calibrated for the 32-bit case, where the practical
-    // allocation ceiling and this check's bound coincide; that's no longer
-    // true once `is64` can legitimately declare a `min` this interpreter
-    // will refuse to actually allocate (see `Table::new_with_is64`'s own
-    // separate, real practical cap at INSTANTIATION time instead).
+    // Not a DoS regression: `Table::new_with_is64` (the constructor
+    // EVERY declared table already goes through in `wasm-runtime::
+    // instantiate`, `is64` or not) already has its own real,
+    // unconditional per-table `MAX_TABLE_ELEMENTS` cap, returning a
+    // graceful `TrapError` instead of attempting the allocation -- see
+    // that constructor's own doc comment ("the cap is checked
+    // UNCONDITIONALLY, not only when `is64`"). This structural check was
+    // always redundant with that one for the single-table case; the only
+    // real gap closed by moving instead of just deleting is the
+    // AGGREGATE case (many individually-under-cap tables summing past
+    // it) -- `wasm-runtime::instantiate`'s own table-aggregate check
+    // (previously `is64`-only, generalized by this same fix to cover
+    // every table) now closes that for 32-bit tables too, the same place
+    // the equivalent `is64` aggregate already lived.
     //
-    // Same aggregate-vs-per-item gap as Check 1b above (2nd round
-    // finding): 64 tables each at `MAX_TABLE_ELEMENTS` would still total
-    // ~5.1GB from one small module. Tracks a running total across every
-    // 32-bit table (imported + declared) and caps the SUM at the same
-    // `MAX_TABLE_ELEMENTS` bound too -- still permits any single table at
-    // its full implementation-defined max, just not many of them at once.
-    let mut total_table_elements: u64 = 0;
-    for (i, tt) in module.tables.iter().enumerate() {
-        if !tt.is64 && tt.limits.min > wasm_execution::MAX_TABLE_ELEMENTS as u64 {
-            return Err(ValidationError::Other(format!(
-                "table #{i}: declared minimum {} elements exceeds this interpreter's resource limit of {}",
-                tt.limits.min,
-                wasm_execution::MAX_TABLE_ELEMENTS
-            )));
-        }
-        if !tt.is64 {
-            total_table_elements += tt.limits.min;
-        }
-    }
-    for imp in &module.imports {
-        if let ImportTypeInfo::Table(tt) = &imp.type_info {
-            if !tt.is64 && tt.limits.min > wasm_execution::MAX_TABLE_ELEMENTS as u64 {
-                return Err(ValidationError::Other(format!(
-                    "imported table {}.{}: declared minimum {} elements exceeds this interpreter's resource limit of {}",
-                    imp.module_name, imp.name, tt.limits.min, wasm_execution::MAX_TABLE_ELEMENTS
-                )));
-            }
-            if !tt.is64 {
-                total_table_elements += tt.limits.min;
-            }
-        }
-    }
-    if total_table_elements > wasm_execution::MAX_TABLE_ELEMENTS as u64 {
-        return Err(ValidationError::Other(format!(
-            "total declared elements across all 32-bit tables is {total_table_elements}, exceeding the aggregate cap of {}",
-            wasm_execution::MAX_TABLE_ELEMENTS
-        )));
-    }
+    // The real spec-mandated "`min` <= `max`" rule (Check 1c above) is
+    // UNCHANGED and still enforced here at validation time -- only the
+    // extra, non-spec resource-limit heuristic moved.
 
     // ── Check 3: Import type indices ────────────────────────────────────
     for (i, imp) in module.imports.iter().enumerate() {
@@ -1492,23 +1478,33 @@ mod tests {
         assert!(validate(&module).is_ok());
     }
 
-    /// Security review (task #96): raising `MAX_TABLES` from 1 to 64
-    /// amplified a pre-existing gap -- a table's declared `min` was never
-    /// bounds-checked before reaching `Table::new`'s eager
-    /// `vec![None; min]` allocation. Unlike memory's real spec-mandated
-    /// 65536-page ceiling, this is an implementation-defined resource
-    /// limit (real WASM allows a table `min` up to `2^32 - 1`).
+    /// Gap 2 of the W-next `elem.wast`/`table.wast` investigation pass
+    /// (`code/specs/W07-wasm-post-mvp-epics.md`'s addendum): a 32-bit
+    /// table declaring far more than this interpreter's own
+    /// `MAX_TABLE_ELEMENTS` resource-limit heuristic must still validate
+    /// successfully -- the real spec allows a 32-bit table `min` up to
+    /// `2^32 - 1`, and merely DECLARING a table never allocates anything.
+    /// `table.wast`'s own real corpus case, `(module definition (table
+    /// 0xffff_ffff funcref))` (`u32::MAX`, no `max`), is exactly this
+    /// shape -- a bare, unwrapped directive the official testsuite itself
+    /// asserts must validate. This replaces the OLD `rejects_a_table_
+    /// declaring_more_than_max_table_elements` test, which asserted the
+    /// opposite (now-corrected) behavior. The practical resource limit is
+    /// still enforced for real, just moved to actual instantiation time
+    /// (`Table::new_with_is64` in `wasm-execution`, called from
+    /// `wasm-runtime::instantiate`) -- see that constructor's own tests
+    /// for the "declares fine, fails to instantiate" half of this story.
     #[test]
-    fn rejects_a_table_declaring_more_than_max_table_elements() {
+    fn accepts_a_32bit_table_declaring_far_more_than_max_table_elements() {
         let module = WasmModule {
             tables: vec![TableType {
                 element_type: 0x70,
-                limits: Limits { min: wasm_execution::MAX_TABLE_ELEMENTS as u64 + 1, max: None },
-             is64: false,}],
+                limits: Limits { min: u32::MAX as u64, max: None },
+                is64: false,
+            }],
             ..Default::default()
         };
-        let err = validate(&module).unwrap_err();
-        assert!(matches!(err, ValidationError::Other(_)), "{err:?}");
+        assert!(validate(&module).is_ok(), "{:?}", validate(&module));
     }
 
     #[test]
@@ -1523,13 +1519,13 @@ mod tests {
         assert!(validate(&module).is_ok());
     }
 
-    /// Security review, 2nd round (task #96): same aggregate-vs-per-item
-    /// gap as memory's Check 1b above -- two tables each under the
-    /// per-table `MAX_TABLE_ELEMENTS` cap can still sum past it, even
-    /// though neither is rejected individually by Check 2b's per-item
-    /// check.
+    /// The former aggregate check (many individually-under-cap 32-bit
+    /// tables summing past `MAX_TABLE_ELEMENTS`) also moved to
+    /// `wasm-runtime::instantiate` alongside the per-table check above --
+    /// validation alone must accept this now, same reasoning as the
+    /// single-table case.
     #[test]
-    fn rejects_tables_whose_combined_elements_exceed_the_aggregate_cap() {
+    fn accepts_tables_whose_combined_elements_exceed_the_old_aggregate_cap() {
         let module = WasmModule {
             tables: vec![
                 TableType {
@@ -1541,11 +1537,10 @@ mod tests {
             ],
             ..Default::default()
         };
-        let err = validate(&module).unwrap_err();
-        assert!(matches!(err, ValidationError::Other(_)), "{err:?}");
+        assert!(validate(&module).is_ok(), "{:?}", validate(&module));
     }
 
-    // ── table64 (W26) Check 2b is64-awareness ────────────────────────────
+    // ── table64 (W26): is64 tables already worked this way ──────────────
 
     /// table64's own real spec ceiling is `u64::MAX` (verified live
     /// against the reference interpreter's `check_tabletype`), NOT the
@@ -1554,43 +1549,14 @@ mod tests {
     /// past this interpreter's own `MAX_TABLE_ELEMENTS` implementation
     /// resource limit must still validate successfully (only actual
     /// instantiation enforces a practical cap, via
-    /// `Table::new_with_is64`).
+    /// `Table::new_with_is64`). Since gap 2's fix above, 32-bit tables now
+    /// share this exact same "declare freely, cap only at instantiation"
+    /// treatment -- this test's own assertion was already correct before
+    /// that fix; it's kept to confirm the fix didn't regress it.
     #[test]
     fn accepts_an_is64_table_declaring_far_more_than_max_table_elements() {
         let module = WasmModule {
             tables: vec![TableType { element_type: 0x70, limits: Limits { min: u64::MAX, max: None }, is64: true }],
-            ..Default::default()
-        };
-        assert!(validate(&module).is_ok(), "{:?}", validate(&module));
-    }
-
-    /// A plain (`is64: false`) table declaring more than `MAX_TABLE_ELEMENTS`
-    /// must still be rejected exactly as before -- this slice's `is64`
-    /// branch must not accidentally loosen the existing 32-bit check.
-    #[test]
-    fn still_rejects_a_32bit_table_declaring_more_than_max_table_elements() {
-        let module = WasmModule {
-            tables: vec![TableType {
-                element_type: 0x70,
-                limits: Limits { min: wasm_execution::MAX_TABLE_ELEMENTS as u64 + 1, max: None },
-                is64: false,
-            }],
-            ..Default::default()
-        };
-        let err = validate(&module).unwrap_err();
-        assert!(matches!(err, ValidationError::Other(_)), "{err:?}");
-    }
-
-    /// An `is64` table's `min` must NOT be added to the 32-bit aggregate --
-    /// a huge `is64` table's `min` alongside a small, otherwise-fine 32-bit
-    /// table must not spuriously trip the 32-bit aggregate cap.
-    #[test]
-    fn is64_table_min_is_excluded_from_the_32bit_aggregate() {
-        let module = WasmModule {
-            tables: vec![
-                TableType { element_type: 0x70, limits: Limits { min: u64::MAX, max: None }, is64: true },
-                TableType { element_type: 0x70, limits: Limits { min: 1, max: None }, is64: false },
-            ],
             ..Default::default()
         };
         assert!(validate(&module).is_ok(), "{:?}", validate(&module));

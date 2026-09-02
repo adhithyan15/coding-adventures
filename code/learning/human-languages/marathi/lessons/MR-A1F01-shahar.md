@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1F01-shahar
 spine_node: SPINE-NAME-EVERYDAY-THINGS
-sequence: 821
+sequence: 1021
 delivery: script
-chapter: 19
+chapter: 23
 type: writing
 headword: "शहर: पुणे"
 gloss: read and trace the form label for city, paired with the already practised place Pune

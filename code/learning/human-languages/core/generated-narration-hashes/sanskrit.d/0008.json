@@ -1,20 +1,20 @@
 {
   "language": "sanskrit",
   "chapter": 8,
-  "sourceHash": "fnv1a64:039ee820449af59a",
+  "sourceHash": "fnv1a64:c04f8ec27e3dd912",
   "lessonIds": [
     "SA-C08-cintayati",
+    "SA-S112-vowel-sign-e",
     "SA-C08-avagacchati",
     "SA-C08-pathati",
-    "SA-C08-likhati",
-    "SA-S01-letter-ma",
-    "SA-S107-letter-ta"
+    "SA-S208-letter-va",
+    "SA-C08-likhati"
   ],
   "voiceLessons": 4,
-  "drivablePrefix": 4,
+  "drivablePrefix": 1,
   "text": "sanskrit/narration/ch08.txt",
   "json": "sanskrit/narration/ch08.json",
-  "textHash": "fnv1a64:8e67dce2a70d9cae",
-  "jsonHash": "fnv1a64:71320589c1594ab4",
+  "textHash": "fnv1a64:b6aa284577148f29",
+  "jsonHash": "fnv1a64:c3dc4b0c054fc504",
   "findings": []
 }

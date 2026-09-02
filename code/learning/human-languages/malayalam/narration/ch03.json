@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:56ff1ca7562bfcd4",
+  "sourceHash": "fnv1a64:c915df7e948eb3ca",
   "lessons": [
     {
       "id": "ML-C03-engane",
@@ -126,6 +126,167 @@
             {
               "kind": "speech",
               "text": "What base do Malayalam's question-words share, and which Tamil cousin heads its own? (The interrogative e-; Tamil's eppaḍi.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-S126-letter-oo",
+      "sequence": 162,
+      "title": "ഓ (ō) — one character, met inside words you already say",
+      "headword": "ഓ",
+      "romanization": "ō",
+      "gloss": "the single character ഓ — recognised inside words you already say",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:942e3144fe6ba8b0",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ഓ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ഓ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ൺ — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only. It has been sitting in front of you on pages you have already read."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ഓ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഓ — ō."
+            },
+            {
+              "kind": "speech",
+              "text": "It is an independent vowel — the shape this vowel takes when a word begins with it, rather than the sign it becomes inside a word."
+            },
+            {
+              "kind": "speech",
+              "text": "You copied its other half in the last chapter. Inside സന്തോഷം (santōṣam) the vowel ō is a sign wrapped around its consonant: ◌ോ. Where the vowel has no consonant to wrap around, it stands up as a letter of its own: ഓ."
+            },
+            {
+              "kind": "speech",
+              "text": "സന്തോഷം santōṣam — the sign form, already in your hand."
+            },
+            {
+              "kind": "speech",
+              "text": "ഓ (ō) — the letter form, which arrives on the next page as the ending that turns a Malayalam statement into a question."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ഓ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ഓ (ō) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find ഓ (ō) in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find ഓ in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "സന്തോഷം (santōṣam), ഓ, ◌ോ."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ഓ three times, saying ō as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ഓ three times, saying *ō* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ഓ (ō) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ഓ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ഓ? What sound does it carry? (ō.) Sign or letter — which does a word use when there is a consonant to hang it on? (The sign, ◌ോ.)"
             }
           ]
         }
@@ -260,6 +421,171 @@
             {
               "kind": "speech",
               "text": "What does sukhamāṇō? literally ask, and what are its Sanskrit and Dravidian pieces? (\"Is [it] well?\"; Sanskrit sukha \"well-being\" + the native copula āṇŭ + the question -ō.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-S139-vowel-sign-e",
+      "sequence": 176,
+      "title": "◌െ — one character, met inside words you already say",
+      "headword": "െ",
+      "romanization": "e",
+      "gloss": "the single character ◌െ — recognised inside words you already say",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:719ea717037f2e73",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ◌െ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌െ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ഓ (ō) — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only. It has been sitting in front of you on pages you have already read."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ◌െ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "◌െ — e."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a vowel sign. It is not a letter and never stands alone: it attaches to a consonant and replaces the a built into it with e. Replaces, not adds — the a is gone."
+            },
+            {
+              "kind": "speech",
+              "text": "You have been reading this one since the first chapter without being told its name."
+            },
+            {
+              "kind": "speech",
+              "text": "അതെ athe — yes."
+            },
+            {
+              "kind": "speech",
+              "text": "എന്റെ enṟe — my."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the short partner of ◌േ, the long sign in പേര്. Both stand to the LEFT of the consonant they belong to and are pronounced AFTER it, so in അതെ the hook belongs to the ത on its right: ta becomes te."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ◌െ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ◌െ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find ◌െ in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find ◌െ in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "അതെ, എന്റെ, പേര്."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "◌െ three times, saying e as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ◌െ three times, saying *e* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ◌െ once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ◌െ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ◌െ? What sound does it carry? (e.) Name one word you already say that contains it."
             }
           ]
         }
@@ -553,6 +879,167 @@
       ]
     },
     {
+      "id": "ML-S140-letter-i",
+      "sequence": 196,
+      "title": "ഇ — one character, met inside words you already say",
+      "headword": "ഇ",
+      "romanization": "i",
+      "gloss": "the single character ഇ — recognised inside words you already say",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:afb8b59d0170ccb7",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ഇ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ഇ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ◌െ — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only. It has been sitting in front of you on pages you have already read."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ഇ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇ — i."
+            },
+            {
+              "kind": "speech",
+              "text": "It is an independent vowel — the shape this vowel takes when a word begins with it, rather than the sign it becomes inside a word."
+            },
+            {
+              "kind": "speech",
+              "text": "You have said a word that starts with it since your very first chapter."
+            },
+            {
+              "kind": "speech",
+              "text": "ഇല്ല illa — no, there isn't."
+            },
+            {
+              "kind": "speech",
+              "text": "Its sign form is the small hook riding on the end of നന്ദി and ശരി. Inside a word, a sign; at the front of a word, the letter ഇ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ഇ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ഇ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find ഇ in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find ഇ in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "ഇല്ല, നന്ദി, ശരി."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ഇ three times, saying i as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ഇ three times, saying *i* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ഇ once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ഇ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ഇ? What sound does it carry? (i.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ML-C03-saaramilla",
       "sequence": 200,
       "title": "സാരമില്ല (sāramilla) — \"it doesn't matter\"",
@@ -694,13 +1181,22 @@
       "romanization": "",
       "gloss": "Chapter 3 recap — the how-are-you exchange",
       "script": "malayalam",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:50faef297aa213bd",
-      "notice": null,
+      "sourceHash": "fnv1a64:af1ded4f2db4e216",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script check — the letters of this chapter"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script check — the letters of this chapter until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -834,6 +1330,44 @@
         },
         {
           "index": 4,
+          "type": "script",
+          "title": "Script check — the letters of this chapter",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cover the romanizations. Find each letter once in the Malayalam above, then say the word it sits in."
+            },
+            {
+              "kind": "speech",
+              "text": "ആണോ? — ഓ ō, the question ending, standing as its own letter."
+            },
+            {
+              "kind": "speech",
+              "text": "അതെ, എന്റെ — ◌െ e."
+            },
+            {
+              "kind": "speech",
+              "text": "ഇല്ല — ഇ i."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at each letter, then find it in the word beside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at each letter, then find it in the word beside it]"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "ML-S134-vowel-sign-ee",
+    "language": "malayalam",
+    "chapter": 2,
+    "sequence": 74,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:221d2085176b814d",
+    "detachableSegments": [
+      "Script you'll notice: ◌േ",
+      "Writing: ◌േ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

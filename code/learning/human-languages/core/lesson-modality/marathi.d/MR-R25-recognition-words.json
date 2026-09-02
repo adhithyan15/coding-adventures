@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-R25-recognition-words",
     "language": "marathi",
-    "chapter": 25,
-    "sequence": 1050,
+    "chapter": 29,
+    "sequence": 1250,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:06da1515f25fe232"
+    "sourceHash": "fnv1a64:9edb56c165b9594c"
   },
   "findings": []
 }

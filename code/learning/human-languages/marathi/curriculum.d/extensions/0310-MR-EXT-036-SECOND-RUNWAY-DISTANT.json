@@ -1,0 +1,16 @@
+{
+  "id": "MR-EXT-036-SECOND-RUNWAY-DISTANT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can rebuild the second runway's two consonant rows from the voice-and-breath pattern, and place all six marks, a whole book after learning them.",
+  "prerequisites": [
+    "MR-EXT-035-SECOND-RUNWAY-DURABLE"
+  ],
+  "lessons": [
+    "MR-R22-marks-r4",
+    "MR-R22-two-rows-r4",
+    "MR-R22-curled-r4",
+    "MR-R22-sibilants-r4"
+  ]
+}

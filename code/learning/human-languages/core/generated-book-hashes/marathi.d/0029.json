@@ -1,0 +1,12 @@
+{
+  "language": "marathi",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:2d991e1c428a7b09",
+  "lessonIds": [
+    "MR-R25-twelve-verbs",
+    "MR-R25-dative-frame",
+    "MR-R25-recognition-script",
+    "MR-R25-recognition-words"
+  ],
+  "tex": "marathi/book/chapters/ch29-twelve-verbs-r2.tex"
+}

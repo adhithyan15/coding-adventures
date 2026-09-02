@@ -2,8 +2,8 @@
   "lesson": {
     "id": "TE-S120-vowel-sign-ee",
     "language": "telugu",
-    "chapter": 17,
-    "sequence": 441,
+    "chapter": 1,
+    "sequence": 55,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:f0c93f52467e048d",
+    "sourceHash": "fnv1a64:70e8229f8e21aec3",
     "detachableSegments": [
       "Script you'll notice: ◌ే",
       "Writing: ◌ే — copy what you see"

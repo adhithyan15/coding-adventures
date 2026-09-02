@@ -1,7 +1,7 @@
 ---
 id: MR-C05-mi-marathi-bolto
-sequence: 170
-chapter: 8
+sequence: 370
+chapter: 12
 type: phrase
 headword: मी मराठी बोलतो
 romanization: "mī marāṭhī bolto"

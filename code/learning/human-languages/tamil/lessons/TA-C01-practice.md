@@ -41,7 +41,7 @@ Let's gather only what you have already learned and make it feel easy.
 
 Say each one before you check the meaning:
 
-| | Meaning |
+| Say this | Meaning |
 |---|---|
 | *vaṇakkam* | hello / greetings |
 | *naṉṟi* | thank you |

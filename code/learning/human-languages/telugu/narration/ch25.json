@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Good Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bad3ca685a1bd64c",
+  "sourceHash": "fnv1a64:49f1c41252db7f2d",
   "lessons": [
     {
       "id": "TE-C25-shubha-ratri",
@@ -135,7 +135,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:82e4cf7b44a84bc2",
+      "sourceHash": "fnv1a64:bd6805799477ae40",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -162,7 +162,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: జ — what does it do?"
+              "text": "Before the new one: జ — what does it do? And one from further back: ఢ?"
             },
             {
               "kind": "pause",
@@ -191,7 +191,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say బ (ba), then say it again and let a puff of breath out on top of it. That second thing is భ. Telugu gives the breathy one its own letter rather than a mark on the plain one, and it does the same for other pairs you have seen: ద (da) has ధ (dha) beside it, the letter standing second in dhanyavādamulu from the first pages of this book. The h in the romanization bha is that puff, not a separate sound."
+              "text": "Say బ (ba), then say it again and let a puff of breath out on top of it. That second thing is భ. By now the pattern should arrive before the letter does: you have met క/ఖ, గ/ఘ and డ/ఢ, and this is the fourth pair of the same kind. The h in the romanization bha is that puff, not a separate sound."
             },
             {
               "kind": "speech",
@@ -284,6 +284,10 @@
             {
               "kind": "speech",
               "text": "Which character is this — భ? What does it carry that బ does not? (bha — the same b with a puff of breath after it.) Name one word you already say that contains it."
+            },
+            {
+              "kind": "speech",
+              "text": "One more, from much earlier: ద — what does it do?"
             }
           ]
         }

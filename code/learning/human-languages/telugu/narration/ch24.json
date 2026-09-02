@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c0d71d8af1d7d06a",
+  "sourceHash": "fnv1a64:ad39861327dff115",
   "lessons": [
     {
       "id": "TE-C24-ratri",
@@ -151,7 +151,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cd3e060e2055f1c9",
+      "sourceHash": "fnv1a64:ac84e772e6b28714",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -178,7 +178,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ణ — what does it do?"
+              "text": "Before the new one: ణ — what does it do? And one from further back: ళ?"
             },
             {
               "kind": "pause",
@@ -300,6 +300,10 @@
             {
               "kind": "speech",
               "text": "Which character is this — జ? What sound does it carry? (ja.) Read రోజు aloud, letter by letter, and then as one word."
+            },
+            {
+              "kind": "speech",
+              "text": "One more, from much earlier: ◌ె — what does it do?"
             }
           ]
         }

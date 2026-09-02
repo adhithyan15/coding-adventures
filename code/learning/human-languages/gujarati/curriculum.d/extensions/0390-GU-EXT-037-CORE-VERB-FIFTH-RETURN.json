@@ -1,0 +1,21 @@
+{
+  "id": "GU-EXT-037-CORE-VERB-FIFTH-RETURN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "retrieval",
+  "canDo": "I can still recognise and write the first five numbers and the fifteen core verbs a hundred lessons after I met them.",
+  "prerequisites": [
+    "GU-EXT-036-TIME-WORDS-WRITTEN"
+  ],
+  "lessons": [
+    "GU-R26-numbers-r4",
+    "GU-R26-hovun-javun-r4",
+    "GU-R26-aavvun-khaavun-r4",
+    "GU-R26-jovun-jaanvun-r4",
+    "GU-R26-vicharvun-samajvun-r4",
+    "GU-R26-vanchvun-lakhvun-r4",
+    "GU-R26-levun-puchhvun-r4",
+    "GU-R26-time-written-r2",
+    "GU-R26-madad-gamvun-paani-r4"
+  ]
+}

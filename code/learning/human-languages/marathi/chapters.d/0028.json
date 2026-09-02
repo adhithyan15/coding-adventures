@@ -1,0 +1,24 @@
+{
+  "chapter": 28,
+  "title": "What Passes Between Two People",
+  "label": "ch:mr-passing-verbs",
+  "canDo": "I can ask someone to tell me their name, quote what I said, say that I am learning Marathi, and ask whether a thing is to be had -- carrying one of the four by ear because its letter is still owed to me.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "MR-R24-passing-verbs",
+    "kind": "production",
+    "summary": "Complete MR-R24-passing-verbs and run the exchange unaided: ask for a name with the by-ear verb, say you are learning Marathi, and ask whether water is to be had.",
+    "assesses": [
+      "MR-LEX-SANGNE",
+      "MR-LEX-MHANNE",
+      "MR-LEX-SHIKNE",
+      "MR-LEX-MILNE",
+      "MR-ETYMON-SANGNE-KENS",
+      "MR-ETYMON-MHANNE-BHAN",
+      "MR-ETYMON-SHIKNE-SHAK",
+      "MR-ETYMON-MILNE-MIL"
+    ]
+  }
+}

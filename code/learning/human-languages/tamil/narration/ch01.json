@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:089a34521af35017",
+  "sourceHash": "fnv1a64:6b00158133c2ec5f",
   "lessons": [
     {
       "id": "TA-C01-vanakkam",
@@ -1259,7 +1259,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:03f4c2012481eab6",
+      "sourceHash": "fnv1a64:d8d2147bc70dd082",
       "notice": null,
       "blocks": [
         {
@@ -1291,7 +1291,7 @@
             {
               "kind": "table",
               "headers": [
-                "",
+                "Say this",
                 "Meaning"
               ],
               "columns": 2,

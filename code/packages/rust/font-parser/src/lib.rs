@@ -206,6 +206,9 @@ struct Tables {
     kern: Option<u32>,
     name: Option<u32>,
     os2: Option<u32>,
+    /// The OpenType MATH table. Present only in maths fonts, so optional --
+    /// its absence is an ordinary property of most fonts, not an error.
+    math: Option<u32>,
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -243,6 +246,10 @@ impl std::fmt::Debug for FontFile {
 // On x86/ARM64 (both little-endian) we must byte-swap.
 //
 // We return Result so every read site propagates BufferTooShort automatically.
+
+// The OpenType MATH table lives in its own module.
+mod math;
+pub use math::MathConstants;
 
 /// Read a 16-bit big-endian unsigned integer.
 ///
@@ -340,6 +347,7 @@ fn parse_table_directory(buf: &[u8]) -> Result<Tables, FontError> {
         kern: find_table(buf, num_tables, b"kern"),
         name: find_table(buf, num_tables, b"name"),
         os2:  find_table(buf, num_tables, b"OS/2"),
+        math: find_table(buf, num_tables, b"MATH"),
     })
 }
 
@@ -791,6 +799,41 @@ fn read_name(buf: &[u8], name_off: Option<u32>, name_id: u16) -> Option<String> 
 // ─────────────────────────────────────────────────────────────────────────────
 // Tests
 // ─────────────────────────────────────────────────────────────────────────────
+
+// ─────────────────────────────────────────────────────────────────────────────
+// OpenType MATH table
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// Read the font's `MathConstants`, if it has a `MATH` table.
+///
+/// Returns `Ok(None)` for an ordinary text font: most fonts have no `MATH`
+/// table, so its absence is a property rather than a failure. `Err` means the
+/// table is present but malformed, which is worth distinguishing — a caller
+/// that treats "no maths font" and "corrupt maths font" the same will silently
+/// typeset with default constants and produce output that looks almost right.
+pub fn math_constants(font: &FontFile) -> Result<Option<MathConstants>, FontError> {
+    match font.tables.math {
+        None => Ok(None),
+        Some(offset) => math::math_constants(&font.data, offset as usize).map(Some),
+    }
+}
+
+/// Italic correction for one glyph, in design units.
+///
+/// `Ok(None)` means either no `MATH` table or no entry for this glyph; both mean
+/// zero correction. Set a subscript after an italic *f* without applying this
+/// and the two collide.
+pub fn italic_correction(font: &FontFile, glyph_id: u16) -> Result<Option<i16>, FontError> {
+    match font.tables.math {
+        None => Ok(None),
+        Some(offset) => math::italic_correction(&font.data, offset as usize, glyph_id),
+    }
+}
+
+/// Whether the font carries a `MATH` table at all.
+pub fn has_math_table(font: &FontFile) -> bool {
+    font.tables.math.is_some()
+}
 
 #[cfg(test)]
 mod tests {

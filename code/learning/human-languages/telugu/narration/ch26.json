@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Morning",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2e6a2a0c1b1d3716",
+  "sourceHash": "fnv1a64:6be936f0f0fcd151",
   "lessons": [
     {
       "id": "TE-C26-udayam",
@@ -135,7 +135,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:60912d0689c29bda",
+      "sourceHash": "fnv1a64:7943c80f1224e382",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -162,7 +162,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: భ — what does it do?"
+              "text": "Before the new one: భ — what does it do? And one from further back: ఎ?"
             },
             {
               "kind": "pause",
@@ -280,6 +280,10 @@
             {
               "kind": "speech",
               "text": "Which character is this — ఋ (ṛ)? What kind of thing is it — a consonant, a vowel sign, or an independent vowel? (An independent vowel, sounded ru.) Name the word you already say that contains it."
+            },
+            {
+              "kind": "speech",
+              "text": "One more, from much earlier: వ — what does it do?"
             }
           ]
         }

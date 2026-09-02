@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TE-S137-letter-kha",
+    "language": "telugu",
+    "chapter": 16,
+    "sequence": 433,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:52443b494d36ad3b",
+    "detachableSegments": [
+      "Script you'll notice: ఖ",
+      "Writing: ఖ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

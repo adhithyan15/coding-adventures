@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C07-asne",
     "language": "marathi",
-    "chapter": 10,
-    "sequence": 380,
+    "chapter": 14,
+    "sequence": 580,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:8f34888a6abd5a5d"
+    "sourceHash": "fnv1a64:372fe73fbefa004b"
   },
   "findings": []
 }

@@ -2,8 +2,8 @@
   "lesson": {
     "id": "ML-S112-letter-pa",
     "language": "malayalam",
-    "chapter": 9,
-    "sequence": 376,
+    "chapter": 2,
+    "sequence": 72,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:cf180cd508b838aa",
+    "sourceHash": "fnv1a64:f185b2c86b6e957a",
     "detachableSegments": [
       "Script you'll notice: പ",
       "Writing: പ — copy what you see"

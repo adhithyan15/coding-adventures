@@ -42,6 +42,20 @@ reviews_of: [ML-C05-samsaarikkuka, ML-C05-njaan-malayalam-samsaarikkunnu, ML-C05
 - *ceyyuka* "to do" → *jōli ceyyuka* "to work" — the *same root* as Tamil *sey*
 - *malayāḷaṁ* = *mala* "mountain" + *āḷaṁ* "place" — "the mountain land"
 
+## Script check — the letters of this chapter
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-115, ML-SCRIPT-RECOG-142, ML-SCRIPT-RECOG-122, ML-SCRIPT-RECOG-143, ML-SCRIPT-RECOG-111, ML-SCRIPT-RECOG-144, ML-SCRIPT-RECOG-127, ML-SCRIPT-RECOG-145, ML-SCRIPT-RECOG-146] -->
+
+[PAUSE 2s] Cover the romanizations. Find each letter once in the Malayalam
+above, then say the word it sits in.
+
+- **ഞാൻ** — **ഞ** *ña*, **ൻ** *n*
+- **പോയി** — **യ** *ya*
+- **കൊച്ചിയിൽ** — **◌ൊ** *o*, **ച** *ca*, **ൽ** *l*
+- **സഹായം** — **ഹ** *ha*
+- **ജോലി** — **ജ** *ja*, **ല** *la*
+
+- [YOU LOOK: at each letter, then find it in the word beside it]
+
 ## Wrap-up Recall
 
 [PAUSE 3s] In one breath, say your language, your city, and your work in Malayalam

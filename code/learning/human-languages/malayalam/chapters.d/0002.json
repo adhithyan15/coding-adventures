@@ -11,8 +11,18 @@
     "kind": "task",
     "summary": "Complete ML-C02-practice, the canonical closing checkpoint, and demonstrate the chapter promise: introduce myself in Malayalam, give my name, and understand the other person's name.",
     "assesses": [
-      "ML-SCRIPT-GUIDED-COPY-SANTOSHAM-02"
+      "ML-SCRIPT-GUIDED-COPY-SANTOSHAM-02",
+      "ML-SCRIPT-RECOG-112",
+      "ML-SCRIPT-RECOG-134",
+      "ML-SCRIPT-RECOG-135",
+      "ML-SCRIPT-RECOG-136",
+      "ML-SCRIPT-RECOG-137",
+      "ML-SCRIPT-RECOG-113",
+      "ML-SCRIPT-RECOG-138",
+      "ML-SCRIPT-RECOG-06",
+      "ML-SCRIPT-RECOG-07",
+      "ML-SCRIPT-RECOG-131"
     ],
-    "note": "The checkpoint now directly assesses the chapter's first typed writing atom with a model-visible copy. The legacy spoken lessons still have no typed knowledge atoms, so their representativeness remains authored until migration."
+    "note": "The checkpoint assesses the chapter's typed writing atom and the ten letters the chapter's own words put into the reader's hands. The legacy spoken lessons still carry no typed knowledge atoms, so their representativeness remains authored until migration."
   }
 }

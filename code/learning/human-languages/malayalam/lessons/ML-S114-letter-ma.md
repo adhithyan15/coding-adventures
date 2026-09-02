@@ -9,31 +9,31 @@ type: writing
 headword: "മ"
 gloss: the single character മ — recognised inside words you already say
 romanization: "ma"
-prerequisites: [ML-S113-letter-nna]
+prerequisites: [ML-S05-letter-na]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-113]
+  knowledge: [ML-SCRIPT-RECOG-05]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-114]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-113, ML-SCRIPT-RECOG-114]
+  knowledge: [ML-SCRIPT-RECOG-05, ML-SCRIPT-RECOG-114]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [ML-S113-letter-nna]
+reviews_of: [ML-S05-letter-na]
 ---
 
 # മ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-113] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-05] -->
 
-[PAUSE 1s] Before the new one: ണ — what does it do?
+[PAUSE 1s] Before the new one: ന — what does it do?
 
 [PAUSE 2s] One character this time. Just one — and you have been saying it
 for pages without knowing which mark on the page it was.

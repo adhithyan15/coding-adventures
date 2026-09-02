@@ -5,40 +5,40 @@ introduces_senses: []
 introduces_culture_claims: []
 id: SA-S109-vowel-sign-i
 spine_node: SPINE-MEET-GREET
-sequence: 506
+sequence: 141
 delivery: script
-chapter: 10
+chapter: 2
 type: writing
 headword: "ि"
-gloss: the single character ि — recognised inside words you already say
+gloss: the single character ◌ि — recognised inside words you already say
 romanization: "i"
-prerequisites: [SA-S108-letter-sa]
+prerequisites: [SA-S202-letter-bha]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [SA-SCRIPT-RECOG-108]
+  knowledge: [SA-SCRIPT-RECOG-202]
 introduces:
   knowledge: [SA-SCRIPT-RECOG-109]
 practises:
-  knowledge: [SA-SCRIPT-RECOG-108, SA-SCRIPT-RECOG-109]
+  knowledge: [SA-SCRIPT-RECOG-201, SA-SCRIPT-RECOG-04, SA-SCRIPT-RECOG-202, SA-SCRIPT-RECOG-109]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [SA-S108-letter-sa]
+reviews_of: [SA-S201-sign-visarga, SA-S04-letter-aa, SA-S202-letter-bha]
 ---
 
 # ◌ि — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-108] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-201, SA-SCRIPT-RECOG-04, SA-SCRIPT-RECOG-202] -->
 
-[PAUSE 1s] Before the new one: स — what does it do?
+[PAUSE 1s] Before the new one, the ones you have already met: ◌ः · आ · भ. Say what each of them does.
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
+[PAUSE 2s] One character this time. One only — and you have been saying it
 for pages without knowing which mark on the page it was.
 
 ## Script you'll notice: ◌ि
@@ -46,18 +46,18 @@ for pages without knowing which mark on the page it was.
 
 **◌ि** — *i*.
 
-It is a **vowel sign**. It is not a letter and never stands alone: it attaches to a consonant and **replaces** the *a* built into it with *i*. Replaces, not adds — the *a* is gone.
+It is a **vowel sign**. It is not a letter and never stands alone: it attaches to a consonant and **replaces** the *a* built into it. Replaces, not adds — the *a* is gone.
 
 Where it sits: a curl placed BEFORE (to the left of) the consonant, though pronounced after.
 
-Worked through: **श** + **◌ि** = **शि** — *śi*.
+Worked through: **न** + **◌ि** = **नि** — *ni*.
 
-You already say these, and every one of them has ◌ि somewhere inside it:
+You already say these words, and ◌ि is one of the shapes inside them — the rest of their shapes are still ahead of you, so here the character stands on its own:
 
-- **अस्ति** *asti* — is
-- **किम्** *kim* — what
-- **न चिन्ता** *na cintā* — no worry / it's nothing / you're welcome
-- **गच्छामि** *gacchāmi* — I go (a way to take leave)
+- *asti* — is
+- *mama nāma … asti* — my name is…
+- *kim* — what
+- *tava nāma kim?* — what's your name?
 
 ## Writing: ◌ि — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-109] -->
@@ -72,12 +72,12 @@ and larger than it is printed.
 > shape gets into your hand in the meantime.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-109] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-202, SA-SCRIPT-RECOG-109] -->
 
 [PAUSE 1s]
-- [YOU LOOK: at these words, and find ◌ि in the ones that have it]
+- [YOU LOOK: at this, and find ◌ि in it]
 
-> अस्ति  ·  किम्  ·  नमस्ते
+> ◌ि
 
 - [YOU TRACE: ◌ि three times, saying *i* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ◌ि once more]

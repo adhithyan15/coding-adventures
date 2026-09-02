@@ -3,8 +3,8 @@
   "language": "malayalam",
   "chapter": 31,
   "title": "Good Afternoon",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:ba6db78dc861ae0f",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:2ffa363d52b068a9",
   "lessons": [
     {
       "id": "ML-C31-shubha-madhyaahnam",
@@ -101,6 +101,171 @@
       ]
     },
     {
+      "id": "ML-S125-letter-uu",
+      "sequence": 635,
+      "title": "ഊ (ū) — one character, met inside words you already say",
+      "headword": "ഊ",
+      "romanization": "ū",
+      "gloss": "the single character ഊ — recognised inside words you already say",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:4bcb464a15e5bd31",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ഊ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ഊ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ഭ — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only. It has not been on a page yet: it arrives with the word on the next one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ഊ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഊ — ū."
+            },
+            {
+              "kind": "speech",
+              "text": "It is an independent vowel — the shape this vowel takes when a word begins with it, rather than the sign it becomes inside a word."
+            },
+            {
+              "kind": "speech",
+              "text": "You already read its short twin. ഉ is u; ഊ is the same vowel held longer, ū, and the shape says so — the short one grows a tail."
+            },
+            {
+              "kind": "speech",
+              "text": "ഉ u — the short one, read since the farewell chapter."
+            },
+            {
+              "kind": "speech",
+              "text": "ഊൺ ūṇ — a meal: the long one, and the word that will put this letter to work."
+            },
+            {
+              "kind": "speech",
+              "text": "Length is the whole difference, in the sound and on the page."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ഊ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ഊ (ū) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find ഊ (ū) in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find ഊ in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "ഊൺ, ഉ, ഊ (ū)."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ഊ three times, saying ū as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ഊ three times, saying *ū* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ഊ (ū) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ഊ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ഊ? What sound does it carry? (ū.) Which of the two is longer — ഉ or ഊ? (ഊ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ML-C31-afternoon-convergence",
       "sequence": 640,
       "title": "One greeting, three afternoon strategies",
@@ -108,13 +273,22 @@
       "romanization": "śubha madhyāhnaṁ — three-way convergence",
       "gloss": "Malayalam, Kannada, and Telugu converge on one formal greeting after building everyday afternoon words three different ways",
       "script": "malayalam",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:82bab263b89d1a92",
-      "notice": null,
+      "sourceHash": "fnv1a64:ffe6569f9eb12ecf",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script check — the letters of this chapter"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script check — the letters of this chapter until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -225,6 +399,36 @@
         },
         {
           "index": 3,
+          "type": "script",
+          "title": "Script check — the letters of this chapter",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cover the romanizations. Find each letter once in the Malayalam above, then say the word it sits in."
+            },
+            {
+              "kind": "speech",
+              "text": "ഊൺ — ഊ ū, the long twin of ഉ."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at each letter, then find it in the word beside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at each letter, then find it in the word beside it]"
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

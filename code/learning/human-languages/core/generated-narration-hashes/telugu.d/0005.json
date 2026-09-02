@@ -1,19 +1,24 @@
 {
   "language": "telugu",
   "chapter": 5,
-  "sourceHash": "fnv1a64:17a95d01a2d69cd1",
+  "sourceHash": "fnv1a64:46a5732370f05a49",
   "lessonIds": [
+    "TE-S01-letter-ta",
     "TE-C05-maatlaadu",
+    "TE-S147-digit-8",
     "TE-C05-nenu-telugu-maatlaadataanu",
+    "TE-S111-letter-sa",
     "TE-C05-undu",
+    "TE-S125-letter-ha",
     "TE-C05-pani-ceyu",
+    "TE-S148-digit-9",
     "TE-C05-practice"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 0,
   "text": "telugu/narration/ch05.txt",
   "json": "telugu/narration/ch05.json",
-  "textHash": "fnv1a64:5a29195239205a1d",
-  "jsonHash": "fnv1a64:dd2d77b6f28d9e31",
+  "textHash": "fnv1a64:e0742bdb5bf4ee68",
+  "jsonHash": "fnv1a64:5a53180d8497df62",
   "findings": []
 }

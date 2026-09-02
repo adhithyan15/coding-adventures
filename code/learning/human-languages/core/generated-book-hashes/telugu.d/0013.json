@@ -1,11 +1,10 @@
 {
   "language": "telugu",
   "chapter": 13,
-  "sourceHash": "fnv1a64:646072a682c448e2",
+  "sourceHash": "fnv1a64:90aa1eea0a9ff01d",
   "lessonIds": [
     "TE-C13-sharira-bhagalu",
-    "TE-S08-vowel-sign-i",
-    "TE-S116-letter-da"
+    "TE-S117-letter-va"
   ],
   "tex": "telugu/book/chapters/ch13-head-and-hand.tex"
 }

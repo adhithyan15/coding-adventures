@@ -1,0 +1,15 @@
+{
+  "language": "marwadi",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:5733aaaf0521cbb4",
+  "lessonIds": [
+    "MW-C25-hear-lavo",
+    "MW-C25-lavo",
+    "MW-C25-hear-bring-request",
+    "MW-C25-bring-request",
+    "MW-R25-bring-two",
+    "MW-C25-request-five",
+    "MW-R25-script-close"
+  ],
+  "tex": "marwadi/book/chapters/ch30-bring-request.tex"
+}

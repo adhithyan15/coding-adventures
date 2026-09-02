@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C03-kasa",
     "language": "marathi",
-    "chapter": 6,
-    "sequence": 105,
+    "chapter": 10,
+    "sequence": 305,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:553a7f5d272f1f60",
+    "sourceHash": "fnv1a64:b2669233903bd0d7",
     "detachableSegments": [
       "The letters in this word"
     ]

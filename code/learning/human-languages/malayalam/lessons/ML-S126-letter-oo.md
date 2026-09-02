@@ -2,59 +2,56 @@
 schema_version: 2
 id: ML-S126-letter-oo
 spine_node: SPINE-MEET-GREET
-sequence: 705
+sequence: 162
 delivery: script
-chapter: 33
+chapter: 3
 type: writing
 headword: "ഓ"
 gloss: the single character ഓ — recognised inside words you already say
 romanization: "ō"
-prerequisites: [ML-S125-letter-uu]
+prerequisites: [ML-S131-chillu-nn]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-125]
+  knowledge: [ML-SCRIPT-RECOG-131]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-126]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-125, ML-SCRIPT-RECOG-126]
+  knowledge: [ML-SCRIPT-RECOG-131, ML-SCRIPT-RECOG-126]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [ML-S125-letter-uu]
+reviews_of: [ML-S131-chillu-nn]
 ---
 
 # ഓ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-125] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-131] -->
 
-[PAUSE 1s] Before the new one: ഊ — what does it do?
+[PAUSE 1s] Before the new one: ൺ — what does it do?
 
-[PAUSE 2s] One character this time. One only — and it has been sitting in
-front of you on pages you have already read.
+[PAUSE 2s] One character this time. One only.
+It has been sitting in front of you on pages you have already read.
 
 ## Script you'll notice: ഓ
 <!-- hl-knowledge: introduces=[ML-SCRIPT-RECOG-126]; assesses=[] -->
 
 **ഓ** — *ō*.
 
-It is an **independent vowel**, and you have been reading its other half for chapters.
+It is an **independent vowel** — the shape this vowel takes when a word *begins* with it, rather than the sign it becomes inside a word.
 
-Inside a word this vowel is a **sign** wrapped around the consonant — the **ോ**
-of **പോകുക** *pōkuka* and **ചോറ്** *cōṟu*. When a word **starts** with the
-vowel there is no consonant to wrap, so the vowel needs a letter of its own:
-**ഓ**.
+You copied its other half in the last chapter. Inside **സന്തോഷം** the
+vowel *ō* is a **sign** wrapped around its consonant: **◌ോ**. Where the vowel
+has no consonant to wrap around, it stands up as a letter of its own: **ഓ**.
 
-- **പോകുക** *pōkuka* — to go — the sign **ോ**, riding a consonant
-- **സുഖമാണോ?** *sukhamāṇō?* — are you well? — the same sign, at the end
-- **ഓ** — the letter, for a word that opens on the vowel
-
-Same vowel, two jobs, two shapes.
+- **സന്തോഷം** *santōṣam* — the sign form, already in your hand
+- **ഓ** — the letter form, which arrives on the next page as the ending that
+  turns a Malayalam statement into a question
 
 ## Writing: ഓ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-126] -->
@@ -74,7 +71,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ഓ in the ones that have it]
 
-> പോകുക  ·  ചോറ്  ·  ഓ
+> സന്തോഷം  ·  ഓ  ·  ◌ോ
 
 - [YOU TRACE: ഓ three times, saying *ō* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ഓ once more]
@@ -83,4 +80,4 @@ and larger than it is printed.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-126] -->
 
 [PAUSE 3s] Which character is this — ഓ? What sound does it carry? (***ō***.)
-When does this vowel need the full letter ഓ rather than the sign ോ?
+Sign or letter — which does a word use when there is a consonant to hang it on? (The sign, ◌ോ.)

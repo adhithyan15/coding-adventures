@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C09-avadne",
     "language": "marathi",
-    "chapter": 12,
-    "sequence": 510,
+    "chapter": 16,
+    "sequence": 710,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:0faf676e5c183072",
+    "sourceHash": "fnv1a64:c1d16ee2770aabc4",
     "detachableSegments": [
       "The letters in this word"
     ]

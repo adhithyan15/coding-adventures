@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C10-bhakari",
     "language": "marathi",
-    "chapter": 13,
-    "sequence": 550,
+    "chapter": 17,
+    "sequence": 750,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:e8291f5305e45591",
+    "sourceHash": "fnv1a64:c05769b1c2547967",
     "detachableSegments": [
       "The letters in this word"
     ]

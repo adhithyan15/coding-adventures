@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1F01-naav
 spine_node: SPINE-NAME-EVERYDAY-THINGS
-sequence: 820
+sequence: 1020
 delivery: script
-chapter: 19
+chapter: 23
 type: writing
 headword: "नाव: मीरा"
 gloss: read and trace the form label for name, then pair it with the known practice name Mira

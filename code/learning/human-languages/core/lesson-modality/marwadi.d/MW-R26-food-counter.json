@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R26-food-counter",
+    "language": "marwadi",
+    "chapter": 31,
+    "sequence": 2540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2fb6e3561d31f0b"
+  },
+  "findings": []
+}

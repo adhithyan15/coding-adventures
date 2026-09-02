@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C23-basne",
     "language": "marathi",
-    "chapter": 23,
-    "sequence": 920,
+    "chapter": 27,
+    "sequence": 1120,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:7b97e19dd54164c5",
+    "sourceHash": "fnv1a64:7b97622441219280",
     "detachableSegments": [
       "The letters in this word"
     ]

@@ -41,6 +41,18 @@ reviews_of: [ML-C04-pokuka, ML-C04-poyi-varaam, ML-C04-naale-kaanaam, ML-C04-vee
 - *nāḷe* ← *nāḷ* "day" (shared with Tamil & Kannada); *kāṇ* "to see"
 - *vīṇḍuṁ* "again" — where Tamil borrowed Sanskrit *sandi*, Malayalam kept *kāṇ*
 
+## Script check — the letters of this chapter
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-110, ML-SCRIPT-RECOG-116, ML-SCRIPT-RECOG-141] -->
+
+[PAUSE 2s] Cover the romanizations. Find each letter once in the Malayalam
+above, then say the word it sits in.
+
+- **വരിക** — **വ** *va*
+- **പോകുക** — **ഉ** *u*, the vowel inside the ending **ഉക**
+- **വരൂ** — **◌ൂ** *ū*
+
+- [YOU LOOK: at each letter, then find it in the word beside it]
+
 ## Wrap-up Recall
 
 [PAUSE 3s] Why does Malayalam never say a plain "I'm leaving," and what does its

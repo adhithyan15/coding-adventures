@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "GU-R28-house-five-r1",
+    "language": "gujarati",
+    "chapter": 32,
+    "sequence": 1610,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c11dcd7b7fc5454c",
+    "detachableSegments": [
+      "Writing — from sound, every model covered"
+    ]
+  },
+  "findings": []
+}

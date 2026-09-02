@@ -5,6 +5,7 @@ chapter: 2
 type: phrase
 headword: तव नाम किम्?
 gloss: what's your name?
+romanization: "tava nāma kim?"
 concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [SA-C02-bhavan-tvam, SA-C02-kim, SA-C02-nama]
 sounds: []

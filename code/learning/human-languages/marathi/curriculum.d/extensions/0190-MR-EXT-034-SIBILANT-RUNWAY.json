@@ -1,0 +1,19 @@
+{
+  "id": "MR-EXT-034-SIBILANT-RUNWAY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write the last six signs of the second runway and name every sign in it after four chapters of distance.",
+  "prerequisites": [
+    "MR-EXT-033-RETROFLEX-RUNWAY"
+  ],
+  "lessons": [
+    "MR-W08-la",
+    "MR-W08-sha",
+    "MR-W08-ssa",
+    "MR-W08-u-independent",
+    "MR-W08-uu-independent",
+    "MR-W08-e-independent",
+    "MR-R08-runway-recall"
+  ]
+}

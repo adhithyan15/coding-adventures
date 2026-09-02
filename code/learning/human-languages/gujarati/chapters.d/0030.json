@@ -1,0 +1,32 @@
+{
+  "chapter": 30,
+  "title": "Fifth Return: The Core Verbs",
+  "label": "ch:gu-core-verb-fifth-return",
+  "canDo": "I can still recognise and write the numbers and core verbs I met a hundred lessons ago.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "GU-R26-madad-gamvun-paani-r4",
+    "kind": "distant-retrieval",
+    "summary": "Eight zero-new-atom lessons place the numbers and the fifteen core verbs 98 to 104 positions after their introductions, scoring recognition and model-free writing separately in each.",
+    "assesses": [
+      "GU-LEX-NUMBERS-ONE-TO-FIVE",
+      "GU-LEX-HOVU",
+      "GU-LEX-JAVU",
+      "GU-LEX-AAVVU",
+      "GU-LEX-KHAAVU",
+      "GU-LEX-JOVU",
+      "GU-LEX-JAANVU",
+      "GU-LEX-VICHARVU",
+      "GU-LEX-SAMAJVU",
+      "GU-LEX-VANCHVU",
+      "GU-LEX-LAKHVU",
+      "GU-LEX-LEVU",
+      "GU-LEX-PUCHHVU",
+      "GU-LEX-MADAD-KARVI",
+      "GU-LEX-GAMVU",
+      "GU-LEX-PAANI"
+    ]
+  }
+}

@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1M01-reader-greeting
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 840
+sequence: 1040
 delivery: script
-chapter: 20
+chapter: 24
 type: writing
 headword: "नमस्कार मीरा."
 gloss: address the named reader with one known greeting and a full stop

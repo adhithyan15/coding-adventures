@@ -2,7 +2,13 @@
   "segments": [
     "GU-PATH-013",
     "GU-PATH-022",
-    "GU-PATH-023"
+    "GU-PATH-023",
+    "GU-PATH-024",
+    "GU-PATH-025",
+    "GU-PATH-026",
+    "GU-PATH-027",
+    "GU-PATH-028",
+    "GU-PATH-029"
   ],
   "omits": [
     "COURTESY-PLEASE",

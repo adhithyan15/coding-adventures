@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R13-two-rows-r3",
+    "language": "marathi",
+    "chapter": 13,
+    "sequence": 572,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:611e1d2d57bb36ee"
+  },
+  "findings": []
+}
