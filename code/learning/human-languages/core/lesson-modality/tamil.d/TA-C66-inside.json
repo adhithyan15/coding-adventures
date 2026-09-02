@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C66-inside",
+    "language": "tamil",
+    "chapter": 66,
+    "sequence": 2560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c11a023a05a2b202"
+  },
+  "findings": []
+}

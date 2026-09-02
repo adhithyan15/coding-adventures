@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Dative Case and Dative Subjects",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:759e5addc915cad6",
+  "sourceHash": "fnv1a64:51f51964a94c56b4",
   "lessons": [
     {
       "id": "TA-C06-dative-ukku",
@@ -782,7 +782,7 @@
       "sequence": 400,
       "title": "-ukku, -ku, -ge, -ikku — the family shows its bones",
       "headword": "எனக்கு / నాకు / ನನಗೆ / എനിക്ക്",
-      "romanization": "",
+      "romanization": "enakku / nāku / nanage / enikku",
       "gloss": "all four Dravidian sisters put the experiencer in visibly related dative forms",
       "script": "tamil",
       "modality": "voice",
@@ -790,7 +790,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:15d841e1d8f9bd2f",
+      "sourceHash": "fnv1a64:1cd137b1bc68e176",
       "notice": null,
       "blocks": [
         {

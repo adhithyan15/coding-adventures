@@ -4,6 +4,7 @@ chapter: 2
 sequence: 160
 type: phrase
 headword: உங்கள் பெயர் என்ன?
+romanization: "uṅgaḷ peyar eṉṉa?"
 gloss: what's your name?
 concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [TA-C02-enna, TA-C02-nii-niingal, TA-C02-peyar]

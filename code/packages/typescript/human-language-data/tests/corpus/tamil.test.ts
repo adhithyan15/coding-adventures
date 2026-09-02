@@ -97,7 +97,12 @@ it("teaches short o by meaning, then retrieves it before Chapter 8 uses it", () 
     (candidate) => candidate.language === "tamil",
   );
   expect(track?.neverTaughtGlyphs).toBe(0);
-  expect(track?.violations).toBe(29);
+  expect(track?.violations).toBe(21);
+  // HL-C194: every Tamil headword now declares how to say it, so no headword is
+  // load-bearing script. Pinned at zero rather than at a count, because this is
+  // the one number in the closure report that an author can only make worse by
+  // shipping a lesson whose headword nobody can pronounce.
+  expect(track?.headwordsWithoutRomanization).toBe(0);
   expect(closure.violations.filter((violation) =>
     violation.language === "tamil" && (
       violation.glyphs.includes("ொ") ||
