@@ -43,6 +43,49 @@ in any language.
 
 ---
 
+## Normative status
+
+This document went through four adversarial security-review rounds. Every round
+found a CRITICAL, and **every round's CRITICAL was created by the previous
+round's fix**: round 2 by the brokered-by-default default, round 3 by the
+capability bars, round 4 by the pre-exec wrapper. The invariants were never
+overturned; only the mechanism kept breaking.
+
+That is a fact about the activity, not only about the text. Syscall-level
+mechanism is being specified in prose with nothing to run it against, and each
+mechanical detail creates new interactions with the others. A wrapper that
+actually runs, with a negative test suite, settles these questions in an
+afternoon and settles them with evidence.
+
+So the two halves of this spec have different status:
+
+**Normative — the invariants.** Stable across all four rounds. Changing one is a
+spec amendment.
+
+| | |
+|---|---|
+| S-B1 | Enforcement is the sandbox and the broker. Layers 0-6 are declaration. |
+| S-I1a | The base deny is unconditional and not derived from the manifest. |
+| S-I2 | One channel, to the broker, and the *ability* to make another is removed. |
+| S-I6 | Brokered by default; the never-grantable set is barred direct **and** brokered. |
+| S-K6 | A brokered request may never yield authority the agent could not hold directly. |
+| S-K2 | Identity is bound at launch, never asserted by the agent. |
+| S-P3 | A platform that cannot enforce fails the launch. It never degrades quietly. |
+
+**Non-normative — the mechanism.** Everything at the level of syscall names,
+flag combinations, ordering within the wrapper, and per-platform primitive
+choice is *implementation guidance*. It records what four review rounds
+established so an implementer does not rediscover it, and it is expected to be
+corrected by the implementation and its tests. A mechanism detail that turns out
+wrong is a code review finding, not a spec amendment — **provided the invariant
+above it still holds.**
+
+The build order's step 1 exists to make this real: the base-deny plan model and
+its tests come before any platform work, so the mechanism has something to be
+validated against.
+
+---
+
 ## Terminology
 
 Continues D18R's OTP vocabulary. New terms:
