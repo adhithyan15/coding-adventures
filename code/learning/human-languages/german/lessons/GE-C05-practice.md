@@ -1,70 +1,84 @@
 ---
+schema_version: 2
 id: GE-C05-practice
+spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 210
 chapter: 5
-type: practice-mix
-headword: (practice)
-gloss: making sentences with weak verbs, and why German keeps the pronoun
+type: practice
+headword: (dialogue)
+gloss: Chapter 5 payoff — building sentences from a pattern, not reciting them
 concept_tag: CH5-PRACTICE
-prerequisites: [GE-C05-wohnen, GE-C05-machen, GE-C05-lernen, GE-C05-ich-lerne-deutsch]
+prerequisites: [GE-C01-gut, GE-C03-danke, GE-C03-bitte, GE-C03-sehr, GE-C03-und, GE-C05-wohnen, GE-C05-verbstamm, GE-C05-er-sie-es, GE-C05-endungen-hoerbar, GE-C05-in, GE-C05-wo, GE-C05-machen, GE-C05-was, GE-C05-lernen, GE-C05-deutsch, GE-C05-ich-lerne-deutsch, GE-C05-pronomen-regel]
 sounds: []
 roots: []
-est_minutes: 4
-reviews_of: [GE-C05-wohnen, GE-C05-machen, GE-C05-lernen, GE-C05-ich-lerne-deutsch, GE-C03-practice]
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [GE-GRAMMAR-VERB-STEM-01, GE-GRAMMAR-OVERT-SUBJECT-01, GE-LEX-WOHNEN-01, GE-LEX-MACHEN-01, GE-LEX-LERNEN-01, GE-GRAMMAR-WEAK-SINGULAR-02, GE-GRAMMAR-THIRD-PERSON-T-03, GE-GRAMMAR-ENDINGS-AUDIBLE-01, GE-LEX-WO-01, GE-LEX-IN-01, GE-LEX-WAS-01, GE-LEX-ICH-LERNE-DEUTSCH-01, GE-LEX-SEHR-01, GE-LEX-GUT-02, GE-LEX-DANKE-01, GE-LEX-BITTE-01, GE-LEX-DEUTSCH-01, GE-LEX-ICH-WOHNE-IN-02, GE-LEX-WAS-MACHST-DU-02, GE-LEX-UND-01]
+introduces:
+  knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [GE-GRAMMAR-VERB-STEM-01, GE-GRAMMAR-OVERT-SUBJECT-01, GE-LEX-WOHNEN-01, GE-LEX-MACHEN-01, GE-LEX-LERNEN-01, GE-GRAMMAR-WEAK-SINGULAR-02, GE-GRAMMAR-THIRD-PERSON-T-03, GE-GRAMMAR-ENDINGS-AUDIBLE-01, GE-LEX-WO-01, GE-LEX-IN-01, GE-LEX-WAS-01, GE-LEX-ICH-LERNE-DEUTSCH-01, GE-LEX-SEHR-01, GE-LEX-GUT-02, GE-LEX-DANKE-01, GE-LEX-BITTE-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-output, fluency]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C05-wohnen, GE-C05-machen, GE-C05-lernen, GE-C05-verbstamm, GE-C05-ich-lerne-deutsch, GE-C05-pronomen-regel]
 ---
 
-# Practice — making sentences with weak verbs
+# Practice — building sentences, not reciting them
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-VERB-STEM-01, GE-GRAMMAR-OVERT-SUBJECT-01] -->
 
-[PAUSE 2s] For the first time you're **building** German sentences from a pattern,
-not reciting phrases. Drill the three verbs and the everyday exchange until it's
-automatic.
+[PAUSE 2s] For the first time you are *building* German rather than repeating
+it. Run each verb through the three singular persons.
 
-## Conjugate on command
+## Grammar Lens: three verbs, one pattern
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-WOHNEN-01, GE-LEX-MACHEN-01, GE-LEX-LERNEN-01, GE-GRAMMAR-WEAK-SINGULAR-02, GE-GRAMMAR-THIRD-PERSON-T-03, GE-GRAMMAR-ENDINGS-AUDIBLE-01] -->
 
-[PAUSE 1s] Run each through *ich / du / er*:
+| Verb | *ich* · *du* · *er* |
+|---|---|
+| *wohnen* | *wohne* · *wohnst* · *wohnt* |
+| *machen* | *mache* · *machst* · *macht* |
+| *lernen* | *lerne* · *lernst* · *lernt* |
 
-- **wohnen**: ich wohne · du wohnst · er wohnt
-- **machen**: ich mache · du machst · er macht
-- **lernen**: ich lerne · du lernst · er lernt
+The same endings every time — **-e**, **-st**, **-t** — and, unlike French, you
+can hear all three. You still keep the pronoun, because German needs an overt
+subject.
 
-Same endings every time (**-e / -st / -t**), and — unlike French — you can
-**hear** them all. But you still keep the pronoun (German needs an overt subject).
+## The exchange
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-WO-01, GE-LEX-IN-01, GE-LEX-WAS-01, GE-LEX-ICH-LERNE-DEUTSCH-01, GE-LEX-SEHR-01, GE-LEX-GUT-02, GE-LEX-DANKE-01, GE-LEX-BITTE-01] -->
 
-## Say something real
+| German | English |
+|---|---|
+| *Wo wohnst du?* | Where do you live? |
+| *Ich wohne in Berlin. Und du?* | I live in Berlin. And you? |
+| *Ich wohne in Wien. Was machst du?* | I live in Vienna. What are you doing? |
+| *Ich lerne Deutsch!* | I'm learning German! |
+| *Sehr gut!* | Very good! |
+| *Danke!* — *Bitte.* | Thanks! — You're welcome. |
 
-> — **Wo wohnst** du? — **Ich wohne** in Berlin. Und du?
-> — Ich wohne in Wien. **Was machst** du?
-> — **Ich lerne** Deutsch! — Sehr gut!
-> — Danke! — Bitte.
-
-## What you've built this chapter
-
-- **the regular (weak) present tense** — drop *-en*, add *-e/-st/-t/-en/-t/-en*;
-  the endings are **audible** (contrast: French's are silent).
-- **wohnen** (← *wonēn* → *wont*), **machen** (← *makōn* → *make*; *Was machst
-  du?*), **lernen** (← *liznōjan* → *learn/lore*).
-- **Ich lerne Deutsch** — first self-assembled sentence (*Deutsch* ← *diutisc*,
-  "of the people" → English *Dutch*).
-- **The pronoun rule, three ways**: Spanish **drops** *yo* (ending says who);
-  French **keeps** *je* (endings silent); German **keeps** *ich* (grammar needs an
-  overt subject).
+Every line is assembled from pieces you own. Nothing here was memorised whole.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-WOHNEN-01, GE-LEX-MACHEN-01, GE-LEX-LERNEN-01, GE-GRAMMAR-WEAK-SINGULAR-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: conjugate all three verbs, ich/du/er — hear the endings]
-- [YOU SAY: answer about yourself — where you live, what you're doing]
-- [YOU SAY: chain it — "Hallo! Ich lerne Deutsch. Wo wohnst du? … Auf
-  Wiedersehen!"]
+- [YOU SAY: the whole exchange, both voices]
+- [YOU SAY: each verb through *ich* / *du* / *er*]
+- [YOU SAY: the exchange again with your own city]
 
-[REPEAT x2] "Wo wohnst du? — Ich wohne in Berlin."
+[REPEAT x2] "Wo wohnst du? — Ich wohne in …"
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-WEAK-SINGULAR-02, GE-GRAMMAR-OVERT-SUBJECT-01, GE-LEX-ICH-LERNE-DEUTSCH-01] -->
 
-[PAUSE 3s] What are the three singular weak endings, and are they audible?
-(*-e/-st/-t*; yes — unlike French.) Give the "I" forms of the three verbs. (*Ich
-wohne, ich mache, ich lerne*.) Why does German keep *ich* when Spanish drops
-*yo*? (German grammar needs an overt subject.) German now moves in real
-sentences.
+[PAUSE 3s] What are the three singular endings, and can you hear them? (*-e*,
+*-st*, *-t*; yes — unlike French.) Give the *ich* form of all three verbs. (*Ich
+wohne*, *ich mache*, *ich lerne*.) Why keep the pronoun? (German needs an overt
+subject.)

@@ -3,9 +3,17 @@
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
     "GE-C05-wohnen",
-    "GE-C05-lernen"
+    "GE-C05-verbstamm",
+    "GE-C05-er-sie-es",
+    "GE-C05-wir",
+    "GE-C05-ihr",
+    "GE-C05-endungen-hoerbar",
+    "GE-C05-in",
+    "GE-C05-wo"
   ],
-  "before": [],
+  "before": [
+    "GE-EXT-014-VERB-MACHINE"
+  ],
   "inline": [],
   "after": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 5,
-  "sourceHash": "fnv1a64:aead273c2e552706",
+  "sourceHash": "fnv1a64:a507fdec50e4b96c",
   "lessonIds": [
     "GE-C05-wohnen",
     "GE-C05-verbstamm",
@@ -19,11 +19,5 @@
     "GE-C05-pronomen-regel",
     "GE-C05-practice"
   ],
-  "voiceLessons": 15,
-  "drivablePrefix": 15,
-  "text": "german/narration/ch05.txt",
-  "json": "german/narration/ch05.json",
-  "textHash": "fnv1a64:a9f4b881d27d0e84",
-  "jsonHash": "fnv1a64:29d77d73d1b1f66d",
-  "findings": []
+  "tex": "german/book/chapters/ch05-first-verbs.tex"
 }
