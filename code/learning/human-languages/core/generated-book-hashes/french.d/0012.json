@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:4f37007d063409c8",
+  "lessonIds": [
+    "FR-C10-pere",
+    "FR-C10-mere",
+    "FR-C10-grimm",
+    "FR-C10-frere",
+    "FR-C10-soeur",
+    "FR-C10-oe",
+    "FR-C10-practice"
+  ],
+  "tex": "french/book/chapters/ch12-family.tex"
+}

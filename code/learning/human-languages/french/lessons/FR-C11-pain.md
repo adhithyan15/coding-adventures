@@ -6,12 +6,12 @@ type: word
 headword: le pain
 gloss: bread — and the "companion" who shares it
 concept_tag: FR-FOOD-BREAD
-prerequisites: [FR-C10-freres-soeurs, FR-C01-bonjour]
+prerequisites: [FR-C10-practice, FR-C01-bonjour]
 sounds: [nasal-in, silent-final]
 roots: [panis-latin]
 etymology_hook: "pain ← Latin pānis 'bread' → companion (com + pānis, 'one you share bread with'), company, pantry; the nasal -ain"
 est_minutes: 4
-reviews_of: [FR-C10-freres-soeurs, FR-C01-bonjour]
+reviews_of: [FR-C10-practice, FR-C01-bonjour]
 ---
 
 # le pain — bread, and the people you share it with
