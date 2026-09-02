@@ -1,10 +1,10 @@
 {
   "language": "telugu",
   "chapter": 15,
-  "sourceHash": "fnv1a64:7e7cec119df65e8f",
+  "sourceHash": "fnv1a64:815f390aeba1cf80",
   "lessonIds": [
     "TE-C15-neellu-biyyam",
-    "TE-S118-letter-ga"
+    "TE-S119-vowel-sign-ii"
   ],
   "tex": "telugu/book/chapters/ch15-water-and-rice.tex"
 }

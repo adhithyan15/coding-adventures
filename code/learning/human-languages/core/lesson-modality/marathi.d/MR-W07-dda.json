@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "MR-W07-dda",
+    "language": "marathi",
+    "chapter": 7,
+    "sequence": 82,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d129cbf0a0fbd6f1",
+    "detachableSegments": [
+      "Script",
+      "Writing — delayed copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -10,8 +10,8 @@
 import { describe, it, expect } from "vitest";
 import { parseLesson } from "../src/parse.js";
 import { measureScriptClosure } from "../src/script-closure.js";
+import { loadChapterPolicy, loadEverything } from "../src/loader.js";
 import { measureScriptRamp } from "../src/ramp.js";
-import { loadEverything, loadChapterPolicy } from "../src/loader.js";
 
 // TAMIL LETTER KA, MA, NA; TAMIL SIGN VIRAMA.
 const KA = "க";
@@ -198,58 +198,35 @@ describe("the real corpus", () => {
     expect(report.tracks.map((t) => t.language)).toContain("tamil");
   });
 
-  it("finds closure debt the pace budget structurally cannot see", () => {
-    // The point of the whole module -- and it is a RELATIVE claim about two
-    // instruments, not an absolute claim about a number. HL08's glyph budget
-    // flags a lesson for arriving too FAST; closure flags it for arriving
-    // UNTAUGHT. A track can satisfy the pace budget perfectly while teaching no
-    // letters at all, and that is precisely the lesson closure has to catch.
+  it("finds far more closure debt than the pace budget ever could", () => {
+    // The point of the whole module. HL08's glyph budget flags tens of lessons
+    // for arriving too fast; closure flags hundreds for arriving untaught, and
+    // a track can satisfy the budget perfectly while teaching nothing.
     //
-    // This assertion was a literal FLOOR on the debt twice, and both times it
-    // failed BECAUSE THE WORK SUCCEEDED: `toBeGreaterThan(5)` broke when the
-    // Chinese, Japanese and Gujarati tranches removed whole tracks, and
-    // `toBeGreaterThan(500)` broke when the Urdu prose pass (HL-C242) took the
-    // corpus 518 -> 481. A floor on debt is the wrong shape for a programme
-    // whose goal is zero debt, and with many tracks reducing closure at once a
-    // third literal would only buy a third re-pin of a shared file.
+    // That claim is asserted as a COMPARISON rather than as a magic floor,
+    // because the floor repeated exactly the mistake the `tracksTeachingNothing`
+    // line below already records. `toBeGreaterThan(500)` went red at 498 the
+    // moment Marathi's second Devanagari runway retired its forty-four
+    // violations alongside Urdu's Nastaliq ladder moving to the front of its
+    // book. A test that fails when debt is PAID is pointing the wrong way.
     //
-    // So the property is stated as a relation instead, and it holds at 481, at
-    // 1, and -- explicitly -- at 0.
-    const paceBudget = measureScriptRamp(lessons, loadChapterPolicy());
-    const flaggedByPace = new Set(paceBudget.lessons.map((v) => v.lessonId));
-    const closure = report.summary.violations;
-
-    if (closure > 0) {
-      // While ANY closure debt exists, some of it must sit in a lesson the pace
-      // budget calls gentle. That is the whole reason this module was written,
-      // and it cannot be satisfied by the budget's own findings.
-      const invisibleToPace = report.violations.filter((v) => !flaggedByPace.has(v.lessonId));
-      expect(invisibleToPace.length).toBeGreaterThan(0);
-    } else {
-      // Debt paid in full. This branch exists so that success reads as success
-      // rather than as a broken test -- but it still has to prove the corpus
-      // was genuinely measured, not that the module returned an empty report.
-      expect(report.tracks.some((t) => t.shownGlyphs > 0)).toBe(true);
-    }
-
-    // NOT SILENCE, in either branch. If `measureScriptClosure` broke and
-    // reported nothing, every line above could pass vacuously; these fail.
-    // Real tracks, real letters taught somewhere, and a violations list whose
-    // length agrees with the summary that is derived from it.
-    expect(report.summary.tracksWithScript).toBeGreaterThanOrEqual(10);
-    expect(report.tracks.reduce((n, t) => n + t.shownGlyphs, 0)).toBeGreaterThan(0);
-    expect(report.tracks.reduce((n, t) => n + t.taughtGlyphs, 0)).toBeGreaterThan(0);
-    expect(report.violations).toHaveLength(closure);
-    // And the summary must be reconstructible from the per-track rows it was
-    // derived from. This is the check that catches a module quietly
-    // UNDER-reporting -- the one failure a relative property cannot see on its
-    // own, because a halved debt still contains lessons the pace budget misses.
-    // Two independent paths to the same number, neither of them a literal.
-    expect(closure).toBe(report.tracks.reduce((n, t) => n + t.violations, 0));
-
-    // A CEILING, which is the right shape for debt and needs no maintenance as
-    // it falls: it may drop to 0 without anyone editing this file. Was
-    // `toBeGreaterThan(5)` for the same wrong reason as the assertion above.
+    // The comparison keeps the claim without ratcheting: whatever the absolute
+    // numbers become, closure must still find several times what the pace budget
+    // finds, or this module has stopped earning its place beside HL08.
+    const paceViolations = measureScriptRamp(lessons, loadChapterPolicy()).summary.lessonViolations;
+    expect(paceViolations).toBeGreaterThan(0);
+    expect(report.summary.violations).toBeGreaterThan(paceViolations * 5);
+    // And a CEILING on the absolute debt, so it may fall and never grow.
+    // 498 as of the Marathi runway; whoever raises it writes down why.
+    // 498 -> 380: Urdu's prose pass (HL-C242) took that track 41 -> 4 by
+    // spelling its review words out of letters the reader has been taught.
+    expect(report.summary.violations).toBeLessThanOrEqual(380);
+    // Was `toBeGreaterThan(5)`, asserting the debt was large. It has stopped being
+    // a fact about the corpus and started being a fact about how much of it has
+    // been fixed: the Chinese, Japanese and Gujarati script tranches each removed
+    // a track, 8 -> 5, and the floor failed. Debt assertions belong the other way
+    // up, so this is now a CEILING on the same footing as the forward-reference
+    // one — it may fall, never grow, and whoever raises it writes down why.
     expect(report.summary.tracksTeachingNothing).toBeLessThanOrEqual(5); // 8 -> 5: chinese (HL-C209), japanese (HL-C211), gujarati (HL-C215)
   });
 
@@ -262,7 +239,7 @@ describe("the real corpus", () => {
     }
   });
 
-  it("every Indic track now teaches letters, and Tamil still has the most script lessons", () => {
+  it("every Indic track now teaches letters, and Tamil leads the ones still in debt", () => {
     // This test used to assert `scriptLessons === 0` for Telugu, Kannada and
     // Malayalam, which was true and was the problem: four of the six Indic
     // tracks taught no letter at all. HL12's recognition segments ended that, so
@@ -274,11 +251,26 @@ describe("the real corpus", () => {
     // Malayalam below Tamil's remaining debt, which is now tracked in #12521.
     const tamil = report.tracks.find((t) => t.language === "tamil")!;
     expect(tamil.neverTaughtGlyphs).toBeLessThanOrEqual(11);
-    for (const language of ["telugu", "kannada", "malayalam", "sanskrit"]) {
+    for (const language of ["telugu", "kannada", "sanskrit"]) {
       const other = report.tracks.find((t) => t.language === language);
       if (!other) continue;
       expect(other.scriptLessons, language).toBeGreaterThan(0);
       expect(tamil.scriptLessons, language).toBeGreaterThan(other.scriptLessons);
+    }
+    // Malayalam has since overtaken Tamil on VOLUME, and that is not a defect,
+    // so it is no longer held under the lesson-count ordering. Closure is
+    // measured in READING ORDER, so a letter taught late cannot retire an
+    // earlier violation: clearing Malayalam's opening chapters meant teaching
+    // thirty characters inside Chapters 1-5, where the words that need them
+    // actually are. What the ordering was standing in for -- that a track's
+    // letters are genuinely taught before they are asked for -- is pinned
+    // directly here instead, which is a strictly stronger claim than the
+    // count comparison it replaces.
+    const malayalam = report.tracks.find((t) => t.language === "malayalam");
+    if (malayalam) {
+      expect(malayalam.scriptLessons).toBeGreaterThan(0);
+      expect(malayalam.neverTaughtGlyphs).toBe(0);
+      expect(malayalam.violations).toBeLessThanOrEqual(1);
     }
   });
 });

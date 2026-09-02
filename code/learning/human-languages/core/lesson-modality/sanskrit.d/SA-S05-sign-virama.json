@@ -2,8 +2,8 @@
   "lesson": {
     "id": "SA-S05-sign-virama",
     "language": "sanskrit",
-    "chapter": 12,
-    "sequence": 575,
+    "chapter": 1,
+    "sequence": 61,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:99914d44a1db00ad",
+    "sourceHash": "fnv1a64:1eff3f821faf3a26",
     "detachableSegments": [
       "Script you'll notice: ◌्",
       "Writing: ◌् — copy what you see"

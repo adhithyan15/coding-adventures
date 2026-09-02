@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Seasons",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d772ea0e40da9ec4",
+  "sourceHash": "fnv1a64:2b305f4b804ba1aa",
   "lessons": [
     {
       "id": "TE-C14-rutuvulu",
@@ -142,12 +142,12 @@
       ]
     },
     {
-      "id": "TE-S117-letter-va",
+      "id": "TE-S118-letter-ga",
       "sequence": 411,
-      "title": "వ (va) — one character, met inside words you already say",
-      "headword": "వ",
-      "romanization": "va",
-      "gloss": "the single character వ — recognised inside words you already say",
+      "title": "గ (ga) — one character, met inside words you already say",
+      "headword": "గ",
+      "romanization": "ga",
+      "gloss": "the single character గ — recognised inside words you already say",
       "script": "telugu",
       "modality": "pen",
       "derivedModality": "pen",
@@ -156,7 +156,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3f5f0c2a9e345f39",
+      "sourceHash": "fnv1a64:5192fda2d33677c1",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -164,10 +164,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script you'll notice: వ",
+          "Script you'll notice: గ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: వ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: గ and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -183,7 +183,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ద — what does it do?"
+              "text": "Before the new one: వ — what does it do? And one from further back: ల?"
             },
             {
               "kind": "pause",
@@ -193,53 +193,53 @@
             },
             {
               "kind": "speech",
-              "text": "One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was."
+              "text": "One character this time — and you have been saying it for pages without knowing which mark on the page it was."
             }
           ]
         },
         {
           "index": 1,
           "type": "script",
-          "title": "Script you'll notice: వ",
+          "title": "Script you'll notice: గ",
           "segments": [
             {
               "kind": "speech",
-              "text": "వ — va."
+              "text": "గ — ga."
             },
             {
               "kind": "speech",
-              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not v, it is va."
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not g, it is ga."
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has వ (va) somewhere inside it:"
+              "text": "You already say these, and every one of them has గ (ga) somewhere inside it:"
             },
             {
               "kind": "speech",
-              "text": "ధన్యవాదములు dhanyavādamulu — thank you (dhanyavādamulu — \"utterances of 'worthy'\")."
+              "text": "బాగా bāgā — well, fine — and the reply \"నేను బాగున్నాను."
             },
             {
               "kind": "speech",
-              "text": "అవును avunu — yes (avunu)."
+              "text": "నేను తెలుగు మాట్లాడతాను — I speak Telugu."
             },
             {
               "kind": "speech",
-              "text": "నువ్వు / మీరు nuvvu / mīru — you (familiar / respectful)."
+              "text": "నాకు తెలుగు వచ్చు nāku telugu vaccu — 'I know Telugu'."
             },
             {
               "kind": "speech",
-              "text": "పరవాలేదు paravālēdu — it's okay / no problem / you're welcome."
+              "text": "ఒకటి రెండు మూడు నాలుగు ఐదు okaṭi reṇḍu mūḍu nālugu aidu — one to five."
             }
           ]
         },
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: వ — copy what you see",
+          "title": "Writing: గ — copy what you see",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on వ (va) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Put your pen on గ (ga) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -261,33 +261,33 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find వ (va) in the ones that have it",
+              "instruction": "at these words, and find గ (ga) in the ones that have it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: at these words, and find వ in the ones that have it]"
+              "source": "[YOU LOOK: at these words, and find గ in the ones that have it]"
             },
             {
               "kind": "speech",
-              "text": "ధన్యవాదములు, అవును, నమస్కారం."
+              "text": "బాగా, నమస్కారం."
             },
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "వ three times, saying va as you finish each one",
+              "instruction": "గ three times, saying ga as you finish each one",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU TRACE: వ three times, saying *va* as you finish each one]"
+              "source": "[YOU TRACE: గ three times, saying *ga* as you finish each one]"
             },
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find వ (va) once more",
+              "instruction": "back at any page of this chapter and find గ (ga) once more",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: back at any page of this chapter and find వ once more]"
+              "source": "[YOU LOOK: back at any page of this chapter and find గ once more]"
             }
           ]
         },
@@ -304,7 +304,11 @@
             },
             {
               "kind": "speech",
-              "text": "Which character is this — వ? What sound does it carry? (va.) Name one word you already say that contains it."
+              "text": "Which character is this — గ? What sound does it carry? (ga.) Name one word you already say that contains it."
+            },
+            {
+              "kind": "speech",
+              "text": "One more, from much earlier: స — what does it do?"
             }
           ]
         }

@@ -1,0 +1,18 @@
+{
+  "id": "MR-EXT-033-RETROFLEX-RUNWAY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write the four retroflex consonants and plain pa, and hear the curled row apart from the dental one I already write.",
+  "prerequisites": [
+    "MR-EXT-032-TWO-ROWS-RUNWAY"
+  ],
+  "lessons": [
+    "MR-W07-tta",
+    "MR-W07-ttha",
+    "MR-W07-dda",
+    "MR-W07-nna",
+    "MR-W07-pa",
+    "MR-R07-retroflex-recall"
+  ]
+}

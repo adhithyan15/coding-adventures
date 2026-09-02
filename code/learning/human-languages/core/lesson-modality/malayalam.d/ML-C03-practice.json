@@ -4,18 +4,21 @@
     "language": "malayalam",
     "chapter": 3,
     "sequence": 210,
-    "modality": "voice",
-    "derived": "voice",
-    "drivable": true,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
     "reasons": [
-      "no-visual-dependency"
+      "script-block"
     ],
     "coreModality": "voice",
     "coreReasons": [
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:50faef297aa213bd"
+    "sourceHash": "fnv1a64:af1ded4f2db4e216",
+    "detachableSegments": [
+      "Script check — the letters of this chapter"
+    ]
   },
   "findings": []
 }

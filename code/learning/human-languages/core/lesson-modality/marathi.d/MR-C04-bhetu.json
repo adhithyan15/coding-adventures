@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C04-bhetu",
     "language": "marathi",
-    "chapter": 7,
-    "sequence": 140,
+    "chapter": 11,
+    "sequence": 340,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:385a4bedf6637a10",
+    "sourceHash": "fnv1a64:b5ce8b00d613bcc3",
     "detachableSegments": [
       "The letters in this word"
     ]

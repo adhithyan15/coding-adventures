@@ -5,40 +5,40 @@ introduces_senses: []
 introduces_culture_claims: []
 id: SA-S114-letter-ha
 spine_node: SPINE-MEET-GREET
-sequence: 721
+sequence: 521
 delivery: script
-chapter: 15
+chapter: 11
 type: writing
 headword: "ह"
 gloss: the single character ह — recognised inside words you already say
 romanization: "ha"
-prerequisites: [SA-S113-letter-pa]
+prerequisites: [SA-S210-vowel-sign-ii]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [SA-SCRIPT-RECOG-113]
+  knowledge: [SA-SCRIPT-RECOG-210]
 introduces:
   knowledge: [SA-SCRIPT-RECOG-114]
 practises:
-  knowledge: [SA-SCRIPT-RECOG-113, SA-SCRIPT-RECOG-114]
+  knowledge: [SA-SCRIPT-RECOG-209, SA-SCRIPT-RECOG-108, SA-SCRIPT-RECOG-210, SA-SCRIPT-RECOG-114]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [SA-S113-letter-pa]
+reviews_of: [SA-S209-sign-anusvara, SA-S108-letter-sa, SA-S210-vowel-sign-ii]
 ---
 
 # ह — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-113] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-209, SA-SCRIPT-RECOG-108, SA-SCRIPT-RECOG-210] -->
 
-[PAUSE 1s] Before the new one: प — what does it do?
+[PAUSE 1s] Before the new one, the ones you have already met: ◌ं · स · ◌ी. Say what each of them does.
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
+[PAUSE 2s] One character this time. One only — and you have been saying it
 for pages without knowing which mark on the page it was.
 
 ## Script you'll notice: ह
@@ -58,8 +58,7 @@ You already say these, and every one of them has ह somewhere inside it:
 
 - **अहम्** *aham* — I
 - **अहं संस्कृतं वदामि** *ahaṁ saṁskṛtaṁ vadāmi* — I speak Sanskrit
-- **गृह्णाति** *gṛhṇāti* — he, she, or it takes, seizes
-- **साहाय्यं करोति** *sāhāyyaṁ karoti* — he, she, or it helps
+- **स्निह्यति · प्रियम्** *snihyati · priyam* — he, she, or it loves, and what is dear — affection named as stickiness, and the word behind English friend
 
 ## Writing: ह
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-114] -->
@@ -70,18 +69,18 @@ You already say these, and every one of them has ह somewhere inside it:
 
 **Pen lifts: 2.** The pen comes up 2 times and no more.
 
-> Verified three-stroke teaching form; the corroborating deskbook stages the joined first body in more component steps.
+> verified three-stroke teaching form; the corroborating deskbook stages the joined first body in more component steps
 
 > This is one attested teaching order and not a national standard — handwriting
 > here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-ह-order.gif’, strokes 1–3, Wikimedia Commons, 9 May 2009.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-114] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-210, SA-SCRIPT-RECOG-114] -->
 
 [PAUSE 1s]
-- [YOU LOOK: at these words, and find ह in the ones that have it]
+- [YOU LOOK: at this, and find ह in it]
 
-> अहम्  ·  नमस्ते
+> अहम्  ·  अहं संस्कृतं वदामि  ·  स्निह्यति · प्रियम्
 
 - [YOU TRACE: ह three times, saying *ha* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ह once more]

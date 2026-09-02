@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-R23-wellbeing-verbs
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 960
-chapter: 23
+sequence: 1160
+chapter: 27
 type: review
 headword: बसा / वाटतं / झोप / चालेल
 romanization: basā / vāṭtaṁ / jhop / chālel

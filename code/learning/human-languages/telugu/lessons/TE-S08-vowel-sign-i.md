@@ -2,41 +2,41 @@
 schema_version: 2
 id: TE-S08-vowel-sign-i
 spine_node: SPINE-MEET-GREET
-sequence: 405
+sequence: 125
 delivery: script
-chapter: 13
+chapter: 2
 type: writing
 headword: "ి"
 gloss: the single character ి — recognised inside words you already say
 romanization: "i"
-prerequisites: [TE-S07-vowel-sign-aa]
+prerequisites: [TE-S141-digit-2]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [TE-SCRIPT-RECOG-07]
+  knowledge: [TE-SCRIPT-RECOG-141]
 introduces:
   knowledge: [TE-SCRIPT-RECOG-08]
 practises:
-  knowledge: [TE-SCRIPT-RECOG-07, TE-SCRIPT-RECOG-08]
+  knowledge: [TE-SCRIPT-RECOG-08, TE-SCRIPT-RECOG-141, TE-SCRIPT-RECOG-02]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [TE-S07-vowel-sign-aa]
+reviews_of: [TE-S141-digit-2, TE-S02-vowel-sign-u]
 ---
 
 # ◌ి — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-07] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-141, TE-SCRIPT-RECOG-02] -->
 
-[PAUSE 1s] Before the new one: ◌ా — what does it do?
+[PAUSE 1s] Before the new one: ౨ — what amount does it stand for? And one from further back: ◌ు?
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
-for pages without knowing which mark on the page it was.
+[PAUSE 2s] One character this time — and you have been saying it for pages
+without knowing which mark on the page it was.
 
 ## Script you'll notice: ◌ి
 <!-- hl-knowledge: introduces=[TE-SCRIPT-RECOG-08]; assesses=[] -->
@@ -47,10 +47,8 @@ It is a **vowel sign**. It is not a letter and never stands alone: it attaches t
 
 You already say these, and every one of them has ◌ి somewhere inside it:
 
+- **మీ పేరు ఏమిటి?** *mī pēru ēmiṭi?* — what is your name?
 - **ఏమిటి** *ēmiṭi* — what
-- **వెళ్ళి వస్తాను** *veḷḷi vastānu* — goodbye (lit. "I'll go and come back")
-- **పని చేయు** *pani cēyu* — to work (lit. "work-do")
-- **ఒకటి రెండు మూడు నాలుగు ఐదు** *okaṭi reṇḍu mūḍu nālugu aidu* — one to five
 
 ## Writing: ◌ి — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-08] -->
@@ -70,7 +68,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ◌ి in the ones that have it]
 
-> ఏమిటి  ·  వెళ్ళి వస్తాను  ·  నమస్కారం
+> ఏమిటి  ·  మీ పేరు ఏమిటి?  ·  నమస్కారం
 
 - [YOU TRACE: ◌ి three times, saying *i* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ◌ి once more]

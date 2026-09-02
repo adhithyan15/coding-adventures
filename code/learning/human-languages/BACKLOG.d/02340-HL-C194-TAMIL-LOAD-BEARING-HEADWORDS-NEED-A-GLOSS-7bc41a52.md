@@ -1,5 +1,17 @@
 ## HL-C194 — Twenty-one Tamil headwords are load-bearing for want of a romanization
 
+> **DONE.** All twenty-one now declare a `romanization`, each transcribed from
+> that lesson's own prose. `headwordsWithoutRomanization` 21 → 0 and closure
+> violations 29 → 21, exactly as this entry predicted. What is left of Tamil's
+> closure debt is a different problem and is written up separately, in
+> `02350-HL-C194-TAMIL-CLOSURE-IS-NOW-ORDERING-NOT-ABSENCE`. This entry is kept
+> because these directories are append-only history; read it for the method, not
+> as open work. The one instruction it gave that had to be exercised —
+> *do not invent a romanization for a headword whose body does not already say
+> the word aloud* — applied to two lessons, and both were fixed in the page
+> instead: `TA-W00-va-guided-copy` and `TA-C19-vayathu` now say their headword
+> aloud, so nothing had to be left and reported.
+
 `measureScriptClosure` draws its exposure line at one mechanical place: a
 lesson's headword is exposure when the lesson declares a `romanization`, and
 something the reader has to decode when it does not. Tamil declares none on

@@ -6,6 +6,7 @@ sequence: 790
 chapter: 25
 type: etymology
 headword: நல்ல இரவு / இரவு வணக்கம்
+romanization: "nalla iravu / iravu vaṇakkam"
 gloss: Tamil repeats its native greeting loyalty with good-night alternatives built from known roots
 prerequisites: [TA-C25-iniya-iravu]
 sounds: [tamil-geminate-lla]

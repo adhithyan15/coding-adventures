@@ -1,0 +1,1240 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 29,
+  "title": "Take the Money: Closing the Bargain",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:f25b8553725ebbdd",
+  "lessons": [
+    {
+      "id": "MW-C24-hear-lo",
+      "sequence": 2310,
+      "title": "Hear lo — take it",
+      "headword": "lo",
+      "romanization": "lo",
+      "gloss": "take it — the shortest asking word in the source",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6d2dc419a38082eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the bargaining payoff and the three-word shopping payoff, then write price and make it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lo — take it."
+            },
+            {
+              "kind": "speech",
+              "text": "One beat, and the third asking word in this track. Say dikhāvo, karo, lo in a row: all three end on the same -o, and that ending is your signal that a word is asking somebody to do something."
+            },
+            {
+              "kind": "speech",
+              "text": "lo is the word that closes a deal rather than opening one. It is what the person handing something over says, and what you say when you accept."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C24-hear-lo-meaning",
+              "prompt": "What does lo ask somebody to do?",
+              "assesses": [
+                "MW-LEX-LO-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "take it",
+                "take",
+                "take it please",
+                "accept it"
+              ],
+              "feedback": {
+                "correct": "Right: lo hands something over.",
+                "incorrect": "It ends like dikhāvo and karo because it asks for an action: take it."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C24-lo",
+      "sequence": 2320,
+      "title": "लो (lo) — take it, on the page",
+      "headword": "लो",
+      "romanization": "lo",
+      "gloss": "take it, written with two signs and no mark below the line",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:3ab55d420c5061ca",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say take it, then write cloud and cart."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ल + ो becomes लो — lo — take it."
+            },
+            {
+              "kind": "speech",
+              "text": "Two signs. The ल ends बादल and opens ठेला; here it stands alone with the ो you put on the end of करो."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at लो (lo), cover it, wait five seconds, and write it from the sound. Write करो beneath it and check that both end with the same mark."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C24-lo-delayed",
+              "prompt": "From lo, write the word that means take it.",
+              "assesses": [
+                "MW-SCRIPT-LO-01",
+                "MW-LEX-LO-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "लो",
+                "लो take it"
+              ],
+              "feedback": {
+                "correct": "Right: ल with the same ो that ends करो.",
+                "incorrect": "Write ल, then add ो."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C24-hear-pay",
+      "sequence": 2330,
+      "title": "Hear paisā le lo — take the money",
+      "headword": "paisā le lo",
+      "romanization": "paisā le lo",
+      "gloss": "take the money — the line that closes a purchase",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9a7d7ccb53d54a99",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the five-word shopping payoff, say the counter-offer, then write goods, money, and take it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "paisā le lo — take the money."
+            },
+            {
+              "kind": "speech",
+              "text": "paisā has been yours since Chapter 14 and has had nothing to do until now. Here it is what you are handing over, and le lo is the taking, said as two short beats that run together in ordinary speech."
+            },
+            {
+              "kind": "speech",
+              "text": "Say the three turns you already have, then this one. That is a whole purchase, from asking to see a thing to paying for it, and every word in it was taught before this chapter except lo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C24-hear-pay-meaning",
+              "prompt": "What are you doing when you say paisā le lo?",
+              "assesses": [
+                "MW-LEX-PAY-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "handing over the money",
+                "taking the money",
+                "paying",
+                "take the money"
+              ],
+              "feedback": {
+                "correct": "Right: the money is being handed over.",
+                "incorrect": "paisā is the money; le lo is the taking of it."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C24-pay",
+      "sequence": 2340,
+      "title": "पैसा ले लो। (paisā le lo.) — the payment line on the page",
+      "headword": "पैसा ले लो।",
+      "romanization": "paisā le lo.",
+      "gloss": "take the money, written from one old word and one sign carrying two vowels",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2acedd97eccd8593",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 22,
+              "perItem": false,
+              "source": "[PAUSE 22s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ै on its own, then write what and this."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पैसा | ले | लो (lo)।."
+            },
+            {
+              "kind": "speech",
+              "text": "The same ल stands twice in a row, once with े and once with ो. Read the pair slowly and watch only the mark: it is the mark, not the letter, that tells the two words apart."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the line once. Cover it for ten seconds and write all three words. Open the model and check the two marks on the two ल before anything else."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C24-pay-write",
+              "prompt": "Write the line that hands over the money.",
+              "assesses": [
+                "MW-SCRIPT-PAY-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "पैसा ले लो।",
+                "पैसा ले लो"
+              ],
+              "feedback": {
+                "correct": "Two ल in a row, and the marks kept them apart.",
+                "incorrect": "Rebuild one word at a time: पैसा | ले | लो।"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R24-pay-two",
+      "sequence": 2350,
+      "title": "Retrieve take it and the payment line",
+      "headword": "लो — पैसा ले लो।",
+      "romanization": "lo — paisā le lo.",
+      "gloss": "the taking word and the payment line it closes",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc4883d382e85f70",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the three-counter request payoff. Write the request itself, then write how much and clarified butter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear the word alone and the whole line, in both orders, and give each meaning. Read two cards. Write both from sound, then say the line at speaking pace with your hand out as if the money were in it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R24-pay-two-recall",
+              "prompt": "Write take it, then the whole payment line.",
+              "assesses": [
+                "MW-LEX-LO-01",
+                "MW-LEX-PAY-01"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "लो — पैसा ले लो।",
+                "लो पैसा ले लो।",
+                "लो, पैसा ले लो"
+              ],
+              "feedback": {
+                "correct": "The word and the line both come back separately.",
+                "incorrect": "Repair only the missed one, then write the pair again."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C24-hear-do",
+      "sequence": 2360,
+      "title": "Hear do — give",
+      "headword": "do",
+      "romanization": "do",
+      "gloss": "give — the asking word on the other side of the counter",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0922a284f0aa8593",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the seven-word shopping payoff, write shop, then write take it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "do — give."
+            },
+            {
+              "kind": "speech",
+              "text": "One beat, like lo, and the same -o ending as every asking word so far. The two are a pair worth holding together: lo asks somebody to take, do asks them to give."
+            },
+            {
+              "kind": "speech",
+              "text": "Say them alternately, four times, with the matching gesture each time. If the gesture stops matching the word, slow down until it does."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C24-hear-do-meaning",
+              "prompt": "Which of do and lo asks somebody to hand something to you?",
+              "assesses": [
+                "MW-LEX-DO-01",
+                "MW-LEX-LO-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "do",
+                "do — give",
+                "do, give"
+              ],
+              "feedback": {
+                "correct": "Right: do asks them to give; lo asks them to take.",
+                "incorrect": "One beat each, and they point in opposite directions."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C24-do",
+      "sequence": 2370,
+      "title": "दो (do) — give, on the page",
+      "headword": "दो",
+      "romanization": "do",
+      "gloss": "give, written with the da of daal and the o mark of lo",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:0af1f22932fe7838",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say give, then write lentils and paternal grandfather."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "द + ो becomes दो — do — give."
+            },
+            {
+              "kind": "speech",
+              "text": "Two signs, and the द is the one that opens दाल and दादा. Write दो (do) and लो (lo) side by side: same mark, different letter, opposite meanings. That pair is worth keeping on one line in your notes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at the pair, cover it, wait five seconds, and write both words from their meanings rather than their sounds: first give, then take it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C24-do-delayed",
+              "prompt": "From do, write the word that asks somebody to give.",
+              "assesses": [
+                "MW-SCRIPT-DO-01",
+                "MW-LEX-DO-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "दो",
+                "दो give"
+              ],
+              "feedback": {
+                "correct": "Right: द with ो, and not ल with ो.",
+                "incorrect": "The letter carries the meaning here, not the mark: द, then ो."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C24-hear-aakhri",
+      "sequence": 2380,
+      "title": "Hear ākhrī — final",
+      "headword": "ākhrī",
+      "romanization": "ākhrī",
+      "gloss": "final; last — the word that ends a bargain",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:89c2796ee92d021f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the counter-offer, then write ख, horse, and give."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ākhrī — final; last."
+            },
+            {
+              "kind": "speech",
+              "text": "Three beats. The second carries the breathed kh you first met inside dikhāvo; say both words in a row and check that the breath falls in the same place."
+            },
+            {
+              "kind": "speech",
+              "text": "A counter-offer can be answered with another counter-offer forever. ākhrī is the word that says this one is the end of it, and it is why the question in the next lesson gets a different kind of answer from the first price question."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C24-hear-aakhri-meaning",
+              "prompt": "What does ākhrī say about the price it describes?",
+              "assesses": [
+                "MW-LEX-AAKHRI-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "that it is the final one",
+                "final",
+                "last",
+                "it is the last price"
+              ],
+              "feedback": {
+                "correct": "Right: ākhrī closes the bargaining rather than continuing it.",
+                "incorrect": "It is not a price. It is what you call a price to end the haggling."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C24-aakhri",
+      "sequence": 2390,
+      "title": "आखरी (ākhrī) — final, on the page",
+      "headword": "आखरी",
+      "romanization": "ākhrī",
+      "gloss": "final, written with the standing aa of aabhaar and the kha of this slice",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:e65d72b2327c00c7",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 22,
+              "perItem": false,
+              "source": "[PAUSE 22s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say final, then write formal thanks and heat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आ + ख + री becomes आखरी — ākhrī — final."
+            },
+            {
+              "kind": "speech",
+              "text": "Four signs, all secure. The word opens on the standing आ of आभार, and its second sign is the ख you traced for दिखावो. Write दिखावो and आखरी (ākhrī) one under the other and check that the ख is drawn the same way in both."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at आखरी (ākhrī), cover it, wait five seconds, and write it from the sound. Check the standing आ is at full height and the ी reaches above the headstroke."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C24-aakhri-delayed",
+              "prompt": "From ākhrī, write the word that means final.",
+              "assesses": [
+                "MW-SCRIPT-AAKHRI-01",
+                "MW-LEX-AAKHRI-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "आखरी",
+                "आखरी final"
+              ],
+              "feedback": {
+                "correct": "Right: the standing आ, then ख, then री.",
+                "incorrect": "Build it in three groups: आ, ख, री."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C24-hear-final-price",
+      "sequence": 2400,
+      "title": "Hear kitṇo ākhrī bhāv doge? — what final price?",
+      "headword": "kitṇo ākhrī bhāv doge?",
+      "romanization": "kitṇo ākhrī bhāv doge?",
+      "gloss": "what final price will you give? — the question that closes a bargain",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae08c9bd634d772c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the first price question, then write how much, price, final, and give."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kitṇo ākhrī bhāv doge? — what final price will you give?"
+            },
+            {
+              "kind": "speech",
+              "text": "Four words, four of them yours in some form. kitṇo asks, ākhrī closes, bhāv is the price you have been able to name since Chapter 18, and doge is the do of the last lesson with an ending that puts it in the future: not give, but will you give."
+            },
+            {
+              "kind": "speech",
+              "text": "Learn the line as one heard shape. The ending on doge is real Marwadi machinery and it gets its own lesson later; taking it whole now costs nothing, because do has already been taught on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C24-hear-final-price-meaning",
+              "prompt": "What does kitṇo ākhrī bhāv doge? ask for?",
+              "assesses": [
+                "MW-LEX-FINAL-PRICE-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "the final price",
+                "what final price will you give",
+                "the last price",
+                "your final price"
+              ],
+              "feedback": {
+                "correct": "Right: it asks for the price that ends the bargaining.",
+                "incorrect": "Take it in four: kitṇo, ākhrī, bhāv, doge."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C24-final-price",
+      "sequence": 2410,
+      "title": "कितणो आखरी भाव दोगे? (kitṇo ākhrī bhāv doge?) — the closing question on the page",
+      "headword": "कितणो आखरी भाव दोगे?",
+      "romanization": "kitṇo ākhrī bhāv doge?",
+      "gloss": "what final price will you give? — written from four words already written",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:74a30fdf7f56fc53",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write भ and ग on their own, then write brother."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कितणो | आखरी (ākhrī) | भाव | दोगे?"
+            },
+            {
+              "kind": "speech",
+              "text": "Four written words. Three you have written alone; the fourth, दोगे, is the दो (do) of two lessons ago with गे added. Write दो (do) and दोगे one above the other so the added part is the only difference on the page."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the line once. Cover it for ten seconds and write all four words. Open the model and repair only the word that changed, then rewrite that word alone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C24-final-price-write",
+              "prompt": "Write the line that asks for the final price.",
+              "assesses": [
+                "MW-SCRIPT-FINAL-PRICE-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "कितणो आखरी भाव दोगे?",
+                "कितणो आखरी भाव दोगे"
+              ],
+              "feedback": {
+                "correct": "Four words, and only the last one grew.",
+                "incorrect": "Rebuild one word at a time: कितणो | आखरी | भाव | दोगे?"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R24-final-two",
+      "sequence": 2420,
+      "title": "Retrieve give and final",
+      "headword": "दो — आखरी",
+      "romanization": "do — ākhrī",
+      "gloss": "give, and final, retrieved apart from the closing question",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9dee797c27e31613",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the five-word shopping payoff, write cheap, then write the total question."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear each word out of its line and give its meaning. Read three cards: दो (do), लो, आखरी (ākhrī). Write all three from sound. Then rebuild the closing question from them and say it once at speaking pace."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R24-final-two-recall",
+              "prompt": "Write give, then final.",
+              "assesses": [
+                "MW-LEX-DO-01",
+                "MW-LEX-AAKHRI-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "दो — आखरी",
+                "दो आखरी",
+                "दो, आखरी"
+              ],
+              "feedback": {
+                "correct": "Both survive outside the question that taught them.",
+                "incorrect": "Repair only the missed word, then repeat the pair."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C24-final-four",
+      "sequence": 2430,
+      "title": "Payoff — close the bargain and pay",
+      "headword": "कितणो आखरी भाव दोगे? — पैसा ले लो।",
+      "romanization": "kitṇo ākhrī bhāv doge? — paisā le lo.",
+      "gloss": "closing a bargain and paying for it, in four separately scored skills",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3a6a76d653fd4dc8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the three-turn bargaining payoff, then write money, price, and goods."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two turns, and they only work in this order."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear both lines and say which one the buyer says and which one ends the exchange."
+            },
+            {
+              "kind": "speech",
+              "text": "Produce both from meaning cues, straight after the three turns of Chapter 28."
+            },
+            {
+              "kind": "speech",
+              "text": "Read both printed lines and point to the two words that mean give and take."
+            },
+            {
+              "kind": "speech",
+              "text": "Write both from dictation, without a model."
+            },
+            {
+              "kind": "speech",
+              "text": "Pass each skill separately. A five-turn purchase now runs end to end. Nothing here understands a number: the amount a seller actually names is still untaught, and so is refusing the final price and walking away."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C24-final-four-payoff",
+              "prompt": "Complete all four scored checks, then write the line that ends the exchange.",
+              "assesses": [
+                "MW-PERFORMANCE-FINAL-PRICE-FOUR-SKILL-01"
+              ],
+              "responseSeconds": 45,
+              "acceptedResponses": [
+                "पैसा ले लो।",
+                "पैसा ले लो"
+              ],
+              "feedback": {
+                "correct": "The bargain now closes and gets paid, in all four skills.",
+                "incorrect": "Repair only the failed skill or line, then retry that part."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R24-script-close",
+      "sequence": 2440,
+      "title": "Close the writing loop for े, ो and ी",
+      "headword": "े — ो — ी",
+      "romanization": "e-mātrā — o-mātrā — ii-mātrā",
+      "gloss": "delayed closure for the three vowel marks that carry this chapter's meanings",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1f1809160dc98658",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the closing payoff, then write paternal grandmother, maternal grandmother, and cart."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write the three marks on their own from spoken cues: above the headstroke, after the stem, and reaching above the line. Add ख from its breath cue."
+            },
+            {
+              "kind": "speech",
+              "text": "Then write लो (lo), दो (do), ले, आखरी (ākhrī), and both lines of this chapter from dictation. In this chapter a mark rather than a letter often carries the meaning, so check every mark before you check any letter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Marwari Pathshala, Lesson 9; Unicode Devanagari chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R24-script-close-recall",
+              "prompt": "Write ल with the e mark, then ल with the o mark.",
+              "assesses": [
+                "MW-SCRIPT-E-MATRA-01",
+                "MW-SCRIPT-O-MATRA-01"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "ले — लो",
+                "ले लो",
+                "ले, लो"
+              ],
+              "feedback": {
+                "correct": "One letter, two marks, two different words.",
+                "incorrect": "Repair the missed mark, then rewrite both words together."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

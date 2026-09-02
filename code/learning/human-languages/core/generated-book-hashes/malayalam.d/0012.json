@@ -1,11 +1,9 @@
 {
   "language": "malayalam",
   "chapter": 12,
-  "sourceHash": "fnv1a64:29339a2a5a7610d9",
+  "sourceHash": "fnv1a64:31b86f111fda0f23",
   "lessonIds": [
-    "ML-C12-kudumbam",
-    "ML-S07-vowel-sign-u",
-    "ML-S115-letter-nya"
+    "ML-C12-kudumbam"
   ],
   "tex": "malayalam/book/chapters/ch12-family.tex"
 }

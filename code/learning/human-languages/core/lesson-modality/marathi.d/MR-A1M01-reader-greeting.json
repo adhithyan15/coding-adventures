@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-A1M01-reader-greeting",
     "language": "marathi",
-    "chapter": 20,
-    "sequence": 840,
+    "chapter": 24,
+    "sequence": 1040,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:9ebdd373dad23318",
+    "sourceHash": "fnv1a64:5c70ae49d127e1bd",
     "detachableSegments": [
       "Writing — observe and trace one complete line"
     ],

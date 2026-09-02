@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "SA-S212-letter-dha",
+    "language": "sanskrit",
+    "chapter": 13,
+    "sequence": 581,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:be88d9538bf48935",
+    "detachableSegments": [
+      "Script you'll notice: ध",
+      "Writing: ध"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

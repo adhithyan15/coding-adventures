@@ -1,14 +1,14 @@
 {
   "language": "sanskrit",
   "chapter": 9,
-  "sourceHash": "fnv1a64:eece98cf1999e107",
+  "sourceHash": "fnv1a64:e8c2dd99e1ac7c36",
   "lessonIds": [
     "SA-C09-grhnati",
+    "SA-S107-letter-ta",
     "SA-C09-prcchati",
     "SA-C09-sahayyam-karoti",
-    "SA-C09-snihyati",
-    "SA-S02-letter-na",
-    "SA-S108-letter-sa"
+    "SA-S209-sign-anusvara",
+    "SA-C09-snihyati"
   ],
   "tex": "sanskrit/book/chapters/ch09-doing-verbs.tex"
 }

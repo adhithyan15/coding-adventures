@@ -1,19 +1,24 @@
 {
   "language": "marathi",
   "chapter": 23,
-  "sourceHash": "fnv1a64:e1e0b878e2af576d",
+  "sourceHash": "fnv1a64:14bda49a08865677",
   "lessonIds": [
-    "MR-C23-basne",
-    "MR-C23-vatne",
-    "MR-C23-jhopne",
-    "MR-C23-chalne",
-    "MR-R23-wellbeing-verbs"
+    "MR-A1F01-naav",
+    "MR-A1F01-shahar",
+    "MR-A1F01-bhasha",
+    "MR-A1F01-avdate-pey",
+    "MR-A1F01-avadti-kruti",
+    "MR-A1F01-mitrache-naav",
+    "MR-A1F02-first-three-copy",
+    "MR-A1F02-last-three-copy",
+    "MR-A1F03-first-three-delayed",
+    "MR-A1F03-last-three-delayed"
   ],
-  "voiceLessons": 1,
+  "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "marathi/narration/ch23.txt",
   "json": "marathi/narration/ch23.json",
-  "textHash": "fnv1a64:bf0f36f16da4e3b9",
-  "jsonHash": "fnv1a64:be2f1f7d3786e872",
+  "textHash": "fnv1a64:f7c9cf44563d921f",
+  "jsonHash": "fnv1a64:504b886e50291f58",
   "findings": []
 }

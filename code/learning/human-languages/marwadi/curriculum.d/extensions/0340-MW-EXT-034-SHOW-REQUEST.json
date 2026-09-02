@@ -1,0 +1,22 @@
+{
+  "id": "MW-EXT-034-SHOW-REQUEST",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "function",
+  "canDo": "I can ask for one named thing to be shown to me, and run that same request over a shopping word, a food word, and a transport word in four separately scored skills.",
+  "prerequisites": [
+    "MW-EXT-033-FOOD-SEVEN"
+  ],
+  "lessons": [
+    "MW-C21-hear-ye",
+    "MW-C21-ye",
+    "MW-C21-hear-dikhavo",
+    "MW-W21-kha",
+    "MW-C21-dikhavo",
+    "MW-R21-show-two",
+    "MW-C21-hear-show-request",
+    "MW-C21-show-request",
+    "MW-C21-show-three",
+    "MW-R21-script-close"
+  ]
+}

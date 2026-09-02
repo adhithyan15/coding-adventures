@@ -6,6 +6,7 @@ sequence: 550
 chapter: 12
 type: word
 headword: அப்பா அம்மா அண்ணன் தம்பி அக்கா தங்கை
+romanization: "appā ammā aṇṇaṉ tambi akkā tangai"
 gloss: father, mother, and FOUR sibling words — Tamil splits "brother"/"sister" by age, where Spanish/French use just one word each
 concept_tag: TA-FAMILY-BASIC
 prerequisites: [TA-C11-nirangal]

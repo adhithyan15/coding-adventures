@@ -2,8 +2,8 @@
   "lesson": {
     "id": "ML-S113-letter-nna",
     "language": "malayalam",
-    "chapter": 10,
-    "sequence": 386,
+    "chapter": 2,
+    "sequence": 94,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:40991c471a8d96f5",
+    "sourceHash": "fnv1a64:d1613e9b5365b64c",
     "detachableSegments": [
       "Script you'll notice: ണ",
       "Writing: ണ — copy what you see"

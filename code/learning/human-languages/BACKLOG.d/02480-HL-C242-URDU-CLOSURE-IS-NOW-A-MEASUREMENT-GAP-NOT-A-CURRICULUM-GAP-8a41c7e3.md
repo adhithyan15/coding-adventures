@@ -60,24 +60,38 @@ Three things are worth carrying forward:
   shows less Nastaliq than it did, which is the correct trade at this point on
   the ladder but is a debt to repay by teaching letters, not by reprinting them.
 
-### A floor on debt is the wrong shape, and this file proved it twice
+### A floor on debt is the wrong shape, and this file proved it three times
 
-`tests/script-closure.test.ts` asserted corpus violations `> 500`. That is a
-FLOOR on debt in a programme whose goal is zero debt, so **the test fails when
-the work succeeds** — and it had already failed that way once, at `> 5`, when
-the Chinese, Japanese and Gujarati tranches removed whole tracks. The comment
-beneath it recorded that failure, drew the right conclusion ("debt assertions
-belong the other way up"), inverted the companion assertion, and left the
-violations line as it was. It then failed a second time, for exactly the reason
-already written down next to it.
+`tests/script-closure.test.ts` asserted corpus violations `> 500` — a FLOOR on
+debt in a programme whose goal is zero debt, so **the test fails when the work
+succeeds.** It had already failed that way once, at `> 5`, when the Chinese,
+Japanese and Gujarati tranches removed whole tracks; the comment beneath it
+recorded that failure, drew the right conclusion, inverted the companion
+assertion, and left the violations line alone. It then went red twice more in a
+single day — at 498 for Marathi, and at 481 for this branch — for exactly the
+reason already written down beside it.
 
-It is now a relation rather than a magnitude: *while any closure debt exists,
-some of it must sit in a lesson the pace budget calls gentle.* That is the
-module's actual point — two instruments, not one number — and it survives the
-corpus going 481 → 0 with nobody editing a shared file. The zero case is an
-explicit branch so success reads as success.
+Marathi (PR #13976) fixed it in the right shape: the floor became a live
+comparison against `measureScriptRamp`'s own violation count, so the module's
+stated point — closure finds several times what the pace budget finds — is
+asserted as a relation rather than a number, with a ceiling on the absolute
+debt. This branch only moved that ceiling to its post-Urdu value.
 
-The general lesson, for the other ratchets in this suite: **a burn-down number
-should be asserted as a ceiling or as a relation, never as a floor**, and when
-a comment predicts a failure mode, the fix belongs in every assertion that
-shares it rather than only the one that happened to break that day.
+Two things for whoever is next in this file:
+
+- **A burn-down number belongs in a ceiling or a relation, never a floor.**
+  Thirteen tracks are reducing closure concurrently; every literal in this
+  suite is a future merge conflict, and a floor is also simply wrong.
+- **When a comment predicts a failure mode, fix every assertion that shares it,
+  not only the one that broke that day.** The `tracksTeachingNothing` line was
+  corrected and the `violations` line beside it was left behind, which is the
+  whole reason this recurred.
+
+### Renumber hazards, inherited from Marathi and live for the chapter-1 split
+
+Recorded here because Urdu's next tranche splits chapter 1: `sequence` must stay
+monotone with `chapter`; `\hlchaptermodality{N}` inside a hand-written `.tex` is
+NOT fixed by renaming the file; `generated-book-hashes` shards go stale and fail
+as a **set difference** rather than one file at a time; and `json.dumps` escapes
+non-ASCII by default, which breaks the canonical-shard test on any Nastaliq it
+touches.

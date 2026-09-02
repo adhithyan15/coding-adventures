@@ -1,11 +1,10 @@
 {
   "language": "telugu",
   "chapter": 8,
-  "sourceHash": "fnv1a64:4c42333414361352",
+  "sourceHash": "fnv1a64:478896e906a195e6",
   "lessonIds": [
     "TE-C08-dayachesi",
-    "TE-S03-letter-ka",
-    "TE-S111-letter-sa"
+    "TE-S112-letter-ca"
   ],
   "tex": "telugu/book/chapters/ch08-please.tex"
 }

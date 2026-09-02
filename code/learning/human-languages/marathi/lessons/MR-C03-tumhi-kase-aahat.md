@@ -1,7 +1,7 @@
 ---
 id: MR-C03-tumhi-kase-aahat
-sequence: 110
-chapter: 6
+sequence: 310
+chapter: 10
 type: phrase
 headword: तुम्ही कसे आहात?
 romanization: "tumhī kase āhāt?"

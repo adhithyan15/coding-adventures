@@ -2,41 +2,41 @@
 schema_version: 2
 id: TE-S05-sign-virama
 spine_node: SPINE-MEET-GREET
-sequence: 375
+sequence: 105
 delivery: script
-chapter: 10
+chapter: 2
 type: writing
 headword: "్"
 gloss: the single character ్ — recognised inside words you already say
 romanization: "virama"
-prerequisites: [TE-S04-sign-anusvara]
+prerequisites: [TE-S140-digit-1]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [TE-SCRIPT-RECOG-04]
+  knowledge: [TE-SCRIPT-RECOG-140]
 introduces:
   knowledge: [TE-SCRIPT-RECOG-05]
 practises:
-  knowledge: [TE-SCRIPT-RECOG-04, TE-SCRIPT-RECOG-05]
+  knowledge: [TE-SCRIPT-RECOG-05, TE-SCRIPT-RECOG-140, TE-SCRIPT-RECOG-120]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [TE-S04-sign-anusvara]
+reviews_of: [TE-S140-digit-1, TE-S120-vowel-sign-ee]
 ---
 
 # ◌్ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-140, TE-SCRIPT-RECOG-120] -->
 
-[PAUSE 1s] Before the new one: ◌ం — what does it do?
+[PAUSE 1s] Before the new one: ౧ — what amount does it stand for? And one from further back: ◌ే?
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
-for pages without knowing which mark on the page it was.
+[PAUSE 2s] One character this time — and you have been saying it for pages
+without knowing which mark on the page it was.
 
 ## Script you'll notice: ◌్
 <!-- hl-knowledge: introduces=[TE-SCRIPT-RECOG-05]; assesses=[] -->
@@ -50,7 +50,6 @@ You already say these, and every one of them has ◌్ somewhere inside it:
 - **నమస్కారం** *namaskāram* — hello / greetings (namaskāram — "a making of a bow")
 - **ధన్యవాదములు** *dhanyavādamulu* — thank you (dhanyavādamulu — "utterances of 'worthy'")
 - **నువ్వు / మీరు** *nuvvu / mīru* — you (familiar / respectful)
-- **వెళ్ళు** *veḷḷu* — to go (and వచ్చు, to come)
 
 ## Writing: ◌్ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-05] -->

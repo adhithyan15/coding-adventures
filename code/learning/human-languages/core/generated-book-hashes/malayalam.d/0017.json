@@ -1,11 +1,10 @@
 {
   "language": "malayalam",
   "chapter": 17,
-  "sourceHash": "fnv1a64:577a6e2083690582",
+  "sourceHash": "fnv1a64:448d03e823c5b127",
   "lessonIds": [
     "ML-C17-ucha-paathira",
-    "ML-C17-paathira",
-    "ML-S116-letter-u"
+    "ML-C17-paathira"
   ],
   "tex": "malayalam/book/chapters/ch17-noon-and-midnight.tex"
 }

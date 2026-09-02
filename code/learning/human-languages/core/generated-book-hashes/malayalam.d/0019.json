@@ -1,10 +1,9 @@
 {
   "language": "malayalam",
   "chapter": 19,
-  "sourceHash": "fnv1a64:2fdd65de19d8ca2b",
+  "sourceHash": "fnv1a64:166dabca2ec6c5d2",
   "lessonIds": [
-    "ML-C19-vayassu",
-    "ML-S122-letter-ya"
+    "ML-C19-vayassu"
   ],
   "tex": "malayalam/book/chapters/ch19-age.tex"
 }

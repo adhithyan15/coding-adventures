@@ -2,12 +2,12 @@
 schema_version: 2
 id: ML-S07-vowel-sign-u
 spine_node: SPINE-MEET-GREET
-sequence: 405
+sequence: 142
 delivery: script
-chapter: 12
+chapter: 2
 type: writing
 headword: "ു"
-gloss: the single character ു — recognised inside words you already say
+gloss: the single character ◌ു — recognised inside words you already say
 romanization: "u"
 prerequisites: [ML-S06-letter-chillu-ll]
 sounds: []
@@ -35,8 +35,8 @@ reviews_of: [ML-S06-letter-chillu-ll]
 
 [PAUSE 1s] Before the new one: ൾ — what does it do?
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
-for pages without knowing which mark on the page it was.
+[PAUSE 2s] One character this time. One only.
+It has not been on a page yet: it arrives with the word on the next one.
 
 ## Script you'll notice: ◌ു
 <!-- hl-knowledge: introduces=[ML-SCRIPT-RECOG-07]; assesses=[] -->
@@ -45,12 +45,13 @@ for pages without knowing which mark on the page it was.
 
 It is a **vowel sign**. It is not a letter and never stands alone: it attaches to a consonant and **replaces** the *a* built into it with *u*. Replaces, not adds — the *a* is gone.
 
-You already say these, and every one of them has ◌ു somewhere inside it:
+The dialogue on the next page introduces two people by name, and one of the
+names carries this sign.
 
-- **സുഖമാണോ?** — how are you? (lit. "are you well?")
-- **സുഖം** *sukhaṁ* — well-being — and the reply "സുഖമാണ്
-- **താമസിക്കുക** *tāmasikkuka* — to live, to stay
-- **ജോലി ചെയ്യുക** *jōli ceyyuka* — to work (lit. "work-do")
+- **അരുൺ** *aruṇ* — a common man's name in Kerala
+
+The sign hangs under its consonant and replaces that consonant's built-in *a*
+with *u*: **ര** *ra* → **രു** *ru*.
 
 ## Writing: ◌ു — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-07] -->
@@ -70,7 +71,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ◌ു in the ones that have it]
 
-> സുഖമാണോ?  ·  സുഖം  ·  നമസ്കാരം
+> അരുൺ  ·  ര  ·  ◌ു
 
 - [YOU TRACE: ◌ു three times, saying *u* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ◌ു once more]
@@ -78,5 +79,5 @@ and larger than it is printed.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-07] -->
 
-[PAUSE 3s] Which character is this — ◌ു? What vowel does it put on the consonant it attaches to — and what does it take off? (**Puts *u* on; takes the built-in *a* off.**)
+[PAUSE 3s] Which character is this — ◌ു? What sound does it carry? (***u***.)
 Name one word you already say that contains it.

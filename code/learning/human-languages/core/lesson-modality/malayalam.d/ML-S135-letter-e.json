@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-S135-letter-e",
+    "language": "malayalam",
+    "chapter": 2,
+    "sequence": 82,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:27ba2eb68c7b1b46",
+    "detachableSegments": [
+      "Script you'll notice: എ",
+      "Writing: എ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

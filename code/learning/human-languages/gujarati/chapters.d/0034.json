@@ -1,0 +1,23 @@
+{
+  "chapter": 34,
+  "title": "People, Paper, and a Book",
+  "label": "ch:gu-people-paper-book",
+  "canDo": "I can hear and say five everyday Gujarati words for people and the things they read, and read and write one of them.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "GU-C30-people-five",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Five words for people and the things they read enter meaning-first by ear, one lesson each; an oral checkpoint scores listening and speaking apart, paper reaches the page with signs taught before chapter 8, and an R1 return carries the chapter-24 three-place map back at its fourth spacing window.",
+    "assesses": [
+      "GU-LEX-CHHOKRO-01",
+      "GU-LEX-CHHOKRI-01",
+      "GU-LEX-MAANAS-01",
+      "GU-LEX-PUSTAK-01",
+      "GU-LEX-KAAGAL-01",
+      "GU-SCRIPT-KAAGAL-01",
+      "GU-PERFORMANCE-PEOPLE-FIVE-ORAL-01"
+    ]
+  }
+}

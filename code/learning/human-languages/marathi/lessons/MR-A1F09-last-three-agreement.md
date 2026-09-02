@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1F09-last-three-agreement
 spine_node: SPINE-NAME-EVERYDAY-THINGS
-sequence: 865
+sequence: 1065
 delivery: script
-chapter: 21
+chapter: 25
 type: writing
 headword: "-ते · -ती · -चे"
 gloss: repair form-label agreement separately from value spelling

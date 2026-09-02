@@ -50,30 +50,18 @@ pass.
   were set in Nastaliq in bodies where the reader could not decode them; they
   are now printed the way they are said. The genuine source-language citations
   (the four above) were left alone.
-- **One shared assertion was rewritten rather than re-pinned.**
-  `tests/script-closure.test.ts` asserted corpus violations `> 500` — a FLOOR
-  on debt, which fails when the work succeeds. It had already failed that way
-  once (`> 5`, when the Chinese, Japanese and Gujarati tranches removed whole
-  tracks) and its own comment recorded that the violations line "was left
-  behind." Taking the corpus to 481 tripped it a second time, for the second
-  predicted reason, and with many tracks reducing closure concurrently a third
-  literal would only have bought a third re-pin of a file nobody owns.
-  The test's stated point is relative, not absolute — "closure flags hundreds
-  for arriving untaught where the pace budget flags tens for arriving too
-  fast" — so it now asserts the relation: **while any closure debt exists,
-  some of it must sit in a lesson HL08's glyph budget calls gentle.** That
-  property holds at 481, at 1, and at 0, so the corpus can reach zero without
-  anyone editing this file again. Four anti-silence guards keep a broken
-  module from reading as success — measured tracks, glyphs shown, glyphs
-  taught, and the summary reconstructed independently from the per-track rows
-  — and the zero case is handled explicitly so "the debt is gone" reads as
-  success rather than as a broken test. Verified by probing seven scenarios:
-  the real corpus and an honest zero pass; an empty report, a zero with
-  nothing taught anywhere, a silently halved count, a closure that degenerates
-  into an alias of the pace budget, and a summary that disagrees with its own
-  list all fail. Persian's expectations, and every other track's, are
-  untouched.
-
+- **One shared number adjusted, and none of its structure touched.**
+  `tests/script-closure.test.ts` used to assert corpus violations `> 500` — a
+  FLOOR on debt, which fails when the work succeeds. Marathi's runway (PR
+  #13976) hit it at 498 and rewrote it properly before this branch landed: the
+  floor became a live comparison against `measureScriptRamp`'s own violation
+  count, so the module's claim is asserted as a relation rather than a
+  magnitude, plus a ceiling on the absolute debt. That restructuring is theirs,
+  not this tranche's. All this change does is move their ceiling 498 → 380 to
+  the value measured after Urdu's 41 → 4 landed on top of their 44 → 0, with a
+  one-line note saying which track moved it. Their comparison is untouched, and
+  the relation still holds with room to spare (380 against a pace budget of 37).
+  Persian's expectations, and every other track's, are untouched.
 
 ## Unreleased — move the Nastaliq ladder to the front of the book (HL-C241)
 

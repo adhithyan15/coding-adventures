@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Day",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bbbeb2717a06a089",
+  "sourceHash": "fnv1a64:7dd5ab676d098936",
   "lessons": [
     {
       "id": "TE-C23-roju",
@@ -135,7 +135,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6d66acca737498b7",
+      "sourceHash": "fnv1a64:e8b2305be3ca9e8e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -162,7 +162,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: హ — what does it do?"
+              "text": "Before the new one: ఎ — what does it do? And one from further back: ఘ?"
             },
             {
               "kind": "pause",
@@ -284,6 +284,10 @@
             {
               "kind": "speech",
               "text": "Which character is this — ణ? What sound does it carry, and where is the tongue for it? (ṇa, with the tongue curled back to the roof of the mouth — not న, which touches the teeth.) Name one word you already say that contains it."
+            },
+            {
+              "kind": "speech",
+              "text": "One more, from much earlier: ల — what does it do?"
             }
           ]
         }

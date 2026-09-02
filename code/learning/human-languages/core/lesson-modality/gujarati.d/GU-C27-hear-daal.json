@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C27-hear-daal",
+    "language": "gujarati",
+    "chapter": 31,
+    "sequence": 1470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fffafdfe8134cbbb"
+  },
+  "findings": []
+}

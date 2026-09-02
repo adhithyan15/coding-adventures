@@ -1,7 +1,7 @@
 ---
 id: MR-C04-punha
-sequence: 135
-chapter: 7
+sequence: 335
+chapter: 11
 type: word
 headword: पुन्हा
 romanization: "punhā"

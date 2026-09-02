@@ -2,9 +2,9 @@
 schema_version: 2
 id: TE-S119-vowel-sign-ii
 spine_node: SPINE-MEET-GREET
-sequence: 431
+sequence: 421
 delivery: script
-chapter: 16
+chapter: 15
 type: writing
 headword: "ీ"
 gloss: the single character ీ — recognised inside words you already say
@@ -19,24 +19,24 @@ requires:
 introduces:
   knowledge: [TE-SCRIPT-RECOG-119]
 practises:
-  knowledge: [TE-SCRIPT-RECOG-118, TE-SCRIPT-RECOG-119]
+  knowledge: [TE-SCRIPT-RECOG-119, TE-SCRIPT-RECOG-118, TE-SCRIPT-RECOG-115, TE-SCRIPT-RECOG-125]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [TE-S118-letter-ga]
+reviews_of: [TE-S118-letter-ga, TE-S115-vowel-sign-e, TE-S125-letter-ha]
 ---
 
 # ◌ీ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-118] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-118, TE-SCRIPT-RECOG-115] -->
 
-[PAUSE 1s] Before the new one: గ — what does it do?
+[PAUSE 1s] Before the new one: గ — what does it do? And one from further back: ◌ె?
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
-for pages without knowing which mark on the page it was.
+[PAUSE 2s] One character this time — and you have been saying it for pages
+without knowing which mark on the page it was.
 
 ## Script you'll notice: ◌ీ
 <!-- hl-knowledge: introduces=[TE-SCRIPT-RECOG-119]; assesses=[] -->
@@ -76,7 +76,9 @@ and larger than it is printed.
 - [YOU LOOK: back at any page of this chapter and find ◌ీ once more]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-119] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-119, TE-SCRIPT-RECOG-125] -->
 
 [PAUSE 3s] Which character is this — ◌ీ? What vowel does it put on the consonant it attaches to — and what does it take off? (**Puts *ī* on; takes the built-in *a* off.**)
 Name one word you already say that contains it.
+
+One more, from much earlier: హ — what does it do?

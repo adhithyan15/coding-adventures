@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-R18-script-c-r4",
     "language": "marathi",
-    "chapter": 18,
-    "sequence": 800,
+    "chapter": 22,
+    "sequence": 1000,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:f218c69d3557ada4"
+    "sourceHash": "fnv1a64:18f8fd983ef58ddc"
   },
   "findings": []
 }

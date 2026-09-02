@@ -1,9 +1,10 @@
 {
   "language": "malayalam",
   "chapter": 31,
-  "sourceHash": "fnv1a64:565d000ddd660e3c",
+  "sourceHash": "fnv1a64:80a9bceaccf095ac",
   "lessonIds": [
     "ML-C31-shubha-madhyaahnam",
+    "ML-S125-letter-uu",
     "ML-C31-afternoon-convergence"
   ],
   "tex": "malayalam/book/chapters/ch31-good-afternoon.tex"

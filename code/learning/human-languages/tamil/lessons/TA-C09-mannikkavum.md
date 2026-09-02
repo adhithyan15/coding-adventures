@@ -6,6 +6,7 @@ sequence: 500
 chapter: 9
 type: phrase
 headword: மன்னிக்கவும்
+romanization: "maṉṉikkavum"
 gloss: please forgive (maṉṉikkavum — a formal/written polite request, from மன்னி maṉṉi "to forgive")
 concept_tag: COURTESY-SORRY
 prerequisites: [TA-C08-please-register]

@@ -19,21 +19,21 @@ requires:
 introduces:
   knowledge: [TE-SCRIPT-RECOG-128]
 practises:
-  knowledge: [TE-SCRIPT-RECOG-127, TE-SCRIPT-RECOG-128]
+  knowledge: [TE-SCRIPT-RECOG-128, TE-SCRIPT-RECOG-127, TE-SCRIPT-RECOG-139, TE-SCRIPT-RECOG-116]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [TE-S127-letter-ja]
+reviews_of: [TE-S127-letter-ja, TE-S139-letter-ddha, TE-S116-letter-da]
 ---
 
 # భ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-127] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-127, TE-SCRIPT-RECOG-139] -->
 
-[PAUSE 1s] Before the new one: జ — what does it do?
+[PAUSE 1s] Before the new one: జ — what does it do? And one from further back: ఢ?
 
 [PAUSE 2s] One character this time — and you have been saying it for pages
 without knowing which mark on the page it was.
@@ -46,11 +46,10 @@ without knowing which mark on the page it was.
 It is a **consonant**, and in this script a consonant is never bare: it comes with an *a* already in it. So it is not *bh*, it is **bha**.
 
 Say **బ** (*ba*), then say it again and let a puff of breath out on top of it.
-That second thing is **భ**. Telugu gives the breathy one its own letter rather
-than a mark on the plain one, and it does the same for other pairs you have
-seen: **ద** (*da*) has **ధ** (*dha*) beside it, the letter standing second in
-*dhanyavādamulu* from the first pages of this book. The *h* in the romanization
-*bha* is that puff, not a separate sound.
+That second thing is **భ**. By now the pattern should arrive before the letter
+does: you have met **క/ఖ**, **గ/ఘ** and **డ/ఢ**, and this is the fourth pair of
+the same kind. The *h* in the romanization *bha* is that puff, not a separate
+sound.
 
 You already say these, and every one of them has భ somewhere inside it:
 
@@ -82,8 +81,10 @@ and larger than it is printed.
 - [YOU TRACE: భ three times, saying *bha* as you finish each one]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-128] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-128, TE-SCRIPT-RECOG-116] -->
 
 [PAUSE 3s] Which character is this — భ? What does it carry that బ does not?
 (***bha*** — the same *b* with a puff of breath after it.)
 Name one word you already say that contains it.
+
+One more, from much earlier: ద — what does it do?

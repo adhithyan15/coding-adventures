@@ -19,21 +19,21 @@ requires:
 introduces:
   knowledge: [TE-SCRIPT-RECOG-133]
 practises:
-  knowledge: [TE-SCRIPT-RECOG-132, TE-SCRIPT-RECOG-133]
+  knowledge: [TE-SCRIPT-RECOG-133, TE-SCRIPT-RECOG-132, TE-SCRIPT-RECOG-129, TE-SCRIPT-RECOG-137]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [TE-S132-letter-nya]
+reviews_of: [TE-S132-letter-nya, TE-S129-letter-vocalic-r, TE-S137-letter-kha]
 ---
 
 # ◌ౌ — one character, met inside a word you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-132] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-132, TE-SCRIPT-RECOG-129] -->
 
-[PAUSE 1s] Before the new one: ఞ — what does it do?
+[PAUSE 1s] Before the new one: ఞ — what does it do? And one from further back: ఋ?
 
 [PAUSE 2s] One character this time — and you have been saying it since the page
 before this one, without knowing which mark on the page it was.
@@ -82,8 +82,10 @@ and larger than it is printed.
 - [YOU TRACE: ◌ౌ three times, saying *au* as you finish each one]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-133] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-133, TE-SCRIPT-RECOG-137] -->
 
 [PAUSE 3s] Which character is this — ◌ౌ? What vowel does it put on the consonant
 it attaches to, and what does it take off? (**Puts *au* on; takes the built-in
 *a* off.**) Name the word you already say that contains it.
+
+One more, from much earlier: ఖ — what does it do?

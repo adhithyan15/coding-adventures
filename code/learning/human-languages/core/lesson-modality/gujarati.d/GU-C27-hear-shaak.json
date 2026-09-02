@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C27-hear-shaak",
+    "language": "gujarati",
+    "chapter": 31,
+    "sequence": 1480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d23b05f29f0e302a"
+  },
+  "findings": []
+}

@@ -1,7 +1,7 @@
 ---
 id: MR-C04-punha-bhetu
-sequence: 145
-chapter: 7
+sequence: 345
+chapter: 11
 type: phrase
 headword: पुन्हा भेटू
 romanization: "punhā bheṭū"

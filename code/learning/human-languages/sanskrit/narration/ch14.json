@@ -3,8 +3,8 @@
   "language": "sanskrit",
   "chapter": 14,
   "title": "Pointing, and Asking",
-  "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:e99d632cb33b1417",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:f217f10cf21de2b0",
   "lessons": [
     {
       "id": "SA-C14-this",
@@ -103,6 +103,187 @@
             {
               "kind": "speech",
               "text": "What is etat? (this one — the thing near me.) What sound does it start with, and does that sound mean near, far, or a question? (a- — near.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-S116-letter-tta",
+      "sequence": 601,
+      "title": "ट (ṭa) — one character, met inside words you already say",
+      "headword": "ट",
+      "romanization": "ṭa",
+      "gloss": "the single character ट — recognised inside words you already say",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:a3b13e7725ae9a8d",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ट",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ट and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one, the ones you have already met: ए, ठ, ध. Say what each of them does."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ट",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ट — ṭa."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not ṭ, it is ṭa."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "a descending central stem joined to a counterclockwise open round body."
+            },
+            {
+              "kind": "speech",
+              "text": "the top shirorekhā."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say this word, and ट (ṭa) is one of the shapes inside it — the rest of its shapes are still ahead of you, so here the character stands on its own:"
+            },
+            {
+              "kind": "speech",
+              "text": "kuṭumbam — family, household — a word Sanskrit itself borrowed, before other languages borrowed it back."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ट",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start at the central stem's headline junction, descend, turn left through the upper shoulder, and sweep counterclockwise around the open round body to its up-right tip without lifting."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 1. The pen comes up 1 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "verified two-stroke teaching form fitted to the bundled printed outline."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-ट (ṭa)-order.gif’, strokes 1–2, Wikimedia Commons, 10 May 2009."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at this, and find ट (ṭa) in it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at this, and find ट in it]"
+            },
+            {
+              "kind": "speech",
+              "text": "ट (ṭa)."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ट three times, saying ṭa as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ट three times, saying *ṭa* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ट (ṭa) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ट once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ट? What sound does it carry? (ṭa.) Name one word you already say that contains it."
             }
           ]
         }
@@ -313,6 +494,203 @@
       ]
     },
     {
+      "id": "SA-S213-letter-la",
+      "sequence": 621,
+      "title": "ल (la) — one character, met inside words you already say",
+      "headword": "ल",
+      "romanization": "la",
+      "gloss": "the single character ल — recognised inside words you already say",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:3fa7b0037628db92",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ल",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ल and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one, the ones you have already met: ठ, ध, ट (ṭa). Say what each of them does."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ल — la."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not l, it is la."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "a clockwise open left loop."
+            },
+            {
+              "kind": "speech",
+              "text": "an up-right diagonal arm."
+            },
+            {
+              "kind": "speech",
+              "text": "a top-to-bottom right stem."
+            },
+            {
+              "kind": "speech",
+              "text": "the top shirorekhā."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these, and every one of them has ल (la) somewhere inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "लिखति likhati — he, she, or it writes — a root that means \"scratch,\" and the chapter's four verbs gathered up."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start at the open lower-left tip, curve up and clockwise around the left loop, and finish at the inner junction."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift at that junction and sweep the diagonal arm up-right to the right stem."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift and draw the right stem top-to-bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "4. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 3. The pen comes up 3 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "verified four-stroke teaching form; another animated learner source writes the same parts in a stem-first order."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-ल (la)-order.gif’, strokes 1–4, Wikimedia Commons, 11 May 2009."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at this, and find ल (la) in it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at this, and find ल in it]"
+            },
+            {
+              "kind": "speech",
+              "text": "लिखति."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ल three times, saying la as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ल three times, saying *la* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ल (la) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ल once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ल? What sound does it carry? (la.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "SA-C14-there",
       "sequence": 630,
       "title": "तत्र (tatra) — there — where I am not",
@@ -511,6 +889,175 @@
             {
               "kind": "speech",
               "text": "What is kaḥ? (who? — asking about a person.) What sound does it start with, and does that sound mean near, far, or a question? (k- — ask.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-S214-vowel-sign-o",
+      "sequence": 641,
+      "title": "◌ो — one character, met inside words you already say",
+      "headword": "ो",
+      "romanization": "o",
+      "gloss": "the single character ◌ो — recognised inside words you already say",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:88d33216e9e128bb",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ◌ो",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ो and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one, the ones you have already met: ध, ट (ṭa), ल (la). Say what each of them does."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ◌ो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "◌ो — o."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a vowel sign. It is not a letter and never stands alone: it attaches to a consonant and replaces the a built into it. Replaces, not adds — the a is gone."
+            },
+            {
+              "kind": "speech",
+              "text": "Where it sits: the ā bar on the right plus a stroke above."
+            },
+            {
+              "kind": "speech",
+              "text": "Worked through: न + ◌ो = नो — no."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these, and every one of them has ◌ो somewhere inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "करोमि karomi — I do, I make."
+            },
+            {
+              "kind": "speech",
+              "text": "साहाय्यं करोति sāhāyyaṁ karoti — he, she, or it helps — a noun plus \"does,\" and help named as going along with someone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ◌ो — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ◌ो and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at this, and find ◌ो (o) in it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at this, and find ◌ो in it]"
+            },
+            {
+              "kind": "speech",
+              "text": "करोमि, साहाय्यं करोति."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "◌ो three times, saying o as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ◌ो three times, saying *o* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ◌ो once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ◌ो once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ◌ो? What vowel does it put on the consonant it attaches to — and what does it take off? (Puts o on; takes the built-in a off.) Name one word you already say that contains it."
             }
           ]
         }
@@ -752,12 +1299,12 @@
       ]
     },
     {
-      "id": "SA-S113-letter-pa",
+      "id": "SA-S215-letter-tha",
       "sequence": 661,
-      "title": "प (pa) — one character, met inside words you already say",
-      "headword": "प",
-      "romanization": "pa",
-      "gloss": "the single character प — recognised inside words you already say",
+      "title": "थ (tha) — one character, met inside words you already say",
+      "headword": "थ",
+      "romanization": "tha",
+      "gloss": "the single character थ — recognised inside words you already say",
       "script": "devanagari",
       "modality": "pen",
       "derivedModality": "pen",
@@ -766,7 +1313,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:048b93594f37e1cd",
+      "sourceHash": "fnv1a64:6b6df413fa7b22dc",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -774,10 +1321,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script you'll notice: प",
+          "Script you'll notice: थ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: प and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: थ and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -793,7 +1340,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ◌े — what does it do?"
+              "text": "Before the new one, the ones you have already met: ट (ṭa), ल (la), ◌ो. Say what each of them does."
             },
             {
               "kind": "pause",
@@ -803,22 +1350,22 @@
             },
             {
               "kind": "speech",
-              "text": "One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was."
+              "text": "One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was."
             }
           ]
         },
         {
           "index": 1,
           "type": "script",
-          "title": "Script you'll notice: प",
+          "title": "Script you'll notice: थ",
           "segments": [
             {
               "kind": "speech",
-              "text": "प — pa."
+              "text": "थ — tha."
             },
             {
               "kind": "speech",
-              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not p, it is pa."
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not th, it is tha."
             },
             {
               "kind": "speech",
@@ -826,7 +1373,7 @@
             },
             {
               "kind": "speech",
-              "text": "a left stem curving around the lower bowl to its upper-right junction."
+              "text": "an upper spiral joined continuously to a broad lower bowl."
             },
             {
               "kind": "speech",
@@ -838,34 +1385,26 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has प (pa) somewhere inside it:"
+              "text": "You already say these, and every one of them has थ (tha) somewhere inside it:"
             },
             {
               "kind": "speech",
-              "text": "पुनः punaḥ — again."
+              "text": "कथम् katham — how."
             },
             {
               "kind": "speech",
-              "text": "पुनर्दर्शनाय punardarśanāya — until we meet again (lit. \"for seeing again\")."
-            },
-            {
-              "kind": "speech",
-              "text": "एक द्व त्रि चतुर् पञ्च eka dva tri catur pañca — one to five."
-            },
-            {
-              "kind": "speech",
-              "text": "एक, द्व, त्रि, चतुर्, पञ्च eka, dva, tri, catur, pañca — the Sanskrit."
+              "text": "भवान् कथम् अस्ति? bhavān katham asti? — how are you?"
             }
           ]
         },
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: प",
+          "title": "Writing: थ",
           "segments": [
             {
               "kind": "speech",
-              "text": "1. descend the left stem, then curve right around the lower bowl and rise to its upper-right junction without lifting."
+              "text": "1. start at the upper spiral's inner-right tip, curl clockwise around the small opening and outward to the left waist, then continue down and clockwise around the broad lower bowl to the right-stem junction without lifting."
             },
             {
               "kind": "speech",
@@ -881,11 +1420,11 @@
             },
             {
               "kind": "speech",
-              "text": "Verified three-stroke teaching form; everyday handwriting may join or simplify the bowl differently."
+              "text": "verified three-stroke teaching form fitted to the bundled printed outline."
             },
             {
               "kind": "speech",
-              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-प (pa)-order.gif’, strokes 1–3, Wikimedia Commons, 10 May 2009."
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-थ (tha)-order.gif’, strokes 1–3, Wikimedia Commons, 10 May 2009."
             }
           ]
         },
@@ -903,33 +1442,33 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find प (pa) in the ones that have it",
+              "instruction": "at this, and find थ (tha) in it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: at these words, and find प in the ones that have it]"
+              "source": "[YOU LOOK: at this, and find थ in it]"
             },
             {
               "kind": "speech",
-              "text": "पुनः, पुनर्दर्शनाय, नमस्ते."
+              "text": "कथम्, भवान् कथम् अस्ति?"
             },
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "प three times, saying pa as you finish each one",
+              "instruction": "थ three times, saying tha as you finish each one",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU TRACE: प three times, saying *pa* as you finish each one]"
+              "source": "[YOU TRACE: थ three times, saying *tha* as you finish each one]"
             },
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find प once more",
+              "instruction": "back at any page of this chapter and find थ (tha) once more",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: back at any page of this chapter and find प once more]"
+              "source": "[YOU LOOK: back at any page of this chapter and find थ once more]"
             }
           ]
         },
@@ -946,7 +1485,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which character is this — प? What sound does it carry? (pa.) Name one word you already say that contains it."
+              "text": "Which character is this — थ? What sound does it carry? (tha.) Name one word you already say that contains it."
             }
           ]
         }

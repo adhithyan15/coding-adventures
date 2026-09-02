@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-S146-letter-la",
+    "language": "malayalam",
+    "chapter": 5,
+    "sequence": 304,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6ef14de3b8d749a8",
+    "detachableSegments": [
+      "Script you'll notice: ല",
+      "Writing: ല — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

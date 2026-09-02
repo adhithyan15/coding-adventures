@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C08-vachne
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 460
-chapter: 11
+sequence: 660
+chapter: 15
 type: word
 headword: वाचणे
 romanization: vāchṇe

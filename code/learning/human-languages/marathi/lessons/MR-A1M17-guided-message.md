@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1M17-guided-message
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 856
+sequence: 1056
 delivery: script
-chapter: 20
+chapter: 24
 type: writing
 headword: guided 32-word message
 gloss: connect four separately practised blocks for the named reader and purpose

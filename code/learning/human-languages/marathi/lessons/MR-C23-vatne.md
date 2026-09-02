@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C23-vatne
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 930
-chapter: 23
+sequence: 1130
+chapter: 27
 type: word
 headword: वाटणे
 romanization: vāṭṇe

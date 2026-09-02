@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "SA-S200-letter-da",
+    "language": "sanskrit",
+    "chapter": 1,
+    "sequence": 41,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:71d3bda9b974a36c",
+    "detachableSegments": [
+      "Script you'll notice: द",
+      "Writing: द"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

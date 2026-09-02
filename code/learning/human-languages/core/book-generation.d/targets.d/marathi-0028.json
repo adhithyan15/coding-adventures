@@ -1,0 +1,7 @@
+{
+  "language": "marathi",
+  "chapter": 28,
+  "output": "marathi/book/chapters/ch28-passing-verbs.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mr"
+}

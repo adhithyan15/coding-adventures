@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-R25-twelve-verbs",
     "language": "marathi",
-    "chapter": 25,
-    "sequence": 1020,
+    "chapter": 29,
+    "sequence": 1220,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:90eff104b96bba9a"
+    "sourceHash": "fnv1a64:a42fd367a89a8eb8"
   },
   "findings": []
 }

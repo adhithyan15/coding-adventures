@@ -2,8 +2,8 @@
   "lesson": {
     "id": "TE-S01-letter-ta",
     "language": "telugu",
-    "chapter": 6,
-    "sequence": 325,
+    "chapter": 5,
+    "sequence": 255,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:113659e6c521e242",
+    "sourceHash": "fnv1a64:f246320943c95f6f",
     "detachableSegments": [
       "Script you'll notice: త",
       "Writing: త — copy what you see"

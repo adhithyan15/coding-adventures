@@ -1,12 +1,13 @@
 {
   "language": "sanskrit",
   "chapter": 23,
-  "sourceHash": "fnv1a64:9425c9da0464b70d",
+  "sourceHash": "fnv1a64:7c84d94b48aa2d56",
   "lessonIds": [
     "SA-C23-father",
     "SA-C23-mother",
     "SA-C23-son",
-    "SA-C23-daughter"
+    "SA-C23-daughter",
+    "SA-S222-vowel-sign-uu"
   ],
   "tex": "sanskrit/book/chapters/ch23-kinship.tex"
 }

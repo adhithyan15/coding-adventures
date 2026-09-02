@@ -12,31 +12,31 @@ type: writing
 headword: "फ"
 gloss: the single character फ — recognised inside words you already say
 romanization: "pha"
-prerequisites: [SA-S121-letter-u]
+prerequisites: [SA-S123-letter-o]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [SA-SCRIPT-RECOG-121]
+  knowledge: [SA-SCRIPT-RECOG-123]
 introduces:
   knowledge: [SA-SCRIPT-RECOG-122]
 practises:
-  knowledge: [SA-SCRIPT-RECOG-121, SA-SCRIPT-RECOG-122]
+  knowledge: [SA-SCRIPT-RECOG-221, SA-SCRIPT-RECOG-222, SA-SCRIPT-RECOG-123, SA-SCRIPT-RECOG-122]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [SA-S121-letter-u]
+reviews_of: [SA-S221-letter-dda, SA-S222-vowel-sign-uu, SA-S123-letter-o]
 ---
 
 # फ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-121] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-221, SA-SCRIPT-RECOG-222, SA-SCRIPT-RECOG-123] -->
 
-[PAUSE 1s] Before the new one: उ — what does it do?
+[PAUSE 1s] Before the new one, the ones you have already met: ड · ◌ू · ओ. Say what each of them does.
 
 [PAUSE 2s] One character this time. One only — and you have been saying it
 for pages without knowing which mark on the page it was.
@@ -54,12 +54,9 @@ What it is made of:
 - a separate clockwise right arch
 - the top shirorekhā
 
-You already say this word, and it has फ inside it:
+You already say these, and every one of them has फ somewhere inside it:
 
 - **फलम्** *phalam* — fruit
-
-फ is प with a puff of breath after it — the same relation ठ has to ट. Say
-*p* and *ph* with a hand in front of your mouth and the difference is the air.
 
 ## Writing: फ
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-122] -->
@@ -70,18 +67,18 @@ You already say this word, and it has फ inside it:
 
 **Pen lifts: 2.** The pen comes up 2 times and no more.
 
-> Verified three-stroke teaching form; another learner source stages the components differently.
+> verified three-stroke teaching form; another learner source stages the components differently
 
 > This is one attested teaching order and not a national standard — handwriting
 > here is taught with school-to-school variation. Source: JackPotte, ‘Devanagari pʰ फ.gif’, strokes 1–3, Wikimedia Commons, 29 March 2009.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-122] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-123, SA-SCRIPT-RECOG-122] -->
 
 [PAUSE 1s]
-- [YOU LOOK: at these words, and find फ in the ones that have it]
+- [YOU LOOK: at this, and find फ in it]
 
-> फलम्  ·  जलम्
+> फलम्
 
 - [YOU TRACE: फ three times, saying *pha* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find फ once more]

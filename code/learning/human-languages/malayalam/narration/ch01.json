@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e22431798e886ea6",
+  "sourceHash": "fnv1a64:901cd65af56af1c8",
   "lessons": [
     {
       "id": "ML-C01-namaskaram",
@@ -1143,6 +1143,167 @@
       ]
     },
     {
+      "id": "ML-S133-letter-a",
+      "sequence": 35,
+      "title": "അ — one character, met inside words you already say",
+      "headword": "അ",
+      "romanization": "a",
+      "gloss": "the single character അ — recognised inside words you already say",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:eafbfc87f30b9d2d",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: അ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: അ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: നമസ്കാരം (namaskāram) — can you still read it back?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only. It has been sitting in front of you on pages you have already read."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: അ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അ — a."
+            },
+            {
+              "kind": "speech",
+              "text": "It is an independent vowel — the shape this vowel takes when a word begins with it, rather than the sign it becomes inside a word."
+            },
+            {
+              "kind": "speech",
+              "text": "You have already said a word that starts with it."
+            },
+            {
+              "kind": "speech",
+              "text": "അതെ athe — yes (\"that [is so]\")."
+            },
+            {
+              "kind": "speech",
+              "text": "Malayalam writes a word-initial vowel with a letter of its own. Inside a word this vowel would be a small sign hung on a consonant; at the front of a word there is no consonant to hang it on, so the vowel stands up as അ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: അ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on അ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find അ in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find അ in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "അതെ (athe), നന്ദി (nandi), നമസ്കാരം (namaskāram)."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "അ three times, saying a as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: അ three times, saying *a* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find അ once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find അ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — അ? What sound does it carry? (a.) Where in a word does a vowel need a full letter of its own? (At the start.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ML-C01-illa",
       "sequence": 40,
       "title": "ഇല്ല (illa) — \"no,\" the word Malayalam and Tamil share almost exactly",
@@ -1500,20 +1661,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-block",
+        "script-block",
         "sight-cue",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:32cc5f4165be8d72",
+      "sourceHash": "fnv1a64:a059bb7bfe4b3790",
       "notice": {
         "modality": "pen",
         "needs": [
+          "your eyes, for letter shapes on the page",
           "your eyes, because the lesson points at something written down",
           "your eyes for one table that cannot be read aloud"
         ],
         "waitUntilStopped": [
-          "The exchange — read them back"
+          "The exchange — read them back",
+          "Script check — the letters of this chapter"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The exchange — read them back until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the sections called The exchange — read them back and Script check — the letters of this chapter until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -1620,6 +1784,36 @@
         },
         {
           "index": 5,
+          "type": "script",
+          "title": "Script check — the letters of this chapter",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cover the romanizations. Find each letter once in the Malayalam above, then say the word it sits in."
+            },
+            {
+              "kind": "speech",
+              "text": "അതെ (athe) — അ a."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at each letter, then find it in the word beside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at each letter, then find it in the word beside it]"
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

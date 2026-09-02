@@ -1,13 +1,13 @@
 {
   "language": "sanskrit",
   "chapter": 10,
-  "sourceHash": "fnv1a64:01fbc6a29ca82734",
+  "sourceHash": "fnv1a64:19bf044a9f34f333",
   "lessonIds": [
     "SA-C10-paniyam",
+    "SA-S108-letter-sa",
     "SA-C10-kshiram",
     "SA-C10-annam",
-    "SA-S03-letter-a",
-    "SA-S109-vowel-sign-i"
+    "SA-S210-vowel-sign-ii"
   ],
   "tex": "sanskrit/book/chapters/ch10-request-nouns.tex"
 }

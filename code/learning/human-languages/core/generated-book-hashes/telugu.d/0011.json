@@ -1,11 +1,10 @@
 {
   "language": "telugu",
   "chapter": 11,
-  "sourceHash": "fnv1a64:9f29172937d2271a",
+  "sourceHash": "fnv1a64:f1cd28e90735fb39",
   "lessonIds": [
     "TE-C11-rangulu",
-    "TE-S06-letter-ra",
-    "TE-S114-letter-la"
+    "TE-S115-vowel-sign-e"
   ],
   "tex": "telugu/book/chapters/ch11-colours.tex"
 }

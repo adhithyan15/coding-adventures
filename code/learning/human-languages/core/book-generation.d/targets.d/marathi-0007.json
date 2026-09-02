@@ -1,0 +1,7 @@
+{
+  "language": "marathi",
+  "chapter": 7,
+  "output": "marathi/book/chapters/ch07-retroflex-runway.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mr"
+}

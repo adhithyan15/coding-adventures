@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C06-numbers-1-5
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 360
-chapter: 9
+sequence: 560
+chapter: 13
 type: word
 headword: एक दोन तीन चार पाच
 romanization: ek don tīn chār pāch

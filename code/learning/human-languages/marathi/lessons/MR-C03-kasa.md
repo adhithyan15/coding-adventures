@@ -1,7 +1,7 @@
 ---
 id: MR-C03-kasa
-sequence: 105
-chapter: 6
+sequence: 305
+chapter: 10
 type: word
 headword: कसा / कशी / कसं
 romanization: "kasā / kaśī / kasaṁ"

@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-R14-numbers
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 750
-chapter: 17
+sequence: 950
+chapter: 21
 type: review
 headword: एक ते पाच
 romanization: ek te paach

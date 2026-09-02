@@ -5,40 +5,40 @@ introduces_senses: []
 introduces_culture_claims: []
 id: SA-S02-letter-na
 spine_node: SPINE-MEET-GREET
-sequence: 475
+sequence: 21
 delivery: script
-chapter: 9
+chapter: 1
 type: writing
 headword: "न"
 gloss: the single character न — recognised inside words you already say
 romanization: "na"
-prerequisites: [SA-S01-letter-ma]
+prerequisites: []
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [SA-SCRIPT-RECOG-01]
+  knowledge: []
 introduces:
   knowledge: [SA-SCRIPT-RECOG-02]
 practises:
-  knowledge: [SA-SCRIPT-RECOG-01, SA-SCRIPT-RECOG-02]
+  knowledge: [SA-SCRIPT-RECOG-02]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [SA-S01-letter-ma]
+reviews_of: []
 ---
 
 # न — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 1s] Before the new one: म — what does it do?
+[PAUSE 1s] A horizontal head-line (shirorekhā) runs across the top; letters hang beneath it like laundry on a line.
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
+[PAUSE 2s] One character this time. One only — and you have been saying it
 for pages without knowing which mark on the page it was.
 
 ## Script you'll notice: न
@@ -50,36 +50,36 @@ It is a **consonant**, and in this script a consonant is never bare: it comes wi
 
 What it is made of:
 
-- a left bowl
-- right spine
-- top bar
+- a clockwise left loop joined to a rightward shoulder
+- a top-to-bottom right stem
+- the top shirorekhā
 
-You already say these, and every one of them has न somewhere inside it:
+You already say these words, and न is one of the shapes inside them — the rest of their shapes are still ahead of you, so here the character stands on its own:
 
-- **नमस्ते** *namaste* — hello (lit. "a bow to you") (namaste)
-- **नमस्कारः** *namaskāraḥ* — hello (lit. "the making of a bow") (namaskāraḥ)
-- **आम् / न** *ām / na* — yes / no (ām / na)
-- **नाम** *nāma* — name
+- *namaste* — hello (lit. "a bow to you")
+- *namaskāraḥ* — hello (lit. "the making of a bow")
 
-## Writing: न — copy what you see
+## Writing: न
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-02] -->
 
-Put your pen on न and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+- **1.** start at the loop's inner-right curve, sweep down and clockwise around the small opening, then continue right along the shoulder without lifting
+- **2.** lift and draw the right stem top-to-bottom
+- **3.** lift and draw the top shirorekhā left-to-right
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+**Pen lifts: 2.** The pen comes up 2 times and no more.
+
+> verified three-stroke teaching form; everyday handwriting may join or simplify the loop differently
+
+> This is one attested teaching order and not a national standard — handwriting
+> here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-न-order.gif’, strokes 1–3, Wikimedia Commons, 11 May 2009.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-02] -->
 
 [PAUSE 1s]
-- [YOU LOOK: at these words, and find न in the ones that have it]
+- [YOU LOOK: at this, and find न in it]
 
-> नमस्ते  ·  नमस्कारः  ·  स्वागतम्
+> न
 
 - [YOU TRACE: न three times, saying *na* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find न once more]

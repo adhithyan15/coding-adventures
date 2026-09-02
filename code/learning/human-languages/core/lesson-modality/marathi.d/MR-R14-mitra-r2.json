@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-R14-mitra-r2",
     "language": "marathi",
-    "chapter": 17,
-    "sequence": 650,
+    "chapter": 21,
+    "sequence": 850,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:32d0393e9f550239"
+    "sourceHash": "fnv1a64:368764289d4eb1d4"
   },
   "findings": []
 }

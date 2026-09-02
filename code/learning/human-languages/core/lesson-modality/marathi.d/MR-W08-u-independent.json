@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "MR-W08-u-independent",
+    "language": "marathi",
+    "chapter": 8,
+    "sequence": 93,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9031f8e1a119f9f9",
+    "detachableSegments": [
+      "Script",
+      "Writing — guided copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

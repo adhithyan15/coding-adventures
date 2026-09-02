@@ -4,14 +4,14 @@
   "chapter": 20,
   "title": "Numbers Eleven to Twenty and Weather",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:e67d1d276c7a7655",
+  "sourceHash": "fnv1a64:6f1e8bdf1411d8b9",
   "lessons": [
     {
       "id": "TA-C20-pathinondru-irupathu",
       "sequence": 700,
       "title": "பதினொன்று–இருபது — shared Dravidian patterns",
       "headword": "பதினொன்று — இருபது",
-      "romanization": "",
+      "romanization": "patiṉoṉḏṟu — irupathu",
       "gloss": "11-20 — additive \"ten-echo\" compounds for the teens, then இருபது (20), transparently \"two-tens\" — closing out the arc: all four Dravidian languages build twenty compositionally, unlike Sanskrit, Latin, or Arabic's opaque special words",
       "script": "tamil",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31182bc6d2e785e6",
+      "sourceHash": "fnv1a64:d2149cc6d201d472",
       "notice": null,
       "blocks": [
         {

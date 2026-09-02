@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1M08-thinking-line
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 847
+sequence: 1047
 delivery: script
-chapter: 20
+chapter: 24
 type: writing
 headword: "मी विचार करतो."
 gloss: retrieve the known masculine thinking sentence without dropping its light verb
