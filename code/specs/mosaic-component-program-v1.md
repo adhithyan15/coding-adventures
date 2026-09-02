@@ -282,7 +282,29 @@ progress, regardless of how it renders.
 
 ---
 
-## 8. What this does not claim
+## 8. Backlog — recorded, not scheduled
+
+Ideas that belong to this program but are deliberately not in any track yet.
+
+- **Self-host MosaicBook** ([#14028](https://github.com/adhithyan15/coding-adventures/issues/14028)). MosaicBook is the tool that
+  renders Mosaic components; it should eventually be a Mosaic app itself, which
+  is the most honest dogfooding test available. Today it is a Go server serving
+  one hand-written 634-line `static/index.html`, and that shell is a natural
+  Mosaic app — `ListGroup`, `Nav`, `Tabs`, `Field`, `Alert`, `Spinner`,
+  `HostSurface` — most of which the toolkit already ships.
+
+  It is unscheduled because of a real bootstrapping problem: if MosaicBook's UI
+  is a Mosaic app, developing it requires a working MosaicBook. The likely answer
+  is to split the layers — the Go server keeps discovery, compilation, watching,
+  and serving, and only the shell becomes Mosaic, with the current static HTML
+  retained as a fallback so the tool can never become unusable. That should be
+  settled in a spec rather than discovered mid-implementation, and it should not
+  start until the components it needs are released (Track A) and Checklist has
+  proven the tree on a non-circular app first.
+
+---
+
+## 9. What this does not claim
 
 It does not claim the inventory is complete — §3 says missing components are
 expected and get filed as found. It does not re-litigate the four packages that
