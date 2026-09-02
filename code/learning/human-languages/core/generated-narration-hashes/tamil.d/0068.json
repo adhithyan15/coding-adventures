@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:a9b0d15fed0aba80",
+  "lessonIds": [
+    "TA-C68-shop",
+    "TA-C68-price",
+    "TA-W24-read-kadai",
+    "TA-C68-money",
+    "TA-C68-buy",
+    "TA-C68-bag"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "tamil/narration/ch68.txt",
+  "json": "tamil/narration/ch68.json",
+  "textHash": "fnv1a64:e6a28d3b3dbaedd3",
+  "jsonHash": "fnv1a64:62f15d1f0599c4fa",
+  "findings": []
+}

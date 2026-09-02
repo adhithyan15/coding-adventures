@@ -1,0 +1,19 @@
+{
+  "id": "GE-EXT-012-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can build German's wellbeing question and its whole answer ladder from parts — es, the dative mir and dir, formal Ihnen, and the degree words sehr, nicht and so lala.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C03-es",
+    "GE-C03-mir",
+    "GE-C03-dir",
+    "GE-C03-ihnen",
+    "GE-C03-wie-geht-register",
+    "GE-C03-sehr",
+    "GE-C03-nicht",
+    "GE-C03-so-lala",
+    "GE-C03-und"
+  ]
+}

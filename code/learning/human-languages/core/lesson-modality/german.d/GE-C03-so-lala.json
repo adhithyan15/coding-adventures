@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C03-so-lala",
+    "language": "german",
+    "chapter": 3,
+    "sequence": 129,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0af7c93bd89c0106"
+  },
+  "findings": []
+}

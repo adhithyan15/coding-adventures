@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C03-schoen",
+    "language": "german",
+    "chapter": 3,
+    "sequence": 107,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2616b504288049f5"
+  },
+  "findings": []
+}

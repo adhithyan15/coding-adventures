@@ -1,0 +1,21 @@
+{
+  "chapter": 67,
+  "title": "What You Wear",
+  "label": "ch:ta-what-you-wear",
+  "canDo": "I can name a shirt, a veshti, a sari, sandals and a cap in Tamil, and run the five from the head down to the floor.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "TA-C67-cap",
+    "kind": "production",
+    "summary": "Complete TA-C67-cap and say all five words of the chapter in order.",
+    "assesses": [
+      "TA-LEX-C67-WEAR-01",
+      "TA-LEX-C67-WEAR-02",
+      "TA-LEX-C67-WEAR-03",
+      "TA-LEX-C67-WEAR-04",
+      "TA-LEX-C67-WEAR-05"
+    ]
+  }
+}

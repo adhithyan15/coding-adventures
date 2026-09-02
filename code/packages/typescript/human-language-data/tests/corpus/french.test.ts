@@ -15,12 +15,20 @@ it("pins French modality", () => expectLanguageModality("french"));
 // 10 -> 13 culture claims: the three `culture` blocks those chapters carried only
 // in LaTeX (merci's three metaphors for gratitude, the comme ci comme ça shrug,
 // and travailler's Spanish twin) are now typed claims owned by a lesson.
+// 78 -> 90 lessons: retiring handwritten chapter 6. Its two schema-v1 lessons
+// each taught five numbers at once behind a wide reveal table; they are replaced
+// by twelve schema-v2 lessons -- one number per lesson, then the calendar
+// synthesis, then the chapter practice -- so the whole chapter is measurable and
+// the numbers arrive one at a time. Net +12 (14 new, 2 retired).
+// 13 -> 14 culture claims: the Roman-calendar claim (septembre to decembre still
+// count seven to ten because the old year began in March) lived only in the
+// hand-written grammarlens and is now owned by FR-C06-mois-romains.
 it("pins French lesson-content budgets", () =>
   expectLanguageLessonBudgets("french", {
-    lessons: 78,
+    lessons: 90,
     idioms: 3,
     senses: 7,
-    cultureClaims: 13,
+    cultureClaims: 14,
     unitPrefix: "FR",
   }));
 

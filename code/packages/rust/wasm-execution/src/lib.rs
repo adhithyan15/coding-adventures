@@ -1583,6 +1583,36 @@ pub struct Table {
     /// `new_with_is64` can set it. Immutable after construction; see the
     /// struct doc comment for why this lives outside `inner`.
     is64: bool,
+    /// The declared element-type TAG (`wasm_types::FUNCREF`/`wasm_types::
+    /// EXTERNREF` -- the same single-byte placeholder `wasm_types::
+    /// TableType::element_type`/`WasmModule::tables[i].element_type`
+    /// already store for EVERY table this repo can construct, funcref-
+    /// family or not -- see that field's own doc comment for the "concrete
+    /// func stays FUNCREF, every other GC/abstract reftype uses EXTERNREF
+    /// as a generic 'opaque, not-funcref' placeholder" convention,
+    /// `code/specs/W37-wasm-gc-reftype-tables.md` design section 3).
+    ///
+    /// Added so `wasm-runtime::instantiate()`'s table-IMPORT arm can
+    /// compare a declared import's own element type against the REAL
+    /// exporting table's element type at link time -- this was previously
+    /// a standing, explicitly-named gap (see that call site's own former
+    /// doc comment, "`Table` doesn't track its declared element type at
+    /// runtime ... a table import mismatched purely on element type would
+    /// incorrectly link here rather than fail. Named, not silent: revisit
+    /// if a future PR gives `Table` a real element-type field") that only
+    /// became corpus-reachable once GC reftype table DECLARATIONS (W37)
+    /// made a real cross-family table-import mismatch constructible in
+    /// `linking.wast` (previously every table was funcref or externref, so
+    /// most instances of this gap were unreachable in practice).
+    ///
+    /// Defaults to [`wasm_types::FUNCREF`] via both [`new`](Self::new) and
+    /// [`new_with_is64`](Self::new_with_is64) -- the overwhelming majority
+    /// of tables this interpreter ever constructs, including every WASM
+    /// 1.0 table and every one of this crate's own pre-existing test call
+    /// sites, which predate this field and never need to override it.
+    /// Immutable after construction, exactly like `is64` -- see the struct
+    /// doc comment for why both live outside `inner`.
+    element_type: u8,
 }
 
 impl Table {
@@ -1592,6 +1622,7 @@ impl Table {
             inner: Rc::new(RefCell::new(TableStorage { elements: vec![None; initial_size as usize] })),
             max_size,
             is64: false,
+            element_type: wasm_types::FUNCREF,
         }
     }
 
@@ -1659,6 +1690,33 @@ impl Table {
     /// See [`Table`]'s own `is64` field doc comment.
     pub fn is64(&self) -> bool {
         self.is64
+    }
+
+    /// Override this table's declared element-type tag (`wasm_types::
+    /// FUNCREF`/`wasm_types::EXTERNREF`) after construction -- both
+    /// [`new`](Self::new) and [`new_with_is64`](Self::new_with_is64)
+    /// default to `FUNCREF`; a caller that knows the table's REAL declared
+    /// type (`wasm-runtime::instantiate()`, building a module-defined
+    /// table from its own `wasm_types::TableType::element_type`) calls
+    /// this once, immediately after construction, to record it. See
+    /// [`Table`]'s own `element_type` field doc comment for why this
+    /// exists and why a builder-style setter (rather than a third
+    /// constructor parameter threaded through `new`/`new_with_is64`) was
+    /// chosen: this crate and its consumers already have dozens of
+    /// pre-existing `Table::new`/`new_with_is64` call sites, all
+    /// exclusively constructing funcref tables, that would otherwise all
+    /// need an unrelated mechanical edit for a field they never need to
+    /// set.
+    pub fn with_element_type(mut self, element_type: u8) -> Self {
+        self.element_type = element_type;
+        self
+    }
+
+    /// This table's declared element-type tag (`wasm_types::FUNCREF`/
+    /// `wasm_types::EXTERNREF`). See [`Table`]'s own `element_type` field
+    /// doc comment.
+    pub fn element_type(&self) -> u8 {
+        self.element_type
     }
 
     /// Get the element at the given table index (W35 slice 2: a real
@@ -14398,6 +14456,41 @@ mod tests {
     fn table_new_with_is64_rejects_u64_max_gracefully() {
         let result = Table::new_with_is64(u64::MAX, None, true);
         assert!(result.is_err());
+    }
+
+    // ── W37 addendum: `Table::element_type`/`with_element_type` ──────────
+
+    #[test]
+    fn table_new_defaults_to_funcref_element_type() {
+        let table = Table::new(1, Some(2));
+        assert_eq!(table.element_type(), wasm_types::FUNCREF);
+    }
+
+    #[test]
+    fn table_new_with_is64_defaults_to_funcref_element_type() {
+        let table = Table::new_with_is64(1, Some(2), true).unwrap();
+        assert_eq!(table.element_type(), wasm_types::FUNCREF);
+    }
+
+    #[test]
+    fn table_with_element_type_overrides_the_default() {
+        let table = Table::new(1, Some(2)).with_element_type(wasm_types::EXTERNREF);
+        assert_eq!(table.element_type(), wasm_types::EXTERNREF);
+        // Overriding the element type must not disturb anything else this
+        // struct already tracks.
+        assert_eq!(table.size(), 1);
+        assert_eq!(table.max_size(), Some(2));
+        assert!(!table.is64());
+    }
+
+    #[test]
+    fn table_clone_preserves_element_type() {
+        // `element_type` lives outside `inner`'s `Rc<RefCell<..>>`, exactly
+        // like `max_size`/`is64` -- a clone must carry its own copy, not
+        // silently fall back to the default.
+        let table = Table::new(1, None).with_element_type(wasm_types::EXTERNREF);
+        let cloned = table.clone();
+        assert_eq!(cloned.element_type(), wasm_types::EXTERNREF);
     }
 
     #[test]

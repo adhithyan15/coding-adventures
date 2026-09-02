@@ -1,0 +1,16 @@
+{
+  "id": "TA-EXT-67-WEAR",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what someone is wearing, from the head down to the feet.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C67-shirt",
+    "TA-C67-veshti",
+    "TA-W23-read-sattai",
+    "TA-C67-sari",
+    "TA-C67-sandal",
+    "TA-C67-cap"
+  ]
+}

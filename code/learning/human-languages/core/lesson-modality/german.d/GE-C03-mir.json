@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C03-mir",
+    "language": "german",
+    "chapter": 3,
+    "sequence": 117,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e184f543bb924d7b"
+  },
+  "findings": []
+}

@@ -5438,8 +5438,8 @@
         "not_yet_supported": 0
       },
       "assert_unlinkable": {
-        "pass": 48,
-        "fail": 2,
+        "pass": 50,
+        "fail": 0,
         "trap": 0,
         "not_yet_supported": 0
       },
@@ -15979,8 +15979,8 @@
       "not_yet_supported": 134
     },
     "assert_unlinkable": {
-      "pass": 252,
-      "fail": 2,
+      "pass": 254,
+      "fail": 0,
       "trap": 0,
       "not_yet_supported": 0
     },

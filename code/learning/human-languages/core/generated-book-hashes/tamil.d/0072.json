@@ -1,0 +1,14 @@
+{
+  "language": "tamil",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:bda28b034ada0f9e",
+  "lessonIds": [
+    "TA-C72-anger",
+    "TA-C72-fear",
+    "TA-W27-read-payam",
+    "TA-C72-sorrow",
+    "TA-C72-laugh",
+    "TA-C72-cry"
+  ],
+  "tex": "tamil/book/chapters/ch72-how-it-feels.tex"
+}

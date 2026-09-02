@@ -3,9 +3,13 @@
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
     "GE-C03-danke",
+    "GE-C03-schoen",
+    "GE-C03-vielen-dank",
     "GE-C03-bitte"
   ],
-  "before": [],
+  "before": [
+    "GE-EXT-010-LANGUAGE-SPECIFIC"
+  ],
   "inline": [],
   "after": []
 }

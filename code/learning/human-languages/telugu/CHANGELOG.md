@@ -103,9 +103,15 @@ say which place you are from — exactly **one** is covered.
 
 `tests/plan-cli.test.ts` pins the completion-plan counters, which this inventory
 moves. Re-measured against the merged tree rather than derived by arithmetic:
-`0 complete and 6 partial` becomes `7 partial`, and `530 uncovered point(s)
-across 6 written` becomes **`687 uncovered point(s) across 7 written`** — exactly
+`0 complete and 6 partial` becomes `7 partial`, and `529 uncovered point(s)
+across 6 written` becomes **`686 uncovered point(s) across 7 written`** — exactly
 Telugu's 157 — while the unmeasurable remainder falls from 18 tracks to 17.
+
+The base moved from 530 to 529 under this branch while it was open: French
+chapter 6 was generated on main and closed one of that track's points. The
+figure above was **re-measured against the merged tree** rather than carried
+forward, which is why it is 686 and not the 687 an earlier commit message on
+this branch quotes.
 
 ## Unreleased — chapters 1-5 are generated from their lessons
 

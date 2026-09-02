@@ -1,5 +1,68 @@
 # Changelog
 
+## Chapter 6 is generated, and its ten numbers now arrive one at a time
+
+Chapter 6 was hand-written LaTeX built from two schema-v1 lessons. Each of those
+lessons taught **five numbers at once**, behind a four-column reveal table, and
+declared no atoms at all -- so `renderBookChapter` refused to generate from
+them, and every lesson-level gate reported on content no reader saw.
+
+It is now twelve schema-v2 lessons, and this is authoring rather than a format
+flip.
+
+### One new word per lesson
+
+`un`, `deux`, `trois`, `quatre`, `cinq`, `six`, `sept`, `huit`, `neuf`, `dix` --
+one number per lesson, each with its Latin parent, its English cousins and its
+own pronunciation note. Then two lessons that spend what the ten built:
+
+- **`FR-C06-mois-romains`** carries across the hand-written grammar lens that
+  explained why *septembre* to *décembre* say seven to ten and sit at nine to
+  twelve. It introduces no new French word; its job is to make four facts the
+  number lessons planted click together, so it practises those four atoms and
+  records the Roman-calendar fact as a culture claim.
+- **`FR-C06-practice`** is the chapter payoff, and it is now atom-scored against
+  every atom the chapter introduces rather than carrying the legacy schema-v1
+  note that said the payoff was authored rather than measured.
+
+### Nothing was dropped, and there is more than there was
+
+The hand-written chapter held **6 prose blocks** (2 `sounds`, 2 `cousinweb`,
+2 `grammarlens`). The generated chapter holds **26** (10 `sounds`,
+11 `cousinweb`, 5 `grammarlens`). Every block of the original writing is
+carried: the nasal *un*, the rounded *eu* and silent *x*, the *trois*/*tres*
+pair worn two ways from one Roman *trēs*, `cinque` on a die, the *six*/*dix*
+on-and-off ending, the *octō* → *oit* → *huit* road and the *oct-* that survived
+in *octobre*, the *dime* from *disme* ← *decima*, and the months two places out
+of place. French's hand-written chapter count falls **13 -> 12**; the parity
+number stays at 47 because Chapter 6's gap was already zero -- which is exactly
+why it was the safe one to take first, and why the twelve that remain are not.
+
+### Liaison is now a rule with a name, which closes an exam point
+
+The hand-written chapter mentioned the *six ans* → *see-z-ans* and *neuf ans* →
+*neu-v-ans* changes in passing, inside two `sounds` blocks. `FR-C06-six` now
+teaches liaison as a named rule with its own atom -- final consonant sounded
+when counting, silent before a consonant, back as a *z* before a vowel -- and
+`FR-C06-neuf` extends it to the *f* → *v* softening rather than minting a second
+atom for the same phenomenon.
+
+That is what a probe can resolve against, so **A1-PRON-03 (obligatory liaison)**
+moves from unmapped to covered. French A1 exam coverage: **25/74 -> 26/74**.
+
+### Measured
+
+- Chapter atoms: 12, exactly at `maxNewAtomsPerChapter`. French's
+  `atomChapterSpikes` stays at 0.
+- Forward references: **51 -> 50**. The chapter contributes none. The "Next:"
+  pointer at the end of each lesson names the next number in English rather than
+  in French, and the gender example uses *un jour* / *une nuit* from Chapter 1
+  instead of the *café* Chapter 28 owns.
+- Narration refusals: **56 -> 54**. The two wide reveal tables the narrator had
+  to refuse are gone.
+- The book compiles under XeLaTeX with `missing_character = 0`, and the rendered
+  pages were read.
+
 ## Chapters 3, 4 and 5 are generated from their lessons, not hand-written
 
 The standing directive is that no hand-written book chapter may remain: a

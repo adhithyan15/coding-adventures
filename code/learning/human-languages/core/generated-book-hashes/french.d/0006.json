@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:4eac91a7972181ed",
+  "lessonIds": [
+    "FR-C06-un",
+    "FR-C06-deux",
+    "FR-C06-trois",
+    "FR-C06-quatre",
+    "FR-C06-cinq",
+    "FR-C06-six",
+    "FR-C06-sept",
+    "FR-C06-huit",
+    "FR-C06-neuf",
+    "FR-C06-dix",
+    "FR-C06-mois-romains",
+    "FR-C06-practice"
+  ],
+  "tex": "french/book/chapters/ch06-numbers-1-10.tex"
+}

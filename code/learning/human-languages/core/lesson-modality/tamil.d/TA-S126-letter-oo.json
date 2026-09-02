@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "TA-S126-letter-oo",
+    "language": "tamil",
+    "chapter": 71,
+    "sequence": 2870,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3ea6e8301b76720c",
+    "detachableSegments": [
+      "Script you'll notice: ஓ — the letter behind a sign you already read"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

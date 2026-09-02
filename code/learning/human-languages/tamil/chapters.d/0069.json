@@ -1,0 +1,21 @@
+{
+  "chapter": 69,
+  "title": "Getting There",
+  "label": "ch:ta-getting-there",
+  "canDo": "I can name a vehicle, a bus, a train, a road and a station in Tamil.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "TA-C69-station",
+    "kind": "production",
+    "summary": "Complete TA-C69-station and say all five words of the chapter in order.",
+    "assesses": [
+      "TA-LEX-C69-GOING-01",
+      "TA-LEX-C69-GOING-02",
+      "TA-LEX-C69-GOING-03",
+      "TA-LEX-C69-GOING-04",
+      "TA-LEX-C69-GOING-05"
+    ]
+  }
+}

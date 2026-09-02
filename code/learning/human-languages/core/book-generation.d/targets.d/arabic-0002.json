@@ -1,0 +1,7 @@
+{
+  "language": "arabic",
+  "chapter": 2,
+  "output": "arabic/book/chapters/ch02-introductions.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ar"
+}

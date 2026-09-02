@@ -625,7 +625,13 @@ describe("the committed French A1 inventory", () => {
     // gap, the inventory naming the five points, nine lessons teaching them, and
     // the probes then resolving against real atoms. The number moved because the
     // CORPUS changed, not because the target was edited.
-    expect(coverage.covered).toBe(25);
+    //
+    // 25 -> 26: retiring hand-written chapter 6 closed A1-PRON-03, obligatory
+    // liaison. The hand-written chapter mentioned the six/dix -s and the neuf
+    // f-to-v in passing inside two `sounds` blocks; the generated chapter teaches
+    // liaison as a named rule with its own atom, which is what a probe can
+    // resolve against. Same rule here: the corpus changed, not the target.
+    expect(coverage.covered).toBe(26);
     expect(coverage.byCategory["L'interrogation"]).toEqual({ enumerated: 5, covered: 5 });
     // The shape, not the score: vocabulary is still a strong column and the
     // sentence-level categories are still empty. No quantity of headwords moves
