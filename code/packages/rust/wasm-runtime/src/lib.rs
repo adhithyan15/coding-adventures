@@ -2943,7 +2943,15 @@ impl WasmRuntime {
                 // corpus directive passes one as a top-level `invoke`
                 // argument (arrays only ever appear as params/locals/globals
                 // inside a function body in `array.wast`).
+                // W37 (`code/specs/W37-wasm-gc-reftype-tables.md`): `Eqref`/
+                // `StructRefAny` join this same lossy-legacy-path
+                // placeholder group -- no vendored corpus directive passes
+                // one as a top-level `invoke` argument either (both only
+                // ever appear as table/global/local/param/result declared
+                // types).
                 ValueType::Anyref
+                | ValueType::Eqref
+                | ValueType::StructRefAny
                 | ValueType::I31ref
                 | ValueType::StructRef(_)
                 | ValueType::ConcreteFuncRef(_)
