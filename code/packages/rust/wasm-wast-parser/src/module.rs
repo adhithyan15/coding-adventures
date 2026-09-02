@@ -4591,7 +4591,25 @@ fn encode_flat_instr(
     if let Some(simd_op) = wasm_opcodes::get_simd_op_by_name(name) {
         match simd_op.kind {
             wasm_opcodes::SimdOpKind::Const => {
-                let (bytes, _consumed) = parse_v128_const(args, pos)?;
+                let (bytes, consumed) = parse_v128_const(args, pos)?;
+                // Folded form's whole `args` list IS the literal (unlike
+                // the stream/flat caller in `encode_stream_instr`, where
+                // trailing tokens are the REST of the instruction stream,
+                // not extra lane literals) -- so anything left over past
+                // `consumed` is a real "wrong number of lane literals"
+                // error, e.g. `simd_const.wast`'s `(v128.const i32x4 0x1
+                // 0x1 0x1 0x1 0x1)` (five literals for a four-lane shape).
+                // `parse_v128_const` itself only ever catches TOO FEW
+                // (`lanes.len() < lane_count`); it can't see "too many"
+                // from inside, since the stream caller legitimately passes
+                // it a much longer, unbounded tail.
+                if consumed != args.len() {
+                    return Err(WastParseError::UnexpectedToken {
+                        pos,
+                        found: args.get(consumed).and_then(|e| e.as_atom()).unwrap_or("").to_string(),
+                        expected: "no extra v128.const lane literals",
+                    });
+                }
                 out.push(0xFD);
                 out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
                 out.extend(bytes);
@@ -10558,6 +10576,89 @@ mod tests {
     fn v128_const_too_few_lanes_is_a_clear_error() {
         let err = parse_module(r#"(module (func (drop (v128.const i32x4 1 2 3))))"#).unwrap_err();
         assert!(matches!(err, WastParseError::UnexpectedEof));
+    }
+
+    // ── W05 conformance gap: `simd_const.wast`'s malformed literal forms ──
+    //
+    // Task: `simd_const.wast` was the single largest "not yet supported"
+    // file in the conformance report (109 `assert_malformed` directives),
+    // ALL of them a text-form `v128.const` literal this parser wrongly
+    // ACCEPTED instead of rejecting. Root cause, confirmed by direct
+    // probing: `numeric.rs`'s magnitude parsers stripped `_` digit
+    // separators from the whole literal, unconditionally, before ever
+    // checking for an `0x` prefix or a float's dot/exponent structure --
+    // so a stray `_` could retroactively manufacture a hex prefix that
+    // was never really there (`0_x100` -> stripped to `0x100`), and an
+    // out-of-range float magnitude silently saturated to infinity instead
+    // of erroring. Fixed in `numeric.rs`'s `valid_underscore_run`/
+    // `valid_float_grammar` plus a post-parse infinity check; these five
+    // tests pin down one representative case from each of the file's
+    // distinct malformed categories (see that file's own "More malformed
+    // v128.const forms" section), plus one from `parse_v128_const`'s own
+    // folded-form "too many lane literals" gap this same investigation
+    // found alongside it. Fixing the shared `numeric.rs` code also
+    // resolved the entire remainder of `const.wast`/`float_literals.wast`/
+    // `int_literals.wast`'s own malformed-literal gaps for free (same
+    // functions, same bug) -- confirmed via the conformance report's own
+    // programmatic before/after diff, with zero other file's tally moving.
+    #[test]
+    fn v128_const_out_of_range_float_magnitude_is_rejected() {
+        // `f32x4`'s per-lane magnitude here (`0x1p128` = 2^128) is far
+        // past `f32::MAX` -- WAT's "constant out of range" malformed rule,
+        // not a `f32.const inf` spelling (which stays valid; see the
+        // passing counterpart test below).
+        let err = parse_module(r#"(module (func (drop (v128.const f32x4 0x1p128 0x1p128 0x1p128 0x1p128))))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::InvalidNumericLiteralForType { ty: "f32", .. }), "{err:?}");
+    }
+
+    #[test]
+    fn v128_const_leading_dot_float_literal_is_rejected() {
+        // WAT requires at least one digit before an optional `.`; Rust's
+        // own `str::parse::<f32>` is more permissive and accepts `.0`,
+        // which is exactly why this used to slip through uncaught.
+        let err = parse_module(r#"(module (func (drop (v128.const f32x4 .0 .0 .0 .0))))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::InvalidNumericLiteral { .. }), "{err:?}");
+    }
+
+    #[test]
+    fn v128_const_misplaced_underscore_cannot_manufacture_a_hex_prefix() {
+        // `0_x100` is a DECIMAL literal starting with the digit `0` --
+        // stripping its `_` before checking for a `0x` prefix used to
+        // turn it into the hex literal `0x100` (256), silently accepting
+        // it instead of failing to parse `0_x100` as a decimal number.
+        let err = parse_module(r#"(module (global v128 (v128.const i32x4 0_x100 0_x100 0_x100 0_x100)))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::InvalidNumericLiteral { .. }), "{err:?}");
+    }
+
+    #[test]
+    fn v128_const_doubled_underscore_in_hex_digits_is_rejected() {
+        let err = parse_module(r#"(module (global v128 (v128.const i64x2 0xff__ffff_ffff_ffff 0xff__ffff_ffff_ffff)))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::InvalidNumericLiteral { .. }), "{err:?}");
+    }
+
+    #[test]
+    fn v128_const_extra_lane_literal_is_a_clear_error() {
+        // The mirror image of `v128_const_too_few_lanes_is_a_clear_error`:
+        // one lane literal MORE than the shape calls for, in folded form
+        // (where the whole parenthesized list IS the literal, unlike the
+        // flat/stream form's unbounded trailing tokens).
+        let err = parse_module(r#"(module (func (drop (v128.const i32x4 1 2 3 4 5))))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedToken { .. }), "{err:?}");
+    }
+
+    #[test]
+    fn v128_const_valid_literals_are_unaffected_by_the_stricter_checks() {
+        // A real, spec-valid `_`-separated literal, a genuine `0x`-hex
+        // magnitude, and the explicit `inf` keyword must all still parse
+        // -- the fix tightens PLACEMENT/range validation, it must not
+        // reject anything that was correctly accepted before.
+        let m = parse_module(
+            r#"(module
+                 (func (drop (v128.const i32x4 1_000_000 0xffff_ffff 0x1_0000 42)))
+                 (func (drop (v128.const f32x4 inf -inf 1.0 0x1.8p3))))"#,
+        )
+        .unwrap();
+        assert_eq!(m.code.len(), 2);
     }
 
     // ── W32 first slice: the four bottom reference-type keywords ─────────────

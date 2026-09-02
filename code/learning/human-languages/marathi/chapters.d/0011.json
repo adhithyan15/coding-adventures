@@ -10,7 +10,19 @@
     "lesson": "MR-C04-practice",
     "kind": "task",
     "summary": "Complete MR-C04-practice, the canonical closing checkpoint, and demonstrate the chapter promise: end a Marathi conversation politely and choose a farewell that fits the situation.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "assesses": [
+      "MR-PHRASE-PUNHA-BHETU",
+      "MR-PHRASE-UDYA-BHETU",
+      "MR-PHRASE-KALJI-GHYA",
+      "MR-LEX-PUNHA",
+      "MR-ETYMON-PUNHA-PUNAR",
+      "MR-LEX-BHETU",
+      "MR-LEX-UDYA",
+      "MR-GRAMMAR-WE-LIVES-IN-THE-VERB",
+      "MR-GRAMMAR-TIME-WORD-FRONTS-THE-VERB",
+      "MR-GRAMMAR-IMPERATIVE-REGISTER",
+      "MR-SCRIPT-LLA-01"
+    ],
+    "note": "The recap runs all four farewells, re-banks each atom they are built from, and closes on what they share: not one of them says goodbye. Every parting is a return or a caring wish."
   }
 }

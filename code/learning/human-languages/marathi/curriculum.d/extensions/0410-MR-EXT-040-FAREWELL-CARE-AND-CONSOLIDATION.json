@@ -1,0 +1,12 @@
+{
+  "id": "MR-EXT-040-FAREWELL-CARE-AND-CONSOLIDATION",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can close a conversation with a caring wish as well as a promise to meet, choosing the respectful or familiar imperative, and then run all four farewells without receiving new material.",
+  "prerequisites": [],
+  "lessons": [
+    "MR-C04-kalji-ghya",
+    "MR-C04-practice"
+  ]
+}

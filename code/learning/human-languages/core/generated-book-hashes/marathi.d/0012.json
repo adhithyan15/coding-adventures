@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:8f5da187b1cde07c",
+  "lessonIds": [
+    "MR-C05-bolne",
+    "MR-C05-mi-marathi-bolto",
+    "MR-C05-rahne",
+    "MR-C05-kaam-karne",
+    "MR-C05-practice"
+  ],
+  "tex": "marathi/book/chapters/ch12-first-verbs.tex"
+}
