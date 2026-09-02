@@ -39,7 +39,7 @@
 % composed together the same way `phoneme-substitution.adj`'s row is (two
 % distinct sentences from the same cited section, each stating one fact):
 %
-%   "I will change 'bike' to 'by'."
+%   "I will change ‘bike’ to ‘by’."
 %     (states the transformation: bike -> by)
 %   "The last sound in 'bike' is /k/."
 %     (states which sound was removed: k)
@@ -64,7 +64,7 @@ table phoneme_deletion {
 
     row (bike, k, by)
 
-    source "I will change 'bike' to 'by'."
+    source "I will change ‘bike’ to ‘by’."
     locator "https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice"
     trust consensus
 }

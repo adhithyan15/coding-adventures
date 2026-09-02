@@ -41,7 +41,7 @@
 % both the word and the three sounds it segments into):
 %
 %   "Now I will segment sounds in a word, and I will use the caps to show
-%    each sound. Watch me. The word is 'feet', /f/ [slide a cap], /ee/
+%    each sound. Watch me. The word is ‘feet’, /f/ [slide a cap], /ee/
 %    [slide a cap], /t/ [slide a cap], feet [sweep finger below the caps
 %    blending the sounds]."
 %
@@ -60,7 +60,7 @@ table phoneme_segmentation {
 
     row (feet, f, ee, t)
 
-    source "Now I will segment sounds in a word, and I will use the caps to show each sound. Watch me. The word is 'feet', /f/ [slide a cap], /ee/ [slide a cap], /t/ [slide a cap], feet [sweep finger below the caps blending the sounds]."
+    source "Now I will segment sounds in a word, and I will use the caps to show each sound. Watch me. The word is ‘feet’, /f/ [slide a cap], /ee/ [slide a cap], /t/ [slide a cap], feet [sweep finger below the caps blending the sounds]."
     locator "https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice"
     trust consensus
 }
