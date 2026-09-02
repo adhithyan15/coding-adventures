@@ -1,0 +1,23 @@
+{
+  "chapter": 71,
+  "title": "Once More, and Which One",
+  "label": "ch:ka-once-more",
+  "canDo": "I can ask for another one, ask somebody to repeat themselves, and ask when and which.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "KA-C71-which",
+    "kind": "production",
+    "summary": "Complete KA-C71-which and say the whole ya- question family in order.",
+    "assesses": [
+      "KA-LEX-C71-MORE-01",
+      "KA-GRAMMAR-C71-MORE-02",
+      "KA-LEX-C71-MORE-03",
+      "KA-LEX-C71-MORE-04",
+      "KA-SCRIPT-RECOG-139",
+      "KA-LEX-C71-MORE-05",
+      "KA-GRAMMAR-C71-MORE-06"
+    ]
+  }
+}

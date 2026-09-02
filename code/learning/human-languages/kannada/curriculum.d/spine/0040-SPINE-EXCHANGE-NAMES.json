@@ -9,7 +9,8 @@
     "KA-PATH-028",
     "KA-PATH-48-ROLE",
     "KA-PATH-54-TREE",
-    "KA-PATH-61-KITCHEN"
+    "KA-PATH-61-KITCHEN",
+    "KA-PATH-71-MORE"
   ],
   "omits": [
     "PRONOUN-ME",

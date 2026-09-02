@@ -1,0 +1,15 @@
+{
+  "id": "KA-PATH-71-MORE",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "KA-C71-another",
+    "KA-C71-say-again",
+    "KA-C71-when",
+    "KA-C71-which"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-71-MORE"
+  ],
+  "after": []
+}

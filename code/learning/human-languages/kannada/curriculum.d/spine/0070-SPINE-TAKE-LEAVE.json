@@ -3,7 +3,8 @@
     "KA-PATH-009",
     "KA-PATH-50-LEAVE",
     "KA-PATH-59-GROUND",
-    "KA-PATH-66-FIELD"
+    "KA-PATH-66-FIELD",
+    "KA-PATH-73-ABLE"
   ],
   "omits": [
     "FAREWELL-CASUAL",

@@ -1,0 +1,23 @@
+{
+  "chapter": 72,
+  "title": "When It Happens, and What You Want",
+  "label": "ch:ka-when-and-want",
+  "canDo": "I can say when something happens, say what I want, and answer a choice with a preference.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "KA-C72-prefer",
+    "kind": "production",
+    "summary": "Complete KA-C72-prefer and answer an offered choice with what you like and what you do not.",
+    "assesses": [
+      "KA-LEX-C72-WANT-01",
+      "KA-GRAMMAR-C72-WANT-02",
+      "KA-LEX-C72-WANT-03",
+      "KA-GRAMMAR-C72-WANT-04",
+      "KA-SCRIPT-RECOG-150",
+      "KA-LEX-C72-WANT-05",
+      "KA-LEX-C72-WANT-06"
+    ]
+  }
+}

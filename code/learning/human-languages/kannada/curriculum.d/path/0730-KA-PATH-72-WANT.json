@@ -1,0 +1,15 @@
+{
+  "id": "KA-PATH-72-WANT",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "KA-C72-when-clause",
+    "KA-C72-want",
+    "KA-C72-do-you-like",
+    "KA-C72-prefer"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-72-WANT"
+  ],
+  "after": []
+}

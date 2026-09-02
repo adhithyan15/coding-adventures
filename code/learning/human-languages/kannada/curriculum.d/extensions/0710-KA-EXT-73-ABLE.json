@@ -1,0 +1,14 @@
+{
+  "id": "KA-EXT-73-ABLE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say why I am doing something, say what I can do, and say a instead of the.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C73-very",
+    "KA-C73-in-order-to",
+    "KA-C73-can",
+    "KA-C73-a-flower"
+  ]
+}

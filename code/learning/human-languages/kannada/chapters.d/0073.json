@@ -1,0 +1,23 @@
+{
+  "chapter": 73,
+  "title": "In Order To, and Being Able",
+  "label": "ch:ka-in-order-to",
+  "canDo": "I can say why I am doing something, say what I can do, and say a instead of the.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "KA-C73-a-flower",
+    "kind": "production",
+    "summary": "Complete KA-C73-a-flower and say all four dative-frame sentences in a row.",
+    "assesses": [
+      "KA-LEX-C73-ABLE-01",
+      "KA-LEX-C73-ABLE-02",
+      "KA-GRAMMAR-C73-ABLE-03",
+      "KA-SCRIPT-RECOG-151",
+      "KA-LEX-C73-ABLE-04",
+      "KA-GRAMMAR-C73-ABLE-05",
+      "KA-GRAMMAR-C73-ABLE-06"
+    ]
+  }
+}
