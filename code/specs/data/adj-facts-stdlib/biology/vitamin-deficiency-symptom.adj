@@ -13,7 +13,7 @@
 %
 %   vitamin_a → inability_to_see_in_low_light
 %     "Xerophthalmia is the inability to see in low light, and it can lead
-%      to blindness if it isn't treated."
+%      to blindness if it isn’t treated."
 %
 %   vitamin_d → soft_weak_deformed_painful_bones
 %     "vitamin D deficiency causes rickets, a disease in which the bones
@@ -68,13 +68,13 @@
 table vitamin_deficiency_symptom {
     columns vitamin, symptom
 
-    row (vitamin_a, inability_to_see_in_low_light)              % NIH: "Xerophthalmia is the inability to see in low light, and it can lead to blindness if it isn't treated."
+    row (vitamin_a, inability_to_see_in_low_light)              % NIH: "Xerophthalmia is the inability to see in low light, and it can lead to blindness if it isn’t treated."
     row (vitamin_d, soft_weak_deformed_painful_bones)            % NIH: "vitamin D deficiency causes rickets, a disease in which the bones become soft, weak, deformed, and painful."
     row (vitamin_b1, tingling_and_numbness_in_feet_and_hands)    % NIH: "beriberi with the added symptoms of tingling and numbness in the feet and hands, loss of muscle, and poor reflexes."
     row (vitamin_b9, weakness_and_fatigue)                       % NIH: "megaloblastic anemia, a blood disorder that causes weakness, fatigue, trouble concentrating, irritability, headache, heart palpitations, and shortness of breath."
     row (vitamin_b12, tired_and_weak)                            % NIH: "megaloblastic anemia, a blood condition that makes people tired and weak."
 
-    source "Xerophthalmia is the inability to see in low light, and it can lead to blindness if it isn't treated."
+    source "Xerophthalmia is the inability to see in low light, and it can lead to blindness if it isn’t treated."
     locator "https://ods.od.nih.gov/factsheets/VitaminA-Consumer/"
     trust authoritative
 

@@ -133,3 +133,29 @@ fn heredity_term_abstains_honestly_on_a_term_outside_the_curated_core() {
          core -- honest abstention, never invented: {out}"
     );
 }
+
+const HEREDITY_TERM_PIN: &str = r#""bindings":{"D":"basic_unit_of_inheritance"},"citations":[{"source":"The gene is considered the basic unit of inheritance.","locator":"https://www.genome.gov/genetics-glossary/Gene","trust":"authoritative","corroborations":[{"source":"An allele is one of two or more versions of DNA sequence (a single base or a segment of bases) at a given genomic location.","locator":"https://www.genome.gov/genetics-glossary/Allele"},{"source":"If the alleles of a gene are different, one allele will be expressed; it is the dominant gene. The effect of the other allele, called recessive, is masked.","locator":"https://www.genome.gov/genetics-glossary/Dominant"},{"source":"In the case of a recessive trait, the alleles of the trait-causing gene are the same, and both (recessive) alleles must be present to express the trait.","locator":"https://www.genome.gov/genetics-glossary/Recessive-Traits-Alleles"},{"source":"A genotype is a scoring of the type of variant present at a given location (i.e., a locus) in the genome.","locator":"https://www.genome.gov/genetics-glossary/genotype"},{"source":"Phenotype refers to an individual’s observable traits, such as height, eye color and blood type.","locator":"https://www.genome.gov/genetics-glossary/Phenotype"}"#;
+
+#[test]
+fn heredity_term_citation_matches_its_page_glyph_for_glyph() {
+    let dir = scratch("glyph");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"heredity-term.adj\"
+? heredity_term(gene, $D)
+",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // A `cites` repair: the pin runs from the bindings THROUGH the
+    // corroboration carrying the repaired sentence, so it ties the ANSWER to
+    // this evidence. A corroboration pin bound to the wrong entry is unique,
+    // anchored, and tests nothing -- that happened once already this effort.
+    assert!(
+        out.contains(HEREDITY_TERM_PIN),
+        "the heredity term citation matches its page: {out}"
+    );
+}

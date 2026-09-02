@@ -75,7 +75,7 @@
 %     dominant    one_allele_is_expressed_and_the_effect_of_the_other_allele_is_masked  "If the alleles of a gene are different, one allele will be expressed; it is the dominant gene. The effect of the other allele, called recessive, is masked."
 %     recessive   both_alleles_must_be_present_to_express_the_trait                     "In the case of a recessive trait, ... both (recessive) alleles must be present to express the trait."
 %     genotype    a_scoring_of_the_type_of_variant_present_at_a_given_location_in_the_genome  "A genotype is a scoring of the type of variant present at a given location (i.e., a locus) in the genome."
-%     phenotype   an_individuals_observable_traits                                      "Phenotype refers to an individual's observable traits, such as height, eye color and blood type."
+%     phenotype   an_individuals_observable_traits                                      "Phenotype refers to an individual’s observable traits, such as height, eye color and blood type."
 %     trait       a_specific_characteristic_of_an_individual                            "A trait, as related to genetics, is a specific characteristic of an individual."
 %
 % This is a curated CORE slice of seven terms directly on the gene -> allele
@@ -119,6 +119,6 @@ table heredity_term {
     cites "If the alleles of a gene are different, one allele will be expressed; it is the dominant gene. The effect of the other allele, called recessive, is masked." locator "https://www.genome.gov/genetics-glossary/Dominant"
     cites "In the case of a recessive trait, the alleles of the trait-causing gene are the same, and both (recessive) alleles must be present to express the trait." locator "https://www.genome.gov/genetics-glossary/Recessive-Traits-Alleles"
     cites "A genotype is a scoring of the type of variant present at a given location (i.e., a locus) in the genome." locator "https://www.genome.gov/genetics-glossary/genotype"
-    cites "Phenotype refers to an individual's observable traits, such as height, eye color and blood type." locator "https://www.genome.gov/genetics-glossary/Phenotype"
+    cites "Phenotype refers to an individual’s observable traits, such as height, eye color and blood type." locator "https://www.genome.gov/genetics-glossary/Phenotype"
     cites "A trait, as related to genetics, is a specific characteristic of an individual." locator "https://www.genome.gov/genetics-glossary/Trait"
 }

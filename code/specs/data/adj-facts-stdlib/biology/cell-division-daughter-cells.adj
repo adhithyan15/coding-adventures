@@ -63,7 +63,7 @@
 %   mitosis → 2
 %     https://www.genome.gov/genetics-glossary/Mitosis
 %     (NIH National Human Genome Research Institute — Genetics Glossary)
-%     "Mitosis is generally followed by equal division of the cell's content
+%     "Mitosis is generally followed by equal division of the cell’s content
 %      into two daughter cells that have identical genomes."
 %
 %   meiosis → 4
@@ -90,7 +90,7 @@ table cell_division_daughter_cells {
     row (mitosis, 2)
     row (meiosis, 4)
 
-    source "Mitosis is generally followed by equal division of the cell's content into two daughter cells that have identical genomes."
+    source "Mitosis is generally followed by equal division of the cell’s content into two daughter cells that have identical genomes."
     locator "https://www.genome.gov/genetics-glossary/Mitosis"
     trust authoritative
 }
