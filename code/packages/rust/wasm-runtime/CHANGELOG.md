@@ -2,6 +2,36 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.30] — 2026-09-02 (mechanical: `call()`'s legacy arg-conversion match covers the two new W37 `ValueType` variants; a real, pre-existing, self-documented gap newly exercised and flagged, not fixed)
+
+Mechanical exhaustiveness update: `wasm-types` 0.1.25 adds `ValueType::
+Eqref`/`ValueType::StructRefAny` (`code/specs/
+W37-wasm-gc-reftype-tables.md`), and `WasmInstance::call()`'s legacy i64
+arg-conversion match is exhaustive over `ValueType`. Both join the existing
+lossy-legacy-path placeholder group (no vendored corpus directive passes
+either as a top-level `invoke` argument — both only ever appear as table/
+global/local/param/result declared types).
+
+**A real, pre-existing, already-self-documented gap this crate's own
+`instantiate()` doc comment flags, newly exercised by W37 but NOT caused
+or fixed by it**: the table-import linking arm (`ImportTypeInfo::Table`)
+only checks `is64` and `Limits` compatibility — it has never checked
+element-type compatibility at all ("`Table` doesn't track its declared
+element type at runtime... a table import mismatched purely on element
+type (not limits) would incorrectly link here rather than fail. Named, not
+silent: revisit if a future PR gives `Table` a real element-type field.").
+Before `wasm-wast-parser` 0.1.100, the ONE corpus fixture that exercises
+table-import type mismatches (`linking.wast`'s own `$Mtable_ex`-based
+`assert_unlinkable` cases, using `(ref null func)`/`(ref null $t)`/
+`externref`-typed table exports and imports) could never even PARSE, so
+this gap was never reachable. It now is: 2 of those cases (importing a
+`(ref null $t)`/`externref`-typed table export as a mismatched `(ref null
+func)`) link successfully when they should be rejected — a real,
+honestly-diagnosed `Fail`, not a silent wrong answer, and NOT fixed in
+this release (implementing real runtime table-type tracking needs a
+`HostInterface::resolve_table` signature change, well beyond "table
+declaration parsing" — flagged as a follow-up item instead).
+
 ## [0.6.29] — 2026-09-01 (fix: `instantiate()` now marks active/declarative element segments dropped, closing the exact gap PR #14009 honestly reported)
 
 Fixes the real, pre-existing `wasm-runtime` bug `wasm-conformance`
