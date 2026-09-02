@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "Yes, No, and I See",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b40a16648ce0ea14",
+  "sourceHash": "fnv1a64:94e61cd852b353a9",
   "lessons": [
     {
       "id": "PA-C31-ji",
@@ -358,7 +358,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cf3f0e85a5568f94",
+      "sourceHash": "fnv1a64:547f03df4d2ea7be",
       "notice": {
         "modality": "pen",
         "needs": [

@@ -1,8 +1,8 @@
 Kannada, chapter 2: Introducing Yourself.
-8 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+10 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 8.
+Lesson 1 of 10.
 ಹೆಸರು (hesaru) — "name," and the p becomes h shift.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -35,7 +35,7 @@ Wrap-up Recall.
 What sound-law turned pesar into hesaru, and what Tamil word is its cousin? (p becomes h; Tamil peyar.) Is it related to English name? (No — native Dravidian.)
 
 
-Lesson 2 of 8.
+Lesson 2 of 10.
 ನನ್ನ (nanna) — "my".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -65,7 +65,7 @@ Wrap-up Recall.
 What does ನನ್ನ (nanna) mean? ("My.") Is it native Dravidian or an Indo-European loan? (Native Dravidian.)
 
 
-Lesson 3 of 8.
+Lesson 3 of 10.
 ನನ್ನ ಹೆಸರು … (nanna hesaru …) — "my name is…," with no "is".
 
 Warm-up.
@@ -74,7 +74,7 @@ Assemble the two atoms — and notice, as in Tamil, no word for "is."
 
 The phrase, assembled.
 nanna (my) + hesaru (name) + your name.
-ನನ್ನ (nanna) ಹೆಸರು (hesaru) … = "my name …" becomes "my name is…"
+ನನ್ನ ಹೆಸರು … (nanna hesaru …) = "my name …" becomes "my name is…"
 Nanna hesaru Arun. becomes "My name is Arun."
 
 Grammar Lens: the zero copula.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 Give your name in Kannada. (Nanna hesaru ….) What does Kannada leave out that English needs? (The verb "is" — zero copula.)
 
 
-Lesson 4 of 8.
+Lesson 4 of 10.
 ನೀನು / ನೀವು (nīnu / nīvu) — "you," familiar and respectful.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 How does Kannada make "you" respectful, and which languages use the same trick? (By the plural — nīvu; Tamil nīṅgaḷ, French vous.)
 
 
-Lesson 5 of 8.
+Lesson 5 of 10.
 ಏನು (ēnu) — "what".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -153,7 +153,7 @@ Wrap-up Recall.
 What Dravidian stem heads ಏನು (ēnu) and Kannada's other question-words? (yā-/e-, the same as Tamil eṉṉa.)
 
 
-Lesson 6 of 8.
+Lesson 6 of 10.
 ನಿಮ್ಮ ಹೆಸರು ಏನು? (nimma hesaru ēnu?) — "what's your name?"
 
 Warm-up.
@@ -162,7 +162,7 @@ Assemble the question — your + name + what — still no "is."
 
 The phrase, assembled.
 ನಿಮ್ಮ (nimma, "your") = the possessive of nīvu ("you," respectful).
-ನಿಮ್ಮ ಹೆಸರು (hesaru) ಏನು (ēnu)? = literally "your name what?" = "what's your name?"
+ನಿಮ್ಮ ಹೆಸರು ಏನು? (nimma hesaru ēnu?) = literally "your name what?" = "what's your name?"
 Three words, no verb — the zero copula holds for questions too.
 
 Grammar Lens: answer, and the familiar version.
@@ -177,10 +177,44 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does ನಿಮ್ಮ ಹೆಸರು (hesaru) ಏನು (ēnu)? literally say, and what's missing vs. English? ("Your name what?"; no "is" — zero copula.)
+What does ನಿಮ್ಮ ಹೆಸರು ಏನು? (nimma hesaru ēnu?) literally say, and what's missing vs. English? ("Your name what?"; no "is" — zero copula.)
 
 
-Lesson 7 of 8.
+Lesson 7 of 10.
+◌ೆ — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ೆ and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: ◌ೆ.
+◌ೆ — e.
+It is a vowel sign. It is not a letter and never stands alone: it attaches to a consonant and replaces the a built into it with e. Replaces, not adds — the a is gone.
+You already say these, and every one of them has ◌ೆ somewhere inside it:
+ಹೆಸರು hesaru — name.
+ನಿಮ್ಮ ಹೆಸರು ಏನು? nimma hesaru ēnu? — what is your name?
+
+Writing: ◌ೆ — copy what you see.
+Put your pen on ◌ೆ and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
+This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these words, and find ◌ೆ in the ones that have it]
+[pause 8 seconds for the answer]
+ಹೆಸರು (hesaru), ಹೌದು, ನಮಸ್ಕಾರ.
+[once you have stopped driving — trace: ◌ೆ three times, saying e as you finish each one]
+[your turn — look: back at any page of this chapter and find ◌ೆ once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — ◌ೆ? What vowel does it put on the consonant it attaches to — and what does it take off? (Puts e on; takes the built-in a off.) Name one word you already say that contains it.
+
+
+Lesson 8 of 10.
 ಸಂತೋಷ (santōṣa) — "joy," and "pleased to meet you".
 
 Warm-up.
@@ -205,7 +239,45 @@ Wrap-up Recall.
 Is ಸಂತೋಷ (santōṣa) native or borrowed, and what does the contrast with Tamil show? (Sanskrit; Kannada borrows Sanskrit — here for "pleased" — where Tamil keeps native magiḻcci.)
 
 
-Lesson 8 of 8.
+Lesson 9 of 10.
+◌ು — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ು and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one: ನ — what does it do?
+[pause 2 seconds]
+One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: ◌ು.
+◌ು — u.
+It is a vowel sign. It is not a letter and never stands alone: it attaches to a consonant and replaces the a built into it with u. Replaces, not adds — the a is gone.
+You already say these, and every one of them has ◌ು somewhere inside it:
+ಹೌದು haudu — yes (haudu).
+ಹೆಸರು hesaru — name.
+ನೀನು / ನೀವು nīnu / nīvu — you (familiar / respectful).
+ಏನು ēnu — what.
+
+Writing: ◌ು — copy what you see.
+Put your pen on ◌ು and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
+This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these words, and find ◌ು (u) in the ones that have it]
+[pause 8 seconds for the answer]
+ಹೌದು, ಹೆಸರು (hesaru), ನಮಸ್ಕಾರ.
+[once you have stopped driving — trace: ◌ು three times, saying u as you finish each one]
+[your turn — look: back at any page of this chapter and find ◌ು (u) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — ◌ು? What vowel does it put on the consonant it attaches to — and what does it take off? (Puts u on; takes the built-in a off.) Name one word you already say that contains it.
+
+
+Lesson 10 of 10.
 Chapter 2 — the introduction, whole.
 
 Warm-up.
@@ -215,7 +287,7 @@ Every atom built. Here's the exchange.
 The dialogue.
 [a table of 4 rows, read aloud]
 ನನ್ನ ಹೆಸರು ಮೀರಾ. (nanna hesaru Mira) means My name is Mira.
-ನಿಮ್ಮ ಹೆಸರು ಏನು? (nimma hesaru ēnu) means What's your name?
+ನಿಮ್ಮ ಹೆಸರು ಏನು? (nimma hesaru ēnu?) (nimma hesaru ēnu) means What's your name?
 ನನ್ನ ಹೆಸರು ಅರುಣ್. (nanna hesaru Arun) means My name is Arun.
 ಸಂತೋಷ. (santōṣa) means Pleased to meet you.
 Every atom traced:

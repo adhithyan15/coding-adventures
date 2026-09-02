@@ -1,9 +1,10 @@
 {
   "language": "kannada",
   "chapter": 38,
-  "sourceHash": "fnv1a64:7748257a525a71de",
+  "sourceHash": "fnv1a64:79f3fb02b9a33f7a",
   "lessonIds": [
-    "KA-C38-hrudaya"
+    "KA-C38-hrudaya",
+    "KA-S132-sign-visarga"
   ],
   "tex": "kannada/book/chapters/ch38-heart.tex"
 }

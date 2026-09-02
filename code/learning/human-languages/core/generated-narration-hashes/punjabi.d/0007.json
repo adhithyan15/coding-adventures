@@ -1,21 +1,23 @@
 {
   "language": "punjabi",
   "chapter": 7,
-  "sourceHash": "fnv1a64:2a44c1fd1fb662bf",
+  "sourceHash": "fnv1a64:1251e66877da0e63",
   "lessonIds": [
     "PA-C07-hona",
+    "PA-S07-naana-jajja-vavva",
     "PA-C07-jana",
     "PA-C07-auna",
+    "PA-S07-rara-ghagga-dadda",
     "PA-C07-khana",
     "PA-C07-vekhna",
     "PA-R07-wellbeing-r3",
     "PA-C07-janna"
   ],
   "voiceLessons": 7,
-  "drivablePrefix": 7,
+  "drivablePrefix": 1,
   "text": "punjabi/narration/ch07.txt",
   "json": "punjabi/narration/ch07.json",
-  "textHash": "fnv1a64:1285ce604a817bb7",
-  "jsonHash": "fnv1a64:235771806fab5ede",
+  "textHash": "fnv1a64:afd1e05e12dfc5fe",
+  "jsonHash": "fnv1a64:fa231c2992b9995e",
   "findings": []
 }

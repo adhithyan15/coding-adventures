@@ -9,27 +9,27 @@ headword: ਵੇਖਣਾ
 romanization: vekhṇā
 gloss: to see — built on the old word for the eye itself, the root behind eye, optic, and window
 concept_tag: VERB-SEE
-prerequisites: [PA-C07-khana]
+prerequisites: [PA-C07-khana, PA-S07-naana-jajja-vavva, PA-S07-rara-ghagga-dadda]
 sounds: [laava-e, aspirate-kh, retroflex-na]
 roots: [sanskrit-preksate, sanskrit-iks, pie-hekw]
 etymology_hook: vekhṇā is Sanskrit prekṣate, on the root īkṣ- “see” from PIE *h₃ekʷ- “eye” — English eye, ocular, optic, autopsy, window.
 duration:
   max_seconds: 220
 requires:
-  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-KHANA]
+  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-KHANA, PA-SCRIPT-RECOG-DA-01, PA-SCRIPT-RECOG-NAANA-01, PA-SCRIPT-RECOG-VA-01]
 introduces:
   knowledge: [PA-LEX-VEKHNA, PA-ETYMON-VEKHNA-IKS, PA-COMPARISON-VEKHNA-DEKHNA]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-KHANA, PA-LEX-VEKHNA, PA-ETYMON-VEKHNA-IKS, PA-COMPARISON-VEKHNA-DEKHNA]
+  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-KHANA, PA-LEX-VEKHNA, PA-ETYMON-VEKHNA-IKS, PA-COMPARISON-VEKHNA-DEKHNA, PA-SCRIPT-RECOG-DA-01, PA-SCRIPT-RECOG-NAANA-01, PA-SCRIPT-RECOG-VA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [PA-C07-khana, PA-C07-hona]
+reviews_of: [PA-C07-khana, PA-C07-hona, PA-S07-naana-jajja-vavva, PA-S07-rara-ghagga-dadda]
 ---
 
 # ਵੇਖਣਾ — “to see,” a verb built out of the eye itself
@@ -78,7 +78,7 @@ old word for the thing in your head.
 - [YOU CONNECT: *īkṣ-* ← \**h₃ekʷ-* → English **eye**, **optic**, **window**]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-VEKHNA, PA-COMPARISON-VEKHNA-DEKHNA, PA-ETYMON-VEKHNA-IKS, PA-LEX-KHANA, PA-GRAMMAR-NA-INFINITIVE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-VEKHNA, PA-COMPARISON-VEKHNA-DEKHNA, PA-ETYMON-VEKHNA-IKS, PA-LEX-KHANA, PA-GRAMMAR-NA-INFINITIVE, PA-SCRIPT-RECOG-DA-01, PA-SCRIPT-RECOG-NAANA-01, PA-SCRIPT-RECOG-VA-01] -->
 
 [PAUSE 3s] What noun is hiding inside *vekhṇā*? (The **eye** — Sanskrit
 *akṣi*, behind the verb *īkṣ-*.) Name two English words off that root. (Any

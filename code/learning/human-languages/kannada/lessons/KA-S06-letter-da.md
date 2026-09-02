@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S06-letter-da
 spine_node: SPINE-MEET-GREET
-sequence: 395
+sequence: 315
 delivery: script
-chapter: 11
+chapter: 6
 type: writing
 headword: "ದ"
 gloss: the single character ದ — recognised inside words you already say
@@ -50,7 +50,6 @@ You already say these, and every one of them has ದ somewhere inside it:
 - **ಧನ್ಯವಾದ** *dhanyavāda* — thank you (dhanyavāda — "an utterance of 'worthy'")
 - **ಹೌದು** *haudu* — yes (haudu)
 - **ನೀವು ಹೇಗಿದ್ದೀರಾ?** *nīvu hēgiddīrā* — how are you? (respectful)
-- **ಒಂದು ಎರಡು ಮೂರು ನಾಲ್ಕು ಐದು** *ondu eraḍu mūru nālku aidu* — one to five
 
 ## Writing: ದ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-06] -->

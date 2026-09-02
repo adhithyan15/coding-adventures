@@ -90,6 +90,12 @@ window without one.
 - Use the round completion control to complete or reopen a task; Edit changes
   the name or optional due date directly in List; select the task name to reveal
   scheduling details; Delete removes it.
+- **Startup is never a blank page** — a loading state shows while the engine and
+  saved workspace initialize, and a failed start becomes a message with the
+  underlying detail and a retry that re-runs initialization in place, rather than
+  an empty page and a console error. The host-neutral contract is
+  `code/specs/task-app-startup-states-v1.md`; generated native hosts still report
+  startup failure only through process and log evidence (#13984).
 - **Persistence is explicit** — the whole workspace is saved to IndexedDB after each
   change and restored on reload when durable browser storage is available (see
   `host/web/`); an in-app warning identifies volatile fallback, failed writes, or a

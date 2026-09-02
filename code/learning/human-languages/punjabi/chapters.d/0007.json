@@ -21,7 +21,13 @@
       "PA-LEX-KHANA",
       "PA-LEX-VEKHNA",
       "PA-SOUND-Y-TO-J",
-      "PA-SOUND-PUNJABI-TONE"
+      "PA-SOUND-PUNJABI-TONE",
+      "PA-SCRIPT-RECOG-RRA-01",
+      "PA-SCRIPT-RECOG-GHA-01",
+      "PA-SCRIPT-RECOG-DA-01",
+      "PA-SCRIPT-RECOG-NAANA-01",
+      "PA-SCRIPT-RECOG-JA-01",
+      "PA-SCRIPT-RECOG-VA-01"
     ]
   }
 }

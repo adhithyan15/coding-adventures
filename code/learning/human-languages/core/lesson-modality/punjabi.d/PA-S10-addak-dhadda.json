@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "PA-S10-addak-dhadda",
+    "language": "punjabi",
+    "chapter": 10,
+    "sequence": 535,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:578dd4e41c6c77f9",
+    "detachableSegments": [
+      "Script you'll notice: ੱ · ਧ",
+      "Writing: copy what you can see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S121-letter-sa
 spine_node: SPINE-MEET-GREET
-sequence: 451
+sequence: 405
 delivery: script
-chapter: 17
+chapter: 12
 type: writing
 headword: "ಸ"
 gloss: the single character ಸ — recognised inside words you already say

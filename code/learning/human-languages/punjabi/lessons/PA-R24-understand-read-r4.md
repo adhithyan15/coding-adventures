@@ -9,27 +9,27 @@ headword: ਸਮਝਣਾ · ਪੜ੍ਹਨਾ
 romanization: samajhṇā · paṛhnā
 gloss: retrieve understand, read, falling tone, and subjoined ha at R4
 concept_tag: REVIEW
-prerequisites: [PA-R24-know-think-r4, PA-C08-parhna]
+prerequisites: [PA-R24-know-think-r4, PA-C08-parhna, PA-S07-rara-ghagga-dadda, PA-S08-khakkha-jhajja-pairin]
 sounds: [tone-falling, subjoined-ha]
 roots: []
 etymology_hook: Understanding returns as waking up, while reading returns as reciting aloud.
 duration:
   max_seconds: 210
 requires:
-  knowledge: [PA-LEX-SAMAJHNA, PA-SOUND-TONE-FALLING, PA-ETYMON-SAMAJH-BUDH, PA-LEX-PARHNA, PA-SCRIPT-SUBJOINED-HA, PA-ETYMON-PARHNA-PATH]
+  knowledge: [PA-LEX-SAMAJHNA, PA-SOUND-TONE-FALLING, PA-ETYMON-SAMAJH-BUDH, PA-LEX-PARHNA, PA-SCRIPT-SUBJOINED-HA, PA-ETYMON-PARHNA-PATH, PA-SCRIPT-RECOG-JHA-01, PA-SCRIPT-RECOG-PAIRIN-01, PA-SCRIPT-RECOG-RRA-01]
 introduces:
   knowledge: []
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-LEX-SAMAJHNA, PA-SOUND-TONE-FALLING, PA-ETYMON-SAMAJH-BUDH, PA-LEX-PARHNA, PA-SCRIPT-SUBJOINED-HA, PA-ETYMON-PARHNA-PATH]
+  knowledge: [PA-LEX-SAMAJHNA, PA-SOUND-TONE-FALLING, PA-ETYMON-SAMAJH-BUDH, PA-LEX-PARHNA, PA-SCRIPT-SUBJOINED-HA, PA-ETYMON-PARHNA-PATH, PA-SCRIPT-RECOG-JHA-01, PA-SCRIPT-RECOG-PAIRIN-01, PA-SCRIPT-RECOG-RRA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus, fluency]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-C08-samajhna, PA-C08-parhna]
+reviews_of: [PA-C08-samajhna, PA-C08-parhna, PA-S07-rara-ghagga-dadda, PA-S08-khakkha-jhajja-pairin]
 ---
 
 # Understand and read return at R4
@@ -50,6 +50,6 @@ reviews_of: [PA-C08-samajhna, PA-C08-parhna]
 Recognizing **ੜ੍ਹ** here is reading evidence only. Do not copy it, and do not count this lesson as independent writing.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-SAMAJHNA, PA-LEX-PARHNA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-SAMAJHNA, PA-LEX-PARHNA, PA-SCRIPT-RECOG-JHA-01, PA-SCRIPT-RECOG-PAIRIN-01, PA-SCRIPT-RECOG-RRA-01] -->
 
 [PAUSE 4s] Say “understand; read” once more from meaning.

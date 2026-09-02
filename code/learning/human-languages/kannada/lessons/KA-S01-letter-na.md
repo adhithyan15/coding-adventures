@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S01-letter-na
 spine_node: SPINE-MEET-GREET
-sequence: 335
+sequence: 55
 delivery: script
-chapter: 6
+chapter: 1
 type: writing
 headword: "ನ"
 gloss: the single character ನ — recognised inside words you already say
@@ -49,8 +49,6 @@ You already say these, and every one of them has ನ somewhere inside it:
 
 - **ನಮಸ್ಕಾರ** *namaskāra* — hello / greetings (namaskāra — "a making of a bow")
 - **ಧನ್ಯವಾದ** *dhanyavāda* — thank you (dhanyavāda — "an utterance of 'worthy'")
-- **ನನ್ನ** *nanna* — my
-- **ನೀನು / ನೀವು** *nīnu / nīvu* — you (familiar / respectful)
 
 ## Writing: ನ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-01] -->

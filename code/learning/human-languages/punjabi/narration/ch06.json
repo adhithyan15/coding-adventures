@@ -3,9 +3,180 @@
   "language": "punjabi",
   "chapter": 6,
   "title": "Numbers One to Five",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:e5e2b0df8902a562",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:da737f40bbfedf02",
   "lessons": [
+    {
+      "id": "PA-S06-kakka-aira-aara",
+      "sequence": 335,
+      "title": "ਅ, ਆ — two pieces met inside a word you already say",
+      "headword": "ਅ · ਆ",
+      "romanization": "a · ā",
+      "gloss": "two pieces of Gurmukhi, met inside a word you already say",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:e446a8abcc05e711",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ਅ, ਆ"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ਅ, ਆ until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The two letters a Punjabi word uses when it opens on a vowel and has no consonant to hang a mātrā on."
+            },
+            {
+              "kind": "speech",
+              "text": "First, say the last things you learned once more, out loud and from memory:"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rahiṇā, kamm karnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rahiṇā* · *kamm karnā*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ਅ, ਆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਅ."
+            },
+            {
+              "kind": "speech",
+              "text": "aiṛā — a. The bare vowel carrier. On its own it is a; with a mātrā hung on it, it is whatever that mātrā says."
+            },
+            {
+              "kind": "speech",
+              "text": "ਆ."
+            },
+            {
+              "kind": "speech",
+              "text": "aiṛā + kannā — ā. The vowel carrier wearing the kannā you already know — so it is long ā, at the start of a word."
+            },
+            {
+              "kind": "speech",
+              "text": "Now put them where you have already heard them:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਅ alone is a; ਆ is the same carrier wearing the kannā you already know. ਆ + ਸ becomes ਆਸ (ās) ਆਸ — ās — hope."
+            },
+            {
+              "kind": "speech",
+              "text": "You are not being asked to write any of this. You are being asked to recognise it the next time it goes past."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: copy what you can see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ਅ, ਆ in front of you and do not cover any of them. Follow each shape once with a finger, then copy it once with a pencil, larger than it is printed. Say its sound as your hand stops."
+            },
+            {
+              "kind": "speech",
+              "text": "This is observe-and-trace with the model visible. Nothing in these chapters asks you to write a Punjabi word from memory; that ladder starts later, and it starts from these same shapes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at ਆਸ and point to each of today's pieces in turn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **ਆਸ** and point to each of today's pieces in turn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a, ā, then the whole word — ās",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a*, *ā*, then the whole word — *ās*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at the headword at the top of any earlier lesson in this chapter and find one shape you now know",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at the headword at the top of any earlier lesson in this chapter and find one shape you now know]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name today's pieces: aiṛā, aiṛā + kannā. Which of them is a mātrā or a mark rather than a letter, and what does ਆਸ say? (ās, “hope”.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Gurmukhi chart."
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "PA-C06-numbers-1-5",
       "sequence": 340,
@@ -19,7 +190,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54b38eb0c72fe8be",
+      "sourceHash": "fnv1a64:c36df9e704ff93e0",
       "notice": null,
       "blocks": [
         {

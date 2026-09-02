@@ -1,8 +1,8 @@
 Punjabi, chapter 10: Water, Tea, Milk, and Bread.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+6 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 4.
+Lesson 1 of 6.
 ਪਾਣੀ (pāṇī) — the first thing you'll actually ask for.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -44,7 +44,7 @@ Sources: Wiktionary: ਪਾਣੀ (pāṇī); Wiktionary: ਕਿਰਪਾ.
 Ask for water politely, in Punjabi.
 
 
-Lesson 2 of 4.
+Lesson 2 of 6.
 ਚਾਹ (cāh) — the ਹ that is not a consonant.
 
 Warm-up.
@@ -57,7 +57,7 @@ You'll want to know first — one word.
 
 Sounds you'll need — a high tone with nowhere left to fall.
 ਚਾਹ (cāh) is spelled with a final ਹ, but that ਹ is not said as a consonant. Chapter 8 showed a jh losing its breath and leaving a high, falling pitch on the vowel before it — falling, because more of the word still followed. Here nothing follows: ਚਾਹ (cāh) is one syllable, so the pitch has nowhere to fall to. It simply stays high: cā́h, level and high from the vowel to the end of the word.
-Gurmukhi has no separate tone mark. A trailing ਹ that is not pronounced is, in practice, how the script writes this tone — the same way ਗ਼'s dot writes a borrowed sound. Say ਖਾਣਾ khāṇā again, flat, then ਚਾਹ (cāh) cā́h, high: two words that both end their vowel clean, one levelled and one not.
+Gurmukhi has no separate tone mark. A trailing ਹ that is not pronounced is, in practice, how the script writes this tone — the same way the dot under a borrowed letter writes a borrowed sound. Say ਖਾਣਾ khāṇā again, flat, then ਚਾਹ (cāh) cā́h, high: two words that both end their vowel clean, one levelled and one not.
 
 The word, taken apart — the tea that went overland.
 ਚਾਹ (cāh) is a loanword — unlike pāṇī, which Punjabi has owned since Sanskrit. It came through Classical Persian čā, from Mandarin Chinese chá: the overland route, out through Central Asia and Persia, the same road that gave Hindi-Urdu chāy, Russian chai, and Turkish çay. Chinese merchants on the coast spoke a different dialect, Hokkien, where the same word is tê — carried by sea into Dutch and then English tea, French thé, German Tee. One Chinese word, two pronunciations, sorted by whether a language met it on a caravan route or a ship's deck.
@@ -81,7 +81,45 @@ Sources: Wiktionary: ਚਾਹ (cāh); Wiktionary: chai.
 Is chaa's tone falling or level?
 
 
-Lesson 3 of 4.
+Lesson 3 of 6.
+ਚ (ca) — one piece met inside a word you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ਚ until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+One consonant, and it opens the word you are about to order.
+First, say the last things you learned once more, out loud and from memory:
+[your turn — say: madad karnā, pasand, pāṇī]
+[pause 8 seconds for the answer]
+
+Script you'll notice: ਚ.
+ਚ (ca).
+chachchā — ca. A consonant, the ch of church but with no puff of breath after it.
+Now put them where you have already heard them:
+ਚ (ca) + ਾ + ਹ becomes ਚਾਹ (cāh) ਚਾਹ — cāh — tea.
+You are not being asked to write any of this. You are being asked to recognise it the next time it goes past.
+
+Writing: copy what you can see.
+Keep ਚ (ca) in front of you and do not cover it. Follow each shape once with a finger, then copy it once with a pencil, larger than it is printed. Say its sound as your hand stops.
+This is observe-and-trace with the model visible. Nothing in these chapters asks you to write a Punjabi word from memory; that ladder starts later, and it starts from these same shapes.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at ਚਾਹ (cāh) and point to each of today's piece in turn]
+[pause 8 seconds for the answer]
+[your turn — say: ca, then the whole word — cāh]
+[pause 8 seconds for the answer]
+[your turn — look: back at the headword at the top of any earlier lesson in this chapter and find one shape you now know]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Name today's piece: chachchā. Which of them is a mātrā or a mark rather than a letter, and what does ਚਾਹ say? (cāh, “tea”.)
+Source: Unicode Gurmukhi chart.
+
+
+Lesson 4 of 6.
 ਦੁੱਧ (dudh) — a third request, and a tone that stays away.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -117,7 +155,7 @@ Ask for milk politely. (Dudh, kirpā karke.) What does dugdha mean, literally? (
 Sources: Wiktionary: ਦੁੱਧ (dudh); Wiktionary: Sanskrit dugdha.
 
 
-Lesson 4 of 4.
+Lesson 5 of 6.
 ਰੋਟੀ (roṭī) — a request pattern, run four times.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -153,3 +191,43 @@ Does roṭikā's own root have a settled answer? (No — the dictionaries disagr
 Sources: Wiktionary: ਰੋਟੀ (roṭī); Wiktionary: Sanskrit roṭikā.
 [question — say your answer, then pause 8 seconds]
 Ask for bread politely, in Punjabi.
+
+
+Lesson 6 of 6.
+ੱ, ਧ — two pieces met inside a word you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ੱ, ਧ until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+A mark that makes no sound of its own, and still changes what a word means.
+First, say the last things you learned once more, out loud and from memory:
+[your turn — say: pāṇī, cāh]
+[pause 8 seconds for the answer]
+
+Script you'll notice: ੱ, ਧ.
+ੱ.
+aḍḍak — (doubled). Not a sound of its own. It sits above the line and says double the consonant that follows — and doubling changes meaning in Punjabi, so this small mark is load-bearing.
+ਧ.
+dhaddā — dha. A third letter whose breath became pitch: written breathy-d, said today with a falling tone.
+Now put them where you have already heard them:
+ਦ + ੁ + ੱ + ਧ becomes ਦੁੱਧ (dudh) ਦੁੱਧ — dudh — milk.
+You are not being asked to write any of this. You are being asked to recognise it the next time it goes past.
+
+Writing: copy what you can see.
+Keep ੱ, ਧ in front of you and do not cover any of them. Follow each shape once with a finger, then copy it once with a pencil, larger than it is printed. Say its sound as your hand stops.
+This is observe-and-trace with the model visible. Nothing in these chapters asks you to write a Punjabi word from memory; that ladder starts later, and it starts from these same shapes.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at ਦੁੱਧ (dudh) and point to each of today's pieces in turn]
+[pause 8 seconds for the answer]
+[your turn — say: (doubled), dha, then the whole word — dudh]
+[pause 8 seconds for the answer]
+[your turn — look: back at the headword at the top of any earlier lesson in this chapter and find one shape you now know]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Name today's pieces: aḍḍak, dhaddā. Which of them is a mātrā or a mark rather than a letter, and what does ਦੁੱਧ say? (dudh, “milk”.)
+Source: Unicode Gurmukhi chart.

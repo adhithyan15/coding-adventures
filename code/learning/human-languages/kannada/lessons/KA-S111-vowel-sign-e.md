@@ -2,40 +2,38 @@
 schema_version: 2
 id: KA-S111-vowel-sign-e
 spine_node: SPINE-MEET-GREET
-sequence: 356
+sequence: 125
 delivery: script
-chapter: 7
+chapter: 2
 type: writing
 headword: "ೆ"
 gloss: the single character ೆ — recognised inside words you already say
 romanization: "e"
-prerequisites: [KA-S110-letter-ba]
+prerequisites: []
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [KA-SCRIPT-RECOG-110]
+  knowledge: []
 introduces:
   knowledge: [KA-SCRIPT-RECOG-111]
 practises:
-  knowledge: [KA-SCRIPT-RECOG-110, KA-SCRIPT-RECOG-111]
+  knowledge: [KA-SCRIPT-RECOG-111]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [KA-S110-letter-ba]
+reviews_of: []
 ---
 
 # ◌ೆ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-110] -->
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 1s] Before the new one: ಬ — what does it do?
-
-[PAUSE 2s] One character this time. Just one — and you have been saying it
+[PAUSE 1s] One character this time. Just one — and you have been saying it
 for pages without knowing which mark on the page it was.
 
 ## Script you'll notice: ◌ೆ
@@ -48,9 +46,7 @@ It is a **vowel sign**. It is not a letter and never stands alone: it attaches t
 You already say these, and every one of them has ◌ೆ somewhere inside it:
 
 - **ಹೆಸರು** *hesaru* — name
-- **ಹೇಗೆ** *hēge* — how
-- **ಚೆನ್ನಾಗಿ** *cennāgi* — well, nicely — and the reply "ನಾನು ಚೆನ್ನಾಗಿದ್ದೇನೆ
-- **ಹೋಗಿ ಬರುತ್ತೇನೆ** *hōgi baruttēne* — goodbye (lit. "I'll go and come back")
+- **ನಿಮ್ಮ ಹೆಸರು ಏನು?** *nimma hesaru ēnu?* — what is your name?
 
 ## Writing: ◌ೆ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-111] -->
@@ -70,7 +66,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ◌ೆ in the ones that have it]
 
-> ಹೆಸರು  ·  ಹೇಗೆ  ·  ನಮಸ್ಕಾರ
+> ಹೆಸರು  ·  ಹೌದು  ·  ನಮಸ್ಕಾರ
 
 - [YOU TRACE: ◌ೆ three times, saying *e* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ◌ೆ once more]
