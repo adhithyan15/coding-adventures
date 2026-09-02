@@ -8,8 +8,8 @@
   and tracked Git-blob digests without adding broad JavaScript, WebAssembly,
   generated-output, or directory authority.
 - Added the closed repository source-input boundary registry for 18 reviewed
-  boundaries, 21 input registrations over 19 tracked inputs, 482 consumer
-  scopes, and 485 authorizations. It distinguishes shared ancestors, generated-
+  boundaries, 21 input registrations over 19 tracked inputs, 483 consumer
+  scopes, and 486 authorizations. It distinguishes shared ancestors, generated-
   pruning exceptions, and exact cross-package inputs; pins the language source-
   input registry digest; and rejects unsafe, colliding, overlapping, ambient,
   untracked, credential, signing, secret, glob, and suffix authority.

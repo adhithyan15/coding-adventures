@@ -13,6 +13,15 @@ pieces taught before the whole; and a book you can read straight through.
   the letters that word needs (నమస్కారం brings the vowel signs, the స్క
   below-stacking conjunct, and the anusvāra ం). A reader who already reads
   Telugu skims those notes.
+- **A second, slower pass over the same letters: gloss first, glyph later.**
+  Running alongside the word lessons is a chain of one-character lessons,
+  `TE-S01` … `TE-S133`, slotted into the chapters rather than gathered into an
+  alphabet block. The rule that places them is that a word is **said before it
+  is read**: హ is taught in chapter 22, after సహాయం and హైదరాబాద్ have been
+  glossed; ృ waits until chapter 39, one chapter after హృదయం; ఞ until chapter 51,
+  the page after కృతజ్ఞత. A letter never appears in this chain before a word
+  the reader can already pronounce needs it, and something else is always
+  learned in between.
 - **Telugu as the Sanskritised Dravidian — and the family's odd one out on
   "no."** Like Kannada, Telugu borrowed heavily from Sanskrit (*namaskāram*,
   *dhanyavādamulu*) yet keeps native Dravidian for the everyday grammar. But
@@ -115,6 +124,15 @@ pieces taught before the whole; and a book you can read straight through.
 - **Chapter 40 — A Meal** ([`lessons/TE-C40-*`](./lessons/)): bhōjanaṁ, the
   Sanskrit word for "a meal" that Chapter 32 already named and never taught.
   In the book.
+- **The letter chain, chapters 6–51** ([`lessons/TE-S*`](./lessons/)):
+  thirty-three one-character lessons. The most recent nine — హ, ణ, జ, భ, ఋ, థ,
+  ృ, ఞ, ౌ — closed the letters the track had been *showing* without ever
+  naming, taking script-closure violations from 45 to 22 and never-taught
+  glyphs from 24 to 13. Four of the nine are taught as contrasts against a
+  letter already known (ణ against న, భ against బ, థ against త, ృ against ఋ)
+  rather than as isolated shapes. What is left is upstream of where the chain
+  begins; `HL-C217` in the shared backlog says why, and what a Telugu-numerals
+  tranche would close next. In the book.
 
 ---
 

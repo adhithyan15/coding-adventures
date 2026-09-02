@@ -25,7 +25,16 @@
     "TE-S121-letter-lla",
     "TE-S122-letter-u",
     "TE-S123-letter-dda",
-    "TE-S124-letter-e"
+    "TE-S124-letter-e",
+    "TE-S125-letter-ha",
+    "TE-S126-letter-nna",
+    "TE-S127-letter-ja",
+    "TE-S128-letter-bha",
+    "TE-S129-letter-vocalic-r",
+    "TE-S130-letter-tha",
+    "TE-S131-vowel-sign-vocalic-r",
+    "TE-S132-letter-nya",
+    "TE-S133-vowel-sign-au"
   ],
   "before": [],
   "inline": [

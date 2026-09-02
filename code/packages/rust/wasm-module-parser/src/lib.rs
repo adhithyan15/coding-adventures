@@ -870,10 +870,7 @@ fn parse_struct_type(p: &mut Parser) -> Result<StructType, WasmParseError> {
     for _ in 0..field_count {
         let val_type = read_value_type(p)?;
         let mutability = p.read_u8()?;
-        fields.push(FieldType {
-            val_type,
-            mutable: decode_mutability(mutability, p.offset() - 1)?,
-        });
+        fields.push(FieldType::plain(val_type, decode_mutability(mutability, p.offset() - 1)?));
     }
     Ok(StructType { fields })
 }
@@ -1636,6 +1633,29 @@ impl WasmModuleParser {
             }
         }
 
+        // Real corpus bug (`binary.wast`'s "memory.init requires a data
+        // count section" / "data.drop requires a data count section"
+        // `assert_malformed` cases -- the W-addendum 2026-09-01 LEB128
+        // prioritization pass): the spec requires a data count section
+        // (§12) whenever the code section uses `memory.init`/`data.drop`
+        // (`0xFC 0x08`/`0xFC 0x09`), REGARDLESS of whether the data
+        // section's own segment count would otherwise agree. This crate
+        // doesn't walk function-body instructions byte-by-byte (`code` is
+        // stored raw, see `parse_code_section`'s own doc comment) -- and
+        // deliberately does NOT start here, since a byte-pattern scan for
+        // `0xFC 0x08`/`0xFC 0x09` without real instruction-boundary
+        // tracking risks a false positive on some OTHER instruction's raw
+        // immediate bytes (e.g. an `f64.const`'s 8 literal bytes)
+        // coincidentally containing that pair. `wasm-validator`'s
+        // type-checker already walks every instruction precisely (it has
+        // to, to type-check them) and already has dedicated `0x08`/`0x09`
+        // arms -- this flag just hands it the one piece of binary-only
+        // context it has no other way to recover once section parsing is
+        // done: whether §12 was present at all. See `WasmModule::
+        // missing_data_count_section`'s own doc comment for why this is
+        // phrased as "missing" (default `false`) rather than "has".
+        module.missing_data_count_section = data_count.is_none();
+
         Ok(module)
     }
 }
@@ -1647,6 +1667,7 @@ impl WasmModuleParser {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use wasm_types::StorageType;
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
@@ -1769,9 +1790,9 @@ mod tests {
         assert_eq!(m.struct_types.len(), 1, "the $LispyPair struct is recovered");
         let st = &m.struct_types[0];
         assert_eq!(st.fields.len(), 2);
-        assert_eq!(st.fields[0].val_type, ValueType::Anyref);
+        assert_eq!(st.fields[0].storage, StorageType::Val(ValueType::Anyref));
         assert!(st.fields[0].mutable);
-        assert_eq!(st.fields[1].val_type, ValueType::Anyref);
+        assert_eq!(st.fields[1].storage, StorageType::Val(ValueType::Anyref));
         assert!(st.fields[1].mutable);
     }
 
@@ -1812,9 +1833,9 @@ mod tests {
         let m = WasmModuleParser::parse(&data).unwrap();
 
         let st = &m.struct_types[0];
-        assert_eq!(st.fields[0].val_type, ValueType::I31ref);
+        assert_eq!(st.fields[0].storage, StorageType::Val(ValueType::I31ref));
         assert!(!st.fields[0].mutable, "field 0 is immutable");
-        assert_eq!(st.fields[1].val_type, ValueType::StructRef(0));
+        assert_eq!(st.fields[1].storage, StorageType::Val(ValueType::StructRef(0)));
         assert!(st.fields[1].mutable, "field 1 is mutable");
     }
 
@@ -1835,9 +1856,9 @@ mod tests {
         let m = WasmModuleParser::parse(&data).unwrap();
 
         let st = &m.struct_types[0];
-        assert_eq!(st.fields[0].val_type, ValueType::NonNullStructRef(0));
+        assert_eq!(st.fields[0].storage, StorageType::Val(ValueType::NonNullStructRef(0)));
         assert!(st.fields[0].mutable);
-        assert_eq!(st.fields[1].val_type, ValueType::NonNullStructRef(1));
+        assert_eq!(st.fields[1].storage, StorageType::Val(ValueType::NonNullStructRef(1)));
         assert!(!st.fields[1].mutable);
     }
 
@@ -2300,6 +2321,33 @@ mod tests {
             "unexpected error: {}",
             err.message
         );
+    }
+
+    /// W-addendum 2026-09-01 pass (`binary.wast`'s "memory.init/data.drop
+    /// requires a data count section" `assert_malformed` cases): a binary
+    /// module with no data count section at all must come out of this
+    /// crate flagged `missing_data_count_section: true` -- the actual
+    /// "memory.init/data.drop without one is malformed" enforcement lives
+    /// in `wasm-validator` (this crate never walks function-body
+    /// instructions), but it can only do that if this crate hands the one
+    /// piece of binary-only context it needs forward instead of silently
+    /// dropping it once the data-count/data-section length cross-check
+    /// above is done.
+    #[test]
+    fn test_missing_data_count_section_flag_set_when_section_absent() {
+        let data = wasm_with_sections(&[]);
+        let m = WasmModuleParser::parse(&data).unwrap();
+        assert!(m.missing_data_count_section);
+    }
+
+    /// The mirror case: a data count section IS present (and agrees with
+    /// the data section, so it parses at all) -- the flag must be `false`.
+    #[test]
+    fn test_missing_data_count_section_flag_false_when_section_present() {
+        let data_count_payload = vec![0x00]; // declares 0 segments
+        let data = wasm_with_sections(&[make_section(12, &data_count_payload)]);
+        let m = WasmModuleParser::parse(&data).unwrap();
+        assert!(!m.missing_data_count_section);
     }
 
     // ── Test 11: Element section ──────────────────────────────────────────────

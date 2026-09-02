@@ -1,0 +1,21 @@
+{
+  "chapter": 34,
+  "title": "Peace and Welcome",
+  "label": "ch:pa-peace-and-welcome",
+  "canDo": "I can greet with salam and welcome someone with ji aaian nu, name the three-consonant Arabic root that salam shares with islam and muslim, say where the postposition nu stands, and write salam in Gurmukhi.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "PA-C34-ji-aaian-nu",
+    "kind": "production",
+    "summary": "The reader welcomes an arrival, translates the phrase piece by piece into life, those who have come, and to, states that nu follows the word it marks rather than preceding it, and writes salam now that its looped letter has been traced.",
+    "assesses": [
+      "PA-LEX-JI-AAIAN-NU",
+      "PA-GRAM-NU-DATIVE",
+      "PA-SCRIPT-SALAAM-01",
+      "PA-LEX-SALAAM",
+      "PA-SCRIPT-LA-01"
+    ]
+  }
+}

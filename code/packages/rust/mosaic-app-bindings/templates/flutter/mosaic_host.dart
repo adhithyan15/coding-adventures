@@ -389,9 +389,16 @@ final class _MosaicRuntime {
 
   Map<String, Object?> _withPersistenceWarning(Map<String, Object?> update) {
     final warning = _persistenceWarning;
-    return warning == null
-        ? update
-        : <String, Object?>{...update, 'persistenceWarning': warning};
+    if (warning == null) return update;
+    final augmented = <String, Object?>{...update, 'persistenceWarning': warning};
+    final props = update['props'];
+    if (props is Map && props.containsKey('storage-warning')) {
+      augmented['props'] = <String, Object?>{
+        ...props.cast<String, Object?>(),
+        'storage-warning': warning,
+      };
+    }
+    return augmented;
   }
 
   static void _replaceAtomically(File temporary, File target) {

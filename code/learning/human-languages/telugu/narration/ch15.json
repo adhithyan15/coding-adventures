@@ -4,14 +4,14 @@
   "chapter": 15,
   "title": "Water and Rice",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7b8d69ddb1344b01",
+  "sourceHash": "fnv1a64:e03d028bf7596a0f",
   "lessons": [
     {
       "id": "TE-C15-neellu-biyyam",
       "sequence": 420,
       "title": "నీళ్ళు, బియ్యం, అన్నం — water and rice",
       "headword": "నీళ్ళు బియ్యం అన్నం",
-      "romanization": "",
+      "romanization": "nīḷḷu biyyam annam",
       "gloss": "water (matching Tamil/Kannada's neer/niiru), and rice raw/cooked — completing the family's water and rice pattern",
       "script": "telugu",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:39c73acb4c328246",
+      "sourceHash": "fnv1a64:e5e97312ee8513ad",
       "notice": null,
       "blocks": [
         {

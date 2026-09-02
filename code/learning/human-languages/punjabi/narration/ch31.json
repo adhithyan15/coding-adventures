@@ -1,0 +1,633 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 31,
+  "title": "Yes, No, and I See",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:b40a16648ce0ea14",
+  "lessons": [
+    {
+      "id": "PA-C31-ji",
+      "sequence": 1940,
+      "title": "ਜੀ (jī) — the smallest respectful yes",
+      "headword": "ਜੀ",
+      "romanization": "jī",
+      "gloss": "yes (respectful) — one syllable that can answer, address, and soften",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ae896fb73b90a9ba",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can already answer ਹਾਂ and ਨਹੀਂ by ear, and you can already choose between the familiar and the respectful you. This chapter adds the answers that sit between a bare yes and a bare no — and it opens with the one Punjabi speakers reach for most."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਜੀ — jī — yes (respectful)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਜ j, and the long ī sign ੀ standing after it: ਜੀ (jī). Both shapes came out of ਪੰਜਾਬੀ and ਹਿੰਦੀ, so this word is writable the moment you meet it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart — a word for \"life,\" doing the work of politeness",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Jī is usually traced back to Sanskrit jīva, \"living, a living being, life.\" That word climbs to a Proto-Indo-European root meaning \"alive,\" gʷih₃wós — the same root standing behind Latin vīvus, the vit- in vitamin, and English quick in its older sense, the one preserved in the phrase the quick and the dead."
+            },
+            {
+              "kind": "speech",
+              "text": "How a word meaning \"life\" became a mark of respect is not settled, and this book reports the derivation as the usual one rather than as a proved one."
+            },
+            {
+              "kind": "speech",
+              "text": "What jī does in speech is easier to be certain about, because a learner can hear it. It answers: someone calls your name, and jī alone is a complete, courteous reply. It attaches: put it after a name and the name becomes respectful. It softens: added to a yes or a no, it takes the edge off both."
+            },
+            {
+              "kind": "speech",
+              "text": "Compare it with ਹਾਂ, which you already have. Hāṁ states agreement. Jī adds the person you are agreeing with."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jī — yes, respectfully",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **jī** — yes, respectfully]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "someone calls your name; reply with jī alone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: someone calls your name; reply with **jī** alone]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "hāṁ (plain agreement) and jī (agreement with respect)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: **hāṁ** (plain agreement) and **jī** (agreement with respect)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "STATE",
+              "instruction": "the Sanskrit word jī is usually traced to (jīva, \"life\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU STATE: the Sanskrit word *jī* is usually traced to (*jīva*, \"life\")]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the respectful yes. (Jī.) What can it do besides answer? (Attach to a name; soften a yes or a no.) Which Sanskrit word is it usually traced to? (Jīva, \"life.\")"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: ji; Wiktionary: jiva."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C31-ji-meaning",
+              "prompt": "Which Sanskrit word is ji usually traced back to, and what did it mean?",
+              "assesses": [
+                "PA-ETYMON-JI-JIVA"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "jiva, life",
+                "jiva",
+                "jiva - living",
+                "life"
+              ],
+              "feedback": {
+                "correct": "jiva, 'living, life' - the same root as Latin vivus and English quick in its older sense.",
+                "incorrect": "jiva, 'living, life'. The step from life to respect is the part that is not settled."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C31-achchha",
+      "sequence": 1950,
+      "title": "achchhā — the word that used to mean \"clear water\"",
+      "headword": "ਅੱਛਾ",
+      "romanization": "achchhā",
+      "gloss": "okay, all right, I see — a word that started out meaning \"clear\"",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:66b5cd3749897d39",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਜੀ (jī) once. Then say hāṁ and nahīṁ. Those three cover yes, no, and respect. What they do not cover is the reply that accepts something without agreeing or refusing — the sound an English speaker makes as okay or right."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "achchhā — okay, all right, I see."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it slowly: ach-chhā. The middle is one ch held twice as long, and the second half of that hold carries a puff of breath."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — from clear water to \"fine\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The usual account takes achchhā back to Sanskrit accha, which meant clear, transparent — said of water you could see the bottom through. Clear became unclouded, unclouded became good, and good, in the mouth of someone listening to you, became fine, I follow you."
+            },
+            {
+              "kind": "speech",
+              "text": "Some dictionaries stop short of that and mark the origin unknown. Both accounts are on the record, and a reader who wants the honest version should hold this one loosely."
+            },
+            {
+              "kind": "speech",
+              "text": "The held middle consonant does the same work here as the small mark ੱ you met over ਰੱਬ: it doubles the sound that follows it. On the page this word will need a letter you have not met, so it stays in sound for now."
+            },
+            {
+              "kind": "speech",
+              "text": "Compare the three replies you now have by ear. Hāṁ agrees. Jī agrees respectfully. Achchhā receives — it says the message landed, and leaves agreement for later."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "achchhā, holding the doubled middle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *achchhā*, holding the doubled middle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "hāṁ (agree), jī (agree respectfully), achchhā (receive)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: *hāṁ* (agree), *jī* (agree respectfully), *achchhā* (receive)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "STATE",
+              "instruction": "what Sanskrit accha described (clear, see-through water)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU STATE: what Sanskrit *accha* described (clear, see-through water)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COMBINE",
+              "instruction": "achchhā jī — the two together, in that order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COMBINE: *achchhā jī* — the two together, in that order]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the reply that receives without agreeing. (Achchhā.) What did its Sanskrit ancestor describe? (Clear water.) Which of your three replies adds respect? (Jī.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: achchha; Wiktionary: accha."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C31-achchha-sense",
+              "prompt": "What did the Sanskrit word behind achchha describe before it meant good?",
+              "assesses": [
+                "PA-ETYMON-ACHCHHA-CLEAR"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "clear",
+                "clear water",
+                "transparent",
+                "see-through",
+                "clear, transparent"
+              ],
+              "feedback": {
+                "correct": "accha meant clear or transparent - water you can see through.",
+                "incorrect": "Clear, transparent. Clear became good, and good became okay."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W09-chhachha",
+      "sequence": 1960,
+      "title": "ਛ (chha) — the letter the last word was waiting for",
+      "headword": "ਛ",
+      "romanization": "chha",
+      "gloss": "trace the Gurmukhi letter chhachha",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:cf3f0e85a5568f94",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — one letter"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one letter until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say achchhā aloud once. You have met the word by ear and you have met two of its four pieces on the page already: the standalone ਅ, and the little doubling mark ੱ that sat over ਰੱਬ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one letter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace ਛ slowly, twice. Say chha as you finish each one. Hang it from the top line the way every base letter hangs. Add nothing above and nothing below."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the model. Write ਛ (chha) once. Compare its shape alone, repair one difference, and stop there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One base shape is enough for this session. The word it belongs to comes back two sessions from now."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W09-chhachha-check",
+              "prompt": "Write the new Gurmukhi base letter chha.",
+              "assesses": [
+                "PA-SCRIPT-CHHA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ਛ"
+              ],
+              "feedback": {
+                "correct": "ਛ is chha, the letter that carries the breath in achchha.",
+                "incorrect": "Trace ਛ once more, hanging it from the top line."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C31-na",
+      "sequence": 1970,
+      "title": "ਨਾ (nā) — a negative you have been saying all along",
+      "headword": "ਨਾ",
+      "romanization": "nā",
+      "gloss": "no, don't — the bare negative already hiding inside nahīṁ",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ab94314f7dd01a0e",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਨਹੀਂ once, then say koī gall nahīṁ. Now cut the word in half and keep only its opening: na. That piece is a word in its own right."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਨਾ — nā — no; don't."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਨ n and the upright ਾ that lengthens it: ਨਾ (nā). Two shapes from the first writing run, and nothing new."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart — the oldest word in this book",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਨਾ (nā) comes down from Sanskrit na, and na comes down from Proto-Indo-European ne. That particle has stayed recognisable for as long as anything in this book: English no, not and the un- of unhappy, Latin ne- and nōn, Greek a- in atypical. The wellbeing chapter met the same root inside nahīṁ; here it stands on its own."
+            },
+            {
+              "kind": "speech",
+              "text": "ਨਹੀਂ is this word with an old emphatic hi welded on — a strengthened no, the one that refuses a statement. ਨਾ (nā) is the plain one: it tells someone not to do a thing, and it can end a sentence as a soft question, the way English tacks on right?"
+            },
+            {
+              "kind": "speech",
+              "text": "The difference to carry away is one of force, not of meaning. Both refuse; one insists."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "writing",
+          "title": "Writing: assemble ਅੱਛਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two sessions ago achchhā was sound only, because one of its letters had not been taught. It has been taught now, so the word can be built."
+            },
+            {
+              "kind": "speech",
+              "text": "Four pieces, left to right: ਅ, then the doubling mark ੱ above it, then ਛ (chha), then the upright ਾ. Written out: ਅੱਛਾ (achchhā)."
+            },
+            {
+              "kind": "speech",
+              "text": "Copy it once with the model visible, say achchhā as you finish, then cover the model and write it once more. Compare only whether the doubling mark sits above the first letter."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nā — the plain no",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **nā** — the plain no]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "nā (plain) and ਨਹੀਂ (the same word, strengthened)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: **nā** (plain) and **ਨਹੀਂ** (the same word, strengthened)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "the four replies of this chapter — jī, achchhā, hāṁ, nā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: the four replies of this chapter — *jī*, *achchhā*, *hāṁ*, *nā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "STATE",
+              "instruction": "three English words that share this root (no, not, un-)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU STATE: three English words that share this root (*no*, *not*, *un-*)]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the plain no. (Nā.) Which word is it hiding inside? (Nahīṁ.) Write achchhā once more from memory."
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: na; Wiktionary: ne-."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C31-na-root",
+              "prompt": "Punjabi na and English no descend from the same Proto-Indo-European particle. Write that particle.",
+              "assesses": [
+                "PA-ETYMON-NA-NE"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ne",
+                "*ne",
+                "ne-"
+              ],
+              "feedback": {
+                "correct": "ne - the particle behind no, not, un-, non and a-.",
+                "incorrect": "ne. Punjabi na, English no and Latin non all continue it."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

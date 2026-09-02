@@ -97,10 +97,30 @@ On Windows, use the compiled `.exe`:
 | `-diff-base` | origin/main | Git ref to diff against for change detection |
 | `-cache-file` | .build-cache.json | Path to the build cache file |
 | `-validate-build-files` | true | Validate BUILD dependency metadata, crate coverage, and tracked artifacts |
+| `-ci-gates` | code/specs/data/ci-gates.json | CI gate registry used to decide which Actions jobs this change needs; empty disables gating |
 
 `-validate-build-files` also fails closed when Git tracks any `node_modules`
 path. Dependency directories are machine-local build products; committing one
 can hide an absolute symlink that works only in its author's checkout.
+
+## Deciding which CI jobs to run
+
+Emitting a plan also decides which GitHub Actions jobs the change needs. The
+tool reads the registry named by `-ci-gates`, intersects each gate's declared
+packages with the affected closure and its declared path globs with the raw
+changed-file list, then writes the verdicts into the plan as `ci_jobs` and emits
+`run_<gate>=true|false` to stdout and `$GITHUB_OUTPUT`. `ci.yml` uses those as
+job-level `if:` conditions.
+
+Evaluation fails open. Force mode, an unavailable git diff, or a change to
+`ci.yml` or the registry itself runs every gate; main-branch pushes already pass
+`-force`. A gate declaring neither packages nor paths is rejected at load time,
+because a gate that can never fire looks exactly like one that always passes.
+
+Every gate needs both clauses. Files under `code/specs`, `code/fixtures`,
+`code/grammars`, and `code/scripts` map to no package at all, so the path clause
+is the only thing that can see a fixture or grammar edit. See
+`code/specs/ci-gate-registry.md`.
 
 ## Metadata safety
 

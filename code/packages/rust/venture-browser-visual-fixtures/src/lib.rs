@@ -33,6 +33,8 @@ pub const POSITIONED_FIXTURE_PATH: &str = "/positioned.html";
 pub const TABLE_FIXTURE_PATH: &str = "/table.html";
 pub const FLOAT_FIXTURE_PATH: &str = "/float.html";
 pub const INLINE_BOX_FIXTURE_PATH: &str = "/inline-box.html";
+pub const REPLACED_FIXTURE_PATH: &str = "/replaced.html";
+pub const GENERATED_FIXTURE_PATH: &str = "/generated.html";
 pub const VIEWPORT_WIDTH: f64 = 240.0;
 pub const VIEWPORT_HEIGHT: f64 = 120.0;
 pub const GPU_LAYER_FIXTURE_WIDTH: u32 = 16;
@@ -101,6 +103,21 @@ pub const FLOAT_FIXTURE_HTML: &str = r#"<!doctype html><html><body><div id="floa
 
 /// Wrapped semantic inline boxes exercising slice and clone edge continuation.
 pub const INLINE_BOX_FIXTURE_HTML: &str = r#"<!doctype html><html><body><p style="width:130px;margin:0"><a id="slice-link" href="slice.html" style="margin:0 2px;padding:2px 4px;border:1px solid red;background:green">sliced inline edges cross several lines</a></p><p style="width:130px;margin:8px 0 0"><a id="clone-link" href="clone.html" style="margin:0 2px;padding:2px 4px;border:1px solid blue;background:red;box-decoration-break:clone">cloned inline edges repeat on every line</a></p></body></html>"#;
+
+/// Decoded intrinsic dimensions and cover-fit geometry shared by every host.
+pub const REPLACED_FIXTURE_HTML: &str = r#"<!doctype html><html><body><img id="intrinsic-image" src="checker.gif" alt="intrinsic"><img id="cover-image" src="checker.gif" alt="cover" style="width:80px;height:40px;object-fit:cover"></body></html>"#;
+
+/// Scoped counters, pseudo content, and inside/outside list-marker geometry.
+pub const GENERATED_FIXTURE_HTML: &str = r#"<!doctype html><html><head><style>
+body { counter-reset: chapter 0; }
+h2 { counter-increment: chapter; margin: 0; }
+h2::before { content: 'Chapter ' counter(chapter, upper-roman) ': ' attr(title) ' - '; color: blue; }
+h2::after { content: ' /'; color: red; }
+ol { list-style: upper-alpha outside; margin: 0; }
+li::marker { color: green; }
+#inside { list-style-position: inside; }
+#generated-link::before { content: 'Open '; }
+</style></head><body><h2 id="generated-heading" title="Atlas">Layout</h2><ol start="3" reversed><li id="outside">Outside marker</li><li id="inside" value="7">Inside marker</li></ol><a id="generated-link" href="generated-next.html">page</a></body></html>"#;
 
 /// A compact backend-neutral oracle for isolated GPU composition.
 ///
@@ -498,6 +515,8 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
     let table_url = format!("{origin}{TABLE_FIXTURE_PATH}");
     let float_url = format!("{origin}{FLOAT_FIXTURE_PATH}");
     let inline_box_url = format!("{origin}{INLINE_BOX_FIXTURE_PATH}");
+    let replaced_url = format!("{origin}{REPLACED_FIXTURE_PATH}");
+    let generated_url = format!("{origin}{GENERATED_FIXTURE_PATH}");
     match requested_url {
         url if url == page_url => Ok(BrowserFetchResponse::new(
             url,
@@ -564,6 +583,18 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
             200,
             Some("text/html; charset=utf-8".into()),
             INLINE_BOX_FIXTURE_HTML.as_bytes().to_vec(),
+        )),
+        url if url == replaced_url => Ok(BrowserFetchResponse::new(
+            url,
+            200,
+            Some("text/html; charset=utf-8".into()),
+            REPLACED_FIXTURE_HTML.as_bytes().to_vec(),
+        )),
+        url if url == generated_url => Ok(BrowserFetchResponse::new(
+            url,
+            200,
+            Some("text/html; charset=utf-8".into()),
+            GENERATED_FIXTURE_HTML.as_bytes().to_vec(),
         )),
         url if url == format!("{origin}{MISSING_IMAGE_PATH}") => {
             Err("intentional visual fixture image failure".into())
@@ -691,6 +722,40 @@ pub fn load_inline_box_page(origin: &str) -> Result<BrowserPage, String> {
         &text,
     );
     let url = format!("{}{INLINE_BOX_FIXTURE_PATH}", origin.trim_end_matches('/'));
+    pipeline
+        .load(&url, &|requested: &str| fixture_response(origin, requested))
+        .map_err(|error| error.to_string())
+}
+
+pub fn load_replaced_page(origin: &str) -> Result<BrowserPage, String> {
+    let theme = mosaic_html_theme();
+    let text = DeterministicText;
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, 1.0),
+        &text,
+        &text,
+        &text,
+        &text,
+    );
+    let url = format!("{}{REPLACED_FIXTURE_PATH}", origin.trim_end_matches('/'));
+    pipeline
+        .load(&url, &|requested: &str| fixture_response(origin, requested))
+        .map_err(|error| error.to_string())
+}
+
+pub fn load_generated_page(origin: &str) -> Result<BrowserPage, String> {
+    let theme = mosaic_html_theme();
+    let text = DeterministicText;
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, 1.0),
+        &text,
+        &text,
+        &text,
+        &text,
+    );
+    let url = format!("{}{GENERATED_FIXTURE_PATH}", origin.trim_end_matches('/'));
     pipeline
         .load(&url, &|requested: &str| fixture_response(origin, requested))
         .map_err(|error| error.to_string())
@@ -1097,6 +1162,7 @@ fn deterministic_font_ref(character: char) -> &'static str {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use layout_ir::Content;
 
     fn find_node<'a>(node: &'a PositionedNode, id: &str) -> Option<(&'a PositionedNode, f64, f64)> {
         let mut stack = vec![(node, 0.0, 0.0)];
@@ -1376,6 +1442,42 @@ mod tests {
     }
 
     #[test]
+    fn replaced_fixture_converges_decoded_intrinsics_and_cover_fit() {
+        let page = load_replaced_page("http://venture.test").expect("replaced fixture page");
+        let intrinsic = find_positioned_id(&page.paint.positioned, "intrinsic-image").unwrap();
+        let cover = find_positioned_id(&page.paint.positioned, "cover-image").unwrap();
+        assert_eq!((intrinsic.width, intrinsic.height), (4.0, 4.0));
+        assert_eq!((cover.width, cover.height), (80.0, 40.0));
+        assert!(has_clip_with_image(
+            &page.paint.scene.instructions,
+            80.0,
+            40.0
+        ));
+    }
+
+    #[test]
+    fn generated_fixture_converges_counters_markers_paint_and_semantics() {
+        let page = load_generated_page("http://venture.test").expect("generated fixture page");
+        let heading = find_positioned_id(&page.paint.positioned, "generated-heading").unwrap();
+        let outside = find_positioned_id(&page.paint.positioned, "outside").unwrap();
+        let inside = find_positioned_id(&page.paint.positioned, "inside").unwrap();
+        let link = find_positioned_id(&page.paint.positioned, "generated-link").unwrap();
+        assert_eq!(positioned_text(heading), "Chapter I: Atlas -Layout /");
+        assert_eq!(positioned_text(outside), "C.Outside marker");
+        assert_eq!(positioned_text(inside), "G. Inside marker");
+        assert!(outside.children[0].x < outside.children[1].x);
+        assert!(inside.children[0].x <= inside.children[1].x);
+        assert!(outside.children[0].id.is_none() && inside.children[0].id.is_none());
+        assert_eq!(positioned_text(link), "Open page");
+        assert!(page
+            .paint
+            .links
+            .iter()
+            .any(|region| region.url.ends_with("generated-next.html") && region.width > 40.0));
+        assert!(!page.paint.scene.instructions.is_empty());
+    }
+
+    #[test]
     fn international_page_converges_direction_wrap_and_font_fallback() {
         let page = load_international_page("http://venture.test").expect("international page");
         for id in [
@@ -1418,6 +1520,17 @@ mod tests {
         assert!(font_refs.contains("sans-symbol"));
     }
 
+    fn positioned_text(node: &PositionedNode) -> String {
+        let mut value = match &node.content {
+            Some(Content::Text(text)) => text.value.clone(),
+            _ => String::new(),
+        };
+        for child in &node.children {
+            value.push_str(&positioned_text(child));
+        }
+        value
+    }
+
     fn find_positioned_id<'a>(node: &'a PositionedNode, id: &str) -> Option<&'a PositionedNode> {
         if node.id.as_deref() == Some(id) {
             return Some(node);
@@ -1445,6 +1558,21 @@ mod tests {
         for child in &node.children {
             collect_positioned_href(child, href, matches);
         }
+    }
+
+    fn has_clip_with_image(instructions: &[PaintInstruction], width: f64, height: f64) -> bool {
+        instructions.iter().any(|instruction| match instruction {
+            PaintInstruction::Clip(clip) => {
+                (clip.width, clip.height) == (width, height)
+                    && clip
+                        .children
+                        .iter()
+                        .any(|child| matches!(child, PaintInstruction::Image(_)))
+            }
+            PaintInstruction::Group(group) => has_clip_with_image(&group.children, width, height),
+            PaintInstruction::Layer(layer) => has_clip_with_image(&layer.children, width, height),
+            _ => false,
+        })
     }
 
     #[test]

@@ -1,0 +1,14 @@
+{
+  "id": "PA-PATH-037",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "PA-C35-mainu",
+    "PA-W09-dulainkar",
+    "PA-W09-dulavan"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-042-PREA1-OBJECT-PRONOUN"
+  ],
+  "after": []
+}

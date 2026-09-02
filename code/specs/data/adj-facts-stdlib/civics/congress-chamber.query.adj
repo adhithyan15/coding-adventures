@@ -1,0 +1,17 @@
+% ============================================================================
+% congress-chamber.query.adj — worked recall over the congress-chamber
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what body is the
+% Senate part of?" (direct), "what are the two chambers of Congress?"
+% (multi-valued, the direction actually asked), or "is the Supreme Court a
+% chamber of Congress?" (abstain) — it states no fact of its own — it only
+% `import`s the grounded table and asks binding queries.
+% ============================================================================
+
+import "congress-chamber.adj"
+
+? congress_chamber(senate, $P)          % expect congress (direct)
+? congress_chamber($C, congress)        % expect two solutions: senate, house_of_representatives (the "what are the chambers?" direction)
+? congress_chamber(supreme_court, $P)   % expect abstain -- a named institution the SAME source names, but of the judicial branch, not a chamber of Congress
+? congress_chamber(president, $P)       % expect abstain -- likewise executive, already tabled in government-branch-member.adj

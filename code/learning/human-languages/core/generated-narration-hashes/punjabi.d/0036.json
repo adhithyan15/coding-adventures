@@ -1,0 +1,17 @@
+{
+  "language": "punjabi",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:35a4cd2aa0c857aa",
+  "lessonIds": [
+    "PA-C36-kall-milaange",
+    "PA-W09-aunkar",
+    "PA-C36-shubh-raat"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "punjabi/narration/ch36.txt",
+  "json": "punjabi/narration/ch36.json",
+  "textHash": "fnv1a64:b8808ce458eb802e",
+  "jsonHash": "fnv1a64:a0e72bde50c4797e",
+  "findings": []
+}

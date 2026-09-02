@@ -28,13 +28,75 @@
 % model calls. A movement the MUTCD sentence does NOT name — `reverse`, for
 % instance — has no row, so a check for it fails rather than being invented.
 %
-% Provenance: reproduces, byte-for-byte, the SAME MUTCD Section 4D.04 green
-% span already quoted inside `traffic-lights.adj`'s own header — no new
-% WebFetch, only a different schema decoding the four enumerated movements
-% already sitting unused inside that already-verified quote. `trust
-% authoritative` — the same tier `traffic-lights.adj` already carries (the
-% FHWA Manual on Uniform Traffic Control Devices, the federal standard for
-% U.S. traffic control devices).
+% Provenance: the full MUTCD Section 4D.04 green sentence, re-extracted from
+% the page and verified character-exactly against its RAW HTML. `trust
+% authoritative` — the FHWA Manual on Uniform Traffic Control Devices is
+% the federal standard for U.S. traffic control devices, the same tier
+% `traffic-lights.adj` carries.
+%
+% *** THE CITATION WAS TRUNCATED UNTIL ISSUE #13916, AND THE WAY IT GOT
+% THAT WAY IS WORTH KNOWING. *** It used to stop at "...or make a U-turn
+% movement", omitting the clause the sentence actually ends with:
+%
+%     "... except as such movement is modified by lane-use signs, turn
+%      prohibition signs, lane markings, roadway design, separate turn
+%      signal indications, or other traffic control devices."
+%
+% Every row was therefore presented as an unconditional permission, backed
+% by evidence with its qualifier cut off — the exact defect
+% `sign-shape.adj` and `red-signal-permitted-movement.adj` both warn
+% against in their own headers: A CITATION HAS TO CARRY THE QUALIFIER IT IS
+% BEING USED TO JUSTIFY.
+%
+% The root cause was not carelessness about the text. This header used to
+% say the span "reproduces, byte-for-byte, the SAME ... span already quoted
+% inside `traffic-lights.adj`'s own header — NO NEW WebFetch". The quote
+% was COPIED FROM A SIBLING LIBRARY'S PROSE rather than re-extracted from
+% the source, so a truncation in that header propagated silently into a
+% `source` envelope. A CITATION INHERITED FROM ANOTHER LIBRARY'S HEADER IS
+% NOT VERIFIED PROVENANCE. Re-extract from the page, every time; the cost
+% of one fetch is far below the cost of a citation that says less than the
+% standard does.
+%
+% THE EXCEPTION STAYS IN THE CITATION RATHER THAN THE ATOMS, and the
+% reason is NOT the one an earlier draft of this header gave. That draft
+% called it a "whole-permission qualifier ... not any one movement", which
+% the grammar does not support: the clause reads "except as SUCH MOVEMENT
+% is modified", a singular distributive anaphor, and every device it names
+% is movement-specific — a turn-prohibition sign prohibits a particular
+% turn, a lane-use sign assigns particular movements to particular lanes.
+% If anything it is MORE per-movement than the red sibling's exception,
+% which is FRONTED and conditions the whole grant before stating it.
+%
+% The right reason is about what the qualifier DOES to a value, not where
+% it sits:
+%
+%   - Red's "after stopping" is CONSTITUTIVE. It changes what the permitted
+%     act IS, so a bare `turn_right` row would assert something red's
+%     sentence never says. The qualifier has to be in the atom or the row
+%     is false.
+%   - Green's exception is DEFEASIBILITY. It can override any of the four
+%     movements without changing what any of them IS, and it applies
+%     uniformly to all four — so it carries NO row-discriminating
+%     information. Pushed into the atoms it would decorate every row
+%     identically while making none of them more accurate; kept in the
+%     envelope it qualifies exactly what it qualifies.
+%
+% CONSTITUTIVE QUALIFIERS GO IN THE ATOM; DEFEASIBILITY GOES IN THE
+% CITATION. That is the sharper statement of the rule `sign-shape.adj` and
+% `karst-process-zone.adj` were already following.
+%
+% A NOTE ON THE RED SIBLING, since the two are meant to be read together.
+% BOTH permissions are device-modifiable — green by this sentence's clause,
+% red by its own "Except when a traffic control device is in place
+% prohibiting a turn on red..." opening. FOR THE MOVEMENTS BOTH SIGNALS
+% PERMIT, the difference is the stopping requirement. But red also permits
+% STRICTLY FEWER MOVEMENTS: it allows neither `straight_through` nor
+% `u_turn` at all, and its left turn is confined to one-way-street-into-
+% one-way-street. An earlier draft of this header said the difference was
+% "the stopping requirement and nothing else", which the red table's own
+% rows refute — a claim worth getting right, since this header invites the
+% reader to consult that table.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
 % ============================================================================
@@ -47,7 +109,7 @@ table green_signal_permitted_movement {
     row (turn_left)
     row (u_turn)
 
-    source "Vehicular traffic facing a CIRCULAR GREEN signal indication is permitted to proceed straight through or turn right or left or make a U-turn movement"
+    source "Vehicular traffic facing a CIRCULAR GREEN signal indication is permitted to proceed straight through or turn right or left or make a U-turn movement except as such movement is modified by lane-use signs, turn prohibition signs, lane markings, roadway design, separate turn signal indications, or other traffic control devices."
     locator "https://mutcd.fhwa.dot.gov/htm/2009/part4/part4d.htm"
     trust authoritative
 }

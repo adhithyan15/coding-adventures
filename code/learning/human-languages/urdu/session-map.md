@@ -127,6 +127,25 @@ After the fourth successful resurfacing, an item moves into the long-term mixed
 practice pool. A missed item returns sooner in Language Ladder's adaptive
 review; the fixed ledger remains the book's no-tracking fallback.
 
+## Chapters 17 and 18 — the interleaved script sessions
+
+These twenty lessons are already spaced by design: each letter lesson sits two
+or three lessons after the word that first glossed its shape, and two review
+lessons per chapter re-surface everything readable so far. Run them one lesson
+per sitting in authored order and the spacing does the work of a review ledger.
+
+Two sittings are worth repeating rather than passing through once. **UR-W17-he**
+is the first letter taught in four positional faces, and its middle form reads
+as a different letter until the hand has made it several times. **UR-W18-pe**
+teaches a shape that shrinks to a tooth when it joins while its three dots stay,
+which is the first time the reader has to identify a letter by what is added
+rather than by its outline.
+
+The two chapter payoffs, **UR-C17-practice** and **UR-C18-practice**, are
+dictation sittings: the model stays covered, the item is heard or read from
+romanization, and the writing is compared only afterwards. Repeat each at N+3
+and N+7 before moving on.
+
 ## Schedule check
 
 Every Chapter 1–8 lesson now has all four fixed resurfacing sessions through

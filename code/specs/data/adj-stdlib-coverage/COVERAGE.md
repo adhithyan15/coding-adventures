@@ -10,8 +10,8 @@ exists. Semantic coverage is tracked in `code/specs/ADJ-STDLIB-COVERAGE.md`.
 
 | Collection | Content libraries | Clauses | Query companions | Test references | Source envelopes | Byte-verified |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| facts | 338 | 341 | 337 (99.7%) | 338 (100.0%) | 338 (100.0%) | 0 (0.0%) |
-| formulas | 163 | 404 | 163 (100.0%) | 163 (100.0%) | 163 (100.0%) | 0 (0.0%) |
+| facts | 362 | 365 | 361 (99.7%) | 362 (100.0%) | 362 (100.0%) | 0 (0.0%) |
+| formulas | 163 | 404 | 163 (100.0%) | 163 (100.0%) | 163 (100.0%) | 4 (2.5%) |
 | medical-recall | 63 | 634 | 63 (100.0%) | 63 (100.0%) | 60 (95.2%) | 0 (0.0%) |
 
 A complete source envelope means every grounded clause has `source`,
@@ -30,7 +30,8 @@ provenance bundle whose CAS graph proves all cited source bytes.
 | `facts/biology` | 63 | 63 | 62 | 63 | 63 | 0 |
 | `facts/calendar` | 2 | 2 | 2 | 2 | 2 | 0 |
 | `facts/chemistry` | 20 | 20 | 20 | 20 | 20 | 0 |
-| `facts/earth-science` | 13 | 13 | 13 | 13 | 13 | 0 |
+| `facts/civics` | 10 | 10 | 10 | 10 | 10 | 0 |
+| `facts/earth-science` | 24 | 24 | 24 | 24 | 24 | 0 |
 | `facts/engineering` | 1 | 1 | 1 | 1 | 1 | 0 |
 | `facts/environment` | 3 | 3 | 3 | 3 | 3 | 0 |
 | `facts/geography` | 12 | 12 | 12 | 12 | 12 | 0 |
@@ -47,8 +48,8 @@ provenance bundle whose CAS graph proves all cited source bytes.
 | `facts/optics` | 1 | 1 | 1 | 1 | 1 | 0 |
 | `facts/physics` | 32 | 33 | 32 | 32 | 32 | 0 |
 | `facts/science` | 2 | 2 | 2 | 2 | 2 | 0 |
-| `facts/transportation` | 2 | 2 | 2 | 2 | 2 | 0 |
-| `formulas/arithmetic` | 10 | 20 | 10 | 10 | 10 | 0 |
+| `facts/transportation` | 5 | 5 | 5 | 5 | 5 | 0 |
+| `formulas/arithmetic` | 10 | 20 | 10 | 10 | 10 | 4 |
 | `formulas/chemistry` | 7 | 26 | 7 | 7 | 7 | 0 |
 | `formulas/clinical` | 84 | 263 | 84 | 84 | 84 | 0 |
 | `formulas/mathematics` | 9 | 21 | 9 | 9 | 9 | 0 |
@@ -73,7 +74,7 @@ None.
 - `code/specs/data/mycin-2026/recall/endocrine-edges.adj`
 - `code/specs/data/mycin-2026/recall/iem-edges.adj`
 
-### Missing pinned source bytes (564)
+### Missing pinned source bytes (584)
 
 See the JSON form of this report for the complete machine-readable list.
 

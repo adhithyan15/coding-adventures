@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:39395b76d48dcd8b",
+  "sourceHash": "fnv1a64:181ecaff66df548a",
   "lessons": [
     {
       "id": "TE-C02-peru",
@@ -265,7 +265,7 @@
       "sequence": 90,
       "title": "నా పేరు … (nā pēru …) — \"my name is…,\" with no \"is\"",
       "headword": "నా పేరు …",
-      "romanization": "",
+      "romanization": "nā pēru …",
       "gloss": "my name is… (with no \"is\")",
       "script": "telugu",
       "modality": "voice",
@@ -273,7 +273,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a7b1f9c467dedf25",
+      "sourceHash": "fnv1a64:bf5e3adb30e69cbd",
       "notice": null,
       "blocks": [
         {
@@ -304,7 +304,7 @@
             },
             {
               "kind": "speech",
-              "text": "నా (nā) పేరు (pēru) … = \"my name …\" becomes \"my name is…\""
+              "text": "నా పేరు … (nā pēru …) = \"my name …\" becomes \"my name is…\""
             },
             {
               "kind": "speech",
@@ -634,7 +634,7 @@
       "sequence": 120,
       "title": "మీ పేరు ఏమిటి? (mī pēru ēmiṭi?) — \"what's your name?\"",
       "headword": "మీ పేరు ఏమిటి?",
-      "romanization": "",
+      "romanization": "mī pēru ēmiṭi?",
       "gloss": "what's your name?",
       "script": "telugu",
       "modality": "voice",
@@ -642,7 +642,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:44afe157adc3e10c",
+      "sourceHash": "fnv1a64:830d4f92b503f5a3",
       "notice": null,
       "blocks": [
         {
@@ -673,7 +673,7 @@
             },
             {
               "kind": "speech",
-              "text": "మీ పేరు (pēru) ఏమిటి (ēmiṭi)? = literally \"your name what?\" = \"what's your name?\""
+              "text": "మీ పేరు ఏమిటి? (mī pēru ēmiṭi?) = literally \"your name what?\" = \"what's your name?\""
             },
             {
               "kind": "speech",
@@ -736,7 +736,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does మీ పేరు (pēru) ఏమిటి (ēmiṭi)? literally say, and what's missing vs. English? (\"Your name what?\"; no \"is\" — zero copula.)"
+              "text": "What does మీ పేరు ఏమిటి? (mī pēru ēmiṭi?) literally say, and what's missing vs. English? (\"Your name what?\"; no \"is\" — zero copula.)"
             }
           ]
         }
@@ -747,7 +747,7 @@
       "sequence": 130,
       "title": "సంతోషం (santōṣam) — \"joy,\" and \"pleased to meet you\"",
       "headword": "సంతోషం",
-      "romanization": "",
+      "romanization": "santōṣam",
       "gloss": "joy / pleased to meet you",
       "script": "telugu",
       "modality": "voice",
@@ -755,7 +755,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:521ae1bcf1d7f5de",
+      "sourceHash": "fnv1a64:b9092a3066eddc0a",
       "notice": null,
       "blocks": [
         {
@@ -841,7 +841,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is సంతోషం native or borrowed, and what does the contrast with Tamil show? (Sanskrit; Telugu borrows Sanskrit — here for \"pleased\" — where Tamil keeps native magiḻcci.)"
+              "text": "Is సంతోషం (santōṣam) native or borrowed, and what does the contrast with Tamil show? (Sanskrit; Telugu borrows Sanskrit — here for \"pleased\" — where Tamil keeps native magiḻcci.)"
             }
           ]
         }
@@ -878,7 +878,7 @@
               "rowCount": 4,
               "utterances": [
                 "నా పేరు మీరా. (nā pēru Mira) means My name is Mira.",
-                "మీ పేరు ఏమిటి? (mī pēru ēmiṭi) means What's your name?",
+                "మీ పేరు ఏమిటి? (mī pēru ēmiṭi?) (mī pēru ēmiṭi) means What's your name?",
                 "నా పేరు అరుణ్. (nā pēru Arun) means My name is Arun.",
                 "సంతోషం. (santōṣam) means Pleased to meet you."
               ]

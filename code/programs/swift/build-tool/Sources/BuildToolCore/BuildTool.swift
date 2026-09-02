@@ -182,10 +182,9 @@ public enum BuildTool {
             return 0
         }
 
-        let packageHashes = try Dictionary(
-            uniqueKeysWithValues: packages.map {
-                ($0.name, try Hasher.hashPackage($0, repositoryRoot: repoRoot))
-            }
+        let packageHashes = try hashPackages(
+            packages,
+            repositoryRoot: repoRoot
         )
         let depsHashes = Dictionary(uniqueKeysWithValues: packages.map { ($0.name, Hasher.hashDeps(packageName: $0.name, graph: graph, packageHashes: packageHashes)) })
 
@@ -262,10 +261,9 @@ public enum BuildTool {
             let affectedSet = plan.affectedPackages.map(Set.init)
             print("Loaded plan: \(packages.count) packages")
 
-            let packageHashes = try Dictionary(
-                uniqueKeysWithValues: packages.map {
-                    ($0.name, try Hasher.hashPackage($0, repositoryRoot: repoRoot))
-                }
+            let packageHashes = try hashPackages(
+                packages,
+                repositoryRoot: repoRoot
             )
             let depsHashes = Dictionary(uniqueKeysWithValues: packages.map { ($0.name, Hasher.hashDeps(packageName: $0.name, graph: graph, packageHashes: packageHashes)) })
             let cachePath = absolutePath(options.cacheFile, repoRoot: repoRoot)
@@ -346,6 +344,44 @@ public enum BuildTool {
             outputLanguageFlags(languagesNeeded)
         }
         return 0
+    }
+
+    private static func hashPackages(
+        _ packages: [BuildPackage],
+        repositoryRoot: String
+    ) throws -> [String: String] {
+        let registeredPaths = Hasher.repositoryBoundaryPaths(
+            for: packages,
+            repositoryRoot: repositoryRoot
+        )
+        let trackedBefore = registeredPaths.isEmpty
+            ? Set<String>()
+            : try GitDiff.getTrackedRegularFiles(
+                repoRoot: repositoryRoot,
+                exactPaths: registeredPaths
+            )
+        let hashes = try Dictionary(
+            uniqueKeysWithValues: packages.map {
+                (
+                    $0.name,
+                    try Hasher.hashPackage(
+                        $0,
+                        repositoryRoot: repositoryRoot,
+                        trackedRepositoryPaths: trackedBefore
+                    )
+                )
+            }
+        )
+        let trackedAfter = registeredPaths.isEmpty
+            ? Set<String>()
+            : try GitDiff.getTrackedRegularFiles(
+                repoRoot: repositoryRoot,
+                exactPaths: registeredPaths
+            )
+        guard trackedAfter == trackedBefore else {
+            throw BuildToolError.io("tracked repository input evidence changed during hashing")
+        }
+        return hashes
     }
 
     private static func computeLanguagesNeeded(

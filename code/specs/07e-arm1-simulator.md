@@ -45,7 +45,7 @@ tools.
 | Data width | 32 bits |
 | Instruction width | 32 bits (fixed-length) |
 | ISA version | ARMv1 |
-| Registers | 16 × 32-bit visible (R0–R15), 25 physical (banked modes) |
+| Registers | 16 × 32-bit visible (R0–R15), 27 physical (banked modes) |
 | Flags | N, Z, C, V (packed into R15 with PC) |
 | Address space | 26-bit (64 MiB) |
 | Program counter | 24 bits (bits 25:2 of R15, bottom 2 always 0) |
@@ -60,7 +60,7 @@ tools.
 
 ### Register File
 
-The ARM1 has 16 registers visible at any time, but 25 physical registers total
+The ARM1 has 16 registers visible at any time, but 27 physical registers total
 due to banked registers in different processor modes.
 
 ```
@@ -117,7 +117,7 @@ M1  M0  Mode          Banked Registers
 1   1   Supervisor    R13_svc, R14_svc                   (2 banked)
         (SVC)
 
-Total physical registers: 16 base + 7 FIQ + 2 IRQ + 2 SVC = 25 banked + 2 shared = 25
+Total physical registers: 16 base + 7 FIQ + 2 IRQ + 2 SVC = 27
 ```
 
 ### Condition Codes
@@ -385,7 +385,39 @@ The simulator implements Reset, Undefined Instruction, SWI, and Address
 Exception (triggered when a 26-bit address overflows). IRQ/FIQ are available
 for external code to trigger but are not generated internally.
 
-## Public API
+## Normative Rust API
+
+The completed implementation is `code/packages/rust/arm1-simulator`.
+
+```rust
+let mut cpu = ARM1::architectural(); // complete 64 MiB address space
+cpu.load_at_checked(&program, origin)?;
+let trace: StepTrace = cpu.step_checked()?;
+let result: ExecutionResult = cpu.run_loaded_checked(max_steps)?;
+```
+
+`ARM1::new(memory_size)` remains for bounded tests and existing consumers.
+`ARM1::architectural()` is the completion-contract constructor and allocates
+the full 26-bit, 64 MiB address space.
+
+`Arm1State` owns all 27 physical registers (including every bank), every memory
+byte, halt state, and installed-program origin/length. `restore` validates that
+state before mutation. `load_checked`, `load_at_checked`,
+`load_words_checked`, `step_checked`, `run_loaded_checked`, and `run_checked`
+are deterministic and transactional. Checked register and byte/word memory
+helpers return `Arm1Error` instead of panicking, returning fabricated zero, or
+silently dropping writes.
+
+`StepTrace` contains the legacy disassembly/memory-access trace plus complete
+before/after state. `ExecutionResult` contains bounded traces and the complete
+final state. The legacy unchecked API remains available for compatibility.
+
+`raise_irq` and `raise_fiq` honor the I/F masks, save combined R15 into the
+correct banked link register, select IRQ/FIQ mode, mask interrupts, and vector
+to 0x18/0x1C. LDM/STM with S selects unbanked user registers; loading R15
+restores its combined PC/status word.
+
+## Legacy cross-language API sketch
 
 ```python
 class ARM1Simulator:
@@ -605,7 +637,7 @@ Unlike the 4004 simulator, the ARM1 behavioral simulator does NOT depend on
 generic opcode dispatch table would not simplify the implementation. Instead,
 the simulator has its own fetch-decode-execute loop.
 
-## Implementation Structure
+## Legacy cross-language source-layout sketch
 
 ```
 arm1-simulator/
@@ -618,6 +650,28 @@ arm1-simulator/
 ├── conditions.{ext}    Condition code evaluation (16 conditions)
 └── types.{ext}         ProcessorMode, ARM1Flags, ARM1Trace, etc.
 ```
+
+## Rust implementation and conformance
+
+The Rust crate keeps decoder, disassembler, barrel shifter, ALU, banked
+register file, memory, interrupt entry, encoders, lifecycle types, and execution
+engine together in `src/lib.rs`. This is a direct implementation rather than a
+GenericVM opcode table.
+
+The reproducible Python-oracle generator emits 599 deterministic one-step
+full-state hashes. Its corpus spans all sixteen conditions and ALU operations,
+immediate and register barrel shifts, every single-transfer and block-transfer
+control combination, branches in both directions, BL, SWI, HALT, and undefined
+entry. Rust compares all 27 physical registers, every memory byte, and halt
+state. Separate lifecycle tests cover the 64 MiB constructor, exact load bounds,
+ownership, invalid restore, direct checked access, truncation, halted stepping,
+late-fault rollback, force-user transfers, IRQ/FIQ masks/vectors, and complete
+results. The in-tree Rust gate-level consumer must remain green.
+
+The audited Rust package passes 51 unit tests, nine lifecycle tests, the
+599-vector aggregate Python differential, and its doctest at 92.29% line
+coverage. The Python oracle's 143 tests remain green at 89.60% coverage, and
+the Rust gate-level consumer's 21 tests pass.
 
 ## Test Strategy
 

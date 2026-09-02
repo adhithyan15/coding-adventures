@@ -1,0 +1,21 @@
+% ============================================================================
+% checks-and-balances.query.adj — worked recall over the
+% checks-and-balances library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what can the
+% president do to the other branches?" (direct, multi-valued), "who can
+% veto?" (reverse on the ACTION), "who acts on the president?" (reverse on
+% the OBJECT), or "can the justices do X?" (abstain) — it states no fact of
+% its own — it only `import`s the grounded table and asks binding queries.
+%
+% Because the relation is ternary, EVERY column can be the bound one, so
+% one table answers three different question shapes.
+% ============================================================================
+
+import "checks-and-balances.adj"
+
+? checks_and_balances(president, $A, $O)   % expect two solutions: veto/legislation_created_by_congress, nominate/federal_agency_heads_and_high_court_appointees
+? checks_and_balances($A, veto, $O)        % expect president (reverse on the ACTION -- "who can veto?")
+? checks_and_balances($A, $Act, president) % expect congress / remove_from_office (reverse on the OBJECT -- "who acts on the president?")
+? checks_and_balances(justices, $Act, $O)  % expect abstain -- the passive "These justices are nominated by the president and confirmed by the Senate" restates acts already held in the active voice
+? checks_and_balances(congress, declare_war, $O)  % expect abstain -- declaring war is a real power the SAME page names, but a legislative KEY ROLE, not a check applied to another branch

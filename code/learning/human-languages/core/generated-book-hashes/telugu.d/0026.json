@@ -1,9 +1,10 @@
 {
   "language": "telugu",
   "chapter": 26,
-  "sourceHash": "fnv1a64:ed5a94c8d8092c51",
+  "sourceHash": "fnv1a64:d33482869f60a3fa",
   "lessonIds": [
-    "TE-C26-udayam"
+    "TE-C26-udayam",
+    "TE-S129-letter-vocalic-r"
   ],
   "tex": "telugu/book/chapters/ch26-morning.tex"
 }

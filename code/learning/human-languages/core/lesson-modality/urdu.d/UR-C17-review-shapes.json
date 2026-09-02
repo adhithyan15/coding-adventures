@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "UR-C17-review-shapes",
+    "language": "urdu",
+    "chapter": 17,
+    "sequence": 860,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d3daa9c135922da0",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

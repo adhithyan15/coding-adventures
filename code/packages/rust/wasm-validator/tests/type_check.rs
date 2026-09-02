@@ -336,6 +336,57 @@ fn valid_br_table_with_matching_arities() {
     );
 }
 
+/// Regression test for a real bug found while prioritizing the vendored
+/// testsuite corpus: `br_table.wast` (a foundational MVP-level file, no
+/// GC-proposal syntax involved) was TOTALLY failing -- `module 0/1`,
+/// `assert_return 0/161` -- because `br_table`'s multi-target type check
+/// was ORDER-DEPENDENT, which the real WASM typing rule is not.
+///
+/// `br_table` requires that the SAME operand value(s) be simultaneously
+/// assignable to every listed target AND the default target -- a "meet"
+/// over all of them. The old implementation instead re-pushed each
+/// target's OWN declared type after checking it (a left-to-right chain),
+/// so checking a WIDER target ($a, generic `(ref null func)`) before a
+/// NARROWER one ($b, the concrete `(ref $tf)`, default) irreversibly
+/// widened the value away, and $b's check then failed spuriously even
+/// though `(ref.func $f)` is perfectly assignable to both. This is
+/// `br_table.wast`'s own `meet-multi-ref` (vendored unchanged): its label
+/// list `$c $b $a` checks progressively WIDER types in order, which is
+/// exactly the direction the old chain-based algorithm got wrong.
+#[test]
+fn valid_br_table_targets_type_check_regardless_of_listed_order() {
+    assert_valid(
+        r#"(module
+             (type $tf (func))
+             (func $f (type $tf))
+             (func (param i32) (result (ref null func))
+               (block $a (result (ref null func))
+                 (block $b (result (ref null $tf))
+                   (block $c (result (ref $tf))
+                     (br_table $c $b $a (ref.func $f) (local.get 0)))))))"#,
+    );
+}
+
+/// The narrow, literal shape this session's regression report described:
+/// a table declared as GENERIC `funcref` (not a concrete type) with an
+/// active element segment naming a concrete function -- must validate,
+/// since a concrete function reference is always assignable to a plain
+/// `funcref` slot (`funcref` is the top type of the func hierarchy).
+/// `wasm-validator::lib`'s own `valid_element_segment` unit test already
+/// covers this exact shape at the `WasmModule`-struct level; this is the
+/// same claim from real `.wat` TEXT, going through `wasm-wast-parser` end
+/// to end (the layer the vendored corpus itself actually exercises).
+#[test]
+fn valid_generic_funcref_table_with_an_elem_segment_naming_a_concrete_function() {
+    assert_valid(
+        r#"(module
+             (func $f (param i32) (result i32) (local.get 0))
+             (table funcref (elem $f))
+             (func (export "get") (result funcref)
+               (table.get 0 (i32.const 0))))"#,
+    );
+}
+
 #[test]
 fn valid_return_matches_function_result_types() {
     assert_valid("(module (func (param i32) (result i32) (return (local.get 0))))");
@@ -403,6 +454,30 @@ fn valid_table_get_set_type_checks_against_each_tables_own_element_type() {
                (table.set $te (i32.const 0) (local.get $e))
                (drop (table.get $tf (i32.const 0)))
                (drop (table.get $te (i32.const 0)))))"#,
+    );
+}
+
+/// The other half of the `br_table.wast` regression
+/// (`valid_br_table_targets_type_check_regardless_of_listed_order` above
+/// covers the first half): `(table $t (ref null $t) (elem $tf))` declares
+/// a table whose element type is the CONCRETE function type `$t`, not
+/// generic `funcref` -- `wasm-wast-parser` used to silently discard that
+/// reftype entirely, leaving `table.get $t` with no way to know the table
+/// was anything but generic `funcref`. Proven here the same way the real
+/// regression surfaced: the exported function's declared result is the
+/// concrete `(ref null $t)`, so its implicit-return check only passes if
+/// `table.get $t` really pushed `$t`'s concrete type -- generic `Funcref`
+/// is not assignable to a concrete-typed result slot (the opposite
+/// direction from `ConcreteFuncRef <: Funcref`).
+#[test]
+fn valid_table_get_on_a_concrete_funcref_table_keeps_its_concrete_type() {
+    assert_valid(
+        r#"(module
+             (type $t (func))
+             (func $tf)
+             (table $t (ref null $t) (elem $tf))
+             (func (export "get-as-concrete") (result (ref null $t))
+               (table.get $t (i32.const 0))))"#,
     );
 }
 
@@ -4276,10 +4351,44 @@ fn valid_global_ref_t_initialized_with_ref_func_using_real_nominal_subtyping() {
 #[test]
 fn invalid_global_ref_t_initialized_with_ref_func_of_an_unrelated_type_is_rejected() {
     // Same shape as the valid case above, but `$f`'s declared type ($b)
-    // has no `sub` relationship to the global's declared type ($a) at
-    // all -- real corpus shape, `type-rec.wast`'s own `(global (ref $ft)
-    // (ref.func $f))` "type mismatch" case.
+    // has no `sub` relationship to the global's declared type ($a), AND a
+    // genuinely different shape (`$b` takes an `i32` param `$a` doesn't) --
+    // a real type mismatch under any rule, nominal or canonical.
+    //
+    // W34 third slice (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`):
+    // this test USED to give `$a`/`$b` the SAME empty `(func)` shape (both
+    // final, no declared supertype -- the pre-GC/MVP default), on the
+    // premise that "no declared `sub` chain" alone makes them unrelated.
+    // That premise is now WRONG: two structurally- AND finality-identical
+    // types genuinely ARE the same canonical type per the real GC
+    // proposal, regardless of whether a `sub` chain was ever declared
+    // between them (see `type-rec.wast`'s own "Static matching of
+    // recursive types" section, which is exactly this case one level up --
+    // two separately-declared, differently-named, structurally-identical
+    // `rec` groups). Shapes changed to be genuinely different instead of
+    // merely un-declared-as-related -- an honest reclassification, not a
+    // regression; see `valid_global_ref_t_initialized_with_ref_func_of_a_
+    // canonically_equivalent_type` just below for the case this test used
+    // to, incorrectly, also cover.
     assert_invalid(
+        "(module
+           (type $a (func))
+           (type $b (func (param i32)))
+           (func $f (type $b))
+           (global (ref $a) (ref.func $f)))",
+    );
+}
+
+/// W34 third slice: the positive case the PREVIOUS version of
+/// `invalid_global_ref_t_initialized_with_ref_func_of_an_unrelated_type_is_
+/// rejected` (just above) used to (incorrectly, per the real GC proposal)
+/// also reject -- `$a`/`$b` are byte-identical (`(func)`, both final, no
+/// declared supertype) and declare NO `sub` relationship at all, yet are
+/// canonically the SAME type, so `ref.func $f` (declared type `$b`)
+/// initializing a `(ref $a)` global must now be ACCEPTED.
+#[test]
+fn valid_global_ref_t_initialized_with_ref_func_of_a_canonically_equivalent_type() {
+    assert_valid(
         "(module
            (type $a (func))
            (type $b (func))
@@ -4342,4 +4451,315 @@ fn valid_data_segment_offset_uses_i64_on_an_is64_memory() {
 #[test]
 fn invalid_data_segment_offset_uses_i32_on_an_is64_memory() {
     assert_invalid(r#"(module (memory i64 1) (data (i32.const 0) "x"))"#);
+}
+
+// ── W33 fourth slice: struct/array instructions ─────────────────────────────
+// (verified against `struct.wast`/`array.wast`'s own real vendored shapes)
+
+#[test]
+fn valid_struct_new_new_default_get_get_s_get_u_set() {
+    assert_valid(
+        r#"(module
+             (type $vec (struct (field f32) (field $y (mut f32)) (field f32)))
+             (global (ref $vec) (struct.new $vec (f32.const 1) (f32.const 2) (f32.const 3)))
+             (global (ref $vec) (struct.new_default $vec))
+             (func (result anyref) (struct.new_default $vec))
+             (func (param $v (ref $vec)) (result f32) (struct.get 0 0 (local.get $v)))
+             (func (param $v (ref $vec)) (result f32) (struct.get $vec $y (local.get $v)))
+             (type $s (struct (field (mut i8)) (field (mut i16))))
+             (func (param $v (ref $s)) (result i32) (struct.get_s $s 0 (local.get $v)))
+             (func (param $v (ref $s)) (result i32) (struct.get_u $s 1 (local.get $v)))
+             (func (param $v (ref $vec)) (param $y f32) (struct.set $vec $y (local.get $v) (local.get $y))))"#,
+    );
+}
+
+#[test]
+fn invalid_struct_set_on_an_immutable_field_is_rejected() {
+    assert_invalid(
+        r#"(module
+             (type $s (struct (field i64)))
+             (func (export "struct.set-immutable") (param $s (ref $s))
+               (struct.set $s 0 (local.get $s) (i64.const 1))))"#,
+    );
+}
+
+#[test]
+fn invalid_struct_get_out_of_range_field_index_is_rejected() {
+    assert_invalid(
+        r#"(module
+             (type $s (struct (field i32)))
+             (func (param $v (ref $s)) (result i32) (struct.get $s 5 (local.get $v))))"#,
+    );
+}
+
+#[test]
+fn valid_array_new_new_default_new_fixed_get_get_s_get_u_set_len() {
+    assert_valid(
+        r#"(module
+             (type $vec (array f32))
+             (type $mvec (array (mut f32)))
+             (global (ref $vec) (array.new $vec (f32.const 1) (i32.const 3)))
+             (global (ref $vec) (array.new_default $vec (i32.const 3)))
+             (global (ref $vec) (array.new_fixed $vec 2 (f32.const 1) (f32.const 2)))
+             (func $new (result (ref $vec)) (array.new_default $vec (i32.const 3)))
+             (func (param $i i32) (param $v (ref $vec)) (result f32) (array.get $vec (local.get $v) (local.get $i)))
+             (func (param $i i32) (param $v (ref $mvec)) (param $y f32) (result f32)
+               (array.set $mvec (local.get $v) (local.get $i) (local.get $y))
+               (array.get $mvec (local.get $v) (local.get $i)))
+             (type $bvec (array i8))
+             (func (param $i i32) (param $v (ref $bvec)) (result i32) (array.get_s $bvec (local.get $v) (local.get $i)))
+             (func (param $i i32) (param $v (ref $bvec)) (result i32) (array.get_u $bvec (local.get $v) (local.get $i)))
+             (func (param $v (ref array)) (result i32) (array.len (local.get $v))))"#,
+    );
+}
+
+#[test]
+fn invalid_array_set_on_an_immutable_array_is_rejected() {
+    assert_invalid(
+        r#"(module
+             (type $a (array i64))
+             (func (export "array.set-immutable") (param $a (ref $a))
+               (array.set $a (local.get $a) (i32.const 0) (i64.const 1))))"#,
+    );
+}
+
+#[test]
+fn invalid_array_new_fixed_count_over_the_dos_guard_ceiling_is_rejected() {
+    // A hand-crafted module can't spell a literal count this large via
+    // `wasm-wast-parser`'s own text grammar (it's a real u32 in the source),
+    // so this exercises the SAME validator code path a maliciously-crafted
+    // BINARY module (out of this crate's own text-only scope, but sharing
+    // `wasm-validator`'s function-body checker) would hit -- confirming the
+    // DoS guard rejects cleanly rather than looping for a very long time.
+    assert_invalid(
+        r#"(module
+             (type $vec (array i32))
+             (func (result (ref $vec)) (array.new_fixed $vec 4294967295 (i32.const 0))))"#,
+    );
+}
+
+#[test]
+fn valid_struct_new_and_array_new_as_global_const_exprs() {
+    // The real GC proposal extends constant expressions to allow these five
+    // instructions (`struct.wast`/`array.wast`'s own module-level globals
+    // use exactly this shape) -- confirmed directly against the vendored
+    // corpus, not assumed.
+    assert_valid(
+        r#"(module
+             (type $vec (struct (field f32) (field $y (mut f32)) (field f32)))
+             (global (ref $vec) (struct.new $vec (f32.const 1) (f32.const 2) (f32.const 3)))
+             (global (ref $vec) (struct.new_default $vec))
+             (type $avec (array f32))
+             (global (ref $avec) (array.new $avec (f32.const 1) (i32.const 3)))
+             (global (ref $avec) (array.new_default $avec (i32.const 3)))
+             (global (ref $avec) (array.new_fixed $avec 2 (f32.const 1) (f32.const 2))))"#,
+    );
+}
+
+#[test]
+fn invalid_struct_new_const_expr_field_type_mismatch_is_rejected() {
+    assert_invalid(
+        r#"(module
+             (type $vec (struct (field f32)))
+             (global (ref $vec) (struct.new $vec (i32.const 1))))"#,
+    );
+}
+
+// ── W34 third slice: canonical equivalence at `is_assignable`'s NEW
+// `StructRef`/`ArrayRef` arms (`code/specs/
+// W34-wasm-gc-canonical-type-equivalence.md`) -- this function had ZERO
+// struct/array arms before this slice (a real, previously-open gap the
+// spec's own research flagged); these are the first tests to exercise
+// them at all, end-to-end through `validate()`, at a real `call` site.
+// Each pair mirrors the func-type pair above: a positive case (two
+// independently-declared, nominally-unrelated but byte-identical
+// composite types, accepted via canonical equivalence) and a negative
+// case (two independently-declared, nominally-unrelated AND genuinely
+// DIFFERENT-shaped composite types, still correctly rejected).
+
+#[test]
+fn call_argument_accepts_a_canonically_equivalent_but_nominally_unrelated_struct_ref() {
+    // `$s1`/`$s2` are byte-identical structs (one `i32` field, immutable,
+    // both final by default) with NO declared `sub` relationship at all --
+    // canonically the SAME type, so passing a `(ref $s1)` value where
+    // `$f` expects `(ref $s2)` must be accepted.
+    assert_valid(
+        r#"(module
+             (type $s1 (struct (field i32)))
+             (type $s2 (struct (field i32)))
+             (func $f (param (ref $s2)))
+             (func (param $x (ref $s1)) (call $f (local.get $x))))"#,
+    );
+}
+
+#[test]
+fn call_argument_rejects_a_struct_ref_with_a_genuinely_different_field_type() {
+    // Same shape as the positive case above, but `$s2`'s field is `i64`,
+    // not `i32` -- genuinely different, so neither nominal nor canonical
+    // equivalence applies; must still be rejected.
+    assert_invalid(
+        r#"(module
+             (type $s1 (struct (field i32)))
+             (type $s2 (struct (field i64)))
+             (func $f (param (ref $s2)))
+             (func (param $x (ref $s1)) (call $f (local.get $x))))"#,
+    );
+}
+
+#[test]
+fn call_argument_accepts_a_canonically_equivalent_but_nominally_unrelated_array_ref() {
+    // `$a1`/`$a2` are byte-identical arrays (immutable `i32` element, both
+    // final by default) with NO declared `sub` relationship -- canonically
+    // the SAME type.
+    assert_valid(
+        r#"(module
+             (type $a1 (array i32))
+             (type $a2 (array i32))
+             (func $f (param (ref $a2)))
+             (func (param $x (ref $a1)) (call $f (local.get $x))))"#,
+    );
+}
+
+#[test]
+fn call_argument_rejects_an_array_ref_with_a_genuinely_different_element_type() {
+    assert_invalid(
+        r#"(module
+             (type $a1 (array i32))
+             (type $a2 (array i64))
+             (func $f (param (ref $a2)))
+             (func (param $x (ref $a1)) (call $f (local.get $x))))"#,
+    );
+}
+
+// ── W34 third slice: `check_type_subtyping`'s struct/array structural
+// checker (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`) --
+// before this slice, a declared `(sub $parent (struct/array ...))`
+// relationship was checked against TWO EMPTY dummy `FuncType`s (per
+// `TypeKind`'s own doc comment: a struct/array-kind flat index's
+// `module.types[i]` slot is an unused placeholder), trivially
+// "compatible" regardless of the real field/element lists -- a real,
+// previously-open correctness gap. Each case here is verified directly
+// against the real, vendored `type-subtyping.wast`'s own "Definitions"/
+// "Invalid subtyping definitions" sections (re-fetched fresh at the
+// pinned SHA for this slice).
+
+#[test]
+fn valid_struct_sub_allows_width_subtyping_and_covariant_immutable_fields() {
+    // `type-subtyping.wast` lines 15-22's own shape: `$e2` adds an extra
+    // field beyond `$e1` (width subtyping), and `$e5`'s second field
+    // narrows `$e4`'s `(ref $e0)` to `(ref $e1)` (`$e1 sub $e0` declared,
+    // immutable field -> covariant is legal).
+    assert_valid(
+        "(module
+           (type $e0 (sub (struct)))
+           (type $e1 (sub $e0 (struct)))
+           (type $e2 (sub $e1 (struct (field i32))))
+           (type $e3 (sub $e2 (struct (field i32 (ref null $e0)))))
+           (type $e4 (sub $e3 (struct (field i32 (ref $e0) (mut i64)))))
+           (type $e5 (sub $e4 (struct (field i32 (ref $e1) (mut i64))))))",
+    );
+}
+
+#[test]
+fn valid_array_sub_allows_identical_element_type_and_mutability() {
+    // `type-subtyping.wast` lines 4-12's own shape.
+    assert_valid(
+        "(module
+           (type $e0 (sub (array i32)))
+           (type $e1 (sub $e0 (array i32)))
+           (type $m1 (sub (array (mut i32))))
+           (type $m2 (sub $m1 (array (mut i32)))))",
+    );
+}
+
+#[test]
+fn invalid_struct_sub_with_narrower_field_count_is_rejected() {
+    // Real corpus shape (`type-subtyping.wast` lines 872-878): the child
+    // must have AT LEAST as many fields as its declared parent -- fewer
+    // fields is a width-subtyping violation, not just a value mismatch.
+    // Encoded here the other way around (parent asks for a field the
+    // child doesn't declare) via a field TYPE mismatch, the closest
+    // equivalent this crate's own field list shape can express directly:
+    // `$s0`'s field is `i32`, `$s1` (declared as its sub) redeclares it
+    // as `i64` -- a real type mismatch, not legal narrowing.
+    assert_invalid(
+        "(module
+           (type $s0 (sub (struct (field i32))))
+           (type $s1 (sub $s0 (struct (field i64)))))",
+    );
+}
+
+#[test]
+fn invalid_array_sub_with_different_element_type_is_rejected() {
+    // `type-subtyping.wast` lines 864-870.
+    assert_invalid(
+        "(module
+           (type $a0 (sub (array i32)))
+           (type $a1 (sub $a0 (array i64))))",
+    );
+}
+
+#[test]
+fn invalid_array_sub_mutable_field_requires_exact_type_match_not_covariance() {
+    // `type-subtyping.wast` lines 888-894's own point, adapted to this
+    // crate's concrete-index-only `(ref $t)` support (non-null ABSTRACT
+    // heap types like `(ref any)`/`(ref none)` are a separate, pre-existing,
+    // deliberate parser limitation -- see `wasm-wast-parser`'s own doc
+    // comments on why -- unrelated to this slice, so this test uses two
+    // CONCRETE struct types related by a real `sub` chain instead, which
+    // exercises the identical invariance rule): `$c` is a declared nominal
+    // subtype of `$p` (so `(ref $c) <: (ref $p)`), yet a MUTABLE array
+    // element field still requires the storage type to match EXACTLY --
+    // narrowing from `(ref $p)` to `(ref $c)` is illegal for a mutable
+    // field, unlike an immutable one (see the valid covariant-immutable-
+    // field test above).
+    assert_invalid(
+        "(module
+           (type $p (sub (struct)))
+           (type $c (sub $p (struct)))
+           (type $a (sub (array (mut (ref $p)))))
+           (type $b (sub $a (array (mut (ref $c))))))",
+    );
+}
+
+#[test]
+fn invalid_struct_sub_mutability_mismatch_is_rejected_both_directions() {
+    // `type-subtyping.wast` lines 920-933: a field can't gain OR lose
+    // mutability through a `sub` relationship, regardless of whether the
+    // value type itself would otherwise be compatible.
+    assert_invalid(
+        "(module
+           (type $a (sub (struct (field (mut i32)))))
+           (type $b (sub $a (struct (field i32)))))",
+    );
+    assert_invalid(
+        "(module
+           (type $a (sub (struct (field i32))))
+           (type $b (sub $a (struct (field (mut i32))))))",
+    );
+}
+
+#[test]
+fn invalid_cross_kind_sub_declarations_are_rejected() {
+    // `type-subtyping.wast` lines 816-862: a struct/array/func may never
+    // declare a `sub` relationship to a DIFFERENT composite-type kind --
+    // the real GC proposal has no such cross-kind subtyping relation at
+    // all. Before this slice, a struct/array-kind child's declared
+    // supertype was checked against the WRONG kind's dummy `FuncType`
+    // rather than being rejected outright.
+    assert_invalid(
+        "(module
+           (type $a0 (sub (array i32)))
+           (type $s0 (sub $a0 (struct))))",
+    );
+    assert_invalid(
+        "(module
+           (type $f0 (sub (func (param i32) (result i32))))
+           (type $s0 (sub $f0 (struct))))",
+    );
+    assert_invalid(
+        "(module
+           (type $s0 (sub (struct)))
+           (type $a0 (sub $s0 (array i32))))",
+    );
 }

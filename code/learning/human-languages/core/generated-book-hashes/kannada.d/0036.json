@@ -1,11 +1,12 @@
 {
   "language": "kannada",
   "chapter": 36,
-  "sourceHash": "fnv1a64:feceebe0cda1eea3",
+  "sourceHash": "fnv1a64:5b42fdef530ed9b2",
   "lessonIds": [
     "KA-C36-magu",
     "KA-C36-maga",
-    "KA-C36-magalu"
+    "KA-C36-magalu",
+    "KA-S131-vowel-sign-vocalic-r"
   ],
   "tex": "kannada/book/chapters/ch36-child-son-daughter.tex"
 }

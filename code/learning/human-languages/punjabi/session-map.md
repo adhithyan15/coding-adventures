@@ -1,4 +1,4 @@
-# Session Map — Punjabi Chapters 1–21
+# Session Map — Punjabi Chapters 1–36
 
 This is the authoritative book order. Every row is one session of at most five
 minutes. Sound and meaning come before load-bearing decoding; writing grows from
@@ -190,6 +190,29 @@ full so omissions, duplicates, and ordering drift can be checked mechanically.
 | 181 | 30 | PA-W08-phone-dictation | transcribe one heard fictional phone value into grouped Gurmukhi digits |
 | 182 | 30 | PA-W08-phone-repair | repair one phone-field dimension at a time |
 | 183 | 30 | PA-W08-phone-no-model | fill one fictional phone line from a nonverbal cue with no model |
+| 184 | 31 | PA-C31-ji | the respectful yes |
+| 185 | 31 | PA-C31-achchha | okay, all right, I see |
+| 186 | 31 | PA-W09-chhachha | observe and trace ਛ |
+| 187 | 31 | PA-C31-na | the bare no, and write ਅੱਛਾ |
+| 188 | 32 | PA-C32-changa | good |
+| 189 | 32 | PA-W09-chacha | observe and trace ਚ |
+| 190 | 32 | PA-C32-thik-thak | so-so, and echo reduplication |
+| 191 | 32 | PA-W09-gagga | observe and trace ਗ |
+| 192 | 33 | PA-C33-miharbani-karke | please, and write ਚੰਗਾ |
+| 193 | 33 | PA-W09-thattha | observe and trace ਠ |
+| 194 | 33 | PA-C33-maaf-karo | sorry, and write ਠੀਕ-ਠਾਕ |
+| 195 | 34 | PA-C34-salaam | the greeting that means peace |
+| 196 | 34 | PA-W09-lalla | observe and trace ਲ |
+| 197 | 34 | PA-C34-ji-aaian-nu | welcome, and write ਸਲਾਮ |
+| 198 | 34 | PA-W09-aara | observe and trace ਆ |
+| 199 | 35 | PA-C35-mainu | to me |
+| 200 | 35 | PA-W09-dulainkar | place the long-uu mark below |
+| 201 | 35 | PA-W09-dulavan | place the ai mark above |
+| 202 | 35 | PA-C35-changa-ji | a casual goodbye, and write ਜੀ ਆਇਆਂ ਨੂੰ |
+| 203 | 35 | PA-C35-jaldi-milaange | see you soon, and write ਮੈਨੂੰ |
+| 204 | 36 | PA-C36-kall-milaange | see you tomorrow |
+| 205 | 36 | PA-W09-aunkar | place the short-u mark below |
+| 206 | 36 | PA-C36-shubh-raat | good night, and write ਸ਼ੁਭ ਰਾਤ |
 
-After session 183, the track continues through the dependency-linked backlog;
+After session 206, the track continues through the dependency-linked backlog;
 this map makes no claim that the current book is yet complete or exam-ready.

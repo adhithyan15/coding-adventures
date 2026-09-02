@@ -1,0 +1,12 @@
+{
+  "language": "punjabi",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:ead7bf0b28429f68",
+  "lessonIds": [
+    "PA-C31-ji",
+    "PA-C31-achchha",
+    "PA-W09-chhachha",
+    "PA-C31-na"
+  ],
+  "tex": "punjabi/book/chapters/ch31-three-answers.tex"
+}

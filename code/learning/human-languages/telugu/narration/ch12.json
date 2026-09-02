@@ -4,14 +4,14 @@
   "chapter": 12,
   "title": "Family",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ee6fad53a3dc1364",
+  "sourceHash": "fnv1a64:9d01bb5a737f8b56",
   "lessons": [
     {
       "id": "TE-C12-kutumbam",
       "sequence": 390,
       "title": "నాన్న, అమ్మ, and four sibling words — Telugu's own twist",
       "headword": "నాన్న అమ్మ అన్న తమ్ముడు అక్క చెల్లి",
-      "romanization": "",
+      "romanization": "nānna amma anna tammuḍu akka celli",
       "gloss": "father, mother, and four age-graded sibling words — Telugu's own father-word and \"younger sister\" word, but the same age-first system",
       "script": "telugu",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:468849cfa4cd8161",
+      "sourceHash": "fnv1a64:b2fc8e3de92c8c0c",
       "notice": null,
       "blocks": [
         {

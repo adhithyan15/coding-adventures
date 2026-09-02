@@ -42,9 +42,12 @@ fn v128_global_initialized_via_v128_const_instantiates_and_reads_back_exact_byte
         types: vec![FuncType { params: vec![], results: vec![ValueType::V128] }],
         type_subtyping: vec![],
         struct_types: vec![],
+        array_types: vec![],
+        type_kinds: vec![],
         imports: vec![],
         functions: vec![0],
         tables: vec![],
+        table_concrete_element_types: vec![],
         memories: vec![],
         globals: vec![Global {
             global_type: GlobalType { value_type: ValueType::V128, mutable: true },
@@ -57,6 +60,7 @@ fn v128_global_initialized_via_v128_const_instantiates_and_reads_back_exact_byte
         data: vec![],
         customs: vec![],
         tags: vec![],
+        missing_data_count_section: false,
     };
 
     let runtime = WasmRuntime::new();
@@ -114,9 +118,12 @@ fn v128_value_allocated_in_one_call_is_visible_in_a_later_separate_call() {
         types: vec![func_type.clone(), func_type],
         type_subtyping: vec![],
         struct_types: vec![],
+        array_types: vec![],
+        type_kinds: vec![],
         imports: vec![],
         functions: vec![0, 1],
         tables: vec![],
+        table_concrete_element_types: vec![],
         memories: vec![],
         globals: vec![Global {
             global_type: GlobalType { value_type: ValueType::V128, mutable: true },
@@ -135,6 +142,7 @@ fn v128_value_allocated_in_one_call_is_visible_in_a_later_separate_call() {
         data: vec![],
         customs: vec![],
         tags: vec![],
+        missing_data_count_section: false,
     };
 
     let runtime = WasmRuntime::new();

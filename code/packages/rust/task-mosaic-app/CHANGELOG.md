@@ -1,5 +1,12 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — expose native local-data guidance (#13690)
+
+The native adapter now publishes the shared storage status, location, and warning
+slots. Windows and macOS name their exact live snapshot path; Linux points to the
+backend-specific `LOCAL-DATA.txt` shipped beside every release so Qt's intentionally
+different path is not misstated.
+
 ## [Unreleased] — name completion controls by action and task (#13691)
 
 Every List row now publishes a state-aware accessible name for its compact

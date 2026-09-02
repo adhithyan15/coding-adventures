@@ -1,0 +1,123 @@
+% ============================================================================
+% speleothem-alt-name — the other names a cave formation goes by
+% (adj-facts-stdlib, EARTH-SCIENCE).
+% ============================================================================
+% Recall is a binding query:
+%
+%     ? speleothem_alt_name(coralloid, $N)
+%       % corallite
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `speleothem_alt_name(speleothem, alt_name)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the name WITH its source, on the CPU, with zero model
+% calls. The query also runs BACKWARD, which is the direction that
+% actually matters here: a reader who meets "organ pipes" on a cave tour
+% needs to get back to `frozen_waterfall`, not the other way round.
+%
+% SEVENTH cave/karst library, and the first on the naming axis. Same shape
+% as `astronomy/space-rock-alt-name.adj`, which reads its pairs from the
+% same kind of apposition ("the fireballs or \"shooting stars\" are called
+% meteors").
+%
+% Provenance: four sentences from the U.S. National Park Service's
+% "Speleothems" page, one per name group.
+%
+%     speleothem         alt_name(s)                    grounding sentence
+%     ----------------   ----------------------------   ------------------
+%     column             pillar                         (1) formation
+%     coralloid          corallite                      (2) catchall
+%     frozen_waterfall   petrified_waterfall,           (3) flowstone forms
+%                        cascades, rivers,
+%                        glaciers, organ_pipes
+%     drapery            cave_bacon_when_...            (4) bacon condition
+%
+% *** A LIMITATION OF THIS TABLE IN PARTICULAR, STATED UP FRONT. ***
+% Provenance in this stdlib is attached at TABLE level: the `source`
+% envelope and every `cites` corroboration cover EVERY row. Most tables
+% here are grounded in one or two sentences, so that is harmless. This one
+% is grounded in FOUR, covering four unrelated speleothems — so an answer
+% about `column` also carries the coralloid, flowstone and bacon sentences,
+% only one of which grounds it. In the JSON output nothing cited is false,
+% and the grounding sentence is always among them, but the reader has to
+% match sentence to row themselves.
+%
+% IN `--explain` OUTPUT IT IS SHARPER THAN THAT, and worth knowing before
+% trusting that view. Explain renders only the PRIMARY `source` and drops
+% corroborations entirely, so the `corallite` row is displayed under the
+% column/pillar sentence — a sentence that does not ground it. That is a
+% property of every multi-sentence table in this stdlib, not of this one:
+% `heredity-term.adj` (6 corroborations, 7 rows), `bill-stage-successor.adj`
+% (6, 7) and `checks-and-balances.adj` (4, 5) all behave the same way. It is
+% filed rather than worked around here, because fixing it means changing
+% how explain renders provenance for a dozen shipped libraries at once.
+% Until then, THE JSON OUTPUT IS THE AUTHORITATIVE VIEW and `--explain` is
+% a summary that can attribute a row to the wrong sentence.
+%
+% The alternative was four single-purpose tables, which would fragment one
+% lookup ("what else is this called?") into four and make the backward
+% query — the useful one — impossible to ask in a single goal. One table
+% with a stated limitation is the better trade. Row-level provenance is
+% filed as issue #13893; when it lands, this header should be revisited
+% and the note deleted rather than left to rot.
+%
+% `trust authoritative` — the National Park Service is a first-party .gov
+% publisher, the same source the six sibling cave/karst libraries cite.
+% Every sentence below was taken from a RAW TEXT EXTRACTION of the page,
+% not from a fetch summary. That distinction is not pedantry: summarised
+% readings of this page disagreed with each other about how many times
+% "bacon" occurs and whether a sentence existed at all, and one of them
+% would have had this table assert a row the page contradicts (see the
+% `cave_popcorn` abstention below).
+%
+% Honest abstention:
+%
+%   - CAVE_POPCORN IS NOT A ROW, AND THE REASON IS THAT THE SOURCE
+%     CONTRADICTS ITSELF. Sentence (2) offers it as a synonym —
+%     "Coralloid (or corallite or cave popcorn) is a catchall term" — but
+%     a later sentence makes it a MEMBER of the category instead:
+%     "Coralloids include cave popcorn, grapes, knobstone, coral,
+%     cauliflower, globularites, and grapefruit." A thing cannot be both
+%     another name for coralloids and one of several kinds of coralloid.
+%     `corallite` has no such problem: it appears only in the
+%     parenthetical, so it ships. Picking whichever reading suited the
+%     table would be choosing an answer and then finding a citation for
+%     it, which is the exact failure this stdlib exists to prevent.
+%   - BARE `cave_bacon` IS NOT A VALUE. Sentence (4) makes the name
+%     CONDITIONAL — bacon "instead of drapery, when the characteristic
+%     layers are present" — so the condition rides inside the atom,
+%     following the placement rule `veto-override.adj` and
+%     `karst-process-zone.adj` already apply. A query for the unconditional
+%     name therefore abstains, because asking for it is asking what a
+%     drapery is ALWAYS called, which this sentence declines to say.
+%   - The plurals are the source's own. It writes "cascades, rivers,
+%     glaciers, or organ pipes", so those are the atoms; singularising
+%     them would be a silent edit of the citation.
+%   - `stalactite`, `stalagmite`, `helictite`, `flowstone` and `soda_straw`
+%     get no rows. This page gives them exactly one name each, and
+%     inventing synonyms from general karst vocabulary is precisely what a
+%     grounded recall library must not do.
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table speleothem_alt_name {
+    columns speleothem, alt_name
+
+    row (column, pillar)
+    row (coralloid, corallite)
+    row (frozen_waterfall, petrified_waterfall)
+    row (frozen_waterfall, cascades)
+    row (frozen_waterfall, rivers)
+    row (frozen_waterfall, glaciers)
+    row (frozen_waterfall, organ_pipes)
+    row (drapery, cave_bacon_when_characteristic_layers_present)
+
+    source "When a stalagmite grows together with its counterpart feeder stalactite, a new speleothem is formed: a column or pillar."
+    locator "https://www.nps.gov/subjects/caves/speleothems.htm"
+    trust authoritative
+    cites "Coralloid (or corallite or cave popcorn) is a catchall term describing knobby, nodular, botryoidal, or corallike speleothems." locator "https://www.nps.gov/subjects/caves/speleothems.htm"
+    cites "The most common of these is the petrified or frozen waterfall, also referred to as cascades, rivers, glaciers, or organ pipes." locator "https://www.nps.gov/subjects/caves/speleothems.htm"
+    cites "Cave Bacon forms on slanted surfaces, and is called \"bacon\" instead of drapery, when the characteristic layers are present." locator "https://www.nps.gov/subjects/caves/speleothems.htm"
+}

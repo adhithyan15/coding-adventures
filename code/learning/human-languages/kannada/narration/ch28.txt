@@ -1,8 +1,8 @@
 Kannada, chapter 28: Afternoon.
-1 lesson. All 1 can be done entirely by ear.
+2 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 1.
+Lesson 1 of 2.
 ಅಪರಾಹ್ನ (aparāhna) — the same "-ahna" pattern, a different first piece.
 
 Warm-up.
@@ -27,3 +27,48 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What suffix does ಅಪರಾಹ್ನ (aparāhna) share with ಮಧ್ಯಾಹ್ನ, and what does it mean? (-ಅಹ್ನ, -ahna, "day.") What's the difference in their first pieces? (ಅಪರ, apara, "latter/further" vs. ಮಧ್ಯ, madhya, "middle.") Is the claim that ಮಧ್ಯಾಹ್ನ also covers "afternoon" in casual speech as well-supported as Hindi's दोपहर-widening finding? (No — much more thinly sourced; treat it as a hedged possibility, not a settled fact.)
+
+
+Lesson 2 of 2.
+ಥ (tha) — one character, and the gap it fills.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಥ and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one: ಝ — which plain letter is it built on, and what does the extra stroke stand for?
+[pause 2 seconds]
+One character this time, and it closes the set you started three chapters ago.
+
+Script you'll notice: ಥ.
+ಥ — tha.
+Same step as last time, on a letter you have read since the beginning: ತ (ta) with breath behind it. ತ in ಹತ್ತು hattu leaves the air still; ಥ (tha) pushes it into your palm. That completes the run:
+ಕ ka, ಖ kha.
+ಗ ga, ಘ gha.
+ಜ ja, ಝ jha.
+ಡ ḍa, ಢ ḍha.
+ದ da, ಧ dha.
+ಪ pa, ಫ pha.
+ಬ ba, ಭ bha.
+ತ ta, ಥ tha.
+Eight pairs, one step between each, drawn the same way every time. The eighth cost you almost nothing, because you learned the pattern at the first.
+A warning worth having. Do not read ಥ (tha) as the English th of think. There is no such sound here. It is a ತ with breath after it, nothing more.
+
+Writing: ಥ — copy what you see.
+Put your pen on ಥ and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
+This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these two and say which one carries the breath]
+[pause 8 seconds for the answer]
+ತ, ಥ (tha).
+[once you have stopped driving — trace: ಥ (tha) three times, pushing the breath out as you finish each one]
+[your turn — look: at ಹತ್ತು and ಸಂತೋಷ and find the plain letter in both]
+[pause 8 seconds for the answer]
+[your turn — say: "ta … tha" with your palm at your mouth, and feel the difference]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — ಥ (tha)? Which plain letter is it built on? (ತ, ta.) Is it the th of English think? (No — a ta with breath after it.) How many plain-and-breathed pairs can you now read? (Eight.)

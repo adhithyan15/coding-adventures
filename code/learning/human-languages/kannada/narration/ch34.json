@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Four Verbs Between People",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:999218b42070c45f",
+  "sourceHash": "fnv1a64:24d9b1cb64061a74",
   "lessons": [
     {
       "id": "KA-C34-tegeduko",
@@ -735,7 +735,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:eafe4399f7a4c8cd",
+      "sourceHash": "fnv1a64:bbe6d97809c8b2dd",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -762,7 +762,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ಪ — what sound does it carry?"
+              "text": "Before the new one: ಈ — what sound does it carry, and what is its riding half?"
             },
             {
               "kind": "pause",
@@ -772,7 +772,7 @@
             },
             {
               "kind": "speech",
-              "text": "One character this time, and it is the last of the twenty-four this book drizzles in. It waited this long for a reason worth knowing."
+              "text": "One character this time. It waited longer than most, for a reason worth knowing."
             }
           ]
         },
@@ -811,7 +811,7 @@
             },
             {
               "kind": "speech",
-              "text": "Why this one came last. Every other character in this sequence was introduced once a word containing it was already in your mouth. ಓ (ō) had to wait until ಓದು was taught, because until then there was nothing to find it inside — and a character shown without a word to hold it is a character you will not keep."
+              "text": "Why this one waited. Every other character in this sequence was introduced once a word containing it was already in your mouth. ಓ (ō) had to wait until ಓದು was taught, because until then there was nothing to find it inside — and a character shown without a word to hold it is a character you will not keep."
             }
           ]
         },

@@ -18,14 +18,13 @@ serde_json = "1"
 # advertising an APKG API that always failed.
 #
 # The export has since moved onto the zero-dependency `sqlite-file` writer, and
-# zstd now sits behind the package's `modern-format` feature. Turning that off is
-# what makes the wasm build possible: legacy V11 `.apkg` stores its members
-# uncompressed through the repo's own `zip` crate and never needs zstd, so the
-# browser gets a genuine legacy importer and exporter. Modern `.anki21b` /
-# `.colpkg` returns an explicit, actionable error there until the repo's own zstd
-# handles arbitrary frames.
-[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+# decompression onto the repo's own `zstd`, which now handles the Huffman and FSE
+# frames real encoders emit. Both are pure Rust with no build script.
+#
+# There was briefly a split here — a `modern-format`-less wasm dependency beside
+# a full native one — because the browser could do legacy `.apkg` but had to
+# refuse modern `.anki21b` / `.colpkg` for want of a decompressor. That split is
+# gone: **every target now gets the same package layer with the same
+# capabilities**, which is the arrangement worth having, since a dependency that
+# differs per target is a second configuration to keep honest.
 engram-anki-package = { path = "../engram-anki-package" }
-
-[target.'cfg(target_arch = "wasm32")'.dependencies]
-engram-anki-package = { path = "../engram-anki-package", default-features = false }

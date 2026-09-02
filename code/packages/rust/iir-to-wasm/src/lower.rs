@@ -4337,14 +4337,8 @@ fn module_uses_lispy_pair(module: &IIRModule) -> bool {
 fn make_lispy_pair_struct_type() -> StructType {
     StructType {
         fields: vec![
-            FieldType {
-                val_type: ValueType::Anyref,
-                mutable: true,
-            }, // $head — car value
-            FieldType {
-                val_type: ValueType::Anyref,
-                mutable: true,
-            }, // $tail — cdr value
+            FieldType::plain(ValueType::Anyref, true), // $head — car value
+            FieldType::plain(ValueType::Anyref, true), // $tail — cdr value
         ],
     }
 }

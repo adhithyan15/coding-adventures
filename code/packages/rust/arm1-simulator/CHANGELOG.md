@@ -2,6 +2,23 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-08-28
+
+### Changed
+
+- Added the complete `Arm1State`, typed `Arm1Error`, checked `StepTrace`, and
+  bounded `ExecutionResult` lifecycle with atomic load/restore/step/run errors.
+- Added the 64 MiB `ARM1::architectural()` constructor while preserving the
+  caller-sized legacy constructor for bounded tests and consumers.
+- Added typed register/memory accessors, deterministic clearing loads, exact
+  installed-program fetch bounds, and complete rollback after late data faults.
+- Implemented LDM/STM force-user bank selection and externally triggered IRQ/FIQ
+  vector entry with banked link registers and interrupt-mask behavior.
+- Added nine lifecycle tests and 599 reproducible Python-oracle full-state
+  transitions across the complete instruction-family surface.
+- Verified the existing ARM1 gate-level consumer and strict formatting, Clippy,
+  and rustdoc checks; total Rust line coverage is 92.29%.
+
 ## [0.1.0] - 2026-03-23
 
 ### Added

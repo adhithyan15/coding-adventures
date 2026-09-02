@@ -1,0 +1,21 @@
+% ============================================================================
+% chamber-exclusive-power.query.adj — worked recall over the
+% chamber-exclusive-power library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what can only the
+% House do?" (direct), "which chamber can initiate tax legislation?"
+% (reverse — the direction a learner is usually quizzed in), or "can the
+% Supreme Court originate revenue bills?" (abstain) — it states no fact of
+% its own — it only `import`s the grounded table and asks binding queries.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli chamber-exclusive-power.query.adj
+% ============================================================================
+
+import "chamber-exclusive-power.adj"
+
+? chamber_exclusive_power(house_of_representatives, $P)   % expect initiate_tax_and_revenue_legislation (direct)
+? chamber_exclusive_power(senate, $P)                     % expect draft_legislation_on_presidential_nominations_and_treaties (direct)
+? chamber_exclusive_power($C, initiate_tax_and_revenue_legislation)  % expect house_of_representatives (reverse)
+? chamber_exclusive_power(supreme_court, $P)              % expect abstain -- not a chamber of Congress at all
+? chamber_exclusive_power($C, majority_vote)              % expect abstain -- the majority-vote/deliberation contrast is a PROCEDURE the same section states, not an exclusive lawmaking power

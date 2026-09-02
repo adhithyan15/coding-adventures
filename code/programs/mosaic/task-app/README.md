@@ -86,8 +86,10 @@ window without one.
 - Use the round completion control to complete or reopen a task; Edit changes
   the name or optional due date directly in List; select the task name to reveal
   scheduling details; Delete removes it.
-- **Everything persists** — the whole workspace is saved to IndexedDB after each change
-  and restored on reload (see `host/web/`); generated native hosts use their
+- **Persistence is explicit** — the whole workspace is saved to IndexedDB after each
+  change and restored on reload when durable browser storage is available (see
+  `host/web/`); an in-app warning identifies volatile fallback, failed writes, or a
+  rejected recovery record. Generated native hosts use their
   platform application-data directory and atomically replace their snapshot after
   each successful event. Exact desktop paths and the close-before-copy backup,
   restore, upgrade, uninstall/purge, and corrupt-state recovery procedures are in

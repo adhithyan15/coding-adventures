@@ -1,0 +1,93 @@
+% ============================================================================
+% speleothem-component — which speleothems JOIN to form a compound one
+% (adj-facts-stdlib, EARTH-SCIENCE).
+% ============================================================================
+% Recall is a binding query:
+%
+%     ? speleothem_component(column, $C)
+%       % stalactite
+%       % stalagmite
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `speleothem_component(compound_speleothem, component)` carrying
+% the source citation, so the lookup above is the ordinary SLD binding
+% query — the engine returns the components WITH their source, on the CPU,
+% with zero model calls. The query also runs BACKWARD.
+%
+% *** THIS LIBRARY EXISTS TO CLOSE A RECORDED ABSTENTION. ***
+%
+% `speleothem-growth-surface.adj` deliberately refused to give `column` a
+% growth surface, and said why in the source's own words: "Columns are not
+% stalactites nor are they stalagmites; they are both, together." A column
+% is produced by two speleothems JOINING rather than by growing from one
+% surface, so it has no single growth surface to bind — binding either
+% would be false, and binding both would misrepresent the relation that
+% table holds.
+%
+% That abstention was correct, and it was never meant to be permanent. The
+% question "what is a column made of?" has a perfectly good grounded
+% answer; it simply is not a question about growth surfaces. It needed a
+% DIFFERENT RELATION, which is this one. Same move `congress-chamber.adj`
+% made for `government-branch-member.adj`'s abstention on the two chambers:
+% when a table declines, the fix is a new relation shaped to the question,
+% never a loosened row in the old one.
+%
+% Provenance: two sentences from the U.S. National Park Service's
+% "Speleothems" page. The `source` envelope carries the formation
+% sentence, which states the joining and names the result:
+%
+%     "When a stalagmite grows together with its counterpart feeder
+%      stalactite, a new speleothem is formed: a column or pillar."
+%
+% and the `cites` corroboration carries the identity sentence, which is
+% what makes BOTH rows rather than one:
+%
+%     "Columns are not stalactites nor are they stalagmites; they are
+%      both, together."
+%
+% The second sentence is doing real work. On its own the first could be
+% read as a column being a stalagmite that reached the ceiling — one
+% component, not two. "They are both, together" settles it: the column is
+% constituted by the pair, so `stalactite` and `stalagmite` are both
+% values of this relation and neither outranks the other. Row order here
+% carries no meaning.
+%
+% `trust authoritative` — the National Park Service is a first-party .gov
+% publisher, the same source the three sibling cave/karst libraries cite.
+% The page was CONTENT-verified rather than merely status-checked.
+%
+% Honest abstention:
+%
+%   - PILLAR is not a row, and the omission is deliberate. The source
+%     offers it as an alternative NAME for the same speleothem ("a column
+%     or pillar"), not as a different thing with components of its own.
+%     Tabling `pillar` here would double-count one speleothem as two.
+%     A synonym belongs in an alt-name relation, the shape
+%     `astronomy/space-rock-alt-name.adj` already uses.
+%   - SODA STRAW is not a row. The source says every stalactite "begin[s]
+%     their growth as hollow soda straws", which is a developmental stage
+%     of ONE speleothem, not two speleothems joining — a different
+%     relation again. It is also, checked directly against the page, a
+%     stage whose SUCCESSOR the source never describes: it says soda
+%     straws are what stalactites begin as, and never states the process
+%     by which one becomes a thicker stalactite. A `stage -> next_stage`
+%     table would have to invent that step, so it is not built.
+%   - No other compound speleothem is a row. This page names exactly one
+%     speleothem formed by joining. Draperies, flowstone and the rest are
+%     described by appearance and deposition, not by constituent parts.
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table speleothem_component {
+    columns compound_speleothem, component
+
+    row (column, stalactite)
+    row (column, stalagmite)
+
+    source "When a stalagmite grows together with its counterpart feeder stalactite, a new speleothem is formed: a column or pillar."
+    locator "https://www.nps.gov/subjects/caves/speleothems.htm"
+    trust authoritative
+    cites "Columns are not stalactites nor are they stalagmites; they are both, together." locator "https://www.nps.gov/subjects/caves/speleothems.htm"
+}

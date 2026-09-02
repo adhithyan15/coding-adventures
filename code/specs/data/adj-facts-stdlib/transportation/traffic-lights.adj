@@ -59,7 +59,17 @@
 %
 %   green  — "Vehicular traffic facing a CIRCULAR GREEN signal indication is
 %             permitted to proceed straight through or turn right or left or
-%             make a U-turn movement" → green means PROCEED.
+%             make a U-turn movement except as such movement is modified by
+%             lane-use signs, turn prohibition signs, lane markings, roadway
+%             design, separate turn signal indications, or other traffic
+%             control devices." → green means PROCEED.
+%
+%             (THIS QUOTE USED TO STOP AT "make a U-turn movement", and that
+%             truncation PROPAGATED: green-signal-permitted-movement.adj
+%             copied it from this header rather than re-extracting from the
+%             page, shipping a `source` envelope whose qualifier had been cut
+%             off — issue #13916. A header quote is not a citation, but it is
+%             read as one, so it is completed here too. See also #13918.)
 %
 % (See ../README.md; feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
 % ============================================================================

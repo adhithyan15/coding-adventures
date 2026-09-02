@@ -7,6 +7,7 @@ chapter: 7
 type: word
 headword: ఆరు ఏడు ఎనిమిది తొమ్మిది పది
 gloss: six to ten — where Telugu wanders furthest from its Dravidian cousins
+romanization: "āru ēḍu enimidi tommidi padi"
 concept_tag: TE-NUMBERS-6-10
 prerequisites: [TE-C07-numbers-1-5]
 sounds: [telugu-inherent-a, retroflex-da, telugu-u-ending]

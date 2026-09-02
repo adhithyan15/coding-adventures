@@ -1,0 +1,8 @@
+[package]
+name = "layout-replaced"
+version = "0.1.0"
+edition = "2021"
+description = "Reusable intrinsic sizing and object-fit geometry for replaced Layout IR boxes."
+
+[dependencies]
+layout-ir = { path = "../layout-ir" }

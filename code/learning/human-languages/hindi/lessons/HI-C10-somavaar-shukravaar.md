@@ -8,7 +8,7 @@ spine_node: SPINE-TIME-OF-DAY
 sequence: 530
 chapter: 10
 type: word
-headword: सोमवार मंगलवार बुधवार गुरुवार शुक्रवार
+headword: सोमवार मंगलवार बुधवार गुरुवार शुक्रवार / वार
 gloss: Monday–Friday — Hindi's own planet-week, independent of Rome's
 concept_tag: HI-DAYS-WEEKDAYS
 prerequisites: [HI-C06-paanch-nasal]

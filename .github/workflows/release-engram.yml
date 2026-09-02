@@ -26,12 +26,22 @@ on:
       - .github/workflows/release-engram.yml
       - code/scripts/engram_release.py
       - code/scripts/tests/test_engram_release.py
+      - code/scripts/verify_relocatable_bundle.py
+      - code/scripts/tests/test_verify_relocatable_bundle.py
       - code/programs/mosaic/engram-app/**
       - code/packages/rust/engram-core/**
       - code/packages/rust/engram-core-wasm/**
       - code/packages/rust/engram-wasm/**
       - code/packages/rust/engram-anki-package/**
       - code/packages/mosaic/mosaic-pkg-**
+      # The React emitter generates the project this lane builds — index.html,
+      # vite.config.ts, package.json, tsconfig.json, src/main.tsx. Engram is the
+      # only app that builds through `--emit-project`, so this lane is the only
+      # place any of that is compiled and served rather than asserted as text.
+      # A wrong `base` here shipped in v0.3.0 while 215 emitter unit tests
+      # passed; without this path the same change would still not build
+      # anything. See #13925.
+      - code/packages/rust/mosaic-emit-react/**
   workflow_dispatch:
     inputs:
       version:
@@ -74,6 +84,8 @@ jobs:
         run: |
           set -euo pipefail
           python -m unittest discover -s code/scripts/tests -p 'test_engram_release.py'
+          python -m unittest discover -s code/scripts/tests \
+            -p 'test_verify_relocatable_bundle.py'
 
       - name: Validate version and tag
         id: release
@@ -135,16 +147,17 @@ jobs:
           cargo test --manifest-path code/packages/rust/Cargo.toml \
             -p engram-core-wasm -p engram-wasm -p engram-anki-package
 
-      # The package layer must build for wasm with Anki support included. It is
-      # excluded on wasm only when `modern-format` is on, so this also pins that
-      # the feature gating still works — a regression there would silently
-      # restore the old "handled by native hosts" behaviour.
+      # The package layer must build for wasm with full Anki support — legacy
+      # *and* modern. There is no longer a reduced-capability wasm
+      # configuration to select, so this builds the same crate the native hosts
+      # build. If a C-linking dependency ever creeps back into the graph, this
+      # is where it fails, because `wasm32-unknown-unknown` has no C toolchain.
       - name: Verify the browser engine builds with Anki support
         shell: bash
         run: |
           set -euo pipefail
           cargo build --manifest-path code/packages/rust/Cargo.toml \
-            -p engram-anki-package --no-default-features --target wasm32-unknown-unknown
+            -p engram-anki-package --target wasm32-unknown-unknown
 
       - name: Build the production web bundle
         shell: bash
@@ -164,6 +177,24 @@ jobs:
           cmp code/packages/rust/engram-wasm/pkg/engram_engine.wasm \
               "$RUNNER_TEMP/engram-web/react/dist/engram_engine.wasm"
           node code/packages/rust/engram-wasm/js/smoke.mjs
+
+      # v0.3.0 passed every check in this lane and still shipped a bundle that
+      # only worked at the root of a domain: Vite emitted `/assets/index-HASH.js`
+      # and the wasm host used `/engram_engine.wasm`. Unzipped into any
+      # subdirectory, index.html returned 200 while both 404'd, so the page
+      # rendered blank — which reads as a working deploy with no content.
+      #
+      # Every other check here asks whether a file is *present*. This one serves
+      # the bundle from a nested path and asks whether the references between
+      # those files actually *resolve*. The engine is passed explicitly because
+      # script fetches it, so it never appears in index.html.
+      - name: Verify the bundle works when served from a subdirectory
+        shell: bash
+        run: |
+          set -euo pipefail
+          python code/scripts/verify_relocatable_bundle.py \
+            "$RUNNER_TEMP/engram-web/react/dist" \
+            --also engram_engine.wasm
 
       - name: Archive the verified web bundle
         shell: bash
@@ -240,13 +271,9 @@ jobs:
             Engram ${{ needs.validate.outputs.version }} — web build.
 
             The browser app, built from the Mosaic package on the Rust core.
-            **Legacy Anki `.apkg` import and export run in the browser**; earlier
-            builds delegated both to native hosts and refused them on the web.
-
-            Modern `.anki21b` / `.colpkg` are not supported in this build — they
-            need zstd decompression, which the browser engine does not carry yet.
-            Export from Anki in the legacy format, and the app will say so
-            explicitly rather than failing silently.
+            **Anki import and export run in the browser** — legacy `.apkg` and
+            modern `.anki21b` / `.colpkg` alike. Earlier builds delegated both to
+            native hosts and refused them on the web.
 
             Media import is capped at 32 MiB in the browser.
 

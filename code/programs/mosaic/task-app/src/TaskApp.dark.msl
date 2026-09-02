@@ -125,6 +125,36 @@ style TaskApp {
     color : "#b3a99c" ;
     font-size : 13 ;
   }
+  part storage-panel {
+    background : "#2d271f" ;
+    border-width : 1 ;
+    border-color : "#4a4034" ;
+    border-style : "solid" ;
+    border-radius : 10 ;
+    padding-top : 8 ;
+    padding-right : 12 ;
+    padding-bottom : 8 ;
+    padding-left : 12 ;
+    gap : 5 ;
+  }
+  part storage-summary {
+    gap : 10 ;
+    align : center-vertical ;
+  }
+  part storage-status {
+    color : "#f1ebe1" ;
+    font-size : 12 ;
+    font-weight : bold ;
+  }
+  part storage-location {
+    color : "#b3a99c" ;
+    font-size : 12 ;
+  }
+  part storage-warning {
+    color : "#e26a52" ;
+    font-size : 12 ;
+    font-weight : bold ;
+  }
   // The engine's verdict. Semantic colour, deliberately not the honey accent.
   part pill-ok {
     background : "#22301f" ;

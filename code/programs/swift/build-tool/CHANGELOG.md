@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- Adopt the complete checked repository source-input boundary in production
+  hashing and diff selection. A generated typed projection covers all 18
+  boundaries, 21 registrations, 19 tracked paths, nine neutral cases, and the
+  domain-separated digest while pinning the package-local registry it extends.
+  Each batch proves applicable paths through bounded NUL-delimited stage-zero
+  Git index records with regular modes `100644` or `100755`, rechecks the index
+  after hashing, opens exact files through retained no-follow repository
+  handles, and unions them with package-local inputs under the existing framed
+  hash and byte ceilings. The same projection reverse-indexes boundary-only
+  diffs to exact consumers without ambient ancestor, generated-directory,
+  credential, secret, symlink, reparse, submodule, conflict-stage, or near-path
+  authority.
 - Replace the Swift hasher's independent source and metadata maps with a
   generated, source-embedded projection of the complete 23-language neutral
   registry. Production collection now distinguishes all seven selector roles,
@@ -12,9 +24,8 @@
   registry path. Canonical package paths must contain a package name and match
   the selected language; incremental enumeration applies the candidate ceiling
   before sorting; and tests recompute the domain-separated digest while
-  checking every fixture pin. Repository-relative boundary inputs remain a
-  separate explicitly owned follow-up rather than being widened into package
-  authority.
+  checking every fixture pin. Repository-relative inputs remain a distinct
+  exact projection rather than being widened into package-tree authority.
 - Bound retained-handle file reads to the exact snapshotted size and probe one
   byte past it without appending, so a concurrent POSIX writer cannot grow a
   source beyond the per-file ceiling before the mutation check.

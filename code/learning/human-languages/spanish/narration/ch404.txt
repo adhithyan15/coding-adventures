@@ -34,8 +34,6 @@ Source: DLE: apagar.
 Lesson 2 of 6.
 el wifi — the connection with a deliberately catchy name.
 
-<!-- Calibration: preserve HL24 section 7.2. Do not present Wireless Fidelity as either the original expansion or a wholly invented myth, and do not attach a precise duration to the Alliance's marketing line. -->.
-
 Warm-up.
 [pause 2 seconds]
 Say internet. (Internet.)

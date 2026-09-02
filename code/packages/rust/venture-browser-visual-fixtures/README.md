@@ -4,8 +4,9 @@ Reusable deterministic visual acceptance for Venture's shared browser
 pipeline and generated hosts.
 
 Compact convergence pages cover flex, grid, positioned/clipped, CSS table,
-float/exclusion, and fragmented inline-box formatting through one
-geometry-and-paint oracle shared by every host.
+float/exclusion, fragmented inline-box, intrinsic replaced formatting, and
+generated pseudo-content/list markers
+through one geometry-and-paint oracle shared by every host.
 
 The crate owns one versioned Mosaic-era page and its resources, deterministic
 text measurement/shaping services, element and link geometry capture, full

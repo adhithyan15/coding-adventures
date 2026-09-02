@@ -4,6 +4,16 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Fixed - visible local-storage and recovery status (#13690)
+
+Trestle now keeps its local-only persistence model and data location visible in
+the shared web/native shell. Volatile browser fallback, failed background saves,
+and rejected saved workspaces produce persistent, non-modal warnings; the web
+host preserves the most recently rejected record under `workspace/web-corrupt`
+before a fresh workspace can replace it. Native bindings route their existing
+corrupt-state warning into the shared warning slot while retaining each release's
+exact `LOCAL-DATA.txt` backup and restore contract.
+
 ### Fixed - native completion-button accessible names (#13754)
 
 The List completion control's task-specific action name now reaches the native

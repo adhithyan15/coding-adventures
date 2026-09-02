@@ -1,0 +1,29 @@
+% ============================================================================
+% karst-process-water-table-position.query.adj — worked recall over the
+% DERIVED karst-process-water-table-position rule.
+% ============================================================================
+% The shape a learner (or an LLM) produces to answer "where relative to the
+% water table can speleothems actually form?" — a question NEITHER shipped
+% table answers alone, and which the rule answers by chaining them. It
+% states no fact of its own — it only `import`s the rule library (which
+% imports both premise tables) and asks binding queries.
+%
+% THE LAST TWO ARE A MATCHED PAIR AND THE SECOND IS THE POINT. The
+% identical chain that resolves for deposition must find NOTHING for cave
+% formation, because `karst_process_zone` binds the hedged atom
+% `zone_of_saturation_typically` — the source says caves only TYPICALLY
+% form below the water table — and that does not unify with the bare
+% `zone_of_saturation` the position table keys on. The hedge survives the
+% join rather than being discarded by it. If the last query ever binds, a
+% tendency has been promoted to a rule.
+%
+% Run (from this directory so the relative imports resolve):
+%     ../../../../packages/rust/target/debug/adj-lang-cli karst-process-water-table-position.query.adj
+% ============================================================================
+
+import "karst-process-water-table-position.adj"
+
+? karst_process_water_table_position(speleothem_deposition, $P)   % expect above_the_water_table -- DERIVED, carries both premises' citations
+? karst_process_water_table_position($P, above_the_water_table)   % expect speleothem_deposition (reverse through the rule)
+? karst_process_water_table_position(dissolution, $P)             % expect abstain -- no premise places it, and a derived relation cannot outrun its premises
+? karst_process_water_table_position(cave_formation, $P)          % expect abstain -- THE HEDGE BLOCKING THE JOIN, not a gap

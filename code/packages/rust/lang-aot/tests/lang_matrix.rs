@@ -1540,6 +1540,24 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — an exact integral tracked square root may feed another
+    // built-in square root before bounded real-power unrolling.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer exponent; real saved; exponent := 16; saved := 6.0 ^ sqrt(sqrt(exponent)) + 6.0; exponent := 81; if saved = 42.0 then output(42) else output(1) end",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — exact integral tracked square roots may feed pure
+    // integer-valued standard functions before bounded real-power unrolling.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer exponent; real saved; exponent := 4; saved := 6.0 ^ (entier(abs(sqrt(exponent))) + sign(sqrt(exponent)) - 1) + 6.0; exponent := 9; if saved = 42.0 then output(42) else output(1) end",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — equal branches of a pure runtime conditional may retain
     // bounded multiplication while the selector branch still lowers.
     Prog {
@@ -6340,7 +6358,10 @@ impl wasm_execution::HostInterface for PrintHost {
         &self,
         _module_name: &str,
         _name: &str,
-    ) -> Option<(wasm_types::GlobalType, wasm_execution::WasmValue)> {
+    ) -> Option<(
+        wasm_types::GlobalType,
+        std::rc::Rc<std::cell::RefCell<wasm_execution::GlobalStorage>>,
+    )> {
         None
     }
 
@@ -8119,6 +8140,52 @@ fn algol_conditional_tracked_sqrt_real_power_exponents_run_on_every_available_st
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the conditional tracked sqrt exponent did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_nested_tracked_sqrt_real_power_exponents_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("sqrt(sqrt(exponent))")
+        })
+        .expect("the ALGOL nested tracked sqrt exponent program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the nested tracked sqrt exponent did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_tracked_sqrt_standard_function_exponents_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("entier(abs(sqrt(exponent)))")
+        })
+        .expect("the ALGOL tracked sqrt standard-function program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the tracked sqrt standard-function exponent did not run"
             );
             continue;
         };

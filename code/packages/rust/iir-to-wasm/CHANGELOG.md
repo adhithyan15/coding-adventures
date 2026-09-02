@@ -1,5 +1,12 @@
 # Changelog — iir-to-wasm
 
+## [0.48.6] — 2026-09-01 (W33 fourth slice — `FieldType` rename fallout)
+
+No functional change — `wasm-types` 0.1.17 renamed `FieldType.val_type:
+ValueType` to `FieldType.storage: StorageType`; this crate's one
+`FieldType`-construction site (`make_lispy_pair_struct_type`) updated
+to `FieldType::plain(...)`, byte-for-byte identical output.
+
 ## [0.48.5] — 2026-08-26 (W25 — memory64 proposal, first slice)
 
 `wasm_types::MemoryType` gained an `is64` field (see `wasm-types`'s own

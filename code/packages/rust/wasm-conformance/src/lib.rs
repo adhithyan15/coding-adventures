@@ -53,10 +53,10 @@ use report::{DirectiveKind, DirectiveOutcome};
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
-use wasm_execution::{HostFunction, HostInterface, LinearMemory, Table, TrapError, V128Bytes, WasmValue};
+use wasm_execution::{GlobalStorage, HostFunction, HostInterface, LinearMemory, Table, TrapError, V128Bytes, WasmValue};
 use wasm_module_parser::WasmModuleParser;
-use wasm_runtime::{WasmInstance, WasmRuntime};
-use wasm_types::{ExternalKind, FuncType, GlobalType, WasmModule};
+use wasm_runtime::{resolve_all_table_funcrefs, WasmInstance, WasmRuntime};
+use wasm_types::{CanonicalGroup, ExternalKind, FuncType, GlobalType, WasmModule};
 use wasm_wast_parser::script::{Action, ConstValue, Directive, Expected, F32LaneExpected, F64LaneExpected, ModuleSource};
 use wasm_wast_parser::{parse_script, WastParseError};
 
@@ -139,21 +139,70 @@ impl HostInterface for RegistryHost {
     fn resolve_function(&self, module_name: &str, name: &str) -> Option<Box<dyn HostFunction>> {
         let (instance_rc, index) = self.find_export(module_name, name, ExternalKind::Function)?;
         let func_type = instance_rc.borrow().func_types.get(index as usize)?.clone();
-        let (group_shape, is_final) = {
+        // W35 fourth slice: the exporting instance's own already-minted
+        // real identity for this function (`instance.func_identities`,
+        // the SAME combined function-index space `index` already lives
+        // in -- see `WasmInstance::func_identities`'s own doc comment).
+        // `unwrap_or(0)` mirrors `HostFunction::identity`'s own documented
+        // "0 == no stable identity" default -- unreachable in practice for
+        // any function actually returned by a successful `find_export`
+        // (every entry in a validated, instantiated module's combined
+        // function-index space gets a real identity, imported or not),
+        // kept only so an out-of-range index degrades to the same safe
+        // default every other pre-`identity()` `HostFunction` already used.
+        let identity = instance_rc.borrow().func_identities.get(index as usize).copied().unwrap_or(0);
+        let (group_shape, is_final, canonical_type, type_idx) = {
             let instance = instance_rc.borrow();
             match combined_function_type_idx(&instance, index) {
-                Some(t) => (instance.module.type_group_shape(t), instance.module.type_subtyping_at(t).is_final),
-                None => ((1, 0), true),
+                Some(t) => (
+                    instance.module.type_group_shape(t),
+                    instance.module.type_subtyping_at(t).is_final,
+                    // W34 fourth slice: the EXPORTING module's own already-
+                    // computed canonical form for this function's type-
+                    // section index, cloned (cheap, `Rc`-backed) at
+                    // resolution time -- see `HostFunction::canonical_type`'s
+                    // own doc comment. `instance.canonical_types` (NOT
+                    // `instance.module`) is the same "cloned once at
+                    // `instantiate()` time from `ValidatedModule::
+                    // canonical_types()`" field `wasm-runtime`'s own
+                    // `WasmExecutionEngine` wiring already uses (W34 third
+                    // slice) -- reusing it here means a `CrossModuleFunction`
+                    // never needs to re-derive canonicalization itself.
+                    instance.canonical_types.get(t as usize).cloned().flatten(),
+                    // W34 fourth slice: this function's own flat type-
+                    // section index, kept (not just consumed above) so
+                    // `HostFunction::canonically_matches` can climb this
+                    // function's own module-LOCAL nominal `sub` chain
+                    // lazily at match time, re-borrowing `instance` --
+                    // see that method's own doc comment for why a declared
+                    // supertype relationship can only ever be walked
+                    // within the module that declared it.
+                    Some(t),
+                ),
+                None => ((1, 0), true, None, None),
             }
         };
-        Some(Box::new(CrossModuleFunction { instance: instance_rc, export_name: name.to_string(), func_type, group_shape, is_final }))
+        Some(Box::new(CrossModuleFunction { instance: instance_rc, export_name: name.to_string(), func_type, identity, group_shape, is_final, canonical_type, type_idx }))
     }
 
-    fn resolve_global(&self, module_name: &str, name: &str) -> Option<(GlobalType, WasmValue)> {
+    fn resolve_global(&self, module_name: &str, name: &str) -> Option<(GlobalType, Rc<RefCell<GlobalStorage>>)> {
         let (instance_rc, index) = self.find_export(module_name, name, ExternalKind::Global)?;
         let instance = instance_rc.borrow();
         let gtype = instance.global_types.get(index as usize)?.clone();
-        let gval = *instance.globals.get(index as usize)?;
+        // Real cross-instance global sharing (real corpus vendoring pass,
+        // `instance.wast`'s "Import is not generative" tests / `linking.
+        // wast`'s `mut_glob` tests): `.clone()` here clones the `Rc`
+        // pointer, NOT the `WasmValue` it points to (mirrors `resolve_
+        // memory`/`resolve_table`'s own W28 `.cloned()` fix immediately
+        // below/above -- see either's doc comment for the full
+        // rationale). Before this fix this line was `*instance.globals.
+        // get(index as usize)?` -- a genuine VALUE copy of whatever the
+        // global held at THIS EXACT MOMENT -- so the importing instance's
+        // own `globals` slot and the exporting instance's original
+        // silently diverged the moment either side executed a
+        // `global.set`, exactly the shape `LinearMemory`/`Table` had
+        // before W28.
+        let gval = instance.globals.get(index as usize)?.clone();
         Some((gtype, gval))
     }
 
@@ -191,8 +240,15 @@ impl HostInterface for RegistryHost {
         // so `.cloned()` shares storage rather than copying it. Still
         // does NOT give a table entry real cross-instance function
         // IDENTITY -- see `Table`'s own doc comment in `wasm-execution`
-        // for the deliberately out-of-scope follow-on that remains
-        // (`linking0.wast`/`linking3.wast`'s one known-gap `fail` each).
+        // for the deliberately out-of-scope follow-on that remains.
+        // Confirmed (real corpus bug-hunt pass, W-next) to be the root
+        // cause of every remaining WRONG-VALUE (not not-yet-supported)
+        // `assert_return` failure in `elem.wast`, `linking.wast`, and
+        // `linking3.wast` -- NOT `linking0.wast`, whose own one
+        // remaining failure turned out to be a completely different,
+        // since-fixed bug (active element segments were being applied
+        // AFTER data segments instead of before -- see `wasm-runtime::
+        // instantiate()`'s own comment on that fix).
         let table = instance_rc.borrow().tables.get(index as usize).cloned();
         table
     }
@@ -294,13 +350,29 @@ fn combined_function_type_idx(instance: &WasmInstance, index: u32) -> Option<u32
 /// Known limitation, not silently allowed to corrupt anything: a
 /// MUTUAL/circular cross-instance call (this function's own callee
 /// instance, reached via a DIFFERENT import, calls back into the
-/// original caller instance) will panic on a `RefCell` double-borrow --
-/// a clean, safe Rust panic (borrow-checked at runtime), not a
-/// memory-safety issue. None of the corpus vendored so far is circular.
+/// original caller instance) traps cleanly on a `RefCell` re-borrow
+/// conflict (W35 fourth slice, security-review finding: `call`'s own
+/// `try_borrow_mut` -- see its doc comment; PRE-fourth-slice this was a
+/// bare `borrow_mut()` panic instead) -- a `TrapError`, not a
+/// memory-safety issue, and not a process abort. None of the corpus
+/// vendored so far is circular.
 struct CrossModuleFunction {
     instance: Rc<RefCell<WasmInstance>>,
     export_name: String,
     func_type: FuncType,
+    /// W35 fourth slice (`code/specs/W35-wasm-cross-instance-function-
+    /// identity.md`): this function's own real, process-wide-unique
+    /// identity, snapshotted from the EXPORTING instance's own
+    /// `func_identities[index]` at `resolve_function` time (the same
+    /// combined function-index space `combined_function_type_idx` already
+    /// resolves `index` against, immediately below) -- see
+    /// `HostFunction::identity`'s own doc comment. This is what lets an
+    /// IMPORTING module's own `WasmInstance::func_identities` construction
+    /// loop (`instantiate()`, mirroring `tag_identities`'s "imported
+    /// adopts the exporter's identity verbatim" rule) give the imported
+    /// function the SAME real identity the exporting instance already
+    /// minted for it, rather than a fresh, unrelated one.
+    identity: u64,
     /// W33 first slice: this function's own `(rec_group_size,
     /// rec_group_position)`, computed once at `resolve_function` time
     /// (see `combined_function_type_idx`) — see `HostFunction::
@@ -310,6 +382,23 @@ struct CrossModuleFunction {
     /// alongside `group_shape` — see `HostFunction::is_final`'s own doc
     /// comment.
     is_final: bool,
+    /// W34 fourth slice: this function's own real canonical type-group
+    /// identity, computed alongside `group_shape`/`is_final` above (from
+    /// the EXPORTING instance's own `canonical_types` table) — see
+    /// `HostFunction::canonical_type`'s own doc comment. `None` whenever
+    /// the exporting module's own type-section index wasn't canonicalized
+    /// (out of range, or the type it belongs to has an internally-
+    /// inconsistent `rec`-group shape — see `wasm_types::canonicalize_types`'s
+    /// own doc comment), in which case `wasm-runtime`'s import check falls
+    /// back to the pre-existing three-part conservative guard, unchanged.
+    canonical_type: Option<(Rc<CanonicalGroup>, u32)>,
+    /// W34 fourth slice: this function's own flat type-section index in
+    /// the EXPORTING instance's own module, kept so `canonically_matches`
+    /// can climb that module's own `type_subtyping` chain lazily (via a
+    /// fresh borrow of `instance`) rather than needing the whole chain
+    /// eagerly precomputed here. `None` in exactly the same case
+    /// `canonical_type` is `None` (an unresolvable combined type index).
+    type_idx: Option<u32>,
 }
 
 impl HostFunction for CrossModuleFunction {
@@ -317,9 +406,33 @@ impl HostFunction for CrossModuleFunction {
         &self.func_type
     }
 
+    /// **W35 fourth slice, security-review finding**: `try_borrow_mut`,
+    /// not a bare `borrow_mut()` -- see `wasm_runtime::LocalFunctionRef::
+    /// call`'s own doc comment for the full rationale (a real, reproduced,
+    /// non-circular re-entrant-dispatch panic this slice's own fixup pass
+    /// made newly reachable: instance `B` calls into instance `A`, whose
+    /// `call_indirect` dispatches a stored funcref pointing back to `B`
+    /// itself, which is still mutably borrowed by the outer call). This
+    /// struct's own doc comment already names the SEPARATE, pre-existing,
+    /// accepted "genuinely mutual cross-instance call cycle" panic risk;
+    /// this fix is specifically about the NEW, non-cyclic case this
+    /// slice's own table-fixup pass introduced.
     fn call(&self, args: &[WasmValue], _memory: Option<&mut LinearMemory>) -> Result<Vec<WasmValue>, TrapError> {
-        let mut instance = self.instance.borrow_mut();
+        let mut instance = self.instance.try_borrow_mut().map_err(|_| {
+            TrapError::new(
+                "cross-instance call failed: the target instance is already executing (a re-entrant \
+                 call back into an instance already on the call stack) -- this trap, not a panic, is \
+                 the correct failure mode for this shape"
+                    .to_string(),
+            )
+        })?;
         WasmRuntime::new().call_typed(&mut instance, &self.export_name, args)
+    }
+
+    /// W35 fourth slice: see this struct's own `identity` field doc
+    /// comment.
+    fn identity(&self) -> u64 {
+        self.identity
     }
 
     fn type_group_shape(&self) -> (u32, u32) {
@@ -328,6 +441,18 @@ impl HostFunction for CrossModuleFunction {
 
     fn is_final(&self) -> bool {
         self.is_final
+    }
+
+    fn canonical_type(&self) -> Option<(Rc<CanonicalGroup>, u32)> {
+        self.canonical_type.clone()
+    }
+
+    fn canonically_matches(&self, target: &(Rc<CanonicalGroup>, u32), budget: &mut wasm_types::CrossModuleComparisonBudget) -> bool {
+        let Some(type_idx) = self.type_idx else {
+            return false;
+        };
+        let instance = self.instance.borrow();
+        wasm_types::canonical_chain_reaches(&instance.module.type_subtyping, &instance.canonical_types, type_idx, Some(target), budget)
     }
 }
 
@@ -443,6 +568,27 @@ impl Executor {
                 match WasmRuntime::with_host(Box::new(host)).instantiate(&validated) {
                     Ok(instance) => {
                         let instance = Rc::new(RefCell::new(instance));
+                        // W35 fourth slice (`code/specs/
+                        // W35-wasm-cross-instance-function-identity.md`):
+                        // resolve every `TableElement::Raw` entry THIS
+                        // instance's own `instantiate()` call just wrote
+                        // into any table it can see (owned or imported),
+                        // now that a real, PERMANENT `Rc<RefCell<
+                        // WasmInstance>>` finally exists for it -- see
+                        // `wasm_runtime::resolve_all_table_funcrefs`'s own
+                        // doc comment for the full rationale, including
+                        // why this is deliberately TABLES only (not
+                        // funcref-typed globals too, a real, reproduced
+                        // regression this slice found and backed out of).
+                        // Run BEFORE either registry insertion below, so
+                        // no subsequent directive (another module's
+                        // `import`, or this module's own `register`) can
+                        // ever observe a not-yet-fixed-up table.
+                        if let Err(e) = resolve_all_table_funcrefs(&instance) {
+                            return DirectiveOutcome::Trap(format!(
+                                "internal error: post-instantiation cross-instance funcref resolution failed: {e}"
+                            ));
+                        }
                         if set_current {
                             self.registry.borrow_mut().insert(None, Rc::clone(&instance));
                         }
@@ -469,6 +615,9 @@ impl Executor {
         }
     }
 
+}
+
+impl Executor {
     fn execute(&mut self, directive: Directive) -> DirectiveOutcome {
         match directive {
             Directive::Module { id, result: module_result } => {
@@ -897,7 +1046,15 @@ impl Executor {
                     .exports
                     .iter()
                     .find(|(n, kind, _)| n == name && *kind == ExternalKind::Global)
-                    .and_then(|(_, _, idx)| instance.globals.get(*idx as usize).copied())
+                    // W35 third slice: `GlobalStorage::value`, not the
+                    // whole `GlobalStorage` -- a real funcref global's
+                    // `value` here is the reserved `WasmValue::Ref(Some(0))`
+                    // sentinel (see that struct's own doc comment); its
+                    // real identity lives in `func_ref`, unused by this
+                    // action (mechanical fallout only, per this slice's
+                    // own scope -- `wasm-conformance`'s own funcref-
+                    // equality/cross-module propagation is slice 4's job).
+                    .and_then(|(_, _, idx)| instance.globals.get(*idx as usize).map(|g| g.borrow().value))
                     // A global read is not a call -- there's no engine
                     // `ctx` involved at all -- but UNLIKE at the time this
                     // comment was first written (SIMD PR1b-3), a
@@ -1188,6 +1345,104 @@ mod tests {
         let null_module = r#"(module (func (export "get") (result funcref) (ref.null func)))"#;
         let results = outcomes(&format!(r#"{null_module} (assert_return (invoke "get") (ref.func))"#));
         assert!(matches!(results[1].1, DirectiveOutcome::Fail(_)));
+    }
+
+    /// Regression test for a real, previously-shipped bug found while
+    /// prioritizing the vendored testsuite corpus: `br_table.wast` (a
+    /// foundational MVP-level control-flow file, no GC-proposal syntax
+    /// involved) was TOTALLY failing -- `module 0/1`, `assert_return
+    /// 0/161` -- with `ValidationError: TypeMismatch: expected
+    /// ConcreteFuncRef(1), found Funcref` on an entirely ordinary `(table
+    /// funcref (elem $f))`-style construct
+    /// (`code/packages/rust/wasm-conformance/tests/fixtures/testsuite/
+    /// br_table.wast`'s own `meet-funcref-1`, vendored unchanged from the
+    /// official spec testsuite).
+    ///
+    /// This is the simplest possible reproduction of the FIRST of the
+    /// bug's two root causes: `(table $t (ref null $t) (elem $tf))`
+    /// declares a table whose element type is the CONCRETE function type
+    /// `$t`, not generic `funcref` -- but `wasm-wast-parser` used to
+    /// silently discard that reftype entirely (see the removed comment
+    /// this fix replaced, "this crate only tracks FUNCREF tables"),
+    /// leaving `table.get $t` with no way to know the table was anything
+    /// but generic `funcref`. A `br_table` branching to a label that
+    /// genuinely requires the NARROWER `$t` type then failed even though
+    /// the actual value in the table (`$tf`, of type `$t`) is exactly
+    /// right.
+    #[test]
+    fn table_get_on_a_concrete_funcref_table_keeps_its_concrete_type() {
+        // The exported function's declared result is the CONCRETE type
+        // `(ref null $t)`, not generic `funcref` -- its implicit-return
+        // check (every function body's own final assignability check
+        // against its declared results) only passes if `table.get $t`
+        // really did push `$t`'s concrete type. Before this fix it pushed
+        // generic `Funcref` instead, which is NOT assignable to a
+        // concrete-typed result slot (the opposite direction from
+        // `ConcreteFuncRef <: Funcref`), so this alone reproduces the
+        // regression without needing a value-comparing `assert_return`.
+        let results = outcomes(
+            r#"
+            (module
+              (type $t (func))
+              (func $tf)
+              (table $t (ref null $t) (elem $tf))
+              (func (export "get-as-concrete") (result (ref null $t))
+                (table.get $t (i32.const 0))
+              )
+            )
+            "#,
+        );
+        assert_eq!(results[0], (DirectiveKind::Module, DirectiveOutcome::Pass));
+    }
+
+    /// The SECOND of the two root causes behind the `br_table.wast`
+    /// regression `table_get_on_a_concrete_funcref_table_keeps_its_
+    /// concrete_type` above documents: even once `table.get` correctly
+    /// pushes the table's own concrete type, `br_table`'s multi-target
+    /// type check was ORDER-DEPENDENT, which the real spec is not.
+    ///
+    /// `br_table`'s typing rule requires that the SAME operand value(s)
+    /// be simultaneously assignable to every listed target AND the
+    /// default target -- a "meet" over all of them, not a left-to-right
+    /// chain. The old implementation instead re-pushed each target's OWN
+    /// declared type after checking it, so checking a WIDER target (here,
+    /// `$l1`'s generic `(ref null func)`) before a NARROWER one (`$l2`'s
+    /// concrete `(ref null $t)`) irreversibly widened the value away,
+    /// and the narrower target's check then failed spuriously -- even
+    /// though the actual value is perfectly assignable to BOTH.
+    ///
+    /// This is `br_table.wast`'s own `meet-funcref-1` (vendored
+    /// unchanged): its label list `$l1 $l1 $l2` deliberately checks the
+    /// generic target ($l1, twice) before the concrete one ($l2, the
+    /// default) -- exactly the ordering the old chain-based algorithm got
+    /// wrong. `meet-funcref-2` (`$l2 $l2 $l1`, concrete first) already
+    /// passed even before this fix, which is WHY this needed a dedicated
+    /// order-sensitive test rather than trusting one passing permutation.
+    #[test]
+    fn br_table_targets_type_check_regardless_of_which_order_they_are_listed_in() {
+        let module = r#"
+            (module
+              (type $t (func))
+              (func $tf)
+              (table $t (ref null $t) (elem $tf))
+              (func (export "meet-wide-target-first") (param i32) (result (ref null func))
+                (block $l1 (result (ref null func))
+                  (block $l2 (result (ref null $t))
+                    (br_table $l1 $l1 $l2 (table.get $t (i32.const 0)) (local.get 0))
+                  )
+                )
+              )
+              (func (export "meet-narrow-target-first") (param i32) (result (ref null func))
+                (block $l1 (result (ref null func))
+                  (block $l2 (result (ref null $t))
+                    (br_table $l2 $l2 $l1 (table.get $t (i32.const 0)) (local.get 0))
+                  )
+                )
+              )
+            )
+        "#;
+        let results = outcomes(module);
+        assert_eq!(results[0], (DirectiveKind::Module, DirectiveOutcome::Pass));
     }
 
     #[test]
@@ -1732,6 +1987,260 @@ mod tests {
         assert_eq!(results[4], (DirectiveKind::AssertReturn, DirectiveOutcome::Pass));
     }
 
+    /// W35 fourth slice (`code/specs/W35-wasm-cross-instance-function-
+    /// identity.md`): a hand-built, minimal version of `linking.wast`'s
+    /// own motivating case, proving the fix end-to-end without relying on
+    /// the corpus. `$A` exports a table and writes ITS OWN local function
+    /// into slot 0 via an active elem segment; `$B` imports that SAME
+    /// table (the shared `Rc<RefCell<TableStorage>>`, per W28) and
+    /// OVERWRITES slot 0 with a DIFFERENT local function of its own, via
+    /// `$B`'s OWN active elem segment (in `$B`'s own combined function-
+    /// index space, unrelated to `$A`'s). `$A`'s own `call_indirect`
+    /// through that same slot must then observe `$B`'s write (222), not
+    /// `$A`'s own original one (111) -- the exact bug `resolve_owned_
+    /// funcrefs`/`resolve_all_table_funcrefs`'s post-instantiation fixup
+    /// pass exists to close (before this slice, `$A`'s own `call_indirect`
+    /// would resolve the raw index `$B` wrote against `$A`'s OWN
+    /// combined index space instead, silently returning the WRONG
+    /// function's result).
+    #[test]
+    fn a_funcref_written_by_one_instance_into_a_table_shared_with_another_dispatches_to_the_writers_own_function() {
+        let results = outcomes(
+            r#"
+            (module $A
+              (type $t (func (result i32)))
+              (table (export "tab") 2 funcref)
+              (elem (i32.const 0) $a_func)
+              (func $a_func (result i32) (i32.const 111))
+              (func (export "call0") (result i32) (call_indirect (type $t) (i32.const 0))))
+            (register "A" $A)
+            (module $B
+              (type $t (func (result i32)))
+              (table (import "A" "tab") 2 funcref)
+              (elem (i32.const 0) $b_func)
+              (func $b_func (result i32) (i32.const 222)))
+            (assert_return (invoke $A "call0") (i32.const 222))
+            "#,
+        );
+        assert_eq!(results[0], (DirectiveKind::Module, DirectiveOutcome::Pass));
+        assert_eq!(results[1], (DirectiveKind::Register, DirectiveOutcome::Pass));
+        assert_eq!(results[2], (DirectiveKind::Module, DirectiveOutcome::Pass), "$B must link against $A's exported table");
+        assert_eq!(
+            results[3],
+            (DirectiveKind::AssertReturn, DirectiveOutcome::Pass),
+            "expected $A's own call_indirect to observe $B's OVERWRITE (222), not $A's original write (111) -- \
+             got: {:?}",
+            results[3].1
+        );
+    }
+
+    /// W35 fourth slice: the `owner_instance_identity`-for-IMPORTS
+    /// correctness gap this slice's own corpus verification found and
+    /// fixed, isolated into a minimal, hand-built reproduction -- mirrors
+    /// `linking.wast`'s own `$Mt`/`$Ot`/`h` example exactly (`$Mt` exports
+    /// `h`; `$Ot` imports it as `$Ot`'s OWN combined-index-space slot 0,
+    /// then writes THAT slot into `$Mt`'s shared table via `$Ot`'s own
+    /// active elem segment). Before this slice's fix, `resolve_func_ref_
+    /// for_instance`'s import branch tagged the resulting `FuncRefTarget`
+    /// with `owner_instance_identity: None` ("dispatchable via local_index
+    /// in ANY ctx"), which is FALSE the moment that target is written into
+    /// a table `$Mt`'s own ctx later reads: `$Mt` has no imports of its
+    /// own, so `local_index: Some(0)` in `$Mt`'s combined space names an
+    /// entirely different (`$Mt`'s own local) function -- confirmed to
+    /// silently produce the WRONG result (this exact test previously
+    /// returned `$Mt`'s own `other` function's value, `999`, instead of
+    /// `h`'s `-4`-shaped value, `77`, before the fix landed).
+    #[test]
+    fn a_table_entry_written_via_an_imported_function_dispatches_through_the_real_exporter_not_the_readers_own_index_space() {
+        let results = outcomes(
+            r#"
+            (module $Mt
+              (type $t (func (result i32)))
+              (table (export "tab") 2 funcref)
+              (func $other (result i32) (i32.const 999))
+              (func (export "h") (result i32) (i32.const 77))
+              (func (export "call0") (result i32) (call_indirect (type $t) (i32.const 0))))
+            (register "Mt" $Mt)
+            (module $Ot
+              (type $t (func (result i32)))
+              (func $h (import "Mt" "h") (result i32))
+              (table (import "Mt" "tab") 2 funcref)
+              (elem (i32.const 0) $h))
+            (assert_return (invoke $Mt "call0") (i32.const 77))
+            "#,
+        );
+        assert_eq!(results[0], (DirectiveKind::Module, DirectiveOutcome::Pass));
+        assert_eq!(results[1], (DirectiveKind::Register, DirectiveOutcome::Pass));
+        assert_eq!(results[2], (DirectiveKind::Module, DirectiveOutcome::Pass), "$Ot must link against $Mt's exports");
+        assert_eq!(
+            results[3],
+            (DirectiveKind::AssertReturn, DirectiveOutcome::Pass),
+            "expected $Mt's own call_indirect to reach the REAL h (77) via $Ot's import-derived write, not \
+             misinterpret local_index 0 in $Mt's OWN space ($other, 999) -- got: {:?}",
+            results[3].1
+        );
+    }
+
+    /// W35 fourth slice: the "ephemeral trap-discarded instance" case --
+    /// `linking3.wast`'s own `$Ms`/`"get table[0]"` example, hand-built.
+    /// An anonymous module (wrapped in `assert_trap`, so it goes through
+    /// `grade_assert_unlinkable`'s throwaway `instantiate()` call, never
+    /// registered anywhere) imports `$M`'s shared table, writes its OWN
+    /// local `$f` into slot 0 via an ACTIVE elem segment (which succeeds),
+    /// then its `(start $main)` calls `unreachable`, discarding the
+    /// `WasmInstance` `instantiate()` would otherwise have returned. `$M`'s
+    /// own LATER `call_indirect` through that same slot must still observe
+    /// `$f`'s real value -- proving `wasm_runtime::instantiate()`'s own
+    /// error-path fixup (a TEMPORARY `Rc<RefCell<WasmInstance>>`, built
+    /// from this call's live state and never `try_unwrap`ed, just before
+    /// propagating the trap) correctly keeps the ephemeral instance alive
+    /// via the `FuncRefTarget`'s own `Rc` clone, embedded in the SHARED
+    /// table before the trap ever discarded anything.
+    #[test]
+    fn a_funcref_written_by_a_module_whose_own_instantiation_later_traps_still_dispatches_correctly() {
+        let results = outcomes(
+            r#"
+            (module $M
+              (type $t (func (result i32)))
+              (table (export "tab") 1 funcref)
+              (func (export "call0") (result i32) (call_indirect (type $t) (i32.const 0))))
+            (register "M" $M)
+            (assert_trap
+              (module
+                (table (import "M" "tab") 1 funcref)
+                (elem (i32.const 0) $f)
+                (func $f (result i32) (i32.const 57005))
+                (func $main (unreachable))
+                (start $main))
+              "unreachable")
+            (assert_return (invoke $M "call0") (i32.const 57005))
+            "#,
+        );
+        assert_eq!(results[0], (DirectiveKind::Module, DirectiveOutcome::Pass));
+        assert_eq!(results[1], (DirectiveKind::Register, DirectiveOutcome::Pass));
+        assert_eq!(
+            results[2],
+            // `wasm-wast-parser` maps `(assert_trap (module ...))` to
+            // `Directive::AssertUnlinkable` (the same "outcome CATEGORY,
+            // not the specific reason" bucket `assert_unlinkable` proper
+            // uses -- see `grade_assert_unlinkable`'s own doc comment),
+            // not `Directive::AssertTrap` (reserved for `assert_trap`
+            // wrapping an ACTION, e.g. `(invoke ...)`).
+            (DirectiveKind::AssertUnlinkable, DirectiveOutcome::Pass),
+            "the anonymous module's own start function must genuinely trap"
+        );
+        assert_eq!(
+            results[3],
+            (DirectiveKind::AssertReturn, DirectiveOutcome::Pass),
+            "expected $M's own call_indirect to observe $f's value (57005) written by the now-discarded \
+             instance's own elem segment before its start function trapped -- got: {:?}",
+            results[3].1
+        );
+    }
+
+    /// W35 fourth slice, security-review finding (HIGH): a real,
+    /// deterministic `RefCell` re-entrant-borrow panic this slice's own
+    /// fixup pass made newly reachable through an entirely ORDINARY,
+    /// non-circular linking pattern -- `$B` calls into `$A` (an ordinary
+    /// cross-module `call`, holding `$B`'s own `Rc<RefCell<WasmInstance>>`
+    /// borrowed for the call's whole duration); `$A`'s own `call_indirect`
+    /// then dispatches a table entry `$B` itself earlier wrote (a
+    /// `LocalFunctionRef` targeting `$B`) -- `$A`'s own `effective_local_
+    /// index` can't find `$B`'s function in `$A`'s own `func_identities`
+    /// (it was never imported by `$A`), so dispatch falls through to
+    /// `target.callable.call(..)`, re-entering `$B`'s OWN, ALREADY mutably
+    /// borrowed instance. This is NOT `CrossModuleFunction`'s own already-
+    /// documented "genuinely mutual cross-instance cycle" risk (`$B`
+    /// calls `$A` exactly once; `$A` never calls back into `$B` via an
+    /// import of its own -- it merely dispatches a stored reference).
+    /// Before the fix (`LocalFunctionRef::call`/`CrossModuleFunction::
+    /// call` using `try_borrow_mut` instead of a bare `borrow_mut()`),
+    /// this reproducibly PANICKED (a process abort, not a graded
+    /// directive outcome) on this exact, entirely ordinary script.
+    #[test]
+    fn a_reentrant_dispatch_back_into_the_caller_traps_cleanly_instead_of_panicking() {
+        let results = outcomes(
+            r#"
+            (module $A
+              (type $t (func (result i32)))
+              (table (export "tab") 1 funcref)
+              (func (export "call0") (result i32) (call_indirect (type $t) (i32.const 0))))
+            (register "A" $A)
+            (module $B
+              (func $callA (import "A" "call0") (result i32))
+              (table (import "A" "tab") 1 funcref)
+              (elem (i32.const 0) $b0)
+              (func $b0 (result i32) (i32.const 222))
+              (func (export "go") (result i32) (call $callA)))
+            (register "B" $B)
+            (assert_return (invoke $B "go") (i32.const 222))
+            "#,
+        );
+        // The point of this test is that the process is still alive to
+        // check an outcome at all -- a panic here would abort the whole
+        // test binary, not merely fail this one assertion. Whether the
+        // graded outcome is `Pass` (if `$A`'s own dispatch happens to
+        // reach `$b0` some other way) or a clean `Fail`/`Trap` (the
+        // re-entrant-borrow trap) is secondary; NEITHER may be a panic.
+        assert_eq!(results[0], (DirectiveKind::Module, DirectiveOutcome::Pass));
+        assert_eq!(results[1], (DirectiveKind::Register, DirectiveOutcome::Pass));
+        assert_eq!(results[2], (DirectiveKind::Module, DirectiveOutcome::Pass), "$B must link against $A's exports");
+        assert_eq!(results[3], (DirectiveKind::Register, DirectiveOutcome::Pass));
+        match &results[4].1 {
+            DirectiveOutcome::Pass | DirectiveOutcome::Fail(_) | DirectiveOutcome::Trap(_) => {}
+            other => panic!("expected a graded outcome (Pass/Fail/Trap), got: {other:?}"),
+        }
+    }
+
+    /// W35 fourth slice, security-review finding (MEDIUM): a raw table
+    /// entry a LIVE `table.init` writes (deliberately deferred to lazy,
+    /// same-instance-only resolution -- see `wasm-execution`'s own
+    /// `table.init` opcode handler doc comment; this slice never changed
+    /// that) must NOT be misattributed to a LATER instance's own fixup
+    /// pass just because that instance happens to import the same table.
+    /// `$A` writes `$a0` into its OWN table via a LIVE `table.init` (never
+    /// touched by any instantiate()-time fixup at all); `$B` merely
+    /// IMPORTS that table, writing nothing of its own. `$B`'s own fixup
+    /// pass must have NOTHING to resolve (`active_elem_writes` is empty
+    /// for `$B`), so `$A`'s own later `call_indirect` through that same
+    /// slot must still observe `$A`'s own value (111) -- not get silently
+    /// reattributed to `$B`'s combined index space. An earlier version of
+    /// `resolve_all_table_funcrefs` (a scan for `TableElement::Raw`
+    /// entries in every visible table, rather than a precise, RECORDED
+    /// write-list) could not tell `$A`'s own live-call write apart from
+    /// something `$B` itself should resolve, and got this wrong.
+    #[test]
+    fn a_raw_entry_written_by_a_live_table_init_is_not_reattributed_to_a_later_importing_instance() {
+        let results = outcomes(
+            r#"
+            (module $A
+              (type $t (func (result i32)))
+              (table (export "tab") 1 funcref)
+              (func $a0 (result i32) (i32.const 111))
+              (elem $e func $a0)
+              (func (export "init_and_call") (result i32)
+                (table.init 0 $e (i32.const 0) (i32.const 0) (i32.const 1))
+                (call_indirect (type $t) (i32.const 0))))
+            (register "A" $A)
+            (module $B
+              (table (import "A" "tab") 1 funcref))
+            (register "B" $B)
+            (assert_return (invoke $A "init_and_call") (i32.const 111))
+            "#,
+        );
+        assert_eq!(results[0], (DirectiveKind::Module, DirectiveOutcome::Pass));
+        assert_eq!(results[1], (DirectiveKind::Register, DirectiveOutcome::Pass));
+        assert_eq!(results[2], (DirectiveKind::Module, DirectiveOutcome::Pass), "$B must link against $A's exported table");
+        assert_eq!(results[3], (DirectiveKind::Register, DirectiveOutcome::Pass));
+        assert_eq!(
+            results[4],
+            (DirectiveKind::AssertReturn, DirectiveOutcome::Pass),
+            "expected $A's own live table.init + call_indirect to observe $A's own value (111), unaffected \
+             by $B merely importing the same table -- got: {:?}",
+            results[4].1
+        );
+    }
+
     // ── W14: a per-module build failure degrades gracefully ─────────────
 
     #[test]
@@ -1984,5 +2493,96 @@ mod tests {
             "#,
         );
         assert!(matches!(results[1].1, DirectiveOutcome::NotYetSupported(_)));
+    }
+
+    // ── W34 fourth slice: cross-module canonical type-group equivalence
+    // (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`) ──────────────
+
+    /// Two independently-declared, structurally-identical `rec` groups, at
+    /// GENUINELY different flat type-section indices in each module (the
+    /// importer has two unrelated padding types declared FIRST, so its own
+    /// `rec` group starts at index 2, not 0 like the exporter's) -- no
+    /// shared numbering between the two modules at all, exactly the
+    /// cross-module comparability property the whole canonicalization
+    /// algorithm exists for (MVP.md's own "no shared context... upfront").
+    /// Before this slice, `wasm-runtime`'s import check only compared raw
+    /// `FuncType` shape plus `(rec_group_size, rec_group_position)` plus
+    /// finality -- none of which is even DECLARED equal here in a way that
+    /// proves real canonical equivalence rather than coincidental shape
+    /// matching, so this is a genuine, not vacuous, positive proof point
+    /// (mirrors `type-subtyping.wast`'s own `M3`/`M4` "Linking" cases, and
+    /// `type-equivalence.wast`'s "Semantic types (link time)" section).
+    #[test]
+    fn cross_module_isomorphic_rec_groups_with_no_shared_numbering_link_successfully() {
+        // The MVP.md/`type-equivalence.wast` "Isomorphic recursive types"
+        // headline shape (two mutually-referencing members, no `sub`
+        // relation declared at all): `$a1` and `$a2` (exporter) tie to the
+        // identical shape as `$b1`/`$b2` (importer) once De-Bruijn-numbered
+        // relative to their OWN group, regardless of the group's absolute
+        // starting index in each module.
+        let results = outcomes(
+            r#"
+            (module
+              (rec
+                (type $a1 (func (param i32 (ref $a2))))
+                (type $a2 (func (param i32 (ref $a1))))
+              )
+              (func (export "g") (type $a2))
+            )
+            (register "IsoExport")
+            (module
+              (type $pad0 (func (param i32)))
+              (type $pad1 (func (param i64)))
+              (rec
+                (type $b1 (func (param i32 (ref $b2))))
+                (type $b2 (func (param i32 (ref $b1))))
+              )
+              (func (import "IsoExport" "g") (type $b2))
+            )
+            "#,
+        );
+        // The importing module's own directive is index 2 (export module=0,
+        // register=1, import module=2) -- `Pass` here means real linking
+        // succeeded, not merely that the directive was gradeable.
+        assert_eq!(results[2], (DirectiveKind::Module, DirectiveOutcome::Pass), "{:?}", results[2]);
+    }
+
+    /// The `M5`-shaped negative case (`type-subtyping.wast` lines 652-666,
+    /// this crate's own vendored corpus copy): superficially similar to the
+    /// positive case above (the same type NAMES, `$f1`/`$f2`/`$g1`/`$g2`,
+    /// are deliberately reused across both modules, copy-paste-style), but
+    /// ONE internal reference is wired to a DIFFERENT earlier group than
+    /// its counterpart -- the exporter's `$g2`'s declared supertype `$f2`
+    /// sits in a `rec` group whose OTHER member (an anonymous struct)
+    /// references `$f1` (a group declared even EARLIER, NOT itself), while
+    /// the importer's `$g1`'s declared supertype `$f1`'s own sibling struct
+    /// references `$f1` REFLEXIVELY (`Rec(0)`, its own group). Canonicalized,
+    /// these tie to genuinely different shapes (`Outer` vs `Rec` at that
+    /// position) despite every group's own size/position/finality/`FuncType`
+    /// shape matching -- exactly the class of mismatch the OLD three-part
+    /// conservative guard could never see, and canonical equivalence must
+    /// NOT be fooled into accepting.
+    #[test]
+    fn cross_module_copy_paste_shaped_type_mismatch_is_correctly_rejected() {
+        let results = outcomes(
+            r#"
+            (module
+              (rec (type $f1 (sub (func))) (type (struct (field (ref $f1)))))
+              (rec (type $f2 (sub (func))) (type (struct (field (ref $f1)))))
+              (rec (type $g2 (sub $f2 (func))) (type (struct)))
+              (func (export "g") (type $g2))
+            )
+            (register "Sneaky")
+            (assert_unlinkable
+              (module
+                (rec (type $f1 (sub (func))) (type (struct (field (ref $f1)))))
+                (rec (type $g1 (sub $f1 (func))) (type (struct)))
+                (func (import "Sneaky" "g") (type $g1))
+              )
+              "incompatible import type"
+            )
+            "#,
+        );
+        assert_eq!(results[2], (DirectiveKind::AssertUnlinkable, DirectiveOutcome::Pass), "{:?}", results[2]);
     }
 }

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-C35-changa-ji",
+    "language": "punjabi",
+    "chapter": 35,
+    "sequence": 2120,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b147b5c6d3a6c9c5",
+    "detachableSegments": [
+      "The letters in this word",
+      "Writing: assemble ਜੀ ਆਇਆਂ ਨੂੰ"
+    ]
+  },
+  "findings": []
+}

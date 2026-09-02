@@ -89,13 +89,50 @@ Chapter 5. **پسند** takes the subject away: **مجھے پڑھنا پسند �
 reading is pleasing,” with the liked thing as subject and the liker in the
 dative — one more language that builds liking that way.
 
-## Chapter 9 — People and simple identity *(planned)*
+## Chapter 16 — Seven letters, and the words you already knew *(authored)*
+
+**ا** → **ل** → **س** → **م** → joining → **ک** → **ن** → **ی**. The track's
+first script chapter, and the one place the ladder is batched rather than
+drizzled: seven letter lessons in seven consecutive positions. It buys eight
+words the reader had only ever been given by ear, and its argument is that the
+page runs right to left, falls as it runs, and leaves its short vowels off.
+
+## Chapter 17 — The sentence learns to end *(authored)*
+
+**یہ** *yih* → **کام** *kām* → **ہ** → **کہاں** *kahāṅ* → review → **ے** →
+**ماں** *māṅ* → review → **ں** → practice. The first chapter written to the
+gloss-first rule: one letter every two or three lessons, and every letter
+arriving after a word has already put it in the ear. **ہ** *gol he* is taught
+in all four positional faces because its middle form splits into two loops and
+reads as a stranger; **ے** and **ں** are taught as word-final letters with no
+middle face to learn, and **ں** as the only letter identified by subtraction.
+The payoff is **ہے**, and with it **میرا نام ... ہے** — the book's first
+sentence, readable at last.
+
+## Chapter 18 — Alif wears a wave, and the meeting comes off the page *(authored)*
+
+**آم** *ām* → **آسمان** *āsmān* → **آ** → **پرانا** *purānā* → review → **پ**
+→ **وہ** *voh* → review → **و** → practice. The same interleave, three more
+letters. **آ** explains itself: a word cannot open with two alifs, so the wave
+is the shorthand that replaced them, which gives one sound two spellings
+decided by position. **پ** is where the alphabet's own history becomes
+visible — Arabic has no *p*, Persian invented the letter, Urdu inherited the
+invention — and its three dots survive the shape when it joins. **و** joins
+alif as the second non-joiner, so gaps inside words stop being surprises. The
+payoff is the whole opening exchange, read and written from dictation.
+
+## Chapter 19 — People and simple identity *(planned)*
 
 - extend **میں ... ہوں** *maiṅ ... hūṅ* from state to identity;
 - add further masculine and feminine agreement one contrast at a time;
 - contrast **ہے** *hai*, **ہیں** *haiṅ*, and **ہوں** *hūṅ* without a paradigm dump;
 - generalize **مجھے** *mujhe* into the wider oblique-plus-postposition system;
 - introduce more retroflex and aspirated letters only when useful words need them.
+
+Twenty-two of the thirty-seven glyphs this track shows are still untaught.
+**ھ** *do-chashmī he* and **ٹ** are next by reach: together they finish
+**ٹھیک**, the one line of the opening exchange chapters 17 and 18 could not
+reach.
 
 ## Part II onward *(sketch)*
 

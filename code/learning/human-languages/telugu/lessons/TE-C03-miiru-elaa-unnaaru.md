@@ -5,6 +5,7 @@ chapter: 3
 type: phrase
 headword: మీరు ఎలా ఉన్నారు?
 gloss: how are you? (respectful)
+romanization: "mīru elā unnāru?"
 concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [TE-C03-elaa, TE-C02-nuvvu-miiru]
 sounds: [double-nn, retroflex]

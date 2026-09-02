@@ -29,7 +29,8 @@
 //! implementation of the computing stack from transistors to operating systems.
 
 use std::collections::HashSet;
-use wasm_types::{ExternalKind, ImportTypeInfo, ValueType, WasmModule};
+use std::rc::Rc;
+use wasm_types::{CanonicalGroup, ExternalKind, ImportTypeInfo, ValueType, WasmModule};
 
 mod type_check;
 
@@ -126,12 +127,70 @@ impl std::error::Error for ValidationError {}
 #[derive(Debug, Clone)]
 pub struct ValidatedModule {
     module: WasmModule,
+    /// This module's own canonical type-group forms (W34 first slice:
+    /// `code/specs/W34-wasm-gc-canonical-type-equivalence.md`) -- one
+    /// entry per flat type-section index, `None` for a type this slice
+    /// does not yet canonicalize (any type belonging to a
+    /// `rec_group_size > 1` group -- multi-member De Bruijn numbering is a
+    /// later slice's job, see the spec's own "Recommended slice
+    /// decomposition"). See [`wasm_types::canonicalize_types`]'s own doc
+    /// comment for the algorithm and its termination argument.
+    ///
+    /// Computed exactly once, here in [`validate`], immediately after
+    /// `type_check::type_check_module` confirms (among everything else)
+    /// that the module's declared `sub` chains are acyclic --
+    /// canonicalization's own termination argument depends on that
+    /// ordering guarantee already holding (see `canonicalize_types`'s doc
+    /// comment). `ValidatedModule`'s `module` field is already private,
+    /// with [`validate`] the only constructor (a struct-literal bypass is
+    /// a compile error -- see this struct's own doc comment above); this
+    /// field inherits that exact same guarantee for free, by construction
+    /// -- there is no code path that can produce a `ValidatedModule`
+    /// (and therefore no path that can produce a `canonical_types` value)
+    /// without going through `validate()` first.
+    canonical_types: Vec<Option<(Rc<CanonicalGroup>, u32)>>,
 }
 
 impl ValidatedModule {
     /// The underlying parsed module, proven to have passed [`validate`].
     pub fn module(&self) -> &WasmModule {
         &self.module
+    }
+
+    /// This flat type-section index's own canonical type-group form (W34
+    /// first slice), or `None` if this slice doesn't canonicalize it yet
+    /// (out of range, or a `rec_group_size > 1` member -- see
+    /// [`wasm_types::canonicalize_types`]'s own doc comment).
+    pub fn canonical_type_at(&self, idx: u32) -> Option<(Rc<CanonicalGroup>, u32)> {
+        self.canonical_types.get(idx as usize).cloned().flatten()
+    }
+
+    /// Whether flat type-section indices `i` and `j` are canonically
+    /// equivalent per this slice's own (singleton-groups-only) algorithm --
+    /// `false`, conservatively, whenever EITHER side isn't canonicalized
+    /// yet (out of range, or a `rec_group_size > 1` member), never a wrong
+    /// `true`. This slice does not wire this into any validator/execution
+    /// call site itself (that's a later slice, per the spec's own "Wiring
+    /// into within-module checks" section) -- it exists here purely so the
+    /// mechanism is directly testable end-to-end through the real
+    /// `validate()` entry point, not just through the lower-level
+    /// `wasm_types::canonicalize_types` free function.
+    pub fn canonically_equivalent(&self, i: u32, j: u32) -> bool {
+        wasm_types::canonical_types_equivalent(&self.canonical_types, i, j)
+    }
+
+    /// The whole per-flat-index canonical-type table (W34 third slice) --
+    /// exposed as a slice so a downstream crate that needs to CARRY this
+    /// data further (`wasm-runtime::instantiate`, threading it into
+    /// `WasmInstance::canonical_types` for `wasm-execution`'s own runtime
+    /// dispatch -- see that crate's own doc comments) can clone it once,
+    /// rather than reconstructing an equivalent Vec index-by-index via
+    /// repeated [`Self::canonical_type_at`] calls. Read-only: there is no
+    /// way to construct a `ValidatedModule` (and therefore no way to reach
+    /// this slice) other than [`validate`] succeeding, the same guarantee
+    /// [`Self::module`] already relies on.
+    pub fn canonical_types(&self) -> &[Option<(Rc<CanonicalGroup>, u32)>] {
+        &self.canonical_types
     }
 }
 
@@ -769,10 +828,27 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
     }
 
     // ── Check 11: Instruction-level type checking (WASM06/W02 Phase 2) ──
-    type_check::type_check_module(module)?;
+    //
+    // W34 first slice (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`),
+    // updated by the third slice: `type_check_module` itself now computes
+    // and returns this module's own canonicalized type-group forms as a
+    // side product of Check 11 -- it needs them internally anyway (wired
+    // into `is_assignable`/`call_indirect`'s static checks via
+    // `ModuleContext`/`TypeContext`, see that crate-internal module's own
+    // doc comments), computed right after `check_type_subtyping` (which
+    // runs `check_type_subtyping_is_acyclic` as its own first step) has
+    // confirmed the module's `sub`/`rec` reference ordering is well-founded
+    // -- see `wasm_types::canonicalize_types`'s own doc comment for why
+    // that ordering guarantee matters even though this function itself
+    // never recurses. Reusing the same computation here (rather than
+    // calling `canonicalize_types` a second time) keeps this a true
+    // "computed exactly once per module" cache, matching `ValidatedModule::
+    // canonical_types`'s own doc comment.
+    let canonical_types = type_check::type_check_module(module)?;
 
     Ok(ValidatedModule {
         module: module.clone(),
+        canonical_types,
     })
 }
 
@@ -826,6 +902,248 @@ mod tests {
         };
         let err = validate(&module).unwrap_err();
         assert!(matches!(err, ValidationError::TypeIndexOutOfBounds(_)));
+    }
+
+    // ── W-addendum 2026-09-01 pass: memarg/sub-opcode LEB128 strictness ─────
+    //
+    // Real corpus bugs (`binary-leb128.wast`'s memarg align/offset overlong
+    // and out-of-range `assert_malformed` cases, and its 0xFC sub-opcode
+    // overlong case): a memory instruction's `align`/`offset` immediates,
+    // and a `0xFC`/`0xFD`-prefixed instruction's sub-opcode immediate, were
+    // all decoded via the native-64-bit-budget `decode_unsigned` instead of
+    // a width-bounded decode, so a 6+-byte or high-bit-set encoding of a
+    // small value parsed successfully instead of being rejected. Each
+    // negative case here has a matching positive-control case proving the
+    // FIX didn't also reject the ordinary minimal encoding of the exact
+    // same value.
+
+    /// A minimal single-function module with one declared memory, whose
+    /// only function body is the given code -- the common shape every
+    /// memarg test below needs. `access_i32` picks a natural-alignment-2
+    /// memory op (`i32.load`) so `align` values up to `2` are legal.
+    fn module_with_memory_and_code(is64: bool, code: Vec<u8>) -> WasmModule {
+        WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }],
+            functions: vec![0],
+            memories: vec![MemoryType { limits: Limits { min: 1, max: None }, shared: false, is64 }],
+            code: vec![FunctionBody { locals: vec![], code }],
+            ..Default::default()
+        }
+    }
+
+    /// `i32.load` with `align` encoded as an overlong (6-byte, one more
+    /// than the `ceil(32/7) = 5`-byte budget) LEB128 of the otherwise
+    /// perfectly legal value `2` -- exactly `binary-leb128.wast`'s
+    /// "alignment 2 with one byte too many" case (adapted from the raw
+    /// binary form to a directly-constructed `WasmModule`, since this
+    /// crate validates bytecode either way).
+    #[test]
+    fn memarg_align_overlong_leb128_is_rejected() {
+        let code = vec![
+            0x41, 0x00, // i32.const 0
+            0x28, // i32.load
+            0x82, 0x80, 0x80, 0x80, 0x80, 0x00, // align 2, overlong (6 bytes)
+            0x00, // offset 0
+            0x1A, // drop
+            0x0B, // end
+        ];
+        let module = module_with_memory_and_code(false, code);
+        assert!(validate(&module).is_err(), "overlong memarg align must be rejected");
+    }
+
+    /// The exact same `align`/`offset`/instruction shape as the previous
+    /// test, but with `align` encoded MINIMALLY (1 byte) -- must still
+    /// validate fine. Guards against the fix over-rejecting.
+    #[test]
+    fn memarg_align_minimal_leb128_still_parses() {
+        let code = vec![
+            0x41, 0x00, // i32.const 0
+            0x28, // i32.load
+            0x02, // align 2, minimal
+            0x00, // offset 0
+            0x1A, // drop
+            0x0B, // end
+        ];
+        let module = module_with_memory_and_code(false, code);
+        assert!(validate(&module).is_ok(), "{:?}", validate(&module).unwrap_err());
+    }
+
+    /// `i32.load` with `offset` encoded overlong (6 bytes) on a plain
+    /// (32-bit) memory -- `binary-leb128.wast`'s "offset 2 with one byte
+    /// too many" case.
+    #[test]
+    fn memarg_offset_overlong_leb128_is_rejected_on_32bit_memory() {
+        let code = vec![
+            0x41, 0x00, // i32.const 0
+            0x28, // i32.load
+            0x02, // align 2, minimal
+            0x82, 0x80, 0x80, 0x80, 0x80, 0x00, // offset 2, overlong (6 bytes)
+            0x1A, // drop
+            0x0B, // end
+        ];
+        let module = module_with_memory_and_code(false, code);
+        assert!(validate(&module).is_err(), "overlong memarg offset on a 32-bit memory must be rejected");
+    }
+
+    /// `i32.load` with `align` encoded in the full 5-byte `u32` budget but
+    /// with an out-of-range high bit set (`\x82\x80\x80\x80\x10` decodes
+    /// bit 32, one past the 32-bit width) -- `binary-leb128.wast`'s
+    /// "alignment 2 with unused bits set" case.
+    #[test]
+    fn memarg_align_out_of_range_high_bit_is_rejected() {
+        let code = vec![
+            0x41, 0x00, // i32.const 0
+            0x28, // i32.load
+            0x82, 0x80, 0x80, 0x80, 0x10, // align 2, bit 32 spuriously set
+            0x00, // offset 0
+            0x1A, // drop
+            0x0B, // end
+        ];
+        let module = module_with_memory_and_code(false, code);
+        assert!(validate(&module).is_err(), "out-of-range memarg align must be rejected");
+    }
+
+    /// `binary_leb128_64.wast`'s own pair of cases, the reason `offset`
+    /// can't just be blanket-narrowed to 32 bits: on an `is64` (memory64)
+    /// memory, `offset` genuinely needs the full 64-bit budget. A 10-byte
+    /// encoding of `2^64 - 1` must parse fine...
+    #[test]
+    fn memarg_offset_widens_to_64_bits_on_is64_memory() {
+        let code = vec![
+            0x42, 0x00, // i64.const 0 (address operand is i64 for an is64 memory)
+            0x28, // i32.load
+            0x02, // align 2, minimal
+            0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x01, // offset 2^64 - 1
+            0x1A, // drop
+            0x0B, // end
+        ];
+        let module = module_with_memory_and_code(true, code);
+        assert!(validate(&module).is_ok(), "{:?}", validate(&module).unwrap_err());
+    }
+
+    /// ...but `2^64` itself (one bit further -- out of range even for the
+    /// full 64-bit budget) must still be rejected.
+    #[test]
+    fn memarg_offset_out_of_range_even_at_64_bits_on_is64_memory() {
+        let code = vec![
+            0x42, 0x00, // i64.const 0
+            0x28, // i32.load
+            0x02, // align 2, minimal
+            0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x02, // offset 2^64
+            0x1A, // drop
+            0x0B, // end
+        ];
+        let module = module_with_memory_and_code(true, code);
+        assert!(validate(&module).is_err(), "offset 2^64 must be rejected even on an is64 memory");
+    }
+
+    /// `binary-leb128.wast`'s "i64_trunc_sat_f64_u with 6 bytes" case: the
+    /// `0xFC`-prefixed sub-opcode is a `u32` LEB128, same overlong rule as
+    /// every other `u32` field.
+    #[test]
+    fn fc_prefixed_sub_opcode_overlong_leb128_is_rejected() {
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![ValueType::F64], results: vec![ValueType::I64] }],
+            functions: vec![0],
+            code: vec![FunctionBody {
+                locals: vec![],
+                code: vec![
+                    0x20, 0x00, // local.get 0
+                    0xFC, 0x87, 0x80, 0x80, 0x80, 0x80, 0x00, // i64.trunc_sat_f64_u (sub-opcode 7), overlong (6 bytes)
+                    0x0B, // end
+                ],
+            }],
+            ..Default::default()
+        };
+        assert!(validate(&module).is_err(), "overlong 0xFC sub-opcode must be rejected");
+    }
+
+    /// Same instruction, sub-opcode encoded minimally (1 byte) -- must
+    /// still validate fine.
+    #[test]
+    fn fc_prefixed_sub_opcode_minimal_leb128_still_parses() {
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![ValueType::F64], results: vec![ValueType::I64] }],
+            functions: vec![0],
+            code: vec![FunctionBody {
+                locals: vec![],
+                code: vec![
+                    0x20, 0x00, // local.get 0
+                    0xFC, 0x07, // i64.trunc_sat_f64_u (sub-opcode 7), minimal
+                    0x0B, // end
+                ],
+            }],
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok(), "{:?}", validate(&module).unwrap_err());
+    }
+
+    // ── W-addendum 2026-09-01 pass: data count section required for
+    //    memory.init/data.drop (`binary.wast`'s own two `assert_malformed`
+    //    cases -- a different root cause than the LEB128 strictness gaps
+    //    above, but found and fixed in the same pass) ──────────────────────
+
+    /// `memory.init` with `missing_data_count_section: true` must be
+    /// rejected, even when the referenced data segment index is perfectly
+    /// in-bounds -- the data-count-section check fires FIRST.
+    #[test]
+    fn memory_init_without_data_count_section_is_rejected() {
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }],
+            functions: vec![0],
+            memories: vec![MemoryType { limits: Limits { min: 1, max: None }, shared: false, is64: false }],
+            data: vec![DataSegment { memory_index: 0, offset_expr: vec![0x41, 0x00, 0x0B], data: vec![], is_passive: false }],
+            code: vec![FunctionBody {
+                locals: vec![],
+                code: vec![
+                    0x41, 0x00, // i32.const 0 (dest)
+                    0x41, 0x00, // i32.const 0 (src)
+                    0x41, 0x00, // i32.const 0 (len)
+                    0xFC, 0x08, 0x00, 0x00, // memory.init 0 0
+                    0x0B, // end
+                ],
+            }],
+            missing_data_count_section: true,
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(format!("{err}").contains("data count section"), "{err:?}");
+    }
+
+    /// The same module, but with `missing_data_count_section: false` (as a
+    /// real binary WOULD set it, had it declared §12) -- `memory.init`
+    /// must validate fine.
+    #[test]
+    fn memory_init_with_data_count_section_parses_fine() {
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }],
+            functions: vec![0],
+            memories: vec![MemoryType { limits: Limits { min: 1, max: None }, shared: false, is64: false }],
+            data: vec![DataSegment { memory_index: 0, offset_expr: vec![0x41, 0x00, 0x0B], data: vec![], is_passive: false }],
+            code: vec![FunctionBody {
+                locals: vec![],
+                code: vec![0x41, 0x00, 0x41, 0x00, 0x41, 0x00, 0xFC, 0x08, 0x00, 0x00, 0x0B],
+            }],
+            missing_data_count_section: false,
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok(), "{:?}", validate(&module).unwrap_err());
+    }
+
+    /// `data.drop` with `missing_data_count_section: true` must be
+    /// rejected, same as `memory.init` above.
+    #[test]
+    fn data_drop_without_data_count_section_is_rejected() {
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }],
+            functions: vec![0],
+            data: vec![DataSegment { memory_index: 0, offset_expr: vec![], data: vec![], is_passive: true }],
+            code: vec![FunctionBody { locals: vec![], code: vec![0xFC, 0x09, 0x00, 0x0B] }],
+            missing_data_count_section: true,
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(format!("{err}").contains("data count section"), "{err:?}");
     }
 
     // ── Check 4c: ConcreteFuncRef bounds (W11 addendum, security-review round) ──
@@ -1925,15 +2243,31 @@ mod tests {
     fn call_argument_rejects_an_unrelated_concrete_func_ref() {
         // The negative counterpart: `$t1`/`$t2` are declared with NO `sub`
         // relationship between them at all (two independent, final types)
-        // -- passing a `(ref $t2)` where `(ref $t1)` is expected must be
-        // rejected. This is deliberately NOT the same as the positive
-        // test's types (no `sub` declared here), proving the new
-        // assignability arms require a REAL declared chain, not just "any
-        // two concrete func ref types."
+        // AND a genuinely different shape (`$t2` takes an `i32` param
+        // `$t1` doesn't) -- passing a `(ref $t2)` where `(ref $t1)` is
+        // expected must be rejected. This is deliberately NOT the same as
+        // the positive test's types (no `sub` declared here), proving the
+        // assignability arms require a REAL declared chain OR real
+        // canonical equivalence, not just "any two concrete func ref
+        // types."
+        //
+        // W34 third slice (`code/specs/W34-wasm-gc-canonical-type-equivalence.md`):
+        // this test USED to give `$t1`/`$t2` the SAME empty shape, on the
+        // premise that byte-identical-but-undeclared-`sub` types stay
+        // unrelated -- exactly the gap this slice closes (see the real GC
+        // proposal's own "subtyping is nominal modulo canonicalization"
+        // rule). That premise is now WRONG (two structurally-identical
+        // types genuinely ARE the same canonical type, `sub` or not), so
+        // this test's shapes were changed to be genuinely different
+        // instead of merely un-declared-as-related, preserving its real
+        // purpose (an honest reclassification, not a regression -- see
+        // `call_argument_accepts_a_canonically_equivalent_but_nominally_
+        // unrelated_concrete_func_ref` just below for the case this test
+        // used to, incorrectly, also cover).
         let module = WasmModule {
             types: vec![
                 FuncType { params: vec![], results: vec![] },                                      // 0: $t1
-                FuncType { params: vec![], results: vec![] },                                      // 1: $t2 (unrelated to $t1)
+                FuncType { params: vec![ValueType::I32], results: vec![] },                        // 1: $t2 (genuinely different shape, unrelated to $t1)
                 FuncType { params: vec![ValueType::NonNullConcreteFuncRef(0)], results: vec![] },   // 2: $f1's type -- param (ref $t1)
                 FuncType { params: vec![ValueType::NonNullConcreteFuncRef(1)], results: vec![] },   // 3: $f2's type -- param (ref $t2)
             ],
@@ -1946,5 +2280,142 @@ mod tests {
         };
         let err = validate(&module).unwrap_err();
         assert!(matches!(err, ValidationError::Other(_)), "{err:?}");
+    }
+
+    /// W34 third slice: the positive case the PREVIOUS version of
+    /// `call_argument_rejects_an_unrelated_concrete_func_ref` (just above)
+    /// used to (incorrectly, per the real GC proposal) also reject --
+    /// `$t1`/`$t2` are byte-identical (`(func)`, no params/results) and
+    /// declare NO `sub` relationship at all, yet are canonically the SAME
+    /// type, so a `(ref $t2)` argument flowing into a `(ref $t1)` param at
+    /// a real `call` site must now be ACCEPTED. This is the direct,
+    /// end-to-end (`validate()`, not just `is_assignable`/`canonicalize_
+    /// types` in isolation) proof this slice's own wiring reaches a real
+    /// validation decision.
+    #[test]
+    fn call_argument_accepts_a_canonically_equivalent_but_nominally_unrelated_concrete_func_ref() {
+        let module = WasmModule {
+            types: vec![
+                FuncType { params: vec![], results: vec![] },                                      // 0: $t1
+                FuncType { params: vec![], results: vec![] },                                      // 1: $t2 (canonically == $t1, no `sub` declared)
+                FuncType { params: vec![ValueType::NonNullConcreteFuncRef(0)], results: vec![] },   // 2: $f1's type -- param (ref $t1)
+                FuncType { params: vec![ValueType::NonNullConcreteFuncRef(1)], results: vec![] },   // 3: $f2's type -- param (ref $t2)
+            ],
+            functions: vec![2, 3],
+            code: vec![
+                FunctionBody { locals: vec![], code: vec![0x0B] },
+                FunctionBody { locals: vec![], code: vec![0x20, 0x00, 0x10, 0x00, 0x0B] }, // local.get 0; call 0; end
+            ],
+            ..Default::default()
+        };
+        validate(&module).expect("canonically equivalent concrete func refs must be assignable even with no declared `sub` chain");
+    }
+
+    // ────────────────────────────────────────────────────────────────────
+    // W34 first slice: canonical type-group equivalence, wired through the
+    // real `validate()` entry point (not just `wasm_types::canonicalize_
+    // types` directly -- see that crate's own extensive unit tests for the
+    // mechanism in isolation).
+    // ────────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn validate_computes_canonical_type_for_a_self_referencing_singleton() {
+        // `type-rec.wast` line 4 shape: `(type (func (param (ref 0))
+        // (result (ref 0))))`.
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![ValueType::ConcreteFuncRef(0)], results: vec![ValueType::ConcreteFuncRef(0)] }],
+            type_subtyping: vec![TypeSubtyping::default()],
+            ..Default::default()
+        };
+        let validated = validate(&module).unwrap();
+        assert!(validated.canonical_type_at(0).is_some());
+        assert!(validated.canonically_equivalent(0, 0));
+        // Out of range never panics, just reports "not canonicalized."
+        assert_eq!(validated.canonical_type_at(99), None);
+    }
+
+    #[test]
+    fn validate_canonical_types_compare_equal_across_two_independently_validated_modules() {
+        // Cross-module comparability, exercised through the real
+        // `validate()` path this time -- two SEPARATE modules, isomorphic
+        // shape at different flat indices, no shared numbering.
+        let module_a = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![ValueType::I32] }],
+            type_subtyping: vec![TypeSubtyping::default()],
+            ..Default::default()
+        };
+        let padding = FuncType { params: vec![], results: vec![] };
+        let module_b = WasmModule {
+            types: vec![padding.clone(), padding, FuncType { params: vec![], results: vec![ValueType::I32] }],
+            type_subtyping: vec![TypeSubtyping::default(); 3],
+            ..Default::default()
+        };
+        let validated_a = validate(&module_a).unwrap();
+        let validated_b = validate(&module_b).unwrap();
+        assert_eq!(validated_a.canonical_type_at(0), validated_b.canonical_type_at(2));
+        assert_ne!(validated_a.canonical_type_at(0), validated_b.canonical_type_at(0));
+    }
+
+    #[test]
+    fn validate_computes_canonical_types_for_a_real_multi_member_rec_group() {
+        // W34 second slice: a real multi-member `rec` group now
+        // canonicalizes through the actual `validate()` entry point too,
+        // not just `wasm_types::canonicalize_types` directly -- `$h`/`$k`,
+        // `type-rec.wast` lines 15-18, `$h -> $k` (`Rec(1)`), `$k -> $h`
+        // (`Rec(0)`).
+        let module = WasmModule {
+            types: vec![
+                FuncType { params: vec![ValueType::ConcreteFuncRef(1)], results: vec![] },
+                FuncType { params: vec![], results: vec![ValueType::ConcreteFuncRef(0)] },
+            ],
+            type_subtyping: vec![
+                TypeSubtyping { rec_group_size: 2, rec_group_position: 0, ..Default::default() },
+                TypeSubtyping { rec_group_size: 2, rec_group_position: 1, ..Default::default() },
+            ],
+            ..Default::default()
+        };
+        let validated = validate(&module).unwrap();
+        assert!(validated.canonical_type_at(0).is_some());
+        assert!(validated.canonical_type_at(1).is_some());
+        // The two members are NOT canonically equivalent to each other
+        // (different bodies -- `$h` takes a param, `$k` returns a
+        // result), but each is a stable, self-consistent identity.
+        assert!(!validated.canonically_equivalent(0, 1));
+        assert!(validated.canonically_equivalent(0, 0));
+    }
+
+    #[test]
+    fn validate_rejects_canonicalizing_an_internally_inconsistent_rec_group_claim() {
+        // A hand-built module whose two "sibling" entries disagree about
+        // their own group's size must still VALIDATE fine if nothing else
+        // is wrong with it (canonicalization failing is not the same as
+        // the module being ill-typed), but canonicalizes to `None` rather
+        // than guessing.
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }, FuncType { params: vec![], results: vec![] }],
+            type_subtyping: vec![
+                TypeSubtyping { rec_group_size: 2, rec_group_position: 0, ..Default::default() },
+                TypeSubtyping { rec_group_size: 3, rec_group_position: 1, ..Default::default() },
+            ],
+            ..Default::default()
+        };
+        let validated = validate(&module).unwrap();
+        assert_eq!(validated.canonical_type_at(0), None);
+        assert_eq!(validated.canonical_type_at(1), None);
+        assert!(!validated.canonically_equivalent(0, 1));
+    }
+
+    #[test]
+    fn validate_canonically_equivalent_is_false_for_genuinely_different_shapes() {
+        let module = WasmModule {
+            types: vec![
+                FuncType { params: vec![], results: vec![ValueType::I32] },
+                FuncType { params: vec![], results: vec![ValueType::I64] },
+            ],
+            type_subtyping: vec![TypeSubtyping::default(); 2],
+            ..Default::default()
+        };
+        let validated = validate(&module).unwrap();
+        assert!(!validated.canonically_equivalent(0, 1));
     }
 }

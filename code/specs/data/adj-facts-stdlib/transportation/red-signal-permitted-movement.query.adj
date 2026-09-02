@@ -1,0 +1,43 @@
+% ============================================================================
+% red-signal-permitted-movement.query.adj — worked recall over the
+% red-signal-permitted-movement library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to answer "what may I do at a
+% red light?" — and, read next to its green sibling, "how is that different
+% from a green light?"
+%
+% It states no fact of its own — it only `import`s the two grounded tables
+% and asks binding queries.
+%
+% BOTH QUERIES ARE IN VARIABLE FORM, and that is not a stylistic choice.
+% A FULLY-GROUND query — `? red_signal_permitted_movement(turn_right)` with
+% no variable — is routed to the hypothesis/ranking path and produces NO
+% `recall` entry at all, so it can neither answer nor abstain. On a
+% one-column table, membership can only be asked by binding a variable and
+% reading the returned set. The green sibling's companion does the same.
+%
+% THE CONTRAST IS THE LESSON. Green permits `turn_right` OUTRIGHT. Red
+% permits only `turn_right_after_stopping` — the qualifier is part of the
+% value, so the two sets share NO atom, and a reader comparing them cannot
+% mistake one permission for the other. An unqualified `turn_right` is
+% absent from the red set entirely, because right-on-red without stopping
+% is a claim the MUTCD does not make.
+%
+% Run (from this directory so the relative imports resolve):
+%     ../../../../packages/rust/target/debug/adj-lang-cli red-signal-permitted-movement.query.adj
+% ============================================================================
+
+import "red-signal-permitted-movement.adj"
+import "green-signal-permitted-movement.adj"
+
+? red_signal_permitted_movement($Movement)
+  % expect turn_right_after_stopping and
+  % turn_left_from_one_way_street_into_one_way_street_after_stopping -- BOTH
+  % carry "after stopping" in the atom, and NEITHER is a bare turn_right.
+  % straight_through and u_turn are absent: the sentence permits exactly two
+  % movements on red.
+
+? green_signal_permitted_movement($Movement)
+  % expect straight_through, turn_right, turn_left, u_turn -- shown here for
+  % the contrast: green's turn_right is UNQUALIFIED, red's is not, and the
+  % two relations share no movement atom at all.
