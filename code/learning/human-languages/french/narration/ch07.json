@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "The Days of the Week",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:446ab9036ea79d9f",
+  "sourceHash": "fnv1a64:b303679faa1f6f60",
   "lessons": [
     {
       "id": "FR-C07-jours-1",
@@ -20,7 +20,7 @@
         "sight-cue",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:3f5afe901d56ae5c",
+      "sourceHash": "fnv1a64:bb17b187f95d6836",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -165,7 +165,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:83cac8f4a0c482c9",
+      "sourceHash": "fnv1a64:d394398c03f2b56f",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -6,12 +6,12 @@ type: word
 headword: lundi, mardi, mercredi, jeudi, vendredi
 gloss: the weekdays (Monday–Friday) — named for the planets
 concept_tag: FR-DAYS-WEEKDAYS
-prerequisites: [FR-C06-nombres-6-10]
+prerequisites: [FR-C06-dix]
 sounds: [nasal-un, vowel-eu]
 roots: [dies-latin, planet-gods]
 etymology_hook: "the -di in lundi/mardi… is Latin diēs 'day'; each weekday is a Roman planet-god — lundi = lūnae diēs 'Moon's day', and English Tuesday names the SAME planet (Mars) via a Germanic god"
 est_minutes: 4
-reviews_of: [FR-C06-nombres-6-10]
+reviews_of: [FR-C06-dix]
 ---
 
 # lundi to vendredi — the planets of the week

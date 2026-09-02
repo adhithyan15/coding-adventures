@@ -6,12 +6,12 @@ type: word
 headword: heure
 gloss: hour / o'clock — telling the time
 concept_tag: FR-TIME-HOUR
-prerequisites: [FR-C06-nombres-1-5]
+prerequisites: [FR-C06-cinq]
 sounds: [silent-h, liaison-z]
 roots: [hora-latin, hora-greek]
 etymology_hook: "heure ← Latin hōra ← Greek hṓrā 'season, time of day' → English hour; 'il est deux heures' = 'it is two hours'"
 est_minutes: 4
-reviews_of: [FR-C06-nombres-1-5, FR-C07-jours-2]
+reviews_of: [FR-C06-cinq, FR-C07-jours-2]
 ---
 
 # heure — the hour, and telling the time

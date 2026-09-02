@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Telling the Time",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:2dab988c5a7db51b",
+  "sourceHash": "fnv1a64:54a0fbac7ffd3b99",
   "lessons": [
     {
       "id": "FR-C08-heure",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93a082b1f4ec4ef7",
+      "sourceHash": "fnv1a64:beec282d3aa0330d",
       "notice": null,
       "blocks": [
         {
