@@ -9,27 +9,27 @@ headword: ਅੱਖ
 romanization: akkh
 gloss: eye — a doubled consonant that survived whole, so it never had a tone to lose
 concept_tag: PA-BODY-EYE
-prerequisites: [PA-C11-bhain]
+prerequisites: [PA-C11-bhain, PA-S10-addak-dhadda, PA-S11-bhabbha, PA-S05-babba-lalla-hora]
 sounds: [addak-doubling, aspirate-kh]
 roots: [sanskrit-akshi, pie-h3okws]
 etymology_hook: ਅੱਖ is inherited from Prakrit akkhi, from Sanskrit akṣi, "eye," from Proto-Indo-Iranian *Hákši, from Proto-Indo-European *h3ókʷs — unbroken in English eye itself, and Punjabi keeps the Middle Indo-Aryan doubled kk that Hindi's āṅkh smoothed away into a nasal.
 duration:
   max_seconds: 260
 requires:
-  knowledge: [PA-LEX-BHAIN, PA-ETYMON-BHAIN-BHAGA, PA-SCRIPT-ADDAK-DOUBLING]
+  knowledge: [PA-LEX-BHAIN, PA-ETYMON-BHAIN-BHAGA, PA-SCRIPT-ADDAK-DOUBLING, PA-SCRIPT-RECOG-ADDAK-01, PA-SCRIPT-RECOG-BHA-01, PA-SCRIPT-RECOG-DHA-01, PA-SCRIPT-RECOG-BA-01]
 introduces:
   knowledge: [PA-LEX-AKKH, PA-ETYMON-AKKH-EYE]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-LEX-AKKH, PA-ETYMON-AKKH-EYE, PA-LEX-BHAIN, PA-ETYMON-BHAIN-BHAGA, PA-SCRIPT-ADDAK-DOUBLING]
+  knowledge: [PA-LEX-AKKH, PA-ETYMON-AKKH-EYE, PA-LEX-BHAIN, PA-ETYMON-BHAIN-BHAGA, PA-SCRIPT-ADDAK-DOUBLING, PA-SCRIPT-RECOG-ADDAK-01, PA-SCRIPT-RECOG-BHA-01, PA-SCRIPT-RECOG-DHA-01, PA-SCRIPT-RECOG-BA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [PA-C11-bhain, PA-C11-bhara]
+reviews_of: [PA-C11-bhain, PA-C11-bhara, PA-S10-addak-dhadda, PA-S11-bhabbha, PA-S05-babba-lalla-hora]
 ---
 
 # ਅੱਖ — the eye that kept both its consonants
@@ -47,7 +47,7 @@ about.
 > **ਅੱਖ** — *akkh* — **eye**
 
 ## The letters in this word
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-ADDAK-DOUBLING] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-ADDAK-DOUBLING, PA-SCRIPT-RECOG-ADDAK-01, PA-SCRIPT-RECOG-BHA-01, PA-SCRIPT-RECOG-DHA-01] -->
 
 **ਅ**, the bare vowel-carrier for *a*, then the **ੱ** *addak* — the same
 doubling mark from **ਰੱਬ** and **ਦੁੱਧ** — over **ਖ** *kh*. Read together: *a-kkh*,
@@ -79,7 +79,7 @@ entirely.
 - [YOU NAME: two other words that used the addak mark]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-AKKH, PA-ETYMON-AKKH-EYE, PA-SCRIPT-ADDAK-DOUBLING] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-AKKH, PA-ETYMON-AKKH-EYE, PA-SCRIPT-ADDAK-DOUBLING, PA-SCRIPT-RECOG-BA-01] -->
 
 [PAUSE 3s] Give the word for "eye." (*Akkh*.) Which English word is the same
 word by unbroken descent? (**Eye**.) Does *akkh* carry a tone? (**No** — its

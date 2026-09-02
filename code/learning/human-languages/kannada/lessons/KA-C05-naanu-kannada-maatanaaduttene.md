@@ -5,6 +5,7 @@ chapter: 5
 type: phrase
 headword: ನಾನು ಕನ್ನಡ ಮಾತನಾಡುತ್ತೇನೆ
 gloss: I speak Kannada
+romanization: "nānu kannaḍa mātanāḍuttēne"
 concept_tag: KA-WORD-KANNADA
 prerequisites: [KA-C05-maatanaadu, KA-C03-naanu]
 sounds: [double-nn]

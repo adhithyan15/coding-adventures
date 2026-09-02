@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S02-vowel-sign-u
 spine_node: SPINE-MEET-GREET
-sequence: 355
+sequence: 135
 delivery: script
-chapter: 7
+chapter: 2
 type: writing
 headword: "ು"
 gloss: the single character ು — recognised inside words you already say

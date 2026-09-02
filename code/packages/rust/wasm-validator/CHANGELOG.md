@@ -2,6 +2,61 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.85] - 2026-09-01 (fix: a 32-bit table's declared minimum no longer rejected at structural validation time)
+
+Gap 2 of a two-gap `elem.wast`/`table.wast` investigation pass
+(`code/specs/W07-wasm-post-mvp-epics.md`'s addendum item 3, previously
+left as "unconfirmed as a real bug — needs spec-text verification before
+fixing"). `table.wast` line 9, `(module definition (table 0xffff_ffff
+funcref))` (`u32::MAX`, no declared `max`), is a bare, UNWRAPPED directive
+— no `assert_invalid` around it — meaning the official testsuite itself
+asserts this declaration must VALIDATE. `wasm-validator` rejected it with
+`ValidationError: table #0: declared minimum 4294967295 elements exceeds
+this interpreter's resource limit of 10000000` (the old Check 2b).
+
+Investigated against the real spec rather than guessed: the real WASM
+core spec places NO ceiling on a 32-bit table's declared `min` beyond
+fitting in `u32` (`min` up to `2^32 - 1` is spec-legal) — Check 2b's own
+doc comment already said as much ("unlike Check 1b above, this is NOT a
+real spec requirement... it's this interpreter's own implementation-
+defined resource limit"), but stopped short of the conclusion this real
+corpus case forces: an implementation MAY refuse to actually ALLOCATE an
+oversized table, but may NOT refuse to let a module merely DECLARE one.
+This is exactly the same "declare freely, cap only at real allocation
+time" treatment `is64` tables (`u64::MAX` ceiling) and 64-bit memories
+already receive elsewhere in this same function — Check 2b's 32-bit-only
+enforcement was the one remaining inconsistency, not a defensible
+implementation choice.
+
+**Fix**: removed Check 2b (both the per-table and the cross-table
+aggregate rejection, for both declared and imported 32-bit tables) from
+`validate()` entirely. The real spec-mandated "`min` <= `max`" rule
+(Check 1c) is unchanged and still enforced at validation time. The
+practical resource-limit heuristic didn't disappear — it moved to
+`wasm-runtime::instantiate` (see that crate's own CHANGELOG), the pipeline
+stage where real allocation actually happens, mirroring exactly how
+`is64` tables' own cap was already handled before this fix.
+
+**Not a DoS regression** (checked as part of this fix, not after the
+fact): `wasm-execution::Table::new_with_is64` — the constructor every
+declared table already goes through — already had its own real,
+UNCONDITIONAL per-table `MAX_TABLE_ELEMENTS` cap regardless of `is64`,
+returning a graceful `TrapError` rather than attempting the allocation;
+removing this check's single-table half is a pure redundancy removal, not
+a new gap. The AGGREGATE half (many individually-under-cap tables
+summing past the cap) is the one real gap this fix had to close somewhere
+else — done in `wasm-runtime::instantiate`, generalizing its pre-existing
+`is64`-only aggregate to cover every table.
+
+Tests: removed `rejects_a_table_declaring_more_than_max_table_elements`
+and `rejects_tables_whose_combined_elements_exceed_the_aggregate_cap`
+(asserted the now-incorrect old behavior), replaced with `accepts_a_32bit_
+table_declaring_far_more_than_max_table_elements` and `accepts_tables_
+whose_combined_elements_exceed_the_old_aggregate_cap` (assert the
+corrected behavior). `accepts_an_is64_table_declaring_far_more_than_
+max_table_elements` kept as a regression check that `is64` tables' own
+pre-existing treatment is unaffected.
+
 ## [0.2.84] - 2026-09-01 (fix: memarg/prefixed-sub-opcode LEB128 under-strictness + missing data-count-section gate)
 
 A fresh corpus-wide prioritization pass after the W32/W33/W34 campaign

@@ -1,8 +1,8 @@
 Punjabi, chapter 11: Friend, Family, Brother, and Sister.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 4.
+Lesson 1 of 5.
 ਦੋਸਤ (dost) — the one you chose.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -36,7 +36,7 @@ Give the word for "friend." (Dost.) What did its Persian root originally mean? (
 Sources: Wiktionary: ਦੋਸਤ (dost); Etymonline: gusto.
 
 
-Lesson 2 of 4.
+Lesson 2 of 5.
 ਪਰਿਵਾਰ (parivār) — what surrounds you.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -73,7 +73,7 @@ Sources: Wiktionary: Sanskrit/Hindi parivār.
 parivar splits into two Sanskrit pieces meaning 'around' and 'to cover'. What is the whole word's literal sense?
 
 
-Lesson 3 of 4.
+Lesson 3 of 5.
 ਭਰਾ (bharā) — a breathy letter you have not met yet.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -89,7 +89,7 @@ The letters in this word.
 ਭ — new: the fourth letter of the p-row, once bha, a b said with a breathy voice. Then ਰ r, ਾ long ā.
 
 Sounds you'll need — the other half of the tone rule.
-Chapter 7 showed word-initial ਘ losing its breath and leaving a low, rising pitch — kòṛā. ਭ is the same story with a different letter: said at the front of a word, its breath is gone too, and what is left is a plain, voiceless p, plus a low tone on the vowel after it.
+Chapter 7 showed word-initial ਘ losing its breath and leaving a low, rising pitch — kòṛā. ਭ (bha) is the same story with a different letter: said at the front of a word, its breath is gone too, and what is left is a plain, voiceless p, plus a low tone on the vowel after it.
 ਭਰਾ is therefore not said bharā. It is said prā̀ — p, not bh, and low on the first vowel. Spelling keeps the old consonant; speech keeps only its pitch.
 [a table of 3 rows, read aloud]
 position in the word: initial (bh-, gh- …) old sound: breathy voice. what survives: low tone, consonant plain.
@@ -117,7 +117,7 @@ Sources: Wiktionary: ਭਰਾ (bharā); Wiktionary: bʰréh₂tēr.
 bharā's bh is said as which consonant, and what tone does the vowel after it carry?
 
 
-Lesson 4 of 4.
+Lesson 4 of 5.
 ਭੈਣ (bhaiṇ) — the same tone, a different family tree.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -153,3 +153,41 @@ Give the word for "sister," and how it is actually said. (Bhaiṇ; pàiṇ, low 
 Sources: Wiktionary: ਭੈਣ (bhaiṇ); Wiktionary: swésōr.
 [question — say your answer, then pause 8 seconds]
 Is bhaiṇ the same word as English sister by unbroken descent, the way bharā is the same word as brother?
+
+
+Lesson 5 of 5.
+ਭ (bha) — one piece met inside a word you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ਭ until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+The last of the four letters whose breath turned into pitch.
+First, say the last things you learned once more, out loud and from memory:
+[your turn — say: roṭī, dost, parivār]
+[pause 8 seconds for the answer]
+
+Script you'll notice: ਭ.
+ਭ (bha).
+bhabbhā — bha. A fourth of the breathy letters, and the same story: the breath left, the falling tone stayed.
+Now put them where you have already heard them:
+ਭ + ਰ + ਾ becomes ਭਰਾ (bharā) ਭਰਾ — bharā — brother.
+You are not being asked to write any of this. You are being asked to recognise it the next time it goes past.
+
+Writing: copy what you can see.
+Keep ਭ (bha) in front of you and do not cover it. Follow each shape once with a finger, then copy it once with a pencil, larger than it is printed. Say its sound as your hand stops.
+This is observe-and-trace with the model visible. Nothing in these chapters asks you to write a Punjabi word from memory; that ladder starts later, and it starts from these same shapes.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at ਭਰਾ (bharā) and point to each of today's piece in turn]
+[pause 8 seconds for the answer]
+[your turn — say: bha, then the whole word — bharā]
+[pause 8 seconds for the answer]
+[your turn — look: back at the headword at the top of any earlier lesson in this chapter and find one shape you now know]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Name today's piece: bhabbhā. Which of them is a mātrā or a mark rather than a letter, and what does ਭਰਾ say? (bharā, “brother”.)
+Source: Unicode Gurmukhi chart.

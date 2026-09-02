@@ -1,8 +1,8 @@
 Kannada, chapter 36: One Root, Three Endings.
-4 lessons. You can do the first 3 of them in the car; after that you will want to have stopped.
+3 lessons. All 3 can be done entirely by ear.
 
 
-Lesson 1 of 4.
+Lesson 1 of 3.
 ಮಗು (magu) — "child," before it picks a gender.
 
 Warm-up.
@@ -30,7 +30,7 @@ Wrap-up Recall.
 Say "this is my child." (Idu nanna magu.) Does magu specify a gender? (No.) What is the Proto-Dravidian root underneath it, and what happens to it next? (maka — the next two lessons put different endings on it for "son" and "daughter.")
 
 
-Lesson 2 of 4.
+Lesson 2 of 3.
 ಮಗ (maga) — "son," the same root with one vowel doing the work.
 
 Warm-up.
@@ -59,7 +59,7 @@ Wrap-up Recall.
 Say "he is my son." (Ivanu nanna maga.) How does maga differ from magu? (One vowel — the plain -a standing for "male.") What does Tamil's fuller form for "son" look like? (மகன் makaṉ — Kannada wore the ending down to just the vowel.)
 
 
-Lesson 3 of 4.
+Lesson 3 of 3.
 ಮಗಳು (magaḷu) — "daughter," one more ending on the same root.
 
 Warm-up.
@@ -95,41 +95,3 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Say "she is my daughter." (Ivaḷu nanna magaḷu.) Name the three words built on maka and what each means. (Magu — child; maga — son; magaḷu — daughter.) How does that differ from how Chapter 12 split siblings by age? (Chapter 12 used four unrelated words; this set uses one root and different endings.) How close is Tamil's word for daughter? (Nearly identical — makaḷ.)
-
-
-Lesson 4 of 4.
-◌ೃ (vowel sign ṛ) — one character, and the pair met the other way round.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ೃ and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 1 second]
-Before the new one: ಓ — does it stand alone or ride on a consonant, and what is its other shape?
-[pause 2 seconds]
-One character this time, and today the halves arrive in the opposite order from every vowel so far.
-
-Script you'll notice: ◌ೃ.
-◌ೃ (vowel sign ṛ) — the riding form of ಋ (ṛ).
-Every vowel until now came standing first and riding second: ಉ then ು, ಊ then ೂ, ಈ then ೀ. This one is the reverse. You have had the standing letter since the chapter that taught ಋ, in a word you say:
-ಋತು ṛtu — season.
-What you have not seen is that vowel riding a consonant. It becomes a small hook tucked underneath:
-ಹ plus ◌ೃ (vowel sign ṛ) gives ಹೃ — hṛ.
-Standing at the front of a word, look for ಋ. Tucked under a consonant, look for ◌ೃ (vowel sign ṛ). Same vowel, two places it can sit.
-What it sounds like. An r doing a vowel's work — close to the ri in a quick bring it. Kannada took the sound and both shapes from Sanskrit, which is where the words needing it come from.
-
-Writing: ◌ೃ — copy what you see.
-Put your pen on ◌ೃ (vowel sign ṛ) and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
-This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
-
-Guided Practice.
-[pause 1 second]
-[your turn — look: at these two and say which one is standing and which one is riding]
-[pause 8 seconds for the answer]
-ಋತು, ಹೃ.
-[once you have stopped driving — trace: ◌ೃ (vowel sign ṛ) three times under a ಹ, saying hṛ as you finish each one]
-[your turn — look: at ಋ and ◌ೃ (vowel sign ṛ) side by side, and say which one opens a word]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Which character is this — ◌ೃ (vowel sign ṛ)? Which standing letter is it the other half of? (ಋ.) Where does it sit on the page? (Tucked under the consonant it rides.) Name the word you already say that carries the standing one. (ṛtu, season.)

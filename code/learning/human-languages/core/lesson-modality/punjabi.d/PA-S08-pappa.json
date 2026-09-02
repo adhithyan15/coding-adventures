@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "PA-S08-pappa",
+    "language": "punjabi",
+    "chapter": 8,
+    "sequence": 455,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c878c4d42993a20c",
+    "detachableSegments": [
+      "Script you'll notice: ਪ",
+      "Writing: copy what you can see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

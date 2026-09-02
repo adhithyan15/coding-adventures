@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "PA-S02-mamma-rara-lava",
+    "language": "punjabi",
+    "chapter": 2,
+    "sequence": 125,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3c332c8aa260e22f",
+    "detachableSegments": [
+      "Script you'll notice: ਮ · ਰ · ੇ",
+      "Writing: copy what you can see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

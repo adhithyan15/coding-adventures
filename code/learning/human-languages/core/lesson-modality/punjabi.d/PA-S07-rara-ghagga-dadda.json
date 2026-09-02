@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "PA-S07-rara-ghagga-dadda",
+    "language": "punjabi",
+    "chapter": 7,
+    "sequence": 385,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:065b35f70a6c50e0",
+    "detachableSegments": [
+      "Script you'll notice: ੜ · ਘ · ਦ",
+      "Writing: copy what you can see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

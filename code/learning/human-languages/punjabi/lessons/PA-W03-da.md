@@ -9,32 +9,32 @@ type: writing
 headword: "ਦ"
 romanization: "da"
 gloss: "trace dental da before writing Hindi"
-prerequisites: [PA-W03-sihari]
+prerequisites: [PA-W03-sihari, PA-S07-rara-ghagga-dadda]
 sounds: []
 roots: []
 duration:
   max_seconds: 165
 requires:
-  knowledge: [PA-SCRIPT-SIHARI-01]
+  knowledge: [PA-SCRIPT-SIHARI-01, PA-SCRIPT-RECOG-DA-01]
 introduces:
   knowledge: [PA-SCRIPT-DA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-SCRIPT-SIHARI-01, PA-SCRIPT-DA-01]
+  knowledge: [PA-SCRIPT-SIHARI-01, PA-SCRIPT-DA-01, PA-SCRIPT-RECOG-DA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-W03-sihari]
+reviews_of: [PA-W03-sihari, PA-S07-rara-ghagga-dadda]
 ---
 
 # ਦ — one dental base
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-SIHARI-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-SIHARI-01, PA-SCRIPT-RECOG-DA-01] -->
 
 Read **ਹਿ** once, then cover it.
 

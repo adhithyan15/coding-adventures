@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S123-sign-anusvara
 spine_node: SPINE-MEET-GREET
-sequence: 471
+sequence: 425
 delivery: script
-chapter: 19
+chapter: 14
 type: writing
 headword: "ಂ"
 gloss: the single character ಂ — recognised inside words you already say
@@ -48,9 +48,9 @@ It is a **nasal**, written as a mark rather than as a letter. It rides on the sy
 You already say these, and every one of them has ◌ಂ somewhere inside it:
 
 - **ಸಂತೋಷ** *santōṣa* — joy / pleased to meet you
-- **ಒಂದು ಎರಡು ಮೂರು ನಾಲ್ಕು ಐದು** *ondu eraḍu mūru nālku aidu* — one to five
-- **ಆರು ಏಳು ಎಂಟು ಒಂಬತ್ತು ಹತ್ತು** — six to ten
-- **ಗಂಟೆ** *gaṇṭe* — hour — the SAME Sanskrit "bell" word behind Hindi's ghantā
+- **ಒಂದು** *ondu* — one
+- **ಎಂಟು** *eṇṭu* — eight
+- **ಒಂಬತ್ತು** *ombattu* — nine
 
 ## Writing: ◌ಂ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-123] -->

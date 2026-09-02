@@ -9,32 +9,32 @@ type: writing
 headword: "ਉ"
 romanization: "u"
 gloss: "trace the independent Gurmukhi vowel u"
-prerequisites: [PA-R28-head-na-r4]
+prerequisites: [PA-R28-head-na-r4, PA-S09-dulainkar-oora]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [PA-SCRIPT-MA-01, PA-SCRIPT-RA-01]
+  knowledge: [PA-SCRIPT-MA-01, PA-SCRIPT-RA-01, PA-SCRIPT-RECOG-OORA-01]
 introduces:
   knowledge: [PA-SCRIPT-INDEPENDENT-U-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-SCRIPT-MA-01, PA-SCRIPT-RA-01, PA-SCRIPT-INDEPENDENT-U-01]
+  knowledge: [PA-SCRIPT-MA-01, PA-SCRIPT-RA-01, PA-SCRIPT-INDEPENDENT-U-01, PA-SCRIPT-RECOG-OORA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-W01-ma, PA-W04-ra, PA-R28-head-na-r4]
+reviews_of: [PA-W01-ma, PA-W04-ra, PA-R28-head-na-r4, PA-S09-dulainkar-oora]
 ---
 
 # ਉ — one new shape for the age label
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-MA-01, PA-SCRIPT-RA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-MA-01, PA-SCRIPT-RA-01, PA-SCRIPT-RECOG-OORA-01] -->
 
 Write the familiar **ਮ** and **ਰ** once each. The age label needs only one new
 letter before those known pieces can return.

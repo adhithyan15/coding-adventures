@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S128-letter-jha
 spine_node: SPINE-MEET-GREET
-sequence: 541
+sequence: 492
 delivery: script
-chapter: 25
+chapter: 20
 type: writing
 headword: "ಝ"
 gloss: the single character ಝ — the breathed partner of ಜ, completing a pattern you have met six times

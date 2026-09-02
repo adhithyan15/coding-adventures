@@ -1,0 +1,13 @@
+{
+  "id": "PA-EXT-057-C4-FAREWELL-CHECKPOINT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can close a Punjabi conversation orally with the farewell the situation calls for, while untaught Gurmukhi reading and writing stay explicitly uncredited.",
+  "prerequisites": [
+    "PA-EXT-019-WELLBEING-CHECKPOINT"
+  ],
+  "lessons": [
+    "PA-C04-practice"
+  ]
+}

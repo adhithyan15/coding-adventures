@@ -9,32 +9,32 @@ type: writing
 headword: "ਡ"
 romanization: "ḍa"
 gloss: "trace the Gurmukhi letter dda"
-prerequisites: [PA-W04-residence-label, PA-W03-tippi]
+prerequisites: [PA-W04-residence-label, PA-W03-tippi, PA-S03-retroflex-row]
 sounds: []
 roots: []
 duration:
   max_seconds: 165
 requires:
-  knowledge: [PA-SCRIPT-TIPPI-WRITING-01]
+  knowledge: [PA-SCRIPT-TIPPI-WRITING-01, PA-SCRIPT-RECOG-DDA-01]
 introduces:
   knowledge: [PA-SCRIPT-DDA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-SCRIPT-TIPPI-WRITING-01, PA-SCRIPT-DDA-01]
+  knowledge: [PA-SCRIPT-TIPPI-WRITING-01, PA-SCRIPT-DDA-01, PA-SCRIPT-RECOG-DDA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-W04-residence-label]
+reviews_of: [PA-W04-residence-label, PA-S03-retroflex-row]
 ---
 
 # ਡ — one new base for a residence value
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-TIPPI-WRITING-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-TIPPI-WRITING-01, PA-SCRIPT-RECOG-DDA-01] -->
 
 Find the familiar nasal mark **ੰ**. Today adds one base letter beneath the line.
 
