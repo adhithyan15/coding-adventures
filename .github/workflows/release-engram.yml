@@ -26,12 +26,22 @@ on:
       - .github/workflows/release-engram.yml
       - code/scripts/engram_release.py
       - code/scripts/tests/test_engram_release.py
+      - code/scripts/verify_relocatable_bundle.py
+      - code/scripts/tests/test_verify_relocatable_bundle.py
       - code/programs/mosaic/engram-app/**
       - code/packages/rust/engram-core/**
       - code/packages/rust/engram-core-wasm/**
       - code/packages/rust/engram-wasm/**
       - code/packages/rust/engram-anki-package/**
       - code/packages/mosaic/mosaic-pkg-**
+      # The React emitter generates the project this lane builds — index.html,
+      # vite.config.ts, package.json, tsconfig.json, src/main.tsx. Engram is the
+      # only app that builds through `--emit-project`, so this lane is the only
+      # place any of that is compiled and served rather than asserted as text.
+      # A wrong `base` here shipped in v0.3.0 while 215 emitter unit tests
+      # passed; without this path the same change would still not build
+      # anything. See #13925.
+      - code/packages/rust/mosaic-emit-react/**
   workflow_dispatch:
     inputs:
       version:
@@ -74,6 +84,8 @@ jobs:
         run: |
           set -euo pipefail
           python -m unittest discover -s code/scripts/tests -p 'test_engram_release.py'
+          python -m unittest discover -s code/scripts/tests \
+            -p 'test_verify_relocatable_bundle.py'
 
       - name: Validate version and tag
         id: release
@@ -165,6 +177,24 @@ jobs:
           cmp code/packages/rust/engram-wasm/pkg/engram_engine.wasm \
               "$RUNNER_TEMP/engram-web/react/dist/engram_engine.wasm"
           node code/packages/rust/engram-wasm/js/smoke.mjs
+
+      # v0.3.0 passed every check in this lane and still shipped a bundle that
+      # only worked at the root of a domain: Vite emitted `/assets/index-HASH.js`
+      # and the wasm host used `/engram_engine.wasm`. Unzipped into any
+      # subdirectory, index.html returned 200 while both 404'd, so the page
+      # rendered blank — which reads as a working deploy with no content.
+      #
+      # Every other check here asks whether a file is *present*. This one serves
+      # the bundle from a nested path and asks whether the references between
+      # those files actually *resolve*. The engine is passed explicitly because
+      # script fetches it, so it never appears in index.html.
+      - name: Verify the bundle works when served from a subdirectory
+        shell: bash
+        run: |
+          set -euo pipefail
+          python code/scripts/verify_relocatable_bundle.py \
+            "$RUNNER_TEMP/engram-web/react/dist" \
+            --also engram_engine.wasm
 
       - name: Archive the verified web bundle
         shell: bash
