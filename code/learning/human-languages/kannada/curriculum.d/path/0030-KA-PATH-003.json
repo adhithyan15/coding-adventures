@@ -4,9 +4,12 @@
   "lessons": [
     "KA-C01-haudu",
     "KA-C01-illa",
-    "KA-C01-sari"
+    "KA-C01-sari",
+    "KA-C01-practice"
   ],
   "before": [],
   "inline": [],
-  "after": []
+  "after": [
+    "KA-EXT-003-CONSOLIDATION"
+  ]
 }

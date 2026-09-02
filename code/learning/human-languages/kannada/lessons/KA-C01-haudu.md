@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: KA-C01-haudu
+spine_node: SPINE-RESPOND-BASIC
 sequence: 30
 chapter: 1
 type: word
@@ -10,18 +12,32 @@ concept_tag: RESPONSE-YES
 prerequisites: [KA-C01-namaskara]
 sounds: [au-vowel-sign, u-vowel-sign]
 roots: [haudu]
-est_minutes: 3
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [KA-LEX-C01-NAMASKARA-01]
+introduces:
+  knowledge: [KA-LEX-C01-HAUDU-01, KA-GRAMMAR-C01-HAUDU-02]
+practises:
+  knowledge: [KA-LEX-C01-HAUDU-01, KA-GRAMMAR-C01-HAUDU-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, presentational]
+strands: [meaning-input, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [KA-C01-namaskara, KA-C01-dhanyavada]
 ---
 
 # ಹೌದು (haudu) — "yes"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] After two Sanskrit loans, a **native Kannada** word — the plain
 "yes."
 
 ## The letters in this word
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 *(Skim if you read Kannada.)*
 
@@ -34,12 +50,14 @@ Left to right: **ಹೌ · ದು** = *hau-du* →
 > **ಹೌದು** = **haudu** = "yes."
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[KA-LEX-C01-HAUDU-01]; assesses=[] -->
 
 **ಹೌದು** (*haudu*) is the everyday **"yes / that's so,"** a genuinely native
 Kannada word (not a Sanskrit loan). Its polite-agreement cousins — *audu*,
 *houdu* in speech — all circle the same "it is so."
 
 ## Grammar Lens: Dravidian often answers by echoing the verb
+<!-- hl-knowledge: introduces=[KA-GRAMMAR-C01-HAUDU-02]; assesses=[] -->
 
 Like its sister Tamil, Kannada frequently answers "yes" by **repeating the
 verb** rather than using a stand-alone word: asked *"bandiddīyā?"* ("have you
@@ -47,14 +65,8 @@ come?"), a natural yes is *"bandiddēne"* ("I have come"). Keep *haudu* as the
 simple all-purpose "yes," but expect a "yes" to come back as a whole verb —
 a habit shared right across the Dravidian family.
 
-## Sounds you'll need
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
-
-ಹೌ is *hau* (ಹ *ha* with the “au” vowel sign hugging it);
-ದು is *du* (ದ *da* with the “u” sign beneath). Read
-ಹೌ·ದು → *haudu*.
-
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C01-HAUDU-01, KA-GRAMMAR-C01-HAUDU-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: hau · du → "haudu"]
@@ -62,6 +74,7 @@ a habit shared right across the Dravidian family.
 - [YOU SAY: "haudu" — "yes, that's so"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C01-HAUDU-01, KA-GRAMMAR-C01-HAUDU-02] -->
 
 [PAUSE 3s] Read **ಹೌದು**. Is it native Kannada or a Sanskrit loan? (Native.)
 Besides *haudu*, how else might a Kannada speaker say "yes"? (By echoing the

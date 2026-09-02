@@ -502,6 +502,7 @@ export type LessonBlockType =
   | "script"
   | "writing"
   | "etymology"
+  | "cognates"
   | "grammar"
   | "culture-pragmatics"
   | "guided-production"

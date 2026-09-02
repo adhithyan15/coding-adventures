@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 1,
+  "sourceHash": "fnv1a64:0a02e73e3fb0781a",
+  "lessonIds": [
+    "KA-C01-namaskara",
+    "KA-C01-dhanyavada",
+    "KA-C01-haudu",
+    "KA-C01-illa",
+    "KA-C01-sari",
+    "KA-S01-letter-na",
+    "KA-C01-practice"
+  ],
+  "tex": "kannada/book/chapters/ch01-greetings.tex"
+}
