@@ -313,9 +313,11 @@ def main(argv=None):
     v1_total = 0
     for track in tracks:
         owned = {e["chapter"] for e in config["handwritten"] if e["language"] == track}
-        total, v1 = schema_v1_lessons(track, owned)
+        # NOT `total, v1` -- that shadowed the outer block-count total and made
+        # --check report the last track's LESSON count as blocks at risk.
+        lessons_in_hw, v1 = schema_v1_lessons(track, owned)
         v1_total += v1
-        print(f"{track:<12}{len(owned):>6}{total:>9}{v1:>11}   {per_track.get(track, 0)}")
+        print(f"{track:<12}{len(owned):>6}{lessons_in_hw:>9}{v1:>11}   {per_track.get(track, 0)}")
     print(f"\n{v1_total} lesson(s) inside hand-written chapters are still schema v1.")
     print("  -- book.ts refuses to generate a chapter from a v1 lesson, so these")
     print("     must be migrated before any flip. This is usually the LARGER half")
