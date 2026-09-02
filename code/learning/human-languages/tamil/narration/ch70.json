@@ -1,0 +1,796 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 70,
+  "title": "The Room You Are In",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:cc55a4eba08b1794",
+  "lessons": [
+    {
+      "id": "TA-C70-table",
+      "sequence": 2790,
+      "title": "மேசை (mēsai) — a table",
+      "headword": "மேசை",
+      "romanization": "mēsai",
+      "gloss": "a table",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a0e7e5f0e4e147a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did nilaiyam mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மேசை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மேசை (mēsai) — \"a table\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The table you eat at, or write at."
+            },
+            {
+              "kind": "speech",
+              "text": "Put it beside நாற்காலி (nāṟkāli), the chair you already have — the word you could take apart into \"four\" and \"leg\". A மேசை (mēsai) and a நாற்காலி are the pair a room is furnished with, and now you can name both."
+            },
+            {
+              "kind": "speech",
+              "text": "Its two signs are old friends: the ே in front of ம, and the ை at the end."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first thing in the room."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēsai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēsai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṟkāli, then mēsai — the pair, in the order you sit down to them",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṟkāli*, then *mēsai* — the pair, in the order you sit down to them]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sālai, then say nilaiyam, then say mēsai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sālai*, then say *nilaiyam*, then say *mēsai*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மேசை (mēsai) mean? (\"A table\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C70-bed",
+      "sequence": 2800,
+      "title": "கட்டில் (kaṭṭil) — a bed",
+      "headword": "கட்டில்",
+      "romanization": "kaṭṭil",
+      "gloss": "a bed",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ceff7643bc23e118",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did mēsai mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கட்டில்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கட்டில் (kaṭṭil) — \"a bed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A bed — and in Tamil it is named as a made thing: a frame with cords or webbing tied across it."
+            },
+            {
+              "kind": "speech",
+              "text": "You already have தூக்கம் (tūkkam), sleep. The pair is easy to hold: the தூக்கம் happens on the கட்டில் (kaṭṭil)."
+            },
+            {
+              "kind": "speech",
+              "text": "Its middle is the doubled ட்ட you took apart in சட்டை, and it closes on ல் — a letter with the vowel taken off, exactly like the ண் in வண்டி, except that here there is nothing after it to lean on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two, and you can now name where you sleep."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭṭil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭṭil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tūkkam, then kaṭṭil — the thing and the place",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tūkkam*, then *kaṭṭil* — the thing and the place]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nilaiyam, then say mēsai, then say kaṭṭil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nilaiyam*, then say *mēsai*, then say *kaṭṭil*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does the தூக்கம் happen? (On the கட்டில் (kaṭṭil).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-W26-read-mesai",
+      "sequence": 2810,
+      "title": "மேசை (mēsai) — two front-hanging signs in one word",
+      "headword": "மேசை",
+      "romanization": "mēsai",
+      "gloss": "the word for a table on the page — two signs, both hanging in front",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f55c34f80ceb30a9",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: மேசை — two front-hanging signs in one word",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: மேசை — two front-hanging signs in one word and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the page: you can say mēsai and kaṭṭil. Now read the first one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: மேசை — two front-hanging signs in one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மேசை (mēsai) is the first word you have read that carries a front-hanging sign on each of its two letters."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "piece",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "piece: மே, mē, ம with the ே sign, the one you read twice in மேலே.",
+                "piece: சை, sai, ச with the ை sign, the one you read at the end of சட்டை and கடை."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "மே, சை becomes மேசை (mēsai)."
+            },
+            {
+              "kind": "speech",
+              "text": "Both signs are drawn to the left of their letter and said after it. So the eye moves left-to-right across four marks while the mouth says only two beats, and the order of the two is not the order they were printed in. Read it slowly once and let that happen on purpose."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "மே — then சை — then மேசை (mēsai)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **மே** — then **சை** — then **மேசை**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "both signs, and say which side of their letters they sit on",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: both signs, and say which side of their letters they sit on]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "மேலே, then மேசை (mēsai), and find the sign they share",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **மேலே**, then **மேசை**, and find the sign they share]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mēsai, then say kaṭṭil, then read மேசை",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mēsai*, then say *kaṭṭil*, then read **மேசை**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read மேசை (mēsai). How many signs does it carry, and are they said before or after their letters? (Two; after.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C70-wall",
+      "sequence": 2820,
+      "title": "சுவர் (suvar) — a wall",
+      "headword": "சுவர்",
+      "romanization": "suvar",
+      "gloss": "a wall",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6a53899c134789a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: read மேசை (mēsai), and say what it means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சுவர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சுவர் (suvar) — \"a wall\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The wall of a room or a house."
+            },
+            {
+              "kind": "speech",
+              "text": "It is short and it is bare — two letters and a closing ர், no vowel signs hanging off the front of anything. Words shaped this plainly are usually old ones, and this is one of them."
+            },
+            {
+              "kind": "speech",
+              "text": "It is also the surface that makes உள்ளே and வெளியே mean anything: a சுவர் (suvar) is what there is an inside and an outside of."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three, and the room has an edge."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suvar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suvar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suvar, then uḷḷē and veḷiyē — the wall, and its two sides",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suvar*, then *uḷḷē* and *veḷiyē* — the wall, and its two sides]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kaṭṭil, then read மேசை (mēsai), then say suvar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kaṭṭil*, then read **மேசை**, then say *suvar*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சுவர் (suvar) mean? (\"A wall\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C70-floor",
+      "sequence": 2830,
+      "title": "தரை (tarai) — the floor",
+      "headword": "தரை",
+      "romanization": "tarai",
+      "gloss": "the floor",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2bedb42bb67115e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did suvar mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தரை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தரை (tarai) — \"the floor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The floor — and also the ground outside. Tamil does not need two words for it; what is under your feet is தரை (tarai) wherever you are standing."
+            },
+            {
+              "kind": "speech",
+              "text": "This is where the கோலம் (kōlam) is drawn each morning, just inside the வாசல். Both of those words are already yours, and this is the one that was missing to put them in a place."
+            },
+            {
+              "kind": "speech",
+              "text": "It ends in the ை again — the fifth word in three chapters to do so."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four, and the room has a bottom."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōlam, then vāsal, then tarai — and say where the design is drawn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōlam*, then *vāsal*, then *tarai* — and say where the design is drawn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read மேசை (mēsai), then say suvar, then say tarai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **மேசை**, then say *suvar*, then say *tarai*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where is the கோலம் drawn? (On the தரை (tarai).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C70-roof",
+      "sequence": 2840,
+      "title": "கூரை (kūrai) — a roof",
+      "headword": "கூரை",
+      "romanization": "kūrai",
+      "gloss": "a roof",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:03a4af9418ed5fe9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did tarai mean, and what did suvar mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கூரை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கூரை (kūrai) — \"a roof\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The roof over you."
+            },
+            {
+              "kind": "speech",
+              "text": "With தரை (tarai) under your feet and கூரை (kūrai) over your head, the room has both ends — and you already have the two words for the space between them: மேலே and கீழே. Point up at the கூரை (kūrai), down at the தரை (tarai), and every word in that sentence is one you have been taught."
+            },
+            {
+              "kind": "speech",
+              "text": "Its ூ is the long u sign, and it ends, like தரை (tarai), in ை."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: a table, a bed, a wall, a floor and a roof."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūrai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūrai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēlē, then kūrai; kīḻē, then tarai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēlē*, then *kūrai*; *kīḻē*, then *tarai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five — mēsai, kaṭṭil, suvar, tarai, kūrai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five — *mēsai*, *kaṭṭil*, *suvar*, *tarai*, *kūrai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say suvar, then say tarai, then say kūrai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *suvar*, then say *tarai*, then say *kūrai*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the five is மேலே, and which is கீழே? (கூரை (kūrai); தரை (tarai).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

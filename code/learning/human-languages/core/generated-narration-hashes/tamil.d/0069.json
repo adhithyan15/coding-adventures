@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:918e5dc70354507c",
+  "lessonIds": [
+    "TA-C69-vehicle",
+    "TA-C69-bus",
+    "TA-W25-read-vandi",
+    "TA-C69-train",
+    "TA-C69-road",
+    "TA-C69-station"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "tamil/narration/ch69.txt",
+  "json": "tamil/narration/ch69.json",
+  "textHash": "fnv1a64:bbd8b729bb01ed52",
+  "jsonHash": "fnv1a64:6cc596c30132b7e7",
+  "findings": []
+}
