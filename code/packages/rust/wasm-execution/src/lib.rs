@@ -293,6 +293,12 @@ impl WasmValue {
             // this slice), so this arm should never observably matter;
             // it exists only so the match stays exhaustive.
             ValueType::Anyref
+            // W37 (`code/specs/W37-wasm-gc-reftype-tables.md`): `Eqref`/
+            // `StructRefAny` are nullable references at the runtime-value
+            // level too -- same "GC and funcref/externref alike default to
+            // null" reasoning as `Anyref` right above.
+            | ValueType::Eqref
+            | ValueType::StructRefAny
             | ValueType::StructRef(_)
             | ValueType::ConcreteFuncRef(_)
             | ValueType::NonNullStructRef(_)

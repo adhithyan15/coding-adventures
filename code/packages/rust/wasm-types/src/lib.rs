@@ -139,6 +139,42 @@ pub enum ValueType {
     /// This is the natural type for a dynamically-typed Lisp value slot.
     Anyref,
 
+    /// `(ref null eq)` — nullable reference to the abstract top of the `eq`
+    /// hierarchy (WasmGC, W37: `code/specs/W37-wasm-gc-reftype-tables.md`).
+    ///
+    /// Encoded as a single byte `0x6D`, mirroring [`ValueType::Anyref`]'s
+    /// `0x6E`/[`ValueType::I31ref`]'s `0x6C` exactly. `eq` sits strictly
+    /// below `any` in the real GC proposal's type hierarchy (`eqref <:
+    /// anyref`) and strictly above `i31`/`struct`/`array` -- every
+    /// GC-managed value that supports `ref.eq` (structs, arrays, i31s, but
+    /// NOT externref/funcref) is assignable to an `eqref`-typed slot. This
+    /// crate does not (yet) implement `ref.eq` itself (see `code/specs/
+    /// W37-wasm-gc-reftype-tables.md`'s "Explicitly out of scope" section)
+    /// -- this variant exists so a table/global/local/param/result can be
+    /// DECLARED `eqref`, independently of whether any instruction that
+    /// actually inspects equality is implemented yet.
+    Eqref,
+
+    /// `(ref null struct)` — nullable reference to the abstract TOP of the
+    /// `struct` hierarchy (WasmGC, W37: `code/specs/
+    /// W37-wasm-gc-reftype-tables.md`), distinct from
+    /// [`ValueType::StructRef`] (a nullable CONCRETE reference that always
+    /// carries a type index): `structref` names "any struct, of any
+    /// declared type," the same relationship [`ValueType::NonNullArrayAny`]
+    /// already has to [`ValueType::NonNullArrayRef`] one hierarchy over,
+    /// except nullable here (the real corpus never spells a bare non-null
+    /// `(ref struct)`, only `(ref null struct)`/bare `structref` -- see
+    /// `wasm-wast-parser::parse_value_type`'s own doc comment).
+    ///
+    /// Encoded as a single byte `0x6B`, mirroring `Anyref`/`I31ref`/`Eqref`.
+    /// Naming choice: the "Any" suffix (mirroring `NonNullArrayAny`'s own
+    /// precedent) marks "the whole hierarchy's abstract top," not a
+    /// specific type index -- `StructRef(u32)`'s own name was already
+    /// taken by the nullable CONCRETE variant, so this crate's `Ref`-vs-
+    /// `RefAny` naming pattern disambiguates the two without renaming
+    /// either existing variant.
+    StructRefAny,
+
     /// `(ref i31)` — boxed 31-bit signed integer (WasmGC).
     ///
     /// Encoded as `0x6C`.  Unlike heap structs, i31ref values do not live
@@ -428,6 +464,10 @@ impl ValueType {
             ValueType::F32 => Some(0x7D),
             ValueType::F64 => Some(0x7C),
             ValueType::Anyref => Some(0x6E),
+            // W37: single-byte abstract hierarchy tops, same shape as
+            // `Anyref`/`I31ref` immediately around them.
+            ValueType::Eqref => Some(0x6D),
+            ValueType::StructRefAny => Some(0x6B),
             ValueType::I31ref => Some(0x6C),
             ValueType::StructRef(_) => None,
             ValueType::ConcreteFuncRef(_) => None,
@@ -472,6 +512,9 @@ impl ValueType {
             ValueType::F32 => vec![0x7D],
             ValueType::F64 => vec![0x7C],
             ValueType::Anyref => vec![0x6E],
+            // W37: single-byte abstract hierarchy tops -- see `byte_tag()`.
+            ValueType::Eqref => vec![0x6D],
+            ValueType::StructRefAny => vec![0x6B],
             ValueType::I31ref => vec![0x6C],
             ValueType::StructRef(idx) => {
                 // 0x63 = nullable concrete reference tag.
@@ -544,7 +587,8 @@ impl ValueType {
     /// Func hierarchy:    NullFuncref   <: Funcref
     /// Extern hierarchy:  NullExternref <: Externref
     /// Exn hierarchy:     NullExnref    <: Exnref
-    /// Any hierarchy:     NullRef       <: Anyref, I31ref, StructRef(_)
+    /// Any hierarchy:     NullRef       <: Anyref, I31ref, StructRef(_),
+    ///                                    ArrayRef(_), Eqref, StructRefAny
     /// ```
     ///
     /// The reverse direction never holds -- a nullable supertype is never a
@@ -565,6 +609,11 @@ impl ValueType {
                 // hierarchy, so it sits below `ArrayRef(_)` too, exactly
                 // like it already does below `StructRef(_)` above.
                 | (ValueType::NullRef, ValueType::ArrayRef(_))
+                // W37: `none` sits below the two new abstract hierarchy
+                // tops too, for the exact same "bottom of the WHOLE `any`
+                // hierarchy" reason as every other arm in this match.
+                | (ValueType::NullRef, ValueType::Eqref)
+                | (ValueType::NullRef, ValueType::StructRefAny)
         )
     }
 
@@ -1611,15 +1660,32 @@ pub struct WasmModule {
     /// means table `i` has no concrete element type -- its `element_type`
     /// byte alone is authoritative, exactly as for every WASM 1.0/
     /// multi-table/table64 table that predates the function-references
-    /// proposal. `Some(vt)` means `vt` (always `ConcreteFuncRef`/
-    /// `NonNullConcreteFuncRef` in this crate's text format -- see
-    /// `ValueType::ConcreteFuncRef`'s own doc comment for why no struct/
-    /// array-typed table can arise here) is the table's REAL declared
-    /// element type; `element_type` still holds `FUNCREF` alongside it
-    /// (every concrete function reference is funcref-family), so any
-    /// consumer that only reads `element_type` keeps working exactly as
-    /// before and only a consumer that also wants the concrete type needs
+    /// proposal. `Some(vt)` means `vt` is the table's REAL declared element
+    /// type; `element_type` still holds either `FUNCREF` (if `vt` is
+    /// funcref-family: `ConcreteFuncRef`/`NonNullConcreteFuncRef`) or
+    /// `EXTERNREF` (for every other reference type -- concrete struct/
+    /// array, or an abstract GC top type like `anyref`/`eqref`/`i31ref`/
+    /// `structref`) alongside it, so any consumer that only reads
+    /// `element_type` keeps working exactly as before (in particular,
+    /// `wasm-runtime`'s cross-instance-funcref fixup pass keeps correctly
+    /// skipping every non-funcref table -- see that pass's own doc
+    /// comment) and only a consumer that also wants the richer type needs
     /// to know this field exists.
+    ///
+    /// **W37 update** (`code/specs/W37-wasm-gc-reftype-tables.md`): prior
+    /// to this spec, `Some(vt)` was ALWAYS `ConcreteFuncRef`/
+    /// `NonNullConcreteFuncRef` -- true only because nothing else ever
+    /// populated this field, not because the `Vec<Option<ValueType>>` type
+    /// itself was restricted. `wasm-validator`'s `table_element_types`
+    /// (`type_check.rs`'s `build_module_context`) already consumed this
+    /// field fully generically before W37 landed -- preferring whatever
+    /// `ValueType` is stored here, falling back to the byte-tag guess only
+    /// when `None` -- so `table.get`/`table.set`/`table.fill`/`table.copy`/
+    /// `call_indirect`'s type-checking needed ZERO changes to start
+    /// type-checking GC-reftype tables (`eqref`/`i31ref`/`anyref`/
+    /// `structref`/`(ref null eq)`/`(ref null struct)`/concrete struct or
+    /// array types) once `wasm-wast-parser`'s table-declaration parsing
+    /// started writing them here.
     ///
     /// Import tables have no entry here -- only MODULE-DEFINED tables can
     /// name a concrete type in this crate's text format (mirrors
@@ -2628,6 +2694,13 @@ fn canonicalize_value_type(
         ValueType::F64 => (CanonicalValType::F64, CanonicalCost::LEAF),
         ValueType::V128 => (CanonicalValType::V128, CanonicalCost::LEAF),
         ValueType::Anyref => (CanonicalValType::Ref(true, Abstract(A::Any)), CanonicalCost::LEAF),
+        // W37 (`code/specs/W37-wasm-gc-reftype-tables.md`): nullable
+        // abstract hierarchy tops, same shape as `Anyref` immediately
+        // above -- `AbstractHeapKind::Eq`/`::Struct` already existed
+        // (consumed elsewhere in this crate) before any `ValueType`
+        // variant reached them.
+        ValueType::Eqref => (CanonicalValType::Ref(true, Abstract(A::Eq)), CanonicalCost::LEAF),
+        ValueType::StructRefAny => (CanonicalValType::Ref(true, Abstract(A::Struct)), CanonicalCost::LEAF),
         // Non-null in this crate -- see `ValueType::I31ref`'s own doc
         // comment ("(ref i31)", not "(ref null i31)").
         ValueType::I31ref => (CanonicalValType::Ref(false, Abstract(A::I31)), CanonicalCost::LEAF),
@@ -5023,6 +5096,9 @@ mod tests {
             ValueType::NullExnref,
             ValueType::NullRef,
             ValueType::NonNullArrayAny,
+            // W37 (`code/specs/W37-wasm-gc-reftype-tables.md`).
+            ValueType::Eqref,
+            ValueType::StructRefAny,
         ];
         for vt in abstracts {
             let m = WasmModule {
@@ -5035,5 +5111,56 @@ mod tests {
             assert_eq!(once, twice, "canonicalization must be deterministic for {vt:?}");
             assert!(once[0].is_some(), "{vt:?} must canonicalize to Some");
         }
+    }
+
+    // ── W37: `Eqref`/`StructRefAny` -- `code/specs/
+    // W37-wasm-gc-reftype-tables.md` ──────────────────────────────────────
+    //
+    // Mirrors `anyref_i31ref_single_byte`/`value_type_byte_tag_singles`/
+    // `nullref_is_a_bottom_subtype_of_anyref_i31ref_and_every_structref`'s
+    // own test shapes exactly, per the spec's own "Recommended slice
+    // decomposition" §0 instruction.
+
+    #[test]
+    fn eqref_structref_any_single_byte() {
+        assert_eq!(ValueType::Eqref.encode(), vec![0x6D], "eqref tag, mirroring Anyref's 0x6E/I31ref's 0x6C");
+        assert_eq!(ValueType::StructRefAny.encode(), vec![0x6B], "structref tag");
+    }
+
+    #[test]
+    fn eqref_structref_any_byte_tag_matches_encode() {
+        assert_eq!(ValueType::Eqref.byte_tag(), Some(0x6D));
+        assert_eq!(ValueType::StructRefAny.byte_tag(), Some(0x6B));
+    }
+
+    #[test]
+    fn nullref_is_a_bottom_subtype_of_eqref_and_structref_any() {
+        assert!(ValueType::NullRef.is_bottom_subtype_of(&ValueType::Eqref));
+        assert!(ValueType::NullRef.is_bottom_subtype_of(&ValueType::StructRefAny));
+    }
+
+    #[test]
+    fn eqref_and_structref_any_are_never_bottom_subtypes_of_nullref() {
+        // Same asymmetry every other bottom-type rule in this lattice
+        // enforces (see `anyref_i31ref_structref_are_never_bottom_subtypes_
+        // of_nullref` just above this in the file) -- a nullable supertype
+        // is never itself a subtype of the bottom type underneath it.
+        assert!(!ValueType::Eqref.is_bottom_subtype_of(&ValueType::NullRef));
+        assert!(!ValueType::StructRefAny.is_bottom_subtype_of(&ValueType::NullRef));
+    }
+
+    #[test]
+    fn eqref_and_structref_any_are_distinct_from_every_other_reftype() {
+        // `StructRefAny` (the abstract, nullable struct-hierarchy TOP) must
+        // never be confused with `StructRef(u32)` (a nullable CONCRETE
+        // struct reference that always carries a type index) -- the two
+        // exist precisely because they are NOT interchangeable.
+        assert_ne!(ValueType::StructRefAny, ValueType::StructRef(0));
+        assert_ne!(ValueType::Eqref, ValueType::Anyref);
+        assert_ne!(ValueType::Eqref, ValueType::I31ref);
+        assert_ne!(ValueType::StructRefAny, ValueType::Anyref);
+        assert_ne!(ValueType::StructRefAny, ValueType::Eqref);
+        assert_ne!(ValueType::NullRef, ValueType::Eqref);
+        assert_ne!(ValueType::NullRef, ValueType::StructRefAny);
     }
 }

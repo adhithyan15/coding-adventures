@@ -91,4 +91,5 @@ table sound_property {
     source "The three subjective quantities of pitch, loudness and timbre are related to laboratory measurements of a sound wave's fundamental frequency, amplitude and waveform, respectively."
     locator "https://phys.libretexts.org/Courses/Joliet_Junior_College/Physics_110_-_by_Conceptual_Objective/12:_Conceptual_Objective_12/12.06:_Pitch_Loudness_and_Timbre"
     trust consensus
+    cites "For the human listener, the amplitude and frequency of a sound roughly correspond to loudness and pitch, respectively." locator "https://www.ncbi.nlm.nih.gov/books/NBK11126/"
 }
