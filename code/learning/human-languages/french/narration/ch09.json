@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Months and Seasons",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:06cc4bc5b102db61",
+  "sourceHash": "fnv1a64:69a12e6db8e5f892",
   "lessons": [
     {
       "id": "FR-C09-mois",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1fa596e076338a9c",
+      "sourceHash": "fnv1a64:bbbf42988dfb033c",
       "notice": null,
       "blocks": [
         {

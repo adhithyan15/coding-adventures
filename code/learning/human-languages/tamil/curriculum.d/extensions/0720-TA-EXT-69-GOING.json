@@ -1,0 +1,16 @@
+{
+  "id": "TA-EXT-69-GOING",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the things that carry me and the places they run between.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C69-vehicle",
+    "TA-C69-bus",
+    "TA-W25-read-vandi",
+    "TA-C69-train",
+    "TA-C69-road",
+    "TA-C69-station"
+  ]
+}

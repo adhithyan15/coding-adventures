@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:21c942480aff1a12",
+  "lessonIds": [
+    "TA-C72-anger",
+    "TA-C72-fear",
+    "TA-W27-read-payam",
+    "TA-C72-sorrow",
+    "TA-C72-laugh",
+    "TA-C72-cry"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "tamil/narration/ch72.txt",
+  "json": "tamil/narration/ch72.json",
+  "textHash": "fnv1a64:4b1ec56f0e9401a5",
+  "jsonHash": "fnv1a64:67f4c3ac979fcad5",
+  "findings": []
+}

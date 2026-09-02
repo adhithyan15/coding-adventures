@@ -1,0 +1,17 @@
+{
+  "id": "TA-PATH-72-FEEL",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "TA-C72-anger",
+    "TA-C72-fear",
+    "TA-W27-read-payam",
+    "TA-C72-sorrow",
+    "TA-C72-laugh",
+    "TA-C72-cry"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-72-FEEL"
+  ],
+  "after": []
+}

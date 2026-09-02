@@ -1,0 +1,21 @@
+{
+  "chapter": 70,
+  "title": "The Room You Are In",
+  "label": "ch:ta-the-room-you-are-in",
+  "canDo": "I can name a table, a bed, a wall, the floor and a roof in Tamil, and place each one against a direction I already know.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "TA-C70-roof",
+    "kind": "production",
+    "summary": "Complete TA-C70-roof and say all five words of the chapter in order.",
+    "assesses": [
+      "TA-LEX-C70-ROOM-01",
+      "TA-LEX-C70-ROOM-02",
+      "TA-LEX-C70-ROOM-03",
+      "TA-LEX-C70-ROOM-04",
+      "TA-LEX-C70-ROOM-05"
+    ]
+  }
+}

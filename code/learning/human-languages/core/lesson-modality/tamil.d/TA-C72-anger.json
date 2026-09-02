@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C72-anger",
+    "language": "tamil",
+    "chapter": 72,
+    "sequence": 2910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1f97a7a1215b6ad2"
+  },
+  "findings": []
+}

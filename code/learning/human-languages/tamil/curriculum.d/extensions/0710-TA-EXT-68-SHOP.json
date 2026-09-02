@@ -1,0 +1,16 @@
+{
+  "id": "TA-EXT-68-SHOP",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can go into a Tamil shop, ask the price, and carry what I bought out in a bag.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C68-shop",
+    "TA-C68-price",
+    "TA-W24-read-kadai",
+    "TA-C68-money",
+    "TA-C68-buy",
+    "TA-C68-bag"
+  ]
+}

@@ -1,56 +1,92 @@
 ---
+schema_version: 2
 id: GE-C03-wie-geht-es
+spine_node: SPINE-CHECK-WELLBEING
 sequence: 120
 chapter: 3
 type: phrase
 headword: Wie geht es dir?
-gloss: how are you? — informal and everyday
+gloss: how are you? — informal, and every piece already yours
 concept_tag: STATE-HOW-ARE-YOU
-prerequisites: [GE-C03-gehen, GE-C02-wie]
-sounds: [w-is-v, ie-long-ee]
+prerequisites: [GE-C01-gut, GE-C02-wie, GE-C03-danke, GE-C03-gehen, GE-C03-es, GE-C03-dir]
+sounds: [w-as-v, ie-long-ee]
 roots: [gehen-german]
-etymology_hook: "Wie + geht + es + dir literally asks 'how goes it to you?'"
-est_minutes: 4
-reviews_of: [GE-C03-gehen, GE-C02-wie]
+etymology_hook: "Wie geht es dir asks, word for word, how goes it to you, from four words already earned"
+duration:
+  max_seconds: 180
+requires:
+  knowledge: [GE-LEX-WIE-02, GE-LEX-GEHEN-01, GE-LEX-ES-01, GE-LEX-DIR-01, GE-LEX-GUT-02, GE-LEX-DANKE-01]
+introduces:
+  knowledge: [GE-LEX-WIE-GEHT-ES-DIR-01, GE-LEX-WIE-GEHTS-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [GE-LEX-WIE-GEHT-ES-DIR-01, GE-LEX-WIE-GEHTS-02, GE-LEX-WIE-02, GE-LEX-GEHEN-01, GE-LEX-ES-01, GE-LEX-DIR-01, GE-LEX-GUT-02, GE-LEX-DANKE-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: informal
+variety: standard-contemporary
+reviews_of: [GE-C03-gehen, GE-C03-es, GE-C03-dir, GE-C02-wie]
 ---
 
-# Wie geht es dir? — “how are you?”
+# Wie geht es dir? — "how are you?"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-WIE-02, GE-LEX-GEHEN-01, GE-LEX-ES-01, GE-LEX-DIR-01] -->
 
-[PAUSE 2s] Combine **wie**, “how,” and **gehen**, “to go,” into the everyday
-question for a friend.
+[PAUSE 2s] Nothing new is coming. You have all four words — *wie*, *geht*, *es*,
+*dir*. This lesson only puts them in order.
 
-> **Wie geht es dir?** — “How are you?”
-> literally: “How goes it to you?”
+## You'll want to know: Wie geht es dir?
+<!-- hl-knowledge: introduces=[GE-LEX-WIE-GEHT-ES-DIR-01]; assesses=[GE-LEX-WIE-02, GE-LEX-GEHEN-01, GE-LEX-ES-01, GE-LEX-DIR-01] -->
 
-- **wie** = how;
-- **geht** = goes;
-- **es** = it;
-- **dir** = to you, the dative form paired with *du*.
+> **Wie geht es dir?** — "How are you?"
 
-In speech, **geht es** contracts to **geht’s**. The short **Wie geht’s?** is the
-most useful neutral-sounding everyday form.
+Word for word: "How goes it to you?"
 
-Answer with the **gut** you already know:
+| German | English |
+|---|---|
+| *wie* | how |
+| *geht* | goes |
+| *es* | it |
+| *dir* | to you |
 
-> **Wie geht’s? — Danke, gut!**
+Said *vee gayt es deer* — remember German **w** says *v*, and *ie* is a long
+*ee*.
 
-German pictures wellbeing as **going**, like English “how’s it going?” French
-uses the same metaphor; Spanish often uses a “standing” verb. The comparison is
-a memory aid, not required knowledge.
+Every piece has been earned: *wie* from asking someone's name, *geht* from
+*gehen*, *es* and *dir* from the last two lessons. This is what the book has
+been building toward — a real question assembled from parts, not memorised
+whole.
+
+## You'll want to know: Wie geht's?
+<!-- hl-knowledge: introduces=[GE-LEX-WIE-GEHTS-02]; assesses=[GE-LEX-WIE-GEHT-ES-DIR-01, GE-LEX-GUT-02, GE-LEX-DANKE-01] -->
+
+In speech, *geht es* crushes together into **geht's**:
+
+> **Wie geht's?** — the form you will actually hear.
+
+It drops the *dir* entirely, which makes it neutral: no need to decide between
+friend and stranger. When in doubt, this is the safe one.
+
+And you can already answer it:
+
+> **Wie geht's? — Danke, gut!**
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-WIE-GEHT-ES-DIR-01, GE-LEX-WIE-GEHTS-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: “Wie geht es dir?”]
-- [YOU SAY: the contraction — “Wie geht’s?”]
-- [YOU SAY: “Danke, gut! Und dir?”]
-
-[REPEAT x2] “Wie geht’s? — Danke, gut!”
+- [YOU SAY: "Wie geht es dir?" — *vee gayt es deer*]
+- [YOU SAY: the four pieces — "wie", "geht", "es", "dir"]
+- [YOU SAY: the short form — "Wie geht's?"]
+- [YOU SAY: the whole exchange — "Wie geht's?" … "Danke, gut!"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-WIE-GEHT-ES-DIR-01, GE-LEX-WIE-GEHTS-02] -->
 
-[PAUSE 3s] What does the question literally ask? (“How goes it **to you**?”)
-Which word means “to you”? (**Dir**.) What is the short form? (**Wie geht’s?**)
-How can you answer? (**Danke, gut.**) Next: switch from *dir* to formal *Ihnen*.
+[PAUSE 3s] What does *Wie geht es dir?* say word for word? ("How goes it to
+you?") What contracts into *geht's*? (*Geht es*.) Why is *Wie geht's?* the safe
+form? (It drops *dir*, so it needs no friend-or-stranger choice.)

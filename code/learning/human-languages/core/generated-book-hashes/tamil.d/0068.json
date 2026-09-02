@@ -1,0 +1,14 @@
+{
+  "language": "tamil",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:8ad659c9ef769b16",
+  "lessonIds": [
+    "TA-C68-shop",
+    "TA-C68-price",
+    "TA-W24-read-kadai",
+    "TA-C68-money",
+    "TA-C68-buy",
+    "TA-C68-bag"
+  ],
+  "tex": "tamil/book/chapters/ch68-at-the-shop.tex"
+}

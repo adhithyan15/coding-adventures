@@ -101,3 +101,38 @@ fn muscle_body_aspect_abstains_honestly_on_quadriceps() {
         "quadriceps shares the thigh region with sartorius but its own quote says 'front of the thigh', never the word 'anterior' -- honest abstention: {out}"
     );
 }
+
+const MBA_PIN: &str = r#""bindings":{"Aspect":"anterior"},"citations":[{"source":"The rectus abdominis, (Latin: straight abdominal) also known as the \"abdominal muscle\" or simply better known as the \"abs\", and sometimes informally referred to as the \"six-pack\", is a pair of segmented skeletal muscle on the ventral aspect of a person's abdomen.","locator":"https://en.wikipedia.org/wiki/Rectus_abdominis_muscle","trust":"consensus""#;
+
+#[test]
+fn muscle_body_aspect_source_is_the_pages_unelided_sentence() {
+    let dir = scratch("cite_mba");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"muscle-body-aspect.adj\"
+? muscle_body_aspect(sartorius, $Aspect)
+",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // THIS LIBRARY INHERITED A DAMAGED QUOTE FROM ANOTHER LIBRARY'S HEADER.
+    // It was built from "clauses already sitting unused inside
+    // muscle-groups.adj's own already-quoted Wikipedia source sentences" (see
+    // this file's own module doc), and muscle-groups' rectus_abdominis header
+    // quote was elided with "..." -- so a COMMENT defect arrived here as a
+    // shipped `source`, i.e. a citation the engine returns to callers.
+    //
+    // The source is now the page's unelided sentence. Nothing previously
+    // pinned this text: the existing assertions check only
+    // `contains("en.wikipedia.org")` and `contains("\"trust\":\"consensus\"")`,
+    // two bare scans that pass equally well against the damaged form. This
+    // pin binds the answer to the actual sentence so the repair cannot
+    // silently regress.
+    assert!(
+        out.contains(MBA_PIN),
+        "the envelope carries the page's unelided sentence: {out}"
+    );
+}

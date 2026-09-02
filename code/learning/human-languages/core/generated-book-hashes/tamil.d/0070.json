@@ -1,0 +1,14 @@
+{
+  "language": "tamil",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:a11c7897772f2b30",
+  "lessonIds": [
+    "TA-C70-table",
+    "TA-C70-bed",
+    "TA-W26-read-mesai",
+    "TA-C70-wall",
+    "TA-C70-floor",
+    "TA-C70-roof"
+  ],
+  "tex": "tamil/book/chapters/ch70-the-room-you-are-in.tex"
+}

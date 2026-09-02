@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:20c6ed4a66f57c8b",
+  "lessonIds": [
+    "TA-C73-today",
+    "TA-C73-yesterday",
+    "TA-W28-read-inru",
+    "TA-C73-before",
+    "TA-C73-month",
+    "TA-C73-year"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "tamil/narration/ch73.txt",
+  "json": "tamil/narration/ch73.json",
+  "textHash": "fnv1a64:6bcebce746227d6c",
+  "jsonHash": "fnv1a64:5dd3e651a45fd44b",
+  "findings": []
+}
