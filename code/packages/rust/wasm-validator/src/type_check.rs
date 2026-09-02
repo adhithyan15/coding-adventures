@@ -1296,11 +1296,47 @@ fn field_is_structural_subtype(child: &FieldType, parent: &FieldType, module: Ty
     if child.mutable {
         child.storage == parent.storage
     } else {
-        match (child.storage, parent.storage) {
-            (StorageType::Val(c), StorageType::Val(p)) => is_assignable(c, p, module),
-            (StorageType::I8, StorageType::I8) | (StorageType::I16, StorageType::I16) => true,
-            _ => false,
-        }
+        storage_type_matches(child.storage, parent.storage, module)
+    }
+}
+
+/// The real GC proposal's own `match-storagetype` relation (`/valid/
+/// matching.html`) between two bare [`StorageType`]s -- deliberately
+/// IGNORING mutability entirely, unlike [`field_is_structural_subtype`]
+/// just above (which folds in a `FieldType`'s own mutability-variance rule
+/// for TYPE-DECLARATION subtyping, e.g. `check_type_subtyping`'s `sub $a
+/// $b` checks). `array.copy x y`'s own validation rule ("The second
+/// array's `storagetype` must match the first's `storagetype`") is this
+/// narrower, mutability-agnostic relation: covariant value-type
+/// [`is_assignable`] (or exact match for packed `i8`/`i16`), full stop --
+/// it says nothing about whether `x`/`y` themselves are declared `mut`.
+///
+/// **W38 slice 3 bug fix** (`code/specs/W38-wasm-gc-array-bulk-ops.md`):
+/// W38 slice 2's own `array.copy` (`0x11`) arm originally called
+/// `field_is_structural_subtype(&src_field, &dest_field, ..)` directly --
+/// which ALSO requires `src_field.mutable == dest_field.mutable`, per that
+/// function's own TYPE-subtyping-specific invariant-when-mutable rule.
+/// That silently rejected the single most common real `array.copy` shape
+/// -- copying from an IMMUTABLE array (e.g. `(type $arr8 (array i8))`)
+/// into a MUTABLE one of the identical storage type (`(type $arr8_mut
+/// (array (mut i8)))`) -- with a spurious "source type not assignable to
+/// destination type" validation error, because the two field types'
+/// mutability flags legitimately differ (that mismatch is exactly WHY one
+/// is being copied into the other). This was invisible in W38 slice 2's
+/// own conformance run because `array_copy.wast`'s module ALSO uses
+/// `array.new_data` (unimplemented until this slice), so the whole module
+/// failed to PARSE before validation was ever reached -- W38 slice 3
+/// unblocking `array.new_data` is what let this module reach `wasm-
+/// validator` for the first time and surface the bug for real (confirmed
+/// via a direct re-probe: `array_copy.wast`'s real, valid module was
+/// rejected with "array.copy: source type 0 not assignable to destination
+/// type 1" until this fix). Fixed by giving `array.copy` its own, correctly
+/// mutability-agnostic relation instead of reusing the type-subtyping one.
+fn storage_type_matches(child: StorageType, parent: StorageType, module: TypeContext<'_>) -> bool {
+    match (child, parent) {
+        (StorageType::Val(c), StorageType::Val(p)) => is_assignable(c, p, module),
+        (StorageType::I8, StorageType::I8) | (StorageType::I16, StorageType::I16) => true,
+        _ => false,
     }
 }
 
@@ -2309,6 +2345,37 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         }
                         stack.push(StackType::Unknown);
                     }
+                    0x09 => {
+                        // array.new_data <type_idx> <data_idx> (W38 slice
+                        // 3: `code/specs/W38-wasm-gc-array-bulk-ops.md`):
+                        // pops [i32 s, i32 n], pushes one arrayref. Real
+                        // spec validation rule: identical element-type and
+                        // data-segment preconditions as `array.init_data`
+                        // (`0x12` below, this spec's other data-segment-
+                        // sourced instruction), minus a mutability
+                        // requirement (a freshly allocated array is always
+                        // writable at construction). "The value type must
+                        // be numeric or vector" -- data segments hold raw
+                        // bytes only, never references -- and the data
+                        // segment index itself must be in range (a real
+                        // validation error, not deferred to a runtime
+                        // trap, matching every other indexed immediate
+                        // this type-checker validates, e.g. `memory.init`'s
+                        // own identical `0xFC 0x08` check above).
+                        let (type_idx, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad array.new_data type index: {e}")))?;
+                        let (data_idx, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad array.new_data data index: {e}")))?;
+                        offset += sz1 + sz2;
+                        let field = *array_element_field(ctx.module, type_idx as u32)?; // real bounds check
+                        if !is_numeric_or_vector(field.storage.widened_type()) {
+                            return Err(ValidationError::Other(format!("array.new_data: array type is not numeric or vector (type {type_idx})")));
+                        }
+                        if data_idx as usize >= ctx.module.data.len() {
+                            return Err(ValidationError::Other(format!("array.new_data: data segment index {data_idx} out of bounds")));
+                        }
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // n
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // s
+                        stack.push(StackType::Unknown);
+                    }
                     0x0B..=0x0D => {
                         // array.get / array.get_s / array.get_u <type_idx>
                         // (W33 fourth slice): pops [arrayref, i32 index],
@@ -2373,16 +2440,20 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // (destination mutability, same shape as 0x10/
                         // 0x0E above) and "The second array's
                         // `storagetype` must match the first's" -- this
-                        // second rule is `field_is_structural_subtype`
-                        // (W34 third slice), read closely to be EXACTLY
-                        // the real spec's own `match-storagetype`
-                        // relation (see this spec's own "Current
-                        // implementation" section) -- zero new subtyping
-                        // logic needed, a direct reuse of already-tested
-                        // W34 infrastructure. `array_copy.wast`'s own
-                        // vendored `assert_invalid` cases probe both
-                        // rules directly ("immutable array", "array types
-                        // do not match").
+                        // second rule is `storage_type_matches` (W38
+                        // slice 3 bug fix -- see that function's own doc
+                        // comment for why the ORIGINAL W38-slice-2 code
+                        // called `field_is_structural_subtype` instead,
+                        // which ALSO compares mutability and so wrongly
+                        // rejected the single most common real `array.
+                        // copy` shape: copying an IMMUTABLE array into a
+                        // MUTABLE one of the same storage type). `array_
+                        // copy.wast`'s own vendored `assert_invalid` cases
+                        // probe both rules directly ("immutable array",
+                        // "array types do not match"), and its own real,
+                        // VALID module (the one this bug used to reject)
+                        // is exactly this src-immutable/dest-mutable
+                        // shape.
                         let (dest_idx, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad array.copy dest type index: {e}")))?;
                         let (src_idx, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad array.copy src type index: {e}")))?;
                         offset += sz1 + sz2;
@@ -2391,7 +2462,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         if !dest_field.mutable {
                             return Err(ValidationError::Other(format!("array.copy: immutable destination array (type {dest_idx})")));
                         }
-                        if !field_is_structural_subtype(&src_field, &dest_field, ctx.module) {
+                        if !storage_type_matches(src_field.storage, dest_field.storage, ctx.module) {
                             return Err(ValidationError::Other(format!(
                                 "array.copy: source type {src_idx} not assignable to destination type {dest_idx}"
                             )));
@@ -2401,6 +2472,40 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         pop_val(&mut stack, frame!())?; // src ref
                         pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // d
                         pop_val(&mut stack, frame!())?; // dest ref
+                    }
+                    0x12 => {
+                        // array.init_data <type_idx> <data_idx> (W38 slice
+                        // 3): pops [arrayref, i32 d, i32 s, i32 n], pushes
+                        // nothing. Real spec validation rule: "Array type
+                        // must expand with `var` mutability" (same
+                        // destination-mutability check as `array.fill`/
+                        // `array.copy` above) plus "The value type must be
+                        // numeric or vector" and "The data segment
+                        // `C.datas[y]` must exist" -- see `array.new_data`
+                        // (`0x09` above) for the identical element-type/
+                        // data-segment checks, minus the mutability
+                        // requirement that instruction doesn't need.
+                        // `array_init_data.wast`'s own vendored `assert_
+                        // invalid` cases probe both rules directly
+                        // ("immutable array", "array type is not numeric
+                        // or vector").
+                        let (type_idx, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad array.init_data type index: {e}")))?;
+                        let (data_idx, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad array.init_data data index: {e}")))?;
+                        offset += sz1 + sz2;
+                        let field = *array_element_field(ctx.module, type_idx as u32)?; // real bounds check
+                        if !field.mutable {
+                            return Err(ValidationError::Other(format!("array.init_data: immutable array (type {type_idx})")));
+                        }
+                        if !is_numeric_or_vector(field.storage.widened_type()) {
+                            return Err(ValidationError::Other(format!("array.init_data: array type is not numeric or vector (type {type_idx})")));
+                        }
+                        if data_idx as usize >= ctx.module.data.len() {
+                            return Err(ValidationError::Other(format!("array.init_data: data segment index {data_idx} out of bounds")));
+                        }
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // n
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // s
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // d
+                        pop_val(&mut stack, frame!())?; // arrayref
                     }
                     0x14 | 0x15 => {
                         // ref.test / ref.test null <heap_type>: pops a ref,

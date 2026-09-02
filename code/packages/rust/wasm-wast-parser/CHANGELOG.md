@@ -1,5 +1,71 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.103 — 2026-09-02 — feat: `array.new_data`/`array.init_data` -- W38 slice 3, GC array bulk ops
+
+Slice 3 of `code/specs/W38-wasm-gc-array-bulk-ops.md`'s six-slice plan --
+the two DATA-segment-sourced bulk-ops instructions (the element-segment-
+sourced pair, `array.new_elem`/`array.init_elem`, remain deliberately
+unwired; they need the real three-layer elem-segment data-model fix a
+later, separate slice attempts).
+
+One new binary-encoder function, `encode_array_new_or_init_data`, wired
+into `encode_gc_struct_array_instr`'s dispatch via ONE combined `matches!`
+branch (not two separate branches, `array.fill`/`array.copy`'s own
+two-function/two-branch shape) --
+
+- `array.new_data $t $data <s> <n>` → `0xFB 0x09 <type_idx> <data_idx>`
+- `array.init_data $t $data <arrayref> <d> <s> <n>` → `0xFB 0x12
+  <type_idx> <data_idx>` (operand order confirmed against
+  `array_init_data.wast`'s own real corpus call sites)
+
+Both resolve their data-segment index via `resolve_idx(&icx.module.
+data_names, ..., "data")` -- the same table `memory.init`/`data.drop`
+already use. Both sub-opcode byte values (`0x09`/`0x12`) are real,
+spec-text-fetched values, cross-checked against the real GC proposal's own
+binary grammar page: `0x09` fills the one remaining gap in the `0x06`-
+`0x0F` array-allocation block (right after `array.new_fixed`); `0x12`
+sits right after `array.copy` (`0x11`) and before `ref.test`/`ref.test
+null` (`0x14`/`0x15`).
+
+**Stack-frame regression caught and fixed before landing**: an EARLIER
+version of this change added `array.new_data`/`array.init_data` as two
+separate dispatch branches directly inside `encode_gc_struct_array_instr`
+(mirroring `array.fill`/`array.copy`'s own two-function shape exactly).
+That function sits on this crate's hot recursive encoding path, guarded
+only by `MAX_INSTR_NESTING_DEPTH`'s software depth counter -- and, in a
+debug build, a function's own stack frame is sized for the union of every
+branch it directly contains. Two more branches there measurably grew
+`encode_gc_struct_array_instr`'s own frame enough to overflow the REAL OS
+stack at exactly `MAX_INSTR_NESTING_DEPTH` levels of recursion, BEFORE the
+depth counter itself ever fired -- caught by this crate's own pre-existing
+`deeply_folded_struct_instructions_do_not_overflow_the_real_stack`
+regression test going from a clean `TooDeeplyNested` parse error to a
+genuine SIGABRT. This is the exact same class of regression `encode_flat_
+instr`'s own `i32.load` arm doc comment already documents having hit once
+before (task #92/#110). Fixed by collapsing both instructions into ONE
+function (dispatching on `name` internally, the same pattern `encode_
+struct_new` already uses for `struct.new`/`struct.new_default`) and ONE
+combined `matches!` branch in the caller -- confirmed the regression test
+passes again, and the fix changes zero externally-observable behavior
+(same bytes emitted either way).
+
+New unit tests: `array_new_data_and_init_data_encode_correctly`
+(byte-for-byte, mirroring `array_fill_and_copy_encode_correctly`'s own
+shape).
+
+**Corpus impact** (regenerated baseline, diffed programmatically against
+the pre-slice baseline across all 257 files -- see the PR description for
+the full accounting): `array_init_data.wast` and `array_new_data.wast`
+both go from entirely `not_yet_supported` to 100% real `Pass`.
+`array_copy.wast` ALSO resolves fully now that its own `array.new_data`
+dependency (confirmed, not assumed, by `wasm-conformance`'s own prior
+0.1.125 CHANGELOG entry) is implemented -- see `wasm-validator`'s own
+CHANGELOG for a real, corpus-caught `array.copy` validation bug this
+unblocking exposed and fixed in the same PR. `array.wast` gains 14 more
+real `Pass` directives (its own `array.new_data`-attributable subset); its
+remaining `not_yet_supported` directives are exclusively the elem-segment-
+sourced instruction family, out of scope for this slice.
+
 ## 0.1.102 — 2026-09-02 — feat: `arrayref` keyword + `array.fill`/`array.copy` -- W38 slices 1-2, GC array bulk ops
 
 Slices 1-2 of `code/specs/W38-wasm-gc-array-bulk-ops.md`'s six-slice plan.

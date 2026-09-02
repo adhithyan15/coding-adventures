@@ -2,6 +2,86 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.96] - 2026-09-02 - `array.init_data`/`array.new_data` execution (W38 slice 3)
+
+Per `code/specs/W38-wasm-gc-array-bulk-ops.md`. Two new `0xFB` sub-opcodes,
+`0x09` (`array.new_data`) and `0x12` (`array.init_data`), reusing `ctx.
+data_segments`/`ctx.dropped_data_segments` VERBATIM -- the exact same
+fields `memory.init` (`0xFC 0x08`) already reads, per this spec's own
+explicit design choice. No new runtime plumbing beyond the two handlers
+themselves.
+
+Both are byte-REINTERPRETATION reads (analogous to `memory.load`), not an
+array-of-refs operation -- data segments can never hold references, so
+they only work for numeric/packed (`i8`/`i16`) or vector (`v128`) array
+storage types (`wasm-validator`'s own new `0x09`/`0x12` arms enforce this
+statically; this crate's own new `array_data_storage_width` re-checks it
+defensively at runtime too).
+
+Four new shared helpers (`array_data_storage_width`, `array_numeric_
+storage_width`, `resolve_array_data_segment`, `checked_segment_byte_
+range`, `decode_array_element_from_bytes`) factor out the segment-
+resolution/width/range/decode logic BOTH instructions need identically
+(unlike `memory.init`, which only ever needed this once).
+
+- **`array.new_data`**: allocates a NEW array, sized and initialized the
+  same way `array.init_data` initializes an existing one -- `array.new` +
+  `array.init_data` fused. `n` is bounded by `MAX_ARRAY_ALLOC` (via `pop_
+  array_length`, the same DoS guard `array.new`/`array.new_default`/
+  `array.new_fixed` already enforce) BEFORE any segment read or
+  allocation, per this spec's own explicit security requirement.
+- **`array.init_data`**: writes into an EXISTING array's storage starting
+  at element `d`, reading `n` elements' worth of raw bytes from data
+  segment `data_idx` starting at BYTE offset `s`. Destination-array bounds
+  (`d.checked_add(n) <= array.elements.len()`) are checked FIRST, entirely
+  via an immutable peek, before any segment read; the segment-content
+  bounds check runs second, before the final mutable write -- a trap on
+  either leaves the array completely unmodified.
+- Both: a dropped segment (`data.drop` already ran) degrades to length-0,
+  exactly `memory.init`'s own already-established rule (`n=0` still
+  succeeds regardless, any `n>0` traps); an out-of-range `data_idx` is a
+  hard defensive runtime error (never trusted, regardless of what `wasm-
+  validator` should have already caught).
+
+**Bug caught mid-implementation, fixed before landing**: a first draft of
+`checked_segment_byte_range` computed the segment read range as `[s*width,
+(s+n)*width)` -- scaling `s` (the data-segment BYTE offset operand) by the
+storage width, as if it were an ELEMENT index. The real spec's own trap
+condition is `s + n·|t|/8 > |segment bytes|` -- `s` is already a raw byte
+position, only `n` gets multiplied by the width. This happened to be
+indistinguishable from correct for every `i8`-storage (`width == 1`) test
+case, but produced a spurious out-of-bounds trap the instant a real corpus
+case exercised a wider storage type at a nonzero offset -- caught directly
+by `array_init_data.wast`'s own `array_init_data_i16` case before this
+release, not merely inferred from the spec text. See `checked_segment_
+byte_range`'s own doc comment for the full trace.
+
+New unit tests: `test_array_new_data_decodes_packed_i8_elements_at_a_
+byte_offset`, `test_array_new_data_decodes_full_width_i32_little_endian`,
+`test_array_new_data_decodes_full_width_i64_little_endian`,
+`test_array_new_data_out_of_bounds_segment_content_traps`,
+`test_array_new_data_out_of_range_data_segment_index_is_a_defensive_
+runtime_error`, `test_array_init_data_writes_into_existing_array_leaving_
+other_elements_untouched`, `test_array_init_data_out_of_bounds_segment_
+content_traps`, `test_array_init_data_out_of_bounds_destination_traps_
+before_reading_the_segment`, `test_array_init_data_null_array_reference_
+traps`, `test_array_init_data_dropped_segment_with_zero_count_succeeds`,
+`test_array_init_data_dropped_segment_with_nonzero_count_traps`.
+
+**Corpus impact** (regenerated baseline, diffed programmatically against
+the pre-slice baseline across all 257 files -- see the PR description for
+the full accounting): `array_init_data.wast`/`array_new_data.wast` both go
+from entirely `not_yet_supported` to 100% real `Pass`. `array_copy.wast`
+also resolves fully now that its own `array.new_data` dependency
+(confirmed by `wasm-conformance`'s own prior 0.1.125 CHANGELOG entry) is
+implemented -- see `wasm-validator`'s own CHANGELOG for a real, corpus-
+caught `array.copy` VALIDATION bug this unblocking exposed (a pre-existing
+W38-slice-2 defect, unrelated to this crate, now fixed in the same PR).
+`array.wast` gains 14 more real `Pass` directives (its own `array.new_
+data`-attributable subset); its remaining `not_yet_supported` directives
+are exclusively the elem-segment-sourced instruction family
+(`array.new_elem`/`array.init_elem`), out of scope for this slice.
+
 ## [0.9.95] - 2026-09-02 - `array.fill`/`array.copy` execution (W38 slice 2) + `ArrayRefAny` default (W38 slice 0)
 
 Per `code/specs/W38-wasm-gc-array-bulk-ops.md`.

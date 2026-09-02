@@ -2,6 +2,65 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.90] - 2026-09-02 - `array.new_data`/`array.init_data` type-checking + a real `array.copy` bug fix -- W38 slice 3
+
+Per `code/specs/W38-wasm-gc-array-bulk-ops.md`.
+
+**Slice 3**: two new `0xFB` match arms in the per-function byte-layout
+stack-effect pass --
+
+- `0x09` (`array.new_data`): real "numeric or vector" storage-type check
+  (`is_numeric_or_vector(field.storage.widened_type())` -- data segments
+  can never hold references) plus a real, compile-time out-of-range
+  `data_idx` check (`ctx.module.data.len()`, the same pattern `memory.
+  init`/`data.drop`'s own existing `0xFC` arms already use) -- no
+  mutability requirement (a freshly allocated array is always writable at
+  construction).
+- `0x12` (`array.init_data`): the same two checks as `0x09` above, PLUS a
+  real destination-mutability check (the array-hierarchy mirror of
+  `array.fill`/`array.copy`'s own identical check). `array_init_data.
+  wast`'s own vendored `assert_invalid` cases ("immutable array", "array
+  type is not numeric or vector") probe exactly these two rules.
+
+Both arms decode their own immediates mirroring `wasm-execution`'s decode
+shape exactly (same established discipline as slice 2's own `0x10`/`0x11`
+arms).
+
+**Real, corpus-caught bug fix, found and fixed in the same PR**: unblocking
+`array.new_data` let `array_copy.wast`'s own module reach this crate's
+validator for the first time (previously the whole module failed to
+PARSE, since it also uses `array.new_data`) -- which surfaced that W38
+slice 2's own `array.copy` (`0x11`) arm had a real, silent bug: it called
+`field_is_structural_subtype(&src_field, &dest_field, ..)` directly for
+the real spec's own `match-storagetype` relation, but that function ALSO
+requires the two `FieldType`s' `mutable` flags to match exactly (it's a
+TYPE-DECLARATION subtyping check, correct for `check_type_subtyping`'s
+`sub $a $b` rule, but too strict for `array.copy`). That silently rejected
+the single most common real `array.copy` shape -- copying from an
+IMMUTABLE array into a MUTABLE one of the identical storage type -- with a
+spurious "source type not assignable to destination type" error. Fixed by
+introducing `storage_type_matches`, the real spec's own bare, mutability-
+agnostic `match-storagetype` relation between two `StorageType`s, and
+switching `array.copy`'s own check to use it instead. See that function's
+own doc comment for the full trace (confirmed via a direct re-probe: the
+exact error message `array_copy.wast`'s real, valid module was wrongly
+rejected with, before and after this fix).
+
+New tests (`tests/type_check.rs`): `valid_array_new_data_and_init_data`,
+`invalid_array_init_data_on_an_immutable_array_is_rejected`,
+`invalid_array_init_data_rejects_a_reference_storage_type`,
+`invalid_array_new_data_rejects_a_reference_storage_type`,
+`invalid_array_init_data_rejects_an_out_of_range_data_segment_index`,
+`invalid_array_new_data_rejects_an_out_of_range_data_segment_index`.
+
+**Corpus impact**: `array_init_data.wast`/`array_new_data.wast` move from
+entirely `not_yet_supported` to 100% real `Pass`; `array_copy.wast` (whose
+own `assert_invalid` count was already 4/4 passing, vacuously, before this
+fix) now also reaches 100% real `Pass` across its `assert_return`/
+`assert_trap` directives too, for real reasons rather than a whole-module
+parse failure. See `wasm-conformance`'s own CHANGELOG for the full
+programmatic before/after diff across all 257 files.
+
 ## [0.2.89] - 2026-09-02 - `ArrayRefAny` subtyping + `array.fill`/`array.copy` type-checking -- W38 slices 0/2
 
 Per `code/specs/W38-wasm-gc-array-bulk-ops.md`.
