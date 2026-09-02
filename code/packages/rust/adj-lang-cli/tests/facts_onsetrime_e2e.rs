@@ -128,3 +128,64 @@ fn onset_rime_extension_recalls_the_newly_added_map_and_tape_splits() {
         "tape splits into t + ape (added this cycle): {out}"
     );
 }
+
+const MAP_PIN: &str = r#""bindings":{"Word":"map"},"citations":[{"source":"For example, sleep could be broken into /sl/ and /eep/.","locator":"https://www.readingrockets.org/topics/phonological-and-phonemic-awareness/articles/tuning-sounds-words","trust":"consensus","corroborations":[{"source":"So in the word “map,” /m/ is the onset and /ap/ is the rime.","locator":"https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice""#;
+
+const TAPE_PIN: &str = r#""bindings":{"Onset":"t","Rime":"ape"},"citations":[{"source":"For example, sleep could be broken into /sl/ and /eep/.","locator":"https://www.readingrockets.org/topics/phonological-and-phonemic-awareness/articles/tuning-sounds-words","trust":"consensus","corroborations":[{"source":"So in the word “map,” /m/ is the onset and /ap/ is the rime.","locator":"https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice"},{"source":"The word is ‘tape’. The first part is /t/ [we put right fist on the table]. What’s the rest of the word? /Ape/ [we put left fist on table].","locator":"https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice""#;
+
+#[test]
+fn onset_rime_map_answer_carries_its_reading_rockets_corroboration_intact() {
+    let dir = scratch("cite_map");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"onset-rime.adj\"\n? onset_rime($Word, m, ap)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // ANCHORED and JOINT: bindings + the full envelope + the added
+    // corroboration as ONE contiguous span, ending on a closing quote. Two
+    // separate `contains` scans over this blob could not tell which answer a
+    // citation belonged to, and a truncated quote would still pass.
+    //
+    // NOTE the curly quotes: the page renders U+201C/U+201D around "map," and
+    // the library header previously flattened them to ASCII. Pinning the real
+    // glyphs is what stops that regressing.
+    //
+    // This does NOT assert row-scoped provenance -- `cites` is table-scoped,
+    // so every answer carries the same corroboration list. It asserts that
+    // THIS answer carries THIS evidence uncorrupted.
+    assert!(
+        out.contains(MAP_PIN),
+        "map's answer carries the In Practice corroboration verbatim: {out}"
+    );
+}
+
+#[test]
+fn onset_rime_tape_answer_carries_its_bracketed_stage_directions_verbatim() {
+    let dir = scratch("cite_tape");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"onset-rime.adj\"\n? onset_rime(tape, $Onset, $Rime)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The page states tape's onset and rime across one block that also
+    // contains bracketed stage directions ("[we put right fist on the
+    // table]"). The library header used to elide those with "...", which is a
+    // CONSTRUCTED span -- text the page never displays as one run. The quote
+    // is carried whole instead, brackets included, and pinned that way here.
+    //
+    // `blast` gets no such pin ON PURPOSE: its lead-in is a <p> and its split
+    // is an <li>, so no single rendered span names the word AND gives its
+    // split. Leaving it uncited with the reason recorded is the result.
+    assert!(
+        out.contains(TAPE_PIN),
+        "tape's answer keeps the page's bracketed asides: {out}"
+    );
+}
