@@ -15,6 +15,14 @@ The Malayalam spelling is deliberately absent from this first pass. The next tin
 
 The word, taken apart.
 The greeting comes from Sanskrit namas, “a bow or homage,” plus kāra, “a making,” from the root kṛ, “to do.” Its memory hook is therefore the making of a bow. Malayalam is Tamil's closest sister, but this formal greeting is part of Malayalam's large Sanskrit layer.
+The same idea, five ways:
+[a table of 5 rows, read aloud]
+Language: Malayalam. "Hello": namaskāram. Source: Sanskrit.
+Language: Telugu. "Hello": namaskāram. Source: Sanskrit.
+Language: Kannada. "Hello": namaskāra. Source: Sanskrit.
+Language: Hindi. "Hello": namaste. Source: Sanskrit.
+Language: Tamil. "Hello": vaṇakkam. Source: native Dravidian.
+Even Tamil's closest sister took the Sanskrit greeting; Tamil alone kept its own. Hold that beside the next lesson, where the word for "thanks" splits the family the other way round.
 
 Guided Practice.
 [your turn — say: namaskāram once as a greeting]
@@ -209,8 +217,7 @@ Left to right: ന, ന്ദി = na-ndi, which gives:
 The word, taken apart.
 നന്ദി (nandi) is native Dravidian, from the same root nal / nan ("good") that gives Tamil naṉṟi ("goodness becomes gratitude"). Malayalam and Tamil split from one language about a thousand years ago, so their oldest, most everyday words are near-twins — and "thanks" is a perfect example: Malayalam nandi, Tamil naṉṟi, one word lightly reshaped.
 Its neighbours went the other way: Kannada and Telugu use the Sanskrit dhanyavāda. So the map of "thanks" traces the family's fault-line exactly — Tamil and Malayalam on the native side, Kannada and Telugu on the Sanskrit side.
-
-Across the family — the same idea, five ways.
+The same idea, five ways:
 [a table of 5 rows, read aloud]
 Language: Malayalam. "Thanks": nandi (നന്ദി). Note: native (root nal, "good").
 Language: Tamil. "Thanks": naṉṟi (நன்றி). Note: the same native root.
@@ -220,9 +227,6 @@ Language: Hindi. "Thanks": dhanyavād / shukriyā. Note: Sanskrit / Perso-Arabic
 
 Why it's said this way.
 Like naṉṟi in Tamil, nandi is a touch formal — among close family it can feel oddly stiff, as if you were thanking a stranger; warmth is usually assumed and shown in tone. The explicit word is for when you want to mark the gratitude. (In casual speech you'll also hear the English thanks.)
-
-Sounds you'll need.
-ന is na; ന്ദി is “ndi” — a conjunct of ന (na) + ദ (da) into “nd,” with the “i” sign. Read ന, ന്ദി becomes nandi.
 
 Guided Practice.
 [pause 1 second]
@@ -259,9 +263,6 @@ The word, taken apart.
 
 Grammar Lens: yes and no as "that is" / "not that".
 Malayalam's yes/no pair are demonstratives in disguise: athe ("that [is so]") and alla ("not that"). Like its sisters, Malayalam also readily answers by echoing the verb of the question (vannu, "[I] came," for "did you come?"). Bank athe as the simple word, but hear the logic underneath — you agree by confirming that is how things are.
-
-Sounds you'll need.
-അ is the independent vowel “a” (word-initial). തെ is “the” — ത (tha, a soft th) with the “e” sign, which is written in front of its consonant but read after. Read അ, തെ becomes athe.
 
 Guided Practice.
 [pause 1 second]
@@ -331,11 +332,7 @@ Left to right: ഇ, ല്ല = i-lla, which gives:
 
 The word, taken apart.
 ഇല്ല (illa) is built on the ancient Dravidian root il, "not-being, absence" — so, exactly like Tamil illai, it really means "[it] is not, [there] is not," and serves as the everyday "no." The positive partner will come much later, after you have enough sentence pieces to use the contrast.
-
-Grammar Lens: Dravidian negates by being.
-English inserts not / no. Malayalam — like Tamil and Kannada — can instead use a negative verb of existence. So illa is both the plain "no" and, later, a word that can make a whole sentence mean "there is not." Today, only the short answer is yours to use. This is a shared Dravidian inheritance, strongest across the Tamil–Malayalam pair: Tamil illai, Malayalam illa, Kannada illa — one family, one way to say a thing is not. (Recall Telugu was the outlier here, using lēdu.)
-
-Across the family — the same idea, five ways.
+The same idea, five ways:
 [a table of 5 rows, read aloud]
 Language: Malayalam. "No / isn't": illa (ഇല്ല). Note: native, root il-.
 Language: Tamil. "No / isn't": illai (இல்லை). Note: the same root.
@@ -343,8 +340,8 @@ Language: Kannada. "No / isn't": illa (ಇಲ್ಲ). Note: the same root.
 Language: Telugu. "No / isn't": lēdu (లేదు). Note: native, a different root.
 Language: Hindi. "No / isn't": nahīṁ (नहीं). Note: Indo-European (unrelated).
 
-Sounds you'll need.
-ഇ is the independent vowel “i” (word-initial). ല്ല is “lla” — a conjunct of ല (la) + ല (la), a held “ll.” Read ഇ, ല്ല becomes illa.
+Grammar Lens: Dravidian negates by being.
+English inserts not / no. Malayalam — like Tamil and Kannada — can instead use a negative verb of existence. So illa is both the plain "no" and, later, a word that can make a whole sentence mean "there is not." Today, only the short answer is yours to use. This is a shared Dravidian inheritance, strongest across the Tamil–Malayalam pair: Tamil illai, Malayalam illa, Kannada illa — one family, one way to say a thing is not. (Recall Telugu was the outlier here, using lēdu.)
 
 Guided Practice.
 [pause 1 second]
@@ -381,9 +378,6 @@ The word, taken apart.
 
 Grammar Lens: one word, four scripts.
 sari / sarē / śari is the clearest single proof of how close these four languages are: essentially one word and one meaning, wearing four different scripts. As you learn to read each, catching a shared word change its clothes but not its sense is the fastest way to feel the whole Dravidian family at once — and the reason the four are worth seeing side by side.
-
-Sounds you'll need.
-ശ is “śa” (a sh-sound). Having borrowed so much Sanskrit, Malayalam keeps the full set of Sanskrit sibilants (ś, ṣ, s) as separate letters — more than Tamil, which uses one. രി is ri. Read ശ, രി becomes śari.
 
 Guided Practice.
 [pause 1 second]

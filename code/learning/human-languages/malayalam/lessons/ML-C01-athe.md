@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: ML-C01-athe
+spine_node: SPINE-RESPOND-BASIC
 sequence: 30
 chapter: 1
 type: word
@@ -10,18 +12,32 @@ concept_tag: RESPONSE-YES
 prerequisites: [ML-C01-namaskaram]
 sounds: [independent-vowel-a, the-syllable]
 roots: [athu]
-est_minutes: 3
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [ML-LEX-NAMASKARAM-01]
+introduces:
+  knowledge: [ML-LEX-ATHE-01, ML-CONCEPT-C01-ANSWER-BY-POINTING-01]
+practises:
+  knowledge: [ML-LEX-ATHE-01, ML-CONCEPT-C01-ANSWER-BY-POINTING-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [ML-C01-namaskaram, ML-C01-nandi]
 ---
 
 # അതെ (athe) — "yes," literally "that [is so]"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] The plain "yes" — and a small window into how Malayalam thinks,
 because the word is really the pointing-word "that."
 
 ## The letters in this word
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 *(Skim if you read Malayalam.)*
 
@@ -35,6 +51,7 @@ Left to right: **അ · തെ** = *a-the* →
 > **അതെ** = **athe** = "yes."
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[ML-LEX-ATHE-01]; assesses=[] -->
 
 **അതെ** (*athe*) is native Malayalam, and it grows from **അത്** (*athu*),
 "that." To say "yes," Malayalam essentially says **"that [is so]"** — you
@@ -42,6 +59,7 @@ affirm by pointing at the truth of what was said. Its natural partner is the
 negative *alla*, "[it is] not that" — the next lesson.
 
 ## Grammar Lens: yes and no as "that is" / "not that"
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C01-ANSWER-BY-POINTING-01]; assesses=[ML-LEX-ATHE-01] -->
 
 Malayalam's yes/no pair are demonstratives in disguise: *athe* ("that [is
 so]") and *alla* ("not that"). Like its sisters, Malayalam also readily answers
@@ -49,15 +67,8 @@ by **echoing the verb** of the question (*vannu*, "[I] came," for "did you
 come?"). Bank *athe* as the simple word, but hear the logic underneath — you
 agree by confirming *that* is how things are.
 
-## Sounds you'll need
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
-
-അ is the **independent vowel** “a” (word-initial). തെ is
-“the” — ത (*tha*, a soft *th*) with the “e” sign, which is
-written *in front* of its consonant but read after. Read അ·തെ →
-*athe*.
-
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ATHE-01, ML-CONCEPT-C01-ANSWER-BY-POINTING-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: a · the → "athe"]
@@ -65,6 +76,7 @@ written *in front* of its consonant but read after. Read അ·തെ →
 - [YOU SAY: "athe" — "yes, that's so"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ATHE-01, ML-CONCEPT-C01-ANSWER-BY-POINTING-01] -->
 
 [PAUSE 3s] Read **അതെ**. What everyday word is it built from, and so what does
 "yes" literally assert? (*athu*, "that" — so "yes" = "that [is so]".) Where does
