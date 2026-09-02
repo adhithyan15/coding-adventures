@@ -2,6 +2,72 @@
 
 ## [Unreleased]
 
+### Added - an A1 exam inventory, and the first measured answer for an Indic track
+
+`core/exam-inventory-hindi-a1.json` enumerates **172 things an A1 Hindi
+candidate must be able to do**, each probed by the knowledge atoms whose
+presence would demonstrate the track teaches it. Hindi is the first track
+outside Spanish, French and German to have one, and the first Indic track whose
+exam gap is a measurement rather than a proxy.
+
+**The number: Hindi covers 116 of 172 points (67%).** Zero points are partly
+taught - every probe names atoms that actually exist - so the shortfall is 56
+points with nothing in the corpus corresponding to them at all. By category:
+
+    31/40  Sanvad-karya (communicative functions)
+    21/25  Shabd-bhandar (core lexis)
+    14/19  Devanagari lipi (script and orthography)
+    10/14  Sankhya aur samay (numbers, time and date)
+     9/19  Kriya (the verb)
+     3/9   Parsarg (postpositions and case)
+     1/5   Vakya (the sentence)
+
+The shape is the finding. Hindi greets, thanks, apologises, introduces itself
+and names a great deal of the world. It cannot yet say where it is from
+(`se`), where it will be (`par`), when anything happens (`kab`, `X baje`),
+what anything costs (no numeral above twenty, no unit of money), or how to get
+anywhere (`jana` is introduced nowhere, and every personal-account item in both
+A1 mocks uses it).
+
+**What is sourced and what is judged.** The Dakshina Bharat Hindi Prachar Sabha
+ladder that `core/exam-levels.json` names for Hindi publishes the NAMES of its
+examinations and the prescribed readers, and no content syllabus - no grammar
+inventory, no word list, no can-do descriptors, no A1/A2 split. Kendriya Hindi
+Sansthan and the Central Hindi Training Institute publish none either, and no
+Council of Europe Reference Level Description exists for Hindi. **Nothing in
+the new file is attributed to DBHPS**, and the file says so in those words. The
+enumeration is bounded instead by the CEFR Companion Volume's published A1
+descriptors, which are finite and level-split but language-neutral, and by this
+project's own checked-in A1 contract - `assessment-spec.md`,
+`task-shapes/a1.json` and the two timed mocks in `mocks/a1/`. Every point is
+therefore editorial, and all four `scope` dimensions are `partial`: the
+inventory is deliberately NOT complete, and the plan still queues the work to
+finish it.
+
+The strongest claims in the file are the gap notes that cite a numbered mock
+item - "mock 2 reading item 3 is `yahan mat baithiye`, and the corpus
+introduces neither `mat` nor `na`" - because those are checkable in one step
+against an artifact that already existed.
+
+Two gaps are worth naming here because they are cheap to close:
+
+- **Eight Hindi writing lessons teach something and declare an empty
+  `introduces` list**, so they contribute no atom and cannot be probed.
+  `HI-W06-name-sentence-stop` teaches the danda and `HI-W06-two-sentence-card`
+  teaches the 30-40 word message to a named reader, which is 60 of the A1
+  writing paper's 100 points. Fixing one frontmatter field per lesson would
+  make both points measurable without authoring any content.
+- **The nuqta is never taught, and the corpus's own headwords are full of it** -
+  shukriya, khushi, zarur, safed, darvaza, mez, sabzi, zyada, safar, tohfa,
+  bukhar, fasal, khushbu, mulaqat. Every corpus-internal metric counts those
+  lessons as taught; only an external target list surfaces the mark itself.
+
+`npm run plan` now names Hindi exam-point work - *cover 56 of 172 A1 exam
+point(s) hindi does not teach* - where it previously reported Hindi among the
+tracks that could not be measured at all. The plan's exam-inventory line moves
+to *0 complete and 5 partial of 138*, and the unmeasured remainder falls from
+twenty tracks to nineteen.
+
 ### Changed — 70 Hindi headwords stop being load-bearing script
 
 Seventy lessons printed their headword in Devanagari and declared no

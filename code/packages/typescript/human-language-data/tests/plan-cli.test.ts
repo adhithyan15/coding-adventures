@@ -54,6 +54,11 @@ describe("the plan CLI", () => {
     // work did not appear, it was always there and was invisible while the
     // target list covered one of four content dimensions.
     expect(out).toMatch(/exam-point — spanish/);
+    // Hindi is the first Indic track with a target list, so it is the first one
+    // whose exam gap is a MEASUREMENT rather than a proxy. It joins the queue
+    // for the same reason Spanish did: the work was always there and was
+    // invisible while no inventory named it.
+    expect(out).toMatch(/exam-point — hindi/);
     expect(out).toMatch(/human-validation — marwadi/);
     expect(out).toMatch(/human-validate 2 of 2 pre-A1 full mock\(s\) for marwadi/);
     // Still PARTIAL, and therefore still "0 complete": the pronunciation half
@@ -61,7 +66,13 @@ describe("the plan CLI", () => {
     // single dimension keeps the whole inventory partial. This is the HL20 rule
     // doing its job — three complete dimensions do not add up to a complete
     // file, and the inventory item is not suppressed.
-    expect(out).toMatch(/0 complete and 4 partial of 138/);
+    //
+    // 4 -> 5 partial: Hindi A1 lands, and lands partial in all FOUR dimensions.
+    // No Hindi awarding body publishes a content syllabus — DBHPS names its
+    // examinations and prescribes readers, and stops — so the file is bounded by
+    // the CEFR A1 descriptors and this project's own checked-in A1 mocks. A
+    // wholly editorial inventory is exactly what `partial` is for.
+    expect(out).toMatch(/0 complete and 5 partial of 138/);
   }, 120_000);
 
   it("does not let an unreadable inventory look like an absent one", () => {
@@ -80,7 +91,9 @@ describe("the plan CLI", () => {
     // It comes BACK as an inventory to write, which is what the old comment
     // falsely claimed already happened.
     expect(out).toMatch(/138\s+exam-inventory/);
-    expect(out).toMatch(/0 complete and 3 partial of 138/);
+    // 3 -> 4: French is the one made unreadable here, and Hindi A1 now sits
+    // alongside Spanish and the two German files in the readable remainder.
+    expect(out).toMatch(/0 complete and 4 partial of 138/);
     expect(out).toMatch(/1 exist but could not be READ/);
   }, 120_000);
 
@@ -121,9 +134,13 @@ describe("the plan CLI", () => {
     // and -10 are closed by the qualities rung's own lessons, and -09 needed no
     // authoring at all — its note claimed the corpus never introduces `saber`, which
     // stopped being true when chapter 389 authored it two slices earlier.
-    expect(out).toMatch(/190 uncovered point\(s\) across 4 written/);
-    expect(out).toMatch(/0 complete and 4 partial of 138/);
-    expect(out).toMatch(/the other 20 track\(s\)/);
+    // 190 -> 246, and 4 -> 5 written. `core/exam-inventory-hindi-a1.json`
+    // enumerates 172 A1 points and the track covers 116 of them, so Hindi
+    // contributes its 56 unmapped points to the total. The unmeasured remainder
+    // falls 20 -> 19 for the same reason: Hindi stopped being a proxy.
+    expect(out).toMatch(/246 uncovered point\(s\) across 5 written/);
+    expect(out).toMatch(/0 complete and 5 partial of 138/);
+    expect(out).toMatch(/the other 19 track\(s\)/);
   }, 120_000);
 
   it("rejects a flag used as another flag's value", () => {
