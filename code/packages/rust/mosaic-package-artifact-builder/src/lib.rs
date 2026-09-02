@@ -2965,6 +2965,13 @@ fn build_compose_main_kt(
             "    }}\n\n",
             "private fun mosaicStringList(props: Map<String, Any?>, name: String): List<String> =\n",
             "    (props[name] as? List<*>)?.map {{ it.toString() }} ?: emptyList()\n\n",
+            "private fun mosaicStringListList(\n",
+            "    props: Map<String, Any?>,\n",
+            "    name: String,\n",
+            "): List<List<String>> =\n",
+            "    (props[name] as? List<*>)?.map {{ row ->\n",
+            "        (row as? List<*>)?.map {{ it.toString() }} ?: emptyList()\n",
+            "    }} ?: emptyList()\n\n",
             "private fun mosaicDoubleList(props: Map<String, Any?>, name: String): List<Double> =\n",
             "    (props[name] as? List<*>)?.mapNotNull {{ value ->\n",
             "        when (value) {{\n",
@@ -3147,6 +3154,17 @@ fn compose_host_value_for_slot(slot: &SlotDecl, require_runtime: bool) -> String
             }
             ListInnerType::Number => format!("mosaicDoubleList(hostProps, \"{slot_name}\")"),
             ListInnerType::Bool => format!("mosaicBooleanList(hostProps, \"{slot_name}\")"),
+            // A list of rows -- the shape every table slot uses. Without this
+            // arm it fell to `fallback`, a CONSTANT, so the generated shell
+            // showed an empty table no matter what the host sent.
+            ListInnerType::List(inner)
+                if matches!(
+                    inner.as_ref(),
+                    ListInnerType::Text | ListInnerType::Image | ListInnerType::Color
+                ) =>
+            {
+                format!("mosaicStringListList(hostProps, \"{slot_name}\")")
+            }
             _ => fallback,
         },
         SlotType::Node | SlotType::Component(_) => {
