@@ -249,7 +249,7 @@ impl std::fmt::Debug for FontFile {
 
 // The OpenType MATH table lives in its own module.
 mod math;
-pub use math::MathConstants;
+pub use math::{AssemblyPart, GlyphConstruction, GlyphVariant, MathConstants, StretchAxis};
 
 /// Read a 16-bit big-endian unsigned integer.
 ///
@@ -346,7 +346,7 @@ fn parse_table_directory(buf: &[u8]) -> Result<Tables, FontError> {
         hmtx: require(b"hmtx", "hmtx")?,
         kern: find_table(buf, num_tables, b"kern"),
         name: find_table(buf, num_tables, b"name"),
-        os2:  find_table(buf, num_tables, b"OS/2"),
+        os2: find_table(buf, num_tables, b"OS/2"),
         math: find_table(buf, num_tables, b"MATH"),
     })
 }
@@ -465,9 +465,9 @@ pub fn font_metrics(font: &FontFile) -> FontMetrics {
     // ── hhea ────────────────────────────────────────────────────────────────
     // Used as fallback values if OS/2 is absent.
     let hhea_base = t.hhea as usize;
-    let hhea_ascender  = read_i16(buf, hhea_base + 4).unwrap_or(0);
+    let hhea_ascender = read_i16(buf, hhea_base + 4).unwrap_or(0);
     let hhea_descender = read_i16(buf, hhea_base + 6).unwrap_or(0);
-    let hhea_line_gap  = read_i16(buf, hhea_base + 8).unwrap_or(0);
+    let hhea_line_gap = read_i16(buf, hhea_base + 8).unwrap_or(0);
 
     // ── maxp ────────────────────────────────────────────────────────────────
     // numGlyphs is at offset 4, regardless of maxp version.
@@ -475,30 +475,26 @@ pub fn font_metrics(font: &FontFile) -> FontMetrics {
 
     // ── OS/2 ────────────────────────────────────────────────────────────────
     // Prefer typo values from OS/2; fall back to hhea if table absent.
-    let (ascender, descender, line_gap, x_height, cap_height) =
-        if let Some(os2_off) = t.os2 {
-            let base = os2_off as usize;
-            let version        = read_u16(buf, base).unwrap_or(0);
-            let typo_ascender  = read_i16(buf, base + 68).unwrap_or(hhea_ascender);
-            let typo_descender = read_i16(buf, base + 70).unwrap_or(hhea_descender);
-            let typo_line_gap  = read_i16(buf, base + 72).unwrap_or(hhea_line_gap);
+    let (ascender, descender, line_gap, x_height, cap_height) = if let Some(os2_off) = t.os2 {
+        let base = os2_off as usize;
+        let version = read_u16(buf, base).unwrap_or(0);
+        let typo_ascender = read_i16(buf, base + 68).unwrap_or(hhea_ascender);
+        let typo_descender = read_i16(buf, base + 70).unwrap_or(hhea_descender);
+        let typo_line_gap = read_i16(buf, base + 72).unwrap_or(hhea_line_gap);
 
-            // xHeight and capHeight were added in OS/2 version 2.
-            let (xh, caph) = if version >= 2 {
-                (
-                    read_i16(buf, base + 86).ok(),
-                    read_i16(buf, base + 88).ok(),
-                )
-            } else {
-                (None, None)
-            };
-            (typo_ascender, typo_descender, typo_line_gap, xh, caph)
+        // xHeight and capHeight were added in OS/2 version 2.
+        let (xh, caph) = if version >= 2 {
+            (read_i16(buf, base + 86).ok(), read_i16(buf, base + 88).ok())
         } else {
-            (hhea_ascender, hhea_descender, hhea_line_gap, None, None)
+            (None, None)
         };
+        (typo_ascender, typo_descender, typo_line_gap, xh, caph)
+    } else {
+        (hhea_ascender, hhea_descender, hhea_line_gap, None, None)
+    };
 
     // ── name ────────────────────────────────────────────────────────────────
-    let family_name    = read_name(buf, t.name, 1).unwrap_or_else(|| "(unknown)".to_owned());
+    let family_name = read_name(buf, t.name, 1).unwrap_or_else(|| "(unknown)".to_owned());
     let subfamily_name = read_name(buf, t.name, 2).unwrap_or_else(|| "(unknown)".to_owned());
 
     FontMetrics {
@@ -555,7 +551,7 @@ pub fn glyph_id(font: &FontFile, codepoint: u32) -> Option<u16> {
         let rec = cmap_off + 4 + i * 8;
         let platform_id = read_u16(buf, rec).ok()?;
         let encoding_id = read_u16(buf, rec + 2).ok()?;
-        let sub_offset  = read_u32(buf, rec + 4).ok()? as usize;
+        let sub_offset = read_u32(buf, rec + 4).ok()? as usize;
 
         // Prefer platform 3 (Windows) encoding 1 (Unicode BMP).
         if platform_id == 3 && encoding_id == 1 {
@@ -578,7 +574,7 @@ pub fn glyph_id(font: &FontFile, codepoint: u32) -> Option<u16> {
 
     // ── Parse Format 4 header ───────────────────────────────────────────────
     let seg_count_x2 = read_u16(buf, sub + 6).ok()? as usize;
-    let seg_count    = seg_count_x2 / 2;
+    let seg_count = seg_count_x2 / 2;
 
     // Array base offsets (all relative to subtable start):
     //   endCode[]:        offset 14
@@ -587,9 +583,9 @@ pub fn glyph_id(font: &FontFile, codepoint: u32) -> Option<u16> {
     //   idDelta[]:        offset 16 + segCount*4
     //   idRangeOffset[]:  offset 16 + segCount*6
     //   glyphIdArray[]:   offset 16 + segCount*8
-    let end_codes_base       = sub + 14;
-    let start_codes_base     = sub + 16 + seg_count * 2;
-    let id_delta_base        = sub + 16 + seg_count * 4;
+    let end_codes_base = sub + 14;
+    let start_codes_base = sub + 16 + seg_count * 2;
+    let id_delta_base = sub + 16 + seg_count * 4;
     let id_range_offset_base = sub + 16 + seg_count * 6;
 
     // ── Segment binary search ────────────────────────────────────────────────
@@ -611,7 +607,7 @@ pub fn glyph_id(font: &FontFile, codepoint: u32) -> Option<u16> {
         return None; // codepoint > all endCodes
     }
 
-    let end_code   = read_u16(buf, end_codes_base   + lo * 2).ok()?;
+    let end_code = read_u16(buf, end_codes_base + lo * 2).ok()?;
     let start_code = read_u16(buf, start_codes_base + lo * 2).ok()?;
 
     // Bounds check: is cp actually within this segment?
@@ -619,7 +615,7 @@ pub fn glyph_id(font: &FontFile, codepoint: u32) -> Option<u16> {
         return None;
     }
 
-    let id_delta        = read_i16(buf, id_delta_base        + lo * 2).ok()?;
+    let id_delta = read_i16(buf, id_delta_base + lo * 2).ok()?;
     let id_range_offset = read_u16(buf, id_range_offset_base + lo * 2).ok()?;
 
     let glyph = if id_range_offset == 0 {
@@ -649,7 +645,11 @@ pub fn glyph_id(font: &FontFile, codepoint: u32) -> Option<u16> {
         read_u16(buf, abs_off).ok()?
     };
 
-    if glyph == 0 { None } else { Some(glyph) }
+    if glyph == 0 {
+        None
+    } else {
+        Some(glyph)
+    }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -676,10 +676,10 @@ pub fn glyph_metrics(font: &FontFile, glyph_id: u16) -> Option<GlyphMetrics> {
     let buf = &font.data;
     let t = &font.tables;
 
-    let num_glyphs        = read_u16(buf, t.maxp as usize + 4).ok()? as usize;
-    let num_h_metrics     = read_u16(buf, t.hhea as usize + 34).ok()? as usize;
-    let hmtx_off          = t.hmtx as usize;
-    let gid               = glyph_id as usize;
+    let num_glyphs = read_u16(buf, t.maxp as usize + 4).ok()? as usize;
+    let num_h_metrics = read_u16(buf, t.hhea as usize + 34).ok()? as usize;
+    let hmtx_off = t.hmtx as usize;
+    let gid = glyph_id as usize;
 
     if gid >= num_glyphs {
         return None;
@@ -688,10 +688,7 @@ pub fn glyph_metrics(font: &FontFile, glyph_id: u16) -> Option<GlyphMetrics> {
     let (advance_width, left_side_bearing) = if gid < num_h_metrics {
         // Full record: 4 bytes each (advanceWidth u16 + lsb i16).
         let base = hmtx_off + gid * 4;
-        (
-            read_u16(buf, base).ok()?,
-            read_i16(buf, base + 2).ok()?,
-        )
+        (read_u16(buf, base).ok()?, read_i16(buf, base + 2).ok()?)
     } else {
         // Shared advance: last advance + per-glyph lsb.
         let last_advance = read_u16(buf, hmtx_off + (num_h_metrics - 1) * 4).ok()?;
@@ -700,7 +697,10 @@ pub fn glyph_metrics(font: &FontFile, glyph_id: u16) -> Option<GlyphMetrics> {
         (last_advance, read_i16(buf, lsb_off).ok()?)
     };
 
-    Some(GlyphMetrics { advance_width, left_side_bearing })
+    Some(GlyphMetrics {
+        advance_width,
+        left_side_bearing,
+    })
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -747,8 +747,14 @@ pub fn kerning(font: &FontFile, left: u16, right: u16) -> i16 {
             break;
         }
         // Subtable header: version (u16) + length (u16) + coverage (u16).
-        let length   = match read_u16(buf, pos + 2) { Ok(v) => v as usize, Err(_) => break };
-        let coverage = match read_u16(buf, pos + 4) { Ok(v) => v, Err(_) => break };
+        let length = match read_u16(buf, pos + 2) {
+            Ok(v) => v as usize,
+            Err(_) => break,
+        };
+        let coverage = match read_u16(buf, pos + 4) {
+            Ok(v) => v,
+            Err(_) => break,
+        };
 
         // Format is the high byte of coverage.
         let sub_format = coverage >> 8;
@@ -756,7 +762,10 @@ pub fn kerning(font: &FontFile, left: u16, right: u16) -> i16 {
         if sub_format == 0 {
             // Format 0: sorted pair table.
             // Header: nPairs (u16) + searchRange + entrySelector + rangeShift (each u16).
-            let n_pairs = match read_u16(buf, pos + 6) { Ok(v) => v as usize, Err(_) => break };
+            let n_pairs = match read_u16(buf, pos + 6) {
+                Ok(v) => v as usize,
+                Err(_) => break,
+            };
             let pairs_base = pos + 14; // 6 (subtable hdr) + 8 (format 0 hdr)
 
             // Composite key for binary search.
@@ -767,15 +776,21 @@ pub fn kerning(font: &FontFile, left: u16, right: u16) -> i16 {
             while lo < hi {
                 let mid = (lo + hi) / 2;
                 let pair_off = pairs_base + mid * 6;
-                let pair_left  = match read_u16(buf, pair_off)     { Ok(v) => v as u32, Err(_) => break };
-                let pair_right = match read_u16(buf, pair_off + 2) { Ok(v) => v as u32, Err(_) => break };
+                let pair_left = match read_u16(buf, pair_off) {
+                    Ok(v) => v as u32,
+                    Err(_) => break,
+                };
+                let pair_right = match read_u16(buf, pair_off + 2) {
+                    Ok(v) => v as u32,
+                    Err(_) => break,
+                };
                 let key = (pair_left << 16) | pair_right;
 
                 match key.cmp(&target) {
                     std::cmp::Ordering::Equal => {
                         return read_i16(buf, pair_off + 4).unwrap_or_default();
                     }
-                    std::cmp::Ordering::Less    => lo = mid + 1,
+                    std::cmp::Ordering::Less => lo = mid + 1,
                     std::cmp::Ordering::Greater => hi = mid,
                 }
             }
@@ -801,19 +816,23 @@ fn read_name(buf: &[u8], name_off: Option<u32>, name_id: u16) -> Option<String> 
     let base = name_off? as usize;
 
     // name table header: format (u16) + count (u16) + stringOffset (u16).
-    let count         = read_u16(buf, base + 2).ok()? as usize;
+    let count = read_u16(buf, base + 2).ok()? as usize;
     let string_offset = read_u16(buf, base + 4).ok()? as usize;
 
     // Scan name records (12 bytes each starting at offset 6).
-    let mut best: Option<(u16 /*platformID*/, usize /*str_start*/, usize /*len*/)> = None;
+    let mut best: Option<(
+        u16,   /*platformID*/
+        usize, /*str_start*/
+        usize, /*len*/
+    )> = None;
 
     for i in 0..count {
         let rec = base + 6 + i * 12;
         let platform_id = read_u16(buf, rec).ok()?;
         let encoding_id = read_u16(buf, rec + 2).ok()?;
-        let nid         = read_u16(buf, rec + 6).ok()?;
-        let length      = read_u16(buf, rec + 8).ok()? as usize;
-        let str_off     = read_u16(buf, rec + 10).ok()? as usize;
+        let nid = read_u16(buf, rec + 6).ok()?;
+        let length = read_u16(buf, rec + 8).ok()? as usize;
+        let str_off = read_u16(buf, rec + 10).ok()? as usize;
 
         if nid != name_id {
             continue;
@@ -837,7 +856,9 @@ fn read_name(buf: &[u8], name_off: Option<u32>, name_id: u16) -> Option<String> 
 
     // Decode UTF-16 BE: read pairs of bytes as big-endian u16 code units.
     let u16_units: Vec<u16> = raw
-        .as_chunks::<2>().0.iter()
+        .as_chunks::<2>()
+        .0
+        .iter()
         .map(|b| u16::from_be_bytes([b[0], b[1]]))
         .collect();
 
@@ -884,6 +905,35 @@ pub fn italic_correction(font: &FontFile, glyph_id: u16) -> Result<Option<i16>, 
 }
 
 /// Whether the font carries a `MATH` table at all.
+/// How a glyph grows to fit its contents, from the `MATH` table.
+///
+/// This is what makes `\left(` wrap a tall fraction instead of staying the
+/// size of an ordinary parenthesis. `Ok(None)` means the font offers this
+/// glyph no construction on that axis -- the common case, since only
+/// delimiters and a few operators stretch.
+pub fn glyph_construction(
+    font: &FontFile,
+    glyph_id: u16,
+    axis: StretchAxis,
+) -> Result<Option<GlyphConstruction>, FontError> {
+    match font.tables.math {
+        None => Ok(None),
+        Some(offset) => math::glyph_construction(&font.data, offset as usize, glyph_id, axis),
+    }
+}
+
+/// The minimum overlap between adjacent assembly parts, in design units.
+///
+/// Stack parts with less overlap than this and the seams show as hairline gaps
+/// at some sizes -- a defect that reads as a rendering artefact rather than a
+/// layout bug.
+pub fn min_connector_overlap(font: &FontFile) -> Result<Option<u16>, FontError> {
+    match font.tables.math {
+        None => Ok(None),
+        Some(offset) => math::min_connector_overlap(&font.data, offset as usize).map(Some),
+    }
+}
+
 pub fn has_math_table(font: &FontFile) -> bool {
     font.tables.math.is_some()
 }
@@ -968,7 +1018,11 @@ mod tests {
         let bytes = inter_regular();
         let font = load(&bytes).unwrap();
         let m = font_metrics(&font);
-        assert!(m.num_glyphs > 100, "expected > 100 glyphs, got {}", m.num_glyphs);
+        assert!(
+            m.num_glyphs > 100,
+            "expected > 100 glyphs, got {}",
+            m.num_glyphs
+        );
     }
 
     #[test]
@@ -976,7 +1030,11 @@ mod tests {
         let bytes = inter_regular();
         let font = load(&bytes).unwrap();
         let m = font_metrics(&font);
-        assert!(m.ascender > 0, "ascender should be positive: {}", m.ascender);
+        assert!(
+            m.ascender > 0,
+            "ascender should be positive: {}",
+            m.ascender
+        );
     }
 
     #[test]
@@ -1062,7 +1120,11 @@ mod tests {
         let font = load(&bytes).unwrap();
         let gid = glyph_id(&font, 0x0041).unwrap();
         let gm = glyph_metrics(&font, gid).unwrap();
-        assert!(gm.advance_width > 0, "advance_width should be positive: {}", gm.advance_width);
+        assert!(
+            gm.advance_width > 0,
+            "advance_width should be positive: {}",
+            gm.advance_width
+        );
     }
 
     #[test]
@@ -1186,9 +1248,9 @@ mod tests {
         // ── Offset Table ─────────────────────────────────────────────────────
         write_u32(&mut buf, 0x0001_0000); // sfntVersion (TrueType)
         write_u16(&mut buf, num_tables);
-        write_u16(&mut buf, 64);  // searchRange (placeholder)
-        write_u16(&mut buf, 2);   // entrySelector
-        write_u16(&mut buf, 32);  // rangeShift
+        write_u16(&mut buf, 64); // searchRange (placeholder)
+        write_u16(&mut buf, 2); // entrySelector
+        write_u16(&mut buf, 32); // rangeShift
 
         // ── Table Records ────────────────────────────────────────────────────
         // Records must be in tag-sorted order (cmap < head < hhea < hmtx < kern < maxp).
@@ -1196,17 +1258,35 @@ mod tests {
         // because Rust's borrow checker won't allow a closure that mutably
         // borrows buf to be called while buf is also passed as an argument).
         // cmap
-        buf.extend_from_slice(b"cmap"); write_u32(&mut buf, 0); write_u32(&mut buf, cmap_off); write_u32(&mut buf, cmap_len);
+        buf.extend_from_slice(b"cmap");
+        write_u32(&mut buf, 0);
+        write_u32(&mut buf, cmap_off);
+        write_u32(&mut buf, cmap_len);
         // head
-        buf.extend_from_slice(b"head"); write_u32(&mut buf, 0); write_u32(&mut buf, head_off); write_u32(&mut buf, head_len);
+        buf.extend_from_slice(b"head");
+        write_u32(&mut buf, 0);
+        write_u32(&mut buf, head_off);
+        write_u32(&mut buf, head_len);
         // hhea
-        buf.extend_from_slice(b"hhea"); write_u32(&mut buf, 0); write_u32(&mut buf, hhea_off); write_u32(&mut buf, hhea_len);
+        buf.extend_from_slice(b"hhea");
+        write_u32(&mut buf, 0);
+        write_u32(&mut buf, hhea_off);
+        write_u32(&mut buf, hhea_len);
         // hmtx
-        buf.extend_from_slice(b"hmtx"); write_u32(&mut buf, 0); write_u32(&mut buf, hmtx_off); write_u32(&mut buf, hmtx_len);
+        buf.extend_from_slice(b"hmtx");
+        write_u32(&mut buf, 0);
+        write_u32(&mut buf, hmtx_off);
+        write_u32(&mut buf, hmtx_len);
         // kern
-        buf.extend_from_slice(b"kern"); write_u32(&mut buf, 0); write_u32(&mut buf, kern_off); write_u32(&mut buf, kern_len);
+        buf.extend_from_slice(b"kern");
+        write_u32(&mut buf, 0);
+        write_u32(&mut buf, kern_off);
+        write_u32(&mut buf, kern_len);
         // maxp
-        buf.extend_from_slice(b"maxp"); write_u32(&mut buf, 0); write_u32(&mut buf, maxp_off); write_u32(&mut buf, maxp_len);
+        buf.extend_from_slice(b"maxp");
+        write_u32(&mut buf, 0);
+        write_u32(&mut buf, maxp_off);
+        write_u32(&mut buf, maxp_len);
 
         assert_eq!(buf.len(), dir_size, "dir_size mismatch");
 
@@ -1228,9 +1308,13 @@ mod tests {
         // modified (8 bytes) at 28
         buf.extend_from_slice(&[0u8; 8]);
         // xMin, yMin, xMax, yMax (i16 each) at 36
-        for _ in 0..4 { write_i16(&mut buf, 0); }
+        for _ in 0..4 {
+            write_i16(&mut buf, 0);
+        }
         // macStyle at 44, lowestRecPPEM at 46, fontDirectionHint at 48
-        write_u16(&mut buf, 0); write_u16(&mut buf, 8); write_i16(&mut buf, 2);
+        write_u16(&mut buf, 0);
+        write_u16(&mut buf, 8);
+        write_i16(&mut buf, 2);
         // indexToLocFormat at 50
         write_i16(&mut buf, 0);
         // glyphDataFormat at 52
@@ -1249,11 +1333,17 @@ mod tests {
         // advanceWidthMax at 10
         write_u16(&mut buf, 1000);
         // minLeftSideBearing at 12, minRightSideBearing at 14, xMaxExtent at 16
-        write_i16(&mut buf, 0); write_i16(&mut buf, 0); write_i16(&mut buf, 0);
+        write_i16(&mut buf, 0);
+        write_i16(&mut buf, 0);
+        write_i16(&mut buf, 0);
         // caretSlopeRise at 18, caretSlopeRun at 20, caretOffset at 22
-        write_i16(&mut buf, 1); write_i16(&mut buf, 0); write_i16(&mut buf, 0);
+        write_i16(&mut buf, 1);
+        write_i16(&mut buf, 0);
+        write_i16(&mut buf, 0);
         // reserved[0..4] at 24
-        for _ in 0..4 { write_i16(&mut buf, 0); }
+        for _ in 0..4 {
+            write_i16(&mut buf, 0);
+        }
         // metricDataFormat at 32
         write_i16(&mut buf, 0);
         // numberOfHMetrics at 34
@@ -1271,31 +1361,31 @@ mod tests {
         write_u16(&mut buf, 0);
         write_u16(&mut buf, 1);
         // Encoding record: platform 3, encoding 1, subtable at offset 12 from cmap start
-        write_u16(&mut buf, 3);   // platformID
-        write_u16(&mut buf, 1);   // encodingID
-        write_u32(&mut buf, 12);  // offset from cmap table start → 4+8=12
-        // Format 4 subtable (minimal: 1 segment = the end-of-table sentinel)
-        // Segment: endCode=0xFFFF, startCode=0xFFFF, idDelta=1, idRangeOffset=0
+        write_u16(&mut buf, 3); // platformID
+        write_u16(&mut buf, 1); // encodingID
+        write_u32(&mut buf, 12); // offset from cmap table start → 4+8=12
+                                 // Format 4 subtable (minimal: 1 segment = the end-of-table sentinel)
+                                 // Segment: endCode=0xFFFF, startCode=0xFFFF, idDelta=1, idRangeOffset=0
         let seg_count: u16 = 1;
-        write_u16(&mut buf, 4);                    // format
-        write_u16(&mut buf, cmap_sub_len);         // length
-        write_u16(&mut buf, 0);                    // language
-        write_u16(&mut buf, seg_count * 2);        // segCountX2
-        write_u16(&mut buf, 2);                    // searchRange
-        write_u16(&mut buf, 0);                    // entrySelector
-        write_u16(&mut buf, 0);                    // rangeShift
-        write_u16(&mut buf, 0xFFFF);               // endCode[0] = sentinel
-        write_u16(&mut buf, 0);                    // reservedPad
-        write_u16(&mut buf, 0xFFFF);               // startCode[0] = sentinel
-        write_i16(&mut buf, 1);                    // idDelta[0]
-        write_u16(&mut buf, 0);                    // idRangeOffset[0]
+        write_u16(&mut buf, 4); // format
+        write_u16(&mut buf, cmap_sub_len); // length
+        write_u16(&mut buf, 0); // language
+        write_u16(&mut buf, seg_count * 2); // segCountX2
+        write_u16(&mut buf, 2); // searchRange
+        write_u16(&mut buf, 0); // entrySelector
+        write_u16(&mut buf, 0); // rangeShift
+        write_u16(&mut buf, 0xFFFF); // endCode[0] = sentinel
+        write_u16(&mut buf, 0); // reservedPad
+        write_u16(&mut buf, 0xFFFF); // startCode[0] = sentinel
+        write_i16(&mut buf, 1); // idDelta[0]
+        write_u16(&mut buf, 0); // idRangeOffset[0]
         assert_eq!(buf.len() as u32, cmap_off + cmap_len);
 
         // ── hmtx table ───────────────────────────────────────────────────────
         // 5 full hMetric records: (advanceWidth=600, lsb=50) each
         for _ in 0..num_h_metrics {
             write_u16(&mut buf, 600); // advanceWidth
-            write_i16(&mut buf, 50);  // lsb
+            write_i16(&mut buf, 50); // lsb
         }
         assert_eq!(buf.len() as u32, hmtx_off + hmtx_len);
 
@@ -1307,16 +1397,16 @@ mod tests {
         // coverage low byte 0x01 = horizontal kerning (not cross-stream, not override)
         // format = high byte of coverage = 0x00 = Format 0
         let sub_len = (kern_subtable_len) as u16;
-        write_u16(&mut buf, 0);       // subtable version
+        write_u16(&mut buf, 0); // subtable version
         write_u16(&mut buf, sub_len); // subtable length
-        write_u16(&mut buf, 0x0001);  // coverage: format 0, horizontal
-        // Format 0 header: nPairs, searchRange, entrySelector, rangeShift
+        write_u16(&mut buf, 0x0001); // coverage: format 0, horizontal
+                                     // Format 0 header: nPairs, searchRange, entrySelector, rangeShift
         let np = n_pairs;
-        write_u16(&mut buf, np);      // nPairs
+        write_u16(&mut buf, np); // nPairs
         write_u16(&mut buf, np.next_power_of_two().min(np) * 6); // searchRange (approx)
-        write_u16(&mut buf, 0);       // entrySelector
-        write_u16(&mut buf, 0);       // rangeShift
-        // Kern pairs: must be sorted by composite key (left<<16|right)
+        write_u16(&mut buf, 0); // entrySelector
+        write_u16(&mut buf, 0); // rangeShift
+                                // Kern pairs: must be sorted by composite key (left<<16|right)
         let mut sorted_pairs = pairs.to_vec();
         sorted_pairs.sort_by_key(|&(l, r, _)| ((l as u32) << 16) | (r as u32));
         for (left, right, value) in &sorted_pairs {
