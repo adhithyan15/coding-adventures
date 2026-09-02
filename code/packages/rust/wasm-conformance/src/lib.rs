@@ -35,9 +35,13 @@
 //!   genuinely fails on an unresolved or type-mismatched import (WASM05,
 //!   see `code/specs/W10-wasm-real-linking-and-unlinkable.md`), and this
 //!   crate's own `RegistryHost` resolves imports from a `register`ed
-//!   sibling module for real — but there's no real `spectest` host module
-//!   (the official test harness's own fixture module), so an import from
-//!   it still correctly grades `NotYetSupported`, not `Fail`.
+//!   sibling module for real. It ALSO resolves the well-known `spectest`
+//!   host module (W07 addendum 2 item 4) -- the informal fixture module
+//!   many upstream `.wast` files assume is implicitly available, providing
+//!   `print*`/`global_*`/`table`/`table64`/`memory` -- via a small built-in
+//!   [`SpectestModule`], not a real parsed WASM module. An import from any
+//!   OTHER unregistered module name still correctly grades
+//!   `NotYetSupported`, not `Fail`.
 //!
 //! `assert_exhaustion` USED to be a third, unconditional case — this
 //! crate never ran it at all, because `wasm-execution` had no call-depth
@@ -105,14 +109,205 @@ fn directive_kind(d: &Directive) -> DirectiveKind {
 /// doc comment for why.
 type ModuleRegistry = Rc<RefCell<HashMap<Option<String>, Rc<RefCell<WasmInstance>>>>>;
 
+/// A no-op host function for the `spectest` fixture module's `print*`
+/// exports (W07 addendum 2 item 4). The real upstream reference
+/// interpreter's own `spectest` host prints its arguments to a log for a
+/// human running the interpreter interactively -- irrelevant here, since
+/// no corpus directive ever asserts on printed output, only on the import
+/// resolving at all and the call succeeding with no trap and the right
+/// arity of (zero) results. `func_type` is the only thing that varies
+/// across the seven `print`/`print_i32`/`print_i64`/`print_f32`/
+/// `print_f64`/`print_i32_f32`/`print_f64_f64` exports -- see
+/// `SpectestModule::resolve_function`'s own match arms for each one's
+/// real upstream-verified signature.
+struct SpectestPrintFunction {
+    func_type: FuncType,
+}
+
+impl HostFunction for SpectestPrintFunction {
+    fn func_type(&self) -> &FuncType {
+        &self.func_type
+    }
+
+    fn call(&self, _args: &[WasmValue], _memory: Option<&mut LinearMemory>) -> Result<Vec<WasmValue>, TrapError> {
+        Ok(Vec::new())
+    }
+}
+
+/// The well-known `spectest` fixture module (W07 addendum 2 item 4,
+/// `code/specs/W07-wasm-post-mvp-epics.md`): an informal convention the
+/// official `WebAssembly/spec` testsuite's OWN interpreter test harness
+/// documents (`interpreter/host/spectest.ml` in that repo) -- many
+/// upstream `.wast` files assume a host module literally named
+/// `"spectest"` is available to import from, without ever `register`ing
+/// it themselves in-script (the real interpreter's own test runner
+/// registers it once, unconditionally, before running ANY script, via
+/// its `-h`/`Import.register` call -- confirmed live against
+/// `WebAssembly/spec`'s own source rather than guessed). This struct is
+/// the cheap, built-in stand-in for that registration: a handful of
+/// fixed exports, backed by real `wasm-execution` primitives
+/// (`LinearMemory`/`Table`/`GlobalStorage`), never a real parsed WASM
+/// module or a full `WasmInstance` -- exactly the "missing, cheap,
+/// one-time host-stub addition to `wasm-conformance`'s own test harness"
+/// the addendum predicted this gap would turn out to be, not a genuine
+/// interpreter capability gap.
+///
+/// Every export below is EXACTLY what a live probe of this crate's own
+/// vendored corpus (`grep -oh '(import "spectest" "[a-zA-Z0-9_]*"'
+/// tests/fixtures/testsuite/*.wast`) shows is actually imported
+/// somewhere in the 257-file corpus -- no unused export was added "for
+/// completeness." The corpus also imports `spectest.unknown` in five
+/// places (`imports.wast`/`imports2.wast`), but every one of those is a
+/// deliberate `assert_unlinkable` case whose whole point is that
+/// `"unknown"` is NOT a real `spectest` export -- adding it here would
+/// make those five directives regress from `Pass` to a real `Fail`
+/// (linking would unexpectedly succeed), so it is deliberately absent.
+///
+/// Values (globals, table/memory limits) are taken verbatim from the
+/// real upstream `spectest.ml` source, fetched and read directly rather
+/// than guessed:
+/// ```ocaml
+/// "global_i32", _ -> global (GlobalT (Cons, NumT I32T))   (* value: 666 *)
+/// "global_i64", _ -> global (GlobalT (Cons, NumT I64T))   (* value: 666 *)
+/// "global_f32", _ -> global (GlobalT (Cons, NumT F32T))   (* value: 666.6 *)
+/// "global_f64", _ -> global (GlobalT (Cons, NumT F64T))   (* value: 666.6 *)
+/// "table"   -> TableT (I32AT, {min = 10L; max = Some 20L}, (Null, FuncHT))
+/// "table64" -> TableT (I64AT, {min = 10L; max = Some 20L}, (Null, FuncHT))
+/// "memory"  -> MemoryT (I32AT, {min = 1L; max = Some 2L})
+/// ```
+/// (`Cons` = immutable/`const`; none of these globals are ever imported
+/// as `mut` anywhere in the corpus, matching the real upstream module,
+/// which declares them all immutable too.)
+///
+/// # Why cloning this struct is cheap and shares live state
+///
+/// `#[derive(Clone)]` here is a SHALLOW, field-wise clone -- and every
+/// field already carries its own real storage behind an `Rc`:
+/// `LinearMemory`/`Table` hold `Rc<RefCell<..>>` internally (see either's
+/// own doc comment in `wasm-execution`, the same W28 fix `RegistryHost::
+/// resolve_memory`/`resolve_table` rely on for registered sibling
+/// modules), and each global is stored as `Rc<RefCell<GlobalStorage>>`
+/// directly, the exact type `HostInterface::resolve_global` already
+/// returns. So cloning a `SpectestModule` -- once per `RegistryHost`
+/// construction, itself once per module instantiation (`Executor::
+/// instantiate_and_register`) -- clones seven cheap `Rc` pointers, NOT
+/// seven megabytes of memory or thousands of table slots, and every
+/// clone still shares the SAME underlying live storage. This is what
+/// makes `spectest.table`/`spectest.memory` behave like a real
+/// persistently-registered module across an entire script's multiple
+/// `(module ...)` directives (a `table.set`/`memory.grow`/`i32.store`
+/// against one importer's copy is visible through every other importer's
+/// copy, and through `SpectestModule::new`'s own original) -- `Executor`
+/// constructs exactly ONE `SpectestModule` (in `Executor::new`) and every
+/// `RegistryHost` for the lifetime of that `Executor` clones FROM that
+/// one original, never re-constructing fresh (differently-seeded, but
+/// here it wouldn't matter since the values are fixed) storage.
+#[derive(Clone)]
+struct SpectestModule {
+    memory: LinearMemory,
+    /// 32-bit-indexed funcref table, min 10 / max 20 (see this struct's
+    /// own doc comment for the upstream-verified limits).
+    table: Table,
+    /// 64-bit-indexed (table64 proposal, W26) counterpart to `table`,
+    /// same min/max -- only `table64.wast` imports this one.
+    table64: Table,
+    global_i32: Rc<RefCell<GlobalStorage>>,
+    global_i64: Rc<RefCell<GlobalStorage>>,
+    global_f32: Rc<RefCell<GlobalStorage>>,
+    global_f64: Rc<RefCell<GlobalStorage>>,
+}
+
+impl SpectestModule {
+    fn new() -> Self {
+        SpectestModule {
+            memory: LinearMemory::new(1, Some(2)),
+            table: Table::new(10, Some(20)),
+            // `expect`: a fixed, hardcoded 10-element table64 stub is
+            // nowhere near `wasm-execution`'s own `MAX_TABLE_ELEMENTS`
+            // practical-allocation cap -- `new_with_is64` can only ever
+            // fail for a caller-supplied size that approaches that cap,
+            // which this literal `10` never does.
+            table64: Table::new_with_is64(10, Some(20), true).expect("fixed-size spectest table64 stub (10 elements) never exceeds the practical allocation cap"),
+            global_i32: Rc::new(RefCell::new(GlobalStorage { value: WasmValue::I32(666), func_ref: None })),
+            global_i64: Rc::new(RefCell::new(GlobalStorage { value: WasmValue::I64(666), func_ref: None })),
+            global_f32: Rc::new(RefCell::new(GlobalStorage { value: WasmValue::F32(666.6), func_ref: None })),
+            global_f64: Rc::new(RefCell::new(GlobalStorage { value: WasmValue::F64(666.6), func_ref: None })),
+        }
+    }
+
+    /// `None` for any name other than the seven real `print*` exports
+    /// (see this struct's own doc comment for why `"unknown"` is
+    /// deliberately not among them) -- surfaces as a link failure exactly
+    /// like an unresolved import from any other module, which is exactly
+    /// right for the corpus's own `spectest.unknown` `assert_unlinkable`
+    /// cases.
+    fn resolve_function(&self, name: &str) -> Option<Box<dyn HostFunction>> {
+        use wasm_types::ValueType::{F32, F64, I32, I64};
+        let params = match name {
+            "print" => vec![],
+            "print_i32" => vec![I32],
+            "print_i64" => vec![I64],
+            "print_f32" => vec![F32],
+            "print_f64" => vec![F64],
+            "print_i32_f32" => vec![I32, F32],
+            "print_f64_f64" => vec![F64, F64],
+            _ => return None,
+        };
+        Some(Box::new(SpectestPrintFunction { func_type: FuncType { params, results: vec![] } }))
+    }
+
+    fn resolve_global(&self, name: &str) -> Option<(GlobalType, Rc<RefCell<GlobalStorage>>)> {
+        use wasm_types::ValueType::{F32, F64, I32, I64};
+        let (value_type, cell) = match name {
+            "global_i32" => (I32, &self.global_i32),
+            "global_i64" => (I64, &self.global_i64),
+            "global_f32" => (F32, &self.global_f32),
+            "global_f64" => (F64, &self.global_f64),
+            _ => return None,
+        };
+        // Every real `spectest` global is immutable (`Cons` in the
+        // upstream OCaml source quoted in this struct's own doc comment)
+        // -- `mutable: false` here matches that exactly, for spec
+        // fidelity. No corpus file actually declares an IMPORTED
+        // `spectest.global_*` as `(mut ...)`, so nothing in this crate's
+        // own graded output currently distinguishes `true` from `false`
+        // here.
+        Some((GlobalType { value_type, mutable: false }, Rc::clone(cell)))
+    }
+
+    fn resolve_memory(&self, name: &str) -> Option<LinearMemory> {
+        match name {
+            "memory" => Some(self.memory.clone()),
+            _ => None,
+        }
+    }
+
+    fn resolve_table(&self, name: &str) -> Option<Table> {
+        match name {
+            "table" => Some(self.table.clone()),
+            "table64" => Some(self.table64.clone()),
+            _ => None,
+        }
+    }
+}
+
 /// A `HostInterface` backed by the `Executor`'s own module registry
 /// (WASM05/W10) -- lets a module import a function/memory/table/global
 /// from a `register`ed sibling module in the same script, exactly the
 /// shape the real corpus's own `assert_unlinkable`/linking cases use
 /// (`register "test"` earlier in the script, then `(import "test" ...)`
-/// later). No `spectest` support -- `resolve_*` simply returns `None`
-/// for any module name not found in the registry, which correctly
-/// surfaces as a link failure without needing a real `spectest` host.
+/// later). ALSO resolves the well-known `spectest` fixture module (W07
+/// addendum 2 item 4) via `spectest`, a small built-in [`SpectestModule`]
+/// -- see that struct's own doc comment for why this is a cheap host
+/// stub, not a real parsed WASM module. Registry lookups are tried FIRST
+/// in every `resolve_*` method below, so a script that (hypothetically)
+/// `register`ed something under the literal name `"spectest"` would
+/// shadow the built-in stub -- matching how the real upstream interpreter
+/// shares one namespace between host-registered and script-registered
+/// modules. No corpus file in this vendored testsuite actually does this.
+/// `resolve_*` returns `None` for any OTHER module name not found in the
+/// registry, which correctly surfaces as a link failure without needing a
+/// real host for it.
 struct RegistryHost {
     /// `Rc<RefCell<..>>`, not a borrowed reference: `HostInterface` (like
     /// any trait consumed as `Box<dyn HostInterface>`) is implicitly
@@ -120,6 +315,11 @@ struct RegistryHost {
     /// own fields -- it needs owned, shared access to the SAME
     /// underlying registry `Executor` itself reads/writes.
     registry: ModuleRegistry,
+    /// The built-in `spectest` fixture module (W07 addendum 2 item 4) --
+    /// cloned from `Executor`'s own persistent copy (see [`SpectestModule`]'s
+    /// doc comment for why cloning it is cheap and shares live storage,
+    /// not an independent copy).
+    spectest: SpectestModule,
 }
 
 impl RegistryHost {
@@ -137,7 +337,14 @@ impl RegistryHost {
 
 impl HostInterface for RegistryHost {
     fn resolve_function(&self, module_name: &str, name: &str) -> Option<Box<dyn HostFunction>> {
-        let (instance_rc, index) = self.find_export(module_name, name, ExternalKind::Function)?;
+        // Registry (real `register`ed sibling module) takes precedence --
+        // see this struct's own doc comment for why -- falling back to
+        // the built-in `spectest` stub (W07 addendum 2 item 4) only when
+        // `module_name` is literally `"spectest"` and no real registered
+        // module shadows it.
+        let Some((instance_rc, index)) = self.find_export(module_name, name, ExternalKind::Function) else {
+            return if module_name == "spectest" { self.spectest.resolve_function(name) } else { None };
+        };
         let func_type = instance_rc.borrow().func_types.get(index as usize)?.clone();
         // W35 fourth slice: the exporting instance's own already-minted
         // real identity for this function (`instance.func_identities`,
@@ -186,7 +393,9 @@ impl HostInterface for RegistryHost {
     }
 
     fn resolve_global(&self, module_name: &str, name: &str) -> Option<(GlobalType, Rc<RefCell<GlobalStorage>>)> {
-        let (instance_rc, index) = self.find_export(module_name, name, ExternalKind::Global)?;
+        let Some((instance_rc, index)) = self.find_export(module_name, name, ExternalKind::Global) else {
+            return if module_name == "spectest" { self.spectest.resolve_global(name) } else { None };
+        };
         let instance = instance_rc.borrow();
         let gtype = instance.global_types.get(index as usize)?.clone();
         // Real cross-instance global sharing (real corpus vendoring pass,
@@ -207,7 +416,9 @@ impl HostInterface for RegistryHost {
     }
 
     fn resolve_memory(&self, module_name: &str, name: &str) -> Option<LinearMemory> {
-        let (instance_rc, index) = self.find_export(module_name, name, ExternalKind::Memory)?;
+        let Some((instance_rc, index)) = self.find_export(module_name, name, ExternalKind::Memory) else {
+            return if module_name == "spectest" { self.spectest.resolve_memory(name) } else { None };
+        };
         // W28: `.cloned()` here is a genuine SHARED live view, not an
         // independent copy -- `LinearMemory`'s mutable storage
         // (`data`/`current_pages`) lives behind an `Rc<RefCell<..>>` (see
@@ -234,7 +445,9 @@ impl HostInterface for RegistryHost {
     }
 
     fn resolve_table(&self, module_name: &str, name: &str) -> Option<Table> {
-        let (instance_rc, index) = self.find_export(module_name, name, ExternalKind::Table)?;
+        let Some((instance_rc, index)) = self.find_export(module_name, name, ExternalKind::Table) else {
+            return if module_name == "spectest" { self.spectest.resolve_table(name) } else { None };
+        };
         // W28: same shared-live-view fix as `resolve_memory` above --
         // `Table`'s `elements` also lives behind an `Rc<RefCell<..>>` now,
         // so `.cloned()` shares storage rather than copying it. Still
@@ -521,6 +734,15 @@ struct Executor {
     /// `NotYetSupported` a directive against "the current module" already
     /// gets, not a `Fail` that looks like a genuine harness/script bug.
     unavailable_reasons: HashMap<Option<String>, String>,
+    /// The ONE built-in `spectest` fixture module (W07 addendum 2 item 4)
+    /// for this `Executor`'s entire run -- constructed once here, then
+    /// cloned (cheaply -- see [`SpectestModule`]'s own doc comment) into
+    /// every `RegistryHost` this `Executor` builds, so `spectest.table`/
+    /// `spectest.memory` behave like a real persistently-registered
+    /// module shared across every `(module ...)` directive in the
+    /// script, exactly matching the real upstream interpreter's own
+    /// "register spectest once, before running the script" behavior.
+    spectest: SpectestModule,
 }
 
 impl Executor {
@@ -531,6 +753,7 @@ impl Executor {
             current_module_status: None,
             definitions: HashMap::new(),
             unavailable_reasons: HashMap::new(),
+            spectest: SpectestModule::new(),
         }
     }
 
@@ -564,7 +787,7 @@ impl Executor {
         match self.runtime.validate(module) {
             Err(e) => DirectiveOutcome::Fail(format!("module failed structural validation: {e}")),
             Ok(validated) => {
-                let host = RegistryHost { registry: Rc::clone(&self.registry) };
+                let host = RegistryHost { registry: Rc::clone(&self.registry), spectest: self.spectest.clone() };
                 match WasmRuntime::with_host(Box::new(host)).instantiate(&validated) {
                     Ok(instance) => {
                         let instance = Rc::new(RefCell::new(instance));
@@ -948,7 +1171,7 @@ impl Executor {
             Ok(built) => match self.runtime.validate(&built) {
                 Err(_) => DirectiveOutcome::Pass,
                 Ok(validated) => {
-                    let host = RegistryHost { registry: Rc::clone(&self.registry) };
+                    let host = RegistryHost { registry: Rc::clone(&self.registry), spectest: self.spectest.clone() };
                     match WasmRuntime::with_host(Box::new(host)).instantiate(&validated) {
                         Ok(_) => DirectiveOutcome::Fail("module linked successfully; expected unlinkable".to_string()),
                         Err(_) => DirectiveOutcome::Pass,
@@ -2477,13 +2700,35 @@ mod tests {
 
     #[test]
     fn module_with_unresolved_import_marks_invoke_not_yet_supported() {
-        // WASM05/W10: `spectest` isn't a `register`ed sibling module, so
-        // this module now genuinely fails to LINK (a real capability
-        // gap, `RegistryHost` has no `spectest` support) rather than
-        // hitting the old blanket "any import present" rule -- same
-        // outcome (`NotYetSupported`, cascading via `current_module_status`
-        // to the following `assert_return`), different, more honest
-        // reason underneath.
+        // WASM05/W10: an import from a module name that is neither a real
+        // `register`ed sibling NOR the built-in `spectest` stub (W07
+        // addendum 2 item 4) genuinely fails to LINK (a real capability
+        // gap) rather than hitting the old blanket "any import present"
+        // rule -- the failure cascades (`NotYetSupported`, via
+        // `current_module_status`) to the following `assert_return`.
+        // Uses a deliberately unknown module name here (NOT `spectest` --
+        // see `spectest_global_i32_import_resolves_to_the_real_upstream_
+        // value_666` immediately below for that now-fully-supported case).
+        let results = outcomes(
+            r#"
+            (module
+              (import "totally-unknown-module" "global_i32" (global i32))
+              (func (export "get_g") (result i32) global.get 0))
+            (assert_return (invoke "get_g") (i32.const 666))
+            "#,
+        );
+        assert!(matches!(results[1].1, DirectiveOutcome::NotYetSupported(_)));
+    }
+
+    // ── W07 addendum 2 item 4: the built-in `spectest` fixture module ───────
+
+    #[test]
+    fn spectest_global_i32_import_resolves_to_the_real_upstream_value_666() {
+        // `global.wast`'s own `get-z1`/`get-z2` shape (real corpus): a
+        // module imports `spectest.global_i32`, re-exports it via a
+        // trivial getter, and the corpus expects exactly `666` --
+        // verified live against the real upstream `spectest.ml` source
+        // (see `SpectestModule`'s own doc comment), not guessed.
         let results = outcomes(
             r#"
             (module
@@ -2492,7 +2737,96 @@ mod tests {
             (assert_return (invoke "get_g") (i32.const 666))
             "#,
         );
-        assert!(matches!(results[1].1, DirectiveOutcome::NotYetSupported(_)));
+        assert_eq!(results[1], (DirectiveKind::AssertReturn, DirectiveOutcome::Pass));
+    }
+
+    #[test]
+    fn spectest_global_i64_and_float_globals_resolve_to_real_upstream_values() {
+        let results = outcomes(
+            r#"
+            (module
+              (import "spectest" "global_i64" (global i64))
+              (import "spectest" "global_f32" (global f32))
+              (import "spectest" "global_f64" (global f64))
+              (func (export "get_i64") (result i64) global.get 0)
+              (func (export "get_f32") (result f32) global.get 1)
+              (func (export "get_f64") (result f64) global.get 2))
+            (assert_return (invoke "get_i64") (i64.const 666))
+            (assert_return (invoke "get_f32") (f32.const 666.6))
+            (assert_return (invoke "get_f64") (f64.const 666.6))
+            "#,
+        );
+        assert_eq!(results[1], (DirectiveKind::AssertReturn, DirectiveOutcome::Pass));
+        assert_eq!(results[2], (DirectiveKind::AssertReturn, DirectiveOutcome::Pass));
+        assert_eq!(results[3], (DirectiveKind::AssertReturn, DirectiveOutcome::Pass));
+    }
+
+    #[test]
+    fn spectest_print_functions_are_callable_no_ops() {
+        // No corpus directive ever asserts on printed output -- only that
+        // the import resolves and the call succeeds with no trap and (for
+        // `print_i32_f32`) the right arity of results (none). Exercises
+        // both a zero-arg and a two-arg `print*` export.
+        let results = outcomes(
+            r#"
+            (module
+              (import "spectest" "print" (func))
+              (import "spectest" "print_i32_f32" (func (param i32 f32)))
+              (func (export "run")
+                call 0
+                (call 1 (i32.const 1) (f32.const 2.0))))
+            (assert_return (invoke "run"))
+            "#,
+        );
+        assert_eq!(results[1], (DirectiveKind::AssertReturn, DirectiveOutcome::Pass));
+    }
+
+    #[test]
+    fn spectest_memory_and_table_resolve_with_real_upstream_limits_and_are_usable() {
+        // `memory`: min 1 / max 2 pages. `table`: min 10 / max 20,
+        // funcref -- both verified live against the real upstream
+        // `spectest.ml` source (see `SpectestModule`'s own doc comment).
+        // Exercised for real (`memory.size`/`table.size`), not just
+        // resolved, to confirm the stub is backed by genuinely usable
+        // `LinearMemory`/`Table` values, not a dummy placeholder.
+        let results = outcomes(
+            r#"
+            (module
+              (import "spectest" "memory" (memory 1 2))
+              (import "spectest" "table" (table 10 20 funcref))
+              (func (export "mem_size") (result i32) memory.size)
+              (func (export "tbl_size") (result i32) table.size))
+            (assert_return (invoke "mem_size") (i32.const 1))
+            (assert_return (invoke "tbl_size") (i32.const 10))
+            "#,
+        );
+        assert_eq!(results[1], (DirectiveKind::AssertReturn, DirectiveOutcome::Pass));
+        assert_eq!(results[2], (DirectiveKind::AssertReturn, DirectiveOutcome::Pass));
+    }
+
+    #[test]
+    fn spectest_table64_import_resolves_as_a_real_is64_table() {
+        let results = outcomes(
+            r#"
+            (module
+              (import "spectest" "table64" (table i64 10 20 funcref))
+              (func (export "tbl_size") (result i64) table.size))
+            (assert_return (invoke "tbl_size") (i64.const 10))
+            "#,
+        );
+        assert_eq!(results[1], (DirectiveKind::AssertReturn, DirectiveOutcome::Pass));
+    }
+
+    #[test]
+    fn spectest_unknown_export_name_is_still_a_genuine_link_failure() {
+        // The corpus's own `imports.wast`/`imports2.wast` deliberately
+        // import `spectest.unknown` inside `assert_unlinkable` cases --
+        // `"unknown"` is NOT a real `spectest` export (see
+        // `SpectestModule`'s own doc comment for why it must stay
+        // absent), so this must keep failing to link even though
+        // `spectest` itself is now a real, resolvable host module.
+        let results = outcomes(r#"(assert_unlinkable (module (import "spectest" "unknown" (func))) "unknown import")"#);
+        assert_eq!(results[0], (DirectiveKind::AssertUnlinkable, DirectiveOutcome::Pass));
     }
 
     // ── W34 fourth slice: cross-module canonical type-group equivalence
