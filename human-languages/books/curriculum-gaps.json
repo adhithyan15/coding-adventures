@@ -20,9 +20,9 @@
     "tracksWithoutBooks": 0,
     "lessonChaptersWithoutBooks": 0,
     "legacySchemaTracks": 0,
-    "mixedSchemaTracks": 9,
-    "version2SchemaTracks": 14,
-    "lessonsWithoutLevel": 46,
+    "mixedSchemaTracks": 8,
+    "version2SchemaTracks": 15,
+    "lessonsWithoutLevel": 45,
     "rampOverBudgetLessons": 40,
     "scriptRampOverBudgetLessons": 34,
     "lessonsOpeningMultipleScripts": 0,
@@ -40,7 +40,7 @@
     "tracksWithoutWritingStageEvidence": 4,
     "missingWritingStagePairs": 519,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 4055,
+    "drivableLessons": 4056,
     "drivablePercent": 79,
     "chaptersWithoutDrivablePrefix": 146,
     "unexplainedModalityOverrides": 0
@@ -3677,11 +3677,10 @@
       },
       {
         "language": "portuguese",
-        "status": "mixed",
+        "status": "version-2",
         "lessonCount": 102,
         "versions": {
-          "1": 8,
-          "2": 94
+          "2": 102
         }
       },
       {
@@ -4064,7 +4063,7 @@
         "language": "portuguese",
         "chapter": 1,
         "lessonId": "PT-C01-practice",
-        "message": "portuguese chapter 1 payoff assesses 0/3 of the chapter's atoms (0.00), below the 0.5 floor."
+        "message": "portuguese chapter 1 payoff assesses 0/18 of the chapter's atoms (0.00), below the 0.5 floor."
       },
       {
         "code": "chapter-payoff-not-representative",
@@ -4640,7 +4639,7 @@
   "levels": {
     "totalLessons": 5151,
     "byLevel": {
-      "pre-A1": 3377,
+      "pre-A1": 3378,
       "A1": 1231,
       "A2": 413,
       "B1": 39,
@@ -4648,7 +4647,7 @@
       "C1": 10,
       "C2": 18
     },
-    "unmapped": 46,
+    "unmapped": 45,
     "mappedPercent": 99,
     "tracks": [
       {
@@ -4880,7 +4879,7 @@
         "language": "portuguese",
         "lessonCount": 102,
         "byLevel": {
-          "pre-A1": 54,
+          "pre-A1": 55,
           "A1": 29,
           "A2": 18,
           "B1": 0,
@@ -4888,7 +4887,7 @@
           "C1": 0,
           "C2": 0
         },
-        "unmapped": 1,
+        "unmapped": 0,
         "reach": "A2"
       },
       {
@@ -5371,6 +5370,13 @@
         "lessonCount": 9
       },
       {
+        "language": "portuguese",
+        "chapter": 1,
+        "atoms": 18,
+        "budget": 12,
+        "lessonCount": 10
+      },
+      {
         "language": "russian",
         "chapter": 1,
         "atoms": 18,
@@ -5719,10 +5725,10 @@
       {
         "language": "portuguese",
         "lessonCount": 102,
-        "measurable": 94,
-        "unmeasurable": 8,
+        "measurable": 102,
+        "unmeasurable": 0,
         "lessonViolations": 0,
-        "chapterViolations": 2
+        "chapterViolations": 3
       },
       {
         "language": "punjabi",
@@ -6415,8 +6421,8 @@
     },
     "summary": {
       "lessonViolations": 40,
-      "chapterViolations": 44,
-      "unmeasurableLessons": 320,
+      "chapterViolations": 45,
+      "unmeasurableLessons": 312,
       "measurablePercent": 94,
       "steepestLesson": {
         "lessonId": "BN-C06-numbers-1-5",
@@ -10790,6 +10796,32 @@
         "language": "punjabi",
         "introducedBy": "PA-C05-rahna",
         "introducedAt": 43,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PT-LEX-BOM-DIA-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C01-bom-dia",
+        "introducedAt": 5,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PT-PRAGMATIC-BOM-DIA-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C01-bom-dia",
+        "introducedAt": 5,
         "missed": [
           "R1",
           "R2",
@@ -33096,6 +33128,18 @@
         "revisits": 1
       },
       {
+        "atom": "PT-ETYMON-BOM-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C01-bom",
+        "introducedAt": 2,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "PT-ETYMON-COMO-SE-CHAMA-02",
         "language": "portuguese",
         "introducedBy": "PT-C03-como-se-chama",
@@ -33124,6 +33168,18 @@
         "language": "portuguese",
         "introducedBy": "PT-C02-de-nada",
         "introducedAt": 10,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PT-ETYMON-DIA-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C01-dia",
+        "introducedAt": 4,
         "missed": [
           "R1",
           "R3",
@@ -33180,10 +33236,34 @@
         "revisits": 2
       },
       {
-        "atom": "PT-ETYMON-OLA-02",
+        "atom": "PT-ETYMON-NOITE-02",
         "language": "portuguese",
-        "introducedBy": "PT-C01-ola",
-        "introducedAt": 0,
+        "introducedBy": "PT-C01-noite",
+        "introducedAt": 7,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PT-ETYMON-O-A-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C01-o-a",
+        "introducedAt": 3,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PT-ETYMON-OBRIGADO-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C01-obrigado",
+        "introducedAt": 8,
         "missed": [
           "R2",
           "R3",
@@ -33216,6 +33296,18 @@
         "revisits": 1
       },
       {
+        "atom": "PT-ETYMON-TARDE-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C01-tarde",
+        "introducedAt": 6,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "PT-ETYMON-TOMAR-PEGAR-03",
         "language": "portuguese",
         "introducedBy": "PT-C20-tomar-pegar",
@@ -33238,6 +33330,30 @@
           "R4"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "PT-GRAMMAR-BOM-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C01-bom",
+        "introducedAt": 2,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PT-GRAMMAR-DIA-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C01-dia",
+        "introducedAt": 4,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "PT-GRAMMAR-DIAS-2-03",
@@ -33286,6 +33402,30 @@
           "R4"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "PT-GRAMMAR-O-A-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C01-o-a",
+        "introducedAt": 3,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PT-GRAMMAR-OBRIGADO-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C01-obrigado",
+        "introducedAt": 8,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "PT-GRAMMAR-PRAZER-04",
@@ -33372,6 +33512,18 @@
         "revisits": 2
       },
       {
+        "atom": "PT-LEX-NOITE-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C01-noite",
+        "introducedAt": 7,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "PT-NOTICE-C03-PRACTICE-03",
         "language": "portuguese",
         "introducedBy": "PT-C03-practice",
@@ -33396,24 +33548,12 @@
         "revisits": 0
       },
       {
-        "atom": "PT-PHONO-OLA-01",
+        "atom": "PT-SOUND-BOM-02",
         "language": "portuguese",
-        "introducedBy": "PT-C01-ola",
-        "introducedAt": 0,
+        "introducedBy": "PT-C01-bom",
+        "introducedAt": 2,
         "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "PT-PRAGMATIC-OLA-03",
-        "language": "portuguese",
-        "introducedBy": "PT-C01-ola",
-        "introducedAt": 0,
-        "missed": [
-          "R2",
+          "R1",
           "R3",
           "R4"
         ],
@@ -33442,6 +33582,18 @@
           "R4"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "PT-SOUND-OBRIGADO-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C01-obrigado",
+        "introducedAt": 8,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "PT-SOUND-PRAZER-02",
@@ -53226,6 +53378,17 @@
         "revisits": 2
       },
       {
+        "atom": "PT-ETYMON-OLA-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C01-ola",
+        "introducedAt": 0,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "PT-ETYMON-PAO-03",
         "language": "portuguese",
         "introducedBy": "PT-C11-pao",
@@ -53785,6 +53948,28 @@
           "R3"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "PT-PHONO-OLA-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C01-ola",
+        "introducedAt": 0,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "PT-PRAGMATIC-OLA-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C01-ola",
+        "introducedAt": 0,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "PT-PRAGMATICS-DIAS-1-02",
@@ -75117,7 +75302,7 @@
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 197,
+        "atomsTaught": 212,
         "atomsNeverRevisited": 16,
         "forwardReferences": 65
       },
@@ -75197,14 +75382,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 6337,
+      "atomsTaught": 6352,
       "atomsNeverRevisited": 604,
       "neverRevisitedPercent": 10,
       "missedByWindow": {
-        "R1": 1355,
-        "R2": 4301,
-        "R3": 4496,
-        "R4": 3173
+        "R1": 1364,
+        "R2": 4306,
+        "R3": 4511,
+        "R4": 3188
       },
       "forwardReferences": 669
     }
@@ -93924,11 +94109,11 @@
       {
         "language": "portuguese",
         "lessonCount": 102,
-        "atomMeasurableLessons": 94,
-        "atomMeasurementBlindLessons": 8,
+        "atomMeasurableLessons": 102,
+        "atomMeasurementBlindLessons": 0,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
-        "atomChapterSpikes": 2,
+        "atomChapterSpikes": 3,
         "glyphLessonSpikes": 0,
         "scriptSystemSpikes": 0,
         "scriptClosureViolations": 0,
@@ -93939,14 +94124,14 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 65,
-        "atomsTaught": 197,
+        "atomsTaught": 212,
         "atomsNeverRevisited": 16,
-        "reinforcementWindowMisses": 337,
+        "reinforcementWindowMisses": 381,
         "reinforcementMissesByWindow": {
-          "R1": 41,
-          "R2": 153,
-          "R3": 119,
-          "R4": 24
+          "R1": 50,
+          "R2": 158,
+          "R3": 134,
+          "R4": 39
         },
         "payoffSurprises": 1,
         "writingPracticeLessons": 2,
@@ -93963,14 +94148,14 @@
           {
             "language": "portuguese",
             "kind": "atom-step",
-            "count": 2,
+            "count": 3,
             "unit": "lesson/chapter spike(s)",
             "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
           },
           {
             "language": "portuguese",
             "kind": "reinforcement",
-            "count": 337,
+            "count": 381,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -93980,13 +94165,6 @@
             "count": 1,
             "unit": "chapter payoff finding(s)",
             "detail": "make each chapter payoff assess only taught, representative material"
-          },
-          {
-            "language": "portuguese",
-            "kind": "measurement-blind",
-            "count": 8,
-            "unit": "lesson(s)",
-            "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
           }
         ],
         "next": {
@@ -94905,7 +95083,7 @@
       {
         "language": "portuguese",
         "kind": "atom-step",
-        "count": 2,
+        "count": 3,
         "unit": "lesson/chapter spike(s)",
         "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
       },
@@ -95092,16 +95270,16 @@
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
-        "language": "italian",
+        "language": "portuguese",
         "kind": "reinforcement",
-        "count": 342,
+        "count": 381,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
-        "language": "portuguese",
+        "language": "italian",
         "kind": "reinforcement",
-        "count": 337,
+        "count": 342,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -95323,13 +95501,6 @@
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
       {
-        "language": "portuguese",
-        "kind": "measurement-blind",
-        "count": 8,
-        "unit": "lesson(s)",
-        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
-      },
-      {
         "language": "punjabi",
         "kind": "measurement-blind",
         "count": 8,
@@ -95370,8 +95541,8 @@
       "tracksWithDetectedCliffs": 21,
       "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 6,
-      "atomMeasurementBlindLessons": 320,
-      "findings": 112
+      "atomMeasurementBlindLessons": 312,
+      "findings": 111
     }
   },
   "levelGate": {
@@ -95812,8 +95983,8 @@
           },
           {
             "criterion": "reinforcement",
-            "detail": "8 atom(s) at or below pre-A1 are revisited fewer than twice (40 etymology hook(s) waived)",
-            "shortfall": 8
+            "detail": "11 atom(s) at or below pre-A1 are revisited fewer than twice (43 etymology hook(s) waived)",
+            "shortfall": 11
           }
         ],
         "vocabulary": 91
@@ -96024,10 +96195,10 @@
   "modality": {
     "maxLinearisableTableColumns": 3,
     "totalLessons": 5151,
-    "voice": 3503,
-    "sight": 628,
+    "voice": 3504,
+    "sight": 627,
     "pen": 1020,
-    "coreVoice": 4055,
+    "coreVoice": 4056,
     "lessonsWithWritingSegments": 605,
     "drivablePercent": 79,
     "tracks": [
@@ -104083,21 +104254,21 @@
       {
         "language": "portuguese",
         "lessonCount": 102,
-        "voice": 91,
-        "sight": 9,
+        "voice": 92,
+        "sight": 8,
         "pen": 2,
-        "coreVoice": 92,
-        "drivablePercent": 90,
+        "coreVoice": 93,
+        "drivablePercent": 91,
         "drivablePrefixTotal": 84,
         "chapters": [
           {
             "language": "portuguese",
             "chapter": 1,
             "lessonCount": 10,
-            "voice": 7,
-            "sight": 1,
+            "voice": 8,
+            "sight": 0,
             "pen": 2,
-            "coreVoice": 8,
+            "coreVoice": 9,
             "modalities": [
               "voice",
               "sight",
@@ -114756,13 +114927,13 @@
     "taughtPercent": 8
   },
   "rootLedger": {
-    "roots": 3687,
-    "underspent": 3516,
+    "roots": 3693,
+    "underspent": 3522,
     "neverSpent": 2453,
     "payoffDistribution": {
       "0": 2453,
-      "1": 749,
-      "2": 314,
+      "1": 753,
+      "2": 316,
       "3": 96,
       "4": 30,
       "5": 22,
@@ -114786,13 +114957,13 @@
   },
   "lessonBudgets": {
     "lessons": 5151,
-    "measuredLessons": 2182,
-    "idiomMeasuredLessons": 2182,
-    "senseMeasuredLessons": 2182,
-    "cultureClaimMeasuredLessons": 2182,
+    "measuredLessons": 2190,
+    "idiomMeasuredLessons": 2190,
+    "senseMeasuredLessons": 2190,
+    "cultureClaimMeasuredLessons": 2190,
     "idioms": 101,
     "senses": 98,
-    "cultureClaims": 158,
+    "cultureClaims": 159,
     "overBudgetLessons": 0
   },
   "metalanguage": {
