@@ -35,6 +35,20 @@ meet across the Dravidian south (Tamil *pōy varugiṟēṉ*, Kannada *hōgi bar
 Malayalam *pōyi varāṁ*) and echoing into the Indo-Aryan tracks (Bengali *āshi*).
 The warm reply is **వెళ్ళి రండి** (*veḷḷi raṇḍi*, "go and come [back]").
 
+## Across the family — the same idea, five ways
+
+| Language | "go and come back" (goodbye) |
+|---|---|
+| **Telugu** | *veḷḷi vastānu* |
+| Tamil | *pōy varugiṟēṉ* |
+| Kannada | *hōgi baruttēne* |
+| Malayalam | *pōyi varāṁ* |
+| Bengali (Indo-Aryan) | *āshi* ("I come") |
+
+The whole south — and, in Bengali, well beyond it — prefers a promise of return
+to a blunt farewell. The languages are not all related; the habit travelled
+anyway.
+
 ## Grammar Lens: the "having …d" participle
 
 *Veḷḷi* is Telugu's way of chaining actions: "having gone, (then) I come." Like

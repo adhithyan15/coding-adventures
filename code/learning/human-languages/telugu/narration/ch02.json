@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ea31596781d8f6fa",
+  "sourceHash": "fnv1a64:c242b01293a7a121",
   "lessons": [
     {
       "id": "TE-C02-peru",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2799e3e4d20f8597",
+      "sourceHash": "fnv1a64:c783fb36b494efae",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -67,15 +67,40 @@
             {
               "kind": "speech",
               "text": "పేరు (pēru, \"name\") is native Dravidian, from Proto-Dravidian pēr — the same word as Tamil peyar and Malayalam pēr, and a cousin of Kannada hesaru (which softened p becomes h). It is not Sanskrit nāma (Hindi nām, English name). Even Telugu — the most Sanskritised of the Dravidian tongues — kept its home-grown word for \"name.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Across the family: Telugu pēru, Tamil peyar, Malayalam pēr, Kannada hesaru — one Dravidian word; only Hindi nām / English name are Indo-European."
             }
           ]
         },
         {
           "index": 3,
+          "type": "unknown",
+          "title": "Across the family — the same idea, six ways",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Language",
+                "\"Name\"",
+                "Source"
+              ],
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "Language: Telugu. \"Name\": పేరు pēru. Source: native Dravidian (pēr).",
+                "Language: Tamil. \"Name\": peyar. Source: the same Dravidian root.",
+                "Language: Malayalam. \"Name\": pēr. Source: the same Dravidian root.",
+                "Language: Kannada. \"Name\": hesaru. Source: Dravidian (pesar, p becomes h).",
+                "Language: Hindi. \"Name\": nām. Source: Sanskrit (Indo-European).",
+                "Language: English. \"Name\": name. Source: Indo-European."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Four Dravidian tongues, one inherited word — even Kannada's hesaru, once you know the old p went soft. Only the last two rows come from somewhere else."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -86,7 +111,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -117,7 +142,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

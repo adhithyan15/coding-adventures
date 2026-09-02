@@ -16,7 +16,16 @@ The letters in this word.
 
 The word, taken apart.
 పేరు (pēru, "name") is native Dravidian, from Proto-Dravidian pēr — the same word as Tamil peyar and Malayalam pēr, and a cousin of Kannada hesaru (which softened p becomes h). It is not Sanskrit nāma (Hindi nām, English name). Even Telugu — the most Sanskritised of the Dravidian tongues — kept its home-grown word for "name."
-Across the family: Telugu pēru, Tamil peyar, Malayalam pēr, Kannada hesaru — one Dravidian word; only Hindi nām / English name are Indo-European.
+
+Across the family — the same idea, six ways.
+[a table of 6 rows, read aloud]
+Language: Telugu. "Name": పేరు pēru. Source: native Dravidian (pēr).
+Language: Tamil. "Name": peyar. Source: the same Dravidian root.
+Language: Malayalam. "Name": pēr. Source: the same Dravidian root.
+Language: Kannada. "Name": hesaru. Source: Dravidian (pesar, p becomes h).
+Language: Hindi. "Name": nām. Source: Sanskrit (Indo-European).
+Language: English. "Name": name. Source: Indo-European.
+Four Dravidian tongues, one inherited word — even Kannada's hesaru, once you know the old p went soft. Only the last two rows come from somewhere else.
 
 Sounds you'll need.
 ప (pa) + ే (the ē-sign) becomes పే (pē); రు (ru). Read పే, రు becomes pēru.

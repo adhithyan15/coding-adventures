@@ -40,10 +40,34 @@ Left to right: **న · మ · స్ · కా · ర · ం** = *na-ma-s-kā-r
 *kṛ*, “to do”): literally **“the making of a bow.”** Telugu added its own final
 sound. Tamil instead kept its native greeting, *vaṇakkam*.
 
+## Across the family — the same idea, six ways
+
+| Language | "Hello" | Source |
+|---|---|---|
+| **Telugu** | **నమస్కారం** *namaskāram* | Sanskrit |
+| Kannada | *namaskāra* | Sanskrit — the same word |
+| Malayalam | *namaskāram* | Sanskrit — the same word |
+| Hindi | *namaste* | Sanskrit — the same *namas* |
+| Tamil | *vaṇakkam* | **native Dravidian** |
+| English | *hello* | Germanic |
+
+Four of the six borrowed the Sanskrit bow. **Tamil alone kept its own word** —
+the first sign that "Dravidian family" does not mean "same vocabulary."
+
 ## Why it's said this way
 
 With palms together and a small bow, *namaskāram* works as **hello or goodbye**.
 It is respectful without being stiff.
+
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Telugu reads **left to right**, and every consonant carries a built-in "a"
+(many under a little check-mark hat, the *talakaṭṭu*). న *na*, మ *ma*, ర *ra*.
+A **vowel sign** changes it: క *ka* + long-ā → కా *kā*. A vowel-less consonant
+**stacks below** the next as a conjunct: స tucks under *ka* → స్క "ska." And
+the **anusvāra** ం adds a final nasal "-ṁ." Read న·మ·స్·కా·ర·ం →
+*namaskāram*.
 
 ## Guided Practice
 

@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 4,
-  "sourceHash": "fnv1a64:7c5643e5bf34365e",
+  "sourceHash": "fnv1a64:5f771050c2ed1618",
   "lessonIds": [
     "TE-S123-letter-dda",
     "TE-C04-vellu",
@@ -17,7 +17,7 @@
   "drivablePrefix": 0,
   "text": "telugu/narration/ch04.txt",
   "json": "telugu/narration/ch04.json",
-  "textHash": "fnv1a64:cef1d7a6f4200284",
-  "jsonHash": "fnv1a64:0c8f1ca3f3d5ebf8",
+  "textHash": "fnv1a64:7bade809af28d95d",
+  "jsonHash": "fnv1a64:3b9a0f3116b46783",
   "findings": []
 }

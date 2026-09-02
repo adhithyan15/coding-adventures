@@ -117,6 +117,15 @@ The letters in this word.
 The word, taken apart.
 వెళ్ళి వస్తాను (veḷḷi vastānu) = వెళ్ళి (veḷḷi, "having gone") + వస్తాను (vastānu, "I come") — literally "having gone, I come [back]," i.e. "I'll go and come back." A Telugu speaker never signs off with a bare "I'm leaving" — that sounds final. Instead they promise return. It is the same "go-and-come-back" farewell you meet across the Dravidian south (Tamil pōy varugiṟēṉ, Kannada hōgi baruttēne, Malayalam pōyi varāṁ) and echoing into the Indo-Aryan tracks (Bengali āshi). The warm reply is వెళ్ళి రండి (veḷḷi raṇḍi, "go and come [back]").
 
+Across the family — the same idea, five ways.
+[a table of 5 rows, read aloud]
+Language: Telugu. "go and come back" (goodbye): veḷḷi vastānu.
+Language: Tamil. "go and come back" (goodbye): pōy varugiṟēṉ.
+Language: Kannada. "go and come back" (goodbye): hōgi baruttēne.
+Language: Malayalam. "go and come back" (goodbye): pōyi varāṁ.
+Language: Bengali (Indo-Aryan). "go and come back" (goodbye): āshi ("I come").
+The whole south — and, in Bengali, well beyond it — prefers a promise of return to a blunt farewell. The languages are not all related; the habit travelled anyway.
+
 Grammar Lens: the "having …d" participle.
 Veḷḷi is Telugu's way of chaining actions: "having gone, (then) I come." Like its sisters, Telugu strings verbs with one in the participle form and the last one fully conjugated.
 

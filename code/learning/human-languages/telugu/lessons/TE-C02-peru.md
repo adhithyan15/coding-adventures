@@ -33,9 +33,19 @@ reviews_of: [TE-C01-namaskaram]
 English *name*). Even Telugu — the most Sanskritised of the Dravidian tongues —
 kept its home-grown word for "name."
 
-Across the family: Telugu *pēru*, Tamil *peyar*, Malayalam *pēr*, Kannada
-*hesaru* — one Dravidian word; only Hindi *nām* / English *name* are
-Indo-European.
+## Across the family — the same idea, six ways
+
+| Language | "Name" | Source |
+|---|---|---|
+| **Telugu** | **పేరు** *pēru* | **native Dravidian** (\*pēr) |
+| Tamil | *peyar* | the *same* Dravidian root |
+| Malayalam | *pēr* | the *same* Dravidian root |
+| Kannada | *hesaru* | Dravidian (\*pesar, *p* → *h*) |
+| Hindi | *nām* | Sanskrit (Indo-European) |
+| English | *name* | Indo-European |
+
+Four Dravidian tongues, one inherited word — even Kannada's *hesaru*, once you
+know the old *p* went soft. Only the last two rows come from somewhere else.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

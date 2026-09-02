@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:fc4c01b5222e4536",
+  "sourceHash": "fnv1a64:81962fb5b92c32ac",
   "lessons": [
     {
       "id": "TE-C01-namaskaram",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7c3bf19b7a099589",
+      "sourceHash": "fnv1a64:f9d703e0f4921177",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -97,6 +97,35 @@
         },
         {
           "index": 3,
+          "type": "unknown",
+          "title": "Across the family — the same idea, six ways",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Language",
+                "\"Hello\"",
+                "Source"
+              ],
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "Language: Telugu. \"Hello\": నమస్కారం namaskāram. Source: Sanskrit.",
+                "Language: Kannada. \"Hello\": namaskāra. Source: Sanskrit — the same word.",
+                "Language: Malayalam. \"Hello\": namaskāram. Source: Sanskrit — the same word.",
+                "Language: Hindi. \"Hello\": namaste. Source: Sanskrit — the same namas.",
+                "Language: Tamil. \"Hello\": vaṇakkam. Source: native Dravidian.",
+                "Language: English. \"Hello\": hello. Source: Germanic."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Four of the six borrowed the Sanskrit bow. Tamil alone kept its own word — the first sign that \"Dravidian family\" does not mean \"same vocabulary.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -107,7 +136,18 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Telugu reads left to right, and every consonant carries a built-in \"a\" (many under a little check-mark hat, the talakaṭṭu). న na, మ ma, ర ra. A vowel sign changes it: క ka + long-ā becomes కా kā. A vowel-less consonant stacks below the next as a conjunct: స tucks under ka becomes స్క \"ska.\" And the anusvāra ం adds a final nasal \"-ṁ.\" Read న, మ, స్, కా, ర, ం becomes namaskāram."
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -156,7 +196,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 7,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
