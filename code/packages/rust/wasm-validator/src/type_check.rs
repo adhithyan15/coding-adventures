@@ -324,6 +324,23 @@ fn is_assignable(actual: ValueType, expected: ValueType, module: TypeContext) ->
         || matches!((actual, expected), (ValueType::Eqref, ValueType::Anyref))
         || matches!((actual, expected), (ValueType::StructRefAny, ValueType::Eqref))
         || matches!((actual, expected), (ValueType::StructRefAny, ValueType::Anyref))
+        // W38 slice 0 (`code/specs/W38-wasm-gc-array-bulk-ops.md`,
+        // Correction 3): `ArrayRefAny`'s own subtyping edges, the array-
+        // hierarchy mirror of `StructRefAny`'s arms directly above -- a
+        // concrete array reference (nullable OR non-null, OR the pre-
+        // existing non-null abstract top `NonNullArrayAny`) is assignable
+        // to the new nullable abstract ARRAY top, and `arrayref <: eqref
+        // <: anyref`, matching the real spec's `array <: eq <: any`
+        // hierarchy exactly (see this function's own W37 doc comment for
+        // why `struct <: eq <: any` gets the identical direct-chain
+        // treatment one hierarchy over).
+        || matches!((actual, expected), (ValueType::ArrayRef(_), ValueType::ArrayRefAny))
+        || matches!((actual, expected), (ValueType::NonNullArrayRef(_), ValueType::ArrayRefAny))
+        || matches!((actual, expected), (ValueType::NonNullArrayAny, ValueType::ArrayRefAny))
+        || matches!((actual, expected), (ValueType::ArrayRef(_), ValueType::Eqref))
+        || matches!((actual, expected), (ValueType::NonNullArrayRef(_), ValueType::Eqref))
+        || matches!((actual, expected), (ValueType::ArrayRefAny, ValueType::Eqref))
+        || matches!((actual, expected), (ValueType::ArrayRefAny, ValueType::Anyref))
 }
 
 /// Require an already-popped [`StackType`] to be assignable to `expected`
@@ -2326,6 +2343,64 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // wasm-wast-parser) -- pops one arrayref, pushes I32.
                         pop_val(&mut stack, frame!())?;
                         push_val(&mut stack, ValueType::I32);
+                    }
+                    0x10 => {
+                        // array.fill <type_idx> (W38 slice 2: `code/specs/
+                        // W38-wasm-gc-array-bulk-ops.md`): pops [arrayref,
+                        // i32 offset, value, i32 count], pushes nothing.
+                        // Real spec validation rule: "The prefix `mut`
+                        // must be `var`" -- a real mutability check, the
+                        // array-hierarchy mirror of `array.set`'s (0x0E)
+                        // own check just above, applied to the SAME
+                        // `array.wast`-family "immutable" `assert_invalid`
+                        // shape `array_fill.wast` vendors for this
+                        // instruction specifically.
+                        let (type_idx, size) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad array.fill type index: {e}")))?;
+                        offset += size;
+                        if !array_element_field(ctx.module, type_idx as u32)?.mutable {
+                            return Err(ValidationError::Other(format!("array.fill: immutable array element (type {type_idx})")));
+                        }
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // count
+                        pop_val(&mut stack, frame!())?; // value (any type -- packed storage widens)
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // offset
+                        pop_val(&mut stack, frame!())?; // arrayref
+                    }
+                    0x11 => {
+                        // array.copy <dest_type_idx> <src_type_idx> (W38
+                        // slice 2): pops [dest_ref, i32 d, src_ref, i32 s,
+                        // i32 n], pushes nothing. TWO real spec validation
+                        // rules: "The first array's `mut` must be `var`"
+                        // (destination mutability, same shape as 0x10/
+                        // 0x0E above) and "The second array's
+                        // `storagetype` must match the first's" -- this
+                        // second rule is `field_is_structural_subtype`
+                        // (W34 third slice), read closely to be EXACTLY
+                        // the real spec's own `match-storagetype`
+                        // relation (see this spec's own "Current
+                        // implementation" section) -- zero new subtyping
+                        // logic needed, a direct reuse of already-tested
+                        // W34 infrastructure. `array_copy.wast`'s own
+                        // vendored `assert_invalid` cases probe both
+                        // rules directly ("immutable array", "array types
+                        // do not match").
+                        let (dest_idx, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad array.copy dest type index: {e}")))?;
+                        let (src_idx, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad array.copy src type index: {e}")))?;
+                        offset += sz1 + sz2;
+                        let dest_field = *array_element_field(ctx.module, dest_idx as u32)?;
+                        let src_field = *array_element_field(ctx.module, src_idx as u32)?;
+                        if !dest_field.mutable {
+                            return Err(ValidationError::Other(format!("array.copy: immutable destination array (type {dest_idx})")));
+                        }
+                        if !field_is_structural_subtype(&src_field, &dest_field, ctx.module) {
+                            return Err(ValidationError::Other(format!(
+                                "array.copy: source type {src_idx} not assignable to destination type {dest_idx}"
+                            )));
+                        }
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // n
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // s
+                        pop_val(&mut stack, frame!())?; // src ref
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // d
+                        pop_val(&mut stack, frame!())?; // dest ref
                     }
                     0x14 | 0x15 => {
                         // ref.test / ref.test null <heap_type>: pops a ref,

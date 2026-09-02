@@ -2,6 +2,19 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.17] — 2026-09-02 — mechanical fallout of `wasm_types::Element::item_exprs` (W38 slice 0)
+
+`wasm-types` 0.1.26 added `Element::item_exprs: Vec<Vec<u8>>` (see that
+crate's own CHANGELOG for the full root-cause writeup: raw per-item
+constant-expression bytes for the elem-segment three-layer data-model gap,
+`code/specs/W38-wasm-gc-array-bulk-ops.md` Correction 2). This crate's own
+binary decoder has no consumer for it yet -- real population is a later
+W38 slice's TEXT-parser-only work -- so this is a pure mechanical
+fallout: the one `Element { .. }` construction site now populates
+`item_exprs` with one empty `Vec` per `function_indices` entry, keeping
+the "always the same length" invariant `item_exprs`'s own doc comment
+documents. No behavior change in this crate.
+
 ## [0.2.16] — 2026-09-01 — mechanical fallout of `wasm_types::Element::is_declarative`
 
 `wasm-types` 0.1.24 added `Element::is_declarative` (see that crate's own

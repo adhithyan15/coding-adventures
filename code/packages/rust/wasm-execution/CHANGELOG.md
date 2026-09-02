@@ -2,6 +2,71 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.95] - 2026-09-02 - `array.fill`/`array.copy` execution (W38 slice 2) + `ArrayRefAny` default (W38 slice 0)
+
+Per `code/specs/W38-wasm-gc-array-bulk-ops.md`.
+
+**Slice 0**: `WasmValue::default_for` gains an `ArrayRefAny` arm (nullable
+at the runtime-value level, same as `Anyref`/`StructRefAny`) -- required
+purely to keep the match exhaustive after `wasm-types` 0.1.26 added the
+variant; no new runtime behavior.
+
+**Slice 2**: two new `0xFB` sub-opcodes, `0x10` (`array.fill`) and `0x11`
+(`array.copy`), reusing the existing `GcArray`/`GcObject` heap
+representation (`gc_heap: Vec<Option<GcObject>>`) unchanged -- no parallel
+representation invented. `GcOp::field_idx` is repurposed to carry
+`array.copy`'s SECOND type index (the source array type) rather than
+adding a new struct field, since the op never touches a struct field.
+
+- **`array.fill`**: bounds-checked (`d.checked_add(n) <=
+  array.elements.len()`, `checked_add` not a bare `+`) write of a repeated
+  value into a sub-range. Traps (never panics) on a null array reference
+  UNCONDITIONALLY, even when `count == 0` -- re-verified directly against
+  `array_fill.wast`'s own vendored `assert_trap` case, which this spec's
+  own prose paraphrase ("traps... and n>0") had understated.
+- **`array.copy`**: bounds-checked on BOTH the source and destination
+  ranges before any write. Overlap-safe (memmove semantics) via an
+  intermediate OWNED `Vec<WasmValue>` -- the source range is read out
+  (one scoped borrow of `gc_heap`, ended before the destination's mutable
+  borrow begins) into a temporary buffer, THEN written into the
+  destination -- correct unconditionally, including self-copy
+  (`dest_handle == src_handle`, overlapping ranges), with no
+  direction-aware forward/backward branch needed (a full copy through an
+  intermediate buffer sidesteps the aliasing hazard `LinearMemory::
+  copy_between`'s own doc comment documents for the identical "two
+  operands might be the same object" problem, W35 slice 2's own precedent
+  for `gc_heap` specifically -- `GcArray.elements` can't be split-borrowed
+  the same way a raw byte slice can when the two handles coincide).
+
+New unit tests (`src/lib.rs`): `test_array_fill_writes_the_value_across_
+the_requested_range_only`, `test_array_fill_leaves_indices_outside_the_
+range_untouched`, `test_array_fill_out_of_bounds_range_traps`,
+`test_array_fill_offset_plus_count_overflow_does_not_wrap_and_bypass_the_
+bounds_check`, `test_array_fill_on_null_reference_traps_even_when_count_
+is_zero`, `test_array_copy_between_two_distinct_arrays_copies_the_
+requested_range`, `test_array_copy_leaves_indices_outside_the_copied_
+range_untouched`, `test_array_copy_out_of_bounds_source_range_traps`,
+`test_array_copy_out_of_bounds_destination_range_traps`,
+`test_array_copy_dest_ref_null_traps_even_when_count_is_zero`,
+`test_array_copy_src_ref_null_traps_even_when_count_is_zero`,
+`test_array_copy_self_overlap_forward_shift_is_memmove_correct`,
+`test_array_copy_self_overlap_backward_shift_is_memmove_correct`.
+
+**Corpus impact** (regenerated baseline, diffed programmatically against
+the pre-slice baseline across all 257 files -- see the PR description for
+the full accounting): `array_fill.wast` moves from 3/30 to 28/30 real
+`Pass` (the remaining 2 are the pre-existing "no instruction-level
+type-checker" scope gap noted in `wasm-validator`'s own CHANGELOG entry,
+not a regression). `array_copy.wast`'s AGGREGATE numbers are unchanged
+(4/35 pass either way) -- re-verified, not assumed: its 4 `assert_invalid`
+cases already passed trivially before this slice (a parse failure
+vacuously satisfies `assert_invalid`), and now pass for the real reason
+(genuine validation rejection); the remaining 31 directives depend on
+`array.new_data` (confirmed by direct read of the file's own "overlap
+test" functions), which is out of scope for this slice -- a real
+corpus-coupling this spec's own summary table did not surface, expected
+to resolve once W38's later `array.new_data` slice lands.
+
 ## [0.9.94] - 2026-09-02 - `Table` gains a real, tracked element-type tag (W37 addendum)
 
 Companion fix to `wasm-runtime` 0.6.31 -- see that crate's own CHANGELOG

@@ -1700,6 +1700,7 @@ mod tests {
                 function_indices: vec![Some(0)],
                 is_passive: false,
                 is_declarative: false,
+                item_exprs: vec![],
             }],
             ..Default::default()
         };
@@ -1723,6 +1724,7 @@ mod tests {
                 function_indices: vec![Some(0)],
                 is_passive: false,
                 is_declarative: false,
+                item_exprs: vec![],
             }],
             ..Default::default()
         };
@@ -1746,6 +1748,7 @@ mod tests {
                 function_indices: vec![Some(99)], // out of bounds
                 is_passive: false,
                 is_declarative: false,
+                item_exprs: vec![],
             }],
             ..Default::default()
         };
@@ -1769,6 +1772,7 @@ mod tests {
                 function_indices: vec![Some(0)],
                 is_passive: false,
                 is_declarative: false,
+                item_exprs: vec![],
             }],
             ..Default::default()
         };

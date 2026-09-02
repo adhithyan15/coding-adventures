@@ -309,6 +309,10 @@ impl WasmValue {
             | ValueType::ArrayRef(_)
             | ValueType::NonNullArrayRef(_)
             | ValueType::NonNullArrayAny
+            // W38 slice 0: `ArrayRefAny` is nullable at the runtime-value
+            // level too -- same "GC and funcref/externref alike default to
+            // null" reasoning as `Anyref`/`StructRefAny` above.
+            | ValueType::ArrayRefAny
             | ValueType::Funcref
             | ValueType::Externref
             | ValueType::Exnref
@@ -3104,6 +3108,8 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
         //   0x0D array.get_u        <type_idx>                    (W33 fourth slice)
         //   0x0E array.set          <type_idx>                    (W33 fourth slice)
         //   0x0F array.len          (none -- no type immediate)   (W33 fourth slice)
+        //   0x10 array.fill         <type_idx>                    (W38 slice 2)
+        //   0x11 array.copy         <dest_type_idx> <src_type_idx> (W38 slice 2; SECOND index carried in `field_idx`, repurposed -- see `GcOp::field_idx`'s own doc comment)
         //   0x1C ref.i31       (none)
         //   0x1D i31.get_s     (none)
         //   0x1E i31.get_u     (none, W20)
@@ -3175,6 +3181,27 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                 // slice; see `wasm-wast-parser::encode_array_len`'s own doc
                 // comment for the real spec rationale).
                 0x0F => (0, 0, 0),
+                // array.fill: one index immediate (the array type) -- W38
+                // slice 2, same one-index decode shape as `0x06 | 0x07`
+                // above.
+                0x10 => {
+                    let (t, sz) = decode_leb_u32(code, offset);
+                    offset += sz;
+                    (t, 0, 0)
+                }
+                // array.copy <dest_type_idx> <src_type_idx>: TWO index
+                // immediates -- W38 slice 2, same two-index decode shape
+                // struct.get/struct.set's own `0x02..=0x05` arm above
+                // already uses. The second index rides in `field_idx`
+                // (repurposed -- see `GcOp::field_idx`'s own doc comment;
+                // this op never touches a struct field, so there is no
+                // real ambiguity).
+                0x11 => {
+                    let (dest_t, sz1) = decode_leb_u32(code, offset);
+                    let (src_t, sz2) = decode_leb_u32(code, offset + sz1);
+                    offset += sz1 + sz2;
+                    (dest_t, src_t, 0)
+                }
                 // ref.i31 / i31.get_s / i31.get_u (W20) (and any unknown
                 // sub-opcode): no immediates.
                 _ => (0, 0, 0),
@@ -4969,7 +4996,15 @@ pub struct GcOp {
     pub sub: u8,
     /// The struct/array type index immediate (0 when the op carries none).
     pub type_idx: u32,
-    /// The field index immediate (0 when the op carries none).
+    /// The field index immediate for `struct.get`/`struct.get_s`/
+    /// `struct.get_u`/`struct.set` (0 when the op carries none). W38
+    /// slice 2 (`code/specs/W38-wasm-gc-array-bulk-ops.md`) REPURPOSES
+    /// this same slot for `array.copy`'s SECOND type index (the SOURCE
+    /// array type -- `type_idx` holds the DESTINATION type for that op)
+    /// rather than adding a new field: `array.copy` never touches a
+    /// struct field, so there is no real ambiguity between the two roles,
+    /// exactly the reuse this spec's own design section calls for ("needs
+    /// an updated doc comment, not a new field").
     pub field_idx: u32,
     /// `array.new_fixed`'s literal element-count immediate (W33 fourth
     /// slice; 0 for every other op, which has no count immediate at all).
@@ -6169,6 +6204,128 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                     return Err(VMError::GenericError(format!("array.len: handle {handle} is not an array")));
                 };
                 push_wasm(vm, WasmValue::I32(a.elements.len() as i32));
+            }
+
+            // array.fill <type_idx> (W38 slice 2: `code/specs/
+            // W38-wasm-gc-array-bulk-ops.md`): pop [arrayref, i32 offset
+            // `d`, value `val`, i32 count `n`], write `val` to
+            // `elements[d..d+n]`. Mutability is a static, VALIDATOR-
+            // enforced property (checked in `wasm-validator`'s own `0x10`
+            // arm, mirroring `array.set`'s existing division of
+            // responsibility) -- this handler enforces the null-deref and
+            // bounds checks only.
+            //
+            // SECURITY: the bounds check is `d.checked_add(n) <=
+            // a.elements.len()`, using `checked_add` (never a bare `+`)
+            // and run BEFORE any write, so a trap leaves the array
+            // completely unmodified -- matching every other bulk
+            // operation in this codebase (`LinearMemory::fill`'s own
+            // `memory.fill` handler, `Table::fill`'s `table.fill`), and
+            // this campaign's own standing `feedback_verify_dos_guards_
+            // adversarially` lesson (an unchecked `d + n` on
+            // attacker-controlled `i32`-derived `usize` values is exactly
+            // the overflow class that lesson warns about). The real
+            // corpus's own `array_fill-null` case traps on a null array
+            // reference EVEN WHEN `n == 0` (confirmed by direct read of
+            // `array_fill.wast`'s own vendored `assert_trap` -- the real
+            // spec's null check is unconditional, not gated on `n > 0`
+            // despite this spec addendum's own paraphrase suggesting
+            // otherwise), which `pop_array_ref`'s own unconditional
+            // null-check below already gives for free, matching
+            // `array.get`/`array.set`/`array.len`'s identical behavior.
+            0x10 => {
+                let n = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                // W35 slice 2 (security review): see struct.new's (0x00)
+                // identical comment -- `gc_heap` persists across calls,
+                // `func_ref_heap` doesn't.
+                let val = flatten_ref_for_durable_storage(ctx, pop_wasm(vm)?)?;
+                let d = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let handle = pop_array_ref(vm, "array.fill")?;
+                let obj = ctx.gc_heap.get_mut(handle as usize).and_then(|slot| slot.as_mut()).ok_or_else(|| {
+                    VMError::GenericError(format!("array.fill: dangling handle {handle}"))
+                })?;
+                let GcObject::Array(a) = obj else {
+                    return Err(VMError::GenericError(format!("array.fill: handle {handle} is not an array")));
+                };
+                let end = d
+                    .checked_add(n)
+                    .filter(|&e| e <= a.elements.len())
+                    .ok_or_else(|| VMError::GenericError(format!("out of bounds array.fill: offset={d}, count={n}, array_length={}", a.elements.len())))?;
+                a.elements[d..end].fill(val);
+            }
+
+            // array.copy <dest_type_idx> <src_type_idx> (W38 slice 2): pop
+            // [dest_ref, i32 `d`, src_ref, i32 `s`, i32 `n`], copy `n`
+            // elements from `src[s..s+n]` to `dest[d..d+n]`. The storage-
+            // type-compatibility check (real spec's own `match-
+            // storagetype` relation) and the destination's mutability
+            // check are both static, VALIDATOR-enforced properties
+            // (`wasm-validator`'s own `0x11` arm, reusing
+            // `field_is_structural_subtype` -- W34 infrastructure, zero
+            // new subtyping logic) -- this handler enforces null-deref and
+            // bounds only, same division of responsibility as every other
+            // GC op here.
+            //
+            // OVERLAP-SAFETY (memmove semantics, SECURITY-relevant): reads
+            // the source range into an OWNED, temporary `Vec<WasmValue>`
+            // via one scoped immutable-then-dropped borrow of `ctx.
+            // gc_heap`, BEFORE taking a separate mutable borrow for the
+            // destination write -- the exact same "read fully out before
+            // writing" discipline `LinearMemory::copy_between`'s own doc
+            // comment documents (W35 slice 2's own precedent for `gc_heap`
+            // aliasing specifically) for the identical "two operands might
+            // be the SAME object" hazard. Unlike `LinearMemory::
+            // copy_between`'s raw-byte `copy_within`, a `GcArray`'s
+            // `elements: Vec<WasmValue>` lives inside `Vec<Option<
+            // GcObject>>` and can't be split-borrowed the same way even
+            // when `dest_handle == src_handle` -- cloning through an
+            // intermediate owned buffer sidesteps that aliasing hazard
+            // AND gives memmove-correct results unconditionally (no
+            // direction-aware forward/backward branch needed at all,
+            // since the buffer is a full, independent copy of the source
+            // range regardless of any overlap with the destination).
+            //
+            // SECURITY: both bounds checks use `checked_add` and run
+            // BEFORE any write -- a trap on either check leaves BOTH
+            // arrays completely unmodified (the source is only ever
+            // read, and the destination mutable borrow/write only
+            // happens after the source range is already proven in-bounds
+            // and fully copied out).
+            0x11 => {
+                let n = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let s = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let src_handle = pop_array_ref(vm, "array.copy")?;
+                let d = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let dest_handle = pop_array_ref(vm, "array.copy")?;
+
+                let src_obj = ctx.gc_heap.get(src_handle as usize).and_then(|slot| slot.as_ref()).ok_or_else(|| {
+                    VMError::GenericError(format!("array.copy: dangling source handle {src_handle}"))
+                })?;
+                let GcObject::Array(src_arr) = src_obj else {
+                    return Err(VMError::GenericError(format!("array.copy: source handle {src_handle} is not an array")));
+                };
+                let src_end = s
+                    .checked_add(n)
+                    .filter(|&e| e <= src_arr.elements.len())
+                    .ok_or_else(|| VMError::GenericError(format!("out of bounds array.copy source: offset={s}, count={n}, array_length={}", src_arr.elements.len())))?;
+                // Scoped read -- this borrow of `ctx.gc_heap` (via `src_obj`/
+                // `src_arr`) ends here, before the destination's mutable
+                // borrow below begins. Safe even when `src_handle ==
+                // dest_handle` (a self-copy), the exact hazard this
+                // handler's own doc comment above explains.
+                let buf: Vec<WasmValue> = src_arr.elements[s..src_end].to_vec();
+
+                let dest_obj = ctx.gc_heap.get_mut(dest_handle as usize).and_then(|slot| slot.as_mut()).ok_or_else(|| {
+                    VMError::GenericError(format!("array.copy: dangling destination handle {dest_handle}"))
+                })?;
+                let GcObject::Array(dest_arr) = dest_obj else {
+                    return Err(VMError::GenericError(format!("array.copy: destination handle {dest_handle} is not an array")));
+                };
+                let dest_end = d
+                    .checked_add(n)
+                    .filter(|&e| e <= dest_arr.elements.len())
+                    .ok_or_else(|| VMError::GenericError(format!("out of bounds array.copy destination: offset={d}, count={n}, array_length={}", dest_arr.elements.len())))?;
+                dest_arr.elements[d..dest_end].clone_from_slice(&buf);
             }
 
             // ref.test (0x14) / ref.test null (0x15): pop a reference, push i32
@@ -15989,6 +16146,372 @@ mod tests {
         ];
         let mut engine = array_engine(code, vec![ValueType::Anyref], vec![Some(wasm_types::StorageType::Val(ValueType::I32))]);
         assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    // ── W38 slice 2 (`code/specs/W38-wasm-gc-array-bulk-ops.md`):
+    // array.fill / array.copy ────────────────────────────────────────────
+
+    /// Helper: build a two-local (index 0 and 1, both `Anyref`) engine --
+    /// `array.fill`/`array.copy` both consume every arrayref operand they
+    /// touch (same "not left on the stack" shape `array.set` has), so
+    /// tests that read an array back after mutating it need somewhere to
+    /// stash the handle(s), mirroring `test_array_set_then_get_round_
+    /// trips_a_mutated_element`'s own reason for not using the
+    /// zero-locals `array_engine` helper.
+    fn array_engine_with_locals(code: Vec<u8>, results: Vec<ValueType>, locals: Vec<ValueType>, array_element_storage: Vec<Option<wasm_types::StorageType>>) -> WasmExecutionEngine {
+        let func_type = FuncType { params: vec![], results };
+        let body = FunctionBody { locals, code };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.set_array_element_storage(array_element_storage);
+        engine
+    }
+
+    #[test]
+    fn test_array_fill_writes_the_value_across_the_requested_range_only() {
+        use wasm_types::StorageType;
+        // array.new_default 0 (length 5) -> local 0; array.fill 0 (local 0)
+        // (offset=1) (value=99) (count=2) -- fills indices [1, 3) only.
+        let code = vec![
+            0x41, 5, // length 5
+            0xFB, 0x07, 0x00, // array.new_default 0
+            0x21, 0x00, // local.set 0
+            0x20, 0x00, // local.get 0 (arrayref)
+            0x41, 1, // offset 1
+            0x41, 0xE3, 0x00, // value 99 (sLEB128, 2 bytes)
+            0x41, 2, // count 2
+            0xFB, 0x10, 0x00, // array.fill 0
+            0x20, 0x00, // local.get 0
+            0x41, 1, // index 1 (inside the filled range)
+            0xFB, 0x0B, 0x00, // array.get 0
+            0x0B,
+        ];
+        let mut engine = array_engine_with_locals(code, vec![ValueType::I32], vec![ValueType::Anyref], vec![Some(StorageType::Val(ValueType::I32))]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(99)]);
+    }
+
+    #[test]
+    fn test_array_fill_leaves_indices_outside_the_range_untouched() {
+        use wasm_types::StorageType;
+        // Same fill as above ([1, 3) <- 99), but reads index 3 back
+        // (outside the filled range) -- must still be the array's own
+        // default zero value.
+        let code = vec![
+            0x41, 5, // length 5
+            0xFB, 0x07, 0x00, // array.new_default 0
+            0x21, 0x00, // local.set 0
+            0x20, 0x00, // local.get 0
+            0x41, 1, // offset 1
+            0x41, 0xE3, 0x00, // value 99
+            0x41, 2, // count 2
+            0xFB, 0x10, 0x00, // array.fill 0
+            0x20, 0x00, // local.get 0
+            0x41, 3, // index 3 (outside the filled range)
+            0xFB, 0x0B, 0x00, // array.get 0
+            0x0B,
+        ];
+        let mut engine = array_engine_with_locals(code, vec![ValueType::I32], vec![ValueType::Anyref], vec![Some(StorageType::Val(ValueType::I32))]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0)]);
+    }
+
+    #[test]
+    fn test_array_fill_out_of_bounds_range_traps() {
+        use wasm_types::StorageType;
+        // length 5, offset=4, count=2 -> 4+2=6 > 5, must trap
+        // (`checked_add` bounds check, run BEFORE any write -- see this
+        // op's own handler doc comment).
+        let code = vec![
+            0x41, 5, // length 5
+            0xFB, 0x07, 0x00, // array.new_default 0
+            0x21, 0x00, // local.set 0
+            0x20, 0x00, // local.get 0
+            0x41, 4, // offset 4
+            0x41, 1, // value 1
+            0x41, 2, // count 2 (4 + 2 = 6 > length 5)
+            0xFB, 0x10, 0x00, // array.fill 0
+            0x0B,
+        ];
+        let mut engine = array_engine_with_locals(code, vec![], vec![ValueType::Anyref], vec![Some(StorageType::Val(ValueType::I32))]);
+        assert!(engine.call_function(0, &[]).is_err(), "offset+count past the array's length must trap, not silently truncate");
+    }
+
+    #[test]
+    fn test_array_fill_offset_plus_count_overflow_does_not_wrap_and_bypass_the_bounds_check() {
+        use wasm_types::StorageType;
+        // Adversarial: offset = i32::MAX, count = 10 -- `offset + count`
+        // would wrap past `usize` on a 32-bit build if computed with a
+        // bare `+` instead of `checked_add`. This op's own handler uses
+        // `checked_add` (see its doc comment's own DoS-guard citation),
+        // so this must trap cleanly, never panic or silently accept a
+        // wrapped-around in-bounds-looking offset.
+        let code = vec![
+            0x41, 3, // length 3
+            0xFB, 0x07, 0x00, // array.new_default 0
+            0x21, 0x00, // local.set 0
+            0x20, 0x00, // local.get 0
+            0x41, 0xFF, 0xFF, 0xFF, 0xFF, 0x07, // offset = i32::MAX (0x7FFFFFFF)
+            0x41, 1, // value 1
+            0x41, 10, // count 10
+            0xFB, 0x10, 0x00, // array.fill 0
+            0x0B,
+        ];
+        let mut engine = array_engine_with_locals(code, vec![], vec![ValueType::Anyref], vec![Some(StorageType::Val(ValueType::I32))]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_array_fill_on_null_reference_traps_even_when_count_is_zero() {
+        // Real corpus precedent (`array_fill.wast`'s own "array_fill-null"
+        // case, confirmed by direct read): a null array reference traps
+        // UNCONDITIONALLY, even when `count == 0` -- not gated on `n > 0`
+        // despite this spec's own prose paraphrase suggesting otherwise
+        // (this handler's own doc comment documents the re-verification).
+        let code = vec![
+            0xD0, 0x0F, // ref.null
+            0x41, 0, // offset 0
+            0x41, 0, // value 0
+            0x41, 0, // count 0
+            0xFB, 0x10, 0x00, // array.fill 0
+            0x0B,
+        ];
+        let mut engine = array_engine(code, vec![], vec![]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    /// Helper: build a two-array-local engine, pre-loading array-type 0's
+    /// AND array-type 1's element storage (`array.copy`'s own two type
+    /// immediates, W38 slice 2) -- the execution layer has no per-type
+    /// structural check of its own; that's `wasm-validator`'s job,
+    /// exercised separately in `wasm-validator/tests/type_check.rs`.
+    fn array_copy_engine(code: Vec<u8>, results: Vec<ValueType>) -> WasmExecutionEngine {
+        use wasm_types::StorageType;
+        array_engine_with_locals(
+            code,
+            results,
+            vec![ValueType::Anyref, ValueType::Anyref],
+            vec![Some(StorageType::Val(ValueType::I32)), Some(StorageType::Val(ValueType::I32))],
+        )
+    }
+
+    #[test]
+    fn test_array_copy_between_two_distinct_arrays_copies_the_requested_range() {
+        // local 0: array type 0, length 3, filled via array.fill with 7.
+        // local 1: array type 1, length 3, default zero.
+        // array.copy 1 0 (dest=local1, d=0) (src=local0, s=0, n=2) --
+        // copies indices [0,2) from local0 into local1.
+        let code = vec![
+            0x41, 3, // length 3
+            0xFB, 0x07, 0x00, // array.new_default 0
+            0x21, 0x00, // local.set 0
+            0x20, 0x00, // local.get 0
+            0x41, 0, // offset 0
+            0x41, 7, // value 7
+            0x41, 3, // count 3
+            0xFB, 0x10, 0x00, // array.fill 0 (local0 = [7, 7, 7])
+            0x41, 3, // length 3
+            0xFB, 0x07, 0x01, // array.new_default 1 (local1 = [0, 0, 0])
+            0x21, 0x01, // local.set 1
+            0x20, 0x01, // local.get 1 (dest ref)
+            0x41, 0, // d = 0
+            0x20, 0x00, // local.get 0 (src ref)
+            0x41, 0, // s = 0
+            0x41, 2, // n = 2
+            0xFB, 0x11, 0x01, 0x00, // array.copy dest_type=1 src_type=0
+            0x20, 0x01, // local.get 1
+            0x41, 0, // index 0
+            0xFB, 0x0B, 0x01, // array.get 1
+            0x0B,
+        ];
+        let mut engine = array_copy_engine(code, vec![ValueType::I32]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(7)], "index 0 must be copied from src");
+    }
+
+    #[test]
+    fn test_array_copy_leaves_indices_outside_the_copied_range_untouched() {
+        let code = vec![
+            0x41, 3, // length 3
+            0xFB, 0x07, 0x00, // array.new_default 0
+            0x21, 0x00, // local.set 0
+            0x20, 0x00, // local.get 0
+            0x41, 0, // offset 0
+            0x41, 7, // value 7
+            0x41, 3, // count 3
+            0xFB, 0x10, 0x00, // array.fill 0 (local0 = [7, 7, 7])
+            0x41, 3, // length 3
+            0xFB, 0x07, 0x01, // array.new_default 1 (local1 = [0, 0, 0])
+            0x21, 0x01, // local.set 1
+            0x20, 0x01, // local.get 1 (dest)
+            0x41, 0, // d = 0
+            0x20, 0x00, // local.get 0 (src)
+            0x41, 0, // s = 0
+            0x41, 2, // n = 2 (copies index 0,1 only -- index 2 stays untouched)
+            0xFB, 0x11, 0x01, 0x00, // array.copy dest_type=1 src_type=0
+            0x20, 0x01, // local.get 1
+            0x41, 2, // index 2
+            0xFB, 0x0B, 0x01, // array.get 1
+            0x0B,
+        ];
+        let mut engine = array_copy_engine(code, vec![ValueType::I32]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0)], "index 2 was outside the copied range and must stay the destination's own default");
+    }
+
+    #[test]
+    fn test_array_copy_out_of_bounds_source_range_traps() {
+        // src length 3, s=2, n=2 -> 2+2=4 > 3, must trap on the SOURCE
+        // bounds check.
+        let code = vec![
+            0x41, 3, 0xFB, 0x07, 0x00, // array.new_default 0 -> local 0 (src)
+            0x21, 0x00,
+            0x41, 3, 0xFB, 0x07, 0x01, // array.new_default 1 -> local 1 (dest)
+            0x21, 0x01,
+            0x20, 0x01, // dest ref
+            0x41, 0, // d = 0
+            0x20, 0x00, // src ref
+            0x41, 2, // s = 2
+            0x41, 2, // n = 2 (2+2=4 > src length 3)
+            0xFB, 0x11, 0x01, 0x00, // array.copy dest=1 src=0
+            0x0B,
+        ];
+        let mut engine = array_copy_engine(code, vec![]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_array_copy_out_of_bounds_destination_range_traps() {
+        // dest length 3, d=2, n=2 -> 2+2=4 > 3, must trap on the
+        // DESTINATION bounds check -- the source range itself (s=0, n=2)
+        // is fully in-bounds, so this specifically exercises the second
+        // (destination) `checked_add` check, not the first.
+        let code = vec![
+            0x41, 3, 0xFB, 0x07, 0x00, // array.new_default 0 -> local 0 (src)
+            0x21, 0x00,
+            0x41, 3, 0xFB, 0x07, 0x01, // array.new_default 1 -> local 1 (dest)
+            0x21, 0x01,
+            0x20, 0x01, // dest ref
+            0x41, 2, // d = 2
+            0x20, 0x00, // src ref
+            0x41, 0, // s = 0
+            0x41, 2, // n = 2 (2+2=4 > dest length 3)
+            0xFB, 0x11, 0x01, 0x00, // array.copy dest=1 src=0
+            0x0B,
+        ];
+        let mut engine = array_copy_engine(code, vec![]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_array_copy_dest_ref_null_traps_even_when_count_is_zero() {
+        // Real corpus precedent (`array_copy.wast`'s own "array_copy-
+        // null-left" case): traps unconditionally, even with n=0.
+        let code = vec![
+            0x41, 3, 0xFB, 0x07, 0x00, // array.new_default 0 -> src
+            0x21, 0x00,
+            0xD0, 0x0F, // ref.null (dest)
+            0x41, 0, // d = 0
+            0x20, 0x00, // src ref
+            0x41, 0, // s = 0
+            0x41, 0, // n = 0
+            0xFB, 0x11, 0x00, 0x00, // array.copy dest=0 src=0
+            0x0B,
+        ];
+        let mut engine = array_copy_engine(code, vec![]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_array_copy_src_ref_null_traps_even_when_count_is_zero() {
+        // Real corpus precedent (`array_copy.wast`'s own "array_copy-
+        // null-right" case): traps unconditionally, even with n=0.
+        let code = vec![
+            0x41, 3, 0xFB, 0x07, 0x00, // array.new_default 0 -> dest
+            0x21, 0x00,
+            0x20, 0x00, // dest ref
+            0x41, 0, // d = 0
+            0xD0, 0x0F, // ref.null (src)
+            0x41, 0, // s = 0
+            0x41, 0, // n = 0
+            0xFB, 0x11, 0x00, 0x00, // array.copy dest=0 src=0
+            0x0B,
+        ];
+        let mut engine = array_copy_engine(code, vec![]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_array_copy_self_overlap_forward_shift_is_memmove_correct() {
+        // Mirrors `array_copy.wast`'s own "array_copy_overlap_test-1"
+        // shape: SAME array, `d=1 > s=0`, shifting every element one slot
+        // to the RIGHT. A naive forward byte-at-a-time copy would corrupt
+        // the tail by reading already-overwritten data; this handler's
+        // own "read the WHOLE source range into an owned buffer before
+        // any write" design sidesteps that hazard unconditionally (see
+        // its own doc comment), so this confirms that design, not a
+        // direction-aware branch.
+        //
+        // Seeds a real [0,1,2,3,4] array via `array.new_fixed` (whose own
+        // doc comment establishes "last-pushed value is the LOWEST
+        // index", so operands are pushed in ASCENDING order below --
+        // first-pushed (0) lands at index 0, per `array.new_fixed`'s own
+        // "first-pushed is deepest/lowest index" doc comment/test
+        // (`test_array_new_fixed_pops_exactly_n_elements_in_order`).
+        let code = vec![
+            0x41, 0, 0x41, 1, 0x41, 2, 0x41, 3, 0x41, 4, // pushed 0,1,2,3,4 -> index0=0 .. index4=4
+            0xFB, 0x08, 0x00, 0x05, // array.new_fixed 0, count=5
+            0x21, 0x00, // local.set 0
+            // array.copy 0 0 (self): dest=local0 d=1, src=local0 s=0, n=4
+            // -- shifts [0,1,2,3] into slots [1,2,3,4]: [0,0,1,2,3].
+            0x20, 0x00, // dest ref
+            0x41, 1, // d = 1
+            0x20, 0x00, // src ref
+            0x41, 0, // s = 0
+            0x41, 4, // n = 4
+            0xFB, 0x11, 0x00, 0x00, // array.copy dest=0 src=0
+            // index 4 must be 3 (the OLD value at index 3, shifted right
+            // by one) -- a byte-at-a-time forward copy without a buffer
+            // would have already overwritten index 3 with index 2's
+            // value by the time index 4 is written, corrupting this to 2.
+            0x20, 0x00,
+            0x41, 4,
+            0xFB, 0x0B, 0x00, // array.get 0
+            0x0B,
+        ];
+        let mut engine = array_engine_with_locals(code, vec![ValueType::I32], vec![ValueType::Anyref], vec![Some(wasm_types::StorageType::Val(ValueType::I32))]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(3)]);
+    }
+
+    #[test]
+    fn test_array_copy_self_overlap_backward_shift_is_memmove_correct() {
+        // The mirror-image shift (`array_copy_overlap_test-2`'s own
+        // shape): `d=0 < s=1`, every element moves one slot to the LEFT.
+        // Array [0,1,2,3,4] -> copy src[1..5) into dest[0..4) ->
+        // [1,2,3,4,4].
+        let code = vec![
+            0x41, 0, 0x41, 1, 0x41, 2, 0x41, 3, 0x41, 4, // index0=0 .. index4=4
+            0xFB, 0x08, 0x00, 0x05, // array.new_fixed 0, count=5
+            0x21, 0x00, // local.set 0
+            0x20, 0x00, // dest ref
+            0x41, 0, // d = 0
+            0x20, 0x00, // src ref
+            0x41, 1, // s = 1
+            0x41, 4, // n = 4
+            0xFB, 0x11, 0x00, 0x00, // array.copy dest=0 src=0
+            // index 0 must be 1 (the OLD value at index 1) -- a
+            // backward-only copy loop that overwrites low indices before
+            // reading them would already have clobbered this.
+            0x20, 0x00,
+            0x41, 0,
+            0xFB, 0x0B, 0x00,
+            0x0B,
+        ];
+        let mut engine = array_engine_with_locals(code, vec![ValueType::I32], vec![ValueType::Anyref], vec![Some(wasm_types::StorageType::Val(ValueType::I32))]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(1)]);
     }
 
     // ── W04: real GC — end-to-end reclamation through real dispatch ────────
