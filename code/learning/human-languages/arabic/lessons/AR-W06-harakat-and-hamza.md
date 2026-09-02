@@ -10,7 +10,7 @@ prerequisites: [AR-W05-ya-and-my-name]
 sounds: [arabic-harakat, arabic-hamza]
 roots: [abjad-vowels]
 est_minutes: 4
-reviews_of: [AR-W05-ya-and-my-name, AR-W01-abjad-short-vowels, AR-W01-direction-and-alif, AR-C02-anta-anti]
+reviews_of: [AR-W05-ya-and-my-name, AR-W00-alif-mim-salam, AR-C02-anta-anti]
 ---
 
 # َ ِ ُ — the short vowels the abjad usually hides

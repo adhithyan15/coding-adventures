@@ -1,5 +1,78 @@
 # Changelog
 
+## Chapters 3, 4 and 5 are generated from their lessons, not hand-written
+
+The standing directive is that no hand-written book chapter may remain: a
+hand-written `.tex` is not built from lessons, so every lesson-level gate --
+the five-minute ceiling, the one-headword ramp, the atom budget -- reports on
+content the reader never sees and says nothing about the chapter that is
+actually printed. French held sixteen such chapters, the joint-largest holding
+in the corpus. Three of them are now retired.
+
+### Carried the prose across first, so the flip deletes nothing
+
+`handwritten_parity.py` scored French at **60 prose blocks** that a naive flip
+would have silently dropped. Almost none of that writing was actually missing:
+it was **mis-homed**. The renderer builds its boxes from four headings, and the
+owner's prose was sitting under headings it does not map -- `## Across the
+family`, a `###` sub-heading nested inside an etymology, a cross-language
+comparison welded onto the tail of a grammar lens. So the work was re-homing,
+not rewriting, and the prose survives verbatim.
+
+- **Chapter 3** (gap 5 -> 0): `merci`'s three-metaphors-for-gratitude table
+  becomes a `culture` block; `de rien`'s French/Spanish *rien*/*nada* parallel
+  splits out of the etymology; the shrug comparison splits off the answer-set
+  lens; the register ladder and the `Comment allez-vous` liaison get their own
+  grammar and sounds blocks.
+- **Chapter 4** (gap 3 -> 0): the *Auf Wiedersehen* pairing, the Latin *tarde*
+  that became French "late" and Spanish "afternoon", and the *demain*/*mañana*
+  twin each become `culture` blocks.
+- **Chapter 5** (gap 5 -> 0): `travailler`'s Spanish *trabajar* twin becomes a
+  `culture` block, "why French keeps its pronouns" becomes its own lens, and
+  `français` gains the sounds and etymology blocks its prose already contained.
+
+French's parity number falls **60 -> 47**. Chapters 1 and 2 were already at
+zero and are prose-ready; the thirteen chapters from 7 up still hold 47 blocks.
+
+### Migrated twenty lessons to schema v2, which is what the flip really costs
+
+A generated chapter requires every one of its lessons to be schema v2 --
+`renderBookChapter` throws otherwise. This, not the prose, is the real blocker
+behind the retirement, and it is why these chapters had never moved.
+
+- Twenty lessons gain typed knowledge atoms, per-block `hl-knowledge`
+  boundaries, declared durations, spine nodes, and skills/modes/strands.
+- Thirty-two new atoms, held inside the gentle-ramp policy rather than merely
+  under the hard gates: `maxNewAtomsPerLesson` is 3 and `maxNewAtomsPerChapter`
+  is 12, and the chapters land on 12, 10 and 10 with no lesson above 3.
+- Seventeen headings that no block type recognised were re-homed onto headings
+  the renderer emits. Nothing was dropped: `## Review first (20 seconds)` was
+  merged into the warm-up it duplicated, and the accent lessons' "How to write
+  it" sections became real `Writing:` blocks.
+- Every lesson stays under the **computed** five-minute ceiling. The binding
+  number is `max(declared, computed)`; the tightest are FR-C03-practice at 293s
+  and FR-C03-comment-registers at 286s.
+
+### What the reader gains
+
+- Chapter 4 now prints the three accent lessons -- `é è ê`, `ç`, `ï ë ü`. The
+  hand-written chapter never printed them at all; they existed only as lessons.
+- Every lesson now carries its own "Your turn" and "Before you move on" boxes.
+  The hand-written chapters had no per-lesson practice or recall in the book.
+- Chapter openings carry the hand-written opening prose rather than the
+  generator's boilerplate, and the three payoffs are now atom-scored instead of
+  carrying a "legacy schema-v1, not atom-scored" note.
+
+### Fixed a font gap the hand-written chapters had been hiding
+
+Latin Modern Roman ships no precomposed `À`, `Ü`, `Ê`, `Ï`, `Ë` or `Ô`. The
+hand-written `.tex` wrote them as LaTeX escapes, so the glyph-coverage gate
+never saw them; a generated chapter emits the character itself. Four gaps were
+fixed at source, in the track's own ASCII respelling system rather than by
+widening the charset: the IPA `ɛ` in three pronunciation notes, the capital `À`
+in the chapter-4 farewell table and dialogue, and `Ü` in the cedilla lesson.
+`FR-C01-bien` was fixed too, so the same gap cannot block chapter 1.
+
 ## French chapters 1-16 regain their reading order (#12250)
 
 - Add one global, spaced sequence to all 64 legacy lessons, recovered from the

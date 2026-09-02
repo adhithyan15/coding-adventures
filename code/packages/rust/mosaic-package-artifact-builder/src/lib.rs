@@ -1679,6 +1679,7 @@ fn build_package_inner(
                 tokens: &package_tokens,
                 profile,
                 runtime_library,
+                host_asset_dependencies: &manifest.host_assets.dependencies,
             })?;
             artifacts.extend(shell_artifacts);
         }
@@ -2064,6 +2065,9 @@ struct ProjectShellOptions<'a> {
     tokens: &'a mosstyle_compiler::TokenOverrides,
     profile: Option<BuildProfile>,
     runtime_library: Option<&'a Path>,
+    /// Dependency coordinates this package's `[host_assets]` declared, so the
+    /// generated build file can declare what the installed host files need.
+    host_asset_dependencies: &'a [mosaic_package_manifest::HostAssetDependency],
 }
 
 fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, BuildError> {
@@ -2079,6 +2083,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         tokens,
         profile,
         runtime_library,
+        host_asset_dependencies,
     } = options;
     // Re-read the triple. This duplicates `compile_one_component`'s
     // file-loading logic; we accept the redundancy because the shell
@@ -2354,7 +2359,11 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 ),
                 (
                     "build.gradle.kts",
-                    build_compose_build_gradle_kts(package_name, bundle_runtime),
+                    build_compose_build_gradle_kts(
+                        package_name,
+                        bundle_runtime,
+                        &host_asset_dependencies_for(host_asset_dependencies, "compose"),
+                    ),
                 ),
                 (
                     "README.md",
@@ -2687,7 +2696,35 @@ fn build_compose_settings_gradle_kts(package_name: &str) -> String {
     )
 }
 
-fn build_compose_build_gradle_kts(package_name: &str, bundle_runtime: bool) -> String {
+/// Build `build.gradle.kts` for the Compose backend.
+///
+/// `host_asset_dependencies` are Maven coordinates a package's `[host_assets]`
+/// declared. They exist because replacing a generated host file with your own
+/// is only half a mechanism if the replacement cannot declare what it needs to
+/// compile -- Engram's Compose host imports `org.json`, which the emitter has
+/// no reason to know about, so the emitted project had never compiled without a
+/// PowerShell script patching this file afterwards.
+/// The dependency coordinates a package's `[host_assets]` declared for one
+/// backend, in declaration order.
+///
+/// Order is preserved rather than sorted: a build file is read by people, and
+/// the author's grouping usually says something a sort would destroy.
+fn host_asset_dependencies_for(
+    dependencies: &[mosaic_package_manifest::HostAssetDependency],
+    backend: &str,
+) -> Vec<String> {
+    dependencies
+        .iter()
+        .filter(|dependency| dependency.backend == backend)
+        .map(|dependency| dependency.coordinate.clone())
+        .collect()
+}
+
+fn build_compose_build_gradle_kts(
+    package_name: &str,
+    bundle_runtime: bool,
+    host_asset_dependencies: &[String],
+) -> String {
     let app_id = compose_gradle_application_id(package_name);
     let app_resources = if bundle_runtime {
         "            appResourcesRootDir.set(project.layout.projectDirectory.dir(\"app-resources\"))\n"
@@ -2707,6 +2744,7 @@ fn build_compose_build_gradle_kts(package_name: &str, bundle_runtime: bool) -> S
             "    implementation(compose.desktop.currentOs)\n",
             "    implementation(\"net.java.dev.jna:jna:{jna_version}\")\n",
             "    implementation(\"org.jetbrains.kotlinx:kotlinx-serialization-json:{serialization_json_version}\")\n",
+            "{host_asset_deps}",
             "    testImplementation(\"org.jetbrains.compose.ui:ui-test-junit4-desktop:{compose_version}\")\n",
             "    testImplementation(kotlin(\"test\"))\n",
             "}}\n\n",
@@ -2732,6 +2770,13 @@ fn build_compose_build_gradle_kts(package_name: &str, bundle_runtime: bool) -> S
         app_id = escape_kotlin_string(&app_id),
         package_version = COMPOSE_DESKTOP_PACKAGE_VERSION,
         app_resources = app_resources,
+        host_asset_deps = host_asset_dependencies
+            .iter()
+            .map(|coordinate| format!(
+                "    implementation(\"{}\")\n",
+                escape_kotlin_string(coordinate)
+            ))
+            .collect::<String>(),
     )
 }
 

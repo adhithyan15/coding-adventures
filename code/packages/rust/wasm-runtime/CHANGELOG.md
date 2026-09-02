@@ -2,6 +2,150 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.29] — 2026-09-01 (fix: `instantiate()` now marks active/declarative element segments dropped, closing the exact gap PR #14009 honestly reported)
+
+Fixes the real, pre-existing `wasm-runtime` bug `wasm-conformance`
+0.1.117's baseline-regen entry documented but deliberately did NOT fix
+(that PR's own scope was a `wasm-wast-parser` arity fix; exercising
+`table_init.wast`/`table_init64.wast`/`elem.wast` for the first time
+merely UNMASKED this bug, already latent in `instantiate()`): 4 real
+conformance failures, 1 each in `table_init.wast`/`table_init64.wast`, 2
+in `elem.wast`, all tracing to the same root cause.
+
+### Real spec semantics, re-verified directly against the spec text (not assumed)
+
+> "after an active or declarative element segment is initialized [at
+> instantiation], it is dropped"
+
+This is a THIRD, independent way an element segment's dropped state can
+become `true`, alongside the two this crate already implemented
+correctly:
+1. **`elem.drop`** (explicit opcode) — sets `dropped_elements[idx] = true`
+   for ANY segment, already correct, unchanged by this fix.
+2. **A consuming `table.init`** — does **NOT** auto-drop the segment it
+   read from. Re-verified directly against `wasm-execution`'s own `0x0C`
+   opcode handler (unchanged by this fix): a genuinely PASSIVE segment
+   may be `table.init`'d any number of times, only an explicit
+   `elem.drop` (or #3 below, which never applies to a genuinely passive
+   segment) ever drops it. Confirmed this really is the spec's own rule,
+   not this repo's own invention: `memory.init`'s exactly analogous
+   `data.drop` rule already documents the same "never self-drops" shape,
+   and the real corpus (`table_init_after_elem_drop_traps_on_nonzero_
+   length_but_succeeds_at_zero_length` in `wasm-execution`) already
+   exercised it correctly before this fix.
+3. **Active/declarative implicit drop-on-instantiation** (the gap this
+   fix closes) — an ACTIVE segment is dropped the instant `instantiate()`
+   finishes copying its contents into its target table; a DECLARATIVE
+   segment (reference-types proposal — see `wasm_types::Element::
+   is_declarative`, new in `wasm-types` 0.1.24) is dropped immediately,
+   having never been live to begin with (it exists purely to make
+   `ref.func`-referenced functions "declared" for validation purposes).
+   Neither has anything to do with `elem.drop` or `table.init` — both are
+   dropped automatically, unconditionally, with no explicit opcode ever
+   executing.
+
+### The bug
+
+`instantiate()`'s active-segment application loop (`for elem in &module.
+elements { if elem.is_passive { continue; } ... }`) applied an active
+segment's contents to its target table correctly, but never flipped that
+segment's own `dropped_elements` entry afterward — the field stayed at
+its `vec![false; ..]` initial value for every segment except one an
+`elem.drop` opcode later touched at RUNTIME. A subsequent `table.init`
+naming that same active segment therefore found `dropped == false`,
+happily re-read `elem.function_indices` (still populated; nothing ever
+cleared it), and copied from it again — succeeding where the real spec
+requires a trap.
+
+Declarative segments had an even more basic gap: `wasm_types::Element`
+had no field distinguishing "declarative" from genuinely "passive" at
+all before this fix (`wasm-wast-parser`'s own `build_elem` folds both
+into `is_passive: true`, a documented, deliberate simplification — see
+that crate's own CHANGELOG). With no way to tell the two apart,
+`instantiate()` could not have marked a declarative segment dropped
+without ALSO wrongly marking every genuinely passive segment dropped —
+the missing `Element::is_declarative` field (this crate's own actual
+dependency bump, `wasm-types` 0.1.24) had to land first.
+
+### The fix
+
+Mechanical, confined to `instantiate()`'s existing elem-segment loop —
+no new tracking machinery, only new WRITES into the tracking machinery
+that already existed for `elem.drop`/`table.init`'s own reads:
+
+- A new `dropped_elements: Vec<bool>` local, sized `module.elements.len()`
+  (all `false` initially), declared right alongside the loop's own
+  pre-existing `active_elem_writes` accumulator — same lifetime, same
+  "computed as a byproduct of this one loop" shape.
+- Inside the loop's `if elem.is_passive { continue; }` branch: if
+  `elem.is_declarative` is ALSO `true`, mark `dropped_elements[elem_idx]
+  = true` before the `continue` — no content ever copied anywhere,
+  exactly matching the spec's "never live to begin with" framing. A
+  genuinely passive segment (`is_declarative: false`) is completely
+  unaffected — its entry stays `false`, same as before this fix.
+- Right after the active-segment branch's own existing `if count > 0 {
+  active_elem_writes.push(..) }` (i.e., once that segment's bounds check
+  and every `table.set` have already succeeded — a trap on either
+  propagates via `?`/`return Err` before reaching this point, so this
+  line is only ever reached on genuine success): unconditionally mark
+  `dropped_elements[elem_idx] = true`, even for a zero-length active
+  segment (`count == 0` is still a real, if empty, active segment per
+  spec).
+- The instance's real `dropped_elements` field (built further down, at
+  this function's normal success return) now reuses this same computed
+  `Vec` instead of re-initializing a fresh all-`false` one — the only
+  place this fix actually changes what a returned `WasmInstance` looks
+  like. The ephemeral "trap-discarded instance" error path (W35 fourth
+  slice's own `resolve_all_table_funcrefs` best-effort fixup) also clones
+  this same partially-computed `Vec` instead of a fresh all-`false` one,
+  for consistency — that instance is discarded immediately after
+  (`return Err(e)` follows), so this is cosmetic, not load-bearing.
+
+### Corpus verification
+
+Regenerated `tests/fixtures/testsuite-status.json` (`--write-baseline`)
+and diffed PROGRAMMATICALLY (Python, comparing the `files` dict keyed by
+filename) against the pre-fix baseline across all 257 corpus files.
+Exactly 3 files changed, exactly the 4 predicted directives, nothing else
+in the whole corpus moved:
+
+| File | Directive kind | Before | After |
+|---|---|---|---|
+| `table_init.wast` | `assert_trap` | 583 pass / 1 fail | 584 pass / 0 fail |
+| `table_init64.wast` | `assert_trap` | 633 pass / 1 fail | 634 pass / 0 fail |
+| `elem.wast` | `assert_trap` | 4 pass / 2 fail (1 NYS unrelated) | 6 pass / 0 fail (1 NYS unrelated) |
+
+Aggregate `assert_trap`: 4824/4828 (140 NYS) → 4828/4828 (140 NYS),
++4 pass, 0 new fail, 0 change in `not_yet_supported`. Every other
+directive kind and every other of the 257 files is byte-for-byte
+unchanged.
+
+### New tests (`wasm-runtime`)
+
+Three focused regression tests, exercising the real `instantiate()` →
+`call_typed()` path (not just the raw opcode, which `wasm-execution`'s
+own `table_init_after_elem_drop_traps_on_nonzero_length_but_succeeds_
+at_zero_length` already covered before this fix):
+- `instantiate_marks_an_active_elem_segment_dropped_so_a_later_table_
+  init_on_it_traps` — `elem.wast`'s own active-segment "Implicitly
+  dropped elements" shape, direct.
+- `instantiate_marks_a_declarative_elem_segment_dropped_so_table_init_
+  on_it_traps` — same file's declarative-segment counterpart.
+- `instantiate_leaves_a_genuinely_passive_elem_segment_undropped_first_
+  table_init_succeeds_elem_drop_then_traps_the_next` — proves this fix
+  does NOT conflate "passive already-dropped" tracking (unchanged) with
+  "active/declarative newly-dropped" tracking (new): a passive segment's
+  first `table.init` must still succeed immediately after instantiation,
+  and only an explicit, later `elem.drop` may make a second `table.init`
+  against it trap.
+
+### Verification
+
+`git stash` A/B across `wasm-execution`/`wasm-runtime`/`wasm-validator`/
+`wasm-conformance`: identical pass/fail counts before and after this fix
+except the 3 new tests above (all passing) — zero regressions. `cargo
+clippy` clean on every touched crate.
+
 ## [0.6.28] — 2026-09-01 (gap 2 of the `elem.wast`/`table.wast` investigation pass: 32-bit table aggregate cap moves here from `wasm-validator`)
 
 Companion fix to `wasm-validator` 0.2.85 (see that crate's own CHANGELOG

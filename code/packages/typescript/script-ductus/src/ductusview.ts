@@ -60,6 +60,7 @@ import {
   DUCTUS,
   ductusKey,
   penLifts,
+  penPathBetween,
   penPathD,
   penTip,
   type LetterDuctus,
@@ -105,6 +106,12 @@ export interface DuctusStep {
   /** How far along `strokeIndex`'s path the pen has travelled, 0..1. */
   fraction: number;
   /**
+   * How far along that same path the pen had ALREADY travelled when this part
+   * began, 0..1. `[startFraction, fraction]` is therefore exactly the movement
+   * this frame's caption describes, and everything before it is history.
+   */
+  startFraction: number;
+  /**
    * True when the hand must LIFT before this frame — i.e. this frame starts a
    * new stroke and is not the first frame of the letter.
    */
@@ -145,6 +152,12 @@ export interface DuctusOptions {
   captionSize?: number;
   /** Rendered width of one frame, in CSS pixels. Height follows the aspect. */
   frameWidth?: number;
+  /**
+   * Mute the part of the current stroke travelled before this frame's own
+   * segment, so only the movement the caption names is in ink. Off by default;
+   * the printed filmstrip turns it on. See `ductusFrame` for why.
+   */
+  highlightSegment?: boolean;
 }
 
 const DEFAULTS: Required<DuctusOptions> = {
@@ -158,6 +171,7 @@ const DEFAULTS: Required<DuctusOptions> = {
   captionColor: "#6b7280",
   captionSize: 92,
   frameWidth: 118,
+  highlightSegment: false,
 };
 
 /** Caption line spacing, as a multiple of the caption size. */
@@ -233,6 +247,12 @@ export function ductusSteps(letter: LetterDuctus): DuctusStep[] {
         segmentIndex,
         label: segment.label,
         fraction: fractions[segmentIndex] ?? 1,
+        // The previous part's END is this part's START, by construction: the
+        // segments of a stroke are consecutive slices of one pen path, so the
+        // first part starts at 0 and every later one picks up where the last
+        // left off. Reading it off `fractions` rather than recomputing keeps
+        // the two numbers derived from the same arc-length measurement.
+        startFraction: segmentIndex === 0 ? 0 : (fractions[segmentIndex - 1] ?? 0),
         startsAfterLift: segmentIndex === 0 && strokeIndex > 0,
       });
     });
@@ -281,7 +301,27 @@ export function ductusFrame(
 
   const current = letter.strokes[step.strokeIndex];
   if (current) {
-    const d = penPathD(current, step.fraction);
+    // Two ways to shade the stroke this frame is in the middle of.
+    //
+    // `highlightSegment: false` (the default, and what the live app shows)
+    // inks the whole travelled part of the stroke: the learner watches one
+    // continuous line grow.
+    //
+    // `highlightSegment: true` splits it at the caption. Everything travelled
+    // BEFORE this part joins the finished strokes in the muted tone, and only
+    // `[startFraction, fraction]` — the movement the caption actually names —
+    // is in ink. That is what a printed FILMSTRIP needs, where the frames sit
+    // side by side and nothing moves: without the split, a five-part stroke
+    // lights up almost entirely on its first frame and every later caption
+    // describes a movement the picture has already finished.
+    //
+    // The default stays `false` because several hundred per-glyph tests pin
+    // the live view's shading; flipping it is a deliberate, separate change.
+    const settled = o.highlightSegment ? penPathD(current, step.startFraction) : "";
+    if (settled) drawn.push(penLine(settled, "ductus__done", o.doneColor, o.penWidth));
+    const d = o.highlightSegment
+      ? penPathBetween(current, step.startFraction, step.fraction)
+      : penPathD(current, step.fraction);
     if (d) drawn.push(penLine(d, "ductus__pen", o.penColor, o.penWidth));
     const tip = penTip(current, step.fraction).at;
     drawn.push({

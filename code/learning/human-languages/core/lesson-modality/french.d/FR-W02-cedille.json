@@ -8,14 +8,18 @@
     "derived": "pen",
     "drivable": false,
     "reasons": [
-      "writing-type"
+      "writing-type",
+      "writing-block"
     ],
     "coreModality": "pen",
     "coreReasons": [
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:d331c582d116496e"
+    "sourceHash": "fnv1a64:e6f5347054a09840",
+    "detachableSegments": [
+      "Writing: the cedilla"
+    ]
   },
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:166630fbb1319806",
+  "sourceHash": "fnv1a64:f10e4a448a2a9a7a",
   "lessons": [
     {
       "id": "AR-W07-hook-family-ha-kha",
@@ -209,7 +209,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:04487ef90e2dd6d7",
+      "sourceHash": "fnv1a64:6dfa0b338337ecd5",
       "notice": {
         "modality": "pen",
         "needs": [

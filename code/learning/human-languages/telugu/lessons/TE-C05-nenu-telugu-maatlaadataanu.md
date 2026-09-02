@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: TE-C05-nenu-telugu-maatlaadataanu
+spine_node: SPINE-EXCHANGE-NAMES
 sequence: 270
 chapter: 5
 type: phrase
@@ -10,22 +12,37 @@ concept_tag: TE-WORD-TELUGU
 prerequisites: [TE-C05-maatlaadu, TE-C03-nenu]
 sounds: [long-u]
 roots: [telugu]
-est_minutes: 4
+duration:
+  max_seconds: 180
+requires:
+  knowledge: []
+introduces:
+  knowledge: [TE-LEX-C05-NENU-TELUGU-MAATLAADATAANU-01, TE-ETYMON-C05-NENU-TELUGU-MAATLAADATAANU-02, TE-GRAMMAR-C05-NENU-TELUGU-MAATLAADATAANU-03]
+practises:
+  knowledge: [TE-LEX-C05-NENU-TELUGU-MAATLAADATAANU-01, TE-ETYMON-C05-NENU-TELUGU-MAATLAADATAANU-02, TE-GRAMMAR-C05-NENU-TELUGU-MAATLAADATAANU-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TE-C05-maatlaadu, TE-C03-nenu]
 ---
 
 # నేను తెలుగు మాట్లాడతాను (nēnu telugu māṭlāḍatānu) — "I speak Telugu"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Your first full, moving sentence — and it names one of India's most
 musical languages.
 
 ## The letters in this word
+<!-- hl-knowledge: introduces=[TE-LEX-C05-NENU-TELUGU-MAATLAADATAANU-01]; assesses=[] -->
 
 **తెలుగు** (*telugu*): **తె** (*te*) + **లు** (*lu*) + **గు** (*gu*).
 
 ## The sentence, taken apart
+<!-- hl-knowledge: introduces=[TE-ETYMON-C05-NENU-TELUGU-MAATLAADATAANU-02]; assesses=[] -->
 
 **నేను తెలుగు మాట్లాడతాను** = **నేను** (*nēnu*, "I") + **తెలుగు** (*telugu*,
 "Telugu," the object) + **మాట్లాడతాను** (*māṭlāḍatānu*, "speak") — "**I Telugu
@@ -36,6 +53,7 @@ nickname "the Italian of the East." It is the language of the *Kāvya* poets and
 today, of some eighty million speakers.
 
 ## Grammar Lens: no gender on "I speak"
+<!-- hl-knowledge: introduces=[TE-GRAMMAR-C05-NENU-TELUGU-MAATLAADATAANU-03]; assesses=[] -->
 
 *Māṭlāḍatānu* is the same whether a man or a woman says it — Telugu, like Tamil,
 marks **no gender in the first or second person** (only the third: *-āḍu* he,
@@ -43,6 +61,7 @@ marks **no gender in the first or second person** (only the third: *-āḍu* he,
 speaker's gender (*boltā/boltī*).
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C05-NENU-TELUGU-MAATLAADATAANU-01, TE-ETYMON-C05-NENU-TELUGU-MAATLAADATAANU-02, TE-GRAMMAR-C05-NENU-TELUGU-MAATLAADATAANU-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "nēnu telugu māṭlāḍatānu"]
@@ -50,6 +69,7 @@ speaker's gender (*boltā/boltī*).
 - [YOU SAY: does "I speak" change for a man vs. a woman? (No — no 1st-person gender)]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C05-NENU-TELUGU-MAATLAADATAANU-01, TE-ETYMON-C05-NENU-TELUGU-MAATLAADATAANU-02, TE-GRAMMAR-C05-NENU-TELUGU-MAATLAADATAANU-03] -->
 
 [PAUSE 3s] Say "I speak Telugu," and give Telugu's old nickname. (*Nēnu telugu
 māṭlāḍatānu*; "the Italian of the East.")

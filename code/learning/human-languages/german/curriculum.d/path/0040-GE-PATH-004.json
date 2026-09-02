@@ -2,6 +2,12 @@
   "id": "GE-PATH-004",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
+    "GE-C01-tag",
+    "GE-C01-guten-tag",
+    "GE-C01-morgen",
+    "GE-C01-guten-morgen",
+    "GE-C01-abend",
+    "GE-C01-guten-abend",
     "GE-C01-nacht"
   ],
   "before": [],

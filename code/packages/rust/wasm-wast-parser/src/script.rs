@@ -811,7 +811,7 @@ fn concat_strings(items: &[SExpr]) -> Result<Vec<u8>, WastParseError> {
 
 fn expect_str(e: &SExpr) -> Result<String, WastParseError> {
     match e {
-        SExpr::Str(b, _) => Ok(String::from_utf8_lossy(b).to_string()),
+        SExpr::Str(b, pos) => String::from_utf8(b.clone()).map_err(|_| WastParseError::InvalidUtf8 { pos: *pos }),
         other => Err(WastParseError::UnexpectedToken { pos: other.pos(), found: "".into(), expected: "a string literal" }),
     }
 }
@@ -1562,5 +1562,17 @@ mod tests {
     fn ref_extern_non_integer_literal_errors_cleanly_not_panics() {
         let err = parse_script(r#"(assert_return (invoke "f") (ref.extern nope))"#).unwrap_err();
         assert!(matches!(err, WastParseError::UnexpectedToken { .. }));
+    }
+
+    /// `expect_str` (used for `register`'s name, `invoke`/`get` action
+    /// names, and assert-message strings) had the same
+    /// `String::from_utf8_lossy` defect as the module-name-string call
+    /// sites in `module.rs` -- same fix (`String::from_utf8`), same
+    /// `WastParseError::InvalidUtf8` error, different call site. `\80` is
+    /// a bare UTF-8 continuation byte with no lead byte, never valid alone.
+    #[test]
+    fn register_name_rejects_invalid_utf8_instead_of_replacing_it() {
+        let err = parse_script(r#"(register "\80" $M)"#).unwrap_err();
+        assert!(matches!(err, WastParseError::InvalidUtf8 { .. }), "expected InvalidUtf8, got {err:?}");
     }
 }

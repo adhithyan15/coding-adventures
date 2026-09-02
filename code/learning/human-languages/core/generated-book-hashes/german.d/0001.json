@@ -1,0 +1,22 @@
+{
+  "language": "german",
+  "chapter": 1,
+  "sourceHash": "fnv1a64:805e51d3d15cafa0",
+  "lessonIds": [
+    "GE-C01-hallo",
+    "GE-W01-hallo-guided-copy",
+    "GE-C01-gut",
+    "GE-C01-der-die-das",
+    "GE-C01-tag",
+    "GE-C01-guten-tag",
+    "GE-C01-morgen",
+    "GE-C01-guten-morgen",
+    "GE-C01-abend",
+    "GE-C01-guten-abend",
+    "GE-C01-nacht",
+    "GE-C01-gute-nacht",
+    "GE-C01-die-plural",
+    "GE-C01-practice"
+  ],
+  "tex": "german/book/chapters/ch01-greetings.tex"
+}

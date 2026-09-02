@@ -1210,6 +1210,10 @@ fn parse_element_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), 
             offset_expr,
             function_indices,
             is_passive,
+            // This decoder only ever accepts modes 0/1/2/5 (see this
+            // function's own doc comment) -- modes 3/7 (declarative) are a
+            // clean parse error, never reach this push. Always `false`.
+            is_declarative: false,
         });
     }
     Ok(())

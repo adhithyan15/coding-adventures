@@ -104,7 +104,10 @@ table tissue_example {
     row (muscle, cardiac_or_skeletal)
     row (nervous, brain_and_nerves)
 
-    source "They form the covering of all body surfaces, line body cavities and hollow organs, and are the major tissue in glands."
+    source "Epithelial tissues are widespread throughout the body. They form the covering of all body surfaces, line body cavities and hollow organs, and are the major tissue in glands."
     locator "https://training.seer.cancer.gov/anatomy/cells_tissues_membranes/tissues/epithelial.html"
     trust authoritative
+    cites "The types of connective tissue include loose connective tissue, adipose tissue, dense fibrous connective tissue, elastic connective tissue, cartilage, osseous tissue (bone), and blood." locator "https://training.seer.cancer.gov/anatomy/cells_tissues_membranes/tissues/connective.html"
+    cites "Muscle tissue can be categorized into skeletal muscle tissue, smooth muscle tissue, and cardiac muscle tissue." locator "https://training.seer.cancer.gov/anatomy/cells_tissues_membranes/tissues/muscle.html"
+    cites "Nervous tissue is found in the brain, spinal cord, and nerves." locator "https://training.seer.cancer.gov/anatomy/cells_tissues_membranes/tissues/nervous.html"
 }
