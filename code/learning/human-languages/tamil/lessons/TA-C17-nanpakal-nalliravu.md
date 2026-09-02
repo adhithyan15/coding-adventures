@@ -6,6 +6,7 @@ sequence: 620
 chapter: 17
 type: word
 headword: நண்பகல் நள்ளிரவு
+romanization: "naṇpakal naḷḷiravu"
 gloss: noon and midnight — NO Sanskrit here at all (unlike Kannada/Telugu); both trace to the same old "middle" root, நள் (naḷ), but Tamil ALSO keeps fully transparent synonyms built on நடு, the everyday word for "middle"
 concept_tag: TA-TIME-NOON-MIDNIGHT
 prerequisites: [TA-C16-thamizh-maadangal]

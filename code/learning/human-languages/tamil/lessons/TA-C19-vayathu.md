@@ -6,6 +6,7 @@ sequence: 670
 chapter: 19
 type: phrase
 headword: உனக்கு எத்தனை வயது ஆகிறது?
+romanization: "unakku ettanai vayathu aakirathu?"
 gloss: how old are you? — literally "to you how many years is becoming?"; the SAME Sanskrit vayas word as Kannada/Telugu/Malayalam; Tamil actually spans BOTH grammatical shapes seen so far, from a plain possessive in casual speech to this more formal dative+verb construction
 concept_tag: TA-AGE
 prerequisites: [TA-C18-mani-homophone-time]
@@ -28,7 +29,7 @@ variety: standard-colloquial
 reviews_of: [TA-C18-mani-homophone-time, TA-C18-mani]
 ---
 
-# உனக்கு எத்தனை வயது ஆகிறது? — Tamil actually has BOTH shapes
+# உனக்கு எத்தனை வயது ஆகிறது? (unakku ettanai vayathu aakirathu?) — Tamil actually has BOTH shapes
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-MANI-HOMOPHONE-TIME-01] -->
@@ -50,7 +51,7 @@ particular concept, the way they did for so many others.
 <!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-MANI-HOMOPHONE-TIME-01, TA-LEX-VAYATHU-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: "vayathu" — age]
+- [YOU SAY: "vayathu" — age — then the whole formal question, "unakku ettanai vayathu aakirathu?"]
 - [YOU CONNECT: Sanskrit *vayas* · Tamil *vayathu* · Latin *vīs*]
 
 ## Wrap-up Recall

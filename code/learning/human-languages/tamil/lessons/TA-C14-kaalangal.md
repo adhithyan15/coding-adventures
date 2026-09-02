@@ -6,6 +6,7 @@ sequence: 580
 chapter: 14
 type: word
 headword: வசந்த காலம் கோடைக் காலம் மழைக் காலம் குளிர் காலம்
+romanization: "vasantha kaalam kodai kaalam mazhai kaalam kulir kaalam"
 gloss: spring, summer, monsoon, winter — and the honest note that the REAL locally central season is the rains, not a Western four-way split
 concept_tag: TA-SEASONS
 prerequisites: [TA-C13-udal-uruppugal]

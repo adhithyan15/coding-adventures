@@ -1,0 +1,22 @@
+{
+  "chapter": 66,
+  "title": "Which Way",
+  "label": "ch:ta-which-way",
+  "canDo": "I can say up, down, inside, outside, right and left in Tamil, and put each one in front of a verb or a noun I already know.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "TA-C66-whichway-recall",
+    "kind": "production",
+    "summary": "Complete TA-C66-whichway-recall and produce each of the six directions from its opposite, then sort all six by the ending they take.",
+    "assesses": [
+      "TA-LEX-C66-WHICHWAY-01",
+      "TA-LEX-C66-WHICHWAY-02",
+      "TA-LEX-C66-WHICHWAY-03",
+      "TA-LEX-C66-WHICHWAY-04",
+      "TA-LEX-C66-WHICHWAY-05",
+      "TA-LEX-C66-WHICHWAY-06"
+    ]
+  }
+}
