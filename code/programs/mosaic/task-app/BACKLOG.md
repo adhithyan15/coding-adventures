@@ -122,7 +122,21 @@ step, no artifact. The ordered queue below comes from that spec.
    emitted-control coverage. The host-neutral contract both share is
    `code/specs/task-app-startup-states-v1.md`.
 2. **P1 [#13692](https://github.com/adhithyan15/coding-adventures/issues/13692):**
-   make the List-first shell usable in compact windows.
+   make the List-first shell usable in compact windows. **Blocked on
+   [#14003](https://github.com/adhithyan15/coding-adventures/issues/14003)
+   (UI48).** Picking this up revealed it was mis-scoped as a TaskApp change.
+   Mosaic has no way for *any* app to respond to its runtime environment:
+   mosstyle has no media queries, `--variant` selects a layout file at compile
+   time, none of the nine emitters observes viewport or pointer, and
+   `mosaic-app-runtime` has no environment concept. UI30 §6 deferred runtime
+   selection to an ML4 that was never built. Doing it TaskApp-side would mean a
+   bespoke `compact` slot plus per-backend host code — exactly the userland
+   conditional UI30 explicitly rejected, and it still could not vary a *style*,
+   so touch-sized tap targets would stay unexpressible. Specified generically as
+   `code/specs/UI48-host-environment.md`; TaskApp then becomes
+   `TaskApp.compact.mll` and nothing else.
+   Next Tier A item to pick up is therefore #13526, while UI48's ENV slices run
+   in parallel as kernel work.
 3. **P2 [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**
    move the Vitest config to Vite's native ESM loading contract.
 4. **P2 [#13625](https://github.com/adhithyan15/coding-adventures/issues/13625):**

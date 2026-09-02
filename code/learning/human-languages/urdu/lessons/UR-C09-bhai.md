@@ -58,11 +58,11 @@ From the right edge: **ب** *b*, then **ھ** aspirating it to *bh*, then **ا**
 long *ā*, then **ئ**, then **ی** *ī*.
 
 **ئ** is new: **ye with hamza above**. It is a fourth shape in the *ye*
-family, alongside consonantal *y* in **کیا**, long *ī* in **جی**, and broad
+family, alongside consonantal *y* in **کیا**, long *ī* in *jī*, and broad
 final *e* in **کیسے**. Its job is narrower than any of those: it marks a
 glide between two vowels that would otherwise collide — here, between **ā**
 and **ī**. **بھ** is new too, extending the two-eyed *he* you already know
-from **جھ**, **ٹھ**, **ڑھ** and **چھ** to a fifth base letter, **ب**.
+from *jh*, *ṭh*, *ṛh* and *chh* to a fifth base letter, **ب**.
 
 ## Grammar Lens: a noun with a gender
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-BHAI] -->
@@ -77,7 +77,7 @@ agrees this easily; the next lesson breaks the pattern.
 **bhāī** comes from Sanskrit *bhrā́tṛ*, "brother," from
 Proto-Indo-Iranian **\*bʰráHtā**, from Proto-Indo-European
 **\*bʰréh₂tēr**. English **brother** comes from the very same root. Unlike
-**پسند**'s disputed link to *candēre* two lessons ago, this one is settled:
+*pasand*'s disputed link to *candēre* two lessons ago, this one is settled:
 Sanskrit and English are both Indo-European, so *bhāī* and *brother* are
 real relatives, not two languages landing on the same idea by accident.
 

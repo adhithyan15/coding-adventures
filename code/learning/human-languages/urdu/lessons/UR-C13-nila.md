@@ -47,7 +47,7 @@ Urdu again, centuries later, and became an English word.
 
 > **نیلا** — *nīlā* — **blue**
 
-> **میرا کوٹ نیلا ہے۔** — *merā koṭ nīlā hai.* — "My coat is blue."
+> *merā koṭ nīlā hai.* — "My coat is blue."
 
 **نیلا** ends in **ا**, so it agrees exactly like **کالا**: feminine
 **نیلی**.
@@ -63,7 +63,7 @@ But Sanskrit's related word **nīlī**, "the indigo plant," did not stop
 there. It travelled forward: into Persian **nīla**, then Arabic **an-nīl**
 ("the indigo"), then Portuguese **anil**, and finally into English as
 **aniline**, the name nineteenth-century chemists gave the dye compound
-first found in indigo. **سفید** reached English through a shared PIE root,
+first found in indigo. *safed* reached English through a shared PIE root,
 inherited by both languages independently. **نیلا**'s route to English is
 a completely different shape: one word, borrowed forward through four
 languages, arriving in English only a couple of centuries ago.
@@ -72,21 +72,21 @@ languages, arriving in English only a couple of centuries ago.
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-NILA, UR-ETYMON-NILA-ANILINE, UR-LEX-KALA, UR-GRAMMAR-ADJECTIVE-AGREEMENT] -->
 
 - [YOU SAY: **nīlā** — blue, masculine; **nīlī** — blue, feminine]
-- [YOU SORT: agrees — **کالا, نیلا**; never changes — **لال, سفید**]
+- [YOU SORT: agrees — **کالا, نیلا**; never changes — *lāl, safed*]
 - [YOU TRACE: **nīlā**'s cousin **nīlī** → Persian → Arabic **an-nīl** →
   Portuguese **anil** → English **aniline**]
-- [YOU SAY: all four colors — **لال, سفید, کالا, نیلا** — with **کوٹ** or
-  **ٹوپی**]
+- [YOU SAY: all four colors — *lāl, safed, kālā, nīlā* — with *koṭ* or
+  *ṭopī*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-NILA, UR-ETYMON-NILA-ANILINE, UR-GRAMMAR-ADJECTIVE-AGREEMENT, UR-CHUNK-AAP-SE-MIL-KAR, UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING, UR-SCRIPT-MERA-NAAM-HAI] -->
 
 [PAUSE 3s] Which two of this chapter's four colors agree with the noun
 they describe, and which two never change? (**Agree: کالا, نیلا. Never
-change: لال, سفید.**) What English word ultimately comes from the same
+change: لال, *safed*.**) What English word ultimately comes from the same
 root as **نیلا**'s cousin **nīlī**? (**Aniline.**) Recall the phrase that
 closed a first introduction with a pleased response — say it now. (**آپ
-سے مل کر خوشی ہوئی.**) Does Urdu spell **خدا حافظ** joined, the way
+سے مل کر khushī huī.**) Does Urdu spell ***khudā hāfiz*** joined, the way
 Persian does, or spaced? (**Spaced.**) Reading **میرا نام ... ہے** right
 to left changes which direction — the script's, or the spoken word
 order's? (**Only the script's.**)

@@ -53,16 +53,17 @@ the second half moves.
 ## Grammar Lens: only the second half conjugates
 <!-- hl-knowledge: introduces=[UR-GRAMMAR-CONJUNCT-VERB]; assesses=[UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-LEX-MADAD-KARNA, UR-CHUNK-AAP-SE-MIL-KAR, UR-LEX-NICE-TO-MEET] -->
 
-> **میں مدد کرتا ہوں** — *maiṅ madad kartā hūṅ* — **I help** (man speaking)
-> **میں مدد کرتی ہوں** — *maiṅ madad kartī hūṅ* — **I help** (woman speaking)
+> *maiṅ madad kartā hūṅ* — **I help** (man speaking)
+> *maiṅ madad kartī hūṅ* — **I help** (woman speaking)
 
 **Madad** never changes. It is not a verb and never becomes one; *karnā* carries
 every ending. This is the **conjunct verb**, the most productive verb-making
 device Urdu owns: name a noun, add *karnā*, and you have a verb.
 
-You have met *karnā*'s stem before without being told. **آپ سے مل کر خوشی ہوئی**
-— *āp se mil kar khushī huī* — holds **کر** *kar* in the middle doing a different
-job: “**having** met.” One little word, two pieces of machinery.
+You have met *karnā*'s stem before without being told. *āp se mil kar khushī
+huī* — the line that closed a first introduction — holds **کر** *kar* in the
+middle doing a different job: “**having** met.” One little word, two pieces of
+machinery.
 
 ## The word, taken apart — a hand held out
 <!-- hl-knowledge: introduces=[UR-ETYMON-MADAD-EXTEND]; assesses=[UR-LEX-MADAD-KARNA, UR-LEX-HAFIZ, UR-ETYMON-HAFIZ-ARABIC, UR-LEX-KHUDA, UR-ETYMON-KHUDA-PERSIAN] -->
@@ -73,10 +74,10 @@ job: “**having** met.” One little word, two pieces of machinery.
 hand, though English inherited nothing from *m-d-d* and its own **help** is
 unrelated Germanic. Better said plainly than dressed up as a cousin.
 
-The root pattern is not new. **حافظ** *hāfiz* sits on **ح-ف-ظ**, “to guard, to
+The root pattern is not new. *hāfiz* sits on *ḥ-f-ẓ*, “to guard, to
 preserve.” Three consonants carrying a meaning, vowels poured in around them:
 that is how Arabic builds words, and now you have two. *Madad* travelled the same
-road as **خدا** *khudā* — into Persian first, then into Urdu.
+road as *khudā* — into Persian first, then into Urdu.
 
 Here is why the join matters more than the word. A borrowed noun **cannot be
 conjugated**. With *karnā* it never has to: the loan stays a frozen noun and

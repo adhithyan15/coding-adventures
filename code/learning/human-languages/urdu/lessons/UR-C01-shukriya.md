@@ -62,8 +62,9 @@ the centuries-long Persian-Arabic layer of its vocabulary.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-SHIN-RECOGNITION-01, UR-SCRIPT-KAF-RECOGNITION-01, UR-SCRIPT-RE-RECOGNITION-01, UR-SCRIPT-YE-RECOGNITION-01, UR-SCRIPT-HE-RECOGNITION-01, UR-LEX-SHUKRIYA] -->
 
-- **سلام** — *salām* — Hello.
-- **شکریہ** — *shukriyā* — Thank you.
+- *salām* — Hello. You can say it; its letters are still ahead of you, so it
+  is printed here the way you say it.
+- **شکریہ** — *shukriyā* — Thank you. This one you can already read.
 
 Say the second word slowly once, then at a natural pace. Keep *shuk-ri-yā* as
 three light beats.

@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Five Verbs at the Core",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bb8279e2192b56da",
+  "sourceHash": "fnv1a64:8aca9a4408d40821",
   "lessons": [
     {
       "id": "UR-C06-hona",
@@ -359,7 +359,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2421e5249a64d68b",
+      "sourceHash": "fnv1a64:2e6c772349ea8893",
       "notice": null,
       "blocks": [
         {
@@ -405,7 +405,11 @@
             },
             {
               "kind": "speech",
-              "text": "میں جاتا ہوں — maiṅ jātā hūṅ — I go (man speaking) میں جاتی ہوں — maiṅ jātī hūṅ — I go (woman speaking)."
+              "text": "maiṅ jātā hūṅ — I go (man speaking) maiṅ jātī hūṅ — I go (woman speaking)."
+            },
+            {
+              "kind": "speech",
+              "text": "The frame is printed the way you say it rather than the way it is spelled. The t of jātā and the ū of hūṅ both ride letters you have not been given yet, and a line you cannot decode is not reading practice."
             },
             {
               "kind": "speech",
@@ -864,7 +868,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0820f3fe03828c7c",
+      "sourceHash": "fnv1a64:34af438882321b58",
       "notice": null,
       "blocks": [
         {
@@ -899,7 +903,7 @@
             },
             {
               "kind": "speech",
-              "text": "ب is new, and it is worth one careful second. Its body is a single low scoop with one dot below. You have already read پ p in آپ āp, and پ is that identical scoop with three dots below. Same skeleton, different dot count, different consonant. Urdu builds much of its alphabet this way, so counting dots is a real reading skill and not a fussy detail."
+              "text": "ب is new, and it is worth one careful second. Its body is a single low scoop with one dot below. Hold that skeleton in mind: the very next chapter adds pe, which is the identical scoop with three dots below — the p you already say in āp. Same skeleton, different dot count, different consonant. Urdu builds much of its alphabet this way, so counting dots is a real reading skill and not a fussy detail."
             }
           ]
         },
@@ -914,7 +918,7 @@
             },
             {
               "kind": "speech",
-              "text": "میں بولتا ہوں — maiṅ boltā hūṅ — I speak (man speaking) میں بولتی ہوں — maiṅ boltī hūṅ — I speak (woman speaking)."
+              "text": "maiṅ boltā hūṅ — I speak (man speaking) maiṅ boltī hūṅ — I speak (woman speaking)."
             },
             {
               "kind": "speech",
@@ -933,7 +937,7 @@
             },
             {
               "kind": "speech",
-              "text": "That plainness is the lesson. Urdu's everyday verbs are inherited Indo-Aryan and often short-rooted like this, while its formal and literary vocabulary was borrowed from Persian and Arabic and tends to be long, elegant, and easy to trace. Beside homely bolnā sits Persian-derived گفتگو guftagū, “conversation,” from Persian guftan, “to speak.” Both are fully Urdu. One is the floor of the house; the other is the ornament on it — and the flowing nastaʿlīq hand Urdu is traditionally written in belongs to that same Persian inheritance."
+              "text": "That plainness is the lesson. Urdu's everyday verbs are inherited Indo-Aryan and often short-rooted like this, while its formal and literary vocabulary was borrowed from Persian and Arabic and tends to be long, elegant, and easy to trace. Beside homely bolnā sits Persian-derived guftagū, “conversation,” from Persian guftan, “to speak.” Both are fully Urdu. One is the floor of the house; the other is the ornament on it — and the flowing nastaʿlīq hand Urdu is traditionally written in belongs to that same Persian inheritance."
             }
           ]
         },
@@ -954,11 +958,11 @@
             {
               "kind": "prompt",
               "action": "COUNT",
-              "instruction": "ب one dot below, پ three dots below",
+              "instruction": "ب one dot below — and say what the three-dot version will be",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU COUNT: **ب** one dot below, **پ** three dots below]"
+              "source": "[YOU COUNT: **ب** one dot below — and say what the three-dot version will be]"
             },
             {
               "kind": "prompt",
