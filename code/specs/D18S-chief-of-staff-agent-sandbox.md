@@ -538,27 +538,39 @@ system silently grants whatever the OS happened to allow.
 
 This rule states a property of the paradigm, not a mediation requirement.
 
-**There is no *ambient* agent-to-agent surface.** An agent cannot discover,
-enumerate, or address an agent it was not explicitly wired to. The only question
-it may ask unprompted is whether a capability exists.
+**In V1, agents do not know about other agents.** An agent reaches anything
+outside itself through its secure channel to the supervisor, and nothing else.
 
-That is narrower than "agents do not know other agents exist", and the narrowing
-is deliberate: the repo's artifacts do contain agent-addressing surfaces, and a
-rule whose premise the artifacts contradict would not survive review.
+The rule is stated as a property of the agent's *view*, because that is what can
+be checked:
 
-| Surface | Where |
-|---|---|
-| `vault.request_direct(secret_name, consumer_agent_id)` — caller names a consumer | `D18-chief-of-staff.md:1996` |
-| `ChannelDefinition`: one `originator.agent_id`, 1..1024 `receivers[].agent_id` | `D18P` §channel definition |
-| `agent.spawn`, `agent.send`, `agent.await` — delegation tools | `D18D` §delegation |
+> **The agent's view contains no agent identity — not a peer's, not its own —
+> and the agent cannot supply one.** An agent addresses a `channel_id`, never an
+> agent. Routing is the supervisor's concern, expressed in `D18P`
+> `ChannelDefinition` records the agent never sees.
 
-Every one of those is a **declared, supervisor-wired path**, not an ambient one:
-a channel exists because the supervisor wired it, and D18D states that a binding
-treating a caller-supplied `consumer_agent_id` as proof of authorization is
-non-conforming — the vault authorizes on the *attested* `requesting_agent_id`
-(`chief-of-staff-vault-runtime/src/lib.rs:331`), never on the asserted field.
-So the paradigm claim holds for *discovery and addressing*, which is what this
-rule needs; it does not hold as a claim that no inter-agent path exists.
+**Conformance.** A V1 agent-facing tool, wire field, or host import that carries
+or accepts an agent identity is non-conforming.
+
+The Level 4 transport already conforms: `chief-agent-stdio-v1`'s `AgentInput`
+carries `channel_id`, `message_id`, `sequence`, `timestamp_ns`, `content_type`,
+and `payload_b64` — no agent identity
+(`chief-of-staff-agent-stdio-protocol/src/lib.rs`). `D18P`'s `originator
+.agent_id` and 1..1024 `receivers[].agent_id` are the **supervisor's** wiring
+view and are correctly absent from the agent's.
+
+Two surfaces do **not** conform and are not exposed to agents in V1:
+
+| Surface | Where | V1 status |
+|---|---|---|
+| `agent.spawn`, `agent.send`, `agent.await` | `D18D` §delegation | not exposed in V1 — each names a peer |
+| `vault.request_direct`'s caller-supplied `consumer_agent_id` | `D18-chief-of-staff.md:1996` | not agent-supplied in V1 |
+
+The vault is already sound underneath: it authorizes on the **attested**
+`requesting_agent_id` (`chief-of-staff-vault-runtime/src/lib.rs:331`), never on
+the asserted field, and `D18D` already calls a binding that treats
+`consumer_agent_id` as proof of authorization non-conforming. V1 removes the
+field from the agent's reach rather than relying on that discipline.
 
 The OS-level discovery path is closed by S-I1 rather than by principal
 separation: `/proc` and `/sys` are unreachable, and the process, IPC and
