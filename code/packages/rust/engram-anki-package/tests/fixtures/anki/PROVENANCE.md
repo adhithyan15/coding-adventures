@@ -12,6 +12,32 @@ would pass every test. See #13940.
   content and no licensing question. Each file contains exactly the one
   situation it is named for.
 
+## The scheduling state is Anki's, not ours
+
+Originally these files were exported by Anki but had their scheduling columns
+**assigned by hand** first (`card.type = 2`, `card.ivl = 21`, `card.left =
+1001`) — so the container was Anki's while the semantics were still our own
+belief wearing an Anki wrapper. That is one level in from the problem #13940
+describes, and the generator's own comment admitted it: *"Anki packs two
+numbers into `left`. Our importer has an opinion about that encoding which
+nothing has ever checked against a real file"* — immediately before writing
+that opinion into the file.
+
+The fixtures are now produced by answering cards through Anki's scheduler, and
+the values changed:
+
+| column | hand-set before | Anki 26.08.1 writes |
+|---|---|---|
+| learning `left` | `1001` | **`2`** |
+| learning `due` | `1700000000` | a real wall-clock timestamp |
+| review `ivl` | `21` | `5` |
+| filtered `odue` | `0` | **`5`** |
+| filtered `due` | `0` | **`-100000`** |
+
+The first and the fourth are the ones that matter. `1001` is the older packed
+step encoding and is not what modern Anki emits; and with `odue` left at zero,
+a reader that ignored the column entirely would still have passed.
+
 ## Regenerating
 
 ```
@@ -30,7 +56,7 @@ anyway, since what matters is that we read Anki's meaning correctly.
 
 | File | What it pins |
 |---|---|
-| `anki-review-scheduled.apkg` | one Basic note whose card is scheduled for review in 5 days |
+| `anki-review-scheduled.apkg` | one Basic note graduated to review by answering Easy |
 | `anki-in-learning.apkg` | one Basic note whose card is in the learning queue with steps remaining |
 | `anki-suspended-buried.apkg` | two Basic notes, one card suspended (queue -1) and one buried (queue -2) |
 | `anki-cloze.apkg` | one Cloze note with two deletions, generating two cards |

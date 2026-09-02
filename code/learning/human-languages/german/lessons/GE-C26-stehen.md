@@ -3,10 +3,10 @@ schema_version: 2
 id: GE-C26-stehen
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 800
-chapter: 26
+chapter: 28
 type: word
 headword: stehen
-gloss: to stand — the verb Chapter 24 found inside verstehen, and the one place German keeps a letter English put in the wrong tense
+gloss: to stand — the verb hiding inside verstehen, and the one place German keeps a letter English put in the wrong tense
 concept_tag: VERB-STAND
 prerequisites: [GE-C26-sitzen, GE-C24-verstehen]
 sounds: [st-initial-scht, h-silent-lengthening]
@@ -36,7 +36,7 @@ reviews_of: [GE-C26-sitzen, GE-C24-verstehen]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-VERSTEHEN-05, GE-ETYMON-VERSTEHEN-06] -->
 
-[PAUSE 2s] Chapter 24 broke **verstehen** into *ver-* plus *stehen*, and named
+[PAUSE 2s] **Verstehen** was broken into *ver-* plus *stehen*, and named
 *stehen* as English **stand**. Here is that verb alone, and the letter the two
 languages disagree about.
 
@@ -73,7 +73,7 @@ German did not lose the *n*. It kept it in the past: **ich stand**, and the
 participle **gestanden**. German's past tense is spelt the way English's present
 is, out of the same drawer of stems.
 
-The root is PIE ***\*steh₂-***, the one Chapter 24 named, and it is everywhere.
+The root is PIE ***\*steh₂-***, the one *verstehen* named, and it is everywhere.
 Latin *stāre* gave **state**, **station**, **stable**, **constant**. Greek
 *hístēmi*, "I set up," gave **static**, **system** and **ecstasy** — standing
 outside yourself. German built **die Stadt**, a city: a standing-place. English
@@ -107,5 +107,5 @@ sitting and standing are things everybody does.
 [PAUSE 3s] Give the *du* and *er* forms. (***Du stehst, er steht***.) Which
 letter does English's *stand* carry that German's *stehen* does not? (An **n**.)
 Where does German still keep it? (In the **past** — *ich stand, gestanden*.)
-Which longer verb from Chapter 24 has *stehen* inside it? (***Verstehen***.)
+Which longer verb already taught has *stehen* inside it? (***Verstehen***.)
 Say "I sit. I stand." (***Ich sitze. Ich stehe.***)

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C16-kommen",
+    "language": "german",
+    "chapter": 18,
+    "sequence": 435,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94c981ccdb369144"
+  },
+  "findings": []
+}

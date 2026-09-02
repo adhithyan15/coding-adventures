@@ -5,6 +5,353 @@ landed and why, not a semver-tracked API.
 
 ## Unreleased
 
+- **#14070 installment 3d: two composed spans re-grounded on what their pages actually say, and the
+  glyph line of work closes.** `earth-science/atmosphere-layers` and `geometry/quadrilateral-types`.
+  2 value lines, 43 comment lines, 2 files. Both mutations redden; **four** pre-existing
+  assertions failed correctly and were repointed.
+
+  **A class-general quote screen now replaces the two per-class ones.** Seven axes of quote defect
+  were found across 3a–3c, each by review, each needing its own rule. Rather than write an eighth,
+  the screen normalizes **every** quote-class codepoint to a single sentinel on both value and page,
+  locates each normalized match, and compares **raw bytes** there. A normalized match whose bytes
+  differ *is* the defect, whatever produced it.
+
+  Positive controls first, because a screen reporting zero is worthless until it reports non-zero on
+  a defect it should catch: four axes were each re-introduced into a known-good value and the screen
+  required to flag them. All four do, including ASCII-single→ASCII-double, which **both** previous
+  screens were blind to by construction.
+
+  **Result: 0 citations anywhere in the stdlib are repairable by requoting.** The glyph work begun in
+  3a is finished — 23 citations across four axes.
+
+  *The population that "0" is measured over*, stated so it can be recomputed rather than trusted:
+  `source`/`cites` values at least 20 characters long containing at least one of
+  `' ‘ ’ ‛ ʼ ´ " “ ” „ ‟ « » ‹ ›`, with a resolvable locator — **77 of the stdlib's 567 values**.
+  Review counting under a narrower rule got 64. Neither is wrong; they measure different sets, and
+  every count in this effort has moved when the rule moved, so the rule is now written down with the
+  number.
+
+  **What the screen could not judge, it said so rather than guessing.** 17 values produced no
+  contiguous page match — but three are not composed spans at all: two locators are PubChem **JSON**
+  endpoints (`chemistry/element-symbols:55`, `chemistry/elements:65`) and one is a **.pptx**
+  (`language/dolch-sight-word-level:469`), which an HTML extractor has no business reading — its
+  longest "overlap" with the PowerPoint was the literal string `presentation.xml`. That is the
+  swallowed-TLS error inverted: that one made an *unchecked* site look clean, this makes an
+  *unjudgeable* site look defective. Corrected to **14 composed spans and 3 unjudgeable**.
+
+  **The 3c entry below calls these "the 17 `language/*` composed spans", and that locus was wrong.**
+  Only six of the seventeen are under `language/*`; the rest are chemistry, earth-science, geometry
+  and physics. 3d corrected the *composition* of the 17 while inheriting 3c's mis-scoping, and review
+  caught that too. The full list is on #14111.
+
+  **The two repaired here are re-groundings, not requotings.** `atmosphere-layers` stopped at "found
+  here." where the sentence continues through the cumulonimbus clause; the full sentence still
+  grounds `troposphere → weather` and adds a caveat, not a contradiction.
+
+  `quadrilateral-types` is the more interesting one, and **review corrected me twice on it**. The
+  value had silently dropped a parenthetical while keeping the opening words, so it read as a whole
+  sentence and appeared on no page. My first repair quoted from "a geometric figure…" — which fixed
+  contiguity and **dropped the subject**, leaving a citation that never names a square, in a file
+  whose own header insists a citation must not omit its subject. Extending through the following
+  sentence — "In other words, a square is a regular polygon with four sides" — is both contiguous and
+  names what it defines.
+
+  I had also justified the truncation by calling the parenthetical **MathML**. It is not: the page
+  has zero `<math>` elements and 47 `<img class="inlineformula">` images, which this same header
+  already describes correctly for the rectangle row. And the full sentence **is** available as
+  plaintext in the page's `<meta>` descriptions, so quoting from the body is a choice, not a
+  necessity. Both corrections are recorded in the file, because the wrong version was written as an
+  instruction not to revisit it.
+
+  **My repair also moved a value out of the screen's reach.** The new span contains no quote
+  characters, so the quote screen's population fell 78 → 77. It is verified by its e2e pin instead. A
+  screen keyed on a character cannot vouch for values carrying none — and the instrument this effort
+  still lacks checks *every* value for contiguity regardless of quoting. That is also the only kind
+  that could see `geography/map-type.adj:57`, which ships a paraphrase and passes every screen built
+  so far.
+
+  **The pin queries `square`, which the authored `.query.adj` does not cover** — its queries are
+  rhombus/parallelogram/trapezoid/rectangle, each grounded by a per-row `cites`; only `square` is
+  grounded by the `source` that changed. Two pre-existing pins that broke were rectangle and trapezoid
+  pins whose span opens on the *square* sentence: **pins reaching across the envelope into text that
+  does not ground the row they name.** They pass once repointed, but that shape is the #14124 smell.
+
+  533 test binaries / 1643 tests green; clippy `-D warnings` clean; both `adj_stdlib_*` gates exit 0;
+  both `.query.adj` companions parse and run clean.
+
+  *Still open:* 14 composed spans (#14111, re-grounding under #13934), 3 unjudgeable locators needing
+  a content-type-aware reader, #14124, and the `map-type.adj:57` paraphrase.
+
+- **#14070 installment 3c: six glyph-flattened citations repaired outside `language/*`, with nineteen
+  comment lines synced across eleven files.** Five contraction repairs
+  (`biology/cell-division-daughter-cells`, `biology/cell-division-genetic-outcome`,
+  `biology/heredity-term`, `biology/vitamin-deficiency-symptom`, `physics/newton-laws`) and one
+  double-quote repair (`biology/consumer-trophic-level`). Every value verifies verbatim on its page;
+  the old forms appear on none. All six mutations redden — five restore-the-flattened-form, one
+  flatten-the-double-quotes.
+
+  **The desync screen now covers ALL comment text, not just lines that begin with `%`.** A trailing
+  comment on a row line — `row (mitosis, x)   % NHGRI: "…"` — does not start with `%`, so scoping the
+  screen to header blocks made it invisible. Two files shipped carrying the repaired sentence in
+  their header and the flattened one three lines below on a row, contradicting themselves; review
+  caught both. With the wider scope that screen reports **zero across the whole stdlib**, and so does
+  the double-quote value screen.
+
+  **That is not the same as saying every shipped value is verbatim, and an earlier draft of this
+  entry conflated the two.** Both screens key on a character class chosen in advance. A class-general
+  check found four values that neither could see — `earth-science/atmosphere-layers:103`,
+  `geometry/quadrilateral-types:116`, `geometry/triangle-alt-name:57`, `geometry/triangle-types:95`.
+  Three of them substitute **ASCII single quotes for the page's ASCII doubles**: no curly glyph
+  anywhere and no ASCII double in the value, so the apostrophe screen and the double-quote screen are
+  both blind by construction. That is a seventh distinct blind spot on a seventh axis, and like the
+  six before it, review found it and I did not.
+
+  Those four are **not repaired here**, because none is verbatim even after the quote substitution —
+  each differs from its page by more than quote characters, and `atmosphere-layers` also truncates
+  the sentence. Curling them would make the visible defect vanish while the citation still failed its
+  page: the same reasoning that left the 17 `language/*` composed spans alone. Filed to #14111 for
+  re-grounding (#13934), along with the observation that the durable fix is class-general —
+  normalize every quote codepoint to one sentinel and compare raw bytes — rather than another
+  per-class screen.
+
+  **Two of the header syncs needed ASCII double quotes, not curly ones.** `anatomy/brain-parts` and
+  `anatomy/tooth-parts` cite pages that really do use ASCII doubles there; curling them would have
+  replaced a correct quote with a wrong one. Each header was therefore synced to *the bytes of the
+  value its own file ships*, after confirming that value appears verbatim on its page — never to
+  whatever glyph the pattern suggested. This is 3a's NASA lesson arriving a second time.
+
+  **`physics/newton-laws` quoted three law labels and only one was repaired at first.** NASA renders
+  all three with U+2019; the value repair touched the First Law, and the header block — which asserts
+  the labels are "quoted here character-for-character so any reader can re-check it" — kept ASCII for
+  the Second and Third on four lines. Neither screen could see it, because laws 2 and 3 are not
+  shipped values. Fixed, and worth stating plainly: a file can assert character-for-character
+  fidelity and be right about one third of its own quotes.
+
+  **The `vitamin-deficiency-symptom` pin queries `vitamin_a`, not `vitamin_d`.** That table ships one
+  envelope for five rows, and the envelope is the xerophthalmia/night-blindness sentence — which
+  grounds `vitamin_a` and not `vitamin_d`. The first version of this pin bound a bone-deformity
+  answer beside a citation about vision and would have frozen that pairing in a test. The entry
+  claimed each envelope had been checked to ground its row; that check was mechanical — it asked
+  whether the pin *contained* the repaired sentence, which is a different question. #14124.
+
+  **`vitamin-deficiency-symptom` is in this batch only because a swallowed error was made loud.** 3a's
+  collector could not complete TLS to its host, caught the exception, and moved on, so an
+  **unchecked** site was indistinguishable from a checked-and-clean one. Once fetch failures were
+  printed, it came back reachable *and* flattened.
+
+  **Two pre-existing pins failed, correctly.** `cell-division-daughter-cells` and
+  `cell-division-genetic-outcome` each asserted the whole citation with an ASCII apostrophe — right in
+  form, faithfully defending a value absent from its own page. Repointed. Third occurrence this
+  effort, after `electoral-college-count` and `mixture-types`. Both libraries quote the *same*
+  genome.gov sentence, so one page's glyph governed two libraries' citations.
+
+  **Two pins span the bindings through a corroboration**, because those repairs were on `cites` lines
+  and corroborations sit past the envelope's `trust` field where an envelope-shaped pin cannot reach.
+  Each was checked to pin the corroboration carrying the repaired sentence rather than a neighbour: a
+  corroboration pin bound to the wrong entry is unique, anchored, and tests nothing, which happened
+  once already this effort.
+
+  Five files beyond the six-value batch were repaired: the three header-sync files
+  (`anatomy/brain-parts`, `anatomy/tooth-parts`, `biology/animal-habitat` — the first two needing
+  ASCII doubles, the third U+2019), plus `biology/vitamins` (the parent `vitamin-deficiency-symptom`
+  was derived from: the child was fixed and the parent left flattened) and
+  `biology/abo-genotype-phenotype`, which quotes a genome.gov sentence this installment repaired
+  elsewhere.
+
+  `physics/newton-laws` needed one more pass after that: its header quotes the NASA page **title**,
+  which was still ASCII inside a block asserting character-for-character fidelity. Neither screen
+  could see it — a page title is not a shipped value and not a same-file desync.
+
+  533 test binaries / 1641 tests green; clippy `-D warnings` clean; `adj_stdlib_report
+  --fail-on-unreferenced-tests` and `adj_stdlib_manifest --validate-json-schema` both exit 0; all six
+  `.query.adj` companions parse and run clean (`cell-division-genetic-outcome.query.adj` has no
+  abstention query, so "abstains correctly" is vacuous for it rather than true).
+
+  *Still open, and not glyph work:* the 17 composed-span `language/*` sites (#14111) differ from their
+  pages by more than glyphs and need re-grounding (#13934) — curling them would be a defect wearing
+  the appearance of a fix. `geography/map-type.adj:57` ships a paraphrase as a verbatim citation,
+  which no glyph screen can ever see because the value has no apostrophe. #14124 remains.
+
+- **#14070 installment 3b: thirteen glyph-flattened citations repaired across `language/*`, with
+  twenty header quote lines synced across fifteen files.** Eleven single-quote repairs — three
+  contraction (`figurative-language-type`, `possessive-noun`, `sentence-type`) and eight paired
+  (`phoneme-addition`, `phoneme-deletion`, `phoneme-segmentation`, `phoneme-substitution`,
+  `plural-s-sound`, `syllable-blending`, `syllable-count`, `syllable-substitution`) — plus two
+  double-quote repairs (`silent-e-word`, `syllable-type-alias`).
+
+  Every value now verifies verbatim against its page; the old forms appear on none of them.
+
+  **Paired cases are not contraction cases.** The page quotes a word as `‘bike’` — U+2018 opening,
+  U+2019 closing. Applying the contraction rule (every `'` becomes U+2019) yields `’bike’`, which
+  appears on no page at all: it would swap one wrong citation for a differently wrong one.
+
+  Three mutation classes pass: restore-the-flattened-form reddens all thirteen; **curl both ends the
+  same way** — the mistake anyone would actually make — reddens all eight paired ones; flatten-the-
+  double-quotes reddens both new ones.
+
+  **This installment's real subject is that the screens kept being wrong, and each one was wrong in a
+  way the previous fix had already taught me.** Five successive screens, five findings, every one
+  raised by review rather than by me:
+
+  1. The header sync matched a whole span against a single `%` line — so five headers that wrap the
+     sentence across lines shipped still showing the flattened form of *the exact sentence the file
+     now cites*. This is verbatim the 3a defect that the entry below describes. Writing the lesson
+     down did not prevent repeating it one installment later.
+  2. Matching atomic units instead fixed the wrap but overshot: it curled apostrophes in the header's
+     own **prose** (`figurative-language-type`'s "something that isn't human" is my sentence, not the
+     page's). Page-verification caught it before it shipped. A repair that cannot be verified against
+     the page is not a repair.
+  3. A joined-header token probe missed `onset-rime` because column annotations break contiguity.
+  4. Extracting `"..."` spans from the joined header failed because **quote pairing is unreliable** —
+     column cells sit between quotes, so the regex paired the close of one with the open of the next
+     and extracted `map m ap` instead of the sentence.
+  5. Sliding windows of each value against the joined header still passed `onset-rime`, because that
+     file carries **both** copies — the correct curly form at line 68 and the flattened one at line
+     34 — so "is this value present in the header?" answered yes and hid the bad copy. The comparison
+     had to be made per-occurrence.
+
+  The common shape: each screen encoded what I already believed the defect looked like. The screen
+  that finally works extracts nothing and pairs nothing — it slides windows, compares under a
+  normalization **blind to which quote character is used**, and checks raw bytes at each match site.
+  It has a known floor: a header quoting a fragment shorter than the window is invisible to it
+  (`possessive-noun:7`'s 16-character "the dog's collar" was found by review, not by it), and
+  lowering the window to catch such fragments produces false positives on prose and on coincidental
+  overlaps between two different rules.
+
+  **An entire quote class had never been screened.** Every glyph screen in this effort keyed on an
+  ASCII *apostrophe*. `silent-e-word` and `syllable-type-alias` ship a sentence whose only quotes are
+  escaped ASCII **doubles**, where the page renders curly ones — so they contained nothing any screen
+  looked for, and were invisible by construction rather than by accident. The same sentence was
+  flattened in both libraries. A repo-wide double-quote screen now exists; it found one more,
+  `biology/consumer-trophic-level:128`, which ships with the non-`language/*` batch.
+
+  **`plural-s-sound`'s pin deliberately queries `dogs`, not `hats`.** That table ships one envelope,
+  "In all other cases we pronounce ‘s’ as /z/", which grounds only the `z_sound` row. A pin on `hats`
+  would pair an /s/ answer with a citation stating the /z/ rule and freeze it in a test, where it
+  reads as an endorsement. Filed as #14124.
+
+  Pins are anchored on the bindings through the `trust` field. Queries come from each library's
+  authored `.query.adj` — **except `plural-s-sound`**, for the reason above. A derived
+  `table(firstRow, $X)` assumed 2-arity and abstained on six of eleven; `phoneme_segmentation` has
+  four columns. The test file for `silent-e-word` is `facts_silentEword_e2e.rs`, **with a capital
+  E** — the naming rule used everywhere else yields `silenteword` and matches nothing. Third filename
+  trap this effort. Filenames are looked up, never derived.
+
+  **`language/*` is NOT clean, and an earlier draft of this entry claimed it was.** The
+  header/data screens report zero across `language/*`, and that is all they report: they compare a
+  header against what the same file *ships*. They say nothing about whether the shipped value matches
+  its page. Review found five more `language/*` libraries — `syllable-segmentation:80`,
+  `syllable-deletion:78`, `diphthong-sound:108`, `silent-letter-sound:100`,
+  `other-vowel-team-sound:185` — shipping flattened glyphs, seventeen sites in all.
+
+  **They are not repaired here, and curling them would not fix them.** Each is a *composed* span: it
+  differs from its page by more than glyphs, so the whole-value check returns "not found" rather than
+  "flattened", which is exactly why this effort's collector never surfaced them. Repairing the quote
+  marks would make the fragments match while the sentence as a whole still did not — a defect wearing
+  the appearance of a fix. They need re-grounding on what the page actually says (#13934), not
+  curling. Filed to #14111 with that distinction stated.
+
+  This matters beyond bookkeeping: `syllable-segmentation:80` and the just-repaired
+  `syllable-count:72` quote near-identical sentences from the *same* Reading Rockets page, so the
+  repo now ships two different renderings of one source sentence until that batch lands.
+
+  Outside `language/*` the header screen reports six sites in five files (`anatomy/brain-parts`,
+  `anatomy/tooth-parts`, `biology/animal-habitat`, `biology/consumer-trophic-level`,
+  `biology/neuron-parts:52`), also #14111. Header quotes of *different* sentences remain in the
+  repaired files too — `possessive-noun` has four by the quoted-span screen — likewise #14111; this
+  installment never verified them.
+
+  Confirmed glyph repairs now stand at **23 repaired-or-queued plus at least 17 newly-found
+  `language/*` sites** — 4 in 3a, 13 here, 6 queued elsewhere (four biology/physics,
+  `biology/vitamin-deficiency-symptom:77`, `biology/consumer-trophic-level:128`), and the composed-span
+  group above. **Treat every one of these totals as a lower bound.** Each has risen every time
+  somebody looked with a differently-shaped instrument, and this entry has now been corrected on that
+  point four times.
+
+  533 test binaries / 1635 tests green; clippy `-D warnings` clean; `adj_stdlib_report
+  --fail-on-unreferenced-tests` and `adj_stdlib_manifest --validate-json-schema` both exit 0; all
+  thirteen `.query.adj` companions parse, run and abstain correctly.
+
+- **#14070 installment 3a: four glyph-flattened `source` values repaired, five header quote lines
+  synced across all four files.** `astronomy/lunar-eclipse-type`,
+  `civics/electoral-college-count`, `earth-science/seismic-wave-arrival-order`,
+  `geography/map-type-classification`.
+
+  Each shipped an ASCII apostrophe where its page renders U+2019, so **the citation did not appear
+  on its own page** — the premise being that a caller can check a citation against its locator.
+  All four now verify verbatim, and the old forms appear on none of the pages.
+
+  **The replacement text was taken from the page, not hand-curled.** A candidate swap was applied
+  and the result confirmed present in a rendered block. Hand-curling is how the earlier undercount
+  happened: assuming the contraction rule covered every case left eight quoted-word values parked
+  in an unexplained NEITHER bucket that a contraction-only swap could not resolve. They were never
+  called clean — the note on that run said they were "likely glyph issues plus a second
+  difference" — but the reason given for holding them back was wrong: the page opens a quoted word
+  with U+2018, not U+2019. Keeping them separate was right; the explanation was not.
+
+  **All four carried the same flattened string in their header; all four headers are fixed here.**
+  The first pass fixed only two — the security review caught the other two, whose headers wrap the
+  quote across two lines, which the screen could not see. Installment 1 repaired header quote
+  blocks in all four of its libraries for the same reason; the installment-2 entry calls that “the
+  header/data desync caught in installment 1”, singular, so treat the count as this entry’s
+  recollection rather than something the log corroborates.
+
+  A PRE-EXISTING PIN IN `electoral-college-count` FAILED, CORRECTLY. It asserted the whole
+  citation, anchored on the JSON key and closed on the terminating quote, and its own comment
+  cites #13916 and #13918 on why fragments are insufficient. It was right in form and **faithfully
+  defended a value absent from its own page**. Repointed to the curly form. Second instance this
+  effort of an *anchored* pin protecting a defect, after `mixture-types`' five-clause join. (The
+  `oganesson` case belongs to the opposite category and was miscited here at first: that assertion
+  was a bare **unanchored** substring, and what it obstructed was a correct repair.)
+
+  Four restore-the-flattened-form mutations pass — each differs from the repaired value by **one
+  character**, so a pin that survived would not be checking the glyph at all.
+
+  **Three screening defects surfaced while shipping this; two of them were in the header screen.**
+  It scanned `source`/`cites` lines and never looked at header quotes at all —
+  `lunar-eclipse-type`'s header claims three verbatim quotes and the first pass repaired only the
+  one that was also a `source`. A header screen written to close that gap then reported two of
+  this PR's own files clean, because both wrap their quote across two `%` lines and it only
+  recognised a complete `"..."` span on a single line. The security review caught both. A second,
+  cell-based screen finds the wrapped ones; **neither screen is a superset of the other**, so the
+  union — 31 sites across 19 files — is the work list, filed as #14111. Five header lines are
+  repaired in this PR (the four matching a shipped `source`, plus lunar-eclipse-type’s third
+  verbatim quote); the union above is measured after those. The same sentence repaired here in
+  `map-type-classification` still sits flattened in sibling `map-type`'s header: header text
+  propagates into derived libraries' shipped data, so this is a defect waiting to happen.
+
+  `electoral-college-count`'s header claimed the page had been "read byte-for-byte", with the em
+  dashes specifically confirmed as U+2014 "so the quote is byte-faithful" — while an ASCII
+  apostrophe sat two rows above in the same table. **A byte-for-byte read that only looks for the
+  character you already suspect is not a byte-for-byte read.** That note is now scoped honestly.
+
+  **The NASA page is mixed, and a blanket curl would have broken a correct quote.** It renders the
+  total and penumbral sentences with U+2019 and the partial one with an ASCII apostrophe. Curling
+  all three would have made a currently-verbatim quote stop appearing on its own page. The file
+  now carries a DO-NOT-NORMALIZE note so a future editor does not "fix" the odd one out.
+
+  *Scope note:* this is **4 of 19** confirmed glyph repairs; **15 remain, and 4 of those are not
+  `language/*`** — `biology/cell-division-daughter-cells:93`,
+  `biology/cell-division-genetic-outcome:55`, `biology/heredity-term:122`,
+  `physics/newton-laws:88`. The language group still ships separately, because a 19-site PR is
+  harder to review than coherent ones.
+
+  **This entry first said "4 of 15, the other 11 all `language/*`", and that was wrong in a way
+  worth recording.** The collector wrapped its fetch in `except Exception: continue`. TLS to
+  several hosts fails on this machine (a proxy root the Python bundle does not carry), so those
+  sites raised, were skipped, and came out the far end **indistinguishable from sites that had
+  been checked and found clean**. A screen that reports absence of evidence as evidence of absence
+  does not fail loudly; it fails silently and confidently, and it had me telling the next
+  installment to sweep `language/*` and stop — leaving four biology/physics citations shipping
+  text absent from their own pages. The transport now goes through curl (system trust store,
+  **verification not disabled**) and fetch failures are counted and printed separately from clean
+  results. One site still cannot be reached (`biology/vitamin-deficiency-symptom:77`) and is now
+  *visible* as unchecked rather than silently counted as fine.
+
+
+  533 test binaries / 1622 tests green, clippy `-D warnings` clean; all four `.query.adj`
+  companions parse, run and abstain correctly.
+
 - **#14070 installment 2: `chemistry/mixture-types` — a joined five-clause `source` becomes one
   `source` plus four `cites`.** Interior-ellipsis count over shipped values falls 5 → 4.
 

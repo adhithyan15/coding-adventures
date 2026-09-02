@@ -1,0 +1,15 @@
+{
+  "id": "KA-PATH-70-TELL",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "KA-C70-say",
+    "KA-C70-quotative",
+    "KA-C70-because",
+    "KA-C70-i-think"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-70-TELL"
+  ],
+  "after": []
+}

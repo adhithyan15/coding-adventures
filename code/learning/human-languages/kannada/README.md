@@ -120,6 +120,37 @@ Because no chapter after 5 has a terminal `practice` lesson, each payoff is the
 chapter's last lesson by `sequence` — in practice the lesson whose Guided
 Practice block recombines everything the chapter taught.
 
+## Chapters 67-73 — the joining column
+
+Twenty-seven headwords and eight script lessons, chosen off
+[`core/exam-inventory-kannada-a1.json`](../core/exam-inventory-kannada-a1.json)'s
+own uncovered list rather than by topic. They take the track's A1 coverage from
+167/258 (65%) to 193/258 (75%) and close the *Samuccaya* column outright: the
+track had no word for **and**, **or**, **but** or **because**, and no quotative,
+so a learner who knew a hundred and thirty nouns could not name two of them in
+one breath.
+
+- **67 And, Or, But** — *mattu*, *athavā*, *ādare*, and the `-ū` suffix that
+  joins two nouns without a word between them.
+- **68 Not That, and Neither** — *alla* against the *illa* the track has had
+  since chapter 1, *gottilla*, and "me neither".
+- **69 Asking, and Asking Why** — the `-ā` question particle NAMED at last,
+  *alvā*, *yāke*.
+- **70 Saying So, and Saying Why** — *hēḷu*, the quotative *anta*, *ēkendare*,
+  and the opinion frame that unblocks *yōcisu*.
+- **71 Once More, and Which One** — *innondu*, "please say it once more",
+  *yāvāga*, *yāva*.
+- **72 When It Happens, and What You Want** — the `-āga` when-clause, *bēku*,
+  and answering an offered choice.
+- **73 In Order To, and Being Able** — *tumbā*, the `-alu` infinitive,
+  *baruttade*, and *ondu* as an article.
+
+Eight characters ride inside those chapters, the eight most-used the ladder had
+never taught: **ಮ ಲ ವ ೇ ಟ ಜ ಅ ೂ**. Seven are recognition lessons; **ಅ** carries
+a stroke order sourced from a cited Wikimedia Commons animation, and says why it
+is the only one that does. Nineteen characters remain, and `HL-C311` in the
+backlog records which of them already have a source and which have none.
+
 ## Book / fonts
 
 The book compiles with XeLaTeX using the **vendored** Noto Sans Kannada font

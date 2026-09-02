@@ -1,0 +1,14 @@
+{
+  "id": "KA-EXT-71-MORE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask for another one, ask somebody to repeat themselves, and ask when and which.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C71-another",
+    "KA-C71-say-again",
+    "KA-C71-when",
+    "KA-C71-which"
+  ]
+}

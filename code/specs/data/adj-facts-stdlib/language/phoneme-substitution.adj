@@ -36,7 +36,7 @@
 % WebFetch-verified TWICE for consistency before writing. The exact spans:
 %
 %   "I can change one sound in a word to form a new word. Watch me. I will
-%    change 'make' to 'bake'."
+%    change ‘make’ to ‘bake’."
 %   "The first sound in make is /m/. The first sound in bake is /b/."
 %
 % `trust consensus` — the same tier `syllable-count.adj`'s sibling section
@@ -54,7 +54,7 @@ table phoneme_substitution {
 
     row (make, m, b, bake)
 
-    source "I can change one sound in a word to form a new word. Watch me. I will change 'make' to 'bake'."
+    source "I can change one sound in a word to form a new word. Watch me. I will change ‘make’ to ‘bake’."
     locator "https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice"
     trust consensus
 }

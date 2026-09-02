@@ -2,6 +2,312 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.36] — 2026-09-02 — round-2 security review: doc-comment corrections + a real, own-caught bug (`NonNullConcreteFuncRef`)
+
+Round 2 of the pre-push security review (on 0.6.35, immediately below)
+returned two things, both addressed here:
+
+1. **Stale doc comments, correction requested by the reviewer.**
+   `resolve_exported_global_funcrefs`'s own "Why exported only" doc
+   comment, and the globals-construction loop's own doc comment, both
+   still framed `return_call_ref.wast`'s safety as resting on "export
+   scoping" -- no longer accurate once 0.6.35 made `func_ref` propagation
+   unconditional (not export-scoped) for `global.get`-initialized
+   globals. Corrected to state the REAL, narrower invariant: `$count`/
+   `$even`/`$odd` stay safe because they are `ref.func`-initialized, not
+   `global.get`-initialized -- 0.6.35's own propagation only ever touches
+   the latter shape. Both comments now explicitly name the residual,
+   currently-untested-but-bounded risk (see item 3) and point at the new
+   regression test proving the bound, rather than asserting safety with
+   no caveat.
+
+2. **A real bug this slice's own new regression test caught while
+   proving the residual risk is bounded** (not something the review
+   flagged directly -- found writing the proof): `resolve_exported_
+   global_funcrefs`'s own `is_funcref` type check only matched
+   `ValueType::Funcref`/`ValueType::ConcreteFuncRef` -- missing
+   `ValueType::NonNullConcreteFuncRef` (`(ref $t)`, the non-nullable
+   concrete function reference), which is just as much funcref-family and
+   just as legal for a global's declared type. An exported global
+   declared `(ref $t)` (as opposed to `(ref null $t)`/bare `funcref`) was
+   silently skipped by this whole function -- `func_ref` staying `None`
+   forever, reproducing the ORIGINAL `elem.wast` bug class for that one
+   type shape. Fixed by adding the missing arm to the `matches!`.
+
+3. **New regression test proving the residual risk is bounded, not a
+   live hazard**: `a_global_get_alias_of_an_imported_funcref_global_
+   read_in_a_deep_tail_recursion_loop_traps_cleanly_instead_of_
+   corrupting_state` (in `wasm-conformance`, see that crate's own
+   CHANGELOG) -- a non-exported alias of an imported funcref global, read
+   once per step inside a `return_call`-based self-recursive loop
+   (structurally identical to `return_call_ref.wast`'s own `$count`),
+   confirmed to run correctly for a small count and to trap CLEANLY (via
+   `push_func_ref`'s own pre-existing `MAX_FUNC_REF_HEAP_LEN` cap) for a
+   count one past that cap -- never a panic, never memory corruption,
+   never a silently wrong answer. No vendored corpus file currently
+   combines these two shapes (confirmed by direct grep across all 257
+   files), so this is a proactive proof of a bound, not a regression fix.
+
+`cargo test -p wasm-runtime`: 77 (lib) + 43 (integration suites) passed,
+0 failed (unchanged from 0.6.35 -- this slice's own new test lives in
+`wasm-conformance`). `cargo clippy --release --all-targets`: clean.
+Corpus baseline re-diffed against the ORIGINAL pre-fix baseline: still
+exactly the one `elem.wast` change, zero real failures anywhere.
+
+## [0.6.35] — 2026-09-02 — security-review finding: propagate `func_ref` at globals-construction time for a `global.get`-copied global (W35 fifth slice, round 1)
+
+A security review of 0.6.34 (immediately below), run before pushing per
+this repo's standing pre-push gate, found a real gap in the SAME class
+of bug that release fixed: a security-review sub-agent was asked to
+verify the fix could not introduce a NEW silent-misdispatch case while
+closing the one it targeted, and it found one, reproduced directly (not
+theorized) before this fix landed:
+
+```wat
+(module $A (func $ax (result i32) (i32.const 42))
+         (global (export "g0") funcref (ref.func $ax)))
+(register "A" $A)
+(module $B
+  (import "A" "g0" (global $g0 funcref))
+  (func $decoy (result i32) (i32.const 999))   ;; $B's own local index 0
+  (global (export "g1") funcref (global.get $g0)))  ;; copies $g0's value
+```
+
+`$g1` is a NEW, independent `GlobalStorage` cell -- `global.get` in a
+constant expression copies a value, it does not alias storage the way
+an IMPORT does. `instantiate()`'s globals-construction loop evaluates
+`$g1`'s init expr against a flattened `&[WasmValue]` snapshot (reads
+only `.value`, never `.func_ref`), so `$g1`'s raw value becomes `$ax`'s
+index in `$A`'s own combined function space (`0`). 0.6.34's
+`resolve_exported_global_funcrefs` (run later, once `$B` is `Rc`-wrapped)
+sees `$g1` is exported, funcref-typed, and unresolved, and resolves that
+raw `0` against `$B`'s OWN function space -- silently reaching `$decoy`
+(999) instead of `$ax` (42) whenever the raw index happens to be in
+range for `$B` too (as it is here). The result is tagged `func_ref:
+Some(..)`, so nothing downstream ever re-checks it -- a genuine,
+undetectable wrong-function dispatch, not a crash: precisely the hazard
+class W35's whole `owner_instance_identity` mechanism exists to prevent,
+reproduced one level removed from the case 0.6.34 closed.
+
+**Fix**: `instantiate()`'s globals-construction loop now ALSO applies
+`global_get_index` (0.6.34's own single-instruction `global.get`
+detector, already used for elem items) to every global's own init
+expression: when a global's init is exactly `(global.get $idx)`, its
+`func_ref` is propagated directly from the SOURCE global's own cell
+(`globals[idx].borrow().func_ref.clone()`) at copy time, using the
+source's own already-correct owner identity, rather than left to be
+reinterpreted later as a raw index in whichever instance happens to
+declare the copy. Deliberately unconditional (every global, not just
+exported ones) -- unlike `resolve_exported_global_funcrefs`'s own
+export-only scoping -- because a non-exported pass-through global can
+just as easily feed an elem item's own `global.get`, which the elem-item
+loop can only see correctly if THIS propagation already ran. Verified
+NOT to reintroduce `resolve_all_table_funcrefs`'s own previously-reverted
+regression (`return_call_ref.wast`'s unexported, `ref.func`-initialized
+`$count`/`$even`/`$odd`): this new propagation only ever fires for a
+`global.get`-initialized global, never a `ref.func`-initialized one, so
+those three globals are byte-for-byte unaffected.
+
+**Verification**: the exact scenario above, confirmed to reproduce the
+bug (misdispatch to `$decoy`, 999) with this fix reverted and to pass
+(reaches `$ax`, 42) with it applied -- a real A/B, not just a green run.
+New regression test in `wasm-conformance` (see that crate's own
+CHANGELOG). Corpus baseline re-diffed against the ORIGINAL (pre-0.6.34)
+baseline: still exactly the one `elem.wast` change, zero real failures
+anywhere, confirming this second fix causes no corpus regression either.
+`cargo test -p wasm-runtime`: 77 (lib) + 43 (integration suites) passed,
+0 failed. `cargo clippy --release --all-targets`: clean.
+
+## [0.6.34] — 2026-09-02 — `resolve_exported_global_funcrefs`: cross-instance funcref-GLOBAL propagation (W35 fifth slice)
+
+Closes the residual gap this crate's own 0.6.33 entry (immediately below)
+named explicitly and left deliberately out of scope: `elem.wast`'s
+"Initializing a table with imported funcref global" case, the LAST
+remaining real (non-`NotYetSupported`) failure anywhere in the pinned
+257-file WebAssembly spec testsuite. Confirmed live before this fix
+(`(module $module4 (func $const-i32 (result i32) (i32.const 42)) (global
+(export "f") funcref (ref.func $const-i32))) (register "module4"
+$module4) (module (import "module4" "f" (global funcref)) ... (elem
+(offset (i32.const 0)) funcref (global.get 0)) (func (export
+"call_imported_elem") ... (call_indirect ... (i32.const 0))))
+(assert_return (invoke "call_imported_elem") (i32.const 42))`): traps
+with "call stack exhausted" instead of returning 42 -- `call_imported_
+elem`'s own `call_indirect` was silently misdispatching to ITSELF
+(unbounded self-recursion), not `$module4`'s real function, the exact
+"silent wrong dispatch" hazard class W35 exists to close for tables.
+
+**Root cause, traced precisely**: `$module4`'s exported global's `ref.
+func`-produced value is deliberately left unresolved by `instantiate()`
+itself (`func_ref: None`, a raw local index in `value` -- see the globals-
+construction loop's own doc comment; W35 third slice already explains why
+`instantiate()` itself cannot safely mint a `LocalFunctionRef` for its own
+export, the self-referential `Rc` cycle problem). The importing module's
+own active elem segment applies `(global.get 0)` against the SHARED
+`GlobalStorage` cell -- but `element_values`'s own computation (0.6.33)
+flattens every global to a bare `WasmValue` snapshot (`global_values`,
+fed to `evaluate_const_expr_gc`), discarding `GlobalStorage::func_ref`
+entirely. The resulting raw index (`$module4`'s own local index 0) gets
+written into the importer's table as an unresolved `TableElement::Raw`,
+and `resolve_all_table_funcrefs`'s own post-registration fixup pass
+(W35 fourth slice) resolves a `Raw` entry against the RESOLVING
+instance's own combined function-index space -- correct for a `ref.func`
+literal written by that SAME instance, but wrong here: `0` names
+`$module4`'s own function, not the importer's local index 0
+(`call_imported_elem` itself, which is exactly why the corpus case
+recurses into itself). `resolve_all_table_funcrefs`'s own doc comment
+already named this as a deliberately out-of-scope gap ("Why NOT globals
+too... no vendored corpus file needs cross-instance funcref-GLOBAL
+resolution at all") -- true when written, no longer true once 0.6.33's
+parser generalization let this exact construct parse and reach the
+executor for the first time.
+
+**Fix, two small, targeted pieces, matching this campaign's "minimal fix,
+reuse the existing W35 machinery" discipline -- no `WasmValue`/
+`evaluate_const_expr_gc` signature change, no broadening of `resolve_all_
+table_funcrefs`'s own scope**:
+
+1. New `pub fn resolve_exported_global_funcrefs(instance_rc:
+   &Rc<RefCell<WasmInstance>>) -> Result<(), TrapError>`, the missing twin
+   of `resolve_all_table_funcrefs` for globals -- called from the exact
+   same post-`instantiate()`, post-`Rc`-wrap, pre-registry-insertion point
+   in `wasm-conformance` (see that crate's own CHANGELOG). Deliberately
+   scoped to EXPORTED funcref-typed globals only, never every module-
+   defined one: `resolve_all_table_funcrefs`'s own "Why NOT globals too"
+   doc comment already documents the concrete, previously reproduced
+   regression a broader attempt caused (`return_call_ref.wast`'s own
+   unexported `$count`/`$even`/`$odd` deep-tail-recursion helpers --
+   confirmed by direct read of that file -- would have every `global.get`
+   mint a fresh `func_ref_heap` handle per read, unbounded across
+   thousands of tail-call-optimized "logical" recursive steps that never
+   reset the heap). Narrowing to "exported only" fixes the cross-instance
+   case (only an EXPORTED global can ever be `import`ed by a different
+   instance in the first place) while structurally avoiding that
+   regression (an unexported global is never touched, full stop). Also
+   guards against double-resolving a RE-EXPORTED (imported-then-exported)
+   global: `func_ref.is_some()` is checked first, since the shared cell
+   may already have been resolved by the ORIGINAL exporting instance's
+   own earlier pass.
+2. `instantiate()`'s own elem-item-expr evaluation loop (0.6.33's
+   `element_values`) now ALSO builds a parallel `element_func_refs:
+   Vec<Vec<Option<FuncRefTarget>>>`, populated via a new, narrowly-scoped
+   `global_get_index(expr)` helper: if an item's expr is syntactically
+   EXACTLY `global.get <idx>` (the one shape that can carry a genuinely
+   cross-instance funcref through this loop -- a funcref-typed constant
+   expression is always exactly one instruction, per the real spec's own
+   restriction, so this single-instruction check is exhaustive, not a
+   heuristic) and `globals[idx]`'s own `func_ref` is `Some` (populated by
+   (1) above, for an already-registered exporting instance, by the time
+   THIS module's own `instantiate()` runs), the active-elem-write loop
+   writes `TableElement::Func(target)` directly instead of `TableElement
+   ::Raw` -- correctly resolved from the moment it's written, never
+   touched by `resolve_all_table_funcrefs`'s own later fixup at all (it
+   only ever acts on a `Raw` entry).
+
+**Verification**: `cargo run --release --bin wasm_conformance_report -p
+wasm-conformance -- --write-baseline`, diffed programmatically
+(`tests/fixtures/testsuite-status.json`'s `files` dict) against the
+pre-fix baseline across all 257 files: `elem.wast`'s `assert_return`
+tally is the ONLY change anywhere in the corpus, `{pass: 26, fail: 1}` ->
+`{pass: 27, fail: 0}` -- confirming a corpus-wide ZERO real `Fail`
+directives remain, the first time this has been true for the entire
+257-file testsuite. Two new unit tests directly exercise `resolve_
+exported_global_funcrefs` (the positive "exported global resolves to the
+declaring function's real identity" case, and the negative "an
+UNEXPORTED funcref global is never eagerly resolved" regression guard for
+the `return_call_ref.wast` class of hazard); `wasm-conformance` gains a
+hand-built, minimal end-to-end reproduction of this exact corpus case
+(see that crate's own CHANGELOG). `cargo test -p wasm-runtime`: 77 (lib,
++2) + 43 (integration suites) passed, 0 failed -- confirmed via a
+`git stash` A/B against the pre-fix tree (75 lib tests passed before, all
+still passing after, plus the 2 new ones). `cargo clippy --release
+--all-targets`: clean.
+
+## [0.6.33] — 2026-09-02 — elem-item evaluation pass + `element_values` + an active-elem-application fix -- W38 slices 4/5
+
+Per `code/specs/W38-wasm-gc-array-bulk-ops.md`, Correction 2's own Design
+§4: `instantiate()` gains a new pass, evaluating every element segment's
+own item constant expressions ONCE, immediately after the existing
+globals loop (same `evaluate_const_expr_gc`, same persistent `gc_heap`/
+`v128_heap`, same runtime tables, same now-final `global_values` snapshot)
+-- producing `element_values: Vec<Vec<WasmValue>>`, a new `WasmInstance`
+field threaded into `wasm_execution::WasmExecutionEngine` via a new
+`set_element_values` call (mirroring `set_elements`'s own one-time,
+no-writeback-needed setup). `array.init_elem`/`array.new_elem` read from
+here; `table.init`/`table.copy` are completely unchanged, still reading
+`elements` (`function_indices`) exclusively.
+
+Running this evaluation exactly once, before any function body ever
+executes, is what makes the corpus's own "not re-evaluated on every
+`array.init_elem`/`array.new_elem`" invariant fall out automatically --
+confirmed directly by a new integration test (`tests/array_init_elem_
+new_elem.rs`), not merely assumed from the design.
+
+**A real regression this same generalization introduces, found and fixed
+in the same PR**: `wasm-wast-parser`'s own Layer 1/2 fix (see that
+crate's CHANGELOG) newly lets an ACTIVE element segment's own item be
+something richer than a literal `ref.func`/`ref.null` -- e.g. `global.
+wast`'s own `(elem (table $t) (global.get $g3) funcref (global.get
+$gf))`. The pre-existing active-elem-application loop (which populates
+the TARGET TABLE at instantiation time) only ever read `elem.function_
+indices`, which has NO representation for a non-literal item (`None`,
+indistinguishable from an explicit null) -- so this construct, once it
+newly PARSES, would silently write a null/wrong entry into the table
+instead of the real referenced function, caught directly by re-probing
+`global.wast` end-to-end (`AssertReturn "fail": expected RefFuncAny, got
+Ref(None)`), not assumed. Fixed by sourcing the loop's writes from the
+new `element_values` table instead (`WasmValue::Ref(x)` is exactly the
+shape `TableElement::Raw`/`None` already expects) -- a strict
+generalization with ZERO behavior change for the pre-existing `ref.func`/
+`ref.null` cases (confirmed: `element_values[i]` for those two shapes is
+byte-for-byte the same value `function_indices[i]` already produced), and
+a real, correct fix for the `global.get`-of-a-LOCAL-funcref-global case.
+
+**A known, deliberately NOT fixed, genuinely out-of-scope residual**,
+found by the same re-probe: `elem.wast`'s own "Initializing a table with
+imported funcref global" test (`(elem (offset (i32.const 0)) funcref
+(global.get 0))`, where global 0 is IMPORTED from a separate module) still
+produces a wrong answer (a safely-trapped "call stack exhausted", not a
+crash) once it newly parses, because `global.get`'s bare `WasmValue`
+snapshot (both in `evaluate_const_expr_gc` generally, and in this crate's
+own pre-existing "module-defined global's `ref.func` value... DELIBERATELY
+LEFT UNRESOLVED" convention) carries no cross-instance provenance -- the
+raw funcref index it holds is only ever meaningful relative to the
+EXPORTING instance, not whichever instance's own `instantiate()` call
+happens to be applying the elem segment. This is the identical, already-
+documented architectural boundary `resolve_all_table_funcrefs`'s own doc
+comment names explicitly ("Why NOT globals too... no vendored corpus file
+needs cross-instance funcref-GLOBAL resolution at all... this pass is
+scoped to tables only") -- a real W35-level feature (propagating a
+`FuncRefTarget` through an imported global, not just a table), genuinely
+outside this spec's own six-slice scope, not something this PR expands
+into. This ONE corpus directive (previously `NotYetSupported` since the
+whole construct failed to parse) moves to `Fail` as an honest, understood
+cost of correctly generalizing the parser -- see the PR description for
+the full diagnosis and a follow-up tracking note.
+
+New integration test file, `tests/array_init_elem_new_elem.rs` (5 tests):
+happy path for both instructions with a funcref-typed array (`array_new_
+elem_and_array_init_elem_happy_path_with_a_funcref_typed_array`), an
+out-of-bounds segment-range trap, an already-dropped passive segment
+(zero count succeeds, nonzero traps), an out-of-range `$elem_idx`
+validation error (hand-built `WasmModule`, bypassing the text parser), and
+the "evaluated once" invariant (`array_init_elem_evaluates_its_segment_
+item_exactly_once_shared_across_separate_calls` -- proven via shared-
+mutation observation, not `ref.eq`, which this crate doesn't implement).
+
+`cargo test -p wasm-runtime`: 75 (lib) + 43 (integration suites) passed,
+0 failed.
+
+## [0.6.32] — 2026-09-02 (mechanical fallout of `wasm_types::ValueType::ArrayRefAny`, W38 slice 0)
+
+`wasm-types` 0.1.26 added `ValueType::ArrayRefAny` (`code/specs/
+W38-wasm-gc-array-bulk-ops.md` Correction 3, see that crate's own
+CHANGELOG). This crate's `call()`'s own lossy-legacy-`i64`-round-trip
+match (params-to-`WasmValue` conversion) joins the same "no vendored
+corpus directive passes one as a top-level `invoke` argument" placeholder
+group `Eqref`/`StructRefAny` (W37) already joined -- one new match arm,
+kept exhaustive. No behavior change in this crate.
+
 ## [0.6.31] — 2026-09-02 (fix: table imports now reject an element-type mismatch against the actual exported table, closing the exact gap 0.6.30 honestly flagged)
 
 Fixes the real bug 0.6.30's own entry below diagnosed and explicitly left

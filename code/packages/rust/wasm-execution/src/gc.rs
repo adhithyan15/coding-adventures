@@ -317,6 +317,7 @@ mod tests {
             dropped_data_segments: Vec::new(),
             elements: Vec::new(),
             dropped_elements: Vec::new(),
+            element_values: Vec::new(),
             tags: Vec::new(),
             tag_identities: Vec::new(),
             try_table_infos: Vec::new(),

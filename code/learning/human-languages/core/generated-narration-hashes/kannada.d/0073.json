@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:f2414eb1d7de8dea",
+  "lessonIds": [
+    "KA-C73-very",
+    "KA-C73-in-order-to",
+    "KA-S151-letter-tta",
+    "KA-C73-can",
+    "KA-C73-a-flower"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "kannada/narration/ch73.txt",
+  "json": "kannada/narration/ch73.json",
+  "textHash": "fnv1a64:ff97c70413748f58",
+  "jsonHash": "fnv1a64:379929ebee3f5807",
+  "findings": []
+}

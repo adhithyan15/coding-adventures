@@ -1,0 +1,12 @@
+{
+  "id": "GE-EXT-021-C-AGREEMENT",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say why a German participle takes no ending inside the perfect where a French one does, and name the one position where the ending comes back.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C16-perfekt-sein-agreement",
+    "GE-C16-partizip-attributiv"
+  ]
+}

@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C24-denken
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 710
-chapter: 24
+chapter: 26
 type: word
 headword: denken
 gloss: to think — the verb you already met hiding inside danke, and the same inherited word as English think
@@ -36,7 +36,7 @@ reviews_of: [GE-C03-danke, GE-C17-kopf-haupt, GE-C21-das-wetter]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] In Chapter 3 you learned that **danke** is built on a verb meaning
+[PAUSE 2s] You learned early on that **danke** is built on a verb meaning
 "to think." Here is that verb, with its own forms at last.
 
 ## Sounds you'll need
@@ -57,7 +57,7 @@ reviews_of: [GE-C03-danke, GE-C17-kopf-haupt, GE-C21-das-wetter]
 
 > **Ich denke, also bin ich.** — "I think, therefore I am."
 
-It also carries Chapter 21 straight into a new sentence:
+It also carries the weather straight into a new sentence:
 
 > **Ich denke, es ist kalt.** — "I think it is cold."
 

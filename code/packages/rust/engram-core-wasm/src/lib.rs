@@ -1554,21 +1554,61 @@ impl EngramSession {
                         },
                     );
                 }
+                // A delete that cannot identify its note is an ERROR, not a
+                // no-op (#13933). The two halves of this were individually
+                // reasonable and wrong together: the branch that minted a
+                // `deleteNote` host intent was exactly the branch that mutated
+                // nothing, and no adapter handles that intent -- so the user
+                // clicked delete and got silence.
+                //
+                // `NoteEditorDeleteNote` already refuses this way; this now
+                // matches it rather than being the one destructive action that
+                // fails quietly.
                 EngramAppEvent::DeleteNote => {
-                    if let Some(note_id) = explicit_note_id_from_app_event(&parsed, &self.state) {
-                        self.state = reduce(
-                            &self.state,
-                            engram_core::EngramCommand::DeleteNote { note_id },
-                        );
-                    }
+                    // Falls back to the CURRENTLY SELECTED note when the event
+                    // carries no id, which is how the Collection panel's button
+                    // sends it -- `onClick : emit: onDeleteNote` has no payload,
+                    // so before this it could never identify anything and the
+                    // click was a no-op every single time.
+                    //
+                    // `note_editor_selection` is the same helper
+                    // `NoteEditorDeleteNote` already resolves through, so this
+                    // adds no new notion of "selected"; it reuses the one the
+                    // working delete path uses.
+                    let note_id =
+                        explicit_note_id_from_app_event(&parsed, &self.state).or_else(|| {
+                            let selection = note_editor_selection(
+                                &self.state,
+                                &self.browser,
+                                &self.editor,
+                                None,
+                                now,
+                                Some(selected_deck_context.as_str()),
+                            );
+                            (!selection.note_id.is_empty()).then_some(selection.note_id)
+                        });
+                    let Some(note_id) = note_id else {
+                        return Err("cannot delete note without a selected note".to_string());
+                    };
+                    self.state = reduce(
+                        &self.state,
+                        engram_core::EngramCommand::DeleteNote { note_id },
+                    );
                 }
                 EngramAppEvent::DeleteNoteType => {
-                    if let Some(note_type_id) = explicit_note_type_id_from_app_event(&parsed) {
-                        self.state = reduce(
-                            &self.state,
-                            engram_core::EngramCommand::DeleteNoteType { note_type_id },
+                    let note_type_id =
+                        explicit_note_type_id_from_app_event(&parsed).or_else(|| {
+                            note_type_editor_selected_id(&self.state, &self.note_type_editor, now)
+                        });
+                    let Some(note_type_id) = note_type_id else {
+                        return Err(
+                            "cannot delete note type without a selected note type".to_string()
                         );
-                    }
+                    };
+                    self.state = reduce(
+                        &self.state,
+                        engram_core::EngramCommand::DeleteNoteType { note_type_id },
+                    );
                 }
                 EngramAppEvent::AddNoteType => {
                     self.note_type_editor.start_new(now);
@@ -2008,15 +2048,51 @@ fn engram_app_props_for_state(
     };
     let hidden_count = stats.suspended_count + stats.buried_count;
     let media_analysis = analyze_media_references(state);
-    let deck_names = state
+    // One row per deck: [ display-name, due, new ].
+    //
+    // The list used to be names alone, so a deck with forty cards waiting
+    // looked exactly like an empty one -- which defeats the point of a
+    // flashcard app's home screen. `get_deck_stats_for_state` already computed
+    // these counts for the SELECTED deck; this asks it per deck.
+    //
+    // The counts are formatted here rather than in the component, matching the
+    // "fat engine, dumb UI" contract the other packages follow: the UI renders
+    // strings and does no counting, so all five backends show the same thing
+    // without reimplementing the arithmetic.
+    // One pass for every deck, not one call per deck: `get_deck_stats_for_state`
+    // rebuilds its card-progress and imported-schedule indexes on each call, so
+    // calling it per deck cost O(decks x cards) on EVERY event -- measured at
+    // 12ms for one deck and 48ms for a hundred over the same 20k cards.
+    //
+    // Zipped rather than looked up by id: the walk yields one entry per deck in
+    // `state.decks` order, so pairing them positionally needs no map and cannot
+    // miss. A lookup would need an `expect` for a case that cannot happen, and
+    // an unreachable panic in wasm is still a panic.
+    let deck_rows = state
         .decks
         .iter()
-        .map(|deck| {
-            if deck.name.trim().is_empty() {
+        .zip(engram_core::get_deck_stats_for_all_decks(state, now))
+        .map(|(deck, (_id, deck_stats))| {
+            let name = if deck.name.trim().is_empty() {
                 deck.id.clone()
             } else {
                 deck.name.clone()
-            }
+            };
+            vec![
+                name,
+                // Empty rather than "0 due": a deck with nothing waiting should
+                // say nothing, so the rows that DO have work catch the eye.
+                if deck_stats.due_count > 0 {
+                    format!("{} due", deck_stats.due_count)
+                } else {
+                    String::new()
+                },
+                if deck_stats.new_count > 0 {
+                    format!("{} new", deck_stats.new_count)
+                } else {
+                    String::new()
+                },
+            ]
         })
         .collect::<Vec<_>>();
     let browser_props = engram_browser_props_for_state(
@@ -2071,7 +2147,7 @@ fn engram_app_props_for_state(
         "show-options-screen": active_screen == EngramAppScreen::Options,
         "deck-name": deck_name,
         "deck-list-label": "Decks",
-        "deck-names": deck_names,
+        "deck-rows": deck_rows,
         "deck-stats-label": "Deck stats",
         "deck-total-label": "Total",
         "deck-total-value": stats.total.to_string(),
@@ -2209,6 +2285,31 @@ fn engram_app_props_for_state(
             "Delete note type".to_string(),
         );
     }
+
+    // #13933 -- the delete buttons are disabled when there is nothing for them
+    // to act on, so the control cannot present a click that does nothing.
+    //
+    // Computed here rather than left to each host: it is a property of the
+    // state, every backend renders `disabled` already, and a host-side answer
+    // would have to be written seven times and kept in step.
+    let delete_note_disabled = note_editor_selection(
+        state,
+        browser,
+        editor,
+        None,
+        now,
+        Some(selected_deck_id.as_str()),
+    )
+    .note_id
+    .is_empty();
+    props_object.insert(
+        "collection-delete-note-disabled".to_string(),
+        Value::Bool(delete_note_disabled),
+    );
+    props_object.insert(
+        "collection-delete-note-type-disabled".to_string(),
+        Value::Bool(note_type_editor_selected_id(state, note_type_editor, now).is_none()),
+    );
     props_object.insert(
         "collection-missing-media-filenames".to_string(),
         serde_json::to_value(&media_analysis.missing_filenames).unwrap_or(Value::Null),
@@ -3375,9 +3476,7 @@ fn browser_card_flag(
         .unwrap_or("none")
 }
 
-fn browser_card_sources_by_id(
-    state: &AppState,
-) -> HashMap<&str, Vec<&ExternalSourceRecord>> {
+fn browser_card_sources_by_id(state: &AppState) -> HashMap<&str, Vec<&ExternalSourceRecord>> {
     let mut sources_by_id: HashMap<&str, Vec<&ExternalSourceRecord>> = HashMap::new();
     for source in &state.external_sources {
         if source.target == ExternalSourceTarget::Card && source.source == "anki-v11" {
@@ -3628,15 +3727,6 @@ fn host_intent_for_event(
 ) -> Option<Value> {
     let event = parsed.kind;
     let selected_deck = selected_deck_id_with_override(state, deck_id, selected_deck_override);
-    let base = |intent_type: &str| {
-        json!({
-            "type": intent_type,
-            "event": event.canonical_name(),
-            "deckId": selected_deck,
-            "createdAt": now,
-        })
-    };
-
     match event {
         EngramAppEvent::ImportAnki => Some(json!({
             "type": "importAnki",
@@ -3674,16 +3764,18 @@ fn host_intent_for_event(
         EngramAppEvent::SaveNote => None,
         EngramAppEvent::AddNoteType => None,
         EngramAppEvent::SaveNoteType => None,
-        EngramAppEvent::DeleteNote if explicit_note_id_from_app_event(parsed, state).is_some() => {
-            None
-        }
-        EngramAppEvent::DeleteNote => Some(base("deleteNote")),
-        EngramAppEvent::DeleteNoteType
-            if explicit_note_type_id_from_app_event(parsed).is_some() =>
-        {
-            None
-        }
-        EngramAppEvent::DeleteNoteType => Some(base("deleteNoteType")),
+        // #13933 -- deliberately no intent. These used to mint `deleteNote` /
+        // `deleteNoteType` when the event carried no id, to ask the host which
+        // note or to confirm. No adapter has ever handled either: all seven
+        // fall through a `default:` branch, so the intent went nowhere and the
+        // click did nothing.
+        //
+        // The event now returns an error in that case, and an intent alongside
+        // an error would be a request to a host that is also a failure. UI47's
+        // `Await` effect is the real answer -- a confirmation round trip the
+        // ABI cannot express today -- and restoring an intent here is part of
+        // that work rather than something to leave dangling until then.
+        EngramAppEvent::DeleteNote | EngramAppEvent::DeleteNoteType => None,
         _ => None,
     }
 }
@@ -5412,10 +5504,7 @@ fn apply_deck_option_text_change(
 }
 
 fn parse_leech_action(value: &str) -> Result<LeechAction, String> {
-    let normalized = value
-        .trim()
-        .to_ascii_lowercase()
-        .replace(['_', ' '], "-");
+    let normalized = value.trim().to_ascii_lowercase().replace(['_', ' '], "-");
     match normalized.as_str() {
         "suspend" | "0" => Ok(LeechAction::Suspend),
         "tag-only" | "tagonly" | "tag" | "1" => Ok(LeechAction::TagOnly),
@@ -7726,12 +7815,16 @@ mod tests {
         assert_eq!(value["props"]["collection-note-type-count-value"], "1");
         assert_eq!(value["props"]["collection-media-count-value"], "0");
         assert_eq!(
-            value["props"]["deck-names"],
+            value["props"]["deck-rows"],
+            // [ name, due, new ]. Every deck here has new cards; only Tamil has
+            // anything DUE, and only its row shows a due count. That asymmetry
+            // is the point -- a deck with nothing waiting says nothing in that
+            // column, so the rows with work are the ones that catch the eye.
             json!([
-                "Tamil::Script and Roots",
-                "Hindi::Devanagari",
-                "Kannada::Script",
-                "Spanish::Latin Roots"
+                ["Tamil::Script and Roots", "1 due", "1 new"],
+                ["Hindi::Devanagari", "", "1 new"],
+                ["Kannada::Script", "", "1 new"],
+                ["Spanish::Latin Roots", "", "1 new"]
             ])
         );
         assert_eq!(
@@ -8600,6 +8693,69 @@ mod tests {
         );
     }
 
+    /// A delete that CAN resolve its target performs it (#13933).
+    ///
+    /// The counterpart to the refusal above. Before this, both branches minted
+    /// a `deleteNote`/`deleteNoteType` host intent that no adapter has ever
+    /// handled, so the click did nothing either way -- the destructive action
+    /// was the one that failed silently.
+    #[test]
+    fn a_resolvable_delete_acts_instead_of_minting_a_dead_intent() {
+        let mut session = EngramSession::new();
+        session.load_snapshot(
+            r#"{
+                "decks": [{"id":"deck","name":"Tamil","description":"","createdAt":1700000000000}],
+                "noteTypes": [{
+                    "id": "basic",
+                    "name": "Basic",
+                    "fields": [{"id":"front","name":"Front","required":true,"ordinal":0}],
+                    "templates": [{
+                        "id": "forward",
+                        "name": "Forward",
+                        "frontTemplate": "{{Front}}",
+                        "backTemplate": "{{Front}}",
+                        "requiredFieldNames": ["Front"],
+                        "ordinal": 0
+                    }],
+                    "createdAt": 1700000000000,
+                    "updatedAt": 1700000000000
+                }],
+                "notes": [],
+                "cards": [],
+                "cardProgress": [],
+                "sessions": [],
+                "reviews": [],
+                "activeSession": null
+            }"#,
+        );
+
+        let before: Value = serde_json::from_str(&session.engram_app_props("deck", NOW)).unwrap();
+        assert_eq!(
+            before["props"]["collection-note-type-count-value"], "1",
+            "the fixture starts with one note type"
+        );
+        assert_eq!(
+            before["props"]["collection-delete-note-type-disabled"], false,
+            "with a resolvable note type the control is offered"
+        );
+
+        let deleted: Value =
+            serde_json::from_str(&session.handle_engram_app_event("delete-note-type", "deck", NOW))
+                .unwrap();
+        assert_eq!(deleted["ok"], true, "it should act: {deleted}");
+        assert!(
+            deleted["hostIntent"].is_null(),
+            "no adapter handles a deleteNoteType intent, so minting one is a dead end"
+        );
+        assert_eq!(deleted["props"]["collection-note-type-count-value"], "0");
+
+        // And now there is nothing to delete, so the control is withdrawn
+        // rather than left to produce an error.
+        let after: Value = serde_json::from_str(&session.engram_app_props("deck", NOW)).unwrap();
+        assert_eq!(after["props"]["collection-delete-note-type-disabled"], true);
+        assert_eq!(after["props"]["collection-delete-note-disabled"], true);
+    }
+
     #[test]
     fn handle_engram_app_collection_events_round_trip_as_host_intents() {
         let mut session = EngramSession::new();
@@ -8642,11 +8798,12 @@ mod tests {
             }"#,
         );
 
+        // Import and export really are host round trips: the host picks a file
+        // and hands bytes back, so an intent is the right answer and the state
+        // is untouched until it returns.
         for (event, canonical, intent_type) in [
             ("onImportAnki", "onImportAnki", "importAnki"),
             ("export-anki", "onExportAnki", "exportAnki"),
-            ("delete-note", "onDeleteNote", "deleteNote"),
-            ("delete-note-type", "onDeleteNoteType", "deleteNoteType"),
         ] {
             let value: Value =
                 serde_json::from_str(&session.handle_engram_app_event(event, "deck", NOW)).unwrap();
@@ -8660,6 +8817,48 @@ mod tests {
             assert_eq!(value["props"]["collection-note-count-value"], "1");
             assert_eq!(value["props"]["collection-note-type-count-value"], "1");
         }
+
+        // The deletes are NOT (#13933). This test used to assert both returned
+        // `ok: true` with an intent and an UNCHANGED count -- which is to say
+        // it pinned the bug as the expected behaviour. No adapter has ever
+        // handled `deleteNote`, so the user clicked delete and got silence, and
+        // the assertion agreed that was fine.
+        //
+        // The two now differ, and the difference is real rather than an
+        // oversight: this session never opened the browser, so no NOTE is
+        // selected -- while the single note type in the fixture is resolvable
+        // on its own.
+
+        // Nothing selected: refuse, and say why.
+        let refused: Value =
+            serde_json::from_str(&session.handle_engram_app_event("delete-note", "deck", NOW))
+                .unwrap();
+        assert_eq!(refused["ok"], false, "delete-note should refuse: {refused}");
+        assert!(
+            refused["error"]
+                .as_str()
+                .unwrap_or_default()
+                .contains("without a selected note"),
+            "it should say why: {refused}"
+        );
+        assert!(
+            refused["hostIntent"].is_null(),
+            "and must not also ask a host that never handles it"
+        );
+        // An error response carries no props, so the state is checked
+        // separately -- which is itself worth knowing: a host that only reads
+        // `props` sees nothing at all on a refusal.
+        let unchanged: Value =
+            serde_json::from_str(&session.engram_app_props("deck", NOW)).unwrap();
+        assert_eq!(
+            unchanged["props"]["collection-note-count-value"], "1",
+            "nothing was deleted"
+        );
+
+        // The successful path is covered by
+        // `a_resolvable_delete_acts_instead_of_minting_a_dead_intent`, which
+        // gets its own session -- deleting the note type here would break this
+        // test's later assertions about it.
 
         let import: Value =
             serde_json::from_str(&session.handle_engram_app_event("onImportAnki", "deck", NOW))
@@ -10718,11 +10917,21 @@ mod tests {
 
         let initial: Value = serde_json::from_str(&session.engram_app_props("", NOW)).unwrap();
         assert_eq!(initial["props"]["deck-name"], "Tamil");
-        assert_eq!(initial["props"]["deck-names"], json!(["Tamil", "Spanish"]));
+        assert_eq!(
+            initial["props"]["deck-rows"],
+            json!([["Tamil", "", "2 new"], ["Spanish", "", "1 new"]])
+        );
         assert_eq!(initial["props"]["deck-total-value"], "2");
 
+        // The deck list emits an INDEX, not a name. It has to: a row renders
+        // three strings and MLL cannot hand an emit a computed value like
+        // `row[0]`, so the button carries the row's position and the engine
+        // resolves it. `deck-rows` above and this index both walk `state.decks`
+        // in order, which is what makes position a safe identifier -- and is
+        // the thing worth pinning, because a change to either ordering would
+        // silently start selecting the wrong deck.
         let selected: Value = serde_json::from_str(&session.handle_engram_app_event(
-            r#"{"event":"onSelectDeck","value":"Spanish"}"#,
+            r#"{"event":"onSelectDeck","index":1}"#,
             "",
             NOW + 1,
         ))
@@ -10731,6 +10940,25 @@ mod tests {
         assert_eq!(selected["event"], "onSelectDeck");
         assert_eq!(selected["props"]["deck-name"], "Spanish");
         assert_eq!(selected["props"]["deck-total-value"], "1");
+
+        // Selecting by name still works. Nothing in the UI emits this shape any
+        // more, but the engine's event surface is also the scripting surface,
+        // and a name is the stable identifier across a reordering.
+        let by_name: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onSelectDeck","value":"Tamil"}"#,
+            "",
+            NOW + 1,
+        ))
+        .unwrap();
+        assert_eq!(by_name["props"]["deck-name"], "Tamil");
+
+        let selected: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onSelectDeck","index":1}"#,
+            "",
+            NOW + 1,
+        ))
+        .unwrap();
+        assert_eq!(selected["props"]["deck-name"], "Spanish");
 
         let persisted: Value =
             serde_json::from_str(&session.engram_app_props("", NOW + 2)).unwrap();

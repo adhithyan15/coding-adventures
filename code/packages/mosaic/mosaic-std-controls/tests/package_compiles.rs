@@ -99,7 +99,11 @@ fn controls_are_native_complete_on_all_five_backends_and_both_themes() {
                     "step: step,",
                 ],
                 Backend::Xaml => &[
-                    "AutomationProperties.Name=\"{x:Bind Label}\"",
+                    // `Mode=OneWay` matters: without it x:Bind is one-TIME, so the
+                    // accessible name is whatever `Label` held at load and never
+                    // updates. The emitter started binding it correctly and this
+                    // assertion was left behind, reddening the suite on main.
+                    "AutomationProperties.Name=\"{x:Bind Label, Mode=OneWay}\"",
                     "AutomationProperties.AccessibilityView=\"Raw\"",
                     "MosaicStep=\"{x:Bind Step, Mode=OneWay}\"",
                 ],

@@ -1,82 +1,87 @@
 ---
+schema_version: 2
 id: GE-C16-sein
+spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 320
 chapter: 16
 type: word
 headword: sein
-gloss: to be — one verb assembled from three different ancient roots
+gloss: to be — the partner of haben, and the most irregular verb German has
 concept_tag: VERB-BE
-prerequisites: [GE-C14-haben, GE-C15-praeteritum]
-sounds: [ich-laut, final-devoicing]
-roots: [pie-h1es, pie-bhuh, pie-wes]
-etymology_hook: "sein is built from THREE roots: ist/sind ← *h₁es- (Latin est/sunt), bin/bist ← *bʰuH- 'grow, become' (the same root as English be and as Spanish fui), and war/waren ← *wes- 'dwell, remain' (English was/were) — three verbs' worth of forms living under one infinitive"
-est_minutes: 4
-reviews_of: [GE-C14-haben, GE-C15-praeteritum, GE-C05-lernen]
+prerequisites: [GE-C02-heissen-endungen, GE-C03-gehen, GE-C04-sehen]
+sounds: [s-voiced, diphthong-ei, final-t]
+roots: [pie-h1es]
+etymology_hook: "sein wears the same -en infinitive ending as gehen and sehen, and is the one German verb whose forms will not follow from it"
+duration:
+  max_seconds: 165
+requires:
+  knowledge: [GE-GRAMMAR-VERB-ENDINGS-01, GE-LEX-GEHEN-01, GE-LEX-SEHEN-01]
+introduces:
+  knowledge: [GE-LEX-SEIN-01, GE-SOUND-SEIN-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [GE-LEX-SEIN-01, GE-SOUND-SEIN-01, GE-GRAMMAR-VERB-ENDINGS-01, GE-LEX-GEHEN-01, GE-LEX-SEHEN-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, presentational]
+strands: [meaning-input, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C03-gehen, GE-C04-sehen, GE-C02-heissen-endungen]
 ---
 
 # sein — "to be"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-VERB-ENDINGS-01] -->
 
-[PAUSE 2s] Chapter 14 gave you *haben*. Here is its partner — and it is the most
-irregular verb in German, because it is not really one verb at all. It is
-**three**.
+[PAUSE 2s] You have met the German verb for *to have*. Here is its partner —
+the most irregular verb in German, and the one verb whose forms you will not be
+able to guess.
 
-## The forms
+## You'll want to know: sein
+<!-- hl-knowledge: introduces=[GE-LEX-SEIN-01]; assesses=[GE-LEX-GEHEN-01, GE-LEX-SEHEN-01] -->
 
-| | |
-|---|---|
-| ich **bin** | wir **sind** |
-| du **bist** | ihr **seid** |
-| er/sie/es **ist** | sie/Sie **sind** |
+> **sein** — "to be."
 
-Past: ich **war**, du **warst**, er **war**, wir **waren**.
+The **-en** on the end is the infinitive ending you already own from *gehen*
+and *sehen*: the dictionary form of a German verb wears it, and *sein* wears it
+too.
 
-Look at that with fresh eyes. *Bin*, *ist*, *war* — those do not look like forms
-of the same word, and they aren't.
+That is where the resemblance stops. *Gehen* and *sehen* keep their stem in
+every form — *ich gehe*, *ich sehe*. *Sein* keeps nothing. Not one of its
+present forms contains the letters *s-e-i-n* in that order.
 
-## Three roots, one verb
+This is the only verb in the book that has to be met one form at a time, and
+the next several lessons do exactly that: one form each, said until it is
+automatic, before any of them are ever seen side by side.
 
-| forms | from Proto-Indo-European | which also gave |
-|---|---|---|
-| **ist, sind, seid, sein** | \**h₁es-* — "to be" | Latin *est, sunt*; French *est, sont* |
-| **bin, bist** | \**bʰuH-* — "to grow, become" | English **be**; Latin *fuī* |
-| **war, waren** | \**wes-* — "to dwell, remain" | English **was, were** |
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[GE-SOUND-SEIN-01]; assesses=[GE-LEX-SEIN-01] -->
 
-Three separate ancient verbs, each contributing a slice of the paradigm. When one
-verb's forms are filled in from another verb, that's **suppletion** — the same
-thing English does in *go / went*.
+- `s-voiced` — a German **s** before a vowel buzzes like English **z**, exactly
+  as it does in *sehen*. So *sein* opens with a *z*.
+- `diphthong-ei` — German **ei** is the vowel of English *eye*, never "ee".
+- `final-t` — worth having ready now, because two of the forms coming up end in
+  a crisp, fully released **t**.
 
-And notice *bin/bist* has a **cousin abroad**. Latin *fuī* is the
-source of Spanish **fui**, "I was / I went" — one of that language's
-*pretéritos fuertes*. German *bin* and Spanish *fui*
-descend from the same PIE root \**bʰuH-* — one landed in the present, the other
-in the past.
-
-## Why "be" verbs are the messiest words in every language
-
-This is not bad luck. It is a rule:
-
-> **The most-used words are the most irregular.**
-
-Regularity spreads by analogy — you meet an unfamiliar verb, you guess its forms
-from the pattern. But you never have to guess at "to be." You hear it a hundred
-times a day, so the odd old shapes are reinforced faster than analogy can sand
-them down. Rare words get regularized; common words are protected fossils.
+Put together, *sein* sounds like English **zine**.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-SEIN-01, GE-SOUND-SEIN-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ich bin, du bist, er ist, wir sind, ihr seid, sie sind"]
-- [YOU SAY: "Ich bin müde" / "Das ist gut"]
-- [YOU SAY: the three roots — "ist ← \**h₁es-*, bin ← \**bʰuH-*, war ← \**wes-*"]
-- [YOU SAY: the cousin — "German **bin**, Spanish **fui** — same root"]
+- [YOU SAY: "sein" (*zine*) — buzzing *z*, *ei* as in *eye*]
+- [YOU SAY: "gehen, sehen, sein" — three infinitives, one ending]
+- [YOU SAY: "sein — to be"]
+
+[REPEAT x2] "sein, sein — *zine*."
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-SEIN-01, GE-SOUND-SEIN-01, GE-GRAMMAR-VERB-ENDINGS-01] -->
 
-[PAUSE 3s] Give the six present forms of *sein*. (*Bin, bist, ist, sind, seid,
-sind*.) How many ancient roots is *sein* built from? (**Three**.) Which root do
-*bin/bist* come from, and which Spanish word shares it? (\**bʰuH-* — Spanish
-**fui**.) Which root gives English *was/were*? (\**wes-*, the same one as German
-*war*.) Why are "be" verbs so irregular everywhere? (**They're too common to be
-regularized by analogy.**) Next: the perfect tense built on *sein*.
+[PAUSE 3s] What does *sein* mean? ("**To be**.") Which ending does it share
+with *gehen* and *sehen*? (**-en**, the infinitive.) How does the *s* sound?
+(Like English **z**.) And the *ei*? (Like English **eye**.) Next: the first
+form, and it looks nothing like the word you just learned.

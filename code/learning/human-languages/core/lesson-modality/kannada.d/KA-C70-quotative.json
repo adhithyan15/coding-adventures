@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C70-quotative",
+    "language": "kannada",
+    "chapter": 70,
+    "sequence": 2350,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1d57f2e09a71526a"
+  },
+  "findings": []
+}

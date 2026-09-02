@@ -1,0 +1,10 @@
+[package]
+name = "glyph-parser"
+version = "0.1.0"
+edition = "2021"
+description = "TrueType glyph outline parser (glyf/loca) — zero dependencies, builds on font-parser"
+
+[dependencies]
+font-parser = { path = "../font-parser" }
+
+[dev-dependencies]

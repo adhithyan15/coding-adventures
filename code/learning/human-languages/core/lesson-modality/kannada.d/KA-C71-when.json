@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C71-when",
+    "language": "kannada",
+    "chapter": 71,
+    "sequence": 2410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e503c8a5456f8c2f"
+  },
+  "findings": []
+}

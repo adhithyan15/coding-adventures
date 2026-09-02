@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C31-finger
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 980
-chapter: 31
+chapter: 33
 type: word
 headword: der Finger
 gloss: finger — identical to its English cousin, and possibly, though not certainly, built on the word for "five"
@@ -36,7 +36,7 @@ reviews_of: [GE-C31-arm, GE-C06-zahlen-1-5]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ARM-02] -->
 
-[PAUSE 2s] The third name from Chapter 17's table, and Chapter 6's numbers
+[PAUSE 2s] The third name from the *Hand* table, and the first numbers
 come back for a cameo.
 
 ## You'll want to know: der Finger
@@ -60,13 +60,13 @@ chapter.
 ## Why it's said this way: a tempting but unproven link
 <!-- hl-knowledge: introduces=[GE-EVIDENCE-FINGER-FUENF-04]; assesses=[GE-LEX-FINGER-02] -->
 
-Chapter 6 taught you **fünf**, "five," from Germanic **\*fimf**. One proposed
+You were taught **fünf**, "five," from Germanic **\*fimf**. One proposed
 account connects *\*fingraz* to that very number, as if a finger were once
 simply "one of the five." It is a satisfying story, and it shows up often —
 but it is reported by standard references as **plausible, not proven**: the
 sound changes needed to get from *\*fimf* to *\*fingraz* are not fully
 regular, so the link stays a proposal rather than a settled fact. Held
-loosely, the way Chapter 26 held "sharp-eared" for *hören*.
+loosely, the way *hören* held "sharp-eared".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-FINGER-02, GE-ETYMON-FINGER-03, GE-EVIDENCE-FINGER-FUENF-04, GE-LEX-ARM-02] -->

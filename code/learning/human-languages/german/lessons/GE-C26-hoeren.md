@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C26-hoeren
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 820
-chapter: 26
+chapter: 28
 type: word
 headword: hören
 gloss: to hear — the same verb as English hear, and the closing of a chapter of four things you do without going anywhere
@@ -59,7 +59,7 @@ born with them, so nothing is left to break.
 
 > **Der Hund hört. Die Katze hört.**
 
-## Grammar Lens: liking it, the Chapter 25 way
+## Grammar Lens: liking it, the mögen way
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-HOEREN-09, GE-GRAMMAR-GERN-11, GE-LEX-MOEGEN-LIEBEN-09, GE-ETYMON-MOEGEN-LIEBEN-10] -->
 
 **gern** hangs on this verb like any other:

@@ -4,6 +4,47 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed — radio groups now get real mutual exclusion (#13007)
+
+A `HostRadio` lowered to a `Toggle`, and N independent Toggles have no mutual
+exclusion: nothing stopped two being on at once except the host echoing back
+consistent state. Qt has `ButtonGroup`, Compose `selectableGroup`, Flutter a
+shared group value; SwiftUI has no container that groups Toggles *after the
+fact*, which is why this stayed degraded after the other three were fixed.
+
+It does have `Picker`, whose single selection is exclusive by construction. A
+run of contiguous sibling radios sharing a literal `group:` now becomes one
+Picker — a sibling-level transform rather than a per-node one.
+
+The selection binding is **derived** from the members' own `checked:` slots
+rather than held in `@State`. Local state would be a second source of truth
+that drifts the moment the host changes the selection itself.
+
+Deliberately strict about when it applies. A `slot:`-bound group, duplicate
+values, members dispatching different events, an explicit `disabled:`, or a
+lone radio all fall back to the previous Toggle emission and keep reporting
+`property.radio-group-ignored` — each is a case where a Picker would change
+behaviour rather than preserve it. `radio_groups_with_native_semantics` is the
+same predicate the emitter uses, so what is reported cannot drift from what
+was emitted.
+
+The radio *appearance* is macOS-only, so `.pickerStyle(.radioGroup)` sits
+behind `#if os(macOS)`; exclusivity itself is cross-platform.
+
+### Fixed — a `list<list<text>>` slot never read the host
+
+A slot typed as a list of rows fell through the host-binding match to the
+*sample* value — a constant — while every neighbouring prop read from the host
+correctly. The generated shell therefore compiled, ran, and showed an **empty
+table** no matter what the host sent.
+
+Rows are how every table in Mosaic is modelled: Engram's deck list, TaskApp's
+project nav. So this was not an exotic corner, it was the one slot shape whose
+whole purpose is to carry data, silently bound to nothing.
+
+Adds a nested-list reader (`mosaicStringListList` / `MosaicHostValue.stringListList`)
+and the match arm that reaches it.
+
 ### Fixed - preserve dynamic HostButton accessible names (#13754)
 
 SwiftUI buttons now lower literal, slot-bound, keyword-bound, and

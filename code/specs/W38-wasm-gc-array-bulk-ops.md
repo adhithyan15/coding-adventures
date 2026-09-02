@@ -1006,3 +1006,81 @@ exists to catch before implementation starts, not after).
    `GcArray`, asserting the exact resulting element order, mirroring
    `linear_memory_copy_moves_bytes_overlap_safe`'s own existing test
    shape for `memory.copy`.
+
+## Addendum (2026-09-02): slices 4/5 shipped — this spec's own six-slice plan is now CLOSED
+
+Slices 4/5 (the elem-segment three-layer fix, Correction 2, plus
+`array.init_elem`/`array.new_elem` themselves) landed together, completing
+the six-slice plan this document laid out (slices 0-2 in #14114, slice 3
+in #14120). Re-verified against the real 257-file corpus, not assumed:
+
+- **`array.wast`**: 40/54 → 53/54 pass. The single remaining
+  `not_yet_supported` is the pre-existing, out-of-scope `(ref struct)`
+  non-null abstract heap type this spec's own "Explicitly out of scope"
+  section already named (already flagged by W37 for a different file,
+  unrelated to array bulk ops) — **exactly matching this spec's own
+  honest "214 of 215 convert" prediction**, not a shortfall.
+- **`array_init_elem.wast`**: 3/36 → 23/36 pass. **`array_new_elem.wast`**:
+  0/24 → 22/24 pass. Every remaining `not_yet_supported` in both files
+  traces to `ref.eq` (confirmed by direct re-probe) — already flagged out
+  of scope by W37, genuinely unrelated to this spec's own six
+  instructions, not a gap this spec ever claimed to close.
+- **`array_copy.wast`/`array_fill.wast`/`array_init_data.wast`/
+  `array_new_data.wast`** (slices 2/3's own targets): unaffected by
+  slices 4/5, still 100% pass, re-confirmed.
+
+**Total real progress across all six instructions, from the 215-directive
+cluster this spec's own "Correction 1" re-derived at the start**: 214 of
+215 now convert to real `Pass`/`Fail`/`Trap` outcomes, never `Not
+YetSupported`, for exactly the reason predicted (the single `(ref
+struct)` case staying out of scope). This spec's own "Does this fully
+close the 215-directive cluster?" section's stated expectation is
+CONFIRMED, not merely assumed — re-probed directly, per-file, per-cause,
+not inferred from an aggregate count.
+
+**Two real, corpus-caught side effects found while landing slices 4/5,
+both fixed except one deliberately left out of scope** (full traces in
+`wasm-validator`'s and `wasm-runtime`'s own CHANGELOGs):
+
+1. **Fixed**: `wasm-validator`'s Check 4c (out-of-range `ConcreteFuncRef`
+   type indices) needed a new arm for `Element::declared_type` — a bare
+   numeric elem-segment reftype tag (`(ref 1)`) is never bounds-checked
+   by `resolve_idx`, the same root cause Check 4c already exists for in
+   every OTHER declared-signature position. Caught by `ref.wast`
+   regressing then being restored to its exact pre-slice baseline by
+   this one fix.
+2. **Fixed**: `wasm-runtime`'s active-elem-application loop (which
+   populates a TARGET TABLE at instantiation time, a different consumer
+   than `table.init`/`table.copy`) needed to read the new `element_
+   values` table instead of the pre-existing `function_indices`, once
+   Layer 1/2's generalization let an ACTIVE segment's own item be
+   something richer than a literal `ref.func`/`ref.null` (`global.wast`'s
+   own `global.get`-sourced item). Caught by `global.wast` regressing
+   then being restored to a STRICT improvement (its own pre-existing 5
+   `not_yet_supported` cases all converting to real `Pass`) by this fix.
+3. **Deliberately NOT fixed, genuinely out of scope**: `elem.wast`'s own
+   "Initializing a table with imported funcref global" test needs real
+   cross-instance funcref propagation THROUGH AN IMPORTED GLOBAL — an
+   already-documented W35-level architectural boundary
+   (`resolve_all_table_funcrefs`'s own doc comment: "no vendored corpus
+   file needs cross-instance funcref-GLOBAL resolution at all... this
+   pass is scoped to tables only"), not something slices 4/5 ever
+   designed to close. This ONE directive moves from `not_yet_supported`
+   (previously failed to parse) to a real, safely-trapped `fail` — an
+   honest, understood cost of correctly generalizing the parser, not a
+   silent regression. Also: 4 `elem.wast` `assert_invalid` cases move from
+   an accidental parse-failure `Pass` to an honest `not_yet_supported`
+   (this crate has no constant-expression type/arity checker anywhere,
+   confirmed by grep — joining an already-substantial existing category,
+   not a new class of gap). Both are real, narrow, fully diagnosed
+   trade-offs of doing this generalization correctly rather than
+   narrowly special-casing this spec's own three target files — see
+   `wasm-conformance`'s own CHANGELOG for the complete per-directive
+   accounting.
+
+**Genuinely remaining, explicitly out of scope, not this spec's job**:
+`ref.eq` (13+2 directives across the two `_elem` files), the pre-existing
+`(ref struct)` case (1 directive, `array.wast`), and cross-instance
+funcref propagation through an imported GLOBAL feeding an elem segment
+(1 directive, `elem.wast`, pre-existing W35 boundary). Nothing else from
+the original 215-directive cluster remains open.

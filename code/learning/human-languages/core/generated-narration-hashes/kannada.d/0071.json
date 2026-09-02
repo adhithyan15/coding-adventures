@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:4a81193c91447fc4",
+  "lessonIds": [
+    "KA-C71-another",
+    "KA-C71-say-again",
+    "KA-C71-when",
+    "KA-S139-letter-va",
+    "KA-C71-which"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "kannada/narration/ch71.txt",
+  "json": "kannada/narration/ch71.json",
+  "textHash": "fnv1a64:7d2f39bb99e781f0",
+  "jsonHash": "fnv1a64:4847792f5d592aba",
+  "findings": []
+}

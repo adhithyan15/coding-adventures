@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Added `get_deck_stats_for_all_decks`, which computes every deck's stats in a
+  single pass. `get_deck_stats_for_state` rebuilds its card-progress and
+  imported-schedule indexes on each call, so asking it once per deck to render
+  a deck list cost O(decks x cards) on every event -- measured at 12ms for one
+  deck and 48ms for a hundred over the same 20,000 cards, now flat at ~10ms.
+  The per-card classification is shared between both walks so they cannot
+  drift, and a test asserts they agree deck for deck including nested decks.
+
 ### Search matching now runs on the zero-dep `regex-engine` (Phase D2)
 
 The three **boolean** regex uses in `search.rs` — user `re:` patterns

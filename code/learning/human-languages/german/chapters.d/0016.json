@@ -1,16 +1,26 @@
 {
   "chapter": 16,
-  "title": "To Be, and the Past That Takes It",
+  "title": "I Am, You Are",
   "label": "ch:sein",
-  "canDo": "I can use the German verb for “to be” and form the past of verbs that select it.",
+  "canDo": "I can say what someone is in German, using any of the six present forms of the verb for “to be” — and say that I am tired.",
   "spineNodes": [
     "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "GE-C16-perfekt-sein-agreement",
+    "lesson": "GE-C16-praesens-practice",
     "kind": "task",
-    "summary": "Complete GE-C16-perfekt-sein-agreement, the canonical closing checkpoint, and demonstrate the chapter promise: use the German verb for “to be” and form the past of verbs that select it.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "sein is the one German verb whose forms cannot be guessed from its infinitive, so this chapter meets them one at a time — bin, bist, ist, sind, seid, sind — and only assembles the grid once every cell has had its own lesson. It closes with müde, the adjective that finishes ich bin, and a short exchange that runs on nothing but this verb.",
+    "assesses": [
+      "GE-LEX-SEIN-01",
+      "GE-SOUND-SEIN-01",
+      "GE-GRAMMAR-SEIN-ICH-BIN-01",
+      "GE-GRAMMAR-SEIN-DU-BIST-01",
+      "GE-GRAMMAR-SEIN-ER-IST-01",
+      "GE-GRAMMAR-SEIN-WIR-SIND-01",
+      "GE-GRAMMAR-SEIN-IHR-SEID-01",
+      "GE-GRAMMAR-SEIN-SIE-SIND-01",
+      "GE-LEX-MUEDE-01"
+    ],
+    "note": "Chapter 16 is generated from schema-v2 lessons, so the payoff is atom-scored. It claims every atom the chapter introduces, because the practice lesson is where the six forms are first allowed to appear together: the grid there is a recap of six lessons, not an introduction, which is the only condition under which a paradigm table may be printed at all."
   }
 }

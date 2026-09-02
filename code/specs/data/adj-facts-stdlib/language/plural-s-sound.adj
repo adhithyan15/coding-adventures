@@ -30,7 +30,7 @@
 %     -----   --------   ---------------------------------------------------------------   -------------------
 %     hats    s_sound    "After the following sounds we pronounce 's' as /s/: ... after     "2 hats /s/"
 %                        a /t/ sound"
-%     dogs    z_sound    "In all other cases we pronounce 's' as /z/"                        "2 dogs /z/"
+%     dogs    z_sound    "In all other cases we pronounce ‘s’ as /z/"                        "2 dogs /z/"
 %     boxes   iz_sound   "When the plural form has the 'es' ending, the pronunciation is     "2 boxes /iz/"
 %                        always /iz/"
 %
@@ -53,7 +53,7 @@ table plural_s_sound {
     row (dogs, z_sound)
     row (boxes, iz_sound)
 
-    source "In all other cases we pronounce 's' as /z/"
+    source "In all other cases we pronounce ‘s’ as /z/"
     locator "https://speakspeak.com/resources/pronunciation/pronunciation-of-s-and-es-endings"
     trust consensus
 }

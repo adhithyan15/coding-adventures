@@ -518,6 +518,21 @@ fn build_permissive_main_dart(component_name: &str, slots: &[SlotDecl]) -> Strin
             "  }}\n",
             "  return const <String>[];\n",
             "}}\n\n",
+            "List<List<String>> mosaicStringListList(\n",
+            "  Map<String, Object?> props,\n",
+            "  String name,\n",
+            ") {{\n",
+            "  final value = props[name];\n",
+            "  if (value is List) {{\n",
+            "    return value.map((row) {{\n",
+            "      if (row is List) {{\n",
+            "        return row.map((item) => item.toString()).toList(growable: false);\n",
+            "      }}\n",
+            "      return const <String>[];\n",
+            "    }}).toList(growable: false);\n",
+            "  }}\n",
+            "  return const <List<String>>[];\n",
+            "}}\n\n",
             "List<double> mosaicDoubleList(Map<String, Object?> props, String name) {{\n",
             "  final value = props[name];\n",
             "  if (value is List) {{\n",
@@ -1080,6 +1095,17 @@ fn host_value_for_slot(slot: &SlotDecl) -> String {
             }
             ListInnerType::Number => format!("mosaicDoubleList(_hostProps, \"{slot_name}\")"),
             ListInnerType::Bool => format!("mosaicBooleanList(_hostProps, \"{slot_name}\")"),
+            // A list of rows -- how every table slot is modelled. Without this
+            // it fell to `fallback`, a CONSTANT, so the table rendered empty
+            // however many rows the host sent.
+            ListInnerType::List(inner)
+                if matches!(
+                    inner.as_ref(),
+                    ListInnerType::Text | ListInnerType::Image | ListInnerType::Color
+                ) =>
+            {
+                format!("mosaicStringListList(_hostProps, \"{slot_name}\")")
+            }
             _ => fallback,
         },
         SlotType::Node | SlotType::Component(_) => {

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C69-why",
+    "language": "kannada",
+    "chapter": 69,
+    "sequence": 2320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:275d9052e636dcce"
+  },
+  "findings": []
+}

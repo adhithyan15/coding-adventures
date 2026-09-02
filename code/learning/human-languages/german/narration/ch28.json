@@ -2,24 +2,24 @@
   "version": 1,
   "language": "german",
   "chapter": 28,
-  "title": "Coffee, Tea, and Milk",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:74baa8a044d4bf4f",
+  "title": "Sitting, Standing, Sleeping, Hearing",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:dcf8f579c84bf1ae",
   "lessons": [
     {
-      "id": "GE-C28-kaffee",
-      "sequence": 870,
-      "title": "der Kaffee — the drink that closes one chapter and opens another",
-      "headword": "der Kaffee",
-      "romanization": "der Kaffee",
-      "gloss": "coffee — a loanword that crossed from Arabic to German by way of Turkish and Italian, and the first word in a new polite request",
+      "id": "GE-C26-sitzen",
+      "sequence": 790,
+      "title": "sitzen — the same word as sit, respelt by one law",
+      "headword": "sitzen",
+      "romanization": "sitzen",
+      "gloss": "to sit — the same inherited word as English sit, respelt by the other branch of the shift that separated helfen from help",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:800b47f03f9b2037",
+      "sourceHash": "fnv1a64:11892734171ad93c",
       "notice": null,
       "blocks": [
         {
@@ -35,57 +35,96 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 27 ended by closing a hand. Now open the day with something to drink — and a new use for a request pattern you already own."
+              "text": "Helfen is help, split by the second sound shift: Germanic p became German f. That law has other branches. This verb rides one."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know: der Kaffee",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "der Kaffee — coffee. Masculine."
+              "text": "tz-affricate — tz is one squeezed sound, ts, as in English cats."
             },
             {
               "kind": "speech",
-              "text": "Chapter 19 taught you a complete polite request out of two known words: Wasser, bitte. The same pattern takes any drink you can name:"
-            },
-            {
-              "kind": "speech",
-              "text": "Kaffee, bitte. — Coffee, please."
+              "text": "i-short — a short, tight i: sitzen = ZIT-sen, buzzed at the front because German s before a vowel is voiced."
             }
           ]
         },
         {
           "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: where the stress falls",
+          "type": "input",
+          "title": "You'll want to know: sitzen",
           "segments": [
             {
               "kind": "speech",
-              "text": "Kaffee is said two ways, and both are standard: many speakers in the north stress the first syllable, KAF-fay; many in the south, and most international learners' material, stress the second, kaf-FAY. Unlike gehen and laufen's Germany/Austria split, this one is not regional in any strict sense — you will hear both from native speakers in the same city."
+              "text": "sitzen means \"to sit.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ich sitze — I sit, wir sitzen — we sit."
+            },
+            {
+              "kind": "speech",
+              "text": "du sitzt — you sit, ihr sitzt — you all sit."
+            },
+            {
+              "kind": "speech",
+              "text": "er sitzt — he sits, sie sitzen — they sit."
+            },
+            {
+              "kind": "speech",
+              "text": "Ich sitze. — a whole sentence, two words."
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart: a Turkish word wearing an Italian coat",
+          "type": "grammar",
+          "title": "Grammar Lens: strong does not mean it breaks",
           "segments": [
             {
               "kind": "speech",
-              "text": "Kaffee is a loanword, and a young one by this book's standard — nothing like Wein's two-thousand-year-old borrowing from Latin vīnum. The word travelled Arabic qahwa becomes Ottoman Turkish kahve becomes Italian caffè becomes German Kaffee. English coffee and French café took the same Italian step, which is why the whole spread of European words for the drink still rhymes with each other despite crossing four language families to get here."
+              "text": "Sitzen is a strong verb — its past is saß, not sitzte. But its present never breaks its vowel: du sitzt, er sitzt. Beside it, helfen breaks to du hilfst."
             },
             {
               "kind": "speech",
-              "text": "Chapter 27 closed on schließen, a verb Proto-Germanic built and English lost outright. Kaffee is the opposite kind of word: nothing here is inherited, and nothing needed to be — German simply took the whole word, sound and all, the way it took Wein centuries earlier."
+              "text": "So \"strong\" is a fact about a verb's past; the du/er break is a separate habit only some strong verbs have."
+            },
+            {
+              "kind": "speech",
+              "text": "The doing verbs gave two ways to say you like something: ich mag with a thing, gern hung on a verb. This verb takes the second."
+            },
+            {
+              "kind": "speech",
+              "text": "Ich sitze gern. — \"I like sitting.\""
             }
           ]
         },
         {
           "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart: the shift's other branch",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sitzen is Proto-Germanic sitjaną, and English sit is the same inherited word — Old English sittan, Old High German sizzen."
+            },
+            {
+              "kind": "speech",
+              "text": "The second, High German shift moved Germanic p to f in helfen. It moved Germanic t just as hard, to z (said ts) or ss: sittan becomes sitzen, water becomes Wasser, eat becomes essen, ten becomes zehn, bite becomes beißen. The food lesson handed you Wasser and the first numbers handed you zehn long before there was a name for what had happened to them."
+            },
+            {
+              "kind": "speech",
+              "text": "Under both lies PIE sed-, \"to sit,\" one of the family's great providers. Latin sedēre gives session, sedentary and preside; Latin sedēs, \"a seat,\" gives the bishop's see. Greek hédra, also \"a seat,\" gives cathedral — the church with the bishop's chair — and polyhedron."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -98,34 +137,61 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"der Kaffee\" — either stress, both correct",
+              "instruction": "\"ich sitze, du sitzt, er sitzt\" — the i never moves",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"der Kaffee\" — either stress, both correct]"
+              "source": "[YOU SAY: \"ich sitze, du sitzt, er sitzt\" — the *i* never moves]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Kaffee, bitte.\" — the Chapter 19 pattern, one word swapped",
+              "instruction": "the contrast — \"du sitzt\" beside \"du hilfst\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Kaffee, bitte.\" — the Chapter 19 pattern, one word swapped]"
+              "source": "[YOU SAY: the contrast — \"du sitzt\" beside \"du hilfst\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the route — \"qahwa, kahve, caffè, Kaffee\"",
+              "instruction": "\"Ich sitze gern.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the route — \"qahwa, kahve, caffè, Kaffee\"]"
+              "source": "[YOU SAY: \"Ich sitze gern.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the t branch four times — \"sitzen/sit, Wasser/water, essen/eat, zehn/ten\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the *t* branch four times — \"sitzen/sit, Wasser/water, essen/eat, zehn/ten\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the p branch beside it — \"helfen/help\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the *p* branch beside it — \"helfen/help\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the seat words — \"sitzen, sedēre, hédra, cathedral\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the seat words — \"sitzen, sedēre, hédra, cathedral\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -137,26 +203,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"coffee\" with its article. (Der Kaffee.) Ask for it politely. (Kaffee, bitte.) Name the three languages the word crossed before German. (Arabic, Turkish, Italian.) Is Kaffee inherited like schließen, or borrowed like Wein? (Borrowed.)"
+              "text": "Give the du and er forms of sitzen. (Du sitzt, er sitzt — no break.) Which of the doing verbs does break, and how? (Helfen — du hilfst.) Which sound did the second shift turn German's z and ss out of? (An old t.) Name two pairs from that branch. (Wasser/water, essen/eat, zehn/ten.) Say you like sitting. (Ich sitze gern.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C28-tee",
-      "sequence": 880,
-      "title": "der Tee — the same loan as English, by the same ship",
-      "headword": "der Tee",
-      "romanization": "der Tee",
-      "gloss": "tea — a word that looks like its English cousin and is not said like it, and travelled to Europe by sea rather than overland",
+      "id": "GE-C26-stehen",
+      "sequence": 800,
+      "title": "stehen — the verb that was hiding inside verstehen",
+      "headword": "stehen",
+      "romanization": "stehen",
+      "gloss": "to stand — the verb hiding inside verstehen, and the one place German keeps a letter English put in the wrong tense",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:938eba3155e0975d",
+      "sourceHash": "fnv1a64:20ae13cf35109bf0",
       "notice": null,
       "blocks": [
         {
@@ -172,53 +238,92 @@
             },
             {
               "kind": "speech",
-              "text": "Kaffee came overland through Turkey and Italy. The next drink took a completely different road — by sea."
+              "text": "Verstehen was broken into ver- plus stehen, and named stehen as English stand. Here is that verb alone, and the letter the two languages disagree about."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know: der Tee",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "der Tee — tea. Masculine."
+              "text": "st-initial-scht — st at the start of a German word is said sht."
             },
             {
               "kind": "speech",
-              "text": "Tee, bitte. — Tea, please."
+              "text": "h-silent-lengthening — the h is silent and marks the long vowel: stehen = SHTAY-en."
             }
           ]
         },
         {
           "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: not the English vowel",
+          "type": "input",
+          "title": "You'll want to know: stehen",
           "segments": [
             {
               "kind": "speech",
-              "text": "Tee is spelled almost exactly like the English word it translates, and said nothing like it. German ee is a long, steady ay: Tee = TAY, not tea's ee. Looking alike on the page and sounding different is its own small trap — worth naming so it doesn't catch you."
+              "text": "stehen means \"to stand.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ich stehe — I stand, wir stehen — we stand."
+            },
+            {
+              "kind": "speech",
+              "text": "du stehst — you stand, ihr steht — you all stand."
+            },
+            {
+              "kind": "speech",
+              "text": "er steht — he stands, sie stehen — they stand."
+            },
+            {
+              "kind": "speech",
+              "text": "Like sitzen, it keeps its vowel all the way through. Two postures, two sentences:"
+            },
+            {
+              "kind": "speech",
+              "text": "Ich sitze. Ich stehe."
             }
           ]
         },
         {
           "index": 3,
           "type": "etymology",
-          "title": "The word, taken apart: the other half of the tea map",
+          "title": "The word, taken apart: the missing n",
           "segments": [
             {
               "kind": "speech",
-              "text": "Tee is Hokkien Chinese tê, the word for the plant in the coastal Chinese dialect that Dutch traders dealt with directly. Dutch thee carried it into Europe by sea, and German took the word from Dutch — the same route English tea followed, which is why Tee and tea match as closely as they do."
+              "text": "Germanic ran two stems off one root here: a short stāną and a longer standaną with an n wedged inside. English generalised the long one and got stand; German took the short one and got stehen, Old High German stān."
             },
             {
               "kind": "speech",
-              "text": "That is not the only road this word took. Languages reached by the overland trade routes out of northern China took a different syllable of the same Chinese word: Hindi chai, Russian chai, Turkish çay. One plant, one Chinese word, two pronunciations of it — split by whether a language got the word from a ship or a caravan. Kaffee's three-hop route through Turkish and Italian was its own single path; tea forked into two."
+              "text": "German did not lose the n. It kept it in the past: ich stand, and the participle gestanden. German's past tense is spelt the way English's present is, out of the same drawer of stems."
+            },
+            {
+              "kind": "speech",
+              "text": "The root is PIE steh₂-, the one verstehen named, and it is everywhere. Latin stāre gave state, station, stable, constant. Greek hístēmi, \"I set up,\" gave static, system and ecstasy — standing outside yourself. German built die Stadt, a city: a standing-place. English built stead, steady and instead."
             }
           ]
         },
         {
           "index": 4,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: two postures, two Latin cousins",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Notice the shape of what has happened. Sitzen goes back to sed-, and so does Latin's sedēre. Stehen goes back to steh₂-, and so does Latin's stāre."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing was borrowed in either direction. Two families inherited the same two roots and held them to the same two meanings for thousands of years, because sitting and standing are things everybody does."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -231,34 +336,61 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"der Tee\" — say it TAY, not tea",
+              "instruction": "\"ich stehe, du stehst, er steht\" — SHTAY, not STAY",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"der Tee\" — say it *TAY*, not *tea*]"
+              "source": "[YOU SAY: \"ich stehe, du stehst, er steht\" — *SHTAY*, not *STAY*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Tee, bitte.\" — \"Kaffee, bitte.\" — same pattern, two drinks",
+              "instruction": "both postures — \"Ich sitze. Ich stehe.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Tee, bitte.\" — \"Kaffee, bitte.\" — same pattern, two drinks]"
+              "source": "[YOU SAY: both postures — \"Ich sitze. Ich stehe.\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the fork — \"tê, thee, Tee, tea\" by sea; \"chai, chai, çay\" overland",
+              "instruction": "the verb inside the verb — \"stehen, verstehen\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the fork — \"tê, thee, Tee, tea\" by sea; \"chai, chai, çay\" overland]"
+              "source": "[YOU SAY: the verb inside the verb — \"stehen, verstehen\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where the n went — \"ich stehe, ich stand, gestanden\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where the *n* went — \"ich stehe, ich stand, gestanden\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Latin pair — \"sitzen/sedēre, stehen/stāre\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Latin pair — \"sitzen/sedēre, stehen/stāre\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what stands in English — \"state, station, stable, stead\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what stands in English — \"state, station, stable, stead\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -270,26 +402,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"tea\" with its article, and say it correctly. (Der Tee — TAY.) Which language gave German the word, and by what route? (Hokkien Chinese tê, by way of Dutch sea trade.) Name one language that got the same Chinese word overland instead. (Hindi, Russian, or Turkish.) Does Tee sound the way it's spelled in English? (No — same letters, different vowel.)"
+              "text": "Give the du and er forms. (Du stehst, er steht.) Which letter does English's stand carry that German's stehen does not? (An n.) Where does German still keep it? (In the past — ich stand, gestanden.) Which longer verb already taught has stehen inside it? (Verstehen.) Say \"I sit. I stand.\" (Ich sitze. Ich stehe.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C28-milch",
-      "sequence": 890,
-      "title": "die Milch — the one that was never borrowed",
-      "headword": "die Milch",
-      "romanization": "die Milch",
-      "gloss": "milk — the native Germanic word that closes this trio, standing beside two loanwords the way Wasser once stood beside the loanword Wein",
+      "id": "GE-C26-schlafen",
+      "sequence": 810,
+      "title": "schlafen — sleep, under two coats of paint",
+      "headword": "schlafen",
+      "romanization": "schlafen",
+      "gloss": "to sleep — the same word as English sleep under two coats of German paint, and a second way for a strong verb to break",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b632083c015ee168",
+      "sourceHash": "fnv1a64:b6e9ca2cbb8d6e16",
       "notice": null,
       "blocks": [
         {
@@ -305,53 +437,92 @@
             },
             {
               "kind": "speech",
-              "text": "Kaffee came from Arabic by way of Turkish and Italian. Tee came from Chinese by way of Dutch. The third drink needed no ship and no caravan — German already had it."
+              "text": "Sitzen and stehen held their vowels still. This one does not — and it does not break the way the mind verbs broke either."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know: die Milch",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "die Milch — milk. Feminine."
+              "text": "sch-sh — sch is English sh: schlafen = SHLAH-fen."
             },
             {
               "kind": "speech",
-              "text": "Milch, bitte. — Milk, please."
+              "text": "vowel-ae — ä is a flat eh: schläft = SHLEFT."
             }
           ]
         },
         {
           "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: the other ch",
+          "type": "input",
+          "title": "You'll want to know: schlafen",
           "segments": [
             {
               "kind": "speech",
-              "text": "German's ch is not one sound but two. After a back vowel like the a of Nacht, it is a rasp at the back of the throat. After a front vowel or consonant like the i of Milch, it is soft, made further forward — closer to a hissed h. Say ich (Chapter 2's own word for \"I\") right before Milch and you are making the same sound twice."
+              "text": "schlafen means \"to sleep.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ich schlafe, wir schlafen."
+            },
+            {
+              "kind": "speech",
+              "text": "du schläfst, ihr schlaft."
+            },
+            {
+              "kind": "speech",
+              "text": "er schläft, sie schlafen."
+            },
+            {
+              "kind": "speech",
+              "text": "Die Katze schläft. — \"The cat is sleeping.\""
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart: a verb that became its own product",
+          "type": "grammar",
+          "title": "Grammar Lens: the second kind of break",
           "segments": [
             {
               "kind": "speech",
-              "text": "Milch is native Germanic, from meluks, and further back from Proto-Indo-European h₂melg-, \"to milk\" — the action came first, and the word for the substance is simply that verb, frozen into a noun. English milk is the exact same word, inherited rather than borrowed, which makes it the cousin of German Melker (\"milker\") the way denken is the cousin of Dank."
+              "text": "Lesen gave you one break: long e goes to i for du and er — du liest, er hilft. Here is the other: a takes two dots and becomes ä — du schläfst, er schläft."
             },
             {
               "kind": "speech",
-              "text": "So the trio closes the way Chapter 11 did: Wasser was native beside the loanword Wein; here, Milch is native beside the loanwords Kaffee and Tee. Two loans, one inherited word, in both chapters — but this time the loans arrived from opposite directions on the map, one overland and one by sea, and only the native word needed no journey at all."
+              "text": "Those two dots are the umlaut, the mark that turns Buch into Bücher. The break lands in the same slot as before, du and er and nobody else, so only its raw material is new: e verbs brighten to i, a verbs to ä."
+            },
+            {
+              "kind": "speech",
+              "text": "Es regnet. Die Katze schläft."
             }
           ]
         },
         {
           "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart: two coats of paint",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "schlafen is Proto-Germanic slēpaną, and English sleep is the same inherited word — Old English slæpan, Old High German slāfan."
+            },
+            {
+              "kind": "speech",
+              "text": "Two German changes sit between them. The first you know: the second shift, Germanic p to German f, as in helfen. The second is new — German turned s into sh before l, m, n and w, and wrote it down: sleep becomes schlafen, swim becomes schwimmen, snow becomes Schnee, smith becomes Schmied. It did the same before p and t and never spelt it, which is why stehen is said SHTAY-en."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the honest part. The old Indo-European verb for sleeping was swep-, still in plain view: Latin somnus gives insomnia and somnolent, Latin sopor gives soporific, Greek hýpnos gives hypnosis, and Old Norse sofa is Swedish sova today. German and English both threw that verb away and built a new one on sleb-, \"to be slack\" — German still has schlaff, \"limp.\" They made that swap together, before they were two languages."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -364,34 +535,61 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"die Milch\" — the soft ch, as in ich",
+              "instruction": "\"ich schlafe, du schläfst, er schläft\" — the a brightens to ä",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"die Milch\" — the soft *ch*, as in *ich*]"
+              "source": "[YOU SAY: \"ich schlafe, du schläfst, er schläft\" — the *a* brightens to *ä*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all three requests — \"Kaffee, bitte. Tee, bitte. Milch, bitte.\"",
+              "instruction": "the three verbs — \"Ich sitze. Ich stehe. Ich schlafe.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all three requests — \"Kaffee, bitte. Tee, bitte. Milch, bitte.\"]"
+              "source": "[YOU SAY: the three verbs — \"Ich sitze. Ich stehe. Ich schlafe.\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the shape of the chapter — \"Wasser native, Wein borrowed; Milch native, Kaffee and Tee borrowed\"",
+              "instruction": "\"Es regnet. Die Katze schläft.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the shape of the chapter — \"Wasser native, Wein borrowed; Milch native, Kaffee and Tee borrowed\"]"
+              "source": "[YOU SAY: \"Es regnet. Die Katze schläft.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "both breaks in the same slot — \"du hilfst\" beside \"du schläfst\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: both breaks in the same slot — \"du hilfst\" beside \"du schläfst\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the sch row — \"schlafen, schwimmen, Schnee, Schmied\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the *sch* row — \"schlafen, schwimmen, Schnee, Schmied\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the verb they both threw away — \"somnus, hypnos, sova\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the verb they both threw away — \"somnus, hypnos, sova\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -403,7 +601,234 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"milk\" with its article. (Die Milch.) Is it native or borrowed? (Native — inherited meluks, the twin of English milk.) Which two drinks in this chapter were borrowed, and from where? (Kaffee from Arabic/Turkish/Italian; Tee from Hokkien Chinese by way of Dutch.) Which earlier chapter set up the exact same native/borrowed shape? (Chapter 11 — Wasser and Wein.)"
+              "text": "Give the du and er forms. (Du schläfst, er schläft — two dots on the a.) Which two people does a German verb break for? (Du and er, always.) Name the two changes between sleep and schlafen. (p to f, and s to sch.) Why is stehen said SHTAY-en? (Same change, never spelt.) Say \"the cat is sleeping.\" (Die Katze schläft.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C26-hoeren",
+      "sequence": 820,
+      "title": "hören — hear, and the end of a chapter that never moved",
+      "headword": "hören",
+      "romanization": "hören",
+      "gloss": "to hear — the same verb as English hear, and the closing of a chapter of four things you do without going anywhere",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e10b41603b1664c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ich sitze. Ich stehe. Ich schlafe. Three verbs that stay put. Here is the fourth — the sense that works with your eyes shut."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "umlaut-oe — ö is the e of bed said with rounded lips."
+            },
+            {
+              "kind": "speech",
+              "text": "r-uvular — the r is a soft scrape at the back: hören = HUR-en."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: hören",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hören means \"to hear.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ich höre, wir hören."
+            },
+            {
+              "kind": "speech",
+              "text": "du hörst, ihr hört."
+            },
+            {
+              "kind": "speech",
+              "text": "er hört, sie hören."
+            },
+            {
+              "kind": "speech",
+              "text": "The ö never moves. Schlafen grew its dots for du and er; hören was born with them, so nothing is left to break."
+            },
+            {
+              "kind": "speech",
+              "text": "Der Hund hört. Die Katze hört."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: liking it, the mögen way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gern hangs on this verb like any other:"
+            },
+            {
+              "kind": "speech",
+              "text": "Ich höre gern. — \"I like listening.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Gern is English yearn: underneath, \"I hear yearningly.\" Beside it is the other way of liking, ich mag — English may, with the power drained out."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart: the s that became an r",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hören is Proto-Germanic hauzijaną, and English hear is the same inherited word."
+            },
+            {
+              "kind": "speech",
+              "text": "This time the change is one they share. Gothic still says hausjan, with an s; Old English hīeran and Old High German hōren had both turned it to r. Sitzen shows where German left English; hören shows a road they walked together."
+            },
+            {
+              "kind": "speech",
+              "text": "The h is Grimm's law, the first shift: an old k became Germanic h. Greek kept the k — akoúein, \"to hear,\" which English borrowed back as acoustic. Same swap that made kwon- into Hund while Latin kept canis."
+            },
+            {
+              "kind": "speech",
+              "text": "Some break the root up further, into \"sharp\" plus \"ear\" — which would make hören \"sharp-eared\" and put das Ohr inside it. Cited often, not settled."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: gehören is not \"hear\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gehören means \"to belong.\" It is ge- welded onto hören, and began as \"to hearken to\": what belongs to you answers when called."
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four — \"Ich sitze. Ich stehe. Ich schlafe. Ich höre.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four — \"Ich sitze. Ich stehe. Ich schlafe. Ich höre.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four er forms — \"er sitzt, er steht, er schläft, er hört\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four *er* forms — \"er sitzt, er steht, er schläft, er hört\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Der Hund hört. Die Katze schläft.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Der Hund hört. Die Katze schläft.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Ich höre gern.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Ich höre gern.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the shared change — \"hausjan, hīeran, hōren\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the shared change — \"hausjan, hīeran, hōren\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the h row — \"hören/akoúein, Hund/canis\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the *h* row — \"hören/akoúein, Hund/canis\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"gehören is belong\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"gehören is *belong*\"]"
+            }
+          ]
+        },
+        {
+          "index": 7,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give all four ich forms of this chapter. (Ich sitze, ich stehe, ich schlafe, ich höre.) Which breaks its vowel? (Schlafen — a to ä.) Which letter did Gothic keep where German and English have r? (An s.) Which law put the h on hören and Hund? (Grimm's law.)"
             }
           ]
         }

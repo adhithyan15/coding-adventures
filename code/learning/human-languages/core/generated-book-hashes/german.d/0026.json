@@ -1,12 +1,12 @@
 {
   "language": "german",
   "chapter": 26,
-  "sourceHash": "fnv1a64:ed49129a47d423a8",
+  "sourceHash": "fnv1a64:8941a0ea3969e17c",
   "lessonIds": [
-    "GE-C26-sitzen",
-    "GE-C26-stehen",
-    "GE-C26-schlafen",
-    "GE-C26-hoeren"
+    "GE-C24-denken",
+    "GE-C24-verstehen",
+    "GE-C24-lesen",
+    "GE-C24-schreiben"
   ],
-  "tex": "german/book/chapters/ch26-still-verbs.tex"
+  "tex": "german/book/chapters/ch26-mind-verbs.tex"
 }

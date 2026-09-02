@@ -69,7 +69,7 @@ a second, entirely separate road to blue, and the one Spanish took too.
 
 [PAUSE 1s]
 - [YOU SAY: "rot, blau"]
-- [YOU SAY: "der Wein ist rot" — Chapter 11's wine again]
+- [YOU SAY: "der Wein ist rot" — the wine you already have, coloured]
 - [YOU SAY: the cousins — "rot · red · rouge"]
 - [YOU SAY: all four — "schwarz, weiß, rot, blau"]
 

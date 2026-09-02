@@ -1,15 +1,15 @@
 {
   "language": "german",
   "chapter": 23,
-  "sourceHash": "fnv1a64:eb1b6a770268bde7",
+  "sourceHash": "fnv1a64:c7b01257ba0e9086",
   "lessonIds": [
-    "GE-C23-gruen-gelb"
+    "GE-C21-das-wetter"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "german/narration/ch23.txt",
   "json": "german/narration/ch23.json",
-  "textHash": "fnv1a64:96af6b0d067f021c",
-  "jsonHash": "fnv1a64:5156c6eb8b58d39e",
+  "textHash": "fnv1a64:5d69f3c248244be3",
+  "jsonHash": "fnv1a64:de6aa465d81b7e4b",
   "findings": []
 }

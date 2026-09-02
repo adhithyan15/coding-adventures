@@ -1,0 +1,11 @@
+{
+  "id": "GE-EXT-021-C-CONSOLIDATION",
+  "stage": "A2",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can pick between German's two perfect helpers without stopping to think about it.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C16-haben-oder-sein"
+  ]
+}

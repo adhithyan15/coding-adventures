@@ -97,3 +97,39 @@ fn plural_s_sound_abstains_honestly_on_an_untabled_word() {
         "cats is also /s/-sounded but not one of the three tabled example words -- honest abstention, never invented: {out}"
     );
 }
+
+const PLURAL_S_SOUND_PIN: &str = r#""bindings":{"Sound":"z_sound"},"citations":[{"source":"In all other cases we pronounce ‘s’ as /z/","locator":"https://speakspeak.com/resources/pronunciation/pronunciation-of-s-and-es-endings","trust":"consensus""#;
+
+#[test]
+fn plural_s_sound_citation_matches_its_page_glyph_for_glyph() {
+    let dir = scratch("glyph");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"plural-s-sound.adj\"
+? plural_s_sound(dogs, $Sound)
+",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The page quotes this word with PAIRED curly quotes -- U+2018 opening and
+    // U+2019 closing -- and the shipped citation had flattened both to ASCII.
+    // This is NOT the contraction case: curling both ends the same way yields
+    // a form that appears on no page. The replacement was confirmed present in
+    // a rendered block before being written here.
+    //
+    // THIS PIN QUERIES `dogs`, NOT `hats`, DELIBERATELY. The table ships ONE
+    // provenance envelope -- "In all other cases we pronounce 's' as /z/" --
+    // and that sentence grounds ONLY the z_sound row. Pinning `hats` would
+    // pair an /s/ answer with a citation stating the /z/ rule, and freeze that
+    // pairing in a test. The rules that actually ground `hats` and `boxes` are
+    // recorded in this library's header but never shipped as `cites`; that is
+    // the one-envelope defect installment 2 fixed in chemistry/mixture-types,
+    // and it is filed separately rather than fixed here.
+    assert!(
+        out.contains(PLURAL_S_SOUND_PIN),
+        "the plural s sound citation matches its page: {out}"
+    );
+}

@@ -128,7 +128,10 @@ fn the_math_value_stride_is_four_bytes_not_two() {
         "distinct constants collapsing to one value is the signature of a \
          wrong stride"
     );
-    assert_eq!(c.axis_height, 258, "the axis is what every construction centres on");
+    assert_eq!(
+        c.axis_height, 258,
+        "the axis is what every construction centres on"
+    );
 }
 
 #[test]
@@ -142,8 +145,14 @@ fn italic_corrections_match_the_oracle() {
     let bytes = font_with_math_table();
     let font = font_parser::load(&bytes).unwrap();
 
-    assert_eq!(font_parser::italic_correction(&font, 1229).unwrap(), Some(25));
-    assert_eq!(font_parser::italic_correction(&font, 3331).unwrap(), Some(20));
+    assert_eq!(
+        font_parser::italic_correction(&font, 1229).unwrap(),
+        Some(25)
+    );
+    assert_eq!(
+        font_parser::italic_correction(&font, 3331).unwrap(),
+        Some(20)
+    );
 }
 
 #[test]
@@ -169,5 +178,145 @@ fn a_font_without_a_math_table_reports_absence_not_failure() {
         assert!(!font_parser::has_math_table(&font));
         assert_eq!(font_parser::math_constants(&font).unwrap(), None);
         assert_eq!(font_parser::italic_correction(&font, 1).unwrap(), None);
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MathVariants — how a delimiter grows
+// ─────────────────────────────────────────────────────────────────────────────
+//
+// Every value below was read out of STIX Two Math by **fontTools**, the same
+// way the constants above were. This is the part TEX-3 needs to make `\left(`
+// wrap a tall fraction instead of staying the size of an ordinary parenthesis.
+//
+// Glyph ids are STIX Two Math's own: 1064 is `parenleft`, 1068 is `braceleft`.
+
+/// A parenthesis has pre-drawn larger glyphs AND an assembly.
+///
+/// The variants cover the common sizes; the assembly is what builds one taller
+/// than the designer drew. A reader that finds only one of the two silently
+/// caps how far a delimiter can grow.
+#[test]
+fn a_parenthesis_has_both_variants_and_an_assembly() {
+    let bytes = font_with_math_table();
+    let font = font_parser::load(&bytes).unwrap();
+
+    let construction =
+        font_parser::glyph_construction(&font, 1064, font_parser::StretchAxis::Vertical)
+            .expect("read")
+            .expect("parenleft stretches vertically");
+
+    assert_eq!(
+        construction.variants.len(),
+        13,
+        "fontTools reports 13 variants"
+    );
+    // The first variant is the glyph itself, at its natural height.
+    assert_eq!(construction.variants[0].glyph_id, 1064);
+    assert_eq!(construction.variants[0].advance, 933);
+    assert_eq!(construction.variants[1].glyph_id, 1301);
+    assert_eq!(construction.variants[1].advance, 1187);
+    // Variants are ordered by increasing size; a renderer picks the first that
+    // is big enough, so an unsorted read would pick the wrong one.
+    let sizes: Vec<u16> = construction.variants.iter().map(|v| v.advance).collect();
+    assert!(
+        sizes.windows(2).all(|pair| pair[0] <= pair[1]),
+        "variants should increase in size: {sizes:?}"
+    );
+
+    // Top piece, repeatable extender, bottom piece.
+    assert_eq!(construction.assembly.len(), 3);
+    assert_eq!(construction.assembly[0].glyph_id, 4862);
+    assert_eq!(construction.assembly[0].start_connector, 0);
+    assert_eq!(construction.assembly[0].end_connector, 250);
+    assert_eq!(construction.assembly[0].full_advance, 1273);
+    assert!(!construction.assembly[0].is_extender);
+
+    assert_eq!(construction.assembly[1].glyph_id, 4861);
+    assert!(
+        construction.assembly[1].is_extender,
+        "the middle piece is what repeats to reach any height"
+    );
+
+    assert_eq!(construction.assembly[2].glyph_id, 4860);
+    assert_eq!(construction.assembly[2].end_connector, 0);
+    assert!(!construction.assembly[2].is_extender);
+}
+
+/// A brace assembles from five pieces, not three.
+///
+/// It has a middle cusp, so the shape is top / extender / middle / extender /
+/// bottom. A reader that assumed three parts would draw a brace with no cusp —
+/// recognisably wrong, and only for braces.
+#[test]
+fn a_brace_assembles_from_five_pieces_with_two_extenders() {
+    let bytes = font_with_math_table();
+    let font = font_parser::load(&bytes).unwrap();
+
+    let construction =
+        font_parser::glyph_construction(&font, 1068, font_parser::StretchAxis::Vertical)
+            .expect("read")
+            .expect("braceleft stretches vertically");
+
+    let ids: Vec<u16> = construction.assembly.iter().map(|p| p.glyph_id).collect();
+    assert_eq!(
+        ids,
+        vec![4874, 4875, 4873, 4875, 4872],
+        "top/ext/middle/ext/bottom"
+    );
+
+    let extenders: Vec<bool> = construction
+        .assembly
+        .iter()
+        .map(|p| p.is_extender)
+        .collect();
+    assert_eq!(
+        extenders,
+        vec![false, true, false, true, false],
+        "only the two repeating pieces are extenders"
+    );
+    assert_eq!(construction.assembly[2].full_advance, 1947, "the cusp");
+}
+
+/// Parts must overlap by at least this much, or the seams show.
+#[test]
+fn the_minimum_connector_overlap_is_read() {
+    let bytes = font_with_math_table();
+    let font = font_parser::load(&bytes).unwrap();
+    assert_eq!(
+        font_parser::min_connector_overlap(&font).unwrap(),
+        Some(100)
+    );
+}
+
+/// Asking on the wrong axis returns nothing rather than the wrong construction.
+///
+/// A `MATH` table keeps the two independently, and `parenleft` grows only
+/// vertically. Reading the horizontal array with a vertical index would return
+/// a plausible construction for an unrelated glyph.
+#[test]
+fn a_vertical_only_glyph_has_no_horizontal_construction() {
+    let bytes = font_with_math_table();
+    let font = font_parser::load(&bytes).unwrap();
+    assert_eq!(
+        font_parser::glyph_construction(&font, 1064, font_parser::StretchAxis::Horizontal).unwrap(),
+        None,
+        "parenleft does not stretch sideways"
+    );
+}
+
+/// An ordinary letter stretches on neither axis.
+#[test]
+fn a_glyph_with_no_construction_reports_absence() {
+    let bytes = font_with_math_table();
+    let font = font_parser::load(&bytes).unwrap();
+    for axis in [
+        font_parser::StretchAxis::Vertical,
+        font_parser::StretchAxis::Horizontal,
+    ] {
+        assert_eq!(
+            font_parser::glyph_construction(&font, 1, axis).unwrap(),
+            None
+        );
     }
 }

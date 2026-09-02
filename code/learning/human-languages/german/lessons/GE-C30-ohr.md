@@ -3,15 +3,15 @@ schema_version: 2
 id: GE-C30-ohr
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 940
-chapter: 30
+chapter: 32
 type: word
 headword: das Ohr
-gloss: ear — another direct Germanic cousin of its English translation, and the sense Chapter 26's hören already named
+gloss: ear — another direct Germanic cousin of its English translation, and the sense hören already named
 concept_tag: GE-BODY-EAR
 prerequisites: [GE-C30-auge, GE-C26-hoeren]
 sounds: [ohr-long-o]
 roots: [germanic-auzon, pie-hous]
-etymology_hook: "Ohr is Germanic *auzô, the inherited cousin of English ear, both from PIE *h2ous- — the same root sitting inside Chapter 26's hören, which some accounts derive as 'sharp-eared', so the body part and the verb for using it may share one ancient root"
+etymology_hook: "Ohr is Germanic *auzô, the inherited cousin of English ear, both from PIE *h2ous- — the same root sitting inside hören, which some accounts derive as 'sharp-eared', so the body part and the verb for using it may share one ancient root"
 duration:
   max_seconds: 220
 requires:
@@ -36,7 +36,7 @@ reviews_of: [GE-C30-auge, GE-C26-hoeren]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-AUGE-02] -->
 
-[PAUSE 2s] You have the eye. Chapter 26 already gave you the verb for what the
+[PAUSE 2s] You have the eye. You already have the verb for what the
 next part does — **hören**, "to hear" — without ever naming the part itself.
 
 ## You'll want to know: das Ohr
@@ -58,8 +58,8 @@ English: **Ohr** = *OHR*, no glide, no second vowel.
 <!-- hl-knowledge: introduces=[GE-ETYMON-OHR-04]; assesses=[GE-LEX-OHR-02, GE-LEX-HOEREN-09, GE-ETYMON-HOEREN-10] -->
 
 **Ohr** is Proto-Germanic ***\*auzô***, the direct cousin of English **ear** —
-both from Proto-Indo-European ***\*h₂ous-***. Chapter 26 already flagged one
-disputed idea about **hören**: some accounts break its root into "sharp" plus
+both from Proto-Indo-European ***\*h₂ous-***. One disputed idea about **hören** was
+already flagged: some accounts break its root into "sharp" plus
 "ear," which would put this very word, *Ohr*, hiding inside the verb for using
 it. That analysis was marked cited but unsettled there, and it stays
 unsettled here — a tidy story is not the same as a confirmed one.
@@ -81,5 +81,5 @@ were different languages.
 
 [PAUSE 3s] Give "ear" with its article and plural. (**Das Ohr, die Ohren**.)
 Is it native or borrowed? (**Native** — cousin of English *ear*.) What
-disputed idea from Chapter 26 would put this word inside *hören*? (**The
+disputed idea would put this word inside *hören*? (**The
 "sharp-eared" root analysis** — cited, not settled.)

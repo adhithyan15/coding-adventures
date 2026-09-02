@@ -1,0 +1,18 @@
+{
+  "language": "german",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:ec657b1c19751aac",
+  "lessonIds": [
+    "GE-C31-arm",
+    "GE-C31-finger",
+    "GE-C31-fuss",
+    "GE-C31-herz"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "german/narration/ch33.txt",
+  "json": "german/narration/ch33.json",
+  "textHash": "fnv1a64:8c0b97067eb8f3ee",
+  "jsonHash": "fnv1a64:b43d1bacc4db4fbd",
+  "findings": []
+}
