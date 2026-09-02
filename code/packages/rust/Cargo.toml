@@ -339,6 +339,7 @@ members = [
     "lookup-core",
     "logic-engine",
     "math-frontend",
+    "math-layout",
     "latex",
     "asciimath",
     "unicode-math",
