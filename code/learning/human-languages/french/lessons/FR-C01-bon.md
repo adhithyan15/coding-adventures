@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: FR-C01-bon
+spine_node: SPINE-CHECK-WELLBEING
 sequence: 15
 chapter: 1
 type: word
@@ -9,19 +11,37 @@ concept_tag: WORD-GOOD
 prerequisites: [FR-C01-bien]
 sounds: [nasal-on, silent-final]
 roots: [bonus]
-est_minutes: 4
+etymology_hook: "bon / bonne ← Latin bonus / bona — English bonus and bounty, Spanish bueno / buena from the very same pair"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [FR-LEX-BIEN-02]
+introduces:
+  knowledge: [FR-LEX-BON-03, FR-GRAM-ADJ-AGREEMENT-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [FR-LEX-BON-03, FR-GRAM-ADJ-AGREEMENT-04, FR-LEX-BIEN-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+variety: standard-contemporary
+register: neutral
 reviews_of: [FR-C01-bien]
 ---
 
 # bon / bonne — "good," the block you build greetings from
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] This is the word that starts *bonjour* and *bonsoir*. Learn it
 alone first — including the trick that its two forms *sound* completely
 different even though they look nearly the same.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - `nasal-on` — **bon** is a **nasal** *bõ*: the *n* is silent, the vowel goes
   through the nose. → [reference](../pronunciation-reference.md)
@@ -30,6 +50,7 @@ different even though they look nearly the same.
   *bonne* (*bun*) sound different despite looking alike.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[FR-LEX-BON-03]; assesses=[FR-LEX-BIEN-02] -->
 
 **bon** — "good" (adjective, masculine). **bonne** — "good" (feminine). Root:
 Latin **bonus / bona** ("good"). Your English cousins:
@@ -42,6 +63,7 @@ Latin **bonus / bona** ("good"). Your English cousins:
 > diphthong (*bue-*). Same Latin word, two accents of wear.
 
 ## Grammar Lens: adjectives agree with their noun
+<!-- hl-knowledge: introduces=[FR-GRAM-ADJ-AGREEMENT-04]; assesses=[] -->
 
 Like every Romance adjective, *bon* **agrees** with its noun's gender and
 number — *bon* (masc.), *bonne* (fem.), *bons* (masc. pl.), *bonnes* (fem.
@@ -50,12 +72,14 @@ pl.). This is Latin's legacy: adjectives change their ending to match the noun
 few lessons: *bon jour* (masc.) but *bonne nuit* (fem.).
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-BON-03, FR-GRAM-ADJ-AGREEMENT-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: "bon" (nasal *bõ*) then "bonne" (*bun*) — hear the difference]
 - [YOU SAY: the four shapes — bon, bonne, bons, bonnes]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-BON-03] -->
 
 [PAUSE 3s] Why do *bon* and *bonne* sound different? (The double *nn* in
 *bonne* cancels the nasal — *bõ* vs *bun*.) Which Spanish adjective shares

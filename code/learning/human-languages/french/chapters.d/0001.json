@@ -13,10 +13,21 @@
   "payoff": {
     "lesson": "FR-C01-practice",
     "kind": "task",
-    "summary": "Complete FR-C01-practice, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in French, recognize the reply, choose an appropriate response, and write salut from memory.",
+    "summary": "The French greetings, built from their pieces — a word for “good,” words for “day,” “evening” and “night,” and the gender machine that decides their endings. French and Spanish are both daughters of Latin; where a French word and its Spanish cousin split from one Latin root, both appear here, because the difference between them is often the lesson — and the text supplies the Spanish word whether or not you have met it before.",
     "assesses": [
-      "FR-ORTHO-SALUT-01"
+      "FR-LEX-SALUT-01",
+      "FR-ORTHO-SALUT-01",
+      "FR-LEX-BIEN-02",
+      "FR-LEX-BON-03",
+      "FR-GRAM-ADJ-AGREEMENT-04",
+      "FR-GRAM-LE-LA-GENDER-05",
+      "FR-LEX-JOUR-06",
+      "FR-LEX-BONJOUR-07",
+      "FR-LEX-SOIR-08",
+      "FR-LEX-BONSOIR-09",
+      "FR-LEX-NUIT-10",
+      "FR-LEX-BONNE-NUIT-11"
     ],
-    "note": "The chapter remains mostly legacy schema v1, but its new typed writing runway is closed explicitly at the canonical payoff."
+    "note": "Chapter 1 is schema-v2 as of the hand-written-chapter retirement, so the payoff is atom-scored: FR-C01-practice assesses every atom the chapter introduces, the writing runway's FR-ORTHO-SALUT-01 included."
   }
 }
