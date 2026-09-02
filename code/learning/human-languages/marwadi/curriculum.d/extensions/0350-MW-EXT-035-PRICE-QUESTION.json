@@ -1,0 +1,21 @@
+{
+  "id": "MW-EXT-035-PRICE-QUESTION",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "function",
+  "canDo": "I can ask what one named thing costs and ask for the total, and run the price question over a shopping word, a food word, and a transport word in four separately scored skills.",
+  "prerequisites": [
+    "MW-EXT-034-SHOW-REQUEST"
+  ],
+  "lessons": [
+    "MW-C22-hear-kitno",
+    "MW-C22-kitno",
+    "MW-C22-hear-price-question",
+    "MW-C22-price-question",
+    "MW-R22-price-two",
+    "MW-C22-hear-total-question",
+    "MW-C22-total-question",
+    "MW-C22-price-three",
+    "MW-R22-script-close"
+  ]
+}
