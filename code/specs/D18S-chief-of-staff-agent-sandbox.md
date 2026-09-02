@@ -432,24 +432,34 @@ Under a shared UID an agent reaches broker memory via `ptrace(PTRACE_ATTACH)`,
 `process_vm_readv`, or `/proc/<pid>/mem`, and can signal the broker, the
 supervisor, and sibling agents.
 
-Agent, broker, and supervisor are therefore distinct OS principals: distinct
-UID on Unix, distinct AppContainer SID on Windows.
+**Three things carry that claim, and none of them requires a privileged
+supervisor:**
 
-**The privilege to allocate them must be provisioned, and its absence is a
-launch failure — not a downgrade.** Allocating a distinct UID needs
-`CAP_SETUID` or a delegated subuid/subgid range, which sits awkwardly beside
-S-P1's "Privilege: none" column for the sandbox primitives themselves. Those
-are different privileges at different times and the spec must say so: the
-**supervisor** runs privileged, or is given a delegated subuid/subgid range at
-install time; the **agent** needs no privilege for any S-P1 primitive. The
-allocated principal is carried in the plan as a first-class term, exactly as
-S-I1a requires of the base policy, and inability to allocate distinct
-principals for agent, broker, and supervisor fails the launch under S-P3.
+1. **One broker per agent** (S-K7). A broker holds only the keys of the agent
+   it serves, so even a total compromise yields the agent nothing it did not
+   already hold. This is what makes the remaining measures defence in depth
+   rather than the sole line.
+2. **The base filter denies process introspection** (S-I1): `ptrace`,
+   `process_vm_readv`, `process_vm_writev`, `kcmp`, with `/proc` and `/sys`
+   unreachable. An agent cannot read its broker's memory because the syscalls
+   are gone, not because the UID differs.
+3. **The sandbox scopes process access on every target platform**, and does so
+   unprivileged:
 
-Without this the natural unprivileged implementation runs every agent and the
-broker under one UID, S-I5's confidentiality claim is void **by its own terms**,
-S-I7 fails wholesale, and nothing in S-P3 catches it — the launch proceeds and
-the audit record says "sandboxed". Broker and supervisor set
+| Platform | How agent-to-broker inspection is denied | Privilege |
+|---|---|---|
+| Linux | Landlock domains restrict ptracing outside the domain (ABI v1), and seccomp denies the syscalls outright | none |
+| OpenBSD | `pledge` without `proc`/`ptrace` promises | none |
+| FreeBSD | capability mode has no process-inspection interface | none |
+| Windows | each agent gets its own AppContainer SID; `CreateAppContainerProfile` needs no administrator | none |
+| macOS | Seatbelt `(deny process-info*)`; `task_for_pid` is already restricted | none |
+
+Distinct UIDs on Unix remain **recommended** as defence in depth against a gap
+in the base filter — four review rounds established that filters are easy to get
+wrong — and where a delegated subuid/subgid range is provisioned at install the
+supervisor uses it. But it is not required, its absence is not a launch failure,
+and **the supervisor does not run privileged.** Broker and supervisor still set
+`PR_SET_DUMPABLE=0`. Broker and supervisor set
 `PR_SET_DUMPABLE=0`. `ptrace`, `process_vm_readv`, `process_vm_writev`, and
 `kill` are denied in every agent filter (S-I1), and `/proc` and `/sys` are
 unreachable in the agent's domain. S-I5's confidentiality claim is not restated
@@ -493,17 +503,34 @@ Every promotion is recorded in the manifest and visible in review. The default
 direction matters: brokered-by-default fails closed, and a direct-by-default
 system silently grants whatever the OS happened to allow.
 
-### S-I7 — agents are mutually isolated
+### S-I7 — there is no agent-to-agent surface to isolate
 
-Every rule above is written agent-versus-outside; this one states the
-horizontal property. An agent may not read, write, signal, or ptrace another
-agent. This is enforced by principal separation — distinct UID, distinct
-AppContainer profile and SID, distinct jail — and not by the sandbox plan.
+This rule states a property of the paradigm, not a mediation requirement.
 
-An AppContainer profile *is* a SID: sharing one profile across agents gives
-them a common security principal, so they share ACL identity and can open each
-other's files and named objects. Profiles are never shared; the creation cost
-is paid per agent.
+**Agents do not know other agents exist.** No agent can name another, no
+capability addresses one, and nothing in `chief-agent-stdio-v1` carries an
+agent identity. The only question an agent may ask is whether a capability
+exists. There is therefore no agent-to-agent channel to mediate, no routing to
+authorize, and no namespace in which one agent could discover another.
+
+The OS-level discovery path is closed by S-I1 rather than by principal
+separation: `/proc` and `/sys` are unreachable in every agent's filesystem
+domain, and `ptrace`, `process_vm_readv`, `process_vm_writev`, `kcmp`, `kill`,
+`tgkill`, SysV IPC, POSIX message queues, and abstract unix sockets are all
+denied in the base filter. An agent cannot enumerate a sibling it was never
+told about, because the kernel interfaces that would enumerate it are gone.
+
+Earlier drafts of this rule required distinct OS principals as *the* enforcement
+mechanism for mutual isolation. That imported a generic multi-tenant threat
+model in which mutually distrusting workloads share a namespace and must be kept
+apart. This design has no such namespace. Principal separation remains
+**recommended defence in depth** (S-I5), not the mechanism, and its absence is
+not a launch failure.
+
+Where an OS supplies per-agent principals for free it is still used: an
+AppContainer profile *is* a SID and `CreateAppContainerProfile` needs no
+administrator, so each Windows agent gets its own and profiles are never
+shared.
 
 ---
 
@@ -716,6 +743,11 @@ brokered, or the launch fails. **No filesystem capability may be granted
 **Unprivileged user namespaces are restricted by default** on Ubuntu 23.10+ via
 AppArmor and historically on Debian. Nothing in the required path depends on
 namespaces.
+
+**The "Privilege: none" column is now true of the whole required path**,
+including principal handling — see S-I5. An earlier draft required a privileged
+supervisor for per-agent UID allocation and contradicted this column; that
+requirement is withdrawn.
 
 **macOS `sandbox_init` is formally deprecated** (since 10.8) and remains what
 production browsers use. There is no supported alternative for spawning
