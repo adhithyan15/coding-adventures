@@ -20,7 +20,8 @@ revoir = "to see again" = re- ("again") + voir ("to see").
 So au revoir literally means "until the seeing-again" — a small promise that this isn't the end. It's built on voir, from Latin vidēre, "to see" — one of the richest roots in English:
 vision, visible, visit, visa, view, video ("I see").
 re-vise ("look again"), e-vident ("seen out"), pro-vide, super-vise, sur-vey.
-A goodbye that sees — French and German agree.
+
+Why it's said this way — a goodbye that sees.
 Here's a satisfying cross-language pair: German says the exact same thing. Auf Wiedersehen = auf ("on") + wieder ("again") + sehen ("to see") = "on the seeing-again." French and German, side by side, both promise a re-seeing; Spanish adiós instead commends you to God. Same moment, two different pictures.
 
 Guided Practice.
@@ -52,8 +53,11 @@ The phrase, taken apart.
 à plus tard = literally "to more late" becomes "see you later."
 à = "to / at" (Latin ad) — French's all-purpose farewell preposition, the way Spanish leans on hasta: à + a time = a soft goodbye.
 plus = "more," from Latin plūs — the plus you already write in English (and the plu- of plural, surplus).
-tard = "late," from Latin tarde, "slowly, late." And that is exactly the Spanish word tarde ("afternoon / late") you met in Chapter 2 — French kept it meaning late, Spanish grew it into afternoon. Same Latin tarde. English keeps it in tardy and retard ("hold back, make late").
+tard = "late," from Latin tarde, "slowly, late." English keeps it in tardy and retard ("hold back, make late").
 So à plus tard is "until more-late" — see you at some later point.
+
+Why it's said this way — one Latin word, two everyday meanings.
+Spanish inherited that identical Latin tarde — the word you met in Chapter 2 — but the two languages grew it in different directions. French kept it meaning late (tard); Spanish grew it into afternoon (tarde). One Latin word, two everyday meanings. And where French leans on à for its soft goodbyes, Spanish leans on hasta ("until"): hasta luego is the twin of à plus tard.
 
 Grammar Lens: the "à …" farewells.
 French's soft goodbyes are all à + a time word — mirror this against Spanish hasta:
@@ -84,8 +88,8 @@ Warm-up.
 For when you'll genuinely meet again shortly: à bientôt, "see you soon" — the French twin of Spanish hasta pronto. It hides a word you already know from Chapter 1: bien.
 
 Sounds you'll need.
-nasal-in — bien = byɛ̃, nasal (your Chapter 1 sound).
-bientôt = byɛ̃-TOH; the circumflex on ô just marks a long o, and the final t is silent. Whole phrase: ah byɛ̃-TOH.
+nasal-in — bien = byan, nasal (your Chapter 1 sound).
+bientôt = byan-TOH; the circumflex on ô just marks a long o, and the final t is silent. Whole phrase: ah byan-TOH.
 
 The phrase, taken apart.
 à bientôt = "to soon" becomes "see you soon."
@@ -101,7 +105,7 @@ You met bien as "well" (an answer to ça va?). Here it's doing a second job: glu
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "à bientôt" — ah byɛ̃-TOH]
+[your turn — say: "à bientôt" — ah byan-TOH]
 [pause 8 seconds for the answer]
 [your turn — say: pull it apart — "bien" (well) + "tôt" (early) = bientôt (soon)]
 [pause 8 seconds for the answer]
@@ -121,7 +125,7 @@ Warm-up.
 Parting for the day: à demain, "until tomorrow" — the twin of Spanish hasta mañana. And demain shares a hidden root with mañana that's worth seeing.
 
 Sounds you'll need.
-nasal-in — demain = duh-Mɛ̃: the -ain is a nasal (like pain, main); the final consonant is silent. ah duh-Mɛ̃.
+nasal-in — demain = duh-MAN: the -ain is a nasal (like pain, main); the final consonant is silent. ah duh-MAN.
 
 The phrase, taken apart.
 à demain = "to tomorrow" becomes "see you tomorrow."
@@ -129,7 +133,10 @@ The phrase, taken apart.
 demain = "tomorrow," from Latin dē māne, "from the morning":
 dē = "from", māne = "in the morning."
 The next "morning" is tomorrow becomes de mane fused into demain.
-The hidden twin. Spanish mañana ("tomorrow / morning") comes from Latin (hōra) maneana — built on the same māne, "morning." So French demain and Spanish mañana are cousins through Latin māne: both turn "morning" into "tomorrow," just assembled differently (French from-morning, Spanish morning-ish hour). English keeps māne too, in the poetic matins (morning prayers) and matinée (a morning/daytime show).
+English keeps māne too, in the poetic matins (morning prayers) and matinée (a morning/daytime show).
+
+Why it's said this way — the hidden twin.
+Spanish mañana ("tomorrow / morning") comes from Latin (hōra) maneana — built on the same māne, "morning." So French demain and Spanish mañana are cousins through one Latin word: both turn "morning" into "tomorrow," just assembled differently — French says from-morning, Spanish says morning-ish hour.
 
 Grammar Lens: the "à …" farewells, complete.
 Your French soft-goodbye set, mapped to Spanish:
@@ -141,7 +148,7 @@ French: à demain. Spanish: hasta mañana. when: tomorrow.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "à demain" — ah duh-Mɛ̃]
+[your turn — say: "à demain" — ah duh-MAN]
 [pause 8 seconds for the answer]
 [your turn — say: "demain" from de mane "from morning"; Spanish "mañana" from maneana — same māne]
 [pause 8 seconds for the answer]
@@ -160,16 +167,16 @@ Warm-up.
 [pause 2 seconds]
 No new words. The farewells — au revoir and the three à … goodbyes — now close a real conversation and fold back into everything since salut.
 
-Choosing the right goodbye.
+Guided Practice: choosing the right goodbye.
 [a table of 4 rows, read aloud]
-you're…: parting plainly / politely. say: Au revoir.
-you're…: expecting to meet again shortly. say: À bientôt.
-you're…: casual "see you". say: À plus (tard).
-you're…: leaving for the day. say: À demain.
+you're…: parting plainly / politely. say: au revoir.
+you're…: expecting to meet again shortly. say: à bientôt.
+you're…: casual "see you". say: à plus (tard).
+you're…: leaving for the day. say: à demain.
 
-The whole exchange, start to finish.
+The exchange, start to finish.
 Everything from the French Chapters 1–4:
-— Salut! Je m'appelle Chloé. Comment tu t'appelles? — Je m'appelle Marc. Enchanté. — Ça va? — Ça va bien, merci, et toi? — Très bien. Bon… à demain, Marc. — À demain, Chloé. Au revoir!
+— Salut! Je m'appelle Chloé. Comment tu t'appelles? — Je m'appelle Marc. Enchanté. — Ça va? — Ça va bien, merci, et toi? — Très bien. Bon… à demain, Marc. — Oui, à demain, Chloé. Au revoir!
 
 What you've built this chapter.
 au revoir — the plain goodbye ("until the seeing-again"; the voir / vidēre family; twin of German auf Wiedersehen).
@@ -198,12 +205,12 @@ Warm-up.
 [pause 2 seconds]
 French sprinkles little marks over its vowels, and they are not decoration — each does a specific job. You've read them since enchanté and très. Three of them ride on e, and one of the three hides a word you already know in English.
 
-The three accents, and what they do.
+You'll want to know: the three accents, and what they do.
 é — accent aigu (rising stroke, like Spanish's). It fixes the sound: é = a crisp "ay" (no glide). café, enchanté, été ("summer").
 è — accent grave (falling stroke). è = an open "eh" as in bed. très ("very"), mère ("mother"), père. The grave also just separates look-alikes: a ("has") vs à ("to"); ou ("or") vs où ("where") — same job as Spanish tu/tú.
 ê — accent circonflexe (a little hat). This one is a fossil.
 
-The circumflex is a tombstone for a lost s.
+Why it's said this way — the circumflex is a tombstone for a lost s.
 Centuries ago French dropped an s before certain consonants, and left a hat where it used to stand. English, having borrowed the older form, usually still has that s — so the circumflex is a decoder ring between the two languages:
 [a table of 8 rows, read aloud]
 French (hat): forêt. the lost s: forest. English kept it: forest.
@@ -216,7 +223,7 @@ French (hat): goût. the lost s: gust. English kept it: (Latin gustus, cf. gusto
 French (hat): être. the lost s: estre. English kept it: (Latin stāre, cf. stare/estar).
 So when you meet a circumflex, mentally slot an s back in and an English cousin often appears. Hôpital becomes hospital. It's the single most useful reading trick in French spelling.
 
-How to write them.
+Writing: the three accents.
 All three are small strokes above the vowel: é leans right (up-stroke), è leans left (down-stroke), ê is a little peak (^). Get the lean right — é and è are different sounds, so the direction matters.
 
 Guided Practice.
@@ -242,7 +249,7 @@ Warm-up.
 [pause 2 seconds]
 You've seen it in français and garçon. The cédille is the tiny hook under a c — ç — and it exists to solve one specific spelling problem.
 
-The problem it solves.
+You'll want to know: the problem the cedilla solves.
 In French (as in Latin, Italian, Spanish), c is soft (an s sound) before e and i, but hard (a k) before a, o, u:
 ce, ci becomes soft: ceci = suh-SEE.
 ca, co, cu becomes hard: car, comme, cure = k.
@@ -250,13 +257,13 @@ So "franc-ais" would read frank-ay — wrong. To force the soft s before a/o/u, 
 français = frahn-SEH (not "frank-").
 garçon = gar-SOHN ("boy").
 ça = sa ("that" — the ça of ça va?).
-reçu = ruh-SÜ ("received").
+reçu = ruh-SU ("received").
 The rule is tidy: ç only ever appears before a, o, u — never before e/i, where c is already soft and the hook would be pointless.
 
-Where the hook came from.
+The mark, taken apart.
 The cédille is literally "a little z." Its name is Spanish zedilla ("little zeta") — medieval scribes wrote a small subscript z under the c to say "pronounce this like z/s, not k." Over time the little z shrank into the hook you write today. So ç = c + a ghost z. (Spanish later dropped it; French and Portuguese kept it — ç is alive in português itself.)
 
-How to write it.
+Writing: the cedilla.
 Write a normal c, then add a small hook curling left off the bottom, like a tiny 5's tail. Only ever under c, only before a/o/u.
 
 Guided Practice.
@@ -280,7 +287,7 @@ Warm-up.
 [pause 2 seconds]
 The last French mark: two little dots over a vowel — the tréma (English calls it a diaeresis). It answers one question the reader would otherwise get wrong: do these two vowels blend, or not?
 
-The problem it solves.
+You'll want to know: the problem the trema solves.
 French loves to fuse vowel pairs into one sound: ai = eh, au = oh, ou = oo, oi = wa. Usually that's what you want. But sometimes two vowels really should be sounded separately — and the tréma is how the spelling says so: "break these apart; pronounce the marked vowel on its own."
 naïve = na-EEV (na-i, two syllables) — not "nave." (English kept the dots: naïve.)
 Noël = no-EL ("Christmas") — o and e separately, not "nurl."
@@ -288,7 +295,7 @@ maïs = ma-EES ("corn") — vs mais (meh, "but"). The two dots are the only diff
 Citroën, Israël, égoïste — same rule: split the vowels.
 So the tréma is the opposite of a blend instruction: where ai says "merge," aï says "don't."
 
-How to write it.
+Writing: the trema.
 Two dots, side by side, above the vowel that starts its own sound — the second vowel of the pair (na-ï-ve). (It looks like a German umlaut, but the job is different: German ä/ö/ü change the vowel; the French tréma separates it. Same two dots, opposite purpose — that's the next lesson.)
 
 Guided Practice.

@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: FR-C03-merci
+spine_node: SPINE-COURTESY-THANK
 sequence: 105
 chapter: 3
 type: word
@@ -10,24 +12,42 @@ prerequisites: []
 sounds: [r-uvular]
 roots: [merces-latin]
 etymology_hook: "merci ← Latin mercēs 'wages, reward, price' → English mercy, mercenary, merchant, commerce"
-est_minutes: 3
 reviews_of: [FR-C02-practice]
+duration:
+  max_seconds: 218
+requires:
+  knowledge: []
+introduces:
+  knowledge: [FR-LEX-MERCI-01, FR-ETYMON-MERCI-02, FR-CULTURE-MERCI-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [FR-CULTURE-MERCI-03]
+practises:
+  knowledge: [FR-LEX-MERCI-01, FR-ETYMON-MERCI-02, FR-CULTURE-MERCI-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 ---
 
 # merci — "thank you," and it means *mercy*
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You can introduce yourself in French. Next you'll ask *how are you?*
 — and every polite answer needs **merci** first. It hides a word you already
 know: *mercy*.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[FR-LEX-MERCI-01]; assesses=[] -->
 
 - `r-uvular` — **merci** = *mehr-SEE*, with the soft guttural French *r* at the
   back of the throat (never the Spanish tap). Stress the end: *mehr-**SEE***.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[FR-ETYMON-MERCI-02]; assesses=[] -->
 
 **merci** — "thank you." Root: Latin **mercēs**, *"wages, reward, price, that
 which is earned."* Saying *merci* originally invoked a **reward** owed for a
@@ -42,7 +62,8 @@ That one root **merc-** ("pay, trade, reward") pays out a huge English family:
   the *price* sense (Latin *mercārī*, "to trade").
 - Even **Mercury** — the Roman god of merchants.
 
-## Across the family — thanks, two different metaphors
+## Why it's said this way — three sisters, three pictures of gratitude
+<!-- hl-knowledge: introduces=[FR-CULTURE-MERCI-03]; assesses=[] -->
 
 Here's a lovely contrast to lock in:
 
@@ -58,6 +79,7 @@ Same feeling, three metaphors — this is exactly the kind of thing worth
 *noticing*, not just memorizing.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-MERCI-01, FR-ETYMON-MERCI-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "merci" — *mehr-SEE*, guttural *r*]
@@ -66,6 +88,7 @@ Same feeling, three metaphors — this is exactly the kind of thing worth
   difference]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-MERCI-01, FR-ETYMON-MERCI-02, FR-CULTURE-MERCI-03] -->
 
 [PAUSE 3s] What everyday English word is *merci* a cousin of? (*Mercy*.) And its
 "trade" cousins? (Merchant, commerce, market, mercenary.) How does its metaphor

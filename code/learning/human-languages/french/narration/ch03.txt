@@ -20,7 +20,7 @@ mercenary — a soldier who fights for wages.
 merchant, commerce, market, mercantile — buying and selling, the price sense (Latin mercārī, "to trade").
 Even Mercury — the Roman god of merchants.
 
-Across the family — thanks, two different metaphors.
+Why it's said this way — three sisters, three pictures of gratitude.
 Here's a lovely contrast to lock in:
 [a table of 3 rows, read aloud]
 language: French. "thank you": merci. literal root: mercēs — reward / mercy.
@@ -50,18 +50,21 @@ Warm-up.
 Someone says merci. The easy reply: de rien — literally "of nothing." You wave the favour off as no trouble — and Spanish pulls this exact trick too.
 
 Sounds you'll need.
-nasal-in — rien = ryɛ̃, a nasal ending (air through the nose, no hard n): duh RYAN becomes more like duh ryɛ̃.
+nasal-in — rien is a nasal ending: the air goes out through the nose and there is no hard n to stop it. duh RYAN, with that final vowel humming rather than closing.
 r-uvular — that guttural French r again, at the back of the throat.
 
 The phrase, taken apart.
 de = "of / from" (Latin dē).
 rien = "nothing." And here is the beautiful part.
 rien comes from Latin rem — the accusative of rēs, "a thing." In Latin rem meant a thing, something real. But French kept using it inside negations — ne … rien, "not … a thing" — until the thing word absorbed the "nothing" and rien came to mean 'nothing' all by itself.
+Latin rēs also gives English real, republic (rēs pūblica, "the public thing"), and rebus. So rien is, at the root, a real thing that learned to mean nothing at all.
+
+Why it's said this way — the same move, twice.
 If that sounds familiar, it should: Spanish did the identical thing with nada ( from Latin nāta, "a born thing" becomes "nothing"). Two sister languages, the same move — the word for thing collapses into the word for nothing:
 [a table of 2 rows, read aloud]
 language: French. "you're welcome": de rien. the "nothing" word, from Latin: rien from rem, "a thing".
 language: Spanish. "you're welcome": de nada. the "nothing" word, from Latin: nada from nāta, "a born thing".
-Latin rēs also gives English real, republic (rēs pūblica, "the public thing"), and rebus. So rien is, at the root, a real thing that learned to mean nothing at all.
+Two sister languages, one instinct: wave the favour off as no thing at all.
 
 Guided Practice.
 [pause 1 second]
@@ -122,7 +125,7 @@ Comment ça va? — “How are you?” literally: “How does this go?”
 The even shorter Ça va? is extremely common. Answer with the same words:
 Ça va? — Ça va. “How’s it going? — It’s going / I’m fine.”
 
-The pieces.
+The phrase, taken apart.
 comment comes from Latin quōmodo, “in what manner”;
 ça comes from ecce hoc, “behold this”;
 va is the third-person form of aller, “to go.”
@@ -151,12 +154,16 @@ Comment vas-tu? / Comment allez-vous? — informal and formal how-are-you questi
 Warm-up.
 [pause 2 seconds]
 Comment ça va? avoids naming the listener. Now use the tu / vous choice you learned in Chapter 2.
-[a table of 2 rows, read aloud]
-listener: one friend, informal. question: Comment vas-tu?
-listener: stranger, elder, or group. question: Comment allez-vous?
-Vas and allez are forms of aller, “to go.” Formal writing and careful speech invert verb and pronoun: allez-vous, literally “go-you.”
 
-Hear the liaison.
+Grammar Lens: a ladder of three registers.
+French offers a neat climb from casual to formal. tu is the familiar “you” (a friend, a peer); vous is the formal or plural “you” (a stranger, an elder, a group).
+[a table of 3 rows, read aloud]
+register: casual, universal. question: Comment ça va? (or Ça va?) literally: “How does it go?”
+register: informal, one friend. question: Comment vas-tu? literally: “How go you?”
+register: formal or plural. question: Comment allez-vous? literally: “How go you (vous)?”
+Vas and allez are simply the tu and vous forms of aller, “to go.” Formal writing and careful speech invert verb and pronoun: allez-vous, literally “go-you.” For a stranger or a boss, reach for Comment allez-vous?
+
+Sounds you'll need — the liaison in Comment allez-vous.
 The final t of comment is normally silent. Before vowel-initial allez, liaison can carry it across:
 Comment allez-vous? — roughly ko-mahn-ta-lay-voo.
 That linking sound is not an extra word; it is a normally silent consonant surfacing between two words.
@@ -184,10 +191,7 @@ comme ci, comme ça — the classic French shrug.
 Warm-up.
 [pause 2 seconds]
 Someone asks Ça va? You're not great, not bad. The perfect, gloriously French answer — a phrase English borrowed whole — is comme ci, comme ça: "like this, like that." A verbal shrug of the shoulders.
-
-Review first (20 seconds).
-[pause 2 seconds]
-From Chapter 1: bien — "well" ( from Latin bene). So Ça va bien = "It's going well." Now the answer for when it's only going.
+First, twenty seconds of review. From Chapter 1: bien — "well" ( from Latin bene). So Ça va bien = "It's going well." Now the answer for when it's only going.
 
 The phrase, taken apart.
 comme ci, comme ça — literally "like this, like that." Every piece is an old friend:
@@ -202,7 +206,9 @@ Grammar Lens: your answer set for Ça va?
 Ça va means fine / okay ("it goes").
 Comme ci, comme ça means so-so.
 Pas mal means not bad.
-Compare across the family — every language has its shrug: Spanish más o menos ("more or less") / regular, Italian così così ("so so"), and French comme ci, comme ça ("like this, like that"). Same shrug, different picture.
+
+Why it's said this way — every language has its shrug.
+Every language has its shrug, and each paints it differently: Spanish says más o menos ("more or less") or regular, Italian says così così ("so so"), French says comme ci, comme ça ("like this, like that"). Same gesture, three pictures.
 
 Guided Practice.
 [pause 1 second]
