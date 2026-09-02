@@ -1,12 +1,59 @@
 # pdf — a PDF writer built from scratch
 
-A zero-dependency PDF writer. This is **PDF-1**: the object model and the file
-structure. No pages helper, text, fonts, or graphics API yet — those sit on top
-(#13957, #13958), and this layer has to be right first, because everything above
-it is expressed in these object types and *located by the byte offsets computed
-here*.
+A zero-dependency PDF writer, through **PDF-2**: the object model and file
+structure (#13944), plus the page tree, content streams and graphics operators
+(#13957). Font embedding and subsetting are next (#13958); until then, text
+uses the base-14 faces, which every reader already has and none of which can
+render Tamil, Devanagari or CJK.
 
-Part of the from-scratch PDF effort (#13944).
+```rust
+use pdf::{ColorTarget, Content, Document, Page, Paint, StandardFont, LETTER};
+
+let (width, height) = LETTER;
+
+// Top-down coordinates: origin top-left, y downward, like a layout tree.
+let mut content = Content::top_down(height);
+content
+    .gray(0.9, ColorTarget::Fill)
+    .rect(40.0, 40.0, 200.0, 60.0)   // 40 points from the TOP
+    .paint(Paint::Fill)
+    .begin_text()
+    .font("F1", 24.0)
+    .text_position(52.0, 80.0)
+    .show_text(b"Engram")
+    .end_text();
+
+let mut page = Page::with_content(width, height, content)?;
+page.add_font("F1", StandardFont::HelveticaBold);
+
+let mut doc = Document::new();
+doc.add_page(page);
+let bytes = doc.finish()?;
+# Ok::<(), pdf::PdfError>(())
+```
+
+## Which way is up
+
+**PDF's origin is bottom-left and y grows upward.** Screens, box-layout trees
+and SVG all put it top-left with y growing downward, so anything rendering into
+a PDF has to reconcile the two — and doing it ad hoc produces pages that are
+perfectly plausible *upside down*.
+
+`Content` is built in one space, chosen once:
+
+| | origin | y |
+|---|---|---|
+| `Content::pdf_space()` | bottom-left | upward |
+| `Content::top_down(h)` | top-left | downward |
+
+The conversion lives in a single private function that every coordinate passes
+through, including `rect` — which needs one extra step, since `re` takes a
+rectangle's *bottom*-left corner and mirroring the corner you were given lands
+on the one diagonally opposite.
+
+It is deliberately **not** implemented as a `1 0 0 -1 0 h cm` matrix: that
+mirrors everything drawn under it, so the text lands in the right place with
+every glyph reversed.
 
 ## Why the foundation is mostly counting bytes
 
@@ -27,6 +74,9 @@ can disagree with the first.
 - `FlateDecode` streams, with `/Length` derived from the data
 - Forward references via `reserve()` / `fill()`, so a page and its parent can
   name each other
+- The page tree: `/Catalog` → `/Pages` → `/Page`, with `MediaBox` and resources
+- Content streams: graphics state, paths, clipping, and text placement
+- The base-14 standard fonts (no embedding required)
 
 Out of scope here: reading, incremental update, encryption, object streams,
 cross-reference streams.

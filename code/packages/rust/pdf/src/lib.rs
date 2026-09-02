@@ -55,10 +55,14 @@
 //! absent rather than skipping, because a test that silently passes when its
 //! oracle is missing is not a test.
 
+mod content;
 mod object;
+mod page;
 mod writer;
 
+pub use content::{ColorTarget, Content, Paint, Space, TextRun};
 pub use object::{format_real, Dict, ObjId, Object};
+pub use page::{Document, Page, StandardFont, A4, LETTER};
 pub use writer::{flate_encode, PdfError, PdfWriter};
 
 #[cfg(test)]
@@ -102,7 +106,10 @@ mod tests {
         // Rust's default float formatting reaches for it on small magnitudes,
         // so this is a real hazard rather than a stylistic preference.
         assert_eq!(format_real(0.0000001), "0");
-        assert_eq!(format_real(1e20), "100000000000000000000.0".trim_end_matches(".0"));
+        assert_eq!(
+            format_real(1e20),
+            "100000000000000000000.0".trim_end_matches(".0")
+        );
         assert!(!format_real(0.000000123).contains('e'));
         assert!(!format_real(1.5e10).contains('e'));
     }
@@ -128,12 +135,18 @@ mod tests {
         // An unescaped `)` would end the string early and the rest of the
         // object would be reinterpreted as syntax.
         assert_eq!(to_string(&Object::Str(b"a(b)c".to_vec())), "(a\\(b\\)c)");
-        assert_eq!(to_string(&Object::Str(b"back\\slash".to_vec())), "(back\\\\slash)");
+        assert_eq!(
+            to_string(&Object::Str(b"back\\slash".to_vec())),
+            "(back\\\\slash)"
+        );
     }
 
     #[test]
     fn hex_strings_carry_binary() {
-        assert_eq!(to_string(&Object::HexStr(vec![0x00, 0xFF, 0x10])), "<00FF10>");
+        assert_eq!(
+            to_string(&Object::HexStr(vec![0x00, 0xFF, 0x10])),
+            "<00FF10>"
+        );
     }
 
     #[test]
@@ -227,7 +240,10 @@ mod tests {
         for index in 0..2 {
             let start = after_subsection + index * 20;
             let entry = &bytes[start..start + 20];
-            assert_eq!(entry[19], b'\n', "entry {index} must be 20 bytes: {entry:?}");
+            assert_eq!(
+                entry[19], b'\n',
+                "entry {index} must be 20 bytes: {entry:?}"
+            );
             assert!(
                 entry[10] == b' ' && entry[16] == b' ',
                 "entry {index} must be nnnnnnnnnn ggggg t: {entry:?}"
