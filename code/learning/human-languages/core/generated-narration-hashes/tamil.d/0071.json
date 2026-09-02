@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:e906a0ebb46f96a8",
+  "lessonIds": [
+    "TA-C71-rise",
+    "TA-C71-sleep",
+    "TA-S126-letter-oo",
+    "TA-C71-run",
+    "TA-C71-wash",
+    "TA-C71-play"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 0,
+  "text": "tamil/narration/ch71.txt",
+  "json": "tamil/narration/ch71.json",
+  "textHash": "fnv1a64:b8c5335b2234bdfb",
+  "jsonHash": "fnv1a64:f23f3ff1cd63a43b",
+  "findings": []
+}

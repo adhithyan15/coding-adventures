@@ -1,0 +1,16 @@
+{
+  "id": "TA-EXT-73-WHEN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can place a moment against today, and name the units above the day.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C73-today",
+    "TA-C73-yesterday",
+    "TA-W28-read-inru",
+    "TA-C73-before",
+    "TA-C73-month",
+    "TA-C73-year"
+  ]
+}

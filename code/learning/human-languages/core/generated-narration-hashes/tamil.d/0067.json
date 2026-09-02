@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:35387da4a17391ea",
+  "lessonIds": [
+    "TA-C67-shirt",
+    "TA-C67-veshti",
+    "TA-W23-read-sattai",
+    "TA-C67-sari",
+    "TA-C67-sandal",
+    "TA-C67-cap"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "tamil/narration/ch67.txt",
+  "json": "tamil/narration/ch67.json",
+  "textHash": "fnv1a64:8f6cf249819a2beb",
+  "jsonHash": "fnv1a64:42a520e9e93b4406",
+  "findings": []
+}

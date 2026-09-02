@@ -1,0 +1,21 @@
+{
+  "chapter": 71,
+  "title": "Through the Day",
+  "label": "ch:ta-through-the-day",
+  "canDo": "I can say get up, sleep, run, wash and play in Tamil, and read the letter ஓ.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "TA-C71-play",
+    "kind": "production",
+    "summary": "Complete TA-C71-play and say all five words of the chapter in order.",
+    "assesses": [
+      "TA-LEX-C71-DAY-01",
+      "TA-LEX-C71-DAY-02",
+      "TA-LEX-C71-DAY-03",
+      "TA-LEX-C71-DAY-04",
+      "TA-LEX-C71-DAY-05"
+    ]
+  }
+}

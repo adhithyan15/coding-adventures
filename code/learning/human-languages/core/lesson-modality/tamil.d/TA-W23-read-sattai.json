@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-W23-read-sattai",
+    "language": "tamil",
+    "chapter": 67,
+    "sequence": 2630,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1df5ccd093c223cd",
+    "detachableSegments": [
+      "Script you'll notice: சட்டை — what a doubled letter looks like"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

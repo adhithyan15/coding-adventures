@@ -8,7 +8,8 @@
     "TA-PATH-51-SKY",
     "TA-PATH-58-ANIMAL",
     "TA-PATH-65-DOING",
-    "TA-PATH-66-WHICHWAY"
+    "TA-PATH-66-WHICHWAY",
+    "TA-PATH-71-DAY"
   ],
   "omits": [
     "GREETING-FORMAL",

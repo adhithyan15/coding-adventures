@@ -1,0 +1,786 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 67,
+  "title": "What You Wear",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:35387da4a17391ea",
+  "lessons": [
+    {
+      "id": "TA-C67-shirt",
+      "sequence": 2610,
+      "title": "சட்டை (saṭṭai) — a shirt",
+      "headword": "சட்டை",
+      "romanization": "saṭṭai",
+      "gloss": "a shirt",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:276ea307ddfe4d8b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: one word back from last chapter: what did iḍadu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சட்டை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சட்டை (saṭṭai) — \"a shirt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The ordinary word for a shirt — the thing that goes over the top half of you, in a shop or on a washing line."
+            },
+            {
+              "kind": "speech",
+              "text": "You already own துணி (tuṇi), cloth. The two are one step apart: துணி is the material, and சட்டை (saṭṭai) is the thing cut and sewn out of it. Ask for துணி and you get a length of fabric; ask for a சட்டை (saṭṭai) and you get a garment."
+            },
+            {
+              "kind": "speech",
+              "text": "Say the middle hard. The doubled ட்ட in சட்டை is the same doubled ட you already hear in பெட்டி (peṭṭi), a box — and it is what keeps this word saṭṭai rather than a softer saḍai."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five things you can wear."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṭṭai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṭṭai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuṇi, then saṭṭai — and say which one is still just cloth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuṇi*, then *saṭṭai* — and say which one is still just cloth]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say valadu, then say iḍadu, then say saṭṭai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *valadu*, then say *iḍadu*, then say *saṭṭai*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say it once more, holding the doubled ட."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C67-veshti",
+      "sequence": 2620,
+      "title": "வேட்டி (vēṭṭi) — a veshti, the cloth a man wraps at the waist",
+      "headword": "வேட்டி",
+      "romanization": "vēṭṭi",
+      "gloss": "a veshti, the cloth a man wraps at the waist",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ea3733025de10583",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did saṭṭai mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வேட்டி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வேட்டி (vēṭṭi) — \"a veshti, the cloth a man wraps at the waist\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Not a sewn garment at all. A வேட்டி (vēṭṭi) is a single uncut length of துணி, wrapped round the waist and tucked — which is why the cloth word sits so close behind it."
+            },
+            {
+              "kind": "speech",
+              "text": "English borrowed the northern word dhoti for the same idea. In Tamil Nadu the word you will hear, and the word to say, is வேட்டி (vēṭṭi)."
+            },
+            {
+              "kind": "speech",
+              "text": "Its middle is the doubled ட you met one lesson ago in சட்டை (saṭṭai), riding a long ே this time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two garments, and the same doubled consonant in both."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēṭṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēṭṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṭṭai, then vēṭṭi — and say which one was never cut",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṭṭai*, then *vēṭṭi* — and say which one was never cut]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say iḍadu, then say saṭṭai, then say vēṭṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *iḍadu*, then say *saṭṭai*, then say *vēṭṭi*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the two is one uncut length of cloth? (வேட்டி (vēṭṭi).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-W23-read-sattai",
+      "sequence": 2630,
+      "title": "சட்டை (saṭṭai) — what a doubled letter looks like",
+      "headword": "சட்டை",
+      "romanization": "saṭṭai",
+      "gloss": "the word for a shirt, read piece by piece — a doubled letter on the page",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:1df5ccd093c223cd",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: சட்டை — what a doubled letter looks like",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: சட்டை — what a doubled letter looks like and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the page: you have said saṭṭai and vēṭṭi aloud. Now look at the first one on the page."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: சட்டை — what a doubled letter looks like",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சட்டை (saṭṭai) brings no new shape. It brings a familiar one used twice in a row, which is worth watching once slowly."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "piece",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "piece: ச, sa, the letter on its own, with its own built-in a.",
+                "piece: ட், the ட with a புள்ளி on top, the dot that takes the vowel away, so nothing is said after it.",
+                "piece: டை, ṭai, the same ட again, this time with the ை sign."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "ச, ட், டை becomes சட்டை (saṭṭai)."
+            },
+            {
+              "kind": "speech",
+              "text": "The dot in the middle is doing the whole job. Without it you would have ச-ட-டை, three open beats. With it, the first ட closes and leans on the second, and the word comes out hard in the middle: saṭṭai."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ச — then ட் — then டை",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ச** — then **ட்** — then **டை**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "the புள்ளி, and say what it takes away",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: the புள்ளி, and say what it takes away]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "சட்டை (saṭṭai), then say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சட்டை**, then say what it means]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say saṭṭai, then say vēṭṭi, then read சட்டை",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *saṭṭai*, then say *vēṭṭi*, then read **சட்டை**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read சட்டை (saṭṭai). Which mark makes the middle hard? (The புள்ளி on the first ட.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C67-sari",
+      "sequence": 2640,
+      "title": "புடவை (puḍavai) — a sari",
+      "headword": "புடவை",
+      "romanization": "puḍavai",
+      "gloss": "a sari",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d1c544ef5969b753",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: read சட்டை (saṭṭai) once, then say what it means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: புடவை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புடவை (puḍavai) — \"a sari\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The everyday Tamil word for the draped cloth a woman wears."
+            },
+            {
+              "kind": "speech",
+              "text": "English took sari in from the north. Tamil's own word is புடவை (puḍavai), and it is the one that works in a Tamil shop: say புடவை (puḍavai) and you will be shown exactly what you asked for."
+            },
+            {
+              "kind": "speech",
+              "text": "It ends in the ை you have now met three times over — in தலை (talai), the head, and twice inside சட்டை (saṭṭai)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three garments, and a Tamil word English never borrowed."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puḍavai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puḍavai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talai, saṭṭai, puḍavai — three words, one ending",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talai*, *saṭṭai*, *puḍavai* — three words, one ending]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vēṭṭi, then read சட்டை (saṭṭai), then say puḍavai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vēṭṭi*, then read **சட்டை**, then say *puḍavai*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which ending do தலை, சட்டை (saṭṭai) and புடவை (puḍavai) share? (The ை.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C67-sandal",
+      "sequence": 2650,
+      "title": "செருப்பு (seruppu) — a sandal, footwear",
+      "headword": "செருப்பு",
+      "romanization": "seruppu",
+      "gloss": "a sandal, footwear",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5110b09670b854ef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did puḍavai mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: செருப்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "செருப்பு (seruppu) — \"a sandal, footwear\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Footwear — and in Tamil it is really a doorway word."
+            },
+            {
+              "kind": "speech",
+              "text": "செருப்பு (seruppu) comes off at the வாசல் (vāsal) before anyone steps உள்ளே. So the thing you have just named is the one thing that stays வெளியே: three words from earlier chapters, and this one is the reason they get used every day."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four, and the run has reached the floor."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seruppu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seruppu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seruppu, then vāsal — and say which side of the door each one is on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seruppu*, then *vāsal* — and say which side of the door each one is on]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read சட்டை (saṭṭai), then say puḍavai, then say seruppu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **சட்டை**, then say *puḍavai*, then say *seruppu*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does the செருப்பு (seruppu) stay — உள்ளே or வெளியே? (வெளியே.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C67-cap",
+      "sequence": 2660,
+      "title": "தொப்பி (toppi) — a cap, a hat",
+      "headword": "தொப்பி",
+      "romanization": "toppi",
+      "gloss": "a cap, a hat",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:536476300311f74a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did seruppu mean, and what did puḍavai mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தொப்பி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தொப்பி (toppi) — \"a cap, a hat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The last of the five, and the highest one: a தொப்பி (toppi) sits மேலே, on the தலை."
+            },
+            {
+              "kind": "speech",
+              "text": "Its ொ is the short o sign you met long before this chapter, and its doubled ப்ப works exactly like the doubled ட you took apart in சட்டை (saṭṭai) — a புள்ளி closing the first letter onto the second."
+            },
+            {
+              "kind": "speech",
+              "text": "With this one the run has both ends: தொப்பி (toppi) at the top, செருப்பு (seruppu) at the floor."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five things to wear, top to bottom."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toppi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toppi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five from the head down — toppi, saṭṭai, vēṭṭi, puḍavai, seruppu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five from the head down — *toppi*, *saṭṭai*, *vēṭṭi*, *puḍavai*, *seruppu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say puḍavai, then say seruppu, then say toppi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *puḍavai*, then say *seruppu*, then say *toppi*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the five sits highest, and which stays வெளியே? (தொப்பி (toppi); செருப்பு (seruppu).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

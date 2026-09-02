@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:cc55a4eba08b1794",
+  "lessonIds": [
+    "TA-C70-table",
+    "TA-C70-bed",
+    "TA-W26-read-mesai",
+    "TA-C70-wall",
+    "TA-C70-floor",
+    "TA-C70-roof"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "tamil/narration/ch70.txt",
+  "json": "tamil/narration/ch70.json",
+  "textHash": "fnv1a64:c2c624d3460cd29c",
+  "jsonHash": "fnv1a64:8eba830f02debe24",
+  "findings": []
+}

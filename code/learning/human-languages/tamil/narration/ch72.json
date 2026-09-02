@@ -1,0 +1,824 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 72,
+  "title": "How It Feels",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:21c942480aff1a12",
+  "lessons": [
+    {
+      "id": "TA-C72-anger",
+      "sequence": 2910,
+      "title": "கோபம் (kōpam) — anger",
+      "headword": "கோபம்",
+      "romanization": "kōpam",
+      "gloss": "anger",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1f97a7a1215b6ad2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did viḷaiyāḍu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கோபம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கோபம் (kōpam) — \"anger\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Anger — the ordinary everyday word for it, not a literary one."
+            },
+            {
+              "kind": "speech",
+              "text": "You can read all of it already, and one part of it you only just learned: கோ is க with the ◌ோ sign, the sign whose free-standing letter ஓ you met last chapter."
+            },
+            {
+              "kind": "speech",
+              "text": "It ends in ம், like வணக்கம், தூக்கம் and பணம் before it. That ending is now four words deep, and it is a good bet for a Tamil noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five feelings."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōpam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōpam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "கோபம் (kōpam), and point at the sign of the letter you met last chapter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **கோபம்**, and point at the sign of the letter you met last chapter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇam, then kōpam, and name the ending they share",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇam*, then *kōpam*, and name the ending they share]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kaḻuvu, then say viḷaiyāḍu, then say kōpam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kaḻuvu*, then say *viḷaiyāḍu*, then say *kōpam*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கோபம் (kōpam) mean, and which sign is on its first letter? (\"Anger\"; the ோ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C72-fear",
+      "sequence": 2920,
+      "title": "பயம் (payam) — fear",
+      "headword": "பயம்",
+      "romanization": "payam",
+      "gloss": "fear",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:183c34afd389983d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kōpam mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பயம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பயம் (payam) — \"fear\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Fear."
+            },
+            {
+              "kind": "speech",
+              "text": "Three letters and not one vowel sign anywhere: ப, ய, and ம with a புள்ளி. Every letter is carrying its own built-in a, which is the plainest a Tamil word can possibly be written."
+            },
+            {
+              "kind": "speech",
+              "text": "It ends in the same ம் as கோபம் (kōpam), which is not a coincidence — Tamil keeps a whole shelf of feeling-nouns with that ending."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two, and both of them end the same way."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "payam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *payam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōpam, then payam — and say what both endings have in common",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōpam*, then *payam* — and say what both endings have in common]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say viḷaiyāḍu, then say kōpam, then say payam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *viḷaiyāḍu*, then say *kōpam*, then say *payam*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many vowel signs does பயம் (payam) carry? (None — every letter keeps its built-in a.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-W27-read-payam",
+      "sequence": 2930,
+      "title": "பயம் (payam) — a word with no vowel signs",
+      "headword": "பயம்",
+      "romanization": "payam",
+      "gloss": "the word for fear on the page — three letters and no signs at all",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f7282420d75d4462",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: பயம் — a word with no vowel signs",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: பயம் — a word with no vowel signs and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the page: you can say kōpam and payam. Now read the second one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: பயம் — a word with no vowel signs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every word you have read so far carried at least one sign. பயம் (payam) carries none, and that makes it the clearest possible demonstration of what a bare Tamil letter is worth."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "piece",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "piece: ப, pa, no sign — the letter's own built-in a is the vowel.",
+                "piece: ய, ya, the same again.",
+                "piece: ம், m, ம with a புள்ளி, so no vowel at all."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "ப, ய, ம் becomes பயம் (payam)."
+            },
+            {
+              "kind": "speech",
+              "text": "So a Tamil consonant is never really silent by default. It says a unless something stops it, and the only thing that stops it is the dot. Read the word once and hear the two a sounds you were never told about."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ப — then ய — then ம்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ப** — then **ய** — then **ம்**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "the one mark in the whole word, and say what it does",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: the one mark in the whole word, and say what it does]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "பயம் (payam), then கடை, and say which one needed a sign",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **பயம்**, then **கடை**, and say which one needed a sign]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kōpam, then say payam, then read பயம்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kōpam*, then say *payam*, then read **பயம்**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read பயம் (payam). Which vowel do ப and ய carry, and why is none written? (a — it is built into the letter.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C72-sorrow",
+      "sequence": 2940,
+      "title": "வருத்தம் (varuttam) — sorrow, regret",
+      "headword": "வருத்தம்",
+      "romanization": "varuttam",
+      "gloss": "sorrow, regret",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3136cdda394d5de6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: read பயம் (payam), and say what it means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வருத்தம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வருத்தம் (varuttam) — \"sorrow, regret\"."
+            },
+            {
+              "kind": "speech",
+              "text": "One word for both kinds of sorry: sad about something, and sorry for something."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the word that finishes an apology in ordinary speech. You already have தவறு (tavaṟu), the mistake, and மன்னிக்கவும் (maṉṉikkavum), which asks formally to be forgiven. வருத்தம் (varuttam) sits between them: it names the feeling rather than making the request, and it is the one you can say to a friend without sounding like a letter."
+            },
+            {
+              "kind": "speech",
+              "text": "Its middle is a doubled த்த, the same closing-and-leaning you read in சட்டை and வண்டி."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three feelings, and one of them is an apology."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varuttam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varuttam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tavaṟu, then varuttam — the mistake, then the feeling about it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tavaṟu*, then *varuttam* — the mistake, then the feeling about it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṉṉikkavum, then varuttam, and say which is the formal one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṉṉikkavum*, then *varuttam*, and say which is the formal one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say payam, then read பயம், then say varuttam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *payam*, then read **பயம்**, then say *varuttam*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the two would you say to a friend — மன்னிக்கவும் or வருத்தம் (varuttam)? (வருத்தம் (varuttam).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C72-laugh",
+      "sequence": 2950,
+      "title": "சிரி (siri) — to laugh",
+      "headword": "சிரி",
+      "romanization": "siri",
+      "gloss": "to laugh",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d02eeae12a9fa9a7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did varuttam mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சிரி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சிரி (siri) — \"to laugh\"."
+            },
+            {
+              "kind": "speech",
+              "text": "To laugh."
+            },
+            {
+              "kind": "speech",
+              "text": "Two letters, both wearing the same ி sign — ச and ர, each with the short i. Words that repeat a sign like that are easy to read and easy to say, and this is a good one to read aloud before you meet its opposite."
+            },
+            {
+              "kind": "speech",
+              "text": "After three nouns, this is a verb: something a person does, not something they have."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four, and the feelings start doing something."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "சிரி (siri), and point at the sign that appears twice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சிரி**, and point at the sign that appears twice]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōpam, then siri — and say which one is a verb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōpam*, then *siri* — and say which one is a verb]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read பயம் (payam), then say varuttam, then say siri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **பயம்**, then say *varuttam*, then say *siri*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சிரி (siri) mean, and which sign does it carry twice? (\"To laugh\"; the ி.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C72-cry",
+      "sequence": 2960,
+      "title": "அழு (aḻu) — to cry",
+      "headword": "அழு",
+      "romanization": "aḻu",
+      "gloss": "to cry",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa0749dfeccc7706",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did siri mean, and what did payam mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அழு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அழு (aḻu) — \"to cry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "To cry — the mirror of the verb before it, and just as short."
+            },
+            {
+              "kind": "speech",
+              "text": "It opens on அ, the free-standing letter, because the word begins with that vowel: the same pattern you saw when ஓ opened ஓடு. And in the middle is ழ again, the third time you have met it after தமிழ் and கழுவு."
+            },
+            {
+              "kind": "speech",
+              "text": "Five feelings now: three you can have — கோபம் (kōpam), பயம் (payam), வருத்தம் (varuttam) — and two you can do, சிரி (siri) and அழு (aḻu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: three nouns and two verbs."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aḻu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aḻu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siri, then aḻu — the pair, one after the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siri*, then *aḻu* — the pair, one after the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five — kōpam, payam, varuttam, siri, aḻu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five — *kōpam*, *payam*, *varuttam*, *siri*, *aḻu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say varuttam, then say siri, then say aḻu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *varuttam*, then say *siri*, then say *aḻu*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which three of the five are things you have, and which two are things you do? (கோபம் (kōpam), பயம் (payam), வருத்தம் (varuttam); சிரி (siri), அழு (aḻu).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

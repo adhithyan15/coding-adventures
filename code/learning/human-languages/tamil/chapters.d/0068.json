@@ -1,0 +1,21 @@
+{
+  "chapter": 68,
+  "title": "At the Shop",
+  "label": "ch:ta-at-the-shop",
+  "canDo": "I can name a shop, a price, money, buying and a bag in Tamil, and ask what something costs.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "TA-C68-bag",
+    "kind": "production",
+    "summary": "Complete TA-C68-bag and say all five words of the chapter in order.",
+    "assesses": [
+      "TA-LEX-C68-SHOP-01",
+      "TA-LEX-C68-SHOP-02",
+      "TA-LEX-C68-SHOP-03",
+      "TA-LEX-C68-SHOP-04",
+      "TA-LEX-C68-SHOP-05"
+    ]
+  }
+}

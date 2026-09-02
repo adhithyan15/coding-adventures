@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C67-shirt",
+    "language": "tamil",
+    "chapter": 67,
+    "sequence": 2610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:276ea307ddfe4d8b"
+  },
+  "findings": []
+}

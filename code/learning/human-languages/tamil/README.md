@@ -124,13 +124,30 @@ through.
   front of a verb (**உள்ளே வா**, **வெளியே போ**); and **-து**, the ending inside
   இது and அது, which makes வலது and இடது into things that stand in front of a
   noun (**வலது கை**). `TA-W22-read-mele` sits third. In the book, Chapter 66.
-- **The script strand, W00–W22** ([`lessons/TA-W*`](./lessons/)): 43 lessons
+- **Chapters 67–73 — the pre-A1 vocabulary tranche** ([`lessons/TA-C6{7,8,9}-*`,
+  `TA-C7{0,1,2,3}-*`](./lessons/)): seven chapters of five headwords each — **35 new
+  words**, all of them on pre-A1 spine nodes, which is what makes them count.
+  சட்டை/வேட்டி/புடவை/செருப்பு/தொப்பி (what you wear),
+  கடை/விலை/பணம்/வாங்கு/பை (at the shop),
+  வண்டி/பேருந்து/ரயில்/சாலை/நிலையம் (getting there),
+  மேசை/கட்டில்/சுவர்/தரை/கூரை (the room you are in),
+  எழு/தூங்கு/ஓடு/கழுவு/விளையாடு (through the day),
+  கோபம்/பயம்/வருத்தம்/சிரி/அழு (how it feels), and
+  இன்று/நேற்று/முன்பு/மாதம்/ஆண்டு (today, yesterday, and the year).
+  One new word per lesson, and each lesson's Guided Practice closes by retrieving
+  the **two** items before it — which is why 42 new lessons leave the
+  reinforcement debt exactly where it was rather than adding to it. Every chapter
+  carries one script lesson in third position, so reading is interleaved with
+  speaking rather than blocked after it. In the book, Chapters 67–73.
+- **The script strand, W00–W28** ([`lessons/TA-W*`](./lessons/)): 50 lessons
   marked `delivery: script`, one after roughly every third speaking lesson from
   Chapter 4 to Chapter 66. They teach curves, the abugida, retroflexion, the
   three Tamil n letters, the puḷḷi, the vowel signs, and then spell — one word
   per lesson — words the learner has already been saying, from **வணக்கம்** to
   **ஒன்று**, then **குடி**, the first word in the strand that costs no new
-  letter, and **மேலே**, the second. Chapters 1–3 hold no writing lesson at all, on purpose. Every glyph the
+  letter, and **மேலே**, the second. `TA-W23`–`TA-W28` continue that run through
+  சட்டை, கடை, வண்டி, மேசை, பயம் and இன்று; only
+  `TA-S126-letter-oo` costs a letter, and it lands one lesson before ஓடு needs it. Chapters 1–3 hold no writing lesson at all, on purpose. Every glyph the
   track prints is now a glyph some script lesson teaches: `neverTaughtGlyphs` is
   **0**, and it is meant to stay there, so a new word whose spelling would need a
   fifty-second shape is not a candidate.
@@ -172,9 +189,9 @@ than the ability to read the letters.
 
 ## Book / fonts
 
-The 65-chapter book compiles with XeLaTeX using **vendored** Noto fonts
+The 73-chapter book compiles with XeLaTeX using **vendored** Noto fonts
 (`../../_fonts/`) for Tamil and every comparison script, with no system-font
-dependency. Chapters 6–65 are generated from canonical lesson ASTs and checked
+dependency. Chapters 6–73 are generated from canonical lesson ASTs and checked
 against Language Ladder source hashes. Build the isolated entrypoint with
 `code/scripts/check-book-compile.sh --strict tamil` from the repository root.
 

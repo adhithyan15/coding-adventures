@@ -1,0 +1,17 @@
+{
+  "id": "TA-PATH-73-WHEN",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "TA-C73-today",
+    "TA-C73-yesterday",
+    "TA-W28-read-inru",
+    "TA-C73-before",
+    "TA-C73-month",
+    "TA-C73-year"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-73-WHEN"
+  ],
+  "after": []
+}
