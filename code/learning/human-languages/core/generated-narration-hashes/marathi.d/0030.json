@@ -1,0 +1,18 @@
+{
+  "language": "marathi",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:4be44e4d25bfa5e1",
+  "lessonIds": [
+    "MR-C30-aani",
+    "MR-C30-kinva",
+    "MR-C30-pan",
+    "MR-R30-three-joins"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "marathi/narration/ch30.txt",
+  "json": "marathi/narration/ch30.json",
+  "textHash": "fnv1a64:8b16ef63a6de2e7f",
+  "jsonHash": "fnv1a64:ac3dbcef58a73b6c",
+  "findings": []
+}
