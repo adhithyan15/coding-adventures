@@ -1,0 +1,4552 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "level": "A1",
+  "about": "A PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS. NOTHING IN THIS FILE MAY BE ATTRIBUTED TO THE MAHARASHTRA DIRECTORATE OF LANGUAGES OR TO ANY OTHER BODY, AND NOTHING IN IT MAY BE ATTRIBUTED TO DELE, THE INSTITUTO CERVANTES OR THE PLAN CURRICULAR ABOUT MARATHI. No awarding body publishes an A1 Marathi syllabus to restate: core/exam-levels.json records this track as exam 'no widely-sat ladder', basis 'editorial'. The Maharashtra Directorate of Languages does administer lower- and higher-level Marathi examinations for government employees, and marathi/assessment-spec.md already declines to borrow that name; those are role-specific tests, not a public four-skill pre-A1-to-C2 ladder, and no content syllabus, grammar inventory, word list or can-do descriptor set is published for them. THE SEARCH IS SETTLED, DO NOT REPEAT IT: the parallel Hindi effort established the same negative result against the best-placed South Asian candidate -- DBHPS publishes examination names and prescribed readers and no syllabus, Kendriya Hindi Sansthan and the Central Hindi Training Institute publish none, and the Council of Europe has issued no Reference Level Description for Hindi. There is no South Asian equivalent of the Plan Curricular. WHAT THIS FILE DOES INSTEAD IS BORROW A LEVEL, NOT A LANGUAGE. Spanish is the one track here whose A1 point set restates a real awarding body's published inventory, so core/exam-inventory-es-a1.json's 273 points are an attributable statement of what an A1 learner must be able to handle. This file walks them and asks, of each, what it DEMANDS of a learner rather than what Spanish grammar it names -- 'give personal information: name, age, origin' and 'negate a statement' are language-neutral demands, while a point about Spanish gendered articles is not, and its Marathi counterpart is whatever carries the same load. Every point records its origin in `derivedFrom`, so the derivation is auditable line by line rather than gestured at; a point with an empty `derivedFrom` and `marathiSpecific: true` has no Spanish source at all, and `notTransferred` lists the Spanish points that were deliberately dropped and why. A proxy is a scaffold, not a template to translate: Devanagari orthography, the postposition system, the ergative and the gender-marked present have no Spanish counterpart and are here on their own merits. Every point also carries `anchorIds` into the `anchors` array, and every anchor declares a KIND a reader should check before the point. `sourced-proxy` is the Spanish set. `external-framework` is the CEFR Companion Volume -- public, language-neutral, able to anchor a function and never a Marathi form. `project-owned` are files in this repository, finite and auditable but our own work, so agreeing with them is not corroboration. `editorial` is unaided judgement, and an editorial point is a working default to be corrected. The pre-A1/A1 boundary is deliberately NOT what this file is shaped around. The owner's criterion is that a learner finishing the A1 material can sit the A1 paper, and level labels are freely adjustable, so a word or a rule appears here if the A1 papers demand it, whatever rung the curriculum eventually files it under. Finally, read the score as a FLOOR, not an estimate. Coverage is computed from DECLARED atoms, and the track has two bands of lessons that teach real material and declare none: 26 schema-v1 lessons in chapters 9 to 12, and four schema-v2 lessons carrying `introduces: []`. Points affected are marked MEASUREMENT GAP in their notes; they are taught, they are unmeasurable, and they are far cheaper to close than the content gaps they sit beside.",
+  "source": "PROJECT-DEFINED. LEVEL PROXY: code/learning/human-languages/core/exam-inventory-es-a1.json, the DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Nothing about Marathi is attributed to DELE, the Instituto Cervantes or the Plan Curricular. EXAM ENVELOPE: code/learning/human-languages/marathi/assessment-spec.md#a1 and code/learning/human-languages/marathi/task-shapes/a1.json, which fix the four-skill A1 papers this book must prepare a book-only learner to pass. PROFICIENCY BACKBONE: Council of Europe, CEFR Companion Volume (2020), https://www.coe.int/en/web/common-european-framework-reference-languages/cefr-companion-volume-and-its-language-versions -- which the Council of Europe states it does not itself validate any examination against. There is no external Marathi A1 syllabus; see core/exam-levels.json, tracks.marathi. NOTE ON METHOD: the parallel Hindi inventory was built by mining that track's checked-in timed MOCKS, because every mock stimulus is a construction a candidate must handle, written down before the inventory and without it in view. Marathi has no mocks -- marathi/assessment.json names mocks/a1/* as required future artifacts and none exist -- so the evidence used here is the Spanish proxy above together with the eleven paper parts of task-shapes/a1.json. Per-point provenance is in `anchors`, `anchorIds` and `derivedFrom`.",
+  "anchors": [
+    {
+      "id": "ca-spanish-a1-proxy",
+      "kind": "sourced-proxy",
+      "title": "core/exam-inventory-es-a1.json -- the DELE/PCIC-sourced Spanish A1 point set, used as a LEVEL proxy",
+      "url": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+      "note": "The strongest anchor in this file and the one that needs the most care. Spanish is the only track in this repository whose A1 point set restates a real awarding body's published inventory, so its 273 points are an ATTRIBUTABLE statement about what an A1 learner must handle. This file walks them and asks what each DEMANDS of a learner -- 'give personal information: name, age, origin', 'negate a statement', 'ask a price' -- and writes the Marathi point that carries the same load. WHAT IS BORROWED IS THE LEVEL, NOT THE LANGUAGE: every Marathi exponent named here is this project's editorial judgement, and NOTHING IN THIS FILE MAY BE ATTRIBUTED TO DELE, TO THE INSTITUTO CERVANTES, OR TO THE PLAN CURRICULAR ABOUT MARATHI. Each point records its origin in `derivedFrom`; a point with an empty `derivedFrom` and `marathiSpecific: true` has no Spanish source and rests on the editorial anchors instead."
+    },
+    {
+      "id": "coe-cefr-cv-2020",
+      "kind": "external-framework",
+      "title": "Council of Europe, Common European Framework of Reference -- Companion Volume (2020)",
+      "url": "https://www.coe.int/en/web/common-european-framework-reference-languages/cefr-companion-volume-and-its-language-versions",
+      "note": "Public and language-neutral. It describes what an A1 user can DO; it names no Marathi word, letter or ending, and the Council of Europe explicitly does not validate any examination's claimed link to it. It is the backbone the proxy sits on rather than a per-point source."
+    },
+    {
+      "id": "ca-spine",
+      "kind": "project-owned",
+      "title": "The shared curriculum spine",
+      "url": "code/learning/human-languages/core/spine.d",
+      "note": "Twelve pre-A1 and A1 nodes, each a can-do statement with a finite concept list, shared by all 23 tracks. Cited where a point restates a node, so the boundary is the spine's rather than ours."
+    },
+    {
+      "id": "ca-marathi-assessment",
+      "kind": "project-owned",
+      "title": "Coding Adventures Marathi Assessment specification and contract",
+      "url": "code/learning/human-languages/marathi/assessment-spec.md#a1",
+      "note": "The project-defined equivalent this book must prepare a book-only learner to pass. Fixes the assessed variety (contemporary standard Marathi in Devanagari), the four independent 60/100 papers, and the A1 level envelope."
+    },
+    {
+      "id": "ca-marathi-task-shapes-a1",
+      "kind": "project-owned",
+      "title": "Marathi A1 four-skill task-shape inventory",
+      "url": "code/learning/human-languages/marathi/task-shapes/a1.json",
+      "note": "Finite and already checked in: it names the genres, item counts, stimulus lengths and response modes of every A1 part. A point anchored here is anchored to something a candidate will literally be handed, and it is what settles whether a demand the Spanish set raises really applies to this book's own exam."
+    },
+    {
+      "id": "ca-assessment-policy",
+      "kind": "project-owned",
+      "title": "Shared assessment policy",
+      "url": "code/learning/human-languages/core/assessment-policy.json",
+      "note": "Owns the writing-stage ladder and the pass-evidence rules. The stages are deliberately NOT enumerated as points here -- see scope['phonology-orthography']."
+    },
+    {
+      "id": "ca-exam-levels",
+      "kind": "project-owned",
+      "title": "CEFR-to-exam mapping ledger",
+      "url": "code/learning/human-languages/core/exam-levels.json",
+      "note": "Records Marathi as exam: 'no widely-sat ladder', basis: 'editorial'. This file is the reason the inventory has to be project-defined, and citing it keeps that visible rather than buried."
+    },
+    {
+      "id": "editorial-marathi-structure",
+      "kind": "editorial",
+      "title": "This project's judgement about which Marathi structures carry a Spanish A1 demand",
+      "url": "code/learning/human-languages/BACKLOG.d (HL-C290)",
+      "note": "The structures named -- three genders, the oblique stem, the -laa dative of the experiencer, the -chaa genitive agreeing with the possessed noun, the gender-marked present, the ergative -ne of the past transitive -- are as standard descriptive grammars of Marathi describe them (Berntsen and Nimbkar, A Marathi Reference Grammar; Pandharipande, Marathi, Routledge Descriptive Grammars). Those works describe the structures; they do NOT assign CEFR levels. Deciding that a given Marathi structure is the one carrying a Spanish A1 point's load is this project's own judgement, and a working default to be corrected."
+    },
+    {
+      "id": "editorial-marathi-lexis",
+      "kind": "editorial",
+      "title": "This project's judgement about which everyday domains carry a Spanish A1 demand",
+      "url": "code/learning/human-languages/BACKLOG.d (HL-C290)",
+      "note": "The Spanish set closes the DOMAIN list for us -- twenty thematic areas, published -- so what is editorial here is narrower than it would otherwise be: which Marathi words sit in each domain, and whether the corpus holds enough of one to answer an item. A domain point is covered only when the corpus could support an item of the kind the papers set, which is a lower bar than command of the domain and is stated so nobody reads it as the higher one."
+    }
+  ],
+  "proxy": {
+    "of": "core/exam-inventory-es-a1.json",
+    "level": "A1",
+    "borrowed": "the structure of what an A1 learner must handle, point by point",
+    "notBorrowed": "any statement about Marathi. Every Marathi exponent is this project's editorial judgement.",
+    "notTransferred": [
+      {
+        "spanishPoints": [
+          "A1-ART-01",
+          "A1-ART-02",
+          "A1-ART-03"
+        ],
+        "why": "Marathi has no article system, so the definite article, the indefinite article and the al/del contractions have no counterpart. The DEMAND behind the fourth Spanish article point -- knowing that a bare noun can be definite or indefinite -- does transfer, as MR-A1-DET-01."
+      },
+      {
+        "spanishPoints": [
+          "A1-O1-04",
+          "A1-O1-05"
+        ],
+        "why": "Devanagari is unicase. Capital and initial lower-case letters are not a distinction the script makes."
+      },
+      {
+        "spanishPoints": [
+          "A1-O2-01",
+          "A1-O2-02"
+        ],
+        "why": "Devanagari writes no stress accent and has no diacritic tilde, so the two written-accentuation points have nothing to land on. Marathi's own stress demand is MR-A1-SN-08, which is a listening point rather than an orthographic one."
+      }
+    ]
+  },
+  "scope": {
+    "communicative-functions": {
+      "status": "partial",
+      "source": "core/exam-inventory-es-a1.json (DELE/PCIC-sourced) used as a level proxy; core/spine.d; marathi/task-shapes/a1.json; CEFR Companion Volume (2020) A1 descriptors",
+      "note": "MUCH BETTER SOURCED THAN IT WAS, AND STILL NOT CLOSED. The 54 functional points here are derived one by one from the Spanish set's six macro-functions, which are themselves a restatement of a published inventory -- so the BOUNDARY is now borrowed from a real awarding body instead of invented, and the count moved from 24 editorially-chosen functions to 43 proxy-derived ones plus the Marathi-specific remainder. What keeps it partial is that the borrowing is a judgement at every step: a Spanish function transfers only if this project decides the Marathi A1 papers demand it too. Closing this dimension needs either a Marathi source that does not exist, or a reviewed project decision recording that the Spanish functional boundary is accepted wholesale for Marathi."
+    },
+    "grammar": {
+      "status": "partial",
+      "source": "core/exam-inventory-es-a1.json used as a level proxy; EDITORIAL for every Marathi exponent, informed by standard descriptive grammars (Berntsen and Nimbkar, A Marathi Reference Grammar; Pandharipande, Marathi, Routledge Descriptive Grammars)",
+      "note": "The dimension the proxy improved most and the one still to distrust first. Walking the Spanish grammar categories in order -- noun, adjective, article, demonstrative, possessive, quantifier, pronoun, adverb, verb, and the phrase and clause levels -- surfaced whole areas the descriptor route had missed entirely: the demonstratives, the relative clause, coordination, subordination, object marking, and the exclamative. What stays editorial is the mapping: deciding that Marathi's oblique stem carries the load of Spanish's prepositional system, or that the ergative belongs at A1 because the past tense does, is this project's judgement and nobody else's. Three Spanish article points and two accentuation points were dropped as inapplicable and are listed in `notTransferred` rather than silently omitted."
+    },
+    "phonology-orthography": {
+      "status": "partial",
+      "source": "core/exam-inventory-es-a1.json orthography inventory used as a level proxy; marathi/assessment-spec.md (assessed variety: contemporary standard Marathi in Devanagari); marathi/pronunciation-reference.md",
+      "note": "TWO HALVES WITH DIFFERENT PROVENANCE. The ORTHOGRAPHY half now follows the Spanish orthographic inventory's own structure -- letters, vowel signs, spelling, punctuation, abbreviations and symbols -- which is what surfaced the punctuation and symbol points a Devanagari-first reading had skipped, and it is close to closed because Devanagari as Marathi writes it is a finite inventory. The PHONOLOGY half has no proxy at all: the Spanish file deliberately enumerates NO pronunciation points, because its source publishes the pronunciation band as one undivided A1-A2 block. So the eight sound-system points are wholly editorial, derived from the assessed variety and the 90-110 wpm listening envelope, and that alone keeps this dimension partial. Note one deliberate ABSENCE: the writing-stage ladder is owned by core/assessment-policy.json and measured by the plan's `writing-stage` family; restating it here would double-count the same debt in two queues."
+    },
+    "lexicon": {
+      "status": "partial",
+      "source": "core/exam-inventory-es-a1.json general and specific notions (DELE/PCIC-sourced) used as a level proxy; core/spine.d LEXICON nodes",
+      "note": "THE DIMENSION THE PROXY CHANGED MOST, AND THE CHANGE IS THE HEADLINE. The Spanish source publishes a closed list of seven general-notion classes and twenty thematic areas, every entry marked A1 or A2. Walking it added the domains an editorially-chosen list had simply never thought of -- education, work, leisure, media, housing, services, shopping, health, travel, money, government, the arts, religion and the natural world -- and the corpus covers almost none of them. That is not the proxy being unfair; it is what an external boundary is FOR. These points still bound DOMAINS rather than words, so the count here is not a count of words: the project's own A1 target is 600 headwords against roughly 50 today, and this dimension names WHICH 600 and in what order the papers ask for them. It stays partial because no ranked A1 Marathi headword list exists to close it, and because deciding which Marathi words populate a Spanish-sourced domain is editorial throughout."
+    }
+  },
+  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is itself the finding -- an unmapped point is uncovered, never skipped, and every null here carries a `note` saying what is missing. Every atom named in a probe EXISTS in the Marathi corpus today, and that rule is enforced both by the generator that wrote this file and by a test. A guessed id -- an atom somebody expects a future lesson to introduce -- resolves to 'not introduced', which is silent, permanent and indistinguishable from real content debt, and would never flip to covered if the author picked a different suffix. So a point whose demonstration would need an atom nobody has written yet gets `null` and a note, not a hopeful probe. ONE MORE DISTINCTION, WHICH THIS TRACK FORCED. A probe reads DECLARED atoms, so a null means one of two quite different things and the note always says which: a CONTENT gap (nobody has taught it) or a MEASUREMENT GAP (it is taught and cannot be measured). Grep for MEASUREMENT GAP to find them. There are two kinds. SCHEMA-V1 MEASUREMENT GAP: 26 of Marathi's 205 lessons, the whole of chapters 9 to 12, are schema-v1 and declare no atoms while teaching mii, tuu/tumhii, maazhaM, kaay, kasaa, 'tumchaM naav kaay aahe?', 'tumhii kase aahaat?', kaam karne and raahne. EMPTY-INTRODUCES MEASUREMENT GAP is worse, because it hides inside schema-v2 where everything looks declared: 66 v2 lessons carry `introduces: []`, most of them honest retrieval lessons that should introduce nothing, but MR-R22-request-verbs and MR-R23-wellbeing-verbs drill five polite imperatives and a future while declaring only the INFINITIVE atoms they review, and MR-A1M17/18 teach the guided and independent 30-to-40-word message -- the A1 writing paper's second task -- while declaring nothing at all. Reading a measurement gap as a content gap would send an author to rewrite chapters 9 and 24.",
+  "points": [
+    {
+      "id": "MR-A1-N-01",
+      "category": "The noun",
+      "label": "proper nouns: personal names, forms of address, place names",
+      "probe": [
+        "MR-A1-FORM-LABEL-NAAV",
+        "MR-A1-FORM-LABEL-SHAHAR"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-N-01"
+      ]
+    },
+    {
+      "id": "MR-A1-N-02",
+      "category": "The noun",
+      "label": "common nouns naming periods of time",
+      "probe": null,
+      "note": "No atom names a period of time. SPINE-TIME-OF-DAY is an A1 core node and the track omits all nine of its concepts.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-N-02"
+      ]
+    },
+    {
+      "id": "MR-A1-N-03",
+      "category": "The noun",
+      "label": "gender: three genders, inherent and unpredictable from meaning",
+      "probe": [
+        "MR-GRAMMAR-THREE-GENDERS-ONE-CHAPTER",
+        "MR-GRAMMAR-KUTUMB-NEUTER"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-N-03"
+      ]
+    },
+    {
+      "id": "MR-A1-N-04",
+      "category": "The noun",
+      "label": "gender by heteronymy in kinship terms",
+      "probe": [
+        "MR-LEX-BHAU",
+        "MR-LEX-BAHIN"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-N-04"
+      ]
+    },
+    {
+      "id": "MR-A1-N-05",
+      "category": "The noun",
+      "label": "number: masculine plural formation",
+      "probe": null,
+      "note": "No atom introduces any plural at all. Spanish closes its whole plural system in one point; Marathi needs three, because the classes do not derive from one another.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-N-05"
+      ]
+    },
+    {
+      "id": "MR-A1-N-06",
+      "category": "The noun",
+      "label": "number: feminine plural formation",
+      "probe": null,
+      "note": "Untaught. Feminine nouns split into several plural classes and knowing one gives none of the others.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-N-05"
+      ]
+    },
+    {
+      "id": "MR-A1-N-07",
+      "category": "The noun",
+      "label": "number: neuter plural formation",
+      "probe": null,
+      "note": "Untaught, and it is the gender the track teaches MOST -- kutumb, khaane, paani are all neuter -- so the gap sits directly on the taught vocabulary.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-N-05"
+      ]
+    },
+    {
+      "id": "MR-A1-N-08",
+      "category": "The noun",
+      "label": "the -ne verbal noun: an infinitive that is also a neuter noun",
+      "probe": [
+        "MR-GRAMMAR-NE-NEUTER-NOUN"
+      ],
+      "anchorIds": [
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [],
+      "marathiSpecific": true
+    },
+    {
+      "id": "MR-A1-N-09",
+      "category": "The noun",
+      "label": "the oblique stem a noun takes before any postposition",
+      "probe": null,
+      "note": "MARATHI-SPECIFIC AND THE LARGEST STRUCTURAL GAP IN THE TRACK. Spanish has no counterpart because it marks case with prepositions and no stem change. Marathi puts almost every case relation on a postposition and almost every postposition demands an oblique stem first, so this one rule stands between the taught vocabulary and any sentence about place, time, direction or accompaniment.",
+      "anchorIds": [
+        "editorial-marathi-structure",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [],
+      "marathiSpecific": true
+    },
+    {
+      "id": "MR-A1-ADJ-01",
+      "category": "The adjective",
+      "label": "qualifying adjectives in attributive and predicative use",
+      "probe": null,
+      "note": "SPINE-DESCRIBE-QUALITIES is an A1 core node with no realization in this track at all, so neither use is reachable.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-01"
+      ]
+    },
+    {
+      "id": "MR-A1-ADJ-02",
+      "category": "The adjective",
+      "label": "relational adjectives: naming a language and a people",
+      "probe": [
+        "MR-A1-FORM-LABEL-BHASHA"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-02"
+      ]
+    },
+    {
+      "id": "MR-A1-ADJ-03",
+      "category": "The adjective",
+      "label": "adjective gender: the -aa class agrees, in three genders rather than two",
+      "probe": [
+        "MR-A1-FORM-AGREEMENT-FEMININE",
+        "MR-A1-FORM-AGREEMENT-NEUTER"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-03"
+      ]
+    },
+    {
+      "id": "MR-A1-ADJ-04",
+      "category": "The adjective",
+      "label": "adjective number and agreement in the plural",
+      "probe": null,
+      "note": "Blocked behind the plurals themselves (MR-A1-N-05 to -07).",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-04"
+      ]
+    },
+    {
+      "id": "MR-A1-ADJ-05",
+      "category": "The adjective",
+      "label": "position: prenominal, which is the opposite of the Spanish default",
+      "probe": null,
+      "note": "Never stated. Every taught example happens to be prenominal, so the rule has been demonstrated and never named -- which is exactly the case a reader cannot generalize from.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-05"
+      ]
+    },
+    {
+      "id": "MR-A1-ADJ-06",
+      "category": "The adjective",
+      "label": "degree: khuup and the intensifying reduplication",
+      "probe": null,
+      "note": "Untaught. Spanish's absolute superlative in muy is the same demand: making an adjective stronger.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-06"
+      ]
+    },
+    {
+      "id": "MR-A1-ADJ-07",
+      "category": "The adjective",
+      "label": "invariable adjectives, which do not agree at all",
+      "probe": null,
+      "note": "MARATHI-SPECIFIC contrast with MR-A1-ADJ-03: a learner who has only met agreeing adjectives over-applies the endings. Spanish's -e and consonant-final adjectives are the nearest analogue and are not an A1 point there.",
+      "anchorIds": [
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [],
+      "marathiSpecific": true
+    },
+    {
+      "id": "MR-A1-DET-01",
+      "category": "Determiners",
+      "label": "how a specific known thing is marked when it is marked at all: Marathi has no article",
+      "probe": null,
+      "note": "SPINE-DEFINITE-REFERENCE is an A1 spine node and the track omits its only concept, GRAMMAR-THE. The Spanish points on the definite and indefinite articles and their contractions do not transfer -- Marathi has no article system -- but the DEMAND behind the bare-noun point does: a reader must know that a bare Marathi noun can be either definite or indefinite and that context decides.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-ART-04"
+      ]
+    },
+    {
+      "id": "MR-A1-DEM-01",
+      "category": "Demonstratives",
+      "label": "the forms haa/hii/he and to/tii/te, in all three genders",
+      "probe": null,
+      "note": "Untaught, and the reading paper's person-to-detail matching is built on pointing at things.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-DEM-01"
+      ]
+    },
+    {
+      "id": "MR-A1-DEM-02",
+      "category": "Demonstratives",
+      "label": "spatial deixis: Marathi's two-way near/far against Spanish's three-way",
+      "probe": null,
+      "note": "Untaught. The point transfers with its cardinality changed, which is what a proxy is for.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-DEM-02"
+      ]
+    },
+    {
+      "id": "MR-A1-DEM-03",
+      "category": "Demonstratives",
+      "label": "position: prenominal, and compatible with a following noun",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-DEM-03"
+      ]
+    },
+    {
+      "id": "MR-A1-POS-01",
+      "category": "Possessives",
+      "label": "possessives with one possessor: maazaa, tuzaa, tyaachaa",
+      "probe": null,
+      "note": "PART MEASUREMENT GAP (SCHEMA-V1), PART REAL. maazhaM is taught in its own right by MR-C02-majhe (chapter 9, schema-v1, declaring no atom) and appears inside the v2 lines MR-A1-MESSAGE-LINE-NAME and -WRITE-NAME. The PARADIGM is what no lesson supplies: the learner meets one neuter form and cannot change the possessor.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-POS-01"
+      ]
+    },
+    {
+      "id": "MR-A1-POS-02",
+      "category": "Possessives",
+      "label": "possessives with several possessors: aamchaa, tumchaa",
+      "probe": null,
+      "note": "tumchaM occurs inside the schema-v1 phrase MR-C02-tumche-naav-kaay-aahe and is introduced nowhere.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-POS-02"
+      ]
+    },
+    {
+      "id": "MR-A1-POS-03",
+      "category": "Possessives",
+      "label": "distribution: the genitive agrees with the thing possessed, not the possessor",
+      "probe": [
+        "MR-A1-FORM-POSSESSIVE-NEUTER",
+        "MR-A1-FORM-LABEL-MITRACHE-NAAV"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-POS-03"
+      ]
+    },
+    {
+      "id": "MR-A1-QU-01",
+      "category": "Quantifiers",
+      "label": "cardinal numerals one to five",
+      "probe": [
+        "MR-LEX-NUMBERS-ONE-TO-FIVE"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-Q-01",
+        "A1-NG2-01",
+        "A1-NE16-01"
+      ]
+    },
+    {
+      "id": "MR-A1-QU-02",
+      "category": "Quantifiers",
+      "label": "cardinal numerals six to twenty",
+      "probe": null,
+      "note": "Untaught. Marathi's teens are irregular enough to be learned rather than derived, so one-to-five does not extend by itself.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-Q-01"
+      ]
+    },
+    {
+      "id": "MR-A1-QU-03",
+      "category": "Quantifiers",
+      "label": "cardinal numerals to one hundred: a price, an age, a house number",
+      "probe": null,
+      "note": "Untaught, and demanded three times over by the A1 envelope -- the practical form, the role-play, and the interview's how-old-are-you.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-Q-01"
+      ]
+    },
+    {
+      "id": "MR-A1-QU-04",
+      "category": "Quantifiers",
+      "label": "ordinal numerals to tenth",
+      "probe": null,
+      "note": "Untaught; needed to read a floor number or a date on a notice.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-Q-02",
+        "A1-NG3-06"
+      ]
+    },
+    {
+      "id": "MR-A1-QU-05",
+      "category": "Quantifiers",
+      "label": "thodaa and khuup, and their agreement",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-Q-03",
+        "A1-NG2-02"
+      ]
+    },
+    {
+      "id": "MR-A1-QU-06",
+      "category": "Quantifiers",
+      "label": "sufficiency: puresaa, baraach",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-Q-04"
+      ]
+    },
+    {
+      "id": "MR-A1-PRON-01",
+      "category": "Pronouns",
+      "label": "subject pronouns: the full paradigm",
+      "probe": null,
+      "note": "SCHEMA-V1 MEASUREMENT GAP, PARTLY. mii and tuu/tumhii ARE taught -- MR-C03-mi (chapter 10) and MR-C02-tu-tumhi (chapter 9) -- but both lessons are schema-v1 and declare no atoms, so nothing can be probed and the point scores zero. Do not send an author to write them again. Genuinely absent are the third person and the plural: to, tii, te and aamhii occur nowhere, which is what the reading paper's person-to-detail part asks for.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ]
+    },
+    {
+      "id": "MR-A1-PRON-02",
+      "category": "Pronouns",
+      "label": "object pronouns: the dative-accusative malaa, tulaa, tyaalaa",
+      "probe": null,
+      "note": "Untaught as a paradigm. malaa appears inside taught lines and the review lesson MR-R25-dative-frame, always with a fixed first person.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-PRON-02"
+      ]
+    },
+    {
+      "id": "MR-A1-PRON-03",
+      "category": "Pronouns",
+      "label": "the dative experiencer that the liking verb requires",
+      "probe": [
+        "MR-GRAMMAR-DATIVE-LIKING",
+        "MR-A1-MESSAGE-LINE-KNOW-MARATHI"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-PRON-03"
+      ]
+    },
+    {
+      "id": "MR-A1-PRON-04",
+      "category": "Pronouns",
+      "label": "the reflexive and the inclusive: swatah and aapan",
+      "probe": null,
+      "note": "Untaught. Listed because aapan is the ordinary polite 'you' across much of Maharashtra, so a candidate meets it in the listening paper whether or not the book taught it.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-PRON-04"
+      ]
+    },
+    {
+      "id": "MR-A1-PRON-05",
+      "category": "Pronouns",
+      "label": "the relative jo/jii/je with its correlative",
+      "probe": null,
+      "note": "Untaught. Marathi's relative is correlative rather than post-nominal, so the Spanish point transfers as a demand and not as a shape.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-PRON-05"
+      ]
+    },
+    {
+      "id": "MR-A1-PRON-06",
+      "category": "Pronouns",
+      "label": "interrogative pronouns: kon, kaay, kitii",
+      "probe": null,
+      "note": "PART MEASUREMENT GAP (SCHEMA-V1), PART REAL, and the point with the widest blast radius either way. kaay is taught by MR-C02-kaay (chapter 9, schema-v1, no atom). kon and kitii appear nowhere at all -- who and how-many being two of the things a wh-item paper asks most.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06"
+      ]
+    },
+    {
+      "id": "MR-A1-PRON-07",
+      "category": "Pronouns",
+      "label": "the exclamative kitii with an adjective or adverb",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-PRON-07"
+      ]
+    },
+    {
+      "id": "MR-A1-PRON-08",
+      "category": "Pronouns",
+      "label": "a pronoun before a postposition takes its oblique form",
+      "probe": null,
+      "note": "Untaught, and blocked behind MR-A1-N-09. Spanish's stressed pronouns after a preposition are the same demand with a much smaller cost.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-PRON-08"
+      ]
+    },
+    {
+      "id": "MR-A1-PRON-09",
+      "category": "Pronouns",
+      "label": "the tuu / tumhii politeness contrast, and which to use with a stranger",
+      "probe": null,
+      "note": "MARATHI-SPECIFIC: Spanish's tu/usted is not an A1 point in the source, but Marathi's speaking paper is an interview with an unmet interlocutor and rubric dimension 2 scores the choice. SCHEMA-V1 MEASUREMENT GAP, ENTIRELY: MR-C02-tu-tumhi teaches exactly this contrast and declares no atom.",
+      "anchorIds": [
+        "editorial-marathi-structure",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [],
+      "marathiSpecific": true
+    },
+    {
+      "id": "MR-A1-ADV-01",
+      "category": "Adverbs",
+      "label": "place deictics: ithe, tithe",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-ADV-01",
+        "A1-NG3-01"
+      ]
+    },
+    {
+      "id": "MR-A1-ADV-02",
+      "category": "Adverbs",
+      "label": "time deictics: aataa, aaj, udyaa, kaal",
+      "probe": null,
+      "note": "udyaa appears inside two fixed farewells -- MR-C04-udya-bhetu (schema-v1) and MR-A1-MESSAGE-LINE-SEE-TOMORROW -- and never as a time word a learner could reuse. aataa, aaj and kaal do not appear at all.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-ADV-02",
+        "A1-NG4-02"
+      ]
+    },
+    {
+      "id": "MR-A1-ADV-03",
+      "category": "Adverbs",
+      "label": "quantity adverbs: khuup, jaraa",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-ADV-03",
+        "A1-NG2-03"
+      ]
+    },
+    {
+      "id": "MR-A1-ADV-04",
+      "category": "Adverbs",
+      "label": "manner adverbs: baraM and its opposite",
+      "probe": [
+        "MR-LEX-BARAM-01"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-ADV-04"
+      ]
+    },
+    {
+      "id": "MR-A1-ADV-05",
+      "category": "Adverbs",
+      "label": "polarity: ho and naahii",
+      "probe": [
+        "MR-LEX-HO-01",
+        "MR-LEX-NAHI-01"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-ADV-05"
+      ]
+    },
+    {
+      "id": "MR-A1-ADV-06",
+      "category": "Adverbs",
+      "label": "connective adverbs: sudhaa and its negative counterpart",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-ADV-06"
+      ]
+    },
+    {
+      "id": "MR-A1-ADV-07",
+      "category": "Adverbs",
+      "label": "interrogative adverbs: kuthe, kadhii, kasaa",
+      "probe": null,
+      "note": "PART MEASUREMENT GAP (SCHEMA-V1), PART REAL. The agreeing kasaa/kashii/kasaM is taught by MR-C03-kasa (chapter 10, schema-v1, no atom); kuthe and kadhii appear nowhere. SPINE-ASK-LOCATION is an A1 core node and the track omits its only concept, QUESTION-WHERE.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07"
+      ]
+    },
+    {
+      "id": "MR-A1-ADV-08",
+      "category": "Adverbs",
+      "label": "kaa against kaaran: asking why, and answering it",
+      "probe": null,
+      "note": "SPINE-SAY-WHY is an A1 core node and omits CONNECTIVE-BECAUSE. Nothing in the track realizes either half.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-ADV-08",
+        "A1-SUB-06"
+      ]
+    },
+    {
+      "id": "MR-A1-V-01",
+      "category": "The verb",
+      "label": "the present habitual: the regular paradigm, all persons",
+      "probe": null,
+      "note": "Only the 1SG masculine and feminine forms carry atoms (MR-PHRASE-YETO-YETE-01, MR-GRAMMAR-PRESENT-GENDER). One 2PL copula form, aahaat, sits inside schema-v1 MR-C03-tumhi-kase-aahat. A candidate can say what HE does and nothing about anyone else.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-V-01"
+      ]
+    },
+    {
+      "id": "MR-A1-V-02",
+      "category": "The verb",
+      "label": "the copula aahe, and the fact that a Marathi clause ends on it",
+      "probe": [
+        "MR-LEX-ASNE-AAHE",
+        "MR-GRAMMAR-AAHE-LAST"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-V-02",
+        "A1-SV-02"
+      ]
+    },
+    {
+      "id": "MR-A1-V-03",
+      "category": "The verb",
+      "label": "the high-frequency motion verbs yene and jaane",
+      "probe": [
+        "MR-LEX-YENE",
+        "MR-LEX-JANE"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-V-02"
+      ]
+    },
+    {
+      "id": "MR-A1-V-04",
+      "category": "The verb",
+      "label": "the present continuous in -t aahe",
+      "probe": null,
+      "note": "Untaught. 'What are you doing?' is an A1 interview question.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-V-03"
+      ]
+    },
+    {
+      "id": "MR-A1-V-05",
+      "category": "The verb",
+      "label": "the past habitual",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-V-04",
+        "A1-V-05"
+      ]
+    },
+    {
+      "id": "MR-A1-V-06",
+      "category": "The verb",
+      "label": "the simple past, and its agreement with the object",
+      "probe": null,
+      "note": "Untaught. The A1 listening paper's third part is 'a personal account', which is past-tense by genre.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-V-06",
+        "A1-V-07",
+        "A1-V-08"
+      ]
+    },
+    {
+      "id": "MR-A1-V-07",
+      "category": "The verb",
+      "label": "the ergative -ne on the subject of a past transitive verb",
+      "probe": null,
+      "note": "MARATHI-SPECIFIC, with no Spanish counterpart because Spanish has no ergative alignment. It is not a refinement of the past tense but the GATE on it: a Marathi past transitive clause without it is ungrammatical, so MR-A1-V-06 cannot be closed independently of this point.",
+      "anchorIds": [
+        "editorial-marathi-structure",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [],
+      "marathiSpecific": true
+    },
+    {
+      "id": "MR-A1-V-08",
+      "category": "The verb",
+      "label": "the perfect",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-V-09"
+      ]
+    },
+    {
+      "id": "MR-A1-V-09",
+      "category": "The verb",
+      "label": "irregular past stems: gelaa, khaallaa, kelaa",
+      "probe": null,
+      "note": "Untaught, and the three commonest verbs in the language are among them.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-V-10"
+      ]
+    },
+    {
+      "id": "MR-A1-V-10",
+      "category": "The verb",
+      "label": "the imperative, plain and polite",
+      "probe": null,
+      "note": "EMPTY-INTRODUCES MEASUREMENT GAP. The polite imperative is drilled outright: MR-R22-request-verbs (chapter 26) is built on dyaa, pyaa, aannaa and thevaa, and MR-R23-wellbeing-verbs adds basaa. Both are schema-v2 with `introduces: []` and both practise the INFINITIVE atoms, so five taught imperative forms carry no atom between them. ghyaa is taught too, in schema-v1 MR-C04-kalji-ghya. The form is in the book and invisible to the measurement.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-V-11",
+        "A1-F4-01"
+      ]
+    },
+    {
+      "id": "MR-A1-V-11",
+      "category": "The verb",
+      "label": "the -ne infinitive as a non-finite form",
+      "probe": [
+        "MR-GRAMMAR-NE-NEUTER-NOUN",
+        "MR-LEX-KHANE"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-V-12"
+      ]
+    },
+    {
+      "id": "MR-A1-V-12",
+      "category": "The verb",
+      "label": "the conjunctive participle in -uun, which links two actions",
+      "probe": null,
+      "note": "bhetuun occurs inside the fixed line MR-A1-MESSAGE-LINE-MEETING and the form is never stated. Spanish's gerund is the nearest thing it has; the Marathi form does more work and is taught less.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-V-13"
+      ]
+    },
+    {
+      "id": "MR-A1-V-13",
+      "category": "The verb",
+      "label": "the past participle used adjectivally",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-V-14"
+      ]
+    },
+    {
+      "id": "MR-A1-V-14",
+      "category": "The verb",
+      "label": "the present tense declares the speaker's own gender",
+      "probe": [
+        "MR-GRAMMAR-PRESENT-GENDER",
+        "MR-PHRASE-YETO-YETE-01"
+      ],
+      "note": "MARATHI-SPECIFIC. Spanish verbs never mark the speaker's gender, so no Spanish point covers this; assessment-spec.md makes it assessable by requiring consistent agreement rather than one assumed candidate identity.",
+      "anchorIds": [
+        "editorial-marathi-structure",
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [],
+      "marathiSpecific": true
+    },
+    {
+      "id": "MR-A1-V-15",
+      "category": "The verb",
+      "label": "dative-subject verbs, where the person is never the subject",
+      "probe": [
+        "MR-GRAMMAR-DATIVE-LIKING",
+        "MR-GRAMMAR-DATIVE-KNOWLEDGE",
+        "MR-GRAMMAR-DATIVE-FEELING"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-SV-01"
+      ]
+    },
+    {
+      "id": "MR-A1-V-16",
+      "category": "The verb",
+      "label": "compound verbs formed with karne",
+      "probe": [
+        "MR-LEX-MADAT-KARNE",
+        "MR-LEX-VICHAR-KARNE",
+        "MR-LEX-PREM-KARNE"
+      ],
+      "note": "MARATHI-SPECIFIC: a large share of the everyday verb stock is noun-plus-karne, a pattern Spanish has no productive equivalent of at A1.",
+      "anchorIds": [
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [],
+      "marathiSpecific": true
+    },
+    {
+      "id": "MR-A1-V-17",
+      "category": "The verb",
+      "label": "the future",
+      "probe": null,
+      "note": "PART MEASUREMENT GAP (EMPTY-INTRODUCES), PART REAL. bhetuu is taught three times over -- MR-C04-bhetu, -punha-bhetu, -udya-bhetu, all schema-v1 -- and chaalel, a third-person future, is drilled by MR-R23-wellbeing-verbs (schema-v2, `introduces: []`, practising the SENSE atom rather than the form). Always a fixed phrase, never a tense a learner could build.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-V-01"
+      ]
+    },
+    {
+      "id": "MR-A1-V-18",
+      "category": "The verb",
+      "label": "ability: -uu shakne, and yene with a language",
+      "probe": null,
+      "note": "Only the frozen line 'malaa maraathii yete' exists (MR-A1-MESSAGE-LINE-KNOW-MARATHI). SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO omits both VERB-HAVE and VERB-CAN.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-F2-17",
+        "A1-NG6-09"
+      ]
+    },
+    {
+      "id": "MR-A1-V-19",
+      "category": "The verb",
+      "label": "wanting and needing: paahije, havaa, nako",
+      "probe": null,
+      "note": "Untaught; SPINE-SAY-WHAT-I-WANT omits VERB-WANT. This is the verb the transactional role-play is built on.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-F3-04"
+      ]
+    },
+    {
+      "id": "MR-A1-V-20",
+      "category": "The verb",
+      "label": "possession: the postposition plus aahe construction",
+      "probe": null,
+      "note": "Untaught. Marathi has no verb 'to have', so this is blocked behind MR-A1-N-09 and the postpositions rather than behind a missing word.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-NG1-01"
+      ]
+    },
+    {
+      "id": "MR-A1-P-01",
+      "category": "Case and postpositions",
+      "label": "the dative -laa / -naa",
+      "probe": [
+        "MR-GRAMMAR-DATIVE-LIKING",
+        "MR-GRAMMAR-DATIVE-KNOWLEDGE",
+        "MR-GRAMMAR-DATIVE-FEELING"
+      ],
+      "anchorIds": [
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [],
+      "marathiSpecific": true
+    },
+    {
+      "id": "MR-A1-P-02",
+      "category": "Case and postpositions",
+      "label": "the locative -t and -var: in, at, on",
+      "probe": null,
+      "note": "MARATHI-SPECIFIC (Spanish uses prepositions and needs no stem). Untaught, and it is what the reading paper's signs and notices are made of.",
+      "anchorIds": [
+        "editorial-marathi-structure",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [],
+      "marathiSpecific": true
+    },
+    {
+      "id": "MR-A1-P-03",
+      "category": "Case and postpositions",
+      "label": "accompaniment and instrument: -shii, barobar, -ne",
+      "probe": null,
+      "note": "MARATHI-SPECIFIC. 'With my friend' is an A1 sentence and the track teaches mitra with no way to attach it.",
+      "anchorIds": [
+        "editorial-marathi-structure",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [],
+      "marathiSpecific": true
+    },
+    {
+      "id": "MR-A1-P-04",
+      "category": "Case and postpositions",
+      "label": "source and starting point: -huun, paasuun",
+      "probe": null,
+      "note": "MARATHI-SPECIFIC. 'I am from Pune' is the second sentence of every A1 speaking interview.",
+      "anchorIds": [
+        "editorial-marathi-structure",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [],
+      "marathiSpecific": true
+    },
+    {
+      "id": "MR-A1-P-05",
+      "category": "Case and postpositions",
+      "label": "goal and limit: -kade, paryant",
+      "probe": null,
+      "note": "MARATHI-SPECIFIC. Required by the transactional role-play.",
+      "anchorIds": [
+        "editorial-marathi-structure",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [],
+      "marathiSpecific": true
+    },
+    {
+      "id": "MR-A1-P-06",
+      "category": "Case and postpositions",
+      "label": "postpositions of place: var, khaalii, madhye, javal, samor",
+      "probe": null,
+      "note": "MARATHI-SPECIFIC in form; the demand is Spanish's relative-position point. SPINE-ASK-LOCATION is an A1 node the track does not realize.",
+      "anchorIds": [
+        "editorial-marathi-structure",
+        "ca-spine"
+      ],
+      "derivedFrom": [],
+      "marathiSpecific": true
+    },
+    {
+      "id": "MR-A1-NP-01",
+      "category": "The noun phrase",
+      "label": "noun-phrase complements: an adjective, a genitive phrase, a relative clause",
+      "probe": null,
+      "note": "Only the genitive is taught (MR-A1-POS-03); the other two are blocked behind MR-A1-ADJ-01 and MR-A1-PRON-05.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-SN-01"
+      ]
+    },
+    {
+      "id": "MR-A1-NP-02",
+      "category": "The noun phrase",
+      "label": "agreement inside the noun phrase",
+      "probe": [
+        "MR-A1-FORM-AGREEMENT-FEMININE",
+        "MR-A1-FORM-AGREEMENT-NEUTER",
+        "MR-A1-FORM-POSSESSIVE-NEUTER"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-SN-02"
+      ]
+    },
+    {
+      "id": "MR-A1-NP-03",
+      "category": "The noun phrase",
+      "label": "subject-verb agreement as a stated rule",
+      "probe": [
+        "MR-GRAMMAR-PRESENT-GENDER"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-SN-03"
+      ]
+    },
+    {
+      "id": "MR-A1-NP-04",
+      "category": "The noun phrase",
+      "label": "the vocative: addressing someone by name",
+      "probe": [
+        "MR-A1-MESSAGE-LINE-GREETING"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-SN-04",
+        "A1-F5-03"
+      ]
+    },
+    {
+      "id": "MR-A1-AP-01",
+      "category": "The adjective phrase",
+      "label": "degree modifiers: khuup, jaraa, puresaa",
+      "probe": null,
+      "note": "Untaught, and blocked behind MR-A1-ADJ-01: there is nothing yet to modify.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-SADJ-01"
+      ]
+    },
+    {
+      "id": "MR-A1-VP-01",
+      "category": "The verb phrase",
+      "label": "the liking verb and its argument structure",
+      "probe": [
+        "MR-LEX-AVADNE",
+        "MR-GRAMMAR-DATIVE-LIKING"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-SV-01"
+      ]
+    },
+    {
+      "id": "MR-A1-VP-02",
+      "category": "The verb phrase",
+      "label": "one copula where Spanish has two",
+      "probe": [
+        "MR-LEX-ASNE-AAHE"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-SV-02"
+      ]
+    },
+    {
+      "id": "MR-A1-VP-03",
+      "category": "The verb phrase",
+      "label": "the attribute and its agreement",
+      "probe": null,
+      "note": "Blocked behind MR-A1-ADJ-01.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-SV-03"
+      ]
+    },
+    {
+      "id": "MR-A1-VP-04",
+      "category": "The verb phrase",
+      "label": "the direct object: animates take -laa, inanimates do not",
+      "probe": null,
+      "note": "Untaught. Spanish's personal a is the same distinction under a different marker, which makes this one of the clearest one-to-one transfers in the file.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-SV-04"
+      ]
+    },
+    {
+      "id": "MR-A1-VP-05",
+      "category": "The verb phrase",
+      "label": "the indirect object",
+      "probe": null,
+      "note": "The dative MARKER is taught (MR-A1-P-01) but only on an experiencer. Giving something to somebody is a different frame and no lesson supplies it.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-SV-05"
+      ]
+    },
+    {
+      "id": "MR-A1-VP-06",
+      "category": "The verb phrase",
+      "label": "subject-object-verb order, and where a circumstantial goes",
+      "probe": [
+        "MR-GRAMMAR-AAHE-LAST"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-SV-06"
+      ]
+    },
+    {
+      "id": "MR-A1-OS-01",
+      "category": "The simple sentence",
+      "label": "declaratives, affirmative and negative",
+      "probe": null,
+      "note": "Affirmative declaratives are taught; negation of a verbal sentence is not. naahii exists only as the answer 'no' (MR-LEX-NAHI-01), and SPINE-NEGATE-AND-ASK has no realization. Half the distractors in a listening paper are negations.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ]
+    },
+    {
+      "id": "MR-A1-OS-02",
+      "category": "The simple sentence",
+      "label": "yes-or-no questions, with kaa and with intonation",
+      "probe": null,
+      "note": "Untaught; SPINE-NEGATE-AND-ASK omits QUESTION-POLAR. A candidate who cannot form one cannot take a turn in the role-play.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-OS-02"
+      ]
+    },
+    {
+      "id": "MR-A1-OS-03",
+      "category": "The simple sentence",
+      "label": "questions with an asking word",
+      "probe": null,
+      "note": "SCHEMA-V1 MEASUREMENT GAP. Two complete wh-questions are taught as whole phrases -- MR-C02-tumche-naav-kaay-aahe and MR-C03-tumhi-kase-aahat, both schema-v1 -- so the word order has been SHOWN twice and never stated, and neither can be probed. Kept separate from MR-A1-PRON-06 because knowing the question word is not knowing where to put it.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-OS-03"
+      ]
+    },
+    {
+      "id": "MR-A1-OS-04",
+      "category": "The simple sentence",
+      "label": "existential sentences",
+      "probe": null,
+      "note": "Untaught. Spanish's impersonal hay is Marathi's aahe with a locative, so this is blocked behind MR-A1-P-02.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-OS-04",
+        "A1-NG1-01",
+        "A1-NG1-02"
+      ]
+    },
+    {
+      "id": "MR-A1-OS-05",
+      "category": "The simple sentence",
+      "label": "copulative and attributive sentences",
+      "probe": [
+        "MR-LEX-ASNE-AAHE",
+        "MR-A1-MESSAGE-LINE-NAME"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-OS-05"
+      ]
+    },
+    {
+      "id": "MR-A1-OS-06",
+      "category": "The simple sentence",
+      "label": "transitive and intransitive sentences",
+      "probe": null,
+      "note": "Both types are demonstrated in taught lines; the distinction is never stated, and in Marathi it is not a grammarian's nicety -- it decides whether the past tense takes the ergative (MR-A1-V-07).",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-OS-06"
+      ]
+    },
+    {
+      "id": "MR-A1-CO-01",
+      "category": "Coordination",
+      "label": "joining with aani",
+      "probe": null,
+      "note": "Untaught, and the A1 writing task is 30-40 CONNECTED words: one conjunction is the cheapest route to 'connected'.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-CO-01"
+      ]
+    },
+    {
+      "id": "MR-A1-CO-02",
+      "category": "Coordination",
+      "label": "negative coordination: naa ... naa",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-CO-02"
+      ]
+    },
+    {
+      "id": "MR-A1-CO-03",
+      "category": "Coordination",
+      "label": "disjunctive coordination: kinvaa",
+      "probe": null,
+      "note": "Untaught, and every multiple-choice item is a disjunction.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-CO-03"
+      ]
+    },
+    {
+      "id": "MR-A1-CO-04",
+      "category": "Coordination",
+      "label": "adversative coordination: pan",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-CO-04",
+        "A1-F2-09"
+      ]
+    },
+    {
+      "id": "MR-A1-CO-05",
+      "category": "Coordination",
+      "label": "distributive coordination: ek ... dusraa",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-CO-05"
+      ]
+    },
+    {
+      "id": "MR-A1-SUB-01",
+      "category": "Subordination",
+      "label": "the verbal noun as subject",
+      "probe": [
+        "MR-GRAMMAR-NE-NEUTER-NOUN",
+        "MR-A1-FORM-LABEL-AVADTI-KRUTI"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-SUB-01"
+      ]
+    },
+    {
+      "id": "MR-A1-SUB-02",
+      "category": "Subordination",
+      "label": "the verbal noun as direct object",
+      "probe": null,
+      "note": "Untaught. Blocked behind MR-A1-V-19: the verbs that take one are the wanting verbs.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-SUB-02"
+      ]
+    },
+    {
+      "id": "MR-A1-SUB-03",
+      "category": "Subordination",
+      "label": "a finite clause as object, with the thinking verb",
+      "probe": null,
+      "note": "vaatne is taught (MR-LEX-VATNE) and the complementizer that would let it take a clause is not.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-SUB-03"
+      ]
+    },
+    {
+      "id": "MR-A1-SUB-04",
+      "category": "Subordination",
+      "label": "the correlative relative clause",
+      "probe": null,
+      "note": "Untaught. Marathi fronts the relative and resumes it with a correlative, so the Spanish points transfer as one demand rather than two.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-SUB-04",
+        "A1-SUB-05"
+      ]
+    },
+    {
+      "id": "MR-A1-SUB-05",
+      "category": "Subordination",
+      "label": "causal clauses with kaaran",
+      "probe": null,
+      "note": "SPINE-SAY-WHY is an A1 core node and omits CONNECTIVE-BECAUSE.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-SUB-06"
+      ]
+    },
+    {
+      "id": "MR-A1-SUB-06",
+      "category": "Subordination",
+      "label": "purpose with -saathii plus the verbal noun",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-SUB-07"
+      ]
+    },
+    {
+      "id": "MR-A1-SUB-07",
+      "category": "Subordination",
+      "label": "simultaneity: jevhaa and the -lyaavar participle",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-SUB-08"
+      ]
+    },
+    {
+      "id": "MR-A1-F1-01",
+      "category": "Giving and asking for information",
+      "label": "identify oneself or another by name",
+      "probe": [
+        "MR-A1-MESSAGE-LINE-NAME",
+        "MR-A1-FORM-LABEL-NAAV",
+        "MR-A1-FORM-LABEL-MITRACHE-NAAV"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-F1-01"
+      ]
+    },
+    {
+      "id": "MR-A1-F1-02",
+      "category": "Giving and asking for information",
+      "label": "ask for information about a person, a thing or a place",
+      "probe": null,
+      "note": "SCHEMA-V1 MEASUREMENT GAP, PARTLY. 'tumchaM naav kaay aahe?' is taught outright by MR-C02-tumche-naav-kaay-aahe (chapter 9, no atom). Asking about a THING or a PLACE needs kuthe, which appears nowhere.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-F1-02"
+      ]
+    },
+    {
+      "id": "MR-A1-F1-03",
+      "category": "Giving and asking for information",
+      "label": "give personal information: name, age, origin",
+      "probe": null,
+      "note": "One third of it works. Name is taught and so is city as a form field; AGE needs a number above five (MR-A1-QU-03) and ORIGIN needs the ablative (MR-A1-P-04). This is the A1 speaking interview's opening question.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-F1-03",
+        "A1-NE03-01"
+      ]
+    },
+    {
+      "id": "MR-A1-F1-04",
+      "category": "Giving and asking for information",
+      "label": "ask for confirmation with a tag",
+      "probe": null,
+      "note": "Untaught. Marathi's naa tag is one syllable and would close this point on its own.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-F1-04"
+      ]
+    },
+    {
+      "id": "MR-A1-F1-05",
+      "category": "Giving and asking for information",
+      "label": "confirm or deny the previous statement",
+      "probe": [
+        "MR-LEX-HO-01",
+        "MR-LEX-NAHI-01"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-F1-05"
+      ]
+    },
+    {
+      "id": "MR-A1-F2-01",
+      "category": "Opinions, attitudes and knowledge",
+      "label": "ask for an opinion by handing the turn back",
+      "probe": null,
+      "note": "Untaught, and it is what a role-play turn is made of.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-F2-01"
+      ]
+    },
+    {
+      "id": "MR-A1-F2-02",
+      "category": "Opinions, attitudes and knowledge",
+      "label": "give an opinion with malaa vaatta",
+      "probe": [
+        "MR-LEX-VATNE",
+        "MR-GRAMMAR-DATIVE-FEELING"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-F2-02",
+        "A1-F2-11"
+      ]
+    },
+    {
+      "id": "MR-A1-F2-03",
+      "category": "Opinions, attitudes and knowledge",
+      "label": "ask for an evaluation",
+      "probe": null,
+      "note": "Blocked behind MR-A1-ADV-07: the question word kasaa is schema-v1 only.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-F2-03"
+      ]
+    },
+    {
+      "id": "MR-A1-F2-04",
+      "category": "Opinions, attitudes and knowledge",
+      "label": "evaluate with baraM and chaalel",
+      "probe": [
+        "MR-LEX-BARAM-01",
+        "MR-SENSE-CHALEL-OKAY"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-F2-04",
+        "A1-NG6-01"
+      ]
+    },
+    {
+      "id": "MR-A1-F2-05",
+      "category": "Opinions, attitudes and knowledge",
+      "label": "express approval and disapproval",
+      "probe": null,
+      "note": "The approval half is reachable through chaalel; disapproval needs the negation of MR-A1-OS-01 and has no exponent at all.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-F2-05"
+      ]
+    },
+    {
+      "id": "MR-A1-F2-06",
+      "category": "Opinions, attitudes and knowledge",
+      "label": "express agreement",
+      "probe": [
+        "MR-LEX-HO-01",
+        "MR-SENSE-CHALEL-OKAY"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-F2-06",
+        "A1-NG6-06"
+      ]
+    },
+    {
+      "id": "MR-A1-F2-07",
+      "category": "Opinions, attitudes and knowledge",
+      "label": "express disagreement",
+      "probe": null,
+      "note": "Untaught. naahii answers a question; contradicting a statement is a different move and no lesson supplies it.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-F2-07"
+      ]
+    },
+    {
+      "id": "MR-A1-F2-08",
+      "category": "Opinions, attitudes and knowledge",
+      "label": "show scepticism: malaa maahiit naahii",
+      "probe": null,
+      "note": "Both halves exist separately -- MR-LEX-MAHIT-JANNE and MR-LEX-NAHI-01 -- and the NEGATED construction is never taught, which is the same missing rule as MR-A1-OS-01. Two atoms and no way to put them together.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-F2-08",
+        "A1-F2-15"
+      ]
+    },
+    {
+      "id": "MR-A1-F2-09",
+      "category": "Opinions, attitudes and knowledge",
+      "label": "express certainty by plain assertion",
+      "probe": [
+        "MR-LEX-ASNE-AAHE",
+        "MR-GRAMMAR-AAHE-LAST"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-F2-10",
+        "A1-NG1-05"
+      ]
+    },
+    {
+      "id": "MR-A1-F2-10",
+      "category": "Opinions, attitudes and knowledge",
+      "label": "express possibility",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-F2-12"
+      ]
+    },
+    {
+      "id": "MR-A1-F2-11",
+      "category": "Opinions, attitudes and knowledge",
+      "label": "ask whether somebody knows something",
+      "probe": null,
+      "note": "Blocked behind MR-A1-OS-02: the knowledge verb is taught and the polar question is not.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-F2-13"
+      ]
+    },
+    {
+      "id": "MR-A1-F2-12",
+      "category": "Opinions, attitudes and knowledge",
+      "label": "express knowledge of something",
+      "probe": [
+        "MR-LEX-MAHIT-JANNE",
+        "MR-GRAMMAR-DATIVE-KNOWLEDGE",
+        "MR-A1-MESSAGE-LINE-UNDERSTAND-MARATHI"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-F2-14",
+        "A1-NG7-01"
+      ]
+    },
+    {
+      "id": "MR-A1-F2-13",
+      "category": "Opinions, attitudes and knowledge",
+      "label": "ask about ability to do something",
+      "probe": null,
+      "note": "Blocked behind MR-A1-OS-02 and MR-A1-V-18.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-F2-16"
+      ]
+    },
+    {
+      "id": "MR-A1-F3-01",
+      "category": "Likes, wishes and feelings",
+      "label": "express likes and interests",
+      "probe": [
+        "MR-LEX-AVADNE",
+        "MR-GRAMMAR-DATIVE-LIKING",
+        "MR-LEX-PREM-KARNE"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-F3-01",
+        "A1-NG6-08"
+      ]
+    },
+    {
+      "id": "MR-A1-F3-02",
+      "category": "Likes, wishes and feelings",
+      "label": "ask about a preference by offering alternatives",
+      "probe": null,
+      "note": "Blocked behind MR-A1-CO-03: offering alternatives needs 'or'.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-F3-02"
+      ]
+    },
+    {
+      "id": "MR-A1-F3-03",
+      "category": "Likes, wishes and feelings",
+      "label": "state a preference",
+      "probe": [
+        "MR-A1-FORM-LABEL-AVDATE-PEY",
+        "MR-A1-FORM-LABEL-AVADTI-KRUTI"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-F3-03"
+      ]
+    },
+    {
+      "id": "MR-A1-F3-04",
+      "category": "Likes, wishes and feelings",
+      "label": "express wishes",
+      "probe": null,
+      "note": "Untaught; SPINE-SAY-WHAT-I-WANT omits VERB-WANT.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-F3-04"
+      ]
+    },
+    {
+      "id": "MR-A1-F3-05",
+      "category": "Likes, wishes and feelings",
+      "label": "ask about plans and intentions",
+      "probe": null,
+      "note": "Blocked behind the future (MR-A1-V-17) and the polar question.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-F3-05"
+      ]
+    },
+    {
+      "id": "MR-A1-F3-06",
+      "category": "Likes, wishes and feelings",
+      "label": "express plans and intentions",
+      "probe": null,
+      "note": "Blocked behind the future.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-F3-06"
+      ]
+    },
+    {
+      "id": "MR-A1-F4-01",
+      "category": "Influencing the listener",
+      "label": "give an order or an instruction",
+      "probe": null,
+      "note": "EMPTY-INTRODUCES MEASUREMENT GAP -- see MR-A1-V-10. Five polite imperatives are drilled by lessons that declare no atoms. Public notices, which the reading paper's second part is made of, are written in exactly this form.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-F4-01"
+      ]
+    },
+    {
+      "id": "MR-A1-F4-02",
+      "category": "Influencing the listener",
+      "label": "ask for an object, softened",
+      "probe": [
+        "MR-PHRASE-KRUPAYA"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-F4-02"
+      ]
+    },
+    {
+      "id": "MR-A1-F4-03",
+      "category": "Influencing the listener",
+      "label": "ask for help",
+      "probe": [
+        "MR-LEX-MADAT-KARNE"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-F4-03"
+      ]
+    },
+    {
+      "id": "MR-A1-F4-04",
+      "category": "Influencing the listener",
+      "label": "respond to an order, a request or a plea",
+      "probe": [
+        "MR-SENSE-CHALEL-OKAY",
+        "MR-LEX-HO-01",
+        "MR-LEX-BARAM-01"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-F4-04",
+        "A1-NG6-05"
+      ]
+    },
+    {
+      "id": "MR-A1-F4-05",
+      "category": "Influencing the listener",
+      "label": "grant permission",
+      "probe": null,
+      "note": "chaalel would carry it, and permission needs a question to answer -- see MR-A1-OS-02.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-F4-05"
+      ]
+    },
+    {
+      "id": "MR-A1-F4-06",
+      "category": "Influencing the listener",
+      "label": "refuse permission",
+      "probe": null,
+      "note": "Untaught; nako, the ordinary refusal, has no atom.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-F4-06"
+      ]
+    },
+    {
+      "id": "MR-A1-F4-07",
+      "category": "Influencing the listener",
+      "label": "offer and invite",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-F4-07"
+      ]
+    },
+    {
+      "id": "MR-A1-F4-08",
+      "category": "Influencing the listener",
+      "label": "accept a proposal, an offer or an invitation",
+      "probe": null,
+      "note": "The acceptance TOKENS exist (ho, chaalel); there is no invitation vocabulary for them to accept, so the exchange cannot be completed and the point is not scored as covered on the strength of half of it.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-F4-08"
+      ]
+    },
+    {
+      "id": "MR-A1-F4-09",
+      "category": "Influencing the listener",
+      "label": "decline a proposal, an offer or an invitation",
+      "probe": null,
+      "note": "Untaught; declining politely needs nako and a softener, neither of which exists.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-F4-09"
+      ]
+    },
+    {
+      "id": "MR-A1-F5-01",
+      "category": "Social relations",
+      "label": "greet",
+      "probe": [
+        "MR-LEX-NAMASKAR-01",
+        "MR-A1-MESSAGE-LINE-GREETING"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-F5-01"
+      ]
+    },
+    {
+      "id": "MR-A1-F5-02",
+      "category": "Social relations",
+      "label": "respond to a greeting",
+      "probe": [
+        "MR-LEX-NAMASKAR-01",
+        "MR-SCRIPT-NAMASKAR-READ-01"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-F5-02"
+      ]
+    },
+    {
+      "id": "MR-A1-F5-03",
+      "category": "Social relations",
+      "label": "choose a greeting that fits the time of day",
+      "probe": null,
+      "note": "SPINE-TIME-OF-DAY is an A1 core node and the track omits all four of its greeting concepts along with its four time words.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-F5-01",
+        "A1-NG4-01"
+      ]
+    },
+    {
+      "id": "MR-A1-F5-04",
+      "category": "Social relations",
+      "label": "introduce oneself",
+      "probe": [
+        "MR-A1-MESSAGE-LINE-NAME",
+        "MR-A1-FORM-LABEL-NAAV"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-F5-04"
+      ]
+    },
+    {
+      "id": "MR-A1-F5-05",
+      "category": "Social relations",
+      "label": "respond to an introduction",
+      "probe": [
+        "MR-A1-MESSAGE-LINE-MEETING"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-F5-05"
+      ]
+    },
+    {
+      "id": "MR-A1-F5-06",
+      "category": "Social relations",
+      "label": "ask somebody else's name",
+      "probe": null,
+      "note": "SCHEMA-V1 MEASUREMENT GAP, ENTIRELY. MR-C02-tumche-naav-kaay-aahe (chapter 9) teaches it outright, declares no atom, and is invisible to every probe. With MR-A1-F5-08 it is one of the two clearest cases in this file of the corpus being better than its own measurement says.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-F1-02",
+        "A1-F5-04"
+      ]
+    },
+    {
+      "id": "MR-A1-F5-07",
+      "category": "Social relations",
+      "label": "apologise",
+      "probe": null,
+      "note": "The RESPONSE to an apology is taught -- 'kaahii harkat naahii', MR-C03-kaahi-harkat-nahi, schema-v1 -- and the apology itself is not, in either schema: maaf karaa and kshamaa karaa appear nowhere. A candidate who can only forgive and never apologise is the wrong half of SPINE-POLITE-REQUEST-REPAIR.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-F5-06"
+      ]
+    },
+    {
+      "id": "MR-A1-F5-08",
+      "category": "Social relations",
+      "label": "ask how somebody is, and answer",
+      "probe": null,
+      "note": "SCHEMA-V1 MEASUREMENT GAP, ENTIRELY. Both halves are taught in chapter 10 -- MR-C03-tumhi-kase-aahat gives the question, MR-C03-mi-bara-aahe the answer -- and both are schema-v1. The v2 material under SPINE-CHECK-WELLBEING is lexical, so the probe sees vocabulary arranged around an exchange it cannot see.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-F5-02"
+      ]
+    },
+    {
+      "id": "MR-A1-F5-09",
+      "category": "Social relations",
+      "label": "thank, and respond to thanks",
+      "probe": [
+        "MR-LEX-DHANYAVAD-01",
+        "MR-A1-MESSAGE-LINE-THANKS",
+        "MR-SCRIPT-DHANYAVAD-WRITE-01"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-F5-07"
+      ]
+    },
+    {
+      "id": "MR-A1-F5-10",
+      "category": "Social relations",
+      "label": "offer condolences",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-F5-08"
+      ]
+    },
+    {
+      "id": "MR-A1-F5-11",
+      "category": "Social relations",
+      "label": "congratulate, and mark a festival",
+      "probe": null,
+      "note": "Untaught. Spanish separates the toast from the congratulation; Marathi's festival greetings carry both and are merged here into one point.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-F5-09",
+        "A1-F5-10",
+        "A1-NE04-03"
+      ]
+    },
+    {
+      "id": "MR-A1-F5-12",
+      "category": "Social relations",
+      "label": "take leave",
+      "probe": [
+        "MR-A1-MESSAGE-LINE-SEE-AGAIN",
+        "MR-A1-MESSAGE-LINE-SEE-TOMORROW",
+        "MR-PHRASE-YETO-YETE-01"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-F5-11"
+      ]
+    },
+    {
+      "id": "MR-A1-F6-01",
+      "category": "Structuring the exchange",
+      "label": "open a conversation and react to its opening",
+      "probe": [
+        "MR-LEX-NAMASKAR-01",
+        "MR-A1-MESSAGE-LINE-GREETING"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-F6-01",
+        "A1-F6-02"
+      ]
+    },
+    {
+      "id": "MR-A1-F6-02",
+      "category": "Structuring the exchange",
+      "label": "ask for a person and respond",
+      "probe": null,
+      "note": "Untaught; blocked behind MR-A1-PRON-06 and MR-A1-OS-03.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-F6-03"
+      ]
+    },
+    {
+      "id": "MR-A1-F6-03",
+      "category": "Structuring the exchange",
+      "label": "show that one is following what is said",
+      "probe": [
+        "MR-LEX-HO-01",
+        "MR-LEX-BARAM-01"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-F6-04"
+      ]
+    },
+    {
+      "id": "MR-A1-F6-04",
+      "category": "Structuring the exchange",
+      "label": "ask somebody to repeat, slow down or be quiet",
+      "probe": null,
+      "note": "Untaught, and assessment-spec.md gives it teeth: the A1 speaking interlocutor 'may repeat once slowly', which a candidate has to be able to ASK for.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [
+        "A1-F6-05"
+      ]
+    },
+    {
+      "id": "MR-A1-F6-05",
+      "category": "Structuring the exchange",
+      "label": "propose closing the conversation",
+      "probe": [
+        "MR-A1-MESSAGE-LINE-SEE-AGAIN",
+        "MR-PHRASE-YETO-YETE-01"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-F6-06"
+      ]
+    },
+    {
+      "id": "MR-A1-NG1-01",
+      "category": "Existential notions",
+      "label": "existence and non-existence",
+      "probe": null,
+      "note": "Blocked behind MR-A1-V-20 and MR-A1-OS-01.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-NG1-01"
+      ]
+    },
+    {
+      "id": "MR-A1-NG1-02",
+      "category": "Existential notions",
+      "label": "presence and absence",
+      "probe": null,
+      "note": "Blocked behind the locative, MR-A1-P-02.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-NG1-02"
+      ]
+    },
+    {
+      "id": "MR-A1-NG1-03",
+      "category": "Existential notions",
+      "label": "stating a general quality",
+      "probe": null,
+      "note": "Blocked behind MR-A1-ADJ-01.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-NG1-03"
+      ]
+    },
+    {
+      "id": "MR-A1-NG1-04",
+      "category": "Existential notions",
+      "label": "locating an event in time",
+      "probe": null,
+      "note": "Untaught; needs the clock and the calendar, neither of which exists.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NG1-04"
+      ]
+    },
+    {
+      "id": "MR-A1-NG1-05",
+      "category": "Existential notions",
+      "label": "certainty and uncertainty",
+      "probe": null,
+      "note": "The certain half is covered by plain assertion (MR-A1-F2-09); the uncertain half has no exponent.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-NG1-05"
+      ]
+    },
+    {
+      "id": "MR-A1-NG2-01",
+      "category": "Quantitative notions",
+      "label": "measures: size, distance and weight",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NG2-04"
+      ]
+    },
+    {
+      "id": "MR-A1-NG3-01",
+      "category": "Spatial notions",
+      "label": "location: being somewhere",
+      "probe": null,
+      "note": "Blocked behind MR-A1-P-02 and MR-A1-ADV-01.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-NG3-01"
+      ]
+    },
+    {
+      "id": "MR-A1-NG3-02",
+      "category": "Spatial notions",
+      "label": "relative position: javal, laamb, ujvii, daavii",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NG3-02"
+      ]
+    },
+    {
+      "id": "MR-A1-NG3-03",
+      "category": "Spatial notions",
+      "label": "distance",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NG3-03"
+      ]
+    },
+    {
+      "id": "MR-A1-NG3-04",
+      "category": "Spatial notions",
+      "label": "movement and rest",
+      "probe": [
+        "MR-LEX-YENE",
+        "MR-LEX-JANE",
+        "MR-LEX-CHALNE",
+        "MR-LEX-BASNE"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-NG3-04"
+      ]
+    },
+    {
+      "id": "MR-A1-NG3-05",
+      "category": "Spatial notions",
+      "label": "orientation and direction",
+      "probe": null,
+      "note": "Untaught; blocked behind MR-A1-P-05.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NG3-05"
+      ]
+    },
+    {
+      "id": "MR-A1-NG3-06",
+      "category": "Spatial notions",
+      "label": "order: first, next, before and after",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NG3-06"
+      ]
+    },
+    {
+      "id": "MR-A1-NG3-07",
+      "category": "Spatial notions",
+      "label": "origin: where one is from",
+      "probe": null,
+      "note": "The city is taught as a form FIELD (MR-A1-FORM-LABEL-SHAHAR); saying one comes FROM it needs the ablative of MR-A1-P-04. The noun without the postposition answers a form and not an interviewer.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-NG3-07"
+      ]
+    },
+    {
+      "id": "MR-A1-NT-01",
+      "category": "Temporal notions",
+      "label": "the clock, and the parts of the day",
+      "probe": null,
+      "note": "SPINE-TIME-OF-DAY is an A1 core node with NO realization at all: all nine concepts omitted. The listening paper's announcements are about times.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-NG4-01"
+      ]
+    },
+    {
+      "id": "MR-A1-NT-02",
+      "category": "Temporal notions",
+      "label": "today, yesterday, tomorrow",
+      "probe": null,
+      "note": "udyaa occurs only inside fixed farewells; aaj and kaal do not occur.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ]
+    },
+    {
+      "id": "MR-A1-NT-03",
+      "category": "Temporal notions",
+      "label": "the days of the week",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ]
+    },
+    {
+      "id": "MR-A1-NT-04",
+      "category": "Temporal notions",
+      "label": "the months, and writing a date",
+      "probe": null,
+      "note": "Untaught; the A1 practical form asks for one.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ]
+    },
+    {
+      "id": "MR-A1-NT-05",
+      "category": "Temporal notions",
+      "label": "the seasons",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ]
+    },
+    {
+      "id": "MR-A1-NT-06",
+      "category": "Temporal notions",
+      "label": "before and after: ordering two events",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-NG4-03"
+      ]
+    },
+    {
+      "id": "MR-A1-NG5-01",
+      "category": "Qualitative notions",
+      "label": "seeing",
+      "probe": [
+        "MR-LEX-PAHNE",
+        "MR-LEX-DOLA"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NG5-01"
+      ]
+    },
+    {
+      "id": "MR-A1-NG5-02",
+      "category": "Qualitative notions",
+      "label": "hearing",
+      "probe": null,
+      "note": "The ORGAN is taught (MR-LEX-KAAN) and the verb is not: SPINE-SAY-WHAT-I-DO omits VERB-HEAR. There is an eighteen-minute listening paper, so this is not a decorative gap.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NG5-02"
+      ]
+    },
+    {
+      "id": "MR-A1-NG5-03",
+      "category": "Qualitative notions",
+      "label": "colour",
+      "probe": null,
+      "note": "Untaught. Colours are the standard A1 descriptor set and what a sign-and-label item uses for its distractors.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NG5-03"
+      ]
+    },
+    {
+      "id": "MR-A1-NG5-04",
+      "category": "Qualitative notions",
+      "label": "age",
+      "probe": null,
+      "note": "Untaught, and blocked behind MR-A1-QU-03: saying an age needs a number above five.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-NG5-04"
+      ]
+    },
+    {
+      "id": "MR-A1-NG5-05",
+      "category": "Qualitative notions",
+      "label": "accessibility: open and closed, the way in and the way out",
+      "probe": null,
+      "note": "Untaught. SPINE-NAME-EVERYDAY-ACTIONS omits VERB-OPEN and VERB-CLOSE, and these four words are most of what a sign set says.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-NG5-05"
+      ]
+    },
+    {
+      "id": "MR-A1-NG6-01",
+      "category": "Evaluative notions",
+      "label": "general evaluation: good, bad, all right",
+      "probe": [
+        "MR-LEX-BARAM-01",
+        "MR-SENSE-CHALEL-OKAY"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NG6-01",
+        "A1-NG6-07"
+      ]
+    },
+    {
+      "id": "MR-A1-NG6-02",
+      "category": "Evaluative notions",
+      "label": "value and price",
+      "probe": null,
+      "note": "Untaught, and it is the content of the speaking paper's third part. Blocked jointly by MR-A1-QU-03 and MR-A1-V-19.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-NG6-02"
+      ]
+    },
+    {
+      "id": "MR-A1-NG6-03",
+      "category": "Evaluative notions",
+      "label": "attractiveness",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NG6-03"
+      ]
+    },
+    {
+      "id": "MR-A1-NG6-04",
+      "category": "Evaluative notions",
+      "label": "quality: calling a thing good or bad",
+      "probe": null,
+      "note": "Blocked behind MR-A1-ADJ-01; baraM evaluates a state, not a thing.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-NG6-04"
+      ]
+    },
+    {
+      "id": "MR-A1-NG6-05",
+      "category": "Evaluative notions",
+      "label": "acceptability",
+      "probe": [
+        "MR-SENSE-CHALEL-OKAY"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NG6-05"
+      ]
+    },
+    {
+      "id": "MR-A1-NG6-06",
+      "category": "Evaluative notions",
+      "label": "interest",
+      "probe": [
+        "MR-LEX-AVADNE"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NG6-08"
+      ]
+    },
+    {
+      "id": "MR-A1-NG6-07",
+      "category": "Evaluative notions",
+      "label": "capacity and competence",
+      "probe": [
+        "MR-LEX-MAHIT-JANNE",
+        "MR-GRAMMAR-DATIVE-KNOWLEDGE"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NG6-09"
+      ]
+    },
+    {
+      "id": "MR-A1-NG6-08",
+      "category": "Evaluative notions",
+      "label": "ease and difficulty",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NG6-10"
+      ]
+    },
+    {
+      "id": "MR-A1-NG7-01",
+      "category": "Mental notions",
+      "label": "reflection and knowledge",
+      "probe": [
+        "MR-LEX-VICHAR-KARNE",
+        "MR-LEX-SAMAJNE",
+        "MR-LEX-MAHIT-JANNE"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-NG7-01"
+      ]
+    },
+    {
+      "id": "MR-A1-NG7-02",
+      "category": "Mental notions",
+      "label": "verbal expression: speaking and writing",
+      "probe": [
+        "MR-LEX-MHANNE",
+        "MR-LEX-SANGNE",
+        "MR-LEX-LIHINE"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-NG7-02"
+      ]
+    },
+    {
+      "id": "MR-A1-NE01-01",
+      "category": "The person: the body",
+      "label": "parts of the body",
+      "probe": [
+        "MR-LEX-DOLA",
+        "MR-LEX-KAAN",
+        "MR-LEX-NAAK",
+        "MR-LEX-TOND",
+        "MR-LEX-HRUDAYA"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01"
+      ]
+    },
+    {
+      "id": "MR-A1-NE01-02",
+      "category": "The person: the body",
+      "label": "physical characteristics",
+      "probe": null,
+      "note": "Untaught; blocked behind MR-A1-ADJ-01. The A1 speaking paper asks for a one-minute description of a familiar person.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE01-02"
+      ]
+    },
+    {
+      "id": "MR-A1-NE01-03",
+      "category": "The person: the body",
+      "label": "actions and positions of the body",
+      "probe": [
+        "MR-LEX-BASNE",
+        "MR-LEX-JHOPNE",
+        "MR-LEX-CHALNE"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-NE01-03"
+      ]
+    },
+    {
+      "id": "MR-A1-NE02-01",
+      "category": "The person: character",
+      "label": "character and personality",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE02-01"
+      ]
+    },
+    {
+      "id": "MR-A1-NE03-01",
+      "category": "Personal identity",
+      "label": "personal data: name, address, telephone, age",
+      "probe": null,
+      "note": "Name and city are taught as form fields; address, telephone and age are not, and the telephone number additionally needs the Devanagari digits of MR-A1-OR-24. This is the A1 writing paper's first task.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-NE03-01"
+      ]
+    },
+    {
+      "id": "MR-A1-NE03-02",
+      "category": "Personal identity",
+      "label": "documents: an identity card or a passport",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE03-02"
+      ]
+    },
+    {
+      "id": "MR-A1-NE03-03",
+      "category": "Personal identity",
+      "label": "personal objects",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE03-03"
+      ]
+    },
+    {
+      "id": "MR-A1-NE04-01",
+      "category": "Personal relationships",
+      "label": "family relationships",
+      "probe": [
+        "MR-LEX-BHAU",
+        "MR-LEX-BAHIN",
+        "MR-LEX-KUTUMB"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE04-01"
+      ]
+    },
+    {
+      "id": "MR-A1-NE04-02",
+      "category": "Personal relationships",
+      "label": "the immediate family: mother, father, son, daughter, husband, wife",
+      "probe": null,
+      "note": "MARATHI-SPECIFIC SPLIT of the Spanish family point, because the shape of the gap is the finding: siblings and 'family' are taught and not one PARENT is. 'Tell me about your family' is the standard A1 interview opener and it cannot currently be answered.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [],
+      "marathiSpecific": true
+    },
+    {
+      "id": "MR-A1-NE04-03",
+      "category": "Personal relationships",
+      "label": "social relationships: friend, neighbour, colleague",
+      "probe": [
+        "MR-LEX-MITRA"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE04-02"
+      ]
+    },
+    {
+      "id": "MR-A1-NE04-04",
+      "category": "Personal relationships",
+      "label": "celebrations and family, social and religious occasions",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE04-03"
+      ]
+    },
+    {
+      "id": "MR-A1-NE05-01",
+      "category": "Food and drink",
+      "label": "the meals of the day",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE05-01"
+      ]
+    },
+    {
+      "id": "MR-A1-NE05-02",
+      "category": "Food and drink",
+      "label": "drink",
+      "probe": [
+        "MR-LEX-CHAHA",
+        "MR-LEX-DUDH",
+        "MR-LEX-PAANI"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE05-02"
+      ]
+    },
+    {
+      "id": "MR-A1-NE05-03",
+      "category": "Food and drink",
+      "label": "foodstuffs",
+      "probe": null,
+      "note": "One foodstuff is taught, bhaakarii, and one word is not a domain: no item asking a candidate to pick a food from three options can be built out of it.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE05-03"
+      ]
+    },
+    {
+      "id": "MR-A1-NE05-04",
+      "category": "Food and drink",
+      "label": "dishes and courses",
+      "probe": null,
+      "note": "Untaught: bhaat, bhaajii, polii and jevan have no atoms.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE05-04"
+      ]
+    },
+    {
+      "id": "MR-A1-NE05-05",
+      "category": "Food and drink",
+      "label": "eating out",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE05-05"
+      ]
+    },
+    {
+      "id": "MR-A1-NE06-01",
+      "category": "Education",
+      "label": "educational institutions",
+      "probe": null,
+      "note": "Untaught; shaalaa has no atom.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE06-01"
+      ]
+    },
+    {
+      "id": "MR-A1-NE06-02",
+      "category": "Education",
+      "label": "teachers and students",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE06-02"
+      ]
+    },
+    {
+      "id": "MR-A1-NE06-03",
+      "category": "Education",
+      "label": "the school day: timetable and term",
+      "probe": null,
+      "note": "Untaught; blocked behind the clock and the calendar.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE06-03"
+      ]
+    },
+    {
+      "id": "MR-A1-NE06-04",
+      "category": "Education",
+      "label": "learning and teaching",
+      "probe": [
+        "MR-LEX-SHIKNE",
+        "MR-LEX-VACHNE",
+        "MR-LEX-LIHINE"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-NE06-04"
+      ]
+    },
+    {
+      "id": "MR-A1-NE06-05",
+      "category": "Education",
+      "label": "examinations and marks",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE06-05"
+      ]
+    },
+    {
+      "id": "MR-A1-NE06-06",
+      "category": "Education",
+      "label": "classroom language",
+      "probe": null,
+      "note": "Untaught. assessment-spec.md allows A1 directions in a declared support language, so this is a real but softened demand at this rung; from A2 the directions are in Marathi.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [
+        "A1-NE06-06"
+      ]
+    },
+    {
+      "id": "MR-A1-NE06-07",
+      "category": "Education",
+      "label": "teaching materials and classroom objects",
+      "probe": null,
+      "note": "Untaught; pustak and pen have no atoms.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE06-07"
+      ]
+    },
+    {
+      "id": "MR-A1-NE07-01",
+      "category": "Work",
+      "label": "professions and posts",
+      "probe": null,
+      "note": "Untaught, and it is a field on the A1 practical form.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-NE07-01"
+      ]
+    },
+    {
+      "id": "MR-A1-NE07-02",
+      "category": "Work",
+      "label": "workplaces and tools",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE07-02"
+      ]
+    },
+    {
+      "id": "MR-A1-NE07-03",
+      "category": "Work",
+      "label": "working activity",
+      "probe": null,
+      "note": "SCHEMA-V1 MEASUREMENT GAP. kaam karne is taught by MR-C05-kaam-karne (chapter 12) and raahne by MR-C05-rahne, both schema-v1 with no atoms, so 'I work' and 'I live' are reachable and invisible.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE07-03"
+      ]
+    },
+    {
+      "id": "MR-A1-NE07-04",
+      "category": "Work",
+      "label": "looking for work",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE07-04"
+      ]
+    },
+    {
+      "id": "MR-A1-NE07-05",
+      "category": "Work",
+      "label": "conditions, rights and obligations at work",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE07-05"
+      ]
+    },
+    {
+      "id": "MR-A1-NE07-06",
+      "category": "Work",
+      "label": "describing a worker",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE07-06"
+      ]
+    },
+    {
+      "id": "MR-A1-NE08-01",
+      "category": "Leisure",
+      "label": "free time and what one likes doing in it",
+      "probe": [
+        "MR-A1-FORM-LABEL-AVADTI-KRUTI",
+        "MR-LEX-VACHNE"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-NE08-01"
+      ]
+    },
+    {
+      "id": "MR-A1-NE08-02",
+      "category": "Leisure",
+      "label": "shows and outings",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE08-02"
+      ]
+    },
+    {
+      "id": "MR-A1-NE08-03",
+      "category": "Leisure",
+      "label": "sport",
+      "probe": null,
+      "note": "Untaught; SPINE-SAY-WHAT-I-DO omits VERB-PLAY and VERB-RUN.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE08-03"
+      ]
+    },
+    {
+      "id": "MR-A1-NE08-04",
+      "category": "Leisure",
+      "label": "games",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE08-04"
+      ]
+    },
+    {
+      "id": "MR-A1-NE09-01",
+      "category": "Information and media",
+      "label": "the media",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE09-01"
+      ]
+    },
+    {
+      "id": "MR-A1-NE09-02",
+      "category": "Information and media",
+      "label": "written correspondence: the lines of a short personal message",
+      "probe": [
+        "MR-A1-MESSAGE-LINE-GREETING",
+        "MR-A1-MESSAGE-LINE-NAME",
+        "MR-A1-MESSAGE-LINE-THANKS",
+        "MR-A1-MESSAGE-LINE-SEE-AGAIN"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-NE09-02"
+      ]
+    },
+    {
+      "id": "MR-A1-NE09-03",
+      "category": "Information and media",
+      "label": "the telephone",
+      "probe": null,
+      "note": "Untaught, and giving a number needs the Devanagari digits of MR-A1-OR-24.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-NE09-03"
+      ]
+    },
+    {
+      "id": "MR-A1-NE09-04",
+      "category": "Information and media",
+      "label": "the printed press",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE09-04"
+      ]
+    },
+    {
+      "id": "MR-A1-NE09-05",
+      "category": "Information and media",
+      "label": "television and radio",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE09-05"
+      ]
+    },
+    {
+      "id": "MR-A1-NE09-06",
+      "category": "Information and media",
+      "label": "the internet, and giving an e-mail address",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE09-06"
+      ]
+    },
+    {
+      "id": "MR-A1-NE10-01",
+      "category": "Housing",
+      "label": "renting, buying and moving",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE10-01"
+      ]
+    },
+    {
+      "id": "MR-A1-NE10-02",
+      "category": "Housing",
+      "label": "types of dwelling and its rooms",
+      "probe": null,
+      "note": "SPINE-NAME-EVERYDAY-THINGS is an A1 core node and the track omits LODGING-ROOM, its only listed concept.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-NE10-02"
+      ]
+    },
+    {
+      "id": "MR-A1-NE10-03",
+      "category": "Housing",
+      "label": "domestic activities",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE10-03"
+      ]
+    },
+    {
+      "id": "MR-A1-NE10-04",
+      "category": "Housing",
+      "label": "household objects and furniture",
+      "probe": null,
+      "note": "Untaught; daar and khidkii have no atoms, and a sign-and-label reading part labels exactly this kind of thing.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE10-04"
+      ]
+    },
+    {
+      "id": "MR-A1-NE11-01",
+      "category": "Services",
+      "label": "the post office",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE11-01"
+      ]
+    },
+    {
+      "id": "MR-A1-NE11-02",
+      "category": "Services",
+      "label": "banks and money services",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE11-02"
+      ]
+    },
+    {
+      "id": "MR-A1-NE11-03",
+      "category": "Services",
+      "label": "health services",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE11-03"
+      ]
+    },
+    {
+      "id": "MR-A1-NE11-04",
+      "category": "Services",
+      "label": "police and emergency services",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE11-04"
+      ]
+    },
+    {
+      "id": "MR-A1-NE12-01",
+      "category": "Shopping",
+      "label": "shops, shopkeepers and shopping",
+      "probe": null,
+      "note": "Untaught. dukaan has no atom, and the A1 speaking paper's third part is a transactional role-play.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-NE12-01"
+      ]
+    },
+    {
+      "id": "MR-A1-NE12-02",
+      "category": "Shopping",
+      "label": "clothing and footwear",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE12-02"
+      ]
+    },
+    {
+      "id": "MR-A1-NE12-03",
+      "category": "Shopping",
+      "label": "paying",
+      "probe": null,
+      "note": "Untaught; paise has no atom and the numbers stop at five.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-NE12-03"
+      ]
+    },
+    {
+      "id": "MR-A1-NE13-01",
+      "category": "Health and hygiene",
+      "label": "health and illness: saying how one feels",
+      "probe": [
+        "MR-LEX-BARAM-01",
+        "MR-LEX-VATNE",
+        "MR-GRAMMAR-DATIVE-FEELING"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-NE13-01"
+      ]
+    },
+    {
+      "id": "MR-A1-NE13-02",
+      "category": "Health and hygiene",
+      "label": "the clinic and the hospital",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE13-02"
+      ]
+    },
+    {
+      "id": "MR-A1-NE13-03",
+      "category": "Health and hygiene",
+      "label": "medicine",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE13-03"
+      ]
+    },
+    {
+      "id": "MR-A1-NE13-04",
+      "category": "Health and hygiene",
+      "label": "hygiene and daily routine",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE13-04"
+      ]
+    },
+    {
+      "id": "MR-A1-NE14-01",
+      "category": "Travel and transport",
+      "label": "travel documents and luggage",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE14-01"
+      ]
+    },
+    {
+      "id": "MR-A1-NE14-02",
+      "category": "Travel and transport",
+      "label": "accommodation",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE14-02"
+      ]
+    },
+    {
+      "id": "MR-A1-NE14-03",
+      "category": "Travel and transport",
+      "label": "getting about: bus, train, ticket, station",
+      "probe": null,
+      "note": "Untaught; SPINE-HANDLE-TRAVEL has no realization in this track.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE14-03"
+      ]
+    },
+    {
+      "id": "MR-A1-NE15-01",
+      "category": "Money and the economy",
+      "label": "money",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-NE15-01"
+      ]
+    },
+    {
+      "id": "MR-A1-NE15-02",
+      "category": "Money and the economy",
+      "label": "buyer and seller",
+      "probe": null,
+      "note": "Untaught; SPINE-NAME-EVERYDAY-ACTIONS omits VERB-BUY.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-spine"
+      ],
+      "derivedFrom": [
+        "A1-NE15-02"
+      ]
+    },
+    {
+      "id": "MR-A1-NE15-03",
+      "category": "Money and the economy",
+      "label": "businesses and organisations",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE15-03"
+      ]
+    },
+    {
+      "id": "MR-A1-NE15-04",
+      "category": "Money and the economy",
+      "label": "industry and energy",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE15-04"
+      ]
+    },
+    {
+      "id": "MR-A1-NE16-01",
+      "category": "Science and technology",
+      "label": "number as a notion",
+      "probe": [
+        "MR-LEX-NUMBERS-ONE-TO-FIVE",
+        "MR-HISTORY-SELECTIVE-RETENTION"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE16-01"
+      ]
+    },
+    {
+      "id": "MR-A1-NE16-02",
+      "category": "Science and technology",
+      "label": "computers and everyday technology",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE16-02"
+      ]
+    },
+    {
+      "id": "MR-A1-NE17-01",
+      "category": "Government and society",
+      "label": "the state and its institutions",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE17-01"
+      ]
+    },
+    {
+      "id": "MR-A1-NE17-02",
+      "category": "Government and society",
+      "label": "law and rules",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE17-02"
+      ]
+    },
+    {
+      "id": "MR-A1-NE18-01",
+      "category": "The arts",
+      "label": "the arts as a field",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE18-01"
+      ]
+    },
+    {
+      "id": "MR-A1-NE18-02",
+      "category": "The arts",
+      "label": "music and dance",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE18-02"
+      ]
+    },
+    {
+      "id": "MR-A1-NE18-03",
+      "category": "The arts",
+      "label": "building, sculpture and painting",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE18-03"
+      ]
+    },
+    {
+      "id": "MR-A1-NE18-04",
+      "category": "The arts",
+      "label": "literature and reading",
+      "probe": null,
+      "note": "Untaught as a domain. vaachne is taught as an ACTION (MR-A1-NE06-04) and no noun names a book, a poem or a film. Spanish's photography and cinema points are merged in here rather than split, since at A1 they are one thin field.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE18-04",
+        "A1-NE18-05",
+        "A1-NE18-06"
+      ]
+    },
+    {
+      "id": "MR-A1-NE19-01",
+      "category": "Religion and belief",
+      "label": "religion and belief",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE19-01"
+      ]
+    },
+    {
+      "id": "MR-A1-NE20-01",
+      "category": "Geography and nature",
+      "label": "the sky and the natural world at large",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE20-01"
+      ]
+    },
+    {
+      "id": "MR-A1-NE20-02",
+      "category": "Geography and nature",
+      "label": "country, state, city",
+      "probe": [
+        "MR-A1-FORM-LABEL-SHAHAR"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-NE20-02"
+      ]
+    },
+    {
+      "id": "MR-A1-NE20-03",
+      "category": "Geography and nature",
+      "label": "town and countryside",
+      "probe": null,
+      "note": "Untaught; rastaa and gaav have no atoms.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE20-03"
+      ]
+    },
+    {
+      "id": "MR-A1-NE20-04",
+      "category": "Geography and nature",
+      "label": "weather and climate",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE20-04"
+      ]
+    },
+    {
+      "id": "MR-A1-NE20-05",
+      "category": "Geography and nature",
+      "label": "animals",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE20-05"
+      ]
+    },
+    {
+      "id": "MR-A1-NE20-06",
+      "category": "Geography and nature",
+      "label": "plants and trees",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-NE20-06"
+      ]
+    },
+    {
+      "id": "MR-A1-OR-01",
+      "category": "Devanagari letters and signs",
+      "label": "the akshara principle: a consonant letter carries an inherent a, and a matra replaces it",
+      "probe": [
+        "MR-SCRIPT-KA-01",
+        "MR-SCRIPT-A-INDEPENDENT-01",
+        "MR-SCRIPT-O-MATRA-01"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [
+        "A1-O1-01",
+        "A1-O1-07"
+      ]
+    },
+    {
+      "id": "MR-A1-OR-02",
+      "category": "Devanagari letters and signs",
+      "label": "the shirorekha headline, which binds the letters of one written word",
+      "probe": [
+        "MR-SCRIPT-HA-01"
+      ],
+      "note": "MARATHI-SPECIFIC: the Latin alphabet has no equivalent, and it is what makes a Devanagari word one visual unit.",
+      "anchorIds": [
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [],
+      "marathiSpecific": true
+    },
+    {
+      "id": "MR-A1-OR-03",
+      "category": "Devanagari letters and signs",
+      "label": "the velar row ka kha ga gha",
+      "probe": [
+        "MR-SCRIPT-KA-01",
+        "MR-SCRIPT-KHA-01",
+        "MR-SCRIPT-GA-01",
+        "MR-SCRIPT-GHA-01"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ]
+    },
+    {
+      "id": "MR-A1-OR-04",
+      "category": "Devanagari letters and signs",
+      "label": "the palatal row ca cha ja jha",
+      "probe": [
+        "MR-SCRIPT-CA-01",
+        "MR-SCRIPT-CHA-01",
+        "MR-SCRIPT-JA-01",
+        "MR-SCRIPT-JHA-01"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ]
+    },
+    {
+      "id": "MR-A1-OR-05",
+      "category": "Devanagari letters and signs",
+      "label": "the retroflex row tta ttha dda ddha nna",
+      "probe": null,
+      "note": "Four fifths taught -- MR-SCRIPT-TTA-01, -TTHA-01, -DDA-01 and -NNA-01 -- and the fifth missing: no atom introduces DDHA. A row a reader can only rebuild four ways is not a row, and DDHA is not rare (dhag, gadhav, vaadh).",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ]
+    },
+    {
+      "id": "MR-A1-OR-06",
+      "category": "Devanagari letters and signs",
+      "label": "the dental row ta tha da dha na",
+      "probe": null,
+      "note": "TA, DA, DHA and NA are taught; THA, the aspirated dental, has no atom. It spells thodaa and the ordinal-forming -thaa, so the gap sits inside A1 vocabulary rather than beyond it.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ]
+    },
+    {
+      "id": "MR-A1-OR-07",
+      "category": "Devanagari letters and signs",
+      "label": "the labial row pa pha ba bha ma",
+      "probe": null,
+      "note": "PA, BA, BHA and MA are taught; PHA has no atom. Without it a candidate cannot read phon, phal or the very common phakta.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ]
+    },
+    {
+      "id": "MR-A1-OR-08",
+      "category": "Devanagari letters and signs",
+      "label": "the semivowels ya ra la va",
+      "probe": [
+        "MR-SCRIPT-YA-01",
+        "MR-SCRIPT-RA-01",
+        "MR-SCRIPT-LA-01",
+        "MR-SCRIPT-VA-01"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ]
+    },
+    {
+      "id": "MR-A1-OR-09",
+      "category": "Devanagari letters and signs",
+      "label": "the three sibilants sha ssa sa, and ha",
+      "probe": [
+        "MR-SCRIPT-SHA-01",
+        "MR-SCRIPT-SSA-01",
+        "MR-SCRIPT-SA-01",
+        "MR-SCRIPT-HA-01"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ]
+    },
+    {
+      "id": "MR-A1-OR-10",
+      "category": "Devanagari letters and signs",
+      "label": "the nasals of the velar and palatal rows, which survive mainly inside conjuncts",
+      "probe": null,
+      "note": "Untaught. Lower priority than the other rows and listed because the row inventory is not closed without them.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ]
+    },
+    {
+      "id": "MR-A1-OR-11",
+      "category": "Devanagari letters and signs",
+      "label": "Marathi's retroflex lla, the letter Hindi does not have",
+      "probe": [
+        "MR-SCRIPT-LLA-01",
+        "MR-SCRIPT-RETROFLEX-LA"
+      ],
+      "note": "MARATHI-SPECIFIC, and the single glyph that most clearly marks a text as Marathi rather than Hindi.",
+      "anchorIds": [
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [],
+      "marathiSpecific": true
+    },
+    {
+      "id": "MR-A1-OR-12",
+      "category": "Devanagari letters and signs",
+      "label": "the independent vowel letters, used word-initially",
+      "probe": null,
+      "note": "A, AA, U, UU and E are taught as independents. I, II, O, AI and AU are not, so a candidate cannot begin a word with them -- and the reading genres are full of such words (ithe, ekun, aai, olakh).",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ]
+    },
+    {
+      "id": "MR-A1-OR-13",
+      "category": "Devanagari letters and signs",
+      "label": "the vowel signs aa i ii u uu e o",
+      "probe": [
+        "MR-SCRIPT-AA-MATRA-01",
+        "MR-SCRIPT-I-MATRA-01",
+        "MR-SCRIPT-II-MATRA-01",
+        "MR-SCRIPT-U-MATRA-01",
+        "MR-SCRIPT-UU-MATRA-01",
+        "MR-SCRIPT-E-MATRA-01",
+        "MR-SCRIPT-O-MATRA-01"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ]
+    },
+    {
+      "id": "MR-A1-OR-14",
+      "category": "Devanagari letters and signs",
+      "label": "the ai and au vowel signs",
+      "probe": null,
+      "note": "Neither has an atom. They spell aai (mother), paise (money) and kaay (what) -- three items this inventory separately marks as untaught vocabulary, so the debts compound.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ]
+    },
+    {
+      "id": "MR-A1-OR-15",
+      "category": "Devanagari letters and signs",
+      "label": "the vocalic r sign, read ru in Marathi",
+      "probe": [
+        "MR-SCRIPT-RU-MATRA-01"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ]
+    },
+    {
+      "id": "MR-A1-OR-16",
+      "category": "Devanagari letters and signs",
+      "label": "the i-matra is written BEFORE the letter it is read after",
+      "probe": [
+        "MR-SCRIPT-I-MATRA-01"
+      ],
+      "note": "MARATHI-SPECIFIC decoding rule with no Latin counterpart: the reading order and the writing order come apart, which is the commonest early decoding error.",
+      "anchorIds": [
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [],
+      "marathiSpecific": true
+    },
+    {
+      "id": "MR-A1-OR-17",
+      "category": "Devanagari letters and signs",
+      "label": "anusvara and candrabindu: the two nasal marks and the difference between them",
+      "probe": [
+        "MR-SCRIPT-ANUSVARA-01",
+        "MR-SCRIPT-CANDRABINDU-01"
+      ],
+      "anchorIds": [
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [],
+      "marathiSpecific": true
+    },
+    {
+      "id": "MR-A1-OR-18",
+      "category": "Devanagari letters and signs",
+      "label": "visarga, in the tatsama words a printed text keeps it in",
+      "probe": [
+        "MR-SCRIPT-VISARGA-01"
+      ],
+      "anchorIds": [
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [],
+      "marathiSpecific": true
+    },
+    {
+      "id": "MR-A1-OR-19",
+      "category": "Devanagari letters and signs",
+      "label": "virama, and the principle that two consonants join when the inherent vowel goes",
+      "probe": [
+        "MR-SCRIPT-VIRAMA-01"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ]
+    },
+    {
+      "id": "MR-A1-OR-20",
+      "category": "Devanagari letters and signs",
+      "label": "the frequent conjuncts themselves: kssa, jnya, tra, shra",
+      "probe": null,
+      "note": "The PRINCIPLE is taught (MR-SCRIPT-VIRAMA-01) and no individual conjunct is. Spanish's digraph point is the nearest analogue and is far cheaper: Spanish has five digraphs, Marathi has a productive system.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ]
+    },
+    {
+      "id": "MR-A1-OR-21",
+      "category": "Devanagari letters and signs",
+      "label": "the r-forms: reph above the line and rakaar below it",
+      "probe": null,
+      "note": "Untaught, and they do not look like a virama join at all, so the conjunct principle does not transfer to them by itself. They appear in karya, purna and the reph of maarg.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ]
+    },
+    {
+      "id": "MR-A1-OR-22",
+      "category": "Devanagari letters and signs",
+      "label": "spelling a word from its sound: syllable division and the doubled consonant",
+      "probe": [
+        "MR-SCRIPT-DHANYAVAD-WRITE-01",
+        "MR-SOUND-KARNA-GEMINATION"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ]
+    },
+    {
+      "id": "MR-A1-OR-23",
+      "category": "Devanagari letters and signs",
+      "label": "reading a whole word back from its pieces",
+      "probe": [
+        "MR-SCRIPT-NAMASKAR-READ-01"
+      ],
+      "anchorIds": [
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [],
+      "marathiSpecific": true
+    },
+    {
+      "id": "MR-A1-OR-24",
+      "category": "Devanagari letters and signs",
+      "label": "the Devanagari digits zero to nine",
+      "probe": null,
+      "note": "No atom introduces a single digit. The A1 writing paper is 'complete a practical form', and a form asks for a phone number, a house number and a date. This is the cheapest large gap in the file: ten glyphs, and they unlock an entire paper part.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-O4-03"
+      ]
+    },
+    {
+      "id": "MR-A1-PU-01",
+      "category": "Punctuation and written conventions",
+      "label": "the danda, and the full stop that has largely replaced it",
+      "probe": null,
+      "note": "Every headword in the corpus punctuates with a full stop. A candidate who has never seen a danda meets it on the first authentic notice.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [
+        "A1-O3-01"
+      ]
+    },
+    {
+      "id": "MR-A1-PU-02",
+      "category": "Punctuation and written conventions",
+      "label": "the comma",
+      "probe": null,
+      "note": "Untaught, and the A1 writing task is a connected message in which a comma is the ordinary join.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-O3-02"
+      ]
+    },
+    {
+      "id": "MR-A1-PU-03",
+      "category": "Punctuation and written conventions",
+      "label": "the colon, as a form label uses it",
+      "probe": [
+        "MR-A1-FORM-LABEL-NAAV",
+        "MR-A1-FORM-LABEL-SHAHAR"
+      ],
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-O3-03"
+      ]
+    },
+    {
+      "id": "MR-A1-PU-04",
+      "category": "Punctuation and written conventions",
+      "label": "question and exclamation marks",
+      "probe": null,
+      "note": "Untaught. Marathi uses the single trailing marks, so Spanish's opened-and-closed pair transfers as a simpler demand rather than not at all -- and it is still a demand, because a question mark is how a written item announces itself as a question.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-O3-04"
+      ]
+    },
+    {
+      "id": "MR-A1-PU-05",
+      "category": "Punctuation and written conventions",
+      "label": "the remaining marks a printed text uses: brackets, quotation marks, the hyphen and the dash",
+      "probe": null,
+      "note": "Untaught. Merged from five Spanish points because at A1 the demand is recognition rather than production, and recognising them is one skill.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-structure"
+      ],
+      "derivedFrom": [
+        "A1-O3-05",
+        "A1-O3-06",
+        "A1-O3-07",
+        "A1-O3-08",
+        "A1-O3-09"
+      ]
+    },
+    {
+      "id": "MR-A1-PU-06",
+      "category": "Punctuation and written conventions",
+      "label": "abbreviations a form or a notice uses, and how they are written",
+      "probe": null,
+      "note": "Untaught. Spanish's superscript abbreviation letters are merged in here: the demand behind both is reading a shortened word on a form, and Marathi shortens with a full stop rather than a raised letter.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-O4-01",
+        "A1-O1-06"
+      ]
+    },
+    {
+      "id": "MR-A1-PU-07",
+      "category": "Punctuation and written conventions",
+      "label": "initialisms and acronyms",
+      "probe": null,
+      "note": "Untaught.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "editorial-marathi-lexis"
+      ],
+      "derivedFrom": [
+        "A1-O4-02"
+      ]
+    },
+    {
+      "id": "MR-A1-PU-08",
+      "category": "Punctuation and written conventions",
+      "label": "symbols: the rupee sign, the numeral sign, the percent sign",
+      "probe": null,
+      "note": "Untaught, and a price on a sign is written with one.",
+      "anchorIds": [
+        "ca-spanish-a1-proxy",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [
+        "A1-O4-03"
+      ]
+    },
+    {
+      "id": "MR-A1-SN-01",
+      "category": "Sound system",
+      "label": "the two pronunciations of ca and ja: palatal, and the dental ts/dz Marathi keeps",
+      "probe": [
+        "MR-SOUND-CHA-TSAA",
+        "MR-SCRIPT-CA-01",
+        "MR-SCRIPT-JA-01"
+      ],
+      "note": "MARATHI-SPECIFIC. The Spanish inventory deliberately enumerates no pronunciation points at all -- its source publishes no A1/A2 split for them -- so this whole category is derived from the assessed variety in assessment-spec.md and from the listening envelope, not from the proxy.",
+      "anchorIds": [
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [],
+      "marathiSpecific": true
+    },
+    {
+      "id": "MR-A1-SN-02",
+      "category": "Sound system",
+      "label": "the four-way stop contrast: voicing crossed with aspiration, in every row",
+      "probe": [
+        "MR-SCRIPT-KHA-01",
+        "MR-SCRIPT-GHA-01",
+        "MR-SCRIPT-TTHA-01",
+        "MR-SCRIPT-DHA-01",
+        "MR-SCRIPT-BHA-01"
+      ],
+      "anchorIds": [
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [],
+      "marathiSpecific": true
+    },
+    {
+      "id": "MR-A1-SN-03",
+      "category": "Sound system",
+      "label": "the dental/retroflex place contrast: ta-tta, da-dda, na-nna, la-lla",
+      "probe": [
+        "MR-SCRIPT-TA-01",
+        "MR-SCRIPT-TTA-01",
+        "MR-SCRIPT-DA-01",
+        "MR-SCRIPT-DDA-01",
+        "MR-SCRIPT-NA-01",
+        "MR-SCRIPT-NNA-01",
+        "MR-SCRIPT-LA-01",
+        "MR-SCRIPT-LLA-01"
+      ],
+      "anchorIds": [
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [],
+      "marathiSpecific": true
+    },
+    {
+      "id": "MR-A1-SN-04",
+      "category": "Sound system",
+      "label": "nasalization: what the anusvara does to a following stop, and what candrabindu does to a vowel",
+      "probe": [
+        "MR-SCRIPT-ANUSVARA-01",
+        "MR-SCRIPT-CANDRABINDU-01",
+        "MR-SCRIPT-DON-FINAL-N",
+        "MR-SCRIPT-PAACH-NONNASAL"
+      ],
+      "anchorIds": [
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [],
+      "marathiSpecific": true
+    },
+    {
+      "id": "MR-A1-SN-05",
+      "category": "Sound system",
+      "label": "reading the formal register a public notice uses: the Sanskrit spelling of a word speech has worn down",
+      "probe": [
+        "MR-SOUND-KARNA-GEMINATION",
+        "MR-GRAMMAR-TATSAMA-TADBHAVA-SPLIT"
+      ],
+      "note": "MARATHI-SPECIFIC. Public notices -- the reading paper's second part -- are written in a heavily tatsama register, so recognising the formal twin of an everyday word is a reading demand and not a piece of philology.",
+      "anchorIds": [
+        "ca-marathi-assessment",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [],
+      "marathiSpecific": true
+    },
+    {
+      "id": "MR-A1-SN-06",
+      "category": "Sound system",
+      "label": "hearing a borrowed doublet as the same word as its everyday twin",
+      "probe": [
+        "MR-GRAMMAR-TATSAMA-BORROWING",
+        "MR-GRAMMAR-TOND-MUKH-DOUBLET"
+      ],
+      "anchorIds": [
+        "ca-marathi-assessment",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [],
+      "marathiSpecific": true
+    },
+    {
+      "id": "MR-A1-SN-07",
+      "category": "Sound system",
+      "label": "word-final inherent-vowel deletion: when the written a is not said",
+      "probe": null,
+      "note": "MARATHI-SPECIFIC and untaught. Nothing states the rule, and it governs how nearly every taught word is pronounced -- naav, not naava. A learner who reads the akshara principle literally mispronounces the whole vocabulary, which the listening and speaking papers both score.",
+      "anchorIds": [
+        "ca-marathi-assessment"
+      ],
+      "derivedFrom": [],
+      "marathiSpecific": true
+    },
+    {
+      "id": "MR-A1-SN-08",
+      "category": "Sound system",
+      "label": "word stress and the rhythm of a short phrase",
+      "probe": null,
+      "note": "MARATHI-SPECIFIC and untaught. The listening envelope specifies 90-110 wpm at A1, so rhythm is assessed whether or not it is taught.",
+      "anchorIds": [
+        "ca-marathi-assessment",
+        "ca-marathi-task-shapes-a1"
+      ],
+      "derivedFrom": [],
+      "marathiSpecific": true
+    }
+  ]
+}

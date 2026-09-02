@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: ML-C01-nandi
+spine_node: SPINE-COURTESY-THANK
 sequence: 20
 chapter: 1
 type: word
@@ -10,19 +12,33 @@ concept_tag: COURTESY-THANKS
 prerequisites: [ML-C01-namaskaram]
 sounds: [nda-conjunct, i-vowel-sign]
 roots: [nal]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ML-LEX-NAMASKARAM-01]
+introduces:
+  knowledge: [ML-LEX-NANDI-01, ML-ETYMON-NANDI-NAL-01]
+practises:
+  knowledge: [ML-LEX-NANDI-01, ML-ETYMON-NANDI-NAL-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [ML-C01-namaskaram]
 ---
 
 # നന്ദി (nandi) — "thank you," and the Tamil kinship made visible
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] After a Sanskrit greeting, the native core shows itself: Malayalam's
 "thank you" is **not** the Sanskrit word its neighbours Kannada and Telugu use.
 It is *nandi* — the very cousin of Tamil's *naṉṟi*.
 
 ## The letters in this word
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 *(Skim if you read Malayalam.)*
 
@@ -35,6 +51,7 @@ Left to right: **ന · ന്ദി** = *na-ndi* →
 > **നന്ദി** = **nandi**
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[ML-LEX-NANDI-01, ML-ETYMON-NANDI-NAL-01]; assesses=[] -->
 
 **നന്ദി** (*nandi*) is **native Dravidian**, from the same root **nal / nan**
 ("good") that gives Tamil **naṉṟi** ("goodness → gratitude"). Malayalam and
@@ -47,7 +64,7 @@ Its neighbours went the other way: Kannada and Telugu use the Sanskrit
 Tamil and Malayalam on the native side, Kannada and Telugu on the Sanskrit
 side.
 
-## Across the family — the same idea, five ways
+The same idea, five ways:
 
 | Language | "Thanks" | Note |
 |---|---|---|
@@ -58,20 +75,15 @@ side.
 | Hindi | *dhanyavād* / *shukriyā* | Sanskrit / Perso-Arabic |
 
 ## Why it's said this way
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-NANDI-01] -->
 
 Like *naṉṟi* in Tamil, *nandi* is a touch formal — among close family it can
 feel oddly stiff, as if you were thanking a stranger; warmth is usually assumed
 and shown in tone. The explicit word is for when you want to *mark* the
 gratitude. (In casual speech you'll also hear the English *thanks*.)
 
-## Sounds you'll need
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
-
-ന is *na*; ന്ദി is “ndi” — a **conjunct** of ന
-(na) + ദ (da) into “nd,” with the “i” sign. Read ന·ന്ദി →
-*nandi*.
-
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-NANDI-01, ML-ETYMON-NANDI-NAL-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: na · ndi → "nandi"]
@@ -79,6 +91,7 @@ gratitude. (In casual speech you'll also hear the English *thanks*.)
 - [YOU SAY: how ന്ദ joins two consonants into one "nd" block]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-NANDI-01, ML-ETYMON-NANDI-NAL-01] -->
 
 [PAUSE 3s] Read **നന്ദി**. Is it native or a Sanskrit loan, and which language
 has the twin word? (Native — root *nal*, "good"; Tamil's *naṉṟi*.) Which two

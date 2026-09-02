@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7c5643e5bf34365e",
+  "sourceHash": "fnv1a64:b4d22d167e3782af",
   "lessons": [
     {
       "id": "TE-S123-letter-dda",
@@ -180,7 +180,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6c63f201e6eeb859",
+      "sourceHash": "fnv1a64:b80bf68af018a88b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -458,7 +458,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5c2c1a5ee2202e6f",
+      "sourceHash": "fnv1a64:167fb4af55c04131",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -506,6 +506,30 @@
             {
               "kind": "speech",
               "text": "వెళ్ళి వస్తాను (veḷḷi vastānu) = వెళ్ళి (veḷḷi, \"having gone\") + వస్తాను (vastānu, \"I come\") — literally \"having gone, I come [back],\" i.e. \"I'll go and come back.\" A Telugu speaker never signs off with a bare \"I'm leaving\" — that sounds final. Instead they promise return. It is the same \"go-and-come-back\" farewell you meet across the Dravidian south (Tamil pōy varugiṟēṉ, Kannada hōgi baruttēne, Malayalam pōyi varāṁ) and echoing into the Indo-Aryan tracks (Bengali āshi). The warm reply is వెళ్ళి రండి (veḷḷi raṇḍi, \"go and come [back]\")."
+            },
+            {
+              "kind": "speech",
+              "text": "Across the family — the same idea, five ways:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Language",
+                "\"go and come back\" (goodbye)"
+              ],
+              "columns": 2,
+              "rowCount": 5,
+              "utterances": [
+                "Language: Telugu. \"go and come back\" (goodbye): veḷḷi vastānu.",
+                "Language: Tamil. \"go and come back\" (goodbye): pōy varugiṟēṉ.",
+                "Language: Kannada. \"go and come back\" (goodbye): hōgi baruttēne.",
+                "Language: Malayalam. \"go and come back\" (goodbye): pōyi varāṁ.",
+                "Language: Bengali (Indo-Aryan). \"go and come back\" (goodbye): āshi (\"I come\")."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The whole south — and, in Bengali, well beyond it — prefers a promise of return to a blunt farewell. The languages are not all related; the habit travelled anyway."
             }
           ]
         },
@@ -592,7 +616,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:009dedce2de234fa",
+      "sourceHash": "fnv1a64:56a3dc92ceca80f8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -895,7 +919,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a8c9eaecc19d5e56",
+      "sourceHash": "fnv1a64:34a3ff98d57eee78",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1164,7 +1188,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:78115613ca846b75",
+      "sourceHash": "fnv1a64:9de82e3f75be2312",
       "notice": null,
       "blocks": [
         {
@@ -1186,9 +1210,33 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The farewells",
+          "type": "input",
+          "title": "The exchange — the farewells",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "All three, side by side — none of them a blunt \"goodbye\":"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Telugu",
+                "",
+                "English"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "Telugu: వెళ్ళి వస్తాను., veḷḷi vastānu. English: I'll go and come back. (the goodbye).",
+                "Telugu: వెళ్ళి రండి., veḷḷi raṇḍi. English: Go and come back. (the reply).",
+                "Telugu: రేపు కలుద్దాం., rēpu kaluddām. English: See you tomorrow.",
+                "Telugu: మళ్ళీ కలుద్దాం., maḷḷī kaluddām. English: We'll meet again."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "A few of these characters have not had their own lesson yet. They are here to be recognised, not decoded — the romanization beside each line is what you read from. The letters catch up in the chapters ahead."
+            },
             {
               "kind": "pause",
               "seconds": 1,
@@ -1235,8 +1283,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The atoms",
+          "type": "notice",
+          "title": "What you've built — the atoms",
           "segments": [
             {
               "kind": "pause",
@@ -1275,14 +1323,18 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Roots you now carry",
+          "type": "etymology",
+          "title": "The words, taken apart — roots you now carry",
           "segments": [
             {
               "kind": "pause",
               "seconds": 2,
               "perItem": false,
               "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Roots you now carry:"
             },
             {
               "kind": "speech",

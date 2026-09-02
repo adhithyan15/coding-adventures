@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9620b124b94658f4",
+  "sourceHash": "fnv1a64:e375774bdd801998",
   "lessons": [
     {
       "id": "ML-C02-peru",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:49c863931124843a",
+      "sourceHash": "fnv1a64:e84e534ccf6bca89",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -72,17 +72,6 @@
         },
         {
           "index": 3,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "പ (pa) + േ (ē) (the ē-sign) becomes പേ (pē); ര് (bare r, with the chandrakkala). Read പേ, ര് becomes pēru."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -113,7 +102,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -468,7 +457,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b47a8e77b0049d38",
+      "sourceHash": "fnv1a64:b87fe8059252b77f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -521,17 +510,6 @@
         },
         {
           "index": 3,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "എ (independent e) + the conjunct ന്റെ (nṟe) becomes enṟe."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -562,7 +540,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -915,7 +893,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3bb46d24c479301f",
+      "sourceHash": "fnv1a64:a20af427ec2c826d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -983,17 +961,6 @@
         },
         {
           "index": 4,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ആ (ā) (independent long ā) + ണ് (bare retroflex ṇ) becomes āṇŭ."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1024,7 +991,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1377,7 +1344,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:18a3b4565c7e6b2c",
+      "sourceHash": "fnv1a64:c59b362b724a12b7",
       "notice": null,
       "blocks": [
         {
@@ -1399,8 +1366,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
+          "type": "etymology",
+          "title": "The phrase, taken apart",
           "segments": [
             {
               "kind": "speech",
@@ -1490,7 +1457,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a4e938a9c64e2303",
+      "sourceHash": "fnv1a64:0bcbfee0925f7555",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1554,17 +1521,6 @@
         },
         {
           "index": 4,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "നീ (n=i); നിങ്ങൾ (niṅṅaḷ)."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1586,7 +1542,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1941,7 +1897,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:31248effacd214a4",
+      "sourceHash": "fnv1a64:9454cf6b9835206f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1994,17 +1950,6 @@
         },
         {
           "index": 3,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "എ (e) + the conjunct ന്ത് (ntŭ) becomes entŭ."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -2035,7 +1980,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -2066,7 +2011,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8717ca7edc9f6ada",
+      "sourceHash": "fnv1a64:03c75db83c7f3b1f",
       "notice": null,
       "blocks": [
         {
@@ -2088,8 +2033,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
+          "type": "etymology",
+          "title": "The phrase, taken apart",
           "segments": [
             {
               "kind": "speech",
@@ -2178,13 +2123,22 @@
       "romanization": "santōṣam",
       "gloss": "joy / pleased to meet you",
       "script": "malayalam",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:e9d348626eb61ca9",
-      "notice": null,
+      "sourceHash": "fnv1a64:eb5e1646a5e403e1",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script: two new shapes to notice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: two new shapes to notice until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -2205,8 +2159,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The word you can use",
+          "type": "input",
+          "title": "The exchange — the words you can use",
           "segments": [
             {
               "kind": "speech",
@@ -2216,8 +2170,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "Two new shapes to notice",
+          "type": "script",
+          "title": "Script: two new shapes to notice",
           "segments": [
             {
               "kind": "speech",
@@ -2729,7 +2683,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1354852e95175961",
+      "sourceHash": "fnv1a64:25f3de7d5f5a86c3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -2743,8 +2697,25 @@
       "blocks": [
         {
           "index": 0,
-          "type": "unknown",
-          "title": "The dialogue",
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No new words. The whole introduction, in the order two people actually say it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "table",
@@ -2792,7 +2763,7 @@
           ]
         },
         {
-          "index": 1,
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -2832,7 +2803,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "writing",
           "title": "Writing check — keep the model visible",
           "segments": [
@@ -2843,7 +2814,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "script",
           "title": "Script check — the letters of this chapter",
           "segments": [
@@ -2889,7 +2860,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -37,7 +37,7 @@ reviews_of: [UR-C13-safed]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-SAFED, UR-ETYMON-SAFED-WHITE-PIE] -->
 
-[PAUSE 2s] Recall **سفید** — white, cousin of Sanskrit *śvetá* and English
+[PAUSE 2s] Recall *safed* — white, cousin of Sanskrit *śvetá* and English
 **white**, three roads from one PIE root. This word is inherited rather
 than Persian, and it breaks the "never changes" rule the last two colors
 kept.
@@ -47,9 +47,9 @@ kept.
 
 > **کالا** — *kālā* — **black**
 
-> **میرا کوٹ کالا ہے۔** — *merā koṭ kālā hai.* — "My coat is black."
+> *merā koṭ kālā hai.* — "My coat is black."
 
-> **میری ٹوپی کالی ہے۔** — *merī ṭopī kālī hai.* — "My cap is black."
+> *merī ṭopī kālī hai.* — "My cap is black."
 
 ## Grammar Lens: a color that agrees like مِیرا
 <!-- hl-knowledge: introduces=[UR-GRAMMAR-ADJECTIVE-AGREEMENT]; assesses=[UR-LEX-KALA] -->
@@ -57,14 +57,14 @@ kept.
 **کالا** ends in **ا** — and a color ending in **ا** changes with the noun
 it describes, exactly the way **merā**/**merī** changed for gender back in
 the family chapter. Masculine stays **کالا**; feminine becomes **کالی**.
-**لال** and **سفید** never had to make this choice, because neither one
+**لال** and *safed* never had to make this choice, because neither one
 ends in **ا**. Watch for it again on the last color of this chapter.
 
 ## The word, taken apart — inherited, but borrowed further back
 <!-- hl-knowledge: introduces=[UR-ETYMON-KALA-DRAVIDIAN]; assesses=[UR-LEX-KALA] -->
 
 **کالا** is inherited from Sanskrit *kāla*, "black, dark" — so far,
-the same kind of story as **بھائی** or **آنکھ**. But **کالا**'s root does
+the same kind of story as *bhāī* or *āṅkh*. But **کالا**'s root does
 not continue into Proto-Indo-European at all. It is usually traced instead
 to Proto-Dravidian **\*kār-**, "black, to be burnt": Sanskrit itself
 borrowed this color word from its Dravidian neighbours, long before any of
@@ -76,7 +76,7 @@ sits outside the Indo-European family this book has been tracing.
 
 - [YOU SAY: **kālā** — black, masculine; **kālī** — black, feminine]
 - [YOU CHOOSE: **merā koṭ kālā hai** against **merī ṭopī kālī hai**]
-- [YOU CONTRAST: **سفید** never changes; **کالا** always agrees]
+- [YOU CONTRAST: *safed* never changes; **کالا** always agrees]
 - [YOU NAME: **کالا**'s root sits outside Indo-European, in Dravidian —
   unlike every other inherited word so far]
 
@@ -86,8 +86,8 @@ sits outside the Indo-European family this book has been tracing.
 [PAUSE 3s] What does **کالا** mean, and what does it become before a
 feminine noun? (**Black**; **kālī**.) Is **کالا**'s ultimate root
 Indo-European? (**No — Proto-Dravidian, borrowed into Sanskrit.**) Which
-two colors so far never change their ending? (**لال and سفید.**) Does
-**خدا حافظ** need a verb or an agreement ending to work as a farewell?
+two colors so far never change their ending? (**لال and safed.**) Does
+*khudā hāfiz* need a verb or an agreement ending to work as a farewell?
 (**No — speakers use the fixed formula simply as "goodbye," no
 conjugation required.**) When choosing **kaise** or **kaisī**, whose
 gender decides the choice — yours, or the person you're addressing?

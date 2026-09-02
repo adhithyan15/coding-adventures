@@ -56,16 +56,17 @@ matter; the history explains them.
 From the right edge: **س** *s*, then **و** carrying *o*, then **چ** *ch*, then
 **ن** *n*, then **ا** long *ā*.
 
-**چ** is new, and you own the trick already. It is the body of **ج** *j* — from
-**جی** *jī* and **جانا** *jānā* — with **three dots below** instead of one.
-Second time this has happened: **ب** *b* has one dot below the low scoop, **پ**
-*p* has three. Counting dots stays a reading skill.
+**چ** is new, and you own the trick already. It is the body of *jīm*, the **j**
+you say in *jī* and *jānā*, carrying **three dots below** instead of one.
+Second time this has happened: *be* has one dot below the low scoop, *pe* has
+three. Counting dots stays a reading skill — one you are given by ear here, a
+lesson before the shapes arrive.
 
 ## Grammar Lens: nothing new to run it
 <!-- hl-knowledge: introduces=[]; assesses=[UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-LEX-SOCHNA] -->
 
-> **میں سوچتا ہوں** — *maiṅ sochtā hūṅ* — **I think** (man speaking)
-> **میں سوچتی ہوں** — *maiṅ sochtī hūṅ* — **I think** (woman speaking)
+> *maiṅ sochtā hūṅ* — **I think** (man speaking)
+> *maiṅ sochtī hūṅ* — **I think** (woman speaking)
 
 The participle takes gender, **ہوں** takes person. The machine is built; every
 new verb walks into it.
@@ -83,7 +84,7 @@ State the limit plainly: *śuc-* has **no secure English cousin**. Inventing one
 would be worse than admitting it.
 
 What is worth noticing sits inside Urdu. Beside inherited **soch**, Urdu keeps
-Arabic **فکر** *fikr*, “thought, reflection,” on the root *f-k-r* — and *fikr*
+Arabic *fikr*, “thought, reflection,” on the root *f-k-r* — and *fikr*
 also means **worry**: *koī fikr nahīṅ*, “no worries.” Two words, two unrelated
 languages, opposite sides of Urdu's vocabulary, each sliding from thinking to
 fretting on its own.
@@ -92,7 +93,7 @@ fretting on its own.
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-SOCHNA, UR-SCRIPT-CHE-LETTER, UR-ETYMON-SOCHNA-GRIEVE, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-GRAMMAR-NA-INFINITIVE, UR-LEX-BOLNA] -->
 
 - [YOU SAY: **sochnā** — to think; then the stem **soch-**]
-- [YOU COUNT: **ج** one dot below, **چ** three dots below]
+- [YOU COUNT: *jīm* one dot below, **چ** three dots below]
 - [YOU SAY: **maiṅ sochtā hūṅ**, then **maiṅ sochtī hūṅ**]
 - [YOU RUN: **bolnā**, **jānnā**, **sochnā** — speak, know, think]
 - [YOU SAY: both meanings of the noun **soch** — a thought, and a worry]

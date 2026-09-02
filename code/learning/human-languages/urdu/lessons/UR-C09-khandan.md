@@ -49,21 +49,21 @@ names the group they belong to.
 > **میرا خاندان۔** — *merā khāndān.* — "[This is] my family."
 
 **خاندان** is grammatically masculine, so **merā** stays unchanged — the
-same class as **بھائی**.
+same class as *bhāī*.
 
 ## The word, taken apart — the fourth Persian noun this chapter has met
 <!-- hl-knowledge: introduces=[UR-ETYMON-KHANDAN-PERSIAN]; assesses=[UR-LEX-KHANDAN, UR-ETYMON-DOST-CHOOSE, UR-ETYMON-KHUDA-PERSIAN, UR-ETYMON-HAFIZ-ARABIC, UR-ETYMON-BHAI-BROTHER, UR-ETYMON-BAHAN-SHARE] -->
 
-**خاندان** is Classical Persian, borrowed into Urdu whole. Unlike **خدا
-حافظ**, whose Persian *khudā* and Arabic-rooted *hāfiz* this book could pull
+**خاندان** is Classical Persian, borrowed into Urdu whole. Unlike *khudā
+hāfiz*, whose Persian *khudā* and Arabic-rooted *hāfiz* this book could pull
 apart piece by piece, no source here commits to what **خاندان** is built
 from internally — so this one stays a single unanalyzed loan, not a
 compound to take apart.
 
-Line up this chapter's four nouns by where they came from. **بھائی** and
-**بہن** are inherited, straight from Sanskrit, the same road as every kin
-word before them. **دوست** and **خاندان** are Persian, the same road as
-**خدا** and **حافظ** back in Chapter 5. The people you would point to and
+Line up this chapter's four nouns by where they came from. *bhāī* and
+*bahan* are inherited, straight from Sanskrit, the same road as every kin
+word before them. *dost* and **خاندان** are Persian, the same road as
+**خدا** and *hāfiz* back in Chapter 5. The people you would point to and
 name stayed native; the words for choosing them as friends and grouping
 them as family reached outside the language.
 
@@ -77,10 +77,10 @@ them as family reached outside the language.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KHANDAN, UR-ETYMON-KHANDAN-PERSIAN, UR-LEX-BHAI, UR-LEX-BAHAN, UR-LEX-DOST, UR-GRAMMAR-MERA-GENDER-AGREEMENT] -->
-<!-- hl-activity: {"id":"UR-C09-khandan-sort","kind":"text","assesses":["UR-ETYMON-KHANDAN-PERSIAN"],"prompt":"Type the Urdu word for 'family' — the loan that groups بھائی and بہن together.","answer":"خاندان","accepted":["khandan","khāndān"],"feedback":{"correct":"Right: خاندان — Persian, like دوست, خدا and حافظ.","incorrect":"Use خاندان — khāndān."},"response_seconds":9} -->
+<!-- hl-activity: {"id":"UR-C09-khandan-sort","kind":"text","assesses":["UR-ETYMON-KHANDAN-PERSIAN"],"prompt":"Type the Urdu word for 'family' — the loan that groups bhāī and bahan together.","answer":"خاندان","accepted":["khandan","khāndān"],"feedback":{"correct":"Right: خاندان — Persian, like dost, khudā and hāfiz.","incorrect":"Use خاندان — khāndān."},"response_seconds":9} -->
 
 [PAUSE 3s] Which two of this chapter's nouns are inherited from Sanskrit,
-and which two are Persian loans? (**بھائی, بہن inherited; دوست, خاندان
+and which two are Persian loans? (**bhāī, bahan inherited; dost, خاندان
 Persian.**) Say all four people-words with **merā** or **merī** correctly
 chosen for each.
 

@@ -5,6 +5,50 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed — components over ~229 slots could not be loaded by the JVM
+
+The emitter gave every slot its own Kotlin parameter. Engram's `EngramApp` has
+254 slots, so the emitted composable took 255 parameters, and the JVM caps a
+method signature at **255 argument slots**. The class compiled, packaged into a
+`.app`, launched, and died:
+
+```
+java.lang.ClassFormatError: Too many arguments in method signature
+```
+
+Components past the limit now take a single grouped props object instead.
+Positional parameters are kept wherever they fit, because Compose skips
+recomposition **per parameter** — collapsing every component into one object
+would trade a load-time crash for a performance regression across the board.
+
+The threshold is measured, not guessed. A probe that compiled **and loaded**
+composables of increasing arity put the boundary at exactly 229 String slots
+(254 JVM slots), with 230 failing. `compileKotlin` succeeds on both, so a
+compile-only probe finds no boundary at all. The cost model that follows —
+parameters, plus `dispatch`, plus the plugin's `$composer` and one `$changed`
+bitmask per ten parameters, with `Double`/`Long` counting twice unless nullable
+— reproduces that boundary exactly.
+
+Two things this took more than one attempt to get right, both now pinned by
+tests:
+
+- **The split-section helpers have the same problem**, and there is one per
+  top-level child, so a component that overflows once overflows eight times.
+  Fixing only the root left the class unloadable.
+- **A constructor is a method signature too.** One flat data class of 254
+  properties overflows its own constructor and its generated `copy()`, which
+  moved the failure from `EngramAppKt` to `EngramAppProps` rather than removing
+  it. The props object is therefore chunked into groups of 64.
+
+Every emitted props class is `@Immutable`. That is load-bearing: Compose can
+only skip recomposition for a type it knows to be stable, and an unannotated
+class is treated as unstable, so the whole component would recompose on any
+change.
+
+Verified end to end: Engram's Compose desktop app emits, compiles, loads all
+three classes, packages, and **runs** with the engine loaded and no
+`ClassFormatError`.
+
 ### Fixed
 
 - `HostInput.a11y-label` now lowers to native Compose content-description

@@ -37,7 +37,7 @@ reviews_of: [UR-C14-juta]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-JUTA, UR-ETYMON-JUTA-YOKE] -->
 
-[PAUSE 2s] Recall **جوتا**, cousin of English **yoke** and Sanskrit
+[PAUSE 2s] Recall *jūtā*, cousin of English **yoke** and Sanskrit
 **yoga**. This word has no such cousin behind it — but it made one of its
 own, going the other direction.
 
@@ -46,9 +46,9 @@ own, going the other direction.
 
 > **ٹوپی** — *ṭopī* — **cap, hat**
 
-> **میری ٹوپی سفید ہے۔** — *merī ṭopī safed hai.* — "My cap is white."
+> *merī ṭopī safed hai.* — "My cap is white."
 
-**ٹوپی** is feminine, like **روٹی** and **قمیض**.
+**ٹوپی** is feminine, like **روٹی** and *qamīz*.
 
 ## The word, taken apart — nothing behind it, something ahead
 <!-- hl-knowledge: introduces=[UR-ETYMON-TOPI-INTO-ENGLISH]; assesses=[UR-LEX-TOPI] -->
@@ -72,7 +72,7 @@ walked straight into English as itself.
   **روٹی**]
 - [YOU CONNECT: **ṭopī** → English **topee**, borrowed directly, no
   intermediate language]
-- [YOU SAY: **کالا جوتا** and **سفید ٹوپی** together]
+- [YOU SAY: *kālā jūtā* and *safed ṭopī* together]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-TOPI, UR-ETYMON-TOPI-INTO-ENGLISH, UR-GRAMMAR-WELLBEING-WORD-ORDER, UR-GRAMMAR-KHUDA-HAFIZ-ELLIPSIS] -->
@@ -81,8 +81,8 @@ walked straight into English as itself.
 (**Cap/hat**; **feminine**.) Does **ٹوپی** have a documented root before
 Prakrit? (**No — a dead end.**) What English word borrows **ٹوپی**
 directly, and roughly when? (**Topee, 1825–35.**) Recall the frame that
-put **ٹھیک** inside a full sentence — say it now with **میں**. (**میں
-ٹھیک ہوں۔**) Does **خدا حافظ** need a conjugated verb to work as a
+put *ṭhīk* inside a full sentence — say it now with **میں**. (**میں
+*ṭhīk* ہوں۔**) Does ***khudā hāfiz*** need a conjugated verb to work as a
 farewell? (**No — it's used as a fixed formula, no agreement ending
 required.**)
 

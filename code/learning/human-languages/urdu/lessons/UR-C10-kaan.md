@@ -50,7 +50,7 @@ question.
 > **میرا کان۔** — *merā kān.* — "my ear."
 
 **کان** is masculine, so **merā** keeps the form you already know from
-**بھائی** and **خاندان**.
+*bhāī* and *khāndān*.
 
 ## The word, taken apart — honestly, not fully traced
 <!-- hl-knowledge: introduces=[UR-ETYMON-KAAN-UNCERTAIN]; assesses=[UR-LEX-KAAN, UR-ETYMON-KHANDAN-PERSIAN] -->
@@ -59,11 +59,11 @@ question.
 Apabhramsa *kaṇṇa*. That much is solid. Where *karṇa* itself comes from is
 not: the trail runs out inside Indo-Aryan, with only a loose, unconfirmed
 suggestion linking it to Persian **کر** (*kar*), "deaf." No English cousin,
-no settled Indo-European root — the same honest dead end **پڑھنا**'s *paṭh-*
+no settled Indo-European root — the same honest dead end *paṛhnā*'s *paṭh-*
 hit two chapters ago.
 
 Notice the pattern from last chapter still holds: **کان** is inherited,
-straight from Sanskrit, the same road as **بھائی** and **بہن**. **خاندان**,
+straight from Sanskrit, the same road as *bhāī* and *bahan*. *khāndān*,
 the word that closed that chapter, was Persian instead — the body's own
 words stay native even where their history goes quiet.
 

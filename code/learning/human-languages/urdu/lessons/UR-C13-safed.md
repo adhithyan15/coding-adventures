@@ -46,7 +46,7 @@ root does not stop where **لال**'s did.
 
 > **سفید** — *safed* — **white**
 
-> **میری ٹوپی سفید ہے۔** — *merī ṭopī safed hai.* — "My cap is white."
+> *merī ṭopī safed hai.* — "My cap is white."
 
 Like **لال**, **سفید** never changes its ending.
 
@@ -62,7 +62,7 @@ into Iranian and then Urdu, the same shape as **دل** and *hṛdaya* two
 chapters back.
 
 This time a third road leads somewhere new: that same PIE root, through
-Proto-Germanic, gives English **white** as well. **پوچھنا** and *porsīdan*
+Proto-Germanic, gives English **white** as well. *pūchhnā* and *porsīdan*
 were cousins by two roads; **سفید**, **śvetá**, and **white** are cousins
 by three.
 
@@ -81,10 +81,10 @@ by three.
 
 [PAUSE 3s] What does **سفید** mean? (**White**.) Name its two settled
 cousins in other languages. (**Sanskrit śvetá; English white.**) Recall
-**ٹھیک** and how a short Urdu word once bridged to a Hindi cognate — how is
-that bridge different from what **سفید** just did? (**ٹھیک**'s bridge
+*ṭhīk* and how a short Urdu word once bridged to a Hindi cognate — how is
+that bridge different from what **سفید** just did? (*ṭhīk*'s bridge
 was Urdu-to-Hindi, the same modern language pair; **سفید**'s is a PIE root
 three languages deep.) How did the earlier take-leave dialogue end?
-(**With خدا حافظ, spoken by both voices.**)
+(**With khudā hāfiz, spoken by both voices.**)
 
 Sources: [Wiktionary: سفید](https://en.wiktionary.org/wiki/%D8%B3%D9%81%DB%8C%D8%AF), [Wiktionary: white](https://en.wiktionary.org/wiki/white).
