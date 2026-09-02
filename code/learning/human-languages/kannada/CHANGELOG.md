@@ -56,6 +56,20 @@ One genuine discrepancy surfaced: the hand-written book romanised Tamil
 எப்படி as *eppaṭi*, the lessons as *eppaḍi*. The book's form is restored, in
 three places — a deliberate three-character change the census reports exactly.
 
+### A ramp number moved, and it is coverage arriving rather than a regression
+
+Chapter 3 became the track's first `atomChapterSpikes` entry (0 → 1), and
+`atomsNeverRevisited` went 9 → 11. Nothing got steeper: the chapter was schema
+v1, which declares no atoms at all, so it was invisible to every ramp
+measurement until now. Fifteen atoms across eight lessons is **1.9 per lesson**,
+under the corpus mean of 2.31, and the chapter introduces five new words across
+six content lessons — one new word per lesson. It trips
+`maxNewAtomsPerChapter: 12` because it is long, not because any step is large,
+and `maxNewAtomsPerLesson: 3` — the budget that defines gentle — is met exactly.
+The atoms were deliberately NOT merged to get under the number; the honest
+remedy is splitting a chapter that already spans two spine nodes, which is
+recorded in `BACKLOG.d` rather than done inside a retirement PR.
+
 Counted against the merged tree after merging it, never derived: `handwritten.d`
 holds **35** entries on `origin/main` (sibling PRs retired a French and a German
 chapter while this was in flight) and **33** on this branch.
