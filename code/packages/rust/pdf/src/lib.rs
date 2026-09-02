@@ -56,13 +56,15 @@
 //! oracle is missing is not a test.
 
 mod content;
+mod embed;
 mod object;
 mod page;
 mod writer;
 
 pub use content::{ColorTarget, Content, Paint, Space, TextRun};
+pub use embed::{EmbeddedFont, EmbeddedGlyph};
 pub use object::{format_real, Dict, ObjId, Object};
-pub use page::{Document, Page, StandardFont, A4, LETTER};
+pub use page::{Document, FontResource, Page, StandardFont, A4, LETTER};
 pub use writer::{flate_encode, PdfError, PdfWriter};
 
 #[cfg(test)]

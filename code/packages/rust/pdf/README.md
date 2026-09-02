@@ -1,10 +1,32 @@
 # pdf — a PDF writer built from scratch
 
-A zero-dependency PDF writer, through **PDF-2**: the object model and file
-structure (#13944), plus the page tree, content streams and graphics operators
-(#13957). Font embedding and subsetting are next (#13958); until then, text
-uses the base-14 faces, which every reader already has and none of which can
-render Tamil, Devanagari or CJK.
+A zero-dependency PDF writer, through **PDF-3**: the object model and file
+structure (#13944), the page tree, content streams and graphics operators
+(#13957), and embedded subsetted TrueType fonts (#13958).
+
+Text can use the base-14 faces, which every reader already has, or an embedded
+font — which is what Tamil, Devanagari and CJK require, since no base-14 face
+can draw any of them.
+
+```rust
+// A script the base-14 fonts cannot draw.
+let subset = font_subset::subset(&font, &wanted)?;
+let embedded = EmbeddedFont::new(name, subset.font, units_per_em, ascent, descent, bbox, glyphs);
+
+let mut content = Content::top_down(height);
+content.begin_text()
+    .font("F1", 48.0)
+    .text_position(72.0, 120.0)
+    .show_glyphs(&glyph_ids)   // glyph IDS: the encoding is Identity-H
+    .end_text();
+
+let mut page = Page::with_content(width, height, content)?;
+page.add_embedded_font("F1", embedded);
+```
+
+`/ToUnicode` is written alongside, and it is the part worth knowing about: it
+is **invisible to rendering**. A PDF without one draws perfectly and returns
+gibberish when the text is selected, searched, or read by a screen reader.
 
 ```rust
 use pdf::{ColorTarget, Content, Document, Page, Paint, StandardFont, LETTER};
