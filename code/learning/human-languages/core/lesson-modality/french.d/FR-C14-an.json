@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C14-an",
+    "language": "french",
+    "chapter": 17,
+    "sequence": 515,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2839c6ef6c0a56f"
+  },
+  "findings": []
+}

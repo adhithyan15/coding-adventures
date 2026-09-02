@@ -1,17 +1,17 @@
 ---
 id: FR-C16-etre
-sequence: 500
+sequence: 560
 chapter: 19
 type: word
 headword: être
 gloss: to be — the six present forms
 concept_tag: VERB-BE
-prerequisites: [FR-C15-passe-simple, FR-C14-avoir]
+prerequisites: [FR-C15-passe-simple, FR-C14-practice-avoir]
 sounds: [nasal-on, circumflex]
 roots: [latin-esse]
 etymology_hook: "the present forms of être continue Latin esse, among the oldest and most frequently worn word-shapes in French"
 est_minutes: 4
-reviews_of: [FR-C14-avoir, FR-C15-passe-simple, FR-C05-parler]
+reviews_of: [FR-C14-practice-avoir, FR-C15-passe-simple, FR-C05-parler]
 ---
 
 # être — “to be”

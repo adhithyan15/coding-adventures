@@ -2,15 +2,28 @@
   "chapter": 17,
   "title": "To Have, and How Old You Are",
   "label": "ch:avoir-age",
-  "canDo": "I can use the French verb for “to have” to talk about possession and age.",
+  "canDo": "I can use all six forms of avoir, and ask and answer how old someone is the way French does it — by having years rather than being them.",
   "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
     "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "FR-C14-age",
+    "lesson": "FR-C14-practice",
     "kind": "task",
-    "summary": "Complete FR-C14-age, the canonical closing checkpoint, and demonstrate the chapter promise: use the French verb for “to have” to talk about possession and age.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "The verb French leans on hardest, taken one person at a time. Its three singular forms are written ai, as and a and sound the same, which is why French keeps the subject pronouns Spanish drops; its plural endings -ons and -ez survived and are unmistakable. Then the sentence the verb exists for: J'ai vingt ans, \"I have twenty years\". Never être, and ans cannot be dropped — and every Romance language on the continent agrees while every Germanic one does not.",
+    "assesses": [
+      "FR-VERB-AVOIR-JAI-01",
+      "FR-VERB-AVOIR-AS-02",
+      "FR-VERB-AVOIR-A-03",
+      "FR-PHON-AI-AS-A-04",
+      "FR-VERB-AVOIR-AVONS-05",
+      "FR-VERB-AVOIR-AVEZ-06",
+      "FR-VERB-AVOIR-ONT-07",
+      "FR-ETYMON-HABERE-AVOIR-08",
+      "FR-LEX-AN-09",
+      "FR-LEX-QUEL-AGE-10",
+      "FR-GRAM-AVOIR-AGE-11"
+    ],
+    "note": "Authored when chapter 17 left the hand-written set. Its cost is a PARADIGM, not vocabulary: the .tex's opening table has one row per person, which is six grammar cells, and maxNewGrammarCellsPerLesson is 1. Two schema-v1 lessons held all six. Fourteen lessons now own one thing each. The payoff is atom-scored -- it assesses every knowledge atom its chapter introduces; the chapter's culture claim is assessed by FR-C14-avoir-etre-langues."
   }
 }

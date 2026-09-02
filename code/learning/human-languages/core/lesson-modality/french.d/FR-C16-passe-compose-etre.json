@@ -3,7 +3,7 @@
     "id": "FR-C16-passe-compose-etre",
     "language": "french",
     "chapter": 19,
-    "sequence": 510,
+    "sequence": 570,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:b5c22887d6e11213"
+    "sourceHash": "fnv1a64:eb852c5e08feae21"
   },
   "findings": []
 }

@@ -1,90 +1,493 @@
 French, chapter 17: To Have, and How Old You Are.
-2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+14 lessons. All 14 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-avoir — "to have".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Lesson 1 of 14.
+j'ai — I have.
 
 Warm-up.
 [pause 2 seconds]
-The verb French leans on hardest. It's irregular, it's everywhere, and — you have already met its root without knowing it.
+The verb French leans on hardest starts here, with the form you will say most — and it is one sound long.
 
-The forms.
-[a table of 3 rows, read aloud]
-j'ai, nous avons, blank.
-tu as, vous avez, blank.
-il/elle a, ils/elles ont, blank.
-Say the singular column: ai, as, a — three forms, and they all sound the same. The written endings differ; your ear can't tell them apart. Only the pronoun tells you who.
-Note j'ai, not je ai: before a vowel, je loses its e. That's the elision you already do in l'eau (Ch. 11).
+Sounds you'll need.
+elision — it is j'ai, never je ai. Before a vowel je drops its e, the same move that turns le eau into l'eau.
+The ai is a single vowel, close to English eh.
+Together: j'ai = zhay. One syllable, and the whole of "I have."
 
-The root you already own.
-avoir from Latin habēre. And among your first verbs you learned habiter ("to live somewhere") from habitāre — which is just habēre run through a "keep doing it" pattern: to keep having a place. Same root, both verbs.
-The family in English is large because English borrowed it whole:
-[a table of 4 rows, read aloud]
-English word: habit. inside it: what you have regularly.
-English word: inhabit. inside it: to have a place — = habiter.
-English word: exhibit. inside it: to hold out.
-English word: prohibit. inside it: to hold back.
-
-How far it wore down.
-Latin habeō ("I have") becomes French j'ai. Four syllables of Latin reduced to a single vowel sound. French does this more than any of its sisters — compare Italian ho, Spanish he, and the aqua becomes eau behind the word for water.
+The word, taken apart.
+j'ai is Latin habeō, "I have."
+Say those two aloud: ha-be-o, then zhay. Three syllables become one, and not one consonant of the Latin survives into the vowel.
+French does this harder than any of its sisters. Italian kept ho, Spanish kept he — both still a whole syllable with a consonant. French kept a vowel. It is the same appetite that ground aqua down to eau, and you will see it again every time a very common word looks like nothing.
+The rule of thumb is worth having now: the more often a word is said, the more of it wears away. That is why the most useful words in a language are usually its least recognisable ones.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "j'ai, tu as, il a, nous avons, vous avez, ils ont"]
+[your turn — say: "j'ai" — zhay, one syllable]
 [pause 8 seconds for the answer]
-[your turn — say: the three that sound alike — "ai, as, a"]
+[your turn — say: the erosion — "habeō, ho, he, j'ai"]
 [pause 8 seconds for the answer]
-[your turn — say: "J'ai un frère" ("I have a brother") — Ch. 10's family]
-[pause 8 seconds for the answer]
-[your turn — say: the root pair — "avoir, habiter"]
+[your turn — say: a whole sentence — "J'ai un frère"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the six forms of avoir. (J'ai, tu as, il a, nous avons, vous avez, ils ont.) Which three sound identical? (Ai, as, a.) What root is avoir from? (Latin habēre.) Which of your first verbs shares it? (Habiter from habitāre.) Why is it j'ai and not je ai? (Elision — je drops its e before a vowel.) Next: what French does with avoir that English would never do.
+How do you say "I have"? (j'ai, zhay.) Why is it not je ai? (Elision — je drops its e before a vowel.) What Latin word is it from? (habeō.) What do Italian and Spanish still keep that French does not? (A whole syllable — ho, he.) Next: the same verb, said to one person.
 
 
-Lesson 2 of 2.
+Lesson 2 of 14.
+tu as — you have.
+
+Warm-up.
+[pause 2 seconds]
+The second form of the verb, and the first sign that this paradigm is easier to say than it looks to read.
+
+Sounds you'll need.
+silent-final — the s of as is not pronounced.
+tu as = tü ah. The u of tu is the tight front-rounded vowel; the as is a bare open ah.
+Say j'ai and tu as back to back and notice how little work the verb is doing in either.
+
+The word, taken apart.
+as is the tu form — the one you use with a friend, a child, or anyone you would call by their first name. It is the same tu you met when you learned which "you" to pick.
+The written s is a signal to the eye and nothing to the ear. That is the normal state of affairs in French verbs: the endings are alive on the page and almost dead in the mouth. It is why the pronoun is not optional — as on its own would tell a listener nothing about who has something.
+Keep that in mind as the paradigm fills in. You are learning six written forms and rather fewer sounds.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "tu as" — tü ah, the s silent]
+[pause 8 seconds for the answer]
+[your turn — say: the pair — "j'ai, tu as"]
+[pause 8 seconds for the answer]
+[your turn — say: with a noun — "Tu as un frère"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say "you have" to a friend? (tu as, tü ah.) Is the s pronounced? (No.) Why can you not drop the pronoun? (The verb form alone does not say who — the pronoun carries it.) Next: he and she.
+
+
+Lesson 3 of 14.
+il a, elle a — he has, she has.
+
+Warm-up.
+[pause 2 seconds]
+The third form, and the shortest verb you will ever meet: one letter.
+
+Sounds you'll need.
+a is a bare open ah — the same sound as tu as, with nothing written after it.
+il a = eel ah. elle a = el ah.
+All three singular forms are now in your mouth, and the next lesson is about what they have in common.
+
+The word, taken apart.
+a is the form for il (he) and elle (she), and it is a single letter carrying an entire verb.
+You already know the two pronouns from the articles: le and la split the world into masculine and feminine, and il and elle do the same for people. French has no separate word for it — a table is elle, a book is il, because the noun's gender decides.
+One thing to notice for later. When French turns this into a question by putting the verb first, two vowels would collide — a il? — so a t is pushed in between them: a-t-il?, "has he?" That t means nothing at all. It is there purely so the mouth has something to land on.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "il a, elle a" — eel ah, el ah]
+[pause 8 seconds for the answer]
+[your turn — say: the three singulars — "j'ai, tu as, il a"]
+[pause 8 seconds for the answer]
+[your turn — say: the question shape — "a-t-il?"; the t is only there for the mouth]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say "he has"? (il a.) And "she has"? (elle a.) How many letters is the verb? (One.) What is the t doing in a-t-il? (Nothing — it keeps two vowels from colliding.) Next: why those three forms are harder to hear than to read.
+
+
+Lesson 4 of 14.
+ai, as, a — three spellings, one ear.
+
+Warm-up.
+[pause 2 seconds]
+You have the three singular forms. Say them one after another and listen to how much difference there actually is.
+
+Grammar Lens: the endings are for the eye.
+Written, the three singular forms are ai, as, a — three different words. Spoken, as and a are the same bare ah, and ai is a single vowel too. The written endings differ; your ear has almost nothing to work with.
+This is not a quirk of avoir. It is the central fact about French verbs, and it has one large consequence: the pronoun is compulsory.
+Spanish can say tengo and drop the yo, because -o means "I" out loud. French cannot drop the je, because the ending that would have carried it went silent centuries ago. So French kept the pronoun and Spanish did not, and the two languages ended up in different places for the same reason: what the ear can still hear decides what the sentence must carry.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the three verb forms bare — "ai, as, a"; hear how close they are]
+[pause 8 seconds for the answer]
+[your turn — say: them with their pronouns — "j'ai, tu as, il a"]
+[pause 8 seconds for the answer]
+[your turn — say: the consequence — "the pronoun does the work the ending stopped doing"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"j'ai, tu as, il a".
+
+Wrap-up Recall.
+[pause 3 seconds]
+Write the three singular forms. (ai, as, a.) How many distinct sounds are there? (Effectively one — a bare vowel.) Why can French not drop its subject pronouns the way Spanish can? (Because the endings are silent — the pronoun is the only thing left that says who.) Next: the plural, where the endings come back to life.
+
+
+Lesson 5 of 14.
+nous avons — we have.
+
+Warm-up.
+[pause 2 seconds]
+Three forms that sound alike, and then this: an ending you can actually hear.
+
+Sounds you'll need.
+nous avons = noo-za-VO(N). The s of nous wakes up and buzzes into the vowel — that is the liaison you already know.
+nasal-on — the -ons ending is a nasal vowel; the n is the nose, not a consonant.
+Weight on the last syllable, as almost always in French.
+
+The word, taken apart.
+avons is Latin habēmus, "we have."
+Here the paradigm turns around. The three singular endings wore away to nothing; -ons did not. It is a full syllable, it is unmistakable, and it belongs to nous and nothing else.
+That pattern holds across French verbs: -ons for nous, -ez for vous. Once you have those two you can hear the plural coming in any verb in the language, regular or not. avoir is one of the most irregular verbs French has, and it still obeys this.
+So the difficulty is not spread evenly. The singular is a listening problem and the plural is not.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "nous avons" — noo-za-VO(N), the s buzzing across]
+[pause 8 seconds for the answer]
+[your turn — say: the contrast — "il a" then "nous avons"; one is a vowel, one is a syllable]
+[pause 8 seconds for the answer]
+[your turn — say: the ending alone — "-ons is always nous"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say "we have"? (nous avons, noo-za-VO(N).) Which ending marks nous? (-ons.) Why is this form easier to hear than il a? (The plural endings survived where the singular ones went silent.) Next: the other you.
+
+
+Lesson 6 of 14.
+vous avez — you have.
+
+Warm-up.
+[pause 2 seconds]
+The second plural ending, and a form you will use with strangers far more often than with crowds.
+
+Sounds you'll need.
+vous avez = voo-za-VAY. The same buzzing liaison as nous avons.
+vowel-e-acute — the -ez is the bright, narrow ay of février. The z is silent.
+Say nous avons, vous avez together: -ons, -ez, the two plural endings of nearly every French verb.
+
+The word, taken apart.
+avez is Latin habētis, and it goes with vous.
+vous is two things at once. It is the plural "you" — several people. And it is the polite "you" for one person, which is the use you will need first and most: a shopkeeper, a stranger, anyone you have not been invited to call tu.
+So vous avez is what you say to one person you are being careful with. Getting this wrong is one of the few grammar mistakes in French that a listener hears as a mistake about them rather than about the language, which is why tu and vous is worth more attention than most endings.
+The verb form does not change between the two meanings. Only who you are looking at does.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "vous avez" — voo-za-VAY]
+[pause 8 seconds for the answer]
+[your turn — say: the two plural endings — "nous avons, vous avez"]
+[pause 8 seconds for the answer]
+[your turn — say: the two jobs — "vous to a group, vous to one stranger"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say "you have" politely? (vous avez, voo-za-VAY.) What are the two jobs vous does? (Plural you, and polite you to one person.) Which ending marks vous? (-ez.) Next: the last form, and the odd one.
+
+
+Lesson 7 of 14.
+ils ont, elles ont — they have.
+
+Warm-up.
+[pause 2 seconds]
+The sixth and last form, and the one that does not resemble the other five.
+
+Sounds you'll need.
+ils ont = eel-ZO(N). The s of ils buzzes across into the vowel.
+nasal-on — ont is one nasal vowel; the n and t are both silent.
+elles ont = el-ZO(N), identical but for the first vowel.
+
+The word, taken apart.
+ont is Latin habent, and it is the odd one out: every other form of avoir has an a in it, and this one does not.
+There is a trap here worth meeting before you fall into it. ils ont is "they have." ils sont is "they are." One consonant apart, and both extremely common. The way to keep them apart is the liaison: ils ont buzzes — eel-z-o(n) — while ils sont hisses, eel so(n). The buzz means have.
+That is the whole paradigm. Six forms, and you now have all of them:
+j'ai, tu as, il a, nous avons, vous avez, ils ont.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "ils ont" — eel-ZO(N), the buzz]
+[pause 8 seconds for the answer]
+[your turn — say: the trap — "ils ont" then "ils sont"; buzz means have]
+[pause 8 seconds for the answer]
+[your turn — say: all six in order]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say "they have"? (ils ont, eel-ZO(N).) What does ils sont mean instead? (They are.) How do you tell them apart by ear? (ils ont buzzes; ils sont hisses.) What is unusual about ont among the six forms? (It is the only one with no a in it.) Next: where the whole verb came from.
+
+
+Lesson 8 of 14.
+habēre — the root you already met.
+
+Warm-up.
+[pause 2 seconds]
+You have all six forms of avoir. You have also, without being told, already learned its root — in a different verb, several chapters ago.
+
+The word, taken apart.
+avoir is Latin habēre, "to have."
+Now recall habiter, "to live somewhere." That is Latin habitāre — and habitāre is just habēre run through a pattern that means "keep doing it." To habitāre a place is to keep having it.
+So avoir and habiter are the same verb twice: one wore down to a vowel, the other kept the h, the b and the t because it was said far less often. The two French verbs sitting at opposite ends of the same root are a compact demonstration of the rule you met with j'ai: frequency is what erodes a word.
+English borrowed the Latin whole and shows the root undisguised every time:
+habit — what you have regularly.
+inhabit — to have a place; the exact twin of habiter.
+exhibit — to hold out.
+prohibit — to hold back.
+Four English words, one French verb you use constantly, and one French verb you met learning to say where you live — all the same handful of Latin letters.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the root — "habēre"]
+[pause 8 seconds for the answer]
+[your turn — say: the two French verbs — "avoir, habiter"]
+[pause 8 seconds for the answer]
+[your turn — say: the English four — "habit, inhabit, exhibit, prohibit"]
+[pause 8 seconds for the answer]
+[your turn — say: the twins — "habiter, inhabit"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What Latin verb is avoir from? (habēre.) Which other French verb you already know comes from it? (habiter — from habitāre, "to keep having a place".) Which English word is habiter's exact twin? (inhabit.) Why did avoir wear down so much further than habiter? (It is said far more often — frequency erodes a word.) Next: all six forms, together.
+
+
+Lesson 9 of 14.
+Practice — the whole of avoir.
+
+Warm-up.
+[pause 2 seconds]
+Six forms, learned one at a time. This is the first time they stand together — and a paradigm you have already built is a recap, not a wall.
+
+Guided Practice: the six in order.
+[pause 1 second]
+[your turn — say: "j'ai, tu as, il a, nous avons, vous avez, ils ont"]
+[pause 8 seconds for the answer]
+[your turn — say: the singulars alone — "j'ai, tu as, il a"]
+[pause 8 seconds for the answer]
+[your turn — say: the plurals alone — "nous avons, vous avez, ils ont"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"j'ai, tu as, il a, nous avons, vous avez, ils ont".
+
+Guided Practice: the two halves sound different.
+[pause 1 second]
+[your turn — say: the three that blur — "ai, as, a"]
+[pause 8 seconds for the answer]
+[your turn — say: the two that do not — "-ons, -ez"]
+[pause 8 seconds for the answer]
+[your turn — say: the trap — "ils ont, ils sont"; buzz for have, hiss for are]
+[pause 8 seconds for the answer]
+
+Guided Practice: use it.
+[pause 1 second]
+[your turn — say: "J'ai un frère"]
+[pause 8 seconds for the answer]
+[your turn — say: "Tu as une sœur"]
+[pause 8 seconds for the answer]
+[your turn — say: "Nous avons du pain"]
+[pause 8 seconds for the answer]
+[your turn — say: the root — "avoir, habiter, inhabit"]
+[pause 8 seconds for the answer]
+
+What you've built so far.
+six forms of the verb French leans on hardest, one lesson each.
+a listening fact — the singular endings are silent, so French keeps its subject pronouns where Spanish drops them.
+a root that pays twice — habēre gave French avoir and habiter, and English habit, inhabit, exhibit, prohibit.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give all six forms without stopping. Which three sound effectively the same? (ai, as, a.) Which two endings can you always hear? (-ons and -ez.) How do you hear the difference between ils ont and ils sont? (The buzz — ont takes a liaison z, sont hisses.) What Latin verb is behind all of it? (habēre.)
+
+
+Lesson 10 of 14.
+un an — a year.
+
+Warm-up.
+[pause 2 seconds]
+One small word, and it unlocks the single most common question anyone will ask you in a new language.
+
+Sounds you'll need.
+nasal-an — an is a nasal vowel, the same one in blanc and janvier. The n is the nose, not a consonant.
+silent-final — the plural ans adds a written s and no sound at all.
+un an = a(n)-NA(N): the n of un links across into the vowel.
+
+The word, taken apart.
+an is Latin annus, "year," and English kept it whole in a whole shelf of words:
+annual — happening each year.
+anniversary — literally the year turning (annus + vertere, "to turn").
+annals — a record kept year by year.
+per annum — English never even translated this one.
+You have met annus's neighbours already: the months came out of the same Roman calendar, and janvier stands at the door of exactly this word.
+French also has a second word for year, année, and the difference is real but small: an counts years, année describes them as a stretch of time. For counting — which is what the next lesson does — you want an.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "un an" — a(n)-NA(N), both vowels through the nose]
+[pause 8 seconds for the answer]
+[your turn — say: the plural — "deux ans, dix ans"; the s is silent]
+[pause 8 seconds for the answer]
+[your turn — say: the English family — "annual, anniversary, annals"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say "a year"? (un an.) What Latin word is it? (annus.) Does the plural ans sound different from an? (No — the s is silent.) What does anniversary literally say? (The year turning.) Next: what French does with avoir and ans together.
+
+
+Lesson 11 of 14.
 j'ai vingt ans — having your years.
 
 Warm-up.
 [pause 2 seconds]
-Ask a French speaker their age and the answer uses avoir. Not "I am twenty" — "I have twenty years." English can't do this; Spanish and Italian do exactly the same thing.
+Here is the first thing French lets you say that English cannot say the same way at all.
 
-The phrase.
-Quel âge as-tu? — "What age do you have?" J'ai vingt ans. — "I have twenty years."
-Two things to notice:
-The verb is avoir, never être. Je suis vingt ans is simply wrong.
-ans is compulsory. English drops it ("I'm twenty"); French cannot.
-
-an from annus.
-an ("year") from Latin annus, which gives English annual, anniversary, annals, and per annum. You have already met its descendants: the month names came from the same calendar.
-Careful with the sound: an is nasal, and in vingt ans the silent t of vingt wakes up and links — vin-t-an. That's liaison, French's habit of reviving a dead consonant when a vowel follows.
-
-Who else does it this way.
-[a table of 6 rows, read aloud]
-language: French. "I am 20": j'ai vingt ans — have.
-language: Spanish. "I am 20": tengo veinte años — have.
-language: Italian. "I am 20": ho venti anni — have.
-language: Portuguese. "I am 20": tenho vinte anos — have.
-language: German. "I am 20": ich bin zwanzig Jahre alt — be.
-language: English. "I am 20": I am twenty — be.
-A clean split: Romance has its years; Germanic is its years. Age as something you carry versus age as something you are.
+Grammar Lens: age is something you have.
+English is its age: I am twenty. French has it:
+J'ai vingt ans. — literally, "I have twenty years."
+Two things follow, and both are absolute.
+The verb is avoir, never être. Je suis vingt ans is not a stylistic choice; it is simply wrong, and it is the single most common thing an English speaker gets wrong in their first month.
+And ans cannot be dropped. English says "I'm twenty" with no noun at all. French must name the years: J'ai vingt on its own means nothing.
+One sound to get right. vingt normally ends in silence — you learned it as VA(N), with the g and t both dead. Put ans after it and the t wakes up: vin-t-a(n). That is liaison, doing what it always does — reviving a buried consonant when a vowel follows it.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "Quel âge as-tu?"]
+[your turn — say: "J'ai vingt ans" — with the liaison, vin-t-a(n)]
 [pause 8 seconds for the answer]
-[your turn — say: "J'ai vingt ans" — with the liaison, vin-t-an]
+[your turn — say: the rule — "avoir, never être"]
 [pause 8 seconds for the answer]
-[your turn — say: your own age, using Ch. 12's numbers]
+[your turn — say: the buried t waking — "vingt" alone, then "vingt ans"]
 [pause 8 seconds for the answer]
-[your turn — say: the split — "French a ses ans; English is its years"]
+[your turn — say: your own age, with the numbers you have]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"J'ai vingt ans".
+
+Wrap-up Recall.
+[pause 3 seconds]
+How does French say "I am twenty"? (J'ai vingt ans — "I have twenty years".) Which verb, and which is wrong? (avoir; être is wrong.) Can you drop ans the way English drops "years"? (No.) What happens to the t of vingt before ans? (It wakes up — vin-t-a(n), a liaison.) Next: how to ask.
+
+
+Lesson 12 of 14.
+Quel âge as-tu? — asking someone's age.
+
+Warm-up.
+[pause 2 seconds]
+You can answer the question. Now you can ask it — and this is a phrase worth taking whole rather than building.
+
+Sounds you'll need.
+Quel âge as-tu? = kel AHZH ah-tü.
+circumflex — the hat on â is the gravestone you met on août: it marks a lost s. Older French wrote aage, and before that Latin had aetāticum.
+The g of âge is the soft zh of rouge.
+The polite form is Quel âge avez-vous? — kel AHZH ah-vay-VOO.
+
+The exchange.
+Take it as one unit, the way you took Comment vous appelez-vous?
+— Quel âge as-tu? — "What age do you have?"
+— J'ai vingt ans. — "I have twenty years."
+Notice the question uses avoir as well. The whole exchange is built on having, on both sides — which is what makes it a pair worth memorising together rather than two separate facts.
+And âge is a word you already own in English. Age came into English from French, hat and all, having lost its s on the way: Latin aetāticum becomes aage becomes âge becomes English age.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "Quel âge as-tu?" — kel AHZH ah-tü]
+[pause 8 seconds for the answer]
+[your turn — say: the polite one — "Quel âge avez-vous?"]
+[pause 8 seconds for the answer]
+[your turn — say: both halves — "Quel âge as-tu? J'ai vingt ans."]
+[pause 8 seconds for the answer]
+[your turn — say: the hat's meaning — "â marks a lost s, like août"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"Quel âge as-tu? J'ai vingt ans."
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you ask a friend their age? (Quel âge as-tu?) And a stranger? (Quel âge avez-vous?) Which verb does the question use? (avoir — the same as the answer.) What does the circumflex on â mark? (A lost s.) Next: who else in Europe does it this way.
+
+
+Lesson 13 of 14.
+"having" your years — who else does it.
+
+Warm-up.
+[pause 2 seconds]
+French is not being strange here. It is on one side of a line that runs straight across Europe, and the line is exactly where you would draw it.
+
+Why it's said this way.
+Ask the same question in six languages and count the verbs.
+[a table of 6 rows, read aloud]
+language: French. "I am 20": j'ai vingt ans. verb: have.
+language: Spanish. "I am 20": tengo veinte años. verb: have.
+language: Italian. "I am 20": ho venti anni. verb: have.
+language: Portuguese. "I am 20": tenho vinte anos. verb: have.
+language: German. "I am 20": ich bin zwanzig Jahre alt. verb: be.
+language: English. "I am 20": I am twenty. verb: be.
+A clean split, and not a coincidental one: every Romance language on that list has its years, and every Germanic one is them.
+French treats age as something you carry: a count of years in your possession, which grows. English treats it as something you are, a property like tall or tired.
+Neither is more logical. What matters is that the choice is inherited rather than reasoned: French did not decide this, it received it, along with the rest of what Latin left behind. And it means the mistake you are most likely to make — je suis vingt ans — is you importing your own family's habit into another one.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the four that have — "j'ai, tengo, ho, tenho"]
+[pause 8 seconds for the answer]
+[your turn — say: the two that are — "ich bin, I am"]
+[pause 8 seconds for the answer]
+[your turn — say: the line — "Romance has its years; Germanic is its years"]
+[pause 8 seconds for the answer]
+[your turn — say: the French one again, correctly — "J'ai vingt ans"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which verb does French use for age? (Avoir — never être.) What does j'ai vingt ans literally say? ("I have twenty years.") Can you drop ans? (No — French requires it.) Where does an come from? (Latin annus becomes annual, anniversary.) What happens to the t of vingt before ans? (It links — liaison.) Which languages side with English here? (German — and only German, of the five.)
+Which language family uses have for age? (Romance — French, Spanish, Italian, Portuguese.) Which uses be? (Germanic — German, English.) Is either one more logical? (No — the choice is inherited, not reasoned.) Which error does that make an English speaker likely to commit? (Je suis vingt ans — importing English's be.) Next: all of it together.
+
+
+Lesson 14 of 14.
+Practice — to have, and how old you are.
+
+Warm-up.
+[pause 2 seconds]
+A verb and a sentence. Run the verb first, then use it for the thing it will earn its keep on.
+
+Guided Practice: the paradigm, cold.
+[pause 1 second]
+[your turn — say: all six — "j'ai, tu as, il a, nous avons, vous avez, ils ont"]
+[pause 8 seconds for the answer]
+[your turn — say: backwards — "ils ont, vous avez, nous avons, il a, tu as, j'ai"]
+[pause 8 seconds for the answer]
+[your turn — say: the trap — "ils ont, ils sont"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"j'ai, tu as, il a, nous avons, vous avez, ils ont".
+
+Guided Practice: the exchange.
+[pause 1 second]
+[your turn — say: "Quel âge as-tu?"]
+[pause 8 seconds for the answer]
+[your turn — say: "J'ai vingt ans" — with the liaison, vin-t-a(n)]
+[pause 8 seconds for the answer]
+[your turn — say: the polite pair — "Quel âge avez-vous?"]
+[pause 8 seconds for the answer]
+[your turn — say: your own age]
+[pause 8 seconds for the answer]
+
+Guided Practice: use the verb on what you own.
+[pause 1 second]
+[your turn — say: "J'ai un frère, j'ai une sœur"]
+[pause 8 seconds for the answer]
+[your turn — say: "Nous avons du pain et du vin"]
+[pause 8 seconds for the answer]
+[your turn — say: the root pair — "avoir, habiter"]
+[pause 8 seconds for the answer]
+
+What you've built this chapter.
+the whole of avoir, six forms, one lesson each, and a paradigm you built rather than one you were handed.
+why French keeps its pronouns — the singular endings went silent, so je, tu and il carry what the verb stopped saying.
+age is something you have — J'ai vingt ans, never je suis, and ans is compulsory. Every Romance language on the continent agrees with French, and every Germanic one disagrees.
+one root, two verbs, four English words — habēre gave avoir and habiter, plus habit, inhabit, exhibit, prohibit.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the six forms of avoir. Ask a friend their age. (Quel âge as-tu?) Answer with your own. Which verb must you never use for age? (être.) Can ans be left out? (No.) Which other French verb shares avoir's root? (habiter.) How do you hear ils ont against ils sont? (The buzz against the hiss.)

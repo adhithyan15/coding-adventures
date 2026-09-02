@@ -8,7 +8,7 @@ type: phrase
 headword: le temps, il pleut
 gloss: weather — le temps means BOTH "time" and "weather," the SAME Latin tempus polysemy as Spanish's tiempo; il pleut keeps Latin's pl- UNCHANGED, unlike Spanish's llueve
 concept_tag: FR-WEATHER
-prerequisites: [FR-C14-age]
+prerequisites: [FR-C14-practice]
 sounds: [nasal-en, silent-final]
 roots: [tempus-latin, pluere-latin]
 etymology_hook: "le temps means BOTH 'time' and 'weather' — the exact same Latin tempus double sense as Spanish's tiempo (this widening happened within Latin itself, shared by both languages, not a Spanish-only development); il fait chaud/froid reuse faire ('to make'), just like Spanish's hacer; il pleut ('it's raining') KEEPS Latin pluere's pl- unchanged, unlike Spanish's llueve, which underwent the pl-→ll- shift"
@@ -28,7 +28,7 @@ modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-contemporary
-reviews_of: [FR-C14-age]
+reviews_of: [FR-C14-practice]
 ---
 
 # le temps, il pleut — the same Latin word, a different fate for "rain"

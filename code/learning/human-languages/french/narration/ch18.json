@@ -4,11 +4,11 @@
   "chapter": 18,
   "title": "The Compound Past",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:1527d15436114b48",
+  "sourceHash": "fnv1a64:69b428b8599aeb40",
   "lessons": [
     {
       "id": "FR-C15-passe-compose",
-      "sequence": 485,
+      "sequence": 545,
       "title": "j'ai parlé — the past built from \"have\"",
       "headword": "j'ai parlé",
       "romanization": "j'ai parlé",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:977cb2491cffe960",
+      "sourceHash": "fnv1a64:45f2ce552694a09d",
       "notice": null,
       "blocks": [
         {
@@ -228,7 +228,7 @@
     },
     {
       "id": "FR-C15-passe-simple",
-      "sequence": 490,
+      "sequence": 550,
       "title": "il parla — the past you read but never say",
       "headword": "il parla",
       "romanization": "il parla",
@@ -239,7 +239,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f349a734eefbd023",
+      "sourceHash": "fnv1a64:3d7d8fad9816ddb0",
       "notice": null,
       "blocks": [
         {

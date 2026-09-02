@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Weather",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6a1ba4dc24863087",
+  "sourceHash": "fnv1a64:7f8a89a5e7b70061",
   "lessons": [
     {
       "id": "FR-C21-le-temps",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eeb8b3067c161a6e",
+      "sourceHash": "fnv1a64:2e5b1110178f9f2a",
       "notice": null,
       "blocks": [
         {

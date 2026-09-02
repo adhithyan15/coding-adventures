@@ -1,6 +1,6 @@
 ---
 id: FR-C16-passe-compose-etre
-sequence: 510
+sequence: 570
 chapter: 19
 type: phrase
 headword: je suis allé(e)
