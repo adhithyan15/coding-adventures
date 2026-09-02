@@ -1310,11 +1310,11 @@ fn insert_unique(
 
 fn build_import_shell(items: &[SExpr], desc: &[SExpr], kind: &str, type_names: &HashMap<String, u32>, module: &WasmModule) -> Result<Import, WastParseError> {
     let module_name = match &items[1] {
-        SExpr::Str(b, _) => String::from_utf8_lossy(b).to_string(),
+        SExpr::Str(b, pos) => String::from_utf8(b.clone()).map_err(|_| WastParseError::InvalidUtf8 { pos: *pos })?,
         other => return Err(WastParseError::UnexpectedToken { pos: other.pos(), found: "".into(), expected: "a module name string" }),
     };
     let name = match &items[2] {
-        SExpr::Str(b, _) => String::from_utf8_lossy(b).to_string(),
+        SExpr::Str(b, pos) => String::from_utf8(b.clone()).map_err(|_| WastParseError::InvalidUtf8 { pos: *pos })?,
         other => return Err(WastParseError::UnexpectedToken { pos: other.pos(), found: "".into(), expected: "an import name string" }),
     };
     let type_info = match kind {
@@ -1582,7 +1582,7 @@ fn build(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
             }
             "export" => {
                 let name = match expect_get(items, 1)? {
-                    SExpr::Str(b, _) => String::from_utf8_lossy(b).to_string(),
+                    SExpr::Str(b, pos) => String::from_utf8(b.clone()).map_err(|_| WastParseError::InvalidUtf8 { pos: *pos })?,
                     other => return Err(WastParseError::UnexpectedToken { pos: other.pos(), found: "".into(), expected: "an export name string" }),
                 };
                 let refd_expr = expect_get(items, 2)?;
@@ -1728,8 +1728,9 @@ fn handle_inline_export(
         let items = rest[i].as_list().unwrap();
         // `(export)` with no trailing name string is syntactically a valid
         // keyword-list but has no second element.
-        if let SExpr::Str(b, _) = expect_get(items, 1)? {
-            ctx.module.exports.push(Export { name: String::from_utf8_lossy(b).to_string(), kind, index: idx as u32 });
+        if let SExpr::Str(b, pos) = expect_get(items, 1)? {
+            let name = String::from_utf8(b.clone()).map_err(|_| WastParseError::InvalidUtf8 { pos: *pos })?;
+            ctx.module.exports.push(Export { name, kind, index: idx as u32 });
         }
         i += 1;
     }
@@ -10259,5 +10260,92 @@ mod tests {
     fn ref_null_none_emits_the_verified_tag_byte() {
         let m = parse_module(r#"(module (global $g nullref (ref.null none)))"#).unwrap();
         assert_eq!(m.globals[0].init_expr, vec![0xD0, 0x71, 0x0B]);
+    }
+
+    // ── UTF-8 validation of `(export "...")` names (W-utf8-invalid-encoding
+    //    slice): a `\XX` raw-hex-byte escape in a WAT string literal (see
+    //    `tokenizer::scan_string`) is deliberately allowed to decode to ANY
+    //    byte sequence, including one that is not valid UTF-8 -- that's what
+    //    lets `module binary`/`module quote` fixtures embed arbitrary raw
+    //    bytes at all. But the WAT text-format spec requires every NAME
+    //    string (import module/field, export name, register name, ...) to
+    //    decode to valid UTF-8; a name string is where the raw bytes get
+    //    interpreted as text, so validation belongs here, not in the
+    //    tokenizer. Before this fix, `build_import_shell`/the module-level
+    //    and inline `(export ...)` handlers/`expect_str` all used
+    //    `String::from_utf8_lossy`, which silently replaces bad bytes with
+    //    U+FFFD instead of rejecting the module -- so all 176 cases in the
+    //    real testsuite's utf8-invalid-encoding.wast (every one an inline
+    //    `(func (export "..."))` with a malformed name) wrongly parsed as
+    //    valid. These cases mirror a representative sample of that corpus
+    //    file's patterns, not an exhaustive reinvention of a UTF-8 decoder
+    //    (the fix reuses `String::from_utf8`, the standard library's own
+    //    linear-time validator, rather than hand-rolling one).
+
+    #[test]
+    fn export_name_with_actual_unicode_content_still_parses() {
+        // A real multi-byte UTF-8 name (not ASCII-only) must still be
+        // accepted -- this guards against overcorrecting into rejecting
+        // valid non-ASCII text along with the genuinely invalid bytes.
+        let m = parse_module(r#"(module (func (export "\e4\bd\a0\e5\a5\bd")))"#).unwrap();
+        assert_eq!(m.exports[0].name, "你好");
+    }
+
+    #[test]
+    fn export_name_rejects_overlong_two_byte_encoding() {
+        // `\c0\80` is an overlong encoding of NUL (U+0000) -- the shortest
+        // valid encoding of NUL is one byte (`\00`), so the two-byte form is
+        // disallowed even though it "decodes" arithmetically to a valid code
+        // point. utf8-invalid-encoding.wast line 8.
+        let err = parse_module(r#"(module (func (export "\c0\80")))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::InvalidUtf8 { .. }), "expected InvalidUtf8, got {err:?}");
+    }
+
+    #[test]
+    fn export_name_rejects_isolated_continuation_byte() {
+        // `\80` alone is a continuation byte (10xxxxxx) with no leading byte
+        // -- never valid on its own. utf8-invalid-encoding.wast line 2.
+        let err = parse_module(r#"(module (func (export "\80")))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::InvalidUtf8 { .. }), "expected InvalidUtf8, got {err:?}");
+    }
+
+    #[test]
+    fn export_name_rejects_truncated_multi_byte_sequence() {
+        // `\c2` is a valid two-byte-sequence LEAD byte but has no
+        // continuation byte following it -- truncated mid-sequence.
+        // utf8-invalid-encoding.wast line 17.
+        let err = parse_module(r#"(module (func (export "\c2")))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::InvalidUtf8 { .. }), "expected InvalidUtf8, got {err:?}");
+    }
+
+    #[test]
+    fn export_name_rejects_utf8_encoded_surrogate_half() {
+        // `\ed\a0\80` is the CESU-8/WTF-8-style encoding of U+D800, a UTF-16
+        // surrogate half -- surrogate code points may never appear in UTF-8.
+        // utf8-invalid-encoding.wast line 62.
+        let err = parse_module(r#"(module (func (export "\ed\a0\80")))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::InvalidUtf8 { .. }), "expected InvalidUtf8, got {err:?}");
+    }
+
+    #[test]
+    fn import_module_and_field_names_are_also_utf8_validated() {
+        // Same defect class, same fix, applied to `(import "m" "n" ...)`'s
+        // two name strings -- not exercised by utf8-invalid-encoding.wast
+        // itself (which only uses inline func exports) but covered for
+        // completeness since `build_import_shell` shared the same
+        // `from_utf8_lossy` bug before this fix.
+        let err = parse_module(r#"(module (import "\80" "n" (func)))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::InvalidUtf8 { .. }), "expected InvalidUtf8, got {err:?}");
+        let err = parse_module(r#"(module (import "m" "\80" (func)))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::InvalidUtf8 { .. }), "expected InvalidUtf8, got {err:?}");
+    }
+
+    #[test]
+    fn module_level_export_name_is_also_utf8_validated() {
+        // The non-inline `(export "name" (func $x))` form uses a separate
+        // code path from inline `(func (export "name"))` -- both had the
+        // same lossy-conversion bug, so both need coverage.
+        let err = parse_module(r#"(module (func $f) (export "\80" (func $f)))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::InvalidUtf8 { .. }), "expected InvalidUtf8, got {err:?}");
     }
 }
