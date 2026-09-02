@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C05-mi-marathi-bolto",
     "language": "marathi",
-    "chapter": 8,
-    "sequence": 170,
+    "chapter": 12,
+    "sequence": 370,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:21fc752615af4207"
+    "sourceHash": "fnv1a64:f65cae607dcfea2e"
   },
   "findings": []
 }

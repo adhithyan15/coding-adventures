@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C10-cha",
     "language": "bengali",
-    "chapter": 10,
-    "sequence": 700,
+    "chapter": 16,
+    "sequence": 870,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:ab2ae534283ea60b",
+    "sourceHash": "fnv1a64:066fc17282b6f1f1",
     "detachableSegments": [
       "The letters in this word"
     ]

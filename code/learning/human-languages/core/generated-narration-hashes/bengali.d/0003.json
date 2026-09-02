@@ -1,20 +1,22 @@
 {
   "language": "bengali",
   "chapter": 3,
-  "sourceHash": "fnv1a64:a5ba65dea1e48ba0",
+  "sourceHash": "fnv1a64:fbfe7a4a41c2f02a",
   "lessonIds": [
-    "BN-C03-ami",
-    "BN-C03-kemon",
-    "BN-C03-tumi-kemon-achho",
-    "BN-C03-bhalo",
-    "BN-C03-kono-bepar-na",
-    "BN-C03-practice"
+    "BN-C02-naam",
+    "BN-C02-amar",
+    "BN-C02-amar-naam",
+    "BN-C02-alaap",
+    "BN-C02-ki",
+    "BN-C02-tumi-apni",
+    "BN-C02-tomar-naam-ki",
+    "BN-C02-practice"
   ],
-  "voiceLessons": 1,
+  "voiceLessons": 3,
   "drivablePrefix": 0,
   "text": "bengali/narration/ch03.txt",
   "json": "bengali/narration/ch03.json",
-  "textHash": "fnv1a64:3189e770b17a352b",
-  "jsonHash": "fnv1a64:0f54017933c38284",
+  "textHash": "fnv1a64:7097eec692af1bab",
+  "jsonHash": "fnv1a64:349bb77fd5330fca",
   "findings": []
 }

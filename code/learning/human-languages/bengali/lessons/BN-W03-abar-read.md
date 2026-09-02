@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W03-abar-read
 spine_node: SPINE-MEET-GREET
-sequence: 1840
+sequence: 520
 delivery: script
-chapter: 18
+chapter: 8
 type: writing
 headword: আবার
 romanization: "ābār"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [BN-SCRIPT-ABAR-READ-01]
 practises:
-  knowledge: [BN-SCRIPT-AA-01, BN-SCRIPT-BA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-RA-01, BN-SCRIPT-KALO-READ-01, BN-SCRIPT-ABAR-READ-01]
+  knowledge: [BN-SCRIPT-AA-01, BN-SCRIPT-BA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-RA-01, BN-SCRIPT-AMI-READ-01, BN-SCRIPT-ABAR-READ-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -61,10 +61,10 @@ and the sign are historically the same mark, which is exactly why they look
 related and exactly why they are easy to confuse.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-ABAR-READ-01, BN-SCRIPT-AA-01, BN-SCRIPT-BA-01, BN-SCRIPT-RA-01, BN-SCRIPT-KALO-READ-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-ABAR-READ-01, BN-SCRIPT-AA-01, BN-SCRIPT-BA-01, BN-SCRIPT-RA-01, BN-SCRIPT-AMI-READ-01] -->
 
 - [YOU READ: আবার]
-- [YOU READ: কালো]
+- [YOU READ: আবার আমার]
 - [YOU WRITE: আবার]
 
 ## Wrap-up Recall

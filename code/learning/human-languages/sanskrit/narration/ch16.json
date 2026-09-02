@@ -3,8 +3,8 @@
   "language": "sanskrit",
   "chapter": 16,
   "title": "Places --- and the Two Noun Families",
-  "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:5da49ee36ba58f36",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:733252ef55db6671",
   "lessons": [
     {
       "id": "SA-C16-house",
@@ -251,6 +251,195 @@
       ]
     },
     {
+      "id": "SA-S217-letter-nna",
+      "sequence": 741,
+      "title": "ण (ṇa) — one character, met inside words you already say",
+      "headword": "ण",
+      "romanization": "ṇa",
+      "gloss": "the single character ण — recognised inside words you already say",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:957ddf66aa9cf672",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ण",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ण and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one, the ones you have already met: उ, ष, ◌ौ. Say what each of them does."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ण — ṇa."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not ṇ, it is ṇa."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "a joined left stem, clockwise lower bowl, and inner right stem."
+            },
+            {
+              "kind": "speech",
+              "text": "a separate top-to-bottom outer right stem."
+            },
+            {
+              "kind": "speech",
+              "text": "the top shirorekhā."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these, and every one of them has ण (ṇa) somewhere inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "कर्णः karṇaḥ — ear — a word Sanskrit itself never settled the origin of."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start at the left stem's headline junction, descend, curve clockwise around the lower bowl, and rise along the inner right stem back to the headline without lifting."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift and draw the outer right stem top-to-bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "verified three-stroke teaching form fitted to the bundled printed outline."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-ण (ṇa)-order.gif’, strokes 1–3, Wikimedia Commons, 10 May 2009."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at this, and find ण (ṇa) in it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at this, and find ण in it]"
+            },
+            {
+              "kind": "speech",
+              "text": "कर्णः."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ण three times, saying ṇa as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ण three times, saying *ṇa* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ण (ṇa) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ण once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ण? What sound does it carry? (ṇa.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "SA-C16-road",
       "sequence": 750,
       "title": "मार्गः (mārgaḥ) — road, path",
@@ -489,6 +678,207 @@
             {
               "kind": "speech",
               "text": "What does वनम् (vanam) mean beyond \"forest\"? (Where the settled world stops.) Which other word shares its ending? (गृहम् (gṛham).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-S218-letter-ga",
+      "sequence": 761,
+      "title": "ग (ga) — one character, met inside words you already say",
+      "headword": "ग",
+      "romanization": "ga",
+      "gloss": "the single character ग — recognised inside words you already say",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:00da0ca75f2ee9f0",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ग",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ग and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one, the ones you have already met: ष, ◌ौ, ण (ṇa). Say what each of them does."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ग",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ग — ga."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not g, it is ga."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "a counterclockwise left loop joined to an ascending stem."
+            },
+            {
+              "kind": "speech",
+              "text": "a top-to-bottom right stem."
+            },
+            {
+              "kind": "speech",
+              "text": "the top shirorekhā."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these, and every one of them has ग (ga) somewhere inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "स्वागतम् svāgatam — welcome (lit. \"well come\")."
+            },
+            {
+              "kind": "speech",
+              "text": "गृह्णाति gṛhṇāti — he, she, or it takes, seizes — the ninth class again, and the root English grabs with."
+            },
+            {
+              "kind": "speech",
+              "text": "भगिनी bhaginī — sister — not built on English \"sister\"'s root at all, but on \"one with a share\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गृहम् gṛham — house, home."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ग",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start at the loop's upper-right junction and sweep left over the top, down around the left side, back to the lower-right junction, and continue up the joined stem to the headline."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift and draw the right stem top-to-bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "verified three-stroke teaching form; everyday handwriting may join or simplify the body differently."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-ग (ga)-order.gif’, strokes 1–3, Wikimedia Commons, 9 May 2009."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at this, and find ग (ga) in it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at this, and find ग in it]"
+            },
+            {
+              "kind": "speech",
+              "text": "स्वागतम्, गृह्णाति, भगिनी."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ग three times, saying ga as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ग three times, saying *ga* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ग (ga) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ग once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ग? What sound does it carry? (ga.) Name one word you already say that contains it."
             }
           ]
         }
@@ -743,12 +1133,12 @@
       ]
     },
     {
-      "id": "SA-S116-letter-tta",
+      "id": "SA-S120-letter-ja",
       "sequence": 781,
-      "title": "ट (ṭa) — one character, met inside words you already say",
-      "headword": "ट",
-      "romanization": "ṭa",
-      "gloss": "the single character ट — recognised inside words you already say",
+      "title": "ज (ja) — one character, met inside words you already say",
+      "headword": "ज",
+      "romanization": "ja",
+      "gloss": "the single character ज — recognised inside words you already say",
       "script": "devanagari",
       "modality": "pen",
       "derivedModality": "pen",
@@ -757,7 +1147,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e02f870d219f3bc0",
+      "sourceHash": "fnv1a64:d38b7b31fb8d163e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -765,10 +1155,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script you'll notice: ट",
+          "Script you'll notice: ज",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ट and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ज and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -784,7 +1174,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ◌ौ — what does it do?"
+              "text": "Before the new one, the ones you have already met: ◌ौ, ण (ṇa), ग (ga). Say what each of them does."
             },
             {
               "kind": "pause",
@@ -801,15 +1191,15 @@
         {
           "index": 1,
           "type": "script",
-          "title": "Script you'll notice: ट",
+          "title": "Script you'll notice: ज",
           "segments": [
             {
               "kind": "speech",
-              "text": "ट — ṭa."
+              "text": "ज — ja."
             },
             {
               "kind": "speech",
-              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not ṭ, it is ṭa."
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not j, it is ja."
             },
             {
               "kind": "speech",
@@ -817,7 +1207,11 @@
             },
             {
               "kind": "speech",
-              "text": "a descending central stem joined to a counterclockwise open round body."
+              "text": "an open left hook curling clockwise around the lower bowl and continuing through the middle bar."
+            },
+            {
+              "kind": "speech",
+              "text": "a top-to-bottom right stem."
             },
             {
               "kind": "speech",
@@ -825,223 +1219,26 @@
             },
             {
               "kind": "speech",
-              "text": "You already say this word, and it has ट (ṭa) inside it:"
+              "text": "You already say these, and every one of them has ज (ja) somewhere inside it:"
             },
             {
               "kind": "speech",
-              "text": "कुटुम्बम् kuṭumbam — family, household."
-            },
-            {
-              "kind": "speech",
-              "text": "The tongue curls back to the roof of the mouth for this one. It is a different letter from त ta, whose tongue touches the teeth, and Sanskrit keeps the two apart in spelling because it keeps them apart in sound. The same ट (ṭa) survives into Hindi कुटुंब, which is the one word above with a syllable rubbed off it."
+              "text": "जानाति jānāti — he, she, or it knows — the root ज्ञा, the class that plants a syllable inside the verb, and the chapter's six roots gathered up."
             }
           ]
         },
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ट",
+          "title": "Writing: ज",
           "segments": [
             {
               "kind": "speech",
-              "text": "1. start at the central stem's headline junction, descend, turn left through the upper shoulder, and sweep counterclockwise around the open round body to its up-right tip without lifting."
+              "text": "1. start at the open upper-left tip, sweep down and clockwise around the lower bowl, then rise through the inner shoulder and continue right along the middle bar to the right-stem junction without lifting."
             },
             {
               "kind": "speech",
-              "text": "2. lift and draw the top shirorekhā left-to-right."
-            },
-            {
-              "kind": "speech",
-              "text": "Pen lifts: 1. The pen comes up 1 times and no more."
-            },
-            {
-              "kind": "speech",
-              "text": "Verified two-stroke teaching form fitted to the bundled printed outline."
-            },
-            {
-              "kind": "speech",
-              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-ट (ṭa)-order.gif’, strokes 1–2, Wikimedia Commons, 10 May 2009."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "LOOK",
-              "instruction": "at these words, and find ट (ṭa) in the ones that have it",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU LOOK: at these words, and find ट in the ones that have it]"
-            },
-            {
-              "kind": "speech",
-              "text": "कुटुम्बम्, नमस्ते."
-            },
-            {
-              "kind": "prompt",
-              "action": "TRACE",
-              "instruction": "ट three times, saying ṭa as you finish each one",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU TRACE: ट three times, saying *ṭa* as you finish each one]"
-            },
-            {
-              "kind": "prompt",
-              "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ट (ṭa) once more",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU LOOK: back at any page of this chapter and find ट once more]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which character is this — ट? What sound does it carry? (ṭa.) Name one word you already say that contains it."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "SA-S117-letter-ttha",
-      "sequence": 782,
-      "title": "ठ (ṭha) — one character, met inside words you already say",
-      "headword": "ठ",
-      "romanization": "ṭha",
-      "gloss": "the single character ठ — recognised inside words you already say",
-      "script": "devanagari",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "writing-block",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:155e8054a5470142",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script you'll notice: ठ",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ठ and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Before the new one: ट (ṭa) — what does it do?"
-            },
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script you'll notice: ठ",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ठ — ṭha."
-            },
-            {
-              "kind": "speech",
-              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not ṭh, it is ṭha."
-            },
-            {
-              "kind": "speech",
-              "text": "What it is made of:"
-            },
-            {
-              "kind": "speech",
-              "text": "a short top-to-bottom central stem."
-            },
-            {
-              "kind": "speech",
-              "text": "a separate counterclockwise closed round body."
-            },
-            {
-              "kind": "speech",
-              "text": "the top shirorekhā."
-            },
-            {
-              "kind": "speech",
-              "text": "You already say these, and every one of them has ठ (ṭha) somewhere inside it:"
-            },
-            {
-              "kind": "speech",
-              "text": "पठति paṭhati — he, she, or it reads."
-            },
-            {
-              "kind": "speech",
-              "text": "पाठ pāṭha — a reading, a lesson — the noun from the same root."
-            },
-            {
-              "kind": "speech",
-              "text": "ठ (ṭha) is ट (ṭa) with a puff of breath after it, and the shapes are close enough to be worth looking at side by side: ट (ṭa), ठ (ṭha). The stem and the round body are the same two pieces; in ट (ṭa) they are one unbroken run, and in ठ (ṭha) the body closes and the pen lifts between them."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "writing",
-          "title": "Writing: ठ",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "1. draw the short central stem top-to-bottom."
-            },
-            {
-              "kind": "speech",
-              "text": "2. lift at the stem's lower junction and sweep left, then counterclockwise around the closed round body back to the junction without lifting."
+              "text": "2. lift and draw the right stem top-to-bottom."
             },
             {
               "kind": "speech",
@@ -1053,11 +1250,11 @@
             },
             {
               "kind": "speech",
-              "text": "Verified three-stroke teaching form fitted to the bundled printed outline."
+              "text": "verified three-stroke teaching form fitted to the bundled printed outline."
             },
             {
               "kind": "speech",
-              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-ठ (ṭha)-order.gif’, strokes 1–3, Wikimedia Commons, 10 May 2009."
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-ज (ja)-order.gif’, strokes 1–3, Wikimedia Commons, 10 May 2009."
             }
           ]
         },
@@ -1075,33 +1272,33 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find ठ (ṭha) in the ones that have it",
+              "instruction": "at this, and find ज (ja) in it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: at these words, and find ठ in the ones that have it]"
+              "source": "[YOU LOOK: at this, and find ज in it]"
             },
             {
               "kind": "speech",
-              "text": "पठति, नमस्ते."
+              "text": "जानाति."
             },
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "ठ three times, saying ṭha as you finish each one",
+              "instruction": "ज three times, saying ja as you finish each one",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU TRACE: ठ three times, saying *ṭha* as you finish each one]"
+              "source": "[YOU TRACE: ज three times, saying *ja* as you finish each one]"
             },
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ठ (ṭha) once more",
+              "instruction": "back at any page of this chapter and find ज (ja) once more",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: back at any page of this chapter and find ठ once more]"
+              "source": "[YOU LOOK: back at any page of this chapter and find ज once more]"
             }
           ]
         },
@@ -1118,7 +1315,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which character is this — ठ? What sound does it carry? (ṭha.) Name one word you already say that contains it."
+              "text": "Which character is this — ज? What sound does it carry? (ja.) Name one word you already say that contains it."
             }
           ]
         }

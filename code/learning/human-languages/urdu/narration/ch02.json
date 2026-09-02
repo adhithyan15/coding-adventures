@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Give your name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:70cc8a618f52d4d8",
+  "sourceHash": "fnv1a64:eb0ccf413091b9f6",
   "lessons": [
     {
       "id": "UR-C02-mera-naam",
@@ -74,7 +74,7 @@
             },
             {
               "kind": "speech",
-              "text": "Nearly every shape here is one you have already met. میرا opens with م, the letter that begins salām, then reuses ی, ر and ا. نام is ن plus that same ا and م. Only the final ے in ہے is new — it is called baṛī ye, the \"big ye\", and here the whole word is said hai. Learn that vowel with this word and you will meet it again everywhere."
+              "text": "Nearly every shape here is one you have already met. میرا opens with م, the letter that begins salām, then reuses ی, ر and ا (alif). نام is ن plus that same ا (alif) and م. Only the final ے in ہے is new — it is called baṛī ye, the \"big ye\", and here the whole word is said hai. Learn that vowel with this word and you will meet it again everywhere."
             }
           ]
         },
@@ -130,6 +130,154 @@
               "feedback": {
                 "correct": "Right: میرا نام سارا ہے keeps ہے at the end.",
                 "incorrect": "Use میرا نام سارا ہے — merā nām Sārā hai."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-W02-alef",
+      "sequence": 55,
+      "title": "ا (alif) — one stroke, and a page that runs the other way",
+      "headword": "ا",
+      "romanization": "alif",
+      "gloss": "one tall downstroke — and the direction the whole page runs in",
+      "script": "urdu-nastaliq",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:a91d63450aeed8cb",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — first, which way the page runs",
+          "Script — the letter itself",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — first, which way the page runs, Script — the letter itself and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write س. Three teeth from the right, flowing straight on into the bowl, no lift. That is one letter drawn from memory; here is the easiest one in the alphabet to put beside it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — first, which way the page runs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You met this in your first week, told rather than explained. Here is the whole rule, and it governs every shape from now on."
+            },
+            {
+              "kind": "speech",
+              "text": "English marches left to right. Urdu marches right to left. Your pen starts at the right edge of a word and travels towards the left, so the letter you meet first is the rightmost one."
+            },
+            {
+              "kind": "speech",
+              "text": "There is a second direction, and it belongs to Urdu in a way it does not belong to Arabic. Urdu is written in a style called Nastaliq, and Nastaliq does not sit flat on the line. A word cascades downward as it moves left, each letter hanging a little below the one before it, so a word reads like a short diagonal staircase running down to the left."
+            },
+            {
+              "kind": "speech",
+              "text": "That is why Urdu looks different from Arabic even where the letters are the same. It is not decoration and it is not optional: it is how Urdu is set."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script — the letter itself",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ا (alif)."
+            },
+            {
+              "kind": "speech",
+              "text": "One tall downstroke. Draw it from the top down and lift. Nothing else."
+            },
+            {
+              "kind": "speech",
+              "text": "Its name is alif, and one thing about it matters more than its shape: alif does not join to the letter that follows it. Hold that; the next few lessons will make it pay."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ا (alif) — one stroke, top to bottom",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ا — one stroke, top to bottom]"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "at the right edge of an Urdu word, where your pen would begin",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: at the right edge of an Urdu word, where your pen would begin]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "How many strokes in alif? (One.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-W02-alef-cascade",
+              "prompt": "Besides running right to left, what else does an Urdu word do as it moves across the page?",
+              "assesses": [
+                "UR-SCRIPT-RTL-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "it cascades downward",
+                "it goes down",
+                "it descends",
+                "each letter sits lower",
+                "it slopes down to the left",
+                "it cascades"
+              ],
+              "feedback": {
+                "correct": "It cascades downward to the left -- that diagonal is Nastaliq.",
+                "incorrect": "It CASCADES DOWNWARD as it moves left. That diagonal is what makes Nastaliq look unlike Arabic."
               }
             }
           ]

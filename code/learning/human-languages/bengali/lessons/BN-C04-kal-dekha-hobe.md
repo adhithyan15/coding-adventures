@@ -2,10 +2,11 @@
 schema_version: 2
 id: BN-C04-kal-dekha-hobe
 spine_node: SPINE-TAKE-LEAVE
-sequence: 240
-chapter: 4
+sequence: 490
+chapter: 7
 type: phrase
 headword: কাল দেখা হবে
+romanization: "kāl dækhā hôbe"
 gloss: see you tomorrow (and the কাল puzzle)
 concept_tag: FAREWELL-TOMORROW
 prerequisites: [BN-C04-dekha-hobe]

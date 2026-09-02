@@ -1,0 +1,162 @@
+Bengali, chapter 21: The Face on the Page.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+
+
+Lesson 1 of 5.
+চোখ (chokh) — eye, read.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Read ভাই. Then write চ.
+
+Script.
+চ + ো + খ becomes চোখ (chokh).
+চ wrapped in ো — cho.
+খ — the breathy k, and at the end of a word the breath is what a listener actually hears.
+chokh — eye. Three pieces, no new shapes, and it is the first word of the chapter on the face.
+Look at the ো again. It is the one vowel sign that arrives in two halves, one on each side of its consonant, and the eye has to take the whole cluster in at once rather than reading left to right through it. That is a small demonstration of something true of the whole script: a Bengali syllable is a unit on the page, not a sequence. The letters inside it may be written before, after, above or below each other, and the reader assembles the syllable, not the strokes.
+It is worth noticing what this word is asking of you at the moment you read it. The organ named is the one doing the reading.
+
+Guided Practice.
+[your turn — read: চোখ (chokh)]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: চোখ (chokh)]
+[once you have stopped driving — write: চ ছ]
+[your turn — say: chokh, letting the breath out at the end]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How many pieces in চোখ (chokh)? (Three.) Which sign sits on both sides of its consonant? (ো.) And how many of the three shapes were new today? (None.)
+Source: Unicode Bengali chart.
+
+
+Lesson 2 of 5.
+নাক (nāk) — nose, read.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Read চোখ (chokh). Then write ক.
+
+Script.
+ন + া + ক becomes নাক (nāk).
+nāk — nose. Every piece of this word came out of the chapter that taught you to read the greeting, several thousand words ago. Nothing has been added since, and nothing needed to be.
+Two things about the last letter. ক ends the word, so its inherent ô is gone — the mouth closes and stops, with no vowel after it. And the closure is clean: no breath escapes, which is the whole difference between this letter and the খ that ended চোখ (chokh) a moment ago. Read the two words one after the other and the contrast is unmissable:
+চোখ (chokh) — ends in air নাক (nāk) — ends in silence.
+That pair is the best short demonstration of aspiration this book can offer, because both words are things you can point at on your own face.
+Say it and mean it. নাক (nāk) is a plain, unglamorous, everyday word, and being able to read one of those off the page without help is a better measure of progress than being able to read a beautiful one.
+
+Guided Practice.
+[your turn — read: নাক (nāk)]
+[pause 8 seconds for the answer]
+[your turn — read: চোখ (chokh) নাক (nāk)]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: নাক (nāk)]
+[once you have stopped driving — write: ক খ গ]
+[your turn — say: chokh, then nāk — air, then silence]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What happens to ক's inherent vowel at the end of নাক (nāk)? (It is gone.) Which of চোখ (chokh) and নাক (nāk) ends in breath? (চোখ (chokh).) And which chapter's letters is নাক (nāk) built from? (The first script chapter's.)
+Source: Unicode Bengali chart.
+
+
+Lesson 3 of 5.
+মুখ (mukh) — mouth, read.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write খ, then write ু underneath it.
+
+Script.
+ম + ু + খ becomes মুখ (mukh).
+ম with ু hanging under it — mu.
+খ — the breathy k, and at the end of a word its inherent vowel is gone, so what is left is the closure and the puff.
+mukh — mouth, from the chapter on the face. A tatsama: kept whole out of Sanskrit rather than worn down on the way.
+The end of this word is where a new reader loses the breath. English speakers finishing a word on k stop the air dead; Bengali lets it out. Say mu, close on the back of the tongue, and then open. If the last thing a listener hears is air, it was right.
+There is a smaller thing worth seeing on the page. Three letters, one sign, and the sign is the only mark below the head-line in the whole word. A Bengali word's information is not spread evenly — most of it rides on the band, and the occasional piece that drops below is doing work the eye must not skip.
+
+Guided Practice.
+[your turn — read: মুখ (mukh)]
+[pause 8 seconds for the answer]
+[your turn — read: ভালো]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: মুখ (mukh)]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What happens to the breath at the end of মুখ (mukh)? (It comes out — the letter is the breathy one.) And where is the only mark below the head-line? (Under the first letter.)
+Source: Unicode Bengali chart.
+
+
+Lesson 4 of 5.
+ৃ (-ri) — the vowel that used to be an r.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Read মুখ (mukh). Then write ু and say which side of the head-line it hangs on.
+
+Script.
+ৃ (-ri).
+A hook hanging under its consonant, in the same country as ু. It is a vowel sign, and it says ri.
+The reason it is filed with the vowels and not with র is a piece of history worth two minutes. Sanskrit had a sound that behaved like a vowel and was made like an r: a syllable you could build a word around with no other vowel in it at all. English does this without noticing — the second syllable of butter has no vowel letter doing any work, only the r. Sanskrit wrote that syllable, and counted it among its vowels.
+Bengali kept the sign and gave up the sound. What a Bengali reader says today is plain ri. So the mark is a vowel that no longer sounds like the thing it is named after, and its position in the alphabet is a fossil.
+হ + ৃ (-ri) becomes হৃ.
+Look at where it goes and what it does to the letter above it. On হ the hook is tucked into the letter's own tail, which is why this combination looks like a single new shape rather than a letter plus a mark. That is normal for this sign and it is the main difficulty it presents: ৃ (-ri) is a mark that hides.
+
+Guided Practice.
+[once you have stopped driving — write: ৃ (-ri)]
+[once you have stopped driving — write: হৃ]
+[once you have stopped driving — write: ু then ৃ (-ri) — both below the line]
+[your turn — read: নাক (nāk)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Is ৃ (-ri) a consonant or a vowel sign? (A vowel sign.) What does it say in Bengali today? (ri.) And is it the letter র? (No — a different mark, in a different place.)
+Source: Unicode Bengali chart.
+
+
+Lesson 5 of 5.
+হৃদয় (hridoy) — heart, and the face read whole.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write হৃ. Then write দ.
+
+Script.
+হ + ৃ (-ri) + দ + য় becomes হৃদয় (hridoy).
+হৃ — the breath with the hidden hook under it, hri.
+দ — the dental d, carrying its inherent ô.
+য় — the dotted glide, closing the word.
+hridoy — heart. Four pieces, and three of the four are things this book bought for other words entirely: the দ came from milk, the য় came from the verb of being, and only the hook was bought for this word alone.
+That is the ordinary economy of a syllabary, and it is why a reader's progress accelerates. The first word cost nine lessons. This one cost one.
+The spelling is also a small piece of evidence. হৃদয় (hridoy) is a tatsama — a word Bengali took out of Sanskrit whole rather than wearing it down over centuries — and you can see that in the letters. A worn-down word would have lost this hook long ago, the way ভাই lost the one its Sanskrit ancestor had. Spelling is where a language keeps its receipts.
+Now the whole chapter, off the page:
+চোখ (chokh), নাক (nāk), মুখ (mukh), হৃদয় (hridoy).
+Four words, thirteen pieces, one new sign between them.
+
+Guided Practice.
+[your turn — read: হৃদয় (hridoy)]
+[pause 8 seconds for the answer]
+[your turn — read: চোখ (chokh) নাক (nāk) মুখ (mukh) হৃদয় (hridoy)]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: হৃদয় (hridoy)]
+[your turn — say: all four, pointing at each]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How many pieces in হৃদয় (hridoy)? (Four.) How many of them were bought for this word? (One — the hook.) Which letter is wearing a dot? (য়.) And name the four words of this chapter in Bengali. (চোখ (chokh), নাক (nāk), মুখ (mukh), হৃদয় (hridoy).)
+Source: Unicode Bengali chart.

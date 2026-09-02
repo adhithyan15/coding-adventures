@@ -9,27 +9,27 @@ headword: ਜਾਣਨਾ
 romanization: jāṇnā
 gloss: to know — one letter away from “to go,” and the same word as English know
 concept_tag: VERB-KNOW
-prerequisites: [PA-C07-vekhna]
+prerequisites: [PA-C07-vekhna, PA-S07-naana-jajja-vavva]
 sounds: [kanna-aa, retroflex-na, dental-na]
 roots: [sanskrit-janati, sanskrit-jna, pie-gneh3]
 etymology_hook: jāṇnā continues Sanskrit jānāti from jñā-, PIE *ǵneh₃- — English know, can, cunning, notice, diagnosis.
 duration:
   max_seconds: 265
 requires:
-  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-HONA, PA-LEX-JANA, PA-LEX-AUNA, PA-LEX-KHANA, PA-LEX-VEKHNA, PA-SOUND-Y-TO-J, PA-SOUND-PUNJABI-TONE]
+  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-HONA, PA-LEX-JANA, PA-LEX-AUNA, PA-LEX-KHANA, PA-LEX-VEKHNA, PA-SOUND-Y-TO-J, PA-SOUND-PUNJABI-TONE, PA-SCRIPT-RECOG-JA-01, PA-SCRIPT-RECOG-NAANA-01]
 introduces:
   knowledge: [PA-LEX-JANNA, PA-CONTRAST-JANA-JANNA, PA-ETYMON-JANNA-KNOW]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-HONA, PA-LEX-JANA, PA-LEX-AUNA, PA-LEX-KHANA, PA-LEX-VEKHNA, PA-SOUND-Y-TO-J, PA-SOUND-PUNJABI-TONE, PA-LEX-JANNA, PA-CONTRAST-JANA-JANNA, PA-ETYMON-JANNA-KNOW]
+  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-HONA, PA-LEX-JANA, PA-LEX-AUNA, PA-LEX-KHANA, PA-LEX-VEKHNA, PA-SOUND-Y-TO-J, PA-SOUND-PUNJABI-TONE, PA-LEX-JANNA, PA-CONTRAST-JANA-JANNA, PA-ETYMON-JANNA-KNOW, PA-SCRIPT-RECOG-JA-01, PA-SCRIPT-RECOG-NAANA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [PA-C07-hona, PA-C07-jana, PA-C07-auna, PA-C07-khana, PA-C07-vekhna]
+reviews_of: [PA-C07-hona, PA-C07-jana, PA-C07-auna, PA-C07-khana, PA-C07-vekhna, PA-S07-naana-jajja-vavva]
 ---
 
 # ਜਾਣਨਾ — “to know,” one letter from “to go”
@@ -80,7 +80,7 @@ Borrowed from Greek *gnōsis*: **diagnosis**, **prognosis**, **agnostic**.
 - [YOU CONNECT: *jñā-* → English **know**, **notice**, **diagnosis**]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-JANNA, PA-CONTRAST-JANA-JANNA, PA-ETYMON-JANNA-KNOW, PA-GRAMMAR-NA-INFINITIVE, PA-LEX-HONA, PA-LEX-JANA, PA-LEX-AUNA, PA-LEX-KHANA, PA-LEX-VEKHNA, PA-SOUND-Y-TO-J, PA-SOUND-PUNJABI-TONE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-JANNA, PA-CONTRAST-JANA-JANNA, PA-ETYMON-JANNA-KNOW, PA-GRAMMAR-NA-INFINITIVE, PA-LEX-HONA, PA-LEX-JANA, PA-LEX-AUNA, PA-LEX-KHANA, PA-LEX-VEKHNA, PA-SOUND-Y-TO-J, PA-SOUND-PUNJABI-TONE, PA-SCRIPT-RECOG-JA-01, PA-SCRIPT-RECOG-NAANA-01] -->
 <!-- hl-activity: {"id":"PA-C07-janna-two-js","kind":"text","assesses":["PA-CONTRAST-JANA-JANNA"],"prompt":"Which Punjabi verb means to know, jana or janna?","answer":"janna","accepted":["jāṇnā","jannaa","jaanna"],"feedback":{"correct":"Right: jāṇnā, with the second n held long, is to know; jāṇā is to go.","incorrect":"No. jāṇnā — with the extra ਨ held long — is to know. jāṇā is to go."},"response_seconds":8} -->
 
 [PAUSE 3s] What single written mark separates *jāṇā* from *jāṇnā*? (A second

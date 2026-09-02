@@ -2,33 +2,36 @@
   "version": 1,
   "language": "bengali",
   "chapter": 10,
-  "title": "Tea, Water, Milk, and Rice",
+  "title": "Two Marks Inside a Verb",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:522e9ad053b71b7f",
+  "sourceHash": "fnv1a64:49d4c640222e3737",
   "lessons": [
     {
-      "id": "BN-C10-cha",
-      "sequence": 700,
-      "title": "চা (chā) — \"tea,\" and the first word you can politely offer",
-      "headword": "চা",
-      "romanization": "chā",
-      "gloss": "tea — a loanword that crossed from China into Bengali overland, and the drink this chapter's polite offers run on",
+      "id": "BN-W04-o-indep",
+      "sequence": 640,
+      "title": "ও — the independent o",
+      "headword": "ও",
+      "romanization": "o",
+      "gloss": "the independent o — the fourth vowel to show both of its bodies",
       "script": "bengali",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
+        "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ab2ae534283ea60b",
+      "sourceHash": "fnv1a64:ec72bc60f7f0e57b",
       "notice": {
-        "modality": "sight",
+        "modality": "pen",
         "needs": [
+          "a pen and something to write on",
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "Script",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -44,122 +47,106 @@
             },
             {
               "kind": "speech",
-              "text": "Last lesson you said āmār chā bhālo lāge, \"I like tea,\" without চা ever being taught on its own. Here it is, by itself — and a new job for a form you already own."
+              "text": "Write এ, then write ো and say which letter it wraps around."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know: চা",
+          "type": "script",
+          "title": "Script",
           "segments": [
             {
               "kind": "speech",
-              "text": "চা — chā — tea."
+              "text": "ও (o)."
+            },
+            {
+              "kind": "speech",
+              "text": "The fourth vowel this book has shown you in both of its bodies, and by now the arrangement should feel less like a rule and more like a habit:"
+            },
+            {
+              "kind": "speech",
+              "text": "আ stands alone, া rides a consonant."
+            },
+            {
+              "kind": "speech",
+              "text": "ই stands alone, ি rides a consonant."
+            },
+            {
+              "kind": "speech",
+              "text": "এ stands alone, ে rides a consonant."
+            },
+            {
+              "kind": "speech",
+              "text": "ও stands alone, ো rides a consonant."
+            },
+            {
+              "kind": "speech",
+              "text": "The choice is never about the sound. It is about whether the vowel has a consonant to sit on. Opening a word, or following another vowel, it has none, so it needs a body of its own. That is the entire distinction, and it is the same distinction Devanagari, Gujarati and Telugu all make — one of the genuinely portable facts about the scripts of South Asia."
+            },
+            {
+              "kind": "speech",
+              "text": "ও is also a word in its own right, the everyday and and also, which is a convenience the other three vowels do not offer."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it long. The sign ো and the letter ও are the same o as in English go — but without the slide toward w that English adds. One steady vowel, not two."
+            },
+            {
+              "kind": "speech",
+              "text": "হ + ও becomes হও."
+            },
+            {
+              "kind": "speech",
+              "text": "The হ keeps its own inherent ô, and then ও is a second syllable standing on its own feet. Two letters, two syllables — which is exactly why the vowel could not have been written as a sign here."
             }
           ]
         },
         {
           "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
+          "type": "guided-production",
+          "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "চা (chā) is চ (chô) with the vowel sign া (ā). চ is a plain, unaspirated ch, the sound at the start of English church with no puff of breath behind it — Bengali also has a breathy partner, ছ, for later."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ও (o)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ও]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "আ ই এ ও (o)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: আ ই এ ও]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "হও",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: হও]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "কেমন",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: কেমন]"
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "চা (chā) is not Sanskrit at all. It came into Bengali from Persian čā, which took it from Chinese chá. That is the overland route: China to Persia to Bengal, the same road Hindi and Punjabi travelled. The words that reached Europe — English tea, French thé — went the opposite way, by sea, from Hokkien Chinese tê, carried on Dutch trading ships. One drink, two ends of the same word, arriving by two different roads."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "grammar",
-          "title": "Grammar Lens: an offer, built on a form you already have",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Chapter 7 taught you আপনি খান (āpni khān), the respectful form of খাওয়া. Put a noun in front of it and the very same words become a polite offer or request:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "Bengali",
-                "what it does"
-              ],
-              "columns": 2,
-              "rowCount": 2,
-              "utterances": [
-                "Bengali: আপনি খান. what it does: you eat / you drink (respectful).",
-                "Bengali: চা (chā) খান. what it does: (please) have some tea."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "No new ending to learn — চা (chā) খান reuses exactly what Chapter 7 already gave you."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"chā\" — tea",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"chā\" — tea]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the offer — \"chā khān\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the offer — \"chā khān\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the route it travelled — \"chá … čā … chā\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the route it travelled — \"chá … čā … chā\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "last lesson's line again — \"āmār chā bhālo lāge\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: last lesson's line again — \"āmār chā bhālo lāge\"]"
-            }
-          ]
-        },
-        {
-          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -171,35 +158,42 @@
             },
             {
               "kind": "speech",
-              "text": "Offer someone tea, politely. (চা (chā) খান.) Is চা (chā) inherited from Sanskrit? (No — it is a Chinese word that reached Bengali by way of Persian.) What form does চা (chā) খান reuse? (আপনি খান, Chapter 7's respectful \"you eat/drink,\" with no new ending.)"
+              "text": "When does a vowel need its standing-alone letter? (When it has no consonant to ride — opening a word, or after another vowel.) Do ও and ো sound different? (No.) And how many syllables are in হও? (Two.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
             }
           ]
         }
       ]
     },
     {
-      "id": "BN-C10-jol",
-      "sequence": 710,
-      "title": "জল (jôl) — \"water,\" prised out of a phrase you already know",
-      "headword": "জল",
-      "romanization": "jôl",
-      "gloss": "water — the word Chapter 7 already used to say \"drink water,\" now taught on its own, beside the Bangladesh-register পানি",
+      "id": "BN-W04-nukta",
+      "sequence": 650,
+      "title": "় ((the dot below)) — the dot below",
+      "headword": "়",
+      "romanization": "(the dot below)",
+      "gloss": "the dot that takes a consonant's job away and gives it another",
       "script": "bengali",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
+        "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a824d2e918679d3f",
+      "sourceHash": "fnv1a64:ec9eff0487cbdeb3",
       "notice": {
-        "modality": "sight",
+        "modality": "pen",
         "needs": [
+          "a pen and something to write on",
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "Script",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -215,102 +209,94 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 7 taught you জল (jôl) খাওয়া, \"to drink water\" — literally \"water-eat\" — without ever teaching জল (jôl) by itself. Here it is, on its own."
+              "text": "Write য and say what it sounds like standing alone. Then read হ্যাঁ."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know: জল",
+          "type": "script",
+          "title": "Script",
           "segments": [
             {
               "kind": "speech",
-              "text": "জল — jôl — water."
+              "text": "় ((the dot below))."
             },
             {
               "kind": "speech",
-              "text": "জল (jôl) খান — (please) drink some water, the same offer pattern as last lesson."
+              "text": "One dot, tucked under a letter. It adds no sound of its own. What it does is change the letter it sits under into a different letter, and Bengali uses it in exactly three places."
+            },
+            {
+              "kind": "speech",
+              "text": "The one you need today:"
+            },
+            {
+              "kind": "speech",
+              "text": "য + ় ((the dot below)) becomes য়."
+            },
+            {
+              "kind": "speech",
+              "text": "য on its own says j. With the dot it stops being a stop altogether and becomes a glide — the y of yes between vowels, and the w of away when the vowel beside it is round. It is the sound the letter used to have before Bengali hardened it, given back by a dot."
+            },
+            {
+              "kind": "speech",
+              "text": "The other two are the same trick on another letter, and they are coming later in this book. What matters now is the shape of the idea: Bengali did not invent new letters for these sounds. It marked old ones. The dot is borrowed machinery — Persian scribes used it to bend Arabic letters into Persian sounds, and Indian scribes took the device rather than the letters."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the dot goes on the page is worth watching, too. It hangs below the body of the letter, the same country as ু, and it is small. Two words can differ by this dot alone, so a reader who is skimming the head-line will read the wrong word rather than no word — the most expensive kind of mistake a script can offer."
+            },
+            {
+              "kind": "speech",
+              "text": "হ + ও + য় becomes হওয়."
             }
           ]
         },
         {
           "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
+          "type": "guided-production",
+          "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "জল is জ (jô) + ল (l), two bare consonants with no vowel sign between them. জ keeps its inherent vowel; ল, at the end of the word with nothing written after it, is silent — so jôl, one syllable, not jô-lô."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "় ((the dot below))",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ়]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "য then য়",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: য then য়]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jô then yô — stop, then glide",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jô* then *yô* — stop, then glide]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "হওয়",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: হওয়]"
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "জল (jôl) is Sanskrit জল (jôl) (jala), inherited straight through Prakrit. Past Sanskrit its root is genuinely unsettled: one proposal traces it to PIE gʷelHo-, \"to gush forth, to spring\" — but the same sources call a local, non-Indo-European origin \"unlikely though possible.\" No confident cousin is claimed here; the honest answer is that nobody is sure."
-            },
-            {
-              "kind": "speech",
-              "text": "Bengali has a second word for water, most common in Bangladesh: পানি (pani). That one is on secure ground — Sanskrit pānīya, \"drinkable,\" built directly on √pā, \"to drink,\" the very root behind Chapter 7's পান করা and English potion, potable. Two words for the same thing, one of disputed origin and one you can trace all the way home."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"jôl\" — water, one syllable",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"jôl\" — water, one syllable]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the offer — \"jôl khān\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the offer — \"jôl khān\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the Bangladesh word, and its root — \"pani … pā, potion, potable\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the Bangladesh word, and its root — \"pani … pā, potion, potable\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "tea, then water — \"chā khān … jôl khān\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: tea, then water — \"chā khān … jôl khān\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -322,54 +308,42 @@
             },
             {
               "kind": "speech",
-              "text": "What did Chapter 7 already say with জল (jôl), without teaching it as a word? (জল (jôl) খাওয়া, \"to drink water.\") Is জল (jôl)'s root secure? (No — genuinely disputed.) Which everyday synonym for water traces cleanly to \"drinkable,\" from the root behind potion? (পানি.)"
+              "text": "Does ় ((the dot below)) add a sound? (No — it changes the letter above it.) What does য become with it? (A glide, y or w.) And which mark sits above the head-line rather than below? (ঁ.)"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "BN-C10-jol-water",
-              "prompt": "Type the Bengali word jôl, meaning 'water'.",
-              "assesses": [
-                "BN-LEX-C10-JOL-01"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "জল",
-                "jôl",
-                "jol"
-              ],
-              "feedback": {
-                "correct": "Right: জল is jôl, water.",
-                "incorrect": "The word is জল - jôl."
-              }
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
             }
           ]
         }
       ]
     },
     {
-      "id": "BN-C10-dudh",
-      "sequence": 720,
-      "title": "দুধ (dudh) — \"milk,\" and the vowel this word refuses to keep",
-      "headword": "দুধ",
-      "romanization": "dudh",
-      "gloss": "milk — a word whose spelling could ask for a trailing vowel but doesn't, and a root whose one secure English cousin is not the word it looks like",
+      "id": "BN-W04-howa-read",
+      "sequence": 660,
+      "title": "হওয়া (hôwā) — to be, read whole",
+      "headword": "হওয়া",
+      "romanization": "hôwā",
+      "gloss": "to be, to become — the verb behind the farewell, read whole",
       "script": "bengali",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
+        "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d75632a7e0e1a63b",
+      "sourceHash": "fnv1a64:08dad5bafe99f7e4",
       "notice": {
-        "modality": "sight",
+        "modality": "pen",
         "needs": [
+          "a pen and something to write on",
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "Script",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -385,109 +359,102 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 9 met a word that had to end in a vowel nobody wrote — সাহায্য, sāhājjo. This word looks like it could do the same thing. It doesn't."
+              "text": "Write য়. Then write ও and say why it is not a sign."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know: দুধ",
+          "type": "script",
+          "title": "Script",
           "segments": [
             {
               "kind": "speech",
-              "text": "দুধ — dudh — milk."
+              "text": "হ + ও + য় + া becomes হওয়া (hôwā)."
             },
             {
               "kind": "speech",
-              "text": "দুধ (dudh) খান — (please) have some milk."
+              "text": "হ — with its own inherent ô."
+            },
+            {
+              "kind": "speech",
+              "text": "ও — standing alone, because a vowel cannot ride a vowel."
+            },
+            {
+              "kind": "speech",
+              "text": "য় — the dotted glide, here doing the w job."
+            },
+            {
+              "kind": "speech",
+              "text": "া — the vowel sign, on the glide."
+            },
+            {
+              "kind": "speech",
+              "text": "hôwā — to be, to become. You met it romanized in the farewells chapter, as the verb hiding inside dækhā hôbe, \"seeing will happen.\" Here it is on the page, and every one of its four pieces was bought in the last two chapters."
+            },
+            {
+              "kind": "speech",
+              "text": "Read it slowly and notice what is not there. No stacked letters. No killed vowels. Four pieces in a row, left to right, each one saying its own thing. This is what Bengali looks like when a word is made mostly of vowels: the spelling stops being a puzzle and becomes a transcript."
+            },
+            {
+              "kind": "speech",
+              "text": "Compare it with the word you read two chapters ago:"
+            },
+            {
+              "kind": "speech",
+              "text": "হ্যাঁ — five pieces, one syllable হওয়া (hôwā) — four pieces, three syllables."
+            },
+            {
+              "kind": "speech",
+              "text": "Same first letter, opposite arrangements. A Bengali reader's real skill is telling those two shapes apart at a glance, and it is a skill of the eye rather than the memory: stacked pieces are one syllable, pieces in a row are several."
             }
           ]
         },
         {
           "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
+          "type": "guided-production",
+          "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "দুধ (dudh) is দ (dô) with the vowel sign ু (u), plus ধ (dh), a breathy dental d. Nothing is written after ধ — the same bare-consonant ending সাহায্য had."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "হওয়া (hôwā)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: হওয়া]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "হওয়া (hôwā)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: হওয়া]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hôwā — three syllables, no cluster",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hôwā* — three syllables, no cluster]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "হবে",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: হবে]"
             }
           ]
         },
         {
           "index": 3,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: why this one stays silent",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "সাহায্য had to surface its inherent vowel — sāhājjo, not sāhājj — because its final letter is a doubled consonant, য্য, and a bare cluster like that cannot be said at all without a vowel to carry it. দুধ ends in one plain consonant, ধ, which needs no such help. So Bengali leaves it silent: দুধ, not dudho. The spelling looks the same kind of \"bare ending\" in both words; whether the vowel survives depends on what it would take to pronounce the letter beneath it."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "দুধ (dudh) is Sanskrit দুগ্ধ (dugdha), the past participle of √দুহ্ (√duh, \"to milk\"), from PIE dʰewgʰ-, \"to produce, to yield.\" That root has exactly one secure English descendant, and it is not the word you would guess: doughty, \"valiant,\" through Old English dohtig, \"capable, of use.\" The word that looks like a cousin, dough, is not one — it comes from a completely different PIE root, dʰeyǵʰ-, \"to knead, to mould.\" A close sound, two unrelated histories."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"dudh\" — no trailing vowel",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"dudh\" — no trailing vowel]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the offer — \"dudh khān\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the offer — \"dudh khān\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the two endings compared — \"sāhājjo … dudh\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the two endings compared — \"sāhājjo … dudh\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "three drinks so far — \"chā khān … jôl khān … dudh khān\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: three drinks so far — \"chā khān … jôl khān … dudh khān\"]"
-            }
-          ]
-        },
-        {
-          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -499,167 +466,11 @@
             },
             {
               "kind": "speech",
-              "text": "Why does সাহায্য keep its final vowel while দুধ (dudh) doesn't? (সাহায্য ends in a doubled consonant that cannot be said bare; দুধ (dudh)'s single ধ can.) Is দুধ (dudh)'s root related to English dough? (No — that is a different PIE root; the real cousin is doughty.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "BN-C10-bhat",
-      "sequence": 730,
-      "title": "ভাত (bhāt) — \"rice,\" and a root that will name a person too",
-      "headword": "ভাত",
-      "romanization": "bhāt",
-      "gloss": "cooked rice — the meal itself, and a Sanskrit root for \"share\" that will resurface two lessons from now in a very different word",
-      "script": "bengali",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:797239fdb53c5eee",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
+              "text": "How many syllables in হওয়া (hôwā)? (Three.) Why is the ও written standing alone? (A vowel cannot ride a vowel.) And what does the dot under the য do? (Turns it into a glide.)"
             },
             {
               "kind": "speech",
-              "text": "Three drinks so far. This chapter closes on the word for the meal itself — and a root worth remembering, because it comes back."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: ভাত",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ভাত — bhāt — cooked rice."
-            },
-            {
-              "kind": "speech",
-              "text": "ভাত (bhāt) খান — (please) eat some rice; in everyday Bengali, \"have a meal.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ভাত is ভ (bhô, a b with a puff of breath) with the vowel sign া (ā), plus ত (t), silent at the end for the same reason দুধ (dudh)'s ধ was: a single bare consonant needs no vowel to carry it, so bhāt, not bhāto."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ভাত (bhāt) is Sanskrit ভক্ত (bhakta), \"portioned out, shared\" — the past participle of √ভজ্ (√bhaj), \"to divide, to distribute, to allot.\" PIE bʰeh₂g- sits behind it. Rice, in this word's own history, is not \"the grain\" but the share that was given out — the meal as a portion handed to you."
-            },
-            {
-              "kind": "speech",
-              "text": "Hold onto that root. Two lessons from now, the very same Sanskrit verb will turn up again, naming someone rather than something."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"bhāt\" — cooked rice, no trailing vowel",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"bhāt\" — cooked rice, no trailing vowel]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the offer — \"bhāt khān\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the offer — \"bhāt khān\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "all four, in order — \"chā khān … jôl khān … dudh khān … bhāt khān\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: all four, in order — \"chā khān … jôl khān … dudh khān … bhāt khān\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the two silent endings, back to back — \"dudh … bhāt\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the two silent endings, back to back — \"dudh … bhāt\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the root that shares — \"bhaj — to divide, to distribute\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the root that shares — \"bhaj — to divide, to distribute\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does ভাত literally mean, at the root? (\"Portioned out, shared\" — √bhaj, \"to divide.\") Offer all four of this chapter's words, politely, in one breath. (Chā khān, jôl khān, dudh khān, bhāt khān.) Why do দুধ and ভাত both drop their final vowel? (Each ends in one plain consonant, easily said bare.) A quick run back through Chapter 7 while you're at it: which verb does Bengali reach for when আছে runs out of future? (হবে.) How many forms of \"I come\" does a Bengali speaker need, whoever is talking? (One — āmi āsi.) And \"you go\" to a stranger, versus to a friend? (যান jān, versus যাও jāo.) সাহায্য's doubled letter — said how? (jj, not yy.)"
+              "text": "Source: Unicode Bengali chart."
             }
           ]
         }

@@ -19,21 +19,21 @@ requires:
 introduces:
   knowledge: [TE-SCRIPT-RECOG-132]
 practises:
-  knowledge: [TE-SCRIPT-RECOG-131, TE-SCRIPT-RECOG-132]
+  knowledge: [TE-SCRIPT-RECOG-132, TE-SCRIPT-RECOG-131, TE-SCRIPT-RECOG-128, TE-SCRIPT-RECOG-136]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [TE-S131-vowel-sign-vocalic-r]
+reviews_of: [TE-S131-vowel-sign-vocalic-r, TE-S128-letter-bha, TE-S136-vowel-sign-ai]
 ---
 
 # ఞ — one character, met inside a word you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-131] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-131, TE-SCRIPT-RECOG-128] -->
 
-[PAUSE 1s] Before the new one: ◌ృ — what does it do?
+[PAUSE 1s] Before the new one: ◌ృ — what does it do? And one from further back: భ?
 
 [PAUSE 2s] One character this time — and you have been saying it since the page
 before this one, without knowing which mark on the page it was.
@@ -82,8 +82,10 @@ and larger than it is printed.
 - [YOU SAY: *kṛtajñata* the way it is said — *kṛtagnyata*]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-132] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-132, TE-SCRIPT-RECOG-136] -->
 
 [PAUSE 3s] Which character is this — ఞ? Which letter does it usually sit under,
 and what does that pair sound like? (**Under జ, in the block జ్ఞ, said
 *gnya*.**)
+
+One more, from much earlier: ◌ై — what does it do?

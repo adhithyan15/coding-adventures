@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:44a61a56f4245df8",
+  "sourceHash": "fnv1a64:e9a42a061b919c34",
   "lessons": [
     {
       "id": "FR-C05-parler",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:b4b7ca33165517c7",
+      "sourceHash": "fnv1a64:857a3b5ad7b93594",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -107,15 +107,22 @@
             {
               "kind": "speech",
               "text": "Here is the great French surprise: -e, -es, and -ent are all SILENT — je parle, tu parles, ils parlent all sound identical, just parl. Only nous (-ons) and vous (-ez) are audible."
-            },
-            {
-              "kind": "speech",
-              "text": "This is exactly why French keeps its subject pronouns (je, tu, il…) where Spanish and Italian drop them: in Spanish the ending tells you who (hablo vs hablas), but in French your ear can't hear the difference — so the pronoun has to carry the person. A key contrast to hold onto."
             }
           ]
         },
         {
           "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens: why French keeps its pronouns",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "That silence has a consequence which shapes the whole language. In Spanish the ending alone tells you who is speaking — hablo (\"I speak\") against hablas (\"you speak\") — so the pronoun can be dropped. In French your ear cannot hear any difference between parle, parles and parlent, so the pronoun must stay to carry the person. Je and tu are not optional decoration in French; they are the only thing telling you who is doing the speaking."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -155,7 +162,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -186,7 +193,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b8cece1e336916a0",
+      "sourceHash": "fnv1a64:76d075164bb1b8cf",
       "notice": null,
       "blocks": [
         {
@@ -341,7 +348,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d6c67c4b15ac00f",
+      "sourceHash": "fnv1a64:95c9a431bc6b9cbf",
       "notice": null,
       "blocks": [
         {
@@ -392,15 +399,22 @@
             {
               "kind": "speech",
               "text": "travel — journeying was once such an ordeal that travail (toil) became travel (to make a journey). You are, etymologically, tortured every time you travel."
-            },
-            {
-              "kind": "speech",
-              "text": "This is the exact same word as Spanish trabajar (from the same tripaliāre) — the -al- stayed in French (travail) and softened to -aj- in Spanish (trabajo). A perfect cross-language twin, torture and all."
             }
           ]
         },
         {
           "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — a cross-language twin, torture and all",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Spanish trabajar (\"to work\") comes from the very same tripaliāre — a perfect cross-language twin, torture and all. The middle of the word went one way in each language: the -al- stayed in French (travail, travailler) and softened to -aj- in Spanish (trabajo, trabajar)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "grammar",
           "title": "Grammar Lens: same -er template",
           "segments": [
@@ -425,7 +439,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -465,7 +479,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -496,7 +510,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2965723fcb81df81",
+      "sourceHash": "fnv1a64:8b7d55558919ee47",
       "notice": null,
       "blocks": [
         {
@@ -518,19 +532,34 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The new word: français",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "français = \"French\" (the language, and a French person), from Francia, \"land of the Franks\" — the Germanic people who settled Roman Gaul and gave France its name. And here's the twist: the Franks' own name meant \"free\" — which is why English frank / frankly means open and unguarded, and why the coin was a franc. Say it frahn-SEH (soft-c-s: the ç-less c before nothing here is soft s; the ai is a nasal-ish eh)."
+              "text": "soft-c-s — français = frahn-SEH. The cedilla under the ç forces a soft s where a plain c would have been hard."
+            },
+            {
+              "kind": "speech",
+              "text": "The opening fran- is nasal, and the final -ais is a plain eh."
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The sentence, assembled",
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "français = \"French\" — both the language and a French person — from Francia, \"land of the Franks\": the Germanic people who settled Roman Gaul and gave France its name. And here is the twist: the Franks' own name meant \"free.\" That is why English frank and frankly mean open and unguarded, and why the old French coin was called a franc."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: two rules hiding in four words",
           "segments": [
             {
               "kind": "speech",
@@ -542,15 +571,15 @@
             },
             {
               "kind": "speech",
-              "text": "A complete, grammatical French sentence. Now note the contrast that defines French:"
+              "text": "A complete, grammatical French sentence. Two rules are hiding in it:"
             },
             {
               "kind": "speech",
-              "text": "You keep the je. Spanish drops it (hablo español), because the Spanish ending -o says \"I\". But French parle / parles / parlent all sound the same (parl) — the ear can't tell who — so the pronoun must stay to carry the person. This is the single biggest structural difference between French and its Iberian cousins."
+              "text": "You keep the je. Spanish drops its pronoun — hablo español says \"I speak Spanish\" with no word for \"I,\" because the ending -o carries the person. French cannot do that: parle, parles and parlent all sound alike, so the pronoun must stay. This is the single biggest structural difference between French and its Iberian cousins."
             },
             {
               "kind": "speech",
-              "text": "No article on the language: je parle français, not \"le français\" (here)."
+              "text": "No article on the language here: je parle français, not je parle le français."
             },
             {
               "kind": "speech",
@@ -567,7 +596,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -607,7 +636,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -638,7 +667,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5578d2361ff9b23e",
+      "sourceHash": "fnv1a64:2b721118886f5685",
       "notice": null,
       "blocks": [
         {
@@ -660,8 +689,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Conjugate on command",
+          "type": "guided-production",
+          "title": "Guided Practice: conjugate on command",
           "segments": [
             {
               "kind": "pause",
@@ -693,8 +722,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "Say something real",
+          "type": "guided-production",
+          "title": "Guided Practice: say something real",
           "segments": [
             {
               "kind": "speech",

@@ -1,20 +1,10 @@
 {
   "language": "bengali",
   "chapter": 19,
-  "sourceHash": "fnv1a64:fe7036b758622cd1",
+  "sourceHash": "fnv1a64:af7157b42629992e",
   "lessonIds": [
-    "BN-W04-cha",
-    "BN-W04-chaa-read",
-    "BN-W04-pa",
     "BN-W04-poribar-read",
-    "BN-W04-ja",
-    "BN-W04-jol-read",
-    "BN-W04-ii-matra",
-    "BN-W04-nil-read",
-    "BN-W04-i-indep",
-    "BN-W04-bhai-read",
-    "BN-W04-e-indep",
-    "BN-W04-ek-read"
+    "BN-W04-bhai-read"
   ],
-  "tex": "bengali/book/chapters/ch19-both-bodies-of-a-vowel.tex"
+  "tex": "bengali/book/chapters/ch19-family-on-the-page.tex"
 }

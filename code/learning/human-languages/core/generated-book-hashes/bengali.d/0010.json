@@ -1,12 +1,11 @@
 {
   "language": "bengali",
   "chapter": 10,
-  "sourceHash": "fnv1a64:60c051c2bf6b9a98",
+  "sourceHash": "fnv1a64:c6ceaa28ab76e072",
   "lessonIds": [
-    "BN-C10-cha",
-    "BN-C10-jol",
-    "BN-C10-dudh",
-    "BN-C10-bhat"
+    "BN-W04-o-indep",
+    "BN-W04-nukta",
+    "BN-W04-howa-read"
   ],
-  "tex": "bengali/book/chapters/ch10-tea-water-milk-rice.tex"
+  "tex": "bengali/book/chapters/ch10-two-marks-inside-a-verb.tex"
 }

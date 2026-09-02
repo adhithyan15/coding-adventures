@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-W03-bhalo-read",
     "language": "bengali",
-    "chapter": 18,
-    "sequence": 1860,
+    "chapter": 8,
+    "sequence": 540,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:765db82f0ba74463",
+    "sourceHash": "fnv1a64:45611bc3505d7ca1",
     "detachableSegments": [
       "Script"
     ],

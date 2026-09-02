@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "PA-S11-bhabbha",
+    "language": "punjabi",
+    "chapter": 11,
+    "sequence": 575,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:72b1ecc1e71f1b03",
+    "detachableSegments": [
+      "Script you'll notice: ਭ",
+      "Writing: copy what you can see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,21 +1,42 @@
 ---
+schema_version: 2
 id: ML-C02-practice
+spine_node: SPINE-EXCHANGE-NAMES
 sequence: 150
 chapter: 2
 type: practice
 headword: (dialogue)
 gloss: Chapter 2 recap — the introduction exchange
 concept_tag: REVIEW
-prerequisites: [ML-C02-enre-peru-aanu, ML-C02-ninre-peru-entaanu, ML-C02-santosham, ML-W02-santosham-guided-copy]
+prerequisites: [ML-C02-enre-peru-aanu, ML-C02-ninre-peru-entaanu, ML-C02-santosham, ML-W02-santosham-guided-copy, ML-S131-chillu-nn]
 sounds: []
 roots: []
-est_minutes: 5
+duration:
+  max_seconds: 290
+requires:
+  knowledge: []
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ML-LEX-PERU-01, ML-LEX-ENRE-01, ML-LEX-AANU-01, ML-LEX-NII-NINGAL-01, ML-LEX-ENTU-01, ML-LEX-SANTOSHAM-01, ML-PHRASE-C02-MY-NAME-IS-01, ML-PHRASE-C02-WHATS-YOUR-NAME-01, ML-CONCEPT-C02-COPULA-01, ML-SCRIPT-RECOG-112, ML-SCRIPT-RECOG-134, ML-SCRIPT-RECOG-135, ML-SCRIPT-RECOG-136, ML-SCRIPT-RECOG-137, ML-SCRIPT-RECOG-113, ML-SCRIPT-RECOG-138, ML-SCRIPT-RECOG-06, ML-SCRIPT-RECOG-07, ML-SCRIPT-RECOG-131, ML-SCRIPT-GUIDED-COPY-SANTOSHAM-02]
+skills: [listening, speaking, reading, writing]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [ML-C02-peru, ML-C02-enre, ML-C02-aanu, ML-C02-enre-peru-aanu, ML-C02-nii-ningal, ML-C02-entu, ML-C02-ninre-peru-entaanu, ML-C02-santosham, ML-W02-santosham-guided-copy]
 ---
 
 # Chapter 2 — the introduction, whole
 
-## The dialogue
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] No new words. The whole introduction, in the order two
+people actually say it.
+
+## The exchange
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-PERU-01, ML-LEX-ENRE-01, ML-LEX-AANU-01, ML-LEX-NII-NINGAL-01, ML-LEX-ENTU-01, ML-LEX-SANTOSHAM-01, ML-PHRASE-C02-MY-NAME-IS-01, ML-PHRASE-C02-WHATS-YOUR-NAME-01, ML-CONCEPT-C02-COPULA-01] -->
 
 | Malayalam | English |
 |---|---|
@@ -37,6 +58,7 @@ The Malayalam standout: unlike its Dravidian sisters' **zero copula**, Malayalam
 closest of sisters.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-PERU-01, ML-LEX-ENRE-01, ML-LEX-AANU-01, ML-LEX-NII-NINGAL-01, ML-LEX-ENTU-01, ML-LEX-SANTOSHAM-01, ML-PHRASE-C02-MY-NAME-IS-01, ML-PHRASE-C02-WHATS-YOUR-NAME-01, ML-CONCEPT-C02-COPULA-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: the whole exchange, both voices]
@@ -50,7 +72,22 @@ Keep the dialogue table open. Copy **സന്തോഷം** once from its visib
 then compare your two new shapes, **ഷ** and **ോ**, with the model. This is
 supported checkpoint writing, not spelling from memory.
 
+## Script check — the letters of this chapter
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-112, ML-SCRIPT-RECOG-134, ML-SCRIPT-RECOG-135, ML-SCRIPT-RECOG-136, ML-SCRIPT-RECOG-137, ML-SCRIPT-RECOG-113, ML-SCRIPT-RECOG-138, ML-SCRIPT-RECOG-06, ML-SCRIPT-RECOG-07, ML-SCRIPT-RECOG-131] -->
+
+[PAUSE 2s] Cover the romanizations. Find each letter once in the Malayalam
+above, then say the word it sits in.
+
+- **പേര്** — **പ** *pa*, **◌േ** *ē*
+- **എന്റെ** — **എ** *e*, **റ** *ṟa*
+- **ആണ്** — **ആ** *ā*, **ണ** *ṇa*
+- **നിങ്ങൾ** — **◌ീ** *ī* (in **നീ**), **ൾ** *ḷ*
+- **അരുൺ** — **◌ു** *u*, **ൺ** *ṇ*
+
+- [YOU LOOK: at each letter, then find it in the word beside it]
+
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-PERU-01, ML-LEX-ENRE-01, ML-LEX-AANU-01, ML-LEX-NII-NINGAL-01, ML-LEX-ENTU-01, ML-LEX-SANTOSHAM-01, ML-PHRASE-C02-MY-NAME-IS-01, ML-PHRASE-C02-WHATS-YOUR-NAME-01, ML-CONCEPT-C02-COPULA-01] -->
 
 [PAUSE 3s] Give your name, ask someone else's, say you're pleased. (*Enṟe pēru
 … āṇŭ. / Ninṟe pēru entāṇŭ? / Santōṣam.*) What grammatical word does Malayalam

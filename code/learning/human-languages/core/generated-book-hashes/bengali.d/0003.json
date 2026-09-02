@@ -1,14 +1,16 @@
 {
   "language": "bengali",
   "chapter": 3,
-  "sourceHash": "fnv1a64:09db6ea596f5b4bc",
+  "sourceHash": "fnv1a64:9671a109127578e4",
   "lessonIds": [
-    "BN-C03-ami",
-    "BN-C03-kemon",
-    "BN-C03-tumi-kemon-achho",
-    "BN-C03-bhalo",
-    "BN-C03-kono-bepar-na",
-    "BN-C03-practice"
+    "BN-C02-naam",
+    "BN-C02-amar",
+    "BN-C02-amar-naam",
+    "BN-C02-alaap",
+    "BN-C02-ki",
+    "BN-C02-tumi-apni",
+    "BN-C02-tomar-naam-ki",
+    "BN-C02-practice"
   ],
-  "tex": "bengali/book/chapters/ch03-responding.tex"
+  "tex": "bengali/book/chapters/ch03-introductions.tex"
 }

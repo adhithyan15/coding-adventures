@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C02-kaay",
     "language": "marathi",
-    "chapter": 5,
-    "sequence": 85,
+    "chapter": 9,
+    "sequence": 285,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:339cb60b56ab3b5f",
+    "sourceHash": "fnv1a64:88399bb81839acbf",
     "detachableSegments": [
       "The letters in this word"
     ]

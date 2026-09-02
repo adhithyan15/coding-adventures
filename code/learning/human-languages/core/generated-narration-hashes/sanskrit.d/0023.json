@@ -1,18 +1,19 @@
 {
   "language": "sanskrit",
   "chapter": 23,
-  "sourceHash": "fnv1a64:470b3b4c31ccc370",
+  "sourceHash": "fnv1a64:8be03d20200b5c56",
   "lessonIds": [
     "SA-C23-father",
     "SA-C23-mother",
     "SA-C23-son",
-    "SA-C23-daughter"
+    "SA-C23-daughter",
+    "SA-S222-vowel-sign-uu"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 4,
   "text": "sanskrit/narration/ch23.txt",
   "json": "sanskrit/narration/ch23.json",
-  "textHash": "fnv1a64:d26c52856e9600b3",
-  "jsonHash": "fnv1a64:214f25438c74c87a",
+  "textHash": "fnv1a64:2d3e2053dbe7f019",
+  "jsonHash": "fnv1a64:67d04f574b51c21c",
   "findings": []
 }

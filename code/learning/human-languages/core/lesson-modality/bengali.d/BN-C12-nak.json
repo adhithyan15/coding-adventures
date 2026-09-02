@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C12-nak",
     "language": "bengali",
-    "chapter": 12,
-    "sequence": 920,
+    "chapter": 20,
+    "sequence": 1040,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:009471eb1c32b168",
+    "sourceHash": "fnv1a64:46a667aa66aadf07",
     "detachableSegments": [
       "The letters in this word"
     ]

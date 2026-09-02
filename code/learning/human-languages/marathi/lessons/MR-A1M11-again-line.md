@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1M11-again-line
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 850
+sequence: 1050
 delivery: script
-chapter: 20
+chapter: 24
 type: writing
 headword: "पुन्हा भेटू."
 gloss: retrieve the familiar see-you-again closing as a separate line

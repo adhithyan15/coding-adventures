@@ -1,12 +1,12 @@
 {
   "language": "bengali",
   "chapter": 15,
-  "sourceHash": "fnv1a64:bb12d12e0bdc9e26",
+  "sourceHash": "fnv1a64:e3d7732a710beac6",
   "lessonIds": [
-    "BN-C15-kapor",
-    "BN-C15-jama",
-    "BN-C15-shari",
-    "BN-C15-choshma"
+    "BN-C09-neowa",
+    "BN-C09-jijnasa-kora",
+    "BN-C09-sahajjo-kora",
+    "BN-C09-bhalo-laga"
   ],
-  "tex": "bengali/book/chapters/ch15-cloth-shirt-sari-glasses.tex"
+  "tex": "bengali/book/chapters/ch15-conjunct-verbs.tex"
 }

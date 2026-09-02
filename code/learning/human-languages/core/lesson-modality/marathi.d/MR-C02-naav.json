@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C02-naav",
     "language": "marathi",
-    "chapter": 5,
-    "sequence": 60,
+    "chapter": 9,
+    "sequence": 260,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:db23a434cda0d9da",
+    "sourceHash": "fnv1a64:89aebc04614a6474",
     "detachableSegments": [
       "The letters in this word"
     ]

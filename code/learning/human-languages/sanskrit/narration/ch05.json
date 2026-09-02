@@ -3,8 +3,8 @@
   "language": "sanskrit",
   "chapter": 5,
   "title": "The First Verbs",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:44514fd4a018fa24",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:acec5d795c484288",
   "lessons": [
     {
       "id": "SA-C05-vadami",
@@ -12,24 +12,15 @@
       "title": "वदामि (vadāmi) — \"I speak,\" and the Sanskrit verb",
       "headword": "वदामि",
       "romanization": "vadāmi",
-      "gloss": "I speak (from वद्, to speak)",
+      "gloss": "I speak (from vad, to speak)",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c686c4ae73bc8a1",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:2712b08a884ce875",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -50,12 +41,12 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "व (va) + दा (dā) + मि (mi) becomes वदामि (vadāmi)."
+              "text": "va, dā, mi. The long ā in the middle beat is the ending doing its work — shorten it and the word stops meaning \"I speak.\""
             }
           ]
         },
@@ -66,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "वदामि (vadāmi, \"I speak\") is from the root वद् (vad, \"to speak, to say\") — the very root of वाद (vāda, \"a saying\") inside Chapter 1's धन्यवादः (dhanyavādaḥ, \"thank you\"). The present tense is stem + person- ending: vad-ā-mi, where -मि (-mi) means \"I\" — the same -mi you can see in asmi (\"I am\")."
+              "text": "vadāmi (\"I speak\") is from the root vad (\"to speak, to say\") — the very root of vāda (\"a saying\") inside Chapter 1's dhanyavādaḥ (\"thank you\"). The present tense is stem + person- ending: vad-ā-mi, where -mi means \"I\" — the same -mi you can see in asmi (\"I am\")."
             }
           ]
         },
@@ -160,6 +151,207 @@
       ]
     },
     {
+      "id": "SA-S204-letter-ya",
+      "sequence": 261,
+      "title": "य (ya) — one character, met inside words you already say",
+      "headword": "य",
+      "romanization": "ya",
+      "gloss": "the single character य — recognised inside words you already say",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ea64fa3d0ae638e9",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: य",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: य and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one, the ones you have already met: ◌ु, र, प. Say what each of them does."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: य",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "य — ya."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not y, it is ya."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "a clockwise inner curl."
+            },
+            {
+              "kind": "speech",
+              "text": "a lower bowl rising to the right-stem junction."
+            },
+            {
+              "kind": "speech",
+              "text": "a top-to-bottom right stem."
+            },
+            {
+              "kind": "speech",
+              "text": "the top shirorekhā."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these words, and य (ya) is one of the shapes inside them — the rest of their shapes are still ahead of you, so here the character stands on its own:"
+            },
+            {
+              "kind": "speech",
+              "text": "dhanyavādaḥ — thank you."
+            },
+            {
+              "kind": "speech",
+              "text": "punardarśanāya — until we meet again (lit. \"for seeing again\")."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: य",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start beneath the headline, curve clockwise around the inner curl, and finish at the left waist."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift at that waist, curve down and right around the lower bowl, and rise to the right-stem junction."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift and draw the right stem top-to-bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "4. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 3. The pen comes up 3 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "verified four-stroke teaching form; another animated learner source joins the inner curl and lower bowl."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-य (ya)-order.gif’, strokes 1–4, Wikimedia Commons, 10 May 2009."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at this, and find य (ya) in it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at this, and find य in it]"
+            },
+            {
+              "kind": "speech",
+              "text": "य (ya)."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "य three times, saying ya as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: य three times, saying *ya* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find य (ya) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find य once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — य? What sound does it carry? (ya.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "SA-C05-aham-samskritam-vadami",
       "sequence": 270,
       "title": "अहं संस्कृतं वदामि (ahaṁ saṁskṛtaṁ vadāmi) — \"I speak Sanskrit\"",
@@ -167,22 +359,13 @@
       "romanization": "ahaṁ saṁskṛtaṁ vadāmi",
       "gloss": "I speak Sanskrit",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2b052e7b455dfc4e",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:ce79dcd9efdfad5d",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -203,12 +386,12 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "संस्कृत (saṁskṛta): सं (saṁ, with the anusvāra) + स्कृ (the conjunct skṛ, with the vocalic ऋ ṛ) + त (ta)."
+              "text": "a, haṁ, saṁs, kṛ, taṁ, va, dā, mi. The ṁ is a hum through the nose that colours the vowel before it rather than a full m; ṛ is a short vowel made with the tongue curled, near the ri of rich."
             }
           ]
         },
@@ -219,7 +402,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "अहं संस्कृतं वदामि (ahaṁ saṁskṛtaṁ vadāmi) = अहम् (aham, \"I\") + संस्कृतम् (saṁskṛtam, the object) + वदामि (vadāmi, \"speak\") — \"I Sanskrit speak,\" the verb last (as in every daughter language). The name संस्कृत (saṁskṛta) means \"put together, refined, perfected\" — from सम् (sam-, \"together,\" cousin of English same, Greek syn-) + कृत (kṛta, \"made, done,\" from the root कृ kṛ you met in namaskāra). So \"Sanskrit\" literally means \"the perfected [language],\" named in contrast to prākṛta (\"natural, raw\" — Prakrit, the everyday speech from which Hindi, Bengali, and the rest descend)."
+              "text": "ahaṁ saṁskṛtaṁ vadāmi = aham (\"I\") + saṁskṛtam (the object) + vadāmi (\"speak\") — \"I Sanskrit speak,\" the verb last (as in every daughter language). The name saṁskṛta means \"put together, refined, perfected\" — from sam- (\"together,\" cousin of English same, Greek syn-) + kṛta (\"made, done,\" from the root kṛ you met in namaskāra). So \"Sanskrit\" literally means \"the perfected [language],\" named in contrast to prākṛta (\"natural, raw\" — Prakrit, the everyday speech from which Hindi, Bengali, and the rest descend)."
             }
           ]
         },
@@ -299,24 +482,15 @@
       "title": "वसामि (vasāmi) — \"I live, I dwell\"",
       "headword": "वसामि",
       "romanization": "vasāmi",
-      "gloss": "I live, I dwell (from वस्, to dwell)",
+      "gloss": "I live, I dwell (from vas, to dwell)",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cde751a56ff7912e",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:8db6ffb96dfe10ea",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -337,12 +511,12 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "व (va) + सा (sā) + मि (mi) becomes वसामि (vasāmi)."
+              "text": "va, sā, mi. One consonant apart from vadāmi, and the same long ā carrying the ending."
             }
           ]
         },
@@ -353,7 +527,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "वसामि (vasāmi, \"I dwell, I live\") is from the root वस् (vas, \"to dwell, to stay, to abide\"), from Proto-Indo-European wes- (\"to dwell, to be\") — the ancestor of English was and were (the past of \"to be\" began as \"to dwell/remain\"). So Sanskrit's \"I dwell\" and English's \"was\" are, at the root, one word. From vas come vāsa (\"a dwelling\"), nivāsa (\"a residence\"), and names like Vārāṇasī. \"I live in the city\" is अहं नगरे वसामि (ahaṁ nagare vasāmi)."
+              "text": "vasāmi (\"I dwell, I live\") is from the root vas (\"to dwell, to stay, to abide\"), from Proto-Indo-European wes- (\"to dwell, to be\") — the ancestor of English was and were (the past of \"to be\" began as \"to dwell/remain\"). So Sanskrit's \"I dwell\" and English's \"was\" are, at the root, one word. From vas come vāsa (\"a dwelling\"), nivāsa (\"a residence\"), and names like Vārāṇasī. \"I live in the city\" is ahaṁ nagare vasāmi."
             }
           ]
         },
@@ -364,7 +538,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "नगरे (nagare, \"in the city\") = nagara (\"city\") in the locative case (-e, \"in / at\"). Sanskrit has no separate word for \"in\" — it is folded into the noun's ending, the ancestor of the postpositions Hindi and Bengali use. This is your second case, after Chapter 4's dative."
+              "text": "nagare (\"in the city\") = nagara (\"city\") in the locative case (-e, \"in / at\"). Sanskrit has no separate word for \"in\" — it is folded into the noun's ending, the ancestor of the postpositions Hindi and Bengali use. This is your second case, after Chapter 4's dative."
             }
           ]
         },
@@ -428,29 +602,185 @@
       ]
     },
     {
+      "id": "SA-S205-vowel-sign-vocalic-r",
+      "sequence": 281,
+      "title": "◌ृ (ṛ) — one character, met inside words you already say",
+      "headword": "ृ",
+      "romanization": "ṛ",
+      "gloss": "the single character ◌ृ — recognised inside words you already say",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:4499afa9fb6b3c36",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ◌ृ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ृ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one, the ones you have already met: र, प, य (ya). Say what each of them does."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ◌ृ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "◌ृ — ṛ."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a vowel sign. It is not a letter and never stands alone: it attaches to a consonant and replaces the a built into it. Replaces, not adds — the a is gone."
+            },
+            {
+              "kind": "speech",
+              "text": "Where it sits: a small hook below (the vocalic r, common in Sanskrit)."
+            },
+            {
+              "kind": "speech",
+              "text": "Worked through: न + ◌ृ = नृ — nṛ."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say this word, and ◌ृ (ṛ) is one of the shapes inside it — the rest of its shapes are still ahead of you, so here the character stands on its own:"
+            },
+            {
+              "kind": "speech",
+              "text": "ahaṁ saṁskṛtaṁ vadāmi — I speak Sanskrit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ◌ृ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ◌ृ (ṛ) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at this, and find ◌ृ (ṛ) in it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at this, and find ◌ृ in it]"
+            },
+            {
+              "kind": "speech",
+              "text": "◌ृ (ṛ)."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "◌ृ three times, saying ṛ as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ◌ृ three times, saying *ṛ* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ◌ृ (ṛ) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ◌ृ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ◌ृ? What vowel does it put on the consonant it attaches to — and what does it take off? (Puts ṛ on; takes the built-in a off.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "SA-C05-karomi",
       "sequence": 290,
       "title": "करोमि (karomi) — \"I do,\" from the root behind karma and namaskāra",
       "headword": "करोमि",
       "romanization": "karomi",
-      "gloss": "I do, I make (कार्यं करोमि, \"I work\")",
+      "gloss": "I do, I make (kāryaṁ karomi, \"I work\")",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:557c4b1e88d8dee8",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:4bb9fcbfff7c22cc",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -471,12 +801,12 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "क (ka) + रो (ro) + मि (mi) becomes करोमि (karomi)."
+              "text": "ka, ro, mi. Three even beats, all short."
             }
           ]
         },
@@ -487,23 +817,23 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "करोमि (karomi, \"I do, I make\") is from the root कृ (kṛ, \"to do, make\"), from Proto-Indo-European kʷer-. This is the root at the heart of this book:"
+              "text": "karomi (\"I do, I make\") is from the root kṛ (\"to do, make\"), from Proto-Indo-European kʷer-. This is the root at the heart of this book:"
             },
             {
               "kind": "speech",
-              "text": "नमस्कारः (namaskāraḥ) — \"the making of a bow\" (namas + kāra)."
+              "text": "namaskāraḥ — \"the making of a bow\" (namas + kāra)."
             },
             {
               "kind": "speech",
-              "text": "कर्म (karma) — \"a thing done,\" an action."
+              "text": "karma — \"a thing done,\" an action."
             },
             {
               "kind": "speech",
-              "text": "संस्कृत (saṁskṛta) — \"put together, perfected\" (this very language)."
+              "text": "saṁskṛta — \"put together, perfected\" (this very language)."
             },
             {
               "kind": "speech",
-              "text": "To say \"I work,\" Sanskrit says कार्यं करोमि (kāryaṁ karomi) — \"I do work,\" where कार्यम् (kāryam, \"work, task\") is itself from kṛ (\"a thing-to-be-done\"). So \"I work\" is, at root, \"kṛ-thing I kṛ-do.\" Hindi's kām karnā and Bengali's kāj karā are its worn-down grandchildren."
+              "text": "To say \"I work,\" Sanskrit says kāryaṁ karomi — \"I do work,\" where kāryam (\"work, task\") is itself from kṛ (\"a thing-to-be-done\"). So \"I work\" is, at root, \"kṛ-thing I kṛ-do.\" Hindi's kām karnā and Bengali's kāj karā are its worn-down grandchildren."
             }
           ]
         },
@@ -579,7 +909,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87a8a0de5c869544",
+      "sourceHash": "fnv1a64:6f32e865c62c6807",
       "notice": null,
       "blocks": [
         {
@@ -601,8 +931,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Build the sentences",
+          "type": "guided-production",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "pause",
@@ -650,8 +980,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The engine",
+          "type": "guided-production",
+          "title": "How to answer: the engine",
           "segments": [
             {
               "kind": "pause",
@@ -690,8 +1020,8 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Roots you now carry (the taproot, both ways)",
+          "type": "notice",
+          "title": "What you've built: the roots you now carry",
           "segments": [
             {
               "kind": "pause",
@@ -731,6 +1061,215 @@
             {
               "kind": "speech",
               "text": "In one breath, say your language, your city, and your work in Sanskrit — then say \"we two speak.\" (Ahaṁ saṁskṛtaṁ vadāmi. Ahaṁ nagare vasāmi. Ahaṁ kāryaṁ karomi. Vadāvaḥ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-S03-letter-a",
+      "sequence": 301,
+      "title": "अ — one character, met inside words you already say",
+      "headword": "अ",
+      "romanization": "a",
+      "gloss": "the single character अ — recognised inside words you already say",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8616b21f85cad43f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: अ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: अ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one, the ones you have already met: प, य (ya), ◌ृ (ṛ). Say what each of them does."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: अ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अ — a."
+            },
+            {
+              "kind": "speech",
+              "text": "It is an independent vowel: the full-size letter a vowel wears when it opens a word and has no consonant to lean on. Inside a word the same vowel is written as a small sign instead."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "a joined upper-and-lower left body."
+            },
+            {
+              "kind": "speech",
+              "text": "a middle shoulder."
+            },
+            {
+              "kind": "speech",
+              "text": "a right vertical stem."
+            },
+            {
+              "kind": "speech",
+              "text": "the top shirorekhā."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these words, and अ is one of the shapes inside them — the rest of their shapes are still ahead of you, so here the character stands on its own:"
+            },
+            {
+              "kind": "speech",
+              "text": "asti — is."
+            },
+            {
+              "kind": "speech",
+              "text": "mama nāma … asti — my name is…"
+            },
+            {
+              "kind": "speech",
+              "text": "bhavān katham asti? — how are you?"
+            },
+            {
+              "kind": "speech",
+              "text": "aham — I."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: अ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. curve around the upper bowl, then continue down and around the lower bowl without lifting."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift and sweep the middle shoulder right."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift and draw the right stem top-to-bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "4. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 3. The pen comes up 3 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "verified modern printed teaching form; other Devanagari traditions split the body into more strokes."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari अ stroke order.svg’, frames 1–4, Wikimedia Commons, 5 August 2023."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at this, and find अ in it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at this, and find अ in it]"
+            },
+            {
+              "kind": "speech",
+              "text": "अ (a)."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "अ three times, saying a as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: अ three times, saying *a* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find अ once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find अ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — अ? What sound does it carry? (a.) Name one word you already say that contains it."
             }
           ]
         }

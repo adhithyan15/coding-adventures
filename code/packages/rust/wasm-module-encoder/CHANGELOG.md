@@ -1,5 +1,40 @@
 # Changelog
 
+- 0.2.11 (mechanical fallout of `wasm_types::Element::is_declarative`,
+  see `wasm-types`'s own CHANGELOG for the full root-cause writeup on the
+  active/declarative-elem-segment-drop bug that field closes): this
+  crate's own `Element` construction sites are all test-only fixtures
+  exercising `encode_element` directly, none of them for a declarative
+  segment — each now sets `is_declarative: false` to keep compiling
+  against `Element`'s new field. No behavior change in this crate.
+
+- 0.2.10 (gap 1 of a two-gap `elem.wast`/`table.wast` investigation pass,
+  `code/specs/W07-wasm-post-mvp-epics.md`'s addendum): `encode_element`'s
+  active-segment branch used to unconditionally emit mode 0/2 (funcidx-
+  list only), doing `func_index.unwrap_or(0)` for every entry — a real,
+  reachable data-corruption bug for a `None` (`ref.null`) entry, silently
+  turning it into a live reference to function 0 on encode. Unreachable in
+  practice until now only because `wasm-wast-parser`'s own text parser
+  independently rejected any ACTIVE segment using the exprs-list form (the
+  only way to represent a null entry) — that rejection was itself a real
+  conformance bug (see `wasm-wast-parser` 0.1.95's own CHANGELOG entry for
+  the full root-cause story: `elem.wast`'s "Initializing a table with an
+  externref-type element segment" needs exactly this shape). Fixed at the
+  actual root instead of leaving the wrong-layer rejection in place:
+  `encode_element` now picks mode 4 (implicit table 0) or mode 6 (explicit
+  table index) whenever any entry is `None`, mirroring the existing mode
+  1-vs-5 split already used for passive segments, with byte layout
+  verified directly against the real spec's binary format (`binary/
+  modules.rst`'s `elem` production) — mode 4 has no reftype byte at all
+  (always implicit funcref), mode 6 does. Four new tests exercise
+  `encode_element` directly at the byte level (not via a `WasmModuleParser`
+  round trip, since that binary DECODER still only handles modes 0/1/2/5 —
+  a real, separate, deliberately deferred gap): mode 4 with a mixed
+  null/non-null list, mode 4 with a single null-only entry (the exact
+  `elem.wast` shape), mode 6 with an explicit table index, and a
+  regression check that the existing mode 0/2 (no-null-entry) path is
+  byte-for-byte unchanged.
+
 - 0.2.9 (W33 fourth slice — struct/array text-format support upstream):
   `wasm-types` 0.1.17 renamed `FieldType.val_type: ValueType` to
   `FieldType.storage: StorageType` (packed `i8`/`i16` field storage).

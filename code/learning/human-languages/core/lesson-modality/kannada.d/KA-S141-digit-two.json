@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S141-digit-two",
+    "language": "kannada",
+    "chapter": 10,
+    "sequence": 387,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6e852a43461d26ff",
+    "detachableSegments": [
+      "Script you'll notice: ೨",
+      "Writing: ೨ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

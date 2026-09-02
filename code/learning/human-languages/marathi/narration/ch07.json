@@ -2,33 +2,36 @@
   "version": 1,
   "language": "marathi",
   "chapter": 7,
-  "title": "Farewells",
+  "title": "The Curled Row, and One Letter from the Lips",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a8c172a79e230b16",
+  "sourceHash": "fnv1a64:76dd92867a6ae0af",
   "lessons": [
     {
-      "id": "MR-C04-punha",
-      "sequence": 135,
-      "title": "पुन्हा (punhā) — \"again\"",
-      "headword": "पुन्हा",
-      "romanization": "punhā",
-      "gloss": "again (punhā)",
+      "id": "MR-W07-tta",
+      "sequence": 80,
+      "title": "ट (ṭa) — the tongue curled back",
+      "headword": "ट",
+      "romanization": "ṭa",
+      "gloss": "retroflex ta — the tongue curled back to the ridge",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
+        "writing-type",
+        "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2b0f4574dd50b248",
+      "sourceHash": "fnv1a64:a261a0ff2c2bd175",
       "notice": {
-        "modality": "sight",
+        "modality": "pen",
         "needs": [
+          "a pen and something to write on",
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "Script"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -37,129 +40,45 @@
           "title": "Warm-up",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
               "kind": "speech",
-              "text": "Chapter 4 gave you the goodbye yeto (\"I'll come [again]\"). Now the explicit word for again, to build the warm \"see you again.\""
+              "text": "Say ta with your tongue on your teeth. Now curl the tip up and back until it touches the ridge behind them, and say it again."
             }
           ]
         },
         {
           "index": 1,
           "type": "script",
-          "title": "The letters in this word",
+          "title": "Script",
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Devanagari.) पु (pu) + न्हा (nhā, the न na joined by a halant to ह ha with the long-ā stroke) becomes पुन्हा punhā."
+              "text": "ट (ṭa)."
+            },
+            {
+              "kind": "speech",
+              "text": "That second sound is ट, ṭa. Marathi has a whole row of these retroflex letters, made with the tongue tip curled back, and they are genuinely different words from the dental row you already write: त and ट are not variants."
+            },
+            {
+              "kind": "speech",
+              "text": "The shape is a hook that opens to the right and hangs from the headline. It is the sound in ṭebal, the borrowed word for table, and it is why this book has been writing ṭ with a dot under it in every romanization you have read."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "writing",
+          "title": "Writing — observe and trace",
           "segments": [
             {
               "kind": "speech",
-              "text": "पुन्हा (punhā, \"again\") comes from Sanskrit पुनर् (punar, \"again, back\"). That punar is a genuine Indo-European cousin of Latin re- in the sense of \"back/again,\" and it echoes in Hindi phir and the puna- of punarjanma (\"rebirth\"). To say a thing punhā is to send it round once more."
+              "text": "Trace ट (ṭa) twice, then trace त once beside it. Say each one with the tongue in the right place. If they sound the same, the tongue has not moved."
             }
           ]
         },
         {
           "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Marathi's goodbyes lean on again and meet rather than on farewell — the parting is framed as a return, never an ending. This word is the hinge of that idea."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"punhā\" — again",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"punhā\" — again]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "its Sanskrit source (punar) and the punarjanma echo",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: its Sanskrit source (*punar*) and the *punarjanma* echo]"
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does punhā mean, and from what Sanskrit word? (\"Again\"; from punar.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-C04-bhetu",
-      "sequence": 140,
-      "title": "भेटू (bheṭū) — \"(let's / we'll) meet\"",
-      "headword": "भेटू",
-      "romanization": "bheṭū",
-      "gloss": "(we'll) meet (bheṭū)",
-      "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:385a4bedf6637a10",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
           "segments": [
             {
               "kind": "pause",
@@ -169,584 +88,600 @@
             },
             {
               "kind": "speech",
-              "text": "The other half of the goodbye: meet. You already brushed past it in bheṭūn ānand jhālā (\"pleased to meet you\")."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Devanagari.) भे (bhe) + टू (ṭū, the retroflex ट ṭa with the long-u stroke) becomes भेटू bheṭū. Note the retroflex ट (ṭa) — the tongue curls back to the roof of the mouth."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "भेटू (bheṭū) is a form of the verb भेटणे (bheṭṇe, \"to meet\"). As भेटू it means \"let's meet / (we) will meet\" — the hopeful, forward-looking mood you want in a goodbye. It is a native Marathi verb (the bheṭ- stem also gives bheṭ, \"a meeting, a visit\")."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: one verb, first-person-plural wish",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "भेटू carries a built-in \"we/let's\" — no separate word for \"we\" is needed, the verb form says it. This is the same -ū ending you'll feel in other \"let's ___\" verbs. Unlike the present tense (yeto/yete), this future-wish form does not split by gender — men and women both say bheṭū."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"bheṭū\" — (we'll) meet",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"bheṭū\" — (we'll) meet]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the fuller verb it comes from (bheṭṇe, to meet)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the fuller verb it comes from (*bheṭṇe*, to meet)]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
+              "text": "Teeth or ridge for ट (ṭa)? (Ridge.)"
             },
             {
               "kind": "speech",
-              "text": "What does bheṭū pack into one word? (\"(we/let's) will meet\" — the \"we\" lives in the verb ending.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-C04-punha-bhetu",
-      "sequence": 145,
-      "title": "पुन्हा भेटू (punhā bheṭū) — \"see you again\"",
-      "headword": "पुन्हा भेटू",
-      "romanization": "punhā bheṭū",
-      "gloss": "see you again (punhā bheṭū)",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:d7f272f6a1de2075",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
+              "text": "Source: Opiaterein, Devanagari tta stroke animation."
             },
             {
-              "kind": "speech",
-              "text": "Assemble the two atoms into the standard warm goodbye."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "पुन्हा (punhā, again) + भेटू (bheṭū, we'll meet) becomes पुन्हा भेटू (punhā bheṭū) — \"we'll meet again.\" Two words, and the whole promise of return is spoken."
-            },
-            {
-              "kind": "speech",
-              "text": "This is the fuller, explicit twin of Chapter 4's येतो (yeto, \"I'll come [again]\"). Both refuse a final \"farewell\": one says I'll come back, the other we'll meet again — the subcontinent's shared goodbye-as-promise (Hindi phir milenge, Bengali āshi, Tamil pōy varugiṟēṉ)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "You can stack them for warmth: येतो, पुन्हा भेटू (yeto, punhā bheṭū) — \"I'll be going; we'll meet again.\" Neither word contains \"goodbye\"; the parting is all return."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"punhā bheṭū\" — see you again",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"punhā bheṭū\" — see you again]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "it stacked with the Chapter-1 goodbye (yeto, punhā bheṭū)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: it stacked with the Chapter-1 goodbye (*yeto, punhā bheṭū*)]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does punhā bheṭū literally promise? (\"We'll meet again\" — return, not farewell.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-C04-udya-bhetu",
-      "sequence": 150,
-      "title": "उद्या भेटू (udyā bheṭū) — \"see you tomorrow\"",
-      "headword": "उद्या भेटू",
-      "romanization": "udyā bheṭū",
-      "gloss": "see you tomorrow (udyā bheṭū)",
-      "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:cdddd85bd37ccdf7",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Swap \"again\" for \"tomorrow\" and you have a dated goodbye."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Devanagari.) उ (u, standalone vowel) + द्या (dyā, द da joined by a halant to य ya with the long-ā stroke) becomes उद्या udyā."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "unknown",
-          "title": "The phrase, assembled",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "उद्या (udyā, \"tomorrow\") + भेटू (bheṭū, we'll meet) becomes उद्या भेटू (udyā bheṭū) — \"we'll meet tomorrow.\""
-            },
-            {
-              "kind": "speech",
-              "text": "उद्या comes from Sanskrit श्वः (śvaḥ) by way of a later udya-; unlike Hindi's kal (which means both tomorrow and yesterday), Marathi keeps tomorrow and yesterday as two distinct words — udyā (tomorrow) vs. काल (kāl, yesterday). No ambiguity about which way time is pointing."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Because bheṭū already carries the future wish, you simply front it with when: udyā bheṭū (tomorrow), punhā bheṭū (again). The verb does the tense; the first word sets the day."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"udyā bheṭū\" — see you tomorrow",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"udyā bheṭū\" — see you tomorrow]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the tomorrow/yesterday pair Marathi keeps apart (udyā / kāl)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the tomorrow/yesterday pair Marathi keeps apart (*udyā / kāl*)]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "How does Marathi's udyā differ from Hindi's kal? (udyā is only \"tomorrow\"; Marathi uses a separate word kāl for \"yesterday.\")"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-C04-kalji-ghya",
-      "sequence": 155,
-      "title": "काळजी घ्या (kāḷjī ghyā) — \"take care\"",
-      "headword": "काळजी घ्या",
-      "romanization": "kāḷjī ghyā",
-      "gloss": "take care (kāḷjī ghyā)",
-      "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:3622ff5c0bd34cd0",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "One last, tender goodbye — the Marathi \"take care,\" and with it a letter unique to Marathi's corner of Devanagari."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Devanagari.) काळजी carries the letter ळ (ḷa) — a retroflex \"l,\" the tongue curled back. Standard Hindi dropped this sound; Marathi (like the Dravidian south and Gujarati) keeps it, and it appears in many everyday Marathi words. का + ळ + जी becomes kāḷjī. Then घ्या (ghyā, \"take,\" respectful)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "unknown",
-          "title": "The phrase, assembled",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "काळजी (kāḷjī, \"care, concern\") + घ्या (ghyā, \"take,\" the respectful imperative) becomes काळजी घ्या (kāḷjī ghyā) — \"take care.\" To a friend, the familiar imperative: काळजी घे (kāḷjī ghe)."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Where punhā bheṭū looks ahead to the next meeting, kāḷjī ghyā looks after the person in between — \"mind yourself until then.\" The respectful घ्या (ghyā) matches the तुम्ही register from Chapter 5; the familiar घे (ghe) matches तू."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"kāḷjī ghyā\" (respectful) / \"kāḷjī ghe\" (to a friend)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"kāḷjī ghyā\" (respectful) / \"kāḷjī ghe\" (to a friend)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the retroflex ळ (ḷa) Marathi keeps that Hindi lost",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the retroflex ळ (*ḷa*) Marathi keeps that Hindi lost]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which special Marathi letter sits in kāḷjī, and who else keeps it? (The retroflex ळ ḷa; also kept by the Dravidian languages and Gujarati.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-C04-practice",
-      "sequence": 160,
-      "title": "Chapter 7 recap — farewells",
-      "headword": "(recap)",
-      "romanization": "",
-      "gloss": "Chapter 7 recap — farewells",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:190872edfc97583e",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The parting words, together — none of them a bare \"goodbye.\""
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "The farewells",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "Marathi",
-                "Say it",
-                "English"
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-W07-tta-r1",
+              "prompt": "Trace retroflex ta, then say where the tongue goes for it.",
+              "assesses": [
+                "MR-SCRIPT-TTA-01",
+                "MR-SCRIPT-JHA-01",
+                "MR-SCRIPT-JA-01"
               ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "Marathi: येतो / येते. Say it: yeto / yete. English: I'll be going. (\"I come again\").",
-                "Marathi: पुन्हा भेटू. Say it: punhā bheṭū. English: See you again.",
-                "Marathi: उद्या भेटू. Say it: udyā bheṭū. English: See you tomorrow.",
-                "Marathi: काळजी घ्या. Say it: kāḷjī ghyā. English: Take care."
-              ]
+              "responseSeconds": 22,
+              "acceptedResponses": [
+                "ट; curled back to the ridge behind the teeth"
+              ],
+              "feedback": {
+                "correct": "The dot under the romanization now has a shape.",
+                "incorrect": "Curl the tongue tip up and back, then trace again."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-W07-ttha",
+      "sequence": 81,
+      "title": "ठ (ṭha) — the curl, with the breath let out",
+      "headword": "ठ",
+      "romanization": "ṭha",
+      "gloss": "aspirated retroflex ta — the same curl with the breath released",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:d0604b7f4368a793",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The four-way pattern again: you have the plain one, so you can predict the next."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ठ (ṭha)."
+            },
+            {
+              "kind": "speech",
+              "text": "ठ is ṭha: ट (ṭa) with the breath released. You have now seen this step three times — क/ख, च/छ, and here — which is the point. Devanagari is built so that hearing one pair teaches you to expect the rest."
+            },
+            {
+              "kind": "speech",
+              "text": "The shape is a plain circle sitting under the headline. It is the roundest letter in the alphabet and the easiest of this chapter to draw."
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "Atoms banked this chapter",
+          "type": "writing",
+          "title": "Writing — guided copy",
           "segments": [
             {
               "kind": "speech",
-              "text": "पुन्हा (punhā) — again; Sanskrit punar."
-            },
-            {
-              "kind": "speech",
-              "text": "भेटू (bheṭū) — (we'll) meet; the \"we\" lives in the verb; from bheṭṇe."
-            },
-            {
-              "kind": "speech",
-              "text": "उद्या (udyā) — tomorrow (distinct from kāl, yesterday)."
-            },
-            {
-              "kind": "speech",
-              "text": "काळजी घ्या (kāḷjī ghyā) — take care; the retroflex ळ Marathi keeps."
-            },
-            {
-              "kind": "speech",
-              "text": "Register: घ्या (ghyā, respectful) vs घे (ghe, familiar) — the tumhī / tū choice again."
+              "text": "Copy ठ (ṭha) twice with the model visible. Then write ट (ṭa) once from memory and check the hook did not close into a circle."
             }
           ]
         },
         {
           "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "all four farewells in a row",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: all four farewells in a row]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "a stacked goodbye — yeto, punhā bheṭū, kāḷjī ghyā",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: a stacked goodbye — *yeto, punhā bheṭū, kāḷjī ghyā*]"
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
             {
               "kind": "pause",
-              "seconds": 3,
+              "seconds": 2,
               "perItem": false,
-              "source": "[PAUSE 3s]"
+              "source": "[PAUSE 2s]"
             },
             {
               "kind": "speech",
-              "text": "What do every Marathi goodbye have in common? (None says \"farewell\" — each is a return or a caring wish.) Next chapter: the first real verbs — mī marāṭhī bolto."
+              "text": "Which of the two is a full circle? (ठ (ṭha).)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Opiaterein, Devanagari ttha stroke animation."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-W07-ttha-r1",
+              "prompt": "Copy aspirated retroflex tha, then write plain retroflex ta from memory.",
+              "assesses": [
+                "MR-SCRIPT-TTHA-01",
+                "MR-SCRIPT-TTA-01",
+                "MR-SCRIPT-JHA-01"
+              ],
+              "responseSeconds": 22,
+              "acceptedResponses": [
+                "ठ; ट"
+              ],
+              "feedback": {
+                "correct": "A circle and a hook, told apart.",
+                "incorrect": "Open the hook, or close the circle — repair only one."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-W07-dda",
+      "sequence": 82,
+      "title": "ड (ḍa) — the curl, with the voice on",
+      "headword": "ड",
+      "romanization": "ḍa",
+      "gloss": "retroflex da — the voiced member of the curled row",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:d129cbf0a0fbd6f1",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Fingers on the throat, tongue curled back. Say ṭa, then switch the voice on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ड (ḍa)."
+            },
+            {
+              "kind": "speech",
+              "text": "ड is ḍa, the voiced member of the curled row (vaḷlelī olī) — the same relationship ग has to क."
+            },
+            {
+              "kind": "speech",
+              "text": "Marathi needs it for ḍoḷā, \"eye\", a word that also carries the retroflex ळ you learned in the doorway chapters. Draw the top stroke, then the body that curves down and closes to the left under the headline."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — delayed copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at ड (ḍa) for five seconds, cover it, and write it once. Uncover and set it beside ठ (ṭha): one closes into a ring, the other does not."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word for a part of the face starts with ड (ḍa)? (ḍoḷā — eye.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Opiaterein, Devanagari dda stroke animation."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-W07-dda-r1",
+              "prompt": "Write retroflex da after a delay, then name the plain and aspirated members of its row.",
+              "assesses": [
+                "MR-SCRIPT-DDA-01",
+                "MR-SCRIPT-TTHA-01",
+                "MR-SCRIPT-TTA-01"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "ड; ṭa; ṭha"
+              ],
+              "feedback": {
+                "correct": "Three of the curled row, retrieved together.",
+                "incorrect": "Repair only the shape, or only the missed name."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-W07-nna",
+      "sequence": 83,
+      "title": "ण (ṇa) — the nasal with the tongue curled back",
+      "headword": "ण",
+      "romanization": "ṇa",
+      "gloss": "retroflex na — the nasal of the curled row, the letter in paani",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8e9f48f0f3a14448",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every row in this alphabet ends with its own nasal. The curled row (vaḷlelī olī) is no exception."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ण (ṇa)."
+            },
+            {
+              "kind": "speech",
+              "text": "ण is ṇa: the tongue curled back, the air through the nose. Set it against न, the dental nasal you learned in your first chapter, and the difference is the same one you made a moment ago for ta and ṭa."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the single most useful letter in this chapter. It ends every Marathi infinitive this book teaches — bolṇe, khāṇe, jāṇe, sāṅgṇe — so once it is yours, the shape of \"to do something\" is readable."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — guided copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy ण (ṇa) twice with the model visible. Then write न once beside it and say both aloud, curling the tongue only for the first."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter ends bolṇe and khāṇe? (ण (ṇa), with the e-mark after it.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Opiaterein, Devanagari nna stroke animation."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-W07-nna-r1",
+              "prompt": "Copy retroflex na, then write dental na and say which needs the curled tongue.",
+              "assesses": [
+                "MR-SCRIPT-NNA-01",
+                "MR-SCRIPT-DDA-01",
+                "MR-SCRIPT-TTA-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "ण; न; the retroflex one"
+              ],
+              "feedback": {
+                "correct": "Two nasals, one curl apart.",
+                "incorrect": "Repair only the shape you missed, then say both again."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-W07-pa",
+      "sequence": 84,
+      "title": "प (pa) — the lips, with the voice off",
+      "headword": "प",
+      "romanization": "pa",
+      "gloss": "pa — the lips' plain voiceless stop, partner to the ba you know",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:911541c846793e35",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Leave the tongue alone for this one. Close your lips, and let the voice stay off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प (pa)."
+            },
+            {
+              "kind": "speech",
+              "text": "प is pa, the voiceless partner of the ब you already write. Same lips, same closure, voice switched off — the fourth time this book has used that one distinction to give you a letter."
+            },
+            {
+              "kind": "speech",
+              "text": "It opens pāṇī, \"water\", and pāhṇe, \"to see\", and it stands inside punhā, \"again\", in the goodbye you already say. The shape is ब without the inner dot: left bowl, right stem, headline across."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — delayed copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at प for five seconds, cover it, and write it once. Uncover and set it beside ब: the missing dot is the whole difference on the page."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Voice on or off for प (pa)? (Off.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Opiaterein, Devanagari pa stroke animation."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-W07-pa-r1",
+              "prompt": "Write pa after a delay, then name the letter it differs from by one dot.",
+              "assesses": [
+                "MR-SCRIPT-PA-01",
+                "MR-SCRIPT-NNA-01",
+                "MR-SCRIPT-DDA-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "प; ब"
+              ],
+              "feedback": {
+                "correct": "One dot on the page, one switch in the throat.",
+                "incorrect": "Leave the inner dot out for pa."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R07-retroflex-recall",
+      "sequence": 85,
+      "title": "The curled row (vaḷlelī olī), and one letter from the lips",
+      "headword": "curled row",
+      "romanization": "vaḷlelī olī",
+      "gloss": "cold retrieval of the curled row and the plain p, with the earlier marks at distance",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d57eb95a96cd105",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One question for the row: where is the tongue? Then two older marks, further back than you have retrieved them before."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Tongue curled back: plain, breathy, voiced, nasal. (ṭa, ṭha, ḍa, ṇa.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of them ends every infinitive this book teaches? (ṇa.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Lips closed, voice off — and one dot fewer than ब. (pa.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does the short-i mark go on the page? (Left of its letter.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One chapter back, at the roof of the mouth: plain, breathy, voiced. (ca, cha, ja.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of those three does Marathi also say as ts? (ca.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R07-retroflex-recall-check",
+              "prompt": "Name the four curled letters in order, the lip letter that differs from ba by one dot, the two marks from two chapters ago by placement, and the plain, breathy and voiced letters of the palate row.",
+              "assesses": [
+                "MR-SCRIPT-TTA-01",
+                "MR-SCRIPT-TTHA-01",
+                "MR-SCRIPT-DDA-01",
+                "MR-SCRIPT-NNA-01",
+                "MR-SCRIPT-PA-01",
+                "MR-SCRIPT-I-MATRA-01",
+                "MR-SCRIPT-U-MATRA-01",
+                "MR-SCRIPT-CA-01",
+                "MR-SCRIPT-CHA-01",
+                "MR-SCRIPT-JA-01"
+              ],
+              "responseSeconds": 60,
+              "acceptedResponses": [
+                "ṭa ṭha ḍa ṇa; pa; i-matra written left, u-matra hung below; ca cha ja"
+              ],
+              "feedback": {
+                "correct": "A whole row, a lip letter, and two marks still holding at distance.",
+                "incorrect": "Repair only what was missed; do not re-say the ones that came."
+              }
             }
           ]
         }

@@ -1,179 +1,231 @@
-Bengali, chapter 9: Taking, Asking, Helping, Liking.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Bengali, chapter 9: The Roof, the Teeth, and the Grid Closed.
+7 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 4.
-নেওয়া (neowā) — "to take," and the verb that finishes other verbs.
+Lesson 1 of 7.
+প (pô) — the consonant pa.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Bengali rarely leaves a verb standing alone. This is the verb it props most of them up with — and the tail it wears will look familiar.
+Write খ from memory, and say what separates it from ক.
 
-You'll want to know: নেওয়া.
-নেওয়া — neowā — to take.
-আমি নিই (āmi nii), "I take." আপনি নেন (āpni nen), respectfully.
-
-The letters in this word.
-নেওয়া (neowā) is নে (ne) + ওয়া (-owā). ন is a dental n, tongue on the teeth. The ওয়া tail is the one every dictionary-form verb of this kind wears — you have it already on হওয়া, যাওয়া and খাওয়া.
-
-The word, taken apart.
-নেওয়া (neowā) is Sanskrit √নী (√nī), "to lead, to carry away." It is a well-attested Indo-Iranian root — Avestan nayeiti, "he leads"; Sanskrit netṛ, "a leader," which is why a politician in Kolkata or Delhi is a netā. Beyond that branch the trail thins, and English kept nothing from it. No cousin will be manufactured for you here; some roots stayed home.
-The lesson worth more than a cousin is what Bengali does with the verb.
-
-Grammar Lens: the verb that ends a compound.
-Put a verb into its -এ form (likhe, "having written"; niye, "having taken") and hang a second verb behind it. The second verb stops meaning what it means and starts colouring the first:
-[a table of 3 rows, read aloud]
-compound: লিখে নেওয়া (likhe neowā). what it does: write it down — take the writing for yourself.
-compound: নিয়ে আসা (niye āsā). what it does: bring — come, having taken.
-compound: নিয়ে যাওয়া (niye jāwā). what it does: take away — go, having taken.
-Bengali has no separate word for "bring." It has "come having taken." And নেওয়া is a noun as readily as লেখা was: দেওয়া-নেওয়া (deowā-neowā), "giving-and-taking," is the everyday word for dealings between people.
+Script.
+প (pô).
+pô — the p of English spin, lips shut, no puff of air after the release.
+The place is the lips, which is where ব was made too. So the two of them fill two cells of one square:
+প (pô) — lips, voice off.
+ব — lips, voice on.
+The English p of pin is the breathy one and belongs to a different letter, the same trap ক and খ laid a lesson ago. Palm in front of the mouth: spin gives no air, and that is this letter.
+With the lips named, the map is complete. Every consonant this book has taught is made at one of four places — lips, teeth, roof, throat — and every one of them is one of four cells at that place. A reader who has that grid is not memorising forty unrelated shapes. They are filling in a table.
+With the mātrā:
+প (pô) + া becomes পা.
 
 Guided Practice.
-[pause 1 second]
-[your turn — say: "neowā" — take — then "āmi nii"]
-[pause 8 seconds for the answer]
-[your turn — say: the same tail four times — "hôwā, jāwā, khāwā, neowā"]
-[pause 8 seconds for the answer]
-[your turn — say: write it down — "likhe neowā"]
-[pause 8 seconds for the answer]
-[your turn — say: bring, then take away — "niye āsā … niye jāwā"]
+[once you have stopped driving — write: প (pô)]
+[once you have stopped driving — write: প (pô) ব]
+[your turn — read: ভালো]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-How does Bengali say "bring," having no word for it? (নিয়ে আসা — "come having taken"; and "take away" is নিয়ে যাওয়া.) Does English share নেওয়া (neowā)'s root? (No — √nī stayed in Indo-Iranian, and that is the honest answer.) Name two more Bengali verbs that are also nouns. (লেখা "a piece of writing" and দেখা "a seeing" — every -া form does it.)
+Where is প (pô) made? (At the lips.) Which other letter is made there? (ব.) And what separates them? (The voice.)
+Source: Unicode Bengali chart.
 
 
-Lesson 2 of 4.
-জিজ্ঞাসা করা (jijñāsā kôrā) — "to ask," which is wanting to know.
+Lesson 2 of 7.
+দ (dô) — the consonant da.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Chapter 7 warned you about a knot of letters, then spared you it. Here it is, inside a word you will use daily — and the word is Chapter 7's verb with an appetite.
+Write খ and প (pô), then write ত and say where the tongue goes for it.
 
-You'll want to know: জিজ্ঞাসা করা.
-জিজ্ঞাসা করা — jijñāsā kôrā — to ask.
-আমি জিজ্ঞাসা করি (āmi jiggāshā kôri), "I ask" — two words, one verb.
-
-The letters in this word.
-জিজ্ঞাসা is জি + জ্ঞা + সা. The middle piece জ্ঞ is the knot of জ and ঞ Chapter 7 named on √jñā — and Bengali never says jñ. It says gg, so the spelled jijñāsā is spoken jiggāshā, with the s becomes sh tilt at the end.
-
-The word, taken apart.
-জিজ্ঞাসা is Sanskrit's desiderative of √জ্ঞা (√jñā, "to know") — the form meaning wanting to do a thing. Jijñāsati is "he desires to know"; jijñāsā is the desire itself. Bengali took the noun.
-So asking is not a separate idea here. It is জানা with an appetite — and the root behind both is the one Chapter 7 traced: PIE ǵneh₃-, English know, Latin nōscere (notice), Greek gnôsis (diagnosis). The doubled ji- is the desiderative's signature: a quiet echo of the root, meaning reaching for it.
-
-Grammar Lens: any noun plus করা is a verb.
-[a table of 2 rows, read aloud]
-noun: কাজ (kāj), work. noun + করা: কাজ করা — to work.
-noun: জিজ্ঞাসা (jijñāsā), a wanting-to-know. noun + করা: জিজ্ঞাসা করা (jijñāsā kôrā) — to ask.
-Chapter 5 built kāj kôrā this way. It is more than a compound: it is the way Bengali makes verbs. The stock of true verbs is small and closed, while nouns pour in from Sanskrit, Persian, Arabic and English — each becoming a verb the moment করা stands behind it. Learn a noun, learn a verb.
-Last lesson’s compound stacks on top: জিজ্ঞাসা করে নেওয়া (jijñāsā kôre neowā) — "just go ahead and ask."
+Script.
+দ (dô).
+dô — the same tongue position as ত, on the back of the top front teeth, with the voice switched on.
+So the warning that came with ত applies here without a word changed. English makes its d on the ridge behind the teeth; Bengali has a separate letter for that position, and it is a different letter spelling different words. Slide the tongue forward onto enamel.
+The pair to hold is not t and d as English thinks of them. It is:
+ত dental, voice off.
+দ (dô) dental, voice on.
+Two settings on one place of articulation. Bengali's consonant grid is built out of exactly these two switches — where the tongue is, and whether the voice is on — plus the breath from the last lesson. Three switches, and most of the inventory falls out of them.
+With the mātrā:
+দ (dô) + া becomes দা.
 
 Guided Practice.
-[pause 1 second]
-[your turn — say: spelling, then sound — "jijñāsā … jiggāshā" — then "āmi jiggāshā kôri," I ask, and the root it grew from, "jānā"]
-[pause 8 seconds for the answer]
-[your turn — say: a fact, then a person — "āmi jāni" … "āmi tāke chini"]
-[pause 8 seconds for the answer]
-[your turn — say: go ahead and ask — "jijñāsā kôre neowā"]
+[once you have stopped driving — write: দ (dô)]
+[once you have stopped driving — write: ত দ (dô)]
+[your turn — read: ভালো আবার]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-How does Bengali say জ্ঞ, and what is জিজ্ঞাসা literally? (gg, never jñ; and a wanting-to-know, the desiderative of জানা's root.) Someone asks whether you know their brother — which knowing verb answers? (চেনা — a person is known by acquaintance; জানা is for facts.) How do you make a verb from a noun you met this morning? (Put করা behind it.)
+What is the same about ত and দ (dô)? (Where the tongue goes — the teeth.) What is different? (The voice.) And is an English d the same letter? (No — it is made further back.)
+Source: Unicode Bengali chart.
 
 
-Lesson 3 of 4.
-সাহায্য করা (sāhājjo kôrā) — "to help," which is going along with someone.
+Lesson 3 of 7.
+ধ (dhô) — the consonant dha.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Chapter 6 said Bengali's inherent vowel leans to o, then admitted it could not show you. This word can — and it is the word you will most want when stuck.
+Write দ (dô) from memory, and say where the tongue touches for it.
 
-You'll want to know: সাহায্য করা.
-সাহায্য করা — sāhājjo kôrā — to help.
-আমাকে সাহায্য করুন (āmāke sāhājjo kôrun), "please help me"; āmāke is "to me."
-
-The letters in this word.
-সাহায্য is সা + হা + য্য. The last piece is য stacked on itself — a conjunct, how Bengali writes a doubled consonant.
-
-Sounds you'll need: a doubled letter, and a vowel nobody writes.
-Two rules land at the end, neither a quirk. Bengali reads a doubled য as jj, not yy. And nothing is written after it, so it takes the inherent vowel, which leans to o: sāhājjo, never sāhājja.
-Chapter 6 could not show that inherent o in ek, dui, tin, chār, pā̃ch, since none of the five ends in a bare consonant. This one does. সা takes the s becomes sh tilt, so the whole is shāhājjo.
-
-The word, taken apart.
-সাহায্য is Sanskrit sāhāyya, "companionship," on সহায় (sahāya), "a companion" — which is সহ- (saha-), "together," plus √ই (√i), "to go." A helper goes along with you.
-Both halves have secure English cousins. Saha- is PIE sem-, "together": English same, Greek homós (homogeneous), Latin similis (similar). √i is PIE h₁ey-, "to go": Latin īre gives exit and transit; Greek ión gives ion. So "help" is same-going, and English holds the pieces without ever building the word.
-
-Grammar Lens: asking for help is where the respect ladder bites.
-Another noun + করা, like জিজ্ঞাসা করা (jijñāsā kôrā). The respect sits where Chapter 7 put it — in করা’s ending:
-[a table of 3 rows, read aloud]
-who you are asking: তুই (tui, intimate). "help": সাহায্য কর (kôr).
-who you are asking: তুমি (tumi, familiar). "help": সাহায্য করো (kôro).
-who you are asking: আপনি (āpni, respectful). "help": সাহায্য করুন (kôrun).
-Say kôr to a stranger and you were not rude by accident, but in grammar.
+Script.
+ধ (dhô).
+dhô — দ (dô) with the breath let out through it. Voice on, tongue on the teeth, and air after the release.
+Set the four dental letters side by side and the grid the last two lessons have been building is visible in one line:
+ত — voice off, no breath.
+দ (dô) — voice on, no breath.
+ধ (dhô) — voice on, with breath.
+The fourth cell, voice off and with breath, is a letter this book has not needed yet. It exists, it sits between the first two in every dictionary, and it will arrive when a word calls for it.
+That square is the unit. Every place of articulation in the script — teeth, ridge, palate, throat — gets the same four cells in the same order, and the order is over two thousand years old: the Sanskrit grammarians sorted the sounds by where they were made and wrote the list down, and every script descended from that tradition still lists them that way.
+With the u-sign:
+ধ (dhô) + ু becomes ধু.
 
 Guided Practice.
-[pause 1 second]
-[your turn — say: spelling, then sound — "sāhāyya … shāhājjo"]
-[pause 8 seconds for the answer]
-[your turn — say: the ladder — "sāhājjo kôr … kôro … kôrun"]
-[pause 8 seconds for the answer]
-[your turn — say: please help me — "āmāke sāhājjo kôrun"]
-[pause 8 seconds for the answer]
-[your turn — say: the two noun-verbs of this chapter — "jijñāsā kôrā … sāhājjo kôrā"]
+[once you have stopped driving — write: ধ (dhô)]
+[once you have stopped driving — write: ত দ (dô) ধ (dhô)]
+[once you have stopped driving — write: দা ধা]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What two things separate ধ (dhô) from ত? (Voice and breath.) How many cells does one place of articulation get? (Four.) And who fixed that order? (The Sanskrit grammarians.)
+Source: Unicode Bengali chart.
+
+
+Lesson 4 of 7.
+চ (chô) — the consonant cha.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write দ (dô) and ধ (dhô), and say which of the two lets the breath out.
+
+Script.
+চ (chô).
+chô — the ch of English cheap, with no puff of air after it.
+The tongue is somewhere new. Not on the teeth, where ত and দ (dô) are made, and not at the back, where ক is: the body of the tongue comes up flat against the hard roof of the mouth, a little behind the ridge. English spells that place with two letters, ch, because its alphabet has no single sign for it. Bengali has one letter, and — following the square this chapter has been filling — a breathy partner and two voiced cells to go with it.
+That is the fourth place of articulation this book has named: teeth, roof, throat, and lips. The list is not long. Everything the script writes is one of those places with the voice and breath switches set.
+With the mātrā:
+চ (chô) + া becomes চা.
+That is already a word, and it gets its own lesson next.
+
+Guided Practice.
+[once you have stopped driving — write: চ (chô)]
+[once you have stopped driving — write: চা]
+[your turn — read: কেমন ভালো]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Why does সাহায্য end in -o with nothing written there? (The inherent vowel — the thing the five numbers could not show.) Which form to a stranger? (করুন — kôr is for তুই.) What is a sahāya? (One who goes with you.)
+Where in the mouth is চ (chô) made? (Against the roof, behind the ridge.) How many letters does English need for that sound? (Two.) And Bengali? (One.)
+Source: Unicode Bengali chart.
 
 
-Lesson 4 of 4.
-ভালো লাগা (bhālo lāgā) — "to like," which happens to you.
+Lesson 5 of 7.
+ছ (chhô) — the breathy one on the roof.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Every verb so far has let you be the one doing it. Here is one that does not.
+Write চ (chô) and say where in the mouth it is made. Then write গ.
 
-You'll want to know: ভালো লাগা.
-ভালো লাগা — bhālo lāgā — to like.
-আমার ভালো লাগে (āmār bhālo lāge), "I like it." Not āmi — āmār, "to me."
-
-The letters in this word.
-ভালো is yours from Chapter 3. The new half is লাগা: লা + গা, গ being a hard g as in go.
-
-The word, taken apart.
-লাগা is Sanskrit √লগ্ (√lag), "to attach, to stick": āmār bhālo lāge says, literally, "good sticks to me."
-ভালোবাসা (bhālobāsā), "to love," is ভালো plus বাসা, a verb no longer used alone. Its origin is genuinely disputed; the commonest proposal is Sanskrit √বস্ (√vas), "to dwell" — love as housed in goodness. If so it carries a startling cousin, since √vas is PIE h₂wes-, "to stay," which became Old English wesan and so English was. That "if" is real, and stays open.
-
-Grammar Lens: liking lands on you; loving you do.
-[a table of 3 rows, read aloud]
-Bengali: আমার ভালো লাগে. word for word: to-me good sticks — I like it.
-Bengali: আমার চা ভালো লাগে. word for word: to-me tea good sticks — I like tea.
-Bengali: আমি ভালোবাসি. word for word: I love.
-That āmār … shape is how Bengali says I have — আমার … আছে, with আছে carrying the weight and no future of its own to give.
-ভালোবাসা breaks the pattern on purpose: āmi bhālobāsi puts you in the subject's chair. It is a noun too — "love" itself — as লেখা was "a piece of writing." One form serves everybody. The harmony has nothing to bite on: bāsi and bāse keep their ā.
+Script.
+ছ (chhô).
+chhô — চ (chô) with the breath let out behind it, the way খ is ক with the breath let out behind it. Same place on the roof of the mouth, same tongue, one switch flipped.
+The pair is worth hearing rather than reading about. Hold a hand in front of your mouth. Say chô: the hand feels almost nothing. Say chhô: the hand is pushed. English has no contrast here at all — the ch of church sits somewhere between the two — so the ear has to be told what to listen for before it can hear it.
+With the mātrā:
+ছ (chhô) + া becomes ছা.
+This letter has been under your nose since the first chapter. আচ্ছা (āchchhā, "okay, I see") is spelled with চ (chô) and ছ (chhô) stacked, one on the other: the plain one, then the breathy one, said as a single long push. That is why the romanization has always carried that awkward chchh — it was reporting two letters honestly.
 
 Guided Practice.
-[pause 1 second]
-[your turn — say: "āmār bhālo lāge" — hearing "to me," not "I"]
-[pause 8 seconds for the answer]
-[your turn — say: I like tea — "āmār chā bhālo lāge" — the tea Bengali eats, "chā khāwā"]
-[pause 8 seconds for the answer]
-[your turn — say: the one you do — "āmi bhālobāsi" — one form, whoever is speaking]
-[pause 8 seconds for the answer]
-[your turn — say: the eight verbs of these two chapters — "bhābā, bojhā, pôṛā, lekhā, neowā, jijñāsā kôrā, sāhājjo kôrā, bhālo lāgā"]
+[once you have stopped driving — write: ছ (chhô)]
+[once you have stopped driving — write: চ (chô) ছ (chhô)]
+[once you have stopped driving — write: ক খ / চ (chô) ছ (chhô)]
+[your turn — say: chô then chhô, hand in front of the mouth]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Who is the subject of āmār bhālo lāge, and what else is built that way? (Not you — the good is; আমার … আছে, "I have," and আছে has no future of its own to give.) Does āmi bhālobāsi behave the same, and would a woman say it differently? (No, and no — loving takes you as subject; Bengali has no grammatical gender.) Name two verbs that are also nouns. (ভালোবাসা "love," লেখা "writing.") Why bāsi, not bosi? (Nothing to raise — this stem has ā.)
+What separates ছ (chhô) from চ (chô)? (The breath.) Which pair from the throat works the same way? (ক and খ.) And which word from the first chapter stacks these two letters? (আচ্ছা.)
+Source: Unicode Bengali chart.
+
+
+Lesson 6 of 7.
+আছি (āchhi) — "I am," read.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write ছ (chhô). Then read আমি.
+
+Script.
+আ + ছি becomes আছি (āchhi).
+আ — the vowel standing on its own, because the word opens on it.
+ছ (chhô) with ি in front of it — chhi.
+āchhi — "[I] am [here]." It is the second half of the exchange you have been having since the responding chapter: তুমি কেমন আছো? and the answer আমি ভালো আছি.
+Look at what the last sign is doing. ি is not decoration and it is not part of the stem: it is the I of the sentence. Bengali packs the person into the verb's ending, so āchhi means "I am" with no pronoun needed at all, and āchho means "you are" by swapping that one sign for another. The আমি in front is emphasis, not grammar.
+That is a genuinely large idea arriving in a three-piece word, and it arrives by eye rather than by rule. You have been saying both endings for chapters. Seeing them written next to each other is what makes them a pattern rather than two memorised noises.
+Now the reply, whole:
+আমি ভালো আছি (āchhi).
+Ten pieces, three words, and not one new shape in any of them.
+
+Guided Practice.
+[your turn — read: আছি (āchhi)]
+[pause 8 seconds for the answer]
+[your turn — read: আমি ভালো আছি (āchhi)]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: আছি (āchhi)]
+[your turn — say: the whole reply, out loud]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which piece of আছি (āchhi) carries the "I"? (The ি at the end.) So does the sentence need আমি? (No — it is emphasis.) And how many new shapes were in আমি ভালো আছি (āchhi)? (None.)
+Source: Unicode Bengali chart.
+
+
+Lesson 7 of 7.
+জ (jô) — the consonant ja, and the grid closed.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write চ (chô) and ছ (chhô), and say what separates them.
+
+Script.
+জ (jô).
+jô — the j of English jam. Same place as চ (chô), the flat of the tongue on the roof of the mouth, with the voice on.
+The third cell of the roof, and by now the move should be predictable: meet a consonant, ask where it is made and whether the voice and the breath are running, and the letter has a family rather than being a shape on its own.
+This letter carries a root worth knowing. Sanskrit jñā, "to know," is spelled with it, and the verbs chapter followed that root out to English know and to the k that English still writes and no longer says. The Bengali verb for knowing facts opens on this shape.
+With the mātrā:
+জ (jô) + া becomes জা.
+That is the last consonant of the two script chapters that built this grid, and it closes a table rather than lengthening a list. Every letter in it was met as a cell — a place in the mouth, with the voice and the breath switched on or off. Say them back by place rather than by shape:
+at the lips: প (pô) voice off, ব voice on, ভ voice on with breath.
+on the teeth: ত voice off, দ (dô) voice on, ধ (dhô) voice on with breath.
+on the roof: চ (chô) voice off, ছ (chhô) voice off with breath, জ (jô) voice on.
+at the throat: ক voice off, খ voice off with breath, গ voice on.
+Twelve cells, four rows, and not one of them learned as a picture. The cells nobody has filled are letters this book has not needed yet, not gaps in the script. A reader who can recite that table by place is filling in a grid; a reader holding twelve shapes is memorising twelve shapes. That difference is the whole reason these chapters kept asking where and with what breath instead of what does this look like.
+
+Guided Practice.
+[once you have stopped driving — write: জ (jô)]
+[once you have stopped driving — write: চ (chô) ছ (chhô) জ (jô)]
+[once you have stopped driving — write: প (pô) ব ভ / ত দ (dô) ধ (dhô) / চ (chô) ছ (chhô) জ (jô) / ক খ গ]
+[your turn — read: আছি (āchhi)]
+[pause 8 seconds for the answer]
+[your turn — read: আবার ভালো]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What separates জ (jô) from চ (chô)? (The voice.) How many cells does the grid now hold? (Twelve — four rows of three.) And what question does the grid ask of a new letter — what it looks like, or where it is made? (Where it is made, and with what breath.)
+Source: Unicode Bengali chart.

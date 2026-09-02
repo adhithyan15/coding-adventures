@@ -9,32 +9,32 @@ type: writing
 headword: "ਚ"
 romanization: "cha"
 gloss: "trace the Gurmukhi letter chacha, the unaspirated partner of chha"
-prerequisites: [PA-C32-changa]
+prerequisites: [PA-C32-changa, PA-S10-chachcha]
 sounds: []
 roots: []
 duration:
   max_seconds: 155
 requires:
-  knowledge: [PA-SCRIPT-CHHA-01, PA-LEX-CHANGA]
+  knowledge: [PA-SCRIPT-CHHA-01, PA-LEX-CHANGA, PA-SCRIPT-RECOG-CHA-01]
 introduces:
   knowledge: [PA-SCRIPT-CHA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-SCRIPT-CHHA-01, PA-LEX-CHANGA, PA-SCRIPT-CHA-01]
+  knowledge: [PA-SCRIPT-CHHA-01, PA-LEX-CHANGA, PA-SCRIPT-CHA-01, PA-SCRIPT-RECOG-CHA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-W09-chhachha, PA-C32-changa]
+reviews_of: [PA-W09-chhachha, PA-C32-changa, PA-S10-chachcha]
 ---
 
 # ਚ — the quiet twin of ਛ
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-CHHA-01, PA-LEX-CHANGA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-CHHA-01, PA-LEX-CHANGA, PA-SCRIPT-RECOG-CHA-01] -->
 
 [PAUSE 2s] Write **ਛ** once from memory and say *chha*, with the puff of
 breath. Then say *changā* aloud. The first sound of *changā* is the same

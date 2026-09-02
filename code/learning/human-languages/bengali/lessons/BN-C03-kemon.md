@@ -2,10 +2,11 @@
 schema_version: 2
 id: BN-C03-kemon
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 160
-chapter: 3
+sequence: 350
+chapter: 5
 type: word
 headword: কেমন
+romanization: "kēmon"
 gloss: how
 concept_tag: QUESTION-HOW
 prerequisites: [BN-C02-ki]
@@ -32,7 +33,7 @@ reviews_of: [BN-C02-ki]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C02-KI-01] -->
 
-[PAUSE 2s] You met **কি** (*ki*, "what") in Chapter 2. Here is its sibling.
+[PAUSE 2s] You met **কি** (*ki*, "what") in Chapter 3. Here is its sibling.
 
 ## The letters in this word
 <!-- hl-knowledge: introduces=[BN-CONCEPT-C03-KEMON-01]; assesses=[BN-CONCEPT-C02-KI-01] -->

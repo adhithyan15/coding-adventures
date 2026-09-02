@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C09-neowa
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 600
-chapter: 9
+sequence: 830
+chapter: 15
 type: word
 headword: নেওয়া
 romanization: neowā
@@ -54,7 +54,7 @@ wears — you have it already on হওয়া, যাওয়া and খা�
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**নেওয়া** is Sanskrit **√নী** (*√nī*), "to lead, to carry away." It is a
+**নেওয়া** is Sanskrit *√nī*, "to lead, to carry away." It is a
 well-attested Indo-Iranian root — Avestan *nayeiti*, "he leads"; Sanskrit *netṛ*,
 "a leader," which is why a politician in Kolkata or Delhi is a *netā*. Beyond
 that branch the trail thins, and **English kept nothing from it**. No cousin will

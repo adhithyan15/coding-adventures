@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C05-thaka",
     "language": "bengali",
-    "chapter": 5,
-    "sequence": 290,
+    "chapter": 11,
+    "sequence": 700,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:de1113bd6536b746",
+    "sourceHash": "fnv1a64:db14b6eaabd99cfb",
     "detachableSegments": [
       "The letters in this word"
     ]

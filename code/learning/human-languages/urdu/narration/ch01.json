@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings and responses",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1d7eabee6a49ebca",
+  "sourceHash": "fnv1a64:a058ed97a6c4b832",
   "lessons": [
     {
       "id": "UR-C01-salam",
@@ -33,7 +33,7 @@
             },
             {
               "kind": "speech",
-              "text": "س s, ل l, ا long ā, م m becomes salām."
+              "text": "س (sīn) s, ل l, ا long ā, م m becomes salām."
             },
             {
               "kind": "speech",
@@ -235,7 +235,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7c76dd62e6985ed2",
+      "sourceHash": "fnv1a64:ed80dde76a9ad630",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -302,11 +302,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "سلام — salām — Hello."
+              "text": "salām — Hello. You can say it; its letters are still ahead of you, so it is printed here the way you say it."
             },
             {
               "kind": "speech",
-              "text": "شکریہ — shukriyā — Thank you."
+              "text": "شکریہ — shukriyā — Thank you. This one you can already read."
             },
             {
               "kind": "speech",
@@ -437,6 +437,142 @@
       ]
     },
     {
+      "id": "UR-W01-sin",
+      "sequence": 35,
+      "title": "س (sīn) — three teeth, then a bowl, without lifting",
+      "headword": "س",
+      "romanization": "sīn",
+      "gloss": "three close teeth flowing into a bowl, all in one movement",
+      "script": "urdu-nastaliq",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:336a22aac8cee790",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Point at ش, the first shape inside shukriyā. Three teeth in a row, a bowl, and three dots floating above."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "س (sīn)."
+            },
+            {
+              "kind": "speech",
+              "text": "Three small teeth close together — short upward points in a row — and then the line flows straight on into a bowl below the baseline."
+            },
+            {
+              "kind": "speech",
+              "text": "Remember which way you are working: the first tooth you draw is the rightmost one."
+            },
+            {
+              "kind": "speech",
+              "text": "No lift anywhere. Teeth and bowl are one continuous movement, and letting the pen stop between them is the commonest way a beginner's sīn comes out looking like two letters."
+            },
+            {
+              "kind": "speech",
+              "text": "Its name is sīn and it says s."
+            },
+            {
+              "kind": "speech",
+              "text": "You have seen this shape before. ش shīn, from shukriyā, is this exact letter wearing three dots above it. Take the dots off and you have س (sīn). That is the first pair of many: in Urdu a great deal of the alphabet is one skeleton shared by two or three letters, told apart only by dots."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "س (sīn) — three teeth from the right, flowing into the bowl, one movement",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: س — three teeth from the right, flowing into the bowl, one movement]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "s",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **s**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which tooth comes first? (The rightmost.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-W01-sin-lifts",
+              "prompt": "How many times do you lift the pen while writing sīn?",
+              "assesses": [
+                "UR-SCRIPT-SIN-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "0",
+                "none",
+                "zero",
+                "not at all",
+                "no lifts",
+                "0 times"
+              ],
+              "feedback": {
+                "correct": "None -- teeth and bowl are one movement.",
+                "incorrect": "NOT AT ALL. The teeth flow straight into the bowl."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "UR-C01-nahin",
       "sequence": 40,
       "title": "نہیں (nahī̃) — no, and later “not”",
@@ -449,7 +585,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:04607597058047f4",
+      "sourceHash": "fnv1a64:668206a5d36cb0fe",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -474,7 +610,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say جی ہاں (jī hā̃)، شکریہ (shukriyā) — “yes, thank you.” Now learn the answer that contrasts with yes."
+              "text": "Say jī hā̃, shukriyā — “yes, thank you.” Now learn the answer that contrasts with yes."
             }
           ]
         },
@@ -519,11 +655,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "جی ہاں — jī hā̃ — yes."
+              "text": "jī hā̃ — yes. Said, not yet read: its first letter is one you have not met."
             },
             {
               "kind": "speech",
-              "text": "نہیں — nahī̃ — no."
+              "text": "نہیں — nahī̃ — no. This one you built out of known shapes a moment ago."
             }
           ]
         },

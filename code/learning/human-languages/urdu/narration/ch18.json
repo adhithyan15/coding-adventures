@@ -2,9 +2,9 @@
   "version": 1,
   "language": "urdu",
   "chapter": 18,
-  "title": "Alif Wears a Wave, and the Meeting Comes Off the Page",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:54a50ec7efa84422",
+  "title": "The Meeting Comes Off the Page",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:8a07942fc3430309",
   "lessons": [
     {
       "id": "UR-C18-aam",
@@ -189,7 +189,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db6ffc1220d4254b",
+      "sourceHash": "fnv1a64:eaec72e813302ced",
       "notice": null,
       "blocks": [
         {
@@ -232,7 +232,7 @@
             },
             {
               "kind": "speech",
-              "text": "That sentence reuses a colour you already own and the copula you learned to write last chapter."
+              "text": "That sentence reuses a colour you already own and the copula you learned to write back in chapter six."
             }
           ]
         },
@@ -350,191 +350,6 @@
       ]
     },
     {
-      "id": "UR-W18-alif-madda",
-      "sequence": 940,
-      "title": "آ (alif madda) — alif, with a wave on its head",
-      "headword": "آ",
-      "romanization": "alif madda",
-      "gloss": "alif wearing a small wave — how Urdu writes a long ā at the very start of a word",
-      "script": "urdu-nastaliq",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block",
-        "sight-cue"
-      ],
-      "sourceHash": "fnv1a64:c1325cf2e1142588",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [
-          "Script — the shape",
-          "The letters in this word",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write ا. One tall downstroke, top to bottom, and it refuses to join to whatever comes after it."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script — the shape",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "آ (alif madda)."
-            },
-            {
-              "kind": "speech",
-              "text": "The tall stroke you already know, and then one small wave laid across the top of it, drawn left to right like a shallow lazy S. Two movements: the downstroke, a lift, the wave."
-            },
-            {
-              "kind": "speech",
-              "text": "Its name is آ alif madda — madda means \"an extension\" — and it says a long ā."
-            },
-            {
-              "kind": "speech",
-              "text": "Now the reason it exists, which is the useful part."
-            },
-            {
-              "kind": "speech",
-              "text": "Plain ا does two different jobs. At the start of a word it is a carrier: a place for a short vowel to sit, with the vowel itself left off the page. Inside a word it is the long ā you have been reading in kām, nām, salām."
-            },
-            {
-              "kind": "speech",
-              "text": "So what does a writer do when a word starts with a long ā? Both jobs want the same stroke, and the answer used to be to write alif twice — carrier plus vowel — which is awkward to write and worse to read. The wave is the shorthand that replaced it. آ (alif madda) at the front of a word means: this begins on a long ā."
-            },
-            {
-              "kind": "speech",
-              "text": "That gives you a rule you can apply on sight. Long ā at the start of a word is written آ (alif madda); the same long ā in the middle of a word is written plain ا. One sound, two spellings, decided by position."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Three words, all glossed to you already, all now readable. Copy each with the model in front of you."
-            },
-            {
-              "kind": "speech",
-              "text": "آم آسمان آنا (ām, āsmān, ānā)."
-            },
-            {
-              "kind": "speech",
-              "text": "آم ām \"mango.\" آسمان āsmān \"sky\" — and look at it closely: آ (alif madda) at the front, plain ا in the middle, the same long vowel spelled two ways inside one word, exactly as promised. آنا ānā \"to come\" — the verb you have been conjugating since the verbs arrived, and now a word you can write."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "آ (alif madda) — the downstroke, lift, then the wave across its head",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: آ — the downstroke, lift, then the wave across its head]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "آم (ām), then آسمان (āsmān), then آنا",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: آم, then آسمان, then آنا]"
-            },
-            {
-              "kind": "prompt",
-              "action": "POINT",
-              "instruction": "at both alifs in آسمان (āsmān) and say which is which",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU POINT: at both alifs in آسمان and say which is which]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "yih ām hai, then āsmān nīlā hai",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *yih ām hai*, then *āsmān nīlā hai*]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "How many movements make آ (alif madda)? (Two — stroke, then wave.) Which verb can you now write? (آنا.) Which of آسمان (āsmān)'s two alifs carries the wave? (The first.)"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "UR-W18-alif-madda-where",
-              "prompt": "Where in a word do you write آ (alif madda) rather than plain ا for a long ā?",
-              "assesses": [
-                "UR-SCRIPT-ALIF-MADDA-01"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "at the start",
-                "start",
-                "the beginning",
-                "word-initially",
-                "at the front"
-              ],
-              "feedback": {
-                "correct": "At the start. Inside a word the same long ā is plain alif.",
-                "incorrect": "AT THE START of a word. In the middle, a long ā is written with plain ا."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "UR-C18-purana",
       "sequence": 950,
       "title": "پرانا (purānā) — \"old,\" and the word behind the Purāṇas",
@@ -547,7 +362,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41f114cfee2dadb7",
+      "sourceHash": "fnv1a64:b065ba20103b1f36",
       "notice": null,
       "blocks": [
         {
@@ -724,7 +539,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6b17b635d23eb22d",
+      "sourceHash": "fnv1a64:4f6c78e29fff3345",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -750,7 +565,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write ا, then آ (alif madda). Say what the wave does and where in a word it belongs. (Long ā; at the start.)"
+              "text": "Write ا, then آ. Say what the wave does and where in a word it belongs. (Long ā; at the start.)"
             }
           ]
         },
@@ -933,201 +748,6 @@
       ]
     },
     {
-      "id": "UR-W18-pe",
-      "sequence": 970,
-      "title": "پ (pe) — three dots under a boat",
-      "headword": "پ",
-      "romanization": "pe",
-      "gloss": "a shallow boat with three dots beneath it — the letter that finishes āp",
-      "script": "urdu-nastaliq",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:49834f6f6cbe1566",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script — the shape",
-          "The letters in this word",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write آم (ām) and آسمان (āsmān), and say which alif wears the wave."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script — the shape",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "پ (pe)."
-            },
-            {
-              "kind": "speech",
-              "text": "A shallow open curve lying along the baseline, like a small flat-bottomed boat — and then a lift, and three dots placed underneath it, arranged as a triangle with its point downward."
-            },
-            {
-              "kind": "speech",
-              "text": "Two parts, one lift. Its name is پ pe and it says p."
-            },
-            {
-              "kind": "speech",
-              "text": "The shapes it wears by position follow the pattern you have already seen twice:"
-            },
-            {
-              "kind": "speech",
-              "text": "standing alone and closing a joined word: the full boat, dots beneath."
-            },
-            {
-              "kind": "speech",
-              "text": "opening a word and in the middle: the boat shrinks to a small tooth — a short upward point on the line — with the three dots still beneath it."
-            },
-            {
-              "kind": "speech",
-              "text": "Note what survives the shrinking. The curve goes; the three dots stay. On a page of Nastaliq you find pe by counting dots below the line, not by looking for a boat."
-            },
-            {
-              "kind": "speech",
-              "text": "That triangle of dots is worth one sentence of history. Arabic has no p, so the Arabic alphabet has no letter for it. Persian needed one, invented it by taking the shape that carries a single dot below and giving it three, and Urdu inherited the invention along with the script. The same trick made letters for ch, zh and g. So the dots under pe are a record of a borrowed alphabet being altered to fit a language it was not built for — which every language that took this alphabet has done, Urdu among them. Sindhi went furthest of Urdu's neighbours, and carries around fifty letters to Urdu's thirty-nine."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Four words, pe in three different places. Copy each with the model in view."
-            },
-            {
-              "kind": "speech",
-              "text": "آپ پانی پرانا (purānā) اپنا."
-            },
-            {
-              "kind": "speech",
-              "text": "آپ āp — the respectful \"you,\" and the word this book has addressed you with from the beginning. Pe closes it, wearing the full boat, because alif madda hands nothing to the left."
-            },
-            {
-              "kind": "speech",
-              "text": "پانی pānī \"water\" and پرانا purānā \"old\" — pe opens both, shrunk to a tooth with its dots underneath."
-            },
-            {
-              "kind": "speech",
-              "text": "اپنا apnā \"one's own\" — pe sits in the middle, the same tooth, hemmed in on both sides."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "پ (pe) — the boat, then a lift, then three dots beneath",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: پ — the boat, then a lift, then three dots beneath]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "آپ, then پانی, then پرانا (purānā)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: آپ, then پانی, then پرانا]"
-            },
-            {
-              "kind": "prompt",
-              "action": "POINT",
-              "instruction": "at the pe in پانی and the pe in آپ, and say what changed",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU POINT: at the pe in پانی and the pe in آپ, and say what changed]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "āp, and say who you would use it with rather than tum",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **āp**, and say who you would use it with rather than *tum*]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "How many dots does pe carry, and where? (Three, underneath.) Why did Persian have to invent this letter? (Arabic has no p.) Write \"you.\" (آپ.)"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "UR-W18-pe-dots",
-              "prompt": "When pe shrinks to a tooth at the start of a word, what stays the same?",
-              "assesses": [
-                "UR-SCRIPT-PE-01"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "the three dots beneath it",
-                "the three dots",
-                "the dots",
-                "three dots below",
-                "its dots underneath"
-              ],
-              "feedback": {
-                "correct": "The three dots below. They are the identification; the boat is not.",
-                "incorrect": "THE THREE DOTS BENEATH IT. The curve shrinks away, the dots stay."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "UR-C18-voh",
       "sequence": 980,
       "title": "وہ (voh) — \"that,\" and everyone who is not here",
@@ -1140,7 +760,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f23fa0acace5553",
+      "sourceHash": "fnv1a64:ea01909a3f50338c",
       "notice": null,
       "blocks": [
         {
@@ -1171,7 +791,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two letters. The second is ہ, closing the word with its round curl. The first is new, and it is the last letter this chapter owes you."
+              "text": "Two letters. The second is ہ, closing the word with its round curl. The first is و, which you learned to write in chapter eight."
             },
             {
               "kind": "speech",
@@ -1313,7 +933,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:189a86fb2db5584f",
+      "sourceHash": "fnv1a64:4c68fd7828ad515f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1488,216 +1108,6 @@
       ]
     },
     {
-      "id": "UR-W18-vao",
-      "sequence": 1000,
-      "title": "و (vāʾo) — a head, a tail, and no hand to the left",
-      "headword": "و",
-      "romanization": "vāʾo",
-      "gloss": "a small round head with a tail — a second letter that refuses to join leftward, and the middle of hūṅ",
-      "script": "urdu-nastaliq",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:b60585479fa9ed74",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script — the shape",
-          "The letters in this word",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Name the letter that takes the hand of what is on its right and offers nothing to the left, so that a gap opens inside a word. (ا.)"
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script — the shape",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "و (vāʾo)."
-            },
-            {
-              "kind": "speech",
-              "text": "A small round head at the top, closed like a tiny loop, and then a tail that sweeps down and away to the left, dropping below the baseline. One movement, no dots."
-            },
-            {
-              "kind": "speech",
-              "text": "Its name is و vāʾo."
-            },
-            {
-              "kind": "speech",
-              "text": "Now the part that matters more than the shape. vāʾo is a non-joiner, the second one you have met. Like alif, it accepts the letter on its right and hands nothing to the letter on its left, so the run stops after it and whatever follows begins as if starting fresh. When you see a break inside an Urdu word, you now have two suspects instead of one."
-            },
-            {
-              "kind": "speech",
-              "text": "With nothing ever attached on its left, vāʾo has no separate middle face to learn. It looks the same wherever it stands; only whether something is joined to its right changes."
-            },
-            {
-              "kind": "speech",
-              "text": "And it carries more than one sound. Vāʾo does four jobs:"
-            },
-            {
-              "kind": "speech",
-              "text": "the consonant v or w."
-            },
-            {
-              "kind": "speech",
-              "text": "the long vowel ū."
-            },
-            {
-              "kind": "speech",
-              "text": "the long vowel o."
-            },
-            {
-              "kind": "speech",
-              "text": "and in some Persian borrowings, nothing at all — a letter written and not said."
-            },
-            {
-              "kind": "speech",
-              "text": "Which one it is comes from the word, not the shape, exactly as with ye. Having heard the word is what tells you."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Three words, three of vāʾo's values. Copy each with the model in front of you."
-            },
-            {
-              "kind": "speech",
-              "text": "وہ (voh) ہوں کون."
-            },
-            {
-              "kind": "speech",
-              "text": "وہ voh — the far pointer from the last lesson. Vāʾo opens it as a consonant, and because it hands nothing leftward, ہ begins a fresh run right after it."
-            },
-            {
-              "kind": "speech",
-              "text": "ہوں hūṅ — \"I am.\" Vāʾo is the long ū here, and the break after it is the same non-joining behaviour, with ں starting clean."
-            },
-            {
-              "kind": "speech",
-              "text": "کون kaun — \"who,\" the k- question word you met beside kahāṅ. Vāʾo is the o of the diphthong."
-            },
-            {
-              "kind": "speech",
-              "text": "One letter, three sounds, in three words you already say."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "و (vāʾo) — the closed head, then the tail sweeping down and left",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: و — the closed head, then the tail sweeping down and left]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "وہ (voh), then ہوں, then کون",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: وہ, then ہوں, then کون]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "میں... ہوں۔ — and say it with something true about yourself",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: میں ... ہوں۔ — and say it with something true about yourself]"
-            },
-            {
-              "kind": "prompt",
-              "action": "POINT",
-              "instruction": "at the break after vāʾo in ہوں and say why it is there",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU POINT: at the break after vāʾo in ہوں and say why it is there]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write \"I am.\" (میں... ہوں۔) How many sounds can vāʾo carry? (Four, counting the silent one.) What tells you which? (Having heard the word.)"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "UR-W18-vao-nonjoiner",
-              "prompt": "Which two letters so far refuse to join to the letter on their left?",
-              "assesses": [
-                "UR-SCRIPT-VAO-01"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "alif and vao",
-                "alif and vāʾo",
-                "ا and و",
-                "alef and vao"
-              ],
-              "feedback": {
-                "correct": "Alif and vāʾo. Both take a hand on the right and offer none on the left.",
-                "incorrect": "ALIF and VĀʾO. Both accept a join on the right and refuse one on the left."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "UR-C18-practice",
       "sequence": 1010,
       "title": "Practice — thirteen letters, and the meeting comes off the page",
@@ -1710,7 +1120,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:38e696ca32f401b9",
+      "sourceHash": "fnv1a64:dd3fc083bc8cdebf",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1736,7 +1146,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write the three letters this chapter gave you and name each: آ (alif madda)، پ (pe)، و (vāʾo)."
+              "text": "Write the three letters this chapter has been cashing in, and name each: آ، پ، و. You learned all three in chapters seven and eight."
             }
           ]
         },
@@ -1790,7 +1200,7 @@
             },
             {
               "kind": "speech",
-              "text": "And the chapter's real argument: پ (pe) exists because Arabic has no p and Persian built the letter Urdu now uses. The alphabet was borrowed and then altered, and the alterations are visible if you count dots."
+              "text": "And the chapter's real argument: پ exists because Arabic has no p and Persian built the letter Urdu now uses. The alphabet was borrowed and then altered, and the alterations are visible if you count dots."
             }
           ]
         },
@@ -1854,7 +1264,7 @@
             },
             {
               "kind": "speech",
-              "text": "How many letters can you now write? (Thirteen.) Which of آم (ām)/mango and آسمان (āsmān)/hammer is a real cousin pair? (آسمان (āsmān) and hammer.) Why does پ (pe) carry three dots? (Persian invented it for a sound Arabic lacks.)"
+              "text": "How many letters can you now write? (Thirteen.) Which of آم (ām)/mango and آسمان (āsmān)/hammer is a real cousin pair? (آسمان (āsmān) and hammer.) Why does پ carry three dots? (Persian invented it for a sound Arabic lacks.)"
             },
             {
               "kind": "activity",

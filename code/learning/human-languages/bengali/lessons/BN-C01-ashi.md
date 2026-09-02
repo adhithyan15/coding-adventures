@@ -6,6 +6,7 @@ sequence: 50
 chapter: 1
 type: word
 headword: আসি
+romanization: "āshi"
 gloss: goodbye, lit. "I'll come [again]" (āshi)
 concept_tag: FAREWELL
 prerequisites: [BN-C01-achchha]

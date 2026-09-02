@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C05-ami-bangla-boli",
     "language": "bengali",
-    "chapter": 5,
-    "sequence": 270,
+    "chapter": 11,
+    "sequence": 680,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:e58c5d27d449db25",
+    "sourceHash": "fnv1a64:2e468e8493962ccc",
     "detachableSegments": [
       "The letters in this word"
     ]

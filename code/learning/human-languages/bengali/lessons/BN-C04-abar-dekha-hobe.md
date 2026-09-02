@@ -2,10 +2,11 @@
 schema_version: 2
 id: BN-C04-abar-dekha-hobe
 spine_node: SPINE-TAKE-LEAVE
-sequence: 230
-chapter: 4
+sequence: 480
+chapter: 7
 type: phrase
 headword: আবার দেখা হবে
+romanization: "ābār dækhā hôbe"
 gloss: we'll meet again (goodbye)
 concept_tag: FAREWELL-LATER
 prerequisites: [BN-C04-abar, BN-C04-dekha-hobe, BN-C01-ashi]

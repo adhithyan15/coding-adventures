@@ -2,84 +2,39 @@
   "version": 1,
   "language": "marathi",
   "chapter": 17,
-  "title": "Family Memory at Real Distance",
-  "drivablePrefix": 12,
-  "sourceHash": "fnv1a64:c6ba4558991d9719",
+  "title": "Water, Tea, Milk, and Bhakri",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:957bcd535bfa1faf",
   "lessons": [
     {
-      "id": "MR-R14-mitra-r2",
-      "sequence": 650,
-      "title": "After a gap — मित्र (mitra)",
-      "headword": "मित्र",
-      "romanization": "mitra",
-      "gloss": "friend — retrieve meaning, history, and borrowing type after a real gap",
+      "id": "MR-C10-paani",
+      "sequence": 720,
+      "title": "पाणी (pāṇī) — the first thing you'll actually ask for",
+      "headword": "पाणी",
+      "romanization": "pāṇī",
+      "gloss": "water — the first thing you would actually ask for, and the request pattern that opens a spine node this track had never realized",
       "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:32d0393e9f550239",
-      "notice": null,
+      "sourceHash": "fnv1a64:cc15f5c4db25b1dc",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
           "type": "warmup",
           "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 5,
-              "perItem": false,
-              "source": "[PAUSE 5s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Friend. Old root meaning to bind. Borrowed whole from Sanskrit. Say the three answers: मित्र (mitra) — bind — tatsama."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Answer once, then repair only the missing piece."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-R14-mitra-r2-check",
-              "prompt": "Complete: friend = __; old root = __; borrowing type = __.",
-              "assesses": [
-                "MR-LEX-MITRA",
-                "MR-ETYMON-MITRA-BIND",
-                "MR-GRAMMAR-TATSAMA-BORROWING"
-              ],
-              "responseSeconds": 18,
-              "acceptedResponses": [
-                "mitra; bind; tatsama",
-                "मित्र; bind; tatsama"
-              ],
-              "feedback": {
-                "correct": "All three parts survived the gap.",
-                "incorrect": "Repair only the missing part: mitra; bind; tatsama."
-              }
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "recall",
-          "title": "Wrap-up Recall",
           "segments": [
             {
               "kind": "pause",
@@ -89,235 +44,60 @@
             },
             {
               "kind": "speech",
-              "text": "Say मित्र (mitra) once more, then stop."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-R14-kutumb-r2",
-      "sequence": 660,
-      "title": "After a gap — कुटुंब (kutumb)",
-      "headword": "कुटुंब",
-      "romanization": "kutumb",
-      "gloss": "family — retrieve the noun and Marathi gender after a real gap",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:5a5de9eaa4b9fd88",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 5,
-              "perItem": false,
-              "source": "[PAUSE 5s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Family. Marathi gender. Answer: कुटुंब (kutumb) — neuter."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Answer once, then repair only the missing piece."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-R14-kutumb-r2-check",
-              "prompt": "Give family in Marathi and its Marathi gender.",
-              "assesses": [
-                "MR-LEX-KUTUMB",
-                "MR-GRAMMAR-KUTUMB-NEUTER"
-              ],
-              "responseSeconds": 15,
-              "acceptedResponses": [
-                "kutumb; neuter",
-                "कुटुंब; neuter"
-              ],
-              "feedback": {
-                "correct": "Right: kutumb, neuter.",
-                "incorrect": "Repair two pieces: kutumb; neuter."
-              }
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say कुटुंब (kutumb) once more."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-R14-siblings",
-      "sequence": 670,
-      "title": "Sibling retrieval",
-      "headword": "भाऊ / बहीण",
-      "romanization": "bhau / bahin",
-      "gloss": "brother and sister — one secure English cousin and one unrelated root",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:4e5f573633751d2b",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 4,
-              "perItem": false,
-              "source": "[PAUSE 4s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say brother, sister: भाऊ, बहीण."
+              "text": "आवडणे told you what you like; प्रेम करणे what you love. This chapter asks for something smaller and more frequent than either: a drink."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "The two words and their histories",
+          "title": "You'll want to know: पाणी",
           "segments": [
             {
               "kind": "speech",
-              "text": "भाऊ is a secure cousin of English brother. Do not extend that claim to बहीण and English sister; those roots are unrelated."
+              "text": "पाणी — pāṇī — water."
             }
           ]
         },
         {
           "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
+          "type": "script",
+          "title": "The letters in this word",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
               "kind": "speech",
-              "text": "Answer once, then repair only the missing piece."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-R14-siblings-check",
-              "prompt": "Say brother and sister, then name the one securely related to English.",
-              "assesses": [
-                "MR-LEX-BHAU",
-                "MR-ETYMON-BHAU-BROTHER",
-                "MR-LEX-BAHIN"
-              ],
-              "responseSeconds": 18,
-              "acceptedResponses": [
-                "bhau, bahin; bhau is related to brother",
-                "भाऊ, बहीण; भाऊ"
-              ],
-              "feedback": {
-                "correct": "Yes: bhau is the secure cousin.",
-                "incorrect": "Brother is bhau; sister is bahin; only bhau is the secure English cousin."
-              }
+              "text": "Nothing new here. प pa you have from punhā; ण you have from every -णे verb so far; ी is the familiar long ī. पा-णी."
             }
           ]
         },
         {
           "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
+          "type": "grammar",
+          "title": "Grammar Lens: asking politely",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
+              "kind": "speech",
+              "text": "पाणी, कृपया. — pāṇī, kṛpayā. — Water, please."
             },
             {
               "kind": "speech",
-              "text": "भाऊ, बहीण."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-R14-eye-ear",
-      "sequence": 680,
-      "title": "Eye and ear retrieval",
-      "headword": "डोळा / कान",
-      "romanization": "dola / kaan",
-      "gloss": "eye and ear — retrieve two face words and the Marathi retroflex lateral",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:f2af9dd62aa85f2a",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 4,
-              "perItem": false,
-              "source": "[PAUSE 4s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Eye: डोळा. Ear: कान. In डोळा, keep ळ retroflex; do not replace it with ordinary ल."
+              "text": "कृपया kṛpayā is Sanskrit's own instrumental of कृपा kṛpā, \"mercy, kindness\" — literally \"by kindness, out of kindness.\" Name the thing you want, add कृपया, and the request is complete: no verb for \"give\" required. This is the pattern the whole chapter reuses, and the first time this track has built a \"please\" of any kind — a spine node this book had left empty until now."
             }
           ]
         },
         {
-          "index": 1,
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart — the oldest drinking word you own",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पाणी continues Maharastri Prakrit pāṇīa, from Sanskrit पानीय pānīya, \"that which is to be drunk,\" built on पा pā-, \"to drink.\" That root is Indo-European peh₃(i)-, and English keeps two disguised pieces of it: potion and poison both come through Latin potare, \"to drink\" — a poison, by origin, is just a drink gone wrong. Greek turned the same idea into sympotēs, \"one who drinks together,\" which English keeps as symposium."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -328,421 +108,81 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Answer once, then repair only the missing piece."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṇī — water",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **pāṇī** — water]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-R14-eye-ear-check",
-              "prompt": "Give eye and ear in Marathi; identify the special consonant in dola.",
-              "assesses": [
-                "MR-LEX-DOLA",
-                "MR-SCRIPT-RETROFLEX-LA",
-                "MR-LEX-KAAN"
-              ],
-              "responseSeconds": 18,
-              "acceptedResponses": [
-                "dola, kaan; retroflex l",
-                "डोळा, कान; ळ"
-              ],
-              "feedback": {
-                "correct": "Right: dola, kaan, and retroflex ळ.",
-                "incorrect": "Retrieve: dola, kaan, retroflex ळ."
-              }
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṇī, kṛpayā. — water, please",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **pāṇī, kṛpayā.** — water, please]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "malā marāṭhī āvaḍte, then pāṇī, kṛpayā — liking and requesting, side by side",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **malā marāṭhī āvaḍte**, then **pāṇī, kṛpayā** — liking and requesting, side by side]"
             }
           ]
         },
         {
-          "index": 2,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
             {
               "kind": "pause",
-              "seconds": 2,
+              "seconds": 3,
               "perItem": false,
-              "source": "[PAUSE 2s]"
+              "source": "[PAUSE 3s]"
             },
             {
               "kind": "speech",
-              "text": "डोळा, कान."
+              "text": "Ask for water politely. (Pāṇī, kṛpayā.) What does कृपया literally mean? (\"By kindness.\") Which two English words for a drink, and one for a whole gathering of them, share pāṇī's root? (Potion, poison, symposium.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: पाणी (pāṇī); Wiktionary: कृपया."
             }
           ]
         }
       ]
     },
     {
-      "id": "MR-R14-mouth-nose",
-      "sequence": 690,
-      "title": "Mouth and nose retrieval",
-      "headword": "तोंड / नाक",
-      "romanization": "tond / naak",
-      "gloss": "mouth and nose — retrieve the everyday mouth word and its formal doublet",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:ee3210733ebb0653",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 4,
-              "perItem": false,
-              "source": "[PAUSE 4s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Everyday mouth is तोंड; formal मुख stands beside it. Nose is नाक."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Answer once, then repair only the missing piece."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-R14-mouth-nose-check",
-              "prompt": "Give everyday mouth, its formal doublet, and nose.",
-              "assesses": [
-                "MR-LEX-TOND",
-                "MR-GRAMMAR-TOND-MUKH-DOUBLET",
-                "MR-LEX-NAAK"
-              ],
-              "responseSeconds": 18,
-              "acceptedResponses": [
-                "tond, mukh, naak",
-                "तोंड, मुख, नाक"
-              ],
-              "feedback": {
-                "correct": "Exactly: tond, mukh, naak.",
-                "incorrect": "Repair the trio: tond, mukh, naak."
-              }
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "तोंड, नाक."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-R14-food",
-      "sequence": 700,
-      "title": "Three request nouns",
-      "headword": "पाणी / चहा / दूध",
-      "romanization": "paani / chaha / dudh",
-      "gloss": "water, tea, and milk — three tiny request nouns from memory",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:c219410de0c3cdfd",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 5,
-              "perItem": false,
-              "source": "[PAUSE 5s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say water, tea, milk in order: पाणी, चहा, दूध."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Answer once, then repair only the missing piece."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-R14-food-check",
-              "prompt": "Give water, tea, and milk in Marathi.",
-              "assesses": [
-                "MR-LEX-PAANI",
-                "MR-LEX-CHAHA",
-                "MR-LEX-DUDH"
-              ],
-              "responseSeconds": 15,
-              "acceptedResponses": [
-                "paani, chaha, dudh",
-                "पाणी, चहा, दूध"
-              ],
-              "feedback": {
-                "correct": "All three are back.",
-                "incorrect": "Repair in order: paani, chaha, dudh."
-              }
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Repeat once, then stop."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-R14-doing",
-      "sequence": 710,
-      "title": "Three doing verbs",
-      "headword": "घेणे / विचारणे / मदत करणे",
-      "romanization": "ghene / vicharne / madat karne",
-      "gloss": "take, ask, and help — three action verbs retrieved without a model",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:d7f932c115976e6b",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 5,
-              "perItem": false,
-              "source": "[PAUSE 5s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Take: घेणे. Ask: विचारणे. Help: मदत करणे."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Answer once, then repair only the missing piece."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-R14-doing-check",
-              "prompt": "Give take, ask, and help in Marathi.",
-              "assesses": [
-                "MR-LEX-GHENE",
-                "MR-LEX-VICHARNE",
-                "MR-LEX-MADAT-KARNE"
-              ],
-              "responseSeconds": 18,
-              "acceptedResponses": [
-                "ghene, vicharne, madat karne",
-                "घेणे, विचारणे, मदत करणे"
-              ],
-              "feedback": {
-                "correct": "Three verbs, retrieved cleanly.",
-                "incorrect": "Repair in order: ghene, vicharne, madat karne."
-              }
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Repeat the trio once."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-R14-mind",
-      "sequence": 720,
-      "title": "Three mind-and-page verbs",
-      "headword": "विचार करणे / समजणे / लिहिणे",
-      "romanization": "vichar karne / samajne / lihine",
-      "gloss": "think, understand, and write — three mind-and-page verbs",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:c4707ef4d942aeed",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 5,
-              "perItem": false,
-              "source": "[PAUSE 5s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Think: विचार करणे. Understand: समजणे. Write: लिहिणे."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Answer once, then repair only the missing piece."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-R14-mind-check",
-              "prompt": "Give think, understand, and write in Marathi.",
-              "assesses": [
-                "MR-LEX-VICHAR-KARNE",
-                "MR-LEX-SAMAJNE",
-                "MR-LEX-LIHINE"
-              ],
-              "responseSeconds": 18,
-              "acceptedResponses": [
-                "vichar karne, samajne, lihine",
-                "विचार करणे, समजणे, लिहिणे"
-              ],
-              "feedback": {
-                "correct": "The three verbs survived the gap.",
-                "incorrect": "Repair: vichar karne, samajne, lihine."
-              }
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Repeat once."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-R14-core",
+      "id": "MR-C10-chaha",
       "sequence": 730,
-      "title": "Three core verbs",
-      "headword": "असणे / जाणे / येणे",
-      "romanization": "asne / jane / yene",
-      "gloss": "be, go, and come — the three core motion-and-state verbs",
+      "title": "चहा (chahā) — a word that took the overland road",
+      "headword": "चहा",
+      "romanization": "chahā",
+      "gloss": "tea — the one request in this chapter that is not inherited at all, and Marathi's first masculine noun",
       "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:7f0eb2de7439761b",
-      "notice": null,
+      "sourceHash": "fnv1a64:91c3650f5e9425f8",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -751,18 +191,59 @@
           "segments": [
             {
               "kind": "pause",
-              "seconds": 5,
+              "seconds": 2,
               "perItem": false,
-              "source": "[PAUSE 5s]"
+              "source": "[PAUSE 2s]"
             },
             {
               "kind": "speech",
-              "text": "Be: असणे. Go: जाणे. Come: येणे."
+              "text": "पाणी, कृपया (pāṇī, kṛpayā) — water, please. Say it once more, then ask for something that is not water at all."
             }
           ]
         },
         {
           "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चहा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चहा — chahā — tea."
+            },
+            {
+              "kind": "speech",
+              "text": "चहा, कृपया. — chahā, kṛpayā. — Tea, please."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nothing new. च you already say near ts from Chapter 13's चार; ह is नमस्कार's; ा the familiar long ā. Cha-hā."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart — the one word in this chapter with no Sanskrit in it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every other word in this chapter reaches back to Sanskrit. चहा (chahā) does not — it is a loanword from Mandarin cha, and it reached Marathi by the overland route, through Persian and Turkic trade, the same road that gave Hindi चाय chāy, Bengali cha, and Persian chāy their words for the same drink. A second branch of the same plant travelled by sea: Dutch traders carried the Hokkien word te to Western Europe, which is why English says tea, not cha. One plant, two words, two trade routes."
+            },
+            {
+              "kind": "speech",
+              "text": "चहा (chahā) is also this chapter's first masculine noun, against पाणी (pāṇī)'s neuter — a reminder that Marathi's three genders do not sort words by where they came from."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -773,65 +254,81 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Answer once, then repair only the missing piece."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chahā, kṛpayā — tea, please",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **chahā, kṛpayā** — tea, please]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-R14-core-check",
-              "prompt": "Give be, go, and come in Marathi.",
-              "assesses": [
-                "MR-LEX-ASNE-AAHE",
-                "MR-LEX-JANE",
-                "MR-LEX-YENE"
-              ],
-              "responseSeconds": 15,
-              "acceptedResponses": [
-                "asne, jane, yene",
-                "असणे, जाणे, येणे"
-              ],
-              "feedback": {
-                "correct": "Three core verbs, still available.",
-                "incorrect": "Repair: asne, jane, yene."
-              }
+              "kind": "prompt",
+              "action": "NAME",
+              "instruction": "the two trade routes — overland to chāy/chahā, by sea to tea",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU NAME: the two trade routes — overland to *chāy/chahā*, by sea to *tea*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "both requests — pāṇī, kṛpayā … chahā, kṛpayā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: both requests — **pāṇī, kṛpayā … chahā, kṛpayā**]"
             }
           ]
         },
         {
-          "index": 2,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
             {
               "kind": "pause",
-              "seconds": 2,
+              "seconds": 3,
               "perItem": false,
-              "source": "[PAUSE 2s]"
+              "source": "[PAUSE 3s]"
             },
             {
               "kind": "speech",
-              "text": "Repeat once."
+              "text": "Ask for tea politely. (Chahā, kṛpayā.) Which language does चहा (chahā) ultimately come from? (Mandarin Chinese, cha.) Which English word for the same plant took the sea route instead? (Tea.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: चहा (chahā)."
             }
           ]
         }
       ]
     },
     {
-      "id": "MR-R14-mitra-r3",
+      "id": "MR-C10-dudh",
       "sequence": 740,
-      "title": "Durable retrieval — मित्र (mitra)",
-      "headword": "मित्र",
-      "romanization": "mitra",
-      "gloss": "friend — durable retrieval of word, binding root, and tatsama path",
+      "title": "दूध (dūdh) — back to Sanskrit, and a surprising English cousin",
+      "headword": "दूध",
+      "romanization": "dūdh",
+      "gloss": "milk — back to inherited Sanskrit, and the same PIE root behind English doughty",
       "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:6e565d825be00972",
-      "notice": null,
+      "sourceHash": "fnv1a64:23a8c3c7b25533b9",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -840,18 +337,55 @@
           "segments": [
             {
               "kind": "pause",
-              "seconds": 6,
+              "seconds": 2,
               "perItem": false,
-              "source": "[PAUSE 6s]"
+              "source": "[PAUSE 2s]"
             },
             {
               "kind": "speech",
-              "text": "Recover the word for friend, its old root meaning, and the name for a Sanskrit form borrowed whole."
+              "text": "चहा (chahā) broke the pattern — a loanword with no Sanskrit behind it. This next word rejoins पाणी (pāṇī)'s family: inherited, traceable, Indo-European."
             }
           ]
         },
         {
           "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दूध",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दूध — dūdh — milk."
+            },
+            {
+              "kind": "speech",
+              "text": "दूध, कृपया. — dūdh, kṛpayā. — Milk, please."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One new mark: ू, the long ū vowel sign — a longer hook under the consonant than any you've written so far. द you have from dhanyavād and madat; ध from dhanyavād too. Dū-dh."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart — milk, and the root behind \"doughty\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दूध (dūdh) continues Maharastri Prakrit duddha, from Sanskrit दुग्ध dugdha, \"milked, milk\" — literally the past participle of दुह् duh-, \"to milk.\" That root traces to Indo-European dʰewgʰ-, \"to be fit, to be of use, to produce\" — milking as producing something useful. Germanic kept the same root for a different sense of \"useful, capable\": English doughty, \"brave and able,\" is dūhtig in Old English, built on this exact root. Milk and doughtiness, four thousand years apart, share one ancestor."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -862,66 +396,81 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Answer once, then repair only the missing piece."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dūdh, kṛpayā — milk, please",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **dūdh, kṛpayā** — milk, please]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-R14-mitra-r3-check",
-              "prompt": "After the long gap: friend; root meaning; borrowing type.",
-              "assesses": [
-                "MR-LEX-MITRA",
-                "MR-ETYMON-MITRA-BIND",
-                "MR-GRAMMAR-TATSAMA-BORROWING"
-              ],
-              "responseSeconds": 20,
-              "acceptedResponses": [
-                "mitra; to bind; tatsama",
-                "मित्र; to bind; tatsama",
-                "mitra, bind, tatsama"
-              ],
-              "feedback": {
-                "correct": "Durable recall: mitra, bind, tatsama.",
-                "incorrect": "Repair only what failed, then close the model: mitra; bind; tatsama."
-              }
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what dugdha literally was — \"milked\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *dugdha* literally was — \"milked\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "all three requests — pāṇī, chahā, dūdh — kṛpayā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: all three requests — **pāṇī, chahā, dūdh** — kṛpayā]"
             }
           ]
         },
         {
-          "index": 2,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
             {
               "kind": "pause",
-              "seconds": 2,
+              "seconds": 3,
               "perItem": false,
-              "source": "[PAUSE 2s]"
+              "source": "[PAUSE 3s]"
             },
             {
               "kind": "speech",
-              "text": "मित्र (mitra). One clean retrieval is enough."
+              "text": "Ask for milk politely. (Dūdh, kṛpayā.) What English word for \"brave and capable\" shares दूध (dūdh)'s root? (Doughty.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: दूध (dūdh)."
             }
           ]
         }
       ]
     },
     {
-      "id": "MR-R14-numbers",
+      "id": "MR-C10-bhakari",
       "sequence": 750,
-      "title": "Count, then notice",
-      "headword": "एक ते पाच",
-      "romanization": "ek te paach",
-      "gloss": "one to five — count and recover Marathi's diagnostic sound history",
+      "title": "भाकरी (bhākarī) — the request that breaks the pattern",
+      "headword": "भाकरी",
+      "romanization": "bhākarī",
+      "gloss": "a round flatbread — the one word in this chapter that never left Marathi's own neighborhood, and Hindi's word for bread altogether",
       "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:b0c4862bb603319f",
-      "notice": null,
+      "sourceHash": "fnv1a64:c05769b1c2547967",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -930,18 +479,70 @@
           "segments": [
             {
               "kind": "pause",
-              "seconds": 6,
+              "seconds": 2,
               "perItem": false,
-              "source": "[PAUSE 6s]"
+              "source": "[PAUSE 2s]"
             },
             {
               "kind": "speech",
-              "text": "Count one through five. Then say चार with Marathi tsā-, and remember that a language can innovate in one place while retaining an older feature in another."
+              "text": "Three requests so far: pāṇī, chahā, dūdh. Two inherited from Sanskrit, one borrowed from Chinese. The fourth belongs to neither story."
             }
           ]
         },
         {
           "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भाकरी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भाकरी — bhākarī — a round flatbread, the everyday Maharashtrian bread — of jowar, bajra, or rice flour, not wheat."
+            },
+            {
+              "kind": "speech",
+              "text": "भाकरी, कृपया. — bhākarī, kṛpayā. — Bhakri, please."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nothing new. भ from bheṭū, क from everywhere, र from marāṭhī, ी the familiar long ī. Bhā-ka-rī."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart — the one word that stayed home",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भाकरी is inherited from Old Marathi bhākarī, from Proto-Indo-Aryan bʰakkaras, \"heap, pile, lump\" — the flatbread named for the lump of dough it started as. That reconstruction is as far back as the sources trace it; its own root before Proto-Indo-Aryan is not established, so this lesson claims none rather than inventing one."
+            },
+            {
+              "kind": "speech",
+              "text": "Unlike पाणी (pāṇī) and दूध (dūdh), भाकरी (bhākarī) is not a Sanskrit tatsama or tadbhava — it never touched classical Sanskrit. And unlike चहा (chahā), it is no loanword either — a regional word, close kin to Gujarati bhākhrī and Kannada bakkari, and simply not Hindi's word for bread: Hindi asks for रोटी roṭī, an unrelated root. A Delhi shopkeeper would not recognize the request; a Pune one would hand you lunch."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say the four requests once more and notice their genders: पाणी (pāṇī) neuter, चहा (chahā) masculine, दूध (dūdh) neuter, भाकरी (bhākarī) feminine. Four everyday nouns, all three of Marathi's genders, in one short chapter — proof, alongside the verbs' present-tense endings, that the third gender Hindi lost is not a museum piece here."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -952,136 +553,52 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Answer once, then repair only the missing piece."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four requests, kṛpayā each time — pāṇī, chahā, dūdh, bhākarī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four requests, kṛpayā each time — **pāṇī, chahā, dūdh, bhākarī**]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-R14-numbers-check",
-              "prompt": "Count one to five and give Marathi's diagnostic pronunciation of four.",
-              "assesses": [
-                "MR-LEX-NUMBERS-ONE-TO-FIVE",
-                "MR-SOUND-CHA-TSAA",
-                "MR-HISTORY-SELECTIVE-RETENTION"
-              ],
-              "responseSeconds": 20,
-              "acceptedResponses": [
-                "ek, don, tin, chaar, paach; chaar begins tsaa-",
-                "एक, दोन, तीन, चार, पाच; tsaa"
-              ],
-              "feedback": {
-                "correct": "Right: the count and Marathi tsaa- are both back.",
-                "incorrect": "Repair the count, then isolate chaar with tsaa-."
-              }
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I eat bhakri\" — mī bhākarī khāto or khāte, putting Chapter 7's खाणे to work on a word it never had before",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I eat bhakri\" — **mī bhākarī khāto** or **khāte**, putting Chapter 7's **खाणे** to work on a word it never had before]"
+            },
+            {
+              "kind": "prompt",
+              "action": "NAME",
+              "instruction": "which of the four is neither Sanskrit nor a loanword — bhākarī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU NAME: which of the four is neither Sanskrit nor a loanword — **bhākarī**]"
             }
           ]
         },
         {
-          "index": 2,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
             {
               "kind": "pause",
-              "seconds": 2,
+              "seconds": 3,
               "perItem": false,
-              "source": "[PAUSE 2s]"
+              "source": "[PAUSE 3s]"
             },
             {
               "kind": "speech",
-              "text": "Count once more without looking."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-R14-kutumb-r3",
-      "sequence": 760,
-      "title": "Durable family comparison",
-      "headword": "मित्र / कुटुंब",
-      "romanization": "mitra / kutumb",
-      "gloss": "friend and family — durable comparison of five Chapter 14 memories",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:de2c253ff64fe6e2",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 7,
-              "perItem": false,
-              "source": "[PAUSE 7s]"
+              "text": "What did भाकरी's Proto-Indo-Aryan ancestor mean? (A heap, a lump.) What does Hindi ask for instead? (रोटी, an unrelated root.) Give all four requests with their genders. (पाणी (pāṇī) n, चहा m, दूध n, भाकरी f — all with कृपया.) Sort the four sources: two from Sanskrit, one a Chinese loan, one purely regional. (Pāṇī, dūdh — Sanskrit; chahā — Chinese; bhākarī — regional.)"
             },
             {
               "kind": "speech",
-              "text": "Friend: मित्र (mitra); old root to bind; tatsama. Family: कुटुंब (kutumb); neuter in Marathi."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Answer once, then repair only the missing piece."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-R14-kutumb-r3-check",
-              "prompt": "Give the five-part durable comparison for mitra and kutumb.",
-              "assesses": [
-                "MR-LEX-MITRA",
-                "MR-ETYMON-MITRA-BIND",
-                "MR-GRAMMAR-TATSAMA-BORROWING",
-                "MR-LEX-KUTUMB",
-                "MR-GRAMMAR-KUTUMB-NEUTER"
-              ],
-              "responseSeconds": 24,
-              "acceptedResponses": [
-                "mitra; bind; tatsama; kutumb; neuter",
-                "मित्र; bind; tatsama; कुटुंब; neuter"
-              ],
-              "feedback": {
-                "correct": "All five memories are available at distance.",
-                "incorrect": "Repair only the missing row, then answer again without the model."
-              }
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "मित्र (mitra), कुटुंब (kutumb). End the session here."
+              "text": "Sources: Wiktionary: भाकरी (bhākarī)."
             }
           ]
         }

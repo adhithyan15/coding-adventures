@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C07-jana
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 450
-chapter: 7
+sequence: 780
+chapter: 13
 type: word
 headword: জানা
 romanization: jānā
@@ -48,7 +48,7 @@ English threw away.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**জানা** is Sanskrit **√জ্ঞা** (*√jñā*, "to know"), the root under *jñāna*,
+**জানা** is Sanskrit *√jñā* ("to know"), the root under *jñāna*,
 "knowledge." Behind it stands PIE *\*ǵneh₃-*, and English is full of its
 children: **know** and **knowledge** by the direct Germanic road; **notice**,
 **recognize** and **cognition** through Latin *nōscere*; **gnosis** and

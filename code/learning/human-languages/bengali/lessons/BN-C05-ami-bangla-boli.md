@@ -2,10 +2,11 @@
 schema_version: 2
 id: BN-C05-ami-bangla-boli
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 270
-chapter: 5
+sequence: 680
+chapter: 11
 type: phrase
 headword: আমি বাংলা বলি
+romanization: "āmi bānglā bôli"
 gloss: I speak Bengali
 concept_tag: BN-WORD-BANGLA
 prerequisites: [BN-C05-bola, BN-C03-ami]
@@ -46,7 +47,7 @@ itself.
 **আমি বাংলা বলি** = **আমি** (*āmi*, "I") + **বাংলা** (*bānglā*, the object) +
 **বলি** (*bôli*, "speak") — "I Bengali speak," the verb last as always. The name
 **বাংলা** (*bānglā*) is the language's own word for itself (English "Bengali"
-comes from it, via *Bangla* → *Bengal*). It descends from **বঙ্গ** (*bôngo*), the
+comes from it, via *Bangla* → *Bengal*). It descends from *bôngo*, the
 ancient name of the region — so the language is named after its land, the great
 delta of the Ganges.
 

@@ -1,12 +1,13 @@
 {
   "language": "bengali",
   "chapter": 11,
-  "sourceHash": "fnv1a64:89cb40fe92cb7cd8",
+  "sourceHash": "fnv1a64:86b9a9f7c95498c4",
   "lessonIds": [
-    "BN-C11-bondhu",
-    "BN-C11-poribar",
-    "BN-C11-bhai",
-    "BN-C11-bon"
+    "BN-C05-bola",
+    "BN-C05-ami-bangla-boli",
+    "BN-C05-kaj-kora",
+    "BN-C05-thaka",
+    "BN-C05-practice"
   ],
-  "tex": "bengali/book/chapters/ch11-friend-family-brother-sister.tex"
+  "tex": "bengali/book/chapters/ch11-first-verbs.tex"
 }

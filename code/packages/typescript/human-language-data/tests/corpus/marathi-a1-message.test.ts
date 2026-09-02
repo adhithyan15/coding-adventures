@@ -34,7 +34,7 @@ it("removes support gently before Marathi's independent A1 named-reader message"
     "MR-A1M18-independent-message",
   ]);
   expect(lessons.map((lesson) => Number(lesson.frontmatter.sequence))).toEqual(
-    Array.from({ length: 18 }, (_, index) => 840 + index),
+    Array.from({ length: 18 }, (_, index) => 1040 + index),
   );
   expect(lessons.every((lesson) => Number(lesson.frontmatter["duration.max_seconds"]) <= 299)).toBe(true);
 

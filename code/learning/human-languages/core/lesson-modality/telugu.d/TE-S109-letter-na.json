@@ -2,8 +2,8 @@
   "lesson": {
     "id": "TE-S109-letter-na",
     "language": "telugu",
-    "chapter": 6,
-    "sequence": 326,
+    "chapter": 2,
+    "sequence": 75,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:614c7635f23af4fc",
+    "sourceHash": "fnv1a64:a7bc58fa95791f87",
     "detachableSegments": [
       "Script you'll notice: న",
       "Writing: న — copy what you see"

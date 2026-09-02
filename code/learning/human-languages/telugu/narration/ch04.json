@@ -4,8 +4,169 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:eec23ac55024fea5",
+  "sourceHash": "fnv1a64:b4d22d167e3782af",
   "lessons": [
+    {
+      "id": "TE-S123-letter-dda",
+      "sequence": 205,
+      "title": "డ (ḍa) — one character, met inside words you already say",
+      "headword": "డ",
+      "romanization": "ḍa",
+      "gloss": "the single character డ — recognised inside words you already say",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:35f2404a58e64c14",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: డ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: డ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ౫ — what amount does it stand for? And one from further back: ఉ?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: డ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "డ — ḍa."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not ḍ, it is ḍa."
+            },
+            {
+              "kind": "speech",
+              "text": "You met it on an earlier page, in the middle of a word you already say:"
+            },
+            {
+              "kind": "speech",
+              "text": "మీరు ఎలా ఉన్నారు? — how are you? (respectful)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: డ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on డ (ḍa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find డ (ḍa) in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find డ in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "మీరు ఎలా ఉన్నారు?, నమస్కారం."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "డ three times, saying ḍa as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: డ three times, saying *ḍa* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find డ (ḍa) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find డ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — డ? What sound does it carry? (ḍa.) Name one word you already say that contains it."
+            },
+            {
+              "kind": "speech",
+              "text": "One more, from much earlier: న — what does it do?"
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "TE-C04-vellu",
       "sequence": 210,
@@ -19,7 +180,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6c63f201e6eeb859",
+      "sourceHash": "fnv1a64:b80bf68af018a88b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -132,6 +293,159 @@
       ]
     },
     {
+      "id": "TE-S145-digit-6",
+      "sequence": 215,
+      "title": "౬ — the Telugu numeral for 6",
+      "headword": "౬",
+      "romanization": "6",
+      "gloss": "the Telugu numeral ౬ — the digit 6, read as a quantity",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:a3d5169c12c80430",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ౬",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ౬ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: డ (ḍa) — what does it do? And one from further back: ౪?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One numeral this time, and it is read the way every numeral is read: as an amount."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ౬",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "౬ (6) is six."
+            },
+            {
+              "kind": "speech",
+              "text": "Six is where the second half begins, and where a warning belongs: ౬ is not the 6 you write, and it is not an E. It is its own character, and the only way it becomes readable is by meeting it often enough that the resemblance stops mattering."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ౬ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ౬ (6) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at this row and say the value of each numeral in it, left to right",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at this row and say the value of each numeral in it, left to right]"
+            },
+            {
+              "kind": "speech",
+              "text": "౬ (6), ౨, ౫."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "౬ three times, saying \"6\" as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ౬ three times, saying \"6\" as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "for ౬ (6) on any page of a Telugu book, calendar or doorplate you can find",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: for ౬ on any page of a Telugu book, calendar or doorplate you can find]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which numeral is this — ౬? What amount does it stand for? (౬ is 6.)"
+            },
+            {
+              "kind": "speech",
+              "text": "One more, from much earlier: ◌ు — what does it do?"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "TE-C04-velli-vastaanu",
       "sequence": 220,
       "title": "వెళ్ళి వస్తాను (veḷḷi vastānu) — \"I'll go and come back\"",
@@ -144,7 +458,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5c2c1a5ee2202e6f",
+      "sourceHash": "fnv1a64:167fb4af55c04131",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -192,6 +506,30 @@
             {
               "kind": "speech",
               "text": "వెళ్ళి వస్తాను (veḷḷi vastānu) = వెళ్ళి (veḷḷi, \"having gone\") + వస్తాను (vastānu, \"I come\") — literally \"having gone, I come [back],\" i.e. \"I'll go and come back.\" A Telugu speaker never signs off with a bare \"I'm leaving\" — that sounds final. Instead they promise return. It is the same \"go-and-come-back\" farewell you meet across the Dravidian south (Tamil pōy varugiṟēṉ, Kannada hōgi baruttēne, Malayalam pōyi varāṁ) and echoing into the Indo-Aryan tracks (Bengali āshi). The warm reply is వెళ్ళి రండి (veḷḷi raṇḍi, \"go and come [back]\")."
+            },
+            {
+              "kind": "speech",
+              "text": "Across the family — the same idea, five ways:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Language",
+                "\"go and come back\" (goodbye)"
+              ],
+              "columns": 2,
+              "rowCount": 5,
+              "utterances": [
+                "Language: Telugu. \"go and come back\" (goodbye): veḷḷi vastānu.",
+                "Language: Tamil. \"go and come back\" (goodbye): pōy varugiṟēṉ.",
+                "Language: Kannada. \"go and come back\" (goodbye): hōgi baruttēne.",
+                "Language: Malayalam. \"go and come back\" (goodbye): pōyi varāṁ.",
+                "Language: Bengali (Indo-Aryan). \"go and come back\" (goodbye): āshi (\"I come\")."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The whole south — and, in Bengali, well beyond it — prefers a promise of return to a blunt farewell. The languages are not all related; the habit travelled anyway."
             }
           ]
         },
@@ -278,7 +616,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:009dedce2de234fa",
+      "sourceHash": "fnv1a64:56a3dc92ceca80f8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -400,6 +738,175 @@
       ]
     },
     {
+      "id": "TE-S113-letter-pa",
+      "sequence": 235,
+      "title": "ప (pa) — one character, met inside words you already say",
+      "headword": "ప",
+      "romanization": "pa",
+      "gloss": "the single character ప — recognised inside words you already say",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f650196d6ea8f2d3",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ప",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ప and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ౬ (6) — what amount does it stand for? And one from further back: ర?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ప",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప — pa."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not p, it is pa."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these, and every one of them has ప (pa) somewhere inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "పేరు pēru — name."
+            },
+            {
+              "kind": "speech",
+              "text": "పరవాలేదు paravālēdu — it's okay / no problem / you're welcome."
+            },
+            {
+              "kind": "speech",
+              "text": "రేపు కలుద్దాం rēpu kaluddām — see you tomorrow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ప — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ప (pa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find ప (pa) in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find ప in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "పేరు, పరవాలేదు, నమస్కారం."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ప three times, saying pa as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ప three times, saying *pa* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ప once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ప once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ప? What sound does it carry? (pa.) Name one word you already say that contains it."
+            },
+            {
+              "kind": "speech",
+              "text": "One more, from much earlier: ౧ — what amount does it stand for?"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "TE-C04-malli-kaluddaam",
       "sequence": 240,
       "title": "మళ్ళీ కలుద్దాం (maḷḷī kaluddām) — \"we'll meet again\"",
@@ -412,7 +919,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a8c9eaecc19d5e56",
+      "sourceHash": "fnv1a64:34a3ff98d57eee78",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -514,6 +1021,161 @@
       ]
     },
     {
+      "id": "TE-S146-digit-7",
+      "sequence": 245,
+      "title": "౭ — the Telugu numeral for 7",
+      "headword": "౭",
+      "romanization": "7",
+      "gloss": "the Telugu numeral ౭ — the digit 7, read as a quantity",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:3ff5b147c2221c01",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ౭",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ౭ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ప (pa) — what does it do? And one from further back: ౫?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One numeral this time, and it is read the way every numeral is read: as an amount."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ౭",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "౭ (7) is seven."
+            },
+            {
+              "kind": "speech",
+              "text": "౬ (6) and ౭ (7) sit next to each other in value and are easy to swap on a first reading. Look at the pair below until you can say which is which without counting up to it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ౭ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ౭ (7) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at this row and say the value of each numeral in it, left to right",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at this row and say the value of each numeral in it, left to right]"
+            },
+            {
+              "kind": "speech",
+              "text": "౭ (7), ౬ (6), ౪."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "౭ three times, saying \"7\" as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ౭ three times, saying \"7\" as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "for ౭ (7) on any page of a Telugu book, calendar or doorplate you can find",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: for ౭ on any page of a Telugu book, calendar or doorplate you can find]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which numeral is this — ౭? What amount does it stand for? (౭ is 7, ౬ is 6.)"
+            },
+            {
+              "kind": "speech",
+              "text": "One more, from much earlier: ◌్ — what does it do?"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "TE-C04-practice",
       "sequence": 250,
       "title": "Chapter 4 — The farewells",
@@ -526,7 +1188,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:78115613ca846b75",
+      "sourceHash": "fnv1a64:9de82e3f75be2312",
       "notice": null,
       "blocks": [
         {
@@ -548,9 +1210,33 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The farewells",
+          "type": "input",
+          "title": "The exchange — the farewells",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "All three, side by side — none of them a blunt \"goodbye\":"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Telugu",
+                "",
+                "English"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "Telugu: వెళ్ళి వస్తాను., veḷḷi vastānu. English: I'll go and come back. (the goodbye).",
+                "Telugu: వెళ్ళి రండి., veḷḷi raṇḍi. English: Go and come back. (the reply).",
+                "Telugu: రేపు కలుద్దాం., rēpu kaluddām. English: See you tomorrow.",
+                "Telugu: మళ్ళీ కలుద్దాం., maḷḷī kaluddām. English: We'll meet again."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "A few of these characters have not had their own lesson yet. They are here to be recognised, not decoded — the romanization beside each line is what you read from. The letters catch up in the chapters ahead."
+            },
             {
               "kind": "pause",
               "seconds": 1,
@@ -597,8 +1283,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The atoms",
+          "type": "notice",
+          "title": "What you've built — the atoms",
           "segments": [
             {
               "kind": "pause",
@@ -637,14 +1323,18 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Roots you now carry",
+          "type": "etymology",
+          "title": "The words, taken apart — roots you now carry",
           "segments": [
             {
               "kind": "pause",
               "seconds": 2,
               "perItem": false,
               "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Roots you now carry:"
             },
             {
               "kind": "speech",

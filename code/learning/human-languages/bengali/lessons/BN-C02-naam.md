@@ -2,10 +2,11 @@
 schema_version: 2
 id: BN-C02-naam
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 70
-chapter: 2
+sequence: 170
+chapter: 3
 type: word
 headword: নাম
+romanization: "nām"
 gloss: name
 concept_tag: WORD-NAME
 prerequisites: []
@@ -44,7 +45,7 @@ the long-*ā* sign overrides the inherent *ô*, so it is *nām*, not "nôm."
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C02-NAAM-01] -->
 
-**নাম** (*nām*, "name") ← Sanskrit **নামন্** (*nāman*), from Proto-Indo-European
+**নাম** (*nām*, "name") ← Sanskrit *nāman*, from Proto-Indo-European
 **\*h₃nómn** (its final *n* syllabic) — the *same* ancient root as English **name**, Latin *nōmen*
 (English **noun**, **nom**inate), and Greek *onoma*. Bengali *nām* and English
 *name* are cousins from before either language existed — one of the clearest

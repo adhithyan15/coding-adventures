@@ -1,19 +1,23 @@
 {
   "language": "telugu",
   "chapter": 4,
-  "sourceHash": "fnv1a64:eec23ac55024fea5",
+  "sourceHash": "fnv1a64:b4d22d167e3782af",
   "lessonIds": [
+    "TE-S123-letter-dda",
     "TE-C04-vellu",
+    "TE-S145-digit-6",
     "TE-C04-velli-vastaanu",
     "TE-C04-reepu-kaluddaam",
+    "TE-S113-letter-pa",
     "TE-C04-malli-kaluddaam",
+    "TE-S146-digit-7",
     "TE-C04-practice"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 0,
   "text": "telugu/narration/ch04.txt",
   "json": "telugu/narration/ch04.json",
-  "textHash": "fnv1a64:07eccf956778636e",
-  "jsonHash": "fnv1a64:eeb697cc2726f572",
+  "textHash": "fnv1a64:d04114a2598e873c",
+  "jsonHash": "fnv1a64:8cd0da5bc0994020",
   "findings": []
 }

@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S115-letter-i
 spine_node: SPINE-MEET-GREET
-sequence: 396
+sequence: 333
 delivery: script
-chapter: 11
+chapter: 6
 type: writing
 headword: "ಇ"
 gloss: the single character ಇ — recognised inside words you already say

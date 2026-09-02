@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 3,
-  "sourceHash": "fnv1a64:166630fbb1319806",
+  "sourceHash": "fnv1a64:f10e4a448a2a9a7a",
   "lessonIds": [
     "AR-W07-hook-family-ha-kha",
     "AR-W08-kaf-and-ra",
@@ -18,6 +18,6 @@
   "text": "arabic/narration/ch03.txt",
   "json": "arabic/narration/ch03.json",
   "textHash": "fnv1a64:282b8c0f141baf92",
-  "jsonHash": "fnv1a64:9ec7fb59b973f80d",
+  "jsonHash": "fnv1a64:c273d7eba4e88d80",
   "findings": []
 }

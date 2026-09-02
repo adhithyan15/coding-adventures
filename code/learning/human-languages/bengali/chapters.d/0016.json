@@ -1,24 +1,22 @@
 {
   "chapter": 16,
-  "title": "Hanging From the Head-Line, One Piece at a Time",
-  "label": "ch:bn-script-first",
-  "canDo": "I can write nine Bengali pieces from memory — six consonants, a vowel sign, its independent twin and the hasanta — and read the words for no and the greeting by assembling them from those pieces, including the greeting's conjunct.",
+  "title": "Tea, Water, Milk, and Rice",
+  "label": "ch:bn-tea-water-milk-rice",
+  "canDo": "I can offer or ask for tea, water, milk and rice politely in Bengali, reusing the respectful verb ending Chapter 7 already taught, and say which of the four words is a Chinese loan and which shares a root with a word two lessons later.",
   "spineNodes": [
-    "SPINE-MEET-GREET"
+    "SPINE-POLITE-REQUEST-REPAIR"
   ],
   "payoff": {
-    "lesson": "BN-W01-nomoshkar-read",
-    "kind": "reading",
-    "summary": "The greeting assembled from seven pieces the reader can each write from memory, including the conjunct and the letter written s but said sh, and introducing nothing new.",
+    "lesson": "BN-C10-bhat",
+    "kind": "production",
+    "summary": "The chapter closes on ভাত, whose Sanskrit root — √bhaj, 'to divide, to share' — will resurface two lessons later in a very different word. The reader offers all four drinks and rice politely in one breath (chā khān, jôl khān, dudh khān, bhāt khān), all built on the same respectful form of খাওয়া Chapter 7 already taught rather than a new 'please' word, which is how this chapter realizes SPINE-POLITE-REQUEST-REPAIR without one. It reaches back to rescue three thin Chapter 7 grammar atoms (হওয়া's future, আসা's genderlessness, যাওয়া's respect ladder) and সাহায্য's doubled-letter sound rule, none revisited since Chapter 7-9.",
     "assesses": [
-      "BN-SCRIPT-NOMOSHKAR-READ-01",
-      "BN-SCRIPT-NA-01",
-      "BN-SCRIPT-MA-01",
-      "BN-SCRIPT-SA-01",
-      "BN-SCRIPT-KA-01",
-      "BN-SCRIPT-HASANTA-01",
-      "BN-SCRIPT-AA-MATRA-01",
-      "BN-SCRIPT-RA-01"
+      "BN-LEX-C10-CHA-01",
+      "BN-GRAMMAR-C10-KHAN-REQUEST-02",
+      "BN-LEX-C10-JOL-01",
+      "BN-LEX-C10-DUDH-01",
+      "BN-SOUND-C10-DUDH-02",
+      "BN-LEX-C10-BHAT-01"
     ]
   }
 }

@@ -1,5 +1,20 @@
 # task-app backlog
 
+> **PAUSED — 2026-09-02.** TaskApp feature work is on hold behind the Mosaic
+> component program ([#14011](https://github.com/adhithyan15/coding-adventures/issues/14011),
+> `code/specs/mosaic-component-program-v1.md`).
+>
+> This app was built app-first, on raw kernel primitives: 166 styled parts, 47
+> raw `HostButton`s, 48 `If`/22 `Else`, and none of the 23 composed components
+> `mosaic-pkg-toolkit` already ships. The cost showed up as platform gaps
+> discovered too late — #13692 needed a runtime host environment that exists in
+> none of the nine backends (#14003), and specifying that surfaced a missing
+> adaptive container primitive.
+>
+> The queue below is still accurate and is not abandoned. TaskApp is rebuilt at
+> Phase 5, on components that are already proven in isolation. Until then the
+> app may be an empty screen, which is the intended trade.
+
 Working backlog for the [super-app roadmap](../../../specs/task-app-super-app.md). Ordered
 by priority — top item is next up. Re-prioritized whenever a new item is discovered mid-flight.
 Each item, once picked up, follows: spec-sync → tests → implementation → CHANGELOG → README →
@@ -41,7 +56,8 @@ links existing Mosaic work instead of duplicating it.
    enforce web/native presentation-contract parity. **Done in #13607.**
 10. **P1 — [#13522](https://github.com/adhithyan15/coding-adventures/issues/13522):**
    package installable local apps on supported platforms. Decomposed into the
-   independently verifiable platform and operations items below.
+   independently verifiable platform and operations items below. **Done — all
+   four children (#13616, #13627, #13652, #13679) shipped; closed 2026-08-31.**
 11. **P1 — [#13611](https://github.com/adhithyan15/coding-adventures/issues/13611):**
    ship verified portable Linux bundles for Qt, Flutter, and Compose Desktop.
    **Done in #13616.**
@@ -102,9 +118,74 @@ the next item is selected. Only one TaskApp completion-loop PR is active at a ti
 The design-fidelity gap (see `CHANGELOG.md`'s "re-closed the design-fidelity gap"
 entry, and Resolved below for icon/SVG assets, Board, richer Gantt, and Calendar) is
 now closed except for one low-priority polish item — see the Backlog section below.
-Picking this session's next-highest-priority item needs a fresh pass over
-`code/specs/task-app-super-app.md`'s remaining phases rather than continuing to work
-off this now-mostly-resolved list.
+
+The fresh pass this section used to defer to is now written down:
+[`code/specs/task-app-platform-completion-v1.md`](../../../specs/task-app-platform-completion-v1.md).
+It measures TaskApp against all nine Mosaic backends rather than against the
+super-app feature roadmap, and it found that three backends — `html`,
+`webcomponent`, and `paint` — contain **zero** TaskApp references: no test, no CI
+step, no artifact. The ordered queue below comes from that spec.
+
+**Tier A — finish the platforms TaskApp already claims.**
+
+1. **P1 [#13695](https://github.com/adhithyan15/coding-adventures/issues/13695):**
+   replace blank startup with loading and failure states. **Done for the web
+   host.** Split out while implementing it:
+   [#13984](https://github.com/adhithyan15/coding-adventures/issues/13984) —
+   generated native hosts still surface startup failure only through process and
+   log evidence, which needs a distinct surface in five backends and its own
+   emitted-control coverage. The host-neutral contract both share is
+   `code/specs/task-app-startup-states-v1.md`.
+2. **P1 [#13692](https://github.com/adhithyan15/coding-adventures/issues/13692):**
+   make the List-first shell usable in compact windows. **Blocked on
+   [#14003](https://github.com/adhithyan15/coding-adventures/issues/14003)
+   (UI48).** Picking this up revealed it was mis-scoped as a TaskApp change.
+   Mosaic has no way for *any* app to respond to its runtime environment:
+   mosstyle has no media queries, `--variant` selects a layout file at compile
+   time, none of the nine emitters observes viewport or pointer, and
+   `mosaic-app-runtime` has no environment concept. UI30 §6 deferred runtime
+   selection to an ML4 that was never built. Doing it TaskApp-side would mean a
+   bespoke `compact` slot plus per-backend host code — exactly the userland
+   conditional UI30 explicitly rejected, and it still could not vary a *style*,
+   so touch-sized tap targets would stay unexpressible. Specified generically as
+   `code/specs/UI48-host-environment.md`; TaskApp then becomes
+   `TaskApp.compact.mll` and nothing else.
+   Next Tier A item to pick up is therefore #13526, while UI48's ENV slices run
+   in parallel as kernel work.
+3. **P2 [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**
+   move the Vitest config to Vite's native ESM loading contract.
+4. **P2 [#13625](https://github.com/adhithyan15/coding-adventures/issues/13625):**
+   roll the changelog forward after each published release and gate against a
+   published version still marked Unreleased. `0.1.0` is in exactly that state
+   today.
+
+**Discovered while working Tier A, awaiting prioritization.**
+
+- **P1 [#13984](https://github.com/adhithyan15/coding-adventures/issues/13984):**
+  native startup failure states (above). Ranks with Tier A, since it is the same
+  defect on five platforms that ship release artifacts.
+- **P2 [#13982](https://github.com/adhithyan15/coding-adventures/issues/13982):**
+  a `packages.microsoft.com` 403 hard-fails required jobs through 10 unguarded
+  `apt-get update` calls across 5 workflows. Red-flagged a four-file docs PR.
+  Not taken yet: it edits three other products' release lanes, which is wider
+  blast radius than this loop should take unprompted. Workaround is a rerun.
+- **P2 [#13977](https://github.com/adhithyan15/coding-adventures/issues/13977):**
+  signing/notarization/installers, filed when #13522 closed while the README
+  still pointed at it.
+
+**Tier B — close the three unexercised backends.** Filed as work is picked up;
+see the spec for the completion bar each one has to clear.
+
+5. Static HTML snapshot gate (cheapest — no runtime, no interaction claim).
+6. Web Components host — the last *interactive* backend with no TaskApp presence.
+7. Paint visual-regression gate — the only mechanism that would catch a purely
+   visual regression.
+
+**Tier C — reach, stated rather than silently missing.** iOS compiles but does
+not run; Android has no Mosaic backend and belongs to #12017; signing,
+notarization, and installers are tracked under #13977 — filed because #13522
+closed on 2026-08-31 while the README still pointed readers at it, leaving the
+limitation recorded against a closed issue.
 
 ## Backlog (lower priority — Phase 10+, spec explicitly defers these)
 

@@ -97,7 +97,24 @@ it("teaches short o by meaning, then retrieves it before Chapter 8 uses it", () 
     (candidate) => candidate.language === "tamil",
   );
   expect(track?.neverTaughtGlyphs).toBe(0);
-  expect(track?.violations).toBe(29);
+  // Zero, and pinned AS zero rather than re-pinned to a smaller count. The 21
+  // that stood here were all one defect wearing twenty-one faces: chapters 1-6
+  // printed Tamil words in running prose and recap tables beside their own
+  // romanization, which the reader was never asked to decode and the script
+  // strand does not reach until much later. Those chapters are the sound-first
+  // opening, so the script came out of their bodies and stayed only in each
+  // lesson's own romanized headword, where the exposure rule already covers it.
+  // The last two -- ch9 and ch32 -- needed the letter உ, which was the one Tamil
+  // letter with no lesson at all; TA-S125-letter-u now teaches it before either.
+  // An exact zero, not a ceiling: a single new violation is a lesson asking the
+  // reader to decode something nobody taught, and there is no longer a backlog
+  // for it to hide inside.
+  expect(track?.violations).toBe(0);
+  // HL-C194: every Tamil headword now declares how to say it, so no headword is
+  // load-bearing script. Pinned at zero rather than at a count, because this is
+  // the one number in the closure report that an author can only make worse by
+  // shipping a lesson whose headword nobody can pronounce.
+  expect(track?.headwordsWithoutRomanization).toBe(0);
   expect(closure.violations.filter((violation) =>
     violation.language === "tamil" && (
       violation.glyphs.includes("ொ") ||

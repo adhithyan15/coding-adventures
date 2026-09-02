@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S117-letter-ya
 spine_node: SPINE-MEET-GREET
-sequence: 416
+sequence: 365
 delivery: script
-chapter: 13
+chapter: 8
 type: writing
 headword: "ಯ"
 gloss: the single character ಯ — recognised inside words you already say

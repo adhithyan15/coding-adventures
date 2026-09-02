@@ -2,11 +2,11 @@
 schema_version: 2
 id: BN-C03-practice
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 200
-chapter: 3
+sequence: 390
+chapter: 5
 type: practice
 headword: (dialogue)
-gloss: Chapter 3 recap — the how-are-you exchange
+gloss: Chapter 5 recap — the how-are-you exchange
 concept_tag: REVIEW
 prerequisites: [BN-C03-tumi-kemon-achho, BN-C03-bhalo, BN-C03-kono-bepar-na]
 sounds: []
@@ -27,7 +27,7 @@ variety: standard-bengali
 reviews_of: [BN-C03-kemon, BN-C03-tumi-kemon-achho, BN-C03-ami, BN-C03-bhalo, BN-C03-kono-bepar-na]
 ---
 
-# Chapter 3 — The how-are-you exchange
+# Chapter 5 — The how-are-you exchange
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C03-BHALO-01, BN-CONCEPT-C03-KEMON-01, BN-CONCEPT-C03-KONOBEPARNA-01, BN-CONCEPT-C03-TUMIKEMONACHHO-01] -->

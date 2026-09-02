@@ -9,27 +9,27 @@ headword: ਦਿਲ
 romanization: dil
 gloss: heart — a Persian loan, not the Sanskrit word Punjabi's other body parts have all used
 concept_tag: PA-BODY-HEART
-prerequisites: [PA-C12-nakk]
+prerequisites: [PA-C12-nakk, PA-S10-addak-dhadda, PA-S13-pairin-bindi, PA-S05-babba-lalla-hora, PA-S09-dulainkar-oora]
 sounds: [dental-da]
 roots: [persian-dil, pie-kerd-heart]
 etymology_hook: ਦਿਲ is borrowed from Classical Persian dil, from Proto-Iranian, ultimately from the Proto-Indo-European root *kerd-, "heart" — the very same root that gives English heart and Sanskrit hṛdaya, but Punjabi's own everyday word for heart arrived as a Persian loan, not by inheriting Sanskrit's version of that shared root.
 duration:
   max_seconds: 265
 requires:
-  knowledge: [PA-LEX-NAKK, PA-LEX-AKKH, PA-LEX-KANN, PA-LEX-DOST, PA-ETYMON-DOST-CHOOSE]
+  knowledge: [PA-LEX-NAKK, PA-LEX-AKKH, PA-LEX-KANN, PA-LEX-DOST, PA-ETYMON-DOST-CHOOSE, PA-SCRIPT-RECOG-ADDAK-01, PA-SCRIPT-RECOG-DHA-01, PA-SCRIPT-RECOG-SHA-01, PA-SCRIPT-RECOG-DULAINKAR-01, PA-SCRIPT-RECOG-LA-01, PA-SCRIPT-RECOG-HORA-01]
 introduces:
   knowledge: [PA-LEX-DIL, PA-ETYMON-DIL-HEART]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: [PA-CULTURE-DIL-EVERYDAY-HRIDAYA-LITERARY-REGISTER-01]
 practises:
-  knowledge: [PA-LEX-DIL, PA-ETYMON-DIL-HEART, PA-LEX-NAKK, PA-LEX-AKKH, PA-LEX-DOST, PA-ETYMON-DOST-CHOOSE]
+  knowledge: [PA-LEX-DIL, PA-ETYMON-DIL-HEART, PA-LEX-NAKK, PA-LEX-AKKH, PA-LEX-DOST, PA-ETYMON-DOST-CHOOSE, PA-SCRIPT-RECOG-ADDAK-01, PA-SCRIPT-RECOG-DHA-01, PA-SCRIPT-RECOG-SHA-01, PA-SCRIPT-RECOG-DULAINKAR-01, PA-SCRIPT-RECOG-LA-01, PA-SCRIPT-RECOG-HORA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [PA-C12-nakk, PA-C11-dost]
+reviews_of: [PA-C12-nakk, PA-C11-dost, PA-S10-addak-dhadda, PA-S13-pairin-bindi, PA-S05-babba-lalla-hora, PA-S09-dulainkar-oora]
 ---
 
 # ਦਿਲ — the one body word that is not Sanskrit
@@ -46,7 +46,7 @@ from Sanskrit. This one breaks the pattern the same way **ਦੋਸਤ** once di
 > **ਦਿਲ** — *dil* — **heart**
 
 ## The letters in this word
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-RECOG-ADDAK-01, PA-SCRIPT-RECOG-DHA-01, PA-SCRIPT-RECOG-SHA-01] -->
 
 **ਦ** *d*, **ਿ** short *i*, **ਲ** *l*. Every letter already yours, from
 **ਦੁੱਧ** and **ਲੈਣਾ**.
@@ -77,7 +77,7 @@ from Sanskrit the way *akkh* and *nakk* did.
 - [YOU RECALL: the other Persian loan this book has taught for a person you know (**dost**)]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-DIL, PA-ETYMON-DIL-HEART, PA-LEX-NAKK] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-DIL, PA-ETYMON-DIL-HEART, PA-LEX-NAKK, PA-SCRIPT-RECOG-DULAINKAR-01, PA-SCRIPT-RECOG-LA-01, PA-SCRIPT-RECOG-HORA-01] -->
 <!-- hl-activity: {"id":"PA-C13-dil-source","kind":"text","assesses":["PA-ETYMON-DIL-HEART"],"prompt":"Is dil, Punjabi's everyday word for heart, inherited from Sanskrit or borrowed from Persian?","answer":"borrowed from Persian","accepted":["persian","borrowed persian","persian loan"],"feedback":{"correct":"Right: dil is a Persian loan; Sanskrit's own word, hṛdaya, survives in Punjabi only as a formal borrowing.","incorrect":"Borrowed from Persian. Sanskrit's word, hṛdaya, is still there, but only in formal, literary use."},"response_seconds":8} -->
 
 [PAUSE 3s] Is *dil* inherited from Sanskrit or borrowed from Persian?

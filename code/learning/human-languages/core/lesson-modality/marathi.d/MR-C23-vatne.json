@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C23-vatne",
     "language": "marathi",
-    "chapter": 23,
-    "sequence": 930,
+    "chapter": 27,
+    "sequence": 1130,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:d6d411aa7c0a742c",
+    "sourceHash": "fnv1a64:6f7c8eb219a278f1",
     "detachableSegments": [
       "The letters in this word"
     ]

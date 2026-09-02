@@ -9,11 +9,11 @@ headword: ಬರೆ
 gloss: to write, to draw — an old Dravidian word for scratching a line, and the third proof of the sound law that gave Kannada its b
 romanization: bare
 concept_tag: VERB-WRITE
-prerequisites: [KA-C33-oodu, KA-C32-baa, KA-C07-numbers-6-10, KA-C20-havamana, KA-C22-hasiru-haladi]
+prerequisites: [KA-C33-oodu, KA-C32-baa, KA-C07-hattu, KA-C20-havamana, KA-C22-hasiru-haladi]
 sounds: [kannada-ba, kannada-vowel-sign-e]
 roots: [proto-dravidian-war-draw-line, proto-dravidian-v-to-b, dravidian-p-to-h]
 etymology_hook: "ಬರೆ goes back to a Dravidian *warV- 'to scratch, to draw lines' — Tamil வரை varai, Malayalam വരയ്ക്കുക varaykkuka and Telugu (వ)రాయు (v)rāyu are the same word, all still meaning 'draw' as readily as 'write' — and Tamil's v against Kannada's b is the very law that gave ಬಾ bā for வா vā and ಬಾಯಿ bāyi for வாய் vāy, the second of Kannada's two front-of-the-word sound laws beside p → h"
-reviews_of: [KA-C33-oodu, KA-C33-artha-maadiko, KA-C33-yocisu, KA-C32-baa, KA-C32-tinnu, KA-C32-noodu, KA-C07-numbers-6-10, KA-C22-hasiru-haladi, KA-C20-havamana]
+reviews_of: [KA-C33-oodu, KA-C33-artha-maadiko, KA-C33-yocisu, KA-C32-baa, KA-C32-tinnu, KA-C32-noodu, KA-C07-hattu, KA-C22-hasiru-haladi, KA-C20-havamana]
 duration:
   max_seconds: 295
 requires:

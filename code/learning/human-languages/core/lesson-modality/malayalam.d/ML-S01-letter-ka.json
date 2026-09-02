@@ -3,7 +3,7 @@
     "id": "ML-S01-letter-ka",
     "language": "malayalam",
     "chapter": 6,
-    "sequence": 335,
+    "sequence": 325,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:3bc0b99bfa35c9a5",
+    "sourceHash": "fnv1a64:5347868dcd7babfe",
     "detachableSegments": [
       "Script you'll notice: ക",
       "Writing: ക — copy what you see"

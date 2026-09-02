@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 23,
-  "sourceHash": "fnv1a64:bbbeb2717a06a089",
+  "sourceHash": "fnv1a64:7dd5ab676d098936",
   "lessonIds": [
     "TE-C23-roju",
     "TE-S126-letter-nna"
@@ -10,7 +10,7 @@
   "drivablePrefix": 1,
   "text": "telugu/narration/ch23.txt",
   "json": "telugu/narration/ch23.json",
-  "textHash": "fnv1a64:9eb44147b2b75507",
-  "jsonHash": "fnv1a64:0deb4e9fa011af38",
+  "textHash": "fnv1a64:14687f3c869e794b",
+  "jsonHash": "fnv1a64:e6b53fee60f0e8f0",
   "findings": []
 }

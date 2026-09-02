@@ -11,8 +11,26 @@
   "payoff": {
     "lesson": "TE-C01-practice",
     "kind": "task",
-    "summary": "Complete TE-C01-practice, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in Telugu, recognize the reply, and choose an appropriate response.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "The greetings and the words that oil a first conversation — and, taught through them, how to read the Telugu script and how Telugu sits inside the Dravidian family. Each word introduces the letters it needs, so you learn to read it and understand it at once: నమస్కారం · ధన్యవాదములు · అవును · లేదు · సరే.",
+    "assesses": [
+      "TE-LEX-C01-AVUNU-01",
+      "TE-ETYMON-C01-AVUNU-02",
+      "TE-GRAMMAR-C01-AVUNU-03",
+      "TE-LEX-C01-DHANYAVADAMULU-01",
+      "TE-ETYMON-C01-DHANYAVADAMULU-02",
+      "TE-GRAMMAR-C01-DHANYAVADAMULU-03",
+      "TE-LEX-C01-LEDU-01",
+      "TE-ETYMON-C01-LEDU-02",
+      "TE-GRAMMAR-C01-LEDU-03",
+      "TE-LEX-C01-NAMASKARAM-01",
+      "TE-ETYMON-C01-NAMASKARAM-02",
+      "TE-PRAGMATICS-C01-NAMASKARAM-03",
+      "TE-LEX-C01-SARE-01",
+      "TE-ETYMON-C01-SARE-02",
+      "TE-GRAMMAR-C01-SARE-03",
+      "TE-SCRIPT-RECOG-03",
+      "TE-SCRIPT-RECOG-07",
+      "TE-SCRIPT-RECOG-120"
+    ]
   }
 }

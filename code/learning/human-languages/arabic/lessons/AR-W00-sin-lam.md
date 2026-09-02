@@ -42,8 +42,10 @@ left**, so the first shape waits on the right.
 ## Script — recall sīn and add lām
 <!-- hl-knowledge: introduces=[AR-SCRIPT-SIN-LAM-02]; assesses=[AR-C01-SALAM-01] -->
 
-- **س** is *sīn*, the *s* sound you are retrieving from lesson one.
-- **ل** is *lām*, the *l* sound. Notice its tall upright and low curve.
+- **س** is *sīn*, the *s* sound you are retrieving from lesson one. From
+  Phoenician **shin** ("tooth") — and the shape really is a row of teeth.
+- **ل** is *lām*, the *l* sound. Notice its tall upright and low curve. From
+  Phoenician **lāmed** ("ox-goad") — ancestor of Greek *lambda* and Latin **L**.
 
 Slide a finger from right to left under **س ل** and say *s — l*. Do not build
 the whole word yet.

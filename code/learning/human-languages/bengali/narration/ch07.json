@@ -2,25 +2,34 @@
   "version": 1,
   "language": "bengali",
   "chapter": 7,
-  "title": "The Core Verbs",
-  "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:1d694b233788553e",
+  "title": "Farewells",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:8c9f4a877c6aee6d",
   "lessons": [
     {
-      "id": "BN-C07-howa",
-      "sequence": 400,
-      "title": "হওয়া (hôwā) — \"to be,\" and the be-verb it stands beside",
-      "headword": "হওয়া",
-      "romanization": "hôwā",
-      "gloss": "to be, to become — the second of Bengali's two be-verbs, and the one that does what আছে cannot",
+      "id": "BN-C04-abar",
+      "sequence": 460,
+      "title": "আবার (ābār) — \"again,\" the seed of \"see you again\"",
+      "headword": "আবার",
+      "romanization": "ābār",
+      "gloss": "again",
       "script": "bengali",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:875d94baecd764c8",
-      "notice": null,
+      "sourceHash": "fnv1a64:0eb8a80ffabb5096",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,22 +44,18 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 2 said \"my name Arun\" with no verb at all. Chapter 3 put one back for \"how are you.\" Both were right, and this verb is why."
+              "text": "One small word turns a goodbye from \"farewell\" into \"till next time.\""
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know: হওয়া",
+          "type": "script",
+          "title": "The letters in this word",
           "segments": [
             {
               "kind": "speech",
-              "text": "হওয়া — hôwā — to be, to become."
-            },
-            {
-              "kind": "speech",
-              "text": "আমি হই (āmi hôi), \"I am, I become.\" সে হয় (se hôy), \"he is.\" Its future is already in your mouth: হবে (hôbe) is the \"will happen\" inside Chapter 4's dækhā hôbe."
+              "text": "আ (independent ā) + বা (bā) + র (r) becomes আবার (ābār)."
             }
           ]
         },
@@ -61,48 +66,12 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "হওয়া (hôwā) is Sanskrit √ভূ (√bhū, \"to become\") with the bh- worn down to a plain h-: bhavati becomes Prakrit hoï becomes Bengali hô-. The root is PIE bʰuH-, \"to grow, to become,\" and English owns two of its children outright — be and been. Latin built fuī (\"I was\") and futūrus on it, which is English future; Greek built phúsis, \"growth, nature,\" which is physics."
+              "text": "আবার (ābār, \"again, once more\") is a native Indo-Aryan adverb with no tidy English cognate, but a familiar job: it turns a parting into a promise. Chapter 1 gave you আসি (āshi, \"I'll come [again]\") as goodbye; add ābār and you can say outright \"we'll meet again.\""
             }
           ]
         },
         {
           "index": 3,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: হ, and the ওয়া that ends a Bengali verb",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "হ is a soft, breathed h carrying Bengali's inherent vowel — hô, not ha. ওয়া (-wā) is the tail every dictionary-form verb wears; you will meet it again on খাওয়া (khāwā) and যাওয়া (jāwā)."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "grammar",
-          "title": "Grammar Lens: two be-verbs, and one of them is unfinished",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "what you mean",
-                "what Bengali uses"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "what you mean: my name is Arun. what Bengali uses: no verb at all.",
-                "what you mean: I have a book; it is here. what Bengali uses: আছে (āchhe).",
-                "what you mean: he will be a teacher. what Bengali uses: হবে (hôbe)."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "আছ-, the verb behind Chapter 3's kemon āchho, means being present. But it is unfinished: it has a present and a past, and nothing else at all. Push it into the future and it stops dead — so Bengali picks up হ- (hôbe), or Chapter 5's থাকা (āmi thākbo, \"I'll be there\"). One job, two verbs, split down the middle."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -115,34 +84,25 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hôwā\" — be, become — then \"āmi hôi\"",
+              "instruction": "\"ābār\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hôwā\" — be, become — then \"āmi hôi\"]"
+              "source": "[YOU SAY: \"ābār\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the future you already knew — \"hôbe … dækhā hôbe\"",
+              "instruction": "what it adds to a goodbye (\"again\")",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the future you already knew — \"hôbe … dækhā hôbe\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "which verb for \"I have a book,\" and which for \"he will be a teacher\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: which verb for \"I have a book,\" and which for \"he will be a teacher\"]"
+              "source": "[YOU SAY: what it adds to a goodbye (\"again\")]"
             }
           ]
         },
         {
-          "index": 6,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -154,27 +114,36 @@
             },
             {
               "kind": "speech",
-              "text": "Which Sanskrit root is hôwā, and which two English words are its brothers? (√bhū, \"to become\" — be and been.) What can আছ- not do? (Anything past a present and a past — it has no future of its own.) So what does Bengali reach for instead? (হবে, or থাকা.) Next: one verb, three levels of respect."
+              "text": "What does ābār mean, and what does it do to a farewell? (\"Again\"; it makes the parting a promise of return.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "BN-C07-jaowa",
-      "sequence": 410,
-      "title": "যাওয়া (jāwā) — \"to go,\" and the respect that rides on the ending",
-      "headword": "যাওয়া",
-      "romanization": "jāwā",
-      "gloss": "to go — and the verb ending that carries how much respect you are paying",
+      "id": "BN-C04-dekha-hobe",
+      "sequence": 470,
+      "title": "দেখা হবে (dækhā hôbe) — \"(we) will meet\"",
+      "headword": "দেখা হবে",
+      "romanization": "dækhā hôbe",
+      "gloss": "(we) will meet (lit. \"seeing will happen\")",
       "script": "bengali",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:02aa3ee59e96b202",
-      "notice": null,
+      "sourceHash": "fnv1a64:afb2b5b5960fe99b",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -189,22 +158,18 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 2 gave you three different words for \"you.\" It did not tell you the rest of the bill: each one bends the verb a different way too."
+              "text": "A future-tense phrase — the other half of \"see you again,\" built in a way English never would."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know: যাওয়া",
+          "type": "script",
+          "title": "The letters in this word",
           "segments": [
             {
               "kind": "speech",
-              "text": "যাওয়া — jāwā — to go."
-            },
-            {
-              "kind": "speech",
-              "text": "আমি যাই (āmi jāi), \"I go.\" Same -i \"I\" ending as Chapter 5's bôli, on the same -wā dictionary form you met a moment ago."
+              "text": "দেখা (dækhā, \"seeing\") = দে (dæ) + খা (khā). হবে (hôbe, \"will be/happen\") = হ (hô) + বে (be)."
             }
           ]
         },
@@ -215,52 +180,23 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "যাওয়া (jāwā) is Sanskrit √যা (√yā, \"to go, to travel\"), and the whole northern family walks on it: Hindi jānā, Marathi jāṇe, Gujarati javũ, Punjabi jāṇā. Sanskrit's y- hardened to a j- sound right across eastern Indo-Aryan, which is why Bengali still writes the y-letter য but says j."
-            },
-            {
-              "kind": "speech",
-              "text": "Deeper than Sanskrit it goes to PIE yeh₂-, \"to travel\" — and here is an honest limit: English kept no everyday word from that root. The nearest living cousin is Lithuanian jóti, \"to ride.\" A fake English cousin here would be worse than none."
+              "text": "দেখা হবে (dækhā hôbe) literally means \"[a] seeing will happen\" — dækhā (the noun \"seeing,\" from দেখা dækhā \"to see\") + hôbe (\"will be/happen,\" the future of হওয়া hôwā, \"to be, to become\"). Bengali says \"a meeting will occur\" rather than \"we will meet\" — an impersonal, gentle way to promise reunion. The verb hôwā (\"to be/become\") is the same one behind āchhā's cousin, and its root ভূ / হ ties (distantly) to English be."
             }
           ]
         },
         {
           "index": 3,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: য",
+          "type": "grammar",
+          "title": "Grammar Lens: the impersonal future",
           "segments": [
             {
               "kind": "speech",
-              "text": "য is the letter Sanskrit reads as y; Bengali reads it as j, like জ. So a written yā- is a spoken jā- — an un-shift worth keeping, since it disguises dozens of familiar Sanskrit words."
+              "text": "Many Bengali \"we'll…\" expressions use this noun + hôbe (\"…will happen\") shape: dækhā hôbe (\"[a] seeing will happen\"), kôthā hôbe (\"[a] talk will happen\"). No \"we,\" no active verb — the event itself is the subject."
             }
           ]
         },
         {
           "index": 4,
-          "type": "grammar",
-          "title": "Grammar Lens: the respect is not in the pronoun, it is in the ending",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "who you are speaking to",
-                "\"you go\""
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "who you are speaking to: তুই (tui, intimate). \"you go\": যাস (jāsh).",
-                "who you are speaking to: তুমি (tumi, familiar). \"you go\": যাও (jāo).",
-                "who you are speaking to: আপনি (āpni, respectful). \"you go\": যান (jān)."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Three endings, one verb. And the same grading runs on into the third person: সে যায় (se jāy) is \"he goes,\" তিনি যান (tini jān) is \"he goes\" said of someone you respect — the very ending আপনি takes. Chapter 5 showed that the ending already means \"I,\" so the pronoun can be dropped. The register cannot. Choose jāsh or jān and you have placed yourself socially, pronoun or no pronoun."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -273,34 +209,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"jāwā\" — go — then \"āmi jāi\"",
+              "instruction": "\"dækhā hôbe\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"jāwā\" — go — then \"āmi jāi\"]"
+              "source": "[YOU SAY: \"dækhā hôbe\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the ladder — \"jāsh … jāo … jān\"",
+              "instruction": "its literal meaning (\"[a] seeing will happen\")",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the ladder — \"jāsh … jāo … jān\"]"
+              "source": "[YOU SAY: its literal meaning (\"[a] seeing will happen\")]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two third persons — \"se jāy … tini jān\"",
+              "instruction": "the verb \"to see\" inside it (dækhā)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two third persons — \"se jāy … tini jān\"]"
+              "source": "[YOU SAY: the verb \"to see\" inside it (*dækhā*)]"
             }
           ]
         },
         {
-          "index": 6,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -312,26 +248,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give the three \"you go\" forms and who each is for. (Jāsh intimate, jāo familiar, jān respectful.) If you drop the pronoun, is the respect dropped too? (No — it is in the ending, and cannot be dodged.) Does English have a living cousin of this root? (No — Lithuanian jóti is as close as it gets.) Next: the verb that asks nothing about who you are."
+              "text": "What does dækhā hôbe literally say, and what is odd (to English ears) about it? (\"A seeing will happen\"; it is impersonal — the event is the subject, not \"we.\")"
             }
           ]
         }
       ]
     },
     {
-      "id": "BN-C07-asha",
-      "sequence": 420,
-      "title": "আসা (āsā) — \"to come,\" the verb that never asks who you are",
-      "headword": "আসা",
-      "romanization": "āsā",
-      "gloss": "to come — the verb that never asks whether a man or a woman is speaking",
+      "id": "BN-C04-abar-dekha-hobe",
+      "sequence": 480,
+      "title": "আবার দেখা হবে (ābār dækhā hôbe) — \"we'll meet again\"",
+      "headword": "আবার দেখা হবে",
+      "romanization": "ābār dækhā hôbe",
+      "gloss": "we'll meet again (goodbye)",
       "script": "bengali",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ba19014092357d3",
+      "sourceHash": "fnv1a64:e5d7d5b835c3ebcd",
       "notice": null,
       "blocks": [
         {
@@ -347,74 +283,23 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 1's goodbye, āshi, was one form of this verb. Here is the whole of it — and the one question it refuses to ask you."
+              "text": "The warm, everyday goodbye — the fuller cousin of Chapter 1's āshi."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know: আসা",
+          "type": "etymology",
+          "title": "The phrase, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "আসা — āsā — to come."
-            },
-            {
-              "kind": "speech",
-              "text": "আমি আসি (āmi āsi), \"I come\" — the farewell you already own. সে আসে (se āse), \"he comes.\" আপনি আসেন (āpni āsen), with last lesson's respectful ending."
+              "text": "আবার দেখা হবে = আবার (ābār, \"again\") + দেখা হবে (dækhā hôbe, \"[a] seeing will happen\") — \"we'll meet again\" (literally \"again a seeing will happen\"). Chapter 1 gave you the tender আসি (āshi, \"I'll come [again]\"), the \"promise of return\" goodbye; ābār dækhā hôbe is its warm, explicit form. It is the sibling of the whole subcontinent's parting habit (Hindi phir milenge, Tamil pōy varugiṟēṉ): never a blunt \"goodbye,\" always a return promised."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The আ- in front is Sanskrit's ā-, \"hither, toward\" — the very prefix that turns going into coming. Hindi's ānā is that ā- welded onto yā-, the go-verb of the last lesson: \"go, but this way.\" Bengali shows the same prefix on a different stem, and the honest position on that stem is that its history is unsettled; this book will not invent one for it."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: স",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "স is written for s and spoken, in this word, as sh — Bengali's standing s becomes sh tilt, the same one that makes namaskāra into nômoshkar. So আসি is āshi, not āsi, though the dictionary form is romanized āsā."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "grammar",
-          "title": "Grammar Lens: no gender, not here, not anywhere",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "language",
-                "\"I come,\" man / woman"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "language: Hindi. \"I come,\" man / woman: maiṁ ātā hūṁ / maiṁ ātī hūṁ.",
-                "language: Marathi. \"I come,\" man / woman: mī yeto / mī yete.",
-                "language: Bengali. \"I come,\" man / woman: āmi āsi — one form."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Its sisters make you declare your gender to say the plainest thing in the world. Bengali does not. And this is not a shortcut for beginners that the grammar takes back later: Bengali has no grammatical gender at all. Not on verbs, not on nouns, not on adjectives. The past behaves the same way — আমি এলাম (āmi elām), \"I came,\" is one form for everyone, where Gujarati, which hides gender in its present, brings it straight back in huṁ āvyo / huṁ āvī."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -427,34 +312,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"āsā\" — come — then \"āmi āshi\"",
+              "instruction": "the warm goodbye — ābār dækhā hôbe",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"āsā\" — come — then \"āmi āshi\"]"
+              "source": "[YOU SAY: the warm goodbye — *ābār dækhā hôbe*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the neighbours splitting in two — \"ātā … ātī\" and \"yeto … yete\"",
+              "instruction": "the two pieces (ābār + dækhā hôbe)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the neighbours splitting in two — \"ātā … ātī\" and \"yeto … yete\"]"
+              "source": "[YOU SAY: the two pieces (*ābār* + *dækhā hôbe*)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "Bengali not splitting — \"āmi āsi\" — and its past, \"āmi elām\"",
+              "instruction": "the Chapter-1 goodbye it deepens (āshi)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: Bengali not splitting — \"āmi āsi\" — and its past, \"āmi elām\"]"
+              "source": "[YOU SAY: the Chapter-1 goodbye it deepens (*āshi*)]"
             }
           ]
         },
         {
-          "index": 6,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -466,27 +351,36 @@
             },
             {
               "kind": "speech",
-              "text": "What does the আ- on this verb mean, and where else have you met it? (Hither, toward — it is the ā- inside Hindi's ānā.) How many forms of \"I come\" does a Bengali speaker need? (One — āmi āsi, whoever is talking.) Is that true of the nouns too? (Yes — Bengali has no grammatical gender anywhere.) Next: a verb that swallows more than food."
+              "text": "What does ābār dækhā hôbe literally say, and how does it relate to āshi? (\"Again a seeing will happen\"; it is the fuller, explicit form of Ch.1's \"promise of return\" goodbye.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "BN-C07-khaowa",
-      "sequence": 430,
-      "title": "খাওয়া (khāwā) — \"to eat,\" and the drinking it also does",
-      "headword": "খাওয়া",
-      "romanization": "khāwā",
-      "gloss": "to eat — and, in everyday Bengali, to drink as well",
+      "id": "BN-C04-kal-dekha-hobe",
+      "sequence": 490,
+      "title": "কাল দেখা হবে (kāl dækhā hôbe) — \"see you tomorrow\"",
+      "headword": "কাল দেখা হবে",
+      "romanization": "kāl dækhā hôbe",
+      "gloss": "see you tomorrow (and the কাল puzzle)",
       "script": "bengali",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:4af6db76d104a4ea",
-      "notice": null,
+      "sourceHash": "fnv1a64:0a43bc1df2fbaf99",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -501,22 +395,18 @@
             },
             {
               "kind": "speech",
-              "text": "Every verb so far has meant roughly what its English gloss means. This one is wider than its gloss, and the extra width is the lesson."
+              "text": "A goodbye for tomorrow — built on a word that means both tomorrow and yesterday."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know: খাওয়া",
+          "type": "script",
+          "title": "The letters in this word",
           "segments": [
             {
               "kind": "speech",
-              "text": "খাওয়া — khāwā — to eat."
-            },
-            {
-              "kind": "speech",
-              "text": "আমি খাই (āmi khāi), \"I eat.\" আপনি খান (āpni khān), with the respectful ending from two lessons back."
+              "text": "কা (kā) + ল (l) becomes কাল (kāl). Two simple letters, one tricky word."
             }
           ]
         },
@@ -527,52 +417,12 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "খাওয়া (khāwā) is Sanskrit √খাদ্ (√khād, \"to chew, to bite\"), smoothed through Prakrit khā-. Every neighbour eats with it: Hindi khānā, Marathi khāṇe, Gujarati khāvũ, Punjabi khāṇā."
-            },
-            {
-              "kind": "speech",
-              "text": "Past Sanskrit the trail goes cold. Khād- has no secure Indo-European pedigree outside Indo-Aryan, so there is no English cousin here — and one will not be manufactured. Some roots are simply local, and saying so is part of the method."
+              "text": "কাল (kāl) means both \"tomorrow\" and \"yesterday\" — the day on either side of today — from Sanskrit কাল (kāla, \"time\"). (It is the very same kāla behind Hindi's kal and Punjabi's akāl \"timeless.\") Bengali trusts the verb's tense to tell which: kāl dækhā hôbe (future becomes \"tomorrow\"), kāl dækhā hôyechhilo (past becomes \"yesterday\"). So কাল দেখা হবে = \"tomorrow, a seeing will happen\" = \"see you tomorrow.\""
             }
           ]
         },
         {
           "index": 3,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: খ against ক",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "খ is kh: a k with a puff of breath behind it. Its plain partner ক (k) is the letter in Chapter 5's kāj. The puff is not decoration — it is the whole difference between two words, and Bengali gives each its own letter."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "grammar",
-          "title": "Grammar Lens: Bengali eats its drinks",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "Bengali",
-                "what it means"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "জল খাওয়া (jôl khāwā) means to drink water — \"water-eat\".",
-                "চা খাওয়া (chā khāwā) means to drink tea.",
-                "ওষুধ খাওয়া (oshudh khāwā) means to take medicine."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Hindi keeps a second verb, pīnā, for drinking. Bengali's everyday speech does not bother: whatever goes in the mouth is khāwā. There is a drink-verb — পান করা (pān kôrā), noun-plus-kôrā in exactly Chapter 5's kāj kôrā shape, built on Sanskrit √পা (√pā, \"to drink\"), whose Latin cousin pōtāre gives English potion and potable. But it belongs to writing and ceremony. Ask for tea in a Kolkata kitchen and you eat it."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -585,34 +435,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"khāwā\" — eat — then \"āmi khāi\"",
+              "instruction": "\"kāl dækhā hôbe\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"khāwā\" — eat — then \"āmi khāi\"]"
+              "source": "[YOU SAY: \"kāl dækhā hôbe\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the drinking Bengali eats — \"jôl khāwā … chā khāwā\"",
+              "instruction": "the puzzle — kāl means both tomorrow and yesterday",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the drinking Bengali eats — \"jôl khāwā … chā khāwā\"]"
+              "source": "[YOU SAY: the puzzle — *kāl* means both **tomorrow** and **yesterday**]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the formal drink-verb and its English cousins — \"pān kôrā … potion, potable\"",
+              "instruction": "the root and its cousins (kāla \"time\"; Hindi kal, Punjabi akāl)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the formal drink-verb and its English cousins — \"pān kôrā … potion, potable\"]"
+              "source": "[YOU SAY: the root and its cousins (*kāla* \"time\"; Hindi *kal*, Punjabi *akāl*)]"
             }
           ]
         },
         {
-          "index": 6,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -624,26 +474,26 @@
             },
             {
               "kind": "speech",
-              "text": "How do you say \"drink water\" in everyday Bengali? (জল খাওয়া — literally \"water-eat.\") Which Sanskrit root is khāwā, and does English share it? (√khād, \"to chew\" — and no, the root goes no further than Indo-Aryan.) Which verb would a formal text use for drinking, and what English words does its root reach? (পান করা, from √pā — English potion, potable.) Next: one spelling, two vowels."
+              "text": "What two opposite days does kāl mean, and what tells them apart? (Both tomorrow and yesterday; the verb's tense.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "BN-C07-dekha",
-      "sequence": 440,
-      "title": "দেখা (dækhā) — \"to see,\" and a vowel that moves under a fixed spelling",
-      "headword": "দেখা",
-      "romanization": "dækhā",
-      "gloss": "to see, to look — and the vowel that changes while the spelling stands still",
+      "id": "BN-C04-practice",
+      "sequence": 500,
+      "title": "Chapter 7 — The farewells",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "Chapter 7 recap — the farewells",
       "script": "bengali",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fdbc818ec1394d03",
+      "sourceHash": "fnv1a64:939546015db1b352",
       "notice": null,
       "blocks": [
         {
@@ -659,151 +509,94 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 4 buried this verb inside dækhā hôbe, \"a seeing will happen.\" Prised out on its own, it carries a sound rule that runs through every verb in this chapter."
+              "text": "No new words. Three ways to part — none of them a blunt \"goodbye.\""
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know: দেখা",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — the farewells",
           "segments": [
             {
-              "kind": "speech",
-              "text": "দেখা — dækhā — to see, to look."
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": true,
+              "source": "[PAUSE 1s each]"
             },
             {
-              "kind": "speech",
-              "text": "আমি দেখি (āmi dekhi), \"I see.\" সে দেখে (se dækhe), \"he sees.\" Read those two romanizations again — they are not the same vowel."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the tender Chapter-1 goodbye — āshi (\"I'll come [again]\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the tender Chapter-1 goodbye — *āshi* (\"I'll come [again]\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the fuller \"we'll meet again\" — ābār dækhā hôbe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the fuller \"we'll meet again\" — *ābār dækhā hôbe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"see you tomorrow\" — kāl dækhā hôbe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"see you tomorrow\" — *kāl dækhā hôbe*]"
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart",
+          "title": "The word, taken apart — the atoms",
           "segments": [
             {
-              "kind": "speech",
-              "text": "দেখা (dækhā) is traced to Sanskrit √দৃশ্ (√dṛś, \"to see\") through the Prakrit stem dekkha-; Hindi's dekhnā is the same word. Sanskrit built darśana, \"a viewing,\" on that root, and further back it is PIE derḱ-, \"to see clearly.\" Greek took it for dérkomai, \"I look,\" and for drákōn, the sharp-gazing serpent — which English borrowed as dragon. Bengali's \"see\" and England's dragons are one word, wearing very different clothes."
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"again\" and \"[a] seeing will happen\" (ābār, dækhā hôbe)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"again\" and \"[a] seeing will happen\" (*ābār*, *dækhā hôbe*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the word that means BOTH tomorrow and yesterday (kāl)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the word that means BOTH tomorrow and yesterday (*kāl*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what's odd about dækhā hôbe (impersonal — the event is the subject)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what's odd about *dækhā hôbe* (impersonal — the event is the subject)]"
             }
           ]
         },
         {
           "index": 3,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: দে, said two ways",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "দ is a soft dental d, tongue on the teeth. The vowel sign ে on it is written identically every time — but Bengali says it either as a close e (as in English bay) or an open æ (as in English bat), and the page will never tell you which."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "grammar",
-          "title": "Grammar Lens: the ending decides the vowel",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "Bengali",
-                "said"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "Bengali: আমি দেখি. said: dekhi — close e.",
-                "Bengali: সে দেখে. said: dækhe — open æ.",
-                "Bengali: তুমি দেখো. said: dækho — open æ."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "The rule: when the ending carries the high vowel -i, the stem vowel closes to e. Any other ending leaves it open at æ. That is vowel harmony, and the verb of the first lesson does it too — আমি হই (hôi, closed) against সে হয় (hôy, open). It is a rule your ear must carry alone, because the spelling never budges."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"dækhā\" — then the pair, \"dekhi … dækhe\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"dækhā\" — then the pair, \"dekhi … dækhe\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the same shift on the be-verb — \"hôi … hôy\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the same shift on the be-verb — \"hôi … hôy\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the root and its odd English relative — \"dṛś … dragon\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the root and its odd English relative — \"dṛś … dragon\"]"
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which ending closes the stem vowel to e? (The -i of \"I\" — dekhi, against dækhe and dækho.) Does the spelling record that? (No — দে is written the same either way; only the ear knows.) Which English animal shares this verb's root? (The dragon — Greek drákōn, from PIE derḱ-.) Next: the last verb, and the knowing English lost."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "BN-C07-jana",
-      "sequence": 450,
-      "title": "জানা (jānā) — \"to know,\" and the knowing English gave up",
-      "headword": "জানা",
-      "romanization": "jānā",
-      "gloss": "to know a fact — beside চেনা, the second knowing that English merged away",
-      "script": "bengali",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:9cee0df0ef154a25",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
+          "type": "notice",
+          "title": "What you've built — roots you now carry",
           "segments": [
             {
               "kind": "pause",
@@ -813,126 +606,20 @@
             },
             {
               "kind": "speech",
-              "text": "Six thousand years ago this verb and the English word you are reading it with were the same word. They still are. But Bengali kept a distinction English threw away."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: জানা",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "জানা — jānā — to know."
+              "text": "dækhā hôbe — \"[a] seeing will happen\"; the impersonal future."
             },
             {
               "kind": "speech",
-              "text": "আমি জানি (āmi jāni), \"I know.\" আপনি জানেন (āpni jānen), respectfully."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
+              "text": "kāl from kāla \"time\" (Hindi kal, Punjabi akāl)."
+            },
             {
               "kind": "speech",
-              "text": "জানা (jānā) is Sanskrit √জ্ঞা (√jñā, \"to know\"), the root under jñāna, \"knowledge.\" Behind it stands PIE ǵneh₃-, and English is full of its children: know and knowledge by the direct Germanic road; notice, recognize and cognition through Latin nōscere; gnosis and diagnosis through Greek gignṓskein. Bengali jāni and English know are one verb, separated only by time."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: জ্ঞ, the letter that lies",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Sanskrit writes the root with জ্ঞ, a knot of j and ñ. Bengali does not say jñ at all — it says gg, so jñāna comes out ggān. The plain verb spares you the knot: জানা (jānā) is simply জা + না, jā-nā."
+              "text": "āshi (Ch.1) — \"I'll come [again],\" the Bengali promise-of-return goodbye."
             }
           ]
         },
         {
           "index": 4,
-          "type": "grammar",
-          "title": "Grammar Lens: two knowings, and English has one word for both",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "Bengali",
-                "what it knows"
-              ],
-              "columns": 2,
-              "rowCount": 2,
-              "utterances": [
-                "Bengali: জানা (jānā). what it knows: a fact, or how to do something.",
-                "Bengali: চেনা (chenā). what it knows: a person or a place, by acquaintance."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "আমি জানি — \"I know\" (that it is so). আমি তাকে চিনি (āmi tāke chini) — \"I know him,\" meaning I am acquainted with him. Say jāni of a person and you have said you know facts about them, which is a colder thing."
-            },
-            {
-              "kind": "speech",
-              "text": "English once had this line and lost it; French still walks it as savoir against connaître, German as wissen against kennen, Spanish as saber against conocer. And listen to chini beside সে চেনে (se chæne): the same vowel harmony as the last lesson, on a brand-new verb."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"jānā\" — know — then \"āmi jāni\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"jānā\" — know — then \"āmi jāni\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the other knowing — \"āmi tāke chini\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the other knowing — \"āmi tāke chini\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the harmony again — \"chini … chæne\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the harmony again — \"chini … chæne\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the six verbs of this chapter — \"hôwā, jāwā, āsā, khāwā, dækhā, jānā\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the six verbs of this chapter — \"hôwā, jāwā, āsā, khāwā, dækhā, jānā\"]"
-            }
-          ]
-        },
-        {
-          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -944,7 +631,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which verb knows a person, and which knows a fact? (চেনা for people, জানা (jānā) for facts — the connaître / savoir line.) Name three English children of this root. (Know, notice, diagnosis — Germanic, Latin, Greek.) Why does chini close its vowel where chæne keeps it open? (Vowel harmony — the -i ending closes the stem vowel, as in dekhi.) That closes the chapter: six verbs, no gender on any of them, and the respect always sitting in the ending."
+              "text": "You're leaving a friend and expect to see them next week. Which goodbye fits, and how does Bengali phrase \"we'll meet\"? (Ābār dækhā hôbe; impersonally — \"a seeing will happen.\")"
             }
           ]
         }

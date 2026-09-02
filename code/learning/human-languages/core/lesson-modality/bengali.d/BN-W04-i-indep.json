@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-W04-i-indep",
     "language": "bengali",
-    "chapter": 19,
-    "sequence": 2010,
+    "chapter": 4,
+    "sequence": 270,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:642cc4b4291789eb",
+    "sourceHash": "fnv1a64:282bda3b6ffa199b",
     "detachableSegments": [
       "Script"
     ],

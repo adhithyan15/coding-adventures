@@ -1,13 +1,13 @@
 Urdu, chapter 6: Five Verbs at the Core.
-5 lessons. All 5 can be done entirely by ear.
+7 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 5.
+Lesson 1 of 7.
 ہونا (honā) — “to be,” and the ending every Urdu verb wears.
 
 Warm-up.
 [pause 2 seconds]
-You can already close an Urdu sentence with ہوں hūṅ — “am.” That small word is a fragment of something larger. Here is the whole verb it was broken off.
+You can already close an Urdu sentence with hūṅ — “am.” It is still spoken rather than written: its last shape is a nūn with no dot, and that letter arrives in the very next lesson. That small word is a fragment of something larger. Here is the whole verb it was broken off.
 
 You'll want to know first — one word.
 ہونا — honā — to be.
@@ -37,7 +37,47 @@ Which ending names an Urdu verb? (-nā.) What is left of honā once you take tha
 Sources: Basic Urdu: Personal Pronouns with “To Be”; Wiktionary: ہونا (honā).
 
 
-Lesson 2 of 5.
+Lesson 2 of 7.
+ں (nūn ghunna) — nūn with the dot taken off.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write ن. The deep bowl, a lift, and one dot placed low inside the curve.
+
+Script — the shape.
+ں (nūn ghunna).
+The same deep bowl you drew two chapters ago, swept right to left below the baseline — and then you stop. No lift. No dot.
+Every other letter so far was identified by what was added to it: nūn's dot, kāf's slash, the three teeth of sīn. This one is identified by what was taken away, and the taking away is the meaning. Its name is ں nūn ghunna, and ghunna is the Urdu word for a nasal hum.
+Here is the difference it makes. A dotted ن is a full consonant: your tongue touches the roof of your mouth and you say n. A dotless ں (nūn ghunna) asks for no consonant at all. It tells you to send the vowel before it through your nose and then stop. In maiṅ the tongue never lands.
+Two more facts and the letter is yours:
+ں (nūn ghunna) closes a word and appears nowhere else. Inside a word, that same nasal hum is carried by the ordinary dotted ن, which therefore does two jobs depending on where it stands — a real n in some words, a hum in others. Only at the end of a word does Urdu bother to spell the difference.
+Because it ends the word, ں (nūn ghunna) has one shape to learn and no joined faces.
+
+The letters in this word.
+Three words, all of them already in your mouth, none of them readable until now. From the right:
+میں ہیں نہیں.
+maiṅ "I" — haiṅ "are" — nahīṅ "no."
+The one to dwell on is نہیں. It is the word you learned for saying no, in the very first handful of words this book gave you, and it is four letters you can now name one by one: ن، ہ، ی، ں (nūn ghunna) — with a dotted nūn opening it and a dotless one closing it, doing two entirely different jobs in a single short word.
+
+Guided Practice.
+[once you have stopped driving — write: ں (nūn ghunna) — the deep bowl, and then nothing]
+[once you have stopped driving — write: میں, then ہیں, then نہیں]
+[your turn — say: maiṅ, letting the vowel hum and keeping your tongue down]
+[pause 8 seconds for the answer]
+[once you have stopped driving — point: at the two nūns in نہیں and say what each one does]
+[your turn — read: ہیں — and say why it ends on a hum rather than an n]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Write "no." (نہیں.) Write "I." (میں.) Does your tongue touch the roof of your mouth at the end of maiṅ? (No — the hum goes through the nose.)
+[question — say your answer, then pause 12 seconds]
+What is the difference between ن and ں (nūn ghunna)?
+
+
+Lesson 3 of 7.
 جانا (jānā) — “to go,” and two agreements in one sentence.
 
 Warm-up.
@@ -50,7 +90,8 @@ From the right edge: ج j, then ا long ā, then ن n, then ا long ā. The ج i
 
 Grammar Lens: the present tense agrees twice.
 “I go” in Urdu is two words after the pronoun, not one:
-میں جاتا ہوں — maiṅ jātā hūṅ — I go (man speaking) میں جاتی ہوں — maiṅ jātī hūṅ — I go (woman speaking).
+maiṅ jātā hūṅ — I go (man speaking) maiṅ jātī hūṅ — I go (woman speaking).
+The frame is printed the way you say it rather than the way it is spelled. The t of jātā and the ū of hūṅ both ride letters you have not been given yet, and a line you cannot decode is not reading practice.
 The first word is the stem jā- plus -tā. It says going, and it agrees with the gender and number of the person doing it: -tā for one man, -tī for one woman, -te for more than one man or for a respectful singular. The second word is hūṅ, which you already own, and it agrees with person — who is speaking.
 Two agreements, split across two words, in one short clause. English makes one agreement at most, and usually none. Say both Urdu lines and let the difference sit in the ear rather than on paper.
 
@@ -74,7 +115,7 @@ Which word in maiṅ jātā hūṅ carries gender? (Jātā — the one built on 
 Source: Wiktionary: جانا (jānā).
 
 
-Lesson 3 of 5.
+Lesson 4 of 7.
 آنا (ānā) — “to come,” which is “go” pointed back at you.
 
 Warm-up.
@@ -83,7 +124,7 @@ Say jānā, then its stem jā-. The opposite direction is the same verb wearing 
 
 You'll want to know first — one word.
 آنا — ānā — to come.
-From the right edge: آ, then ن n, then ا long ā. That first shape is alif madd — alif wearing a small wave — and it is how Urdu writes a long ā at the start of a word. It opens آپ āp too. Strip the -nā and the stem is ā-.
+From the right edge: آ, then ن n, then ا long ā. That first shape is alif madd — alif wearing a small wave — and it is how Urdu writes a long ā at the start of a word. It opens āp too, which you will be able to spell out once pe arrives. Strip the -nā and the stem is ā-.
 
 The word, taken apart — a prefix welded to a verb you know.
 ānā continues Sanskrit āyāti, and that word is two pieces: ā-, “toward,” plus yā-, “go.” So the Urdu verb for coming is, underneath, the verb for going aimed back at the speaker. “Go toward me” is “come.”
@@ -106,7 +147,53 @@ Which two pieces are hiding inside ānā? (Ā- “toward” and yā- “go.”) 
 Source: Wiktionary: آنا (ānā).
 
 
-Lesson 4 of 5.
+Lesson 5 of 7.
+ے (baṛī ye) — the big ye, and the end of the sentence.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write ی, then ہ, then ں (nūn ghunna). An S-curve, a loop, a bowl with no dot.
+
+Script — the shape.
+ے (baṛī ye).
+A wide, flat sweep. Start high on the right, drop through a long shallow curve that goes well below the baseline, and carry it a long way to the left, finishing flat — with no hook, no lift at the tip, and no dots.
+Its name is ے baṛī ye, "big ye," and the letter you already know, ی, is choṭī ye, "small ye." Two names, one family, and one test that separates them at a glance:
+ی choṭī ye is narrow and curls back up at its tip.
+ے baṛī ye is broad and runs out flat.
+There is a second difference, and it is about where each one lives. Small ye turns up anywhere in a word — opening it, in the middle, closing it. Big ye belongs to the end of a word and turns up nowhere else, which means you will never have to work out its middle face. It has none.
+Big ye carries a final e or ai sound.
+
+The letters in this word.
+Two letters, and the smallest word in Urdu that does real work:
+ہے.
+From the right: ہ, then ے (baṛī ye). Say it: hai — "is."
+That is the word you have been ending sentences with since you first said your name, four chapters ago. Read it now.
+Two more, both already in your ear:
+کیسے میرے.
+کیسے kaise — "how," with small ye in the middle and big ye at the end, so the pair sit in one word and you can see the difference for yourself. میرے mere — "my" before a plural, every letter of it now yours.
+
+What you've built.
+Twelve letters. Now read the first sentence this book ever gave you, whole, with nothing taken on trust:
+میرا نام... ہے.
+merā nām... hai — "my name is...". Every letter in it is one you can form: م، ی، ر، ا — ن، ا، م — ہ، ے (baṛī ye).
+
+Guided Practice.
+[once you have stopped driving — write: ے (baṛī ye) — wide, flat, below the line, no hook at the tip]
+[once you have stopped driving — write: ہے — and say hai]
+[your turn — read: کیسے — and point at the small ye and the big ye in turn]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: میرا نام... ہے — and say it with your own name in the gap]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which ye curls up at the tip? (Small ye, ی.) Which runs out flat? (Big ye, ے (baṛī ye).) Write "is." (ہے.)
+[question — say your answer, then pause 10 seconds]
+Where in a word does baṛī ye appear?
+
+
+Lesson 6 of 7.
 بولنا (bolnā) — “to speak,” and the two layers of Urdu.
 
 Warm-up.
@@ -116,21 +203,21 @@ Retrieve the opening without looking: shukriyā — jī hā̃ — nahī̃. Air-t
 You'll want to know first — one word.
 بولنا — bolnā — to speak.
 From the right edge: ب b, then و carrying o, then ل l, then ن n, then ا long ā. Strip the -nā and the stem is bol-.
-ب is new, and it is worth one careful second. Its body is a single low scoop with one dot below. You have already read پ p in آپ āp, and پ is that identical scoop with three dots below. Same skeleton, different dot count, different consonant. Urdu builds much of its alphabet this way, so counting dots is a real reading skill and not a fussy detail.
+ب is new, and it is worth one careful second. Its body is a single low scoop with one dot below. Hold that skeleton in mind: the very next chapter adds pe, which is the identical scoop with three dots below — the p you already say in āp. Same skeleton, different dot count, different consonant. Urdu builds much of its alphabet this way, so counting dots is a real reading skill and not a fussy detail.
 
 Grammar Lens: put it in the frame.
 The stem takes the same two-agreement frame as before:
-میں بولتا ہوں — maiṅ boltā hūṅ — I speak (man speaking) میں بولتی ہوں — maiṅ boltī hūṅ — I speak (woman speaking).
+maiṅ boltā hūṅ — I speak (man speaking) maiṅ boltī hūṅ — I speak (woman speaking).
 Nothing new is being learned there. That is the point of a stem: the machine is already built, and each verb just walks into it.
 
 The word, taken apart — where the trail goes cold.
 bolnā goes back to Prakrit bollaï, “speaks” — and then the trail stops. A link onward to Sanskrit brūte “speaks” has been proposed, but it is not settled, so treat it as a maybe rather than a fact.
-That plainness is the lesson. Urdu's everyday verbs are inherited Indo-Aryan and often short-rooted like this, while its formal and literary vocabulary was borrowed from Persian and Arabic and tends to be long, elegant, and easy to trace. Beside homely bolnā sits Persian-derived گفتگو guftagū, “conversation,” from Persian guftan, “to speak.” Both are fully Urdu. One is the floor of the house; the other is the ornament on it — and the flowing nastaʿlīq hand Urdu is traditionally written in belongs to that same Persian inheritance.
+That plainness is the lesson. Urdu's everyday verbs are inherited Indo-Aryan and often short-rooted like this, while its formal and literary vocabulary was borrowed from Persian and Arabic and tends to be long, elegant, and easy to trace. Beside homely bolnā sits Persian-derived guftagū, “conversation,” from Persian guftan, “to speak.” Both are fully Urdu. One is the floor of the house; the other is the ornament on it — and the flowing nastaʿlīq hand Urdu is traditionally written in belongs to that same Persian inheritance.
 
 Guided Practice.
 [your turn — say: bolnā — to speak]
 [pause 8 seconds for the answer]
-[your turn — count: ب one dot below, پ three dots below]
+[your turn — count: ب one dot below — and say what the three-dot version will be]
 [pause 8 seconds for the answer]
 [your turn — say: maiṅ boltā hūṅ, then maiṅ boltī hūṅ]
 [pause 8 seconds for the answer]
@@ -143,7 +230,7 @@ How many dots does ب carry, and where? (One, below.) How far back can bolnā be
 Sources: Zero Zabar: The Urdu alphabet; Wiktionary: بولنا (bolnā).
 
 
-Lesson 5 of 5.
+Lesson 7 of 7.
 جاننا (jānnā) — “to know,” a word English has been carrying all along.
 
 Warm-up.

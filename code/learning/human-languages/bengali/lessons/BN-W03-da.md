@@ -2,38 +2,38 @@
 schema_version: 2
 id: BN-W03-da
 spine_node: SPINE-MEET-GREET
-sequence: 1890
+sequence: 580
 delivery: script
-chapter: 18
+chapter: 9
 type: writing
 headword: দ
 romanization: "dô"
 gloss: "the consonant da — dental again, and voiced this time"
-prerequisites: [BN-W03-mukh-read]
+prerequisites: [BN-W04-pa]
 sounds: []
 roots: []
 etymology_hook: "The voiced partner of the dental t, made at the same place on the teeth, which is why an English d dropped into a Bengali word lands on a different letter for exactly the same reason an English t does."
 duration:
   max_seconds: 200
 requires:
-  knowledge: [BN-SCRIPT-TA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-MUKH-READ-01]
+  knowledge: [BN-SCRIPT-TA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-KHA-01]
 introduces:
   knowledge: [BN-SCRIPT-DA-01]
 practises:
-  knowledge: [BN-SCRIPT-TA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-MUKH-READ-01, BN-SCRIPT-DA-01]
+  knowledge: [BN-SCRIPT-TA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-KHA-01, BN-SCRIPT-DA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard
-reviews_of: [BN-W03-mukh-read, BN-W02-ta]
+reviews_of: [BN-W04-pa, BN-W02-ta]
 ---
 # দ — the consonant da
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-MUKH-READ-01, BN-SCRIPT-TA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-KHA-01, BN-SCRIPT-TA-01] -->
 
-[PAUSE 2s] Read **মুখ**, then write **ত** and say where the tongue goes for it.
+[PAUSE 2s] Write **খ** and **প**, then write **ত** and say where the tongue goes for it.
 
 ## Script
 <!-- hl-knowledge: introduces=[BN-SCRIPT-DA-01]; assesses=[BN-SCRIPT-TA-01, BN-SCRIPT-AA-MATRA-01] -->
@@ -63,11 +63,11 @@ With the mātrā:
 > **দ** + **া** → **দা**
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-DA-01, BN-SCRIPT-TA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-MUKH-READ-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-DA-01, BN-SCRIPT-TA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-KHA-01] -->
 
 - [YOU WRITE: দ]
 - [YOU WRITE: ত দ]
-- [YOU READ: মুখ]
+- [YOU READ: ভালো আবার]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-DA-01, BN-SCRIPT-TA-01] -->

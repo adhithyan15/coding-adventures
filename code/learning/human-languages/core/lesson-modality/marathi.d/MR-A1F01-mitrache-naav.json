@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-A1F01-mitrache-naav",
     "language": "marathi",
-    "chapter": 19,
-    "sequence": 825,
+    "chapter": 23,
+    "sequence": 1025,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:87d80fe68b442816",
+    "sourceHash": "fnv1a64:550ecd23de2ae99e",
     "detachableSegments": [
       "Writing — observe and trace one pair"
     ],

@@ -2,14 +2,14 @@
 schema_version: 2
 id: BN-C06-numbers-1-5
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 340
-chapter: 6
+sequence: 720
+chapter: 12
 type: word
 headword: এক দুই তিন চার পাঁচ
 romanization: ek dui tin chār pā̃ch
 gloss: one to five — and the "two" that kept its Sanskrit vowel
 concept_tag: BN-NUMBERS-1-5
-prerequisites: [BN-C01-nomoshkar]
+prerequisites: [BN-C01-nomoshkar, BN-W02-chandrabindu]
 sounds: [long-aa, chandrabindu-nasal, i-sign]
 roots: [sanskrit-dvi, sanskrit-panca]
 etymology_hook: "Bengali দুই dui keeps a trace of the vowel following the old dv- that Hindi and Marathi flattened into do/don — which is why it has two syllables where they have one; it shares this with Assamese, Odia and Nepali, and is unusual only among the four languages compared here"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [BN-LEX-NUMBERS-ONE-TO-FIVE, BN-SCRIPT-CHANDRABINDU-NASAL, BN-ETYMON-DUI-COMPARISON, BN-HISTORY-DV-NUMERAL-SIMPLIFICATION, BN-HISTORY-DUI-AREAL-COMPANY, BN-SOUND-INHERENT-O-NOT-IN-NUMBERS]
 practises:
-  knowledge: [BN-LEX-NUMBERS-ONE-TO-FIVE, BN-SCRIPT-CHANDRABINDU-NASAL, BN-ETYMON-DUI-COMPARISON, BN-HISTORY-DV-NUMERAL-SIMPLIFICATION, BN-HISTORY-DUI-AREAL-COMPANY, BN-SOUND-INHERENT-O-NOT-IN-NUMBERS]
+  knowledge: [BN-LEX-NUMBERS-ONE-TO-FIVE, BN-SCRIPT-CHANDRABINDU-NASAL, BN-SCRIPT-CHANDRABINDU-01, BN-ETYMON-DUI-COMPARISON, BN-HISTORY-DV-NUMERAL-SIMPLIFICATION, BN-HISTORY-DUI-AREAL-COMPANY, BN-SOUND-INHERENT-O-NOT-IN-NUMBERS]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -98,7 +98,7 @@ Don't let a neighbouring language's spelling tell you how Bengali sounds.
 - [YOU SAY: the Ch. 1 echo — "**no**moshkar, not **na**maskār"]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-NUMBERS-ONE-TO-FIVE, BN-SCRIPT-CHANDRABINDU-NASAL, BN-ETYMON-DUI-COMPARISON, BN-HISTORY-DV-NUMERAL-SIMPLIFICATION, BN-HISTORY-DUI-AREAL-COMPANY, BN-SOUND-INHERENT-O-NOT-IN-NUMBERS] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-NUMBERS-ONE-TO-FIVE, BN-SCRIPT-CHANDRABINDU-NASAL, BN-SCRIPT-CHANDRABINDU-01, BN-ETYMON-DUI-COMPARISON, BN-HISTORY-DV-NUMERAL-SIMPLIFICATION, BN-HISTORY-DUI-AREAL-COMPANY, BN-SOUND-INHERENT-O-NOT-IN-NUMBERS] -->
 
 [PAUSE 3s] Count to five in Bengali. (*Ek, dui, tin, chār, pā̃ch*.) What does
 **দুই** keep that Hindi and Marathi flattened away? (**The following *-i***,

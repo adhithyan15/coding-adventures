@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C12-chokh",
     "language": "bengali",
-    "chapter": 12,
-    "sequence": 900,
+    "chapter": 20,
+    "sequence": 1020,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:f5271cd10674b60d",
+    "sourceHash": "fnv1a64:4cb8765d18b50c47",
     "detachableSegments": [
       "The letters in this word"
     ]

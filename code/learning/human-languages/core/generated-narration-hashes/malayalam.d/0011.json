@@ -1,17 +1,16 @@
 {
   "language": "malayalam",
   "chapter": 11,
-  "sourceHash": "fnv1a64:02e4e75e4b4208b9",
+  "sourceHash": "fnv1a64:15a2eeb50f0b7ba3",
   "lessonIds": [
     "ML-C11-nirangal",
-    "ML-S06-letter-chillu-ll",
     "ML-S114-letter-ma"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "malayalam/narration/ch11.txt",
   "json": "malayalam/narration/ch11.json",
-  "textHash": "fnv1a64:dcd851eb06b6c7a5",
-  "jsonHash": "fnv1a64:cc5cc1fba1d564e6",
+  "textHash": "fnv1a64:8ea67eebd00063ee",
+  "jsonHash": "fnv1a64:add52a37616c5557",
   "findings": []
 }

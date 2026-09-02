@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1F06-first-three-supported
 spine_node: SPINE-NAME-EVERYDAY-THINGS
-sequence: 862
+sequence: 1062
 delivery: script
-chapter: 21
+chapter: 25
 type: writing
 headword: "नाव: ___ · शहर: ___ · भाषा: ___"
 gloss: complete three visible form rows from a support-language profile card

@@ -1,5 +1,276 @@
 # Changelog
 
+## Unreleased — Tamil has no hand-written chapters and no closure debt left
+
+Chapters 1-5 were hand-written LaTeX that the book generator skipped entirely,
+so no lesson-level gate had ever touched them. They are now generated from their
+lessons, and with the whole opening finally inside the pipeline the script-order
+work that had been blocked behind it could land in the same pass.
+
+```
+hand-written chapters (tamil)     5 -> 0     (corpus 69 -> 64)
+script-closure violations        21 -> 0     (corpus 357 -> 336)
+never-taught glyphs                0 -> 0    (held)
+headwords without romanization     0 -> 0    (held)
+drivable reach                   208 -> 208  (held)
+atoms never revisited             50 -> 54
+lessons                          316 -> 317
+```
+
+### 1. Carrying the prose, then flipping the ledger
+
+`handwritten_parity.py tamil` reported **5 blocks at risk**: one `culture` in
+chapter 1 and four `cognates` across chapters 1, 2 and 4. Each was tracked to
+where its content actually lives before anything was flipped.
+
+* The two chapter-1 `cognates` tables — "hello" and "thanks" across the family —
+  were **already carried**, verbatim, into `TA-C01-vanakkam-family-register` and
+  `TA-C01-nandri-family-register`. The parity script could not see them because
+  their heading, `## Across the family`, is not one of the four it classifies.
+* The chapter-2 and chapter-4 `cognates` tables survived only as run-on prose
+  inside `TA-C02-peyar` and `TA-C04-poy-varugiren`. **Both are restored as
+  tables**, which is how they read in the LaTeX and is easier to scan than the
+  sentence they had been folded into.
+* The missing chapter-1 `culture` block was the "why Tamil won't just say I'm
+  leaving" passage. Its farewell content is carried by `TA-C04-poy-varugiren`,
+  and chapter 1 had deliberately deferred it with a "promise for later" note.
+  That note is now a real `## Why it's said this way` section which explains the
+  deferral to the reader instead of merely announcing it.
+
+**`cognates` is dropped as an environment, not as writing.** The generator has no
+`cognates` path, so those tables now render inside `cousinweb`, whose box title —
+"The word, taken apart — its roots and family" — is the right home for a cognate
+table. Nothing is lost but a violet border.
+
+### 2. Schema v2, which is what had actually blocked the flip
+
+`generate:books` refuses a schema-v1 lesson, and 32 of the 33 lessons in
+chapters 1-5 were v1. `migrate_schema_v2.py --apply` handled 28; the four chapter
+recaps needed a hand-chosen spine node first, and now sit on new
+`TA-EXT-00{6,7}` / `TA-EXT-01{1,2}-CONSOLIDATION` extension nodes attached to
+their own path segments, mirroring `TA-EXT-013-CONSOLIDATION`.
+
+24 section headings across 16 lessons were renamed to headings `classifyBlock`
+recognises — `The word` → `You'll want to know: <headword>`, `Across the family`
+→ `The word, taken apart — across the family`, `Where the word fits` → `Why it's
+said this way`, the recap sections to `What you've built — …` or `Guided Practice
+— …` by whether they drill or summarise. The generator rejects an unknown block,
+and that rejection was right: these were all real block types wearing local names.
+
+Two content defects surfaced on the way and were fixed rather than carried:
+
+* `TA-C01-nandri`'s pronunciation cue read *naṇ-ṛi* — retroflex, contradicting
+  both its own romanization `naṉṟi` and its own next sentence naming the second
+  *n* as **alveolar**. It reads *naṉ-ṟi* now.
+* Three chapter-1 lessons held decomposed `n`+U+0323 sequences left by an earlier
+  LaTeX carry. NFC-normalised.
+
+Chapters 2-5 also carried a placeholder payoff whose note said "this legacy
+schema-v1 chapter has no typed knowledge atoms yet" and whose summary printed a
+lesson id at the reader (*"Complete TA-C04-practice, the canonical closing
+checkpoint…"*). The migration made the note false, so all four have real
+reader-facing payoffs and real `assesses` sets, at representativeness 1.00, 1.00,
+0.83 and 0.56.
+
+### 3. The chapters 1-6 script decision
+
+Nineteen of the twenty-one closure violations sat in chapters 1-6, and every one
+of them was the same defect: a Tamil word printed in **body prose or a recap
+table**, always beside its own romanization, whose letters the script strand does
+not reach for another thirty lessons. `வணங்கு` in chapter 1's etymology.
+`உண்டு`. `நான் நலமாக இருக்கிறேன்`. A five-row recap table in `TA-C01-practice`
+printing four words in Tamil on the same page as the sentence *"Nothing asks you
+to read or write the other shapes."*
+
+**The decision: chapters 1-6 are the sound-first opening, so Tamil script appears
+there in exactly one place — the lesson's own romanized headword, which the
+exposure rule already covers. Every other Tamil word in those chapters is printed
+in romanization only, and gets its glyphs back later when the script strand
+reaches it, one letter at a time.**
+
+The alternative was measured and rejected. Retiring those nineteen by *teaching*
+instead would need roughly thirty pen lessons inside the first six chapters,
+because `script-closure.ts` credits a glyph only to a `type: writing` /
+`delivery: script` lesson and `modality.ts` scores a `writing` lesson as pen **by
+definition** — so a lesson that can retire a violation is a lesson that costs
+drivability. That inverts the gentle ramp to buy back something the reader was
+never asked for: these chapters promise, in their own words, that you can say
+everything in them without reading a letter.
+
+One exception is kept and is the point of the exposure rule: the headword stays
+in Tamil, the way a child sees a shop sign years before reading it. So does
+`வணக்கம்` in the chapter-1 recap — every one of its shapes *is* taught, by the
+chapter's own tracing lesson, which is exactly what that recap's prose claims.
+
+### 4. உ — the one Tamil letter with no lesson
+
+The last two violations, `TA-C09-mannikkavum` and `TA-C32-saappidu`, both wanted
+the independent vowel **உ**. Its *sign*, ◌ு, is taught in chapter 4; the letter
+had no `TA-S` lesson anywhere in the track.
+
+`TA-S125-letter-u` teaches it at sequence 492 — chapter 8, immediately after
+`TA-S112-letter-e` and immediately before chapter 9 needs it. **Placed as late as
+its own glyphs allow while still paying forward**, per the Punjabi finding: it
+lands after chapter 8's voice-cored opening, so chapter 8's drivable prefix is
+unchanged and the track's drivable reach holds at 208 while gaining a pen lesson.
+
+Every other shape in `உங்கள்`, `உம்` and `உண்` was already taught at that point,
+so this one letter makes all three fully decodable. **Closure violations: 2 → 0.**
+
+### 5. Reinforcement, and an honest accounting
+
+The v2 migration assigns one atom per lesson, so it added 33 atoms that nothing
+else practised — `atomsNeverRevisited` went **50 → 82** and retrieval misses
+**981 → 1109** the moment the migration landed. Wiring the five chapter recaps to
+practise their own chapter's atoms, block by block rather than by frontmatter
+claim, brought that back to **54** and **1084**.
+
+That is still worse than where the track started, and the number says why: R3
+(346) and R4 (285) are distance windows, and a chapter recap is three to ten
+lessons away from what it reviews. Closing those needs a distant-review band —
+the Gujarati shape, a chapter of zero-new-atom lessons returning material 90-plus
+positions out. Filed as **HL-C246**; it is the next thing this track should do.
+
+### Pins moved, and why
+
+* `grouped-shards.test.ts`: `handwritten.d` 69 → 64. That literal exists to see
+  exactly this flip; its own comment says so.
+* `script-closure.test.ts`: the corpus ceiling, re-measured to **336**. `main` had already
+  flipped this assertion from a floor to a ceiling for the same reason — the
+  Marathi runway made a floor on debt fail because debt was paid — and kept a
+  comparison canary (`violations > paceViolations * 5`) so the ceiling cannot
+  pass on a degenerate zero. That version is taken whole; only the number moves,
+  which is what its own comment asks of whoever changes it.
+* `tests/corpus/tamil.test.ts`: `violations` pinned **at zero**, not re-pinned to
+  a smaller count. There is no longer a backlog for a new violation to hide in.
+
+## Unreleased — every Tamil headword now says how it is said (HL-C194), and Chapter 66
+
+Two pieces of work on one branch, because the first one re-renders the book and
+the second one wanted to land against a green tree.
+
+### 1. The romanization sweep — 21 load-bearing headwords, closed
+
+`measureScriptClosure` draws its exposure line at exactly one mechanical place:
+**a lesson's headword is exposure when the lesson declares a `romanization`, and
+something the reader has to decode when it does not.** Twenty-one Tamil lessons
+printed a Tamil-script headword and declared none, so the track reported
+`headwordsWithoutRomanization: 21` and carried closure violations for glyphs
+that appeared nowhere but the undeclared headword.
+
+```
+headwordsWithoutRomanization   21 -> 0
+script-closure violations      29 -> 21
+corpus-wide exposure          188 -> 167   (Tamil is the whole difference)
+```
+
+**Every value was transcribed from that lesson's own prose. None was invented,
+and none was normalised to a house style that would contradict the page.** That
+is the load-bearing decision here, not the field itself. `TA-C14-kaalangal`
+declares `vasantha kaalam kodai kaalam mazhai kaalam kulir kaalam` because that
+is how its own table spells the four seasons — *kaalam*, not *kālam* — and a
+"tidier" value would have made the frontmatter disagree with the lesson the
+reader is looking at. The list headwords were checked word by word: twelve month
+names for `TA-C16-thamizh-maadangal`, six kinship terms for `TA-C12-kudumbam`,
+four Dravidian cognates for `TA-C06-dative-subject-family`.
+
+The check that this is transcription rather than invention is mechanical and was
+run over all twenty-one: **every whitespace-separated token of every new
+`romanization` appears as a whole word in that lesson's own text**, with the
+lesson's own frontmatter line excluded so it cannot verify against itself.
+
+Two lessons could not pass that check as written, and were fixed in the page
+rather than fudged in the field:
+
+- `TA-W00-va-guided-copy` teaches the single letter **வ** and never romanised
+  it, only the whole word it comes from. The lesson now names it — *va* — in its
+  heading and at both points where it asks the reader to look at the shape.
+- `TA-C19-vayathu` carries the full question **உனக்கு எத்தனை வயது ஆகிறது?** as
+  its headword while its body only ever says *vayathu*. Its heading now carries
+  the whole question romanised, in exactly the spelling the following lesson's
+  own practice prompt already uses.
+
+Sixteen book chapters, their narration and their hashes moved with the sweep,
+which is why it is its own commit-sized change. The ToC and glossary improved as a side effect,
+which was the reason to prefer this over any other way of moving the number: the
+glossary prints the romanization beside the headword, and the ToC's short title
+falls back to it, so `\section[\ta{சித்திரை} \ta{வைகாசி} …]` in the months
+chapter is now `\section[Chithirai Vaikāsi Āṉi Āḍi Āvaṇi …]`.
+
+`tests/corpus/tamil.test.ts` tightens 29 to 21 and adds
+`expect(track?.headwordsWithoutRomanization).toBe(0)` — pinned at **zero**
+rather than at a count, because it is the one number in the closure report an
+author can only make worse, by shipping a lesson whose headword nobody can
+pronounce.
+
+### 2. Chapter 66 — Which Way
+
+Eight lessons appended after chapter 65 and chained from `TA-C65-doing-recall`,
+on `SPINE-MEET-GREET`.
+
+```
+vocabulary   160/300 -> 166/300   (shortfall 140 -> 134)
+```
+
+Three pairs, each word arriving beside the one that answers it:
+
+```
+மேலே     mēlē      up, above     கீழே      kīḻē      down, below
+உள்ளே     uḷḷē      inside        வெளியே    veḷiyē    outside
+வலது     valadu    right          இடது      iḍadu     left
+```
+
+**The chapter's subject is two endings the reader already owns.** Four of the
+six are a bare place-word plus **-ஏ** — the same ending inside **இங்கே** and
+**அங்கே**, taught long before — and the other two are a word plus **-து**, the
+same ending inside **இது** and **அது**. That is why the four stand in front of a
+**verb** and the two stand in front of a **noun**, and the chapter closes by
+asking the reader to sort all six by which ending they take. Nothing about the
+pattern is asserted; it is all visible in words the track already taught.
+
+Every verb and noun the six attach to was taught earlier — **பார்**, **வா**,
+**போ**, **கை** — so six new words buy a dozen usable instructions
+(*mēlē pār*, *uḷḷē vā*, *veḷiyē pō*, *valadu kai*) without a single additional
+new word.
+
+`TA-W22-read-mele` is the script strand's **second consecutive no-new-letter
+lesson**. It reads **மேலே**, whose entire content is the **ே** sign ridden
+twice — once on **ம**, once on **ல** — so the reader watches the same
+left-of-the-letter, said-after-the-letter move happen twice in a row. It sits
+third, after *mēlē* was learned by ear and after *kīḻē* came between.
+
+**The chapter costs nothing in script closure, and that is a property of the
+inventory being closed rather than of care taken here.** Chapter 66 prints 27
+distinct Tamil glyphs and the last of them to be taught, உ, is taught in chapter
+36; Tamil's `neverTaughtGlyphs` stays **0** and its
+violation count stays **21**. Both hazards from the chapter-65 tranche were
+checked before any headword was chosen: no candidate is glossed by a later
+lesson (forward references hold at the corpus-wide 670), and no candidate needs
+a glyph outside the closed 51.
+
+Concept tags are namespaced `TA-ADVERB-*` / `TA-ADJECTIVE-*` for the same reason
+chapter 65's were `TA-VERB-*`: a canonical concept owned by an A1 spine node
+would have relocated all six lessons off pre-A1 and moved the vocabulary count
+by zero.
+
+Two lessons were reworded after the modality gate classified them `sight` on a
+"look at" cue, which would have made chapter 66 unstartable by ear. Both were
+teaching an ending that is **audible**, so "listen to how it ends" is the more
+honest instruction as well as the drivable one. Tamil's sight count returns to
+its baseline 29, and its drivable chapter-prefix reach goes 206 → 208.
+
+### Verification
+
+`node dist/cli.js validate` 0 errors. `npx vitest run` 1689 passed / 3 skipped,
+matching the pre-change baseline exactly, with only the two pre-existing
+`figure*.test.ts` suite failures (missing `paint-vm` dependency). All nine
+`check:*` gates exit 0. The Tamil book compiles under XeLaTeX with **zero**
+missing characters, zero overfull and zero underfull boxes.
+
+No regressions anywhere in the report: `neverTaughtGlyphs` 0 → 0, forward
+references 670 → 670, reinforcement 585 atoms never revisited → 585, lessons
+over the five-minute ceiling 0 → 0, atom-budget spikes 40 → 40.
+
 ## Unreleased — Chapter 65: doing, and undoing (the pre-A1 verb floor)
 
 Seven lessons appended after chapter 64 and chained from `TA-C64-harvest`, on

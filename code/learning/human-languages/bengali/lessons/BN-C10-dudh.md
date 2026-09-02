@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C10-dudh
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 720
-chapter: 10
+sequence: 890
+chapter: 16
 type: word
 headword: দুধ
 romanization: dudh
@@ -12,7 +12,7 @@ concept_tag: BN-FOOD-MILK
 prerequisites: [BN-C10-jol]
 sounds: [silent-final-vowel]
 roots: [duh-milk]
-etymology_hook: "দুধ is Sanskrit দুগ্ধ dugdha, the past participle of √duh 'to milk', from PIE dʰewgʰ- 'to produce, to yield' — its one secure English cousin is doughty, 'valiant', by way of Old English dohtig; the look-alike dough is unrelated, from a different PIE root, dʰeyǵʰ-, 'to knead'"
+etymology_hook: "দুধ is Sanskrit *dugdha*, the past participle of √duh 'to milk', from PIE dʰewgʰ- 'to produce, to yield' — its one secure English cousin is doughty, 'valiant', by way of Old English dohtig; the look-alike dough is unrelated, from a different PIE root, dʰeyǵʰ-, 'to knead'"
 duration:
   max_seconds: 270
 requires:
@@ -34,7 +34,7 @@ reviews_of: [BN-C10-jol, BN-C10-cha, BN-C09-sahajjo-kora]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C10-JOL-01] -->
 
-[PAUSE 2s] Chapter 9 met a word that had to end in a vowel nobody wrote —
+[PAUSE 2s] Chapter 15 met a word that had to end in a vowel nobody wrote —
 সাহায্য, *sāhājjo*. This word looks like it could do the same thing. It
 doesn't.
 
@@ -66,8 +66,8 @@ letter beneath it.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**দুধ** is Sanskrit **দুগ্ধ** (*dugdha*), the past participle of **√দুহ্**
-(*√duh*, "to milk"), from PIE **\*dʰewgʰ-**, "to produce, to yield." That root
+**দুধ** is Sanskrit *dugdha*, the past participle of *√duh* ("to milk"), from
+PIE **\*dʰewgʰ-**, "to produce, to yield." That root
 has exactly one secure English descendant, and it is not the word you would
 guess: **doughty**, "valiant," through Old English *dohtig*, "capable, of
 use." The word that *looks* like a cousin, **dough**, is not one — it comes

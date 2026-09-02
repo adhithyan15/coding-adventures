@@ -2,38 +2,38 @@
 schema_version: 2
 id: BN-W04-pa
 spine_node: SPINE-MEET-GREET
-sequence: 1950
+sequence: 570
 delivery: script
-chapter: 19
+chapter: 9
 type: writing
 headword: প
 romanization: "pô"
 gloss: "the consonant pa — the lips, and the last place of articulation"
-prerequisites: [BN-W04-chaa-read]
+prerequisites: [BN-W03-kha]
 sounds: []
 roots: []
 etymology_hook: "The lips are the front of the mouth and the last position the reader needs, so with this letter the whole map of where Bengali sounds are made is in hand."
 duration:
   max_seconds: 200
 requires:
-  knowledge: [BN-SCRIPT-BA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-CHAA-READ-01]
+  knowledge: [BN-SCRIPT-BA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-KHA-01]
 introduces:
   knowledge: [BN-SCRIPT-PA-01]
 practises:
-  knowledge: [BN-SCRIPT-BA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-CHAA-READ-01, BN-SCRIPT-PA-01]
+  knowledge: [BN-SCRIPT-BA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-KHA-01, BN-SCRIPT-PA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard
-reviews_of: [BN-W04-chaa-read]
+reviews_of: [BN-W03-kha]
 ---
 # প — the consonant pa
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-CHAA-READ-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-KHA-01] -->
 
-[PAUSE 2s] Read **চা** and **দুধ চা** aloud before adding a new shape.
+[PAUSE 2s] Write **খ** from memory, and say what separates it from **ক**.
 
 ## Script
 <!-- hl-knowledge: introduces=[BN-SCRIPT-PA-01]; assesses=[BN-SCRIPT-BA-01, BN-SCRIPT-AA-MATRA-01] -->
@@ -49,7 +49,7 @@ two cells of one square:
 - **ব** — lips, voice on
 
 The English *p* of *pin* is the breathy one and belongs to a different letter,
-the same trap **ক** and **খ** laid in the last chapter. Palm in front of the
+the same trap **ক** and **খ** laid a lesson ago. Palm in front of the
 mouth: *spin* gives no air, and that is this letter.
 
 With the lips named, the map is complete. Every consonant this book has taught is
@@ -62,11 +62,11 @@ With the mātrā:
 > **প** + **া** → **পা**
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-PA-01, BN-SCRIPT-BA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-CHAA-READ-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-PA-01, BN-SCRIPT-BA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-KHA-01] -->
 
 - [YOU WRITE: প]
 - [YOU WRITE: প ব]
-- [YOU READ: চা]
+- [YOU READ: ভালো]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-PA-01, BN-SCRIPT-BA-01] -->

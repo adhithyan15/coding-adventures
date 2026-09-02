@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:ac0408e311424c76",
+  "lessonIds": [
+    "TE-S142-digit-3",
+    "TE-C03-elaa",
+    "TE-C03-miiru-elaa-unnaaru",
+    "TE-S122-letter-u",
+    "TE-C03-nenu",
+    "TE-S143-digit-4",
+    "TE-C03-baagaa",
+    "TE-S06-letter-ra",
+    "TE-C03-paravaaledu",
+    "TE-S144-digit-5",
+    "TE-C03-practice"
+  ],
+  "tex": "telugu/book/chapters/ch03-responding.tex"
+}

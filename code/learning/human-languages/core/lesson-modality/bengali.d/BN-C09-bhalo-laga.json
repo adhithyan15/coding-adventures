@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C09-bhalo-laga",
     "language": "bengali",
-    "chapter": 9,
-    "sequence": 630,
+    "chapter": 15,
+    "sequence": 860,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:103b21f7a6a3c779",
+    "sourceHash": "fnv1a64:a8b46ed73f69e78d",
     "detachableSegments": [
       "The letters in this word"
     ]

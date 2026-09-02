@@ -12,7 +12,14 @@
     "lesson": "SA-C03-practice",
     "kind": "task",
     "summary": "Complete SA-C03-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in Sanskrit, answer naturally, and return the question.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "assesses": [
+      "SA-LEX-KATHAM",
+      "SA-PATTERN-HOW-ARE-YOU",
+      "SA-PATTERN-I-AM-WELL",
+      "SA-LEX-KUSHALAM",
+      "SA-LEX-AHAM",
+      "SA-PATTERN-NA-CINTA",
+      "SA-HISTORY-ROOTS-EAST-AND-WEST"
+    ]
   }
 }

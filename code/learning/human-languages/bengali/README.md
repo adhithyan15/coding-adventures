@@ -10,8 +10,10 @@ before the whole; and a book you can read straight through.
   Hindi, Marathi, Punjabi), written in its own script — sister to Devanagari,
   sharing the hanging top line but with rounder shapes. A vendored Noto Sans
   Bengali font renders it; each word lesson has a *"The letters in this word"*
-  section, and a reader who already reads Bengali simply skims it. No reading
-  course.
+  section, and a reader who already reads Bengali simply skims it. The nine
+  script chapters are **interleaved** between the speech chapters rather than
+  bolted on at the end, so a shape is never asked for before the word wearing
+  it has been said.
 - **One sound-shift as the spine.** The recurring thread is Bengali's
   **fingerprint**: the inherent vowel is **ô** (not "a"), *s* tilts to **sh**,
   and *v* collapses to **b** — so Sanskrit *namaskāra* is spoken **nômoshkar**
@@ -25,59 +27,59 @@ before the whole; and a book you can read straight through.
 - **Chapter 1 — Greetings** ([`lessons/BN-C01-*`](./lessons/)): nômoshkar,
   dhônyobad, hyã/nā, āchchhā, āshi (the "I'll come again" goodbye), practice.
   In the book.
-- **Chapter 2 — Introducing Yourself** ([`lessons/BN-C02-*`](./lessons/)): nām,
+- **Chapter 3 — Introducing Yourself** ([`lessons/BN-C02-*`](./lessons/)): nām,
   āmār, **āmār nām …** ("my name is," zero copula), tumi/āpni (+ tui), ki,
   **tomār nām ki?**, ālāp kore bhālo lāglo, practice. The zero copula; no
   gender. In the book.
-- **Chapter 3 — How Are You** ([`lessons/BN-C03-*`](./lessons/)): kemon, **tumi
+- **Chapter 5 — How Are You** ([`lessons/BN-C03-*`](./lessons/)): kemon, **tumi
   kemon āchho?**, āmi (← *asmi* → *am*), bhālo, kono bæpār nā, practice. The
   verb *āchhā* returns for state. In the book.
-- **Chapter 4 — Farewells** ([`lessons/BN-C04-*`](./lessons/)): ābār, dækhā
+- **Chapter 7 — Farewells** ([`lessons/BN-C04-*`](./lessons/)): ābār, dækhā
   hôbe, **ābār dækhā hôbe**, kāl dækhā hôbe, practice. The impersonal future.
   In the book.
-- **Chapter 5 — First Verbs** ([`lessons/BN-C05-*`](./lessons/)): bôlā, **āmi
+- **Chapter 11 — First Verbs** ([`lessons/BN-C05-*`](./lessons/)): bôlā, **āmi
   bānglā bôli**, thākā (← *sthā* → *stand/stay*), kāj kôrā, practice. The verb
   never changes for gender. In the book.
-- **Chapter 6 — Numbers 1–5** ([`lessons/BN-C06-*`](./lessons/)): *ek, dui,
+- **Chapter 12 — Numbers 1–5** ([`lessons/BN-C06-*`](./lessons/)): *ek, dui,
   tin, chār, pā̃ch*, the chandrabindu, and the conservative vowel in *dui*. In
   the book.
-- **Chapter 7 — The Core Verbs** ([`lessons/BN-C07-*`](./lessons/)): hôwā (two
+- **Chapter 13 — The Core Verbs** ([`lessons/BN-C07-*`](./lessons/)): hôwā (two
   be-verbs, and আছ- has no future), jāwā (respect rides on the ending), āsā (no
   grammatical gender, anywhere), khāwā (Bengali eats its drinks), dækhā (vowel
   harmony under a fixed spelling), jānā (জানা for facts, চেনা for people). The
   first six **canonical** verb concepts the track has ever realized. In the
   book, and fully drivable.
-- **Chapter 8 — The Mind and the Page** ([`lessons/BN-C08-*`](./lessons/)):
+- **Chapter 14 — The Mind and the Page** ([`lessons/BN-C08-*`](./lessons/)):
   bhābā (thinking is হওয়া's root with the causative gear engaged), bojhā
   (√budh → the **Buddha**, and vowel harmony that this time moves the spelling),
   pôṛā (the flapped **ড়**, and the two Sanskrit verbs that both landed on পড়া),
   lekhā (writing is scratching in three unrelated families — and every **-া**
   form is a noun, which is what দেখা হবে was doing all along). In the book.
-- **Chapter 9 — Taking, Asking, Helping, Liking**
+- **Chapter 15 — Taking, Asking, Helping, Liking**
   ([`lessons/BN-C09-*`](./lessons/)): neowā (the verb that ends a compound —
   নিয়ে আসা "bring," লিখে নেওয়া "write it down"), jijñāsā kôrā (the desiderative
   of জানা's root, and **noun + করা**, the pattern that turns any noun into a
   verb), sāhājjo kôrā (*saha* "together" + √i "to go," and the word-final
-  inherent **o** Chapter 6 could not demonstrate), bhālo lāgā (**the liker is
+  inherent **o** Chapter 12 could not demonstrate), bhālo lāgā (**the liker is
   not the subject** — *āmār bhālo lāge*, "good sticks to me" — set against
   ভালোবাসা, where you are). In the book.
-- **Chapter 10 — Tea, Water, Milk, and Rice** ([`lessons/BN-C10-*`](./lessons/)):
+- **Chapter 16 — Tea, Water, Milk, and Rice** ([`lessons/BN-C10-*`](./lessons/)):
   chā (a Chinese loan via Persian), jôl (disputed root, beside the
-  Bangladesh-register pāni, which traces cleanly to Chapter 7's √pā), dudh
+  Bangladesh-register pāni, which traces cleanly to Chapter 13's √pā), dudh
   (√duh — its secure English cousin is *doughty*, not the look-alike
-  *dough*), bhāt (√bhaj "to share," a root Chapter 11 picks back up). Also
+  *dough*), bhāt (√bhaj "to share," a root Chapter 18 picks back up). Also
   realizes `SPINE-POLITE-REQUEST-REPAIR` — previously unrealized in this
-  track — by reusing Chapter 7's respectful খান as a polite-offer pattern
+  track — by reusing Chapter 13's respectful খান as a polite-offer pattern
   rather than teaching a separate "please" word. In the book.
-- **Chapter 11 — Friend, Family, Brother, and Sister**
+- **Chapter 18 — Friend, Family, Brother, and Sister**
   ([`lessons/BN-C11-*`](./lessons/)): bôndhu (a tatsama, √bandh — English
   **bind**/**bond**/**band**, undisguised), pôribār (a tatsama, "what
   surrounds you"), bhāi (a tadbhava, and simply *is* English "brother," not
   a cousin of it), bon (the payoff — not related to English "sister" at
-  all, but to Chapter 10's ভাত, both from √bhaj, "to share"). States and
+  all, but to Chapter 16's ভাত, both from √bhaj, "to share"). States and
   demonstrates that Bengali marks no grammatical gender on any of these
   words. In the book.
-- **Chapter 12 — Eye, Mouth, Nose, and Heart**
+- **Chapter 20 — Eye, Mouth, Nose, and Heart**
   ([`lessons/BN-C12-*`](./lessons/)): chokh (an ardhatatsama, half-worn
   through Old and Middle Bengali), mukh (a tatsama whose own deepest root is
   a genuine, unresolved Dravidian-vs-Indo-European dispute), nāk (a
@@ -85,7 +87,7 @@ before the whole; and a book you can read straight through.
   (the payoff — a tatsama with a poetic tadbhava twin, হিয়া, and the widest
   confirmed cousin family in the track: **heart**, *kardía*, *cor*). In the
   book.
-- **Chapter 13 — Please, Sorry, and Welcome** ([`lessons/BN-C13-*`](./lessons/)):
+- **Chapter 22 — Please, Sorry, and Welcome** ([`lessons/BN-C13-*`](./lessons/)):
   doya kore ("please," literally "having done a kindness" — the noun-plus-করা
   pattern's third demonstration, root PIE *deh₂-, proposed cousin of Greek
   *dêmos* and English *democracy*), dukkhito ("sorry," Sanskrit *duḥkha* —
@@ -97,7 +99,7 @@ before the whole; and a book you can read straight through.
   আসা already taught, this time on √gam, PIE *gʷem-*, ancestor of English
   *come*). Closes the two courtesy concepts, please and sorry, this track had
   never realized, plus a third greeting concept, welcome. In the book.
-- **Chapter 14 — Five Colors** ([`lessons/BN-C14-*`](./lessons/)): lāl (red, a
+- **Chapter 23 — Five Colors** ([`lessons/BN-C14-*`](./lessons/)): lāl (red, a
   Persian gem-name Hindi shares exactly), nīl (blue, Sanskrit *nīla*, one
   form where Hindi's *nīlā/nīlī* changes for gender), kālo (black, the same
   word as *kāla*, "time," tied to Kālī and Yama), shādā (white — the one
@@ -105,7 +107,7 @@ before the whole; and a book you can read straight through.
   word where Hindi took a Persian loan instead), shôbuj (the payoff — green,
   a second Persian loan, the same root behind Hindi's *sabzī*, "vegetable").
   In the book.
-- **Chapter 15 — Cloth, Shirt, Sari, and Glasses**
+- **Chapter 25 — Cloth, Shirt, Sari, and Glasses**
   ([`lessons/BN-C15-*`](./lessons/)): kāpoṛ (cloth, a Sanskrit *deśī* —
   homegrown, not inherited — word shared across five Indo-Aryan languages),
   jāmā (shirt, a Persian loan identical to Hindi's), shāṛi (sari, the one
@@ -114,43 +116,76 @@ before the whole; and a book you can read straight through.
   on the Persian word for "eye" চোখ's own lesson already named as its only
   cousin). In the book.
 
-- **Chapter 16 — Hanging From the Head-Line, One Piece at a Time**
-  ([`lessons/BN-W01-*`](./lessons/)): the first nine pieces — ন, া, আ, হ, ম,
-  স, ক, ্, র — and the greeting নমস্কার read back from them, conjunct and
-  all. In the book.
-- **Chapters 17–19 — the script strand continued** ([`lessons/BN-W02-*`,
-  `BN-W03-*`, `BN-W04-*`](./lessons/)): seventeen more pieces and eighteen
-  words handed back to the eye. **Ch. 17** adds ি, ল, ত, ু, ে and reads নাম,
-  আমি, লাল, তিন, তুমি, কেমন — three of the five additions being vowel signs,
-  because a sign multiplies where a consonant adds. **Ch. 18** adds ো, ব, ভ,
-  খ, দ, ধ and reads কালো, আবার, ভালো, মুখ, সাদা, দুধ — the plain-and-breathy
-  square, the one distinction an English-speaking reader has no habit for.
-  **Ch. 19** adds চ, প, জ, ী, ই, এ and reads চা, পরিবার, জল, নীল, ভাই, এক,
-  closing the machinery by giving three vowels both of their bodies. Every
-  word was romanized and spoken in Chapters 1–15 before it was ever shown as
-  a shape to decode. In the book.
+### The script strand, interleaved
 
-With Chapters 8 and 9 the track realizes **14 of the 40 core verb concepts**, up
+The sixty script lessons do not sit in a block at the end. They are **nine
+chapters spread through the book**, each one landing after the speech chapter
+whose words it hands to the eye:
+
+- **Chapter 2 — Hanging From the Head-Line, One Piece at a Time**
+  ([`lessons/BN-W01-*`](./lessons/)): the first nine pieces — ন, া, আ, হ, ম,
+  স, ক, ্, র — and the greeting নমস্কার read back from them, conjunct and all.
+- **Chapter 4 — In Front, Underneath, and On Its Own**: ি, ই, ত, ু, য, ঁ, with
+  নাম, তুমি and হ্যাঁ read back. The i-sign meets its independent twin here,
+  which is the pattern আ/া already set in Chapter 2; and **হ্যাঁ**, the third
+  word this book ever taught, becomes legible in five pieces.
+- **Chapter 6 — A Sign Made of Two Signs**: ল, ে, এ, ো, and আমি and কেমন read
+  back. The o-sign is not a new shape: it is the e-sign and the a-sign written
+  around one consonant.
+- **Chapter 8 — The Breath Is a Letter**: ব, ভ, খ, গ, with আবার and ভালো read
+  back and the throat row closed — ক voice off, খ voice off with breath, গ
+  voice on — so that লাগলো becomes readable.
+- **Chapter 9 — The Roof, the Teeth, and the Grid Closed**: প, দ, ধ, চ, ছ, জ,
+  with আছি read back. The chapter ends by reciting twelve consonants from their
+  places of articulation rather than from their shapes.
+- **Chapter 10 — Two Marks Inside a Verb**: ও and the dot below, with হওয়া read
+  whole. The dot is the piece that turns য into a glide, and it is the reason
+  half the verbs in this book were unreadable until now.
+- **Chapter 17 — Three Words Free, and One Dot**: চা, জল, দুধ read with nothing
+  new added, then ড and the flap পড়া needs — the verb for what the reader is
+  doing.
+- **Chapter 19 — Family, on the Page**: পরিবার and ভাই, and why the *i* at the
+  end of ভাই takes its full letter although it is nowhere near the start.
+- **Chapter 21 — The Face on the Page**: চোখ, নাক and মুখ read free, then ৃ and
+  হৃদয় — the only one of the four body words that needed a new sign.
+- **Chapter 24 — The Last Sign, and Six Words Back**: ী, then লাল, কালো, সাদা,
+  নীল, তিন and এক.
+
+Every one of those words was romanized and spoken in an **earlier** chapter
+before it was ever shown as a shape to decode. That ordering is the point: the
+script chapters sit between chapters of speech, not after all of them.
+
+### Chapter 26 — the distant band
+
+The book closes with **nine lessons that teach nothing**. Every item in them was
+first taught between ninety-eight and a hundred and four lessons earlier, and the
+chapter exists because a curriculum that only ever adds is delivering rather than
+teaching. It introduces zero atoms, its hand work sits in a detachable
+`Writing —` block so the whole chapter can be driven by ear, and it took the
+track's R4 retrieval misses **26 → 14** and its never-revisited atoms **9 → 5**.
+
+With Chapters 8 and 11 the track realizes **14 of the 40 core verb concepts**, up
 from six, and joins Spanish, Latin and Portuguese on all eight of
 `VERB-THINK`, `VERB-UNDERSTAND`, `VERB-READ`, `VERB-WRITE`, `VERB-TAKE`,
 `VERB-ASK`, `VERB-HELP` and `VERB-LIKE-LOVE` — each of which was a three-track
-concept before and is now a four-track one. Chapters 10–12 add twelve
+concept before and is now a four-track one. Chapters 12–14 add twelve
 pre-A1 nouns, moving the track's pre-A1 vocabulary from 21 to 33 distinct
 headwords (of the 300 HL09 asks for) and closing the one pre-A1 spine node —
 `SPINE-POLITE-REQUEST-REPAIR` — this track had never realized. Chapters
-13–15 add thirteen more pre-A1 words, moving the track's pre-A1 vocabulary
+15–17 add thirteen more pre-A1 words, moving the track's pre-A1 vocabulary
 from 33 to 46 distinct headwords, and close two universal concepts —
 `COURTESY-PLEASE` and `COURTESY-SORRY` — this track had never realized,
 plus `GREETING-WELCOME`.
 
-Chapters 16–19 build the script strand: `scriptLessons` 0 → 45,
-`taughtGlyphs` 0 → 26, and **`neverTaughtGlyphs` 48 → 22** — Bengali was the
-worst never-taught glyph count in the corpus and is no longer in the bottom
-four. Twenty-two shapes remain, headed by য, ়, ও, গ and ছ. The closure
-*violation* count is unmoved at 65, because that measurement walks lessons in
-reading order and the script strand sits after all fifteen content chapters;
-the measured cost and the obstacles to interleaving it are recorded in
-`BACKLOG.d` as HL-C194.
+The script strand carries `scriptLessons` 60 and `taughtGlyphs` 34, with
+**`neverTaughtGlyphs` at 11**. Interleaving the strand (HL-C194) moved the
+closure *violation* count 65 → 41 without adding a lesson; teaching the eight
+shapes that already had a glossed word waiting for them, and giving Sanskrit
+citation forms in IAST rather than in Bengali script, moved it **41 → 21**
+(HL-C201). The two levers were measured apart: the orthography change alone
+clears six lessons, the eight new letters alone clear nine, and five more clear
+only when both are done. `headwordsWithoutRomanization` stays **0**. What
+remains is recorded in `BACKLOG.d`.
 
 ---
 
@@ -162,90 +197,109 @@ language.
 
 ## What each chapter lets you do
 
-[`chapters.json`](./chapters.json) is the HL05 capability ledger: per chapter, one
+[`chapters.d/`](./chapters.d/) is the HL05 capability ledger: per chapter, one
 first-person can-do sentence and the lesson that pays it off.
 
-- **Chapter 6** — *"I can count from one to five in Bengali script and say what
+- **Chapter 12** — *"I can count from one to five in Bengali script and say what
   দুই kept that Hindi and Marathi flattened away."* Payoff:
   [`BN-C06-numbers-1-5`](./lessons/BN-C06-numbers-1-5.md), a spoken production —
   count the five, name the chandrabindu on **পাঁচ**, place *dui* against *do* and
   *don*.
-- **Chapter 7** — *"I can say what I do with six everyday Bengali verbs, pick
+- **Chapter 13** — *"I can say what I do with six everyday Bengali verbs, pick
   the ending that matches তুই, তুমি or আপনি, and say why a Bengali verb never
   changes for gender and why আছে has to hand the future to হবে."* Payoff:
   [`BN-C07-jana`](./lessons/BN-C07-jana.md), a spoken production covering 8 of
   the chapter's 12 introduced atoms.
-- **Chapter 8** — *"I can say that I think, understand, read and write in
+- **Chapter 14** — *"I can say that I think, understand, read and write in
   Bengali, hear the stem vowel rise whenever the -i ending arrives, and read the
   flapped ড় that Sanskrit never needed."* Payoff:
   [`BN-C08-lekha`](./lessons/BN-C08-lekha.md), a spoken production covering
   **8 of the chapter's 8** introduced atoms.
-- **Chapter 9** — *"I can take, ask, help and say what I like and whom I love in
+- **Chapter 15** — *"I can take, ask, help and say what I like and whom I love in
   Bengali, build a fresh verb out of any noun by putting করা behind it, and say
   why liking happens to me while loving is something I do."* Payoff:
   [`BN-C09-bhalo-laga`](./lessons/BN-C09-bhalo-laga.md), a spoken production
   covering 6 of the chapter's 9 introduced atoms (0.67, above the 0.5 floor).
   Two of the remaining three are retrieved by the very next lesson after the one
   that taught them; the third — the doubled **য্য** of সাহায্য — genuinely is
-  not, and `chapters.json` records that rather than claiming otherwise.
-- **Chapter 10** — *"I can offer or ask for tea, water, milk and rice
-  politely in Bengali, reusing the respectful verb ending Chapter 7 already
+  not, and `chapters.d/` records that rather than claiming otherwise.
+- **Chapter 16** — *"I can offer or ask for tea, water, milk and rice
+  politely in Bengali, reusing the respectful verb ending Chapter 13 already
   taught, and say which of the four words is a Chinese loan and which
   shares a root with a word two lessons later."* Payoff:
   [`BN-C10-bhat`](./lessons/BN-C10-bhat.md), a spoken production covering
   **6 of the chapter's 6** introduced atoms.
-- **Chapter 11** — *"I can name a friend, my family, my brother and my
+- **Chapter 18** — *"I can name a friend, my family, my brother and my
   sister in Bengali, none of them marked for gender, and say which are
   borrowed whole from Sanskrit and which evolved by sound change."* Payoff:
   [`BN-C11-bon`](./lessons/BN-C11-bon.md), a spoken production covering the
-  chapter's 4 new lexical atoms plus a rescue of all five of Chapter 6's
+  chapter's 4 new lexical atoms plus a rescue of all five of Chapter 12's
   numbers atoms.
-- **Chapter 12** — *"I can name my eye, my mouth, my nose and my heart in
+- **Chapter 20** — *"I can name my eye, my mouth, my nose and my heart in
   Bengali, and say which of those four words is settled Indo-European,
   which is a genuinely disputed origin, and which is borrowed whole from
   Sanskrit with the widest confirmed cousin family in this book."* Payoff:
   [`BN-C12-hridoy`](./lessons/BN-C12-hridoy.md), a spoken production
-  covering the chapter's 4 new lexical atoms plus a rescue of Chapter 8's
+  covering the chapter's 4 new lexical atoms plus a rescue of Chapter 14's
   flapped-ড় sound rule and causative-আনো grammar.
-- **Chapter 13** — *"I can say please and sorry in Bengali, excuse myself
+- **Chapter 22** — *"I can say please and sorry in Bengali, excuse myself
   politely, and welcome someone with a word that carries the same 'hither'
   prefix already met on the verb for coming."* Payoff:
   [`BN-C13-sbagotom`](./lessons/BN-C13-sbagotom.md), a spoken production
   covering **4 of the chapter's 6** introduced atoms — the four lexical
   headwords; the two grammar atoms (করা's participle and future-as-request
   shapes) are retrieved by name in the chapter's own guided practice.
-- **Chapter 14** — *"I can name five colors in Bengali and say which came
+- **Chapter 23** — *"I can name five colors in Bengali and say which came
   from Persian, which from Sanskrit, and which is the one color where
   Bengali and Hindi genuinely parted ways."* Payoff:
   [`BN-C14-shobuj`](./lessons/BN-C14-shobuj.md), a spoken production
   covering **5 of the chapter's 5** introduced atoms.
-- **Chapter 15** — *"I can name cloth, a shirt, a sari and glasses in
+- **Chapter 25** — *"I can name cloth, a shirt, a sari and glasses in
   Bengali, and say which word English borrowed directly and which is built
   on the same Persian word already met for 'eye'."* Payoff:
   [`BN-C15-choshma`](./lessons/BN-C15-choshma.md), a spoken production
   covering **4 of the chapter's 4** introduced atoms, plus a rescue of the
   dative construction and ভালোবাসা from the liking-and-loving lesson,
   unrevisited since they were taught.
-- **Chapter 17** — *"I can read six Bengali words I already say — নাম, আমি,
-  লাল, তিন, তুমি and কেমন — by adding five pieces to the nine I already
-  write, and I can say why a vowel sign written in front of a consonant is
-  still spoken after it."* Payoff:
-  [`BN-W02-kemon-read`](./lessons/BN-W02-kemon-read.md), a reading that
-  introduces no new shape and covers **11 of the chapter's 11** introduced
-  atoms.
-- **Chapter 18** — *"I can read six more Bengali words I already say, tell a
-  plain consonant from its breathy partner on the page and in the mouth, and
-  say why the o-sign is two signs I already write rather than a new shape."*
-  Payoff: [`BN-W03-dudh-read`](./lessons/BN-W03-dudh-read.md), which puts the
-  plain dental and its breathy partner in one three-piece word — **12 of the
-  chapter's 12** introduced atoms.
-- **Chapter 19** — *"I can read six more Bengali words I already say, and say
-  which of a vowel's two forms to write, and why, from whether there is a
-  consonant in front of it."* Payoff:
-  [`BN-W04-ek-read`](./lessons/BN-W04-ek-read.md), which reads এক as a vowel
-  opening a word with no consonant to carry it — making visible the claim
-  Chapter 6 could only assert — and covers **12 of the chapter's 12**
-  introduced atoms.
+- **Chapter 4** — *"I can read নাম, তুমি and হ্যাঁ off the page, write the two
+  i-bodies and the u-sign, and say what a য hung under another letter does to
+  the vowel beside it."* Payoff:
+  [`BN-W02-hyan-read`](./lessons/BN-W02-hyan-read.md), a reading that assembles
+  the book's third word out of five pieces and closes the chapter by reading
+  নাম and তুমি back — **7 of the chapter's 9** introduced atoms.
+- **Chapter 8** — *"I can write five Bengali consonants as cells of one grid,
+  read আবার and ভালো with them, and close the throat row with গ so that লাগলো
+  becomes readable."* Payoff: [`BN-W03-ga`](./lessons/BN-W03-ga.md), which
+  finishes ক/খ/গ and spends the new letter immediately on a word from the
+  introductions chapter.
+- **Chapter 9** — *"I can write the five consonants that finish Bengali's stop
+  grid, hear the breath that separates চ from ছ, read আছি off the page, and say
+  every consonant I own by where in the mouth it is made."* Payoff:
+  [`BN-W04-ja`](./lessons/BN-W04-ja.md), which recites twelve cells by place
+  rather than by shape.
+- **Chapter 10** — *"I can write the independent ও, add the dot that turns য
+  into a glide, and read হওয়া — the verb of being — straight off the page."*
+  Payoff: [`BN-W04-howa-read`](./lessons/BN-W04-howa-read.md), which sets হওয়া
+  beside হ্যাঁ to show that stacked pieces are one syllable and pieces in a row
+  are several.
+- **Chapter 17** — *"I can read চা, জল and দুধ with nothing new, then write ড
+  and the flap পড়া needs."* Payoff:
+  [`BN-W04-pora-read`](./lessons/BN-W04-pora-read.md) — the verb for what the
+  reader is doing, made legible by a dot.
+- **Chapter 21** — *"I can read চোখ, নাক, মুখ and হৃদয় off the page, hear which
+  ends in breath and which in silence, and write the one sign the fourth of them
+  needed."* Payoff:
+  [`BN-W04-hridoy-read`](./lessons/BN-W04-hridoy-read.md), four words and
+  thirteen pieces, one of them bought that day.
+- **Chapter 24** — *"I can read the colours and two of the numerals off the
+  page, and write the long-i sign that completes the script this book teaches."*
+  Payoff: [`BN-W04-ek-read`](./lessons/BN-W04-ek-read.md), which reads এক as a
+  vowel opening a word with no consonant to carry it.
+- **Chapter 26** — *"I can retrieve, cold, the words and letters this track
+  taught between ninety-eight and a hundred and four lessons earlier, without a
+  single new atom being introduced to help me."* Payoff:
+  [`BN-R01-practice`](./lessons/BN-R01-practice.md), which answers four
+  chapter-closing practice lessons untouched for the length of a whole book.
 
 Chapters 1–5 are **not in the ledger yet**, and that gap is deliberate. They are
 still schema v1, so their lessons declare no knowledge atoms and no payoff there
@@ -272,12 +326,27 @@ Two details serve the generated chapters: the `grammarlens` box takes an
 optional title, because the generator passes each lesson's own "Grammar
 Lens: …" heading through, and `ǵ`/`ḱ` are composed with `\newunicodechar`
 since the main font has no precomposed glyph for the reconstructed PIE
-palatals. Every Sanskrit citation in the prose is rendered in **Bengali
-script**, never Devanagari — the only Indic font this book loads — which
-Chapters 10–12 learned the hard way when a first pass quoted roots in
-Devanagari and briefly reintroduced 91 `Missing character` errors, and
-which Chapter 13's first pass repeated with a stray Arabic script aside
-before it was caught and replaced with a plain romanization.
+palatals.
+
+**Sanskrit, Prakrit and Persian citation forms are given in IAST, not in
+Bengali script** (HL-C201). This is a pedagogical decision, not an
+orthographic one: Bengali script genuinely *is* used for Sanskrit in Bengal,
+and `√দৃশ্` is not wrong the way a Devanagari citation would be wrong in a
+book that loads no Devanagari font. But an etymon set in Bengali script puts
+letters in front of a reader who has not been taught them, and
+`measureScriptClosure` counts that, correctly. The IAST was already sitting
+in italics beside every one of these forms, so dropping the Bengali-script
+twin costs the reader nothing and clears six lessons outright. A Bengali
+*word* — হৃদয়, মুখ, দয়া, নীল, ভগিনী — stays in Bengali script even when its
+Sanskrit ancestor is spelled identically; the rule is about which language a
+form is being cited as, not about how it looks.
+
+Any Indic citation that does stay in the prose is set in Bengali script and
+never Devanagari — the only Indic font this book loads — which Chapters 12–14
+learned the hard way when a first pass quoted roots in Devanagari and briefly
+reintroduced 91 `Missing character` errors, and which Chapter 22's first pass
+repeated with a stray Arabic script aside before it was caught and replaced
+with a plain romanization.
 
 ## Files
 

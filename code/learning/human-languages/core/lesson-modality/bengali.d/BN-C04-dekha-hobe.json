@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C04-dekha-hobe",
     "language": "bengali",
-    "chapter": 4,
-    "sequence": 220,
+    "chapter": 7,
+    "sequence": 470,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:4e69cc199d65ed6f",
+    "sourceHash": "fnv1a64:afb2b5b5960fe99b",
     "detachableSegments": [
       "The letters in this word"
     ]

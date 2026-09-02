@@ -367,20 +367,30 @@ fn encode_global(global: &Global) -> Vec<u8> {
 /// the only exprs mode this repo produces, and only ever `funcref`).
 /// Modes 3/4/6/7 (declarative, or an ACTIVE segment carrying exprs) are
 /// never encoded here: `function_indices` can only contain a real `None`
-/// (a `ref.null` entry, requiring an exprs-list mode) for a PASSIVE
-/// segment -- both real producers of `Element` (`wasm-wast-parser`'s own
-/// corpus census and `wasm-module-parser`'s scoped binary decode) never
-/// construct an ACTIVE segment with a `None` entry, so that combination
-/// is unreachable in practice; `unwrap_or(0)` rather than a panic is
-/// still used below as defense-in-depth, same non-panicking-on-a-
-/// structurally-impossible-case discipline this repo applies throughout
-/// (a wrong-but-non-crashing encoding here would only ever be reachable
-/// by a bug in this repo's OWN code, never by attacker-controlled input
-/// -- `encode_element`'s only callers construct `Element` from Rust,
-/// never from parsed external bytes).
+/// (a `ref.null` entry, requiring an exprs-list mode) for an ACTIVE
+/// segment too, mirroring the mode-1-vs-5 split already used for a
+/// PASSIVE one immediately below (gap 1 of the `elem.wast`/`table.wast`
+/// investigation pass, see `code/specs/W07-wasm-post-mvp-epics.md`'s
+/// addendum): `wasm-wast-parser`'s own text parser used to reject any
+/// ACTIVE segment using the exprs-list form outright specifically
+/// BECAUSE this function's active branch used to unconditionally emit
+/// mode 0/2 (funcidx-list only) and `unwrap_or(0)`, which would have
+/// silently turned a real `(ref.null extern)`/`(ref.null func)` entry
+/// into a live reference to function 0 on encode -- a real, reachable
+/// data-corruption bug, not a hypothetical one: `elem.wast`'s own
+/// "Initializing a table with an externref-type element segment" test
+/// (the corpus census that justified the old rejection turned out to be
+/// wrong) needs exactly this shape in the TEXT format. Fixing the root
+/// cause HERE, instead of just relaxing the parser's rejection, is what
+/// makes lifting that rejection safe: any OTHER future producer of an
+/// `Element` with `is_passive: false` and a `None` entry (not just
+/// `wasm-wast-parser`) now encodes correctly instead of silently
+/// corrupting, the same "fix the backend, not just the one caller"
+/// discipline this repo applies elsewhere (see `feedback_verify_backend_
+/// totality_across_producers` in project lessons).
 fn encode_element(element: &Element) -> Vec<u8> {
+    let has_null_entry = element.function_indices.iter().any(|f| f.is_none());
     if element.is_passive {
-        let has_null_entry = element.function_indices.iter().any(|f| f.is_none());
         if !has_null_entry {
             // Mode 1: passive, funcidx-list.
             let mut bytes = encode_u32(1);
@@ -411,7 +421,9 @@ fn encode_element(element: &Element) -> Vec<u8> {
             }
             bytes
         }
-    } else {
+    } else if !has_null_entry {
+        // Mode 0 / 2: active, funcidx-list -- unchanged from before this
+        // fix, still the common case (every entry a real function index).
         let mut bytes = if element.table_index == 0 {
             encode_u32(0) // Mode 0: active, implicit table 0.
         } else {
@@ -423,6 +435,46 @@ fn encode_element(element: &Element) -> Vec<u8> {
         bytes.extend(encode_u32(element.function_indices.len() as u32));
         for func_index in &element.function_indices {
             bytes.extend(encode_u32(func_index.unwrap_or(0)));
+        }
+        bytes
+    } else {
+        // Mode 4 / 6: active, exprs-list -- the new case this fix adds,
+        // needed whenever a `None` (`ref.null`) entry is present (a
+        // funcidx-list has no way to represent null at all). Byte layout
+        // per the real spec's binary format (`binary/modules.rst`'s
+        // `elem` production): mode 4 is `e:expr el*:vec(expr)` -- table
+        // index is always implicit 0, and there is NO reftype byte at all
+        // (always funcref); mode 6 is `x:tableidx e:expr et:reftype
+        // el*:vec(expr)` -- explicit table index BEFORE the offset expr,
+        // and a real reftype byte AFTER it. The two modes are laid out
+        // differently enough (not just a shared prefix like 0-vs-2) that
+        // they're built as two separate byte sequences rather than one
+        // shared skeleton with conditional pieces spliced in.
+        let mut bytes = if element.table_index == 0 {
+            encode_u32(4) // Mode 4: active, implicit table 0, exprs.
+        } else {
+            let mut b = encode_u32(6); // Mode 6: active, explicit table, exprs.
+            b.extend(encode_u32(element.table_index));
+            b
+        };
+        bytes.extend_from_slice(&element.offset_expr);
+        if element.table_index != 0 {
+            bytes.push(0x70); // reftype: funcref (mode 6 only -- mode 4 has none).
+        }
+        bytes.extend(encode_u32(element.function_indices.len() as u32));
+        for func_index in &element.function_indices {
+            match func_index {
+                Some(idx) => {
+                    bytes.push(0xD2); // ref.func
+                    bytes.extend(encode_u32(*idx));
+                    bytes.push(0x0B); // end
+                }
+                None => {
+                    bytes.push(0xD0); // ref.null
+                    bytes.push(0x70); // heaptype: func
+                    bytes.push(0x0B); // end
+                }
+            }
         }
         bytes
     }
@@ -1362,6 +1414,124 @@ mod tests {
         assert!(encoded.windows(2).any(|w| w == [0x63, 0x00]), "expected a 0x63 0x00 (nullable) field encoding");
         let parsed = WasmModuleParser::parse(&encoded).unwrap();
         assert_eq!(parsed.struct_types, module.struct_types);
+    }
+
+    /// Gap 1 of the W-next `elem.wast`/`table.wast` investigation pass
+    /// (`code/specs/W07-wasm-post-mvp-epics.md`'s addendum): `encode_
+    /// element`'s new active-exprs-list branch (mode 4, implicit table
+    /// 0) -- exercised directly at the byte level, not via a `WasmModule
+    /// Parser::parse` round trip, because that binary DECODER still only
+    /// handles modes 0/1/2/5 (a real, separate, deliberately deferred
+    /// gap -- see `wasm-wast-parser::module::build_elem`'s own doc
+    /// comment). Checked against the real spec's own binary layout for
+    /// mode 4 (`binary/modules.rst`'s `elem` production): `e:expr
+    /// el*:vec(expr)` -- flag byte, offset expr, vec of
+    /// `ref.func`/`ref.null` expressions, NO reftype byte at all (always
+    /// implicit funcref).
+    #[test]
+    fn encode_element_active_exprs_list_mode4_implicit_table() {
+        let element = Element {
+            table_index: 0,
+            offset_expr: vec![0x41, 0x00, 0x0B], // i32.const 0; end
+            function_indices: vec![Some(0), None],
+            is_passive: false,
+            is_declarative: false,
+        };
+        let bytes = encode_element(&element);
+        assert_eq!(
+            bytes,
+            vec![
+                0x04, // mode 4: active, implicit table 0, exprs
+                0x41, 0x00, 0x0B, // offset expr: i32.const 0; end
+                0x02, // vec length: 2 entries
+                0xD2, 0x00, 0x0B, // ref.func 0; end
+                0xD0, 0x70, 0x0B, // ref.null func; end
+            ]
+        );
+    }
+
+    /// The externref-null-only shape `elem.wast`'s own real corpus case
+    /// uses verbatim (`(elem (i32.const 0) externref (ref.null extern))`)
+    /// -- a single null entry, no non-null entries at all. Confirms mode
+    /// 4 is chosen (not accidentally falling back to mode 0's funcidx-
+    /// list, which has no way to represent a null entry) purely because
+    /// of the null entry, independent of externref vs. funcref (this
+    /// repo's `WasmValue::Ref(None)` doesn't distinguish the two -- see
+    /// `resolve_elem_expr_entry`'s own doc comment in `wasm-wast-parser`).
+    #[test]
+    fn encode_element_active_exprs_list_single_null_entry() {
+        let element = Element {
+            table_index: 0,
+            offset_expr: vec![0x41, 0x00, 0x0B],
+            function_indices: vec![None],
+            is_passive: false,
+            is_declarative: false,
+        };
+        let bytes = encode_element(&element);
+        assert_eq!(
+            bytes,
+            vec![
+                0x04, // mode 4
+                0x41, 0x00, 0x0B, // offset expr
+                0x01, // vec length: 1 entry
+                0xD0, 0x70, 0x0B, // ref.null func; end
+            ]
+        );
+    }
+
+    /// Mode 6 (explicit table index, exprs-list) -- the same null-entry
+    /// trigger as mode 4 above, but for a non-zero table index. Byte
+    /// layout per the real spec: `x:tableidx e:expr et:reftype
+    /// el*:vec(expr)` -- table index comes BEFORE the offset expr (same
+    /// order mode 2's existing funcidx-list branch already uses), and
+    /// (unlike mode 4) a real reftype byte follows the offset expr.
+    #[test]
+    fn encode_element_active_exprs_list_mode6_explicit_table() {
+        let element = Element {
+            table_index: 3,
+            offset_expr: vec![0x41, 0x05, 0x0B], // i32.const 5; end
+            function_indices: vec![None, Some(7)],
+            is_passive: false,
+            is_declarative: false,
+        };
+        let bytes = encode_element(&element);
+        assert_eq!(
+            bytes,
+            vec![
+                0x06, // mode 6: active, explicit table, exprs
+                0x03, // table index: 3
+                0x41, 0x05, 0x0B, // offset expr: i32.const 5; end
+                0x70, // reftype: funcref
+                0x02, // vec length: 2 entries
+                0xD0, 0x70, 0x0B, // ref.null func; end
+                0xD2, 0x07, 0x0B, // ref.func 7; end
+            ]
+        );
+    }
+
+    /// Existing mode 0/2 behavior (no null entry present) must stay
+    /// byte-for-byte unchanged by this fix -- the `has_null_entry` check
+    /// added ahead of the active branch must not perturb the common
+    /// case at all.
+    #[test]
+    fn encode_element_active_funcidx_list_unaffected_by_null_entry_fix() {
+        let element = Element {
+            table_index: 0,
+            offset_expr: vec![0x41, 0x00, 0x0B],
+            function_indices: vec![Some(3), Some(1), Some(4)],
+            is_passive: false,
+            is_declarative: false,
+        };
+        let bytes = encode_element(&element);
+        assert_eq!(
+            bytes,
+            vec![
+                0x00, // mode 0: active, implicit table 0, funcidx-list
+                0x41, 0x00, 0x0B, // offset expr
+                0x03, // vec length: 3 entries
+                0x03, 0x01, 0x04, // funcidx list: 3, 1, 4
+            ]
+        );
     }
 
     /// Minimal LEB128 decoder for test assertions — decode one unsigned value.

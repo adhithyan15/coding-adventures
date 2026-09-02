@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C12-nak
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 920
-chapter: 12
+sequence: 1040
+chapter: 20
 type: word
 headword: নাক
 romanization: nāk
@@ -12,7 +12,7 @@ concept_tag: BN-BODY-NOSE
 prerequisites: [BN-C12-mukh]
 sounds: [na-review]
 roots: [nas-nose]
-etymology_hook: "নাক is Sanskrit নস্ nas through Prakrit ṇakka — a tadbhava — from PIE néh₂s-, the direct ancestor of English nose and Latin nasus (English nasal): three languages, one word, worn down three different ways"
+etymology_hook: "নাক is Sanskrit *nas* through Prakrit ṇakka — a tadbhava — from PIE néh₂s-, the direct ancestor of English nose and Latin nasus (English nasal): three languages, one word, worn down three different ways"
 duration:
   max_seconds: 260
 requires:
@@ -53,7 +53,7 @@ at the end: *nāk*, not *nāko*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**নাক** is Sanskrit **নস্** (*nas*), inherited through Prakrit **ṇakka** — a
+**নাক** is Sanskrit *nas*, inherited through Prakrit **ṇakka** — a
 tadbhava, like ভাই and বোন before it. Its PIE root is **\*néh₂s-**, and this
 one is as secure as roots get: it is the direct ancestor of English **nose**
 itself, and of Latin **nāsus**, which gives English **nasal**. Three

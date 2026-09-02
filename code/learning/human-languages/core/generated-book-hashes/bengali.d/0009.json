@@ -1,12 +1,15 @@
 {
   "language": "bengali",
   "chapter": 9,
-  "sourceHash": "fnv1a64:82414b9469b64ee2",
+  "sourceHash": "fnv1a64:db6cd2f3d2ad77fa",
   "lessonIds": [
-    "BN-C09-neowa",
-    "BN-C09-jijnasa-kora",
-    "BN-C09-sahajjo-kora",
-    "BN-C09-bhalo-laga"
+    "BN-W04-pa",
+    "BN-W03-da",
+    "BN-W03-dha",
+    "BN-W04-cha",
+    "BN-W04-chha",
+    "BN-W04-achhi-read",
+    "BN-W04-ja"
   ],
-  "tex": "bengali/book/chapters/ch09-conjunct-verbs.tex"
+  "tex": "bengali/book/chapters/ch09-roof-teeth-grid.tex"
 }

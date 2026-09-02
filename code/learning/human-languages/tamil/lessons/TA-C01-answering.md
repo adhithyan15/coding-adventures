@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: TA-C01-answering
+spine_node: SPINE-RESPOND-BASIC
 sequence: 80
 chapter: 1
 type: phrase
@@ -10,24 +12,39 @@ concept_tag: RESPONSE-YESNO
 prerequisites: [TA-C01-sari, TA-C01-nandri, TA-C01-illai, TA-C01-aam, TA-C01-vanakkam]
 sounds: []
 roots: []
-est_minutes: 2
 reviews_of: [TA-C01-sari, TA-C01-nandri, TA-C01-illai, TA-C01-aam, TA-C01-vanakkam]
+duration:
+  max_seconds: 120
+requires:
+  knowledge: []
+introduces:
+  knowledge: [TA-LEX-C01-ANSWERING-01]
+practises:
+  knowledge: [TA-LEX-C01-ANSWERING-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
 ---
+
 
 # Putting the five together — how Tamil answers
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Five words, one at a time. Now they go into a conversation, and two
 habits show up that English does not have.
 
-## Using them
+## The exchange — built from the five words
+<!-- hl-knowledge: introduces=[TA-LEX-C01-ANSWERING-01]; assesses=[] -->
 
 A whole exchange, built only from the five words:
 
-> — **வணக்கம்.** — **வணக்கம்.**
-> — **சரி?** — **ஆம்.**
-> — **நன்றி.** — **சரி.**
+> — ***vaṇakkam*.** — ***vaṇakkam*.**
+> — ***sari*?** — ***ām*.**
+> — ***naṉṟi*.** — ***sari*.**
 >
 > *— Hello. — Hello.*
 > *— Alright? — Yes.*
@@ -35,7 +52,11 @@ A whole exchange, built only from the five words:
 
 Every reply is one word. Tamil is comfortable with that in a way English is not.
 
+Say the exchange, don't read it. Each of these five words is printed in Tamil in
+its own lesson, and the letters arrive later, one at a time.
+
 ## Grammar Lens: two habits behind the answers
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **One — Tamil often answers by echoing the verb.**
 
@@ -58,12 +79,14 @@ it is what makes the whole thing negative. Learn it as *is not* and both uses
 fall out.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C01-ANSWERING-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: the exchange above, both parts]
 - [YOU HEAR: "puttakam uṇḍu" … "puttakam illai" — only the last word changed]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C01-ANSWERING-01] -->
 
 [PAUSE 3s] Give a one-word reply to *sari?* and to *naṉṟi*. (**ām** / **sari**.)
 Besides *ām*, what else is a natural yes? (**Repeating the verb**.) What does

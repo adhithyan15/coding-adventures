@@ -1,12 +1,13 @@
 {
   "language": "sanskrit",
   "chapter": 22,
-  "sourceHash": "fnv1a64:4d1be13d35800fa5",
+  "sourceHash": "fnv1a64:56d691d417c13af8",
   "lessonIds": [
     "SA-C22-hear",
     "SA-C22-lead",
     "SA-C22-play",
-    "SA-C22-burn"
+    "SA-C22-burn",
+    "SA-S221-letter-dda"
   ],
   "tex": "sanskrit/book/chapters/ch22-more-verbs.tex"
 }

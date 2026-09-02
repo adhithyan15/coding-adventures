@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C07-jaowa
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 410
-chapter: 7
+sequence: 740
+chapter: 13
 type: word
 headword: যাওয়া
 romanization: jāwā
@@ -34,7 +34,7 @@ reviews_of: [BN-C02-tumi-apni, BN-C07-howa]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Chapter 2 gave you three different words for "you." It did not tell
+[PAUSE 2s] Chapter 3 gave you three different words for "you." It did not tell
 you the rest of the bill: each one bends the verb a different way too.
 
 ## You'll want to know: যাওয়া
@@ -42,13 +42,13 @@ you the rest of the bill: each one bends the verb a different way too.
 
 > **যাওয়া** — *jāwā* — **to go**
 
-আমি যাই (*āmi jāi*), "I go." Same *-i* "I" ending as Chapter 5's *bôli*, on the
+আমি যাই (*āmi jāi*), "I go." Same *-i* "I" ending as Chapter 11's *bôli*, on the
 same *-wā* dictionary form you met a moment ago.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**যাওয়া** is Sanskrit **√যা** (*√yā*, "to go, to travel"), and the whole northern
+**যাওয়া** is Sanskrit *√yā* ("to go, to travel"), and the whole northern
 family walks on it: Hindi *jānā*, Marathi *jāṇe*, Gujarati *javũ*, Punjabi
 *jāṇā*. Sanskrit's *y-* hardened to a *j-* sound right across eastern Indo-Aryan,
 which is why Bengali still writes the *y*-letter **য** but says *j*.
@@ -76,7 +76,7 @@ disguises dozens of familiar Sanskrit words.
 
 Three endings, one verb. And the same grading runs on into the third person:
 সে যায় (*se jāy*) is "he goes," তিনি যান (*tini jān*) is "he goes" said of
-someone you respect — the very ending আপনি takes. Chapter 5 showed that the
+someone you respect — the very ending আপনি takes. Chapter 11 showed that the
 ending already means "I," so the pronoun can be dropped. The register cannot.
 Choose *jāsh* or *jān* and you have placed yourself socially, pronoun or no
 pronoun.

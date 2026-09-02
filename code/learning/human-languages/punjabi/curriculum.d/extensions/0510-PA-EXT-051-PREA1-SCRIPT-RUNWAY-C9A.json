@@ -1,0 +1,11 @@
+{
+  "id": "PA-EXT-051-PREA1-SCRIPT-RUNWAY-C9A",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can recognize the first mātrā written below the line, and read pasand.",
+  "prerequisites": [],
+  "lessons": [
+    "PA-S09-aunkar-tippi"
+  ]
+}

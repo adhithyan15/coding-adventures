@@ -2,38 +2,33 @@
   "version": 1,
   "language": "bengali",
   "chapter": 16,
-  "title": "Hanging From the Head-Line, One Piece at a Time",
+  "title": "Tea, Water, Milk, and Rice",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c53696530f0636ec",
+  "sourceHash": "fnv1a64:b0369f5dfdde1482",
   "lessons": [
     {
-      "id": "BN-W01-na",
-      "sequence": 1600,
-      "title": "ন (nô) — the consonant na",
-      "headword": "ন",
-      "romanization": "nô",
-      "gloss": "the consonant na — and an inherent vowel that is not 'a'",
+      "id": "BN-C10-cha",
+      "sequence": 870,
+      "title": "চা (chā) — \"tea,\" and the first word you can politely offer",
+      "headword": "চা",
+      "romanization": "chā",
+      "gloss": "tea — a loanword that crossed from China into Bengali overland, and the drink this chapter's polite offers run on",
       "script": "bengali",
-      "modality": "pen",
-      "derivedModality": "pen",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "writing-type",
-        "script-block",
-        "sight-cue"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:eedcc499ba736b46",
+      "sourceHash": "fnv1a64:066fc17282b6f1f1",
       "notice": {
-        "modality": "pen",
+        "modality": "sight",
         "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script",
-          "Guided Practice"
+          "The letters in this word"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -49,64 +44,122 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing is assumed but the words you can already say. This chapter turns them into words you can read."
+              "text": "Last lesson you said āmār chā bhālo lāge, \"I like tea,\" without চা ever being taught on its own. Here it is, by itself — and a new job for a form you already own."
             }
           ]
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "Script",
+          "type": "input",
+          "title": "You'll want to know: চা",
           "segments": [
             {
               "kind": "speech",
-              "text": "Bengali is an abugida: a consonant already carries a vowel, and you write a vowel mark only when you want a different one."
-            },
-            {
-              "kind": "speech",
-              "text": "ন (nô)."
-            },
-            {
-              "kind": "speech",
-              "text": "Now the part that catches every reader who comes to Bengali from Hindi or Sanskrit. The inherent vowel here is not a. It is ô — the vowel of English awe, rounded and open. So this letter alone is nô, not na."
-            },
-            {
-              "kind": "speech",
-              "text": "Devanagari's bare consonant says ka; Bengali's says kô. Same family, same system, different default. It is one of the first things that makes Bengali sound like Bengali rather than like Hindi read aloud."
-            },
-            {
-              "kind": "speech",
-              "text": "Look at the top of the shape: a horizontal bar, and in running text it joins up across a whole word so the writing hangs from a line — the same head-line Devanagari has, and the one Gujarati erases."
+              "text": "চা — chā — tea."
             }
           ]
         },
         {
           "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
+          "type": "script",
+          "title": "The letters in this word",
           "segments": [
             {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "ন (nô)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: ন]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
+              "kind": "speech",
+              "text": "চা (chā) is চ (chô) with the vowel sign া (ā). চ is a plain, unaspirated ch, the sound at the start of English church with no puff of breath behind it — Bengali also has a breathy partner, ছ, for later."
             }
           ]
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চা (chā) is not Sanskrit at all. It came into Bengali from Persian čā, which took it from Chinese chá. That is the overland route: China to Persia to Bengal, the same road Hindi and Punjabi travelled. The words that reached Europe — English tea, French thé — went the opposite way, by sea, from Hokkien Chinese tê, carried on Dutch trading ships. One drink, two ends of the same word, arriving by two different roads."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens: an offer, built on a form you already have",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Chapter 13 taught you আপনি খান (āpni khān), the respectful form of খাওয়া. Put a noun in front of it and the very same words become a polite offer or request:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Bengali",
+                "what it does"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "Bengali: আপনি খান. what it does: you eat / you drink (respectful).",
+                "Bengali: চা (chā) খান. what it does: (please) have some tea."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "No new ending to learn — চা (chā) খান reuses exactly what Chapter 13 already gave you."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"chā\" — tea",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"chā\" — tea]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the offer — \"chā khān\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the offer — \"chā khān\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the route it travelled — \"chá … čā … chā\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the route it travelled — \"chá … čā … chā\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "last lesson's line again — \"āmār chā bhālo lāge\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: last lesson's line again — \"āmār chā bhālo lāge\"]"
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -118,42 +171,35 @@
             },
             {
               "kind": "speech",
-              "text": "What vowel does a bare Bengali consonant carry? (ô, the vowel of awe — not a.) And what does Devanagari's carry instead? (a.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Bengali chart."
+              "text": "Offer someone tea, politely. (চা (chā) খান.) Is চা (chā) inherited from Sanskrit? (No — it is a Chinese word that reached Bengali by way of Persian.) What form does চা (chā) খান reuse? (আপনি খান, Chapter 13's respectful \"you eat/drink,\" with no new ending.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "BN-W01-aa-matra",
-      "sequence": 1610,
-      "title": "া (-a) — the vowel sign that replaces the inherent vowel",
-      "headword": "া",
-      "romanization": "-a",
-      "gloss": "the vowel sign that replaces the inherent vowel — and your first readable word",
+      "id": "BN-C10-jol",
+      "sequence": 880,
+      "title": "জল (jôl) — \"water,\" prised out of a phrase you already know",
+      "headword": "জল",
+      "romanization": "jôl",
+      "gloss": "water — the word Chapter 13 already used to say \"drink water,\" now taught on its own, beside the Bangladesh-register পানি",
       "script": "bengali",
-      "modality": "pen",
-      "derivedModality": "pen",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a66fe2c67ac18397",
+      "sourceHash": "fnv1a64:19bef7db2a4e338d",
       "notice": {
-        "modality": "pen",
+        "modality": "sight",
         "needs": [
-          "a pen and something to write on",
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script",
-          "Guided Practice"
+          "The letters in this word"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -169,68 +215,102 @@
             },
             {
               "kind": "speech",
-              "text": "Write the piece from the previous lesson before adding another."
+              "text": "Chapter 13 taught you জল (jôl) খাওয়া, \"to drink water\" — literally \"water-eat\" — without ever teaching জল (jôl) by itself. Here it is, on its own."
             }
           ]
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "Script",
+          "type": "input",
+          "title": "You'll want to know: জল",
           "segments": [
             {
               "kind": "speech",
-              "text": "To get a different vowel you replace the inherent one with a mark called a mātrā."
+              "text": "জল — jôl — water."
             },
             {
               "kind": "speech",
-              "text": "া (-a)."
-            },
-            {
-              "kind": "speech",
-              "text": "A single upright stroke standing to the right of its consonant, dropping from the head-line. Attached, it swaps the inherent ô for a long open a."
-            },
-            {
-              "kind": "speech",
-              "text": "ন (nô) + া (-a) becomes না."
-            },
-            {
-              "kind": "speech",
-              "text": "na — and that is the word for no, which you have been saying since your first lesson."
-            },
-            {
-              "kind": "speech",
-              "text": "One consonant and one mark, and a word you could already say became a word you can read."
+              "text": "জল (jôl) খান — (please) drink some water, the same offer pattern as last lesson."
             }
           ]
         },
         {
           "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
+          "type": "script",
+          "title": "The letters in this word",
           "segments": [
             {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "া (-a)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: া]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
+              "kind": "speech",
+              "text": "জল is জ (jô) + ল (l), two bare consonants with no vowel sign between them. জ keeps its inherent vowel; ল, at the end of the word with nothing written after it, is silent — so jôl, one syllable, not jô-lô."
             }
           ]
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জল (jôl) is Sanskrit জল (jôl) (jala), inherited straight through Prakrit. Past Sanskrit its root is genuinely unsettled: one proposal traces it to PIE gʷelHo-, \"to gush forth, to spring\" — but the same sources call a local, non-Indo-European origin \"unlikely though possible.\" No confident cousin is claimed here; the honest answer is that nobody is sure."
+            },
+            {
+              "kind": "speech",
+              "text": "Bengali has a second word for water, most common in Bangladesh: পানি (pani). That one is on secure ground — Sanskrit pānīya, \"drinkable,\" built directly on √pā, \"to drink,\" the very root behind Chapter 13's পান করা and English potion, potable. Two words for the same thing, one of disputed origin and one you can trace all the way home."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"jôl\" — water, one syllable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"jôl\" — water, one syllable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the offer — \"jôl khān\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the offer — \"jôl khān\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Bangladesh word, and its root — \"pani … pā, potion, potable\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Bangladesh word, and its root — \"pani … pā, potion, potable\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tea, then water — \"chā khān … jôl khān\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: tea, then water — \"chā khān … jôl khān\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -242,42 +322,54 @@
             },
             {
               "kind": "speech",
-              "text": "What does a mātrā do to the inherent vowel? (Replaces it.) What word did those two pieces make? (না — na, \"no\".)"
+              "text": "What did Chapter 13 already say with জল (jôl), without teaching it as a word? (জল (jôl) খাওয়া, \"to drink water.\") Is জল (jôl)'s root secure? (No — genuinely disputed.) Which everyday synonym for water traces cleanly to \"drinkable,\" from the root behind potion? (পানি.)"
             },
             {
-              "kind": "speech",
-              "text": "Source: Unicode Bengali chart."
+              "kind": "activity",
+              "scored": true,
+              "id": "BN-C10-jol-water",
+              "prompt": "Type the Bengali word jôl, meaning 'water'.",
+              "assesses": [
+                "BN-LEX-C10-JOL-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "জল",
+                "jôl",
+                "jol"
+              ],
+              "feedback": {
+                "correct": "Right: জল is jôl, water.",
+                "incorrect": "The word is জল - jôl."
+              }
             }
           ]
         }
       ]
     },
     {
-      "id": "BN-W01-aa",
-      "sequence": 1620,
-      "title": "আ — the same vowel standing alone",
-      "headword": "আ",
-      "romanization": "a",
-      "gloss": "the same vowel standing alone — a different character for the same sound",
+      "id": "BN-C10-dudh",
+      "sequence": 890,
+      "title": "দুধ (dudh) — \"milk,\" and the vowel this word refuses to keep",
+      "headword": "দুধ",
+      "romanization": "dudh",
+      "gloss": "milk — a word whose spelling could ask for a trailing vowel but doesn't, and a root whose one secure English cousin is not the word it looks like",
       "script": "bengali",
-      "modality": "pen",
-      "derivedModality": "pen",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c90a1b9dc66e8228",
+      "sourceHash": "fnv1a64:e148a82499ff05d3",
       "notice": {
-        "modality": "pen",
+        "modality": "sight",
         "needs": [
-          "a pen and something to write on",
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script",
-          "Guided Practice"
+          "The letters in this word"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -293,80 +385,109 @@
             },
             {
               "kind": "speech",
-              "text": "Write the piece from the previous lesson before adding another."
+              "text": "Chapter 15 met a word that had to end in a vowel nobody wrote — সাহায্য, sāhājjo. This word looks like it could do the same thing. It doesn't."
             }
           ]
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "Script",
+          "type": "input",
+          "title": "You'll want to know: দুধ",
           "segments": [
             {
               "kind": "speech",
-              "text": "The mark you just learned only works attached to a consonant. So what do you write when a word begins with that vowel?"
+              "text": "দুধ — dudh — milk."
             },
             {
               "kind": "speech",
-              "text": "A different character:"
-            },
-            {
-              "kind": "speech",
-              "text": "আ (a)."
-            },
-            {
-              "kind": "speech",
-              "text": "That is the same a sound, but as an independent vowel — a full letter that stands on its own at the start of a word."
-            },
-            {
-              "kind": "speech",
-              "text": "These are two different characters, not two styles of one. A font, a keyboard and this book all treat them as entirely separate, and confusing them is the commonest spelling error in every Indic script."
-            },
-            {
-              "kind": "speech",
-              "text": "What decides which one you write is position, not sound:"
-            },
-            {
-              "kind": "speech",
-              "text": "আ begins a word."
-            },
-            {
-              "kind": "speech",
-              "text": "া (-a) rides on a consonant."
-            },
-            {
-              "kind": "speech",
-              "text": "Two words you already say begin with this letter — the one for I see you later and the one for all right."
+              "text": "দুধ (dudh) খান — (please) have some milk."
             }
           ]
         },
         {
           "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
+          "type": "script",
+          "title": "The letters in this word",
           "segments": [
             {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "আ (a)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: আ]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
+              "kind": "speech",
+              "text": "দুধ (dudh) is দ (dô) with the vowel sign ু (u), plus ধ (dh), a breathy dental d. Nothing is written after ধ — the same bare-consonant ending সাহায্য had."
             }
           ]
         },
         {
           "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need: why this one stays silent",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সাহায্য had to surface its inherent vowel — sāhājjo, not sāhājj — because its final letter is a doubled consonant, য্য, and a bare cluster like that cannot be said at all without a vowel to carry it. দুধ ends in one plain consonant, ধ, which needs no such help. So Bengali leaves it silent: দুধ, not dudho. The spelling looks the same kind of \"bare ending\" in both words; whether the vowel survives depends on what it would take to pronounce the letter beneath it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দুধ (dudh) is Sanskrit dugdha, the past participle of √duh (\"to milk\"), from PIE dʰewgʰ-, \"to produce, to yield.\" That root has exactly one secure English descendant, and it is not the word you would guess: doughty, \"valiant,\" through Old English dohtig, \"capable, of use.\" The word that looks like a cousin, dough, is not one — it comes from a completely different PIE root, dʰeyǵʰ-, \"to knead, to mould.\" A close sound, two unrelated histories."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"dudh\" — no trailing vowel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"dudh\" — no trailing vowel]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the offer — \"dudh khān\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the offer — \"dudh khān\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two endings compared — \"sāhājjo … dudh\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two endings compared — \"sāhājjo … dudh\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "three drinks so far — \"chā khān … jôl khān … dudh khān\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: three drinks so far — \"chā khān … jôl khān … dudh khān\"]"
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -378,42 +499,35 @@
             },
             {
               "kind": "speech",
-              "text": "Which of the two starts a word? (আ.) Which rides on a consonant? (া (-a).) Are they the same character? (No — two separate characters, one sound.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Bengali chart."
+              "text": "Why does সাহায্য keep its final vowel while দুধ (dudh) doesn't? (সাহায্য ends in a doubled consonant that cannot be said bare; দুধ (dudh)'s single ধ can.) Is দুধ (dudh)'s root related to English dough? (No — that is a different PIE root; the real cousin is doughty.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "BN-W01-ha",
-      "sequence": 1630,
-      "title": "হ (hô) — the consonant ha",
-      "headword": "হ",
-      "romanization": "hô",
-      "gloss": "the consonant ha",
+      "id": "BN-C10-bhat",
+      "sequence": 900,
+      "title": "ভাত (bhāt) — \"rice,\" and a root that will name a person too",
+      "headword": "ভাত",
+      "romanization": "bhāt",
+      "gloss": "cooked rice — the meal itself, and a Sanskrit root for \"share\" that will resurface two lessons from now in a very different word",
       "script": "bengali",
-      "modality": "pen",
-      "derivedModality": "pen",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0eaaa6660e8f638b",
+      "sourceHash": "fnv1a64:eb851ea4f9698ddd",
       "notice": {
-        "modality": "pen",
+        "modality": "sight",
         "needs": [
-          "a pen and something to write on",
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script",
-          "Guided Practice"
+          "The letters in this word"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -429,60 +543,111 @@
             },
             {
               "kind": "speech",
-              "text": "Write the piece from the previous lesson before adding another."
+              "text": "Three drinks so far. This chapter closes on the word for the meal itself — and a root worth remembering, because it comes back."
             }
           ]
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "Script",
+          "type": "input",
+          "title": "You'll want to know: ভাত",
           "segments": [
             {
               "kind": "speech",
-              "text": "হ (hô)."
+              "text": "ভাত — bhāt — cooked rice."
             },
             {
               "kind": "speech",
-              "text": "hô — the h of English hat, plus the inherent vowel you now know is ô rather than a."
-            },
-            {
-              "kind": "speech",
-              "text": "No new machinery: every rule you hold applies unchanged. New shapes are coming; new rules are not."
-            },
-            {
-              "kind": "speech",
-              "text": "You have been saying this letter since your first lesson — it opens the word for yes."
+              "text": "ভাত (bhāt) খান — (please) eat some rice; in everyday Bengali, \"have a meal.\""
             }
           ]
         },
         {
           "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
+          "type": "script",
+          "title": "The letters in this word",
           "segments": [
             {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "হ (hô)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: হ]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
+              "kind": "speech",
+              "text": "ভাত is ভ (bhô, a b with a puff of breath) with the vowel sign া (ā), plus ত (t), silent at the end for the same reason দুধ (dudh)'s ধ was: a single bare consonant needs no vowel to carry it, so bhāt, not bhāto."
             }
           ]
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভাত (bhāt) is Sanskrit bhakta, \"portioned out, shared\" — the past participle of √bhaj, \"to divide, to distribute, to allot.\" PIE bʰeh₂g- sits behind it. Rice, in this word's own history, is not \"the grain\" but the share that was given out — the meal as a portion handed to you."
+            },
+            {
+              "kind": "speech",
+              "text": "Hold onto that root. Two lessons from now, the very same Sanskrit verb will turn up again, naming someone rather than something."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"bhāt\" — cooked rice, no trailing vowel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"bhāt\" — cooked rice, no trailing vowel]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the offer — \"bhāt khān\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the offer — \"bhāt khān\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four, in order — \"chā khān … jôl khān … dudh khān … bhāt khān\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four, in order — \"chā khān … jôl khān … dudh khān … bhāt khān\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two silent endings, back to back — \"dudh … bhāt\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two silent endings, back to back — \"dudh … bhāt\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the root that shares — \"bhaj — to divide, to distribute\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the root that shares — \"bhaj — to divide, to distribute\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -494,751 +659,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is the inherent vowel in হ (hô)? (ô.) How many new rules did this lesson add? (None.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Bengali chart."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "BN-W01-ma",
-      "sequence": 1640,
-      "title": "ম (mô) — the consonant ma",
-      "headword": "ম",
-      "romanization": "mô",
-      "gloss": "the consonant ma",
-      "script": "bengali",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:758d761299d55e46",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write the piece from the previous lesson before adding another."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ম (mô)."
-            },
-            {
-              "kind": "speech",
-              "text": "mô — the m of English met, plus the inherent vowel."
-            },
-            {
-              "kind": "speech",
-              "text": "Three consonants now. Say them in the order you met them, each with the vowel nobody wrote:"
-            },
-            {
-              "kind": "speech",
-              "text": "ন (nô) হ (hô) ম (mô)."
-            },
-            {
-              "kind": "speech",
-              "text": "nô, hô, mô. Notice you are saying aw three times, not ah."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "ম (mô)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: ম]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say the three consonants you hold, each with its inherent vowel. (nô, hô, mô.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Bengali chart."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "BN-W01-sa",
-      "sequence": 1650,
-      "title": "স (shô) — the consonant that is written s and said sh",
-      "headword": "স",
-      "romanization": "shô",
-      "gloss": "the consonant that is written s and said sh",
-      "script": "bengali",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:341320bfbe6972cb",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write the piece from the previous lesson before adding another."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "স (shô)."
-            },
-            {
-              "kind": "speech",
-              "text": "Here the letter and the sound part company, and it is worth knowing early."
-            },
-            {
-              "kind": "speech",
-              "text": "This letter descends from the Sanskrit s, and every transliteration writes it s. In Bengali it is normally pronounced sh — the sh of English shoe."
-            },
-            {
-              "kind": "speech",
-              "text": "So the word you say as nomosh-kar is written with what looks like an s. The spelling records the word's Sanskrit ancestry; the pronunciation records what Bengali did with it afterwards. Both are true, and the script keeps the older one."
-            },
-            {
-              "kind": "speech",
-              "text": "English does exactly this with knight and through. Every literary language accumulates spellings that outlive their sounds."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "স (shô)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: স]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "How is স (shô) written in transliteration, and how is it said? (Written s, said sh.) Why the difference? (The spelling keeps the Sanskrit ancestry; the sound moved on.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Bengali chart."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "BN-W01-ka",
-      "sequence": 1660,
-      "title": "ক (kô) — the consonant ka",
-      "headword": "ক",
-      "romanization": "kô",
-      "gloss": "the consonant ka — unaspirated",
-      "script": "bengali",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:1c76ab09a17c9bad",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write the piece from the previous lesson before adding another."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ক (kô)."
-            },
-            {
-              "kind": "speech",
-              "text": "kô — the k of English skip, with no puff of breath after it."
-            },
-            {
-              "kind": "speech",
-              "text": "Hold a palm in front of your mouth and say English kit: you feel air. Say skip: you do not. This is the second one. Bengali has a separate letter for the breathy version, and swapping them changes the word — so a difference English treats as an accident, this script writes down."
-            },
-            {
-              "kind": "speech",
-              "text": "Five consonants, one mātrā, one independent vowel. One piece of machinery left."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "ক (kô)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: ক]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Is ক (kô) the k of kit or of skip? (Of skip — no puff of air.) Does the script care? (Yes — the breathy one is a different letter.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Bengali chart."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "BN-W01-hasanta",
-      "sequence": 1670,
-      "title": "্ ((hasanta)) — the mark that DELETES the inherent vowel and fuses two consonants",
-      "headword": "্",
-      "romanization": "(hasanta)",
-      "gloss": "the mark that DELETES the inherent vowel and fuses two consonants",
-      "script": "bengali",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:e68b33a392711989",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write the piece from the previous lesson before adding another."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The inherent vowel is a nuisance when you do not want it. If a word presses two consonants together with no vowel between them, writing them plainly would insert an ô that is not there."
-            },
-            {
-              "kind": "speech",
-              "text": "So there is a mark that removes it:"
-            },
-            {
-              "kind": "speech",
-              "text": "্ ((hasanta))."
-            },
-            {
-              "kind": "speech",
-              "text": "Bengali calls it the hasanta — Devanagari calls the same thing a virama. It sits under a consonant and means: no vowel here."
-            },
-            {
-              "kind": "speech",
-              "text": "Then something happens that no European alphabet does. A consonant stripped of its vowel fuses with the one after it into a single joined shape, a conjunct:"
-            },
-            {
-              "kind": "speech",
-              "text": "স (shô) + ্ ((hasanta)) + ক (kô) becomes স্ক."
-            },
-            {
-              "kind": "speech",
-              "text": "One cluster. Conjuncts are not new characters to memorise — they are two you already know, joined. Bengali's are more thoroughly fused than Devanagari's, so some take a moment to take apart, but the principle does not change."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "্ ((hasanta))",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: ্]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does the hasanta do? (Removes the inherent vowel.) What is Devanagari's name for the same mark? (The virama.) And are conjuncts new letters? (No — two known letters, fused.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Bengali chart."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "BN-W01-ra",
-      "sequence": 1680,
-      "title": "র (rô) — the last consonant of the greeting",
-      "headword": "র",
-      "romanization": "rô",
-      "gloss": "the last consonant of the greeting",
-      "script": "bengali",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:84a07209c194a1d1",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write the piece from the previous lesson before adding another."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "র (rô)."
-            },
-            {
-              "kind": "speech",
-              "text": "rô — a light tap of the tongue, closer to the r of Spanish pero than to any English r."
-            },
-            {
-              "kind": "speech",
-              "text": "That is the last piece. Everything the greeting needs is now something you can write from memory."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "র (rô)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: র]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "How is র (rô) made? (A light tap, not an English r.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Bengali chart."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "BN-W01-nomoshkar-read",
-      "sequence": 1690,
-      "title": "নমস্কার (nomoshkar) — seven pieces, all of them already yours",
-      "headword": "নমস্কার",
-      "romanization": "nomoshkar",
-      "gloss": "seven pieces, all of them already yours — the greeting, read",
-      "script": "bengali",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:1db3c9f2d04fe9ed",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write the piece from the previous lesson before adding another."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Nothing new is introduced here. Every piece below is one you can write."
-            },
-            {
-              "kind": "speech",
-              "text": "ন (nô) + ম (mô) + স (shô) + ্ ((hasanta)) + ক (kô) + া (-a) + র (rô) becomes নমস্কার (nomoshkar)."
-            },
-            {
-              "kind": "speech",
-              "text": "Read it the way you built it:"
-            },
-            {
-              "kind": "speech",
-              "text": "ন — nô, inherent vowel."
-            },
-            {
-              "kind": "speech",
-              "text": "ম — mô, inherent vowel."
-            },
-            {
-              "kind": "speech",
-              "text": "স্ক — the conjunct: the s-letter with its vowel removed, fused to kô."
-            },
-            {
-              "kind": "speech",
-              "text": "া (-a) — the mātrā, making that piece ka."
-            },
-            {
-              "kind": "speech",
-              "text": "র — rô."
-            },
-            {
-              "kind": "speech",
-              "text": "nô-mosh-kar — and notice the sh, from a letter written s."
-            },
-            {
-              "kind": "speech",
-              "text": "Count what it took: six consonants, one mātrā, one independent vowel and one hasanta. With them you can read no and the greeting, and every consonant you meet from here obeys rules you already hold."
-            },
-            {
-              "kind": "speech",
-              "text": "Bengali has around forty more letters. It does not have any more systems."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "নমস্কার (nomoshkar)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: নমস্কার]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "How many new pieces were in this lesson? (None.) What is স্ক made of? (The s-letter with its vowel removed, joined to ক (kô).) And what still remains to learn — rules, or shapes? (Shapes.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Bengali chart."
+              "text": "What does ভাত literally mean, at the root? (\"Portioned out, shared\" — √bhaj, \"to divide.\") Offer all four of this chapter's words, politely, in one breath. (Chā khān, jôl khān, dudh khān, bhāt khān.) Why do দুধ and ভাত both drop their final vowel? (Each ends in one plain consonant, easily said bare.) A quick run back through Chapter 13 while you're at it: which verb does Bengali reach for when আছে runs out of future? (হবে.) How many forms of \"I come\" does a Bengali speaker need, whoever is talking? (One — āmi āsi.) And \"you go\" to a stranger, versus to a friend? (যান jān, versus যাও jāo.) সাহায্য's doubled letter — said how? (jj, not yy.)"
             }
           ]
         }

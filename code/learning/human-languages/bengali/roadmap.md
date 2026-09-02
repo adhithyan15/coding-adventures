@@ -173,8 +173,8 @@ Structural work, filed as **HL-C194** in `BACKLOG.d/`: the script strand sits
 after all fifteen content chapters, which is why `scriptClosureViolations` is
 unmoved at 65 while `neverTaughtGlyphs` has fallen from 48 to 22. Interleaving
 the strand into chapters 1–6 was measured to be worth seventeen violations;
-relocating chapter 16 alone is worth three.
+relocating chapter 18 alone is worth three.
 
 Note: Bengali marks "you" **three** ways by register — *tui* (intimate) / *tumi*
 (familiar) / *āpni* (respectful) — a finer distinction than the two-way split of
-the Romance and other Indo-Aryan tracks. Introduced in Chapter 2.
+the Romance and other Indo-Aryan tracks. Introduced in Chapter 3.

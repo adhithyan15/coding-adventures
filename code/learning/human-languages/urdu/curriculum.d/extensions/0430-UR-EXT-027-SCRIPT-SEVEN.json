@@ -1,0 +1,11 @@
+{
+  "id": "UR-EXT-027-SCRIPT-SEVEN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read eight words the book taught me by ear letter by letter from the right, including kan and nak, the same three letters in different orders.",
+  "prerequisites": [],
+  "lessons": [
+    "UR-C16-practice"
+  ]
+}

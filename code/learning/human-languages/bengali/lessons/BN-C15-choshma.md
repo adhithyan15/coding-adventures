@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C15-choshma
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 1230
-chapter: 15
+sequence: 1300
+chapter: 25
 type: word
 headword: চশমা
 romanization: choshma
@@ -56,7 +56,7 @@ an everyday shortening this particular loanword has settled into.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C12-CHOKH-01] -->
 
-**চশমা** is built on Persian **চশম** (*chashm*), "eye" — the exact word the
+**চশমা** is built on Persian *chashm*, "eye" — the exact word the
 eye lesson once named as চোখ's only named cousin outside the Indo-Aryan
 family, with no secure English descendant claimed for চোখ itself. চশমা
 takes that word and adds a suffix that turns "eye" into "eye-thing":

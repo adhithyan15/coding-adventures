@@ -2,8 +2,8 @@
   "lesson": {
     "id": "SA-S01-letter-ma",
     "language": "sanskrit",
-    "chapter": 8,
-    "sequence": 435,
+    "chapter": 3,
+    "sequence": 181,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,10 +17,10 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:c5f3c49ddd22256d",
+    "sourceHash": "fnv1a64:b386d7b92a08e4bf",
     "detachableSegments": [
       "Script you'll notice: म",
-      "Writing: म — copy what you see"
+      "Writing: म"
     ],
     "delivery": "script"
   },

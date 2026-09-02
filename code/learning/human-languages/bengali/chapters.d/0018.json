@@ -1,28 +1,22 @@
 {
   "chapter": 18,
-  "title": "The Breath That Is a Letter",
-  "label": "ch:bn-breath-is-a-letter",
-  "canDo": "I can read six more Bengali words I already say — কালো, আবার, ভালো, মুখ, সাদা and দুধ — tell a plain consonant from its breathy partner on the page and in the mouth, and say why the o-sign is two signs I already write rather than a new shape.",
+  "title": "Friend, Family, Brother, and Sister",
+  "label": "ch:bn-friend-family-brother-sister",
+  "canDo": "I can name a friend, my family, my brother and my sister in Bengali, none of them marked for gender, and say which are borrowed whole from Sanskrit and which evolved by sound change, including one that turns out to share a root with the previous chapter's rice.",
   "spineNodes": [
-    "SPINE-MEET-GREET"
+    "SPINE-EXCHANGE-NAMES"
   ],
   "payoff": {
-    "lesson": "BN-W03-dudh-read",
-    "kind": "reading",
-    "summary": "Milk puts the plain dental and its breathy partner side by side in one three-piece word, then the chapter's six words are read back in one pass with nothing new introduced.",
+    "lesson": "BN-C11-bon",
+    "kind": "production",
+    "summary": "The chapter closes on বোন, which is not related to English 'sister' at all: it traces through Sanskrit bhaginī and bhaga, 'a share,' back to the same √bhaj that named Chapter 10's ভাত. The reader names all four people (bôndhu, pôribār, bhāi, bon), states which two are tatsamas kept whole from Sanskrit (বন্ধু, পরিবার) and which two are tadbhavas worn down by sound change (ভাই, বোন), and counts a sibling or two using Chapter 6's numbers. It reaches back to rescue all five of Chapter 6's numbers atoms, unrevisited since the chapter that introduced them.",
     "assesses": [
-      "BN-SCRIPT-O-MATRA-01",
-      "BN-SCRIPT-KALO-READ-01",
-      "BN-SCRIPT-BA-01",
-      "BN-SCRIPT-ABAR-READ-01",
-      "BN-SCRIPT-BHA-01",
-      "BN-SCRIPT-BHALO-READ-01",
-      "BN-SCRIPT-KHA-01",
-      "BN-SCRIPT-MUKH-READ-01",
-      "BN-SCRIPT-DA-01",
-      "BN-SCRIPT-SHADA-READ-01",
-      "BN-SCRIPT-DHA-01",
-      "BN-SCRIPT-DUDH-READ-01"
+      "BN-LEX-C11-BONDHU-01",
+      "BN-LEX-C11-PORIBAR-01",
+      "BN-LEX-C11-BHAI-01",
+      "BN-LEX-C11-BON-01",
+      "BN-LEX-NUMBERS-ONE-TO-FIVE",
+      "BN-ETYMON-DUI-COMPARISON"
     ]
   }
 }

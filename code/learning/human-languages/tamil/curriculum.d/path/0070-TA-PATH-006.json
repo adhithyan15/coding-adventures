@@ -3,9 +3,12 @@
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
     "TA-C01-sari",
-    "TA-C01-answering"
+    "TA-C01-answering",
+    "TA-C01-practice"
   ],
   "before": [],
-  "inline": [],
+  "inline": [
+    "TA-EXT-006-CONSOLIDATION"
+  ],
   "after": []
 }

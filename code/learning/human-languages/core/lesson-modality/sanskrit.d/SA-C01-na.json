@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C01-na",
+    "language": "sanskrit",
+    "chapter": 1,
+    "sequence": 55,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1fc892002b28f685"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-EXT-002C-SCRIPT-SIN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write sin from memory and say how it differs from the shin I already met in shukriya.",
+  "prerequisites": [],
+  "lessons": [
+    "UR-W01-sin"
+  ]
+}

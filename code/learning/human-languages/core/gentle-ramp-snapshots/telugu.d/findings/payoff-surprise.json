@@ -1,11 +1,5 @@
 {
   "language": "telugu",
   "kind": "payoff-surprise",
-  "finding": {
-    "language": "telugu",
-    "kind": "payoff-surprise",
-    "count": 2,
-    "unit": "chapter payoff finding(s)",
-    "detail": "make each chapter payoff assess only taught, representative material"
-  }
+  "finding": null
 }

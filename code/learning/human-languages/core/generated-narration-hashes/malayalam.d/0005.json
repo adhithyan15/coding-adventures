@@ -1,19 +1,28 @@
 {
   "language": "malayalam",
   "chapter": 5,
-  "sourceHash": "fnv1a64:d7977acf76cbb666",
+  "sourceHash": "fnv1a64:51e78cedadaca4ec",
   "lessonIds": [
     "ML-C05-samsaarikkuka",
+    "ML-S115-letter-nya",
+    "ML-S142-chillu-n",
+    "ML-S122-letter-ya",
     "ML-C05-njaan-malayalam-samsaarikkunnu",
+    "ML-S143-vowel-sign-o",
+    "ML-S111-letter-ca",
+    "ML-S144-chillu-l",
     "ML-C05-taamasikkuka",
+    "ML-S127-letter-ha",
     "ML-C05-joli-ceyyuka",
+    "ML-S145-letter-ja",
+    "ML-S146-letter-la",
     "ML-C05-practice"
   ],
-  "voiceLessons": 1,
+  "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "malayalam/narration/ch05.txt",
   "json": "malayalam/narration/ch05.json",
-  "textHash": "fnv1a64:917a81a2eb23629e",
-  "jsonHash": "fnv1a64:92d5e264b30ce27f",
+  "textHash": "fnv1a64:c6cd17299dd3019d",
+  "jsonHash": "fnv1a64:1685668951a7fa39",
   "findings": []
 }

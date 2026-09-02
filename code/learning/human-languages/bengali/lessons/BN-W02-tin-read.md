@@ -2,14 +2,14 @@
 schema_version: 2
 id: BN-W02-tin-read
 spine_node: SPINE-MEET-GREET
-sequence: 1760
+sequence: 1250
 delivery: script
-chapter: 17
+chapter: 24
 type: writing
 headword: তিন
 romanization: "tin"
 gloss: "three — the numeral you can now read as well as count"
-prerequisites: [BN-W02-ta]
+prerequisites: [BN-W04-nil-read]
 sounds: []
 roots: []
 etymology_hook: "The numeral for three is one of the least changed words in the whole Indo-European inheritance, and the Bengali spelling puts its three pieces on the page in an order the mouth refuses to follow."
@@ -26,7 +26,7 @@ modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard
-reviews_of: [BN-W02-ta, BN-C06-numbers-1-5]
+reviews_of: [BN-W04-nil-read, BN-C06-numbers-1-5]
 ---
 # তিন — three, read
 

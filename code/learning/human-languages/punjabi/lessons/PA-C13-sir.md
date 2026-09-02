@@ -9,27 +9,27 @@ headword: ਸਿਰ
 romanization: sir
 gloss: head — a cousin of English horn, not of English head, and an unborrowed twin of Persian sar
 concept_tag: PA-BODY-HEAD
-prerequisites: [PA-C13-dil]
+prerequisites: [PA-C13-dil, PA-S11-bhabbha, PA-S13-pairin-bindi, PA-S07-naana-jajja-vavva]
 sounds: [dental-sa]
 roots: [pie-kerh2-horn-head]
 etymology_hook: ਸਿਰ is inherited, ultimately from Proto-Indo-European *kerh2-, "head, horn" — the same root behind English horn and Greek karenon, "head" — not the unrelated root behind English head; and it looks identical to Persian sar, "head," not because Punjabi borrowed it, but because both are honest, separately-inherited descendants of a shared Proto-Indo-Iranian ancestor.
 duration:
   max_seconds: 290
 requires:
-  knowledge: [PA-LEX-DIL, PA-ETYMON-DIL-HEART, PA-LEX-NAKK, PA-ETYMON-NAKK-NOSE, PA-LEX-AKKH, PA-LEX-KANN, PA-LEX-MUNH, PA-LEX-BHARA, PA-LEX-BHAIN, PA-SOUND-TONE-LOW, PA-SOUND-TONE-HIGH-LEVEL]
+  knowledge: [PA-LEX-DIL, PA-ETYMON-DIL-HEART, PA-LEX-NAKK, PA-ETYMON-NAKK-NOSE, PA-LEX-AKKH, PA-LEX-KANN, PA-LEX-MUNH, PA-LEX-BHARA, PA-LEX-BHAIN, PA-SOUND-TONE-LOW, PA-SOUND-TONE-HIGH-LEVEL, PA-SCRIPT-RECOG-BHA-01, PA-SCRIPT-RECOG-SHA-01, PA-SCRIPT-RECOG-NAANA-01]
 introduces:
   knowledge: [PA-LEX-SIR, PA-ETYMON-SIR-HORN]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-LEX-SIR, PA-ETYMON-SIR-HORN, PA-LEX-DIL, PA-ETYMON-DIL-HEART, PA-LEX-NAKK, PA-ETYMON-NAKK-NOSE, PA-LEX-AKKH, PA-LEX-KANN, PA-LEX-MUNH, PA-LEX-BHARA, PA-LEX-BHAIN, PA-SOUND-TONE-LOW]
+  knowledge: [PA-LEX-SIR, PA-ETYMON-SIR-HORN, PA-LEX-DIL, PA-ETYMON-DIL-HEART, PA-LEX-NAKK, PA-ETYMON-NAKK-NOSE, PA-LEX-AKKH, PA-LEX-KANN, PA-LEX-MUNH, PA-LEX-BHARA, PA-LEX-BHAIN, PA-SOUND-TONE-LOW, PA-SCRIPT-RECOG-BHA-01, PA-SCRIPT-RECOG-SHA-01, PA-SCRIPT-RECOG-NAANA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [PA-C13-dil, PA-C12-nakk, PA-C12-munh, PA-C11-bhara]
+reviews_of: [PA-C13-dil, PA-C12-nakk, PA-C12-munh, PA-C11-bhara, PA-S11-bhabbha, PA-S13-pairin-bindi, PA-S07-naana-jajja-vavva]
 ---
 
 # ਸਿਰ — a cousin of "horn," and a twin nobody borrowed
@@ -48,7 +48,7 @@ low-toned, the way this book's other loan-versus-inheritance pair opened it.
 > **ਸਿਰ** — *sir* — **head**
 
 ## The letters in this word
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-RECOG-BHA-01, PA-SCRIPT-RECOG-SHA-01] -->
 
 **ਸ** *s*, **ਿ** short *i*, **ਰ** *r*. Every letter already familiar, from
 **ਸਤਿ** and **ਮੇਰਾ**.
@@ -86,7 +86,7 @@ resemblance to Persian is convergence, exactly like *panj*'s.
 - [YOU RUN: all six body words from this tranche — **akkh**, **kann**, **mūnh**, **nakk**, **dil**, **sir**]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-SIR, PA-ETYMON-SIR-HORN, PA-LEX-DIL, PA-LEX-NAKK, PA-LEX-AKKH, PA-LEX-KANN, PA-LEX-MUNH] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-SIR, PA-ETYMON-SIR-HORN, PA-LEX-DIL, PA-LEX-NAKK, PA-LEX-AKKH, PA-LEX-KANN, PA-LEX-MUNH, PA-SCRIPT-RECOG-NAANA-01] -->
 <!-- hl-activity: {"id":"PA-C13-sir-cousin","kind":"text","assesses":["PA-ETYMON-SIR-HORN"],"prompt":"sir shares its Proto-Indo-European root with which English word — head, or horn?","answer":"horn","accepted":["horn not head","its horn"],"feedback":{"correct":"Right: sir traces to *kerh2-, 'head, horn' — the ancestor of English horn. English head comes from an unrelated root.","incorrect":"Horn. Sir and English horn share *kerh2-; English head descends from a completely different root, *kaput-."},"response_seconds":10} -->
 
 [PAUSE 3s] Give the word for "head." (*Sir*.) Which English word is its real

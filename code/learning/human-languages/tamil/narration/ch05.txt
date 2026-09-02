@@ -11,8 +11,8 @@ So far, "to be." Here is a verb that does something — and it shows how Tamil b
 
 The word, taken apart.
 பேசு (pēsu, "to speak") is native Dravidian. The bare stem pēsu is also the command "speak!" To say "I speak," Tamil adds a two-part ending to the stem: tense + person:
-pēsu- (speak) + -giṟ- (present) + -ēṉ ("I") becomes பேசுகிறேன் (pēsugiṟēṉ), "I speak."
-The -ஏன் (-ēṉ) ending is "I" — so, as with irukkiṟēṉ, you rarely need the word nāṉ. Change the ending, change the person: pēsugiṟāṉ ("he speaks"), pēsugiṟāḷ ("she speaks"), pēsugiṟārgaḷ ("they/you-respectful speak").
+pēsu- (speak) + -giṟ- (present) + -ēṉ ("I") becomes pēsugiṟēṉ, "I speak."
+The -ēṉ ending is "I" — so, as with irukkiṟēṉ, you rarely need the word nāṉ. Change the ending, change the person: pēsugiṟāṉ ("he speaks"), pēsugiṟāḷ ("she speaks"), pēsugiṟārgaḷ ("they/you-respectful speak").
 
 Grammar Lens: stem + tense + person.
 Every Tamil verb is built this way — a stem, a tense-marker, a person-ending, stacked in that order and glued together. Learn the pattern once and every verb follows it.
@@ -111,8 +111,7 @@ Warm-up.
 A second verb — and one of the most beloved words in the language, the one Tamils use to bless.
 
 The word, taken apart.
-வாழ் (vāḻ, "to live, to flourish, to thrive") is native Dravidian, and carries more warmth than a plain "to reside." From it grow வாழ்க்கை (vāḻkkai, "life") and the blessing வாழ்க (vāḻga, "may you live / long live"), heard in vāḻga tamiḻ ("long live Tamil"). To say "I live," add the familiar ending: நான் … வாழ்கிறேன் (nāṉ … vāḻgiṟēṉ), stem + present -giṟ-.
-"I" -ēṉ, exactly like pēsugiṟēṉ.
+வாழ் (vāḻ, "to live, to flourish, to thrive") is native Dravidian, and carries more warmth than a plain "to reside." From it grow vāḻkkai ("life") and the blessing vāḻga ("may you live / long live"), heard in vāḻga tamiḻ ("long live Tamil"). To say "I live," add the familiar ending: nāṉ … vāḻgiṟēṉ, stem + present -giṟ- + "I" -ēṉ, exactly like pēsugiṟēṉ.
 
 Grammar Lens: same engine, new verb.
 You already know the machine: vāḻ- (stem) + -giṟ- (present) + -ēṉ ("I") becomes vāḻgiṟēṉ ("I live"). Every verb you learn slots into the same three-part frame — that is the reward for learning pēsu carefully.
@@ -142,8 +141,8 @@ The word, taken apart.
 செய் (sey, "to do, to make") is a core native Dravidian verb, and Tamil — like Hindi with karnā — builds compound verbs by putting a noun in front of it:
 வேலை செய் (vēlai sey) = "work-do" = "to work" (vēlai, "work").
 சமையல் செய் (samaiyal sey) = "to cook".
-உதவி செய் (udavi sey) = "to help".
-So "I work" is நான் வேலை செய்கிறேன் (nāṉ vēlai seygiṟēṉ) — sey- + -giṟ-.
+udavi sey = "to help".
+So "I work" is nāṉ vēlai seygiṟēṉ — sey- + -giṟ-.
 -ēṉ, "I do work." Master sey and a whole grammar of "do-verbs" opens up.
 
 Grammar Lens: noun + செய் = a new verb.
@@ -170,7 +169,7 @@ Warm-up.
 [pause 2 seconds]
 No new words. Three verbs, one engine — build real sentences about yourself.
 
-Build the sentences.
+Guided Practice — build the sentences.
 [pause 1 second after each]
 [your turn — say: "I speak Tamil" — nāṉ tamiḻ pēsugiṟēṉ]
 [pause 8 seconds for the answer]
@@ -181,7 +180,7 @@ Build the sentences.
 [your turn — say: "he speaks" vs. "she speaks" — pēsugiṟāṉ / pēsugiṟāḷ]
 [pause 8 seconds for the answer]
 
-The engine.
+Grammar lens — the engine.
 [pause 2 seconds]
 [your turn — say: the three stacked pieces of every Tamil verb (stem + tense + person)]
 [pause 8 seconds for the answer]
@@ -190,7 +189,7 @@ The engine.
 [your turn — say: where Tamil marks gender — and where it doesn't (3rd person only)]
 [pause 8 seconds for the answer]
 
-Roots you now carry.
+What you've built — roots you now carry.
 [pause 2 seconds]
 pēsu "to speak" (native Dravidian).
 vāḻ "to live/flourish" becomes vāḻkkai "life," vāḻga "long live".

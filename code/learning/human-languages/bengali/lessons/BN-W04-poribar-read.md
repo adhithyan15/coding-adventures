@@ -2,14 +2,14 @@
 schema_version: 2
 id: BN-W04-poribar-read
 spine_node: SPINE-MEET-GREET
-sequence: 1960
+sequence: 1000
 delivery: script
 chapter: 19
 type: writing
 headword: পরিবার
 romanization: "pôribār"
 gloss: "family — the longest word read so far, and the inherent vowel heard at last"
-prerequisites: [BN-W04-pa]
+prerequisites: [BN-W03-dudh-read]
 sounds: []
 roots: []
 etymology_hook: "Family is what surrounds you — a prefix meaning around on a root meaning to cover — and its spelling is the first in this book long enough to show the inherent vowel doing real work in the middle of a word."
@@ -26,7 +26,7 @@ modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard
-reviews_of: [BN-W04-pa, BN-C11-poribar]
+reviews_of: [BN-W03-dudh-read, BN-C11-poribar]
 ---
 # পরিবার — family, read
 
@@ -47,7 +47,7 @@ Six pieces — the longest word this book has asked anyone to assemble.
 - **ব** with **া** — *bā*
 - **র** — *rô*, worn away at the end
 
-**pôribār** — *family*, the tatsama from the eleventh chapter: *pari-* "around"
+**pôribār** — *family*, the tatsama from the chapter before this one: *pari-* "around"
 plus a root meaning "to cover." What surrounds you.
 
 The first letter is the lesson here. **প** wears no sign at all, and a reader who

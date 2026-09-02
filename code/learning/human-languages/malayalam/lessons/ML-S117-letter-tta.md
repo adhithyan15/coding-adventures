@@ -9,31 +9,31 @@ type: writing
 headword: "ട"
 gloss: the single character ട — recognised inside words you already say
 romanization: "ṭa"
-prerequisites: [ML-S115-letter-nya]
+prerequisites: [ML-S08-letter-ta]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-115]
+  knowledge: [ML-SCRIPT-RECOG-08]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-117]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-115, ML-SCRIPT-RECOG-117]
+  knowledge: [ML-SCRIPT-RECOG-08, ML-SCRIPT-RECOG-117]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [ML-S115-letter-nya]
+reviews_of: [ML-S08-letter-ta]
 ---
 
 # ട — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-115] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-08] -->
 
-[PAUSE 1s] Before the new one: ഞ — what does it do?
+[PAUSE 1s] Before the new one: ത — what does it do?
 
 [PAUSE 2s] One character this time. Just one — and you have been saying it
 for pages without knowing which mark on the page it was.

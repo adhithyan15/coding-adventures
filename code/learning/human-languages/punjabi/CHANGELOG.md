@@ -1,5 +1,125 @@
 # Changelog
 
+## Punjabi retires its last hand-written chapters (Chapters 4 and 5)
+
+- **No hand-written book chapters remain in the Punjabi track.** Chapter 4
+  (farewells) and Chapter 5 (first verbs) moved from
+  `core/book-generation.d/handwritten.d/` to `targets.d/` and are now generated
+  from their lessons. `handwritten_parity.py --check punjabi` answers "already
+  retired, nothing handwritten remains".
+- **The flip required a schema-v2 migration, and that was the real work.** A
+  generated chapter cannot be built from a schema-v1 lesson, so all ten legacy
+  lessons behind those chapters now declare `spine_node`, a computed-safe
+  `duration`, typed `requires`/`introduces`/`practises` knowledge, block-boundary
+  knowledge directives and scored activities. Punjabi is now a **version-2
+  track** rather than a mixed-schema one, and its atom-measurement-blind lessons
+  fall from **18 to 8**.
+- **Split the two Chapter 5 lessons that packed several headwords into one
+  session.** `PA-C05-main-punjabi-bolda-han` had been teaching the word
+  *panjābī*, its Persian etymology, the gendered present habitual and the whole
+  sentence at once; `PA-C05-kamm-karna` had been teaching the noun *kamm*, the
+  verb *karnā*, the √kṛ root and the noun-plus-*karnā* pattern. Two new lessons,
+  **PA-C05-panjabi** and **PA-C05-karna**, take the first half of each. Every
+  Chapter 4 and 5 lesson now introduces **at most three atoms and exactly one new
+  headword**, and every one comes in under the computed five-minute ceiling (the
+  longest is 240s against a 300s limit). The track grows 224 → 226 lessons.
+- **Script closure stays at 0 and romanization coverage stays complete.**
+  `headwordsWithoutRomanization` is **0 before and 0 after**; reading-order
+  closure violations are **0 before and 0 after**. Gloss-first is preserved by
+  keeping the script sessions where the lesson sequence puts them rather than
+  where the hand-written .tex put them: the reader meets *phir* and *bolṇā* by
+  ear, and their pieces arrive later in the same chapter. That placement is also
+  what the script lessons' own prose has always assumed — they speak of a word
+  "you already say" and ask the reader to look *back* at an earlier headword.
+- **Reinforcement debt rises because it became visible, not because it grew.**
+  Twenty-five atoms the corpus taught in prose and counted nowhere are now typed,
+  so every R1-R4 window they miss is now measured: R1 45→48, R2 103→113, R3
+  158→175, R4 72→92. The assertions that name specific serviced atoms all still
+  hold exactly. The residue is recorded in `BACKLOG.d` as the next tranche's work.
+- **Chapter 5 carries 15 new atoms against a chapter budget of 12**, one new
+  atom-chapter spike (Punjabi 11 → 12). That is the shape Chapter 3 (17) and
+  Chapter 6 (13) already have; clearing it means splitting the chapter, which
+  renumbers Chapters 6-36 and belongs to a separate tranche.
+- Fixed two defects the flip exposed in text that had never been through the
+  generator: a stray `>` left by a blank blockquote-continuation line in the
+  script sessions, and `[YOU SAY (m.): ...]` cues whose parenthesis defeated the
+  cue parser and printed as literal markup.
+- The book compiles: 303 pages under XeLaTeX, with no overfull or underfull
+  boxes and no missing characters.
+
+## Punjabi pre-A1 script recognition runway (Chapters 2-13)
+
+- Took **script-closure violations from 40 to 0**, **never-taught glyphs from 8
+  to 0**, and **headwords lacking romanization from 8 to 0**. Closure is
+  measured in reading order, so this needed an *insertion* into the early
+  chapters rather than an addition at the end; PR #13826 removing the
+  per-chapter lesson-count pins from `language-ladder` is what made it possible.
+- Inserted an **18-lesson recognition runway into chapters 2-13** — one or two
+  lessons per chapter, at most three Gurmukhi pieces each, each placed
+  immediately before the first lesson that asks the reader to decode them. Every
+  lesson teaches the shape by eye and the sound by ear, names the piece
+  (*mammā*, *lāvā̃*, *aḍḍak*), and builds one word the reader can already say.
+  No writing is asked for: formation stays where it was, in chapters 14-36.
+- Moved **Sanskrit and PIE etymons out of Gurmukhi and into IAST**. Before any
+  letter lesson existed, ਨਾਮਨ੍, ਅਸ੍ਤਿ, ਮਿਲ੍, ਰਹ੍ and ਕ੍ਰੁ were the single
+  largest source of untaught glyphs in chapters 2-5, and they dragged the
+  subjoining sign ੍ — which no lesson in the track ever taught — into five of
+  them. Sanskrit is not written in Gurmukhi; this is a scholarship correction
+  that happens to retire a large share of the debt.
+- Applied **gloss-first to the remaining early bodies**: where a chapter-2-to-13
+  lesson printed a Punjabi word whose letters the runway had not yet reached, it
+  now prints the romanization the reader can actually use. The Gurmukhi headword
+  stays, with its romanization, as exposure.
+- Added the **eight missing romanizations** to the schema-v1 ch4 farewell and
+  ch5 verb headwords, which converts those headwords from load-bearing to
+  exposure and is a real gain for the reader, not a way of hiding from the
+  measurement.
+- **Paid for it in drivability, and the number is the honest one.** The
+  ear-drivable share falls from **43% to 40%** and lessons reachable in
+  chapter-prefix order from **74 to 46**. A first draft typed the runway
+  `reading` and appeared to *raise* both — but HL08's manifest requires
+  `delivery: script` to coincide exactly with `type: writing`, and it is right:
+  a lesson that teaches a letter teaches the hand and the eye, and HL08 states
+  plainly that a `writing`-typed lesson has a pen core with nothing separable to
+  set aside. **A track cannot close its script-closure debt without spending
+  drivability**, because the only lessons closure credits are the ones modality
+  scores as pen. That trade is now a measured fact rather than an assumption.
+- Recovered most of the prefix that would otherwise have been lost by pushing
+  **each runway lesson to the latest slot its own glyphs allow**: the letters
+  have to arrive before the first lesson that decodes them and not one session
+  earlier, so chapters 2, 4, 5, 10, 11 and 12 keep an ear-drivable opening.
+  Placed naively at the head of each chapter the figure was 25; placed late it
+  is 46.
+- Gave the recognition atoms a **review layer rather than leaving 40 new atoms
+  unrevisited**: each runway lesson rehearses the three lessons before it (its
+  R1 neighbourhood, which a wedged-in lesson would otherwise push out of
+  window), each early content lesson declares the letters its page shows, and
+  each later FORMATION lesson declares the recognition atom for the same glyph —
+  turning what was an unrelated first meeting into a measured R3/R4 review.
+  **R1 misses fall 43 -> 34 and R2 87 -> 78**, both below their pre-runway
+  values, and corpus-wide reinforcement is flat-to-better despite 41 new atoms
+  entering it. R3 rises 130 -> 131 and R4 53 -> 82; the reason is stated in the
+  pin and in `BACKLOG.d`: 16 of the 40 new atoms have no lesson 80-250 sessions
+  later that puts their glyph back on a page, mostly because ten of the letters
+  have no handwriting lesson anywhere in chapters 14-36.
+- Kept the chapter ledger honest as the atoms arrived: chapters 4, 5 and 7 now
+  assess the recognition atoms their runway sessions introduce, so Punjabi stays
+  one of the tracks with **zero chapter-capability debt** rather than falling
+  below the 0.5 representativeness floor. Chapters 4 and 5 remain legacy
+  schema-v1 for their oral content, and their notes now say exactly which three
+  atoms they do carry and why.
+- Realigned `curriculum.d/path`: `PA-PATH-001S` held chapter-14 lessons at file
+  position 3, so curriculum order disagreed with lesson sequence. Renumbered to
+  `0265` so the two agree.
+- Recorded in `BACKLOG.d` (HL-C272) what was measured and not done: the 18
+  remaining R4 misses and the ten glyphs with no formation lesson, six chapters
+  now over the 12-atom chapter budget, three payoffs below the representativeness
+  floor, the two lexical forward references (ਮੈਨੂੰ, ਨਾ) that need a lesson MOVE
+  rather than an addition, and the proof that the **pre-A1 verb floor is
+  unreachable by authoring in any track**: all 40 core `VERB-*` concepts are
+  owned by spine nodes at A1 or A2, so tagging a pre-A1 lesson with one
+  relocates the lesson instead of filling the floor.
+
 ## Punjabi pre-A1 courtesy and parting tranche (Chapters 31-36)
 
 - Realized the **last fourteen unrealized pre-A1 spine concepts** in one arc, so

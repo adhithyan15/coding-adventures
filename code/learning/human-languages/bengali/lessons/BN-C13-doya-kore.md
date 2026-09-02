@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C13-doya-kore
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1000
-chapter: 13
+sequence: 1110
+chapter: 22
 type: word
 headword: দয়া করে
 romanization: doya kore

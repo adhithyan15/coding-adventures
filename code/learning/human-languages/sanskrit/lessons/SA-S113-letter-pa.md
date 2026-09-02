@@ -5,40 +5,40 @@ introduces_senses: []
 introduces_culture_claims: []
 id: SA-S113-letter-pa
 spine_node: SPINE-MEET-GREET
-sequence: 661
+sequence: 241
 delivery: script
-chapter: 14
+chapter: 4
 type: writing
 headword: "प"
 gloss: the single character प — recognised inside words you already say
 romanization: "pa"
-prerequisites: [SA-S112-vowel-sign-e]
+prerequisites: [SA-S110-letter-ra]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [SA-SCRIPT-RECOG-112]
+  knowledge: [SA-SCRIPT-RECOG-110]
 introduces:
   knowledge: [SA-SCRIPT-RECOG-113]
 practises:
-  knowledge: [SA-SCRIPT-RECOG-112, SA-SCRIPT-RECOG-113]
+  knowledge: [SA-SCRIPT-RECOG-01, SA-SCRIPT-RECOG-203, SA-SCRIPT-RECOG-110, SA-SCRIPT-RECOG-113]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [SA-S112-vowel-sign-e]
+reviews_of: [SA-S01-letter-ma, SA-S203-vowel-sign-u, SA-S110-letter-ra]
 ---
 
 # प — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-112] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-01, SA-SCRIPT-RECOG-203, SA-SCRIPT-RECOG-110] -->
 
-[PAUSE 1s] Before the new one: ◌े — what does it do?
+[PAUSE 1s] Before the new one, the ones you have already met: म · ◌ु · र. Say what each of them does.
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
+[PAUSE 2s] One character this time. One only — and you have been saying it
 for pages without knowing which mark on the page it was.
 
 ## Script you'll notice: प
@@ -57,9 +57,6 @@ What it is made of:
 You already say these, and every one of them has प somewhere inside it:
 
 - **पुनः** *punaḥ* — again
-- **पुनर्दर्शनाय** *punardarśanāya* — until we meet again (lit. "for seeing again")
-- **एक द्व त्रि चतुर् पञ्च** *eka dva tri catur pañca* — one to five
-- **एक · द्व · त्रि · चतुर् · पञ्च** *eka · dva · tri · catur · pañca* — the Sanskrit
 
 ## Writing: प
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-113] -->
@@ -70,18 +67,18 @@ You already say these, and every one of them has प somewhere inside it:
 
 **Pen lifts: 2.** The pen comes up 2 times and no more.
 
-> Verified three-stroke teaching form; everyday handwriting may join or simplify the bowl differently.
+> verified three-stroke teaching form; everyday handwriting may join or simplify the bowl differently
 
 > This is one attested teaching order and not a national standard — handwriting
 > here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-प-order.gif’, strokes 1–3, Wikimedia Commons, 10 May 2009.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-113] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-110, SA-SCRIPT-RECOG-113] -->
 
 [PAUSE 1s]
-- [YOU LOOK: at these words, and find प in the ones that have it]
+- [YOU LOOK: at this, and find प in it]
 
-> पुनः  ·  पुनर्दर्शनाय  ·  नमस्ते
+> पुनः
 
 - [YOU TRACE: प three times, saying *pa* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find प once more]

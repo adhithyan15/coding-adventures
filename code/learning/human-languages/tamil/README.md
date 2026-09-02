@@ -115,13 +115,22 @@ through.
   it, and குடி completes the pair சாப்பிடு had been holding alone. The
   chapter carries the writing strand's `TA-W21-read-kudi` in third position and
   closes on a zero-new-material retrieval lesson. In the book, Chapter 65.
-- **The script strand, W00–W21** ([`lessons/TA-W*`](./lessons/)): 42 lessons
+- **Chapter 66 — Which Way** ([`lessons/TA-C66-*`](./lessons/)):
+  மேலே (*mēlē*, up), கீழே (*kīḻē*, down), உள்ளே (*uḷḷē*, inside),
+  வெளியே (*veḷiyē*, outside), வலது (*valadu*, right), இடது (*iḍadu*, left) —
+  three pairs, each word arriving beside the one that answers it. The chapter's
+  real subject is two endings the reader already owns: **-ஏ**, the ending inside
+  இங்கே and அங்கே, which makes four of the six into place-words that stand in
+  front of a verb (**உள்ளே வா**, **வெளியே போ**); and **-து**, the ending inside
+  இது and அது, which makes வலது and இடது into things that stand in front of a
+  noun (**வலது கை**). `TA-W22-read-mele` sits third. In the book, Chapter 66.
+- **The script strand, W00–W22** ([`lessons/TA-W*`](./lessons/)): 43 lessons
   marked `delivery: script`, one after roughly every third speaking lesson from
-  Chapter 4 to Chapter 65. They teach curves, the abugida, retroflexion, the
+  Chapter 4 to Chapter 66. They teach curves, the abugida, retroflexion, the
   three Tamil n letters, the puḷḷi, the vowel signs, and then spell — one word
   per lesson — words the learner has already been saying, from **வணக்கம்** to
-  **ஒன்று** and on to **குடி**, the first word in the strand that costs no
-  new letter. Chapters 1–3 hold no writing lesson at all, on purpose. Every glyph the
+  **ஒன்று**, then **குடி**, the first word in the strand that costs no new
+  letter, and **மேலே**, the second. Chapters 1–3 hold no writing lesson at all, on purpose. Every glyph the
   track prints is now a glyph some script lesson teaches: `neverTaughtGlyphs` is
   **0**, and it is meant to stay there, so a new word whose spelling would need a
   fifty-second shape is not a candidate.

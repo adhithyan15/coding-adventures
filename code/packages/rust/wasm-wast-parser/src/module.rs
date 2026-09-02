@@ -1310,11 +1310,11 @@ fn insert_unique(
 
 fn build_import_shell(items: &[SExpr], desc: &[SExpr], kind: &str, type_names: &HashMap<String, u32>, module: &WasmModule) -> Result<Import, WastParseError> {
     let module_name = match &items[1] {
-        SExpr::Str(b, _) => String::from_utf8_lossy(b).to_string(),
+        SExpr::Str(b, pos) => String::from_utf8(b.clone()).map_err(|_| WastParseError::InvalidUtf8 { pos: *pos })?,
         other => return Err(WastParseError::UnexpectedToken { pos: other.pos(), found: "".into(), expected: "a module name string" }),
     };
     let name = match &items[2] {
-        SExpr::Str(b, _) => String::from_utf8_lossy(b).to_string(),
+        SExpr::Str(b, pos) => String::from_utf8(b.clone()).map_err(|_| WastParseError::InvalidUtf8 { pos: *pos })?,
         other => return Err(WastParseError::UnexpectedToken { pos: other.pos(), found: "".into(), expected: "an import name string" }),
     };
     let type_info = match kind {
@@ -1582,7 +1582,7 @@ fn build(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
             }
             "export" => {
                 let name = match expect_get(items, 1)? {
-                    SExpr::Str(b, _) => String::from_utf8_lossy(b).to_string(),
+                    SExpr::Str(b, pos) => String::from_utf8(b.clone()).map_err(|_| WastParseError::InvalidUtf8 { pos: *pos })?,
                     other => return Err(WastParseError::UnexpectedToken { pos: other.pos(), found: "".into(), expected: "an export name string" }),
                 };
                 let refd_expr = expect_get(items, 2)?;
@@ -1728,8 +1728,9 @@ fn handle_inline_export(
         let items = rest[i].as_list().unwrap();
         // `(export)` with no trailing name string is syntactically a valid
         // keyword-list but has no second element.
-        if let SExpr::Str(b, _) = expect_get(items, 1)? {
-            ctx.module.exports.push(Export { name: String::from_utf8_lossy(b).to_string(), kind, index: idx as u32 });
+        if let SExpr::Str(b, pos) = expect_get(items, 1)? {
+            let name = String::from_utf8(b.clone()).map_err(|_| WastParseError::InvalidUtf8 { pos: *pos })?;
+            ctx.module.exports.push(Export { name, kind, index: idx as u32 });
         }
         i += 1;
     }
@@ -2154,6 +2155,10 @@ fn build_table_limits_and_elements(rest: &[SExpr], table_idx: u32, storage_idx: 
         offset_expr: if is64 { vec![0x42, 0x00, 0x0B] } else { vec![0x41, 0x00, 0x0B] },
         function_indices,
         is_passive: false,
+        // `(table funcref (elem ...))`'s inline shorthand always desugars
+        // to an ordinary ACTIVE segment (an explicit offset of 0 into the
+        // table it just declared) -- never declarative.
+        is_declarative: false,
     });
     Ok(())
 }
@@ -2320,27 +2325,39 @@ fn build_elem(fields: &[SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseErro
         }
         false
     };
-    // `/security-review` finding: an ACTIVE segment using the exprs-list
-    // form (binary modes 4/6) is out of scope -- the real spec's own
+    // Gap 1 of the W-next `elem.wast`/`table.wast` investigation pass
+    // (`code/specs/W07-wasm-post-mvp-epics.md`'s addendum): an ACTIVE
+    // segment using the exprs-list form (binary modes 4/6) USED to be
+    // rejected here outright, on the theory that "the real spec's own
     // W17-wasm-bulk-table-ops.md census found no vendored corpus file
-    // needs it, and `parse_element_section`'s binary decoder already
-    // structurally can't produce this combination (its `match flags`
-    // only has arms for 0/1/2/5, with everything else, including 4/6,
-    // falling into a hard reject). Without this check, `Element.is_
-    // passive: false` combined with a `None` (`ref.null`) entry would
-    // silently reach `wasm-module-encoder::encode_element`, whose active-
-    // segment branch does `func_index.unwrap_or(0)` -- turning a real
-    // `ref.null` into a real reference to function 0 on re-encode, wrong
-    // table contents with no error. Reject at parse time instead, same
-    // "loud, not silent" discipline as every other out-of-scope shape
-    // this parser rejects.
-    if !is_passive && use_exprs {
-        return Err(WastParseError::UnexpectedToken {
-            pos: fields.first().map(|f| f.pos()).unwrap_or(0),
-            found: "an active element segment using the exprs-list (funcref/externref) form".to_string(),
-            expected: "an active segment to use a plain function-index list instead (exprs-list is only supported for passive segments)",
-        });
-    }
+    // needs it." That census was wrong -- confirmed via a corpus
+    // bug-hunt pass that pinned `elem.wast`'s own last remaining
+    // `assert_return` failure to exactly this shape: "Initializing a
+    // table with an externref-type element segment" declares
+    // `(elem (i32.const 0) externref (ref.null extern))`, a real,
+    // spec-legal ACTIVE segment whose only entry is a null literal --
+    // which has no representation at all in a plain function-index list
+    // (there's no "null function index"), so it MUST use the exprs-list
+    // form even though it's active.
+    //
+    // The old rejection's stated reason -- that accepting this would
+    // silently reach `wasm-module-encoder::encode_element`'s active
+    // branch and corrupt a `None` entry into a real reference to
+    // function 0 via `unwrap_or(0)` on re-encode -- was a real, separate
+    // bug, but in the WRONG layer: rejecting a legal construct here to
+    // paper over a latent bug in a completely different, unrelated
+    // crate is exactly the kind of misattributed fix this repo's own
+    // review discipline warns against. `encode_element` now has its own
+    // mode-4/6 branch for precisely this case (see that function's own
+    // doc comment) instead, so this parser is free to accept what the
+    // real spec actually allows: no rejection needed for either an
+    // active or a passive exprs-list segment. `wasm-module-parser`'s
+    // binary DECODER still only handles modes 0/1/2/5 -- a real,
+    // separate, deliberately deferred gap (declarative/active-exprs
+    // binary decoding is a larger feature than this one-directive fix),
+    // unaffected by this change since it's scoped to the TEXT parser,
+    // which never round-trips through the binary decoder for a plain
+    // `(module ...)` directive.
     let mut function_indices = Vec::new();
     for f in fields.get(i..).unwrap_or(&[]) {
         if use_exprs {
@@ -2349,7 +2366,20 @@ fn build_elem(fields: &[SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseErro
             function_indices.push(Some(resolve_idx(&ctx.func_names, f, "func")?));
         }
     }
-    ctx.module.elements.push(Element { table_index, offset_expr, function_indices, is_passive });
+    // `is_declarative` threads the `declare` keyword detected above
+    // through to `wasm-runtime::instantiate()` -- see `wasm_types::
+    // Element::is_declarative`'s own doc comment for why `is_passive`
+    // alone (true for BOTH this and a genuinely passive segment, by this
+    // struct's deliberate "no third variant" convention) isn't enough to
+    // tell `instantiate()` this segment must be marked dropped immediately
+    // rather than left resident for `table.init`.
+    ctx.module.elements.push(Element {
+        table_index,
+        offset_expr,
+        function_indices,
+        is_passive,
+        is_declarative,
+    });
     Ok(())
 }
 
@@ -2752,13 +2782,25 @@ fn encode_stream_instr(
     // task #97): same "no vendored corpus file exercises this flat/
     // stream form" deferral as `table.grow`/`table.size`/`table.fill`
     // above -- `table_init.wast`/`table_copy.wast` only ever use folded
-    // syntax (confirmed by direct census, `code/specs/
-    // W17-wasm-bulk-table-ops.md`). `table.init` still needs a real
-    // elem-segment index (unlike table/memory indices, WHICH segment to
-    // read from can't be hardcoded), so this consumes ONE following
-    // token even in this deferred form; `table.copy` needs no immediate
-    // token at all (both table operands are 0); `elem.drop` needs a real
-    // elem-segment index, same shape as `data.drop`.
+    // syntax, so this deferred form's hardcoded-table-0 behavior is still
+    // fine. CORRECTION (W36, `code/specs/
+    // W36-wasm-element-segment-exprs-list.md`'s own "Correction to
+    // Addendum 2" section): the W17 census this comment used to cite for
+    // that claim never separately checked whether the folded syntax
+    // always supplies BOTH of `table.init`'s/`table.copy`'s OPTIONAL
+    // leading index atoms -- it does not (the real grammar lets both
+    // default to 0 for `table.copy`, and lets `table.init`'s table index
+    // default to 0), and the FOLDED form's own encoder
+    // (`encode_table_init_flat`/`encode_table_copy_flat`, reached via
+    // `encode_flat_instr` below) now detects that arity itself. This
+    // deferred/flat form is unaffected -- it was never reachable by any
+    // corpus file with a non-default table index anyway. `table.init`
+    // still needs a real elem-segment index (unlike table/memory
+    // indices, WHICH segment to read from can't be hardcoded), so this
+    // consumes ONE following token even in this deferred form;
+    // `table.copy` needs no immediate token at all (both table operands
+    // are 0); `elem.drop` needs a real elem-segment index, same shape as
+    // `data.drop`.
     if name == "table.init" {
         let idx = resolve_idx(&icx.module.elem_names, following.first().ok_or(WastParseError::UnexpectedEof)?, "elem")?;
         out.push(0xFC);
@@ -3451,9 +3493,31 @@ fn encode_stream_instr(
             // keyword list. Defaults to table 0 when absent, matching
             // every other MVP module (real corpus precedent:
             // `table_copy.wast`/`table_init.wast` use this form
-            // pervasively in FOLDED syntax; no vendored file needs it in
-            // this flat/stream form, but the parse shape is identical).
-            let has_table_token = following.first().is_some_and(|a| a.as_atom().is_some());
+            // pervasively in FOLDED syntax).
+            //
+            // Real corpus regression found (W37/`select.wast`'s own
+            // "Flat syntax" section, `unreachable select call_indirect
+            // select`): in the FLAT/STREAM form, `call_indirect` with NO
+            // table token and NO immediates at all is followed directly
+            // by the NEXT bare-atom instruction (here, a second
+            // `select`) -- and a bare atom is indistinguishable from a
+            // real table token by SHAPE alone (both are plain
+            // `SExpr::Atom`s). Unlike the folded form (where the operand
+            // list is unambiguously delimited by parens), this flat form
+            // has no such delimiter, so the previous shape-only check
+            // misidentified that trailing `select` as `call_indirect`'s
+            // own table-index token and failed trying to resolve it as
+            // one. Distinguishing "really a table token" from "the next
+            // instruction's name" needs a CONTENT check, not just a
+            // shape check: attempt the same resolution `resolve_idx`
+            // would do (a `$name` lookup or a plain numeral), and only
+            // treat it as a table token if that actually succeeds --
+            // exactly what a real token would always do, and what an
+            // arbitrary instruction name (never a `$`-prefixed
+            // identifier, never a bare numeral) never does.
+            let has_table_token = following
+                .first()
+                .is_some_and(|a| a.as_atom().is_some() && resolve_idx(&icx.module.table_names, a, "table").is_ok());
             let table_idx = if has_table_token {
                 resolve_idx(&icx.module.table_names, &following[0], "table")?
             } else {
@@ -3560,10 +3624,19 @@ fn encode_stream_instr(
             out.extend(bits.to_le_bytes());
             Ok(1)
         }
+        // Flat/stream form of the same typed-`select` shape
+        // `encode_select_folded` handles for folded syntax -- see
+        // `collect_leading_select_result_types`'s own doc comment for the
+        // real grammar and the "zero or more, concatenated" clause-count
+        // rationale, and `encode_select_stream`'s own doc comment for why
+        // this is a single function call, not inlined here (same "hot
+        // recursive path, debug-build stack frame size" reasoning as
+        // `encode_flat_instr`'s matching arm).
+        "select" => encode_select_stream(following, info, icx, out),
         // Every other opcode (control returns/unreachable/nop, parametric
-        // drop/select, and the ~150 no-immediate numeric/comparison/
-        // conversion instructions) takes no immediates at all in EITHER
-        // syntax -- just the bare opcode byte.
+        // drop, and the ~150 no-immediate numeric/comparison/conversion
+        // instructions) takes no immediates at all in EITHER syntax --
+        // just the bare opcode byte.
         _ => {
             out.push(info.opcode);
             Ok(0)
@@ -3796,20 +3869,52 @@ fn encode_table_fill_flat(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>)
 /// its own `#[inline(never)]` function for the same stack-frame-bloat
 /// reason `encode_table_grow_flat`'s own doc comment explains (task
 /// #98). LEADING immediates, matching `"call" | "return_call"`'s own
-/// folded shape -- unlike `table.grow`/`table.size`/`table.fill`'s
-/// single OPTIONAL table index, `table.init` always takes TWO required
-/// leading tokens: the target table (`$t`) THEN the source elem segment
-/// (`$e`), in that TEXT order -- but the real BINARY encoding is
+/// folded shape -- but unlike that fixed-arity precedent, the real
+/// grammar makes the LEADING table index itself optional (W36's own
+/// "Correction" section, `code/specs/
+/// W36-wasm-element-segment-exprs-list.md`):
+///
+/// ```text
+/// 'table.init' x:tableidx_I y:elemidx_I  ⟹  table.init x y
+/// 'table.init' y:elemidx_I               ≡  table.init 0 y
+/// ```
+///
+/// The elem index can never be omitted (which segment to read from can't
+/// be inferred), so there are exactly two shapes to disambiguate: TWO
+/// leading atoms (`$t $e`, today's only previously-handled case) or ONE
+/// leading atom (`$e` alone, table implicit 0) -- never zero. The
+/// disambiguator is simply "is `args[1]` ALSO an atom" -- every real
+/// stack operand is written as a parenthesized folded instruction (even
+/// a zero-operand one, e.g. `(nop)`), so a bare atom can never be
+/// anything OTHER than an index in this position, and a list can never
+/// be anything BUT a stack operand; there is no way for a legitimate
+/// index to be misread as an operand or vice versa.
+///
+/// Once the two indices are resolved, the real BINARY encoding is
 /// `elemidx` FIRST, `tableidx` SECOND (`0xFC 0x0C <elemidx> <tableidx>`,
 /// same "segment index, then target index" convention `memory.init`'s
 /// own `0xFC 0x08 <dataidx> <memidx>` already establishes), so the two
 /// resolved indices are written in the OPPOSITE order from how they're
-/// read here.
+/// read here -- unaffected by which text-format shape was used.
 #[inline(never)]
 fn encode_table_init_flat(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
-    let table_idx = resolve_idx(&icx.module.table_names, expect_get(args, 0)?, "table")?;
-    let elem_idx = resolve_idx(&icx.module.elem_names, expect_get(args, 1)?, "elem")?;
-    encode_instr_list(&args[2..], icx, out)?;
+    let two_leading_atoms = matches!(args.first(), Some(SExpr::Atom(..))) && matches!(args.get(1), Some(SExpr::Atom(..)));
+    let (table_idx, elem_idx, operands) = if two_leading_atoms {
+        let table_idx = resolve_idx(&icx.module.table_names, expect_get(args, 0)?, "table")?;
+        let elem_idx = resolve_idx(&icx.module.elem_names, expect_get(args, 1)?, "elem")?;
+        (table_idx, elem_idx, &args[2..])
+    } else {
+        // Exactly one leading atom (the elem-only abbreviation) -- or, for
+        // genuinely malformed input with zero leading atoms, `expect_get`/
+        // `resolve_idx` below still produce the correct "expected an index"
+        // error against `args[0]` (a list), matching this function's own
+        // pre-existing error-shape convention. Either way, the table index
+        // NEVER gets resolved against `table_names` here -- there is no
+        // atom left over to misread as one.
+        let elem_idx = resolve_idx(&icx.module.elem_names, expect_get(args, 0)?, "elem")?;
+        (0, elem_idx, &args[1..])
+    };
+    encode_instr_list(operands, icx, out)?;
     out.push(0xFC);
     out.push(0x0C);
     out.extend(wasm_leb128::encode_unsigned(elem_idx as u64));
@@ -3819,14 +3924,38 @@ fn encode_table_init_flat(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>)
 
 /// `table.copy $dst $src (dest)(src)(len)` (task #97) — folded form. See
 /// [`encode_table_init_flat`]'s doc comment for why this is its own
-/// function. Unlike `table.init`, the TEXT and BINARY operand orders
-/// match (`0xFC 0x0E <dst_tableidx> <src_tableidx>`, destination first
-/// both times) -- no reordering needed.
+/// function, and for the general shape of this crate's optional-leading-
+/// index disambiguation (reused here). Unlike `table.init`, `table.copy`
+/// is fully symmetric: the real grammar has NO "exactly one index"
+/// abbreviation, only "both present" or "both absent" (W36's own
+/// "Correction" section):
+///
+/// ```text
+/// 'table.copy' x₁:tableidx_I x₂:tableidx_I  ⟹  table.copy x₁ x₂
+/// 'table.copy'                              ≡  table.copy 0 0
+/// ```
+///
+/// so the check is a simple "is `args[0]` an atom at all" -- zero leading
+/// atoms means both tables default to 0 and zero atoms are consumed;
+/// otherwise (two leading atoms) today's behavior is unchanged. As with
+/// `table.init` above, every real stack operand is a parenthesized list,
+/// never a bare atom, so this can't be tricked into skipping a real
+/// index by a cleverly-shaped operand.
+///
+/// The TEXT and BINARY operand orders match (`0xFC 0x0E <dst_tableidx>
+/// <src_tableidx>`, destination first both times) -- no reordering
+/// needed, unlike `table.init` above.
 #[inline(never)]
 fn encode_table_copy_flat(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
-    let dst_table_idx = resolve_idx(&icx.module.table_names, expect_get(args, 0)?, "table")?;
-    let src_table_idx = resolve_idx(&icx.module.table_names, expect_get(args, 1)?, "table")?;
-    encode_instr_list(&args[2..], icx, out)?;
+    let (dst_table_idx, src_table_idx, operands) = match args.first() {
+        Some(expr @ SExpr::Atom(..)) => {
+            let dst_table_idx = resolve_idx(&icx.module.table_names, expr, "table")?;
+            let src_table_idx = resolve_idx(&icx.module.table_names, expect_get(args, 1)?, "table")?;
+            (dst_table_idx, src_table_idx, &args[2..])
+        }
+        _ => (0, 0, args),
+    };
+    encode_instr_list(operands, icx, out)?;
     out.push(0xFC);
     out.push(0x0E);
     out.extend(wasm_leb128::encode_unsigned(dst_table_idx as u64));
@@ -4193,8 +4322,12 @@ fn encode_flat_instr(
     // grow`/`table.size`/`table.fill` above, for the identical stack-
     // frame-bloat reason -- `table_init.wast`/`table_copy.wast` (unlike
     // `table_grow.wast`) exclusively use FOLDED syntax for these three,
-    // confirmed by direct census (`code/specs/W17-wasm-bulk-table-ops.
-    // md`), so this is where the real work happens.
+    // so this is where the real work happens, INCLUDING resolving
+    // `table.init`'s/`table.copy`'s optional leading index atoms (W36,
+    // see `encode_table_init_flat`'s/`encode_table_copy_flat`'s own doc
+    // comments -- a prior version of this comment claimed, citing a now-
+    // superseded W17 census, that the folded syntax always supplies both
+    // indices; it does not).
     if name == "table.init" {
         return encode_table_init_flat(args, icx, out);
     }
@@ -5049,11 +5182,24 @@ fn encode_flat_instr(
             out.extend(bits.to_le_bytes());
             Ok(())
         }
-        "return" | "unreachable" | "nop" | "drop" | "select" => {
+        "return" | "unreachable" | "nop" | "drop" => {
             encode_instr_list(args, icx, out)?;
             out.push(info.opcode);
             Ok(())
         }
+        // Reference-types proposal's EXPLICITLY TYPED `select` -- see
+        // `encode_select_folded`'s own doc comment for the real grammar
+        // and arity rationale. Deliberately just a single function call
+        // in this arm, no locals of its own: `encode_flat_instr` sits on
+        // the hot recursive path every folded instruction funnels
+        // through (`encode_one` -> `encode_flat_instr` -> `encode_instr_
+        // list` -> `encode_one` -> ...), and a debug build sizes ITS
+        // stack frame for the union of every match arm's own locals --
+        // see the `"i32.load" | ...` arm's own doc comment above for the
+        // identical lesson (a real SIGABRT, `deeply_nested_folded_
+        // arithmetic_errors_cleanly_not_stack_overflow`, confirmed once
+        // before) already learned for that exact reason.
+        "select" => encode_select_folded(args, info, icx, out),
         _ => {
             // Every other opcode (the ~150 no-immediate numeric/comparison/
             // conversion instructions) is: recurse into folded operands,
@@ -5261,6 +5407,94 @@ fn resolve_leading_memidx_token<'e>(args: &'e [SExpr], icx: &InstrCtx) -> Result
         }
         _ => Ok((0, false, args)),
     }
+}
+
+/// Parse `select`'s zero-or-more LEADING `(result t*)` clauses, returning
+/// `(clause_end, result_types)`: `clause_end` is how many leading elements
+/// of `clauses` were themselves `(result ...)` lists (0 means this is the
+/// untyped form), `result_types` is every valtype collected from them, in
+/// order.
+///
+/// "Zero or more" leading clauses, not "at most one", even though the
+/// FOLDED corpus only ever writes a single clause -- the flat/stream
+/// corpus (`select.wast`'s own "Flat syntax" section) has real, must-PASS
+/// cases like `select (result i32) (result)` and `select (result) (result
+/// i32)`, both of which need their clauses' valtypes concatenated (here:
+/// `[i32] ++ [] = [i32]` and `[] ++ [i32] = [i32]`, each arity 1 and so
+/// valid) -- exactly the same "any number of `(result ...)` groups,
+/// concatenated in order" convention `encode_blocktype`'s own `(param...)*
+/// (result...)*` scan and `parse_func_signature`'s `(result ...)` handling
+/// already use elsewhere in this file.
+///
+/// Arity other than exactly 1 (after concatenation) is a VALIDATION error,
+/// not a parse error (the real corpus's own `select.wast` has
+/// `assert_invalid` cases for `(result)` and `(result i32 i32)`) -- so
+/// every shape here parses successfully, leaving the actual arity check to
+/// `wasm-validator`'s `0x1C` handler.
+///
+/// A free function, not inlined into either caller's own match arm: both
+/// `encode_flat_instr` and `encode_stream_instr` sit on the hot recursive
+/// path every instruction funnels through, and a debug build sizes a
+/// function's stack frame for the union of every match arm's own locals --
+/// see the `"i32.load" | ...` arm's own doc comment in `encode_flat_instr`
+/// for the identical lesson (a real SIGABRT, not a hypothetical) already
+/// learned once for that exact reason.
+fn collect_leading_select_result_types(clauses: &[SExpr], icx: &mut InstrCtx) -> Result<(usize, Vec<ValueType>), WastParseError> {
+    let clause_end = clauses.iter().position(|a| !a.is_keyword_list("result")).unwrap_or(clauses.len());
+    let mut result_types = Vec::new();
+    for clause in &clauses[..clause_end] {
+        let items = clause.as_list().unwrap();
+        for t in &items[1..] {
+            result_types.push(parse_value_type(t, &icx.module.type_names, &icx.module.module)?);
+        }
+    }
+    Ok((clause_end, result_types))
+}
+
+/// Folded-syntax `select` -- see `collect_leading_select_result_types`'s
+/// own doc comment for the real grammar/arity rationale. Kept as its own
+/// function, deliberately called from `encode_flat_instr`'s match arm with
+/// no other locals alongside it -- see that helper's own doc comment for
+/// why.
+fn encode_select_folded(args: &[SExpr], info: &wasm_opcodes::OpcodeInfo, icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
+    let (clause_end, result_types) = collect_leading_select_result_types(args, icx)?;
+    if clause_end == 0 {
+        encode_instr_list(args, icx, out)?;
+        out.push(info.opcode);
+    } else {
+        encode_instr_list(&args[clause_end..], icx, out)?;
+        // Typed select is a DISTINCT opcode from untyped select (`0x1C`
+        // vs `info.opcode`'s `0x1B`), not the same opcode plus an
+        // immediate -- so this deliberately does not use `info.opcode`.
+        out.push(0x1C);
+        out.extend(wasm_leb128::encode_unsigned(result_types.len() as u64));
+        for t in &result_types {
+            out.extend(t.encode());
+        }
+    }
+    Ok(())
+}
+
+/// Flat/stream-syntax `select` -- the same shape `encode_select_folded`
+/// handles for folded syntax, except the `(result t*)` clauses trail the
+/// bare `select` atom as the NEXT elements of the flat stream rather than
+/// being nested inside it (real corpus precedent: `select.wast`'s own
+/// "Flat syntax" section, e.g. `unreachable select (result i32)`).
+/// Returns how many of `following` were consumed. Kept as its own
+/// function for the same "off the hot recursive path" reason
+/// `encode_select_folded` is.
+fn encode_select_stream(following: &[SExpr], info: &wasm_opcodes::OpcodeInfo, icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<usize, WastParseError> {
+    let (clause_end, result_types) = collect_leading_select_result_types(following, icx)?;
+    if clause_end == 0 {
+        out.push(info.opcode);
+    } else {
+        out.push(0x1C);
+        out.extend(wasm_leb128::encode_unsigned(result_types.len() as u64));
+        for t in &result_types {
+            out.extend(t.encode());
+        }
+    }
+    Ok(clause_end)
 }
 
 /// `align=N` / `offset=N` attributes on a load/store, in either order,
@@ -6080,24 +6314,49 @@ mod tests {
         assert_eq!(m.elements[0].function_indices, vec![Some(0), None, Some(2)]);
     }
 
-    /// `/security-review` finding: an ACTIVE segment using the exprs-list
-    /// form (binary modes 4/6) must be rejected at parse time, not
-    /// silently accepted -- `wasm-module-encoder::encode_element`'s
-    /// active-segment branch does `func_index.unwrap_or(0)`, which would
-    /// silently turn a `ref.null` entry into a real reference to function
-    /// 0 on re-encode if this combination ever reached it. The binary
-    /// decoder (`parse_element_section`) already structurally can't
-    /// produce this shape (only mode flags 0/1/2/5 are handled); this
-    /// test confirms the text parser enforces the same restriction.
+    /// Gap 1 of the W-next `elem.wast`/`table.wast` investigation pass:
+    /// an ACTIVE segment using the exprs-list form (binary modes 4/6) is
+    /// a real, spec-legal construct this parser now accepts -- see
+    /// `build_elem`'s own updated doc comment for why the PRIOR
+    /// rejection here (this test used to assert an error) was fixing a
+    /// real `wasm-module-encoder` bug in the wrong layer, and how that
+    /// bug is now fixed at its actual root instead. Mirrors `passive_
+    /// element_segment_exprs_list_with_ref_func_and_ref_null` above,
+    /// just active (an explicit `(table $t)` + offset expr) instead of
+    /// passive.
     #[test]
-    fn active_element_segment_using_exprs_list_form_is_rejected() {
-        let err = parse_module(
+    fn active_element_segment_using_exprs_list_form_is_accepted() {
+        let m = parse_module(
             r#"(module
                  (func) (table $t 30 30 funcref)
                  (elem (table $t) (i32.const 0) funcref (ref.func 0) (ref.null func)))"#,
         )
-        .unwrap_err();
-        assert!(matches!(err, WastParseError::UnexpectedToken { .. }), "{err:?}");
+        .unwrap();
+        assert_eq!(m.elements.len(), 1);
+        assert!(!m.elements[0].is_passive);
+        assert_eq!(m.elements[0].table_index, 0);
+        assert_eq!(m.elements[0].function_indices, vec![Some(0), None]);
+    }
+
+    /// The externref counterpart, matching `elem.wast`'s own real corpus
+    /// case exactly (`(elem (i32.const 0) externref (ref.null extern))`,
+    /// no explicit `(table ...)` clause -- table index defaults to 0):
+    /// a single null entry, which has NO representation in a plain
+    /// function-index list at all (there's no "null function index"),
+    /// so an active segment whose only content is `ref.null` MUST use
+    /// the exprs-list form even though it's active.
+    #[test]
+    fn active_element_segment_using_exprs_list_form_with_externref_null_only() {
+        let m = parse_module(
+            r#"(module
+                 (table $t 2 externref)
+                 (elem (i32.const 0) externref (ref.null extern)))"#,
+        )
+        .unwrap();
+        assert_eq!(m.elements.len(), 1);
+        assert!(!m.elements[0].is_passive);
+        assert_eq!(m.elements[0].table_index, 0);
+        assert_eq!(m.elements[0].function_indices, vec![None]);
     }
 
     /// Task #97: `table.init`/`table.copy`/`elem.drop`'s folded-form
@@ -6148,6 +6407,113 @@ mod tests {
         )
         .unwrap();
         assert_eq!(code_of(&drop, 1), &[0xFC, 0x0D, 0x00, 0x0B]);
+    }
+
+    /// W36 ("Correction to Addendum 2"): `table.copy` with ZERO leading
+    /// index atoms -- the real grammar's own backward-compatible
+    /// abbreviation, `'table.copy' ≡ table.copy 0 0` -- must resolve both
+    /// tables to 0 and consume no atoms from `args`, exactly like
+    /// `table_copy.wast`'s/`table_copy64.wast`'s own dominant fixture
+    /// shape (`(table.copy (local.get $targetOffs) (local.get $srcOffs)
+    /// (local.get $len))`). Before this fix, `args[0]` (the first stack
+    /// operand, a `SExpr::List`) was unconditionally fed to `resolve_idx`
+    /// against `table_names`, producing `"expected an index or
+    /// $identifier, found list"`.
+    #[test]
+    fn table_copy_folded_form_with_zero_leading_indices_defaults_both_tables_to_zero() {
+        let m = parse_module(
+            r#"(module (table $t 30 30 funcref)
+                 (func (param $a i32) (param $b i32) (param $c i32)
+                   (table.copy (local.get $a) (local.get $b) (local.get $c))))"#,
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&m, 0),
+            &[
+                0x20, 0x00, // local.get $a
+                0x20, 0x01, // local.get $b
+                0x20, 0x02, // local.get $c
+                0xFC, 0x0E, 0x00, 0x00, // table.copy dst=0 src=0
+                0x0B,
+            ]
+        );
+    }
+
+    /// W36: `table.copy` with its full TWO leading index atoms must keep
+    /// resolving exactly as before this fix (regression guard for the
+    /// arity-detection branch added alongside the zero-atom case above).
+    #[test]
+    fn table_copy_folded_form_with_two_leading_indices_is_unchanged() {
+        let m = parse_module(
+            r#"(module
+                 (table $t0 30 30 funcref) (table $t1 30 30 funcref)
+                 (func (table.copy $t1 $t0 (i32.const 20) (i32.const 15) (i32.const 5))))"#,
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&m, 0),
+            &[
+                0x41, 20, // i32.const 20 (dest)
+                0x41, 15, // i32.const 15 (src)
+                0x41, 5, // i32.const 5 (len)
+                0xFC, 0x0E, 0x01, 0x00, // table.copy dst=1 src=0
+                0x0B,
+            ]
+        );
+    }
+
+    /// W36: `table.init` with exactly ONE leading atom -- the real
+    /// grammar's own backward-compatible abbreviation, `'table.init'
+    /// y:elemidx_I ≡ table.init 0 y` -- must resolve that atom against
+    /// `elem_names` (NOT `table_names`) with the table index implicitly
+    /// 0, exactly like `table_init.wast`'s/`table_init64.wast`'s/
+    /// `bulk.wast`'s own dominant fixture shape (`(table.init 1
+    /// (i32.const 12) (i32.const 1) (i32.const 1))`). Before this fix,
+    /// the single atom was wrongly resolved against `table_names`
+    /// instead (producing `unknown table identifier` for a name like
+    /// `$p` that only exists in `elem_names`, or consuming the wrong
+    /// atom entirely for a numeric literal).
+    #[test]
+    fn table_init_folded_form_with_one_leading_atom_resolves_it_as_the_elem_index() {
+        let m = parse_module(
+            r#"(module
+                 (func) (table $t 30 30 funcref) (elem $e (table $t) (i32.const 0) func 0)
+                 (func (table.init $e (i32.const 1) (i32.const 0) (i32.const 4))))"#,
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&m, 1),
+            &[
+                0x41, 0x01, // i32.const 1 (dest)
+                0x41, 0x00, // i32.const 0 (src)
+                0x41, 0x04, // i32.const 4 (len)
+                0xFC, 0x0C, 0x00, 0x00, // table.init elemidx=0 tableidx=0
+                0x0B,
+            ]
+        );
+    }
+
+    /// W36: `table.init` with its full TWO leading index atoms must keep
+    /// resolving exactly as before this fix (regression guard for the
+    /// arity-detection branch added alongside the one-atom case above).
+    #[test]
+    fn table_init_folded_form_with_two_leading_indices_is_unchanged() {
+        let m = parse_module(
+            r#"(module
+                 (func) (table $t 30 30 funcref) (elem $e (table $t) (i32.const 0) func 0)
+                 (func (table.init $t $e (i32.const 1) (i32.const 0) (i32.const 4))))"#,
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&m, 1),
+            &[
+                0x41, 0x01, // i32.const 1 (dest)
+                0x41, 0x00, // i32.const 0 (src)
+                0x41, 0x04, // i32.const 4 (len)
+                0xFC, 0x0C, 0x00, 0x00, // table.init elemidx=0 tableidx=0
+                0x0B,
+            ]
+        );
     }
 
     /// Task #98: `table.size`'s folded form resolves a REAL leading `$t`
@@ -6513,23 +6879,28 @@ mod tests {
     }
 
     #[test]
-    fn select_with_explicit_result_type_annotation_is_a_known_gap() {
+    fn select_with_explicit_result_type_annotation_is_now_supported() {
         // `select (result funcref)` -- opcode 0x1C, a SEPARATE opcode from
         // plain `select` (0x1B), added by the same reference-types
         // proposal WASM17 otherwise implements (needed because a bare
         // `select`'s type can't always be inferred from the stack alone
-        // when reference types are ambiguous). Deliberately NOT implemented
-        // here -- `select`'s existing folded-arm handling recurses into
-        // `(result funcref)` as if it were an operand sub-expression,
-        // producing a clean `UnknownInstruction` on "result" rather than a
-        // real parse. Documented honestly as a known limitation (see the
-        // real corpus's `select.wast`) rather than silently mishandled.
-        let err = parse_module(
+        // when reference types are ambiguous). Formerly a known,
+        // documented gap here -- `select`'s folded-arm handling used to
+        // recurse into `(result funcref)` as if it were an operand
+        // sub-expression, producing a clean `UnknownInstruction` on
+        // "result" instead of a real parse (this test used to assert
+        // exactly that error). Now fixed (W37, closing `select.wast`'s
+        // 126 `not_yet_supported` directives) -- see
+        // `typed_select_folded_form_funcref_encodes_0x1c_with_funcref_type`
+        // above for the byte-exact encoding check; this test is kept as
+        // the direct "the old known-gap case now really works end to
+        // end" regression guard.
+        let m = parse_module(
             r#"(module (func (param funcref funcref i32) (result funcref)
                  (select (result funcref) (local.get 0) (local.get 1) (local.get 2))))"#,
         )
-        .unwrap_err();
-        assert!(matches!(err, WastParseError::UnknownInstruction { .. }));
+        .unwrap();
+        assert_eq!(code_of(&m, 0), &[0x20, 0x00, 0x20, 0x01, 0x20, 0x02, 0x1C, 0x01, 0x70, 0x0B]);
     }
 
     // ── Security-review regressions: malformed-but-syntactically-parseable
@@ -10026,5 +10397,216 @@ mod tests {
     fn ref_null_none_emits_the_verified_tag_byte() {
         let m = parse_module(r#"(module (global $g nullref (ref.null none)))"#).unwrap();
         assert_eq!(m.globals[0].init_expr, vec![0xD0, 0x71, 0x0B]);
+    }
+
+    // ── UTF-8 validation of `(export "...")` names (W-utf8-invalid-encoding
+    //    slice): a `\XX` raw-hex-byte escape in a WAT string literal (see
+    //    `tokenizer::scan_string`) is deliberately allowed to decode to ANY
+    //    byte sequence, including one that is not valid UTF-8 -- that's what
+    //    lets `module binary`/`module quote` fixtures embed arbitrary raw
+    //    bytes at all. But the WAT text-format spec requires every NAME
+    //    string (import module/field, export name, register name, ...) to
+    //    decode to valid UTF-8; a name string is where the raw bytes get
+    //    interpreted as text, so validation belongs here, not in the
+    //    tokenizer. Before this fix, `build_import_shell`/the module-level
+    //    and inline `(export ...)` handlers/`expect_str` all used
+    //    `String::from_utf8_lossy`, which silently replaces bad bytes with
+    //    U+FFFD instead of rejecting the module -- so all 176 cases in the
+    //    real testsuite's utf8-invalid-encoding.wast (every one an inline
+    //    `(func (export "..."))` with a malformed name) wrongly parsed as
+    //    valid. These cases mirror a representative sample of that corpus
+    //    file's patterns, not an exhaustive reinvention of a UTF-8 decoder
+    //    (the fix reuses `String::from_utf8`, the standard library's own
+    //    linear-time validator, rather than hand-rolling one).
+
+    #[test]
+    fn export_name_with_actual_unicode_content_still_parses() {
+        // A real multi-byte UTF-8 name (not ASCII-only) must still be
+        // accepted -- this guards against overcorrecting into rejecting
+        // valid non-ASCII text along with the genuinely invalid bytes.
+        let m = parse_module(r#"(module (func (export "\e4\bd\a0\e5\a5\bd")))"#).unwrap();
+        assert_eq!(m.exports[0].name, "你好");
+    }
+
+    #[test]
+    fn export_name_rejects_overlong_two_byte_encoding() {
+        // `\c0\80` is an overlong encoding of NUL (U+0000) -- the shortest
+        // valid encoding of NUL is one byte (`\00`), so the two-byte form is
+        // disallowed even though it "decodes" arithmetically to a valid code
+        // point. utf8-invalid-encoding.wast line 8.
+        let err = parse_module(r#"(module (func (export "\c0\80")))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::InvalidUtf8 { .. }), "expected InvalidUtf8, got {err:?}");
+    }
+
+    #[test]
+    fn export_name_rejects_isolated_continuation_byte() {
+        // `\80` alone is a continuation byte (10xxxxxx) with no leading byte
+        // -- never valid on its own. utf8-invalid-encoding.wast line 2.
+        let err = parse_module(r#"(module (func (export "\80")))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::InvalidUtf8 { .. }), "expected InvalidUtf8, got {err:?}");
+    }
+
+    #[test]
+    fn export_name_rejects_truncated_multi_byte_sequence() {
+        // `\c2` is a valid two-byte-sequence LEAD byte but has no
+        // continuation byte following it -- truncated mid-sequence.
+        // utf8-invalid-encoding.wast line 17.
+        let err = parse_module(r#"(module (func (export "\c2")))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::InvalidUtf8 { .. }), "expected InvalidUtf8, got {err:?}");
+    }
+
+    #[test]
+    fn export_name_rejects_utf8_encoded_surrogate_half() {
+        // `\ed\a0\80` is the CESU-8/WTF-8-style encoding of U+D800, a UTF-16
+        // surrogate half -- surrogate code points may never appear in UTF-8.
+        // utf8-invalid-encoding.wast line 62.
+        let err = parse_module(r#"(module (func (export "\ed\a0\80")))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::InvalidUtf8 { .. }), "expected InvalidUtf8, got {err:?}");
+    }
+
+    #[test]
+    fn import_module_and_field_names_are_also_utf8_validated() {
+        // Same defect class, same fix, applied to `(import "m" "n" ...)`'s
+        // two name strings -- not exercised by utf8-invalid-encoding.wast
+        // itself (which only uses inline func exports) but covered for
+        // completeness since `build_import_shell` shared the same
+        // `from_utf8_lossy` bug before this fix.
+        let err = parse_module(r#"(module (import "\80" "n" (func)))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::InvalidUtf8 { .. }), "expected InvalidUtf8, got {err:?}");
+        let err = parse_module(r#"(module (import "m" "\80" (func)))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::InvalidUtf8 { .. }), "expected InvalidUtf8, got {err:?}");
+    }
+
+    #[test]
+    fn module_level_export_name_is_also_utf8_validated() {
+        // The non-inline `(export "name" (func $x))` form uses a separate
+        // code path from inline `(func (export "name"))` -- both had the
+        // same lossy-conversion bug, so both need coverage.
+        let err = parse_module(r#"(module (func $f) (export "\80" (func $f)))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::InvalidUtf8 { .. }), "expected InvalidUtf8, got {err:?}");
+    }
+
+    // ── Typed `select` folded/(flat) form (W37, `select.wast`) ────────────
+
+    #[test]
+    fn untyped_select_folded_form_is_unaffected() {
+        // Plain, untyped `select` (no `(result t)` clause) must still
+        // encode to the MVP opcode `0x1B` with NO immediate at all --
+        // this crate's pre-existing, already-passing behavior, which the
+        // new typed-`select` arm must not disturb.
+        let m = parse_module(
+            r#"(module (func (param i32 i32 i32) (result i32)
+                 (select (local.get 0) (local.get 1) (local.get 2))))"#,
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&m, 0),
+            &[0x20, 0x00, 0x20, 0x01, 0x20, 0x02, 0x1B, 0x0B],
+            "local.get 0; local.get 1; local.get 2; select (0x1B, no immediate); end"
+        );
+    }
+
+    #[test]
+    fn typed_select_folded_form_i32_encodes_0x1c_with_one_result_type() {
+        let m = parse_module(
+            r#"(module (func (param i32 i32 i32) (result i32)
+                 (select (result i32) (local.get 0) (local.get 1) (local.get 2))))"#,
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&m, 0),
+            &[0x20, 0x00, 0x20, 0x01, 0x20, 0x02, 0x1C, 0x01, 0x7F, 0x0B],
+            "operands; select_t (0x1C); vec(valtype) count=1; i32 (0x7F); end"
+        );
+    }
+
+    #[test]
+    fn typed_select_folded_form_funcref_encodes_0x1c_with_funcref_type() {
+        // The real-world reason typed `select` exists at all: reference-
+        // typed operands (funcref/externref/concrete refs), which
+        // untyped `select`'s "infer from operand type" rule can't accept
+        // (see `wasm-validator`'s own `0x1B` handler).
+        let m = parse_module(
+            r#"(module (table 1 funcref)
+                 (func (param funcref funcref i32) (result funcref)
+                   (select (result funcref) (local.get 0) (local.get 1) (local.get 2))))"#,
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&m, 0),
+            &[0x20, 0x00, 0x20, 0x01, 0x20, 0x02, 0x1C, 0x01, 0x70, 0x0B],
+            "operands; select_t (0x1C); vec(valtype) count=1; funcref (0x70); end"
+        );
+    }
+
+    #[test]
+    fn typed_select_flat_stream_form_encodes_0x1c() {
+        // The flat/stream shape `select.wast`'s own "Flat syntax" section
+        // exercises: the `(result t)` clause trails the bare `select`
+        // atom as the next stream element, not nested inside it.
+        let m = parse_module(r#"(module (func (result i32) unreachable select (result i32)))"#).unwrap();
+        assert_eq!(
+            code_of(&m, 0),
+            &[0x00, 0x1C, 0x01, 0x7F, 0x0B],
+            "unreachable (0x00); select_t (0x1C); vec(valtype) count=1; i32 (0x7F); end"
+        );
+    }
+
+    #[test]
+    fn typed_select_multiple_leading_result_clauses_concatenate() {
+        // Real corpus precedent (`select.wast`'s own "Flat syntax"
+        // section): `select (result i32) (result)` -- TWO consecutive
+        // `(result ...)` clauses, concatenated to a single-element
+        // vector (`[i32] ++ [] = [i32]`), same "any number of `(result
+        // ...)` groups in a row" convention block/loop/if's own
+        // blocktype parsing already uses. Must NOT be misread as
+        // `select`'s immediate followed by a bogus second instruction
+        // named "result".
+        let m = parse_module(r#"(module (func (result i32) unreachable select (result i32) (result)))"#).unwrap();
+        assert_eq!(
+            code_of(&m, 0),
+            &[0x00, 0x1C, 0x01, 0x7F, 0x0B],
+            "the empty second `(result)` clause contributes zero types, so the total vector is still just [i32]"
+        );
+    }
+
+    #[test]
+    fn call_indirect_flat_form_does_not_swallow_the_next_bare_instruction() {
+        // Real corpus regression this same investigation found
+        // (`select.wast`'s own "Flat syntax" section:
+        // `unreachable select call_indirect select`): `call_indirect`'s
+        // flat-form leading-table-token heuristic used to treat ANY
+        // following bare atom as its own table index, even when that
+        // atom is actually the NEXT instruction in the stream (here,
+        // `nop`) -- failing to resolve it as a table name/index and
+        // erroring out instead of leaving it for the next `encode_one`
+        // call. A real table token (a `$name` or a bare numeral) still
+        // resolves fine and is unaffected -- see the next test.
+        let m = parse_module(r#"(module (type $t (func)) (table 1 funcref) (func unreachable call_indirect nop))"#).unwrap();
+        assert_eq!(
+            code_of(&m, 0),
+            &[0x00, 0x11, 0x00, 0x00, 0x01, 0x0B],
+            "unreachable; call_indirect (typeidx=0, tableidx=0); nop; end -- \
+             `nop` must be its own trailing instruction, not misread as call_indirect's table token"
+        );
+    }
+
+    #[test]
+    fn call_indirect_flat_form_still_resolves_a_real_leading_table_token() {
+        // The positive counterpart to the regression test above: a
+        // GENUINE leading table token (a real table name) must still be
+        // consumed as `call_indirect`'s own tableidx immediate, not
+        // dismissed as "the next instruction" now that resolution
+        // failure is how the two are told apart.
+        let m = parse_module(
+            r#"(module (type $t (func)) (table $t0 1 funcref)
+                 (func unreachable call_indirect $t0 (type $t) nop))"#,
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&m, 0),
+            &[0x00, 0x11, 0x00, 0x00, 0x01, 0x0B],
+            "unreachable; call_indirect (typeidx=0, tableidx=0, resolved from $t0); nop; end"
+        );
     }
 }

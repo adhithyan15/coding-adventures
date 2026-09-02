@@ -2,10 +2,11 @@
 schema_version: 2
 id: BN-C04-abar
 spine_node: SPINE-TAKE-LEAVE
-sequence: 210
-chapter: 4
+sequence: 460
+chapter: 7
 type: word
 headword: আবার
+romanization: "ābār"
 gloss: again
 concept_tag: BN-WORD-ABAR
 prerequisites: []

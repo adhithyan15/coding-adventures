@@ -2,9 +2,9 @@
 schema_version: 2
 id: TE-S117-letter-va
 spine_node: SPINE-MEET-GREET
-sequence: 411
+sequence: 405
 delivery: script
-chapter: 14
+chapter: 13
 type: writing
 headword: "వ"
 gloss: the single character వ — recognised inside words you already say
@@ -19,24 +19,24 @@ requires:
 introduces:
   knowledge: [TE-SCRIPT-RECOG-117]
 practises:
-  knowledge: [TE-SCRIPT-RECOG-116, TE-SCRIPT-RECOG-117]
+  knowledge: [TE-SCRIPT-RECOG-117, TE-SCRIPT-RECOG-116, TE-SCRIPT-RECOG-135, TE-SCRIPT-RECOG-147]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [TE-S116-letter-da]
+reviews_of: [TE-S116-letter-da, TE-S135-letter-i, TE-S147-digit-8]
 ---
 
 # వ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-116] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-116, TE-SCRIPT-RECOG-135] -->
 
-[PAUSE 1s] Before the new one: ద — what does it do?
+[PAUSE 1s] Before the new one: ద — what does it do? And one from further back: ఇ?
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
-for pages without knowing which mark on the page it was.
+[PAUSE 2s] One character this time — and you have been saying it for pages
+without knowing which mark on the page it was.
 
 ## Script you'll notice: వ
 <!-- hl-knowledge: introduces=[TE-SCRIPT-RECOG-117]; assesses=[] -->
@@ -76,7 +76,9 @@ and larger than it is printed.
 - [YOU LOOK: back at any page of this chapter and find వ once more]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-117] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-117, TE-SCRIPT-RECOG-147] -->
 
 [PAUSE 3s] Which character is this — వ? What sound does it carry? (***va***.)
 Name one word you already say that contains it.
+
+One more, from much earlier: ౮ — what amount does it stand for?

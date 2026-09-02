@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C07-dekha
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 440
-chapter: 7
+sequence: 770
+chapter: 13
 type: word
 headword: দেখা
 romanization: dækhā
@@ -34,7 +34,7 @@ reviews_of: [BN-C04-dekha-hobe, BN-C07-howa]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Chapter 4 buried this verb inside *dækhā hôbe*, "a seeing will
+[PAUSE 2s] Chapter 7 buried this verb inside *dækhā hôbe*, "a seeing will
 happen." Prised out on its own, it carries a sound rule that runs through every
 verb in this chapter.
 
@@ -49,7 +49,7 @@ romanizations again — they are not the same vowel.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**দেখা** is traced to Sanskrit **√দৃশ্** (*√dṛś*, "to see") through the Prakrit
+**দেখা** is traced to Sanskrit *√dṛś* ("to see") through the Prakrit
 stem *dekkha-*; Hindi's *dekhnā* is the same word. Sanskrit built *darśana*,
 "a viewing," on that root, and further back it is PIE *\*derḱ-*, "to see
 clearly." Greek took it for *dérkomai*, "I look," and for *drákōn*, the

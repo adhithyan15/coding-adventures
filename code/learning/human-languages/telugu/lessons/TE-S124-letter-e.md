@@ -9,34 +9,34 @@ type: writing
 headword: "ఎ"
 gloss: the single character ఎ — recognised inside words you already say
 romanization: "e"
-prerequisites: [TE-S123-letter-dda]
+prerequisites: [TE-S139-letter-ddha]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [TE-SCRIPT-RECOG-123]
+  knowledge: [TE-SCRIPT-RECOG-139]
 introduces:
   knowledge: [TE-SCRIPT-RECOG-124]
 practises:
-  knowledge: [TE-SCRIPT-RECOG-123, TE-SCRIPT-RECOG-124]
+  knowledge: [TE-SCRIPT-RECOG-124, TE-SCRIPT-RECOG-139, TE-SCRIPT-RECOG-137, TE-SCRIPT-RECOG-135]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [TE-S123-letter-dda]
+reviews_of: [TE-S139-letter-ddha, TE-S137-letter-kha, TE-S135-letter-i]
 ---
 
 # ఎ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-123] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-139, TE-SCRIPT-RECOG-137] -->
 
-[PAUSE 1s] Before the new one: డ — what does it do?
+[PAUSE 1s] Before the new one: ఢ — what does it do? And one from further back: ఖ?
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
-for pages without knowing which mark on the page it was.
+[PAUSE 2s] One character this time — and you have been saying it for pages
+without knowing which mark on the page it was.
 
 ## Script you'll notice: ఎ
 <!-- hl-knowledge: introduces=[TE-SCRIPT-RECOG-124]; assesses=[] -->
@@ -78,7 +78,9 @@ than the only possible way anyone writes ఎ.
 - [YOU LOOK: back at any page of this chapter and find ఎ once more]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-124] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-124, TE-SCRIPT-RECOG-135] -->
 
 [PAUSE 3s] Which character is this — ఎ? What sound does it carry? (***e***.)
 Name one word you already say that contains it.
+
+One more, from much earlier: ఇ — what does it do?

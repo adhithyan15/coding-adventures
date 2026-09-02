@@ -1,8 +1,8 @@
 Punjabi, chapter 12: Eye, Ear, Mouth, and Nose.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 4.
+Lesson 1 of 5.
 ਅੱਖ (akkh) — the eye that kept both its consonants.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -36,7 +36,7 @@ Give the word for "eye." (Akkh.) Which English word is the same word by unbroken
 Sources: Wiktionary: ਅੱਖ (akkh); Wiktionary: Sanskrit akṣi.
 
 
-Lesson 2 of 4.
+Lesson 2 of 5.
 ਕੰਨ (kann) — a false friend hiding in plain sight.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -73,7 +73,7 @@ Sources: Wiktionary: ਕੰਨ (kann); Wiktionary: Sanskrit karṇa.
 Does kann, 'ear', share a root with karnā, 'to do'?
 
 
-Lesson 3 of 4.
+Lesson 3 of 5.
 ਮੂੰਹ (mūnh) — a consonant that wore all the way down to a tone.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -110,7 +110,7 @@ Sources: Wiktionary: ਮੂੰਹ (mūnh); Wiktionary: Sanskrit mukha.
 What Sanskrit word does mūnh come from, and what learned Punjabi word keeps the same source intact?
 
 
-Lesson 4 of 4.
+Lesson 4 of 5.
 ਨੱਕ (nakk) — the whole face, run back.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -144,3 +144,41 @@ Give the word for "nose." (Nakk.) Which English word is the same word by unbroke
 Sources: Wiktionary: ਨੱਕ (nakk).
 [question — say your answer, then pause 10 seconds]
 Name all four Punjabi face words taught in this chapter, in any order.
+
+
+Lesson 5 of 5.
+ਈ (ī) — one piece met inside a word you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ਈ until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+A vowel that needs no consonant to lean on, because it starts the word itself.
+First, say the last things you learned once more, out loud and from memory:
+[your turn — say: bharā, bhaiṇ]
+[pause 8 seconds for the answer]
+
+Script you'll notice: ਈ.
+ਈ (ī).
+īṛī — ī. The independent long ī, for when a word starts on that vowel.
+Now put them where you have already heard them:
+ਕ + ੋ + ਈ becomes ਕੋਈ (koī) ਕੋਈ — koī — any, some.
+You are not being asked to write any of this. You are being asked to recognise it the next time it goes past.
+
+Writing: copy what you can see.
+Keep ਈ (ī) in front of you and do not cover it. Follow each shape once with a finger, then copy it once with a pencil, larger than it is printed. Say its sound as your hand stops.
+This is observe-and-trace with the model visible. Nothing in these chapters asks you to write a Punjabi word from memory; that ladder starts later, and it starts from these same shapes.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at ਕੋਈ and point to each of today's piece in turn]
+[pause 8 seconds for the answer]
+[your turn — say: ī, then the whole word — koī]
+[pause 8 seconds for the answer]
+[your turn — look: back at the headword at the top of any earlier lesson in this chapter and find one shape you now know]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Name today's piece: īṛī. Which of them is a mātrā or a mark rather than a letter, and what does ਕੋਈ say? (koī, “any, some”.)
+Source: Unicode Gurmukhi chart.

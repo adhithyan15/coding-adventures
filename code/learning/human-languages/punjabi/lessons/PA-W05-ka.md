@@ -9,32 +9,32 @@ type: writing
 headword: "ਕ"
 romanization: "ka"
 gloss: "trace the Gurmukhi letter ka"
-prerequisites: [PA-W04-residence-no-model]
+prerequisites: [PA-W04-residence-no-model, PA-S02-sassa-tatta-sihari]
 sounds: []
 roots: []
 duration:
   max_seconds: 165
 requires:
-  knowledge: [PA-SCRIPT-MA-01, PA-SCRIPT-TIPPI-WRITING-01]
+  knowledge: [PA-SCRIPT-MA-01, PA-SCRIPT-TIPPI-WRITING-01, PA-SCRIPT-RECOG-KA-01]
 introduces:
   knowledge: [PA-SCRIPT-KA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-SCRIPT-MA-01, PA-SCRIPT-TIPPI-WRITING-01, PA-SCRIPT-KA-01]
+  knowledge: [PA-SCRIPT-MA-01, PA-SCRIPT-TIPPI-WRITING-01, PA-SCRIPT-KA-01, PA-SCRIPT-RECOG-KA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-W04-residence-no-model]
+reviews_of: [PA-W04-residence-no-model, PA-S02-sassa-tatta-sihari]
 ---
 
 # ਕ — one new base for the work label
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-MA-01, PA-SCRIPT-TIPPI-WRITING-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-MA-01, PA-SCRIPT-TIPPI-WRITING-01, PA-SCRIPT-RECOG-KA-01] -->
 
 Write the familiar **ਮ** once and place the familiar nasal mark **ੰ** above it once. Today adds only one base letter.
 

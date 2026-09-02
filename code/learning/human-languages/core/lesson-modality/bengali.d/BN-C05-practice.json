@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C05-practice",
     "language": "bengali",
-    "chapter": 5,
-    "sequence": 300,
+    "chapter": 11,
+    "sequence": 710,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:fc9aa1a11dfc6dc9"
+    "sourceHash": "fnv1a64:95bb2380827f42b2"
   },
   "findings": []
 }

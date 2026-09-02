@@ -47,8 +47,8 @@ same verb wearing a prefix.
 
 From the right edge: **آ**, then **ن** *n*, then **ا** long *ā*. That first
 shape is *alif madd* — alif wearing a small wave — and it is how Urdu writes a
-long *ā* at the start of a word. It opens **آپ** *āp* too. Strip the **-nā**
-and the stem is **ā-**.
+long *ā* at the start of a word. It opens *āp* too, which you will be able to
+spell out once pe arrives. Strip the **-nā** and the stem is **ā-**.
 
 ## The word, taken apart — a prefix welded to a verb you know
 <!-- hl-knowledge: introduces=[UR-ETYMON-ANA-TOWARD-GO]; assesses=[] -->

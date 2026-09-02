@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C09-neowa",
     "language": "bengali",
-    "chapter": 9,
-    "sequence": 600,
+    "chapter": 15,
+    "sequence": 830,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:4ab8b306459cb32b",
+    "sourceHash": "fnv1a64:b16d37f4c791da2b",
     "detachableSegments": [
       "The letters in this word"
     ]

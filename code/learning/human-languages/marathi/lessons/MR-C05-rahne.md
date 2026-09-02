@@ -1,7 +1,7 @@
 ---
 id: MR-C05-rahne
-sequence: 175
-chapter: 8
+sequence: 375
+chapter: 12
 type: word
 headword: राहणे
 romanization: "rāhṇe"

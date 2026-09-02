@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-W02-ami-read",
     "language": "bengali",
-    "chapter": 17,
-    "sequence": 1720,
+    "chapter": 6,
+    "sequence": 400,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:73b0cd3035a15831",
+    "sourceHash": "fnv1a64:4ffea3b94b9158c1",
     "detachableSegments": [
       "Script"
     ],

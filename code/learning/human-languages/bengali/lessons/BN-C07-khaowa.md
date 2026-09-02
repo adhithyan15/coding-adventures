@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C07-khaowa
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 430
-chapter: 7
+sequence: 760
+chapter: 13
 type: word
 headword: খাওয়া
 romanization: khāwā
@@ -48,7 +48,7 @@ from two lessons back.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**খাওয়া** is Sanskrit **√খাদ্** (*√khād*, "to chew, to bite"), smoothed through
+**খাওয়া** is Sanskrit *√khād* ("to chew, to bite"), smoothed through
 Prakrit *khā-*. Every neighbour eats with it: Hindi *khānā*, Marathi *khāṇe*,
 Gujarati *khāvũ*, Punjabi *khāṇā*.
 
@@ -60,7 +60,7 @@ manufactured. Some roots are simply local, and saying so is part of the method.
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **খ** is *kh*: a *k* with a puff of breath behind it. Its plain partner **ক**
-(*k*) is the letter in Chapter 5's *kāj*. The puff is not decoration — it is the
+(*k*) is the letter in Chapter 11's *kāj*. The puff is not decoration — it is the
 whole difference between two words, and Bengali gives each its own letter.
 
 ## Grammar Lens: Bengali eats its drinks
@@ -74,8 +74,8 @@ whole difference between two words, and Bengali gives each its own letter.
 
 Hindi keeps a second verb, *pīnā*, for drinking. Bengali's everyday speech does
 not bother: whatever goes in the mouth is *khāwā*. There **is** a drink-verb —
-পান করা (*pān kôrā*), noun-plus-*kôrā* in exactly Chapter 5's *kāj kôrā* shape,
-built on Sanskrit **√পা** (*√pā*, "to drink"), whose Latin cousin *pōtāre* gives
+পান করা (*pān kôrā*), noun-plus-*kôrā* in exactly Chapter 11's *kāj kôrā* shape,
+built on Sanskrit *√pā* ("to drink"), whose Latin cousin *pōtāre* gives
 English **potion** and **potable**. But it belongs to writing and ceremony. Ask
 for tea in a Kolkata kitchen and you eat it.
 

@@ -9,27 +9,27 @@ headword: ਪਾਣੀ
 romanization: pāṇī
 gloss: water — Punjabi's first noun for something you would actually ask for, and the phrase that asks for it politely
 concept_tag: PA-FOOD-WATER
-prerequisites: [PA-C09-pasand]
+prerequisites: [PA-C09-pasand, PA-S08-pappa, PA-S09-aunkar-tippi, PA-S09-dulainkar-oora]
 sounds: [kanna-aa, retroflex-na, laava-i]
 roots: [sanskrit-paniya, sanskrit-pa-drink, pie-peh3-drink]
 etymology_hook: ਪਾਣੀ is inherited from Prakrit pāṇīa, from Sanskrit pānīya, "that which is to be drunk," built on pā-, "to drink" — PIE *peh3(i)-, the same root English keeps, disguised, in potion and poison, both through Latin potare, and in symposium, Greek for "a drinking together."
 duration:
   max_seconds: 265
 requires:
-  knowledge: [PA-LEX-PASAND, PA-GRAMMAR-DATIVE-LIKING, PA-LEX-MADAD-KARNA, PA-GRAMMAR-NOUN-PLUS-KARNA, PA-ETYMON-MADAD-ARABIC]
+  knowledge: [PA-LEX-PASAND, PA-GRAMMAR-DATIVE-LIKING, PA-LEX-MADAD-KARNA, PA-GRAMMAR-NOUN-PLUS-KARNA, PA-ETYMON-MADAD-ARABIC, PA-SCRIPT-RECOG-DULAINKAR-01, PA-SCRIPT-RECOG-PA-01, PA-SCRIPT-RECOG-TIPPI-01]
 introduces:
   knowledge: [PA-LEX-PAANI, PA-PHRASE-KIRPA-KARKE, PA-ETYMON-PAANI-DRINK]
 introduces_idioms: [PA-IDIOM-KIRPA-KARKE-PLEASE-01]
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-LEX-PAANI, PA-PHRASE-KIRPA-KARKE, PA-ETYMON-PAANI-DRINK, PA-LEX-PASAND, PA-GRAMMAR-DATIVE-LIKING, PA-LEX-MADAD-KARNA, PA-GRAMMAR-NOUN-PLUS-KARNA]
+  knowledge: [PA-LEX-PAANI, PA-PHRASE-KIRPA-KARKE, PA-ETYMON-PAANI-DRINK, PA-LEX-PASAND, PA-GRAMMAR-DATIVE-LIKING, PA-LEX-MADAD-KARNA, PA-GRAMMAR-NOUN-PLUS-KARNA, PA-SCRIPT-RECOG-DULAINKAR-01, PA-SCRIPT-RECOG-PA-01, PA-SCRIPT-RECOG-TIPPI-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [PA-C09-pasand, PA-C09-madad-karna]
+reviews_of: [PA-C09-pasand, PA-C09-madad-karna, PA-S08-pappa, PA-S09-aunkar-tippi, PA-S09-dulainkar-oora]
 ---
 
 # ਪਾਣੀ — the first thing you'll actually ask for
@@ -46,7 +46,7 @@ help. This chapter asks for something smaller and far more frequent: a drink.
 > **ਪਾਣੀ** — *pāṇī* — **water**
 
 ## The letters in this word
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-RECOG-DULAINKAR-01, PA-SCRIPT-RECOG-PA-01, PA-SCRIPT-RECOG-TIPPI-01] -->
 
 **ਪ** *p*, **ਾ** long *ā*, then **ਣ** — the curled-back *ṇ* you already read in
 **ਜਾਣਨਾ** — and **ੀ** long *ī*. Nothing here is new; every letter is doing work

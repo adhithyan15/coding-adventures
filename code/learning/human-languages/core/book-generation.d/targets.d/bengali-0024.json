@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 24,
+  "output": "bengali/book/chapters/ch24-last-sign-six-words.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

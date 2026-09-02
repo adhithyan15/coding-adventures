@@ -2,24 +2,24 @@
   "version": 1,
   "language": "bengali",
   "chapter": 15,
-  "title": "Cloth, Shirt, Sari, and Glasses",
+  "title": "Taking, Asking, Helping, Liking",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f72c5c88d66553d9",
+  "sourceHash": "fnv1a64:2d52c53f381ea3f2",
   "lessons": [
     {
-      "id": "BN-C15-kapor",
-      "sequence": 1200,
-      "title": "কাপড় (kapor) — \"cloth,\" a word five languages share",
-      "headword": "কাপড়",
-      "romanization": "kapor",
-      "gloss": "cloth, clothing — a word Sanskrit's own dictionaries call homegrown, not inherited, and the flapped letter returns",
+      "id": "BN-C09-neowa",
+      "sequence": 830,
+      "title": "নেওয়া (neowā) — \"to take,\" and the verb that finishes other verbs",
+      "headword": "নেওয়া",
+      "romanization": "neowā",
+      "gloss": "to take — and the verb that finishes other verbs",
       "script": "bengali",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7b44fcd2e26effb3",
+      "sourceHash": "fnv1a64:b16d37f4c791da2b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -44,22 +44,22 @@
             },
             {
               "kind": "speech",
-              "text": "Five colors named. Now the things they color, starting with the plainest word for cloth itself — and a sound you have not needed since the verb for reading."
+              "text": "Bengali rarely leaves a verb standing alone. This is the verb it props most of them up with — and the tail it wears will look familiar."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: কাপড়",
+          "title": "You'll want to know: নেওয়া",
           "segments": [
             {
               "kind": "speech",
-              "text": "কাপড় (kapor) — kāpoṛ — cloth, clothing."
+              "text": "নেওয়া — neowā — to take."
             },
             {
               "kind": "speech",
-              "text": "সাদা কাপড় (kapor) (shādā kāpoṛ) — white cloth."
+              "text": "আমি নিই (āmi nii), \"I take.\" আপনি নেন (āpni nen), respectfully."
             }
           ]
         },
@@ -70,7 +70,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "কাপড় (kapor) is ক (kô) with the vowel sign া (ā), plus প (pô), plus ড় — the flapped letter, the same curled-tongue sound the reading verb needed, silent-final here: kā-po-ṛ."
+              "text": "নেওয়া (neowā) is নে (ne) + ওয়া (-owā). ন is a dental n, tongue on the teeth. The ওয়া tail is the one every dictionary-form verb of this kind wears — you have it already on হওয়া, যাওয়া and খাওয়া."
             }
           ]
         },
@@ -81,12 +81,45 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "কাপড় (kapor) traces to Sanskrit কর্পট (karpaṭa), \"rag, old cloth.\" Here the honesty runs deeper than usual: even Sanskrit's own dictionaries label karpaṭa a deśī word — homegrown vernacular vocabulary that was already sitting inside classical Sanskrit rather than inherited from any older reconstructed root. No further ancestor is claimed for it at all. What makes it worth teaching anyway is how far it travelled sideways: the identical word, worn down by the same kind of sound change, gives Hindi kapṛā, Marathi kapaḍā, Gujarati kapaḍũ, and Punjabi kapṛā — five Indo-Aryan languages sharing one root together, none of them borrowing from the others."
+              "text": "নেওয়া (neowā) is Sanskrit √nī, \"to lead, to carry away.\" It is a well-attested Indo-Iranian root — Avestan nayeiti, \"he leads\"; Sanskrit netṛ, \"a leader,\" which is why a politician in Kolkata or Delhi is a netā. Beyond that branch the trail thins, and English kept nothing from it. No cousin will be manufactured for you here; some roots stayed home."
+            },
+            {
+              "kind": "speech",
+              "text": "The lesson worth more than a cousin is what Bengali does with the verb."
             }
           ]
         },
         {
           "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens: the verb that ends a compound",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put a verb into its -এ form (likhe, \"having written\"; niye, \"having taken\") and hang a second verb behind it. The second verb stops meaning what it means and starts colouring the first:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "compound",
+                "what it does"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "compound: লিখে নেওয়া (likhe neowā). what it does: write it down — take the writing for yourself.",
+                "compound: নিয়ে আসা (niye āsā). what it does: bring — come, having taken.",
+                "compound: নিয়ে যাওয়া (niye jāwā). what it does: take away — go, having taken."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Bengali has no separate word for \"bring.\" It has \"come having taken.\" And নেওয়া is a noun as readily as লেখা was: দেওয়া-নেওয়া (deowā-neowā), \"giving-and-taking,\" is the everyday word for dealings between people."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -99,43 +132,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"kāpoṛ\" — cloth",
+              "instruction": "\"neowā\" — take — then \"āmi nii\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"kāpoṛ\" — cloth]"
+              "source": "[YOU SAY: \"neowā\" — take — then \"āmi nii\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"shādā kāpoṛ\" — white cloth",
+              "instruction": "the same tail four times — \"hôwā, jāwā, khāwā, neowā\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"shādā kāpoṛ\" — white cloth]"
+              "source": "[YOU SAY: the same tail four times — \"hôwā, jāwā, khāwā, neowā\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the flap, again — \"poṛā … kāpoṛ\"",
+              "instruction": "write it down — \"likhe neowā\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the flap, again — \"poṛā … kāpoṛ\"]"
+              "source": "[YOU SAY: write it down — \"likhe neowā\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the family sharing this root — \"kāpoṛ … kapṛā … kapaḍā\"",
+              "instruction": "bring, then take away — \"niye āsā … niye jāwā\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the family sharing this root — \"kāpoṛ … kapṛā … kapaḍā\"]"
+              "source": "[YOU SAY: bring, then take away — \"niye āsā … niye jāwā\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -147,26 +180,26 @@
             },
             {
               "kind": "speech",
-              "text": "Does কাপড় (kapor)'s root, karpaṭa, trace back to a reconstructed PIE ancestor? (No — Sanskrit's own dictionaries call it a homegrown, deśī word.) Name two other Indo-Aryan languages that share this exact root. (Hindi's kapṛā, Marathi's kapaḍā — or Gujarati's kapaḍũ, or Punjabi's kapṛā.)"
+              "text": "How does Bengali say \"bring,\" having no word for it? (নিয়ে আসা — \"come having taken\"; and \"take away\" is নিয়ে যাওয়া.) Does English share নেওয়া (neowā)'s root? (No — √nī stayed in Indo-Iranian, and that is the honest answer.) Name two more Bengali verbs that are also nouns. (লেখা \"a piece of writing\" and দেখা \"a seeing\" — every -া form does it.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "BN-C15-jama",
-      "sequence": 1210,
-      "title": "জামা (jama) — \"shirt,\" a third word from Persian",
-      "headword": "জামা",
-      "romanization": "jama",
-      "gloss": "shirt — a second Persian loan for clothing, the same word behind Hindi's own jaamaa",
+      "id": "BN-C09-jijnasa-kora",
+      "sequence": 840,
+      "title": "জিজ্ঞাসা করা (jijñāsā kôrā) — \"to ask,\" which is wanting to know",
+      "headword": "জিজ্ঞাসা করা",
+      "romanization": "jijñāsā kôrā",
+      "gloss": "to ask — literally \"to do a wanting-to-know,\" and the door into a thousand verbs",
       "script": "bengali",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6fa947452f036e20",
+      "sourceHash": "fnv1a64:e343932a6725b7c6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -191,22 +224,22 @@
             },
             {
               "kind": "speech",
-              "text": "Cloth in general, now a specific garment — and Persian, again, supplies the word."
+              "text": "Chapter 13 warned you about a knot of letters, then spared you it. Here it is, inside a word you will use daily — and the word is Chapter 13's verb with an appetite."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: জামা",
+          "title": "You'll want to know: জিজ্ঞাসা করা",
           "segments": [
             {
               "kind": "speech",
-              "text": "জামা (jama) — jāmā — shirt."
+              "text": "জিজ্ঞাসা করা — jijñāsā kôrā — to ask."
             },
             {
               "kind": "speech",
-              "text": "লাল জামা (jama) (lāl jāmā) — a red shirt."
+              "text": "আমি জিজ্ঞাসা করি (āmi jiggāshā kôri), \"I ask\" — two words, one verb."
             }
           ]
         },
@@ -217,7 +250,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "জামা (jama) is জ (jô) with the vowel sign া (ā), plus ম (mô) with the vowel sign া (ā) again: jā-mā."
+              "text": "জিজ্ঞাসা is জি + জ্ঞা + সা. The middle piece জ্ঞ is the knot of জ and ঞ Chapter 13 named on √jñā — and Bengali never says jñ. It says gg, so the spelled jijñāsā is spoken jiggāshā, with the s becomes sh tilt at the end."
             }
           ]
         },
@@ -228,12 +261,44 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "জামা (jama) is a Persian loan, jāma, \"robe, garment\" — carried into Hindi and Urdu as the identical word, jāmā. Count it up: of the clothing and color words in this small set, three now trace to Persian rather than Sanskrit — লাল, সবুজ, and জামা (jama). Bengali's everyday wardrobe vocabulary leans on the same trading world its colors did."
+              "text": "জিজ্ঞাসা is Sanskrit's desiderative of √jñā (\"to know\") — the form meaning wanting to do a thing. Jijñāsati is \"he desires to know\"; jijñāsā is the desire itself. Bengali took the noun."
+            },
+            {
+              "kind": "speech",
+              "text": "So asking is not a separate idea here. It is জানা with an appetite — and the root behind both is the one Chapter 13 traced: PIE ǵneh₃-, English know, Latin nōscere (notice), Greek gnôsis (diagnosis). The doubled ji- is the desiderative's signature: a quiet echo of the root, meaning reaching for it."
             }
           ]
         },
         {
           "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens: any noun plus করা is a verb",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "noun",
+                "noun + করা"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "noun: কাজ (kāj), work. noun + করা: কাজ করা — to work.",
+                "noun: জিজ্ঞাসা (jijñāsā), a wanting-to-know. noun + করা: জিজ্ঞাসা করা (jijñāsā kôrā) — to ask."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter 11 built kāj kôrā this way. It is more than a compound: it is the way Bengali makes verbs. The stock of true verbs is small and closed, while nouns pour in from Sanskrit, Persian, Arabic and English — each becoming a verb the moment করা stands behind it. Learn a noun, learn a verb."
+            },
+            {
+              "kind": "speech",
+              "text": "Last lesson’s compound stacks on top: জিজ্ঞাসা করে নেওয়া (jijñāsā kôre neowā) — \"just go ahead and ask.\""
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -246,34 +311,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"jāmā\" — shirt",
+              "instruction": "spelling, then sound — \"jijñāsā … jiggāshā\" — then \"āmi jiggāshā kôri,\" I ask, and the root it grew from, \"jānā\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"jāmā\" — shirt]"
+              "source": "[YOU SAY: spelling, then sound — \"jijñāsā … jiggāshā\" — then \"āmi jiggāshā kôri,\" I ask, and the root it grew from, \"jānā\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"lāl jāmā\" — a red shirt",
+              "instruction": "a fact, then a person — \"āmi jāni\" … \"āmi tāke chini\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"lāl jāmā\" — a red shirt]"
+              "source": "[YOU SAY: a fact, then a person — \"āmi jāni\" … \"āmi tāke chini\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the three Persian loans so far — \"lāl … shôbuj … jāmā\"",
+              "instruction": "go ahead and ask — \"jijñāsā kôre neowā\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the three Persian loans so far — \"lāl … shôbuj … jāmā\"]"
+              "source": "[YOU SAY: go ahead and ask — \"jijñāsā kôre neowā\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -285,26 +350,26 @@
             },
             {
               "kind": "speech",
-              "text": "Where does জামা (jama) come from? (Persian jāma, \"robe, garment,\" the identical word Hindi and Urdu also use.) How many of this set's clothing and color words now trace to Persian? (Three — লাল, সবুজ, জামা (jama).)"
+              "text": "How does Bengali say জ্ঞ, and what is জিজ্ঞাসা literally? (gg, never jñ; and a wanting-to-know, the desiderative of জানা's root.) Someone asks whether you know their brother — which knowing verb answers? (চেনা — a person is known by acquaintance; জানা is for facts.) How do you make a verb from a noun you met this morning? (Put করা behind it.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "BN-C15-shari",
-      "sequence": 1220,
-      "title": "শাড়ি (shari) — \"sari,\" a word English simply borrowed",
-      "headword": "শাড়ি",
-      "romanization": "shari",
-      "gloss": "sari — a Sanskrit word for a strip of cloth that walked, almost unchanged, straight into English",
+      "id": "BN-C09-sahajjo-kora",
+      "sequence": 850,
+      "title": "সাহায্য করা (sāhājjo kôrā) — \"to help,\" which is going along with someone",
+      "headword": "সাহায্য করা",
+      "romanization": "sāhājjo kôrā",
+      "gloss": "to help — \"to go together with,\" and the word that finally shows you the inherent vowel",
       "script": "bengali",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:18eb94eb5d5822ae",
+      "sourceHash": "fnv1a64:ab125e9ee0527304",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -329,22 +394,22 @@
             },
             {
               "kind": "speech",
-              "text": "Every English cousin this book has traced so far has been buried deep — a shared PIE root, worn down over thousands of years past recognizing. This word's road into English was much shorter."
+              "text": "Chapter 12 said Bengali's inherent vowel leans to o, then admitted it could not show you. This word can — and it is the word you will most want when stuck."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: শাড়ি",
+          "title": "You'll want to know: সাহায্য করা",
           "segments": [
             {
               "kind": "speech",
-              "text": "শাড়ি (shari) — shāṛi — sari."
+              "text": "সাহায্য করা — sāhājjo kôrā — to help."
             },
             {
               "kind": "speech",
-              "text": "লাল শাড়ি (shari) (lāl shāṛi) — a red sari."
+              "text": "আমাকে সাহায্য করুন (āmāke sāhājjo kôrun), \"please help me\"; āmāke is \"to me.\""
             }
           ]
         },
@@ -355,23 +420,71 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "শাড়ি (shari) opens with শ — a second letter for an s-family sound, a different one from স. Sanskrit distinguished three of these (স, শ, and a third, ষ); modern Bengali speech has merged them into one sound, but the spelling keeps them apart. Then া (ā), ড় (the flap you now know from কাপড় (kapor)), and ি (i): shā-ṛi."
+              "text": "সাহায্য is সা + হা + য্য. The last piece is য stacked on itself — a conjunct, how Bengali writes a doubled consonant."
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "pronunciation",
+          "title": "Sounds you'll need: a doubled letter, and a vowel nobody writes",
           "segments": [
             {
               "kind": "speech",
-              "text": "শাড়ি (shari) traces to Sanskrit শাটী (śāṭī), \"a strip of cloth, a garment,\" worn down through Middle Indic সাড়ী (sāḍī) into Bengali and Hindi's shared śāṛī/sāṛī. Here is the unusual part: every English cousin this book has traced so far — heart, nose, bind, come — went underground for thousands of years, worn down by sound change on both ends until only a shared ancient root connects them. This word took a different road. It entered English directly, in the modern era, as an ordinary borrowed word: \"sari.\" No PIE root, no centuries of drift — just a garment's name, carried whole into another language's dictionary."
+              "text": "Two rules land at the end, neither a quirk. Bengali reads a doubled য as jj, not yy. And nothing is written after it, so it takes the inherent vowel, which leans to o: sāhājjo, never sāhājja."
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter 12 could not show that inherent o in ek, dui, tin, chār, pā̃ch, since none of the five ends in a bare consonant. This one does. সা takes the s becomes sh tilt, so the whole is shāhājjo."
             }
           ]
         },
         {
           "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সাহায্য is Sanskrit sāhāyya, \"companionship,\" on sahāya, \"a companion\" — which is saha-, \"together,\" plus √i, \"to go.\" A helper goes along with you."
+            },
+            {
+              "kind": "speech",
+              "text": "Both halves have secure English cousins. Saha- is PIE sem-, \"together\": English same, Greek homós (homogeneous), Latin similis (similar). √i is PIE h₁ey-, \"to go\": Latin īre gives exit and transit; Greek ión gives ion. So \"help\" is same-going, and English holds the pieces without ever building the word."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "grammar",
+          "title": "Grammar Lens: asking for help is where the respect ladder bites",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Another noun + করা, like জিজ্ঞাসা করা (jijñāsā kôrā). The respect sits where Chapter 13 put it — in করা’s ending:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "who you are asking",
+                "\"help\""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "who you are asking: তুই (tui, intimate). \"help\": সাহায্য কর (kôr).",
+                "who you are asking: তুমি (tumi, familiar). \"help\": সাহায্য করো (kôro).",
+                "who you are asking: আপনি (āpni, respectful). \"help\": সাহায্য করুন (kôrun)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Say kôr to a stranger and you were not rude by accident, but in grammar."
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -384,43 +497,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"shāṛi\" — sari",
+              "instruction": "spelling, then sound — \"sāhāyya … shāhājjo\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"shāṛi\" — sari]"
+              "source": "[YOU SAY: spelling, then sound — \"sāhāyya … shāhājjo\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"lāl shāṛi\" — a red sari",
+              "instruction": "the ladder — \"sāhājjo kôr … kôro … kôrun\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"lāl shāṛi\" — a red sari]"
+              "source": "[YOU SAY: the ladder — \"sāhājjo kôr … kôro … kôrun\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the second s-letter — \"শ, beside স\"",
+              "instruction": "please help me — \"āmāke sāhājjo kôrun\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the second s-letter — \"শ, beside স\"]"
+              "source": "[YOU SAY: please help me — \"āmāke sāhājjo kôrun\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "three garments so far — \"kāpoṛ … jāmā … shāṛi\"",
+              "instruction": "the two noun-verbs of this chapter — \"jijñāsā kôrā … sāhājjo kôrā\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: three garments so far — \"kāpoṛ … jāmā … shāṛi\"]"
+              "source": "[YOU SAY: the two noun-verbs of this chapter — \"jijñāsā kôrā … sāhājjo kôrā\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 7,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -432,26 +545,26 @@
             },
             {
               "kind": "speech",
-              "text": "How did শাড়ি (shari) reach English — through a shared ancient root, worn down over millennia, or as a direct modern loanword? (A direct loanword — \"sari,\" borrowed whole, no PIE root involved.) How many distinct s-family letters did Sanskrit distinguish, now merged in Bengali speech? (Three — স, শ, ষ.)"
+              "text": "Why does সাহায্য end in -o with nothing written there? (The inherent vowel — the thing the five numbers could not show.) Which form to a stranger? (করুন — kôr is for তুই.) What is a sahāya? (One who goes with you.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "BN-C15-choshma",
-      "sequence": 1230,
-      "title": "চশমা (choshma) — \"glasses,\" built on an old cousin's name",
-      "headword": "চশমা",
-      "romanization": "choshma",
-      "gloss": "glasses — built on the very Persian word the eye lesson once named as its only cousin",
+      "id": "BN-C09-bhalo-laga",
+      "sequence": 860,
+      "title": "ভালো লাগা (bhālo lāgā) — \"to like,\" which happens to you",
+      "headword": "ভালো লাগা",
+      "romanization": "bhālo lāgā",
+      "gloss": "to like — \"good sticks to me\" — and beside it ভালোবাসা, to love",
       "script": "bengali",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:03bb7a2f8bcd229d",
+      "sourceHash": "fnv1a64:a8b46ed73f69e78d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -476,22 +589,22 @@
             },
             {
               "kind": "speech",
-              "text": "Three garments named. This one closes the chapter by returning to the very body part the eye lesson once traced to a single named Persian cousin — and building something new out of it."
+              "text": "Every verb so far has let you be the one doing it. Here is one that does not."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: চশমা",
+          "title": "You'll want to know: ভালো লাগা",
           "segments": [
             {
               "kind": "speech",
-              "text": "চশমা (choshma) — chôshmā — glasses."
+              "text": "ভালো লাগা — bhālo lāgā — to like."
             },
             {
               "kind": "speech",
-              "text": "আমার চশমা (choshma) (āmār chôshmā) — my glasses."
+              "text": "আমার ভালো লাগে (āmār bhālo lāge), \"I like it.\" Not āmi — āmār, \"to me.\""
             }
           ]
         },
@@ -502,7 +615,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "চশমা (choshma) is spelled চ (chô) + শ (shô, the second s-letter শাড়ি (shari) just introduced) + ম (mô) + া (ā) — four sounds by the spelling. Ordinary speech thins it to three: chôsh-mā, not chô-sho-mā — an everyday shortening this particular loanword has settled into."
+              "text": "ভালো is yours from Chapter 5. The new half is লাগা: লা + গা, গ being a hard g as in go."
             }
           ]
         },
@@ -513,12 +626,45 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "চশমা (choshma) is built on Persian চশম (chashm), \"eye\" — the exact word the eye lesson once named as চোখ's only named cousin outside the Indo-Aryan family, with no secure English descendant claimed for চোখ itself. চশমা (choshma) takes that word and adds a suffix that turns \"eye\" into \"eye-thing\": spectacles, the thing that sits in front of your eyes. Bengali did not build this the way it built জিজ্ঞাসা করা or সাহায্য করা, by hanging করা on a noun; it took a ready-made South Asian coinage on a Persian root, the same formation Hindi and Urdu also use."
+              "text": "লাগা is Sanskrit √lag, \"to attach, to stick\": āmār bhālo lāge says, literally, \"good sticks to me.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ভালোবাসা (bhālobāsā), \"to love,\" is ভালো plus বাসা, a verb no longer used alone. Its origin is genuinely disputed; the commonest proposal is Sanskrit √vas, \"to dwell\" — love as housed in goodness. If so it carries a startling cousin, since √vas is PIE h₂wes-, \"to stay,\" which became Old English wesan and so English was. That \"if\" is real, and stays open."
             }
           ]
         },
         {
           "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens: liking lands on you; loving you do",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Bengali",
+                "word for word"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "Bengali: আমার ভালো লাগে. word for word: to-me good sticks — I like it.",
+                "Bengali: আমার চা ভালো লাগে. word for word: to-me tea good sticks — I like tea.",
+                "Bengali: আমি ভালোবাসি. word for word: I love."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "That āmār … shape is how Bengali says I have — আমার … আছে, with আছে carrying the weight and no future of its own to give."
+            },
+            {
+              "kind": "speech",
+              "text": "ভালোবাসা breaks the pattern on purpose: āmi bhālobāsi puts you in the subject's chair. It is a noun too — \"love\" itself — as লেখা was \"a piece of writing.\" One form serves everybody. The harmony has nothing to bite on: bāsi and bāse keep their ā."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -531,43 +677,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"chôshmā\" — glasses",
+              "instruction": "\"āmār bhālo lāge\" — hearing \"to me,\" not \"I\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"chôshmā\" — glasses]"
+              "source": "[YOU SAY: \"āmār bhālo lāge\" — hearing \"to me,\" not \"I\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"āmār chôshmā\" — my glasses",
+              "instruction": "I like tea — \"āmār chā bhālo lāge\" — the tea Bengali eats, \"chā khāwā\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"āmār chôshmā\" — my glasses]"
+              "source": "[YOU SAY: I like tea — \"āmār chā bhālo lāge\" — the tea Bengali eats, \"chā khāwā\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the eye it is built on — \"chashm … chôshmā\"",
+              "instruction": "the one you do — \"āmi bhālobāsi\" — one form, whoever is speaking",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the eye it is built on — \"chashm … chôshmā\"]"
+              "source": "[YOU SAY: the one you do — \"āmi bhālobāsi\" — one form, whoever is speaking]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all four garments of this chapter — \"kāpoṛ, jāmā, shāṛi, chôshmā\"",
+              "instruction": "the eight verbs of these two chapters — \"bhābā, bojhā, pôṛā, lekhā, neowā, jijñāsā kôrā, sāhājjo kôrā, bhālo lāgā\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all four garments of this chapter — \"kāpoṛ, jāmā, shāṛi, chôshmā\"]"
+              "source": "[YOU SAY: the eight verbs of these two chapters — \"bhābā, bojhā, pôṛā, lekhā, neowā, jijñāsā kôrā, sāhājjo kôrā, bhālo lāgā\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -579,7 +725,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Persian word is চশমা (choshma) built on, and where did this book meet it before? (Chashm, \"eye\" — named as চোখ's only cousin outside the family.) Say all five colors and all four garments this small set has now taught. (লাল, নীল, কালো, সাদা, সবুজ; কাপড় (kapor), জামা (jama), শাড়ি (shari), চশমা (choshma).) Two reaches further back, to close out: who is the subject of āmār bhālo lāge, \"I like it\"? (Not you — the good is, the same shape as āmār chôshmā, \"to me, glasses.\") And is āmi bhālobāsi, \"I love,\" built the same inverted way? (No — loving takes you as subject; liking happens to you.)"
+              "text": "Who is the subject of āmār bhālo lāge, and what else is built that way? (Not you — the good is; আমার … আছে, \"I have,\" and আছে has no future of its own to give.) Does āmi bhālobāsi behave the same, and would a woman say it differently? (No, and no — loving takes you as subject; Bengali has no grammatical gender.) Name two verbs that are also nouns. (ভালোবাসা \"love,\" লেখা \"writing.\") Why bāsi, not bosi? (Nothing to raise — this stem has ā.)"
             }
           ]
         }

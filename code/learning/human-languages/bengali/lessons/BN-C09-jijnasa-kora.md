@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C09-jijnasa-kora
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 610
-chapter: 9
+sequence: 840
+chapter: 15
 type: word
 headword: জিজ্ঞাসা করা
 romanization: jijñāsā kôrā
@@ -12,7 +12,7 @@ concept_tag: VERB-ASK
 prerequisites: [BN-C09-neowa]
 sounds: [jna-conjunct, long-aa]
 roots: [jna-know, kr-do]
-etymology_hook: "জিজ্ঞাসা is the Sanskrit desiderative of √jñā — literally 'a wanting to know' — so it is Chapter 7's জানা with an appetite, and it carries the same PIE *ǵneh₃- that gives English know and Greek gnosis; the verb is made by hanging করা on that noun, which is the pattern Bengali uses to turn any noun at all into a verb"
+etymology_hook: "জিজ্ঞাসা is the Sanskrit desiderative of √jñā — literally 'a wanting to know' — so it is Chapter 13's জানা with an appetite, and it carries the same PIE *ǵneh₃- that gives English know and Greek gnosis; the verb is made by hanging করা on that noun, which is the pattern Bengali uses to turn any noun at all into a verb"
 duration:
   max_seconds: 298
 requires:
@@ -34,8 +34,8 @@ reviews_of: [BN-C09-neowa, BN-C07-jana]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Chapter 7 warned you about a knot of letters, then spared you it.
-Here it is, inside a word you will use daily — and the word is Chapter 7's verb
+[PAUSE 2s] Chapter 13 warned you about a knot of letters, then spared you it.
+Here it is, inside a word you will use daily — and the word is Chapter 13's verb
 with an appetite.
 
 ## You'll want to know: জিজ্ঞাসা করা
@@ -49,19 +49,19 @@ with an appetite.
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **জিজ্ঞাসা** is **জি** + **জ্ঞা** + **সা**. The middle piece **জ্ঞ** is the knot
-of **জ** and **ঞ** Chapter 7 named on √jñā — and Bengali never says *jñ*. It says
+of **জ** and **ঞ** Chapter 13 named on √jñā — and Bengali never says *jñ*. It says
 **gg**, so the spelled *jijñāsā* is spoken **jiggāshā**, with the *s → sh* tilt
 at the end.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**জিজ্ঞাসা** is Sanskrit's **desiderative** of **√জ্ঞা** (*√jñā*, "to know") —
+**জিজ্ঞাসা** is Sanskrit's **desiderative** of *√jñā* ("to know") —
 the form meaning *wanting* to do a thing. *Jijñāsati* is "he desires to know";
 *jijñāsā* is the desire itself. Bengali took the noun.
 
 So asking is not a separate idea here. It is **জানা with an appetite** — and the
-root behind both is the one Chapter 7 traced: PIE *\*ǵneh₃-*, English **know**,
+root behind both is the one Chapter 13 traced: PIE *\*ǵneh₃-*, English **know**,
 Latin *nōscere* (**notice**), Greek *gnôsis* (**diagnosis**). The doubled *ji-*
 is the desiderative's signature: a quiet echo of the root, meaning *reaching
 for* it.
@@ -74,7 +74,7 @@ for* it.
 | কাজ (*kāj*), work | কাজ করা — to work |
 | জিজ্ঞাসা (*jijñāsā*), a wanting-to-know | জিজ্ঞাসা করা — to ask |
 
-Chapter 5 built *kāj kôrā* this way. It is more than a compound: it is **the**
+Chapter 11 built *kāj kôrā* this way. It is more than a compound: it is **the**
 way Bengali makes verbs. The stock of true verbs is small and closed, while nouns
 pour in from Sanskrit, Persian, Arabic and English — each becoming a verb the
 moment করা stands behind it. Learn a noun, learn a verb.

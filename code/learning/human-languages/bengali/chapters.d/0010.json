@@ -1,22 +1,21 @@
 {
   "chapter": 10,
-  "title": "Tea, Water, Milk, and Rice",
-  "label": "ch:bn-tea-water-milk-rice",
-  "canDo": "I can offer or ask for tea, water, milk and rice politely in Bengali, reusing the respectful verb ending Chapter 7 already taught, and say which of the four words is a Chinese loan and which shares a root with a word two lessons later.",
+  "title": "Two Marks Inside a Verb",
+  "label": "ch:bn-two-marks-inside-a-verb",
+  "canDo": "I can write the independent ও, explain why a vowel following a vowel cannot be a sign, add the dot that turns য into a glide, and read হওয়া — the verb of being — straight off the page.",
   "spineNodes": [
-    "SPINE-POLITE-REQUEST-REPAIR"
+    "SPINE-MEET-GREET"
   ],
   "payoff": {
-    "lesson": "BN-C10-bhat",
-    "kind": "production",
-    "summary": "The chapter closes on ভাত, whose Sanskrit root — √bhaj, 'to divide, to share' — will resurface two lessons later in a very different word. The reader offers all four drinks and rice politely in one breath (chā khān, jôl khān, dudh khān, bhāt khān), all built on the same respectful form of খাওয়া Chapter 7 already taught rather than a new 'please' word, which is how this chapter realizes SPINE-POLITE-REQUEST-REPAIR without one. It reaches back to rescue three thin Chapter 7 grammar atoms (হওয়া's future, আসা's genderlessness, যাওয়া's respect ladder) and সাহায্য's doubled-letter sound rule, none revisited since Chapter 7-9.",
+    "lesson": "BN-W04-howa-read",
+    "kind": "reading",
+    "summary": "The verb of being is read whole from four pieces bought in this chapter and the last, and set beside হ্যাঁ to show that stacked pieces make one syllable and pieces in a row make several.",
     "assesses": [
-      "BN-LEX-C10-CHA-01",
-      "BN-GRAMMAR-C10-KHAN-REQUEST-02",
-      "BN-LEX-C10-JOL-01",
-      "BN-LEX-C10-DUDH-01",
-      "BN-SOUND-C10-DUDH-02",
-      "BN-LEX-C10-BHAT-01"
+      "BN-SCRIPT-HOWA-READ-01",
+      "BN-SCRIPT-O-INDEP-01",
+      "BN-SCRIPT-NUKTA-01",
+      "BN-SCRIPT-YA-01",
+      "BN-SCRIPT-HA-01"
     ]
   }
 }

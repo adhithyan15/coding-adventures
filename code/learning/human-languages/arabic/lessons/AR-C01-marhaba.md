@@ -16,12 +16,12 @@ duration:
 requires:
   knowledge: [AR-C01-SALAM-01, AR-SCRIPT-WRITE-SALAM-03]
 introduces:
-  knowledge: [AR-C01-MARHABA-04]
+  knowledge: [AR-C01-MARHABA-05]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: [AR-CULTURE-MARHABA-INFORMAL-01]
 practises:
-  knowledge: [AR-C01-SALAM-01, AR-C01-MARHABA-04]
+  knowledge: [AR-C01-SALAM-01, AR-C01-MARHABA-05]
 skills: [listening, speaking]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, language-focus]
@@ -33,13 +33,13 @@ reviews_of: [AR-C01-salam, AR-W00-alif-mim-salam]
 # *marḥaban* — make room for someone
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[AR-C01-MARHABA-04]; assesses=[AR-C01-SALAM-01] -->
+<!-- hl-knowledge: introduces=[AR-C01-MARHABA-05]; assesses=[AR-C01-SALAM-01] -->
 
 [PAUSE 2s] You can say *salām*. Now learn the light, everyday “hello” by ear
 before its written form asks anything of your eyes or hand.
 
 ## Sounds you'll need — Hear the word
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-MARHABA-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-MARHABA-05] -->
 
 Build three small beats: *mar* — *ḥa* — *ban*. The middle consonant is a warm,
 breathy sound made deeper in the throat than English *h*. Approximate it gently;
@@ -48,14 +48,14 @@ clarity matters more than force.
 > *marḥaban* = hello / welcome.
 
 ## The word, taken apart
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-MARHABA-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-MARHABA-05] -->
 
 The root **r–ḥ–b** carries spaciousness: *raḥb* is roomy. So *marḥaban* is not
 an empty signal. It suggests, “There is room for you here.” A warm reply is
 *marḥabtayn* — literally, “two welcomes.”
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01, AR-C01-MARHABA-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01, AR-C01-MARHABA-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mar* — *ḥa* — *ban*]
@@ -63,7 +63,7 @@ an empty signal. It suggests, “There is room for you here.” A warm reply is
 - [YOU SAY: *marḥabtayn*, “two welcomes”]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-MARHABA-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-MARHABA-05] -->
 
 [PAUSE 3s] What does the root r–ḥ–b suggest? (**Room, spaciousness.**) Say the
 three beats of *marḥaban*. The next two lessons reveal its new letter shapes in

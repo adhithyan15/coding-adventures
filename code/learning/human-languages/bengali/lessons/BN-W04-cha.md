@@ -2,38 +2,38 @@
 schema_version: 2
 id: BN-W04-cha
 spine_node: SPINE-MEET-GREET
-sequence: 1930
+sequence: 600
 delivery: script
-chapter: 19
+chapter: 9
 type: writing
 headword: চ
 romanization: "chô"
 gloss: "the consonant cha — made where the tongue meets the roof"
-prerequisites: [BN-W03-dudh-read]
+prerequisites: [BN-W03-dha]
 sounds: []
 roots: []
 etymology_hook: "A fourth place of articulation, further back than the teeth and further forward than the throat, and the one whose four-cell square gives Bengali the sounds English spells with two letters apiece."
 duration:
   max_seconds: 200
 requires:
-  knowledge: [BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-DUDH-READ-01, BN-SCRIPT-DHA-01]
+  knowledge: [BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-DHA-01]
 introduces:
   knowledge: [BN-SCRIPT-CHA-01]
 practises:
-  knowledge: [BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-DUDH-READ-01, BN-SCRIPT-DHA-01, BN-SCRIPT-CHA-01]
+  knowledge: [BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-DHA-01, BN-SCRIPT-CHA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard
-reviews_of: [BN-W03-dudh-read]
+reviews_of: [BN-W03-dha]
 ---
 # চ — the consonant cha
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-DUDH-READ-01, BN-SCRIPT-DHA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-DHA-01] -->
 
-[PAUSE 2s] Read **দুধ** aloud, and say which of its two letters lets the breath out.
+[PAUSE 2s] Write **দ** and **ধ**, and say which of the two lets the breath out.
 
 ## Script
 <!-- hl-knowledge: introduces=[BN-SCRIPT-CHA-01]; assesses=[BN-SCRIPT-AA-MATRA-01] -->
@@ -46,7 +46,7 @@ The tongue is somewhere new. Not on the teeth, where **ত** and **দ** are mad
 and not at the back, where **ক** is: the body of the tongue comes up flat against
 the **hard roof of the mouth**, a little behind the ridge. English spells that place
 with two letters, *ch*, because its alphabet has no single sign for it. Bengali
-has one letter, and — following the square from the last chapter — a breathy
+has one letter, and — following the square this chapter has been filling — a breathy
 partner and two voiced cells to go with it.
 
 That is the fourth place of articulation this book has named: teeth, roof,
@@ -60,11 +60,11 @@ With the mātrā:
 That is already a word, and it gets its own lesson next.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-CHA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-DUDH-READ-01, BN-SCRIPT-DHA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-CHA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-DHA-01] -->
 
 - [YOU WRITE: চ]
 - [YOU WRITE: চা]
-- [YOU READ: দুধ]
+- [YOU READ: কেমন ভালো]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-CHA-01] -->

@@ -1,5 +1,192 @@
 # Changelog
 
+## Unreleased — chapters 1-5 are generated from their lessons
+
+Telugu has **no hand-written chapters left**. `ch01`–`ch05` were the last five;
+they are now built from the same lessons everything else is built from, and the
+corpus's handwritten holding falls **69 → 64**.
+
+### What had to happen first, and what it cost
+
+`handwritten_parity.py` put Telugu at **7 blocks** of prose that lived only in
+the LaTeX and would have been deleted by a naive flip. All seven are carried,
+and `--check telugu` exited 0 **with the five chapters still hand-written** —
+which is the only ordering in which that gate proves anything:
+
+* **`sounds` ×1.** `TE-C01-namaskaram` was the only chapter-1 word lesson with
+  no "Sounds you'll need" section. Its four siblings all had one; now it does.
+* **`cognates` ×5.** The renderer has no `cognates` environment and no reason to
+  grow one. An unclassified `##` heading already renders as a `\subsection*`,
+  and two of the five tables reached the page that way already, so the other
+  three were carried the same way — into `TE-C01-namaskaram`, `TE-C02-peru` and
+  `TE-C04-velli-vastaanu`. `TE-C02-peru` held its comparison as a run-on
+  sentence and `TE-C04-velli-vastaanu` inside a paragraph; both are now the
+  five-row table the `.tex` had. The tables stay romanization-only, exactly as
+  the `.tex` wrote them, so no lesson gained a cousin-script glyph.
+* **`culture` ×1.** The chapter-1 recap's "go and come back" farewell. Not lost
+  — **re-homed**, and deliberately: teaching a sixth phrase in the recap of a
+  five-word chapter is the ramp violation this migration exists to fix. It lives
+  in chapter 4 on `TE-C04-velli-vastaanu`, where the reader has met వెళ్ళు
+  first, and chapter 1 keeps the forward pointer `TE-C01-practice` already had.
+
+### The real blocker was schema v1
+
+Moving the ledger entries produced one error: *"generated books require schema
+version 2."* All **thirty** word, phrase and recap lessons in chapters 1-5 were
+schema v1 — the same thirty the gentle-ramp report had been calling
+*measurement-blind*. So the flip is a migration:
+
+* every `##` heading now carries a stable block type (sixteen did not: five
+  "Across the family" tables folded into the etymology block they belong in,
+  "The phrase, assembled" became "The phrase, taken apart", and the recap
+  sections took the "The exchange" / "What you've built" / "Guided Practice"
+  spellings the parser knows);
+* every block declares `hl-knowledge`, every lesson declares atoms, duration,
+  skills, modes, strands, register and variety;
+* `TE-C02-practice` gained the warm-up a v2 lesson must open with;
+* the four chapter recaps that were absent from the local path were placed in
+  it, each with a consolidation extension node, matching `TE-C05-practice`.
+
+**No lesson had to be split.** The computed five-minute ceiling is derived from
+content, and the heaviest lesson in chapters 1-5 computes at **252 s** against
+the 300 s bar — chapters 1-5 were already one headword per lesson, with the
+letter ladder interleaved, before this tranche started.
+
+### Reading the chapters side by side found three things the script cannot see
+
+The parity script counts prose BLOCKS. `center`/`tabular` are layout to it, so
+it is blind to a table. Reading the old and new chapters against each other:
+
+* **Three end-of-chapter summary tables** (the how-are-you exchange, the three
+  farewells, the three sentences about yourself) existed only in the `.tex`.
+  They are now in `TE-C03-practice`, `TE-C04-practice` and `TE-C05-practice`,
+  with a romanization column the originals did not have.
+* **Five chapter-opening paragraphs** had no home in a generated chapter, which
+  builds its opening from `canDo` and `payoff.summary`. The writing moved into
+  `chapters.d`, so the reader still opens chapter 4 on *"Telugu … does not say a
+  plain 'goodbye.' It promises to return."*
+* **`cousinweb` drops its block heading**, so "Roots you now carry" would have
+  arrived as an unlabelled box of bullets. The label moved inside the box.
+
+### Numbers
+
+| | before | after |
+|---|---|---|
+| hand-written chapters | 5 | **0** |
+| `handwritten_parity.py --check telugu` | 7 blocks at risk | **0** |
+| schema-v2 lessons in chapters 1-5 | 24 of 54 | **54 of 54** |
+| atom-measurement-blind lessons | 30 | **0** |
+| chapter payoff debt | 5 findings | **0** — telugu joins the clean list |
+| lessons over the 300 s ceiling | 0 | 0 |
+| headwords without romanization | 0 | 0 |
+| script-closure violations | 6 | 9 |
+
+The closure movement is the recap tables described above: they show the
+chapter's sentences in Telugu, as the hand-written book always did, and five
+characters in them — **గ · బ · ళ · ె · చ** — have not had a letter lesson yet.
+Each table now says so on the page, and the characters are named in
+`BACKLOG.d` HL-C282 as the next ladder rungs. `TE-C05-undu` also lost a
+zero-width non-joiner, which the emitter was placing OUTSIDE the script run
+where it could neither join nor render.
+
+
+## Unreleased — the letter ladder starts in chapter 1, and the ten numerals are taught
+
+Telugu's script-closure violations fall **22 → 6** and its never-taught glyphs
+**13 → 0**. Both numbers come from `report-cli`'s `script closure` line;
+corpus-wide the violation count moves 576 → 560, and every glyph of that
+movement is Telugu's. Load-bearing headwords stay at **0**.
+
+### The ladder now opens on chapter 1, lesson 2
+
+HL-C217 measured the ceiling on the previous approach: every surviving
+violation sat at or before chapter 19 while the first script lesson sat in
+chapter 6, and a script lesson can only teach the lessons that follow it. So
+this tranche moved the ladder rather than extending it.
+
+**క is now taught immediately after నమస్కారం**, the book's first word, which
+contains it. **ా** follows two lessons later and **ే** closes the chapter. The
+chain was reordered so the marks that unlock reading come first — ా, న, ు, ్,
+ి, ం before chapter 3 — instead of following the alphabet's own order:
+
+| chapter | script lessons now taught there |
+|---|---|
+| 1 | క · ా · ే |
+| 2 | న · ు · ౧ · ్ · ౨ · ి · ం |
+| 3 | ౩ · ఉ · ౪ · ర · ౫ |
+| 4 | డ · ౬ · ప · ౭ |
+| 5 | త · ౮ · స · హ · ౯ |
+| 6 | ౦ · య |
+
+Nothing was cut. Every letter lesson that used to sit in chapters 6–20 is still
+in the book; sixteen of them moved earlier, and each had its example words
+pruned back to words the reader has actually met at the lesson's new position.
+`TE-S123` (డ) lost four example words and kept one; `TE-S125` (హ) lost సహాయం,
+which now arrives on the page after it, and lost a sentence pointing forward at
+మధ్యాహ్నం nine chapters ahead.
+
+### The ten numerals ౦ ౧ ౨ ౩ ౪ ౫ ౬ ౭ ౮ ౯, taught two per chapter
+
+Ten new lessons, `TE-S140` … `TE-S149`, spread across chapters 2–6 so they never
+bunch. They carry **no Telugu word**, on purpose: a numeral is read as a
+quantity, so its shape can be learned months before the spoken name arrives in
+chapter 7 — and holding it back until then is exactly what left ten characters
+untaught for the whole book. ౦ comes last and pays the set off: it is the ring
+the reader already knows as the sunna ం, and with it ౧౦ and ౨౦ and ౧౦౦ become
+readable, because Telugu numerals use place value the same way the reader's own
+digits do.
+
+Both number lessons in chapter 7 are now clean.
+
+### Six new letters, four of them a family
+
+| lesson | letter | placed at | first met in |
+|---|---|---|---|
+| `TE-S134-vowel-sign-uu` | ◌ూ | ch. 7 | మూడు |
+| `TE-S135-letter-i` | ఇ | ch. 9 | ‑ఇంచు |
+| `TE-S136-vowel-sign-ai` | ◌ై | ch. 16 | చైత్రం, వైశాఖం |
+| `TE-S137-letter-kha` | ఖ | ch. 16 | వైశాఖం |
+| `TE-S138-letter-gha` | ఘ | ch. 17 | మాఘం |
+| `TE-S139-letter-ddha` | ఢ | ch. 18 | ఆషాఢం |
+
+ఖ, ఘ and ఢ were the last three never-taught glyphs, and teaching them together
+turns what used to be an isolated pair (బ/భ) into a rule the reader can
+predict: a plain consonant and the same consonant with a puff of breath. `థ`
+moved from chapter 34 to chapter 33 — after అర్థం, the word that needs it, and
+before `TE-C33-raayu`, which used to ask for it untaught — and now names the
+whole family instead of claiming త was the first letter the book ever taught,
+which it no longer is. ఇ is taught as the pair to the sign ◌ి the reader
+already reads, which is the rule that makes an abugida legible: sign after a
+consonant, letter when the vowel starts.
+
+### Script atoms now return three times instead of once
+
+A `TE-SCRIPT-RECOG-*` atom used to be revisited exactly once, by the next letter
+in the chain, and then never again — against an owner directive of "reviewed
+constantly," and against ~14 appearances for a lexical atom. Each script lesson
+now recalls its predecessor and the letter **four back** in its warm-up, and the
+letter **twelve back** in its wrap-up, which lands inside the corpus's own R1,
+R2 and R3 windows at both the dense and the sparse ends of the ladder.
+
+Telugu's script-atom reinforcement misses fall **103 → 68** while the atom count
+rises 33 → 49 — 3.12 → 1.39 misses per atom — with R2 misses 32 → 7 and R3
+misses 31 → 11. Mean lessons per script atom rises **1.94 → 3.65**. R4 is still
+unserved and is recorded in HL-C218.
+
+### What else moved
+
+Script-ramp glyph spikes fall **5 → 3**. Chapter atom-budget violations stay at
+0 and forward references stay at 10, under the pinned ceiling of 12. The
+handwritten `.tex` for chapters 1–5 gained twenty-four sections, declared in
+`core/book-generation.d/handwritten.d/telugu-000{1..5}.json` as
+`embeddedLessonIds` so the book cannot silently drop a lesson the curriculum
+teaches. Twenty-four inherited uses of the banned word *just* left the script-lesson
+template.
+
+Six violations remain. All six are lessons that are themselves the corpus's
+first sighting of the glyph they fail on, so no honest script lesson can precede
+them; the remedy is vocabulary sequencing, and HL-C218 names each one.
+
 ## Unreleased — nine untaught letters, and the end of the load-bearing headword
 
 Telugu's script-closure violations fall **45 → 22** and its load-bearing

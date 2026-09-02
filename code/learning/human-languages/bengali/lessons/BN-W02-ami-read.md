@@ -2,14 +2,14 @@
 schema_version: 2
 id: BN-W02-ami-read
 spine_node: SPINE-MEET-GREET
-sequence: 1720
+sequence: 400
 delivery: script
-chapter: 17
+chapter: 6
 type: writing
 headword: আমি
 romanization: "āmi"
 gloss: "the word for I, and two more that come free with it"
-prerequisites: [BN-W02-i-matra]
+prerequisites: [BN-W02-tumi-read, BN-W02-ya, BN-W02-chandrabindu, BN-W02-hyan-read]
 sounds: []
 roots: []
 etymology_hook: "One sign bought three words at once: the pronoun, the question word, and the goodbye that means I am coming back — all of them already spoken, none of them needing a tenth letter."
@@ -20,20 +20,21 @@ requires:
 introduces:
   knowledge: [BN-SCRIPT-AMI-READ-01]
 practises:
-  knowledge: [BN-SCRIPT-AA-01, BN-SCRIPT-MA-01, BN-SCRIPT-KA-01, BN-SCRIPT-SA-01, BN-SCRIPT-I-MATRA-01, BN-SCRIPT-NAAM-READ-01, BN-SCRIPT-AMI-READ-01]
+  knowledge: [BN-SCRIPT-AA-01, BN-SCRIPT-MA-01, BN-SCRIPT-KA-01, BN-SCRIPT-SA-01, BN-SCRIPT-I-MATRA-01, BN-SCRIPT-NAAM-READ-01, BN-SCRIPT-AMI-READ-01, BN-SCRIPT-HYAN-READ-01, BN-SCRIPT-YA-01, BN-SCRIPT-CHANDRABINDU-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard
-reviews_of: [BN-W02-i-matra, BN-C03-ami]
+reviews_of: [BN-W02-tumi-read, BN-C03-ami]
 ---
 # আমি — the word for I, and two more that come free with it
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-I-MATRA-01, BN-SCRIPT-NAAM-READ-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-I-MATRA-01, BN-SCRIPT-NAAM-READ-01, BN-SCRIPT-HYAN-READ-01, BN-SCRIPT-YA-01, BN-SCRIPT-CHANDRABINDU-01] -->
 
 [PAUSE 2s] Write **ি** once, and say which side of its consonant it goes on.
+Then read **হ্যাঁ**, and name the piece in it that makes no sound.
 
 ## Script
 <!-- hl-knowledge: introduces=[BN-SCRIPT-AMI-READ-01]; assesses=[BN-SCRIPT-AA-01, BN-SCRIPT-MA-01, BN-SCRIPT-I-MATRA-01] -->
@@ -45,7 +46,7 @@ reviews_of: [BN-W02-i-matra, BN-C03-ami]
 - **ম** — *mô*
 - **ি** — written in front of that **ম**, heard after it
 
-**āmi** — *I*. The word from the third chapter, the one that came down from
+**āmi** — *I*. The word from the chapter before this one, the one that came down from
 Sanskrit *asmi* and is cousin to English *am*.
 
 Watch what the sign does to the eye. On the page the order runs আ, then the

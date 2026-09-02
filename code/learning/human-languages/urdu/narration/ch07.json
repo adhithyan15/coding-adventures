@@ -4,8 +4,191 @@
   "chapter": 7,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e74bffd91b088f61",
+  "sourceHash": "fnv1a64:99d3d7e2599c5de4",
   "lessons": [
+    {
+      "id": "UR-W07-alif-madda",
+      "sequence": 255,
+      "title": "آ (alif madda) — alif, with a wave on its head",
+      "headword": "آ",
+      "romanization": "alif madda",
+      "gloss": "alif wearing a small wave — how Urdu writes a long ā at the very start of a word",
+      "script": "urdu-nastaliq",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:eea2bf0b86d3a620",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "The letters in this word",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ا. One tall downstroke, top to bottom, and it refuses to join to whatever comes after it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "آ (alif madda)."
+            },
+            {
+              "kind": "speech",
+              "text": "The tall stroke you already know, and then one small wave laid across the top of it, drawn left to right like a shallow lazy S. Two movements: the downstroke, a lift, the wave."
+            },
+            {
+              "kind": "speech",
+              "text": "Its name is آ alif madda — madda means \"an extension\" — and it says a long ā."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the reason it exists, which is the useful part."
+            },
+            {
+              "kind": "speech",
+              "text": "Plain ا does two different jobs. At the start of a word it is a carrier: a place for a short vowel to sit, with the vowel itself left off the page. Inside a word it is the long ā you have been reading in kām, nām, salām."
+            },
+            {
+              "kind": "speech",
+              "text": "So what does a writer do when a word starts with a long ā? Both jobs want the same stroke, and the answer used to be to write alif twice — carrier plus vowel — which is awkward to write and worse to read. The wave is the shorthand that replaced it. آ (alif madda) at the front of a word means: this begins on a long ā."
+            },
+            {
+              "kind": "speech",
+              "text": "That gives you a rule you can apply on sight. Long ā at the start of a word is written آ (alif madda); the same long ā in the middle of a word is written plain ا. One sound, two spellings, decided by position."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two words, every letter already yours. Copy each with the model in view."
+            },
+            {
+              "kind": "speech",
+              "text": "آنا آسان."
+            },
+            {
+              "kind": "speech",
+              "text": "آنا ānā \"to come\" — a word you can now write rather than take on trust. آسان āsān \"easy\" — look closely: آ (alif madda) at the front, plain ا in the middle, one long vowel spelled two ways inside a single word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "آ (alif madda) — the downstroke, lift, then the wave across its head",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: آ — the downstroke, lift, then the wave across its head]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "آنا, then آسان",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: آنا, then آسان]"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "at both alifs in آسان and say which is which",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: at both alifs in آسان and say which is which]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ānā, and name the two movements that make آ (alif madda)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ānā*, and name the two movements that make **آ**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many movements make آ (alif madda)? (Two — stroke, then wave.) Which verb can you now write? (آنا.) Which of آسان's two alifs carries the wave? (The first.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-W07-alif-madda-where",
+              "prompt": "Where in a word do you write آ (alif madda) rather than plain ا for a long ā?",
+              "assesses": [
+                "UR-SCRIPT-ALIF-MADDA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "at the start",
+                "start",
+                "the beginning",
+                "word-initially",
+                "at the front"
+              ],
+              "feedback": {
+                "correct": "At the start. Inside a word the same long ā is plain alif.",
+                "incorrect": "AT THE START of a word. In the middle, a long ā is written with plain ا."
+              }
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "UR-C07-sochna",
       "sequence": 260,
@@ -19,7 +202,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:74f18b9fdb9647a5",
+      "sourceHash": "fnv1a64:796146538e120a61",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -74,7 +257,7 @@
             },
             {
               "kind": "speech",
-              "text": "چ is new, and you own the trick already. It is the body of ج j — from جی jī and جانا jānā — with three dots below instead of one. Second time this has happened: ب b has one dot below the low scoop, پ p has three. Counting dots stays a reading skill."
+              "text": "چ is new, and you own the trick already. It is the body of jīm, the j you say in jī and jānā, carrying three dots below instead of one. Second time this has happened: be has one dot below the low scoop, pe has three. Counting dots stays a reading skill — one you are given by ear here, a lesson before the shapes arrive."
             }
           ]
         },
@@ -85,7 +268,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "میں سوچتا ہوں — maiṅ sochtā hūṅ — I think (man speaking) میں سوچتی ہوں — maiṅ sochtī hūṅ — I think (woman speaking)."
+              "text": "maiṅ sochtā hūṅ — I think (man speaking) maiṅ sochtī hūṅ — I think (woman speaking)."
             },
             {
               "kind": "speech",
@@ -108,7 +291,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is worth noticing sits inside Urdu. Beside inherited soch, Urdu keeps Arabic فکر fikr, “thought, reflection,” on the root f-k-r — and fikr also means worry: koī fikr nahīṅ, “no worries.” Two words, two unrelated languages, opposite sides of Urdu's vocabulary, each sliding from thinking to fretting on its own."
+              "text": "What is worth noticing sits inside Urdu. Beside inherited soch, Urdu keeps Arabic fikr, “thought, reflection,” on the root f-k-r — and fikr also means worry: koī fikr nahīṅ, “no worries.” Two words, two unrelated languages, opposite sides of Urdu's vocabulary, each sliding from thinking to fretting on its own."
             }
           ]
         },
@@ -129,11 +312,11 @@
             {
               "kind": "prompt",
               "action": "COUNT",
-              "instruction": "ج one dot below, چ three dots below",
+              "instruction": "jīm one dot below, چ three dots below",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU COUNT: **ج** one dot below, **چ** three dots below]"
+              "source": "[YOU COUNT: *jīm* one dot below, **چ** three dots below]"
             },
             {
               "kind": "prompt",
@@ -200,7 +383,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d6f4509b23c4cb10",
+      "sourceHash": "fnv1a64:7b1c05f031b5c86a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -225,7 +408,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can think — sochnā, three dots under the چ. You can know — jānnā. Between brooding and knowing sits the moment a thing clicks, and Urdu has a verb for exactly that."
+              "text": "You can think — sochnā, three dots under its che. You can know — jānnā. Between brooding and knowing sits the moment a thing clicks, and Urdu has a verb for exactly that."
             }
           ]
         },
@@ -259,11 +442,11 @@
             },
             {
               "kind": "speech",
-              "text": "You have used it once already. ٹھیک ṭhīk is ٹ plus this same ھ — retroflex ṭ, then the breath. One letter, one job."
+              "text": "You have used it once already. In ṭhīk, the retroflex ṭe takes this same ھ — retroflex ṭ, then the breath. One letter, one job."
             },
             {
               "kind": "speech",
-              "text": "Keep it apart from ہ, gol he, “round he,” which is a real h and which you write in ہوں hūṅ and ہونا honā. Round ہ speaks; two-eyed ھ only breathes on its right-hand neighbour."
+              "text": "Keep it apart from ہ, gol he, “round he,” which is a real h and which you write in hūṅ and honā. Round ہ speaks; two-eyed ھ only breathes on its right-hand neighbour."
             }
           ]
         },
@@ -274,7 +457,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "میں سمجھتا ہوں — maiṅ samajhtā hūṅ — I understand (man speaking) میں سمجھتی ہوں — maiṅ samajhtī hūṅ — I understand (woman speaking)."
+              "text": "maiṅ samajhtā hūṅ — I understand (man speaking) maiṅ samajhtī hūṅ — I understand (woman speaking)."
             }
           ]
         },
@@ -377,6 +560,201 @@
       ]
     },
     {
+      "id": "UR-W07-pe",
+      "sequence": 275,
+      "title": "پ (pe) — three dots under a boat",
+      "headword": "پ",
+      "romanization": "pe",
+      "gloss": "a shallow boat with three dots beneath it — the letter that finishes āp",
+      "script": "urdu-nastaliq",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:01bad136eb7b374f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "The letters in this word",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write آنا and آسان, and say which alif wears the wave."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پ (pe)."
+            },
+            {
+              "kind": "speech",
+              "text": "A shallow open curve lying along the baseline, like a small flat-bottomed boat — and then a lift, and three dots placed underneath it, arranged as a triangle with its point downward."
+            },
+            {
+              "kind": "speech",
+              "text": "Two parts, one lift. Its name is پ pe and it says p."
+            },
+            {
+              "kind": "speech",
+              "text": "The shapes it wears by position follow the pattern you have already seen twice:"
+            },
+            {
+              "kind": "speech",
+              "text": "standing alone and closing a joined word: the full boat, dots beneath."
+            },
+            {
+              "kind": "speech",
+              "text": "opening a word and in the middle: the boat shrinks to a small tooth — a short upward point on the line — with the three dots still beneath it."
+            },
+            {
+              "kind": "speech",
+              "text": "Note what survives the shrinking. The curve goes; the three dots stay. On a page of Nastaliq you find pe by counting dots below the line, not by looking for a boat."
+            },
+            {
+              "kind": "speech",
+              "text": "That triangle of dots is worth one sentence of history. Arabic has no p, so the Arabic alphabet has no letter for it. Persian needed one, invented it by taking the shape that carries a single dot below and giving it three, and Urdu inherited the invention along with the script. The same trick made letters for ch, zh and g. So the dots under pe are a record of a borrowed alphabet being altered to fit a language it was not built for — which every language that took this alphabet has done, Urdu among them. Sindhi went furthest of Urdu's neighbours, and carries around fifty letters to Urdu's thirty-nine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three words, pe in three different places, and no letter in any of them that is not already yours. Copy each with the model in view."
+            },
+            {
+              "kind": "speech",
+              "text": "آپ پیر اپنا."
+            },
+            {
+              "kind": "speech",
+              "text": "آپ āp — the respectful \"you,\" and the word this book has addressed you with from the beginning. Pe closes it, wearing the full boat, because alif madda hands nothing to the left."
+            },
+            {
+              "kind": "speech",
+              "text": "پیر pair \"foot\" — pe opens it, shrunk to a tooth with its three dots still underneath."
+            },
+            {
+              "kind": "speech",
+              "text": "اپنا apnā \"one's own\" — pe sits in the middle, the same tooth, hemmed in on both sides."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "پ (pe) — the boat, then a lift, then three dots beneath",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: پ — the boat, then a lift, then three dots beneath]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "آپ, then پیر, then اپنا",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: آپ, then پیر, then اپنا]"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "at the pe in پیر and the pe in آپ, and say what changed",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: at the pe in پیر and the pe in آپ, and say what changed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āp, and say who you would use it with rather than tum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **āp**, and say who you would use it with rather than *tum*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many dots does pe carry, and where? (Three, underneath.) Why did Persian have to invent this letter? (Arabic has no p.) Write \"you.\" (آپ.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-W07-pe-dots",
+              "prompt": "When pe shrinks to a tooth at the start of a word, what stays the same?",
+              "assesses": [
+                "UR-SCRIPT-PE-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "the three dots beneath it",
+                "the three dots",
+                "the dots",
+                "three dots below",
+                "its dots underneath"
+              ],
+              "feedback": {
+                "correct": "The three dots below. They are the identification; the boat is not.",
+                "incorrect": "THE THREE DOTS BENEATH IT. The curve shrinks away, the dots stay."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "UR-C07-parhna",
       "sequence": 280,
       "title": "پڑھنا (paṛhnā) — “to read,” and “to study,” and “to recite”",
@@ -389,7 +767,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:99b2b541ffe2862b",
+      "sourceHash": "fnv1a64:b2fa26405519f511",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -430,7 +808,7 @@
             },
             {
               "kind": "speech",
-              "text": "It is also the ordinary word for “to study”: the noun پڑھائی paṛhāī is “studies, schooling.” Urdu does not keep reading and studying in separate boxes. Strip the -nā and the stem is paṛh-."
+              "text": "It is also the ordinary word for “to study”: the noun paṛhāī is “studies, schooling.” Urdu does not keep reading and studying in separate boxes. Strip the -nā and the stem is paṛh-."
             }
           ]
         },
@@ -441,15 +819,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "From the right edge: پ p, then ڑ, then ھ, then ن n, then ا long ā."
+              "text": "From the right edge: پ (pe) p, then ڑ, then ھ, then ن n, then ا long ā."
             },
             {
               "kind": "speech",
-              "text": "Two are yours: پ, the low scoop with three dots below, from آپ āp; and ھ, the two-eyed he from سمجھنا (samajhnā) — ڑ plus ھ gives ṛh."
+              "text": "Two are yours: پ (pe), the low scoop with three dots below, from آپ āp; and ھ, the two-eyed he from samajhnā — ڑ plus ھ gives ṛh."
             },
             {
               "kind": "speech",
-              "text": "ڑ is new, and built from two things you have met. Its body is ر r, from شکریہ shukriyā. On top sits the very mark that rides on ٹ in ٹھیک ṭhīk: Urdu's retroflex sign, meaning curl the tongue back. ٹ is a curled t; ڑ is a curled r, flicked rather than rolled."
+              "text": "ڑ is new, and built from two things you have met. Its body is ر r, from شکریہ shukriyā. On top sits the very mark that ṭe carries in ṭhīk: Urdu's retroflex sign, meaning curl the tongue back. Ṭe is a curled t; ڑ is a curled r, flicked rather than rolled. You meet the mark here, on the letter that is yours today, and meet its other bearer by ear until the shape is handed to you."
             }
           ]
         },
@@ -460,7 +838,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "میں پڑھتا ہوں — maiṅ paṛhtā hūṅ — I read (man speaking) میں پڑھتی ہوں — maiṅ paṛhtī hūṅ — I read (woman speaking)."
+              "text": "maiṅ paṛhtā hūṅ — I read (man speaking) maiṅ paṛhtī hūṅ — I read (woman speaking)."
             }
           ]
         },
@@ -479,7 +857,7 @@
             },
             {
               "kind": "speech",
-              "text": "The near end is better. The oldest sense — speaking a text you hold in memory — is everyday, not a fossil. To perform the Muslim ritual prayer is نماز پڑھنا namāz paṛhnā, literally “to read the prayer,” and nobody performing it holds a book. You already met the word for someone who does that with the whole Quran: a حافظ hāfiz, on the Arabic root ḥ-f-ẓ, “to guard, to preserve.” Guarding a text and reciting it are two halves of one practice — one word borrowed, one inherited."
+              "text": "The near end is better. The oldest sense — speaking a text you hold in memory — is everyday, not a fossil. To perform the Muslim ritual prayer is namāz paṛhnā, literally “to read the prayer,” and nobody performing it holds a book. You already met the word for someone who does that with the whole Quran: a hāfiz, on the Arabic root ḥ-f-ẓ, “to guard, to preserve.” Guarding a text and reciting it are two halves of one practice — one word borrowed, one inherited."
             }
           ]
         },
@@ -509,11 +887,11 @@
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "the retroflex mark on ٹ, then the same mark on ڑ",
+              "instruction": "the retroflex mark on ڑ — the same mark ṭe carries",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU TRACE: the retroflex mark on **ٹ**, then the same mark on **ڑ**]"
+              "source": "[YOU TRACE: the retroflex mark on **ڑ** — the same mark *ṭe* carries]"
             },
             {
               "kind": "prompt",
@@ -539,7 +917,7 @@
             },
             {
               "kind": "speech",
-              "text": "Name the two everyday meanings of paṛhnā. (To read; to study.) What does the mark on ڑ tell you to do, and which other letter carries it? (Curl the tongue back; ٹ.) Does paṭh- have an English cousin? (No.)"
+              "text": "Name the two everyday meanings of paṛhnā. (To read; to study.) What does the mark on ڑ tell you to do, and which other letter carries it? (Curl the tongue back; ṭe.) Does paṭh- have an English cousin? (No.)"
             },
             {
               "kind": "speech",
@@ -562,7 +940,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ac91ae3b6fe38f76",
+      "sourceHash": "fnv1a64:cf4fc8d0f93b4dc2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -629,11 +1007,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "میں لکھتا ہوں — maiṅ likhtā hūṅ — I write (man speaking) میں لکھتی ہوں — maiṅ likhtī hūṅ — I write (woman speaking)."
+              "text": "maiṅ likhtā hūṅ — I write (man speaking) maiṅ likhtī hūṅ — I write (woman speaking)."
             },
             {
               "kind": "speech",
-              "text": "Run the chapter through that frame without changing anything but the stem: maiṅ sochtā hūṅ, maiṅ samajhtā hūṅ, maiṅ paṛhtā hūṅ, maiṅ likhtā hūṅ. One machine, four verbs, and میں ہوں holding the ends of every sentence."
+              "text": "Run the chapter through that frame without changing anything but the stem: maiṅ sochtā hūṅ, maiṅ samajhtā hūṅ, maiṅ paṛhtā hūṅ, maiṅ likhtā hūṅ. One machine, four verbs, and maiṅ … hūṅ holding the ends of every sentence."
             }
           ]
         },
@@ -648,7 +1026,7 @@
             },
             {
               "kind": "speech",
-              "text": "Now the part only Urdu can show you. All four verbs of this chapter are inherited Indo-Aryan, the plain floor of the language — but the things writing needs are borrowed to a word: قلم qalam, the pen, Arabic from Greek kálamos, “a reed”; کتاب kitāb, the book, from the Arabic root k-t-b, “to write”; and نستعلیق nastaʿlīq, the Persian name of the flowing hand Urdu is set in. The deed is inherited; the equipment came by ship."
+              "text": "Now the part only Urdu can show you. All four verbs of this chapter are inherited Indo-Aryan, the plain floor of the language — but the things writing needs are borrowed to a word: qalam, the pen, Arabic from Greek kálamos, “a reed”; kitāb, the book, from the Arabic root k-t-b, “to write”; and nastaʿlīq, the Persian name of the flowing hand Urdu is set in. All three are printed the way you say them: each is spelled with letters still ahead of you. The deed is inherited; the equipment came by ship."
             }
           ]
         },
@@ -687,11 +1065,11 @@
             {
               "kind": "prompt",
               "action": "NAME",
-              "instruction": "which letter is چ, which is ڑ, and what ھ does to a neighbour",
+              "instruction": "which letter is che, which is ṛe, and what ھ does to a neighbour",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU NAME: which letter is **چ**, which is **ڑ**, and what **ھ** does to a neighbour]"
+              "source": "[YOU NAME: which letter is *che*, which is *ṛe*, and what **ھ** does to a neighbour]"
             },
             {
               "kind": "prompt",
@@ -730,7 +1108,7 @@
             },
             {
               "kind": "speech",
-              "text": "Sources: Wiktionary: لکھنا (likhnā); Wiktionary: قلم."
+              "text": "Sources: Wiktionary: لکھنا (likhnā); Wiktionary: qalam."
             },
             {
               "kind": "activity",

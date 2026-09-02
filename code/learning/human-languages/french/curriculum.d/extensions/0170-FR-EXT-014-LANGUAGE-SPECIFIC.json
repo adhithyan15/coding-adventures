@@ -1,0 +1,12 @@
+{
+  "id": "FR-EXT-014-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can assemble my own short present-tense sentences from the -er template.",
+  "prerequisites": [],
+  "lessons": [
+    "FR-C05-je-parle-francais",
+    "FR-C05-practice"
+  ]
+}

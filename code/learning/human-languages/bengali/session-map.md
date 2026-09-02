@@ -1,19 +1,19 @@
-# Session Map — Bengali Chapters 1–12 and 17–19
+# Session Map — Bengali Chapters 1–14 and 17–19
 
 Same spaced-repetition schedule as the other tracks (a word from session *N*
 resurfaces at *N+1, N+3, N+7, N+15*). Lessons named by slug; this map is the
 authoritative order.
 
-**The script is not a gated course.** Chapters 1–15 learn it *through* the
+**The script is not a gated course.** Chapters 1–17 learn it *through* the
 words: each lesson's *"The letters in this word"* section shows exactly the
 letters that word needs, with the word romanized so it can be said before it can
-be read. Chapters 16–19 then teach those shapes one at a time and hand the words
+be read. Chapters 20–22 then teach those shapes one at a time and hand the words
 back to the eye, in the order the words themselves ask for.
 
-**Sessions 58–80 — chapters 13 through 16 — are not mapped here yet.** That gap
+**Sessions 58–80 — chapters 15 through 16 — are not mapped here yet.** That gap
 predates the script tranche below and is recorded rather than filled, so the
-numbering stays true to the authored order: chapters 1–12 end at session 57,
-chapters 13–16 occupy 58–80, and chapter 17 opens at 81.
+numbering stays true to the authored order: chapters 1–14 end at session 57,
+chapters 17–18 occupy 58–80, and chapter 19 opens at 81.
 
 ## Chapter 1 — Greetings
 
@@ -26,7 +26,7 @@ chapters 13–16 occupy 58–80, and chapter 17 opens at 81.
 | 5 | ashi | আসি | "I'll come again" goodbye; স = "sh"; no gender on the verb |
 | 6 | practice | (recap) | the five greetings + the sound-fingerprint |
 
-## Chapter 2 — Introducing Yourself
+## Chapter 3 — Introducing Yourself
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
@@ -39,7 +39,7 @@ chapters 13–16 occupy 58–80, and chapter 17 opens at 81.
 | 13 | alaap | আলাপ করে ভালো লাগলো | "pleased to meet you"; *ālāp* ← Sanskrit *ālāpa* (a rāga's opening) |
 | 14 | practice | (dialogue) | the whole exchange |
 
-## Chapter 3 — How Are You
+## Chapter 5 — How Are You
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
@@ -50,7 +50,7 @@ chapters 13–16 occupy 58–80, and chapter 17 opens at 81.
 | 19 | kono-bepar-na | কোনো ব্যাপার না | "no matter / you're welcome"; *nā* ← PIE *ne |
 | 20 | practice | (dialogue) | the whole how-are-you exchange |
 
-## Chapter 4 — Farewells
+## Chapter 7 — Farewells
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
@@ -60,7 +60,7 @@ chapters 13–16 occupy 58–80, and chapter 17 opens at 81.
 | 24 | kal-dekha-hobe | কাল দেখা হবে | "see you tomorrow"; *kāl* = tomorrow *and* yesterday ← *kāla* |
 | 25 | practice | (dialogue) | the farewells |
 
-## Chapter 5 — The First Verbs
+## Chapter 11 — The First Verbs
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
@@ -70,13 +70,13 @@ chapters 13–16 occupy 58–80, and chapter 17 opens at 81.
 | 29 | kaj-kora | কাজ করা | "to work" (noun + *kôrā*) ← √kṛ, the root of *nômoshkar* |
 | 30 | practice | (dialogue) | three verbs, one gender-free engine |
 
-## Chapter 6 — Numbers 1–5
+## Chapter 12 — Numbers 1–5
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
 | 31 | numbers-1-5 | এক দুই তিন চার পাঁচ | *dui* keeps the vowel Hindi *do* and Marathi *don* flattened |
 
-## Chapter 7 — The Core Verbs
+## Chapter 13 — The Core Verbs
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
@@ -87,7 +87,7 @@ chapters 13–16 occupy 58–80, and chapter 17 opens at 81.
 | 36 | dekha | দেখা | "to see" ← √dṛś → **dragon**; vowel harmony, *dekhi* vs *dækhe* |
 | 37 | jana | জানা | "to know" ← √jñā → **know**; জানা facts vs চেনা people |
 
-## Chapter 8 — The Mind and the Page
+## Chapter 14 — The Mind and the Page
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
@@ -96,7 +96,7 @@ chapters 13–16 occupy 58–80, and chapter 17 opens at 81.
 | 40 | pora | পড়া | "to read" ← √paṭh; the flap **ড়**, and √pat's twin → **feather** |
 | 41 | lekha | লেখা | "to write" ← √likh "scratch"; every **-া** form is also a noun |
 
-## Chapter 9 — Taking, Asking, Helping, Liking
+## Chapter 15 — Taking, Asking, Helping, Liking
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
@@ -105,7 +105,7 @@ chapters 13–16 occupy 58–80, and chapter 17 opens at 81.
 | 44 | sahajjo-kora | সাহায্য করা | "to help" ← *saha* "together" + √i "go"; the final inherent **o** |
 | 45 | bhalo-laga | ভালো লাগা | "to like" ← √lag "stick" — *āmār bhālo lāge*; vs ভালোবাসা |
 
-## Chapter 10 — Tea, Water, Milk, and Rice
+## Chapter 16 — Tea, Water, Milk, and Rice
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
@@ -114,7 +114,7 @@ chapters 13–16 occupy 58–80, and chapter 17 opens at 81.
 | 48 | dudh | দুধ | "milk" ← √duh; cousin **doughty**, not the look-alike **dough** |
 | 49 | bhat | ভাত | "rice" ← √bhaj "to share" — a root Ch. 11 picks back up |
 
-## Chapter 11 — Friend, Family, Brother, and Sister
+## Chapter 18 — Friend, Family, Brother, and Sister
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
@@ -123,7 +123,7 @@ chapters 13–16 occupy 58–80, and chapter 17 opens at 81.
 | 52 | bhai | ভাই | "brother" — simply *is* English "brother," PIE *bʰréh₂tēr* |
 | 53 | bon | বোন | "sister" ← *bhaginī* ← *bhaga* "a share," the same root as ভাত |
 
-## Chapter 12 — Eye, Mouth, Nose, and Heart
+## Chapter 20 — Eye, Mouth, Nose, and Heart
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
@@ -132,7 +132,7 @@ chapters 13–16 occupy 58–80, and chapter 17 opens at 81.
 | 56 | nak | নাক | "nose" ← PIE *néh₂s-* → English **nose**, Latin *nāsus* |
 | 57 | hridoy | হৃদয় | "heart" ← PIE *ḱérd-* → English **heart**, Greek *kardía*, Latin *cor* |
 
-## Chapter 17 — Five More Pieces, Six More Words
+## Chapter 19 — Five More Pieces, Six More Words
 
 Every word here was spoken in an earlier chapter and is now handed to the eye.
 A new piece arrives, the next lesson spends it on a word, and the piece after
@@ -152,7 +152,7 @@ that waits until something has come between.
 | 90 | e-matra | ে | the second leading sign — so leading marks become a rule, not two facts |
 | 91 | kemon-read | কেমন | the payoff: six words read, and why a sign is worth more than a letter |
 
-## Chapter 18 — The Breath That Is a Letter
+## Chapter 20 — The Breath That Is a Letter
 
 | Session | Lesson | Piece / word | Hook |
 |---|---|---|---|
@@ -169,7 +169,7 @@ that waits until something has come between.
 | 102 | dha | ধ | the fourth cell; the square is the unit the whole order is built from |
 | 103 | dudh-read | দুধ | the payoff: plain and breathy in one short word, twelve words held |
 
-## Chapter 19 — Both Bodies of a Vowel
+## Chapter 22 — Both Bodies of a Vowel
 
 | Session | Lesson | Piece / word | Hook |
 |---|---|---|---|
@@ -188,7 +188,7 @@ that waits until something has come between.
 
 ## Next
 
-Chapters 13–16 still need session-map entries. On the script side, the next
+Chapters 17–18 still need session-map entries. On the script side, the next
 tranche starts at **য**, **়**, **ও**, **গ** and **ছ** — the five untaught
 glyphs the corpus shows most often — each with a word already glossed and
 waiting: হ্যাঁ, কাপড়, হওয়া, লাগা, আছি.

@@ -1,0 +1,17 @@
+{
+  "language": "telugu",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:ae90ad4a1e26b5f7",
+  "lessonIds": [
+    "TE-S123-letter-dda",
+    "TE-C04-vellu",
+    "TE-S145-digit-6",
+    "TE-C04-velli-vastaanu",
+    "TE-C04-reepu-kaluddaam",
+    "TE-S113-letter-pa",
+    "TE-C04-malli-kaluddaam",
+    "TE-S146-digit-7",
+    "TE-C04-practice"
+  ],
+  "tex": "telugu/book/chapters/ch04-farewells.tex"
+}

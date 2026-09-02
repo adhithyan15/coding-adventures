@@ -1,0 +1,23 @@
+{
+  "language": "telugu",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:4f5b3ba366c7acd3",
+  "lessonIds": [
+    "TE-C02-peru",
+    "TE-S109-letter-na",
+    "TE-C02-naa",
+    "TE-S02-vowel-sign-u",
+    "TE-C02-naa-peru",
+    "TE-S140-digit-1",
+    "TE-C02-nuvvu-miiru",
+    "TE-S05-sign-virama",
+    "TE-C02-emiti",
+    "TE-S141-digit-2",
+    "TE-C02-mii-peru-emiti",
+    "TE-S08-vowel-sign-i",
+    "TE-C02-santosham",
+    "TE-S04-sign-anusvara",
+    "TE-C02-practice"
+  ],
+  "tex": "telugu/book/chapters/ch02-introductions.tex"
+}

@@ -37,7 +37,7 @@ reviews_of: [UR-C12-roti]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-ROTI, UR-ETYMON-ROTI-STRIKE] -->
 
-[PAUSE 2s] Recall **روٹی** — bread, an honest dead end with no English cousin.
+[PAUSE 2s] Recall *roṭī* — bread, an honest dead end with no English cousin.
 This lesson opens a new kind of word: colors, starting with the one you'd
 use for a ripe tomato or a bride's dress.
 
@@ -46,7 +46,7 @@ use for a ripe tomato or a bride's dress.
 
 > **لال** — *lāl* — **red**
 
-> **میرا کوٹ لال ہے۔** — *merā koṭ lāl hai.* — "My coat is red."
+> *merā koṭ lāl hai.* — "My coat is red."
 
 ## Grammar Lens: a color that never agrees
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-LAL] -->
@@ -61,7 +61,7 @@ Not every color in this book will be this simple.
 
 **لال** is borrowed from Classical Persian **لَال**, "red." No further
 ancestor is documented for the Persian word itself — the trail simply
-stops, the same honest kind of dead end **روٹی**'s Sanskrit root hit last
+stops, the same honest kind of dead end *roṭī*'s Sanskrit root hit last
 lesson, except this time on the Persian side of the book's two layers
 rather than the inherited one.
 
@@ -71,7 +71,7 @@ rather than the inherited one.
 - [YOU SAY: **lāl** — red; then **merā koṭ lāl hai**]
 - [YOU NOTE: **لال** never changes its ending, unlike the colors still to
   come]
-- [YOU CONNECT: **lāl** ← Persian, no further root — like **روٹی**'s
+- [YOU CONNECT: **lāl** ← Persian, no further root — like *roṭī*'s
   Sanskrit root, but on the other side of the book's two layers]
 
 ## Wrap-up Recall
@@ -81,7 +81,7 @@ rather than the inherited one.
 inherited or Persian? (**Red**; **Persian**.) Does **لال** change its
 ending for a feminine noun? (**No — it stays لال.**) Does **لال** have a
 documented ancestor before Persian? (**No — an honest dead end.**) Is
-**خدا حافظ** written as one word or two in Urdu spelling? (**Two, spaced
+*khudā hāfiz* written as one word or two in Urdu spelling? (**Two, spaced
 — unlike Persian's joined form.**) When you read **میرا نام ... ہے** right
 to left, does the spoken order of the words change? (**No — the script
 direction changes, the spoken order does not.**)

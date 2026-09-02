@@ -4,8 +4,218 @@
   "chapter": 8,
   "title": "Four Verbs Between People",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3bbae3fce96a39d3",
+  "sourceHash": "fnv1a64:1661ce4843aa19d7",
   "lessons": [
+    {
+      "id": "UR-W08-vao",
+      "sequence": 295,
+      "title": "و (vāʾo) — a head, a tail, and no hand to the left",
+      "headword": "و",
+      "romanization": "vāʾo",
+      "gloss": "a small round head with a tail — a second letter that refuses to join leftward, and the middle of hūṅ",
+      "script": "urdu-nastaliq",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:c0443341ce5cb487",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "The letters in this word",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the letter that takes the hand of what is on its right and offers nothing to the left, so that a gap opens inside a word. (ا.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "و (vāʾo)."
+            },
+            {
+              "kind": "speech",
+              "text": "A small round head at the top, closed like a tiny loop, and then a tail that sweeps down and away to the left, dropping below the baseline. One movement, no dots."
+            },
+            {
+              "kind": "speech",
+              "text": "Its name is و vāʾo."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the part that matters more than the shape. vāʾo is a non-joiner, the second one you have met. Like alif, it accepts the letter on its right and hands nothing to the letter on its left, so the run stops after it and whatever follows begins as if starting fresh. When you see a break inside an Urdu word, you now have two suspects instead of one."
+            },
+            {
+              "kind": "speech",
+              "text": "With nothing ever attached on its left, vāʾo has no separate middle face to learn. It looks the same wherever it stands; only whether something is joined to its right changes."
+            },
+            {
+              "kind": "speech",
+              "text": "And it carries more than one sound. Vāʾo does four jobs:"
+            },
+            {
+              "kind": "speech",
+              "text": "the consonant v or w."
+            },
+            {
+              "kind": "speech",
+              "text": "the long vowel ū."
+            },
+            {
+              "kind": "speech",
+              "text": "the long vowel o."
+            },
+            {
+              "kind": "speech",
+              "text": "and in some Persian borrowings, nothing at all — a letter written and not said."
+            },
+            {
+              "kind": "speech",
+              "text": "Which one it is comes from the word, not the shape, exactly as with ye. Having heard the word is what tells you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three words, three of vāʾo's values. Copy each with the model in front of you."
+            },
+            {
+              "kind": "speech",
+              "text": "وکیل ہوں کون."
+            },
+            {
+              "kind": "speech",
+              "text": "وکیل vakīl \"lawyer\" — vāʾo opens it as a consonant, and because it hands nothing leftward, ک begins a fresh run right after it. The gap you see inside the word is the letter refusing to join, not a space."
+            },
+            {
+              "kind": "speech",
+              "text": "ہوں hūṅ — \"I am.\" Vāʾo is the long ū here, and the break after it is the same non-joining behaviour, with ں starting clean."
+            },
+            {
+              "kind": "speech",
+              "text": "کون kaun — \"who.\" Vāʾo is the o of the diphthong."
+            },
+            {
+              "kind": "speech",
+              "text": "One letter, three sounds, in three words you already say."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "و (vāʾo) — the closed head, then the tail sweeping down and left",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: و — the closed head, then the tail sweeping down and left]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "وکیل, then ہوں, then کون",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: وکیل, then ہوں, then کون]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "میں... ہوں۔ — and say it with something true about yourself",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: میں ... ہوں۔ — and say it with something true about yourself]"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "at the break after vāʾo in ہوں and say why it is there",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: at the break after vāʾo in ہوں and say why it is there]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write \"I am.\" (میں... ہوں۔) How many sounds can vāʾo carry? (Four, counting the silent one.) What tells you which? (Having heard the word.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-W08-vao-nonjoiner",
+              "prompt": "Which two letters so far refuse to join to the letter on their left?",
+              "assesses": [
+                "UR-SCRIPT-VAO-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "alif and vao",
+                "alif and vāʾo",
+                "ا and و",
+                "alef and vao"
+              ],
+              "feedback": {
+                "correct": "Alif and vāʾo. Both take a hand on the right and offer none on the left.",
+                "incorrect": "ALIF and VĀʾO. Both accept a join on the right and refuse one on the left."
+              }
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "UR-C08-lena",
       "sequence": 300,
@@ -19,7 +229,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1faf5cffd27f08d5",
+      "sourceHash": "fnv1a64:d085795588aa2995",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -74,7 +284,7 @@
             },
             {
               "kind": "speech",
-              "text": "ی here carries a long e — le-, rhyming with English lay. That is its third job: it supplied a consonantal y in کیا kyā and stood for long ī in جی jī."
+              "text": "ی here carries a long e — le-, rhyming with English lay. That is its third job: it supplied a consonantal y in کیا kyā and stood for long ī in jī."
             },
             {
               "kind": "speech",
@@ -89,7 +299,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "میں لیتا ہوں — maiṅ letā hūṅ — I take (man speaking) میں لیتی ہوں — maiṅ letī hūṅ — I take (woman speaking)."
+              "text": "maiṅ letā hūṅ — I take (man speaking) maiṅ letī hūṅ — I take (woman speaking)."
             },
             {
               "kind": "speech",
@@ -108,7 +318,7 @@
             },
             {
               "kind": "speech",
-              "text": "Prakrit then did something tidy: it levelled le- “take” against de- “give” so the pair matched. That is why لینا lenā and دینا denā still rhyme. They are not related; they were made to sound like partners."
+              "text": "Prakrit then did something tidy: it levelled le- “take” against de- “give” so the pair matched. That is why لینا lenā and denā still rhyme. They are not related; they were made to sound like partners."
             },
             {
               "kind": "speech",
@@ -204,7 +414,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:688836cc7c6a1c87",
+      "sourceHash": "fnv1a64:727673a4d1b2e3ef",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -255,7 +465,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "From the right edge: پ p, then و carrying long ū, then چ ch, then ھ, then ن n, then ا long ā."
+              "text": "From the right edge: پ p, then و (vāʾo) carrying long ū, then چ ch, then ھ, then ن n, then ا long ā."
             },
             {
               "kind": "speech",
@@ -274,7 +484,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "میں پوچھتا ہوں — maiṅ pūchhtā hūṅ — I ask (man speaking) میں پوچھتی ہوں — maiṅ pūchhtī hūṅ — I ask (woman speaking)."
+              "text": "maiṅ pūchhtā hūṅ — I ask (man speaking) maiṅ pūchhtī hūṅ — I ask (woman speaking)."
             }
           ]
         },
@@ -385,7 +595,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a226fc31644c4769",
+      "sourceHash": "fnv1a64:8718ddc12f1c6d3b",
       "notice": null,
       "blocks": [
         {
@@ -427,7 +637,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "میں مدد کرتا ہوں — maiṅ madad kartā hūṅ — I help (man speaking) میں مدد کرتی ہوں — maiṅ madad kartī hūṅ — I help (woman speaking)."
+              "text": "maiṅ madad kartā hūṅ — I help (man speaking) maiṅ madad kartī hūṅ — I help (woman speaking)."
             },
             {
               "kind": "speech",
@@ -435,7 +645,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have met karnā's stem before without being told. آپ سے مل کر خوشی ہوئی — āp se mil kar khushī huī — holds کر kar in the middle doing a different job: “having met.” One little word, two pieces of machinery."
+              "text": "You have met karnā's stem before without being told. āp se mil kar khushī huī — the line that closed a first introduction — holds کر kar in the middle doing a different job: “having met.” One little word, two pieces of machinery."
             }
           ]
         },
@@ -450,7 +660,7 @@
             },
             {
               "kind": "speech",
-              "text": "The root pattern is not new. حافظ hāfiz sits on ح-ف-ظ, “to guard, to preserve.” Three consonants carrying a meaning, vowels poured in around them: that is how Arabic builds words, and now you have two. Madad travelled the same road as خدا khudā — into Persian first, then into Urdu."
+              "text": "The root pattern is not new. hāfiz sits on ḥ-f-ẓ, “to guard, to preserve.” Three consonants carrying a meaning, vowels poured in around them: that is how Arabic builds words, and now you have two. Madad travelled the same road as khudā — into Persian first, then into Urdu."
             },
             {
               "kind": "speech",
@@ -537,7 +747,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:84aaa23b89f0c160",
+      "sourceHash": "fnv1a64:e3a9194eed7e600e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -569,11 +779,11 @@
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know first — مجھے, the shape of “to me”",
+          "title": "You'll want to know first — mujhe, the shape of “to me”",
           "segments": [
             {
               "kind": "speech",
-              "text": "مجھے — mujhe — to me."
+              "text": "mujhe — to me."
             },
             {
               "kind": "speech",
@@ -588,7 +798,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "From the right edge: م m, ج j, ھ aspirating it to jh, then broad final ے for e — the shape that ends کیسے kaise. All four already yours."
+              "text": "From the right edge: م m, then jīm carrying j, then the two-eyed he aspirating it to jh, then broad final ے for e — the shape that ends کیسے kaise. All four already yours."
             }
           ]
         },
@@ -599,7 +809,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "مجھے پڑھنا پسند ہے۔ — mujhe paṛhnā pasand hai. — I like reading."
+              "text": "mujhe paṛhnā pasand hai. — I like reading."
             },
             {
               "kind": "speech",
@@ -607,11 +817,11 @@
             },
             {
               "kind": "speech",
-              "text": "پڑھنا is the subject, which is what ہے agrees with. No Urdu sentence puts I in front of like. And any -nā infinitive drops into that slot, because an Urdu infinitive doubles as a noun — so every verb of the last three chapters is likeable."
+              "text": "paṛhnā is the subject, which is what ہے agrees with. No Urdu sentence puts I in front of like. And any -nā infinitive drops into that slot, because an Urdu infinitive doubles as a noun — so every verb of the last three chapters is likeable."
             },
             {
               "kind": "speech",
-              "text": "مجھے لکھنا پسند ہے۔ — mujhe likhnā pasand hai. — I like writing."
+              "text": "mujhe likhnā pasand hai. — I like writing."
             },
             {
               "kind": "speech",
@@ -630,11 +840,11 @@
             },
             {
               "kind": "speech",
-              "text": "Where sand goes next is genuinely disputed. One proposal ties it to the root behind Latin candēre, “to glow” — English candid, incendiary — and Sanskrit candra, “moon,” Urdu's چاند chānd. Lovely, but unsettled."
+              "text": "Where sand goes next is genuinely disputed. One proposal ties it to the root behind Latin candēre, “to glow” — English candid, incendiary — and Sanskrit candra, “moon,” Urdu's chānd. Lovely, but unsettled."
             },
             {
               "kind": "speech",
-              "text": "It came by the Persian road that gave you خوشی khushī, and sits beside Arabic مدد madad. Lenā and pūchhnā are inherited; madad and pasand are borrowed. Urdu's hands stayed home; its social words travelled."
+              "text": "It came by the Persian road that gave you khushī, and sits beside Arabic مدد madad. Lenā and pūchhnā are inherited; madad and pasand are borrowed. Urdu's hands stayed home; its social words travelled."
             },
             {
               "kind": "speech",
@@ -698,7 +908,7 @@
             },
             {
               "kind": "speech",
-              "text": "In mujhe paṛhnā pasand hai, what is the subject, and what part of speech is pasand? (پڑھنا; a noun and adjective from Persian.)"
+              "text": "In mujhe paṛhnā pasand hai, what is the subject, and what part of speech is pasand? (paṛhnā; a noun and adjective from Persian.)"
             },
             {
               "kind": "speech",
@@ -714,14 +924,13 @@
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "مجھے",
                 "mujhe",
                 "mujhe.",
                 "mujhay"
               ],
               "feedback": {
-                "correct": "Right: مجھے — mujhe, 'to me'.",
-                "incorrect": "The form is مجھے — mujhe, 'to me'."
+                "correct": "Right: mujhe, 'to me'. Its letters come later; the word is yours now.",
+                "incorrect": "The form is mujhe, 'to me'."
               }
             }
           ]

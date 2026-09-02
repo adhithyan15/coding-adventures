@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2d6d888b44c53554",
+  "sourceHash": "fnv1a64:d3f7da967468a0ad",
   "lessons": [
     {
       "id": "IT-C01-ciao",
@@ -227,7 +227,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1a009286963919e4",
+      "sourceHash": "fnv1a64:6d9edd18ed412398",
       "notice": null,
       "blocks": [
         {
@@ -343,7 +343,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e2fe477a454e308a",
+      "sourceHash": "fnv1a64:692b8741167331f0",
       "notice": null,
       "blocks": [
         {
@@ -448,7 +448,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41d5c0fe0be4d53c",
+      "sourceHash": "fnv1a64:2adecce0f33e0690",
       "notice": null,
       "blocks": [
         {
@@ -576,7 +576,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7d36199668fda70",
+      "sourceHash": "fnv1a64:1b1dbe891a75bcf0",
       "notice": null,
       "blocks": [
         {
@@ -598,8 +598,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
@@ -685,7 +685,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1eb2fa43556aab91",
+      "sourceHash": "fnv1a64:fb60f2f8aa4caa2b",
       "notice": null,
       "blocks": [
         {
@@ -790,7 +790,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6b3f034049e20398",
+      "sourceHash": "fnv1a64:dd942a94f281177d",
       "notice": null,
       "blocks": [
         {
@@ -888,7 +888,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9564370f405668b5",
+      "sourceHash": "fnv1a64:6489878f4e2484a3",
       "notice": null,
       "blocks": [
         {
@@ -1004,13 +1004,30 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:30418fbe799afe68",
+      "sourceHash": "fnv1a64:e62d8b5a140b35ce",
       "notice": null,
       "blocks": [
         {
           "index": 0,
-          "type": "unknown",
-          "title": "The greetings",
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No new words today. Everything below is something you have already met, said once, and can now put in one place."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built — the day of greetings",
           "segments": [
             {
               "kind": "table",
@@ -1059,7 +1076,7 @@
           ]
         },
         {
-          "index": 1,
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1099,7 +1116,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

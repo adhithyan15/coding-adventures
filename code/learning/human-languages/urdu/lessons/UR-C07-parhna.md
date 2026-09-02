@@ -45,7 +45,7 @@ reviews_of: [UR-C07-samajhna, UR-C07-sochna, UR-C05-hafiz, UR-C06-bolna]
 
 > **پڑھنا** — *paṛhnā* — **to read**
 
-It is also the ordinary word for “**to study**”: the noun **پڑھائی** *paṛhāī* is
+It is also the ordinary word for “**to study**”: the noun *paṛhāī* is
 “studies, schooling.” Urdu does not keep reading and studying in separate boxes.
 Strip the **-nā** and the stem is **paṛh-**.
 
@@ -56,18 +56,20 @@ From the right edge: **پ** *p*, then **ڑ**, then **ھ**, then **ن** *n*, then
 **ا** long *ā*.
 
 Two are yours: **پ**, the low scoop with **three dots below**, from **آپ** *āp*;
-and **ھ**, the two-eyed *he* from **سمجھنا** — **ڑ** plus **ھ** gives *ṛh*.
+and **ھ**, the two-eyed *he* from *samajhnā* — **ڑ** plus **ھ** gives *ṛh*.
 
 **ڑ** is new, and built from two things you have met. Its body is **ر** *r*,
-from **شکریہ** *shukriyā*. On top sits the very mark that rides on **ٹ** in
-**ٹھیک** *ṭhīk*: Urdu's retroflex sign, meaning *curl the tongue back*. **ٹ** is
-a curled *t*; **ڑ** is a curled *r*, flicked rather than rolled.
+from **شکریہ** *shukriyā*. On top sits the very mark that *ṭe* carries in
+*ṭhīk*: Urdu's retroflex sign, meaning *curl the tongue back*. *Ṭe* is a curled
+*t*; **ڑ** is a curled *r*, flicked rather than rolled. You meet the mark here,
+on the letter that is yours today, and meet its other bearer by ear until the
+shape is handed to you.
 
 ## Grammar Lens: into the frame
 <!-- hl-knowledge: introduces=[]; assesses=[UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-LEX-PARHNA] -->
 
-> **میں پڑھتا ہوں** — *maiṅ paṛhtā hūṅ* — **I read** (man speaking)
-> **میں پڑھتی ہوں** — *maiṅ paṛhtī hūṅ* — **I read** (woman speaking)
+> *maiṅ paṛhtā hūṅ* — **I read** (man speaking)
+> *maiṅ paṛhtī hūṅ* — **I read** (woman speaking)
 
 ## The word, taken apart — reading was always out loud
 <!-- hl-knowledge: introduces=[UR-ETYMON-PARHNA-RECITE]; assesses=[UR-LEX-PARHNA, UR-LEX-HAFIZ, UR-ETYMON-HAFIZ-ARABIC] -->
@@ -81,9 +83,9 @@ There is no English cousin, and the trail stops inside India.
 
 The near end is better. The oldest sense — *speaking a text you hold in memory* —
 is everyday, not a fossil. To perform the Muslim ritual prayer is
-**نماز پڑھنا** *namāz paṛhnā*, literally “to **read** the prayer,” and nobody
+*namāz paṛhnā*, literally “to **read** the prayer,” and nobody
 performing it holds a book. You already met the word for someone who does that
-with the whole Quran: a **حافظ** *hāfiz*, on the Arabic root *ḥ-f-ẓ*, “to guard,
+with the whole Quran: a *hāfiz*, on the Arabic root *ḥ-f-ẓ*, “to guard,
 to preserve.” Guarding a text and reciting it are two halves of one practice —
 one word borrowed, one inherited.
 
@@ -92,7 +94,7 @@ one word borrowed, one inherited.
 
 - [YOU SAY: **paṛhnā** — to read, and to study; then the stem **paṛh-**]
 - [YOU COUNT: **پ** three dots below, and name the word it opens]
-- [YOU TRACE: the retroflex mark on **ٹ**, then the same mark on **ڑ**]
+- [YOU TRACE: the retroflex mark on **ڑ** — the same mark *ṭe* carries]
 - [YOU SAY: **maiṅ paṛhtā hūṅ**, then **maiṅ samajhtā hūṅ** — I read, I understand]
 
 ## Wrap-up Recall
@@ -100,7 +102,7 @@ one word borrowed, one inherited.
 
 [PAUSE 3s] Name the two everyday meanings of *paṛhnā*. (**To read**; **to
 study**.) What does the mark on **ڑ** tell you to do, and which other letter
-carries it? (**Curl the tongue back**; **ٹ**.) Does *paṭh-* have an English
+carries it? (**Curl the tongue back**; *ṭe*.) Does *paṭh-* have an English
 cousin? (**No**.)
 
 Sources: [Wiktionary: پڑھنا](https://en.wiktionary.org/wiki/%D9%BE%DA%91%DA%BE%D9%86%D8%A7); [*Zero Zabar*: The Urdu alphabet](https://openbooks.library.northwestern.edu/zerozabar/chapter/the-urdu-alphabet/).

@@ -2,14 +2,14 @@
 schema_version: 2
 id: BN-W02-e-matra
 spine_node: SPINE-MEET-GREET
-sequence: 1790
+sequence: 420
 delivery: script
-chapter: 17
+chapter: 6
 type: writing
 headword: ে
 romanization: "-e"
 gloss: "the e-sign — the second mark that stands in front"
-prerequisites: [BN-W02-tumi-read]
+prerequisites: [BN-W02-la]
 sounds: []
 roots: []
 etymology_hook: "The second of the two signs written in front of their consonant, and the one that will later be half of a mark that surrounds a letter on both sides at once."
@@ -26,7 +26,7 @@ modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard
-reviews_of: [BN-W02-tumi-read]
+reviews_of: [BN-W02-la]
 ---
 # ে — the e-sign, standing in front
 

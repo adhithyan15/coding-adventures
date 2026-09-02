@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W03-kha
 spine_node: SPINE-MEET-GREET
-sequence: 1870
+sequence: 550
 delivery: script
-chapter: 18
+chapter: 8
 type: writing
 headword: খ
 romanization: "khô"
@@ -26,7 +26,7 @@ modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard
-reviews_of: [BN-W03-bha]
+reviews_of: [BN-W03-bhalo-read]
 ---
 # খ — the consonant kha, the breathy k
 

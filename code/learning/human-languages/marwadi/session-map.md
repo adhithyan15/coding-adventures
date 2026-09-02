@@ -203,6 +203,66 @@ memory demand at a time.
 | S195 | `MW-R20-food-new-two` | retrieve the sweet and the tea | mixed four-skill recall |
 | S196 | `MW-C20-food-seven` | pass the seven-word food map | non-compensatory listening, speaking, reading, and writing |
 | S197 | `MW-R20-script-close` | close **य** and **ट** in load-bearing words | independent sign and word dictation |
+| S198 | `MW-C21-hear-ye` | hear *ye* as the pointing word | none; meaning precedes spelling |
+| S199 | `MW-C21-ye` | assemble **ये** from the glide and the e mark | delayed copy and dictation |
+| S200 | `MW-C21-hear-dikhavo` | hear *dikhāvo* as an asking word | none; the breath contrast comes first |
+| S201 | `MW-W21-kha` | separate **ख** from **क** by breath | observe, trace, copy one sign |
+| S202 | `MW-C21-dikhavo` | assemble **दिखावो** | delayed copy and dictation |
+| S203 | `MW-R21-show-two` | retrieve *this* and *show it* | mixed four-skill recall |
+| S204 | `MW-C21-hear-show-request` | hear the first complete request | none; the line is heard whole |
+| S205 | `MW-C21-show-request` | write **ये कपड़ा दिखावो।** | delayed copy of a whole line |
+| S206 | `MW-C21-show-three` | run one request at three counters | non-compensatory listening, speaking, reading, and writing |
+| S207 | `MW-R21-script-close` | close **ख** and three under-drilled signs | independent sign and word dictation |
+| S208 | `MW-C22-hear-kitno` | hear *kitṇo* as the asking word for an amount | none; meaning precedes spelling |
+| S209 | `MW-C22-kitno` | assemble **कितणो** from known signs | delayed copy and dictation |
+| S210 | `MW-C22-hear-price-question` | hear the price question whole | none; the ending shift is heard, not parsed |
+| S211 | `MW-C22-price-question` | write **ये कितणे कू है?** | delayed copy of a whole line |
+| S212 | `MW-R22-price-two` | retrieve the asking word and its question | mixed four-skill recall |
+| S213 | `MW-C22-hear-total-question` | hear the total question | none; contrast with the first question by ear |
+| S214 | `MW-C22-total-question` | write **ये कितणो हुआ?** | delayed copy of a whole line |
+| S215 | `MW-C22-price-three` | price a thing at three counters | non-compensatory listening, speaking, reading, and writing |
+| S216 | `MW-R22-script-close` | close **ू**, **ण**, **आ** and **ई** | independent sign and word dictation |
+| S217 | `MW-C23-hear-ghano` | hear *ghaṇo* as a strengthener | none; meaning precedes spelling |
+| S218 | `MW-C23-ghano` | assemble **घणो** from known signs | delayed copy and dictation |
+| S219 | `MW-C23-hear-price-answer` | hear the reply that starts a bargain | none; the line is heard whole |
+| S220 | `MW-C23-price-answer` | write **ये घणो महंगो है।** | delayed copy of a whole line |
+| S221 | `MW-R23-answer-two` | retrieve the question and its reply in order | mixed four-skill recall |
+| S222 | `MW-C23-hear-thodu` | hear *thoṛu* against *ghaṇo* | none; the two are separated by ear |
+| S223 | `MW-C23-thodu` | assemble **थोड़ु** with its dot and short u | delayed copy and dictation |
+| S224 | `MW-C23-hear-karo` | hear *karo* as the second asking word | none; the shared ending is heard first |
+| S225 | `MW-C23-karo` | assemble **करो** without the breath | delayed copy and dictation |
+| S226 | `MW-C23-hear-bargain-request` | hear the counter-offer whole | none; the -o ending is named, not drilled |
+| S227 | `MW-C23-bargain-request` | write **थोड़ु सस्तो करो।** | delayed copy of a whole line |
+| S228 | `MW-R23-bargain-two` | retrieve *a little* and *make it* alone | mixed four-skill recall |
+| S229 | `MW-C23-counter-four` | hold a three-turn bargaining exchange | non-compensatory listening, speaking, reading, and writing |
+| S230 | `MW-R23-script-close` | close the nukta, the vowel-killer, and the dot | independent mark and word dictation |
+| S231 | `MW-C24-hear-lo` | hear *lo* as the third asking word | none; meaning precedes spelling |
+| S232 | `MW-C24-lo` | assemble **लो** from two known signs | delayed copy and dictation |
+| S233 | `MW-C24-hear-pay` | hear the payment line | none; the line is heard whole |
+| S234 | `MW-C24-pay` | write **पैसा ले लो।** | delayed copy of a whole line |
+| S235 | `MW-R24-pay-two` | retrieve *take it* and the payment line | mixed four-skill recall |
+| S236 | `MW-C24-hear-do` | hear *do* against *lo* | none; the pair is separated by gesture |
+| S237 | `MW-C24-do` | assemble **दो** beside **लो** | delayed copy and dictation |
+| S238 | `MW-C24-hear-aakhri` | hear *ākhrī* as the word that ends a bargain | none; the breath is placed by ear |
+| S239 | `MW-C24-aakhri` | assemble **आखरी** from the standing आ and ख | delayed copy and dictation |
+| S240 | `MW-C24-hear-final-price` | hear the closing question | none; the future ending is taken whole |
+| S241 | `MW-C24-final-price` | write **कितणो आखरी भाव दोगे?** | delayed copy of a whole line |
+| S242 | `MW-R24-final-two` | retrieve *give* and *final* alone | mixed four-skill recall |
+| S243 | `MW-C24-final-four` | close a bargain and pay for it | non-compensatory listening, speaking, reading, and writing |
+| S244 | `MW-R24-script-close` | close **े**, **ो** and **ी** | independent mark and word dictation |
+| S245 | `MW-C25-hear-lavo` | hear *lāvo* as the food counter's asking word | none; meaning precedes spelling |
+| S246 | `MW-C25-lavo` | assemble **लावो** beside **लो** | delayed copy and dictation |
+| S247 | `MW-C25-hear-bring-request` | hear the tea order | none; the noun slot is heard as movable |
+| S248 | `MW-C25-bring-request` | write **चाय लावो।** and two variants | delayed copy of a whole line |
+| S249 | `MW-R25-bring-two` | separate five asking words by job | mixed four-skill recall |
+| S250 | `MW-C25-request-five` | pass all five asking words separately | non-compensatory listening, speaking, reading, and writing |
+| S251 | `MW-R25-script-close` | close **ल**, **व**, **च**, **छ** and **ख** | independent sign and word dictation |
+| S252 | `MW-R26-shopping-counter` | run the seven shopping words through the exchange | mixed four-skill recall |
+| S253 | `MW-R26-transport-counter` | run the five transport words through the exchange | mixed four-skill recall |
+| S254 | `MW-R26-food-counter` | run the seven food words through the ordering line | mixed four-skill recall |
+| S255 | `MW-R26-letters-close` | retrieve the nine least-drilled signs alone | independent sign and word dictation |
+| S256 | `MW-C26-counter-exchange` | hold one five-turn exchange at three counters | non-compensatory listening, speaking, reading, and writing |
+| S257 | `MW-R26-script-close` | close **ख** against **क** and every new word | independent sign and word dictation |
 
 Reviews use expanding spacing: repeat S7 the next day, after three days, after
 one week, and after two weeks. A failed written recall sends the learner back to

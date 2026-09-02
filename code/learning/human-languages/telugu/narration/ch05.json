@@ -4,8 +4,173 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:17a95d01a2d69cd1",
+  "sourceHash": "fnv1a64:fc15f86b3302d6c6",
   "lessons": [
+    {
+      "id": "TE-S01-letter-ta",
+      "sequence": 255,
+      "title": "త (ta) — one character, met inside words you already say",
+      "headword": "త",
+      "romanization": "ta",
+      "gloss": "the single character త — recognised inside words you already say",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f246320943c95f6f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: త",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: త and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ౭ — what amount does it stand for? And one from further back: డ?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: త",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "త — ta."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not t, it is ta."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these, and every one of them has త (ta) somewhere inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "సంతోషం — joy / pleased to meet you."
+            },
+            {
+              "kind": "speech",
+              "text": "వెళ్ళి వస్తాను veḷḷi vastānu — goodbye (lit. \"I'll go and come back\")."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: త — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on త (ta) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find త (ta) in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find త in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "సంతోషం, వెళ్ళి వస్తాను, నమస్కారం."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "త three times, saying ta as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: త three times, saying *ta* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find త (ta) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find త once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — త? What sound does it carry? (ta.) Name one word you already say that contains it."
+            },
+            {
+              "kind": "speech",
+              "text": "One more, from much earlier: ౨ — what amount does it stand for?"
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "TE-C05-maatlaadu",
       "sequence": 260,
@@ -19,7 +184,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c0c834c7ba1fb553",
+      "sourceHash": "fnv1a64:e894bbccf25ab924",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -160,6 +325,159 @@
       ]
     },
     {
+      "id": "TE-S147-digit-8",
+      "sequence": 265,
+      "title": "౮ — the Telugu numeral for 8",
+      "headword": "౮",
+      "romanization": "8",
+      "gloss": "the Telugu numeral ౮ — the digit 8, read as a quantity",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:21d226eee261a812",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ౮",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ౮ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: త (ta) — what does it do? And one from further back: ౬?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One numeral this time, and it is read the way every numeral is read: as an amount."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ౮",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "౮ (8) is eight."
+            },
+            {
+              "kind": "speech",
+              "text": "Eight of ten. Read the row below and say each value aloud before moving on — the pause matters more than the speed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ౮ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ౮ (8) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at this row and say the value of each numeral in it, left to right",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at this row and say the value of each numeral in it, left to right]"
+            },
+            {
+              "kind": "speech",
+              "text": "౮ (8), ౩, ౭, ౧."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "౮ three times, saying \"8\" as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ౮ three times, saying \"8\" as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "for ౮ (8) on any page of a Telugu book, calendar or doorplate you can find",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: for ౮ on any page of a Telugu book, calendar or doorplate you can find]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which numeral is this — ౮? What amount does it stand for? (౮ is 8.)"
+            },
+            {
+              "kind": "speech",
+              "text": "One more, from much earlier: ◌ి — what does it do?"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "TE-C05-nenu-telugu-maatlaadataanu",
       "sequence": 270,
       "title": "నేను తెలుగు మాట్లాడతాను (nēnu telugu māṭlāḍatānu) — \"I speak Telugu\"",
@@ -172,7 +490,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b7482c4562fad79c",
+      "sourceHash": "fnv1a64:79a5a543687f9796",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -294,6 +612,175 @@
       ]
     },
     {
+      "id": "TE-S111-letter-sa",
+      "sequence": 275,
+      "title": "స — one character, met inside words you already say",
+      "headword": "స",
+      "romanization": "sa",
+      "gloss": "the single character స — recognised inside words you already say",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:37ce8b84d085090c",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: స",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: స and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ౮ (8) — what amount does it stand for? And one from further back: ప?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: స",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "స — sa."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not s, it is sa."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these, and every one of them has స somewhere inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "నమస్కారం namaskāram — hello / greetings (namaskāram — \"a making of a bow\")."
+            },
+            {
+              "kind": "speech",
+              "text": "సరే sarē — okay / alright (sarē)."
+            },
+            {
+              "kind": "speech",
+              "text": "వెళ్ళి వస్తాను veḷḷi vastānu — goodbye (lit. \"I'll go and come back\")."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: స — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on స (sa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find స (sa) in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find స in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "నమస్కారం, సరే, ధన్యవాదములు."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "స three times, saying sa as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: స three times, saying *sa* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find స (sa) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find స once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — స? What sound does it carry? (sa.) Name one word you already say that contains it."
+            },
+            {
+              "kind": "speech",
+              "text": "One more, from much earlier: ◌ం — what does it do?"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "TE-C05-undu",
       "sequence": 280,
       "title": "ఉండు (uṇḍu) — \"to be, to stay, to live\"",
@@ -306,7 +793,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:043e0ccd43de7364",
+      "sourceHash": "fnv1a64:464718962afe7af7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -353,7 +840,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ఉండు (uṇḍu, \"to be, to exist, to stay, to live\") is native Dravidian and does an enormous amount of work. It is the verb behind Chapter 3's unnāru (\"you are\") and bāgunnānu (\"I'm well\") — and it also means \"to reside\": నేను హైదరాబాద్‌లో ఉంటాను (nēnu Hyderābādlō uṇṭānu, \"I live in Hyderabad\"). One verb covers \"be,\" \"stay,\" and \"live.\""
+              "text": "ఉండు (uṇḍu, \"to be, to exist, to stay, to live\") is native Dravidian and does an enormous amount of work. It is the verb behind Chapter 3's unnāru (\"you are\") and bāgunnānu (\"I'm well\") — and it also means \"to reside\": నేను హైదరాబాద్లో ఉంటాను (nēnu Hyderābādlō uṇṭānu, \"I live in Hyderabad\"). One verb covers \"be,\" \"stay,\" and \"live.\""
             }
           ]
         },
@@ -364,7 +851,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "హైదరాబాద్‌లో (Hyderābādlō) = Hyderabad + -లో (-lō, \"in\"). The little word for \"in\" is glued to the end of the noun — Telugu uses postpositions (really, case-suffixes) where English uses prepositions. \"Hyderabad-in I stay,\" the verb last."
+              "text": "హైదరాబాద్లో (Hyderābādlō) = Hyderabad + -లో (-lō, \"in\"). The little word for \"in\" is glued to the end of the noun — Telugu uses postpositions (really, case-suffixes) where English uses prepositions. \"Hyderabad-in I stay,\" the verb last."
             }
           ]
         },
@@ -428,6 +915,171 @@
       ]
     },
     {
+      "id": "TE-S125-letter-ha",
+      "sequence": 285,
+      "title": "హ — one character, met inside words you already say",
+      "headword": "హ",
+      "romanization": "ha",
+      "gloss": "the single character హ — recognised inside words you already say",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:006228cf3adfdcab",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: హ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: హ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: స (sa) — what does it do? And one from further back: ౭?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: హ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "హ — ha."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not h, it is ha."
+            },
+            {
+              "kind": "speech",
+              "text": "You met it on the page before this one, at the front of a place name:"
+            },
+            {
+              "kind": "speech",
+              "text": "హైదరాబాద్ Hyderābād — the city from the sentence about where you live."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at where that word came from. Hyderābād reached Telugu through Persian and Urdu, and that is the pattern: in the words this book has given you so far, హ sits almost entirely on borrowings — from Persian, from Urdu, from Sanskrit. It is a letter you will meet again on the very next page, in a word for help that came in from Sanskrit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: హ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on హ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find హ in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find హ in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "హైదరాబాద్, నమస్కారం."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "హ three times, saying ha as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: హ three times, saying *ha* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find హ once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find హ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — హ? What sound does it carry? (ha.) Name one word you already say that contains it."
+            },
+            {
+              "kind": "speech",
+              "text": "One more, from much earlier: ౩ — what amount does it stand for?"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "TE-C05-pani-ceyu",
       "sequence": 290,
       "title": "పని చేయు (pani cēyu) — \"to work\"",
@@ -440,7 +1092,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:497dcf5cb0a967b8",
+      "sourceHash": "fnv1a64:8f539e417056a4c0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -578,6 +1230,159 @@
       ]
     },
     {
+      "id": "TE-S148-digit-9",
+      "sequence": 295,
+      "title": "౯ — the Telugu numeral for 9",
+      "headword": "౯",
+      "romanization": "9",
+      "gloss": "the Telugu numeral ౯ — the digit 9, read as a quantity",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:5ec26089c8719dbe",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ౯",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ౯ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: హ — what does it do? And one from further back: త (ta)?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One numeral this time, and it is read the way every numeral is read: as an amount."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ౯",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "౯ (9) is nine."
+            },
+            {
+              "kind": "speech",
+              "text": "That is nine of the ten, and the last one is the one that makes the rest useful."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ౯ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ౯ (9) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at this row and say the value of each numeral in it, left to right",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at this row and say the value of each numeral in it, left to right]"
+            },
+            {
+              "kind": "speech",
+              "text": "౯ (9), ౮ (8), ౬, ౨, ౫."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "౯ three times, saying \"9\" as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ౯ three times, saying \"9\" as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "for ౯ (9) on any page of a Telugu book, calendar or doorplate you can find",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: for ౯ on any page of a Telugu book, calendar or doorplate you can find]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which numeral is this — ౯? What amount does it stand for? (౯ is 9.)"
+            },
+            {
+              "kind": "speech",
+              "text": "One more, from much earlier: ఉ — what does it do?"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "TE-C05-practice",
       "sequence": 300,
       "title": "Chapter 5 — The first verbs",
@@ -590,7 +1395,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1ed7623432987e94",
+      "sourceHash": "fnv1a64:0c71b9c5468c407b",
       "notice": null,
       "blocks": [
         {
@@ -612,9 +1417,32 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Build the sentences",
+          "type": "guided-production",
+          "title": "Guided Practice: build the sentences",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "Three sentences about yourself, read off the page before you say them:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Telugu",
+                "",
+                "English"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "Telugu: నేను తెలుగు మాట్లాడతాను., nēnu telugu māṭlāḍatānu. English: I speak Telugu.",
+                "Telugu: నేను హైదరాబాద్లో ఉంటాను., nēnu Hyderābādlō uṇṭānu. English: I live in Hyderabad.",
+                "Telugu: నేను పని చేస్తాను., nēnu pani cēstānu. English: I work."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "A few of these characters have not had their own lesson yet. They are here to be recognised, not decoded — the romanization beside each line is what you read from. The letters catch up in the chapters ahead."
+            },
             {
               "kind": "pause",
               "seconds": 1,
@@ -661,8 +1489,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The engine",
+          "type": "notice",
+          "title": "What you've built — the engine",
           "segments": [
             {
               "kind": "pause",
@@ -701,14 +1529,18 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Roots you now carry",
+          "type": "etymology",
+          "title": "The words, taken apart — roots you now carry",
           "segments": [
             {
               "kind": "pause",
               "seconds": 2,
               "perItem": false,
               "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Roots you now carry:"
             },
             {
               "kind": "speech",

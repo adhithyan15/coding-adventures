@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C07-howa
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 400
-chapter: 7
+sequence: 730
+chapter: 13
 type: word
 headword: হওয়া
 romanization: hôwā
@@ -34,7 +34,7 @@ reviews_of: [BN-C03-tumi-kemon-achho, BN-C04-dekha-hobe, BN-C02-amar-naam]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Chapter 2 said "my name Arun" with no verb at all. Chapter 3 put one
+[PAUSE 2s] Chapter 3 said "my name Arun" with no verb at all. Chapter 5 put one
 back for "how are you." Both were right, and this verb is why.
 
 ## You'll want to know: হওয়া
@@ -43,13 +43,13 @@ back for "how are you." Both were right, and this verb is why.
 > **হওয়া** — *hôwā* — **to be, to become**
 
 আমি হই (*āmi hôi*), "I am, I become." সে হয় (*se hôy*), "he is." Its future is
-already in your mouth: **হবে** (*hôbe*) is the "will happen" inside Chapter 4's
+already in your mouth: **হবে** (*hôbe*) is the "will happen" inside Chapter 7's
 *dækhā hôbe*.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**হওয়া** is Sanskrit **√ভূ** (*√bhū*, "to become") with the *bh-* worn down to a
+**হওয়া** is Sanskrit *√bhū* ("to become") with the *bh-* worn down to a
 plain *h-*: *bhavati* → Prakrit *hoï* → Bengali *hô-*. The root is PIE
 *\*bʰuH-*, "to grow, to become," and English owns two of its children outright —
 **be** and **been**. Latin built *fuī* ("I was") and *futūrus* on it, which is
@@ -71,9 +71,9 @@ again on খাওয়া and যাওয়া.
 | I have a book; it is here | **আছে** (*āchhe*) |
 | he will be a teacher | **হবে** (*hôbe*) |
 
-আছ-, the verb behind Chapter 3's *kemon āchho*, means **being present**. But it
+আছ-, the verb behind Chapter 5's *kemon āchho*, means **being present**. But it
 is unfinished: it has a present and a past, and nothing else at all. Push it into
-the future and it stops dead — so Bengali picks up হ- (*hôbe*), or Chapter 5's
+the future and it stops dead — so Bengali picks up হ- (*hôbe*), or Chapter 11's
 থাকা (*āmi thākbo*, "I'll be there"). One job, two verbs, split down the middle.
 
 ## Guided Practice

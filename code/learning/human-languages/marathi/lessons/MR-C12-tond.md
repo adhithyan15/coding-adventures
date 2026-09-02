@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C12-tond
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 620
-chapter: 15
+sequence: 820
+chapter: 19
 type: word
 headword: तोंड
 romanization: tõḍ

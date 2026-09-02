@@ -1,0 +1,21 @@
+{
+  "chapter": 21,
+  "title": "The Face on the Page",
+  "label": "ch:bn-face-on-the-page",
+  "canDo": "I can read চোখ, নাক, মুখ and হৃদয় off the page, hear which of them ends in breath and which in silence, and write the one sign the fourth of them needed.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "BN-W04-hridoy-read",
+    "kind": "reading",
+    "summary": "Heart is read last because it is the only one of the four words that needed a new sign, and the chapter ends with all four read back — thirteen pieces, one of them bought today.",
+    "assesses": [
+      "BN-SCRIPT-HRIDOY-READ-01",
+      "BN-SCRIPT-RI-MATRA-01",
+      "BN-SCRIPT-CHOKH-READ-01",
+      "BN-SCRIPT-NAK-READ-01",
+      "BN-SCRIPT-MUKH-READ-01"
+    ]
+  }
+}

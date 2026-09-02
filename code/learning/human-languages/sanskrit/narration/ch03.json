@@ -3,8 +3,8 @@
   "language": "sanskrit",
   "chapter": 3,
   "title": "How Are You?",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b089fe3d35ef4a66",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:6b4d9182bd6b37ba",
   "lessons": [
     {
       "id": "SA-C03-katham",
@@ -14,22 +14,13 @@
       "romanization": "katham",
       "gloss": "how",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8277df7c7009a07e",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:5342a61f7293bb2e",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -44,18 +35,18 @@
             },
             {
               "kind": "speech",
-              "text": "You met किम् (kim, \"what\") in Chapter 2. Here is its sibling in the question-family."
+              "text": "You met kim (\"what\") in Chapter 2. Here is its sibling in the question-family."
             }
           ]
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "क (ka) + थ (tha) + म् (bare m, halant) becomes कथम् (katham)."
+              "text": "ka, tham. The th is one sound — a t with breath after it, never the th of English thin."
             }
           ]
         },
@@ -66,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "कथम् (katham, \"how, in what way\") is from the interrogative stem क- (ka-), PIE kʷo- — the same root that gave kim and, in the west, English wh- and Latin qu-. It heads the same ka- question-family: kim (what), kaḥ (who), kadā (when), kutra (where), katham (how). From katham comes the abstract noun kathā (\"a telling, a story\" — \"the how of a thing\"), and, worn down, Hindi's kaise."
+              "text": "katham (\"how, in what way\") is from the interrogative stem ka-, PIE kʷo- — the same root that gave kim and, in the west, English wh- and Latin qu-. It heads the same ka- question-family: kim (what), kaḥ (who), kadā (when), kutra (where), katham (how). From katham comes the abstract noun kathā (\"a telling, a story\" — \"the how of a thing\"), and, worn down, Hindi's kaise."
             }
           ]
         },
@@ -125,7 +116,7 @@
       "sequence": 160,
       "title": "भवान् कथम् अस्ति? (bhavān katham asti?) — \"how are you?\"",
       "headword": "भवान् कथम् अस्ति?",
-      "romanization": "",
+      "romanization": "bhavān katham asti?",
       "gloss": "how are you? (respectful)",
       "script": "devanagari",
       "modality": "voice",
@@ -133,7 +124,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e8ed54663edb1f0",
+      "sourceHash": "fnv1a64:1320572ed69c3099",
       "notice": null,
       "blocks": [
         {
@@ -160,7 +151,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "भवान् कथम् अस्ति? = भवान् (bhavān, respectful \"you\") + कथम् (katham, \"how\") + अस्ति (asti, \"is\") — literally \"your honour how is?\" Recall from Chapter 2 that bhavān (\"your honour\") takes a third-person verb — so it is asti (\"is\"), not \"are.\" The familiar version uses tvam and the second-person verb: त्वं कथम् असि? (tvaṁ katham asi? — asi, \"you are\")."
+              "text": "bhavān katham asti? = bhavān (respectful \"you\") + katham (\"how\") + asti (\"is\") — literally \"your honour how is?\" Recall from Chapter 2 that bhavān (\"your honour\") takes a third-person verb — so it is asti (\"is\"), not \"are.\" The familiar version uses tvam and the second-person verb: tvaṁ katham asi? (asi, \"you are\")."
             }
           ]
         },
@@ -171,7 +162,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "You now hold the \"to be\" verb across persons: अस्मि (asmi, \"I am\"), असि (asi, \"you are\"), अस्ति (asti, \"is\") — the ancestors, respectively, of English am, and (through Latin/Greek) of is/est. \"How are you?\" simply asks after a state, and Sanskrit, unlike Tamil, has always kept a verb for it."
+              "text": "You now hold the \"to be\" verb across persons: asmi (\"I am\"), asi (\"you are\"), asti (\"is\") — the ancestors, respectively, of English am, and (through Latin/Greek) of is/est. \"How are you?\" simply asks after a state, and Sanskrit, unlike Tamil, has always kept a verb for it."
             }
           ]
         },
@@ -235,6 +226,183 @@
       ]
     },
     {
+      "id": "SA-S06-vowel-sign-aa",
+      "sequence": 161,
+      "title": "◌ा (ā) — one character, met inside words you already say",
+      "headword": "ा",
+      "romanization": "ā",
+      "gloss": "the single character ◌ा — recognised inside words you already say",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:c89d5653dc913ee9",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ◌ा",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ा and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one, the ones you have already met: आ, भ, ◌ि. Say what each of them does."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ◌ा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "◌ा — ā."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a vowel sign. It is not a letter and never stands alone: it attaches to a consonant and replaces the a built into it. Replaces, not adds — the a is gone."
+            },
+            {
+              "kind": "speech",
+              "text": "Where it sits: a vertical bar to the right of the consonant."
+            },
+            {
+              "kind": "speech",
+              "text": "Worked through: न + ◌ा = ना — nā."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these words, and ◌ा (ā) is one of the shapes inside them — the rest of their shapes are still ahead of you, so here the character stands on its own:"
+            },
+            {
+              "kind": "speech",
+              "text": "namaskāraḥ — hello (lit. \"the making of a bow\")."
+            },
+            {
+              "kind": "speech",
+              "text": "dhanyavādaḥ — thank you."
+            },
+            {
+              "kind": "speech",
+              "text": "svāgatam — welcome (lit. \"well come\")."
+            },
+            {
+              "kind": "speech",
+              "text": "nāma — name."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ◌ा — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ◌ा (ā) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at this, and find ◌ा (ā) in it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at this, and find ◌ा in it]"
+            },
+            {
+              "kind": "speech",
+              "text": "◌ा (ā)."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "◌ा three times, saying ā as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ◌ा three times, saying *ā* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ◌ा (ā) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ◌ा once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ◌ा? What vowel does it put on the consonant it attaches to — and what does it take off? (Puts ā on; takes the built-in a off.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "SA-C03-aham",
       "sequence": 170,
       "title": "अहम् (aham) — \"I,\" the ancestor of ego and I",
@@ -242,22 +410,13 @@
       "romanization": "aham",
       "gloss": "I",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2cae91caeb5ea99",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:4eedae248c1ce078",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -278,12 +437,12 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "अ (independent a) + ह (ha) + म् (bare m, halant) becomes अहम् (aham)."
+              "text": "a, ham. Two short beats, closing on m."
             }
           ]
         },
@@ -294,7 +453,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "अहम् (aham, \"I\") is from Proto-Indo-European h₁eǵ(H)om — the direct ancestor of Latin ego (whence English ego, egotist), Greek egō, and, worn all the way down, English I itself. So Sanskrit aham, Latin ego, and English I are one word across three continents of time. Its possessive is the मम (mama, \"my\") from Chapter 2 — and, curiously, \"I\" (aham) and \"my\" (mama) come from different ancient roots (eǵ- and me-), a quirk Sanskrit shares with English (I vs. my/me)."
+              "text": "aham (\"I\") is from Proto-Indo-European h₁eǵ(H)om — the direct ancestor of Latin ego (whence English ego, egotist), Greek egō, and, worn all the way down, English I itself. So Sanskrit aham, Latin ego, and English I are one word across three continents of time. Its possessive is the mama (\"my\") from Chapter 2 — and, curiously, \"I\" (aham) and \"my\" (mama) come from different ancient roots (eǵ- and me-), a quirk Sanskrit shares with English (I vs. my/me)."
             }
           ]
         },
@@ -371,27 +530,18 @@
     {
       "id": "SA-C03-kushalam",
       "sequence": 180,
-      "title": "कुशलम् (kuśalam) — \"well-being,\" and how to answer",
+      "title": "कुशलम् (kuśalam) — \"well-being\"",
       "headword": "कुशलम्",
       "romanization": "kuśalam",
-      "gloss": "well-being — and the reply \"अहं कुशली अस्मि\"",
+      "gloss": "well-being (kuśalam)",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9b0fa063054236d8",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:12f4b9a3c8edcac5",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -412,12 +562,12 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "कु (ku) + श (śa, a palatal sh) + ल (la) + म् (m, halant) becomes कुशलम् (kuśalam)."
+              "text": "ku, śa, lam. The ś is the sh of ship. Three short beats, closing on a bare m."
             }
           ]
         },
@@ -428,22 +578,333 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "कुशलम् (kuśalam, \"well-being, welfare, all-being-well\") is native Sanskrit, famously derived from कुश (kuśa, the sacred grass) + a root of \"cutting\" — so it first meant \"skilled [at gathering kuśa grass properly],\" hence \"adept, fit, in good order,\" hence \"well.\" A whole idea of wellness grew from a ritual skill. Its adjective is कुशली (kuśalī, \"one who is well\")."
+              "text": "Kuśalam (\"well-being, welfare, all-being-well\") is native Sanskrit, famously derived from kuśa (the sacred grass) + a root of \"cutting\" — so it first meant \"skilled [at gathering kuśa grass properly],\" hence \"adept, fit, in good order,\" hence \"well.\" A whole idea of wellness grew from a ritual skill. Its adjective is kuśalī (\"one who is well\")."
             }
           ]
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "The reply",
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "well-being — kuśalam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: well-being — *kuśalam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "its adjective (kuśalī, \"one who is well\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: its adjective (*kuśalī*, \"one who is well\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the surprising root (kuśa, the sacred grass becomes \"skilled\" becomes \"well\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the surprising root (*kuśa*, the sacred grass → \"skilled\" → \"well\")]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does kuśalam mean, and where does it come from? (\"Well-being\"; from kuśa grass becomes \"skilled\" becomes \"well.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-S01-letter-ma",
+      "sequence": 181,
+      "title": "म (ma) — one character, met inside words you already say",
+      "headword": "म",
+      "romanization": "ma",
+      "gloss": "the single character म — recognised inside words you already say",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:b386d7b92a08e4bf",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: म",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: म and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one, the ones you have already met: भ, ◌ि, ◌ा (ā). Say what each of them does."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: म",
           "segments": [
             {
               "kind": "speech",
-              "text": "अहं कुशली अस्मि (ahaṁ kuśalī asmi) — \"I am well\" (aham \"I\" + kuśalī \"well\" + asmi \"am\"). Or simply kuśalam (\"[all is] well\"). The exchange:"
+              "text": "म — ma."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not m, it is ma."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "a top-to-bottom left stem joined to a clockwise lower loop and rightward crossbar."
+            },
+            {
+              "kind": "speech",
+              "text": "a top-to-bottom right stem."
+            },
+            {
+              "kind": "speech",
+              "text": "the top shirorekhā."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these, and every one of them has म (ma) somewhere inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "आम् / न ām / na — yes / no."
+            },
+            {
+              "kind": "speech",
+              "text": "नाम nāma — name."
+            },
+            {
+              "kind": "speech",
+              "text": "मम mama — my."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: म",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. descend the left stem, curl left and clockwise around the lower loop, and continue right through the crossbar without lifting."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift and draw the right stem top-to-bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "verified three-stroke teaching form; another learner source stages the left stem and loop-crossbar separately."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: JackPotte, ‘Devanagari m म (ma).gif’, strokes 1–3, Wikimedia Commons, 29 March 2009."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at this, and find म (ma) in it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at this, and find म in it]"
+            },
+            {
+              "kind": "speech",
+              "text": "आम् / न, नाम, मम."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "म three times, saying ma as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: म three times, saying *ma* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find म (ma) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find म once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — म? What sound does it carry? (ma.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C03-kushali-asmi",
+      "sequence": 185,
+      "title": "अहं कुशली अस्मि (ahaṁ kuśalī asmi) — \"I am well\"",
+      "headword": "अहं कुशली अस्मि",
+      "romanization": "ahaṁ kuśalī asmi",
+      "gloss": "I am well (ahaṁ kuśalī asmi)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a598a69a4dfa2c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have the question and you have the word. Now put the answer together."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a, haṁ, ku, śa, lī, as, mi. The ṁ is a hum through the nose that colours the vowel before it rather than a full m; the ī in the fifth beat is long."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ahaṁ kuśalī asmi — \"I am well\": aham (\"I\") + kuśalī (\"well\") + asmi (\"am\"). Or simply kuśalam (\"[all is] well\"). The exchange:"
             },
             {
               "kind": "speech",
               "text": "— bhavān katham asti? (\"How are you?\") — ahaṁ kuśalī asmi, dhanyavādaḥ. (\"I am well, thank you.\")"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: asmi is the \"I\" form of \"to be\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Asti was \"is.\" Asmi is \"am\" — the same verb wearing its first-person ending -mi. That -mi is the mark of \"I\" all through the Sanskrit verb, and you will meet it again on every verb in the next chapter."
             }
           ]
         },
@@ -461,29 +922,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"kuśalam\"",
+              "instruction": "the question — bhavān katham asti?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"kuśalam\"]"
+              "source": "[YOU SAY: the question — *bhavān katham asti?*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the full reply — ahaṁ kuśalī asmi",
+              "instruction": "the full reply — ahaṁ kuśalī asmi, dhanyavādaḥ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the full reply — *ahaṁ kuśalī asmi*]"
+              "source": "[YOU SAY: the full reply — *ahaṁ kuśalī asmi, dhanyavādaḥ*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the surprising root (kuśa, the sacred grass becomes \"skilled\" becomes \"well\")",
+              "instruction": "the ending that means \"I\" (-mi, as in asmi)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the surprising root (*kuśa*, the sacred grass → \"skilled\" → \"well\")]"
+              "source": "[YOU SAY: the ending that means \"I\" (*-mi*, as in *asmi*)]"
             }
           ]
         },
@@ -500,7 +961,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the reply to bhavān katham asti?, and kuśalam's surprising origin. (Ahaṁ kuśalī asmi; from kuśa grass becomes \"skilled\" becomes \"well.\")"
+              "text": "Give the reply to bhavān katham asti?, and say which ending marks \"I.\" (Ahaṁ kuśalī asmi; the ending -mi.)"
             }
           ]
         }
@@ -514,22 +975,13 @@
       "romanization": "na cintā",
       "gloss": "no worry / it's nothing / you're welcome",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5db6f7dffc43bfa4",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:3ebbe9dd55cabd93",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -550,12 +1002,12 @@
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "न (na, \"not,\" from Chapter 1) + चिन्ता (cintā, \"worry, anxious thought,\" with the conjunct न्त nt) becomes न चिन्ता (na cintā)."
+              "text": "na cin, tā. The c is the ch of church, never a k; the final ā is long."
             }
           ]
         },
@@ -566,7 +1018,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "न चिन्ता (na cintā) literally means \"[there is] no worry / no anxiety\" — used for \"never mind / no trouble / you're welcome.\" Two atoms: न (na, \"not\"), the ancient negative from Chapter 1 — PIE ne, behind English no, not, Latin nōn, and every Indo-Aryan \"no.\" And चिन्ता (cintā, \"anxious thought\"), from the root चिन्त् (cint, \"to think, ponder\") — the same cintā borrowed into Hindi and Urdu (cintā mat karo, \"don't worry\"). So the reply pairs the family's oldest negative with a verb of thinking: \"think nothing of it.\""
+              "text": "Na cintā literally means \"[there is] no worry / no anxiety\" — used for \"never mind / no trouble / you're welcome.\" Two atoms: na (\"not\"), the ancient negative from Chapter 1 — PIE ne, behind English no, not, Latin nōn, and every Indo-Aryan \"no.\" And cintā (\"anxious thought\"), from the root cint (\"to think, ponder\") — the same cintā borrowed into Hindi and Urdu (cintā mat karo, \"don't worry\"). So the reply pairs the family's oldest negative with a verb of thinking: \"think nothing of it.\""
             }
           ]
         },
@@ -642,7 +1094,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9bc296d87696bd85",
+      "sourceHash": "fnv1a64:4f816e01ca1a57b7",
       "notice": null,
       "blocks": [
         {
@@ -713,8 +1165,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The atoms",
+          "type": "guided-production",
+          "title": "How to answer: the atoms",
           "segments": [
             {
               "kind": "pause",
@@ -744,8 +1196,8 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Roots you now carry (the taproot, both ways)",
+          "type": "notice",
+          "title": "What you've built: the roots you now carry",
           "segments": [
             {
               "kind": "pause",
@@ -785,6 +1237,171 @@
             {
               "kind": "speech",
               "text": "A respected stranger asks bhavān katham asti? — give a full reply, and answer their thanks. (Ahaṁ kuśalī asmi, dhanyavādaḥ — and to thanks, na cintā.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-S203-vowel-sign-u",
+      "sequence": 201,
+      "title": "◌ु — one character, met inside words you already say",
+      "headword": "ु",
+      "romanization": "u",
+      "gloss": "the single character ◌ु — recognised inside words you already say",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:4f2b8be3c2759e1e",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ◌ु",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ु and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one, the ones you have already met: ◌ि, ◌ा (ā), म (ma). Say what each of them does."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ◌ु",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "◌ु — u."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a vowel sign. It is not a letter and never stands alone: it attaches to a consonant and replaces the a built into it. Replaces, not adds — the a is gone."
+            },
+            {
+              "kind": "speech",
+              "text": "Where it sits: a small hook below the consonant."
+            },
+            {
+              "kind": "speech",
+              "text": "Worked through: न + ◌ु = नु — nu."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say this word, and ◌ु is one of the shapes inside it — the rest of its shapes are still ahead of you, so here the character stands on its own:"
+            },
+            {
+              "kind": "speech",
+              "text": "kuśalam — well-being."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ◌ु — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ◌ु and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at this, and find ◌ु (u) in it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at this, and find ◌ु in it]"
+            },
+            {
+              "kind": "speech",
+              "text": "◌ु (u)."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "◌ु three times, saying u as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ◌ु three times, saying *u* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ◌ु (u) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ◌ु once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ◌ु? What vowel does it put on the consonant it attaches to — and what does it take off? (Puts u on; takes the built-in a off.) Name one word you already say that contains it."
             }
           ]
         }

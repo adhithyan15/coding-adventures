@@ -55,7 +55,7 @@ From the right edge: **آ**, alif carrying long *ā* (the same mark you
 already read in **آپ**), then **ن**, then **ک** *k*, then **ھ**.
 
 **کھ** extends the two-eyed *he* to a fifth base letter. It has already
-aspirated **ج** in *samajh-*, **ٹ** in *ṭhīk*, **ڑ** in *paṛh-*, and **چ**
+aspirated *jīm* in *samajh-*, *ṭe* in *ṭhīk*, *ṛe* in *paṛh-*, and *che*
 in *pūchh-*; here it does the same job to **ک**, giving *kh*.
 
 The **ن** in this word is not pronounced as its own consonant. It marks the
@@ -76,15 +76,15 @@ This chapter has now found two settled Indo-European cousins in a row —
 
 - [YOU SAY: **āṅkh** — eye; then **merī āṅkh**]
 - [YOU NASALIZE: **ā** through the nose, no separate **n**]
-- [YOU COUNT: five letters now carrying **ھ** — **ج، ٹ، ڑ، چ، ک**]
+- [YOU COUNT: five letters now carrying **ھ** — *jīm, ṭe, ṛe, che, kāf*]
 - [YOU CONNECT: **āṅkh** ← *\*h₃ekʷ-* → English **eye**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-AANKH, UR-ETYMON-AANKH-EYE, UR-SCRIPT-DO-CHASHMI-HE] -->
 
 [PAUSE 3s] Which letter does **کھ** newly pair the two-eyed *he* with, and
-name two letters it already paired with? (**ک**; any two of **ج، ٹ، ڑ،
-چ**.) What job does **ن** do in **آنکھ**? (**Marks the آ as nasal — it is
+name two letters it already paired with? (**ک**; any two of **jīm، ṭe، ṛe،
+che**.) What job does **ن** do in **آنکھ**? (**Marks the آ as nasal — it is
 not its own consonant.**) Is **آنکھ**'s English cousin settled? (**Yes —
 *eye*.**)
 

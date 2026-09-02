@@ -7,9 +7,9 @@ chapter: 16
 type: practice-mix
 headword: "سلام کیا کالا نیلا"
 romanization: "salām, kyā, kālā, nīlā"
-gloss: "seven letters, and eight words you already knew become words you can read"
+gloss: "eight words you already knew become eight words you can read"
 concept_tag: UR-C16-PRACTICE
-prerequisites: [UR-W16-ye]
+prerequisites: [UR-C15-sardi, UR-W05-ye]
 sounds: [rtl]
 roots: []
 etymology_hook: "Nothing new is taught here. Eight words the book gave by ear are read off the page, letter by letter, for the first time."
@@ -29,7 +29,7 @@ modes: [interpretive, presentational]
 strands: [meaning-input, language-focus, fluency]
 register: neutral
 variety: standard-urdu
-reviews_of: [UR-W16-alef, UR-W16-lam, UR-W16-sin, UR-W16-mim, UR-W16-joining, UR-W16-kaf, UR-W16-nun, UR-W16-ye]
+reviews_of: [UR-W02-alef, UR-W03-lam, UR-W01-sin, UR-W03-mim, UR-W04-joining, UR-W04-kaf, UR-W04-nun, UR-W05-ye]
 ---
 
 # Practice — eight words you already knew, now read
@@ -37,8 +37,9 @@ reviews_of: [UR-W16-alef, UR-W16-lam, UR-W16-sin, UR-W16-mim, UR-W16-joining, UR
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-RTL-01] -->
 
-[PAUSE 2s] Write your seven letters in a row, right to left, naming each as you
-go, and let the line fall as it travels.
+[PAUSE 2s] Write the seven letters this reading needs — ا، ل، س، م، ک، ن، ی —
+in a row, right to left, naming each as you go, and let the line fall as it
+travels.
 
 ## Script — the words come back
 <!-- hl-knowledge: introduces=[UR-SCRIPT-SEVEN-READ-01]; assesses=[UR-SCRIPT-ALIF-01, UR-SCRIPT-LAM-01, UR-SCRIPT-SIN-01, UR-SCRIPT-MIM-01, UR-SCRIPT-KAF-01, UR-SCRIPT-NUN-01, UR-SCRIPT-YE-01] -->
@@ -83,13 +84,14 @@ that nothing on the page records.
 This has a consequence worth accepting now rather than discovering later:
 **you cannot reliably sound out an Urdu word you have never heard.** Reading and
 listening have to grow together here, more tightly than in a language that
-spells every vowel — which is exactly why this book spent fifteen chapters
-putting these words in your ear before handing you the page.
+spells every vowel — which is exactly why this book put every one of these
+words in your ear, chapters before it asked you to read one.
 
 ## What you've built this chapter
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-SEVEN-READ-01, UR-SCRIPT-JOINING-01] -->
 
-Seven letters, and three ideas that outlast them:
+Seven letters you have been carrying since chapter five, and three ideas that
+outlast them:
 
 - **the page runs right to left**, and in Nastaliq the word also **falls** as it
   goes, each letter hanging below the last

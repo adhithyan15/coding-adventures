@@ -73,8 +73,8 @@ not present-tense readiness evidence.
   **Authored.**
 - **Ch. 9 — Taking, Asking, Helping, Liking** (`MR-C09-ghene` →
   `MR-C09-vicharne` → `MR-C09-madat-karne` → `MR-C09-avadne`): **घेणे** is the
-  verb inside Chapter 4's *kāḷjī ghyā*, on Vedic **ग्रभ्** *grabh-* = English
-  **grab**; **विचारणे** is Chapter 8's **विचार** with *-णे*, so thinking and
+  verb inside Ch. 4's *kāḷjī ghyā*, on Vedic **ग्रभ्** *grabh-* = English
+  **grab**; **विचारणे** is Ch. 8's **विचार** with *-णे*, so thinking and
   asking are one word; **मदत** is Arabic through Persian, the **माहीत** layer,
   spelled with a final **त** where Hindi and Urdu write **द**; and **आवडणे** is
   **native**, with no securely established Sanskrit ancestor, where Hindi and
@@ -82,11 +82,25 @@ not present-tense readiness evidence.
   one frame, beside **प्रेम करणे** (← *\*preyH-*, cousin of **friend** and
   **free**), where you *are* the subject. **Authored.**
 
-Chapters 8 and 9 carry a `## The letters in this word` section each, which
-derives as `sight` at full modality — but that section is detachable, so every
+Ch. 12 and Ch. 9 above carry a `## The letters in this word` section each,
+which derives as `sight` at full modality — but that section is detachable, so every
 lesson is `coreVoice` and both chapters stay fully drivable.
 
-- **Ch. 22-25 — The pre-A1 verb tranche** (`MR-C22-*` → `MR-C23-*` →
+- **Book chapters 5-8 — the second Devanagari runway** (`MR-W05-*` → `MR-W06-*`
+  → `MR-W07-*` → `MR-W08-*`, with `MR-R05-*`…`MR-R08-*` as payoffs): twenty-four
+  signs — **ि ु ू ृ ँ अ**, **ख ग घ च छ ज झ**, **ट ठ ड ण प**, **ल श ष उ ऊ ए** —
+  one per lesson, inserted **before** the introductions chapter rather than
+  appended after the book. Script closure is measured in **reading order**, so a
+  glyph taught late cannot retire a violation that happens early: seventeen of
+  these signs were already somewhere in the corpus and still left forty-four
+  lessons asking the reader to decode something untaught. Teaching them here
+  took Marathi's closure violations **44 → 0** and its never-taught glyphs
+  **7 → 0** — the first Devanagari track in the corpus with neither. Nine
+  ear-only retrieval lessons (book chapters 9, 13 and 22) carry all twenty-four
+  atoms through R2, R3 and R4. Every sign cites a stroke-order source that was
+  checked to exist before the lesson was written. **Authored.**
+
+- **Ch. 26-29 — The pre-A1 verb tranche** (`MR-C22-*` → `MR-C23-*` →
   `MR-C24-*` → `MR-R25-*`): twelve verbs on four pre-A1 spine nodes, authored
   because the track had 149 lessons standing behind 36 pre-A1 headwords. Asking
   (**देणे, पिणे, आणणे, ठेवणे**), a visit (**बसणे, वाटणे, झोपणे, चालणे**), and
@@ -99,16 +113,17 @@ lesson is `coreVoice` and both chapters stay fully drivable.
   writing runways in book order while realizing **pre-A1** nodes — a node's
   level is a property of the node, not of where the chapter falls — which is the
   same arrangement Hindi, Telugu, Malayalam and Kannada already use. And
-  **सांगणे** is authored **gloss-first**: its **ग** has never been taught, so the
-  word is usable by ear before it is writable, its Devanagari stays in the
+  **सांगणे** was authored **gloss-first**: its **ग** had never been taught, so the
+  word was usable by ear before it was writable, its Devanagari stayed in the
   headword where the romanization exemption makes it exposure, and **म्हणणे**
-  arrives in the same chapter as the fully readable partner. **Authored.**
+  arrived in the same chapter as the fully readable partner. The second runway
+  above has since taught **ग**, so the debt that shape was recording is paid.
+  **Authored.**
 
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| next script tranche | **ग, घ, ख** — the three consonants the book shows and never teaches, which would make **सांगणे**, **घेणे** and **खाणे** readable (HL-C217) |
 | 6 continuation | Numbers 6–10 (native words + Devanagari digits १२३), counting, age |
 | 10 | Family (*āī*, *bābā*, *bhāū*, *bahīṇ*) and the honorific *-jī* / *-rāv* |
 | 11 | Food and the market — where the Perso-Arabic and Portuguese loans cluster |
@@ -118,4 +133,4 @@ Note: Marathi marks "you" by **register** (*tū* familiar / *tumhī* respectful,
 also plural) — like the other Indo-Aryan and Romance tracks. Its signature is
 gender on the **verb** in the present tense (*yeto/yete*, *bolto/bolte*), the
 **three** genders, and the extra retroflex letter **ळ** — all now surfaced across
-Chapters 1–5.
+Ch. 1–9 above.

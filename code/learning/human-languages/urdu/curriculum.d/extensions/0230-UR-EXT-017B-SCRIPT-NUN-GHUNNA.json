@@ -1,0 +1,11 @@
+{
+  "id": "UR-EXT-017B-SCRIPT-NUN-GHUNNA",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write nun ghunna and read main, hain and nahin off the page rather than from romanization.",
+  "prerequisites": [],
+  "lessons": [
+    "UR-W06-nun-ghunna"
+  ]
+}

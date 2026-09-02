@@ -1,281 +1,157 @@
-Bengali, chapter 16: Hanging From the Head-Line, One Piece at a Time.
-10 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Bengali, chapter 16: Tea, Water, Milk, and Rice.
+4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 10.
-ন (nô) — the consonant na.
+Lesson 1 of 4.
+চা (chā) — "tea," and the first word you can politely offer.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Nothing is assumed but the words you can already say. This chapter turns them into words you can read.
+Last lesson you said āmār chā bhālo lāge, "I like tea," without চা ever being taught on its own. Here it is, by itself — and a new job for a form you already own.
 
-Script.
-Bengali is an abugida: a consonant already carries a vowel, and you write a vowel mark only when you want a different one.
-ন (nô).
-Now the part that catches every reader who comes to Bengali from Hindi or Sanskrit. The inherent vowel here is not a. It is ô — the vowel of English awe, rounded and open. So this letter alone is nô, not na.
-Devanagari's bare consonant says ka; Bengali's says kô. Same family, same system, different default. It is one of the first things that makes Bengali sound like Bengali rather than like Hindi read aloud.
-Look at the top of the shape: a horizontal bar, and in running text it joins up across a whole word so the writing hangs from a line — the same head-line Devanagari has, and the one Gujarati erases.
+You'll want to know: চা.
+চা — chā — tea.
+
+The letters in this word.
+চা (chā) is চ (chô) with the vowel sign া (ā). চ is a plain, unaspirated ch, the sound at the start of English church with no puff of breath behind it — Bengali also has a breathy partner, ছ, for later.
+
+The word, taken apart.
+চা (chā) is not Sanskrit at all. It came into Bengali from Persian čā, which took it from Chinese chá. That is the overland route: China to Persia to Bengal, the same road Hindi and Punjabi travelled. The words that reached Europe — English tea, French thé — went the opposite way, by sea, from Hokkien Chinese tê, carried on Dutch trading ships. One drink, two ends of the same word, arriving by two different roads.
+
+Grammar Lens: an offer, built on a form you already have.
+Chapter 13 taught you আপনি খান (āpni khān), the respectful form of খাওয়া. Put a noun in front of it and the very same words become a polite offer or request:
+[a table of 2 rows, read aloud]
+Bengali: আপনি খান. what it does: you eat / you drink (respectful).
+Bengali: চা (chā) খান. what it does: (please) have some tea.
+No new ending to learn — চা (chā) খান reuses exactly what Chapter 13 already gave you.
 
 Guided Practice.
-[once you have stopped driving — write: ন (nô)]
-[your turn — read: every piece this chapter has given you so far, in order]
+[pause 1 second]
+[your turn — say: "chā" — tea]
+[pause 8 seconds for the answer]
+[your turn — say: the offer — "chā khān"]
+[pause 8 seconds for the answer]
+[your turn — say: the route it travelled — "chá … čā … chā"]
+[pause 8 seconds for the answer]
+[your turn — say: last lesson's line again — "āmār chā bhālo lāge"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What vowel does a bare Bengali consonant carry? (ô, the vowel of awe — not a.) And what does Devanagari's carry instead? (a.)
-Source: Unicode Bengali chart.
+Offer someone tea, politely. (চা (chā) খান.) Is চা (chā) inherited from Sanskrit? (No — it is a Chinese word that reached Bengali by way of Persian.) What form does চা (chā) খান reuse? (আপনি খান, Chapter 13's respectful "you eat/drink," with no new ending.)
 
 
-Lesson 2 of 10.
-া (-a) — the vowel sign that replaces the inherent vowel.
+Lesson 2 of 4.
+জল (jôl) — "water," prised out of a phrase you already know.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Write the piece from the previous lesson before adding another.
+Chapter 13 taught you জল (jôl) খাওয়া, "to drink water" — literally "water-eat" — without ever teaching জল (jôl) by itself. Here it is, on its own.
 
-Script.
-To get a different vowel you replace the inherent one with a mark called a mātrā.
-া (-a).
-A single upright stroke standing to the right of its consonant, dropping from the head-line. Attached, it swaps the inherent ô for a long open a.
-ন (nô) + া (-a) becomes না.
-na — and that is the word for no, which you have been saying since your first lesson.
-One consonant and one mark, and a word you could already say became a word you can read.
+You'll want to know: জল.
+জল — jôl — water.
+জল (jôl) খান — (please) drink some water, the same offer pattern as last lesson.
+
+The letters in this word.
+জল is জ (jô) + ল (l), two bare consonants with no vowel sign between them. জ keeps its inherent vowel; ল, at the end of the word with nothing written after it, is silent — so jôl, one syllable, not jô-lô.
+
+The word, taken apart.
+জল (jôl) is Sanskrit জল (jôl) (jala), inherited straight through Prakrit. Past Sanskrit its root is genuinely unsettled: one proposal traces it to PIE gʷelHo-, "to gush forth, to spring" — but the same sources call a local, non-Indo-European origin "unlikely though possible." No confident cousin is claimed here; the honest answer is that nobody is sure.
+Bengali has a second word for water, most common in Bangladesh: পানি (pani). That one is on secure ground — Sanskrit pānīya, "drinkable," built directly on √pā, "to drink," the very root behind Chapter 13's পান করা and English potion, potable. Two words for the same thing, one of disputed origin and one you can trace all the way home.
 
 Guided Practice.
-[once you have stopped driving — write: া (-a)]
-[your turn — read: every piece this chapter has given you so far, in order]
+[pause 1 second]
+[your turn — say: "jôl" — water, one syllable]
+[pause 8 seconds for the answer]
+[your turn — say: the offer — "jôl khān"]
+[pause 8 seconds for the answer]
+[your turn — say: the Bangladesh word, and its root — "pani … pā, potion, potable"]
+[pause 8 seconds for the answer]
+[your turn — say: tea, then water — "chā khān … jôl khān"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does a mātrā do to the inherent vowel? (Replaces it.) What word did those two pieces make? (না — na, "no".)
-Source: Unicode Bengali chart.
+What did Chapter 13 already say with জল (jôl), without teaching it as a word? (জল (jôl) খাওয়া, "to drink water.") Is জল (jôl)'s root secure? (No — genuinely disputed.) Which everyday synonym for water traces cleanly to "drinkable," from the root behind potion? (পানি.)
+[question — say your answer, then pause 8 seconds]
+Type the Bengali word jôl, meaning 'water'.
 
 
-Lesson 3 of 10.
-আ — the same vowel standing alone.
+Lesson 3 of 4.
+দুধ (dudh) — "milk," and the vowel this word refuses to keep.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Write the piece from the previous lesson before adding another.
+Chapter 15 met a word that had to end in a vowel nobody wrote — সাহায্য, sāhājjo. This word looks like it could do the same thing. It doesn't.
 
-Script.
-The mark you just learned only works attached to a consonant. So what do you write when a word begins with that vowel?
-A different character:
-আ (a).
-That is the same a sound, but as an independent vowel — a full letter that stands on its own at the start of a word.
-These are two different characters, not two styles of one. A font, a keyboard and this book all treat them as entirely separate, and confusing them is the commonest spelling error in every Indic script.
-What decides which one you write is position, not sound:
-আ begins a word.
-া (-a) rides on a consonant.
-Two words you already say begin with this letter — the one for I see you later and the one for all right.
+You'll want to know: দুধ.
+দুধ — dudh — milk.
+দুধ (dudh) খান — (please) have some milk.
+
+The letters in this word.
+দুধ (dudh) is দ (dô) with the vowel sign ু (u), plus ধ (dh), a breathy dental d. Nothing is written after ধ — the same bare-consonant ending সাহায্য had.
+
+Sounds you'll need: why this one stays silent.
+সাহায্য had to surface its inherent vowel — sāhājjo, not sāhājj — because its final letter is a doubled consonant, য্য, and a bare cluster like that cannot be said at all without a vowel to carry it. দুধ ends in one plain consonant, ধ, which needs no such help. So Bengali leaves it silent: দুধ, not dudho. The spelling looks the same kind of "bare ending" in both words; whether the vowel survives depends on what it would take to pronounce the letter beneath it.
+
+The word, taken apart.
+দুধ (dudh) is Sanskrit dugdha, the past participle of √duh ("to milk"), from PIE dʰewgʰ-, "to produce, to yield." That root has exactly one secure English descendant, and it is not the word you would guess: doughty, "valiant," through Old English dohtig, "capable, of use." The word that looks like a cousin, dough, is not one — it comes from a completely different PIE root, dʰeyǵʰ-, "to knead, to mould." A close sound, two unrelated histories.
 
 Guided Practice.
-[once you have stopped driving — write: আ (a)]
-[your turn — read: every piece this chapter has given you so far, in order]
+[pause 1 second]
+[your turn — say: "dudh" — no trailing vowel]
+[pause 8 seconds for the answer]
+[your turn — say: the offer — "dudh khān"]
+[pause 8 seconds for the answer]
+[your turn — say: the two endings compared — "sāhājjo … dudh"]
+[pause 8 seconds for the answer]
+[your turn — say: three drinks so far — "chā khān … jôl khān … dudh khān"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which of the two starts a word? (আ.) Which rides on a consonant? (া (-a).) Are they the same character? (No — two separate characters, one sound.)
-Source: Unicode Bengali chart.
+Why does সাহায্য keep its final vowel while দুধ (dudh) doesn't? (সাহায্য ends in a doubled consonant that cannot be said bare; দুধ (dudh)'s single ধ can.) Is দুধ (dudh)'s root related to English dough? (No — that is a different PIE root; the real cousin is doughty.)
 
 
-Lesson 4 of 10.
-হ (hô) — the consonant ha.
+Lesson 4 of 4.
+ভাত (bhāt) — "rice," and a root that will name a person too.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Write the piece from the previous lesson before adding another.
+Three drinks so far. This chapter closes on the word for the meal itself — and a root worth remembering, because it comes back.
 
-Script.
-হ (hô).
-hô — the h of English hat, plus the inherent vowel you now know is ô rather than a.
-No new machinery: every rule you hold applies unchanged. New shapes are coming; new rules are not.
-You have been saying this letter since your first lesson — it opens the word for yes.
+You'll want to know: ভাত.
+ভাত — bhāt — cooked rice.
+ভাত (bhāt) খান — (please) eat some rice; in everyday Bengali, "have a meal."
+
+The letters in this word.
+ভাত is ভ (bhô, a b with a puff of breath) with the vowel sign া (ā), plus ত (t), silent at the end for the same reason দুধ (dudh)'s ধ was: a single bare consonant needs no vowel to carry it, so bhāt, not bhāto.
+
+The word, taken apart.
+ভাত (bhāt) is Sanskrit bhakta, "portioned out, shared" — the past participle of √bhaj, "to divide, to distribute, to allot." PIE bʰeh₂g- sits behind it. Rice, in this word's own history, is not "the grain" but the share that was given out — the meal as a portion handed to you.
+Hold onto that root. Two lessons from now, the very same Sanskrit verb will turn up again, naming someone rather than something.
 
 Guided Practice.
-[once you have stopped driving — write: হ (hô)]
-[your turn — read: every piece this chapter has given you so far, in order]
+[pause 1 second]
+[your turn — say: "bhāt" — cooked rice, no trailing vowel]
+[pause 8 seconds for the answer]
+[your turn — say: the offer — "bhāt khān"]
+[pause 8 seconds for the answer]
+[your turn — say: all four, in order — "chā khān … jôl khān … dudh khān … bhāt khān"]
+[pause 8 seconds for the answer]
+[your turn — say: the two silent endings, back to back — "dudh … bhāt"]
+[pause 8 seconds for the answer]
+[your turn — say: the root that shares — "bhaj — to divide, to distribute"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is the inherent vowel in হ (hô)? (ô.) How many new rules did this lesson add? (None.)
-Source: Unicode Bengali chart.
-
-
-Lesson 5 of 10.
-ম (mô) — the consonant ma.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Write the piece from the previous lesson before adding another.
-
-Script.
-ম (mô).
-mô — the m of English met, plus the inherent vowel.
-Three consonants now. Say them in the order you met them, each with the vowel nobody wrote:
-ন (nô) হ (hô) ম (mô).
-nô, hô, mô. Notice you are saying aw three times, not ah.
-
-Guided Practice.
-[once you have stopped driving — write: ম (mô)]
-[your turn — read: every piece this chapter has given you so far, in order]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say the three consonants you hold, each with its inherent vowel. (nô, hô, mô.)
-Source: Unicode Bengali chart.
-
-
-Lesson 6 of 10.
-স (shô) — the consonant that is written s and said sh.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Write the piece from the previous lesson before adding another.
-
-Script.
-স (shô).
-Here the letter and the sound part company, and it is worth knowing early.
-This letter descends from the Sanskrit s, and every transliteration writes it s. In Bengali it is normally pronounced sh — the sh of English shoe.
-So the word you say as nomosh-kar is written with what looks like an s. The spelling records the word's Sanskrit ancestry; the pronunciation records what Bengali did with it afterwards. Both are true, and the script keeps the older one.
-English does exactly this with knight and through. Every literary language accumulates spellings that outlive their sounds.
-
-Guided Practice.
-[once you have stopped driving — write: স (shô)]
-[your turn — read: every piece this chapter has given you so far, in order]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-How is স (shô) written in transliteration, and how is it said? (Written s, said sh.) Why the difference? (The spelling keeps the Sanskrit ancestry; the sound moved on.)
-Source: Unicode Bengali chart.
-
-
-Lesson 7 of 10.
-ক (kô) — the consonant ka.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Write the piece from the previous lesson before adding another.
-
-Script.
-ক (kô).
-kô — the k of English skip, with no puff of breath after it.
-Hold a palm in front of your mouth and say English kit: you feel air. Say skip: you do not. This is the second one. Bengali has a separate letter for the breathy version, and swapping them changes the word — so a difference English treats as an accident, this script writes down.
-Five consonants, one mātrā, one independent vowel. One piece of machinery left.
-
-Guided Practice.
-[once you have stopped driving — write: ক (kô)]
-[your turn — read: every piece this chapter has given you so far, in order]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Is ক (kô) the k of kit or of skip? (Of skip — no puff of air.) Does the script care? (Yes — the breathy one is a different letter.)
-Source: Unicode Bengali chart.
-
-
-Lesson 8 of 10.
-্ ((hasanta)) — the mark that DELETES the inherent vowel and fuses two consonants.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Write the piece from the previous lesson before adding another.
-
-Script.
-The inherent vowel is a nuisance when you do not want it. If a word presses two consonants together with no vowel between them, writing them plainly would insert an ô that is not there.
-So there is a mark that removes it:
-্ ((hasanta)).
-Bengali calls it the hasanta — Devanagari calls the same thing a virama. It sits under a consonant and means: no vowel here.
-Then something happens that no European alphabet does. A consonant stripped of its vowel fuses with the one after it into a single joined shape, a conjunct:
-স (shô) + ্ ((hasanta)) + ক (kô) becomes স্ক.
-One cluster. Conjuncts are not new characters to memorise — they are two you already know, joined. Bengali's are more thoroughly fused than Devanagari's, so some take a moment to take apart, but the principle does not change.
-
-Guided Practice.
-[once you have stopped driving — write: ্ ((hasanta))]
-[your turn — read: every piece this chapter has given you so far, in order]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does the hasanta do? (Removes the inherent vowel.) What is Devanagari's name for the same mark? (The virama.) And are conjuncts new letters? (No — two known letters, fused.)
-Source: Unicode Bengali chart.
-
-
-Lesson 9 of 10.
-র (rô) — the last consonant of the greeting.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Write the piece from the previous lesson before adding another.
-
-Script.
-র (rô).
-rô — a light tap of the tongue, closer to the r of Spanish pero than to any English r.
-That is the last piece. Everything the greeting needs is now something you can write from memory.
-
-Guided Practice.
-[once you have stopped driving — write: র (rô)]
-[your turn — read: every piece this chapter has given you so far, in order]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-How is র (rô) made? (A light tap, not an English r.)
-Source: Unicode Bengali chart.
-
-
-Lesson 10 of 10.
-নমস্কার (nomoshkar) — seven pieces, all of them already yours.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Write the piece from the previous lesson before adding another.
-
-Script.
-Nothing new is introduced here. Every piece below is one you can write.
-ন (nô) + ম (mô) + স (shô) + ্ ((hasanta)) + ক (kô) + া (-a) + র (rô) becomes নমস্কার (nomoshkar).
-Read it the way you built it:
-ন — nô, inherent vowel.
-ম — mô, inherent vowel.
-স্ক — the conjunct: the s-letter with its vowel removed, fused to kô.
-া (-a) — the mātrā, making that piece ka.
-র — rô.
-nô-mosh-kar — and notice the sh, from a letter written s.
-Count what it took: six consonants, one mātrā, one independent vowel and one hasanta. With them you can read no and the greeting, and every consonant you meet from here obeys rules you already hold.
-Bengali has around forty more letters. It does not have any more systems.
-
-Guided Practice.
-[once you have stopped driving — write: নমস্কার (nomoshkar)]
-[your turn — read: every piece this chapter has given you so far, in order]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-How many new pieces were in this lesson? (None.) What is স্ক made of? (The s-letter with its vowel removed, joined to ক (kô).) And what still remains to learn — rules, or shapes? (Shapes.)
-Source: Unicode Bengali chart.
+What does ভাত literally mean, at the root? ("Portioned out, shared" — √bhaj, "to divide.") Offer all four of this chapter's words, politely, in one breath. (Chā khān, jôl khān, dudh khān, bhāt khān.) Why do দুধ and ভাত both drop their final vowel? (Each ends in one plain consonant, easily said bare.) A quick run back through Chapter 13 while you're at it: which verb does Bengali reach for when আছে runs out of future? (হবে.) How many forms of "I come" does a Bengali speaker need, whoever is talking? (One — āmi āsi.) And "you go" to a stranger, versus to a friend? (যান jān, versus যাও jāo.) সাহায্য's doubled letter — said how? (jj, not yy.)

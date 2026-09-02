@@ -2,14 +2,14 @@
 schema_version: 2
 id: BN-W04-jol-read
 spine_node: SPINE-MEET-GREET
-sequence: 1980
+sequence: 920
 delivery: script
-chapter: 19
+chapter: 17
 type: writing
 headword: জল
 romanization: "jôl"
 gloss: "water — two bare consonants and the vowel neither of them writes"
-prerequisites: [BN-W04-ja]
+prerequisites: [BN-W04-chaa-read]
 sounds: []
 roots: []
 etymology_hook: "Two letters, no signs, and one vowel that is on the page only because every Bengali consonant carries it — which makes water the cleanest possible demonstration of what an abugida is."
@@ -20,13 +20,13 @@ requires:
 introduces:
   knowledge: [BN-SCRIPT-JOL-READ-01]
 practises:
-  knowledge: [BN-SCRIPT-JA-01, BN-SCRIPT-LA-01, BN-SCRIPT-PORIBAR-READ-01, BN-SCRIPT-CHAA-READ-01, BN-SCRIPT-JOL-READ-01]
+  knowledge: [BN-SCRIPT-JA-01, BN-SCRIPT-LA-01, BN-SCRIPT-CHAA-READ-01, BN-SCRIPT-JOL-READ-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard
-reviews_of: [BN-W04-ja, BN-C10-jol]
+reviews_of: [BN-W04-chaa-read, BN-C10-jol]
 ---
 # জল — water, read
 
@@ -58,15 +58,15 @@ Set it beside the drink from earlier in this chapter:
 > **জল** — two consonants, no signs
 
 Both are two syllables in the mouth and neither spells them the way an English
-reader would expect. The tenth chapter noted that Bengali *eats* its drinks —
+reader would expect. The chapter before this one noted that Bengali *eats* its drinks —
 *jôl khāwā*, "to eat water" — so these two words keep company in more than one
 way.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-JOL-READ-01, BN-SCRIPT-CHAA-READ-01, BN-SCRIPT-PORIBAR-READ-01, BN-SCRIPT-JA-01, BN-SCRIPT-LA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-JOL-READ-01, BN-SCRIPT-CHAA-READ-01, BN-SCRIPT-JA-01, BN-SCRIPT-LA-01] -->
 
 - [YOU READ: জল]
-- [YOU READ: চা জল পরিবার]
+- [YOU READ: চা জল]
 - [YOU WRITE: জল]
 
 ## Wrap-up Recall

@@ -2,10 +2,11 @@
 schema_version: 2
 id: BN-C05-bola
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 260
-chapter: 5
+sequence: 670
+chapter: 11
 type: word
 headword: বলা
+romanization: "bôlā"
 gloss: to speak, to say
 concept_tag: BN-VERB-BOLA
 prerequisites: [BN-C03-ami]

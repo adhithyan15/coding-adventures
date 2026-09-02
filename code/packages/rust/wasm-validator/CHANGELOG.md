@@ -2,6 +2,116 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.87] - 2026-09-02 - type-check typed `select` (0x1C)
+
+Adds an instruction-level type-check rule for `0x1C`, the reference-
+types proposal's explicitly-typed `select` — a real, previously-entirely-
+unhandled opcode (the instruction-decode loop jumped straight from
+`0x1B` `select` to `0x20` `local.get`, so a module containing `0x1C`
+would have silently mis-decoded whatever followed it as if it belonged
+to the NEXT instruction). Companion fix to `wasm-wast-parser` 0.1.99,
+which just started being able to PARSE `select`'s typed `(result t)`
+text-format form into this binary opcode — see that crate's own
+CHANGELOG for the parser-side root cause and `wasm-execution`'s for the
+matching runtime/decode-length fix.
+
+**Rule.** Decode the `vec(valtype)` immediate (a LEB128 count followed
+by that many valtype bytes — one byte for a numtype/vectype/reftype tag,
+two for the `0x63`/`0x64` concrete-reference tags, via a new `decode_
+valtype` helper that reuses `decode_blocktype`'s own byte-tag table).
+Real validation rule (confirmed against the vendored `select.wast`'s own
+`arity-0`/`arity-2` `assert_invalid` cases, `(result)` and `(result i32
+i32)`): the vector must have EXACTLY one valtype, or it's rejected as
+"invalid result arity" — the binary format's `vec(valtype)` shape can
+technically encode any count, but `select` only ever selects and
+produces one value. Given exactly one valtype `t`, pops `[i32
+condition, t, t]` and pushes `t` — same operand shape untyped `0x1B`
+already uses, just with an explicit type instead of an inferred one.
+
+**Security.** `decode_valtype`'s `vec(valtype)` count-decode loop caps
+its up-front `Vec::with_capacity` at `count.min(4096)`, the same defense
+`0x0E` `br_table`'s own label-vec decode already uses — an attacker-
+controlled LEB128 count can claim billions of entries, but each entry
+still costs at least one real byte of `code` to decode via `?`-
+propagated errors, so the loop can never run more iterations than
+`code` has bytes left regardless of what `count` claims.
+
+No regressions: `git stash` A/B across this crate plus `wasm-wast-
+parser`/`wasm-execution`/`wasm-runtime`/`wasm-conformance` (578 tests in
+this crate alone) is identical pass/fail before and after. `cargo
+clippy` clean.
+
+## [0.2.86] - 2026-09-01 (mechanical fallout of `wasm_types::Element::is_declarative`)
+
+`wasm-types` 0.1.24 added `Element::is_declarative` (see that crate's own
+CHANGELOG for the full root-cause writeup: `wasm-runtime::instantiate()`
+had no way to tell a declarative elem segment apart from a genuinely
+passive one, so it could never mark a declarative segment "already
+dropped" without wrongly dropping every passive segment too). This
+crate's own `Element` construction sites are all test-only fixtures for
+`validate()`'s own element-segment checks (none of them declarative) —
+each now sets `is_declarative: false` to keep compiling against
+`Element`'s new field. No behavior change in this crate: `validate()`'s
+own per-element check already treats every `is_passive: true` segment
+identically (its own doc comment already notes this covers a declarative
+segment too, by this repo's "no dedicated third-variant" convention), and
+that logic doesn't consult `is_declarative` at all.
+
+## [0.2.85] - 2026-09-01 (fix: a 32-bit table's declared minimum no longer rejected at structural validation time)
+
+Gap 2 of a two-gap `elem.wast`/`table.wast` investigation pass
+(`code/specs/W07-wasm-post-mvp-epics.md`'s addendum item 3, previously
+left as "unconfirmed as a real bug — needs spec-text verification before
+fixing"). `table.wast` line 9, `(module definition (table 0xffff_ffff
+funcref))` (`u32::MAX`, no declared `max`), is a bare, UNWRAPPED directive
+— no `assert_invalid` around it — meaning the official testsuite itself
+asserts this declaration must VALIDATE. `wasm-validator` rejected it with
+`ValidationError: table #0: declared minimum 4294967295 elements exceeds
+this interpreter's resource limit of 10000000` (the old Check 2b).
+
+Investigated against the real spec rather than guessed: the real WASM
+core spec places NO ceiling on a 32-bit table's declared `min` beyond
+fitting in `u32` (`min` up to `2^32 - 1` is spec-legal) — Check 2b's own
+doc comment already said as much ("unlike Check 1b above, this is NOT a
+real spec requirement... it's this interpreter's own implementation-
+defined resource limit"), but stopped short of the conclusion this real
+corpus case forces: an implementation MAY refuse to actually ALLOCATE an
+oversized table, but may NOT refuse to let a module merely DECLARE one.
+This is exactly the same "declare freely, cap only at real allocation
+time" treatment `is64` tables (`u64::MAX` ceiling) and 64-bit memories
+already receive elsewhere in this same function — Check 2b's 32-bit-only
+enforcement was the one remaining inconsistency, not a defensible
+implementation choice.
+
+**Fix**: removed Check 2b (both the per-table and the cross-table
+aggregate rejection, for both declared and imported 32-bit tables) from
+`validate()` entirely. The real spec-mandated "`min` <= `max`" rule
+(Check 1c) is unchanged and still enforced at validation time. The
+practical resource-limit heuristic didn't disappear — it moved to
+`wasm-runtime::instantiate` (see that crate's own CHANGELOG), the pipeline
+stage where real allocation actually happens, mirroring exactly how
+`is64` tables' own cap was already handled before this fix.
+
+**Not a DoS regression** (checked as part of this fix, not after the
+fact): `wasm-execution::Table::new_with_is64` — the constructor every
+declared table already goes through — already had its own real,
+UNCONDITIONAL per-table `MAX_TABLE_ELEMENTS` cap regardless of `is64`,
+returning a graceful `TrapError` rather than attempting the allocation;
+removing this check's single-table half is a pure redundancy removal, not
+a new gap. The AGGREGATE half (many individually-under-cap tables
+summing past the cap) is the one real gap this fix had to close somewhere
+else — done in `wasm-runtime::instantiate`, generalizing its pre-existing
+`is64`-only aggregate to cover every table.
+
+Tests: removed `rejects_a_table_declaring_more_than_max_table_elements`
+and `rejects_tables_whose_combined_elements_exceed_the_aggregate_cap`
+(asserted the now-incorrect old behavior), replaced with `accepts_a_32bit_
+table_declaring_far_more_than_max_table_elements` and `accepts_tables_
+whose_combined_elements_exceed_the_old_aggregate_cap` (assert the
+corrected behavior). `accepts_an_is64_table_declaring_far_more_than_
+max_table_elements` kept as a regression check that `is64` tables' own
+pre-existing treatment is unaffected.
+
 ## [0.2.84] - 2026-09-01 (fix: memarg/prefixed-sub-opcode LEB128 under-strictness + missing data-count-section gate)
 
 A fresh corpus-wide prioritization pass after the W32/W33/W34 campaign

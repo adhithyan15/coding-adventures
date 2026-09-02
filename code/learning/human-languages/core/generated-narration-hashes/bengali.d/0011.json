@@ -1,18 +1,19 @@
 {
   "language": "bengali",
   "chapter": 11,
-  "sourceHash": "fnv1a64:08a61c259a749e99",
+  "sourceHash": "fnv1a64:f0148140c8adbb31",
   "lessonIds": [
-    "BN-C11-bondhu",
-    "BN-C11-poribar",
-    "BN-C11-bhai",
-    "BN-C11-bon"
+    "BN-C05-bola",
+    "BN-C05-ami-bangla-boli",
+    "BN-C05-kaj-kora",
+    "BN-C05-thaka",
+    "BN-C05-practice"
   ],
-  "voiceLessons": 0,
+  "voiceLessons": 1,
   "drivablePrefix": 0,
   "text": "bengali/narration/ch11.txt",
   "json": "bengali/narration/ch11.json",
-  "textHash": "fnv1a64:306694d81f9b00c1",
-  "jsonHash": "fnv1a64:2651e904ca27e3d1",
+  "textHash": "fnv1a64:e36f5ab737cc8f6a",
+  "jsonHash": "fnv1a64:b35f83ddb411fbe2",
   "findings": []
 }

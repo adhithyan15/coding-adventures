@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C11-poribar",
     "language": "bengali",
-    "chapter": 11,
-    "sequence": 810,
+    "chapter": 18,
+    "sequence": 970,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:aaf70854fc763281",
+    "sourceHash": "fnv1a64:971ae76b98791b95",
     "detachableSegments": [
       "The letters in this word"
     ]

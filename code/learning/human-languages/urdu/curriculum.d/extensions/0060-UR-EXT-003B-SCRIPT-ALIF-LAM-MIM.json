@@ -1,0 +1,13 @@
+{
+  "id": "UR-EXT-003B-SCRIPT-ALIF-LAM-MIM",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write alif, lam and mim from memory, and explain both directions a Nastaliq word runs in.",
+  "prerequisites": [],
+  "lessons": [
+    "UR-W02-alef",
+    "UR-W03-lam",
+    "UR-W03-mim"
+  ]
+}

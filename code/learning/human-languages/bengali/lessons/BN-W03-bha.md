@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W03-bha
 spine_node: SPINE-MEET-GREET
-sequence: 1850
+sequence: 530
 delivery: script
-chapter: 18
+chapter: 8
 type: writing
 headword: ভ
 romanization: "bhô"
@@ -26,7 +26,7 @@ modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard
-reviews_of: [BN-W03-ba]
+reviews_of: [BN-W03-abar-read]
 ---
 # ভ — the consonant bha, the breathy twin
 

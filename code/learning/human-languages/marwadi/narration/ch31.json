@@ -1,0 +1,516 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 31,
+  "title": "One Exchange, Three Counters",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:8e98f87dbbebcbf0",
+  "lessons": [
+    {
+      "id": "MW-R26-shopping-counter",
+      "sequence": 2520,
+      "title": "The shopping map, inside the exchange",
+      "headword": "दुकान — वस्तु — भाव — सस्ता — सामान — कपड़ा — महंगो",
+      "romanization": "dukān — vastu — bhāv — sastā — sāmān — kapṛā — mahaṅgo",
+      "gloss": "the whole shopping map run through the exchange this slice built",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3963c75a872f9d64",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall all three shopping payoffs in the order they were earned: three words, five words, seven words."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Take the seven shopping words one at a time. For each one, say its meaning, then put it into the request from Chapter 26 and the price question from Chapter 27. Two of the seven do not fit a request slot at all: name them and say why."
+            },
+            {
+              "kind": "speech",
+              "text": "Then write all seven from dictation, and write the two lines you built with the word that fits them best."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R26-shopping-counter-recall",
+              "prompt": "Write clothes, goods, and expensive.",
+              "assesses": [
+                "MW-LEX-KAPDA-01",
+                "MW-LEX-SAMAAN-01",
+                "MW-LEX-MAHANGO-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "कपड़ा — सामान — महंगो",
+                "कपड़ा सामान महंगो",
+                "कपड़ा, सामान, महंगो"
+              ],
+              "feedback": {
+                "correct": "All seven shopping words survive being used rather than listed.",
+                "incorrect": "Repair only the missed word, then use it in the price question once."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R26-transport-counter",
+      "sequence": 2530,
+      "title": "The transport map, inside the exchange",
+      "headword": "बस — गाड़ी — ठेला — रिक्शा — घोड़ो",
+      "romanization": "bas — gāṛī — ṭhelā — rikśā — ghoṛo",
+      "gloss": "the whole transport map run through the same exchange",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4c627a59fff9118a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall both transport payoffs, say lentils, then write the total question."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Take the five transport words one at a time. Say each meaning, then price it with the question from Chapter 27 and answer with the counter-offer from Chapter 28. A fare is bargained exactly like a price, which is why no new line is needed here."
+            },
+            {
+              "kind": "speech",
+              "text": "Then write all five from dictation, and write the price question with the word you would actually use standing at a roadside."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Marwari Pathshala, Lesson 10; Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R26-transport-counter-recall",
+              "prompt": "Write rickshaw, horse, and cart.",
+              "assesses": [
+                "MW-LEX-RIKSHA-01",
+                "MW-LEX-GHODO-01",
+                "MW-LEX-THELA-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "रिक्शा — घोड़ो — ठेला",
+                "रिक्शा घोड़ो ठेला",
+                "रिक्शा, घोड़ो, ठेला"
+              ],
+              "feedback": {
+                "correct": "All five transport words survive being priced rather than listed.",
+                "incorrect": "Repair only the missed word, then price it once."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R26-food-counter",
+      "sequence": 2540,
+      "title": "The food map, inside the ordering line",
+      "headword": "दाल — घी — सबजी — रोटी — बाटी — चूरमा — चाय",
+      "romanization": "dāl — ghī — sabjī — roṭī — bāṭī — chūrmā — chāy",
+      "gloss": "the whole food map run through the ordering line",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d2fb6e3561d31f0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall all three food payoffs in the order they were earned, then write ट and य."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Take the seven food words one at a time. Say each meaning, then order it with the line from Chapter 30 and price it with the question from Chapter 27. Only the first word of the order changes; the asking word never does."
+            },
+            {
+              "kind": "speech",
+              "text": "Then write all seven from dictation, and write three complete orders: the one you would ask for first, the one you would ask for last, and the drink."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R26-food-counter-recall",
+              "prompt": "Write lentils, clarified butter, and the sweet crumbled wheat dessert.",
+              "assesses": [
+                "MW-LEX-DAAL-01",
+                "MW-LEX-GHEE-01",
+                "MW-LEX-CHURMA-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "दाल — घी — चूरमा",
+                "दाल घी चूरमा",
+                "दाल, घी, चूरमा"
+              ],
+              "feedback": {
+                "correct": "All seven food words survive being ordered rather than listed.",
+                "incorrect": "Repair only the missed word, then order it once."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R26-letters-close",
+      "sequence": 2550,
+      "title": "Five signs, on their own",
+      "headword": "ख — ट — श — ड़ — ौ",
+      "romanization": "kha — ṭa — śa — ṛa — au-mātrā",
+      "gloss": "the five least-drilled signs in the track, retrieved on their own",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f12afc21e0e9e5ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the six-word weather payoff, then write weather, heat, and cold."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Some signs in this track have been read a hundred times inside words and asked for on their own only once. This lesson asks for them alone, which is the only way to know whether they were learned."
+            },
+            {
+              "kind": "speech",
+              "text": "Write each from a spoken cue, with nothing else on the line: ख (kha), ट, श, ड़, ौ, ग, ड, ु, ई. Then write one word that carries each: आखरी, रोटी, रिक्शा, थोड़ु, मौसम, गर्मी, ठंडी, दुकान, घी. Repair only the missed sign and rewrite its word once."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Devanagari chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R26-letters-close-recall",
+              "prompt": "Write the sign inside rickshaw, then the mark inside weather, then the word for clarified butter.",
+              "assesses": [
+                "MW-SCRIPT-SHA-01",
+                "MW-SCRIPT-AU-MATRA-01",
+                "MW-LEX-GHEE-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "श — ौ — घी",
+                "श ौ घी",
+                "श, ौ, घी"
+              ],
+              "feedback": {
+                "correct": "Signs that only ever appeared inside words now stand alone.",
+                "incorrect": "Repair the missed sign, then rewrite the word it lives in."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C26-counter-exchange",
+      "sequence": 2560,
+      "title": "Payoff — one exchange, three counters",
+      "headword": "ये कपड़ा दिखावो। — ये कितणे कू है? — ये घणो महंगो है। — थोड़ु सस्तो करो। — पैसा ले लो।",
+      "romanization": "ye kapṛā dikhāvo. — ye kitṇe kū hai? — ye ghaṇo mahaṅgo hai. — thoṛu sasto karo. — paisā le lo.",
+      "gloss": "one five-turn counter exchange, run at a shop, a food stall, and a rickshaw",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4efb5e088f2b1df3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the five payoffs of this slice in order, then write clarified butter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five turns, and the only thing that changes between counters is the noun."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear the five turns shuffled and put them in order, twice: once with a shopping noun, once with a transport noun."
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the whole exchange from meaning cues at a food stall, using the ordering line in place of the first turn."
+            },
+            {
+              "kind": "speech",
+              "text": "Read all five printed turns and say who speaks each."
+            },
+            {
+              "kind": "speech",
+              "text": "Write the whole exchange from dictation, without a model."
+            },
+            {
+              "kind": "speech",
+              "text": "Pass each skill separately. This is one function taught once and reused over three noun sets, not three exchanges learned three times. It still stops where numbers begin: no amount a seller names can yet be understood, and refusing the final price and leaving is untaught."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Marwari Pathshala, Lesson 9; Marwari Pathshala, Lesson 6; Marwari Pathshala, Lesson 10."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C26-counter-exchange-payoff",
+              "prompt": "Complete all four scored checks, then write the first and last turns of the exchange.",
+              "assesses": [
+                "MW-PERFORMANCE-COUNTER-EXCHANGE-FOUR-SKILL-01"
+              ],
+              "responseSeconds": 50,
+              "acceptedResponses": [
+                "ये कपड़ा दिखावो। — पैसा ले लो।",
+                "ये कपड़ा दिखावो। पैसा ले लो।",
+                "ये कपड़ा दिखावो पैसा ले लो"
+              ],
+              "feedback": {
+                "correct": "A five-turn exchange now passes in all four skills at three counters.",
+                "incorrect": "Repair only the failed skill or turn, then retry that part."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R26-script-close",
+      "sequence": 2570,
+      "title": "Close the writing loop for ख (kha)",
+      "headword": "ख",
+      "romanization": "kha",
+      "gloss": "final closure for the slice's only new sign, against the words that now carry it",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:88a2b453061dcd27",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the five-turn exchange payoff, then write vegetables and clarified butter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write ख (kha) and क from breath cues alone, with nothing else on the line. Then write four words from dictation and mark which of the two each one uses: दिखावो, आखरी, करो, कितणो. Two take the breath and two do not."
+            },
+            {
+              "kind": "speech",
+              "text": "Finish by writing every word this slice added, from meaning cues rather than sounds: ये, लो, दो, लावो, घणो, थोड़ु, and the five turns of the exchange. Repair only what was missed and rewrite that alone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Marwari Pathshala, Lesson 9; Unicode Devanagari chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R26-script-close-recall",
+              "prompt": "Write the breathed k, then the plain one.",
+              "assesses": [
+                "MW-SCRIPT-KHA-01",
+                "MW-SCRIPT-KA-01"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "ख — क",
+                "ख क",
+                "ख, क"
+              ],
+              "feedback": {
+                "correct": "The slice's only new sign closes against the one it is confused with.",
+                "incorrect": "Say both with a hand at your mouth; the breath moves it on ख."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

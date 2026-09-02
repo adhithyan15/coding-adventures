@@ -1,5 +1,243 @@
 # Changelog — wasm-conformance
 
+## 0.1.120 — 2026-09-02 — baseline regen: typed `select` (0x1C) closes `select.wast` (126 not-yet-supported → 0)
+
+Regenerated `tests/fixtures/testsuite-status.json` (`--write-baseline`)
+after `wasm-wast-parser` 0.1.99 / `wasm-validator` 0.2.87 / `wasm-
+execution` 0.9.92 added parsing, type-checking, and runtime support for
+`select`'s typed `(result t)` form (opcode `0x1C`) — see those three
+crates' own CHANGELOGs for the full root-cause writeup. No code changes
+in this crate itself.
+
+Live re-verification before fixing anything: ran the report tool fresh
+(`cargo run --release --bin wasm_conformance_report`) rather than
+trusting Addendum 2's number, confirming `select.wast` was still exactly
+at 126 `not_yet_supported` (2 `module`, 118 `assert_return`, 6
+`assert_trap`) — unchanged from the addendum. A throwaway probe outside
+the repo (`wasm_conformance::run_wast_source` against `select.wast`
+alone, via a scratch Cargo project depending on this crate by path) then
+pinned the exact failing construct: both `module` failures were the
+literal error `unknown instruction "result"`, at byte 656 (`(select
+(result i32) ...)`) and byte 23437 — confirming Addendum 2's diagnosis
+was still accurate as given, unlike two earlier finds in this same
+campaign (W35's closing addendum, W36's own investigation) where a
+prior session's diagnosis needed correction on re-check.
+
+Programmatic per-file diff against the pre-fix baseline (Python,
+comparing the `files` dict keyed by filename), across all 257 corpus
+files: exactly 3 files changed, all strict improvements (no file's pass
+count decreased or fail count increased) —
+
+| File | Directive kind | Before | After |
+|---|---|---|---|
+| `select.wast` | `module` | 1/3 (2 not-yet-supported) | 3/3, 0 NYS |
+| `select.wast` | `assert_return` | 0/118 (not-yet-supported) | 118/118 |
+| `select.wast` | `assert_trap` | 0/6 (not-yet-supported) | 6/6 |
+| `select.wast` | `assert_invalid` | 30/30 (unchanged — see below) | 30/30 |
+| `call_indirect.wast` | `module` | 2/3 (1 not-yet-supported) | 3/3, 0 NYS |
+| `stack.wast` | `module` | 0/2 (2 not-yet-supported) | 1/2, 1 NYS |
+
+`select.wast` itself is now fully passing on every directive kind it
+has — the honest exception is `stack.wast`, which drops from 2 to 1
+`module` NYS: the SAME `call_indirect` flat-form fix (needed to fully
+close `select.wast`'s own "Flat syntax" section) also fixed 1 of
+`stack.wast`'s 2 pre-existing gaps as a real, understood side effect
+(both exercise the identical "bare atom right after `call_indirect` in
+flat/stream form" ambiguity — `stack.wast`'s remaining 1 NYS is a
+genuinely separate, still-open gap, not something this fix touched).
+`call_indirect.wast` similarly picked up 1 more real pass for the same
+reason. `select.wast`'s own `assert_invalid` count (30/30) is UNCHANGED
+in total, but for a subtler reason worth recording honestly: those 30
+cases used to pass by ACCIDENT (`grade_assert_invalid` treats a module
+build failure as a valid "correctly rejected" `Pass`, and every one of
+them failed to even parse before this fix, for the wrong reason —
+`select`'s typed form itself, not the type mismatch the case was
+actually designed to probe). They now parse and build successfully and
+pass for the RIGHT reason instead: `wasm-validator`'s new `0x1C` type-
+check rule genuinely rejects them (e.g. `arity-0`/`arity-2`'s "invalid
+result arity", the reference-typed-operand cases via the untyped-`0x1B`-
+restriction check). Confirmed by reading `wasm-validator`'s new code
+path directly, not just by the pass count staying the same.
+
+Aggregate: `module` 2055→2059 pass (+4: 2 in `select.wast`, 1 each in
+`call_indirect.wast`/`stack.wast`), not-yet-supported 198→194 (-4, exact
+match); `assert_return` 52015→52133 pass (+118, exact match to `select.
+wast`'s own count), not-yet-supported 749→631 (-118); `assert_trap`
+4828→4834 pass (+6), not-yet-supported 140→134 (-6). Every other
+directive kind and every other of the 257 files is byte-for-byte
+unchanged from the 0.1.119 baseline.
+
+## 0.1.119 — 2026-09-01 — baseline regen: `wasm-wast-parser` UTF-8 name validation closes `utf8-invalid-encoding.wast` (0/176 → 176/176)
+
+Regenerated `tests/fixtures/testsuite-status.json` (`--write-baseline`)
+after `wasm-wast-parser` 0.1.98 fixed its `String::from_utf8_lossy` name-
+string bug — see that crate's own CHANGELOG for the full root-cause
+writeup and security rationale. No code changes in this crate itself;
+`grade_assert_malformed`'s `ModuleSource::Quote` arm already had exactly
+the right shape for this (`wasm_wast_parser::parse_module` returning
+`Err` on a malformed quote payload was always graded `Pass`) — it was
+purely waiting on the parser it calls to actually reject the input.
+
+Programmatic per-file diff against the pre-fix baseline (Python,
+comparing the `files` dict keyed by filename), across all 257 corpus
+files: exactly 1 file changed —
+
+| File | Directive kind | Before | After |
+|---|---|---|---|
+| `utf8-invalid-encoding.wast` | `assert_malformed` | 0/176 (176 not-yet-supported) | 176/176, 0 fail, 0 NYS |
+
+Aggregate: `assert_malformed` 1313→1489 pass, not-yet-supported 627→451
+(both deltas exactly 176). Every other directive kind and every other of
+the 257 files — including the other three `utf8-*.wast` siblings
+(`utf8-custom-section-id.wast`, `utf8-import-field.wast`, `utf8-import-
+module.wast`, already 176/176 before this change via a different code
+path) — is byte-for-byte unchanged from the 0.1.118 baseline, confirming
+the fix is exactly as scoped as intended: stricter UTF-8 validation in
+the WAT text front-end did not newly reject any currently-passing module
+anywhere in the vendored testsuite.
+
+## 0.1.118 — 2026-09-01 — baseline regen: active/declarative elem-segment drop fix closes the 4 failures 0.1.117 honestly reported
+
+Regenerated `tests/fixtures/testsuite-status.json` (`--write-baseline`)
+after `wasm-runtime` 0.6.29 fixed the exact bug the previous entry
+(0.1.117) documented but deliberately did not fix: `instantiate()` never
+marked an active or declarative element segment "dropped" once applied
+(or, for a declarative segment, immediately, since it's never applied at
+all) — see that crate's own CHANGELOG for the full spec-semantics
+writeup and root cause. No code changes in this crate itself.
+
+Programmatic per-file diff against the pre-fix baseline (Python,
+comparing the `files` dict keyed by filename), across all 257 corpus
+files: exactly 3 files changed, exactly the 4 directives 0.1.117
+predicted, nothing else in the whole corpus moved:
+
+| File | Directive kind | Before | After |
+|---|---|---|---|
+| `table_init.wast` | `assert_trap` | 583 pass / 1 fail | 584/584, 0 fail |
+| `table_init64.wast` | `assert_trap` | 633 pass / 1 fail | 634/634, 0 fail |
+| `elem.wast` | `assert_trap` | 4 pass / 2 fail / 1 NYS | 6 pass / 0 fail / 1 NYS |
+
+Aggregate: `assert_trap` 4824→4828 pass, **0 fail** (was +4 new fail),
+140 not-yet-supported unchanged. Every other directive kind (`module`,
+`action`, `assert_return`, `assert_invalid`, `assert_malformed`,
+`assert_unlinkable`, `assert_exception`, `assert_exhaustion`, `register`)
+and every other of the 257 files is byte-for-byte unchanged from the
+0.1.117 baseline — confirming this fix is exactly as scoped as intended,
+with zero collateral impact on any other passive/declarative
+element-segment interaction in the corpus.
+
+## 0.1.117 — 2026-09-01 — baseline regen: W36 slice 0, `table.init`/`table.copy` arity fix
+
+Regenerated `tests/fixtures/testsuite-status.json`
+(`--write-baseline`) after `wasm-wast-parser` 0.1.96 fixed
+`encode_table_init_flat`/`encode_table_copy_flat`'s missing arity
+detection for `table.init`'s/`table.copy`'s optional leading index
+abbreviations (see that crate's own CHANGELOG for the full root-cause
+writeup; no code changes in this crate itself). This was originally
+misdiagnosed by `code/specs/W07-wasm-post-mvp-epics.md`'s Addendum 2 as a
+~2130-directive element-segment "exprs-list" gap; `code/specs/
+W36-wasm-element-segment-exprs-list.md`'s own re-verification found the
+real cause was this much smaller, unrelated parser bug instead, and
+specced it as "slice 0" — do first, independently of that spec's own
+(still-unimplemented) exprs-list subject.
+
+Programmatic per-file diff against the pre-fix baseline, across all 257
+corpus files (every file not listed below is byte-for-byte unchanged):
+
+| File | Before | After | Notes |
+|---|---|---|---|
+| `bulk.wast` | 42 NYS | 0 NYS, 0 fail | all 42 → `Pass` |
+| `table_copy.wast` | 566 NYS | 0 NYS, 0 fail | all 566 → `Pass` |
+| `table_copy64.wast` | 566 NYS | 0 NYS, 0 fail | all 566 → `Pass` |
+| `table_init.wast` | 499 NYS | 2 NYS, 1 fail | 496 → `Pass`; 2 NYS remain (the pre-existing, explicitly-out-of-scope `arrayref`/`array.new_default` exprs-list case, split across `module`/`assert_return`); 1 → genuinely NEW real `Fail` (see below) |
+| `table_init64.wast` | 499 NYS | 2 NYS, 1 fail | same shape as `table_init.wast` |
+| `elem.wast` | 4 of its NYS entries were the `"unknown table identifier \"$e\""` case Addendum 2 left "undetermined, re-probe after fix" | 2 of those 4 → `Pass` (the modules now build); the other 2 (their own follow-on `assert_trap` directives) → genuinely NEW real `Fail` (same cause as `table_init.wast`'s, below) | all other `elem.wast` tallies unchanged |
+
+Aggregate: `module` 1994→2055 pass (198 NYS remain, was 259), `action`
+357→382 pass (33 NYS remain, was 58), `assert_return` 51784→52015 pass
+(749 NYS remain, was 980), `assert_trap` 2973→4824 pass **+4 new fail**
+(140 NYS remain, was 1995). Every other directive kind (`assert_invalid`,
+`assert_malformed`, `assert_unlinkable`, `assert_exception`,
+`assert_exhaustion`, `register`) is untouched by this baseline regen.
+
+**4 genuinely new real failures, honestly reported, NOT fixed here**: all
+four trace to the exact same pre-existing `wasm-runtime` gap, only
+reachable now that these modules parse for the first time —
+`instantiate()` never marks an active (or `declare`d) element segment as
+"dropped" once it's applied, so a later `table.init` reading from that
+segment wrongly succeeds instead of trapping `"out of bounds table
+access"` per the real spec's own implicit-drop rule for active/
+declarative segments. Confirmed via a throwaway `run_wast_source` probe
+correlating each `Fail`'s directive index against the file's own parsed
+top-level forms:
+- `table_init.wast` byte offset 21455 / `table_init64.wast` byte offset
+  31003 (i64 analog): `(table.init 2 (i32.const 12) (i32.const 1)
+  (i32.const 1))` reads from elem index 2, an ACTIVE segment already
+  consumed during this same module's own instantiation — should trap,
+  doesn't.
+- `elem.wast` byte offsets 20594 and 20815: one case reads from an active
+  segment already consumed at instantiation, the other from a `declare`d
+  segment (which the real spec treats as always-already-dropped); both
+  should trap, neither does.
+
+This is a `wasm-runtime` bug, unrelated to text-format parsing or this
+crate — tracked separately, out of scope for the `wasm-wast-parser` fix
+that unmasked it.
+
+## 0.1.116 — 2026-09-01 — both remaining post-W35 gaps closed: `elem.wast` externref bug and `table.wast`'s oversized-minimum question
+
+Resolves the two gaps `code/specs/W07-wasm-post-mvp-epics.md`'s
+"Addendum (2026-09-01)" left open after W35 closed: `elem.wast`'s one
+remaining `assert_return` failure (item 1, believed W35-unrelated and
+confirmed so), and `table.wast`'s oversized-declared-minimum `module`
+case (item 3, left as "unconfirmed as a real bug — needs spec-text
+verification before fixing"). No code changes in this crate itself — both
+fixes live in `wasm-wast-parser`/`wasm-module-encoder` (gap 1) and
+`wasm-validator`/`wasm-runtime`/`wasm-execution` (gap 2); see each crate's
+own CHANGELOG for the full root-cause writeups. This entry records the
+corpus-wide verification.
+
+**Gap 1** — root-caused via a throwaway probe (outside this repo, not
+committed) using `run_wast_source` directly against `elem.wast`, pinning
+the failure to directive `#133` (line 1029): a module importing another's
+exported externref table and writing to it via an ACTIVE element segment
+using the exprs-list form (the only way to express a `(ref.null extern)`
+entry) never built at all, because `wasm-wast-parser` rejected that
+construct outright — not a table cross-instance-sharing bug (W28's
+`Rc<RefCell<TableStorage>>` sharing is correct and was never at fault
+here).
+
+**Gap 2** — read `table.wast` line 9 directly: `(module definition (table
+0xffff_ffff funcref))` is a bare, UNWRAPPED directive (no `assert_invalid`
+around it), meaning the official testsuite itself asserts this
+declaration must validate. Confirmed against the real spec's own
+implementation-limits reasoning (also already present, if incompletely
+followed through, in `wasm-validator`'s own prior Check 2b doc comment):
+a 32-bit table's `min` has no spec ceiling below `2^32 - 1`; only actual
+allocation may be refused, and only at instantiation time.
+
+**Verification**: regenerated `tests/fixtures/testsuite-status.json` and
+diffed all 257 files programmatically (Python, comparing the `files` dict
+keyed by filename) against the pre-fix baseline. Exactly 3 files changed:
+`elem.wast` (assert_return 18/1-fail/8-not-yet-supported →
+24/0-fail/3-not-yet-supported; module 26/50-nys → 36/40-nys; assert_trap
+1/6-nys → 4/3-nys; assert_invalid 23/3-nys → 21/5-nys, an HONEST regrade —
+two cases that used to "pass" only because the old exprs-list rejection
+happened to reject the module for an unrelated reason now correctly
+report `NotYetSupported`, since this repo's structural-only validator
+genuinely can't tell those specific cases are invalid), `table.wast`
+(module 11/1-fail/6-nys → 12/0-fail/6-nys, exactly the one targeted
+directive), and `ref_func.wast` (module 2/1-nys → 3/0-nys — the exact same
+gap-1 root cause at a different line, `(elem (table $t) (i32.const 0)
+funcref (ref.func $f4))`, confirmed via the same probe technique, not an
+unrelated regression). Every other of the 257 files is byte-identical to
+the pre-fix baseline. Aggregate result: every graded directive category
+in the whole corpus is now at 100% (`module` 1982/1983 → 1994/1994,
+`assert_return` 51778/51779 → 51784/51784) — the only non-100% categories
+left are legitimately-deferred features (`not_yet_supported`), matching
+this campaign's own standing discipline of never taking credit for an
+untested case.
+
 ## 0.1.115 — 2026-09-01 — W35 fourth slice, epic closed: cross-module registry fixup pass, `CrossModuleFunction::identity()`, full corpus verification
 
 Slice 4 of 4 for `code/specs/W35-wasm-cross-instance-function-identity.md`

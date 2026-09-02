@@ -9,27 +9,27 @@ headword: ਮੂੰਹ
 romanization: mūnh
 gloss: mouth, face — the second word this book has found with a level high tone
 concept_tag: PA-BODY-MOUTH
-prerequisites: [PA-C12-kann]
+prerequisites: [PA-C12-kann, PA-S10-chachcha]
 sounds: [tone-high-level, tippi-nasal]
 roots: [sanskrit-mukha]
 etymology_hook: ਮੂੰਹ is inherited from Sanskrit mukha, "face, mouth" — the same word survives a second time as the learned borrowing ਮੁਖ mukh — but on the inherited path the medial kh first weakened to h in Middle Indo-Aryan, and Punjabi then dropped that h too, leaving a level high tone exactly where cāh's lost h left one.
 duration:
   max_seconds: 275
 requires:
-  knowledge: [PA-LEX-KANN, PA-CONTRAST-KANN-KARNA, PA-SOUND-TONE-HIGH-LEVEL, PA-LEX-CHA]
+  knowledge: [PA-LEX-KANN, PA-CONTRAST-KANN-KARNA, PA-SOUND-TONE-HIGH-LEVEL, PA-LEX-CHA, PA-SCRIPT-RECOG-CHA-01]
 introduces:
   knowledge: [PA-LEX-MUNH, PA-ETYMON-MUNH-MUKHA]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-LEX-MUNH, PA-ETYMON-MUNH-MUKHA, PA-LEX-KANN, PA-CONTRAST-KANN-KARNA, PA-SOUND-TONE-HIGH-LEVEL, PA-LEX-CHA]
+  knowledge: [PA-LEX-MUNH, PA-ETYMON-MUNH-MUKHA, PA-LEX-KANN, PA-CONTRAST-KANN-KARNA, PA-SOUND-TONE-HIGH-LEVEL, PA-LEX-CHA, PA-SCRIPT-RECOG-CHA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [PA-C12-kann, PA-C10-chaa]
+reviews_of: [PA-C12-kann, PA-C10-chaa, PA-S10-chachcha]
 ---
 
 # ਮੂੰਹ — a consonant that wore all the way down to a tone
@@ -49,7 +49,7 @@ no false friend at all.
 > **ਮੂੰਹ** — *mūnh* — **mouth**, also **face**
 
 ## The letters in this word
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SOUND-TONE-HIGH-LEVEL] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SOUND-TONE-HIGH-LEVEL, PA-SCRIPT-RECOG-CHA-01] -->
 
 **ਮ** *m*, **ੂ** long *ū*, **ੰ** the nasal *ṭippī*, **ਹ** — again not spoken as
 *h*, marking the same level high tone you first read in **ਚਾਹ**: *mū́h̃*.

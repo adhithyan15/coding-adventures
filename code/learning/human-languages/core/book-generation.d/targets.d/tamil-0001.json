@@ -1,0 +1,6 @@
+{
+  "language": "tamil",
+  "chapter": 1,
+  "output": "tamil/book/chapters/ch01-greetings.tex",
+  "scriptSet": "tamil-comparisons"
+}

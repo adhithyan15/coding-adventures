@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:b55db3804a8a541e",
+  "sourceHash": "fnv1a64:2062f4c0a998ee19",
   "lessons": [
     {
       "id": "TA-C02-peyar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8cfd51ec9c416d3f",
+      "sourceHash": "fnv1a64:95b4bcbb6bab9261",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,29 @@
             },
             {
               "kind": "speech",
-              "text": "Across the family: Tamil peyar, Malayalam pēr, Telugu pēru — the same Dravidian root; Kannada hesaru (also Dravidian, with p becomes h); only Hindi nām and English name are the Indo-European word."
+              "text": "Across the family:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Language",
+                "\"Name\"",
+                "Source"
+              ],
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "Language: Tamil. \"Name\": peyar. Source: native Dravidian (peyar).",
+                "Language: Malayalam. \"Name\": pēr. Source: the same Dravidian root.",
+                "Language: Telugu. \"Name\": pēru. Source: the same Dravidian root.",
+                "Language: Kannada. \"Name\": hesaru. Source: Dravidian (pesar, with p becomes h).",
+                "Language: Hindi. \"Name\": nām. Source: Sanskrit nāman (Indo-European).",
+                "Language: English. \"Name\": name. Source: Indo-European."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Four Dravidian tongues share peyar/pēru; only the Indo-European languages have name/nām."
             }
           ]
         },
@@ -126,7 +148,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:57800df36bdff6a2",
+      "sourceHash": "fnv1a64:057c19828b8210fe",
       "notice": null,
       "blocks": [
         {
@@ -220,7 +242,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:509c10f2dfb45a9a",
+      "sourceHash": "fnv1a64:c132ee50a6e93580",
       "notice": null,
       "blocks": [
         {
@@ -242,8 +264,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
+          "type": "etymology",
+          "title": "The phrase, taken apart",
           "segments": [
             {
               "kind": "speech",
@@ -333,7 +355,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:98e137452fb83731",
+      "sourceHash": "fnv1a64:0da88d14ff4ec9f6",
       "notice": null,
       "blocks": [
         {
@@ -438,7 +460,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:062d05f9bb347ae1",
+      "sourceHash": "fnv1a64:dc3ddcd146399d51",
       "notice": null,
       "blocks": [
         {
@@ -524,7 +546,7 @@
       "sequence": 160,
       "title": "உங்கள் பெயர் என்ன? (uṅgaḷ peyar eṉṉa?) — \"what's your name?\"",
       "headword": "உங்கள் பெயர் என்ன?",
-      "romanization": "",
+      "romanization": "uṅgaḷ peyar eṉṉa?",
       "gloss": "what's your name?",
       "script": "tamil",
       "modality": "voice",
@@ -532,7 +554,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8ac64f1e7a0c725",
+      "sourceHash": "fnv1a64:00fd058b12c349fc",
       "notice": null,
       "blocks": [
         {
@@ -554,8 +576,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
+          "type": "etymology",
+          "title": "The phrase, taken apart",
           "segments": [
             {
               "kind": "speech",
@@ -563,7 +585,7 @@
             },
             {
               "kind": "speech",
-              "text": "உங்கள் பெயர் (peyar) என்ன (eṉṉa)? = literally \"your name what?\" = \"what's your name?\""
+              "text": "உங்கள் பெயர் என்ன? (uṅgaḷ peyar eṉṉa?) = literally \"your name what?\" = \"what's your name?\""
             },
             {
               "kind": "speech",
@@ -626,7 +648,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does உங்கள் பெயர் (peyar) என்ன (eṉṉa)? literally say, and what's missing versus English? (\"Your name what?\"; no \"is\" — zero copula.)"
+              "text": "What does உங்கள் பெயர் என்ன? (uṅgaḷ peyar eṉṉa?) literally say, and what's missing versus English? (\"Your name what?\"; no \"is\" — zero copula.)"
             }
           ]
         }
@@ -637,7 +659,7 @@
       "sequence": 165,
       "title": "மகிழ்ச்சி (magiḻcci) — \"joy,\" and \"pleased to meet you\"",
       "headword": "மகிழ்ச்சி",
-      "romanization": "",
+      "romanization": "magiḻcci",
       "gloss": "joy / pleased to meet you",
       "script": "tamil",
       "modality": "voice",
@@ -645,7 +667,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5519f38ad4330a86",
+      "sourceHash": "fnv1a64:4c66a4c678aed4e7",
       "notice": null,
       "blocks": [
         {
@@ -667,12 +689,12 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The phrase",
+          "type": "input",
+          "title": "You'll want to know: மகிழ்ச்சி",
           "segments": [
             {
               "kind": "speech",
-              "text": "The full form is உங்களை சந்தித்ததில் மகிழ்ச்சி (uṅgaḷai sandittatil magiḻcci) — \"in having met you, joy.\""
+              "text": "The full form is uṅgaḷai sandittatil magiḻcci — \"in having met you, joy.\" Say it; the extra two words are longer than you need today, and மகிழ்ச்சி on its own already carries the whole meaning."
             }
           ]
         },
@@ -731,7 +753,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does மகிழ்ச்சி mean and from what verb? (\"Joy,\" from magiḻ, \"to rejoice.\") What rare Tamil sound does it contain? (ழ, ḻ — also in Tamiḻ.)"
+              "text": "What does மகிழ்ச்சி (magiḻcci) mean and from what verb? (\"Joy,\" from magiḻ, \"to rejoice.\") What rare Tamil sound does it contain? (ழ, ḻ — also in Tamiḻ.)"
             }
           ]
         }
@@ -750,7 +772,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:10c4d0f86990f82a",
+      "sourceHash": "fnv1a64:6f24b19132b1b683",
       "notice": null,
       "blocks": [
         {
@@ -772,22 +794,22 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The dialogue",
+          "type": "input",
+          "title": "The exchange — the whole introduction",
           "segments": [
             {
               "kind": "table",
               "headers": [
-                "Tamil",
+                "Say this",
                 "English"
               ],
               "columns": 2,
               "rowCount": 4,
               "utterances": [
-                "என் பெயர் மீரா. (eṉ peyar Mira) means My name is Mira.",
-                "உங்கள் பெயர் என்ன? (uṅgaḷ peyar eṉṉa) means What's your name?",
-                "என் பெயர் அருண். (eṉ peyar Arun) means My name is Arun.",
-                "மகிழ்ச்சி. (magiḻcci) means Pleased to meet you."
+                "eṉ peyar Mira. means My name is Mira.",
+                "uṅgaḷ peyar eṉṉa? means What's your name?",
+                "eṉ peyar Arun. means My name is Arun.",
+                "magiḻcci. means Pleased to meet you."
               ]
             },
             {

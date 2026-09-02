@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C15-shari",
     "language": "bengali",
-    "chapter": 15,
-    "sequence": 1220,
+    "chapter": 25,
+    "sequence": 1290,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:18eb94eb5d5822ae",
+    "sourceHash": "fnv1a64:3d559db4bd8d361e",
     "detachableSegments": [
       "The letters in this word"
     ]

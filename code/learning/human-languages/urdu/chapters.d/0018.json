@@ -1,15 +1,15 @@
 {
   "chapter": 18,
-  "title": "Alif Wears a Wave, and the Meeting Comes Off the Page",
+  "title": "The Meeting Comes Off the Page",
   "label": "ch:ur-script-meeting",
-  "canDo": "I can write alif madda, pe and vao, name a non-joining letter on sight, read aam, aasmaan, purana, aap, voh and hun, and write the opening meeting exchange from dictation.",
+  "canDo": "I can read aam, aasmaan, purana, aap, voh and hun off the page, name a non-joining letter on sight, and write the opening meeting exchange from dictation.",
   "spineNodes": [
     "SPINE-RESPOND-BASIC"
   ],
   "payoff": {
     "lesson": "UR-C18-practice",
     "kind": "writing",
-    "summary": "Three more letters, and the exchange the book opens with -- salam, aap ka naam kya hai, mera naam ... hai, aap kaise hain, main ... hun -- is readable and writable end to end for the first time.",
+    "summary": "The exchange the book opens with -- salam, aap ka naam kya hai, mera naam ... hai, aap kaise hain, main ... hun -- is readable and writable end to end for the first time, on letters taught across chapters one to eight.",
     "assesses": [
       "UR-SCRIPT-ALIF-MADDA-01",
       "UR-SCRIPT-PE-01",

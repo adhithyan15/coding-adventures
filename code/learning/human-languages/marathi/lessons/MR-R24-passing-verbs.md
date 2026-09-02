@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-R24-passing-verbs
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 1010
-chapter: 24
+sequence: 1210
+chapter: 28
 type: review
 headword: म्हणणे / शिकणे / मिळणे
 romanization: mhaṇṇe / shikṇe / miḷṇe

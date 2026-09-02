@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1F01-bhasha
 spine_node: SPINE-NAME-EVERYDAY-THINGS
-sequence: 822
+sequence: 1022
 delivery: script
-chapter: 19
+chapter: 23
 type: writing
 headword: "भाषा: मराठी"
 gloss: read and trace the form label for language, paired with the already practised word Marathi

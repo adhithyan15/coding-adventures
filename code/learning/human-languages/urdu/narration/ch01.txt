@@ -1,13 +1,13 @@
 Urdu, chapter 1: Greetings and responses.
-5 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+6 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 5.
+Lesson 1 of 6.
 سلام (salām) — hello across a family of languages.
 
 Notice the direction.
 Urdu is written right to left, traditionally in the flowing Nastaliq style. Begin with four letters:
-س s, ل l, ا long ā, م m becomes salām.
+س (sīn) s, ل l, ا long ā, م m becomes salām.
 Letters usually connect inside a word. The tall ا does not connect onward to the final م, creating a visible break. That is enough script for today.
 
 Meaning and history.
@@ -25,7 +25,7 @@ Source.
 Zero Zabar: the Urdu alphabet.
 
 
-Lesson 2 of 5.
+Lesson 2 of 6.
 ش ک ر (shīn, kāf, re) — three shapes, then stop.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — recognize three shapes and Writing — trace before you copy until you have stopped, and I will say so again when we reach it.
@@ -52,7 +52,7 @@ Wrap-up Recall.
 Point in this order: sh, k, r. Stop after three. The next short lesson adds the final two shapes and only then lets you copy the whole word.
 
 
-Lesson 3 of 5.
+Lesson 3 of 6.
 شکریہ (shukriyā) — thank you.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — add two shapes and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -70,8 +70,8 @@ The word, taken apart.
 The central consonants sh-k-r belong to the Arabic family for gratitude and thanks; Arabic shukran is a close comparison. Urdu shukriyā reflects the centuries-long Persian-Arabic layer of its vocabulary.
 
 Guided Practice.
-سلام — salām — Hello.
-شکریہ — shukriyā — Thank you.
+salām — Hello. You can say it; its letters are still ahead of you, so it is printed here the way you say it.
+شکریہ — shukriyā — Thank you. This one you can already read.
 Say the second word slowly once, then at a natural pace. Keep shuk-ri-yā as three light beats.
 [once you have stopped driving — write: copy شکریہ (shukriyā) once while looking at the model; do not write it from memory yet]
 [your turn — say: shukriyā once after the pen stops]
@@ -81,7 +81,7 @@ Wrap-up Recall.
 Which two shapes did this lesson add? ی and final ہ. Greet, then thank: salām — shukriyā. Copying with a model is enough for today.
 
 
-Lesson 4 of 5.
+Lesson 4 of 6.
 جی ہاں (jī hā̃) — yes, respectfully.
 
 Warm-up.
@@ -104,14 +104,42 @@ Wrap-up Recall.
 Which mark makes the vowel nasal? Final ں. Answer politely: jī hā̃.
 
 
-Lesson 5 of 5.
+Lesson 5 of 6.
+س (sīn) — three teeth, then a bowl, without lifting.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Point at ش, the first shape inside shukriyā. Three teeth in a row, a bowl, and three dots floating above.
+
+Script — the shape.
+س (sīn).
+Three small teeth close together — short upward points in a row — and then the line flows straight on into a bowl below the baseline.
+Remember which way you are working: the first tooth you draw is the rightmost one.
+No lift anywhere. Teeth and bowl are one continuous movement, and letting the pen stop between them is the commonest way a beginner's sīn comes out looking like two letters.
+Its name is sīn and it says s.
+You have seen this shape before. ش shīn, from shukriyā, is this exact letter wearing three dots above it. Take the dots off and you have س (sīn). That is the first pair of many: in Urdu a great deal of the alphabet is one skeleton shared by two or three letters, told apart only by dots.
+
+Guided Practice.
+[once you have stopped driving — write: س (sīn) — three teeth from the right, flowing into the bowl, one movement]
+[your turn — say: s]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Which tooth comes first? (The rightmost.)
+[question — say your answer, then pause 8 seconds]
+How many times do you lift the pen while writing sīn?
+
+
+Lesson 6 of 6.
 نہیں (nahī̃) — no, and later “not”.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — recombine known shapes until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Say جی ہاں (jī hā̃)، شکریہ (shukriyā) — “yes, thank you.” Now learn the answer that contrasts with yes.
+Say jī hā̃, shukriyā — “yes, thank you.” Now learn the answer that contrasts with yes.
 
 Script — recombine known shapes.
 You have seen ہ, ی, and nasal ں. Add ن n at the right:
@@ -123,8 +151,8 @@ As a complete answer, nahī̃ means “no.” Inside a sentence it commonly mean
 This is inherited Indo-Aryan vocabulary and is shared with Hindi नहीं nahī̃. The scripts differ, but the spoken word and grammar align closely.
 
 Guided Practice.
-جی ہاں — jī hā̃ — yes.
-نہیں — nahī̃ — no.
+jī hā̃ — yes. Said, not yet read: its first letter is one you have not met.
+نہیں — nahī̃ — no. This one you built out of known shapes a moment ago.
 
 Wrap-up Recall.
 What does final ں do? It nasalizes the vowel. Answer “no”: nahī̃.

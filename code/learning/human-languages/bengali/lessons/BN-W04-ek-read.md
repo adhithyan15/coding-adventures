@@ -2,14 +2,14 @@
 schema_version: 2
 id: BN-W04-ek-read
 spine_node: SPINE-MEET-GREET
-sequence: 2040
+sequence: 1260
 delivery: script
-chapter: 19
+chapter: 24
 type: writing
 headword: এক
 romanization: "ek"
 gloss: "one — and eighteen words a reader can now take off a page"
-prerequisites: [BN-W04-e-indep]
+prerequisites: [BN-W02-tin-read]
 sounds: []
 roots: []
 etymology_hook: "The numeral for one, whose independent opening vowel is exactly why the numbers chapter said its five words could not demonstrate the inherent vowel — a claim this reading finally makes visible."
@@ -20,13 +20,13 @@ requires:
 introduces:
   knowledge: [BN-SCRIPT-EK-READ-01]
 practises:
-  knowledge: [BN-SCRIPT-E-INDEP-01, BN-SCRIPT-KA-01, BN-SCRIPT-CHA-01, BN-SCRIPT-PA-01, BN-SCRIPT-JA-01, BN-SCRIPT-II-MATRA-01, BN-SCRIPT-I-INDEP-01, BN-SCRIPT-CHAA-READ-01, BN-SCRIPT-PORIBAR-READ-01, BN-SCRIPT-JOL-READ-01, BN-SCRIPT-NIL-READ-01, BN-SCRIPT-BHAI-READ-01, BN-SCRIPT-TIN-READ-01, BN-SCRIPT-EK-READ-01]
+  knowledge: [BN-SCRIPT-E-INDEP-01, BN-SCRIPT-KA-01, BN-SCRIPT-II-MATRA-01, BN-SCRIPT-I-INDEP-01, BN-SCRIPT-NIL-READ-01, BN-SCRIPT-TIN-READ-01, BN-SCRIPT-EK-READ-01, BN-SCRIPT-MUKH-READ-01, BN-SCRIPT-LAL-READ-01, BN-SCRIPT-KALO-READ-01, BN-SCRIPT-SHADA-READ-01, BN-SCRIPT-AA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard
-reviews_of: [BN-W04-e-indep, BN-C06-numbers-1-5]
+reviews_of: [BN-W02-tin-read, BN-C06-numbers-1-5]
 ---
 # এক — one, and the words this reader can now take off a page
 
@@ -49,42 +49,42 @@ those five numerals were no good for showing off the inherent **ô**, because
 consonant at the front of this word to carry a vowel, so there is no inherent
 vowel to hear. The claim is now something you can see rather than take on trust.
 
-And **তিন** from the seventeenth chapter is readable too, so two of the five
-numerals are on the page.
+And **তিন**, read two lessons ago, is on the page too, so two of the five
+numerals are now shapes rather than sounds.
 
-Count the whole holding. Nine pieces came from the first script chapter, five
-from the seventeenth, six from the eighteenth, and six from this one: **চ**,
-**প**, **জ**, **ী**, **ই**, **এ**. Twenty-six pieces. And with them, eighteen
-words:
+Count the whole holding. Twenty-six pieces, gathered nine, four, four, eight and
+one across five script chapters. And with them, nineteen words:
 
-- **নাম** *name* · **আমি** *I* · **লাল** *red* · **তিন** *three* · **তুমি**
-  *you* · **কেমন** *how*
-- **কালো** *black* · **আবার** *again* · **ভালো** *good* · **মুখ** *mouth* ·
-  **সাদা** *white* · **দুধ** *milk*
-- **চা** *tea* · **পরিবার** *family* · **জল** *water* · **নীল** *blue* ·
-  **ভাই** *brother* · **এক** *one*
+- **নমস্কার** *the greeting* · **নাম** *name* · **তুমি** *you* · **আমি** *I* ·
+  **কেমন** *how*
+- **আবার** *again* · **ভালো** *good* · **চা** *tea* · **জল** *water* ·
+  **দুধ** *milk*
+- **পরিবার** *family* · **ভাই** *brother* · **মুখ** *mouth* · **লাল** *red* ·
+  **কালো** *black*
+- **সাদা** *white* · **নীল** *blue* · **তিন** *three* · **এক** *one*
 
-with **নাক**, **কি**, **আসি** and **কাল** riding along free.
+with **নাক**, **কি**, **আসি**, **আমার** and **কাল** riding along free.
 
 Every one of them was in the mouth before it was on the page. That order was the
 whole design: hear a word, use it, and only then be shown what it looks like. A
 reader who had been handed the alphabet first would have spent twenty-six lessons
-decoding shapes that meant nothing yet.
+decoding shapes that meant nothing yet. Every script chapter in this book sits
+between two chapters of speech for that reason.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-EK-READ-01, BN-SCRIPT-CHAA-READ-01, BN-SCRIPT-PORIBAR-READ-01, BN-SCRIPT-JOL-READ-01, BN-SCRIPT-NIL-READ-01, BN-SCRIPT-BHAI-READ-01, BN-SCRIPT-TIN-READ-01, BN-SCRIPT-E-INDEP-01, BN-SCRIPT-I-INDEP-01, BN-SCRIPT-II-MATRA-01, BN-SCRIPT-CHA-01, BN-SCRIPT-PA-01, BN-SCRIPT-JA-01, BN-SCRIPT-KA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-EK-READ-01, BN-SCRIPT-MUKH-READ-01, BN-SCRIPT-LAL-READ-01, BN-SCRIPT-KALO-READ-01, BN-SCRIPT-SHADA-READ-01, BN-SCRIPT-NIL-READ-01, BN-SCRIPT-TIN-READ-01, BN-SCRIPT-II-MATRA-01, BN-SCRIPT-E-INDEP-01, BN-SCRIPT-I-INDEP-01, BN-SCRIPT-AA-01, BN-SCRIPT-KA-01] -->
 
-- [YOU READ: চা পরিবার জল নীল ভাই এক]
+- [YOU READ: মুখ লাল কালো সাদা নীল]
 - [YOU READ: এক তিন]
 - [YOU WRITE: এক]
-- [YOU WRITE: ভালো চা]
+- [YOU WRITE: এ ই আ ী ি া ে ো]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-EK-READ-01, BN-SCRIPT-E-INDEP-01, BN-SCRIPT-TIN-READ-01] -->
 
 [PAUSE 3s] Why is there no inherent vowel to hear at the start of **এক**? (It opens on an
 **independent vowel**, not a consonant.) How many pieces do you hold now?
-(**Twenty-six**.) And which came first for every one of these words — the sound
-or the shape? (**The sound**.)
+(**Twenty-six**.) How many words? (**Nineteen**.) And which came first for every
+one of them — the sound or the shape? (**The sound**.)
 
 Source: [Unicode Bengali chart](https://www.unicode.org/charts/PDF/U0980.pdf).

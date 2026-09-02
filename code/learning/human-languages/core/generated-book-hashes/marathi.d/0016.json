@@ -1,9 +1,12 @@
 {
   "language": "marathi",
   "chapter": 16,
-  "sourceHash": "fnv1a64:3e99d9ef331a1451",
+  "sourceHash": "fnv1a64:c529ee5bf2c088c1",
   "lessonIds": [
-    "MR-C13-hrudaya"
+    "MR-C09-ghene",
+    "MR-C09-vicharne",
+    "MR-C09-madat-karne",
+    "MR-C09-avadne"
   ],
-  "tex": "marathi/book/chapters/ch16-heart.tex"
+  "tex": "marathi/book/chapters/ch16-doing-verbs.tex"
 }

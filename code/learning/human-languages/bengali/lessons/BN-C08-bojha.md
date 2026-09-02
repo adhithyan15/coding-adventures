@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C08-bojha
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 510
-chapter: 8
+sequence: 800
+chapter: 14
 type: word
 headword: বোঝা
 romanization: bojhā
@@ -54,7 +54,7 @@ the *o*-sign **ো**.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**বোঝা** is Sanskrit **√বুধ্** (*√budh*), "to wake up, to notice" — the root that
+**বোঝা** is Sanskrit *√budh*, "to wake up, to notice" — the root that
 gave a prince his title: the **Buddha** is "the awakened one," and *bodhi* is the
 awakening. Understanding, in this family, is waking up to something.
 

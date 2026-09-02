@@ -1,19 +1,21 @@
 {
   "language": "urdu",
   "chapter": 3,
-  "sourceHash": "fnv1a64:2f9996f9c2375308",
+  "sourceHash": "fnv1a64:b6c8f1de756acfd9",
   "lessonIds": [
     "UR-C03-aap-tum-tu",
     "UR-C03-kya",
+    "UR-W03-lam",
     "UR-C03-aap-ka-naam-kya-hai",
     "UR-C03-khushi-hui",
+    "UR-W03-mim",
     "UR-C03-practice"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 2,
   "text": "urdu/narration/ch03.txt",
   "json": "urdu/narration/ch03.json",
-  "textHash": "fnv1a64:410c6d05f04f80a7",
-  "jsonHash": "fnv1a64:757ed08281e8f654",
+  "textHash": "fnv1a64:3cfef995c306c154",
+  "jsonHash": "fnv1a64:4b44a310b9d04473",
   "findings": []
 }

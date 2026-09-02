@@ -1,19 +1,22 @@
 {
   "language": "malayalam",
   "chapter": 4,
-  "sourceHash": "fnv1a64:ab0a74b9863ecb75",
+  "sourceHash": "fnv1a64:8e232d680dfbcef3",
   "lessonIds": [
+    "ML-S110-letter-va",
+    "ML-S116-letter-u",
     "ML-C04-pokuka",
+    "ML-S141-vowel-sign-uu",
     "ML-C04-poyi-varaam",
     "ML-C04-naale-kaanaam",
     "ML-C04-veendum-kaanaam",
     "ML-C04-practice"
   ],
-  "voiceLessons": 1,
+  "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "malayalam/narration/ch04.txt",
   "json": "malayalam/narration/ch04.json",
-  "textHash": "fnv1a64:167d5a5f4229a200",
-  "jsonHash": "fnv1a64:286507645ec13fbd",
+  "textHash": "fnv1a64:9255fa6e074dd85c",
+  "jsonHash": "fnv1a64:8644ac46a7e7f6de",
   "findings": []
 }

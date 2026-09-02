@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C13-sbagotom
 spine_node: SPINE-MEET-GREET
-sequence: 1030
-chapter: 13
+sequence: 1140
+chapter: 22
 type: word
 headword: স্বাগতম
 romanization: shbagotom
@@ -57,16 +57,16 @@ book has shown) plus **া** (*ā*), then **গ** (*gô*), **ত** (*tô*), and 
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C07-ASHA-01] -->
 
 **স্বাগতম** is Sanskrit **স্বাগতম** (*svāgatam*), built from two pieces
-fused together. The second piece, **আগত** (*āgata*), "arrived, come," opens
+fused together. The second piece, *āgata*, "arrived, come," opens
 with the very same **আ-**, "hither," that আসা's own lesson already named —
-except here it rides a different verb, **√গম্** (*√gam*, "to go, to come"),
+except here it rides a different verb, *√gam* ("to go, to come"),
 not আসা's own unsettled stem. **√gam** is PIE **\*gʷem-**, and this root is
 about as secure as roots get: it is the direct ancestor of English
 **come**, and, by way of Latin **venīre**, of **advent** and **convene**
-too. The first piece, **সু-** (*su-*, "good"), loses its vowel to the glide
+too. The first piece, *su-* ("good"), loses its vowel to the glide
 **ব** when the next syllable also opens with a vowel — ordinary Sanskrit
-sandhi, the same trade **সু-** plus **আগত** makes every time: *svāgata*.
-সু- is PIE **\*h₁su-**, cousin of Greek **eu-**, the "good" inside
+sandhi, the same trade *su-* plus *āgata* makes every time: *svāgata*.
+*su-* is PIE **\*h₁su-**, cousin of Greek **eu-**, the "good" inside
 **eulogy** and **euphoria**. Put the pieces back together: স্বাগতম is,
 literally, "a good coming."
 

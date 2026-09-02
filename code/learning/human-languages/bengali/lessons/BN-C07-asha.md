@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C07-asha
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 420
-chapter: 7
+sequence: 750
+chapter: 13
 type: word
 headword: আসা
 romanization: āsā

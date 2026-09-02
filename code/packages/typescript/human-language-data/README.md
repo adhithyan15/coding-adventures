@@ -902,11 +902,32 @@ npm run check:figures
 ```
 
 `core/figure-generation.json` binds each figure to one canonical lesson and a safe
-`<track>/book/figures/*.svg` target. The first figure kind, `etymology-route`, reads
-only the ordered `roots` asserted by that lesson and renders them through
-`paint-vm-svg`. `core/generated-figure-hashes.json` fingerprints the figure-driving
-source subset and the exact SVG separately, so either a stale claim or an edited
-artifact fails `--check`. Generated book chapters rewrite the lesson's `.svg` image
+`<track>/book/figures/*.svg` target. `core/generated-figure-hashes.json` fingerprints
+the figure-driving source subset and the exact SVG separately, so either a stale
+claim or an edited artifact fails `--check`.
+
+Two kinds exist:
+
+- **`etymology-route`** reads only the ordered `roots` asserted by that lesson and
+  renders them through `paint-vm-svg`.
+- **`script-filmstrip`** prints how a letter is written: one frame per labelled
+  movement, the finished glyph behind in pale grey, the strokes already written
+  muted, the movement being added in ink, and the segment's own authored label as
+  its caption. A target adds `script` and `glyph`:
+
+  ```json
+  { "kind": "script-filmstrip", "lessonId": "TA-S119-letter-a",
+    "script": "tamil", "glyph": "அ",
+    "output": "tamil/book/figures/TA-S119-letter-a-filmstrip.svg" }
+  ```
+
+  The geometry comes from `data/ductus/filmstrip-geometry.json`, which
+  `@coding-adventures/script-ductus` generates from its cited pen paths and the
+  vendored font and byte-checks in its own suite. **Adding a filmstrip target is
+  two steps**: declare it here, then run `npm run generate:filmstrip-ledger` in
+  `script-ductus` before `npm run generate:figures` here. A missing entry fails
+  with the command to run. Stroke order is never invented — an uncited letter has
+  no ledger entry and therefore no figure. Generated book chapters rewrite the lesson's `.svg` image
 destination to `.pdf`; the books workflow creates that PDF with `rsvg-convert`
 before XeLaTeX runs.
 

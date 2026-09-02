@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 39,
-  "sourceHash": "fnv1a64:0cf1da0f4a0e2ba6",
+  "sourceHash": "fnv1a64:a0bbc1f45d7947fd",
   "lessonIds": [
     "TE-C39-tii",
     "TE-C39-paalu",
@@ -11,7 +11,7 @@
   "drivablePrefix": 2,
   "text": "telugu/narration/ch39.txt",
   "json": "telugu/narration/ch39.json",
-  "textHash": "fnv1a64:372994a63c8859c0",
-  "jsonHash": "fnv1a64:cd229b61491a91ca",
+  "textHash": "fnv1a64:ed1be062e679394f",
+  "jsonHash": "fnv1a64:d578f47c91216102",
   "findings": []
 }

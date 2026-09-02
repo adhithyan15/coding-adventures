@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: TA-C01-sari
+spine_node: SPINE-RESPOND-BASIC
 sequence: 70
 chapter: 1
 type: word
@@ -10,17 +12,32 @@ concept_tag: RESPONSE-OKAY
 prerequisites: [TA-C01-nandri]
 sounds: [c-sa-one-letter, matra-i]
 roots: [sari]
-est_minutes: 1
 reviews_of: [TA-C01-nandri]
+duration:
+  max_seconds: 120
+requires:
+  knowledge: []
+introduces:
+  knowledge: [TA-LEX-C01-SARI-01]
+practises:
+  knowledge: [TA-LEX-C01-SARI-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
 ---
+
 
 # சரி (sari) — "okay"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] The most useful small word in the language, and the easiest to say.
 
-## The word
+## You'll want to know: சரி
+<!-- hl-knowledge: introduces=[TA-LEX-C01-SARI-01]; assesses=[] -->
 
 **சரி** — *sari* — **"okay, alright, correct."**
 
@@ -58,6 +75,7 @@ voicing (*k*/*g*, *s*/*ch*). The payoff is a strikingly
 predictable from the letter alone — you pick it up by ear, word by word.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C01-SARI-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "sari"]
@@ -65,6 +83,7 @@ predictable from the letter alone — you pick it up by ear, word by word.
 - [YOU SAY: agree to something with nothing but this word]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C01-SARI-01] -->
 
 [PAUSE 3s] Say **சரி**. What does doubling it add? (**Hurry, or easy
 agreement** — "yes yes, fine.") Next: putting the five words together.

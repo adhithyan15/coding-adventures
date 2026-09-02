@@ -1,5 +1,391 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.99 — 2026-09-02 — fix: parse `select`'s typed `(result t)` folded/flat form (0x1C)
+
+Closes `code/packages/rust/wasm-conformance/tests/fixtures/testsuite/
+select.wast`, which had 126 `not_yet_supported` directives (mostly
+`assert_return`/`assert_trap`) cascading from just 2 real module-build
+failures. Addendum 2's own diagnosis (`code/specs/W07-wasm-post-mvp-
+epics.md`) held up on live re-verification: a throwaway probe against
+`select.wast` alone (`wasm_conformance::run_wast_source`) confirmed both
+failures were the literal error `unknown instruction "result"`, at byte
+656 (`(select (result i32) (local.get 0) (local.get 1) (local.get 2))`)
+and byte 23437 (the file's own "Flat syntax" section).
+
+**Root cause.** `select`'s folded-form arm (`encode_flat_instr`) and
+flat/stream-form arm (`encode_stream_instr`) both handled `select`
+identically to `drop`/`nop`/`unreachable` — recurse into every argument
+as an operand sub-expression, then emit the bare opcode. For untyped
+`select` that's correct; for the reference-types proposal's EXPLICITLY
+TYPED `select` (`select (result t) a b c`, needed to disambiguate the
+result type when it can't be inferred from the stack — e.g. selecting
+between two reference values, which `wasm-validator`'s own `0x1B`
+handler already rejects for exactly this reason), the leading `(result
+t)` clause got recursed into as if it were an operand, and its own head
+atom `"result"` then failed `get_opcode_by_name` as an unknown
+instruction.
+
+**The fix** teaches both arms to recognize and consume a LEADING run of
+`(result ...)` clauses before `select`'s normal operands, encoding
+`0x1C` (a genuinely different opcode from untyped `select`'s `0x1B`,
+not the same opcode plus an immediate) followed by the real binary
+`vec(valtype)` immediate (`ValueType::encode()`, already used elsewhere
+in this crate for locals/params/results — no new encoding logic
+needed). "Zero or more" clauses, not "at most one": the real corpus's
+own "Flat syntax" section has must-PASS cases with TWO consecutive
+clauses — `select (result i32) (result)` and `select (result) (result
+i32)` — whose valtypes concatenate (`[i32] ++ [] = [i32]`), the same
+"any number of `(result ...)` groups in a row" convention `encode_
+blocktype`'s own `(param...)*(result...)*` scan and `parse_func_
+signature` already use elsewhere in this file. Arity other than exactly
+1 after concatenation (the real corpus's own `arity-0`/`arity-2`
+`assert_invalid` cases, `(result)` and `(result i32 i32)`) is left to
+`wasm-validator`'s new `0x1C` type-check rule (see that crate's own
+CHANGELOG) — this crate parses every shape permissively, matching its
+existing "parse permissively, validate strictly" split.
+
+Verified this was genuinely a TEXT-FORMAT-only gap, not also a binary
+gap: no other already-passing corpus file exercised the binary opcode
+`0x1C` before this fix (a plain grep across `wasm-validator`/`wasm-
+execution` found only `0xFB 0x1C`/`0xFD 0x1C` GC/SIMD sub-opcodes, never
+a bare top-level `0x1C`) — so `wasm-validator` (type-check rule) and
+`wasm-execution` (runtime handler + opcode-table entry) needed matching
+fixes; see those two crates' own CHANGELOGs.
+
+**A second real gap found investigating the same file.** Fixing the two
+`unknown instruction "result"` failures let parsing reach FURTHER into
+`select.wast`'s own "Flat syntax" section, exposing a pre-existing,
+previously-unreachable bug in `call_indirect`'s flat/stream-form
+leading-table-token heuristic (`unreachable select call_indirect
+select`): a bare atom immediately after `call_indirect` was always
+treated as its own table-index token by SHAPE alone, with no way to
+tell "a real table token" apart from "the next instruction's bare atom
+name" (here, a second `select`) — previously safe only because no
+vendored corpus file's flat/stream `call_indirect` had anything
+following it. Fixed by attempting the real `resolve_idx` resolution
+before committing to "this is a table token" — a genuine `$name`/
+numeral token still always resolves; an arbitrary instruction name
+never does. This same fix, needed to fully close `select.wast`, also
+happened to close 1 previously-`not_yet_supported` `module` directive
+each in `call_indirect.wast` and `stack.wast` (both already exercised
+this exact flat-form ambiguity) — a positive side effect, not scope
+creep; every other file's tally is byte-for-byte unchanged (see `wasm-
+conformance`'s own CHANGELOG for the full programmatic diff).
+
+**Stack-frame lesson repeated.** The first version of this fix put the
+type-collection loop directly in `encode_flat_instr`'s own `"select"`
+match arm and immediately overflowed the real OS stack in
+`deeply_folded_struct_instructions_do_not_overflow_the_real_stack` — the
+exact same lesson `"i32.load" | ...`'s own arm already documents: a
+debug build sizes a function's stack frame for the union of every match
+arm's locals, and `encode_flat_instr`/`encode_stream_instr` both sit on
+the hot recursive path every instruction funnels through. Fixed by
+moving all of it into two new free functions, `encode_select_folded`/
+`encode_select_stream` (sharing `collect_leading_select_result_types`),
+called with no other locals alongside them in either match arm.
+
+**Tests**: 6 new unit tests — untyped `select` unaffected (byte-exact),
+typed `select` folded form with `i32`/`funcref` result types (byte-
+exact, including the funcref case a pre-existing test used to pin as a
+"known gap" — now updated to assert the real encoding instead), the
+flat/stream form, the two-clause-concatenation case, and the
+`call_indirect` disambiguation fix (both the regression and a positive
+case confirming a real table token still resolves). 393 tests total (up
+from 386), zero regressions (`git stash` A/B across `wasm-wast-parser`/
+`wasm-validator`/`wasm-execution`/`wasm-runtime`/`wasm-conformance`).
+`cargo clippy` clean.
+
+## 0.1.98 — 2026-09-01 — fix: reject invalid UTF-8 in name strings instead of silently replacing it
+
+Closes `code/packages/rust/wasm-conformance/tests/fixtures/testsuite/utf8-
+invalid-encoding.wast`, the single worst not-yet-supported file in the
+whole corpus (0/176 `assert_malformed` cases, 100% NYS). Addendum 2's own
+scoping note guessed the fix belonged in `wasm-module-parser`'s BINARY
+string-decoding path; that guess was wrong once actually investigated —
+every one of the 176 cases is `(assert_malformed (module quote "(func
+(export \"\XX...\"))") "malformed UTF-8 encoding")`, i.e. a `module
+quote` directive, whose payload is WAT TEXT, not raw binary bytes. The
+real defect was entirely in this crate's own text-format name-string
+handling.
+
+**Root cause.** `tokenizer::scan_string`'s `\XX` raw-hex-byte escape
+(e.g. `\c0`, `\80`) decodes straight into a raw `u8` with no UTF-8
+validation — correctly so, since it's the same escape mechanism `module
+binary` fixtures rely on to embed arbitrary raw bytes, and `Token::Str`
+is documented to carry "arbitrary bytes (including invalid UTF-8, for
+`assert_malformed` cases)". The bug was one layer up: every place that
+then interprets a decoded byte string AS A NAME (an import's module/field
+strings, a module-level `(export "name" ...)`, an inline `(func (export
+"name"))`, and `expect_str` — used by `register`'s name, `invoke`/`get`
+action names, and assert-message strings) used `String::from_utf8_lossy`,
+which never fails: it silently substitutes U+FFFD for every invalid byte
+run instead of rejecting the string. So a module whose export name was
+objectively malformed UTF-8 (an overlong 2-byte encoding of NUL, a bare
+continuation byte, a truncated multi-byte lead byte, a UTF-8-encoded
+surrogate half, ...) parsed as `Ok` with a mangled-but-valid name,
+exactly the "unexpectedly accepts the text" case
+`wasm-conformance::grade_assert_malformed`'s `ModuleSource::Quote` arm
+(correctly) grades as `NotYetSupported` rather than `Fail`, since an
+unexpected accept can't tell that harness whether type-checking
+knowledge (vs. this crate) was the missing piece.
+
+**Security rationale (not incidental — the actual reason this class of
+bug matters).** Accepting invalid UTF-8 in identifiers is a parser-
+differential hazard of the same shape as the non-canonical-LEB128 issue
+fixed earlier in this campaign: if this parser silently normalizes
+invalid bytes to U+FFFD while a DIFFERENT tool (a linker, a signature
+verifier, a second WASM engine) either rejects the same bytes outright or
+normalizes them differently, the two tools can disagree about whether two
+binaries "have the same export name" — the exact kind of confusable-
+identifier smuggling that lets one verifier see module A and an executor
+see module A′. Fixed by making every name-string call site use
+`String::from_utf8`/`str::from_utf8` (the standard library's own
+strict, linear-time, panic-free validator — no hand-rolled byte-by-byte
+UTF-8 state machine was written for this fix) and propagating a real
+`WastParseError::InvalidUtf8 { pos }` (an error variant that already
+existed and was already used correctly by `sexpr.rs`'s annotation-id
+handling and `script.rs`'s own `build_module_directive` quote-text
+entry point — this fix just closes the remaining stragglers that didn't
+follow that precedent) instead of a mangled string, a panic, or an
+`unsafe` unchecked conversion.
+
+**Call sites fixed** (all in `src/module.rs` and `src/script.rs`,
+all `String::from_utf8_lossy(b).to_string()` → `String::from_utf8(b.clone())
+.map_err(|_| WastParseError::InvalidUtf8 { pos })?`):
+- `module.rs::build_import_shell` — import module-name and import name
+  (the two-string form: `(import "m" "n" ...)`).
+- `module.rs`, the module-level `(export "name" (func/table/memory/global
+  $x))` handler.
+- `module.rs::handle_inline_export` — the inline `(func (export "name"))`
+  / `(table (export "name") ...)` / etc. shorthand. This is the ONE path
+  every case in `utf8-invalid-encoding.wast` actually exercises.
+- `script.rs::expect_str` — `register`'s name, `invoke`/`get` action
+  names, and `assert_trap`/`assert_exception`'s message strings.
+
+`tokenizer::scan_string` itself was deliberately left untouched — its
+permissiveness at the BYTE level is a feature, not the bug; the fix
+belongs at the point raw bytes get promoted to a semantic name, not at
+the point they're merely collected off the wire.
+
+**Corpus impact** (`wasm-conformance` 0.1.119's own entry has the full
+diff; summary here): `utf8-invalid-encoding.wast` moves from 0/176 to
+176/176 `assert_malformed`, and a programmatic per-file diff of the
+regenerated baseline against the pre-fix one confirms this is the ONLY
+file anywhere in the 257-file corpus whose tally changed — no other file
+happens to rely on the old lossy behavior for a currently-passing case.
+
+**Tests added** (`src/module.rs` and `src/script.rs`, 7 new cases): a
+valid multi-byte-UTF-8 export name (`你好`) still parses, to guard against
+overcorrecting into rejecting legitimate non-ASCII text; representative
+samples of the corpus's own invalid patterns — an overlong 2-byte NUL
+encoding (`\c0\80`), an isolated continuation byte (`\80`), a truncated
+2-byte lead sequence (`\c2` alone), and a UTF-8-encoded UTF-16 surrogate
+half (`\ed\a0\80`, U+D800) — each asserting `WastParseError::InvalidUtf8`
+specifically (not just "some error"); plus coverage for the import-name,
+module-level-export-name, and `register`-name call sites, which the real
+corpus file doesn't happen to exercise but shared the identical defect.
+
+## 0.1.97 — 2026-09-01 — thread `build_elem`'s own `is_declarative` local through to `Element`
+
+Closes the exact gap this crate's own `build_elem` doc comment
+(pre-existing, see 0.1.28-ish history) already flagged as a real,
+deliberate simplification rather than an oversight: `wasm_types::Element`
+had no distinct field for "declarative" (only `is_passive: bool`, folding
+declarative segments into the same `is_passive: true` representation a
+genuinely passive segment uses), on the stated theory that "nothing in
+this repo's vendored corpus ever `table.init`s/`elem.drop`s a segment
+this parser marks declarative." That census turned out wrong: `wasm-
+wast-parser` 0.1.96 (previous entry) let `elem.wast` parse for the first
+time, and its own "Implicitly dropped elements" section does exactly
+that — `(elem $e declare func $f) ... (table.init $e ...)`, which must
+trap per spec but silently succeeded instead (see `wasm-runtime`'s own
+CHANGELOG for the full bug and fix, `wasm-types`'s for the new field
+itself).
+
+This crate's own change is purely mechanical: `build_elem` already
+computed a local `is_declarative` bool (from the `declare` keyword) to
+decide `is_passive`'s value — that same local now ALSO flows into the new
+`Element::is_declarative` field on the one real construction site
+(`ctx.module.elements.push(Element { .. })`), instead of being discarded
+after computing `is_passive`. The OTHER `Element` construction site in
+this file (`build_table_limits_and_elements`, the `(table funcref (elem
+...))` inline shorthand) always desugars to an ordinary active segment,
+so it sets `is_declarative: false` unconditionally. No parsing-shape
+change — a module that already parsed continues to parse identically;
+only the flag now threaded through actually changes any downstream
+behavior (in `wasm-runtime`, not here).
+
+## 0.1.96 — 2026-09-01 — fix: `table.init`/`table.copy` folded-form optional-index abbreviations
+
+W36 ("slice 0" — `code/specs/W36-wasm-element-segment-exprs-list.md`'s own
+"Correction to Addendum 2" section, landed first for leverage reasons and
+deliberately kept independent of that spec's own exprs-list subject,
+slices 1-3, which remain unimplemented).
+
+`code/specs/W07-wasm-post-mvp-epics.md`'s Addendum 2 named the element
+segment "exprs-list" text/binary form as the cause of ~2130 of the 4048
+`not_yet_supported` (NYS) conformance directives left after W35, based on
+`table_copy.wast`/`table_copy64.wast`/`table_init.wast`/`table_init64.wast`
+losing that many NYS entries. Direct re-probe (`wasm_conformance::
+run_wast_source` on the current corpus, reading each `NotYetSupported`
+message and slicing the exact source substring at its reported byte
+position) found that diagnosis wrong: every one of those files' NYS
+entries traced to the SAME small, unrelated bug in this crate's folded-
+instruction encoder, nothing to do with element-segment content at all.
+
+**Root cause**: `encode_table_init_flat`/`encode_table_copy_flat`
+unconditionally treated their first one or two S-expression arguments as
+table/elem INDEX atoms, with no arity detection for the real WASM spec's
+own optional-leading-index text-format abbreviations:
+
+```text
+'table.init' x:tableidx_I y:elemidx_I  ⟹  table.init x y
+'table.init' y:elemidx_I               ≡  table.init 0 y      (table index optional)
+
+'table.copy' x₁:tableidx_I x₂:tableidx_I  ⟹  table.copy x₁ x₂
+'table.copy'                              ≡  table.copy 0 0   (both indices optional)
+```
+
+`table_copy.wast`'s/`table_copy64.wast`'s dominant fixture shape writes
+`table.copy` with ZERO leading index atoms (`(table.copy (local.get
+$targetOffs) (local.get $srcOffs) (local.get $len))`, both tables
+defaulting to 0) — `args[0]` is actually the first STACK OPERAND, an
+`SExpr::List`, and the old code fed it straight to `resolve_idx` against
+`table_names`, producing `"expected an index or $identifier, found
+list"`. `table_init.wast`'s/`table_init64.wast`'s/`bulk.wast`'s dominant
+shape writes `table.init` with exactly ONE leading atom (`(table.init 1
+(i32.const 12) ...)`, the elem index alone, table implicit 0) — the old
+code wrongly resolved that atom against `table_names` instead of
+`elem_names`, producing either `unknown table identifier` (for a name
+like `bulk.wast`'s `$p`, which only exists in `elem_names`) or the same
+"found list" error once past the first bad resolution.
+
+**Fix**: both folded-form encoders now detect arity before resolving —
+`encode_table_init_flat` checks whether TWO leading atoms are present
+(`args[0]` and `args[1]` both atoms) before treating them as `table_idx`/
+`elem_idx`; otherwise the sole leading atom is the elem index alone, table
+implicit 0 (a `table.init` folded form can never omit the elem index
+entirely, so this is a strict "1 or 2" check, never "0"). `encode_table_
+copy_flat` checks whether `args[0]` is an atom at all; if not, both tables
+default to 0 and zero atoms are consumed (this form's only other shape is
+"both present," never "exactly one"). Every real stack operand is written
+as a parenthesized folded instruction (even a zero-operand one, e.g.
+`(nop)`), so a bare atom can never be misread as an operand or vice versa
+— the arity check is unambiguous and can't be tricked into skipping a
+real index's own `resolve_idx` existence/lookup check. Also corrected a
+stale doc comment (on the OTHER, non-folded "flat/stream" `table.init`/
+`table.copy` handling, and on `encode_flat_instr`'s own dispatcher
+comment) that cited a superseded W17 census claiming the folded syntax
+always supplies both optional index atoms — it does not, for exactly the
+modules this fix targets.
+
+**Confirmed corpus impact** (`cargo run --release --bin
+wasm_conformance_report -p wasm-conformance -- --write-baseline`, diffed
+programmatically against the pre-fix baseline across all 257 corpus
+files; see the `wasm-conformance` CHANGELOG for the full per-file
+breakdown): `bulk.wast` (42/42 NYS → Pass), `table_copy.wast`/
+`table_copy64.wast` (566/566 NYS each → Pass, zero new failures),
+`table_init.wast`/`table_init64.wast` (497/499 NYS attributable to this
+bug each → 496 Pass + 1 genuinely new real `Fail` each, a pre-existing
+`wasm-runtime` gap this fix newly exposed — see below), and `elem.wast`
+(4 previously-NYS `"unknown table identifier \"$e\""` directives — 2
+modules now build, but their own follow-on `assert_trap` directives
+newly FAIL, the same pre-existing gap). Total: ~1671 directives moved off
+NYS, ~1667 to a real `Pass`, 4 to a genuinely new, honestly-reported
+`Fail`. No file outside this expected set changed.
+
+**New real failures uncovered, NOT fixed here (out of this fix's own
+scope, a `wasm-wast-parser`-only change)**: `table_init.wast`/
+`table_init64.wast`/`elem.wast`'s "implicitly dropped elements" test
+blocks now parse and run for the first time, and expose that `wasm-
+runtime`'s `instantiate()` never marks an ACTIVE (or `declare`d) element
+segment as dropped after it's applied/validated — so a subsequent
+`table.init` reading from that segment wrongly succeeds instead of
+trapping `"out of bounds table access"`, per the real spec's own
+"active/declarative segments are implicitly dropped" rule. This is a
+`wasm-runtime` bug, unrelated to text-format parsing, tracked separately
+rather than fixed as part of this slice.
+
+Four new unit tests added directly exercising the arity-detection branch
+(`table.copy` with zero leading indices, `table.copy` with the existing
+two-index form as a regression guard, `table.init` with one leading atom,
+`table.init` with the existing two-atom form as a regression guard).
+`cargo test -p wasm-wast-parser -p wasm-conformance -p wasm-execution -p
+wasm-runtime` (`git stash` A/B): zero regressions in any pre-existing
+test. `cargo clippy` clean on all four crates.
+
+## 0.1.95 — 2026-09-01 — fix: active element segments may use the exprs-list form
+
+Gap 1 of a two-gap `elem.wast`/`table.wast` investigation pass (`code/
+specs/W07-wasm-post-mvp-epics.md`'s addendum item 3, plus the one
+remaining `elem.wast` `assert_return` failure item 1 already named as
+closed pending this exact follow-up). `build_elem` used to unconditionally
+reject an ACTIVE element segment written with the exprs-list form
+(`funcref`/`externref` keyword followed by `(ref.func ...)`/`(ref.null
+...)` expressions, binary modes 4/6) — added under a `/security-review`
+finding that reasoned "the real spec's own `W17-wasm-bulk-table-ops.md`
+census found no vendored corpus file needs it." That census was wrong.
+
+Root-caused via a throwaway probe (`wasm_conformance::run_wast_source`
+against `elem.wast` directly, correlating the returned directive index
+against a manual top-level-form line count) that pinned the file's last
+remaining `assert_return` failure to directive `#133`, line 1029: after a
+module imports `$m`'s exported externref table and applies `(elem
+(i32.const 0) externref (ref.null extern))` to it, `(invoke $m "get"
+(i32.const 0))` should return `(ref.null extern)` but returned `(ref.extern
+42)` instead — the OLD value from an earlier `set`. The actual root cause
+wasn't a table-sharing bug (the `Table`/`Rc<RefCell<TableStorage>>`
+cross-instance sharing this repo already has, per W28, is correct and
+unrelated) — the anonymous module simply never built at all: its own
+`(elem (i32.const 0) externref (ref.null extern))` is an ACTIVE segment
+using the exprs-list form (a null literal has no representation in a
+plain function-index list), which this parser rejected outright, so the
+elem write never happened and `$m`'s table kept its stale value.
+
+The old rejection's stated reason — that accepting this would reach
+`wasm-module-encoder::encode_element`'s active branch and corrupt a
+`None` entry into function 0 via `unwrap_or(0)` on re-encode — was a real
+bug, but in the wrong layer: rejecting a legal construct here to paper
+over a latent bug in a different, unrelated crate. Fixed at the actual
+root instead: `wasm-module-encoder` 0.2.10 gives `encode_element` its own
+mode-4/6 branch (see that crate's own CHANGELOG), and this parser's
+rejection is removed now that the thing it was guarding against no longer
+exists. `wasm-module-parser`'s binary DECODER still only handles modes
+0/1/2/5 — a real, separate, deliberately deferred gap (declarative/
+active-exprs binary decoding is a larger feature than this fix), unaffected
+since this fix is scoped to the TEXT parser, which never round-trips
+through the binary decoder for a plain `(module ...)` directive.
+
+Verification: regenerated `wasm-conformance`'s baseline and diffed all 257
+files programmatically against the pre-fix baseline — exactly 3 files
+changed (`elem.wast`, `table.wast` [gap 2, see that fix's own entry],
+`ref_func.wast`), every other file byte-identical. `ref_func.wast` (module
+2/1-not-yet-supported → 3/0) uses the exact same construct at a different
+line (`(elem (table $t) (i32.const 0) funcref (ref.func $f4))`) — the same
+root cause, not a new or unrelated regression. `elem.wast` itself moved
+well beyond the single targeted `assert_return` (18/1-fail/8-not-yet-
+supported → 24/0-fail/3-not-yet-supported; `module` 26/50-not-yet-supported
+→ 36/40; `assert_trap` 1/6-not-yet-supported → 4/3) because the SAME
+rejection had been silently swallowing several other modules in the same
+file into "not yet supported" rather than a wrong-value failure — restoring
+them is a genuine coverage win, not scope creep, since it's the identical
+root cause within the file this investigation already targeted.
+
+`elem.wast`'s `assert_invalid` tally also shifted (23/3-not-yet-supported
+→ 21/5): two cases (`(elem (i32.const 0) funcref (ref.null extern))` on a
+funcref table, and its externref-vs-funcref mirror) used to "pass" only
+because this parser's own now-removed rejection happened to reject the
+whole module for an unrelated reason (active exprs-list, not the actual
+declared-vs-actual reftype type mismatch the test exists to probe) — an
+accidental pass for the wrong reason, not real coverage. Now that the
+module builds, this repo's structural-only validator honestly can't tell
+the case is invalid (no instruction-level type-checker), so it correctly
+reports `NotYetSupported` instead of taking credit it hadn't earned. New
+tests: `active_element_segment_using_exprs_list_form_is_accepted` (mirrors
+the previous rejection test, now inverted) and `active_element_segment_
+using_exprs_list_form_with_externref_null_only` (the exact real-corpus
+shape, single null entry, no explicit `(table ...)` clause).
+
 ## 0.1.94 — 2026-09-01 — test fixture update for `wasm-types`' new `missing_data_count_section` field
 
 No functional change in this crate. `wasm-types` 0.1.23 added `WasmModule::

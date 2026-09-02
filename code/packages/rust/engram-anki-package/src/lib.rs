@@ -8,6 +8,8 @@
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::fmt;
 
+mod schema18;
+
 use coding_adventures_sha1::sum1;
 pub use engram_core::EngramMediaReferenceAnalysis;
 
@@ -741,6 +743,22 @@ pub fn read_v11_collection(data: &[u8]) -> Result<AnkiV11Collection, ApkgError> 
 
 pub fn parse_v11_collection_bytes(bytes: &[u8]) -> Result<AnkiV11Collection, ApkgError> {
     let raw_col = read_v11_col_row(bytes)?;
+
+    // Modern packages are not V11 with compression bolted on: at schema 18 the
+    // `col` table's conf/models/decks/dconf columns are EMPTY and the same data
+    // lives in relational tables. Parsing `col.conf` as V11 JSON there fails
+    // with `EOF while parsing a value at line 1 column 0` -- the string really
+    // is empty -- so the version must be consulted before the JSON is touched.
+    //
+    // Dispatching on `col.ver` rather than on which archive member was found
+    // is deliberate: the member name says how the bytes were packaged, and the
+    // version says what they contain. Real Anki exports ship BOTH
+    // `collection.anki21` and `collection.anki2` in one archive, so the member
+    // name is the weaker signal.
+    if raw_col.version >= schema18::SCHEMA_18 {
+        return parse_schema18_collection(bytes, &raw_col);
+    }
+
     let metadata = AnkiV11CollectionMetadata {
         id: raw_col.id,
         created_at_days: raw_col.created_at_days,
@@ -762,6 +780,49 @@ pub fn parse_v11_collection_bytes(bytes: &[u8]) -> Result<AnkiV11Collection, Apk
         cards: read_v11_cards(bytes)?,
         reviews: read_v11_reviews(bytes)?,
         graves: read_v11_graves(bytes)?,
+        metadata,
+    })
+}
+
+/// Assemble an [`AnkiV11Collection`] from a **schema 18** database.
+///
+/// The notes, cards, revlog and graves tables are unchanged between the two
+/// schemas, so those readers are reused as-is. Only the configuration moved,
+/// and [`schema18`] puts it back into the V11 shape the rest of the importer
+/// already consumes -- which keeps this a reading concern rather than a second
+/// parallel import path.
+fn parse_schema18_collection(
+    bytes: &[u8],
+    raw_col: &RawV11ColRow,
+) -> Result<AnkiV11Collection, ApkgError> {
+    let metadata = AnkiV11CollectionMetadata {
+        id: raw_col.id,
+        created_at_days: raw_col.created_at_days,
+        modified_at: raw_col.modified_at,
+        schema_modified_at: raw_col.schema_modified_at,
+        version: raw_col.version,
+        dirty: raw_col.dirty,
+        update_sequence_number: raw_col.update_sequence_number,
+        last_sync: raw_col.last_sync,
+        config: schema18::read_config(bytes)?,
+        // `deck_config` has no direct V11 equivalent here: schema 18 stores it
+        // as protobuf in `deck_config`, and nothing downstream reads it yet.
+        // An empty object records that honestly rather than inventing defaults
+        // that would look like real settings on a round trip.
+        deck_config: serde_json::json!({}),
+        tags: schema18::read_tags(bytes)?,
+    };
+
+    Ok(AnkiV11Collection {
+        decks: schema18::read_decks(bytes)?,
+        note_types: schema18::read_note_types(bytes)?,
+        // notes, cards and revlog keep their rowids at schema 18, so these
+        // readers are shared between the two schemas unchanged. `graves` does
+        // not -- it became WITHOUT ROWID, which the V11 reader refuses.
+        notes: read_v11_notes(bytes)?,
+        cards: read_v11_cards(bytes)?,
+        reviews: read_v11_reviews(bytes)?,
+        graves: schema18::read_graves(bytes)?,
         metadata,
     })
 }
@@ -1131,7 +1192,14 @@ fn v11_external_sources(
         "schemaModifiedAt",
         collection.metadata.schema_modified_at,
     );
-    insert_i64(&mut collection_data, "version", collection.metadata.version);
+    // The V11 writer emits V11 tables, so it must declare V11 -- not whatever
+    // version the SOURCE collection had. Carrying a modern collection's
+    // `ver = 18` through made Anki look for schema-18 tables in a V11 file:
+    //
+    //     DbError { info: "SqliteFailure(...): no such table: config" }
+    //
+    // The version field describes the bytes being written, not their origin.
+    insert_i64(&mut collection_data, "version", ANKI_V11_SCHEMA_VERSION);
     insert_i64(&mut collection_data, "dirty", collection.metadata.dirty);
     insert_i64(
         &mut collection_data,
@@ -1307,6 +1375,13 @@ fn source_record(
         data,
     }
 }
+
+/// The schema version the legacy writer emits.
+///
+/// `write_legacy_apkg` produces the V11 table layout, so the collection must
+/// say so. Anki dispatches on this field, and a mismatch is not a warning: it
+/// looks for tables that are not there and fails the import outright.
+const ANKI_V11_SCHEMA_VERSION: i64 = 11;
 
 fn insert_i64(data: &mut BTreeMap<String, String>, key: &str, value: i64) {
     data.insert(key.to_string(), value.to_string());
@@ -1907,7 +1982,7 @@ fn v11_export_rows(
                     review
                         .resulting_progress
                         .as_ref()
-                        .map(progress_factor_to_anki)
+                        .map(|progress| progress_factor_to_anki(progress, source))
                         .unwrap_or((INITIAL_EASE_FACTOR * 1000.0).round() as i64)
                 })),
                 SqlValue::Int(
@@ -1978,6 +2053,24 @@ fn export_decks_json(export: &ExportModel) -> Value {
         deck_object
             .entry("extendRev".to_string())
             .or_insert_with(|| Value::Number(50_i64.into()));
+        // Anki deserialises a deck into a typed struct, so these are not
+        // optional decoration -- an absent one fails the whole import with
+        // `decoding decks: JsonError`, naming no field. A legacy source carries
+        // them in its preserved `rawJson`; a MODERN source has no legacy deck
+        // JSON at all, so without these an export of a `.colpkg` was refused.
+        //
+        // The `*Today` pairs are [day-number, count]; zero on an unknown day is
+        // the same thing Anki writes for a deck studied on no day yet.
+        for (key, value) in [
+            ("collapsed", Value::Bool(false)),
+            ("browserCollapsed", Value::Bool(false)),
+            ("newToday", serde_json::json!([0, 0])),
+            ("revToday", serde_json::json!([0, 0])),
+            ("lrnToday", serde_json::json!([0, 0])),
+            ("timeToday", serde_json::json!([0, 0])),
+        ] {
+            deck_object.entry(key.to_string()).or_insert(value);
+        }
         merge_dynamic_deck_source_json(deck_object, source);
         object.insert(id.to_string(), deck_json);
     }
@@ -2086,17 +2179,86 @@ fn export_collection_config_json(export: &ExportModel) -> Value {
     config
 }
 
+/// The default deck configuration, in the shape Anki's deserialiser requires.
+///
+/// A legacy source carries its own `col.dconf`, so this is only reached when
+/// there is none to preserve -- which is every **modern** source, because at
+/// schema 18 deck configuration lives in a protobuf `deck_config` table that
+/// this importer does not decode yet.
+///
+/// It used to be `{ "id": 1, "name": "Default" }`. Anki refused the resulting
+/// export outright:
+///
+/// ```text
+/// JsonError { info: "decoding deck config: missing field `mod`" }
+/// ```
+///
+/// Required fields are Anki's to define, so the safe move is to emit the
+/// classic V11 shape in full rather than the subset Engram happens to model.
+/// The nested `new`/`rev`/`lapse` objects are not optional: Anki deserialises
+/// them into typed structs, so an absent one fails the same way a missing
+/// scalar does.
+fn default_anki_deck_config() -> Value {
+    serde_json::json!({
+        "id": 1,
+        "mod": 0,
+        "name": "Default",
+        "usn": -1,
+        "maxTaken": 60,
+        "autoplay": true,
+        "timer": 0,
+        "replayq": true,
+        "dyn": false,
+        "new": {
+            "delays": [1.0, 10.0],
+            "ints": [1, 4, 0],
+            "initialFactor": 2500,
+            "separate": true,
+            "order": 1,
+            "perDay": 20,
+            "bury": false,
+        },
+        "rev": {
+            "perDay": 200,
+            "ease4": 1.3,
+            "fuzz": 0.05,
+            "minSpace": 1,
+            "ivlFct": 1.0,
+            "maxIvl": 36500,
+            "bury": false,
+            "hardFactor": 1.2,
+        },
+        "lapse": {
+            "delays": [10.0],
+            "mult": 0.0,
+            "minInt": 1,
+            "leechFails": 8,
+            "leechAction": 0,
+        },
+    })
+}
+
 fn export_collection_deck_config_json(export: &ExportModel) -> Value {
     let mut deck_config = export_collection_json(export, "deckConfigJson")
-        .unwrap_or_else(|| serde_json::json!({ "1": { "id": 1, "name": "Default" } }));
+        .unwrap_or_else(|| serde_json::json!({ "1": default_anki_deck_config() }));
     let object = ensure_json_object(&mut deck_config);
-    object.entry("1".to_string()).or_insert_with(|| {
-        serde_json::json!({
-            "id": 1,
-            "name": "Default",
-        })
-    });
+    object
+        .entry("1".to_string())
+        .or_insert_with(default_anki_deck_config);
 
+    // A config Engram synthesises for a deck-options preset must carry every
+    // field Anki's deserialiser requires, not just the ones Engram models.
+    // Building from `{}` produced an 11-key object missing `mod` and `usn`, and
+    // Anki refused the whole import:
+    //
+    //     JsonError { info: "decoding deck config: missing field `mod`" }
+    //
+    // Seeding from the default config rather than listing the missing fields is
+    // deliberate: the required set is Anki's to define and has grown before
+    // (`fsrsParams6`, `desiredRetention`, `easyDaysPercentages` are all recent).
+    // Inheriting it means a future addition arrives for free instead of
+    // becoming the next rejected export.
+    let default_config = object.get("1").cloned();
     for preset in &export.deck_options {
         let Some(config_id) = export_deck_option_config_id(export, &preset.deck_id) else {
             continue;
@@ -2104,6 +2266,7 @@ fn export_collection_deck_config_json(export: &ExportModel) -> Value {
         let mut config = object
             .get(&config_id.to_string())
             .cloned()
+            .or_else(|| default_config.clone())
             .unwrap_or_else(|| serde_json::json!({}));
         let deck_name = export
             .decks
@@ -2665,7 +2828,7 @@ fn export_card_scheduling(
             queue: source_i64(source, "queue").unwrap_or(0),
             due: source_i64(source, "due").unwrap_or(index.saturating_add(1) as i64),
             interval: 0,
-            factor: progress_factor_to_anki(progress),
+            factor: progress_factor_to_anki(progress, source),
             repetitions: 0,
             lapses: 0,
             left: source_i64(source, "left").unwrap_or(0),
@@ -2708,7 +2871,7 @@ fn export_card_scheduling(
         queue,
         due,
         interval: i64::from(progress.interval),
-        factor: progress_factor_to_anki(progress),
+        factor: progress_factor_to_anki(progress, source),
         repetitions: i64::from(progress.times_seen),
         lapses: i64::from(progress.times_incorrect),
         left: learning_step_index_to_anki_left(progress, source, deck_options),
@@ -2805,7 +2968,28 @@ fn is_export_metadata_overlay(progress: &CardProgress) -> bool {
         && progress.times_incorrect == 0
 }
 
-fn progress_factor_to_anki(progress: &CardProgress) -> i64 {
+/// Convert our ease factor to Anki's, preserving "no ease yet".
+///
+/// Anki writes `factor = 0` for a card that has never graduated to review: a
+/// new or learning card has not earned an ease. Our model gives every card a
+/// default ease of 2.5 from the moment it exists, so converting unconditionally
+/// writes 2500 where Anki wrote 0.
+///
+/// That is not cosmetic. Round-tripping a learning card through Engram handed
+/// it back to Anki with an ease factor it never had, which changes how it will
+/// be scheduled after it graduates. Anki itself rejected nothing -- it accepted
+/// the file and the card came back subtly different, which is the failure mode
+/// worth caring about.
+///
+/// So when the card has no completed reviews of its own, the value Anki
+/// originally wrote is preserved. Our 2.5 is a placeholder, not a measurement,
+/// and a placeholder should not overwrite a fact.
+fn progress_factor_to_anki(progress: &CardProgress, source: Option<&ExternalSourceRecord>) -> i64 {
+    if progress.times_seen == 0 {
+        if let Some(original) = source_i64(source, "factor") {
+            return original;
+        }
+    }
     (progress.ease_factor * 1000.0)
         .round()
         .clamp(0.0, i64::MAX as f64) as i64
@@ -7260,5 +7444,105 @@ CREATE TABLE graves (
         let ours = decode_package_payload(CollectionFormat::Sqlite21b, "collection", &encoded)
             .expect("our reader should read our writer");
         assert_eq!(ours, collection);
+    }
+
+    /// Every fixture produced by real Anki imports.
+    ///
+    /// The corpus is the point: these archives were written by Anki 26.08.1,
+    /// not by us, so they pin our reading of Anki's semantics rather than our
+    /// agreement with ourselves. The modern one is why this test exists --
+    /// before schema-18 support it failed with `invalid Anki V11 JSON in
+    /// col.conf: EOF while parsing a value at line 1 column 0`, because at
+    /// schema 18 that column really is empty.
+    #[test]
+    fn every_real_anki_fixture_imports() {
+        let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("tests")
+            .join("fixtures")
+            .join("anki");
+        let mut checked = 0;
+        for entry in std::fs::read_dir(&dir).expect("fixture directory") {
+            let path = entry.unwrap().path();
+            if path.extension().and_then(|e| e.to_str()) != Some("apkg") {
+                continue;
+            }
+            let bytes = std::fs::read(&path).unwrap();
+            let name = path.file_name().unwrap().to_string_lossy().into_owned();
+            let state = read_v11_collection_as_engram_state(&bytes)
+                .unwrap_or_else(|err| panic!("{name} failed to import: {}", err.message));
+            assert!(!state.notes.is_empty(), "{name} imported no notes");
+            assert!(!state.cards.is_empty(), "{name} imported no cards");
+            checked += 1;
+        }
+        assert!(
+            checked >= 7,
+            "expected the whole real-Anki corpus, found {checked} archives"
+        );
+    }
+
+    /// A modern package's note types survive the relational round trip.
+    ///
+    /// Names, fields and templates come from ordinary columns, but the CSS and
+    /// the two template formats are protobuf, and `fields`/`templates` are
+    /// WITHOUT ROWID. Asserting on the *content* rather than on "it parsed"
+    /// is what distinguishes reading those blobs correctly from reading them
+    /// at all.
+    #[test]
+    fn a_modern_package_yields_usable_note_types() {
+        let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("tests/fixtures/anki/anki-modern.apkg");
+        let bytes = std::fs::read(path).unwrap();
+        let collection = read_v11_collection(&bytes).expect("modern package should parse");
+
+        assert_eq!(collection.metadata.version, 18, "this fixture is schema 18");
+
+        let basic = collection
+            .note_types
+            .iter()
+            .find(|nt| nt.name == "Basic")
+            .expect("the Basic note type");
+
+        assert_eq!(basic.kind, 0, "Basic is a normal note type, not cloze");
+        assert!(
+            basic.css.contains("font-family"),
+            "CSS should come through from notetypes.config field 3, got: {:?}",
+            basic.css
+        );
+
+        let names: Vec<&str> = basic.fields.iter().map(|f| f.name.as_str()).collect();
+        assert_eq!(names, vec!["Front", "Back"], "fields, in ordinal order");
+
+        let template = basic.templates.first().expect("one template");
+        assert!(
+            template.question_format.contains("{{Front}}"),
+            "qfmt from templates.config field 1, got: {:?}",
+            template.question_format
+        );
+        assert!(
+            template.answer_format.contains("{{Back}}"),
+            "afmt from templates.config field 2, got: {:?}",
+            template.answer_format
+        );
+    }
+
+    /// Schema dispatch reads `col.ver`, not the archive member name.
+    ///
+    /// Real Anki legacy exports ship BOTH `collection.anki21` and
+    /// `collection.anki2` in one archive, so the member name says how the bytes
+    /// were packaged rather than what they contain. The version is the honest
+    /// signal, and this pins that the legacy fixtures really are being read
+    /// down the V11 path rather than accidentally through the new one.
+    #[test]
+    fn legacy_fixtures_are_still_read_as_v11() {
+        let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("tests/fixtures/anki/anki-review-scheduled.apkg");
+        let bytes = std::fs::read(path).unwrap();
+        let collection = read_v11_collection(&bytes).unwrap();
+        assert!(
+            collection.metadata.version < 18,
+            "a legacy export should report a pre-18 schema, got {}",
+            collection.metadata.version
+        );
+        assert!(!collection.note_types.is_empty());
     }
 }

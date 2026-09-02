@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C15-shari
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 1220
-chapter: 15
+sequence: 1290
+chapter: 25
 type: word
 headword: শাড়ি
 romanization: shari
@@ -57,7 +57,7 @@ now know from কাপড়), and **ি** (*i*): *shā-ṛi*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**শাড়ি** traces to Sanskrit **শাটী** (*śāṭī*), "a strip of cloth, a
+**শাড়ি** traces to Sanskrit *śāṭī*, "a strip of cloth, a
 garment," worn down through Middle Indic **সাড়ী** (*sāḍī*) into Bengali and
 Hindi's shared *śāṛī/sāṛī*. Here is the unusual part: every English cousin
 this book has traced so far — heart, nose, bind, come — went underground

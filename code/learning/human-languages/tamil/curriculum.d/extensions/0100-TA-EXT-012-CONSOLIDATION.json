@@ -1,0 +1,11 @@
+{
+  "id": "TA-EXT-012-CONSOLIDATION",
+  "stage": "pre-A1",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can retrieve and combine the Chapter 4 farewells from atoms I already own.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C04-practice"
+  ]
+}

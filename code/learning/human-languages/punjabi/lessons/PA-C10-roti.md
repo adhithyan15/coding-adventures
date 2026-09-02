@@ -9,27 +9,27 @@ headword: ਰੋਟੀ
 romanization: roṭī
 gloss: bread — the fourth request, and the retroflex letter this book only mentioned in passing until now
 concept_tag: PA-FOOD-BREAD
-prerequisites: [PA-C10-dudh]
+prerequisites: [PA-C10-dudh, PA-S08-pappa]
 sounds: [retroflex-ta, hora-o]
 roots: [sanskrit-rotika]
 etymology_hook: ਰੋਟੀ is inherited from Sanskrit roṭikā, "a kind of bread" — but roṭikā's own root is where the trail stops; the standard comparative dictionaries weigh an unattested root meaning "to strike" against one meaning "to crush," and neither settles the question.
 duration:
   max_seconds: 275
 requires:
-  knowledge: [PA-LEX-DUDH, PA-ETYMON-DUDH-DUGDHA, PA-LEX-CHA, PA-ETYMON-CHA-CHINESE, PA-LEX-PAANI, PA-ETYMON-PAANI-DRINK, PA-PHRASE-KIRPA-KARKE]
+  knowledge: [PA-LEX-DUDH, PA-ETYMON-DUDH-DUGDHA, PA-LEX-CHA, PA-ETYMON-CHA-CHINESE, PA-LEX-PAANI, PA-ETYMON-PAANI-DRINK, PA-PHRASE-KIRPA-KARKE, PA-SCRIPT-RECOG-PA-01]
 introduces:
   knowledge: [PA-LEX-ROTI, PA-ETYMON-ROTI-UNKNOWN]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-LEX-ROTI, PA-ETYMON-ROTI-UNKNOWN, PA-LEX-DUDH, PA-ETYMON-DUDH-DUGDHA, PA-LEX-CHA, PA-ETYMON-CHA-CHINESE, PA-LEX-PAANI, PA-ETYMON-PAANI-DRINK, PA-PHRASE-KIRPA-KARKE]
+  knowledge: [PA-LEX-ROTI, PA-ETYMON-ROTI-UNKNOWN, PA-LEX-DUDH, PA-ETYMON-DUDH-DUGDHA, PA-LEX-CHA, PA-ETYMON-CHA-CHINESE, PA-LEX-PAANI, PA-ETYMON-PAANI-DRINK, PA-PHRASE-KIRPA-KARKE, PA-SCRIPT-RECOG-PA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [PA-C10-dudh, PA-C10-chaa, PA-C10-paani]
+reviews_of: [PA-C10-dudh, PA-C10-chaa, PA-C10-paani, PA-S08-pappa]
 ---
 
 # ਰੋਟੀ — a request pattern, run four times
@@ -49,7 +49,7 @@ closes the chapter on a letter this book has never properly taught.
 > **ਰੋਟੀ, ਕਿਰਪਾ ਕਰਕੇ।** — *roṭī, kirpā karke.* — **Bread, please.**
 
 ## The letters in this word
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-RECOG-PA-01] -->
 
 **ਰ** *r*, **ੋ** the *o* sign, then **ਟ** — a retroflex *ṭ*, tongue curled
 back and stopping the air rather than letting it through. Chapter 3 named the

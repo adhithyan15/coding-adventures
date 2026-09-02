@@ -2,8 +2,8 @@
   "lesson": {
     "id": "KA-S07-letter-ra",
     "language": "kannada",
-    "chapter": 12,
-    "sequence": 405,
+    "chapter": 7,
+    "sequence": 338,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:f87d92f51b706e3b",
+    "sourceHash": "fnv1a64:473d8a0fbceb6962",
     "detachableSegments": [
       "Script you'll notice: ರ",
       "Writing: ರ — copy what you see"

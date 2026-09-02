@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C12-hridoy",
     "language": "bengali",
-    "chapter": 12,
-    "sequence": 930,
+    "chapter": 20,
+    "sequence": 1050,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:ace5e34488c3d602",
+    "sourceHash": "fnv1a64:4fceadfd8722b839",
     "detachableSegments": [
       "The letters in this word"
     ]

@@ -1,21 +1,19 @@
 Sanskrit, chapter 5: The First Verbs.
-5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+8 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 5.
+Lesson 1 of 8.
 वदामि (vadāmi) — "I speak," and the Sanskrit verb.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
 So far, "to be." Here is a verb that acts — and it reveals the most famous feature of the Sanskrit verb: it counts to three.
 
-The letters in this word.
-व (va) + दा (dā) + मि (mi) becomes वदामि (vadāmi).
+Sounds you'll need.
+va, dā, mi. The long ā in the middle beat is the ending doing its work — shorten it and the word stops meaning "I speak."
 
 The word, taken apart.
-वदामि (vadāmi, "I speak") is from the root वद् (vad, "to speak, to say") — the very root of वाद (vāda, "a saying") inside Chapter 1's धन्यवादः (dhanyavādaḥ, "thank you"). The present tense is stem + person- ending: vad-ā-mi, where -मि (-mi) means "I" — the same -mi you can see in asmi ("I am").
+vadāmi ("I speak") is from the root vad ("to speak, to say") — the very root of vāda ("a saying") inside Chapter 1's dhanyavādaḥ ("thank you"). The present tense is stem + person- ending: vad-ā-mi, where -mi means "I" — the same -mi you can see in asmi ("I am").
 
 Grammar Lens: singular, DUAL, and plural.
 Here is Sanskrit's showpiece. Where English (and Hindi) count in two — singular and plural — Sanskrit counts in three, with a special dual for exactly two:
@@ -39,20 +37,64 @@ Wrap-up Recall.
 What root is vadāmi from, and what third "number" does Sanskrit have that English lacks? (Vad, "to speak"; the dual, for exactly two — vadāvaḥ, "we two speak.")
 
 
-Lesson 2 of 5.
-अहं संस्कृतं वदामि (ahaṁ saṁskṛtaṁ vadāmi) — "I speak Sanskrit".
+Lesson 2 of 8.
+य (ya) — one character, met inside words you already say.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: य and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one, the ones you have already met: ◌ु, र, प. Say what each of them does.
+[pause 2 seconds]
+One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: य.
+य — ya.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not y, it is ya.
+What it is made of:
+a clockwise inner curl.
+a lower bowl rising to the right-stem junction.
+a top-to-bottom right stem.
+the top shirorekhā.
+You already say these words, and य (ya) is one of the shapes inside them — the rest of their shapes are still ahead of you, so here the character stands on its own:
+dhanyavādaḥ — thank you.
+punardarśanāya — until we meet again (lit. "for seeing again").
+
+Writing: य.
+1. start beneath the headline, curve clockwise around the inner curl, and finish at the left waist.
+2. lift at that waist, curve down and right around the lower bowl, and rise to the right-stem junction.
+3. lift and draw the right stem top-to-bottom.
+4. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 3. The pen comes up 3 times and no more.
+verified four-stroke teaching form; another animated learner source joins the inner curl and lower bowl.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-य (ya)-order.gif’, strokes 1–4, Wikimedia Commons, 10 May 2009.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at this, and find य (ya) in it]
+[pause 8 seconds for the answer]
+य (ya).
+[once you have stopped driving — trace: य three times, saying ya as you finish each one]
+[your turn — look: back at any page of this chapter and find य (ya) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — य? What sound does it carry? (ya.) Name one word you already say that contains it.
+
+
+Lesson 3 of 8.
+अहं संस्कृतं वदामि (ahaṁ saṁskṛtaṁ vadāmi) — "I speak Sanskrit".
 
 Warm-up.
 [pause 2 seconds]
 Your first full, moving sentence — and the language's name is itself a little lesson in how Sanskrit builds words.
 
-The letters in this word.
-संस्कृत (saṁskṛta): सं (saṁ, with the anusvāra) + स्कृ (the conjunct skṛ, with the vocalic ऋ ṛ) + त (ta).
+Sounds you'll need.
+a, haṁ, saṁs, kṛ, taṁ, va, dā, mi. The ṁ is a hum through the nose that colours the vowel before it rather than a full m; ṛ is a short vowel made with the tongue curled, near the ri of rich.
 
 The sentence, taken apart.
-अहं संस्कृतं वदामि (ahaṁ saṁskṛtaṁ vadāmi) = अहम् (aham, "I") + संस्कृतम् (saṁskṛtam, the object) + वदामि (vadāmi, "speak") — "I Sanskrit speak," the verb last (as in every daughter language). The name संस्कृत (saṁskṛta) means "put together, refined, perfected" — from सम् (sam-, "together," cousin of English same, Greek syn-) + कृत (kṛta, "made, done," from the root कृ kṛ you met in namaskāra). So "Sanskrit" literally means "the perfected [language]," named in contrast to prākṛta ("natural, raw" — Prakrit, the everyday speech from which Hindi, Bengali, and the rest descend).
+ahaṁ saṁskṛtaṁ vadāmi = aham ("I") + saṁskṛtam (the object) + vadāmi ("speak") — "I Sanskrit speak," the verb last (as in every daughter language). The name saṁskṛta means "put together, refined, perfected" — from sam- ("together," cousin of English same, Greek syn-) + kṛta ("made, done," from the root kṛ you met in namaskāra). So "Sanskrit" literally means "the perfected [language]," named in contrast to prākṛta ("natural, raw" — Prakrit, the everyday speech from which Hindi, Bengali, and the rest descend).
 
 Grammar Lens: sandhi joins the words.
 Say it aloud and aham + saṁskṛtam runs together as ahaṁ saṁskṛtam — the m softening to the anusvāra before the next consonant. That is sandhi, the sound-joining you met in Chapter 1's svāgatam; it is why Sanskrit flows.
@@ -71,23 +113,21 @@ Wrap-up Recall.
 Say "I speak Sanskrit," and unpack the name. (Ahaṁ saṁskṛtaṁ vadāmi; saṁskṛta = sam "together" + kṛta "made" — "the perfected language.")
 
 
-Lesson 3 of 5.
+Lesson 4 of 8.
 वसामि (vasāmi) — "I live, I dwell".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
 A second verb, so you can say where you live — and it hides the English word was.
 
-The letters in this word.
-व (va) + सा (sā) + मि (mi) becomes वसामि (vasāmi).
+Sounds you'll need.
+va, sā, mi. One consonant apart from vadāmi, and the same long ā carrying the ending.
 
 The word, taken apart.
-वसामि (vasāmi, "I dwell, I live") is from the root वस् (vas, "to dwell, to stay, to abide"), from Proto-Indo-European wes- ("to dwell, to be") — the ancestor of English was and were (the past of "to be" began as "to dwell/remain"). So Sanskrit's "I dwell" and English's "was" are, at the root, one word. From vas come vāsa ("a dwelling"), nivāsa ("a residence"), and names like Vārāṇasī. "I live in the city" is अहं नगरे वसामि (ahaṁ nagare vasāmi).
+vasāmi ("I dwell, I live") is from the root vas ("to dwell, to stay, to abide"), from Proto-Indo-European wes- ("to dwell, to be") — the ancestor of English was and were (the past of "to be" began as "to dwell/remain"). So Sanskrit's "I dwell" and English's "was" are, at the root, one word. From vas come vāsa ("a dwelling"), nivāsa ("a residence"), and names like Vārāṇasī. "I live in the city" is ahaṁ nagare vasāmi.
 
 Grammar Lens: "in" is a case-ending.
-नगरे (nagare, "in the city") = nagara ("city") in the locative case (-e, "in / at"). Sanskrit has no separate word for "in" — it is folded into the noun's ending, the ancestor of the postpositions Hindi and Bengali use. This is your second case, after Chapter 4's dative.
+nagare ("in the city") = nagara ("city") in the locative case (-e, "in / at"). Sanskrit has no separate word for "in" — it is folded into the noun's ending, the ancestor of the postpositions Hindi and Bengali use. This is your second case, after Chapter 4's dative.
 
 Guided Practice.
 [pause 1 second]
@@ -103,24 +143,59 @@ Wrap-up Recall.
 What PIE root is vasāmi from, its English cousin, and how does Sanskrit say "in"? (wes- "to dwell"; English was; with a case-ending, the locative -e.)
 
 
-Lesson 4 of 5.
-करोमि (karomi) — "I do," from the root behind karma and namaskāra.
+Lesson 5 of 8.
+◌ृ (ṛ) — one character, met inside words you already say.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ृ and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one, the ones you have already met: र, प, य (ya). Say what each of them does.
+[pause 2 seconds]
+One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: ◌ृ.
+◌ृ — ṛ.
+It is a vowel sign. It is not a letter and never stands alone: it attaches to a consonant and replaces the a built into it. Replaces, not adds — the a is gone.
+Where it sits: a small hook below (the vocalic r, common in Sanskrit).
+Worked through: न + ◌ृ = नृ — nṛ.
+You already say this word, and ◌ृ (ṛ) is one of the shapes inside it — the rest of its shapes are still ahead of you, so here the character stands on its own:
+ahaṁ saṁskṛtaṁ vadāmi — I speak Sanskrit.
+
+Writing: ◌ृ — copy what you see.
+Put your pen on ◌ृ (ṛ) and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
+This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at this, and find ◌ृ (ṛ) in it]
+[pause 8 seconds for the answer]
+◌ृ (ṛ).
+[once you have stopped driving — trace: ◌ृ three times, saying ṛ as you finish each one]
+[your turn — look: back at any page of this chapter and find ◌ृ (ṛ) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — ◌ृ? What vowel does it put on the consonant it attaches to — and what does it take off? (Puts ṛ on; takes the built-in a off.) Name one word you already say that contains it.
+
+
+Lesson 6 of 8.
+करोमि (karomi) — "I do," from the root behind karma and namaskāra.
 
 Warm-up.
 [pause 2 seconds]
 The last verb of the chapter — from the single most productive root in Sanskrit, one you have met again and again.
 
-The letters in this word.
-क (ka) + रो (ro) + मि (mi) becomes करोमि (karomi).
+Sounds you'll need.
+ka, ro, mi. Three even beats, all short.
 
 The word, taken apart.
-करोमि (karomi, "I do, I make") is from the root कृ (kṛ, "to do, make"), from Proto-Indo-European kʷer-. This is the root at the heart of this book:
-नमस्कारः (namaskāraḥ) — "the making of a bow" (namas + kāra).
-कर्म (karma) — "a thing done," an action.
-संस्कृत (saṁskṛta) — "put together, perfected" (this very language).
-To say "I work," Sanskrit says कार्यं करोमि (kāryaṁ karomi) — "I do work," where कार्यम् (kāryam, "work, task") is itself from kṛ ("a thing-to-be-done"). So "I work" is, at root, "kṛ-thing I kṛ-do." Hindi's kām karnā and Bengali's kāj karā are its worn-down grandchildren.
+karomi ("I do, I make") is from the root kṛ ("to do, make"), from Proto-Indo-European kʷer-. This is the root at the heart of this book:
+namaskāraḥ — "the making of a bow" (namas + kāra).
+karma — "a thing done," an action.
+saṁskṛta — "put together, perfected" (this very language).
+To say "I work," Sanskrit says kāryaṁ karomi — "I do work," where kāryam ("work, task") is itself from kṛ ("a thing-to-be-done"). So "I work" is, at root, "kṛ-thing I kṛ-do." Hindi's kām karnā and Bengali's kāj karā are its worn-down grandchildren.
 
 Guided Practice.
 [pause 1 second]
@@ -136,14 +211,14 @@ Wrap-up Recall.
 What root is karomi from, and name three words built on it. (Kṛ, "to do," PIE kʷer-; namaskāra, karma, saṁskṛta — among many.)
 
 
-Lesson 5 of 5.
+Lesson 7 of 8.
 Chapter 5 — The first verbs.
 
 Warm-up.
 [pause 2 seconds]
 No new words. Three verbs, one engine — and Sanskrit's count-to-three.
 
-Build the sentences.
+Guided Practice.
 [pause 1 second after each]
 [your turn — say: "I speak Sanskrit" — ahaṁ saṁskṛtaṁ vadāmi]
 [pause 8 seconds for the answer]
@@ -154,7 +229,7 @@ Build the sentences.
 [your turn — say: "we two speak" — vadāvaḥ (the dual!)]
 [pause 8 seconds for the answer]
 
-The engine.
+How to answer: the engine.
 [pause 2 seconds]
 [your turn — say: the ending that means "I" (-mi, as in asmi, vadāmi)]
 [pause 8 seconds for the answer]
@@ -163,7 +238,7 @@ The engine.
 [your turn — say: where the verb sits, and how "in" is shown (verb last; a case-ending, the locative -e)]
 [pause 8 seconds for the answer]
 
-Roots you now carry (the taproot, both ways).
+What you've built: the roots you now carry.
 [pause 2 seconds]
 vad "to speak" ( becomes dhanyavāda).
 vas "to dwell" from PIE wes- becomes English was.
@@ -173,3 +248,51 @@ saṁskṛta = sam ("together," English same) + kṛta ("made") = "perfected".
 Wrap-up Recall.
 [pause 3 seconds]
 In one breath, say your language, your city, and your work in Sanskrit — then say "we two speak." (Ahaṁ saṁskṛtaṁ vadāmi. Ahaṁ nagare vasāmi. Ahaṁ kāryaṁ karomi. Vadāvaḥ.)
+
+
+Lesson 8 of 8.
+अ — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: अ and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one, the ones you have already met: प, य (ya), ◌ृ (ṛ). Say what each of them does.
+[pause 2 seconds]
+One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: अ.
+अ — a.
+It is an independent vowel: the full-size letter a vowel wears when it opens a word and has no consonant to lean on. Inside a word the same vowel is written as a small sign instead.
+What it is made of:
+a joined upper-and-lower left body.
+a middle shoulder.
+a right vertical stem.
+the top shirorekhā.
+You already say these words, and अ is one of the shapes inside them — the rest of their shapes are still ahead of you, so here the character stands on its own:
+asti — is.
+mama nāma … asti — my name is…
+bhavān katham asti? — how are you?
+aham — I.
+
+Writing: अ.
+1. curve around the upper bowl, then continue down and around the lower bowl without lifting.
+2. lift and sweep the middle shoulder right.
+3. lift and draw the right stem top-to-bottom.
+4. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 3. The pen comes up 3 times and no more.
+verified modern printed teaching form; other Devanagari traditions split the body into more strokes.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari अ stroke order.svg’, frames 1–4, Wikimedia Commons, 5 August 2023.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at this, and find अ in it]
+[pause 8 seconds for the answer]
+अ (a).
+[once you have stopped driving — trace: अ three times, saying a as you finish each one]
+[your turn — look: back at any page of this chapter and find अ once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — अ? What sound does it carry? (a.) Name one word you already say that contains it.

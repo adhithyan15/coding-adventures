@@ -2,38 +2,38 @@
 schema_version: 2
 id: BN-W02-ta
 spine_node: SPINE-MEET-GREET
-sequence: 1750
+sequence: 280
 delivery: script
-chapter: 17
+chapter: 4
 type: writing
 headword: ত
 romanization: "tô"
 gloss: "the consonant ta — the dental one, and English has no letter for it"
-prerequisites: [BN-W02-lal-read]
+prerequisites: [BN-W04-i-indep]
 sounds: []
 roots: []
 etymology_hook: "English hears one t; Bengali writes two, and the one this letter records is the one an English speaker almost never makes, which is why an English accent in Bengali is audible on the very first word."
 duration:
   max_seconds: 200
 requires:
-  knowledge: [BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-LAL-READ-01]
+  knowledge: [BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-I-INDEP-01]
 introduces:
   knowledge: [BN-SCRIPT-TA-01]
 practises:
-  knowledge: [BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-LAL-READ-01, BN-SCRIPT-TA-01]
+  knowledge: [BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-I-INDEP-01, BN-SCRIPT-TA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard
-reviews_of: [BN-W02-lal-read]
+reviews_of: [BN-W04-i-indep]
 ---
 # ত — the consonant ta, the dental one
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-LAL-READ-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-I-INDEP-01] -->
 
-[PAUSE 2s] Read **লাল** and **কাল** aloud before adding a new shape.
+[PAUSE 2s] Read **নাম** aloud, then write **ই** and **ি** and say which is which.
 
 ## Script
 <!-- hl-knowledge: introduces=[BN-SCRIPT-TA-01]; assesses=[BN-SCRIPT-AA-MATRA-01] -->
@@ -58,11 +58,11 @@ With the mātrā:
 > **ত** + **া** → **তা**
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-TA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-LAL-READ-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-TA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-I-INDEP-01] -->
 
 - [YOU WRITE: ত]
 - [YOU WRITE: তা]
-- [YOU READ: লাল]
+- [YOU READ: নাম]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-TA-01] -->

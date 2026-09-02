@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C08-bhaba
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 500
-chapter: 8
+sequence: 790
+chapter: 14
 type: word
 headword: ভাবা
 romanization: bhābā
@@ -12,7 +12,7 @@ concept_tag: VERB-THINK
 prerequisites: [BN-C07-jana]
 sounds: [bha-aspirate, long-aa]
 roots: [bhu-become, bhava-state]
-etymology_hook: "ভাবা is Sanskrit bhāvayati, the causative of √bhū 'to become' — the very root of Chapter 7's হওয়া — so to think is, at root, to make a thing be; and the same causative move is still alive in Bengali, turning দেখা 'see' into দেখানো 'show'"
+etymology_hook: "ভাবা is Sanskrit bhāvayati, the causative of √bhū 'to become' — the very root of Chapter 13's হওয়া — so to think is, at root, to make a thing be; and the same causative move is still alive in Bengali, turning দেখা 'see' into দেখানো 'show'"
 duration:
   max_seconds: 256
 requires:
@@ -54,11 +54,11 @@ between them.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ভাবা** is Sanskrit **ভাবয়তি** (*bhāvayati*), and *bhāvayati* is not its own
+**ভাবা** is Sanskrit *bhāvayati*, and *bhāvayati* is not its own
 verb: it is **হওয়া**'s verb with a gear changed. *Bhavati* is "it becomes";
 *bhāvayati* is "he **makes** it become" — and from making-something-be to
 imagining it is one short step. So Bengali *bhābi* and Bengali *hôi* are one
-root, √ভূ (*√bhū*), which is also English **be** and **been**, Latin *futūrus*
+root, *√bhū*, which is also English **be** and **been**, Latin *futūrus*
 (English **future**), and Greek *phúsis* (English **physics**). The noun
 *bhāva*, "a state of mind," sits between them: thinking is holding a state.
 

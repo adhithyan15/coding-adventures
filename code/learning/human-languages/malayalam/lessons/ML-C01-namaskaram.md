@@ -56,6 +56,20 @@ making,” from the root *kṛ*, “to do.” Its memory hook is therefore **the
 of a bow**. Malayalam is Tamil's closest sister, but this formal greeting is
 part of Malayalam's large Sanskrit layer.
 
+The same idea, five ways:
+
+| Language | "Hello" | Source |
+|---|---|---|
+| **Malayalam** | *namaskāram* | Sanskrit |
+| Telugu | *namaskāram* | Sanskrit |
+| Kannada | *namaskāra* | Sanskrit |
+| Hindi | *namaste* | Sanskrit |
+| Tamil | *vaṇakkam* | **native Dravidian** |
+
+Even Tamil's closest sister took the Sanskrit greeting; Tamil alone kept its
+own. Hold that beside the next lesson, where the word for "thanks" splits the
+family the other way round.
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-NAMASKARAM-01, ML-ETYMON-NAMASKARAM-BOW-01] -->
 

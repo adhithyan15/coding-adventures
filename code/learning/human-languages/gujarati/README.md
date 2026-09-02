@@ -32,7 +32,7 @@ and book-only human pass evidence remain backlog.
 
 ## Current authored boundary
 
-Canonical data currently contains **28 chapters and 179 lessons**. All 179
+Canonical data currently contains **34 chapters and 228 lessons**. All 228
 lessons are mapped and generated, and every lesson stays within the five-minute
 cap. The pre-A1 writing-stage contract is complete, all 41 Gujarati forms shown
 by the current book are explicitly taught, and the exact script inventory has
@@ -46,17 +46,22 @@ them went by moving three gender endings out of Gujarati script and into
 romanization in a chapter that had not yet taught the two signs concerned.
 
 That is a solid pre-A1 foundation, not a finished course. The exact pre-A1
-headword inventory now contains 52 words against a 300-word floor, and the
-newest chapter is deliberately ear-first: fourteen lessons, eight new words, and
-only two of them ever shown on the page. 56% of the track is now drivable by
-ear, up from 52%. Current measured continuity debt is pinned at 339 windows by
-the corpus tests rather than treated as mastery. That figure rose while the
-track improved, and the reason is worth stating plainly: R4 opens 80 lessons
-after an atom appears, so a longer track can measure atoms a shorter one could
-not, and the core-verb chapters (13-16) became measurable at the same moment
-they were found wanting. Five atoms are still never revisited, two lesson atom
-spikes and one chapter atom spike remain, and one lesson remains
-measurement-blind. Vocabulary breadth, grammar, listening volume, connected
+headword inventory now contains 72 words against a 300-word floor. The newest
+chapters stay deliberately ear-first: twenty new headwords arrive at one per
+lesson, glossed on first meeting, and exactly one word per chapter ever reaches
+the page. 65% of the track is now drivable by ear, up from 56%, and 136 lessons
+are reachable in chapter-prefix order without ever needing to look at anything.
+
+Measured continuity debt is pinned at 283 windows by the corpus tests rather
+than treated as mastery, and this time it FELL — from 339, while the track grew
+by 49 lessons. The previous tranche's rise was eligibility rather than neglect,
+and this one pays it off: a fifth-return slab returns the numbers and the fifteen
+core verbs of chapters 12-16 at ninety-eight to a hundred and four positions out,
+and every new vocabulary chapter carries a named distant band of older material
+at whatever window the longer track has just made measurable. R4 misses alone
+fall 101 to 43, and atoms never revisited at all fall five to **one**. Two
+lesson atom spikes and one chapter atom spike remain, and four lessons remain
+measurement-blind — all of them unchanged by this work. Vocabulary breadth, grammar, listening volume, connected
 reading, free writing, speaking, every later level, and examination materials
 still require substantial expansion.
 

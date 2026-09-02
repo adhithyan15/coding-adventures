@@ -1,16 +1,16 @@
 {
   "language": "telugu",
   "chapter": 14,
-  "sourceHash": "fnv1a64:d772ea0e40da9ec4",
+  "sourceHash": "fnv1a64:2b305f4b804ba1aa",
   "lessonIds": [
     "TE-C14-rutuvulu",
-    "TE-S117-letter-va"
+    "TE-S118-letter-ga"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "telugu/narration/ch14.txt",
   "json": "telugu/narration/ch14.json",
-  "textHash": "fnv1a64:dc1d4da73843a6d2",
-  "jsonHash": "fnv1a64:7ea6a29516163314",
+  "textHash": "fnv1a64:c757577b333fb007",
+  "jsonHash": "fnv1a64:247fa4997ec5bb2b",
   "findings": []
 }

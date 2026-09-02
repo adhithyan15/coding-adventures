@@ -7,6 +7,7 @@ chapter: 19
 type: phrase
 headword: ನಿನ್ನ ವಯಸ್ಸು ಎಷ್ಟು?
 gloss: how old are you? — literally "your age how-much?"; ವಯಸ್ಸು is a Sanskrit loan, distant cousin of Latin's own vīs
+romanization: "ninna vayassu eṣṭu?"
 concept_tag: KA-AGE
 prerequisites: [KA-C18-gante]
 sounds: [kannada-anusvara, kannada-conjunct-ssu]

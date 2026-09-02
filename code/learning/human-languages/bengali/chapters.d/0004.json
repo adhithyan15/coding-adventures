@@ -1,22 +1,23 @@
 {
   "chapter": 4,
-  "title": "Farewells",
-  "label": "ch:farewells",
-  "canDo": "I can end a Bengali conversation politely and choose a farewell that fits the situation.",
+  "title": "In Front, Underneath, and On Its Own",
+  "label": "ch:bn-signs-around-the-letter",
+  "canDo": "I can read নাম, তুমি and হ্যাঁ off the page, write the two i-bodies and the u-sign, and say what a য hung under another letter does to the vowel beside it.",
   "spineNodes": [
-    "SPINE-TAKE-LEAVE"
+    "SPINE-MEET-GREET"
   ],
   "payoff": {
-    "lesson": "BN-C04-practice",
-    "kind": "task",
-    "summary": "Complete BN-C04-practice, the canonical closing checkpoint, and demonstrate the chapter promise: end a Bengali conversation politely and choose a farewell that fits the situation.",
+    "lesson": "BN-W02-hyan-read",
+    "kind": "reading",
+    "summary": "Yes — the third word this book ever taught — is read whole from five pieces, four of which the chapter already owned; না is read beside it, and নাম and তুমি are read back to close the chapter.",
     "assesses": [
-      "BN-CONCEPT-C01-ASHI-01",
-      "BN-CONCEPT-C04-ABAR-01",
-      "BN-CONCEPT-C04-ABARDEKHAHOBE-01",
-      "BN-CONCEPT-C04-DEKHAHOBE-01",
-      "BN-CONCEPT-C04-KALDEKHAHOBE-01",
-      "BN-CONCEPT-C04-PRACTICE-01"
+      "BN-SCRIPT-CHANDRABINDU-01",
+      "BN-SCRIPT-HYAN-READ-01",
+      "BN-SCRIPT-I-MATRA-01",
+      "BN-SCRIPT-NAAM-READ-01",
+      "BN-SCRIPT-TUMI-READ-01",
+      "BN-SCRIPT-U-MATRA-01",
+      "BN-SCRIPT-YA-01"
     ]
   }
 }

@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1M13-opening-block
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 852
+sequence: 1052
 delivery: script
-chapter: 20
+chapter: 24
 type: writing
 headword: opening block
 gloss: choose and order the three already-practised opening lines for Mira

@@ -1,31 +1,49 @@
 ---
+schema_version: 2
 id: TA-C01-aam
+spine_node: SPINE-RESPOND-BASIC
 sequence: 30
 chapter: 1
 type: word
 headword: ஆம்
+romanization: "ām"
 gloss: yes (ām)
 concept_tag: RESPONSE-YES
 prerequisites: [TA-C01-vanakkam]
 sounds: [independent-vowel-aa, matra-vs-independent]
 roots: [ām]
-est_minutes: 1
 reviews_of: [TA-C01-vanakkam]
+duration:
+  max_seconds: 120
+requires:
+  knowledge: []
+introduces:
+  knowledge: [TA-LEX-C01-AAM-01]
+practises:
+  knowledge: [TA-LEX-C01-AAM-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
 ---
+
 
 # ஆம் (ām) — "yes"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] The plain yes. One word, and then we will put these together.
 
-## The word
+## You'll want to know: ஆம்
+<!-- hl-knowledge: introduces=[TA-LEX-C01-AAM-01]; assesses=[] -->
 
 **ஆம்** — *ām* — **"yes."**
 
 One beat, with a long opening *aa*.
 
-Stretch it and you get **ஆமாம்** (*āmām*) — "yes, indeed; that's right." Tamil
+Stretch it and you get ***āmām*** — "yes, indeed; that's right." Tamil
 doubles words for warmth and certainty, the way *sari sari* does.
 
 > *Ām* is a worn-down form of *āgum*, "it becomes, it will be" — a yes that
@@ -41,8 +59,8 @@ so the length is not decoration.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-ஆம் (*ām*) is the plain “yes.” Doubled for emphasis it becomes
-ஆமாம் (*āmām*), “yes, indeed.”
+**ஆம்** (*ām*) is the plain “yes.” Doubled for emphasis it becomes
+*āmām*, “yes, indeed.”
 
 ## Grammar lens
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -52,6 +70,7 @@ Tamil often says “yes” by **echoing the verb**: asked *vandāyā?*
 as the simple word, but expect a “yes” to come back as a whole verb.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C01-AAM-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ām" — one long *aa*, closed on the *m*]
@@ -59,6 +78,7 @@ as the simple word, but expect a “yes” to come back as a whole verb.
 - [YOU SAY: "ām" then "sari" — yes, and alright]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C01-AAM-01] -->
 
-[PAUSE 3s] Say **ஆம்**. What does **ஆமாம்** add? (**Emphasis** — "yes,
+[PAUSE 3s] Say **ஆம்**. What does ***āmām*** add? (**Emphasis** — "yes,
 indeed.") Next: the word for no.

@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C14-kalo
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 1120
-chapter: 14
+sequence: 1170
+chapter: 23
 type: word
 headword: কালো
 romanization: kalo

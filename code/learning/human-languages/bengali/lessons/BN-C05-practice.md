@@ -2,11 +2,11 @@
 schema_version: 2
 id: BN-C05-practice
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 300
-chapter: 5
+sequence: 710
+chapter: 11
 type: practice
 headword: (dialogue)
-gloss: Chapter 5 recap — the first verbs
+gloss: Chapter 11 recap — the first verbs
 concept_tag: REVIEW
 prerequisites: [BN-C05-bola, BN-C05-ami-bangla-boli, BN-C05-thaka, BN-C05-kaj-kora]
 sounds: []
@@ -27,7 +27,7 @@ variety: standard-bengali
 reviews_of: [BN-C05-bola, BN-C05-ami-bangla-boli, BN-C05-thaka, BN-C05-kaj-kora, BN-C03-ami]
 ---
 
-# Chapter 5 — The first verbs
+# Chapter 11 — The first verbs
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C05-AMIBANGLABOLI-01, BN-CONCEPT-C05-BOLA-01, BN-CONCEPT-C05-KAJKORA-01, BN-CONCEPT-C05-THAKA-01] -->

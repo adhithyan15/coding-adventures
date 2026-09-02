@@ -2,41 +2,41 @@
 schema_version: 2
 id: TE-S109-letter-na
 spine_node: SPINE-MEET-GREET
-sequence: 326
+sequence: 75
 delivery: script
-chapter: 6
+chapter: 2
 type: writing
 headword: "న"
 gloss: the single character న — recognised inside words you already say
 romanization: "na"
-prerequisites: []
+prerequisites: [TE-S120-vowel-sign-ee]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: []
+  knowledge: [TE-SCRIPT-RECOG-120]
 introduces:
   knowledge: [TE-SCRIPT-RECOG-109]
 practises:
-  knowledge: [TE-SCRIPT-RECOG-109]
+  knowledge: [TE-SCRIPT-RECOG-109, TE-SCRIPT-RECOG-120]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: []
+reviews_of: [TE-S120-vowel-sign-ee]
 ---
 
 # న — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-120] -->
 
-[PAUSE 1s] Rounded, curvy letters, most crowned with a small tick or check-mark headstroke; no continuous top line.
+[PAUSE 1s] Before the new one: ◌ే — what does it do?
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
-for pages without knowing which mark on the page it was.
+[PAUSE 2s] One character this time — and you have been saying it for pages
+without knowing which mark on the page it was.
 
 ## Script you'll notice: న
 <!-- hl-knowledge: introduces=[TE-SCRIPT-RECOG-109]; assesses=[] -->
@@ -50,7 +50,6 @@ You already say these, and every one of them has న somewhere inside it:
 - **నమస్కారం** *namaskāram* — hello / greetings (namaskāram — "a making of a bow")
 - **ధన్యవాదములు** *dhanyavādamulu* — thank you (dhanyavādamulu — "utterances of 'worthy'")
 - **అవును** *avunu* — yes (avunu)
-- **నువ్వు / మీరు** *nuvvu / mīru* — you (familiar / respectful)
 
 ## Writing: న — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-109] -->

@@ -2,14 +2,14 @@
 schema_version: 2
 id: BN-W03-shada-read
 spine_node: SPINE-MEET-GREET
-sequence: 1900
+sequence: 1220
 delivery: script
-chapter: 18
+chapter: 24
 type: writing
 headword: সাদা
 romanization: "shādā"
 gloss: "white — the one colour Bengali kept where Hindi borrowed"
-prerequisites: [BN-W03-da]
+prerequisites: [BN-W03-kalo-read]
 sounds: []
 roots: []
 etymology_hook: "White is the colour where Bengali and Hindi genuinely parted ways, Bengali keeping the homegrown word where Hindi took a Persian loan, and the spelling is as plain as the history is not."
@@ -26,7 +26,7 @@ modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard
-reviews_of: [BN-W03-da, BN-C14-shada]
+reviews_of: [BN-W03-kalo-read, BN-C14-shada]
 ---
 # সাদা — white, read
 

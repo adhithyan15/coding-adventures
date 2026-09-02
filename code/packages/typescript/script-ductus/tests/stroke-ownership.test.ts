@@ -159,12 +159,15 @@ describe("stroke ownership migration baseline", () => {
       counts: Object.fromEntries(
         Object.entries(counts).sort(([a], [b]) => a.localeCompare(b)),
       ),
+    // Measured, not reasoned: ऋ (DEVANAGARI LETTER VOCALIC R) is the only glyph
+    // added since the previous pin, so it alone moved keys 349 -> 350, both
+    // hashes, and devanagari 43 -> 44.
     }).toEqual({
-      keys: 349,
+      keys: 350,
       keyHash:
-        "d17ad42bbb5a2053fd3b6dabae1605f3ccfb83a34141a4cbbbac0103d3179c09",
+        "df4fc24ab73cf07e94654833bcbfecc534b9bccdef6a3daee7766c02ac1318be",
       nonTamilDataHash:
-        "340d616e8fd5ded029f03afb2942c42af47d2fae64320aa87b24f967985058bf",
+        "abd6661160d94d9f0eca0f24820fe9e9d8ce567c45ee23cdd37af8f9a21480ff",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -172,7 +175,7 @@ describe("stroke ownership migration baseline", () => {
         arabic: 32,
         chinese: 43,
         cyrillic: 33,
-        devanagari: 43,
+        devanagari: 44,
         gujarati: 44,
         hebrew: 22,
         japanese: 15,

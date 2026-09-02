@@ -1,21 +1,24 @@
 {
   "language": "malayalam",
   "chapter": 3,
-  "sourceHash": "fnv1a64:56ff1ca7562bfcd4",
+  "sourceHash": "fnv1a64:49cd9175720a9359",
   "lessonIds": [
     "ML-C03-engane",
+    "ML-S126-letter-oo",
     "ML-C03-sukhamaano",
+    "ML-S139-vowel-sign-e",
     "ML-C03-njaan",
     "ML-C03-sukham",
+    "ML-S140-letter-i",
     "ML-C03-saaramilla",
     "ML-C03-practice",
     "ML-W03-santosham-delayed-copy"
   ],
-  "voiceLessons": 1,
+  "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "malayalam/narration/ch03.txt",
   "json": "malayalam/narration/ch03.json",
-  "textHash": "fnv1a64:09b1ef0704724c55",
-  "jsonHash": "fnv1a64:cbf4d1413cae558c",
+  "textHash": "fnv1a64:1d741a87d83230c3",
+  "jsonHash": "fnv1a64:89d3b9296d9c2c69",
   "findings": []
 }

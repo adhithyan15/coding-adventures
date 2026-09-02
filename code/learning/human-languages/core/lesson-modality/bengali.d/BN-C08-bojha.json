@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C08-bojha",
     "language": "bengali",
-    "chapter": 8,
-    "sequence": 510,
+    "chapter": 14,
+    "sequence": 800,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:847cbb02cc421259",
+    "sourceHash": "fnv1a64:72866755fda483f6",
     "detachableSegments": [
       "The letters in this word"
     ]

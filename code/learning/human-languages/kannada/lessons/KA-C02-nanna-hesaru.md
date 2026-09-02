@@ -5,6 +5,7 @@ chapter: 2
 type: phrase
 headword: ನನ್ನ ಹೆಸರು …
 gloss: my name is… (with no "is")
+romanization: "nanna hesaru …"
 concept_tag: INTRO-MY-NAME-IS
 prerequisites: [KA-C02-nanna, KA-C02-hesaru]
 sounds: []

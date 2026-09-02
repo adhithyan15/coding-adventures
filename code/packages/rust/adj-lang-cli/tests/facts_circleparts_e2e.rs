@@ -86,3 +86,60 @@ fn geometry_circle_parts_recall_binds_description_with_citation() {
     // abstention, never a fabricated description.
     assert!(out.contains("\"abstained\":true"), "vertex abstains: {out}");
 }
+
+const CHORD_PIN: &str = r#""bindings":{"D":"ends_on_circle"},"citations":[{"source":"The distance from the center of a circle to its perimeter, or from the center of a sphere to its surface.","locator":"https://mathworld.wolfram.com/Radius.html","trust":"authoritative","corroborations":[{"source":"In plane geometry, a chord is the line segment joining two points on a curve. The term is often used to describe a line segment whose ends lie on a circle.","locator":"https://mathworld.wolfram.com/Chord.html""#;
+
+const CIRC_PIN: &str = r#""bindings":{"Part":"circumference"},"citations":[{"source":"The distance from the center of a circle to its perimeter, or from the center of a sphere to its surface.","locator":"https://mathworld.wolfram.com/Radius.html","trust":"authoritative","corroborations":[{"source":"In plane geometry, a chord is the line segment joining two points on a curve. The term is often used to describe a line segment whose ends lie on a circle.","locator":"https://mathworld.wolfram.com/Chord.html"},{"source":"In the work, the term \"circumference\" is used to mean the perimeter of a circle.","locator":"https://mathworld.wolfram.com/Circumference.html""#;
+
+#[test]
+fn circle_part_chord_answer_carries_its_mathworld_corroboration_intact() {
+    let dir = scratch("cite_chord");
+    std::fs::copy(
+        facts_stdlib().join("geometry/circle-parts.adj"),
+        dir.join("circle-parts.adj"),
+    )
+    .expect("copy shipped circle-parts.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"circle-parts.adj\"\n? circle_part(chord, $D)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // ANCHORED and JOINT -- bindings, envelope, and corroboration in one span.
+    assert!(
+        out.contains(CHORD_PIN),
+        "chord's answer carries the MathWorld Chord sentence verbatim: {out}"
+    );
+}
+
+#[test]
+fn circle_part_circumference_corroboration_survives_its_embedded_quotes() {
+    let dir = scratch("cite_circ");
+    std::fs::copy(
+        facts_stdlib().join("geometry/circle-parts.adj"),
+        dir.join("circle-parts.adj"),
+    )
+    .expect("copy shipped circle-parts.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"circle-parts.adj\"\n? circle_part($Part, perimeter)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // MathWorld writes the term in quotation marks, so this is the FIRST
+    // string in the stdlib to use the lexer's `\"` escape (STRING is
+    // `"([^"\\]|\\.)*"`). The pin covers the whole round trip: escaped in
+    // the .adj, a real quote in the value, re-escaped in the JSON.
+    //
+    // The page emits `&quot;`, which my extraction did not decode -- the
+    // sentence came back NOT FOUND and would have been recorded as a false
+    // blocker had the negative been trusted.
+    assert!(
+        out.contains(CIRC_PIN),
+        "circumference's corroboration keeps its embedded quotes: {out}"
+    );
+}

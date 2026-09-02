@@ -2,41 +2,41 @@
 schema_version: 2
 id: TE-S07-vowel-sign-aa
 spine_node: SPINE-MEET-GREET
-sequence: 395
+sequence: 35
 delivery: script
-chapter: 12
+chapter: 1
 type: writing
 headword: "ా"
 gloss: the single character ా — recognised inside words you already say
 romanization: "ā"
-prerequisites: [TE-S06-letter-ra]
+prerequisites: [TE-S03-letter-ka]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [TE-SCRIPT-RECOG-06]
+  knowledge: [TE-SCRIPT-RECOG-03]
 introduces:
   knowledge: [TE-SCRIPT-RECOG-07]
 practises:
-  knowledge: [TE-SCRIPT-RECOG-06, TE-SCRIPT-RECOG-07]
+  knowledge: [TE-SCRIPT-RECOG-07, TE-SCRIPT-RECOG-03]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [TE-S06-letter-ra]
+reviews_of: [TE-S03-letter-ka]
 ---
 
 # ◌ా — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-06] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-03] -->
 
-[PAUSE 1s] Before the new one: ర — what does it do?
+[PAUSE 1s] Before the new one: క — what does it do?
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
-for pages without knowing which mark on the page it was.
+[PAUSE 2s] One character this time — and you have been saying it for pages
+without knowing which mark on the page it was.
 
 ## Script you'll notice: ◌ా
 <!-- hl-knowledge: introduces=[TE-SCRIPT-RECOG-07]; assesses=[] -->
@@ -49,8 +49,6 @@ You already say these, and every one of them has ◌ా somewhere inside it:
 
 - **నమస్కారం** *namaskāram* — hello / greetings (namaskāram — "a making of a bow")
 - **ధన్యవాదములు** *dhanyavādamulu* — thank you (dhanyavādamulu — "utterances of 'worthy'")
-- **బాగా** *bāgā* — well, fine — and the reply "నేను బాగున్నాను
-- **పరవాలేదు** *paravālēdu* — it's okay / no problem / you're welcome
 
 ## Writing: ◌ా — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-07] -->

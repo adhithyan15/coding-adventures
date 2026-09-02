@@ -2,8 +2,8 @@
   "lesson": {
     "id": "ML-S111-letter-ca",
     "language": "malayalam",
-    "chapter": 8,
-    "sequence": 366,
+    "chapter": 5,
+    "sequence": 284,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:789617e07171bbfd",
+    "sourceHash": "fnv1a64:f38b40469f70fdbd",
     "detachableSegments": [
       "Script you'll notice: ച",
       "Writing: ച — copy what you see"

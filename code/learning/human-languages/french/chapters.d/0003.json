@@ -11,8 +11,21 @@
   "payoff": {
     "lesson": "FR-C03-practice",
     "kind": "task",
-    "summary": "Complete FR-C03-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in French, answer naturally, and return the question.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Now the small talk that follows a name: thanking, answering a thank-you, and asking how someone is doing. French asks that last question with a verb of motion — not “how are you?” but “how does it go?”",
+    "assesses": [
+      "FR-LEX-MERCI-01",
+      "FR-ETYMON-MERCI-02",
+      "FR-CULTURE-MERCI-03",
+      "FR-LEX-DERIEN-04",
+      "FR-ETYMON-RIEN-05",
+      "FR-LEX-ALLER-06",
+      "FR-ETYMON-ALLER-07",
+      "FR-LEX-CAVA-08",
+      "FR-GRAM-REGISTER-09",
+      "FR-SOUND-LIAISON-10",
+      "FR-LEX-COMMECI-11",
+      "FR-CULTURE-SHRUG-12"
+    ],
+    "note": "Chapter 3 is schema-v2 as of the handwritten-chapter retirement, so the payoff is atom-scored: FR-C03-practice assesses every atom the chapter introduces."
   }
 }

@@ -1,0 +1,11 @@
+{
+  "id": "FR-EXT-012-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can run the whole how-are-you exchange, formally and informally.",
+  "prerequisites": [],
+  "lessons": [
+    "FR-C03-practice"
+  ]
+}

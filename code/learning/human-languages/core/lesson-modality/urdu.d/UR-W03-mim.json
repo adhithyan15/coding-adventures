@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "UR-W03-mim",
+    "language": "urdu",
+    "chapter": 3,
+    "sequence": 95,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6ea2c0a4e5c83119",
+    "detachableSegments": [
+      "Script — the shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

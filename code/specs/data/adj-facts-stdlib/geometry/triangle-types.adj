@@ -95,4 +95,6 @@ table triangle_sides {
     source "An equilateral triangle is a triangle with all three sides of equal length a, corresponding to what could also be known as a 'regular' triangle."
     locator "https://mathworld.wolfram.com/EquilateralTriangle.html"
     trust authoritative
+    cites "An isosceles triangle is a triangle with (at least) two equal sides." locator "https://mathworld.wolfram.com/IsoscelesTriangle.html"
+    cites "A scalene triangle is a triangle that has three unequal sides, such as those illustrated above." locator "https://mathworld.wolfram.com/ScaleneTriangle.html"
 }

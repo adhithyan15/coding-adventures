@@ -1,13 +1,14 @@
 {
   "language": "bengali",
   "chapter": 5,
-  "sourceHash": "fnv1a64:26c27f34d6626e40",
+  "sourceHash": "fnv1a64:89cb8f7f83977e03",
   "lessonIds": [
-    "BN-C05-bola",
-    "BN-C05-ami-bangla-boli",
-    "BN-C05-kaj-kora",
-    "BN-C05-thaka",
-    "BN-C05-practice"
+    "BN-C03-ami",
+    "BN-C03-kemon",
+    "BN-C03-tumi-kemon-achho",
+    "BN-C03-bhalo",
+    "BN-C03-kono-bepar-na",
+    "BN-C03-practice"
   ],
-  "tex": "bengali/book/chapters/ch05-first-verbs.tex"
+  "tex": "bengali/book/chapters/ch05-responding.tex"
 }

@@ -1,150 +1,234 @@
-Bengali, chapter 13: Please, Sorry, and Welcome.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Bengali, chapter 13: The Core Verbs.
+6 lessons. All 6 can be done entirely by ear.
 
 
-Lesson 1 of 4.
-দয়া করে (doya kore) — "please," a kindness done.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Lesson 1 of 6.
+হওয়া (hôwā) — "to be," and the be-verb it stands beside.
 
 Warm-up.
 [pause 2 seconds]
-The heart word closed the last chapter. A new one opens on a feeling that starts in the same place — and a word this book has never taught you before now.
+Chapter 3 said "my name Arun" with no verb at all. Chapter 5 put one back for "how are you." Both were right, and this verb is why.
 
-You'll want to know: দয়া করে.
-দয়া করে — doya kore — please.
-দয়া করে বসুন (doya kore bôshun) — please, sit.
-
-The letters in this word.
-দয়া is দ (dô) plus য় (the glide already met inside হৃদয়) with the vowel sign া (ā): doyā. করে is ক (kô) plus র (r) with the vowel sign ে (e): kôre.
+You'll want to know: হওয়া.
+হওয়া — hôwā — to be, to become.
+আমি হই (āmi hôi), "I am, I become." সে হয় (se hôy), "he is." Its future is already in your mouth: হবে (hôbe) is the "will happen" inside Chapter 7's dækhā hôbe.
 
 The word, taken apart.
-দয়া is Sanskrit দয়া (dayā), "compassion, pity." Most Indo-Europeanists trace its root back to PIE deh₂-, "to divide, to apportion" — the same root proposed for Greek daíomai, "to divide," and dêmos, "a portion of land, the people," which English holds without inheriting it directly: democracy, epidemic, demographic. If the comparison is right, compassion and sharing are the same idea at the root — you feel দয়া for someone by dividing your own good fortune with them, the warmth this book already located in হৃদয়, the heart.
+হওয়া (hôwā) is Sanskrit √bhū ("to become") with the bh- worn down to a plain h-: bhavati becomes Prakrit hoï becomes Bengali hô-. The root is PIE bʰuH-, "to grow, to become," and English owns two of its children outright — be and been. Latin built fuī ("I was") and futūrus on it, which is English future; Greek built phúsis, "growth, nature," which is physics.
 
-Grammar Lens: করা wears a new outfit.
-Noun plus করা already builds a verb — কাজ করা, "to work"; জিজ্ঞাসা করা, "to ask." Here করা takes a different shape, করে, "having done": not a full sentence on its own, but a piece that leans on the next word.
+Sounds you'll need: হ, and the ওয়া that ends a Bengali verb.
+হ is a soft, breathed h carrying Bengali's inherent vowel — hô, not ha. ওয়া (-wā) is the tail every dictionary-form verb wears; you will meet it again on খাওয়া (khāwā) and যাওয়া (jāwā).
+
+Grammar Lens: two be-verbs, and one of them is unfinished.
+[a table of 3 rows, read aloud]
+what you mean: my name is Arun. what Bengali uses: no verb at all.
+what you mean: I have a book; it is here. what Bengali uses: আছে (āchhe).
+what you mean: he will be a teacher. what Bengali uses: হবে (hôbe).
+আছ-, the verb behind Chapter 5's kemon āchho, means being present. But it is unfinished: it has a present and a past, and nothing else at all. Push it into the future and it stops dead — so Bengali picks up হ- (hôbe), or Chapter 11's থাকা (āmi thākbo, "I'll be there"). One job, two verbs, split down the middle.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "hôwā" — be, become — then "āmi hôi"]
+[pause 8 seconds for the answer]
+[your turn — say: the future you already knew — "hôbe … dækhā hôbe"]
+[pause 8 seconds for the answer]
+[your turn — say: which verb for "I have a book," and which for "he will be a teacher"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which Sanskrit root is hôwā, and which two English words are its brothers? (√bhū, "to become" — be and been.) What can আছ- not do? (Anything past a present and a past — it has no future of its own.) So what does Bengali reach for instead? (হবে, or থাকা.) Next: one verb, three levels of respect.
+
+
+Lesson 2 of 6.
+যাওয়া (jāwā) — "to go," and the respect that rides on the ending.
+
+Warm-up.
+[pause 2 seconds]
+Chapter 3 gave you three different words for "you." It did not tell you the rest of the bill: each one bends the verb a different way too.
+
+You'll want to know: যাওয়া.
+যাওয়া — jāwā — to go.
+আমি যাই (āmi jāi), "I go." Same -i "I" ending as Chapter 11's bôli, on the same -wā dictionary form you met a moment ago.
+
+The word, taken apart.
+যাওয়া (jāwā) is Sanskrit √yā ("to go, to travel"), and the whole northern family walks on it: Hindi jānā, Marathi jāṇe, Gujarati javũ, Punjabi jāṇā. Sanskrit's y- hardened to a j- sound right across eastern Indo-Aryan, which is why Bengali still writes the y-letter য but says j.
+Deeper than Sanskrit it goes to PIE yeh₂-, "to travel" — and here is an honest limit: English kept no everyday word from that root. The nearest living cousin is Lithuanian jóti, "to ride." A fake English cousin here would be worse than none.
+
+Sounds you'll need: য.
+য is the letter Sanskrit reads as y; Bengali reads it as j, like জ. So a written yā- is a spoken jā- — an un-shift worth keeping, since it disguises dozens of familiar Sanskrit words.
+
+Grammar Lens: the respect is not in the pronoun, it is in the ending.
+[a table of 3 rows, read aloud]
+who you are speaking to: তুই (tui, intimate). "you go": যাস (jāsh).
+who you are speaking to: তুমি (tumi, familiar). "you go": যাও (jāo).
+who you are speaking to: আপনি (āpni, respectful). "you go": যান (jān).
+Three endings, one verb. And the same grading runs on into the third person: সে যায় (se jāy) is "he goes," তিনি যান (tini jān) is "he goes" said of someone you respect — the very ending আপনি takes. Chapter 11 showed that the ending already means "I," so the pronoun can be dropped. The register cannot. Choose jāsh or jān and you have placed yourself socially, pronoun or no pronoun.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "jāwā" — go — then "āmi jāi"]
+[pause 8 seconds for the answer]
+[your turn — say: the ladder — "jāsh … jāo … jān"]
+[pause 8 seconds for the answer]
+[your turn — say: the two third persons — "se jāy … tini jān"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three "you go" forms and who each is for. (Jāsh intimate, jāo familiar, jān respectful.) If you drop the pronoun, is the respect dropped too? (No — it is in the ending, and cannot be dodged.) Does English have a living cousin of this root? (No — Lithuanian jóti is as close as it gets.) Next: the verb that asks nothing about who you are.
+
+
+Lesson 3 of 6.
+আসা (āsā) — "to come," the verb that never asks who you are.
+
+Warm-up.
+[pause 2 seconds]
+Chapter 1's goodbye, āshi, was one form of this verb. Here is the whole of it — and the one question it refuses to ask you.
+
+You'll want to know: আসা.
+আসা — āsā — to come.
+আমি আসি (āmi āsi), "I come" — the farewell you already own. সে আসে (se āse), "he comes." আপনি আসেন (āpni āsen), with last lesson's respectful ending.
+
+The word, taken apart.
+The আ- in front is Sanskrit's ā-, "hither, toward" — the very prefix that turns going into coming. Hindi's ānā is that ā- welded onto yā-, the go-verb of the last lesson: "go, but this way." Bengali shows the same prefix on a different stem, and the honest position on that stem is that its history is unsettled; this book will not invent one for it.
+
+Sounds you'll need: স.
+স is written for s and spoken, in this word, as sh — Bengali's standing s becomes sh tilt, the same one that makes namaskāra into nômoshkar. So আসি is āshi, not āsi, though the dictionary form is romanized āsā.
+
+Grammar Lens: no gender, not here, not anywhere.
+[a table of 3 rows, read aloud]
+language: Hindi. "I come," man / woman: maiṁ ātā hūṁ / maiṁ ātī hūṁ.
+language: Marathi. "I come," man / woman: mī yeto / mī yete.
+language: Bengali. "I come," man / woman: āmi āsi — one form.
+Its sisters make you declare your gender to say the plainest thing in the world. Bengali does not. And this is not a shortcut for beginners that the grammar takes back later: Bengali has no grammatical gender at all. Not on verbs, not on nouns, not on adjectives. The past behaves the same way — আমি এলাম (āmi elām), "I came," is one form for everyone, where Gujarati, which hides gender in its present, brings it straight back in huṁ āvyo / huṁ āvī.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "āsā" — come — then "āmi āshi"]
+[pause 8 seconds for the answer]
+[your turn — say: the neighbours splitting in two — "ātā … ātī" and "yeto … yete"]
+[pause 8 seconds for the answer]
+[your turn — say: Bengali not splitting — "āmi āsi" — and its past, "āmi elām"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does the আ- on this verb mean, and where else have you met it? (Hither, toward — it is the ā- inside Hindi's ānā.) How many forms of "I come" does a Bengali speaker need? (One — āmi āsi, whoever is talking.) Is that true of the nouns too? (Yes — Bengali has no grammatical gender anywhere.) Next: a verb that swallows more than food.
+
+
+Lesson 4 of 6.
+খাওয়া (khāwā) — "to eat," and the drinking it also does.
+
+Warm-up.
+[pause 2 seconds]
+Every verb so far has meant roughly what its English gloss means. This one is wider than its gloss, and the extra width is the lesson.
+
+You'll want to know: খাওয়া.
+খাওয়া — khāwā — to eat.
+আমি খাই (āmi khāi), "I eat." আপনি খান (āpni khān), with the respectful ending from two lessons back.
+
+The word, taken apart.
+খাওয়া (khāwā) is Sanskrit √khād ("to chew, to bite"), smoothed through Prakrit khā-. Every neighbour eats with it: Hindi khānā, Marathi khāṇe, Gujarati khāvũ, Punjabi khāṇā.
+Past Sanskrit the trail goes cold. Khād- has no secure Indo-European pedigree outside Indo-Aryan, so there is no English cousin here — and one will not be manufactured. Some roots are simply local, and saying so is part of the method.
+
+Sounds you'll need: খ against ক.
+খ is kh: a k with a puff of breath behind it. Its plain partner ক (k) is the letter in Chapter 11's kāj. The puff is not decoration — it is the whole difference between two words, and Bengali gives each its own letter.
+
+Grammar Lens: Bengali eats its drinks.
+[a table of 3 rows, read aloud]
+জল খাওয়া (jôl khāwā) means to drink water — "water-eat".
+চা খাওয়া (chā khāwā) means to drink tea.
+ওষুধ খাওয়া (oshudh khāwā) means to take medicine.
+Hindi keeps a second verb, pīnā, for drinking. Bengali's everyday speech does not bother: whatever goes in the mouth is khāwā. There is a drink-verb — পান করা (pān kôrā), noun-plus-kôrā in exactly Chapter 11's kāj kôrā shape, built on Sanskrit √pā ("to drink"), whose Latin cousin pōtāre gives English potion and potable. But it belongs to writing and ceremony. Ask for tea in a Kolkata kitchen and you eat it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "khāwā" — eat — then "āmi khāi"]
+[pause 8 seconds for the answer]
+[your turn — say: the drinking Bengali eats — "jôl khāwā … chā khāwā"]
+[pause 8 seconds for the answer]
+[your turn — say: the formal drink-verb and its English cousins — "pān kôrā … potion, potable"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say "drink water" in everyday Bengali? (জল খাওয়া — literally "water-eat.") Which Sanskrit root is khāwā, and does English share it? (√khād, "to chew" — and no, the root goes no further than Indo-Aryan.) Which verb would a formal text use for drinking, and what English words does its root reach? (পান করা, from √pā — English potion, potable.) Next: one spelling, two vowels.
+
+
+Lesson 5 of 6.
+দেখা (dækhā) — "to see," and a vowel that moves under a fixed spelling.
+
+Warm-up.
+[pause 2 seconds]
+Chapter 7 buried this verb inside dækhā hôbe, "a seeing will happen." Prised out on its own, it carries a sound rule that runs through every verb in this chapter.
+
+You'll want to know: দেখা.
+দেখা — dækhā — to see, to look.
+আমি দেখি (āmi dekhi), "I see." সে দেখে (se dækhe), "he sees." Read those two romanizations again — they are not the same vowel.
+
+The word, taken apart.
+দেখা (dækhā) is traced to Sanskrit √dṛś ("to see") through the Prakrit stem dekkha-; Hindi's dekhnā is the same word. Sanskrit built darśana, "a viewing," on that root, and further back it is PIE derḱ-, "to see clearly." Greek took it for dérkomai, "I look," and for drákōn, the sharp-gazing serpent — which English borrowed as dragon. Bengali's "see" and England's dragons are one word, wearing very different clothes.
+
+Sounds you'll need: দে, said two ways.
+দ is a soft dental d, tongue on the teeth. The vowel sign ে on it is written identically every time — but Bengali says it either as a close e (as in English bay) or an open æ (as in English bat), and the page will never tell you which.
+
+Grammar Lens: the ending decides the vowel.
+[a table of 3 rows, read aloud]
+Bengali: আমি দেখি. said: dekhi — close e.
+Bengali: সে দেখে. said: dækhe — open æ.
+Bengali: তুমি দেখো. said: dækho — open æ.
+The rule: when the ending carries the high vowel -i, the stem vowel closes to e. Any other ending leaves it open at æ. That is vowel harmony, and the verb of the first lesson does it too — আমি হই (hôi, closed) against সে হয় (hôy, open). It is a rule your ear must carry alone, because the spelling never budges.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "dækhā" — then the pair, "dekhi … dækhe"]
+[pause 8 seconds for the answer]
+[your turn — say: the same shift on the be-verb — "hôi … hôy"]
+[pause 8 seconds for the answer]
+[your turn — say: the root and its odd English relative — "dṛś … dragon"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which ending closes the stem vowel to e? (The -i of "I" — dekhi, against dækhe and dækho.) Does the spelling record that? (No — দে is written the same either way; only the ear knows.) Which English animal shares this verb's root? (The dragon — Greek drákōn, from PIE derḱ-.) Next: the last verb, and the knowing English lost.
+
+
+Lesson 6 of 6.
+জানা (jānā) — "to know," and the knowing English gave up.
+
+Warm-up.
+[pause 2 seconds]
+Six thousand years ago this verb and the English word you are reading it with were the same word. They still are. But Bengali kept a distinction English threw away.
+
+You'll want to know: জানা.
+জানা — jānā — to know.
+আমি জানি (āmi jāni), "I know." আপনি জানেন (āpni jānen), respectfully.
+
+The word, taken apart.
+জানা (jānā) is Sanskrit √jñā ("to know"), the root under jñāna, "knowledge." Behind it stands PIE ǵneh₃-, and English is full of its children: know and knowledge by the direct Germanic road; notice, recognize and cognition through Latin nōscere; gnosis and diagnosis through Greek gignṓskein. Bengali jāni and English know are one verb, separated only by time.
+
+Sounds you'll need: জ্ঞ, the letter that lies.
+Sanskrit writes the root with জ্ঞ, a knot of j and ñ. Bengali does not say jñ at all — it says gg, so jñāna comes out ggān. The plain verb spares you the knot: জানা (jānā) is simply জা + না, jā-nā.
+
+Grammar Lens: two knowings, and English has one word for both.
 [a table of 2 rows, read aloud]
-shape of করা: a finite ending (করি, করে, করেন…) job: states an action. example: আমি কাজ করি — I work.
-shape of করা: করে, unchanged. job: "having done," leaning forward. example: দয়া করে (doya kore) বসুন — please, sit.
-দয়া করে (doya kore) literally says "having done a kindness, [now do this]" — the kindness is named, then the actual request follows.
+Bengali: জানা (jānā). what it knows: a fact, or how to do something.
+Bengali: চেনা (chenā). what it knows: a person or a place, by acquaintance.
+আমি জানি — "I know" (that it is so). আমি তাকে চিনি (āmi tāke chini) — "I know him," meaning I am acquainted with him. Say jāni of a person and you have said you know facts about them, which is a colder thing.
+English once had this line and lost it; French still walks it as savoir against connaître, German as wissen against kennen, Spanish as saber against conocer. And listen to chini beside সে চেনে (se chæne): the same vowel harmony as the last lesson, on a brand-new verb.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "doya" — compassion, then "kore" — having done]
+[your turn — say: "jānā" — know — then "āmi jāni"]
 [pause 8 seconds for the answer]
-[your turn — say: "doya kore bôshun" — please, sit]
+[your turn — say: the other knowing — "āmi tāke chini"]
 [pause 8 seconds for the answer]
-[your turn — say: the family this word joins — "kāj kôrā … jijñāsā kôrā … doya kore"]
+[your turn — say: the harmony again — "chini … chæne"]
+[pause 8 seconds for the answer]
+[your turn — say: the six verbs of this chapter — "hôwā, jāwā, āsā, khāwā, dækhā, jānā"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does দয়া করে (doya kore) mean literally, piece by piece? ("Having done a kindness" — দয়া "compassion" + করে "having done.") Is করে here a full sentence by itself? (No — it leans forward onto the request that follows it.) One quick reach back: what root does দয়া share with a very old disputed argument about democracy? (PIE deh₂-, "to divide" — the same proposed root behind Greek dêmos, and behind the warmth হৃদয়, the heart, already carries — two lessons after নাক, the nose, which shares none of it.)
-
-
-Lesson 2 of 4.
-দুঃখিত (dukkhito) — "sorry," and a prefix that reaches Greek.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Last lesson's kindness gets a request said politely. This lesson is what you say when the kindness came too late.
-
-You'll want to know: দুঃখিত.
-দুঃখিত — dukkhito — sorry.
-আমি দুঃখিত (āmi dukkhito) — I'm sorry.
-
-The letters in this word.
-দুঃখিত is দ (dô) with the vowel sign ু (u), then ঃ — a new mark, the visarga, two small stacked dots that add a light breath after the vowel — then খ (kh) with the vowel sign ি (i), then ত (t, silent at the end). Spelled duḥkhita, said dukkhito: the breath mark softens toward the consonant that follows it rather than staying a separate sound.
-
-The word, taken apart.
-দুঃখিত (dukkhito) is built on Sanskrit দুঃখ (duḥkha), "sorrow, suffering" — the word Buddhism made famous as dukkha. Take it apart and one half is certain: দুঃ/দুস্ (dus-) means "bad, difficult," from PIE dus-, the very prefix inside Greek dys-: dystopia, dysfunctional. The other half, খ (kha), is where the certainty ends. Sanskrit's own grammatical tradition explains it as "an axle-hole" — a duḥkha journey is a bad axle-hole, a rough ride, set against সুখ (sukha), "a good axle-hole," comfort. It is a vivid story, and it is repeated everywhere. It is also, by the account of modern Sanskritists including Mayrhofer, not a story to trust: the axle-hole reading may be a later folk explanation grafted onto a word whose real root is lost. দুঃ's cousin is real; খ's is a story, reported and not settled.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "dukkhito" — sorry]
-[pause 8 seconds for the answer]
-[your turn — say: "āmi dukkhito" — I'm sorry]
-[pause 8 seconds for the answer]
-[your turn — say: the secure half and its Greek cousin — "dus- … dystopia"]
-[pause 8 seconds for the answer]
-[your turn — say: last lesson's request again — "doya kore bôshun"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "I'm sorry" in Bengali. (আমি দুঃখিত (dukkhito).) Which half of দুঃখ is a secure PIE prefix, and which English word shares it? (দুঃ/dus-, "bad" — dystopia, by way of Greek dys-.) Is the "bad axle-hole" story of খ settled fact? (No — a repeated tradition, treated with real skepticism by modern Sanskritists.) Sorrow, like compassion, can weigh somewhere specific — where? (হৃদয়, the heart.)
-
-
-Lesson 3 of 4.
-মাফ করবেন (maf korben) — "excuse me," borrowed and softened.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Last lesson's word for "sorry" was a native Sanskrit word. This one is a loanword — the very same loanword Hindi uses in its own "sorry" phrase — and it softens a request in a way you have not met yet.
-
-You'll want to know: মাফ করবেন.
-মাফ করবেন — maf korben — excuse me.
-মাফ করবেন, একটু জায়গা দেবেন? (maf korben, êktu jāygā debên?) — excuse me, could you make a little room?
-
-The letters in this word.
-মাফ is ম (mô) with া (ā) plus ফ (ph, the puffed p). Notice what is missing: Hindi marks this same borrowed sound with a small dot under its own letter for pha, a nuqtā, to write a dedicated letter for f. Bengali's script has no such mark at all — ফ alone serves for both the native puffed p and this borrowed f, and only habit tells a reader which one a given word means.
-
-The word, taken apart.
-মাফ is not Bengali, and not Sanskrit: it is borrowed, by way of Persian, from Arabic 'afw, "to pardon, to wipe a wrong away." Hindi borrowed the identical word for the identical job. Bengali also keeps a formal, Sanskritic cousin for the same idea, ক্ষমা করবেন, from ক্ষমা (kṣamā), "patience, forbearance" — the everyday loan and the bookish native word side by side, the same split Hindi keeps.
-
-Grammar Lens: the future, asked to be gentle.
-The tea-offering pattern you already own reuses a present verb — আপনি খান — to make a request. করবেন does the same job with a different tense: it is the plain future, "you will do," not a command at all by its grammar, and yet its job here is exactly a request — a third shape for করা, beside last lesson's participle করে.
-[a table of 2 rows, read aloud]
-tense used: present habitual. what it does: states, and doubles as a request. example: আপনি খান — you eat / please eat.
-tense used: future. what it does: states, and doubles as a softer request. example: মাফ করবেন (maf korben) — you will excuse / please excuse.
-The future's distance is what buys the softness: asking rather than telling, even grammatically.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "maf korben" — excuse me]
-[pause 8 seconds for the answer]
-[your turn — say: the two soft requests compared — "chā khān … maf korben"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Where does মাফ come from? (Arabic 'afw, "to pardon," by way of Persian — the same loan Hindi's own "sorry" phrase uses.) What tense is করবেন, and why does that make it gentler than a command? (Future — "you will do," asking rather than telling.)
-
-
-Lesson 4 of 4.
-স্বাগতম (shbagotom) — "welcome," a good arrival.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-This chapter has taught what to say after a mistake. It closes on what to say before anything goes wrong at all — a word built on the same "hither" you have carried since the verb for coming.
-
-You'll want to know: স্বাগতম.
-স্বাগতম — shbagotom — welcome.
-আমাদের বাড়িতে স্বাগতম (āmāder bāṛite shbagotom) — welcome to our house.
-
-The letters in this word.
-স্বাগতম (shbagotom) is স্ব (a conjunct, স joined straight to ব with no vowel between — sbô, tilted by the same s becomes sh habit every Sanskrit word in this book has shown) plus া (ā), then গ (gô), ত (tô), and ম (mô, keeping its own inherent vowel at the very end): shbā-go-to-m.
-
-The word, taken apart.
-স্বাগতম (shbagotom) is Sanskrit স্বাগতম (shbagotom) (svāgatam), built from two pieces fused together. The second piece, আগত (āgata), "arrived, come," opens with the very same আ-, "hither," that আসা's own lesson already named — except here it rides a different verb, √গম্ (√gam, "to go, to come"), not আসা's own unsettled stem. √gam is PIE gʷem-, and this root is about as secure as roots get: it is the direct ancestor of English come, and, by way of Latin venīre, of advent and convene too. The first piece, সু- (su-, "good"), loses its vowel to the glide ব when the next syllable also opens with a vowel — ordinary Sanskrit sandhi, the same trade সু- plus আগত makes every time: svāgata. সু- is PIE h₁su-, cousin of Greek eu-, the "good" inside eulogy and euphoria. Put the pieces back together: স্বাগতম (shbagotom) is, literally, "a good coming."
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "shbagotom" — welcome]
-[pause 8 seconds for the answer]
-[your turn — say: "āmāder bāṛite shbagotom" — welcome to our house]
-[pause 8 seconds for the answer]
-[your turn — say: the shared prefix — "ā-, hither" — on āsā, then on āgata]
-[pause 8 seconds for the answer]
-[your turn — say: the two secure cousins — "gam … come" and "su- … eu-"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give "welcome" in Bengali. (স্বাগতম (shbagotom).) What does স্বাগতম (shbagotom) mean, piece by piece? ("Good" plus "come" — a good arrival.) Which prefix does it share with আসা, and on a different verb this time? (আ-, "hither" — on √gam here, not আসা's own uncertain stem.) Run this chapter's three other new words back: a kindness done, a word for sorrow, and a borrowed pardon. (দয়া করে (doya kore), দুঃখিত (dukkhito), মাফ করবেন (maf korben).) One more reach: what tense softened that pardon into a request? (Future — করবেন, "you will do.")
+Which verb knows a person, and which knows a fact? (চেনা for people, জানা (jānā) for facts — the connaître / savoir line.) Name three English children of this root. (Know, notice, diagnosis — Germanic, Latin, Greek.) Why does chini close its vowel where chæne keeps it open? (Vowel harmony — the -i ending closes the stem vowel, as in dekhi.) That closes the chapter: six verbs, no gender on any of them, and the respect always sitting in the ending.

@@ -3,8 +3,8 @@
   "language": "urdu",
   "chapter": 6,
   "title": "Five Verbs at the Core",
-  "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a77e1fea634ba5e1",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:8aca9a4408d40821",
   "lessons": [
     {
       "id": "UR-C06-hona",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e5482d1dd319c952",
+      "sourceHash": "fnv1a64:16223dcb09af3fa2",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can already close an Urdu sentence with ہوں hūṅ — “am.” That small word is a fragment of something larger. Here is the whole verb it was broken off."
+              "text": "You can already close an Urdu sentence with hūṅ — “am.” It is still spoken rather than written: its last shape is a nūn with no dot, and that letter arrives in the very next lesson. That small word is a fragment of something larger. Here is the whole verb it was broken off."
             }
           ]
         },
@@ -151,6 +151,202 @@
       ]
     },
     {
+      "id": "UR-W06-nun-ghunna",
+      "sequence": 215,
+      "title": "ں (nūn ghunna) — nūn with the dot taken off",
+      "headword": "ں",
+      "romanization": "nūn ghunna",
+      "gloss": "nūn with its dot taken away — the hum at the end of maiṅ, haiṅ and nahīṅ",
+      "script": "urdu-nastaliq",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:0ae18f79664964b2",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "The letters in this word",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ن. The deep bowl, a lift, and one dot placed low inside the curve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ں (nūn ghunna)."
+            },
+            {
+              "kind": "speech",
+              "text": "The same deep bowl you drew two chapters ago, swept right to left below the baseline — and then you stop. No lift. No dot."
+            },
+            {
+              "kind": "speech",
+              "text": "Every other letter so far was identified by what was added to it: nūn's dot, kāf's slash, the three teeth of sīn. This one is identified by what was taken away, and the taking away is the meaning. Its name is ں nūn ghunna, and ghunna is the Urdu word for a nasal hum."
+            },
+            {
+              "kind": "speech",
+              "text": "Here is the difference it makes. A dotted ن is a full consonant: your tongue touches the roof of your mouth and you say n. A dotless ں (nūn ghunna) asks for no consonant at all. It tells you to send the vowel before it through your nose and then stop. In maiṅ the tongue never lands."
+            },
+            {
+              "kind": "speech",
+              "text": "Two more facts and the letter is yours:"
+            },
+            {
+              "kind": "speech",
+              "text": "ں (nūn ghunna) closes a word and appears nowhere else. Inside a word, that same nasal hum is carried by the ordinary dotted ن, which therefore does two jobs depending on where it stands — a real n in some words, a hum in others. Only at the end of a word does Urdu bother to spell the difference."
+            },
+            {
+              "kind": "speech",
+              "text": "Because it ends the word, ں (nūn ghunna) has one shape to learn and no joined faces."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three words, all of them already in your mouth, none of them readable until now. From the right:"
+            },
+            {
+              "kind": "speech",
+              "text": "میں ہیں نہیں."
+            },
+            {
+              "kind": "speech",
+              "text": "maiṅ \"I\" — haiṅ \"are\" — nahīṅ \"no.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The one to dwell on is نہیں. It is the word you learned for saying no, in the very first handful of words this book gave you, and it is four letters you can now name one by one: ن، ہ، ی، ں (nūn ghunna) — with a dotted nūn opening it and a dotless one closing it, doing two entirely different jobs in a single short word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ں (nūn ghunna) — the deep bowl, and then nothing",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ں — the deep bowl, and then nothing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "میں, then ہیں, then نہیں",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: میں, then ہیں, then نہیں]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṅ, letting the vowel hum and keeping your tongue down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **maiṅ**, letting the vowel hum and keeping your tongue down]"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "at the two nūns in نہیں and say what each one does",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: at the two nūns in نہیں and say what each one does]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ہیں — and say why it ends on a hum rather than an n",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: ہیں — and say why it ends on a hum rather than an n]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write \"no.\" (نہیں.) Write \"I.\" (میں.) Does your tongue touch the roof of your mouth at the end of maiṅ? (No — the hum goes through the nose.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-W06-nun-ghunna-dot",
+              "prompt": "What is the difference between ن and ں (nūn ghunna)?",
+              "assesses": [
+                "UR-SCRIPT-NUN-GHUNNA-WRITE-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "the dot",
+                "one has a dot",
+                "ں has no dot",
+                "the missing dot",
+                "nun ghunna has no dot"
+              ],
+              "feedback": {
+                "correct": "The dot. Dotted nūn is a consonant; dotless nūn ghunna is a hum on the vowel before it.",
+                "incorrect": "THE DOT. With it you say n; without it you nasalize the vowel before it and stop."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "UR-C06-jana",
       "sequence": 220,
       "title": "جانا (jānā) — “to go,” and two agreements in one sentence",
@@ -163,7 +359,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2421e5249a64d68b",
+      "sourceHash": "fnv1a64:2e6c772349ea8893",
       "notice": null,
       "blocks": [
         {
@@ -209,7 +405,11 @@
             },
             {
               "kind": "speech",
-              "text": "میں جاتا ہوں — maiṅ jātā hūṅ — I go (man speaking) میں جاتی ہوں — maiṅ jātī hūṅ — I go (woman speaking)."
+              "text": "maiṅ jātā hūṅ — I go (man speaking) maiṅ jātī hūṅ — I go (woman speaking)."
+            },
+            {
+              "kind": "speech",
+              "text": "The frame is printed the way you say it rather than the way it is spelled. The t of jātā and the ū of hūṅ both ride letters you have not been given yet, and a line you cannot decode is not reading practice."
             },
             {
               "kind": "speech",
@@ -315,7 +515,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:459c05ad689e4c8b",
+      "sourceHash": "fnv1a64:5eb3de496892f19d",
       "notice": null,
       "blocks": [
         {
@@ -346,7 +546,7 @@
             },
             {
               "kind": "speech",
-              "text": "From the right edge: آ, then ن n, then ا long ā. That first shape is alif madd — alif wearing a small wave — and it is how Urdu writes a long ā at the start of a word. It opens آپ āp too. Strip the -nā and the stem is ā-."
+              "text": "From the right edge: آ, then ن n, then ا long ā. That first shape is alif madd — alif wearing a small wave — and it is how Urdu writes a long ā at the start of a word. It opens āp too, which you will be able to spell out once pe arrives. Strip the -nā and the stem is ā-."
             }
           ]
         },
@@ -436,6 +636,226 @@
       ]
     },
     {
+      "id": "UR-W06-bari-ye",
+      "sequence": 235,
+      "title": "ے (baṛī ye) — the big ye, and the end of the sentence",
+      "headword": "ے",
+      "romanization": "baṛī ye",
+      "gloss": "the big ye — a wide flat sweep that only ever ends a word, and the letter that finishes hai",
+      "script": "urdu-nastaliq",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:9b65df470fa3cdc0",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "The letters in this word",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ی, then ہ, then ں (nūn ghunna). An S-curve, a loop, a bowl with no dot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ے (baṛī ye)."
+            },
+            {
+              "kind": "speech",
+              "text": "A wide, flat sweep. Start high on the right, drop through a long shallow curve that goes well below the baseline, and carry it a long way to the left, finishing flat — with no hook, no lift at the tip, and no dots."
+            },
+            {
+              "kind": "speech",
+              "text": "Its name is ے baṛī ye, \"big ye,\" and the letter you already know, ی, is choṭī ye, \"small ye.\" Two names, one family, and one test that separates them at a glance:"
+            },
+            {
+              "kind": "speech",
+              "text": "ی choṭī ye is narrow and curls back up at its tip."
+            },
+            {
+              "kind": "speech",
+              "text": "ے baṛī ye is broad and runs out flat."
+            },
+            {
+              "kind": "speech",
+              "text": "There is a second difference, and it is about where each one lives. Small ye turns up anywhere in a word — opening it, in the middle, closing it. Big ye belongs to the end of a word and turns up nowhere else, which means you will never have to work out its middle face. It has none."
+            },
+            {
+              "kind": "speech",
+              "text": "Big ye carries a final e or ai sound."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two letters, and the smallest word in Urdu that does real work:"
+            },
+            {
+              "kind": "speech",
+              "text": "ہے."
+            },
+            {
+              "kind": "speech",
+              "text": "From the right: ہ, then ے (baṛī ye). Say it: hai — \"is.\""
+            },
+            {
+              "kind": "speech",
+              "text": "That is the word you have been ending sentences with since you first said your name, four chapters ago. Read it now."
+            },
+            {
+              "kind": "speech",
+              "text": "Two more, both already in your ear:"
+            },
+            {
+              "kind": "speech",
+              "text": "کیسے میرے."
+            },
+            {
+              "kind": "speech",
+              "text": "کیسے kaise — \"how,\" with small ye in the middle and big ye at the end, so the pair sit in one word and you can see the difference for yourself. میرے mere — \"my\" before a plural, every letter of it now yours."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Twelve letters. Now read the first sentence this book ever gave you, whole, with nothing taken on trust:"
+            },
+            {
+              "kind": "speech",
+              "text": "میرا نام... ہے."
+            },
+            {
+              "kind": "speech",
+              "text": "merā nām... hai — \"my name is...\". Every letter in it is one you can form: م، ی، ر، ا — ن، ا، م — ہ، ے (baṛī ye)."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ے (baṛī ye) — wide, flat, below the line, no hook at the tip",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ے — wide, flat, below the line, no hook at the tip]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ہے — and say hai",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ہے — and say **hai**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "کیسے — and point at the small ye and the big ye in turn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: کیسے — and point at the small ye and the big ye in turn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "میرا نام... ہے — and say it with your own name in the gap",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: میرا نام ... ہے — and say it with your own name in the gap]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which ye curls up at the tip? (Small ye, ی.) Which runs out flat? (Big ye, ے (baṛī ye).) Write \"is.\" (ہے.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-W06-bari-ye-position",
+              "prompt": "Where in a word does baṛī ye appear?",
+              "assesses": [
+                "UR-SCRIPT-BARI-YE-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "at the end",
+                "end",
+                "word-finally",
+                "only at the end",
+                "the last letter"
+              ],
+              "feedback": {
+                "correct": "At the end, and nowhere else -- so it has no middle form to learn.",
+                "incorrect": "AT THE END of a word only. That is why it has no middle form."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "UR-C06-bolna",
       "sequence": 240,
       "title": "بولنا (bolnā) — “to speak,” and the two layers of Urdu",
@@ -448,7 +868,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0820f3fe03828c7c",
+      "sourceHash": "fnv1a64:34af438882321b58",
       "notice": null,
       "blocks": [
         {
@@ -483,7 +903,7 @@
             },
             {
               "kind": "speech",
-              "text": "ب is new, and it is worth one careful second. Its body is a single low scoop with one dot below. You have already read پ p in آپ āp, and پ is that identical scoop with three dots below. Same skeleton, different dot count, different consonant. Urdu builds much of its alphabet this way, so counting dots is a real reading skill and not a fussy detail."
+              "text": "ب is new, and it is worth one careful second. Its body is a single low scoop with one dot below. Hold that skeleton in mind: the very next chapter adds pe, which is the identical scoop with three dots below — the p you already say in āp. Same skeleton, different dot count, different consonant. Urdu builds much of its alphabet this way, so counting dots is a real reading skill and not a fussy detail."
             }
           ]
         },
@@ -498,7 +918,7 @@
             },
             {
               "kind": "speech",
-              "text": "میں بولتا ہوں — maiṅ boltā hūṅ — I speak (man speaking) میں بولتی ہوں — maiṅ boltī hūṅ — I speak (woman speaking)."
+              "text": "maiṅ boltā hūṅ — I speak (man speaking) maiṅ boltī hūṅ — I speak (woman speaking)."
             },
             {
               "kind": "speech",
@@ -517,7 +937,7 @@
             },
             {
               "kind": "speech",
-              "text": "That plainness is the lesson. Urdu's everyday verbs are inherited Indo-Aryan and often short-rooted like this, while its formal and literary vocabulary was borrowed from Persian and Arabic and tends to be long, elegant, and easy to trace. Beside homely bolnā sits Persian-derived گفتگو guftagū, “conversation,” from Persian guftan, “to speak.” Both are fully Urdu. One is the floor of the house; the other is the ornament on it — and the flowing nastaʿlīq hand Urdu is traditionally written in belongs to that same Persian inheritance."
+              "text": "That plainness is the lesson. Urdu's everyday verbs are inherited Indo-Aryan and often short-rooted like this, while its formal and literary vocabulary was borrowed from Persian and Arabic and tends to be long, elegant, and easy to trace. Beside homely bolnā sits Persian-derived guftagū, “conversation,” from Persian guftan, “to speak.” Both are fully Urdu. One is the floor of the house; the other is the ornament on it — and the flowing nastaʿlīq hand Urdu is traditionally written in belongs to that same Persian inheritance."
             }
           ]
         },
@@ -538,11 +958,11 @@
             {
               "kind": "prompt",
               "action": "COUNT",
-              "instruction": "ب one dot below, پ three dots below",
+              "instruction": "ب one dot below — and say what the three-dot version will be",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU COUNT: **ب** one dot below, **پ** three dots below]"
+              "source": "[YOU COUNT: **ب** one dot below — and say what the three-dot version will be]"
             },
             {
               "kind": "prompt",

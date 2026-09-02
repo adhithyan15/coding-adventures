@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W02-la
 spine_node: SPINE-MEET-GREET
-sequence: 1730
+sequence: 410
 delivery: script
-chapter: 17
+chapter: 6
 type: writing
 headword: ল
 romanization: "lô"

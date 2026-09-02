@@ -3,7 +3,7 @@
     "id": "BN-W04-poribar-read",
     "language": "bengali",
     "chapter": 19,
-    "sequence": 1960,
+    "sequence": 1000,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:0e80cc031eb68760",
+    "sourceHash": "fnv1a64:4448aef2e42bd847",
     "detachableSegments": [
       "Script"
     ],
