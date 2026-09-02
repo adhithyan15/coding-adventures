@@ -216,7 +216,6 @@ describe("the real corpus", () => {
     const paceViolations = measureScriptRamp(lessons, loadChapterPolicy()).summary.lessonViolations;
     expect(paceViolations).toBeGreaterThan(0);
     expect(report.summary.violations).toBeGreaterThan(paceViolations * 5);
-<<<<<<< HEAD
     // A CEILING on the absolute debt, so it may fall and never grow.
     //
     // **Do not tighten this number when your PR pays debt down.** A ceiling is
@@ -225,25 +224,20 @@ describe("the real corpus", () => {
     // ratcheting this line is the most common DIRTY in this corpus — one Tamil
     // branch went DIRTY three times in a session, twice on exactly this and the
     // handwritten counter, and arithmetic on either side would have been wrong
-    // each time because the tree had moved again underneath.
+    // each time because the tree had moved again underneath. A ratchet does NOT
+    // make the line safe: it stops the value growing, not two branches
+    // disagreeing about where it now sits.
     //
     // Raise it only if debt genuinely grows, and write down why. Tighten it only
     // deliberately, alone, when nothing else is in flight.
-    // 498 as of the Marathi runway; 397 once Kannada's letter ladder was reseated
-    // to run from chapter 1 rather than chapter 6, taking that track 30 -> 10.
-    // Whoever raises it writes down why.
-    expect(report.summary.violations).toBeLessThanOrEqual(397);
-=======
-    // And a CEILING on the absolute debt, so it may fall and never grow.
-    // 498 as of the Marathi runway, and falling fast as tranches land together:
-    // Kannada's letter ladder reseated to run from chapter 1 rather than chapter 6
-    // (30 -> 10), Tamil's opening chapters stopped printing untaught script in body
-    // prose (21 -> 0, the first non-Latin track at zero), and further paydown on
-    // main. Re-MEASURED against the merged tree at each step rather than derived by
-    // arithmetic from either side, because two branches that both lower it will
-    // both be wrong about the total. Whoever raises it writes down why.
-    expect(report.summary.violations).toBeLessThanOrEqual(336);
->>>>>>> origin/main
+    //
+    // 498 as of the Marathi runway, and falling as tranches land: Kannada's
+    // letter ladder reseated to chapter 1 (30 -> 10), Tamil's openings stopped
+    // printing untaught script in body prose (21 -> 0, the first non-Latin track
+    // at zero), Italian/Telugu/Malayalam stopped hand-writing their openings, and
+    // Sanskrit romanized its five opening chapters (31 -> 21). Each step
+    // re-MEASURED against the merged tree, never derived by arithmetic.
+    expect(report.summary.violations).toBeLessThanOrEqual(271);
     // Was `toBeGreaterThan(5)`, asserting the debt was large. It has stopped being
     // a fact about the corpus and started being a fact about how much of it has
     // been fixed: the Chinese, Japanese and Gujarati script tranches each removed

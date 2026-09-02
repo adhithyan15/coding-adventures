@@ -1,0 +1,18 @@
+{
+  "language": "sanskrit",
+  "chapter": 1,
+  "sourceHash": "fnv1a64:e7dd49a17642cd8c",
+  "lessonIds": [
+    "SA-C01-namaste",
+    "SA-C01-namaskara",
+    "SA-S02-letter-na",
+    "SA-C01-dhanyavada",
+    "SA-C01-svagatam",
+    "SA-S200-letter-da",
+    "SA-C01-am",
+    "SA-C01-na",
+    "SA-C01-practice",
+    "SA-S05-sign-virama"
+  ],
+  "tex": "sanskrit/book/chapters/ch01-greetings.tex"
+}

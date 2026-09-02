@@ -1,0 +1,18 @@
+{
+  "language": "sanskrit",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:03188cec7c67d2b4",
+  "lessonIds": [
+    "SA-C03-katham",
+    "SA-C03-bhavan-katham-asti",
+    "SA-S06-vowel-sign-aa",
+    "SA-C03-aham",
+    "SA-C03-kushalam",
+    "SA-S01-letter-ma",
+    "SA-C03-kushali-asmi",
+    "SA-C03-na-cinta",
+    "SA-C03-practice",
+    "SA-S203-vowel-sign-u"
+  ],
+  "tex": "sanskrit/book/chapters/ch03-responding.tex"
+}

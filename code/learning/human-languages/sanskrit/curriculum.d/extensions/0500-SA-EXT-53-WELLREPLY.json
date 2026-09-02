@@ -1,0 +1,11 @@
+{
+  "id": "SA-EXT-53-WELLREPLY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can answer \"how are you?\" in Sanskrit with a full sentence rather than a single word.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C03-kushali-asmi"
+  ]
+}

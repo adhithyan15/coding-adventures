@@ -7,10 +7,19 @@
     "SPINE-EXCHANGE-NAMES"
   ],
   "payoff": {
-    "lesson": "SA-C02-tava-nama-kim",
+    "lesson": "SA-C02-practice",
     "kind": "task",
-    "summary": "Complete SA-C02-tava-nama-kim, the canonical closing checkpoint, and demonstrate the chapter promise: introduce myself in Sanskrit, give my name, and understand the other person's name.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Complete SA-C02-practice, the canonical closing checkpoint, and demonstrate the chapter promise: introduce myself in Sanskrit, give my name, and understand the other person's name.",
+    "assesses": [
+      "SA-PATTERN-MY-NAME-IS",
+      "SA-PATTERN-WHATS-YOUR-NAME",
+      "SA-LEX-ANANDAH",
+      "SA-LEX-NAMA",
+      "SA-LEX-MAMA",
+      "SA-LEX-ASTI",
+      "SA-LEX-KIM",
+      "SA-GRAMMAR-COPULA-IS-KEPT",
+      "SA-HISTORY-CH2-SOURCE-WORDS"
+    ]
   }
 }

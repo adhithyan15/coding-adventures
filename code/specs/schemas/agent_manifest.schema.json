@@ -28,6 +28,21 @@
           "channels": {"$ref": "#/$defs/channelsV2"}
         }
       }
+    },
+    {
+      "if": {
+        "properties": {"version": {"const": 3}},
+        "required": ["version"]
+      },
+      "then": {
+        "properties": {
+          "channels": {"$ref": "#/$defs/channelsV2"}
+        },
+        "required": ["allowed_tools"]
+      },
+      "else": {
+        "not": {"required": ["allowed_tools"]}
+      }
     }
   ],
   "properties": {
@@ -37,7 +52,7 @@
     },
     "version": {
       "type": "integer",
-      "enum": [1, 2],
+      "enum": [1, 2, 3],
       "description": "Schema version. Version 1 is accepted for installed legacy packages. Version 2 requires an explicit payload-schema version for every declared channel."
     },
     "agent": {
@@ -88,6 +103,18 @@
         }
       },
       "required": ["secrets", "mode", "max_lease_ttl"]
+    },
+    "allowed_tools": {
+      "description": "D18D tool identifiers this agent may call. Schema v3 only. Namespaced, sorted, deduplicated. A bare namespace is rejected: it names no tool and would invite prefix matching in the broker.",
+      "type": "array",
+      "uniqueItems": true,
+      "maxItems": 256,
+      "items": {
+        "type": "string",
+        "minLength": 3,
+        "maxLength": 128,
+        "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$"
+      }
     },
     "capabilities": {
       "type": "array",

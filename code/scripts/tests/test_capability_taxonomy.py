@@ -117,6 +117,46 @@ class CapabilityTaxonomyTest(unittest.TestCase):
         legacy_with_current_binding["channels"] = current["channels"]
         self.assertTrue(list(validator.iter_errors(legacy_with_current_binding)))
 
+        # Schema v3 adds allowed_tools, and the published schema must mirror the
+        # Rust gate in chief-of-staff-agent-manifest. The prose, README and
+        # CHANGELOG were once evolved for v3 while this file was not, which left
+        # a v3 manifest failing its own published contract -- and this schema is
+        # what a reviewer, an editor, or a non-Rust consumer reads to learn what
+        # a signed manifest authorizes.
+        v3 = dict(current)
+        v3["version"] = 3
+        v3["allowed_tools"] = ["artifact.write", "context.append_entry"]
+        validator.validate(v3)
+
+        v3_no_tools = dict(v3)
+        v3_no_tools["allowed_tools"] = []
+        validator.validate(v3_no_tools)
+
+        # Required at v3: "calls no tools" is declared, never defaulted into.
+        v3_missing_tools = {k: v for k, v in v3.items() if k != "allowed_tools"}
+        self.assertTrue(list(validator.iter_errors(v3_missing_tools)))
+
+        # Earlier versions may not carry a tool surface, or a consumer trusting
+        # `version` would be told something false about the signed bytes.
+        for older in (1, 2):
+            smuggled = dict(v3)
+            smuggled["version"] = older
+            if older == 1:
+                smuggled["channels"] = legacy["channels"]
+            self.assertTrue(list(validator.iter_errors(smuggled)))
+
+        # A bare namespace names no tool and would invite prefix matching.
+        for bad in ("artifact", "Artifact.create", "artifact..create", ".create", "artifact."):
+            malformed = dict(v3)
+            malformed["allowed_tools"] = [bad]
+            self.assertTrue(
+                list(validator.iter_errors(malformed)), f"must reject {bad!r}"
+            )
+
+        duplicated = dict(v3)
+        duplicated["allowed_tools"] = ["artifact.write", "artifact.write"]
+        self.assertTrue(list(validator.iter_errors(duplicated)))
+
         invalid = dict(current)
         invalid["channels"] = {
             "reads": {},

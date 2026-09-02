@@ -4,7 +4,7 @@
 #![deny(missing_docs)]
 
 pub use chief_of_staff_agent_manifest::{
-    AgentManifest, Capability, ChannelAccess, MANIFEST_VERSION,
+    AgentManifest, Capability, ChannelAccess, MANIFEST_V2_VERSION,
 };
 use document_ast::{BlockNode, InlineNode, ListChildNode};
 use std::collections::{BTreeMap, BTreeSet};
@@ -176,7 +176,12 @@ pub fn parse_skill(source: &str) -> Result<ParsedSkill, SkillParseError> {
     let capabilities = parse_capabilities(&document.children, &agent)?;
     let deno_permissions = deno_permissions(&capabilities);
     let manifest = AgentManifest {
-        version: MANIFEST_VERSION,
+        // Pinned to v2 rather than tracking MANIFEST_VERSION. SKILL.md has no
+        // `## Tools needed` section yet, and v3 requires `allowed_tools` to be
+        // declared -- so following the constant would have silently changed
+        // what this parser emits the moment the constant moved. Emitting v3
+        // becomes correct when SKILL.md can express a tool surface.
+        version: MANIFEST_V2_VERSION,
         agent: agent.clone(),
         description,
         privilege_tier,
@@ -184,6 +189,7 @@ pub fn parse_skill(source: &str) -> Result<ParsedSkill, SkillParseError> {
         message_schema_versions,
         vault_access: None,
         capabilities,
+        allowed_tools: Vec::new(),
         restart_policy,
         justification: format!(
             "Level 1 agent {agent} requests only the access declared in its SKILL.md."
@@ -554,7 +560,7 @@ mod tests {
         let skill = parse_skill(MINIMAL).unwrap();
         assert_eq!(skill.title, "Weather Reporter");
         assert_eq!(skill.manifest.agent, "weather-reporter");
-        assert_eq!(skill.manifest.version, MANIFEST_VERSION);
+        assert_eq!(skill.manifest.version, MANIFEST_V2_VERSION);
         assert_eq!(skill.manifest.privilege_tier, 0);
         assert_eq!(skill.manifest.channels, ChannelAccess::default());
         assert!(skill.manifest.message_schema_versions.is_empty());
