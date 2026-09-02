@@ -68,6 +68,23 @@ fn electoral_college_count_binds_the_winning_threshold_with_its_sentence() {
 
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
+    // FULL ANCHORED CITATION PIN. A fragment needle in this file
+    // matched only part of the sentence, so the citation could be
+    // truncated AT that point -- deleting everything after it -- while
+    // the test stayed green. Anchoring on the `"source":"` key and
+    // closing on the terminating quote pins head, tail, punctuation and
+    // length at once.
+    //
+    // Several tests load this library, because siblings import it as a
+    // dependency. The pin belongs in its OWN test: the others are not
+    // responsible for its provenance. That is also why the assertion has
+    // to be unique -- where a co-loaded sibling carries a byte-identical
+    // citation, an assertion either one satisfies pins neither.
+    // See issues #13916 and #13918.
+    assert!(
+        out.contains("\"source\":\"Including Washington, D.C.'s three electors, there are currently 538 electors in all.\""),
+        "the citation is the whole source sentence, exactly: {out}"
+    );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     assert!(out.contains("\"N\":\"270\""), "270 electors to win: {out}");
     // An exact number must arrive with the sentence that states it.
