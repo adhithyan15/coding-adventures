@@ -44,9 +44,10 @@ The first verb of the morning: to get up, off the கட்டில் you name
 what the sun does.
 
 Look at it hard, because you have seen these two letters before with one more on the end.
-எழுது (*eḻudu*) is "to write". எழு is "to rise". They are not the same word wearing an
-ending — they are two separate verbs that happen to start alike, and telling them apart by ear
-is worth a moment now rather than later.
+எழுது (*eḻudu*) is "to write". எழு is "to rise". Whether the longer one grew out of the
+shorter is a question this book does not answer, because the dictionaries do not agree on it —
+and it does not matter yet. What matters is that they are two different verbs, they are one
+letter apart, and swapping them changes what you said.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

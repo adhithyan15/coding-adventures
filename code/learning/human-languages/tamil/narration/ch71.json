@@ -4,7 +4,7 @@
   "chapter": 71,
   "title": "Through the Day",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e906a0ebb46f96a8",
+  "sourceHash": "fnv1a64:0ee9e4a9a812a029",
   "lessons": [
     {
       "id": "TA-C71-rise",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:dbea1438802608db",
+      "sourceHash": "fnv1a64:0b27b2aacc6c76e1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -61,7 +61,7 @@
             },
             {
               "kind": "speech",
-              "text": "Look at it hard, because you have seen these two letters before with one more on the end. எழுது (eḻudu) is \"to write\". எழு is \"to rise\". They are not the same word wearing an ending — they are two separate verbs that happen to start alike, and telling them apart by ear is worth a moment now rather than later."
+              "text": "Look at it hard, because you have seen these two letters before with one more on the end. எழுது (eḻudu) is \"to write\". எழு is \"to rise\". Whether the longer one grew out of the shorter is a question this book does not answer, because the dictionaries do not agree on it — and it does not matter yet. What matters is that they are two different verbs, they are one letter apart, and swapping them changes what you said."
             }
           ]
         },
