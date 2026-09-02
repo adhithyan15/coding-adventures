@@ -77,4 +77,7 @@ table neuron_part_function {
     source "Dendrites receive afferent signals."
     locator "https://www.ncbi.nlm.nih.gov/books/NBK441977/"
     trust authoritative
+    cites "Axons carry efferent signals." locator "https://www.ncbi.nlm.nih.gov/books/NBK441977/"
+    cites "The information from the inputs that impinge on the neuronal dendrites is integrated and “read out” at the origin of the axon, the portion of the nerve cell specialized for signal conduction to the next site of synaptic interaction (see Figures 1." locator "https://www.ncbi.nlm.nih.gov/books/NBK11103/"
+    cites "The presence of myelin greatly increases conduction velocity." locator "https://www.ncbi.nlm.nih.gov/books/NBK551652/"
 }
