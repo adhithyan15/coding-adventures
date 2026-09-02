@@ -9,26 +9,26 @@ headword: ਕੋਈ ਗੱਲ ਨਹੀਂ
 romanization: "koī gall nahīṁ"
 gloss: "it is nothing; no problem; you are welcome"
 concept_tag: COURTESY-YOUREWELCOME
-prerequisites: [PA-C01-han-nahin, PA-C01-dhanvaad]
+prerequisites: [PA-C01-han-nahin, PA-C01-dhanvaad, PA-S02-sassa-tatta-sihari, PA-S03-nanna-bihari-dulava]
 sounds: [double-ll, bindi-nasal]
 roots: [na-negative, gall-word]
 duration:
   max_seconds: 220
 requires:
-  knowledge: [PA-LEX-HAAN-NAHIN-01, PA-LEX-DHANVAAD-01]
+  knowledge: [PA-LEX-HAAN-NAHIN-01, PA-LEX-DHANVAAD-01, PA-SCRIPT-RECOG-BIHARI-01, PA-SCRIPT-RECOG-KA-01, PA-SCRIPT-RECOG-NANNA-01]
 introduces:
   knowledge: [PA-PHRASE-NO-PROBLEM-03, PA-ETYMON-NEGATIVE-NE-03]
 introduces_idioms: [PA-IDIOM-KOI-GALL-NAHIN-GRACIOUS-REPLY-01]
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-LEX-HAAN-NAHIN-01, PA-LEX-DHANVAAD-01, PA-PHRASE-NO-PROBLEM-03, PA-ETYMON-NEGATIVE-NE-03]
+  knowledge: [PA-LEX-HAAN-NAHIN-01, PA-LEX-DHANVAAD-01, PA-PHRASE-NO-PROBLEM-03, PA-ETYMON-NEGATIVE-NE-03, PA-SCRIPT-RECOG-BIHARI-01, PA-SCRIPT-RECOG-KA-01, PA-SCRIPT-RECOG-NANNA-01]
 skills: [listening, speaking]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: courteous
 variety: standard-punjabi
-reviews_of: [PA-C01-han-nahin, PA-C01-dhanvaad]
+reviews_of: [PA-C01-han-nahin, PA-C01-dhanvaad, PA-S02-sassa-tatta-sihari, PA-S03-nanna-bihari-dulava]
 ---
 
 # ਕੋਈ ਗੱਲ ਨਹੀਂ (koī gall nahīṁ) — "it's nothing"
@@ -40,7 +40,7 @@ reviews_of: [PA-C01-han-nahin, PA-C01-dhanvaad]
 reply, built on a word from Chapter 1.
 
 ## The letters in this word
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-RECOG-BIHARI-01, PA-SCRIPT-RECOG-KA-01, PA-SCRIPT-RECOG-NANNA-01] -->
 
 **ਕੋਈ** (*koī*, "any") + **ਗੱਲ** (*gall*, "matter, talk" — note the *addak*, the
 doubling mark, on **ੱਲ**) + **ਨਹੀਂ** (*nahīṁ*, "not," from Chapter 1) → *koī gall

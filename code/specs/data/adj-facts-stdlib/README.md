@@ -389,6 +389,89 @@ a recalled fact **composes into a formula** — a looked-up atomic number, side 
 conversion factor flows straight into arithmetic. That is the bridge from **recall** to
 **compute**, and the reason facts and formulas belong in one standard library.
 
+## When one sentence does not cover every row: add `cites`, do NOT drop the evidence
+
+A `table` carries one `source`/`locator`/`trust` envelope. **That does not mean a table can carry
+only one piece of evidence**, and reading it that way has been the single most expensive mistake in
+this library's history.
+
+`cites` attaches additional evidence, each with **its own locator**, and every answer carries all of
+it as corroborations:
+
+```adj
+table government_branch_member {
+    columns branch, member
+
+    row (legislative, congress)
+    row (judicial, supreme_court)
+    row (executive, president)
+    row (executive, vice_president)
+    row (executive, president_cabinet)
+
+    source "The president, the vice president, and the president's cabinet are the members of the executive branch."
+    locator "https://www.usa.gov/branches-of-government"
+    trust authoritative
+    cites "The legislative branch is made up of Congress:" locator "https://www.usa.gov/branches-of-government"
+    cites "The judicial branch includes the Supreme Court and other federal courts." locator "https://www.usa.gov/branches-of-government"
+}
+```
+
+**The locators may differ.** `cites` is not restricted to the `source`'s page — a table whose rows
+were verified across several NIH fact sheets should carry each fact sheet.
+
+### The rule
+
+> **If a row's own supporting sentence is not the `source`, it must be a `cites`.**
+> Evidence that lives only in the literate header is not provenance — it is a comment, and nothing
+> can check it.
+
+Concretely: if your first column is a CATEGORY (`legislative` / `judicial` / `executive`, or
+`cerebrum` / `brainstem` / `hippocampus`) and the `source` sentence names only one of them, the
+others each need a `cites`. Otherwise every answer is returned evidenced by a sentence **about a
+different category**, which is worse than an incomplete citation — it is a wrong one.
+
+### What this cost before it was written down
+
+Measured on 2026-09-02, and the reason this section exists:
+
+- **105 of 362 headers** asserted some form of "an ADJ `table` carries ONE provenance envelope, so
+  the `source` below holds the single cleanest span". The first clause is true; the inference is
+  false.
+- **36 libraries** named evidence URLs in their header that appear in no `locator`, with zero `cites`,
+  amounting to **123 distinct source pages** documented and encoded nowhere — a mean of 3.4 per library.
+  In **12 of the 36**, the header URL count exactly equals the ROW count: every single row was verified
+  against its own separate page, and one of those pages was encoded. `biology/hormone-glands.adj` fetched
+  twelve SEER endocrine pages and ships with one.
+- `anatomy/brain-parts.adj` documented five sentences across three NIH/NCI pages and encoded one.
+  Verified against the raw HTML of that one page: the terms in **13 of its 15 rows appear zero
+  times**. Those rows were returned to a learner with a `trust authoritative` citation to a page
+  that never mentions them.
+- `biology/vitamins.adj` documented a per-vitamin NIH fact sheet with a verbatim quote for each of
+  its seven rows, and encoded only the Vitamin C sheet — so `vitamin_b12 -> megaloblastic_anemia`
+  was evidenced by "People who get little or no vitamin C … can get scurvy."
+
+None of those libraries was researched carelessly. `biology/vitamins.adj`'s header even states the
+rule it followed — "any pair whose disease could not be verified there was dropped" — and names and
+quotes every source. **The rigour was real and it evaporated at the boundary between the comment and
+the table**, because the author believed the format could not hold it. See issues #13928, #13931,
+#13934.
+
+### A citation must name its own subject
+
+Related, and easy to get wrong when quoting from a page whose `<h3>` carries the subject:
+
+```adj
+% WRONG -- read on its own, this does not say what "They" are:
+source "They often are the first sign of an approaching warm front or upper-level jet streak."
+
+% WRONG -- an example of WHAT?
+source "One example is the joint formed by the trapezium and 1st metacarpal bone."
+```
+
+A citation is read **detached from its page**, so a sentence that depends on a heading or a previous
+sentence for its subject grounds nothing. Widen the quote until it is self-contained, or choose a
+different sentence.
+
 ## When no single source states the fact directly: DERIVE it with a `rule`
 
 Every library above is a `table`: one source states the answer, and recall is a plain lookup.

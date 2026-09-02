@@ -9,32 +9,32 @@ type: writing
 headword: "ਰ"
 romanization: "ra"
 gloss: "trace the Gurmukhi letter ra"
-prerequisites: [PA-W03-language-no-model]
+prerequisites: [PA-W03-language-no-model, PA-S02-mamma-rara-lava]
 sounds: []
 roots: []
 duration:
   max_seconds: 165
 requires:
-  knowledge: [PA-SCRIPT-SIHARI-01]
+  knowledge: [PA-SCRIPT-SIHARI-01, PA-SCRIPT-RECOG-RA-01]
 introduces:
   knowledge: [PA-SCRIPT-RA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-SCRIPT-SIHARI-01, PA-SCRIPT-RA-01]
+  knowledge: [PA-SCRIPT-SIHARI-01, PA-SCRIPT-RA-01, PA-SCRIPT-RECOG-RA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-W03-language-no-model]
+reviews_of: [PA-W03-language-no-model, PA-S02-mamma-rara-lava]
 ---
 
 # ਰ — one new base for the residence label
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-SIHARI-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-SIHARI-01, PA-SCRIPT-RECOG-RA-01] -->
 
 Find the familiar short-vowel mark **ਿ**. Today adds only one base letter.
 

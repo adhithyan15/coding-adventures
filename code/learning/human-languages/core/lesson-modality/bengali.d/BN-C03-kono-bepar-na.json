@@ -3,7 +3,7 @@
     "id": "BN-C03-kono-bepar-na",
     "language": "bengali",
     "chapter": 5,
-    "sequence": 350,
+    "sequence": 380,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:0cfee389253d6152",
+    "sourceHash": "fnv1a64:907bde8d5558d71f",
     "detachableSegments": [
       "The letters in this word"
     ]

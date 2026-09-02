@@ -9,32 +9,32 @@ type: writing
 headword: "ਪ"
 romanization: "pa"
 gloss: "trace pa before writing Punjabi"
-prerequisites: [PA-W03-language-label]
+prerequisites: [PA-W03-language-label, PA-S08-pappa]
 sounds: []
 roots: []
 duration:
   max_seconds: 165
 requires:
-  knowledge: [PA-FORM-LABEL-LANGUAGE-01]
+  knowledge: [PA-FORM-LABEL-LANGUAGE-01, PA-SCRIPT-RECOG-PA-01]
 introduces:
   knowledge: [PA-SCRIPT-PA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-FORM-LABEL-LANGUAGE-01, PA-SCRIPT-PA-01]
+  knowledge: [PA-FORM-LABEL-LANGUAGE-01, PA-SCRIPT-PA-01, PA-SCRIPT-RECOG-PA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-W03-language-label]
+reviews_of: [PA-W03-language-label, PA-S08-pappa]
 ---
 
 # ਪ — first piece of ਪੰਜਾਬੀ
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-LABEL-LANGUAGE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-LABEL-LANGUAGE-01, PA-SCRIPT-RECOG-PA-01] -->
 
 Read **ਭਾਸ਼ਾ** as language. Now hide it; this session adds one value-letter.
 

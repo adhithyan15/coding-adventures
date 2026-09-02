@@ -9,32 +9,32 @@ type: writing
 headword: "ੈ"
 romanization: "ai"
 gloss: "place the dulavan, the two-stroke ai sign above the top line"
-prerequisites: [PA-W09-dulainkar]
+prerequisites: [PA-W09-dulainkar, PA-S03-nanna-bihari-dulava]
 sounds: []
 roots: []
 duration:
   max_seconds: 160
 requires:
-  knowledge: [PA-SCRIPT-E-MATRA-01, PA-SCRIPT-DULAINKAR-01, PA-SCRIPT-MA-01]
+  knowledge: [PA-SCRIPT-E-MATRA-01, PA-SCRIPT-DULAINKAR-01, PA-SCRIPT-MA-01, PA-SCRIPT-RECOG-DULAVA-01]
 introduces:
   knowledge: [PA-SCRIPT-DULAVAN-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-SCRIPT-E-MATRA-01, PA-SCRIPT-DULAINKAR-01, PA-SCRIPT-MA-01, PA-SCRIPT-DULAVAN-01]
+  knowledge: [PA-SCRIPT-E-MATRA-01, PA-SCRIPT-DULAINKAR-01, PA-SCRIPT-MA-01, PA-SCRIPT-DULAVAN-01, PA-SCRIPT-RECOG-DULAVA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-W09-dulainkar, PA-W01-e-matra, PA-W01-ma]
+reviews_of: [PA-W09-dulainkar, PA-W01-e-matra, PA-W01-ma, PA-S03-nanna-bihari-dulava]
 ---
 
 # ੈ — one stroke becomes two
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-E-MATRA-01, PA-SCRIPT-DULAINKAR-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-E-MATRA-01, PA-SCRIPT-DULAINKAR-01, PA-SCRIPT-RECOG-DULAVA-01] -->
 
 [PAUSE 2s] Write **ਤੇ** once: the single slanting stroke above the line is the
 *e* sign you met in **ਨਮਸਤੇ**. Then write **ਨੂ** from the session before, with

@@ -2,8 +2,8 @@
   "lesson": {
     "id": "KA-S117-letter-ya",
     "language": "kannada",
-    "chapter": 13,
-    "sequence": 416,
+    "chapter": 8,
+    "sequence": 365,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:b96f3326db306f60",
+    "sourceHash": "fnv1a64:96db5a694eacc755",
     "detachableSegments": [
       "Script you'll notice: ಯ",
       "Writing: ಯ — copy what you see"

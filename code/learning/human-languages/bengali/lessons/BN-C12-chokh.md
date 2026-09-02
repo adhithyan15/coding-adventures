@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C12-chokh
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 910
-chapter: 18
+sequence: 1020
+chapter: 20
 type: word
 headword: চোখ
 romanization: chokh
@@ -12,7 +12,7 @@ concept_tag: BN-BODY-EYE
 prerequisites: [BN-C11-bon]
 sounds: [kh-aspirate-review]
 roots: [caksus-see]
-etymology_hook: "চোখ traces to Sanskrit চক্ষুস্ cakṣus, 'eye,' itself built on √cakṣ 'to see,' PIE kʷeḱ- 'to appear, to see' — Persian čašm is its nearest named cousin, and no secure English descendant is claimed; Old Bengali softened cakṣus through চখু and চউখ into today's চোখ, an ardhatatsama, half old sound and half new"
+etymology_hook: "চোখ traces to Sanskrit *cakṣus*, 'eye,' itself built on √cakṣ 'to see,' PIE kʷeḱ- 'to appear, to see' — Persian čašm is its nearest named cousin, and no secure English descendant is claimed; Old Bengali softened cakṣus through *cakhu* and *coukh* into today's চোখ, an ardhatatsama, half old sound and half new"
 duration:
   max_seconds: 265
 requires:
@@ -54,12 +54,12 @@ consonant, so no trailing vowel: *chokh*, not *chokho*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**চোখ** traces to Sanskrit **চক্ষুস্** (*cakṣus*), "eye" — a noun built
-directly on **√চক্ষ্** (*√cakṣ*, "to see"), from PIE **\*kʷeḱ-**, "to appear,
+**চোখ** traces to Sanskrit *cakṣus*, "eye" — a noun built
+directly on *√cakṣ* ("to see"), from PIE **\*kʷeḱ-**, "to appear,
 to see." The nearest named cousin outside Indo-Aryan is Persian **čašm**,
 "eye"; no secure English descendant is claimed for this one. And
 the word itself has travelled: Old Bengali softened *cakṣus* down through
-**চখু** (*cakhu*) and **চউখ** (*coukh*) to today's **চোখ** — half kept from
+*cakhu* and *coukh* to today's **চোখ** — half kept from
 Sanskrit, half worn smooth by three centuries of sound change, which is why
 this kind of word gets its own name, **ardhatatsama**, "half a tatsama."
 

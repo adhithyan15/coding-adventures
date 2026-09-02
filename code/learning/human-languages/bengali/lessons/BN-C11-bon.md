@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C11-bon
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 880
-chapter: 16
+sequence: 990
+chapter: 18
 type: word
 headword: বোন
 romanization: bon
@@ -56,10 +56,10 @@ it did on দুধ and ভাত: *bon*, not *bono*.
 
 English "sister" descends from PIE **\*swésōr**. **বোন does not.** It is a
 tadbhava through Magadhi Prakrit *\*bahiṇī, from Old Indo-Aryan *\*baghinī —
-a doublet of Sanskrit's own **ভগিনী** (*bhaginī*), "one with a share," built
-on **ভগ** (*bhaga*), "a share, a portion, good fortune." And *bhaga* is a noun
+a doublet of Sanskrit's own *bhaginī*, "one with a share," built
+on *bhaga*, "a share, a portion, good fortune." And *bhaga* is a noun
 from the very same verb that named this chapter's rice two lessons ago:
-**√ভজ্** (*√bhaj*, "to divide, to share out"), PIE **\*bʰeh₂g-**. ভাত is
+*√bhaj* ("to divide, to share out"), PIE **\*bʰeh₂g-**. ভাত is
 "the portion given"; বোন is "the one with a portion." Bengali's word for
 sister and Bengali's word for rice are, underneath, cousins. Its word for
 sister and English's are not.
@@ -76,7 +76,7 @@ family or not.
 - [YOU SAY: "āmār bon" — my sister]
 - [YOU SAY: the shared root — "bhaj … bhāt, bon"]
 - [YOU SAY: all four of this chapter's people — "bôndhu, pôribār, bhāi, bon"]
-- [YOU SAY: a count of them, using Chapter 10's numbers — "āmār ek bhāi. āmār
+- [YOU SAY: a count of them, using Chapter 12's numbers — "āmār ek bhāi. āmār
   dui bon." — one brother. two sisters.]
 
 ## Wrap-up Recall

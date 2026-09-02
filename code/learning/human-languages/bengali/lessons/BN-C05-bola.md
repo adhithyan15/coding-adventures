@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C05-bola
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 580
-chapter: 9
+sequence: 670
+chapter: 11
 type: word
 headword: বলা
 romanization: "bôlā"

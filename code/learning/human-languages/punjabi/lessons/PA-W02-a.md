@@ -9,32 +9,32 @@ type: writing
 headword: ਅ
 romanization: "a"
 gloss: "the independent vowel a"
-prerequisites: [PA-W01-namaste-read]
+prerequisites: [PA-W01-namaste-read, PA-S06-kakka-aira-aara]
 sounds: []
 roots: []
 duration:
   max_seconds: 160
 requires:
-  knowledge: [PA-SCRIPT-NAMASTE-READ-01]
+  knowledge: [PA-SCRIPT-NAMASTE-READ-01, PA-SCRIPT-RECOG-AIRA-01]
 introduces:
   knowledge: [PA-SCRIPT-INDEPENDENT-A-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-SCRIPT-NAMASTE-READ-01, PA-SCRIPT-INDEPENDENT-A-01]
+  knowledge: [PA-SCRIPT-NAMASTE-READ-01, PA-SCRIPT-INDEPENDENT-A-01, PA-SCRIPT-RECOG-AIRA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-W01-namaste-read]
+reviews_of: [PA-W01-namaste-read, PA-S06-kakka-aira-aara]
 ---
 
 # ਅ — a vowel that can stand first
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-NAMASTE-READ-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-NAMASTE-READ-01, PA-SCRIPT-RECOG-AIRA-01] -->
 
 Point to the first known piece in **ਨਮਸਤੇ**: **ਨ**. A consonant can carry an
 unwritten *a*. Today a vowel stands by itself at the beginning of a word.

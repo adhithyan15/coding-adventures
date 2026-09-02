@@ -2,7 +2,8 @@
   "segments": [
     "BN-PATH-001",
     "BN-PATH-004A",
-    "BN-PATH-019"
+    "BN-PATH-019",
+    "BN-PATH-022"
   ],
   "omits": [
     "GREETING-FORMAL",

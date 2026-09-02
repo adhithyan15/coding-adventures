@@ -9,27 +9,27 @@ headword: ਪੜ੍ਹਨਾ
 romanization: paṛhnā
 gloss: to read — and in the language it came from, reading meant saying it out loud
 concept_tag: VERB-READ
-prerequisites: [PA-C08-samajhna]
+prerequisites: [PA-C08-samajhna, PA-S07-naana-jajja-vavva, PA-S07-rara-ghagga-dadda, PA-S08-khakkha-jhajja-pairin, PA-S02-mamma-rara-lava]
 sounds: [tone-falling, subjoined-ha, retroflex-rra]
 roots: [sanskrit-pathati, prakrit-padhai]
 etymology_hook: paṛhnā comes through Prakrit paḍhaï from Sanskrit paṭhati, “recites, reads aloud” — reading named as a thing done with the mouth, not the eye, and the same root that gives Punjabi pāṭh, a recitation of scripture; where paṭh- itself came from is unsettled, so no English cousin is claimed.
 duration:
   max_seconds: 285
 requires:
-  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-SAMAJHNA, PA-SOUND-TONE-FALLING, PA-SCRIPT-GURMUKHI-TOP-LINE, PA-LEX-VEKHNA, PA-ETYMON-VEKHNA-IKS]
+  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-SAMAJHNA, PA-SOUND-TONE-FALLING, PA-SCRIPT-GURMUKHI-TOP-LINE, PA-LEX-VEKHNA, PA-ETYMON-VEKHNA-IKS, PA-SCRIPT-RECOG-KHA-01, PA-SCRIPT-RECOG-NAANA-01, PA-SCRIPT-RECOG-PAIRIN-01, PA-SCRIPT-RECOG-RRA-01, PA-SCRIPT-RECOG-VA-01, PA-SCRIPT-RECOG-LAVA-01]
 introduces:
   knowledge: [PA-LEX-PARHNA, PA-SCRIPT-SUBJOINED-HA, PA-ETYMON-PARHNA-PATH]
 introduces_idioms: []
 introduces_senses: [PA-SENSE-PARHNA-READ-STUDY-01]
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-LEX-PARHNA, PA-SCRIPT-SUBJOINED-HA, PA-ETYMON-PARHNA-PATH, PA-GRAMMAR-NA-INFINITIVE, PA-LEX-SAMAJHNA, PA-SOUND-TONE-FALLING, PA-ETYMON-SAMAJH-BUDH, PA-LEX-SOCHNA, PA-SCRIPT-GURMUKHI-TOP-LINE, PA-LEX-VEKHNA, PA-ETYMON-VEKHNA-IKS, PA-COMPARISON-VEKHNA-DEKHNA]
+  knowledge: [PA-LEX-PARHNA, PA-SCRIPT-SUBJOINED-HA, PA-ETYMON-PARHNA-PATH, PA-GRAMMAR-NA-INFINITIVE, PA-LEX-SAMAJHNA, PA-SOUND-TONE-FALLING, PA-ETYMON-SAMAJH-BUDH, PA-LEX-SOCHNA, PA-SCRIPT-GURMUKHI-TOP-LINE, PA-LEX-VEKHNA, PA-ETYMON-VEKHNA-IKS, PA-COMPARISON-VEKHNA-DEKHNA, PA-SCRIPT-RECOG-KHA-01, PA-SCRIPT-RECOG-NAANA-01, PA-SCRIPT-RECOG-PAIRIN-01, PA-SCRIPT-RECOG-RRA-01, PA-SCRIPT-RECOG-VA-01, PA-SCRIPT-RECOG-LAVA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [PA-C08-samajhna, PA-C08-sochna, PA-C07-vekhna]
+reviews_of: [PA-C08-samajhna, PA-C08-sochna, PA-C07-vekhna, PA-S07-naana-jajja-vavva, PA-S07-rara-ghagga-dadda, PA-S08-khakkha-jhajja-pairin, PA-S02-mamma-rara-lava]
 ---
 
 # ਪੜ੍ਹਨਾ — “to read,” which used to mean “to say out loud”
@@ -51,7 +51,7 @@ The stem is **paṛh-**, and its *h* is not breath. It is the falling pitch agai
 and **ਪੜ੍ਹਣਾ**; this book uses the first.
 
 ## The letters in this word
-<!-- hl-knowledge: introduces=[PA-SCRIPT-SUBJOINED-HA]; assesses=[PA-SCRIPT-GURMUKHI-TOP-LINE] -->
+<!-- hl-knowledge: introduces=[PA-SCRIPT-SUBJOINED-HA]; assesses=[PA-SCRIPT-GURMUKHI-TOP-LINE, PA-SCRIPT-RECOG-KHA-01, PA-SCRIPT-RECOG-NAANA-01, PA-SCRIPT-RECOG-PAIRIN-01, PA-SCRIPT-RECOG-RRA-01, PA-SCRIPT-RECOG-VA-01] -->
 
 **ਪ** *p*, then **ੜ** *ṛ* — a flapped *r* made with the tongue tip curled back
 and struck forward. Then the new thing, then **ਨਾ**.
@@ -89,7 +89,7 @@ English cousin for it.
 - [YOU CONTRAST: *vekhṇā*, built on the **eye**; *paṛhnā*, built on the **voice**]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-PARHNA, PA-SCRIPT-SUBJOINED-HA, PA-ETYMON-PARHNA-PATH, PA-SCRIPT-GURMUKHI-TOP-LINE, PA-SOUND-TONE-FALLING] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-PARHNA, PA-SCRIPT-SUBJOINED-HA, PA-ETYMON-PARHNA-PATH, PA-SCRIPT-GURMUKHI-TOP-LINE, PA-SOUND-TONE-FALLING, PA-SCRIPT-RECOG-LAVA-01] -->
 <!-- hl-activity: {"id":"PA-C08-parhna-subjoined","kind":"text","assesses":["PA-SCRIPT-SUBJOINED-HA"],"prompt":"In the cluster rrha, where is the h written relative to the letter before it?","answer":"underneath","accepted":["below","under","beneath","underneath it","under it"],"feedback":{"correct":"Right: a subjoined ਹ is tucked underneath its neighbour instead of hanging from the top line.","incorrect":"Underneath. A subjoined ਹ tucks under its neighbour rather than hanging from the top line."},"response_seconds":8} -->
 
 [PAUSE 3s] What did *paṭhati* mean? (**To recite aloud**.) So which organ names

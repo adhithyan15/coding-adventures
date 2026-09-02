@@ -3,8 +3,8 @@
   "language": "punjabi",
   "chapter": 7,
   "title": "Six Verbs at the Core",
-  "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:2a44c1fd1fb662bf",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:1251e66877da0e63",
   "lessons": [
     {
       "id": "PA-C07-hona",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4662b67ab08de593",
+      "sourceHash": "fnv1a64:d4b2859d09baee3d",
       "notice": null,
       "blocks": [
         {
@@ -145,6 +145,185 @@
             {
               "kind": "speech",
               "text": "Which ending names a Punjabi verb, and what is left of hoṇā once you take it off? (-ṇā; the stem ho-.) And why do hoṇā and hai not resemble each other at all? (They are two different ancient verbs braided into one — the bhū- verb and the as- verb, exactly as English braids be with is.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-S07-naana-jajja-vavva",
+      "sequence": 365,
+      "title": "ਣ, ਜ, ਵ — three pieces met inside a word you already say",
+      "headword": "ਣ · ਜ · ਵ",
+      "romanization": "ṇa · ja · va",
+      "gloss": "three pieces of Gurmukhi, met inside a word you already say",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ac0d337851c33f8b",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ਣ, ਜ, ਵ"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ਣ, ਜ, ਵ until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Almost every verb in this chapter ends in the same two pieces. Meet them."
+            },
+            {
+              "kind": "speech",
+              "text": "First, say the last things you learned once more, out loud and from memory:"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ikk do tinn chār panj, panj, panj, hoṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ikk do tinn chār panj* · *panj · panj* · *hoṇā*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ਣ, ਜ, ਵ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਣ."
+            },
+            {
+              "kind": "speech",
+              "text": "ṇāṇā — ṇa. A consonant, the retroflex n: the tongue curls back and taps the roof of the mouth."
+            },
+            {
+              "kind": "speech",
+              "text": "ਜ."
+            },
+            {
+              "kind": "speech",
+              "text": "jajjā — ja. A consonant, the j of jam, with no breath after it."
+            },
+            {
+              "kind": "speech",
+              "text": "ਵ."
+            },
+            {
+              "kind": "speech",
+              "text": "vāvvā — va. A consonant between English v and w — the lip barely touches the teeth."
+            },
+            {
+              "kind": "speech",
+              "text": "Now put them where you have already heard them:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਜ + ਾ + ਣ + ਾ becomes ਜਾਣਾ (jāṇā) ਜਾਣਾ — jāṇā — to go."
+            },
+            {
+              "kind": "speech",
+              "text": "You are not being asked to write any of this. You are being asked to recognise it the next time it goes past."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: copy what you can see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ਣ, ਜ, ਵ in front of you and do not cover any of them. Follow each shape once with a finger, then copy it once with a pencil, larger than it is printed. Say its sound as your hand stops."
+            },
+            {
+              "kind": "speech",
+              "text": "This is observe-and-trace with the model visible. Nothing in these chapters asks you to write a Punjabi word from memory; that ladder starts later, and it starts from these same shapes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at ਜਾਣਾ (jāṇā) and point to each of today's pieces in turn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **ਜਾਣਾ** and point to each of today's pieces in turn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṇa, ja, va, then the whole word — jāṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṇa*, *ja*, *va*, then the whole word — *jāṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at the headword at the top of any earlier lesson in this chapter and find one shape you now know",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at the headword at the top of any earlier lesson in this chapter and find one shape you now know]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name today's pieces: ṇāṇā, jajjā, vāvvā. Which of them is a mātrā or a mark rather than a letter, and what does ਜਾਣਾ say? (jāṇā, “to go”.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Gurmukhi chart."
             }
           ]
         }
@@ -304,7 +483,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de95cf78daea6df3",
+      "sourceHash": "fnv1a64:7256ab3ba2460259",
       "notice": null,
       "blocks": [
         {
@@ -416,6 +595,185 @@
       ]
     },
     {
+      "id": "PA-S07-rara-ghagga-dadda",
+      "sequence": 385,
+      "title": "ੜ, ਘ, ਦ — three pieces met inside a word you already say",
+      "headword": "ੜ · ਘ · ਦ",
+      "romanization": "ṛa · gha · da",
+      "gloss": "three pieces of Gurmukhi, met inside a word you already say",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:065b35f70a6c50e0",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ੜ, ਘ, ਦ"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ੜ, ਘ, ਦ until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two shapes English has no letter for — and one of them carries a tone."
+            },
+            {
+              "kind": "speech",
+              "text": "First, say the last things you learned once more, out loud and from memory:"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāṇā, āuṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāṇā* · *āuṇā*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ੜ, ਘ, ਦ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ੜ."
+            },
+            {
+              "kind": "speech",
+              "text": "ṛāṛā — ṛa. A consonant English does not have: a retroflex flap, the tongue curled back and flicked forward once."
+            },
+            {
+              "kind": "speech",
+              "text": "ਘ."
+            },
+            {
+              "kind": "speech",
+              "text": "ghaggā — gha. Written as a breathy g, but modern Punjabi says it as a plain k-like sound carried on a falling tone. The letter is the record of a sound that moved into the pitch."
+            },
+            {
+              "kind": "speech",
+              "text": "ਦ."
+            },
+            {
+              "kind": "speech",
+              "text": "daddā — da. A consonant, the dental d: tongue on the teeth."
+            },
+            {
+              "kind": "speech",
+              "text": "Now put them where you have already heard them:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਘ + ੋ + ੜ + ਾ becomes ਘੋੜਾ (ghoṛā) and the dental one, in an ending this chapter leans on: ਦ + ਾ becomes ਦਾ (dā) ਘੋੜਾ — ghoṛā — horse."
+            },
+            {
+              "kind": "speech",
+              "text": "You are not being asked to write any of this. You are being asked to recognise it the next time it goes past."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: copy what you can see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ੜ, ਘ, ਦ in front of you and do not cover any of them. Follow each shape once with a finger, then copy it once with a pencil, larger than it is printed. Say its sound as your hand stops."
+            },
+            {
+              "kind": "speech",
+              "text": "This is observe-and-trace with the model visible. Nothing in these chapters asks you to write a Punjabi word from memory; that ladder starts later, and it starts from these same shapes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at ਘੋੜਾ and point to each of today's pieces in turn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **ਘੋੜਾ** and point to each of today's pieces in turn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṛa, gha, da, then the whole word — ghoṛā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṛa*, *gha*, *da*, then the whole word — *ghoṛā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at the headword at the top of any earlier lesson in this chapter and find one shape you now know",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at the headword at the top of any earlier lesson in this chapter and find one shape you now know]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name today's pieces: ṛāṛā, ghaggā, daddā. Which of them is a mātrā or a mark rather than a letter, and what does ਘੋੜਾ say? (ghoṛā, “horse”.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Gurmukhi chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "PA-C07-khana",
       "sequence": 390,
       "title": "ਖਾਣਾ (khāṇā) — “to eat,” and the tone hiding one letter away",
@@ -428,7 +786,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba4f33f3a55ae352",
+      "sourceHash": "fnv1a64:511ff1648542bd3c",
       "notice": null,
       "blocks": [
         {
@@ -573,7 +931,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:318823eea240e19e",
+      "sourceHash": "fnv1a64:27e3c464052fe7aa",
       "notice": null,
       "blocks": [
         {
@@ -841,7 +1199,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d241d60dba8de3f",
+      "sourceHash": "fnv1a64:76bae8734524f3d1",
       "notice": null,
       "blocks": [
         {

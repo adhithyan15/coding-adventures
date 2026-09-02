@@ -1,12 +1,13 @@
 {
   "language": "punjabi",
   "chapter": 11,
-  "sourceHash": "fnv1a64:c7557e6e0c08d55f",
+  "sourceHash": "fnv1a64:ff20ac4f8f3c6f60",
   "lessonIds": [
     "PA-C11-dost",
     "PA-C11-parivar",
     "PA-C11-bhara",
-    "PA-C11-bhain"
+    "PA-C11-bhain",
+    "PA-S11-bhabbha"
   ],
   "tex": "punjabi/book/chapters/ch11-friend-and-family.tex"
 }

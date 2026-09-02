@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S04-vowel-sign-i
 spine_node: SPINE-MEET-GREET
-sequence: 375
+sequence: 215
 delivery: script
-chapter: 9
+chapter: 4
 type: writing
 headword: "ಿ"
 gloss: the single character ಿ — recognised inside words you already say
@@ -49,7 +49,7 @@ You already say these, and every one of them has ◌ಿ somewhere inside it:
 
 - **ಸರಿ** *sari* — okay / alright / correct (sari)
 - **ನೀವು ಹೇಗಿದ್ದೀರಾ?** *nīvu hēgiddīrā* — how are you? (respectful)
-- **ಚೆನ್ನಾಗಿ** *cennāgi* — well, nicely — and the reply "ನಾನು ಚೆನ್ನಾಗಿದ್ದೇನೆ
+- **ಚೆನ್ನಾಗಿ** *cennāgi* — well, nicely — and the reply "ನಾನು ಚೆನ್ನಾಗಿದ್ದೇನೆ"
 - **ಪರವಾಗಿಲ್ಲ** *paravāgilla* — it's okay / no problem / you're welcome
 
 ## Writing: ◌ಿ — copy what you see

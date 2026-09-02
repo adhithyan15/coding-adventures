@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C11-bhai
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 870
-chapter: 16
+sequence: 980
+chapter: 18
 type: word
 headword: ভাই
 romanization: bhāi
@@ -12,7 +12,7 @@ concept_tag: BN-PEOPLE-BROTHER
 prerequisites: [BN-C11-poribar]
 sounds: [bha-aspirate, ai-diphthong]
 roots: [bhratr-brother]
-etymology_hook: "ভাই is Sanskrit ভ্রাতৃ bhrātṛ, worn down through Magadhi Prakrit bhāi — a tadbhava, unlike this chapter's two tatsamas — from PIE bʰréh₂tēr, the direct ancestor of English brother, Latin frater and Greek phratēr: ভাই and 'brother' are the same word, not cousins of it"
+etymology_hook: "ভাই is Sanskrit *bhrātṛ*, worn down through Magadhi Prakrit bhāi — a tadbhava, unlike this chapter's two tatsamas — from PIE bʰréh₂tēr, the direct ancestor of English brother, Latin frater and Greek phratēr: ভাই and 'brother' are the same word, not cousins of it"
 duration:
   max_seconds: 260
 requires:
@@ -55,7 +55,7 @@ into one syllable, *bhāi*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ভাই** is Sanskrit **ভ্রাতৃ** (*bhrātṛ*), worn down through Magadhi Prakrit
+**ভাই** is Sanskrit *bhrātṛ*, worn down through Magadhi Prakrit
 *bhāi* — a **tadbhava** this time, not a tatsama like বন্ধু and পরিবার:
 Bengali inherited this one through centuries of sound change rather than
 lifting it whole. And PIE **\*bʰréh₂tēr** sits behind *bhrātṛ*, the same root

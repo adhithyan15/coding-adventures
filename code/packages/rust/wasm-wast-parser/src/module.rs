@@ -2320,27 +2320,39 @@ fn build_elem(fields: &[SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseErro
         }
         false
     };
-    // `/security-review` finding: an ACTIVE segment using the exprs-list
-    // form (binary modes 4/6) is out of scope -- the real spec's own
+    // Gap 1 of the W-next `elem.wast`/`table.wast` investigation pass
+    // (`code/specs/W07-wasm-post-mvp-epics.md`'s addendum): an ACTIVE
+    // segment using the exprs-list form (binary modes 4/6) USED to be
+    // rejected here outright, on the theory that "the real spec's own
     // W17-wasm-bulk-table-ops.md census found no vendored corpus file
-    // needs it, and `parse_element_section`'s binary decoder already
-    // structurally can't produce this combination (its `match flags`
-    // only has arms for 0/1/2/5, with everything else, including 4/6,
-    // falling into a hard reject). Without this check, `Element.is_
-    // passive: false` combined with a `None` (`ref.null`) entry would
-    // silently reach `wasm-module-encoder::encode_element`, whose active-
-    // segment branch does `func_index.unwrap_or(0)` -- turning a real
-    // `ref.null` into a real reference to function 0 on re-encode, wrong
-    // table contents with no error. Reject at parse time instead, same
-    // "loud, not silent" discipline as every other out-of-scope shape
-    // this parser rejects.
-    if !is_passive && use_exprs {
-        return Err(WastParseError::UnexpectedToken {
-            pos: fields.first().map(|f| f.pos()).unwrap_or(0),
-            found: "an active element segment using the exprs-list (funcref/externref) form".to_string(),
-            expected: "an active segment to use a plain function-index list instead (exprs-list is only supported for passive segments)",
-        });
-    }
+    // needs it." That census was wrong -- confirmed via a corpus
+    // bug-hunt pass that pinned `elem.wast`'s own last remaining
+    // `assert_return` failure to exactly this shape: "Initializing a
+    // table with an externref-type element segment" declares
+    // `(elem (i32.const 0) externref (ref.null extern))`, a real,
+    // spec-legal ACTIVE segment whose only entry is a null literal --
+    // which has no representation at all in a plain function-index list
+    // (there's no "null function index"), so it MUST use the exprs-list
+    // form even though it's active.
+    //
+    // The old rejection's stated reason -- that accepting this would
+    // silently reach `wasm-module-encoder::encode_element`'s active
+    // branch and corrupt a `None` entry into a real reference to
+    // function 0 via `unwrap_or(0)` on re-encode -- was a real, separate
+    // bug, but in the WRONG layer: rejecting a legal construct here to
+    // paper over a latent bug in a completely different, unrelated
+    // crate is exactly the kind of misattributed fix this repo's own
+    // review discipline warns against. `encode_element` now has its own
+    // mode-4/6 branch for precisely this case (see that function's own
+    // doc comment) instead, so this parser is free to accept what the
+    // real spec actually allows: no rejection needed for either an
+    // active or a passive exprs-list segment. `wasm-module-parser`'s
+    // binary DECODER still only handles modes 0/1/2/5 -- a real,
+    // separate, deliberately deferred gap (declarative/active-exprs
+    // binary decoding is a larger feature than this one-directive fix),
+    // unaffected by this change since it's scoped to the TEXT parser,
+    // which never round-trips through the binary decoder for a plain
+    // `(module ...)` directive.
     let mut function_indices = Vec::new();
     for f in fields.get(i..).unwrap_or(&[]) {
         if use_exprs {
@@ -6080,24 +6092,49 @@ mod tests {
         assert_eq!(m.elements[0].function_indices, vec![Some(0), None, Some(2)]);
     }
 
-    /// `/security-review` finding: an ACTIVE segment using the exprs-list
-    /// form (binary modes 4/6) must be rejected at parse time, not
-    /// silently accepted -- `wasm-module-encoder::encode_element`'s
-    /// active-segment branch does `func_index.unwrap_or(0)`, which would
-    /// silently turn a `ref.null` entry into a real reference to function
-    /// 0 on re-encode if this combination ever reached it. The binary
-    /// decoder (`parse_element_section`) already structurally can't
-    /// produce this shape (only mode flags 0/1/2/5 are handled); this
-    /// test confirms the text parser enforces the same restriction.
+    /// Gap 1 of the W-next `elem.wast`/`table.wast` investigation pass:
+    /// an ACTIVE segment using the exprs-list form (binary modes 4/6) is
+    /// a real, spec-legal construct this parser now accepts -- see
+    /// `build_elem`'s own updated doc comment for why the PRIOR
+    /// rejection here (this test used to assert an error) was fixing a
+    /// real `wasm-module-encoder` bug in the wrong layer, and how that
+    /// bug is now fixed at its actual root instead. Mirrors `passive_
+    /// element_segment_exprs_list_with_ref_func_and_ref_null` above,
+    /// just active (an explicit `(table $t)` + offset expr) instead of
+    /// passive.
     #[test]
-    fn active_element_segment_using_exprs_list_form_is_rejected() {
-        let err = parse_module(
+    fn active_element_segment_using_exprs_list_form_is_accepted() {
+        let m = parse_module(
             r#"(module
                  (func) (table $t 30 30 funcref)
                  (elem (table $t) (i32.const 0) funcref (ref.func 0) (ref.null func)))"#,
         )
-        .unwrap_err();
-        assert!(matches!(err, WastParseError::UnexpectedToken { .. }), "{err:?}");
+        .unwrap();
+        assert_eq!(m.elements.len(), 1);
+        assert!(!m.elements[0].is_passive);
+        assert_eq!(m.elements[0].table_index, 0);
+        assert_eq!(m.elements[0].function_indices, vec![Some(0), None]);
+    }
+
+    /// The externref counterpart, matching `elem.wast`'s own real corpus
+    /// case exactly (`(elem (i32.const 0) externref (ref.null extern))`,
+    /// no explicit `(table ...)` clause -- table index defaults to 0):
+    /// a single null entry, which has NO representation in a plain
+    /// function-index list at all (there's no "null function index"),
+    /// so an active segment whose only content is `ref.null` MUST use
+    /// the exprs-list form even though it's active.
+    #[test]
+    fn active_element_segment_using_exprs_list_form_with_externref_null_only() {
+        let m = parse_module(
+            r#"(module
+                 (table $t 2 externref)
+                 (elem (i32.const 0) externref (ref.null extern)))"#,
+        )
+        .unwrap();
+        assert_eq!(m.elements.len(), 1);
+        assert!(!m.elements[0].is_passive);
+        assert_eq!(m.elements[0].table_index, 0);
+        assert_eq!(m.elements[0].function_indices, vec![None]);
     }
 
     /// Task #97: `table.init`/`table.copy`/`elem.drop`'s folded-form

@@ -1,11 +1,13 @@
 {
   "language": "punjabi",
   "chapter": 9,
-  "sourceHash": "fnv1a64:8aef055b646cc5f3",
+  "sourceHash": "fnv1a64:e2f4a4a62c3fc750",
   "lessonIds": [
     "PA-C09-laina",
     "PA-C09-puchhna",
+    "PA-S09-aunkar-tippi",
     "PA-C09-madad-karna",
+    "PA-S09-dulainkar-oora",
     "PA-C09-pasand"
   ],
   "tex": "punjabi/book/chapters/ch09-taking-and-liking.tex"

@@ -2,7 +2,7 @@
 schema_version: 2
 id: BN-W02-kemon-read
 spine_node: SPINE-MEET-GREET
-sequence: 420
+sequence: 450
 delivery: script
 chapter: 6
 type: writing
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [BN-SCRIPT-KEMON-READ-01]
 practises:
-  knowledge: [BN-SCRIPT-KA-01, BN-SCRIPT-E-MATRA-01, BN-SCRIPT-MA-01, BN-SCRIPT-NA-01, BN-SCRIPT-I-MATRA-01, BN-SCRIPT-U-MATRA-01, BN-SCRIPT-LA-01, BN-SCRIPT-TA-01, BN-SCRIPT-NAAM-READ-01, BN-SCRIPT-AMI-READ-01, BN-SCRIPT-TUMI-READ-01, BN-SCRIPT-NOMOSHKAR-READ-01, BN-SCRIPT-KEMON-READ-01]
+  knowledge: [BN-SCRIPT-KA-01, BN-SCRIPT-E-MATRA-01, BN-SCRIPT-MA-01, BN-SCRIPT-NA-01, BN-SCRIPT-I-MATRA-01, BN-SCRIPT-U-MATRA-01, BN-SCRIPT-LA-01, BN-SCRIPT-TA-01, BN-SCRIPT-NAAM-READ-01, BN-SCRIPT-AMI-READ-01, BN-SCRIPT-TUMI-READ-01, BN-SCRIPT-NOMOSHKAR-READ-01, BN-SCRIPT-KEMON-READ-01, BN-SCRIPT-HYAN-READ-01, BN-SCRIPT-YA-01, BN-SCRIPT-CHANDRABINDU-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -72,10 +72,12 @@ each one buys a great deal, because every consonant already held can take every
 sign. Adding a sign multiplies. Adding a letter adds.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-KEMON-READ-01, BN-SCRIPT-NAAM-READ-01, BN-SCRIPT-AMI-READ-01, BN-SCRIPT-TUMI-READ-01, BN-SCRIPT-I-MATRA-01, BN-SCRIPT-U-MATRA-01, BN-SCRIPT-E-MATRA-01, BN-SCRIPT-LA-01, BN-SCRIPT-TA-01, BN-SCRIPT-KA-01, BN-SCRIPT-MA-01, BN-SCRIPT-NA-01, BN-SCRIPT-NOMOSHKAR-READ-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-KEMON-READ-01, BN-SCRIPT-NAAM-READ-01, BN-SCRIPT-AMI-READ-01, BN-SCRIPT-TUMI-READ-01, BN-SCRIPT-I-MATRA-01, BN-SCRIPT-U-MATRA-01, BN-SCRIPT-E-MATRA-01, BN-SCRIPT-LA-01, BN-SCRIPT-TA-01, BN-SCRIPT-KA-01, BN-SCRIPT-MA-01, BN-SCRIPT-NA-01, BN-SCRIPT-NOMOSHKAR-READ-01, BN-SCRIPT-HYAN-READ-01, BN-SCRIPT-YA-01, BN-SCRIPT-CHANDRABINDU-01] -->
 
 - [YOU READ: নাম তুমি আমি কেমন]
 - [YOU READ: নমস্কার]
+- [YOU READ: হ্যাঁ না]
+- [YOU WRITE: ঁ]
 - [YOU WRITE: কেমন]
 - [YOU WRITE: তুমি কেমন]
 

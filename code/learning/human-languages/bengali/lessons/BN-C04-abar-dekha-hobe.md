@@ -2,7 +2,7 @@
 schema_version: 2
 id: BN-C04-abar-dekha-hobe
 spine_node: SPINE-TAKE-LEAVE
-sequence: 450
+sequence: 480
 chapter: 7
 type: phrase
 headword: আবার দেখা হবে

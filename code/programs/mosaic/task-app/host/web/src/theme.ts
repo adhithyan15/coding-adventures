@@ -113,6 +113,44 @@ export function applyThemeGround(theme: Theme): void {
 }
 
 /**
+ * The four values the host's own startup chrome needs.
+ *
+ * Startup chrome is the loading and failure text shown *before* the Mosaic
+ * component can exist. That component is purely presentational: it takes slot
+ * values computed by the controller, and the controller needs a live engine. So
+ * while the engine is still being fetched and compiled there is, by
+ * construction, nothing authored to render — the host has to draw these two
+ * states itself.
+ *
+ * That makes this the one deliberate exception to "never style the app outside
+ * mosstyle" (see `index.html`'s comment, which makes the same point about CSS).
+ * The exception is kept as small as possible: four values, taken verbatim from
+ * `app-shell` and `storage-warning` in TaskApp.{light,dark}.msl, so the startup
+ * states are visually continuous with the app that replaces them. Same
+ * duplication caveat as `GROUND` above — if those parts change in the .msl,
+ * change them here too.
+ */
+export interface StartupChrome {
+  ground: string;
+  text: string;
+  alert: string;
+  fontFamily: string;
+}
+
+const SHELL_FONT =
+  "-apple-system, Segoe UI, system-ui, Helvetica Neue, Arial, sans-serif";
+
+const STARTUP: Record<Theme, StartupChrome> = {
+  light: { ground: GROUND.light, text: "#2b2723", alert: "#b53f2f", fontFamily: SHELL_FONT },
+  dark: { ground: GROUND.dark, text: "#f1ebe1", alert: "#e26a52", fontFamily: SHELL_FONT },
+};
+
+/** The startup chrome palette for a resolved theme. */
+export function startupChrome(theme: Theme): StartupChrome {
+  return STARTUP[theme];
+}
+
+/**
  * The progress ring's fill/track colours (task-app-icon-assets-v1.md). Same
  * duplication reasoning as `GROUND` above — `ring-fill`'s background is the one
  * UI36-bound property in the whole component, so the host computes the actual

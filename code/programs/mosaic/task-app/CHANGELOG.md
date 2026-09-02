@@ -8,6 +8,35 @@ Entries below ship in the next product release. `task-app-v0.1.0` published on
 2026-08-31; everything added after that tag accumulates here until the next
 version is cut and this heading is replaced with it.
 
+### Fixed - startup no longer fails to a blank page (#13695)
+
+Trestle waited for the WASM fetch, the compile, the storage open, and the
+workspace restore before rendering anything, and the boot promise was floated —
+so a failed fetch, a failed compile, or a browser without WebAssembly left an
+empty page permanently, with the error visible only in the console.
+
+The host now paints a concise loading state before the first `await`, and
+replaces it with a failure state carrying the underlying detail and a **Try
+again** button that re-runs initialization in place. The failure state says
+explicitly that saved tasks are unchanged, because at that point nothing has
+been written and a transient network error must not read as data loss. Error
+detail is rendered as text, never as markup.
+
+A 404 previously became a `CompileError`: `fetch` resolves for a 404, so the
+error page's bytes reached `WebAssembly.compile` and a missing engine reported
+itself as a corrupt one. The response status is now checked explicitly.
+
+Startup states cannot be authored in Mosaic — the emitted component is
+presentational and its slots need a live engine — so they are host chrome, and
+this is the one deliberate exception to styling outside mosstyle. It is kept to
+four values read verbatim from `app-shell` and `storage-warning` in the .msl so
+the states stay visually continuous with the app that replaces them.
+
+The host-neutral contract is `code/specs/task-app-startup-states-v1.md`.
+Generated native hosts still surface startup failure only through process and
+log evidence; that needs a distinct surface in five backends and is tracked in
+#13984 rather than bundled here.
+
 ### Documented - platform completion plan across all nine Mosaic backends (#13517)
 
 The backlog's "next up" section had emptied its own queue and deferred the next

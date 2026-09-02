@@ -7,6 +7,7 @@ chapter: 20
 type: word
 headword: ಹನ್ನೊಂದು — ಇಪ್ಪತ್ತು
 gloss: 11-20 — additive "ten-echo" compounds for the teens, then ಇಪ್ಪತ್ತು (20), compositionally "two-tens" from OLD Dravidian roots — though the pieces have shifted enough that it no longer looks like the MODERN words eraḍu/hattu on the surface
+romanization: "hannondu — ippattu"
 concept_tag: KA-NUM-11-20
 prerequisites: [KA-C19-vayassu]
 sounds: [kannada-anusvara-o, kannada-geminate-pp]

@@ -4,11 +4,11 @@
   "chapter": 6,
   "title": "A Sign Made of Two Signs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:362e69db5dc99a1b",
+  "sourceHash": "fnv1a64:c3d841e3e45ae650",
   "lessons": [
     {
       "id": "BN-W02-ami-read",
-      "sequence": 370,
+      "sequence": 400,
       "title": "আমি (āmi) — the word for I, and two more that come free with it",
       "headword": "আমি",
       "romanization": "āmi",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3ba3c0f2aa2804f9",
+      "sourceHash": "fnv1a64:4ffea3b94b9158c1",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -47,7 +47,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write ি once, and say which side of its consonant it goes on."
+              "text": "Write ি once, and say which side of its consonant it goes on. Then read হ্যাঁ, and name the piece in it that makes no sound."
             }
           ]
         },
@@ -166,7 +166,7 @@
     },
     {
       "id": "BN-W02-la",
-      "sequence": 380,
+      "sequence": 410,
       "title": "ল (lô) — the consonant la",
       "headword": "ল",
       "romanization": "lô",
@@ -178,7 +178,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2f9e547141c33fbd",
+      "sourceHash": "fnv1a64:c7c8c3f4907a00a1",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -299,7 +299,7 @@
     },
     {
       "id": "BN-W02-e-matra",
-      "sequence": 390,
+      "sequence": 420,
       "title": "ে (-e) — the e-sign, standing in front",
       "headword": "ে",
       "romanization": "-e",
@@ -311,7 +311,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0b82249df8616558",
+      "sourceHash": "fnv1a64:3a79eb0aa7fa08f2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -436,7 +436,7 @@
     },
     {
       "id": "BN-W04-e-indep",
-      "sequence": 400,
+      "sequence": 430,
       "title": "এ — the independent e",
       "headword": "এ",
       "romanization": "e",
@@ -448,7 +448,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2ec03cf60e92f32c",
+      "sourceHash": "fnv1a64:8fa5aaa68ba7e5cd",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -577,7 +577,7 @@
     },
     {
       "id": "BN-W03-o-matra",
-      "sequence": 410,
+      "sequence": 440,
       "title": "ো (-o) — the o-sign, wrapped around its letter",
       "headword": "ো",
       "romanization": "-o",
@@ -590,7 +590,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:8550ac8cfc3e550d",
+      "sourceHash": "fnv1a64:669165fdc238b4be",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -716,7 +716,7 @@
     },
     {
       "id": "BN-W02-kemon-read",
-      "sequence": 420,
+      "sequence": 450,
       "title": "কেমন (kemon) — how, and the five words the eye now holds",
       "headword": "কেমন",
       "romanization": "kemon",
@@ -728,7 +728,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1f2445130946e074",
+      "sourceHash": "fnv1a64:fd3083c7a0534024",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -844,6 +844,24 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: নমস্কার]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "হ্যাঁ না",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: হ্যাঁ না]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ঁ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ঁ]"
             },
             {
               "kind": "prompt",

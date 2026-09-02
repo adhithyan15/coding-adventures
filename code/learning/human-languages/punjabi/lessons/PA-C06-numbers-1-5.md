@@ -9,27 +9,27 @@ headword: ਇੱਕ ਦੋ ਤਿੰਨ ਚਾਰ ਪੰਜ
 romanization: ikk do tinn chār panj
 gloss: one to five — meeting the panj of Punjabi as an actual number
 concept_tag: PA-NUMBERS-1-5
-prerequisites: [PA-C01-sat-sri-akal, PA-C05-main-punjabi-bolda-han]
+prerequisites: [PA-C01-sat-sri-akal, PA-C05-main-punjabi-bolda-han, PA-S04-phappha-gagga, PA-S05-babba-lalla-hora, PA-S06-kakka-aira-aara]
 sounds: [sihari-i, tippi-nasal, kanna-aa]
 roots: [sanskrit-panca, persian-panj]
 etymology_hook: "Chapter 5 introduced panj inside panjabi; learn it as the ordinary number five here, then trace Punjabi and Persian panj as convergence in the next short lesson"
 duration:
   max_seconds: 240
 requires:
-  knowledge: []
+  knowledge: [PA-SCRIPT-RECOG-AARA-01, PA-SCRIPT-RECOG-BA-01, PA-SCRIPT-RECOG-HORA-01, PA-SCRIPT-RECOG-SIHARI-01]
 introduces:
   knowledge: [PA-LEX-NUMBERS-ONE-TO-FIVE, PA-SCRIPT-GURMUKHI-TOP-LINE, PA-SCRIPT-ADDAK-DOUBLING, PA-SCRIPT-TIPPI-NASAL, PA-HISTORY-PANJABI-FIVE-RIVERS]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: [PA-CULTURE-PUNJAB-FIVE-RIVERS-NAME-01]
 practises:
-  knowledge: [PA-LEX-NUMBERS-ONE-TO-FIVE, PA-SCRIPT-GURMUKHI-TOP-LINE, PA-SCRIPT-ADDAK-DOUBLING, PA-SCRIPT-TIPPI-NASAL, PA-HISTORY-PANJABI-FIVE-RIVERS]
+  knowledge: [PA-LEX-NUMBERS-ONE-TO-FIVE, PA-SCRIPT-GURMUKHI-TOP-LINE, PA-SCRIPT-ADDAK-DOUBLING, PA-SCRIPT-TIPPI-NASAL, PA-HISTORY-PANJABI-FIVE-RIVERS, PA-SCRIPT-RECOG-AARA-01, PA-SCRIPT-RECOG-BA-01, PA-SCRIPT-RECOG-HORA-01, PA-SCRIPT-RECOG-SIHARI-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [PA-C01-sat-sri-akal, PA-C05-main-punjabi-bolda-han]
+reviews_of: [PA-C01-sat-sri-akal, PA-C05-main-punjabi-bolda-han, PA-S04-phappha-gagga, PA-S05-babba-lalla-hora, PA-S06-kakka-aira-aara]
 ---
 
 # ਇੱਕ, ਦੋ, ਤਿੰਨ, ਚਾਰ, ਪੰਜ — one to five
@@ -83,7 +83,7 @@ numeral and the Persian word reached the same *panj* shape independently.
 - [YOU SAY: the Ch. 5 callback — "**panj** + **āb** = five rivers"]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-NUMBERS-ONE-TO-FIVE, PA-SCRIPT-GURMUKHI-TOP-LINE, PA-SCRIPT-ADDAK-DOUBLING, PA-SCRIPT-TIPPI-NASAL, PA-HISTORY-PANJABI-FIVE-RIVERS] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-NUMBERS-ONE-TO-FIVE, PA-SCRIPT-GURMUKHI-TOP-LINE, PA-SCRIPT-ADDAK-DOUBLING, PA-SCRIPT-TIPPI-NASAL, PA-HISTORY-PANJABI-FIVE-RIVERS, PA-SCRIPT-RECOG-AARA-01, PA-SCRIPT-RECOG-BA-01, PA-SCRIPT-RECOG-HORA-01, PA-SCRIPT-RECOG-SIHARI-01] -->
 
 [PAUSE 3s] Count to five in Punjabi. (*Ikk, do, tinn, chār, panj*.) What script is
 this? (**Gurmukhi** — related to Devanagari, and it has a top line too.) What does

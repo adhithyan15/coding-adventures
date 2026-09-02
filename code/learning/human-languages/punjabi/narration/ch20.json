@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Build the Work Label and Values",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ad2298170f9a7fe7",
+  "sourceHash": "fnv1a64:a77e4c66070b809d",
   "lessons": [
     {
       "id": "PA-W05-ka",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fb2b0f7669753736",
+      "sourceHash": "fnv1a64:420e14647757d1f8",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -202,7 +202,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:501b60709f6e31c3",
+      "sourceHash": "fnv1a64:f8a9c56a8daaf3ed",
       "notice": {
         "modality": "pen",
         "needs": [

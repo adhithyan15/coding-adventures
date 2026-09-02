@@ -46,7 +46,7 @@ reviews_of: [PA-C02-naam, PA-C02-mera]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[PA-LEX-HAI-02]; assesses=[] -->
 
-**ਹੈ** (*hai*, "is") ← Sanskrit **ਅਸ੍ਤਿ** (*asti*, "is"), from Proto-Indo-European
+**ਹੈ** (*hai*, "is") ← Sanskrit *asti* ("is"), from Proto-Indo-European
 **\*h₁es-** — the root of "to be" across the whole family: English **is**, German
 *ist*, Latin *est*, Spanish *es*. Punjabi *hai* is the Indian cousin of the same
 tiny verb.

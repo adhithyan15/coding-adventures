@@ -8,6 +8,8 @@
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::fmt;
 
+mod schema18;
+
 use coding_adventures_sha1::sum1;
 pub use engram_core::EngramMediaReferenceAnalysis;
 
@@ -741,6 +743,22 @@ pub fn read_v11_collection(data: &[u8]) -> Result<AnkiV11Collection, ApkgError> 
 
 pub fn parse_v11_collection_bytes(bytes: &[u8]) -> Result<AnkiV11Collection, ApkgError> {
     let raw_col = read_v11_col_row(bytes)?;
+
+    // Modern packages are not V11 with compression bolted on: at schema 18 the
+    // `col` table's conf/models/decks/dconf columns are EMPTY and the same data
+    // lives in relational tables. Parsing `col.conf` as V11 JSON there fails
+    // with `EOF while parsing a value at line 1 column 0` -- the string really
+    // is empty -- so the version must be consulted before the JSON is touched.
+    //
+    // Dispatching on `col.ver` rather than on which archive member was found
+    // is deliberate: the member name says how the bytes were packaged, and the
+    // version says what they contain. Real Anki exports ship BOTH
+    // `collection.anki21` and `collection.anki2` in one archive, so the member
+    // name is the weaker signal.
+    if raw_col.version >= schema18::SCHEMA_18 {
+        return parse_schema18_collection(bytes, &raw_col);
+    }
+
     let metadata = AnkiV11CollectionMetadata {
         id: raw_col.id,
         created_at_days: raw_col.created_at_days,
@@ -762,6 +780,49 @@ pub fn parse_v11_collection_bytes(bytes: &[u8]) -> Result<AnkiV11Collection, Apk
         cards: read_v11_cards(bytes)?,
         reviews: read_v11_reviews(bytes)?,
         graves: read_v11_graves(bytes)?,
+        metadata,
+    })
+}
+
+/// Assemble an [`AnkiV11Collection`] from a **schema 18** database.
+///
+/// The notes, cards, revlog and graves tables are unchanged between the two
+/// schemas, so those readers are reused as-is. Only the configuration moved,
+/// and [`schema18`] puts it back into the V11 shape the rest of the importer
+/// already consumes -- which keeps this a reading concern rather than a second
+/// parallel import path.
+fn parse_schema18_collection(
+    bytes: &[u8],
+    raw_col: &RawV11ColRow,
+) -> Result<AnkiV11Collection, ApkgError> {
+    let metadata = AnkiV11CollectionMetadata {
+        id: raw_col.id,
+        created_at_days: raw_col.created_at_days,
+        modified_at: raw_col.modified_at,
+        schema_modified_at: raw_col.schema_modified_at,
+        version: raw_col.version,
+        dirty: raw_col.dirty,
+        update_sequence_number: raw_col.update_sequence_number,
+        last_sync: raw_col.last_sync,
+        config: schema18::read_config(bytes)?,
+        // `deck_config` has no direct V11 equivalent here: schema 18 stores it
+        // as protobuf in `deck_config`, and nothing downstream reads it yet.
+        // An empty object records that honestly rather than inventing defaults
+        // that would look like real settings on a round trip.
+        deck_config: serde_json::json!({}),
+        tags: schema18::read_tags(bytes)?,
+    };
+
+    Ok(AnkiV11Collection {
+        decks: schema18::read_decks(bytes)?,
+        note_types: schema18::read_note_types(bytes)?,
+        // notes, cards and revlog keep their rowids at schema 18, so these
+        // readers are shared between the two schemas unchanged. `graves` does
+        // not -- it became WITHOUT ROWID, which the V11 reader refuses.
+        notes: read_v11_notes(bytes)?,
+        cards: read_v11_cards(bytes)?,
+        reviews: read_v11_reviews(bytes)?,
+        graves: schema18::read_graves(bytes)?,
         metadata,
     })
 }
@@ -7260,5 +7321,105 @@ CREATE TABLE graves (
         let ours = decode_package_payload(CollectionFormat::Sqlite21b, "collection", &encoded)
             .expect("our reader should read our writer");
         assert_eq!(ours, collection);
+    }
+
+    /// Every fixture produced by real Anki imports.
+    ///
+    /// The corpus is the point: these archives were written by Anki 26.08.1,
+    /// not by us, so they pin our reading of Anki's semantics rather than our
+    /// agreement with ourselves. The modern one is why this test exists --
+    /// before schema-18 support it failed with `invalid Anki V11 JSON in
+    /// col.conf: EOF while parsing a value at line 1 column 0`, because at
+    /// schema 18 that column really is empty.
+    #[test]
+    fn every_real_anki_fixture_imports() {
+        let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("tests")
+            .join("fixtures")
+            .join("anki");
+        let mut checked = 0;
+        for entry in std::fs::read_dir(&dir).expect("fixture directory") {
+            let path = entry.unwrap().path();
+            if path.extension().and_then(|e| e.to_str()) != Some("apkg") {
+                continue;
+            }
+            let bytes = std::fs::read(&path).unwrap();
+            let name = path.file_name().unwrap().to_string_lossy().into_owned();
+            let state = read_v11_collection_as_engram_state(&bytes)
+                .unwrap_or_else(|err| panic!("{name} failed to import: {}", err.message));
+            assert!(!state.notes.is_empty(), "{name} imported no notes");
+            assert!(!state.cards.is_empty(), "{name} imported no cards");
+            checked += 1;
+        }
+        assert!(
+            checked >= 7,
+            "expected the whole real-Anki corpus, found {checked} archives"
+        );
+    }
+
+    /// A modern package's note types survive the relational round trip.
+    ///
+    /// Names, fields and templates come from ordinary columns, but the CSS and
+    /// the two template formats are protobuf, and `fields`/`templates` are
+    /// WITHOUT ROWID. Asserting on the *content* rather than on "it parsed"
+    /// is what distinguishes reading those blobs correctly from reading them
+    /// at all.
+    #[test]
+    fn a_modern_package_yields_usable_note_types() {
+        let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("tests/fixtures/anki/anki-modern.apkg");
+        let bytes = std::fs::read(path).unwrap();
+        let collection = read_v11_collection(&bytes).expect("modern package should parse");
+
+        assert_eq!(collection.metadata.version, 18, "this fixture is schema 18");
+
+        let basic = collection
+            .note_types
+            .iter()
+            .find(|nt| nt.name == "Basic")
+            .expect("the Basic note type");
+
+        assert_eq!(basic.kind, 0, "Basic is a normal note type, not cloze");
+        assert!(
+            basic.css.contains("font-family"),
+            "CSS should come through from notetypes.config field 3, got: {:?}",
+            basic.css
+        );
+
+        let names: Vec<&str> = basic.fields.iter().map(|f| f.name.as_str()).collect();
+        assert_eq!(names, vec!["Front", "Back"], "fields, in ordinal order");
+
+        let template = basic.templates.first().expect("one template");
+        assert!(
+            template.question_format.contains("{{Front}}"),
+            "qfmt from templates.config field 1, got: {:?}",
+            template.question_format
+        );
+        assert!(
+            template.answer_format.contains("{{Back}}"),
+            "afmt from templates.config field 2, got: {:?}",
+            template.answer_format
+        );
+    }
+
+    /// Schema dispatch reads `col.ver`, not the archive member name.
+    ///
+    /// Real Anki legacy exports ship BOTH `collection.anki21` and
+    /// `collection.anki2` in one archive, so the member name says how the bytes
+    /// were packaged rather than what they contain. The version is the honest
+    /// signal, and this pins that the legacy fixtures really are being read
+    /// down the V11 path rather than accidentally through the new one.
+    #[test]
+    fn legacy_fixtures_are_still_read_as_v11() {
+        let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("tests/fixtures/anki/anki-review-scheduled.apkg");
+        let bytes = std::fs::read(path).unwrap();
+        let collection = read_v11_collection(&bytes).unwrap();
+        assert!(
+            collection.metadata.version < 18,
+            "a legacy export should report a pre-18 schema, got {}",
+            collection.metadata.version
+        );
+        assert!(!collection.note_types.is_empty());
     }
 }

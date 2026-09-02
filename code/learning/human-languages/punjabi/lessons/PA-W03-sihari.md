@@ -9,32 +9,32 @@ type: writing
 headword: "ਿ"
 romanization: "sihari"
 gloss: "place the short-i mark before its base"
-prerequisites: [PA-W03-punjabi]
+prerequisites: [PA-W03-punjabi, PA-S04-phappha-gagga]
 sounds: []
 roots: []
 duration:
   max_seconds: 165
 requires:
-  knowledge: [PA-FORM-LANGUAGE-PUNJABI-01, PA-SCRIPT-HA-01]
+  knowledge: [PA-FORM-LANGUAGE-PUNJABI-01, PA-SCRIPT-HA-01, PA-SCRIPT-RECOG-SIHARI-01]
 introduces:
   knowledge: [PA-SCRIPT-SIHARI-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-FORM-LANGUAGE-PUNJABI-01, PA-SCRIPT-HA-01, PA-SCRIPT-SIHARI-01]
+  knowledge: [PA-FORM-LANGUAGE-PUNJABI-01, PA-SCRIPT-HA-01, PA-SCRIPT-SIHARI-01, PA-SCRIPT-RECOG-SIHARI-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-W03-punjabi]
+reviews_of: [PA-W03-punjabi, PA-S04-phappha-gagga]
 ---
 
 # ਿ — a mark written before, read after
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-LANGUAGE-PUNJABI-01, PA-SCRIPT-HA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-LANGUAGE-PUNJABI-01, PA-SCRIPT-HA-01, PA-SCRIPT-RECOG-SIHARI-01] -->
 
 Write familiar **ਹ** once.
 

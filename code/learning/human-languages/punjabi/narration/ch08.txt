@@ -1,8 +1,8 @@
 Punjabi, chapter 8: The Mind, the Page, and the Falling Tone.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+6 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 4.
+Lesson 1 of 6.
 ਸੋਚਣਾ (sochṇā) — “to think,” and it once meant “to burn”.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -42,7 +42,49 @@ What did the root under sochṇā mean first? (To burn, then to grieve.) What fa
 The Punjabi noun soch means a thought and one other thing. What?
 
 
-Lesson 2 of 4.
+Lesson 2 of 6.
+ਖ, ਝ, ੍ — three pieces met inside a word you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ਖ, ਝ, ੍ until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+One new mark today is not a sound at all. It is an instruction about the letter beside it.
+First, say the last things you learned once more, out loud and from memory:
+[your turn — say: kivēṁ — tusī̃ kivēṁ ho — maiṁ ṭhīk hāṁ — koī gall nahīṁ, jāṇnā, sochṇā]
+[pause 8 seconds for the answer]
+
+Script you'll notice: ਖ, ਝ, ੍.
+ਖ.
+khakkhā — kha. A consonant, k with a clear puff of breath after it — the k of English kin.
+ਝ.
+jhajjā — jha. Another letter whose breath became pitch: written breathy, said today with a falling tone.
+੍.
+pairī̃ — (no vowel). Not a letter and not a vowel sign. It is the mark that says no vowel here — the consonant before it runs straight into the next one, and in print the second letter is often tucked underneath the first.
+Now put them where you have already heard them:
+ਖ is ਕ with breath after it. Set them side by side: ਕ ਖ ੜ + ੍ + ਹ becomes ੜ੍ਹ ੜ੍ਹ — ṛh — a ṛa with a shrunken ha tucked underneath it.
+You are not being asked to write any of this. You are being asked to recognise it the next time it goes past.
+
+Writing: copy what you can see.
+Keep ਖ, ਝ, ੍ in front of you and do not cover any of them. Follow each shape once with a finger, then copy it once with a pencil, larger than it is printed. Say its sound as your hand stops.
+This is observe-and-trace with the model visible. Nothing in these chapters asks you to write a Punjabi word from memory; that ladder starts later, and it starts from these same shapes.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at ੜ੍ਹ and point to each of today's pieces in turn]
+[pause 8 seconds for the answer]
+[your turn — say: kha, jha, (no vowel), then the whole word — ṛh]
+[pause 8 seconds for the answer]
+[your turn — look: back at the headword at the top of any earlier lesson in this chapter and find one shape you now know]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Name today's pieces: khakkhā, jhajjā, pairī̃. Which of them is a mātrā or a mark rather than a letter, and what does ੜ੍ਹ say? (ṛh, “a ṛa with a shrunken ha tucked underneath it”.)
+Source: Unicode Gurmukhi chart.
+
+
+Lesson 3 of 6.
 ਸਮਝਣਾ (samajhṇā) — “to understand,” and the tone you can hear in it.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -89,7 +131,7 @@ Where does the pitch fall in samajhṇā, and why? (On the vowel before ਝ, whe
 In samajhna the jh is not heard as breath. What is heard instead?
 
 
-Lesson 3 of 4.
+Lesson 4 of 6.
 ਪੜ੍ਹਨਾ (paṛhnā) — “to read,” which used to mean “to say out loud”.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -103,7 +145,7 @@ You'll want to know first — one word.
 The stem is paṛh-, and its h is not breath. It is the falling pitch again: páṛnā, high on the vowel and dropping. Punjabi writes this verb both ਪੜ੍ਹਨਾ (paṛhnā) and ਪੜ੍ਹਣਾ; this book uses the first.
 
 The letters in this word.
-ਪ p, then ੜ ṛ — a flapped r made with the tongue tip curled back and struck forward. Then the new thing, then ਨਾ.
+ਪ (pa) p, then ੜ ṛ — a flapped r made with the tongue tip curled back and struck forward. Then the new thing, then ਨਾ.
 Every Gurmukhi letter so far has hung from the top line that runs across a word. ੍ਹ breaks that habit: it is ਹ shrunk and tucked underneath its neighbour, so ੜ plus a subjoined ਹ is written ੜ੍ਹ. Gurmukhi has a small set of these subjoined forms, and this is the commonest.
 
 The word, taken apart — reading with the mouth, not the eye.
@@ -130,7 +172,7 @@ What did paṭhati mean? (To recite aloud.) So which organ names Punjabi's readi
 In the cluster rrha, where is the h written relative to the letter before it?
 
 
-Lesson 4 of 4.
+Lesson 5 of 6.
 ਲਿਖਣਾ (likhṇā) — “to write,” which is scratching.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -164,3 +206,41 @@ Wrap-up Recall.
 Say “I write Punjabi” in your own gender. Now run the chapter's four verbs back to what their roots meant before they meant anything mental: sochṇā (to burn, then to grieve), samajhṇā (to wake), paṛhnā (to recite aloud), likhṇā (to scratch). Which two of the four are said with a falling pitch? (Samajhṇā and paṛhnā.) And which of them writes its h underneath the letter? (Paṛhnā.)
 [question — say your answer, then pause 8 seconds]
 What did the Sanskrit root behind likhna mean before it meant to write?
+
+
+Lesson 6 of 6.
+ਪ (pa) — one piece met inside a word you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ਪ until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+One letter today, and it finishes a word this chapter is built on.
+First, say the last things you learned once more, out loud and from memory:
+[your turn — say: sochṇā, samajhṇā]
+[pause 8 seconds for the answer]
+
+Script you'll notice: ਪ.
+ਪ (pa).
+pappā — pa. A consonant, the plain p of spin — no puff of breath.
+Now put them where you have already heard them:
+ਪ (pa) + ਾ + ਠ becomes ਪਾਠ (pāṭh) ਪਾਠ — pāṭh — a reading, a recitation, a lesson.
+You are not being asked to write any of this. You are being asked to recognise it the next time it goes past.
+
+Writing: copy what you can see.
+Keep ਪ (pa) in front of you and do not cover it. Follow each shape once with a finger, then copy it once with a pencil, larger than it is printed. Say its sound as your hand stops.
+This is observe-and-trace with the model visible. Nothing in these chapters asks you to write a Punjabi word from memory; that ladder starts later, and it starts from these same shapes.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at ਪਾਠ and point to each of today's piece in turn]
+[pause 8 seconds for the answer]
+[your turn — say: pa, then the whole word — pāṭh]
+[pause 8 seconds for the answer]
+[your turn — look: back at the headword at the top of any earlier lesson in this chapter and find one shape you now know]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Name today's piece: pappā. Which of them is a mātrā or a mark rather than a letter, and what does ਪਾਠ say? (pāṭh, “a reading, a recitation, a lesson”.)
+Source: Unicode Gurmukhi chart.

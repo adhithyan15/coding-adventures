@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S07-letter-ra
 spine_node: SPINE-MEET-GREET
-sequence: 405
+sequence: 338
 delivery: script
-chapter: 12
+chapter: 7
 type: writing
 headword: "ರ"
 gloss: the single character ರ — recognised inside words you already say

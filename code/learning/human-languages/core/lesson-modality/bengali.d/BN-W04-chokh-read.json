@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "BN-W04-chokh-read",
+    "language": "bengali",
+    "chapter": 21,
+    "sequence": 1060,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0c627508b67abc28",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

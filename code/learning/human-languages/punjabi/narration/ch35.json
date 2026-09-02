@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Me, and Two Ways to Part",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d010bc1d4f183047",
+  "sourceHash": "fnv1a64:914a9775ac8c3887",
   "lessons": [
     {
       "id": "PA-C35-mainu",
@@ -178,7 +178,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:aa87ba2e088a4bf8",
+      "sourceHash": "fnv1a64:6f776427c42d06e8",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -278,7 +278,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b2d188052eeb237d",
+      "sourceHash": "fnv1a64:e2e37c4404f41adb",
       "notice": {
         "modality": "pen",
         "needs": [

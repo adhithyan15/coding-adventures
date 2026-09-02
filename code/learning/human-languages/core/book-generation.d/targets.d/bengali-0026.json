@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 26,
+  "output": "bengali/book/chapters/ch26-distant-band.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

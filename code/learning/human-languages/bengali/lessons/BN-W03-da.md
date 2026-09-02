@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W03-da
 spine_node: SPINE-MEET-GREET
-sequence: 540
+sequence: 580
 delivery: script
-chapter: 8
+chapter: 9
 type: writing
 headword: দ
 romanization: "dô"

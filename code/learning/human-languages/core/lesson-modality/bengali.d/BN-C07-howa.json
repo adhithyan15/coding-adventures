@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C07-howa",
     "language": "bengali",
-    "chapter": 11,
-    "sequence": 640,
+    "chapter": 13,
+    "sequence": 730,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:9e4707c1d1c7885b"
+    "sourceHash": "fnv1a64:3a103488d109eb3d"
   },
   "findings": []
 }

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "BN-R01-ya-again",
+    "language": "bengali",
+    "chapter": 26,
+    "sequence": 1330,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8379f6390dcadc04",
+    "detachableSegments": [
+      "Writing — from sound"
+    ]
+  },
+  "findings": []
+}

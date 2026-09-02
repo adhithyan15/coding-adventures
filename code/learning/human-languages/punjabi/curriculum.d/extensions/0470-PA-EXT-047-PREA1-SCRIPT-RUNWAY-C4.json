@@ -1,0 +1,11 @@
+{
+  "id": "PA-EXT-047-PREA1-SCRIPT-RUNWAY-C4",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read phir, the first word of the farewell chapter, letter by letter.",
+  "prerequisites": [],
+  "lessons": [
+    "PA-S04-phappha-gagga"
+  ]
+}

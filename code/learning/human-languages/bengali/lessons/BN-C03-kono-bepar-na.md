@@ -2,7 +2,7 @@
 schema_version: 2
 id: BN-C03-kono-bepar-na
 spine_node: SPINE-COURTESY-THANK
-sequence: 350
+sequence: 380
 chapter: 5
 type: phrase
 headword: কোনো ব্যাপার না

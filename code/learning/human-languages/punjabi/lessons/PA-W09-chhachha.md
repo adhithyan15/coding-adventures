@@ -9,26 +9,26 @@ type: writing
 headword: "ਛ"
 romanization: "chha"
 gloss: "trace the Gurmukhi letter chhachha"
-prerequisites: [PA-C31-achchha]
+prerequisites: [PA-C31-achchha, PA-S05-babba-lalla-hora, PA-S10-addak-dhadda]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [PA-SCRIPT-INDEPENDENT-A-01, PA-SCRIPT-ADDAK-DOUBLING, PA-LEX-ACHCHHA]
+  knowledge: [PA-SCRIPT-INDEPENDENT-A-01, PA-SCRIPT-ADDAK-DOUBLING, PA-LEX-ACHCHHA, PA-SCRIPT-RECOG-ADDAK-01, PA-SCRIPT-RECOG-BA-01]
 introduces:
   knowledge: [PA-SCRIPT-CHHA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-SCRIPT-INDEPENDENT-A-01, PA-SCRIPT-ADDAK-DOUBLING, PA-LEX-ACHCHHA, PA-SCRIPT-CHHA-01]
+  knowledge: [PA-SCRIPT-INDEPENDENT-A-01, PA-SCRIPT-ADDAK-DOUBLING, PA-LEX-ACHCHHA, PA-SCRIPT-CHHA-01, PA-SCRIPT-RECOG-ADDAK-01, PA-SCRIPT-RECOG-BA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-C31-achchha, PA-W02-a]
+reviews_of: [PA-C31-achchha, PA-W02-a, PA-S05-babba-lalla-hora, PA-S10-addak-dhadda]
 ---
 
 # ਛ — the letter the last word was waiting for
@@ -54,7 +54,7 @@ Cover the model. Write **ਛ** once. Compare its shape alone, repair one
 difference, and stop there.
 
 ## Wrap-up recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-CHHA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-CHHA-01, PA-SCRIPT-RECOG-ADDAK-01, PA-SCRIPT-RECOG-BA-01] -->
 <!-- hl-activity: {"id": "PA-W09-chhachha-check", "kind": "text", "assesses": ["PA-SCRIPT-CHHA-01"], "prompt": "Write the new Gurmukhi base letter chha.", "answer": "ਛ", "accepted": [], "feedback": {"correct": "ਛ is chha, the letter that carries the breath in achchha.", "incorrect": "Trace ਛ once more, hanging it from the top line."}, "response_seconds": 12} -->
 
 One base shape is enough for this session. The word it belongs to comes back

@@ -9,32 +9,32 @@ type: writing
 headword: "ੋ"
 romanization: "hora"
 gloss: "trace and place the Gurmukhi long-o vowel mark"
-prerequisites: [PA-W08-pairin-bindi]
+prerequisites: [PA-W08-pairin-bindi, PA-S05-babba-lalla-hora]
 sounds: []
 roots: []
 duration:
   max_seconds: 155
 requires:
-  knowledge: [PA-SCRIPT-PAIRIN-BINDI-01]
+  knowledge: [PA-SCRIPT-PAIRIN-BINDI-01, PA-SCRIPT-RECOG-HORA-01]
 introduces:
   knowledge: [PA-SCRIPT-HORA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-SCRIPT-PAIRIN-BINDI-01, PA-SCRIPT-HORA-01]
+  knowledge: [PA-SCRIPT-PAIRIN-BINDI-01, PA-SCRIPT-HORA-01, PA-SCRIPT-RECOG-HORA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-W08-pairin-bindi]
+reviews_of: [PA-W08-pairin-bindi, PA-S05-babba-lalla-hora]
 ---
 
 # ੋ — add the long-o mark
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-PAIRIN-BINDI-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-PAIRIN-BINDI-01, PA-SCRIPT-RECOG-HORA-01] -->
 
 Write **ਫ਼** once.
 
