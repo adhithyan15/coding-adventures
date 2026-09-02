@@ -1,0 +1,1005 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 29,
+  "title": "The Time Words Reach the Page",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:1f040aae83e531c4",
+  "lessons": [
+    {
+      "id": "GU-C25-savaar",
+      "sequence": 1300,
+      "title": "Savār reaches the page",
+      "headword": "સવાર",
+      "romanization": "savār",
+      "gloss": "morning, now written with signs taught long before this chapter",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:8806469075e6e7de",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before anything is uncovered, say the Gujarati word for morning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Uncover સવાર (savār) once. Four pieces, none of them new: સ and the ા stroke both come from the greeting lesson, and વ and ર from the courtesy chapter after it. Name the four pieces aloud in order, then read the whole word once."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C25-savaar-reading",
+              "prompt": "Read this word aloud and give its meaning: સવાર (savār).",
+              "assesses": [
+                "GU-SCRIPT-SAVAAR-01",
+                "GU-LEX-SAVAAR-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "savār — morning",
+                "savār morning"
+              ],
+              "feedback": {
+                "correct": "You read savār from signs you already knew.",
+                "incorrect": "Name the four pieces one at a time, then read the word again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — guided copy, model in view",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the model in view and copy સવાર (savār) once. Repair one shape if it needs it; do not start a row."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C25-savaar-guided-copy",
+              "prompt": "With the model in view, copy morning once.",
+              "assesses": [
+                "GU-SCRIPT-SAVAAR-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "સવાર"
+              ],
+              "feedback": {
+                "correct": "સવાર is morning.",
+                "incorrect": "Copy the parts in order, checking each against the model."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the four signs in savār was taught most recently? (ર, in the courtesy chapter — the other three all come out of the greeting.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Cambridge: morning."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C25-bapor",
+      "sequence": 1310,
+      "title": "Bapor reaches the page",
+      "headword": "બપોર",
+      "romanization": "bapor",
+      "gloss": "midday, now written with signs taught long before this chapter",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:633a9fe06dc8d8ad",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before anything is uncovered, say the Gujarati word for midday."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Uncover બપોર (bapor) once. બ and પ were taught together among the forms that come before your name, the ો sign among the doorway nine, and ર you wrote yesterday inside savār. Name the four pieces aloud in order, then read the whole word once."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C25-bapor-reading",
+              "prompt": "Read this word aloud and give its meaning: બપોર (bapor).",
+              "assesses": [
+                "GU-SCRIPT-BAPOR-01",
+                "GU-LEX-BAPOR-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "bapor — midday",
+                "bapor midday"
+              ],
+              "feedback": {
+                "correct": "You read bapor from signs you already knew.",
+                "incorrect": "Name the four pieces one at a time, then read the word again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — guided copy, model in view",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the model in view and copy બપોર (bapor) once. Repair one shape if it needs it; do not start a row."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C25-bapor-guided-copy",
+              "prompt": "With the model in view, copy midday once.",
+              "assesses": [
+                "GU-SCRIPT-BAPOR-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "બપોર"
+              ],
+              "feedback": {
+                "correct": "બપોર is midday.",
+                "incorrect": "Copy the parts in order, checking each against the model."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two signs in bapor were taught in the same lesson pair? (બ and પ, side by side among the forms that come before your name.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Cambridge: midday."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C25-saanj",
+      "sequence": 1320,
+      "title": "Sānj reaches the page",
+      "headword": "સાંજ",
+      "romanization": "sānj",
+      "gloss": "evening, now written with signs taught long before this chapter",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:bf825a9fe7068cbb",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before anything is uncovered, say the Gujarati word for evening."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Uncover સાંજ (sānj) once. સ and the ા stroke opened savār two lessons ago; the dot above is the ં nasal mark from the doorway nine, and જ is the doorway consonant that also ends āj. Name the four pieces aloud in order, then read the whole word once."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C25-saanj-reading",
+              "prompt": "Read this word aloud and give its meaning: સાંજ (sānj).",
+              "assesses": [
+                "GU-SCRIPT-SAANJ-01",
+                "GU-LEX-SAANJ-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "sānj — evening",
+                "sānj evening"
+              ],
+              "feedback": {
+                "correct": "You read sānj from signs you already knew.",
+                "incorrect": "Name the four pieces one at a time, then read the word again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — guided copy, model in view",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the model in view and copy સાંજ (sānj) once. Repair one shape if it needs it; do not start a row."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C25-saanj-guided-copy",
+              "prompt": "With the model in view, copy evening once.",
+              "assesses": [
+                "GU-SCRIPT-SAANJ-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "સાંજ"
+              ],
+              "feedback": {
+                "correct": "સાંજ is evening.",
+                "incorrect": "Copy the parts in order, checking each against the model."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where in sānj does the nasal live — at the end, or in the middle? (In the middle, on the ā.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Cambridge: evening."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C25-divas",
+      "sequence": 1330,
+      "title": "Divas reaches the page",
+      "headword": "દિવસ",
+      "romanization": "divas",
+      "gloss": "day, now written with signs taught long before this chapter",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:6aa644b1a0fced48",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before anything is uncovered, say the Gujarati word for day."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Uncover દિવસ (divas) once. Watch the second piece. The િ sign is written to the LEFT of દ but is read AFTER it, exactly as the forms before your name taught; વ and સ then follow in order. Name the four pieces aloud in order, then read the whole word once."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C25-divas-reading",
+              "prompt": "Read this word aloud and give its meaning: દિવસ (divas).",
+              "assesses": [
+                "GU-SCRIPT-DIVAS-01",
+                "GU-LEX-DIVAS-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "divas — day",
+                "divas day"
+              ],
+              "feedback": {
+                "correct": "You read divas from signs you already knew.",
+                "incorrect": "Name the four pieces one at a time, then read the word again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — guided copy, model in view",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the model in view and copy દિવસ (divas) once. Repair one shape if it needs it; do not start a row."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C25-divas-guided-copy",
+              "prompt": "With the model in view, copy day once.",
+              "assesses": [
+                "GU-SCRIPT-DIVAS-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "દિવસ"
+              ],
+              "feedback": {
+                "correct": "દિવસ is day.",
+                "incorrect": "Copy the parts in order, checking each against the model."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The િ sits before દ on the page. Which is said first? (દ — the sign is written first and read second.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Cambridge: day."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C25-mahino",
+      "sequence": 1340,
+      "title": "Mahino reaches the page",
+      "headword": "મહિનો",
+      "romanization": "mahino",
+      "gloss": "month, now written with signs taught long before this chapter",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:0b471dd68e374c86",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before anything is uncovered, say the Gujarati word for month."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Uncover મહિનો (mahino) once. મ, હ and ન all come out of the greeting, the િ you used yesterday in divas, and the ો sign from bapor. Name the five pieces aloud in order, then read the whole word once."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C25-mahino-reading",
+              "prompt": "Read this word aloud and give its meaning: મહિનો (mahino).",
+              "assesses": [
+                "GU-SCRIPT-MAHINO-01",
+                "GU-LEX-MAHINO-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "mahino — month",
+                "mahino month"
+              ],
+              "feedback": {
+                "correct": "You read mahino from signs you already knew.",
+                "incorrect": "Name the five pieces one at a time, then read the word again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — delayed copy, model covered",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look, cover the model, and write મહિનો (mahino) once. Repair one shape if it needs it; do not start a row."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C25-mahino-delayed-copy",
+              "prompt": "Look at the model, cover it, then write month from memory.",
+              "assesses": [
+                "GU-SCRIPT-MAHINO-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "મહિનો"
+              ],
+              "feedback": {
+                "correct": "મહિનો is month.",
+                "incorrect": "Copy the parts in order, checking each against the model."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Divas and mahino share one vowel sign. Which? (The િ — left-written, right-read, in both.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Cambridge: month."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C25-atyaare",
+      "sequence": 1350,
+      "title": "Atyāre reaches the page",
+      "headword": "અત્યારે",
+      "romanization": "atyāre",
+      "gloss": "now, now written with signs taught long before this chapter",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:12d6d9043296441d",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before anything is uncovered, say the Gujarati word for now."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Uncover અત્યારે (atyāre) once. The hard part is in the middle: ત carries the ્ stroke that deletes its own vowel and glues it to ય, which is exactly the join you first met in namaste. Around it stand અ, the ા stroke, ર, and the ે sign. Name the six pieces aloud in order, then read the whole word once."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C25-atyaare-reading",
+              "prompt": "Read this word aloud and give its meaning: અત્યારે (atyāre).",
+              "assesses": [
+                "GU-SCRIPT-ATYAARE-01",
+                "GU-LEX-ATYAARE-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "atyāre — now",
+                "atyāre now"
+              ],
+              "feedback": {
+                "correct": "You read atyāre from signs you already knew.",
+                "incorrect": "Name the six pieces one at a time, then read the word again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — guided copy, model in view",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the model in view and copy અત્યારે (atyāre) once. Repair one shape if it needs it; do not start a row."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C25-atyaare-guided-copy",
+              "prompt": "With the model in view, copy now once.",
+              "assesses": [
+                "GU-SCRIPT-ATYAARE-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "અત્યારે"
+              ],
+              "feedback": {
+                "correct": "અત્યારે is now.",
+                "incorrect": "Copy the parts in order, checking each against the model."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which earlier word taught you the ્ join used here? (નમસ્તે — the greeting the book opens with.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Cambridge: now."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C25-time-written",
+      "sequence": 1360,
+      "title": "All eight time words, now on the page",
+      "headword": "સવાર — બપોર — સાંજ — દિવસ — મહિનો — અત્યારે",
+      "romanization": "savār — bapor — sānj — divas — mahino — atyāre",
+      "gloss": "the six oral time words, now scored in reading and writing as well as by ear",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:1e6cd2a1ea7f6173",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new arrives here. Say morning and now in Gujarati before any Gujarati is uncovered."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two of the four scores are kept here: reading runs page to meaning, speaking runs meaning to sound."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C25-time-written-reading",
+              "prompt": "Read this shuffled row aloud and give the six English meanings: મહિનો (mahino) — સવાર (savār) — અત્યારે (atyāre) — સાંજ (sānj) — બપોર (bapor) — દિવસ (divas).",
+              "assesses": [
+                "GU-PERFORMANCE-TIME-EIGHT-WRITTEN-01",
+                "GU-SCRIPT-SAVAAR-01",
+                "GU-SCRIPT-BAPOR-01",
+                "GU-SCRIPT-SAANJ-01",
+                "GU-SCRIPT-DIVAS-01",
+                "GU-SCRIPT-MAHINO-01",
+                "GU-SCRIPT-ATYAARE-01"
+              ],
+              "responseSeconds": 40,
+              "acceptedResponses": [
+                "mahino month — savār morning — atyāre now — sānj evening — bapor midday — divas day",
+                "month morning now evening midday day",
+                "month morning now evening afternoon day"
+              ],
+              "feedback": {
+                "correct": "Reading is 6/6.",
+                "incorrect": "Re-read only a missed word, naming its signs in order."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C25-time-written-speaking",
+              "prompt": "From English cues alone, say evening, month, midday, and now in Gujarati.",
+              "assesses": [
+                "GU-PERFORMANCE-TIME-EIGHT-WRITTEN-01",
+                "GU-LEX-SAVAAR-01",
+                "GU-LEX-BAPOR-01",
+                "GU-LEX-SAANJ-01",
+                "GU-LEX-DIVAS-01",
+                "GU-LEX-MAHINO-01",
+                "GU-LEX-ATYAARE-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "sānj — mahino — bapor — atyāre",
+                "sanj mahino bapor atyaare"
+              ],
+              "feedback": {
+                "correct": "Speaking is 4/4.",
+                "incorrect": "Repair only a missed cue, then say that one again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — delayed copy, every model covered",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write the three from memory, not from a model. Record writing on its own; a 6/6 in reading cannot cover a miss here."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C25-time-written-writing",
+              "prompt": "Look once, cover every model, then write morning, day, and now.",
+              "assesses": [
+                "GU-PERFORMANCE-TIME-EIGHT-WRITTEN-01",
+                "GU-SCRIPT-SAVAAR-01",
+                "GU-SCRIPT-DIVAS-01",
+                "GU-SCRIPT-ATYAARE-01"
+              ],
+              "responseSeconds": 45,
+              "acceptedResponses": [
+                "સવાર — દિવસ — અત્યારે"
+              ],
+              "feedback": {
+                "correct": "Three words came back with no model in view.",
+                "incorrect": "Uncover only the missed word, cover it again, and rewrite that one."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many of the eight time words can you now write? (All eight — rāt and āj since the chapter that taught them by ear, and these six today.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: morning, month, and now."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R25-time-written-r1",
+      "sequence": 1370,
+      "title": "The written time words return at R1",
+      "headword": "સવાર — બપોર — સાંજ — દિવસ — મહિનો — અત્યારે",
+      "romanization": "savār — bapor — sānj — divas — mahino — atyāre",
+      "gloss": "retrieve the six newly written time words at their first spacing window",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:240c7818889c0857",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new arrives here. Say the word for now before anything is read to you."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Listening runs sound to meaning, exactly as it did before any of these six reached the page."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R25-time-written-r1-listening",
+              "prompt": "Hear this shuffled row and give the six English meanings: divas — atyāre — bapor — mahino — savār — sānj.",
+              "assesses": [
+                "GU-PERFORMANCE-TIME-EIGHT-WRITTEN-01",
+                "GU-LEX-SAVAAR-01",
+                "GU-LEX-BAPOR-01",
+                "GU-LEX-SAANJ-01",
+                "GU-LEX-DIVAS-01",
+                "GU-LEX-MAHINO-01",
+                "GU-LEX-ATYAARE-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "day — now — midday — month — morning — evening",
+                "day now midday month morning evening",
+                "day now afternoon month morning evening"
+              ],
+              "feedback": {
+                "correct": "Listening is 6/6 at R1.",
+                "incorrect": "Replay only a missed sound, then answer that one again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — from sound, every model covered",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "These are the three the payoff did not ask for, so between the two lessons all six have been written without a model."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R25-time-written-r1-writing",
+              "prompt": "Cover every model. Write midday, evening, and month from the spoken words alone.",
+              "assesses": [
+                "GU-PERFORMANCE-TIME-EIGHT-WRITTEN-01",
+                "GU-SCRIPT-BAPOR-01",
+                "GU-SCRIPT-SAANJ-01",
+                "GU-SCRIPT-MAHINO-01"
+              ],
+              "responseSeconds": 45,
+              "acceptedResponses": [
+                "બપોર — સાંજ — મહિનો"
+              ],
+              "feedback": {
+                "correct": "Three words came back from sound with no model in view.",
+                "incorrect": "Check only the missed word, cover it again, and rewrite that one."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How far after the payoff did this return come? (One lesson — the first spacing window.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: evening, and month."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

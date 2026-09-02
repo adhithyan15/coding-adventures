@@ -1,0 +1,22 @@
+{
+  "language": "gujarati",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:1f040aae83e531c4",
+  "lessonIds": [
+    "GU-C25-savaar",
+    "GU-C25-bapor",
+    "GU-C25-saanj",
+    "GU-C25-divas",
+    "GU-C25-mahino",
+    "GU-C25-atyaare",
+    "GU-C25-time-written",
+    "GU-R25-time-written-r1"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "gujarati/narration/ch29.txt",
+  "json": "gujarati/narration/ch29.json",
+  "textHash": "fnv1a64:cf5d38c9c84829d3",
+  "jsonHash": "fnv1a64:c421baf2560e039c",
+  "findings": []
+}

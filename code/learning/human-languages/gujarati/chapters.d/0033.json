@@ -1,0 +1,23 @@
+{
+  "chapter": 33,
+  "title": "Sun, Sky, and River",
+  "label": "ch:gu-sun-sky-river",
+  "canDo": "I can hear and say five everyday Gujarati outdoor words, and read and write one of them.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "GU-C29-sky-five",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Five outdoor words enter meaning-first by ear, one lesson each; an oral checkpoint scores listening and speaking apart, river reaches the page with signs taught before chapter 8, and an R1 return carries the chapter-18 face words back at their fourth spacing window.",
+    "assesses": [
+      "GU-LEX-SOORAJ-01",
+      "GU-LEX-CHANDRA-01",
+      "GU-LEX-AAKAASH-01",
+      "GU-LEX-VARSAAD-01",
+      "GU-LEX-NADI-01",
+      "GU-SCRIPT-NADI-01",
+      "GU-PERFORMANCE-SKY-FIVE-ORAL-01"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "GU-R29-sky-five-r1",
+    "language": "gujarati",
+    "chapter": 33,
+    "sequence": 1690,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block",
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8bb59e5084b2d45b",
+    "detachableSegments": [
+      "Writing — from sound, every model covered"
+    ]
+  },
+  "findings": []
+}

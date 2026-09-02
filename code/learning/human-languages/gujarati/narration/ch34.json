@@ -1,0 +1,1068 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 34,
+  "title": "People, Paper, and a Book",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:3f9a479d6a206495",
+  "lessons": [
+    {
+      "id": "GU-C30-hear-chhokro",
+      "sequence": 1700,
+      "title": "છોકરો (chhokro) — hear boy",
+      "headword": "છોકરો",
+      "romanization": "chhokro",
+      "gloss": "boy, heard and said before it is ever shown",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:33917d79fd394f12",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Gujarati words for brother and for sister. Now listen twice: chhokro. It means boy — younger than the bhāī you already know, and ending in the masculine -o."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"chhokro\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"chhokro\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"chhokro\" twice, once slowly and once at speed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"chhokro\" twice, once slowly and once at speed]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does chhokro mean? (Boy.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Cambridge: boy."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C30-hear-chhokro-recall",
+              "prompt": "Which names a child rather than a sibling: bhāī or chhokro?",
+              "assesses": [
+                "GU-LEX-CHHOKRO-01",
+                "GU-LEX-BHAI",
+                "GU-LEX-BAHEN"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "chhokro",
+                "boy",
+                "chhokro is the child"
+              ],
+              "feedback": {
+                "correct": "Sibling and child stay apart.",
+                "incorrect": "Hear the two once more: bhāī — brother; chhokro — boy."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C30-hear-chhokri",
+      "sequence": 1710,
+      "title": "છોકરી (chhokrī) — hear girl",
+      "headword": "છોકરી",
+      "romanization": "chhokrī",
+      "gloss": "girl, heard and said before it is ever shown",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:80485c3923f751f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the word for boy. Now listen twice: chhokrī. It means girl — the pair of chhokro, and this time the -o and -ī endings really do mark gender."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"chhokrī\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"chhokrī\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"chhokro\" for boy, then \"chhokrī\" for girl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"chhokro\" for boy, then \"chhokrī\" for girl]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does chhokrī mean? (Girl.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Cambridge: girl."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C30-hear-chhokri-recall",
+              "prompt": "Do -o and -ī always mark gender in Gujarati?",
+              "assesses": [
+                "GU-LEX-CHHOKRI-01",
+                "GU-LEX-CHHOKRO-01",
+                "GU-GRAMMAR-GENDER-NOT-BY-ENDING"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "no — chhokro and chhokrī are a pair, but roṭlī and kerī are not that rule",
+                "no"
+              ],
+              "feedback": {
+                "correct": "A pair that works does not make it a rule.",
+                "incorrect": "Set chhokro/chhokrī beside roṭlī and kerī, and say what differs."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C30-hear-maanas",
+      "sequence": 1720,
+      "title": "માણસ (māṇas) — hear person",
+      "headword": "માણસ",
+      "romanization": "māṇas",
+      "gloss": "person, heard and said before it is ever shown",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:91f8370d9e721d56",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for boy and for girl. Now listen twice: māṇas. It means person — anybody at all, the word to use when boy or girl is not the question."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"māṇas\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"māṇas\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"chhokrī\" for girl, then \"māṇas\" for person",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"chhokrī\" for girl, then \"māṇas\" for person]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does māṇas mean? (Person.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Cambridge: person."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C30-hear-maanas-recall",
+              "prompt": "Which word covers a boy, a girl, a brother, and a sister all at once?",
+              "assesses": [
+                "GU-LEX-MAANAS-01",
+                "GU-LEX-CHHOKRI-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "māṇas",
+                "person",
+                "maanas"
+              ],
+              "feedback": {
+                "correct": "One word covers them all.",
+                "incorrect": "Hear māṇas once more: a person, anybody."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C30-hear-pustak",
+      "sequence": 1730,
+      "title": "પુસ્તક (pustak) — hear book",
+      "headword": "પુસ્તક",
+      "romanization": "pustak",
+      "gloss": "book, heard and said before it is ever shown",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d80654f77c3b0cf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Gujarati verb for to read. Now listen twice: pustak. It means book — the thing a māṇas reads, and it carries the same st join as namaste."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"pustak\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"pustak\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"māṇas\" for person, then \"pustak\" for book",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"māṇas\" for person, then \"pustak\" for book]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pustak mean? (Book.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Cambridge: book."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C30-hear-pustak-recall",
+              "prompt": "Which two words you know share the st join: namaste and which?",
+              "assesses": [
+                "GU-LEX-PUSTAK-01",
+                "GU-LEX-MAANAS-01",
+                "GU-LEX-VANCHVU"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "pustak",
+                "book",
+                "pustak shares it"
+              ],
+              "feedback": {
+                "correct": "The same join, two words apart in the book.",
+                "incorrect": "Say namaste and pustak slowly and listen for the same st."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C30-hear-kaagal",
+      "sequence": 1740,
+      "title": "કાગળ (kāgaḷ) — hear paper",
+      "headword": "કાગળ",
+      "romanization": "kāgaḷ",
+      "gloss": "paper, heard and said before it is ever shown",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:36f29a844e77dfc4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for book and for person. Now listen twice: kāgaḷ. It means paper — what a pustak is made of, ending on the curled-back ḷ you also hear in dāḷ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"kāgaḷ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"kāgaḷ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"pustak\" for book, then \"kāgaḷ\" for paper",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"pustak\" for book, then \"kāgaḷ\" for paper]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does kāgaḷ mean? (Paper.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Cambridge: paper."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C30-hear-kaagal-recall",
+              "prompt": "Which other word you know ends on the same curled-back ḷ?",
+              "assesses": [
+                "GU-LEX-KAAGAL-01",
+                "GU-LEX-PUSTAK-01",
+                "GU-LEX-DAAL-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "dāḷ",
+                "daal",
+                "lentils"
+              ],
+              "feedback": {
+                "correct": "The same retroflex ḷ closes both.",
+                "incorrect": "Say dāḷ and kāgaḷ slowly and listen for the same final sound."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C30-people-five",
+      "sequence": 1750,
+      "title": "Five people and things, by ear",
+      "headword": "છોકરો — છોકરી — માણસ — પુસ્તક — કાગળ",
+      "romanization": "chhokro — chhokrī — māṇas — pustak — kāgaḷ",
+      "gloss": "five people-and-paper words retrieved by ear alone, with the outdoor and food words returning at R2 and R3",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ac4f64ad554e3d64",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new arrives here. Say the first and the last word of the chapter before any list is read to you."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep two scores. Listening goes from sound to meaning; speaking goes from meaning to sound. A strong score in one cannot cover a miss in the other. The third row is not new material — it is two older bands at once: the outdoor words of the previous chapter at their second spacing window, and the food words two chapters before that at their third."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C30-people-five-listening",
+              "prompt": "Hear this shuffled row and give the five English meanings: kāgaḷ — māṇas — chhokrī — pustak — chhokro.",
+              "assesses": [
+                "GU-PERFORMANCE-PEOPLE-FIVE-ORAL-01",
+                "GU-LEX-CHHOKRO-01",
+                "GU-LEX-CHHOKRI-01",
+                "GU-LEX-MAANAS-01",
+                "GU-LEX-PUSTAK-01",
+                "GU-LEX-KAAGAL-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "paper — person — girl — book — boy",
+                "paper person girl book boy"
+              ],
+              "feedback": {
+                "correct": "Listening is 5/5.",
+                "incorrect": "Replay only the missed sound, then answer that one again."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C30-people-five-speaking",
+              "prompt": "Say the five Gujarati words from the English cues alone: boy, girl, person, book, paper.",
+              "assesses": [
+                "GU-PERFORMANCE-PEOPLE-FIVE-ORAL-01",
+                "GU-LEX-CHHOKRO-01",
+                "GU-LEX-CHHOKRI-01",
+                "GU-LEX-MAANAS-01",
+                "GU-LEX-PUSTAK-01",
+                "GU-LEX-KAAGAL-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "chhokro — chhokrī — māṇas — pustak — kāgaḷ",
+                "chhokro chhokri maanas pustak kaagal"
+              ],
+              "feedback": {
+                "correct": "Speaking is 5/5.",
+                "incorrect": "Repair only the missed cue, then say that one again."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C30-people-five-carryover",
+              "prompt": "Now the two older bands, by ear only: give the English of sūraj, chandra, ākāsh, varsād, and nadī, then of bhāt, dāḷ, shāk, tel, and kerī.",
+              "assesses": [
+                "GU-LEX-SOORAJ-01",
+                "GU-LEX-CHANDRA-01",
+                "GU-LEX-AAKAASH-01",
+                "GU-LEX-VARSAAD-01",
+                "GU-LEX-NADI-01",
+                "GU-LEX-BHAAT-01",
+                "GU-LEX-DAAL-01",
+                "GU-LEX-SHAAK-01",
+                "GU-LEX-TEL-01",
+                "GU-LEX-KERI-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "sun — moon — sky — rain — river; rice — lentils — vegetable — oil — mango",
+                "sun moon sky rain river rice lentils vegetable oil mango"
+              ],
+              "feedback": {
+                "correct": "The older band came back too.",
+                "incorrect": "Replay only the missed item, then answer that one again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the five would you use for a person whose age you do not know? (māṇas.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: boy, girl, person, and book."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C30-kaagal",
+      "sequence": 1760,
+      "title": "Kāgaḷ reaches the page",
+      "headword": "કાગળ",
+      "romanization": "kāgaḷ",
+      "gloss": "paper, now written with signs taught long before this chapter",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:6de09b4841b2197c",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before anything is uncovered, say the Gujarati word for paper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Uncover કાગળ (kāgaḷ) once. Four pieces, none new: ક from the doorway nine, the ા stroke from the greeting, and ગ and the curled ળ from the forms taught before the verbs. Watch ગ and ળ side by side; they are the two most easily confused shapes here. Name the pieces aloud in order, then read the whole word once. This is the only word of the chapter the hand is asked for; the other four stay in the ear for now, which is the gloss-first order rather than an omission."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C30-kaagal-reading",
+              "prompt": "Read this word aloud and give its meaning: કાગળ (kāgaḷ).",
+              "assesses": [
+                "GU-SCRIPT-KAAGAL-01",
+                "GU-LEX-KAAGAL-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "kāgaḷ — paper",
+                "kāgaḷ paper"
+              ],
+              "feedback": {
+                "correct": "You read kāgaḷ from signs you already knew.",
+                "incorrect": "Name the pieces one at a time, then read the word again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — guided copy, model in view",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the model in view and copy કાગળ (kāgaḷ) once. Repair one shape if it needs it; do not start a row."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C30-kaagal-guided-copy",
+              "prompt": "With the model in view, copy paper once.",
+              "assesses": [
+                "GU-SCRIPT-KAAGAL-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "કાગળ"
+              ],
+              "feedback": {
+                "correct": "કાગળ is paper.",
+                "incorrect": "Copy the pieces in order, checking each against the model."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — the first map at its fourth window",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first three-place map was read and written more than eighty positions ago, which is its fourth spacing window; the river reached the page eight lessons ago, which is its second. Both rows here are cold reading."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C30-kaagal-map-r4",
+              "prompt": "Read this row aloud and give the three English meanings: મંદિર — બજાર — ઘર.",
+              "assesses": [
+                "GU-SCRIPT-BAJAR-01",
+                "GU-SCRIPT-GHA-01",
+                "GU-SCRIPT-GHAR-01",
+                "GU-SCRIPT-MANDIR-01",
+                "GU-PERFORMANCE-PLACES-THREE-FOUR-SKILL-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "temple — market — home",
+                "temple market home"
+              ],
+              "feedback": {
+                "correct": "The first three-place map came back off the page at its fourth window.",
+                "incorrect": "Re-read only a missed word, naming its signs in order."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C30-kaagal-nadi-r2",
+              "prompt": "Read this one too, and give its meaning: નદી.",
+              "assesses": [
+                "GU-SCRIPT-NADI-01",
+                "GU-PERFORMANCE-SKY-FIVE-ORAL-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "nadī — river",
+                "nadi river"
+              ],
+              "feedback": {
+                "correct": "River came back off the page at its second window.",
+                "incorrect": "Name the three signs one at a time, then read the word again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two signs in kāgaḷ are the easiest to confuse, and how do you tell them apart? (ગ and ળ — one opens to the right, the other curls back on itself.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Cambridge: paper."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R30-people-five-r1",
+      "sequence": 1770,
+      "title": "The people return at R1, and the first map at R4",
+      "headword": "છોકરો — છોકરી — માણસ — પુસ્તક — કાગળ",
+      "romanization": "chhokro — chhokrī — māṇas — pustak — kāgaḷ",
+      "gloss": "retrieve the five people-and-paper words at R1 and the first three-place map at its fourth spacing window",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:538e4a0331a65588",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new arrives here. Say the words for boy and for paper before anything is read to you."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Listening runs sound to meaning; speaking runs meaning to sound, exactly as they did one lesson ago."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R30-people-five-r1-listening",
+              "prompt": "Hear this shuffled row and give the five English meanings: pustak — chhokro — kāgaḷ — chhokrī — māṇas.",
+              "assesses": [
+                "GU-PERFORMANCE-PEOPLE-FIVE-ORAL-01",
+                "GU-LEX-CHHOKRO-01",
+                "GU-LEX-CHHOKRI-01",
+                "GU-LEX-MAANAS-01",
+                "GU-LEX-PUSTAK-01",
+                "GU-LEX-KAAGAL-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "book — boy — paper — girl — person",
+                "book boy paper girl person"
+              ],
+              "feedback": {
+                "correct": "Listening is 5/5 at R1.",
+                "incorrect": "Replay only a missed sound, then answer that one again."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R30-people-five-r1-speaking",
+              "prompt": "From English cues alone, say person, book, and girl in Gujarati.",
+              "assesses": [
+                "GU-PERFORMANCE-PEOPLE-FIVE-ORAL-01",
+                "GU-LEX-CHHOKRO-01",
+                "GU-LEX-CHHOKRI-01",
+                "GU-LEX-MAANAS-01",
+                "GU-LEX-PUSTAK-01",
+                "GU-LEX-KAAGAL-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "māṇas — pustak — chhokrī",
+                "maanas pustak chhokri"
+              ],
+              "feedback": {
+                "correct": "Speaking is 3/3 at R1.",
+                "incorrect": "Repair only a missed cue, then say that one again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — the distant band, the first map, and the house",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A māṇas goes to the bajār, comes back to the ghar, and opens its bārṇũ. The first three were introduced around position 136 and are asked for here more than eighty lessons later, which is the fourth spacing window; the four house words are at their third."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R30-people-five-r1-distant",
+              "prompt": "By ear only: give the English of bajār, ghar, and mandir, then of bārṇũ, bārī, khurshī, and chāvī.",
+              "assesses": [
+                "GU-LEX-BAJAR-01",
+                "GU-LEX-GHAR-01",
+                "GU-LEX-MANDIR-01",
+                "GU-LEX-BAARNUN-01",
+                "GU-LEX-BAARI-01",
+                "GU-LEX-KHURSHI-01",
+                "GU-LEX-CHAAVI-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "market — home — temple; door — window — chair — key",
+                "market home temple door window chair key"
+              ],
+              "feedback": {
+                "correct": "The distant band came back.",
+                "incorrect": "Replay only a missed item, then answer that one again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing — from sound, every model covered",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Record writing on its own; a 5/5 in listening cannot cover a miss here."
+            },
+            {
+              "kind": "speech",
+              "text": "A māṇas carries paisā in a hāth. Both reached the page more than eighty positions ago, which is the fourth spacing window."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R30-people-five-r1-writing",
+              "prompt": "Cover every model. Write paper from the spoken word alone.",
+              "assesses": [
+                "GU-PERFORMANCE-PEOPLE-FIVE-ORAL-01",
+                "GU-SCRIPT-KAAGAL-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "કાગળ"
+              ],
+              "feedback": {
+                "correct": "The word came back from sound with no model in view.",
+                "incorrect": "Check it once, cover it again, and rewrite that one word."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R30-people-five-r1-travel-r4",
+              "prompt": "Still covered: write hand and money, then name the one sign in money that no other word you write uses.",
+              "assesses": [
+                "GU-SCRIPT-HAATH-01",
+                "GU-SCRIPT-PAISA-01",
+                "GU-SCRIPT-AI-MATRA-01",
+                "GU-LEX-HAATH-01",
+                "GU-LEX-PAISA-01",
+                "GU-PERFORMANCE-TRAVEL-FIVE-FOUR-SKILL-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "હાથ — પૈસા; the ai sign ૈ"
+              ],
+              "feedback": {
+                "correct": "Hand, money, and the ai sign came back at their fourth window.",
+                "incorrect": "Check only the missed word, cover it again, and rewrite that one."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How far after the checkpoint did this return come? (Two lessons — inside the first spacing window.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: paper, person, market, and temple."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
