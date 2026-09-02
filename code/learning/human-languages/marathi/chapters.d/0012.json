@@ -10,7 +10,19 @@
     "lesson": "MR-C05-practice",
     "kind": "task",
     "summary": "Complete MR-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense Marathi sentences with the chapter's first verbs.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "assesses": [
+      "MR-PHRASE-MI-MARATHI-BOLTO",
+      "MR-LEX-BOLNE",
+      "MR-LEX-RAHNE",
+      "MR-LEX-KARNE",
+      "MR-ETYMON-MARATHI-MAHARASHTRA",
+      "MR-ETYMON-KARNE-KWER",
+      "MR-GRAMMAR-INFINITIVE-NE",
+      "MR-GRAMMAR-PRESENT-GENDERED-ENDING",
+      "MR-GRAMMAR-POSTPOSITION-ON-NOUN",
+      "MR-GRAMMAR-NO-SEPARATE-COPULA",
+      "MR-GRAMMAR-NOUN-PLUS-KARNE"
+    ],
+    "note": "The recap says all three sentences about the reader, then shows the single engine underneath them -- an infinitive in -ṇe, a present of stem plus a gendered ending that folds in the \"am\", the verb last, and \"in\" on the noun's tail -- and re-banks the roots each verb came from."
   }
 }

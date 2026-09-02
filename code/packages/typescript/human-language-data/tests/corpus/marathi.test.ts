@@ -34,7 +34,15 @@ it("pins Marathi lesson-content budgets", () =>
     // as chapter 9 -- every one was already written and already in the book, so
     // this counts lessons that became MEASURABLE, not lessons that were added.
     // Idioms, senses and culture claims stay at 5 / 4 / 7.
-    lessons: 194,
+    //
+    // 194 -> 205: chapters 11 and 12's eleven schema-v1 lessons migrated to v2,
+    // which retires the last of Marathi's hand-written chapters. Same shape
+    // again -- all eleven were already written and already in the book, so
+    // this counts lessons that became MEASURABLE. With 9, 10, 11 and 12 done,
+    // marathi/lessons holds NO schema-v1 lesson at all: 179 -> 205 is the
+    // whole v1 island, and idioms, senses and culture claims never moved off
+    // 5 / 4 / 7 across any of it.
+    lessons: 205,
     idioms: 5,
     senses: 4,
     cultureClaims: 7,

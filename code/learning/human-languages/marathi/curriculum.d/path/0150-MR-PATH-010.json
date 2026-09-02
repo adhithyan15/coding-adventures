@@ -5,11 +5,15 @@
     "MR-C04-punha",
     "MR-C04-bhetu",
     "MR-C04-punha-bhetu",
-    "MR-C04-udya-bhetu"
+    "MR-C04-udya-bhetu",
+    "MR-C04-kalji-ghya",
+    "MR-C04-practice"
   ],
   "before": [
     "MR-EXT-010-LANGUAGE-SPECIFIC"
   ],
-  "inline": [],
+  "inline": [
+    "MR-EXT-040-FAREWELL-CARE-AND-CONSOLIDATION"
+  ],
   "after": []
 }
