@@ -32,6 +32,19 @@ landed and why, not a semver-tracked API.
   Four restore-the-flattened-form mutations pass — each differs from the repaired value by **one
   character**, so a pin that survived would not be checking the glyph at all.
 
+  **The screen had a blind spot, found while shipping this: it scans `source`/`cites` lines and
+  never looked at header quotes.** `lunar-eclipse-type`'s header claims three verbatim quotes and
+  this installment initially repaired only the one that was also a `source`. Screening all 66
+  apostrophe-bearing header quotes against their own pages found **23 flattened**; the one in this
+  file is fixed here and the other 22 are filed as #14111. The same sentence repaired here in
+  `map-type-classification` still sits flattened in sibling `map-type`'s header — header text
+  propagates into derived libraries' shipped data, so this is a defect waiting to happen.
+
+  **The NASA page is mixed, and a blanket curl would have broken a correct quote.** It renders the
+  total and penumbral sentences with U+2019 and the partial one with an ASCII apostrophe. Curling
+  all three would have made a currently-verbatim quote stop appearing on its own page. The file now
+  carries a DO-NOT-NORMALIZE note so a future editor does not "fix" the odd one out.
+
   *Scope note:* this is 4 of 15 confirmed glyph repairs. The other 11 are `language/*` and ship
   separately — a 15-file PR across 15 libraries is harder to review than two coherent ones.
 
