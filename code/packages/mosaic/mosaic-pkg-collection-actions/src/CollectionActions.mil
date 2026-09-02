@@ -26,6 +26,10 @@ component CollectionActions {
   slot add-note-type-label : text ;
   slot delete-note-label : text ;
   slot delete-note-type-label : text ;
+  // #13933 -- a delete with nothing selected used to be a silent no-op, so the
+  // control is disabled rather than presenting a click that does nothing.
+  slot delete-note-disabled : bool ;
+  slot delete-note-type-disabled : bool ;
 
   emit onImportAnki ;
   emit onExportAnki ;
