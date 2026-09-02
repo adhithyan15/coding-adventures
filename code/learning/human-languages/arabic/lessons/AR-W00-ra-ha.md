@@ -14,14 +14,14 @@ roots: [phoenician-resh]
 duration:
   max_seconds: 240
 requires:
-  knowledge: [AR-C01-MARHABA-04]
+  knowledge: [AR-C01-MARHABA-05]
 introduces:
-  knowledge: [AR-SCRIPT-RA-HA-05]
+  knowledge: [AR-SCRIPT-RA-HA-06]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [AR-C01-MARHABA-04, AR-SCRIPT-RA-HA-05]
+  knowledge: [AR-C01-MARHABA-05, AR-SCRIPT-RA-HA-06]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -33,13 +33,13 @@ reviews_of: [AR-C01-marhaba, AR-W00-alif-mim-salam]
 # ر and ح — two shapes inside *marḥaban*
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-MARHABA-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-MARHABA-05] -->
 
 [PAUSE 2s] Say *marḥaban*. Its sound and welcome already belong to you. Now
 notice only two of its new written consonants.
 
 ## Script — observe rāʾ and ḥāʾ
-<!-- hl-knowledge: introduces=[AR-SCRIPT-RA-HA-05]; assesses=[AR-C01-MARHABA-04] -->
+<!-- hl-knowledge: introduces=[AR-SCRIPT-RA-HA-06]; assesses=[AR-C01-MARHABA-05] -->
 
 - **ر** is *rāʾ*, the tapped *r*. It curves down and left. It joins to what
   comes before it but not to what follows.
@@ -48,7 +48,7 @@ notice only two of its new written consonants.
 Trace **ر ح** separately. Keep *ḥāʾ* open and dotless.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-MARHABA-04, AR-SCRIPT-RA-HA-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-MARHABA-05, AR-SCRIPT-RA-HA-06] -->
 
 [PAUSE 1s]
 - [YOU SAY: *rāʾ*, and trace **ر**]
@@ -56,7 +56,7 @@ Trace **ر ح** separately. Keep *ḥāʾ* open and dotless.
 - [YOU WRITE: **ر ح** once from memory, then compare]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-MARHABA-04, AR-SCRIPT-RA-HA-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-MARHABA-05, AR-SCRIPT-RA-HA-06] -->
 
 [PAUSE 3s] Which letter refuses to join forward? (**ر.**) Which one is the
 dotless open bowl? (**ح.**) Say *marḥaban* again; the next step adds its final

@@ -1,0 +1,11 @@
+{
+  "id": "TE-EXT-008-CONSOLIDATION",
+  "stage": "pre-A1",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can retrieve and combine the Telugu how-are-you exchange of chapter 3.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C03-practice"
+  ]
+}

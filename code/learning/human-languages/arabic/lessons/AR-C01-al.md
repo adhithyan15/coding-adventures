@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: AR-C01-al
+spine_node: SPINE-DEFINITE-REFERENCE
 sequence: 30
 chapter: 1
 type: word
@@ -9,25 +11,44 @@ concept_tag: GRAMMAR-THE
 prerequisites: [AR-C01-salam]
 sounds: [alif-lam, sun-moon-letters]
 roots: []
-est_minutes: 4
 reviews_of: [AR-C01-salam, AR-C01-marhaba]
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-C01-SALAM-01]
+introduces:
+  knowledge: [AR-SCRIPT-AL-08, AR-CONCEPT-AL-09, AR-CONCEPT-SUN-MOON-10]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [AR-SCRIPT-AL-08, AR-CONCEPT-AL-09, AR-CONCEPT-SUN-MOON-10]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
 ---
+
 
 # ال (al-) — "the," hiding in English *algebra*
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Before the fuller greetings, one tiny, mighty word: Arabic's "the."
 You'll need it for *the* peace, *the* goodness — and you already know how to
 read it.
 
 ## The letters in this word
+<!-- hl-knowledge: introduces=[AR-SCRIPT-AL-08]; assesses=[] -->
 
 *(Skim if you read Arabic.)* No new letters — just **ا** (alif) and **ل**
 (lām), the two you met in *salām*, written together as **ال** and **attached to
 the front** of a noun (Arabic glues "the" on; it isn't a separate word).
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[AR-CONCEPT-AL-09]; assesses=[] -->
 
 **ال** (*al-*, "the"). For roughly 800 years Arabic was the Mediterranean's
 language of science and trade, and English and Spanish absorbed its words **with
@@ -36,6 +57,7 @@ al- still attached**: **al**gebra (*al-jabr*), **al**cohol (*al-kuḥl*),
 is meeting an old friend you've been carrying in English all along.
 
 ## Grammar Lens: sun letters and moon letters
+<!-- hl-knowledge: introduces=[AR-CONCEPT-SUN-MOON-10]; assesses=[] -->
 
 Here's a rule you can *hear*. Before about half the consonants — the **sun
 letters** (*s, sh, n, r, t, d*…) — the *l* of *al-* assimilates and the next
@@ -49,6 +71,7 @@ Before the **moon letters** (*kh, k, b, m*…) the *l* stays clear: **al-khayr**
 Arabic *as-sukkar* ("the sugar") — the *l* long gone, the doubled *s* remaining.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-SCRIPT-AL-08, AR-CONCEPT-AL-09, AR-CONCEPT-SUN-MOON-10] -->
 
 [PAUSE 1s]
 - [YOU SAY: "al-" and three English words hiding it — al-gebra, al-cohol,
@@ -57,6 +80,7 @@ Arabic *as-sukkar* ("the sugar") — the *l* long gone, the doubled *s* remainin
 - [YOU SAY: moon-letter, no change — al- + khayr → "al-khayr"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-SCRIPT-AL-08, AR-CONCEPT-AL-09, AR-CONCEPT-SUN-MOON-10] -->
 
 [PAUSE 3s] What does **ال** mean, and how does it attach? ("The," glued to the
 front of its noun.) What happens before a *sun letter* like *s*? (The *l*

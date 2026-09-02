@@ -92,6 +92,37 @@ const svg = svgMarkup(strip.root);   // for the book pipeline
 serialises it to text; the app walks the same tree with `createElementNS` and
 never touches `innerHTML`. One description, two consumers.
 
+## The printed filmstrip, and the ledger the book reads
+
+The app calls `ductusFilmstrip` and draws the `SvgNode` tree straight into the DOM.
+The book cannot: `human-language-data` is a plain Node CLI, this package needs a
+Vite process (`scriptdata.ts` reads the sharded inventories through a virtual
+module), and this package already depends on that one — so importing it back would
+close a build-graph cycle.
+
+The two therefore meet on data. `filmstrip-ledger.ts` writes
+`code/learning/human-languages/data/ductus/filmstrip-geometry.json`: for each
+letter the book prints, its frames as escaped SVG fragments in one shared viewBox,
+plus the citation, the font the outline came from, the pen-lift count and the
+summary line. Every value in it is read back out of the tree `ductusFilmstrip`
+produced — nothing is recomputed — so the book and the app cannot draw different
+pictures.
+
+```bash
+npm run generate:filmstrip-ledger   # rewrite it
+npm run check:filmstrip-ledger      # fail if it is stale
+```
+
+The check also runs as part of `npm test`, so a stroke edited here and not
+regenerated fails this package rather than the book. Which letters get an entry is
+decided by the curriculum's `core/figure-generation.json`, not here: the generator
+emits one entry per `script-filmstrip` target declared there.
+
+`DuctusOptions.highlightSegment` is what the printed strip turns on. Frames sit
+side by side and nothing animates, so the part of the current stroke travelled
+before this frame drops back to the muted tone and only the movement the caption
+names is in ink. The live app keeps the default whole-stroke shading.
+
 ## No DOM, no filesystem
 
 Nothing here touches `document` or reads a file. Fonts arrive as an

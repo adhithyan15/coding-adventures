@@ -27,7 +27,7 @@ modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: modern-standard-arabic
-reviews_of: [AR-W06-harakat-and-hamza, AR-W01-abjad-short-vowels, AR-C01-shukran]
+reviews_of: [AR-W06-harakat-and-hamza, AR-C01-shukran]
 ---
 
 # ْ ّ ً — stop, double, or add *-an*
