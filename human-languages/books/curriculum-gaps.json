@@ -20,22 +20,22 @@
     "tracksWithoutBooks": 0,
     "lessonChaptersWithoutBooks": 0,
     "legacySchemaTracks": 0,
-    "mixedSchemaTracks": 10,
-    "version2SchemaTracks": 13,
+    "mixedSchemaTracks": 9,
+    "version2SchemaTracks": 14,
     "lessonsWithoutLevel": 46,
     "rampOverBudgetLessons": 40,
     "scriptRampOverBudgetLessons": 34,
     "lessonsOpeningMultipleScripts": 0,
-    "scriptClosureViolations": 303,
+    "scriptClosureViolations": 302,
     "scriptExposureExemptedGlyphs": 1353,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 46,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
-    "atomsNeverRevisited": 600,
+    "atomsNeverRevisited": 604,
     "forwardReferences": 669,
     "chaptersWithoutCapability": 0,
-    "chapterPayoffsNotRepresentative": 93,
+    "chapterPayoffsNotRepresentative": 94,
     "chapterGateCleanTracks": 10,
     "tracksWithoutWritingStageEvidence": 4,
     "missingWritingStagePairs": 519,
@@ -3744,11 +3744,10 @@
       },
       {
         "language": "persian",
-        "status": "mixed",
+        "status": "version-2",
         "lessonCount": 71,
         "versions": {
-          "1": 3,
-          "2": 68
+          "2": 71
         }
       },
       {
@@ -4038,6 +4037,13 @@
         "chapter": 24,
         "lessonId": "ML-C24-native-night-words",
         "message": "malayalam chapter 24 payoff assesses 1/3 of the chapter's atoms (0.33), below the 0.5 floor."
+      },
+      {
+        "code": "chapter-payoff-not-representative",
+        "language": "persian",
+        "chapter": 1,
+        "lessonId": "FA-C01-practice",
+        "message": "persian chapter 1 payoff assesses 4/10 of the chapter's atoms (0.40), below the 0.5 floor."
       },
       {
         "code": "chapter-payoff-not-representative",
@@ -4550,7 +4556,7 @@
         "bookChapters": 15,
         "declaredChapters": 15,
         "missingCapability": 0,
-        "findings": 2,
+        "findings": 3,
         "clean": false
       },
       {
@@ -4623,7 +4629,7 @@
       "declaredChapters": 1239,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
-      "payoffsNotRepresentative": 93,
+      "payoffsNotRepresentative": 94,
       "unknownPayoffLessons": 0,
       "titleDrift": 0,
       "duplicateChapters": 0,
@@ -5705,8 +5711,8 @@
       {
         "language": "persian",
         "lessonCount": 71,
-        "measurable": 67,
-        "unmeasurable": 4,
+        "measurable": 70,
+        "unmeasurable": 1,
         "lessonViolations": 2,
         "chapterViolations": 3
       },
@@ -6410,7 +6416,7 @@
     "summary": {
       "lessonViolations": 40,
       "chapterViolations": 44,
-      "unmeasurableLessons": 323,
+      "unmeasurableLessons": 320,
       "measurablePercent": 94,
       "steepestLesson": {
         "lessonId": "BN-C06-numbers-1-5",
@@ -24234,6 +24240,30 @@
         "revisits": 1
       },
       {
+        "atom": "FA-ETYMON-MAMNUN-MNN-02",
+        "language": "persian",
+        "introducedBy": "FA-C01-mamnoon",
+        "introducedAt": 2,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "FA-ETYMON-NA-INDO-IRANIAN-02",
+        "language": "persian",
+        "introducedBy": "FA-C01-na",
+        "introducedAt": 4,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
         "atom": "FA-ETYMON-NEVESHTAN-PAINT",
         "language": "persian",
         "introducedBy": "FA-C07-neveshtan",
@@ -24250,6 +24280,30 @@
         "language": "persian",
         "introducedBy": "FA-C11-zaban",
         "introducedAt": 46,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "FA-LEX-MAMNUN-01",
+        "language": "persian",
+        "introducedBy": "FA-C01-mamnoon",
+        "introducedAt": 2,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "FA-LEX-NA-01",
+        "language": "persian",
+        "introducedBy": "FA-C01-na",
+        "introducedAt": 4,
         "missed": [
           "R1",
           "R2",
@@ -44526,6 +44580,17 @@
         "revisits": 2
       },
       {
+        "atom": "FA-LEX-BALE-01",
+        "language": "persian",
+        "introducedBy": "FA-C01-bale",
+        "introducedAt": 3,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "FA-LEX-BARADAR",
         "language": "persian",
         "introducedBy": "FA-C10-baradar",
@@ -44832,6 +44897,17 @@
           "R2"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "FA-SCRIPT-SHORT-VOWELS-01",
+        "language": "persian",
+        "introducedBy": "FA-C01-mamnoon",
+        "introducedAt": 2,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
       },
       {
         "atom": "FA-STEM-DAR",
@@ -75031,8 +75107,8 @@
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 150,
-        "atomsNeverRevisited": 7,
+        "atomsTaught": 156,
+        "atomsNeverRevisited": 11,
         "forwardReferences": 4
       },
       {
@@ -75121,13 +75197,13 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 6331,
-      "atomsNeverRevisited": 600,
-      "neverRevisitedPercent": 9,
+      "atomsTaught": 6337,
+      "atomsNeverRevisited": 604,
+      "neverRevisitedPercent": 10,
       "missedByWindow": {
-        "R1": 1351,
-        "R2": 4295,
-        "R3": 4490,
+        "R1": 1355,
+        "R2": 4301,
+        "R3": 4496,
         "R4": 3173
       },
       "forwardReferences": 669
@@ -75273,8 +75349,8 @@
         "taughtGlyphs": 10,
         "shownGlyphs": 35,
         "neverTaughtGlyphs": 25,
-        "violations": 47,
-        "exposureOnly": 13,
+        "violations": 46,
+        "exposureOnly": 14,
         "exposureExemptedGlyphs": 200,
         "headwordsWithoutRomanization": 0
       },
@@ -76640,13 +76716,6 @@
         "count": 2
       },
       {
-        "lessonId": "FA-C01-na",
-        "language": "persian",
-        "chapter": 1,
-        "glyphs": "بو",
-        "count": 2
-      },
-      {
         "lessonId": "FA-C02-esm-e-man",
         "language": "persian",
         "chapter": 2,
@@ -77483,8 +77552,8 @@
     "summary": {
       "tracksWithScript": 17,
       "tracksTeachingNothing": 0,
-      "violations": 303,
-      "exposureOnly": 345,
+      "violations": 302,
+      "exposureOnly": 346,
       "exposureExemptedGlyphs": 1353,
       "headwordsWithoutRomanization": 46,
       "tracksWithUnknownScript": 0
@@ -93765,14 +93834,14 @@
       {
         "language": "persian",
         "lessonCount": 71,
-        "atomMeasurableLessons": 67,
-        "atomMeasurementBlindLessons": 4,
+        "atomMeasurableLessons": 70,
+        "atomMeasurementBlindLessons": 1,
         "durationViolations": 0,
         "atomLessonSpikes": 2,
         "atomChapterSpikes": 3,
         "glyphLessonSpikes": 1,
         "scriptSystemSpikes": 0,
-        "scriptClosureViolations": 47,
+        "scriptClosureViolations": 46,
         "neverTaughtGlyphs": 25,
         "orderDefects": 0,
         "lessonsWithoutSequence": 0,
@@ -93780,17 +93849,17 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 4,
-        "atomsTaught": 150,
-        "atomsNeverRevisited": 7,
-        "reinforcementWindowMisses": 209,
+        "atomsTaught": 156,
+        "atomsNeverRevisited": 11,
+        "reinforcementWindowMisses": 225,
         "reinforcementMissesByWindow": {
-          "R1": 27,
-          "R2": 93,
-          "R3": 89,
+          "R1": 31,
+          "R2": 99,
+          "R3": 95,
           "R4": 0
         },
-        "payoffSurprises": 2,
-        "writingPracticeLessons": 13,
+        "payoffSurprises": 3,
+        "writingPracticeLessons": 16,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
@@ -93825,21 +93894,21 @@
           {
             "language": "persian",
             "kind": "reinforcement",
-            "count": 209,
+            "count": 225,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
           {
             "language": "persian",
             "kind": "payoff-surprise",
-            "count": 2,
+            "count": 3,
             "unit": "chapter payoff finding(s)",
             "detail": "make each chapter payoff assess only taught, representative material"
           },
           {
             "language": "persian",
             "kind": "measurement-blind",
-            "count": 4,
+            "count": 1,
             "unit": "lesson(s)",
             "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
           }
@@ -95079,16 +95148,16 @@
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
-        "language": "marathi",
+        "language": "persian",
         "kind": "reinforcement",
-        "count": 218,
+        "count": 225,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
-        "language": "persian",
+        "language": "marathi",
         "kind": "reinforcement",
-        "count": 209,
+        "count": 218,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -95149,6 +95218,13 @@
         "detail": "make each chapter payoff assess only taught, representative material"
       },
       {
+        "language": "persian",
+        "kind": "payoff-surprise",
+        "count": 3,
+        "unit": "chapter payoff finding(s)",
+        "detail": "make each chapter payoff assess only taught, representative material"
+      },
+      {
         "language": "urdu",
         "kind": "payoff-surprise",
         "count": 3,
@@ -95157,13 +95233,6 @@
       },
       {
         "language": "german",
-        "kind": "payoff-surprise",
-        "count": 2,
-        "unit": "chapter payoff finding(s)",
-        "detail": "make each chapter payoff assess only taught, representative material"
-      },
-      {
-        "language": "persian",
         "kind": "payoff-surprise",
         "count": 2,
         "unit": "chapter payoff finding(s)",
@@ -95275,16 +95344,16 @@
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
       {
-        "language": "persian",
+        "language": "spanish",
         "kind": "measurement-blind",
         "count": 4,
         "unit": "lesson(s)",
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
       {
-        "language": "spanish",
+        "language": "persian",
         "kind": "measurement-blind",
-        "count": 4,
+        "count": 1,
         "unit": "lesson(s)",
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
@@ -95301,7 +95370,7 @@
       "tracksWithDetectedCliffs": 21,
       "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 6,
-      "atomMeasurementBlindLessons": 323,
+      "atomMeasurementBlindLessons": 320,
       "findings": 112
     }
   },
@@ -95709,8 +95778,8 @@
           },
           {
             "criterion": "reinforcement",
-            "detail": "2 atom(s) at or below pre-A1 are revisited fewer than twice (34 etymology hook(s) waived)",
-            "shortfall": 2
+            "detail": "6 atom(s) at or below pre-A1 are revisited fewer than twice (36 etymology hook(s) waived)",
+            "shortfall": 6
           }
         ],
         "vocabulary": 56
@@ -95955,8 +96024,8 @@
   "modality": {
     "maxLinearisableTableColumns": 3,
     "totalLessons": 5151,
-    "voice": 3506,
-    "sight": 625,
+    "voice": 3503,
+    "sight": 628,
     "pen": 1020,
     "coreVoice": 4055,
     "lessonsWithWritingSegments": 605,
@@ -103788,8 +103857,8 @@
       {
         "language": "persian",
         "lessonCount": 71,
-        "voice": 58,
-        "sight": 2,
+        "voice": 55,
+        "sight": 5,
         "pen": 11,
         "coreVoice": 61,
         "drivablePercent": 86,
@@ -103799,8 +103868,8 @@
             "language": "persian",
             "chapter": 1,
             "lessonCount": 6,
-            "voice": 4,
-            "sight": 0,
+            "voice": 1,
+            "sight": 3,
             "pen": 2,
             "coreVoice": 5,
             "modalities": [
@@ -114687,14 +114756,14 @@
     "taughtPercent": 8
   },
   "rootLedger": {
-    "roots": 3685,
-    "underspent": 3515,
-    "neverSpent": 2452,
+    "roots": 3687,
+    "underspent": 3516,
+    "neverSpent": 2453,
     "payoffDistribution": {
-      "0": 2452,
-      "1": 748,
-      "2": 315,
-      "3": 95,
+      "0": 2453,
+      "1": 749,
+      "2": 314,
+      "3": 96,
       "4": 30,
       "5": 22,
       "6": 10,
@@ -114717,10 +114786,10 @@
   },
   "lessonBudgets": {
     "lessons": 5151,
-    "measuredLessons": 2179,
-    "idiomMeasuredLessons": 2179,
-    "senseMeasuredLessons": 2179,
-    "cultureClaimMeasuredLessons": 2179,
+    "measuredLessons": 2182,
+    "idiomMeasuredLessons": 2182,
+    "senseMeasuredLessons": 2182,
+    "cultureClaimMeasuredLessons": 2182,
     "idioms": 101,
     "senses": 98,
     "cultureClaims": 158,
@@ -114730,7 +114799,7 @@
     "terms": 54,
     "termsUsed": 53,
     "lessonsUsingTerms": 4764,
-    "usesBeforeIntroduction": 15792,
+    "usesBeforeIntroduction": 15791,
     "technicalUsesBeforeIntroduction": 3793,
     "technicalLessons": 2082,
     "worstTerms": [
