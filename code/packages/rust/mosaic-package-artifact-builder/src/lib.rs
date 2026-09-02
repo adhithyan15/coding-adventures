@@ -3004,11 +3004,42 @@ fn build_compose_root_invocation(
     slots: &[SlotDecl],
     require_runtime: bool,
 ) -> String {
+    // A component whose signature would exceed the JVM's 255 argument slots is
+    // emitted taking a single props object instead of positional parameters, so
+    // the call site has to match. Recomputing the condition here rather than
+    // threading a flag through keeps the two in step through one shared
+    // function -- if they disagree, the generated project does not compile,
+    // which is a loud failure rather than a subtle one.
+    let grouped = mosaic_emit_compose::needs_props_object(slots);
     let mut out = format!("            {component_name}(\n");
-    for slot in slots {
-        let field = to_camel_case_first_lower(&slot.name);
-        let value = compose_host_value_for_slot(slot, require_runtime);
-        writeln!(out, "                {field} = {value},").unwrap();
+    if grouped {
+        // The props object is chunked into groups, because a constructor is a
+        // method signature too and one flat class would overflow its own. The
+        // call site has to mirror that nesting.
+        out.push_str(&format!("                props = {component_name}Props(\n"));
+        for (index, group) in slots
+            .chunks(mosaic_emit_compose::PROPS_GROUP_SIZE)
+            .enumerate()
+        {
+            writeln!(
+                out,
+                "                    group{index} = {component_name}Props{index}("
+            )
+            .unwrap();
+            for slot in group {
+                let field = to_camel_case_first_lower(&slot.name);
+                let value = compose_host_value_for_slot(slot, require_runtime);
+                writeln!(out, "                        {field} = {value},").unwrap();
+            }
+            writeln!(out, "                    ),").unwrap();
+        }
+        out.push_str("                ),\n");
+    } else {
+        for slot in slots {
+            let field = to_camel_case_first_lower(&slot.name);
+            let value = compose_host_value_for_slot(slot, require_runtime);
+            writeln!(out, "                {field} = {value},").unwrap();
+        }
     }
     out.push_str("                dispatch = { event ->\n");
     if require_runtime {

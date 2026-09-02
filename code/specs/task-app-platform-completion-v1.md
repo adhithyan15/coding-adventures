@@ -2,6 +2,13 @@
 
 Epic: [#13517](https://github.com/adhithyan15/coding-adventures/issues/13517)
 
+> **Superseded in part — 2026-09-02.** The *measurement* here stands. The
+> *working method* — finish the app, discover platform gaps as features need
+> them — is replaced by `mosaic-component-program-v1.md` ([#14011](https://github.com/adhithyan15/coding-adventures/issues/14011)),
+> which builds leaf to root. Tier A item 2 was the trigger: it turned out to be
+> a kernel gap wearing an app-shaped costume, and it was the second in one
+> session.
+
 ## Why this document exists
 
 `BACKLOG.md`'s "Next up" section stopped being able to name the next item. It
