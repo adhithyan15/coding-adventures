@@ -1,65 +1,144 @@
-# ================================================================
-# Deploy Engram to GitHub Pages
-# ================================================================
-#
-# Builds the engram-app Vite SPA and deploys it to the gh-pages
-# branch under the engram/ subdirectory, preserving all other
-# content already on GitHub Pages (logic-gates/, transistors/, etc.).
-#
-# Pages is configured to serve from the gh-pages branch (legacy mode).
-# The peaceiris action pushes built assets into engram/ on that branch,
-# making the app available at:
-#   https://adhithyan15.github.io/coding-adventures/engram/
-#
-# VITE_BASE is set at build time so Vite resolves all asset URLs relative
-# to /coding-adventures/engram/ rather than the default "./".
-
 name: Deploy Engram
+
+# Publishes the **Mosaic** web build — the app compiled from the Mosaic package
+# onto the Rust core — to GitHub Pages at /coding-adventures/engram/.
+#
+# This workflow used to build `code/programs/typescript/engram-app`, the
+# hand-written TypeScript SPA. That meant the deployed site and the released
+# artifact were two *different applications*: `release-engram.yml` has shipped
+# the Mosaic build since #13745, so everything in the Rust core — Anki `.apkg`
+# and modern `.colpkg` import on our own zstd, schema-18 support, FSRS — was
+# absent from the page anyone actually visited.
+#
+# The deployed page is the shop window. It should be the same software the
+# release describes.
+#
+# The old SPA is left in the tree, unbuilt by CI. Retiring it is a separate
+# decision from fixing what the site serves.
 
 on:
   push:
     branches: [main]
     paths:
-      - "code/programs/typescript/engram-app/**"
-      - "code/packages/typescript/ui-components/**"
-      - "code/packages/typescript/store/**"
-      - "code/packages/typescript/indexeddb/**"
+      - "code/programs/mosaic/engram-app/**"
+      - "code/packages/rust/engram-core/**"
+      - "code/packages/rust/engram-core-wasm/**"
+      - "code/packages/rust/engram-wasm/**"
+      - "code/packages/rust/engram-anki-package/**"
+      - "code/packages/rust/engram-mosaic-app/**"
+      - "code/packages/mosaic/mosaic-pkg-**"
+      # The React emitter generates the project this builds. A change there can
+      # break the deployed page without touching a line of Engram — which is
+      # how a wrong Vite `base` reached a release (#13832).
+      - "code/packages/rust/mosaic-emit-react/**"
+      - "code/scripts/verify_relocatable_bundle.py"
       - ".github/workflows/deploy-engram.yml"
   workflow_dispatch:
 
 permissions:
   contents: write
 
+concurrency:
+  group: deploy-engram
+  cancel-in-progress: true
+
 jobs:
   build-and-deploy:
+    name: Build the Mosaic web app and publish it
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Setup Node.js
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Set up Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: "22"
+          node-version: 22
 
-      - name: Install package dependencies
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      # `mosaic-compile` links `cairo-sys-rs` through the paint backend, and the
+      # runner has no system cairo. Without this the emit step fails with
+      # "Package cairo was not found in the pkg-config search path" — nothing to
+      # do with Engram, but it stops the bundle being built at all.
+      - name: Install Linux build dependencies
+        shell: bash
         run: |
-          cd code/packages/typescript/indexeddb && npm install
-          cd ../store && npm install
-          cd ../ui-components && npm install
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y libcairo2-dev
 
-      - name: Install app dependencies
-        run: cd code/programs/typescript/engram-app && npm install
+      - name: Build the production web bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash code/programs/mosaic/engram-app/scripts/build-web.sh \
+            --output "$RUNNER_TEMP/engram-web" --build
 
-      - name: Build for GitHub Pages
-        run: cd code/programs/typescript/engram-app && npm run build
-        env:
-          VITE_BASE: /coding-adventures/engram/
+      # The engine is what makes the app able to do anything. A bundle missing
+      # it builds, loads, and runs — it simply cannot import a deck. A committed
+      # artifact went two months stale exactly this way, so the freshly built
+      # engine is compared against what landed in dist/.
+      - name: Verify the shipped engine is the one just built
+        shell: bash
+        run: |
+          set -euo pipefail
+          cmp code/packages/rust/engram-wasm/pkg/engram_engine.wasm \
+              "$RUNNER_TEMP/engram-web/react/dist/engram_engine.wasm"
+          node code/packages/rust/engram-wasm/js/smoke.mjs
 
+      # Pages serves this from /coding-adventures/engram/ — a SUBDIRECTORY,
+      # which is precisely the deployment shape that root-absolute asset paths
+      # break. engram-v0.3.0 shipped exactly that bug: index.html returned 200
+      # while its script and the wasm both 404'd, rendering a blank page that
+      # looks like a working deploy with no content.
+      #
+      # This gate serves the bundle from a nested path and asserts every
+      # reference resolves, so the failure is caught here rather than by a user.
+      - name: Verify the bundle works when served from a subdirectory
+        shell: bash
+        run: |
+          set -euo pipefail
+          python code/scripts/verify_relocatable_bundle.py \
+            "$RUNNER_TEMP/engram-web/react/dist" \
+            --also engram_engine.wasm
+
+      - name: Stage the bundle for publication
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf public-engram
+          cp -R "$RUNNER_TEMP/engram-web/react/dist" public-engram
+          # A .nojekyll file stops Pages' Jekyll pass from dropping files whose
+          # names begin with an underscore. Vite does not currently emit any,
+          # but a build that starts to would fail silently and only in
+          # production, which is the worst place to discover it.
+          touch public-engram/.nojekyll
+          ls -la public-engram
+
+      # `keep_files: true` matches every other deploy workflow in this
+      # repository, and the reason is load-bearing: seventeen of them publish
+      # into the SAME `gh-pages` branch under different `destination_dir`s, and
+      # `deploy-root.yml` targets `.`. Turning it off here to get a clean swap
+      # risks removing the sibling sites, which is not a trade worth making for
+      # tidiness.
+      #
+      # The cost is that hashed assets from the old TypeScript SPA linger in
+      # `engram/` as orphans. They are harmless — `index.html` is overwritten by
+      # the new build and nothing references the old chunks — but they are why
+      # this directory will look untidy for a while.
       - name: Deploy to GitHub Pages (engram/ subdirectory)
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: code/programs/typescript/engram-app/dist
+          publish_dir: public-engram
           destination_dir: engram
           keep_files: true

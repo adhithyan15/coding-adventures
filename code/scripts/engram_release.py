@@ -55,16 +55,45 @@ def validate_identifiers(version: str, tag: str, commit: str | None = None) -> N
         raise ValueError("commit must be a full 40-character Git SHA")
 
 
+# The desktop platforms, and the file extension electron-builder produces for
+# each. macOS is a plain zip rather than a dmg because signing and notarisation
+# need credentials this build does not have, and an unsigned dmg is worse than a
+# zip: macOS refuses to open it with an error that reads like corruption.
+DESKTOP_TARGETS = {
+    "linux": "AppImage",
+    "macos": "zip",
+    "windows": "exe",
+}
+
+
 def artifact_names(version: str) -> list[str]:
     """Every payload this release publishes.
 
-    One entry today. It is a list rather than a string so that adding native
-    bundles later does not change the shape of the contract, and so the workflow
-    can assert the set it uploaded matches the set declared here.
+    The workflow asserts the set on disk equals this set, so a job that silently
+    produced nothing cannot result in a release that quietly ships less than it
+    claims. That check is only meaningful if this list is the single place the
+    payload set is written down.
     """
 
     validate_identifiers(version, f"{TAG_PREFIX}{version}")
-    return [f"engram-web-v{version}.zip"]
+    names = [f"engram-web-v{version}.zip"]
+    names.extend(
+        f"engram-desktop-{platform}-v{version}.{extension}"
+        for platform, extension in sorted(DESKTOP_TARGETS.items())
+    )
+    return names
+
+
+def desktop_artifact_name(version: str, platform: str) -> str:
+    """The published name for one platform's desktop build."""
+
+    validate_identifiers(version, f"{TAG_PREFIX}{version}")
+    if platform not in DESKTOP_TARGETS:
+        raise ValueError(
+            f"unknown desktop platform {platform!r}; "
+            f"expected one of {sorted(DESKTOP_TARGETS)}"
+        )
+    return f"engram-desktop-{platform}-v{version}.{DESKTOP_TARGETS[platform]}"
 
 
 def _zip_tree(source: Path, output: Path, root_name: str, commit: str) -> None:
@@ -170,6 +199,11 @@ def _cmd_artifact_names(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_desktop_name(args: argparse.Namespace) -> int:
+    print(desktop_artifact_name(args.version, args.platform))
+    return 0
+
+
 def _cmd_archive_web(args: argparse.Namespace) -> int:
     output = archive_web(
         args.version, args.commit, Path(args.source), Path(args.output_dir)
@@ -195,6 +229,13 @@ def main(argv: list[str] | None = None) -> int:
     )
     names.add_argument("--version", required=True)
     names.set_defaults(handler=_cmd_artifact_names)
+
+    desktop = subcommands.add_parser(
+        "desktop-name", help="The published name for one platform's desktop build"
+    )
+    desktop.add_argument("--version", required=True)
+    desktop.add_argument("--platform", required=True, choices=sorted(DESKTOP_TARGETS))
+    desktop.set_defaults(handler=_cmd_desktop_name)
 
     web = subcommands.add_parser(
         "archive-web", help="Verify and archive the production web bundle"
