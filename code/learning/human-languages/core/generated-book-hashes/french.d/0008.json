@@ -1,7 +1,8 @@
 {
-  "id": "FR-PATH-029",
-  "spine_node": "SPINE-TIME-OF-DAY",
-  "lessons": [
+  "language": "french",
+  "chapter": 8,
+  "sourceHash": "fnv1a64:0f9c7a29f8889afe",
+  "lessonIds": [
     "FR-C08-heure",
     "FR-C08-il-est",
     "FR-C08-une-heure",
@@ -12,9 +13,5 @@
     "FR-C08-moins",
     "FR-C08-practice"
   ],
-  "before": [],
-  "inline": [
-    "FR-EXT-029-LANGUAGE-SPECIFIC"
-  ],
-  "after": []
+  "tex": "french/book/chapters/ch08-time.tex"
 }

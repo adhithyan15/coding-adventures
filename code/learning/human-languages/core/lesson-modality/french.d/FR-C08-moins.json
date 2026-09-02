@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "FR-C08-heure",
+    "id": "FR-C08-moins",
     "language": "french",
     "chapter": 8,
-    "sequence": 223,
+    "sequence": 230,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:ef24c0dfb48eb611"
+    "sourceHash": "fnv1a64:5a4435fd14c374d4"
   },
   "findings": []
 }

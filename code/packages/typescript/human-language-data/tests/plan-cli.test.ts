@@ -184,7 +184,13 @@ describe("the plan CLI", () => {
     //   +157  Telugu A1, on main: 326 points enumerated, 169 covered.
     //   +107  Tamil A1, on this branch: 262 points enumerated, 155 covered.
     // The unmeasured remainder falls for both reasons at once.
-    expect(out).toMatch(/793 uncovered point\(s\) across 8 written/);
+    //
+    // 793 -> 792: French chapter 8 closed A1-LEX-07, telling the time -- the
+    // generated chapter teaches et quart, et demie and moins le quart, which the
+    // hand-written one named in a sentence and then deferred. RE-MEASURED for
+    // the same reason as the line above: this branch was written when the total
+    // was 529 across 6 inventories, and Telugu and Tamil landed in between.
+    expect(out).toMatch(/792 uncovered point\(s\) across 8 written/);
     // 190 -> 403, and 4 -> 5 written. Marathi's own A1 inventory enumerates 301
     // points and the corpus covers 88, so it contributes 213. Nothing regressed:
     // a twentieth track stopped being unmeasurable, and the backlog grew by
@@ -193,7 +199,7 @@ describe("the plan CLI", () => {
     // one, which is the only DELE-sourced set here, so its denominator is what an
     // attributable A1 inventory actually asks for rather than what a
     // descriptor-led guess remembered to include.
-    expect(out).toMatch(/793 uncovered point\(s\) across 8 written/);
+    expect(out).toMatch(/792 uncovered point\(s\) across 8 written/);
     // 529 -> 686, and 6 -> 7 written. `core/exam-inventory-telugu-a1.json`
     // enumerates 326 A1 points and the corpus covers 169, so Telugu contributes
     // its 157 unmapped points. The unmeasured remainder falls 18 -> 17 for the
