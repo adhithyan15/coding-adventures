@@ -1,5 +1,95 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.98 — 2026-09-01 — fix: reject invalid UTF-8 in name strings instead of silently replacing it
+
+Closes `code/packages/rust/wasm-conformance/tests/fixtures/testsuite/utf8-
+invalid-encoding.wast`, the single worst not-yet-supported file in the
+whole corpus (0/176 `assert_malformed` cases, 100% NYS). Addendum 2's own
+scoping note guessed the fix belonged in `wasm-module-parser`'s BINARY
+string-decoding path; that guess was wrong once actually investigated —
+every one of the 176 cases is `(assert_malformed (module quote "(func
+(export \"\XX...\"))") "malformed UTF-8 encoding")`, i.e. a `module
+quote` directive, whose payload is WAT TEXT, not raw binary bytes. The
+real defect was entirely in this crate's own text-format name-string
+handling.
+
+**Root cause.** `tokenizer::scan_string`'s `\XX` raw-hex-byte escape
+(e.g. `\c0`, `\80`) decodes straight into a raw `u8` with no UTF-8
+validation — correctly so, since it's the same escape mechanism `module
+binary` fixtures rely on to embed arbitrary raw bytes, and `Token::Str`
+is documented to carry "arbitrary bytes (including invalid UTF-8, for
+`assert_malformed` cases)". The bug was one layer up: every place that
+then interprets a decoded byte string AS A NAME (an import's module/field
+strings, a module-level `(export "name" ...)`, an inline `(func (export
+"name"))`, and `expect_str` — used by `register`'s name, `invoke`/`get`
+action names, and assert-message strings) used `String::from_utf8_lossy`,
+which never fails: it silently substitutes U+FFFD for every invalid byte
+run instead of rejecting the string. So a module whose export name was
+objectively malformed UTF-8 (an overlong 2-byte encoding of NUL, a bare
+continuation byte, a truncated multi-byte lead byte, a UTF-8-encoded
+surrogate half, ...) parsed as `Ok` with a mangled-but-valid name,
+exactly the "unexpectedly accepts the text" case
+`wasm-conformance::grade_assert_malformed`'s `ModuleSource::Quote` arm
+(correctly) grades as `NotYetSupported` rather than `Fail`, since an
+unexpected accept can't tell that harness whether type-checking
+knowledge (vs. this crate) was the missing piece.
+
+**Security rationale (not incidental — the actual reason this class of
+bug matters).** Accepting invalid UTF-8 in identifiers is a parser-
+differential hazard of the same shape as the non-canonical-LEB128 issue
+fixed earlier in this campaign: if this parser silently normalizes
+invalid bytes to U+FFFD while a DIFFERENT tool (a linker, a signature
+verifier, a second WASM engine) either rejects the same bytes outright or
+normalizes them differently, the two tools can disagree about whether two
+binaries "have the same export name" — the exact kind of confusable-
+identifier smuggling that lets one verifier see module A and an executor
+see module A′. Fixed by making every name-string call site use
+`String::from_utf8`/`str::from_utf8` (the standard library's own
+strict, linear-time, panic-free validator — no hand-rolled byte-by-byte
+UTF-8 state machine was written for this fix) and propagating a real
+`WastParseError::InvalidUtf8 { pos }` (an error variant that already
+existed and was already used correctly by `sexpr.rs`'s annotation-id
+handling and `script.rs`'s own `build_module_directive` quote-text
+entry point — this fix just closes the remaining stragglers that didn't
+follow that precedent) instead of a mangled string, a panic, or an
+`unsafe` unchecked conversion.
+
+**Call sites fixed** (all in `src/module.rs` and `src/script.rs`,
+all `String::from_utf8_lossy(b).to_string()` → `String::from_utf8(b.clone())
+.map_err(|_| WastParseError::InvalidUtf8 { pos })?`):
+- `module.rs::build_import_shell` — import module-name and import name
+  (the two-string form: `(import "m" "n" ...)`).
+- `module.rs`, the module-level `(export "name" (func/table/memory/global
+  $x))` handler.
+- `module.rs::handle_inline_export` — the inline `(func (export "name"))`
+  / `(table (export "name") ...)` / etc. shorthand. This is the ONE path
+  every case in `utf8-invalid-encoding.wast` actually exercises.
+- `script.rs::expect_str` — `register`'s name, `invoke`/`get` action
+  names, and `assert_trap`/`assert_exception`'s message strings.
+
+`tokenizer::scan_string` itself was deliberately left untouched — its
+permissiveness at the BYTE level is a feature, not the bug; the fix
+belongs at the point raw bytes get promoted to a semantic name, not at
+the point they're merely collected off the wire.
+
+**Corpus impact** (`wasm-conformance` 0.1.119's own entry has the full
+diff; summary here): `utf8-invalid-encoding.wast` moves from 0/176 to
+176/176 `assert_malformed`, and a programmatic per-file diff of the
+regenerated baseline against the pre-fix one confirms this is the ONLY
+file anywhere in the 257-file corpus whose tally changed — no other file
+happens to rely on the old lossy behavior for a currently-passing case.
+
+**Tests added** (`src/module.rs` and `src/script.rs`, 7 new cases): a
+valid multi-byte-UTF-8 export name (`你好`) still parses, to guard against
+overcorrecting into rejecting legitimate non-ASCII text; representative
+samples of the corpus's own invalid patterns — an overlong 2-byte NUL
+encoding (`\c0\80`), an isolated continuation byte (`\80`), a truncated
+2-byte lead sequence (`\c2` alone), and a UTF-8-encoded UTF-16 surrogate
+half (`\ed\a0\80`, U+D800) — each asserting `WastParseError::InvalidUtf8`
+specifically (not just "some error"); plus coverage for the import-name,
+module-level-export-name, and `register`-name call sites, which the real
+corpus file doesn't happen to exercise but shared the identical defect.
+
 ## 0.1.97 — 2026-09-01 — thread `build_elem`'s own `is_declarative` local through to `Element`
 
 Closes the exact gap this crate's own `build_elem` doc comment
