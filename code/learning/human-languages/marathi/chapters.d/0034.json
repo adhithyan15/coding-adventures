@@ -1,0 +1,19 @@
+{
+  "chapter": 34,
+  "title": "Why, and Because",
+  "label": "ch:mr-why-because",
+  "canDo": "I can ask why in Marathi, answer it with a whole reason clause after kaaran, and use the comma in a written list and after a named reader.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "MR-R34-reasons",
+    "kind": "production",
+    "summary": "Complete MR-R34-reasons and take both turns unaided: ask kaa?, then answer with the claim first and the reason after kaaran.",
+    "assesses": [
+      "MR-JOIN-KAA-WHY",
+      "MR-JOIN-KAARAN",
+      "MR-SCRIPT-COMMA"
+    ]
+  }
+}

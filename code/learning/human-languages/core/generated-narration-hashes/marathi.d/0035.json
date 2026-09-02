@@ -1,0 +1,17 @@
+{
+  "language": "marathi",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:be7da779dd1df240",
+  "lessonIds": [
+    "MR-C35-kii",
+    "MR-C35-saathi",
+    "MR-R35-inside"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "marathi/narration/ch35.txt",
+  "json": "marathi/narration/ch35.json",
+  "textHash": "fnv1a64:4525767e9f0cb0ce",
+  "jsonHash": "fnv1a64:2306f2b8024fa8b5",
+  "findings": []
+}

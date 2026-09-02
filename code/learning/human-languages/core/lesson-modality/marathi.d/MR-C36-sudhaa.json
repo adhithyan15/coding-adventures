@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C36-sudhaa",
+    "language": "marathi",
+    "chapter": 36,
+    "sequence": 1490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f926af5a6b7bec9"
+  },
+  "findings": []
+}

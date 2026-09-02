@@ -1,0 +1,12 @@
+{
+  "id": "HI-PATH-70-WANT",
+  "spine_node": "SPINE-SAY-WHAT-I-WANT",
+  "lessons": [
+    "HI-C70-chahna"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-070-WANTING"
+  ],
+  "after": []
+}

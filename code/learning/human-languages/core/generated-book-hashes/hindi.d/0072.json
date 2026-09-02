@@ -1,0 +1,11 @@
+{
+  "language": "hindi",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:e58ee2ec178327f3",
+  "lessonIds": [
+    "HI-C72-kab",
+    "HI-C72-jab-tab",
+    "HI-R72-when"
+  ],
+  "tex": "hindi/book/chapters/ch72-when-then.tex"
+}

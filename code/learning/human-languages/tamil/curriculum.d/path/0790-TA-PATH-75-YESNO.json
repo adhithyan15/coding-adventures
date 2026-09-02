@@ -1,0 +1,15 @@
+{
+  "id": "TA-PATH-75-YESNO",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "lessons": [
+    "TA-C75-polar",
+    "TA-C75-answering",
+    "TA-W30-read-sariyaa",
+    "TA-C75-permission"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-75-YESNO"
+  ],
+  "after": []
+}

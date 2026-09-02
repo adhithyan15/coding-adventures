@@ -1,0 +1,7 @@
+{
+  "language": "marathi",
+  "chapter": 31,
+  "output": "marathi/book/chapters/ch31-paired-joins.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mr"
+}

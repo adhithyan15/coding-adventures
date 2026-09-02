@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C36-jevha",
+    "language": "marathi",
+    "chapter": 36,
+    "sequence": 1470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:845cfdfc9055f1a1"
+  },
+  "findings": []
+}

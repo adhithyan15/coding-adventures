@@ -17,9 +17,9 @@ duration:
 requires:
   knowledge: [TA-LEX-NUMBERS-1-5-01]
 introduces:
-  knowledge: []
+  knowledge: [TA-SCRIPT-W07-DIGITS-01]
 practises:
-  knowledge: [TA-LEX-NUMBERS-1-5-01]
+  knowledge: [TA-LEX-NUMBERS-1-5-01, TA-SCRIPT-W07-DIGITS-01]
 skills: [listening, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -37,7 +37,7 @@ reviews_of: [TA-C07-numbers-1-5]
 this lesson adds only their three numeral shapes.
 
 ## Script
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01] -->
+<!-- hl-knowledge: introduces=[TA-SCRIPT-W07-DIGITS-01]; assesses=[TA-LEX-NUMBERS-1-5-01] -->
 
 - **௧** means 1: *onru*.
 - **௨** means 2: *irantu*.
@@ -46,14 +46,14 @@ this lesson adds only their three numeral shapes.
 Point in order, then out of order: **௩ ௧ ௨**.
 
 ## Writing — observe and trace
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01, TA-SCRIPT-W07-DIGITS-01] -->
 <!-- hl-writing-stage: observe-trace -->
 
 Keep the models visible. Finger-trace **௧**, **௨**, and **௩** once each. Say the
 number word only after your finger stops. Do not copy from memory yet.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01, TA-SCRIPT-W07-DIGITS-01] -->
 
 [PAUSE 3s] Point to **௨** and say it. (***Irantu.***) Which shape means three?
 (**௩**.) How many new shapes arrived? (**Three.**)

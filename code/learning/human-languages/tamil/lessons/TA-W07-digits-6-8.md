@@ -17,9 +17,9 @@ duration:
 requires:
   knowledge: [TA-LEX-NUMBERS-6-10-01]
 introduces:
-  knowledge: []
+  knowledge: [TA-SCRIPT-W07-DIGITS-03]
 practises:
-  knowledge: [TA-LEX-NUMBERS-6-10-01]
+  knowledge: [TA-LEX-NUMBERS-6-10-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02, TA-SCRIPT-W07-DIGITS-03]
 skills: [listening, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -36,7 +36,7 @@ reviews_of: [TA-C07-numbers-6-10]
 [PAUSE 2s] Say *aaru, eezhu, ettu*. Only their shapes are new.
 
 ## Script
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-6-10-01] -->
+<!-- hl-knowledge: introduces=[TA-SCRIPT-W07-DIGITS-03]; assesses=[TA-LEX-NUMBERS-6-10-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02] -->
 
 - **௬** means 6: *aaru*.
 - **௭** means 7: *eezhu*.
@@ -45,14 +45,14 @@ reviews_of: [TA-C07-numbers-6-10]
 Point out of order: **௮ ௬ ௭**.
 
 ## Writing — observe and trace
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-6-10-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-6-10-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02, TA-SCRIPT-W07-DIGITS-03] -->
 <!-- hl-writing-stage: observe-trace -->
 
 Trace **௬**, **௭**, and **௮** once each with the models visible. Say the word
 after each trace. Memory writing waits.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-6-10-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-6-10-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02, TA-SCRIPT-W07-DIGITS-03] -->
 
 [PAUSE 3s] Which shape means seven? (**௭**.) Read **௮**. (***Ettu.***) Three
 new shapes arrived.

@@ -748,8 +748,11 @@
       "id": "MR-A1-ADV-06",
       "category": "Adverbs",
       "label": "connective adverbs: sudhaa and its negative counterpart",
-      "probe": null,
-      "note": "Untaught.",
+      "probe": [
+        "MR-JOIN-SUDHAA",
+        "MR-JOIN-SUDHAA-NEG"
+      ],
+      "note": "Closed by MR-C36-sudhaa (chapter 36). The negative counterpart is not a second word: sudhaa in a negated sentence reads 'not even', and the lesson teaches both readings of the one word.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -776,8 +779,11 @@
       "id": "MR-A1-ADV-08",
       "category": "Adverbs",
       "label": "kaa against kaaran: asking why, and answering it",
-      "probe": null,
-      "note": "SPINE-SAY-WHY is an A1 core node and omits CONNECTIVE-BECAUSE. Nothing in the track realizes either half.",
+      "probe": [
+        "MR-JOIN-KAA-WHY",
+        "MR-JOIN-KAARAN"
+      ],
+      "note": "Closed by MR-C34-kaa-why and MR-C34-kaaran (chapter 34). Both halves are required, which is what the point asks for: asking why and answering it.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "ca-spine"
@@ -1062,7 +1068,7 @@
       "category": "The verb",
       "label": "wanting and needing: paahije, havaa, nako",
       "probe": null,
-      "note": "Untaught; SPINE-SAY-WHAT-I-WANT omits VERB-WANT. This is the verb the transactional role-play is built on.",
+      "note": "Still untaught as a set. nako now has an atom (MR-LEX-NAKO, chapter 32) and closes the REFUSAL points on its own, but paahije and havaa -- the wanting and needing halves this point names, and the ones the transactional role-play is built on -- have no exponent. One of three is not this point.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "ca-spine"
@@ -1333,8 +1339,10 @@
       "id": "MR-A1-OS-01",
       "category": "The simple sentence",
       "label": "declaratives, affirmative and negative",
-      "probe": null,
-      "note": "Affirmative declaratives are taught; negation of a verbal sentence is not. naahii exists only as the answer 'no' (MR-LEX-NAHI-01), and SPINE-NEGATE-AND-ASK has no realization. Half the distractors in a listening paper are negations.",
+      "probe": [
+        "MR-GRAMMAR-NEGATE-NAHI"
+      ],
+      "note": "Closed by MR-C32-nahi-verb (chapter 32), which realizes VERB-NEGATE on SPINE-NEGATE-AND-ASK. Affirmative declaratives were already taught; only the negation was missing, so one atom closes the point.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -1347,8 +1355,11 @@
       "id": "MR-A1-OS-02",
       "category": "The simple sentence",
       "label": "yes-or-no questions, with kaa and with intonation",
-      "probe": null,
-      "note": "Untaught; SPINE-NEGATE-AND-ASK omits QUESTION-POLAR. A candidate who cannot form one cannot take a turn in the role-play.",
+      "probe": [
+        "MR-GRAMMAR-QUESTION-KAA",
+        "MR-SOUND-QUESTION-RISE"
+      ],
+      "note": "Closed by MR-C33-kaa-polar (chapter 33), which realizes QUESTION-POLAR. Both atoms are required because the point names both routes, and a listening paper supplies the rise without the particle.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -1421,8 +1432,10 @@
       "id": "MR-A1-CO-01",
       "category": "Coordination",
       "label": "joining with aani",
-      "probe": null,
-      "note": "Untaught, and the A1 writing task is 30-40 CONNECTED words: one conjunction is the cheapest route to 'connected'.",
+      "probe": [
+        "MR-JOIN-AANI"
+      ],
+      "note": "Closed by MR-C30-aani (chapter 30), which teaches aani joining two full clauses, not only two nouns -- the 30-40 connected words of the writing task want the clause join.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "ca-marathi-task-shapes-a1"
@@ -1435,8 +1448,10 @@
       "id": "MR-A1-CO-02",
       "category": "Coordination",
       "label": "negative coordination: naa ... naa",
-      "probe": null,
-      "note": "Untaught.",
+      "probe": [
+        "MR-JOIN-NAA-NAA"
+      ],
+      "note": "Closed by MR-C31-naa-naa (chapter 31). The doubled naa is taught as a shape that must be said twice; saying it once is explicitly named as an unfinished sentence.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -1449,8 +1464,10 @@
       "id": "MR-A1-CO-03",
       "category": "Coordination",
       "label": "disjunctive coordination: kinvaa",
-      "probe": null,
-      "note": "Untaught, and every multiple-choice item is a disjunction.",
+      "probe": [
+        "MR-JOIN-KINVA"
+      ],
+      "note": "Closed by MR-C30-kinva (chapter 30).",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -1463,8 +1480,10 @@
       "id": "MR-A1-CO-04",
       "category": "Coordination",
       "label": "adversative coordination: pan",
-      "probe": null,
-      "note": "Untaught.",
+      "probe": [
+        "MR-JOIN-PAN"
+      ],
+      "note": "Closed by MR-C30-pan (chapter 30). Its example contradicts with the already-taught existential naahii, so the lesson needs no forward reference to sentence negation, which arrives two chapters later.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -1478,8 +1497,11 @@
       "id": "MR-A1-CO-05",
       "category": "Coordination",
       "label": "distributive coordination: ek ... dusraa",
-      "probe": null,
-      "note": "Untaught.",
+      "probe": [
+        "MR-JOIN-EK-DUSRA",
+        "MR-LEX-DUSRA"
+      ],
+      "note": "Closed by MR-C31-dusra (chapter 31). Both halves are required: ek was already taught in the numbers chapter, dusraa is new, and the point is the frame rather than either word.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -1522,8 +1544,11 @@
       "id": "MR-A1-SUB-03",
       "category": "Subordination",
       "label": "a finite clause as object, with the thinking verb",
-      "probe": null,
-      "note": "vaatne is taught (MR-LEX-VATNE) and the complementizer that would let it take a clause is not.",
+      "probe": [
+        "MR-JOIN-KII",
+        "MR-LEX-VATNE"
+      ],
+      "note": "Closed by MR-C35-kii (chapter 35). Both atoms are required because the point is the thinking verb WITH a clause attached, not the complementizer in the abstract.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -1537,7 +1562,7 @@
       "category": "Subordination",
       "label": "the correlative relative clause",
       "probe": null,
-      "note": "Untaught. Marathi fronts the relative and resumes it with a correlative, so the Spanish points transfer as one demand rather than two.",
+      "note": "Still untaught. MR-C36-jevha (chapter 36) teaches the jevhaa/tevhaa correlative and NAMES the ja-/ta- stems that jo/to share, but naming a shape is not teaching the relative clause, and the point is not scored as covered on that.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -1551,8 +1576,10 @@
       "id": "MR-A1-SUB-05",
       "category": "Subordination",
       "label": "causal clauses with kaaran",
-      "probe": null,
-      "note": "SPINE-SAY-WHY is an A1 core node and omits CONNECTIVE-BECAUSE.",
+      "probe": [
+        "MR-JOIN-KAARAN"
+      ],
+      "note": "Closed by MR-C34-kaaran (chapter 34), which also realizes CONNECTIVE-BECAUSE on SPINE-SAY-WHY; that node's omission ledger is now empty.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "ca-spine"
@@ -1565,8 +1592,10 @@
       "id": "MR-A1-SUB-06",
       "category": "Subordination",
       "label": "purpose with -saathii plus the verbal noun",
-      "probe": null,
-      "note": "Untaught.",
+      "probe": [
+        "MR-JOIN-SAATHI"
+      ],
+      "note": "Closed by MR-C35-saathi (chapter 35). The lesson teaches the -ne -> -nyaasaathii swap as one productive rule and says in as many words that the general oblique-stem rule behind the -nyaa- (MR-A1-N-09) is still owed.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -1579,8 +1608,11 @@
       "id": "MR-A1-SUB-07",
       "category": "Subordination",
       "label": "simultaneity: jevhaa and the -lyaavar participle",
-      "probe": null,
-      "note": "Untaught.",
+      "probe": [
+        "MR-JOIN-JEVHA",
+        "MR-GRAMMAR-LYAAVAR"
+      ],
+      "note": "Closed by MR-C36-jevha and MR-C36-lyaavar (chapter 36). Both atoms are required because the point names both exponents, and they mean different things: jevhaa is simultaneity, -lyaavar is sequence.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -1639,8 +1671,10 @@
       "id": "MR-A1-F1-04",
       "category": "Giving and asking for information",
       "label": "ask for confirmation with a tag",
-      "probe": null,
-      "note": "Untaught. Marathi's naa tag is one syllable and would close this point on its own.",
+      "probe": [
+        "MR-JOIN-TAG-NAA"
+      ],
+      "note": "Closed by MR-C31-naa-tag (chapter 31), exactly as this note predicted: one syllable.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -1731,8 +1765,11 @@
       "id": "MR-A1-F2-05",
       "category": "Opinions, attitudes and knowledge",
       "label": "express approval and disapproval",
-      "probe": null,
-      "note": "The approval half is reachable through chaalel; disapproval needs the negation of MR-A1-OS-01 and has no exponent at all.",
+      "probe": [
+        "MR-SENSE-CHALEL-OKAY",
+        "MR-GRAMMAR-NEGATE-NAHI"
+      ],
+      "note": "Closed once sentence negation existed. Approval runs through the already-taught chaalel; disapproval is MR-C32-nahi-verb's own worked example, malaa duudh aavaDat naahii.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -1763,7 +1800,7 @@
       "category": "Opinions, attitudes and knowledge",
       "label": "express disagreement",
       "probe": null,
-      "note": "Untaught. naahii answers a question; contradicting a statement is a different move and no lesson supplies it.",
+      "note": "Still untaught, and the shape of the remainder is now clearer. Sentence negation exists (MR-GRAMMAR-NEGATE-NAHI) and pan can contradict a clause, but neither is the DISCOURSE move of contradicting something an interlocutor just said, and no lesson supplies it. Deliberately not claimed on the strength of the two nearby exponents.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -1776,8 +1813,10 @@
       "id": "MR-A1-F2-08",
       "category": "Opinions, attitudes and knowledge",
       "label": "show scepticism: malaa maahiit naahii",
-      "probe": null,
-      "note": "Both halves exist separately -- MR-LEX-MAHIT-JANNE and MR-LEX-NAHI-01 -- and the NEGATED construction is never taught, which is the same missing rule as MR-A1-OS-01. Two atoms and no way to put them together.",
+      "probe": [
+        "MR-PHRASE-MAHIT-NAHI"
+      ],
+      "note": "Closed by MR-C32-nahi-verb (chapter 32), which teaches malaa maahiit naahii as a named construction rather than leaving the two halves to be assembled.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -1822,8 +1861,11 @@
       "id": "MR-A1-F2-11",
       "category": "Opinions, attitudes and knowledge",
       "label": "ask whether somebody knows something",
-      "probe": null,
-      "note": "Blocked behind MR-A1-OS-02: the knowledge verb is taught and the polar question is not.",
+      "probe": [
+        "MR-GRAMMAR-QUESTION-KAA",
+        "MR-LEX-MAHIT-JANNE"
+      ],
+      "note": "Closed by MR-C33-kaa-polar (chapter 33), whose worked example IS this move: maahiit aahe kaa?",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -1855,7 +1897,7 @@
       "category": "Opinions, attitudes and knowledge",
       "label": "ask about ability to do something",
       "probe": null,
-      "note": "Blocked behind MR-A1-OS-02 and MR-A1-V-18.",
+      "note": "Still blocked. MR-A1-OS-02 is now closed, so the question half exists; the ability half does not, because MR-A1-V-18 (-uu shakne) remains untaught. Half a pair buys nothing and this is not scored as covered.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -2020,8 +2062,11 @@
       "id": "MR-A1-F4-05",
       "category": "Influencing the listener",
       "label": "grant permission",
-      "probe": null,
-      "note": "chaalel would carry it, and permission needs a question to answer -- see MR-A1-OS-02.",
+      "probe": [
+        "MR-GRAMMAR-QUESTION-KAA",
+        "MR-SENSE-CHALEL-OKAY"
+      ],
+      "note": "Closed by MR-C33-kaa-polar (chapter 33): chaalel kaa? asks, and the already-taught chaalel grants.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -2034,8 +2079,10 @@
       "id": "MR-A1-F4-06",
       "category": "Influencing the listener",
       "label": "refuse permission",
-      "probe": null,
-      "note": "Untaught; nako, the ordinary refusal, has no atom.",
+      "probe": [
+        "MR-LEX-NAKO"
+      ],
+      "note": "Closed by MR-C32-nako (chapter 32), exactly as this note predicted.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -2076,8 +2123,11 @@
       "id": "MR-A1-F4-09",
       "category": "Influencing the listener",
       "label": "decline a proposal, an offer or an invitation",
-      "probe": null,
-      "note": "Untaught; declining politely needs nako and a softener, neither of which exists.",
+      "probe": [
+        "MR-LEX-NAKO",
+        "MR-LEX-DHANYAVAD-01"
+      ],
+      "note": "Closed by MR-C32-nako (chapter 32). The softener this note asked for is the already-taught dhanyavaad, and the lesson teaches the whole decline as one line -- nako, dhanyavaad -- rather than leaving the learner to join them.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -2353,7 +2403,7 @@
       "category": "Existential notions",
       "label": "existence and non-existence",
       "probe": null,
-      "note": "Blocked behind MR-A1-V-20 and MR-A1-OS-01.",
+      "note": "Still blocked, and now by one thing rather than two. MR-A1-OS-01 is closed, so non-existence can be said; existence in a place still needs MR-A1-V-20 and the locative MR-A1-P-02.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -2408,8 +2458,11 @@
       "id": "MR-A1-NG1-05",
       "category": "Existential notions",
       "label": "certainty and uncertainty",
-      "probe": null,
-      "note": "The certain half is covered by plain assertion (MR-A1-F2-09); the uncertain half has no exponent.",
+      "probe": [
+        "MR-JOIN-KII",
+        "MR-LEX-VATNE"
+      ],
+      "note": "Closed by MR-C35-kii (chapter 35). The uncertain half this note said had no exponent is malaa vaaTta kii ... -- hedging an assertion by putting it under the seeming verb. The certain half remains plain assertion (MR-A1-F2-09).",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -4322,8 +4375,10 @@
       "id": "MR-A1-PU-02",
       "category": "Punctuation and written conventions",
       "label": "the comma",
-      "probe": null,
-      "note": "Untaught, and the A1 writing task is a connected message in which a comma is the ordinary join.",
+      "probe": [
+        "MR-SCRIPT-COMMA"
+      ],
+      "note": "Closed by MR-W34-comma (chapter 34), which teaches both jobs the writing task needs: the list comma that stands in for aani, and the comma after a named reader.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -4352,8 +4407,11 @@
       "id": "MR-A1-PU-04",
       "category": "Punctuation and written conventions",
       "label": "question and exclamation marks",
-      "probe": null,
-      "note": "Untaught. Marathi uses the single trailing marks, so Spanish's opened-and-closed pair transfers as a simpler demand rather than not at all -- and it is still a demand, because a question mark is how a written item announces itself as a question.",
+      "probe": [
+        "MR-SCRIPT-QUESTION-MARK",
+        "MR-SCRIPT-EXCLAMATION-MARK"
+      ],
+      "note": "Closed by MR-W33-question-mark (chapter 33). Both marks are required because the point names both, and the lesson states the rule they share: one mark, at the end, with nothing opening the sentence.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"

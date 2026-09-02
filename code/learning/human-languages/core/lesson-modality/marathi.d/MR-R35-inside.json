@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R35-inside",
+    "language": "marathi",
+    "chapter": 35,
+    "sequence": 1460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9cfde00779552379"
+  },
+  "findings": []
+}

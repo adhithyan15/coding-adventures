@@ -1,0 +1,18 @@
+{
+  "language": "hindi",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:804cc8e042f8ad3c",
+  "lessonIds": [
+    "HI-C74-kya-polar",
+    "HI-C74-question-rise",
+    "HI-C74-na-tag",
+    "HI-R74-ask"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "hindi/narration/ch74.txt",
+  "json": "hindi/narration/ch74.json",
+  "textHash": "fnv1a64:fd46c68fb631bdde",
+  "jsonHash": "fnv1a64:cf8f68d8ae4b2ef6",
+  "findings": []
+}

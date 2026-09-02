@@ -1,0 +1,14 @@
+{
+  "id": "TA-EXT-74-JOIN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can put two things into one list, add myself to somebody else's plan, and deny a pair.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C74-and",
+    "TA-C74-also",
+    "TA-W29-read-paalum",
+    "TA-C74-neither"
+  ]
+}

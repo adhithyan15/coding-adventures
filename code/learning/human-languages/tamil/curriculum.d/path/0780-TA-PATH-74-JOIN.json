@@ -1,0 +1,15 @@
+{
+  "id": "TA-PATH-74-JOIN",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "TA-C74-and",
+    "TA-C74-also",
+    "TA-W29-read-paalum",
+    "TA-C74-neither"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-74-JOIN"
+  ],
+  "after": []
+}

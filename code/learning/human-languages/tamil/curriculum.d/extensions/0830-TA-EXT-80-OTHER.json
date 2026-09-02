@@ -1,0 +1,14 @@
+{
+  "id": "TA-EXT-80-OTHER",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can pick one of two things in a shop and ask its price.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C80-other",
+    "TA-C80-one-and-other",
+    "TA-W35-read-marradu",
+    "TA-C80-price"
+  ]
+}

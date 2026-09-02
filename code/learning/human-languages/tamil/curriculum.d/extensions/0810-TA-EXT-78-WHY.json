@@ -1,0 +1,15 @@
+{
+  "id": "TA-EXT-78-WHY",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can ask why, answer why, and say who something is for.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C78-why",
+    "TA-C78-because",
+    "TA-W33-read-een",
+    "TA-C78-therefore",
+    "TA-C78-for-the-sake-of"
+  ]
+}

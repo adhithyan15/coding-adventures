@@ -1,0 +1,18 @@
+{
+  "language": "tamil",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:02147d3ca910d4bb",
+  "lessonIds": [
+    "TA-C75-polar",
+    "TA-C75-answering",
+    "TA-W30-read-sariyaa",
+    "TA-C75-permission"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "tamil/narration/ch75.txt",
+  "json": "tamil/narration/ch75.json",
+  "textHash": "fnv1a64:a3f03b4e2e020896",
+  "jsonHash": "fnv1a64:3468fffcef4dfe14",
+  "findings": []
+}

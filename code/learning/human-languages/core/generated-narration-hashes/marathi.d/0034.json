@@ -1,0 +1,18 @@
+{
+  "language": "marathi",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:1684a53318b40142",
+  "lessonIds": [
+    "MR-C34-kaa-why",
+    "MR-C34-kaaran",
+    "MR-W34-comma",
+    "MR-R34-reasons"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "marathi/narration/ch34.txt",
+  "json": "marathi/narration/ch34.json",
+  "textHash": "fnv1a64:34ada39dc1133af0",
+  "jsonHash": "fnv1a64:3d9fce9a0450afa2",
+  "findings": []
+}

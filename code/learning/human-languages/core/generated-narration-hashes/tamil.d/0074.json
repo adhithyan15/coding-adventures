@@ -1,0 +1,18 @@
+{
+  "language": "tamil",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:382d07687487109b",
+  "lessonIds": [
+    "TA-C74-and",
+    "TA-C74-also",
+    "TA-W29-read-paalum",
+    "TA-C74-neither"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "tamil/narration/ch74.txt",
+  "json": "tamil/narration/ch74.json",
+  "textHash": "fnv1a64:7aecea58b401d470",
+  "jsonHash": "fnv1a64:03b396e16f25cb68",
+  "findings": []
+}

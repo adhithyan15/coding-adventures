@@ -3156,7 +3156,7 @@ fn encode_stream_instr(
         return Ok(0);
     }
     if let Some(atomic_op) = wasm_opcodes::get_atomic_op_by_name(name) {
-        let (memarg, consumed) = parse_memarg(following, atomic_op.natural_align.trailing_zeros());
+        let (memarg, consumed) = parse_memarg(following, atomic_op.natural_align.trailing_zeros())?;
         out.push(0xFE);
         out.push(atomic_op.sub_opcode);
         out.extend(wasm_leb128::encode_unsigned(memarg.0 as u64));
@@ -3289,7 +3289,7 @@ fn encode_stream_instr(
                 // loadN_splat vs. loadN_zero vs. load_extend -- only the
                 // sub-opcode value differs, already captured in
                 // `simd_op.sub_opcode`.
-                let (memarg, consumed) = parse_memarg(following, 0);
+                let (memarg, consumed) = parse_memarg(following, 0)?;
                 out.push(0xFD);
                 out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
                 out.extend(wasm_leb128::encode_unsigned(memarg.0 as u64));
@@ -3335,7 +3335,7 @@ fn encode_stream_instr(
                 // preceding instructions produced them, so only the
                 // memarg tokens (optional `offset=`/`align=`) and the
                 // trailing lane-index literal need reading here.
-                let (memarg, mem_consumed) = parse_memarg(following, 0);
+                let (memarg, mem_consumed) = parse_memarg(following, 0)?;
                 let (text, lpos) = literal_text(following.get(mem_consumed), pos)?;
                 let lane = parse_lane_index(&text, lpos)?;
                 out.push(0xFD);
@@ -3850,7 +3850,7 @@ fn encode_stream_instr(
         | "i32.load16_u" | "i64.load8_s" | "i64.load8_u" | "i64.load16_s" | "i64.load16_u" | "i64.load32_s"
         | "i64.load32_u" | "i32.store" | "i64.store" | "f32.store" | "f64.store" | "i32.store8" | "i32.store16"
         | "i64.store8" | "i64.store16" | "i64.store32" => {
-            let (memarg, consumed) = parse_memarg(following, 0);
+            let (memarg, consumed) = parse_memarg(following, 0)?;
             out.push(info.opcode);
             out.extend(wasm_leb128::encode_unsigned(memarg.0 as u64));
             out.extend(wasm_leb128::encode_unsigned(memarg.1 as u64));
@@ -4942,13 +4942,7 @@ fn encode_flat_instr(
         return Ok(());
     }
     if let Some(atomic_op) = wasm_opcodes::get_atomic_op_by_name(name) {
-        let (memarg, operand_start) = parse_memarg(args, atomic_op.natural_align.trailing_zeros());
-        encode_instr_list(&args[operand_start..], icx, out)?;
-        out.push(0xFE);
-        out.push(atomic_op.sub_opcode);
-        out.extend(wasm_leb128::encode_unsigned(memarg.0 as u64));
-        out.extend(wasm_leb128::encode_unsigned(memarg.1 as u64));
-        return Ok(());
+        return encode_atomic_memop_flat(atomic_op, args, icx, out);
     }
     // SIMD: see the matching comment in `encode_stream_instr`. `v128.const`
     // takes no stack operand at all (its whole `args` list is the literal
@@ -5083,13 +5077,7 @@ fn encode_flat_instr(
                 // the executor in wasm-execution). Encoding is identical
                 // regardless of which of these kinds it is -- only
                 // `simd_op.sub_opcode` differs.
-                let (memarg, operand_start) = parse_memarg(args, 0);
-                encode_instr_list(&args[operand_start..], icx, out)?;
-                out.push(0xFD);
-                out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
-                out.extend(wasm_leb128::encode_unsigned(memarg.0 as u64));
-                out.extend(wasm_leb128::encode_unsigned(memarg.1 as u64));
-                return Ok(());
+                return encode_simd_memop_flat(simd_op.sub_opcode, args, icx, out);
             }
             wasm_opcodes::SimdOpKind::Load8Lane
             | wasm_opcodes::SimdOpKind::Store8Lane
@@ -5114,17 +5102,7 @@ fn encode_flat_instr(
                 // (`args[operand_start + 1..]`), matching the pinned
                 // corpus's own source order: `(v128.loadN_lane offset=4 4
                 // (addr) (x))`.
-                let (memarg, operand_start) = parse_memarg(args, 0);
-                let lane_expr = args.get(operand_start).ok_or(WastParseError::UnexpectedEof)?;
-                let (text, lpos) = literal_text(Some(lane_expr), pos)?;
-                let lane = parse_lane_index(&text, lpos)?;
-                encode_instr_list(&args[operand_start + 1..], icx, out)?;
-                out.push(0xFD);
-                out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
-                out.extend(wasm_leb128::encode_unsigned(memarg.0 as u64));
-                out.extend(wasm_leb128::encode_unsigned(memarg.1 as u64));
-                out.push(lane);
-                return Ok(());
+                return encode_simd_memop_lane_flat(simd_op.sub_opcode, args, pos, icx, out);
             }
             wasm_opcodes::SimdOpKind::Splat
             | wasm_opcodes::SimdOpKind::SplatI8x16
@@ -5627,19 +5605,13 @@ fn encode_flat_instr(
             // failing with a genuine SIGABRT once these locals lived
             // directly in this arm. Keeping them in a separate,
             // non-hot-path function keeps this arm's cost off every
-            // other instruction's recursion budget.
-            let (memidx, has_memidx, rest) = resolve_leading_memidx_token(args, icx)?;
-            let (memarg, operand_start) = parse_memarg(rest, 0);
-            encode_instr_list(&rest[operand_start..], icx, out)?;
-            out.push(info.opcode);
-            const MULTI_MEMORY_FLAG: u32 = 0x40;
-            let flag_byte = memarg.0 | if has_memidx { MULTI_MEMORY_FLAG } else { 0 };
-            out.extend(wasm_leb128::encode_unsigned(flag_byte as u64));
-            out.extend(wasm_leb128::encode_unsigned(memarg.1 as u64));
-            if has_memidx {
-                out.extend(wasm_leb128::encode_unsigned(memidx as u64));
-            }
-            Ok(())
+            // other instruction's recursion budget. [`parse_memarg`]
+            // becoming fallible (the `align=N` power-of-two check) later
+            // reproduced the exact same regression even with the memidx
+            // resolution already factored out, so the WHOLE arm body now
+            // lives in [`encode_memop_flat`] -- see that function's own
+            // doc comment.
+            encode_memop_flat(info.opcode, args, icx, out)
         }
         "memory.size" | "memory.grow" => {
             // Multi-memory (W16, task #85): an optional LEADING memory-
@@ -6003,6 +5975,99 @@ fn encode_select_stream(following: &[SExpr], info: &wasm_opcodes::OpcodeInfo, ic
     Ok(clause_end)
 }
 
+/// `i32.atomic.load`/`i64.atomic.rmw.add`/etc.'s folded-form `memarg` (WASM18)
+/// -- factored out of [`encode_flat_instr`], the SAME stack-frame-size
+/// reason as `resolve_leading_memidx_token`'s own doc comment: this arm
+/// lives on the hot recursive path every folded instruction funnels
+/// through, and making [`parse_memarg`] fallible (the `align=N` power-of-
+/// two check, see [`WastParseError::InvalidAlignment`]) added one more
+/// `?`-propagated `Result` this arm would otherwise have carried directly
+/// in `encode_flat_instr`'s own per-call frame -- exactly the kind of
+/// growth `deeply_folded_struct_instructions_do_not_overflow_the_real_
+/// stack` exists to catch (confirmed empirically: this arm's logic stayed
+/// inline just long enough to reproduce that regression, moving it here
+/// fixed it).
+#[inline(never)]
+fn encode_atomic_memop_flat(
+    atomic_op: &'static wasm_opcodes::AtomicOpInfo,
+    args: &[SExpr],
+    icx: &mut InstrCtx,
+    out: &mut Vec<u8>,
+) -> Result<(), WastParseError> {
+    let (memarg, operand_start) = parse_memarg(args, atomic_op.natural_align.trailing_zeros())?;
+    encode_instr_list(&args[operand_start..], icx, out)?;
+    out.push(0xFE);
+    out.push(atomic_op.sub_opcode);
+    out.extend(wasm_leb128::encode_unsigned(memarg.0 as u64));
+    out.extend(wasm_leb128::encode_unsigned(memarg.1 as u64));
+    Ok(())
+}
+
+/// `v128.load`/`v128.store`/the `v128.loadN_splat`/`v128.loadN_zero`/
+/// `v128.load_extend` families' folded-form `memarg` -- factored out of
+/// [`encode_flat_instr`] for the identical reason as
+/// [`encode_atomic_memop_flat`]'s own doc comment (same hot recursive
+/// path, same fallible-`parse_memarg` frame-growth hazard).
+#[inline(never)]
+fn encode_simd_memop_flat(sub_opcode: u32, args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
+    let (memarg, operand_start) = parse_memarg(args, 0)?;
+    encode_instr_list(&args[operand_start..], icx, out)?;
+    out.push(0xFD);
+    out.extend(wasm_leb128::encode_unsigned(sub_opcode as u64));
+    out.extend(wasm_leb128::encode_unsigned(memarg.0 as u64));
+    out.extend(wasm_leb128::encode_unsigned(memarg.1 as u64));
+    Ok(())
+}
+
+/// `v128.loadN_lane`/`v128.storeN_lane`'s folded-form `memarg` PLUS
+/// trailing lane-index immediate -- factored out of [`encode_flat_instr`]
+/// for the identical reason as [`encode_atomic_memop_flat`]'s own doc
+/// comment.
+#[inline(never)]
+fn encode_simd_memop_lane_flat(
+    sub_opcode: u32,
+    args: &[SExpr],
+    pos: usize,
+    icx: &mut InstrCtx,
+    out: &mut Vec<u8>,
+) -> Result<(), WastParseError> {
+    let (memarg, operand_start) = parse_memarg(args, 0)?;
+    let lane_expr = args.get(operand_start).ok_or(WastParseError::UnexpectedEof)?;
+    let (text, lpos) = literal_text(Some(lane_expr), pos)?;
+    let lane = parse_lane_index(&text, lpos)?;
+    encode_instr_list(&args[operand_start + 1..], icx, out)?;
+    out.push(0xFD);
+    out.extend(wasm_leb128::encode_unsigned(sub_opcode as u64));
+    out.extend(wasm_leb128::encode_unsigned(memarg.0 as u64));
+    out.extend(wasm_leb128::encode_unsigned(memarg.1 as u64));
+    out.push(lane);
+    Ok(())
+}
+
+/// `i32.load`/.../`i64.store32`'s folded-form `memarg` (plain MVP loads/
+/// stores, plus their W18 multi-memory leading memidx token) -- factored
+/// out of [`encode_flat_instr`] for the identical reason as
+/// [`encode_atomic_memop_flat`]'s own doc comment. This arm ALREADY
+/// factored `resolve_leading_memidx_token` out for exactly this hazard
+/// (see that call's own comment, still inline at this arm's call site
+/// before this function existed); making `parse_memarg` fallible tipped
+/// it over again, so the whole arm body moves here now.
+#[inline(never)]
+fn encode_memop_flat(opcode: u8, args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
+    let (memidx, has_memidx, rest) = resolve_leading_memidx_token(args, icx)?;
+    let (memarg, operand_start) = parse_memarg(rest, 0)?;
+    encode_instr_list(&rest[operand_start..], icx, out)?;
+    out.push(opcode);
+    const MULTI_MEMORY_FLAG: u32 = 0x40;
+    let flag_byte = memarg.0 | if has_memidx { MULTI_MEMORY_FLAG } else { 0 };
+    out.extend(wasm_leb128::encode_unsigned(flag_byte as u64));
+    out.extend(wasm_leb128::encode_unsigned(memarg.1 as u64));
+    if has_memidx {
+        out.extend(wasm_leb128::encode_unsigned(memidx as u64));
+    }
+    Ok(())
+}
+
 /// `align=N` / `offset=N` attributes on a load/store, in either order,
 /// both optional (default align is the natural alignment, encoded here as
 /// 0 -- real alignment *hints* don't affect semantics, only performance,
@@ -6023,12 +6088,24 @@ fn encode_select_stream(following: &[SExpr], info: &wasm_opcodes::OpcodeInfo, ic
 /// validation. An align=N that a real test case DOES write out
 /// explicitly (e.g. deliberately mis-aligned, to test rejection) always
 /// takes precedence over this default either way.
-fn parse_memarg(args: &[SExpr], default_align_log2: u32) -> ((u32, u32), usize) {
+///
+/// An explicit `align=N` MUST name a power of two -- `N` is stored in the
+/// binary encoding as `log2(N)`, and there is no encoding for "align to 7
+/// bytes." `align.wast`/`align64.wast` (the official corpus's own
+/// alignment-annotation-rules files) each carry dozens of
+/// `assert_malformed` cases built entirely from this rule (`align=0`,
+/// `align=7`, ...) -- rejected here, at parse time, exactly like the real
+/// reference interpreter's own `ALIGN_EQ_NAT` grammar rule does. Errors
+/// with [`WastParseError::InvalidAlignment`] rather than silently
+/// misinterpreting `N` (the previous behavior: `n.trailing_zeros()`
+/// unconditionally, which reads `align=0` as log2 32 and `align=7` as
+/// log2 1 -- see that variant's own doc comment for the full history).
+fn parse_memarg(args: &[SExpr], default_align_log2: u32) -> Result<((u32, u32), usize), WastParseError> {
     let mut align_log2 = default_align_log2;
     let mut offset = 0u32;
     let mut i = 0;
     while i < args.len() {
-        if let SExpr::Atom(s, _) = &args[i] {
+        if let SExpr::Atom(s, pos) = &args[i] {
             if let Some(v) = s.strip_prefix("offset=") {
                 if let Ok(n) = v.parse::<u32>() {
                     offset = n;
@@ -6038,6 +6115,9 @@ fn parse_memarg(args: &[SExpr], default_align_log2: u32) -> ((u32, u32), usize) 
             }
             if let Some(v) = s.strip_prefix("align=") {
                 if let Ok(n) = v.parse::<u32>() {
+                    if !n.is_power_of_two() {
+                        return Err(WastParseError::InvalidAlignment { pos: *pos, value: n });
+                    }
                     align_log2 = n.trailing_zeros();
                     i += 1;
                     continue;
@@ -6046,7 +6126,7 @@ fn parse_memarg(args: &[SExpr], default_align_log2: u32) -> ((u32, u32), usize) 
         }
         break;
     }
-    ((align_log2, offset), i)
+    Ok(((align_log2, offset), i))
 }
 
 fn encode_structured_instr(
@@ -9135,6 +9215,67 @@ mod tests {
         .unwrap();
         // 0xFE 0x10 <align_log2=2> <offset=4>
         assert_eq!(code_of(&m, 0), &[0x41, 0x00, 0xFE, 0x10, 0x02, 0x04, 0x0B]);
+    }
+
+    // ── `align=N` must be a power of two (`align.wast`/`align64.wast`) ──
+    //
+    // The official corpus's own alignment-annotation-rules files
+    // (`align.wast`, `align64.wast`) build dozens of `assert_malformed`
+    // cases entirely from this rule: `align=0` and `align=7` for every
+    // load/store shape. Before `parse_memarg` validated this, `align=0`
+    // computed `align_log2` via `0u32.trailing_zeros() == 32` (a bogus
+    // shift amount smuggled straight into the encoded module) and
+    // `align=7` computed `7u32.trailing_zeros() == 0` (silently
+    // downgraded to `align=1`, which is always <= any instruction's
+    // natural alignment, so the module parsed AND validated instead of
+    // being rejected) -- both hid a real malformed-input case as a
+    // falsely-valid module. These tests exercise a representative
+    // handful of the corpus's own concrete patterns directly, not an
+    // exhaustive reinvention of the whole file.
+
+    #[test]
+    fn align_zero_is_rejected_as_malformed() {
+        let err = parse_module("(module (memory 0) (func (drop (i32.load8_s align=0 (i32.const 0)))))").unwrap_err();
+        assert!(matches!(err, WastParseError::InvalidAlignment { value: 0, .. }), "{err:?}");
+    }
+
+    #[test]
+    fn align_non_power_of_two_is_rejected_as_malformed() {
+        // align.wast's own `i32.load align=7` case: 7 isn't a power of
+        // two, so there's no `log2(7)` to encode.
+        let err = parse_module("(module (memory 0) (func (drop (i32.load align=7 (i32.const 0)))))").unwrap_err();
+        assert!(matches!(err, WastParseError::InvalidAlignment { value: 7, .. }), "{err:?}");
+    }
+
+    #[test]
+    fn align_non_power_of_two_rejected_on_store_too() {
+        let err =
+            parse_module("(module (memory 0) (func (i64.store8 align=7 (i32.const 0) (i64.const 1))))").unwrap_err();
+        assert!(matches!(err, WastParseError::InvalidAlignment { value: 7, .. }), "{err:?}");
+    }
+
+    #[test]
+    fn align_zero_rejected_on_memory64_load() {
+        // align64.wast's memory-64 variant of the same rule.
+        let err =
+            parse_module("(module (memory i64 0) (func (drop (i64.load align=0 (i64.const 0)))))").unwrap_err();
+        assert!(matches!(err, WastParseError::InvalidAlignment { value: 0, .. }), "{err:?}");
+    }
+
+    #[test]
+    fn valid_power_of_two_alignments_still_parse() {
+        // Every power-of-two align value already exercised by align.wast's
+        // own non-malformed modules must keep working: 1, 2, 4, 8, 16.
+        for (align, ty) in [(1, "i32.load8_s"), (2, "i32.load16_s"), (4, "i32.load"), (8, "i64.load")] {
+            let src = format!("(module (memory 0) (func (drop ({ty} align={align} (i32.const 0)))))");
+            parse_module(&src).unwrap_or_else(|e| panic!("align={align} on {ty} should parse: {e:?}"));
+        }
+        // align=16 exceeds f64.load's natural width (8) -- that's a
+        // SEMANTIC rule (`wasm-validator`'s "alignment must not be larger
+        // than natural"), not a text-format syntax error, so parsing
+        // itself must still succeed here.
+        parse_module("(module (memory 0) (func (drop (f64.load align=16 (i32.const 0)))))")
+            .expect("align=16 is syntactically valid (a power of two); any natural-width check is the validator's job, not the parser's");
     }
 
     #[test]
