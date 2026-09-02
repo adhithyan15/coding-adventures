@@ -14,14 +14,14 @@ roots: [phoenician-bet, semitic-r-h-b]
 duration:
   max_seconds: 299
 requires:
-  knowledge: [AR-C01-MARHABA-04, AR-SCRIPT-WRITE-SALAM-03, AR-SCRIPT-RA-HA-05]
+  knowledge: [AR-C01-MARHABA-05, AR-SCRIPT-WRITE-SALAM-03, AR-SCRIPT-RA-HA-06]
 introduces:
-  knowledge: [AR-SCRIPT-BA-FAMILY-06]
+  knowledge: [AR-SCRIPT-BA-FAMILY-07]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [AR-C01-MARHABA-04, AR-SCRIPT-WRITE-SALAM-03, AR-SCRIPT-RA-HA-05, AR-SCRIPT-BA-FAMILY-06]
+  knowledge: [AR-C01-MARHABA-05, AR-SCRIPT-WRITE-SALAM-03, AR-SCRIPT-RA-HA-06, AR-SCRIPT-BA-FAMILY-07]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -33,13 +33,13 @@ reviews_of: [AR-W00-ra-ha, AR-C01-marhaba, AR-W00-alif-mim-salam]
 # ب ت ث — one bowl, three dot choices
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-MARHABA-04, AR-SCRIPT-WRITE-SALAM-03, AR-SCRIPT-RA-HA-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-MARHABA-05, AR-SCRIPT-WRITE-SALAM-03, AR-SCRIPT-RA-HA-06] -->
 
 [PAUSE 2s] You know **ر** and **ح**. Today introduces one shared bowl and three
 dot patterns — exactly three new shapes — before you copy *marḥaban*.
 
 ## Script — one skeleton, three letters
-<!-- hl-knowledge: introduces=[AR-SCRIPT-BA-FAMILY-06]; assesses=[AR-SCRIPT-RA-HA-05] -->
+<!-- hl-knowledge: introduces=[AR-SCRIPT-BA-FAMILY-07]; assesses=[AR-SCRIPT-RA-HA-06] -->
 
 - **ب** = *bāʾ*: one dot **below**.
 - **ت** = *tāʾ*: two dots **above**.
@@ -48,8 +48,13 @@ dot patterns — exactly three new shapes — before you copy *marḥaban*.
 The dots are not decoration. They decide which letter you wrote. Trace the bowl
 once, then practise the three dot choices.
 
+**ب** comes from Phoenician **bēt** ("house") — ancestor of Greek *beta* and
+Latin **B**. Put it beside the *alif* you already know, from **ʾālep** ("ox"),
+and you have the word *alpha-bet*: the **ox** and the **house**, in that order,
+still naming every alphabet on earth.
+
 ## Writing — guided copy, then delayed copy
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-MARHABA-04, AR-SCRIPT-WRITE-SALAM-03, AR-SCRIPT-RA-HA-05, AR-SCRIPT-BA-FAMILY-06] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-MARHABA-05, AR-SCRIPT-WRITE-SALAM-03, AR-SCRIPT-RA-HA-06, AR-SCRIPT-BA-FAMILY-07] -->
 <!-- hl-writing-stage: delayed-copy -->
 
 The greeting uses **ب**. Its full form is **مرحبا**.
@@ -59,7 +64,7 @@ The greeting uses **ب**. Its full form is **مرحبا**.
 3. Cover it. Write it once from memory, then check the dot below **ب**.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-MARHABA-04, AR-SCRIPT-WRITE-SALAM-03, AR-SCRIPT-RA-HA-05, AR-SCRIPT-BA-FAMILY-06] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-MARHABA-05, AR-SCRIPT-WRITE-SALAM-03, AR-SCRIPT-RA-HA-06, AR-SCRIPT-BA-FAMILY-07] -->
 
 [PAUSE 3s] Which cousin has one dot below? (**ب.**) Two above? (**ت.**) Three
 above? (**ث.**) Read and write **مرحبا** once: *marḥaban*, “welcome.”

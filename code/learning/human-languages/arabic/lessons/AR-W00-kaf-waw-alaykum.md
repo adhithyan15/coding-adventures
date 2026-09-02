@@ -14,14 +14,14 @@ roots: [phoenician-kaph, phoenician-waw, semitic-s-l-m]
 duration:
   max_seconds: 299
 requires:
-  knowledge: [AR-C01-FULL-GREETING-07, AR-SCRIPT-AYN-YA-08, AR-SCRIPT-WRITE-SALAM-03]
+  knowledge: [AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-SALAM-03]
 introduces:
-  knowledge: [AR-SCRIPT-WRITE-FULL-GREETING-09]
+  knowledge: [AR-SCRIPT-WRITE-FULL-GREETING-13]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [AR-C01-FULL-GREETING-07, AR-SCRIPT-AYN-YA-08, AR-SCRIPT-WRITE-SALAM-03, AR-SCRIPT-WRITE-FULL-GREETING-09]
+  knowledge: [AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-SALAM-03, AR-SCRIPT-WRITE-FULL-GREETING-13]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -33,20 +33,20 @@ reviews_of: [AR-W00-ayn-ya, AR-C01-as-salamu-alaykum, AR-W00-alif-mim-salam]
 # ك and و — complete the greeting after the sound
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-FULL-GREETING-07, AR-SCRIPT-AYN-YA-08, AR-SCRIPT-WRITE-SALAM-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-SALAM-03] -->
 
 [PAUSE 2s] You can speak the greeting and recognize **ع** and **ي**. Add just two
 shapes, then copy the complete line.
 
 ## Script — observe two new shapes
-<!-- hl-knowledge: introduces=[AR-SCRIPT-WRITE-FULL-GREETING-09]; assesses=[AR-C01-FULL-GREETING-07, AR-SCRIPT-AYN-YA-08] -->
+<!-- hl-knowledge: introduces=[AR-SCRIPT-WRITE-FULL-GREETING-13]; assesses=[AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12] -->
 
 - **ك** is *kāf*, the *k* near the end of *ʿalaykum*.
 - **و** is *wāw*, the *w* in the reply’s opening *wa-*, “and.” Like **ر**, it
   does not join to the letter after it.
 
 ## Writing — guided copy, then delayed copy
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-FULL-GREETING-07, AR-SCRIPT-AYN-YA-08, AR-SCRIPT-WRITE-SALAM-03, AR-SCRIPT-WRITE-FULL-GREETING-09] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-SALAM-03, AR-SCRIPT-WRITE-FULL-GREETING-13] -->
 <!-- hl-writing-stage: delayed-copy -->
 
 1. Find the familiar peace word inside **السلام عليكم**.
@@ -56,7 +56,7 @@ shapes, then copy the complete line.
 5. Add **و** before that block to begin the reply: **وعليكم**.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-FULL-GREETING-07, AR-SCRIPT-AYN-YA-08, AR-SCRIPT-WRITE-SALAM-03, AR-SCRIPT-WRITE-FULL-GREETING-09] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-SALAM-03, AR-SCRIPT-WRITE-FULL-GREETING-13] -->
 
 [PAUSE 3s] Which letter gives the *k*? (**ك.**) Which gives *wa-*, “and”? (**و.**)
 Read **السلام عليكم**, then write the shorter block **عليكم** without looking.

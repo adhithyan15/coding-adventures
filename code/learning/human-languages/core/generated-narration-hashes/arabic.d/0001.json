@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 1,
-  "sourceHash": "fnv1a64:1e0f4096d87c860e",
+  "sourceHash": "fnv1a64:c535300ed58a4266",
   "lessonIds": [
     "AR-C01-salam",
     "AR-W00-sin-lam",
@@ -17,19 +17,13 @@
     "AR-C01-sabah-al-khayr",
     "AR-C01-masa-al-khayr",
     "AR-C01-shukran",
-    "AR-C01-practice",
-    "AR-W01-direction-and-alif",
-    "AR-W01-abjad-short-vowels",
-    "AR-W02-joining-sin-lam",
-    "AR-W02-lam-alif-joins",
-    "AR-W03-dots-mim-ba-salam",
-    "AR-W03-write-salam"
+    "AR-C01-practice"
   ],
   "voiceLessons": 3,
   "drivablePrefix": 0,
   "text": "arabic/narration/ch01.txt",
   "json": "arabic/narration/ch01.json",
-  "textHash": "fnv1a64:2e5dc89b7c90b2fe",
-  "jsonHash": "fnv1a64:af484cb4030a8729",
+  "textHash": "fnv1a64:8e1210a3f1842860",
+  "jsonHash": "fnv1a64:4075a49a387016a6",
   "findings": []
 }

@@ -11,10 +11,10 @@ it("pins Arabic continuity", () => expectLanguageContinuity("arabic"));
 it("pins Arabic modality", () => expectLanguageModality("arabic"));
 it("pins Arabic lesson-content budgets", () =>
   expectLanguageLessonBudgets("arabic", {
-    lessons: 86,
+    lessons: 90,
     idioms: 2,
     senses: 3,
-    cultureClaims: 11,
+    cultureClaims: 14,
     unitPrefix: "AR",
   }));
 it("pins Arabic's complete pre-A1 writing ramp", () => {
@@ -30,9 +30,17 @@ it("pins Arabic's root ledger", () => {
   );
   expect(ledger.summary).toEqual({
     roots: 104,
-    underspent: 101,
-    neverSpent: 88,
-    payoffDistribution: { "0": 88, "1": 10, "2": 3, "3": 2, "6": 1 },
-    underspentPercent: 97,
+    // HL-C285 retired the superseded AR-W01/W02/W03 writing ladder, which was
+    // the only later spend of five Phoenician letter-origin roots (aleph, bet,
+    // lamed, mem, shin) and of abjad-vowels. Their PROSE was re-homed into the
+    // AR-W00 lessons that teach those same letters, so the reader still meets
+    // every origin story -- but the ledger counts DECLARING LESSONS, not prose,
+    // so a root introduced and re-used only inside one lesson reads as unspent.
+    // This is a real, quantified cost of removing the duplicate ladder, recorded
+    // rather than papered over by padding `roots:` onto downstream lessons.
+    underspent: 102,
+    neverSpent: 93,
+    payoffDistribution: { "0": 93, "1": 8, "2": 1, "3": 1, "5": 1 },
+    underspentPercent: 98,
   });
 });

@@ -1,5 +1,7 @@
 ## HL-C285 — Arabic cannot be flipped yet: chapter 1 owns two writing ladders, and only one of them is in the book
 
+**RESOLVED — the decision came back: keep `AR-W00`, retire `AR-W01`/`W02`/`W03`. Chapter 1 is now generated. See HL-C286 for what that cost and what it proved. The evidence below is left as written.**
+
 Arabic is the last of the four small tracks in this retirement wave and the only
 one that did not ship. The blocker is not prose and not schema: it is that
 Chapter 1 contains **two complete writing ladders for the same five letters**,

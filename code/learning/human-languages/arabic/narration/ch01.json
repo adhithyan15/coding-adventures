@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1e0f4096d87c860e",
+  "sourceHash": "fnv1a64:c535300ed58a4266",
   "lessons": [
     {
       "id": "AR-C01-salam",
@@ -166,7 +166,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:48398a48761a6dc0",
+      "sourceHash": "fnv1a64:7fdd6188cf30ed08",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -204,11 +204,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "س is sīn, the s sound you are retrieving from lesson one."
+              "text": "س is sīn, the s sound you are retrieving from lesson one. From Phoenician shin (\"tooth\") — and the shape really is a row of teeth."
             },
             {
               "kind": "speech",
-              "text": "ل is lām, the l sound. Notice its tall upright and low curve."
+              "text": "ل is lām, the l sound. Notice its tall upright and low curve. From Phoenician lāmed (\"ox-goad\") — ancestor of Greek lambda and Latin L."
             },
             {
               "kind": "speech",
@@ -297,7 +297,7 @@
     {
       "id": "AR-W00-alif-mim-salam",
       "sequence": 14,
-      "title": "ا (alif) and م — finish سلام (salām) without a cliff",
+      "title": "ا and م — finish سلام without a cliff",
       "headword": "ا م — سلام",
       "romanization": "alif, mīm — salām",
       "gloss": "add alif and mim, then guided-copy salām",
@@ -309,7 +309,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1f0ce9bff579b36a",
+      "sourceHash": "fnv1a64:ed8bff66af9c1bce",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -346,15 +346,19 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ا is alif: one clean upright carrying the long ā here."
+              "text": "ا is alif: one clean upright carrying the long ā here. From Phoenician ʾālep (\"ox\") — ancestor of Greek alpha and Latin A."
             },
             {
               "kind": "speech",
-              "text": "م is mīm: a small round head and a tail; it gives the final m."
+              "text": "م is mīm: a small round head and a tail; it gives the final m. From Phoenician mem (\"water\") — sibling of Greek mu and Latin M."
             },
             {
               "kind": "speech",
-              "text": "Arabic letters join. In سلام (salām), sīn reaches into lām; lām and alif form لا; then alif forces a pen lift before final mīm."
+              "text": "Arabic letters join — and a joined letter changes shape. The same letter looks different at the start, the middle and the end of a joined run. Its skeleton never changes (three teeth stay three teeth); only the connectors at its edges do. This is the one habit that makes Arabic read like handwriting rather than like print."
+            },
+            {
+              "kind": "speech",
+              "text": "Watch all of it happen in one short word. In سلام, sīn reaches leftward into lām; lām and alif fuse into the fixed pair لا; then alif, which never joins leftward, forces a pen lift before final mīm."
             }
           ]
         },
@@ -365,15 +369,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Point right to left: س, ل, ا (alif), م. Say s, l, ā, m."
+              "text": "Point right to left: س, ل, ا, م. Say s, l, ā, m."
             },
             {
               "kind": "speech",
-              "text": "Trace سلام (salām) once: teeth, tall hook, upright, lift, round-headed mīm."
+              "text": "Trace سلام once: teeth, tall hook, upright, lift, round-headed mīm."
             },
             {
               "kind": "speech",
-              "text": "Copy سلام (salām) once while looking."
+              "text": "Copy سلام once while looking."
             },
             {
               "kind": "speech",
@@ -394,7 +398,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read سلام. (salām, peace.) Where does the pen lift? (After alif.) Write the word once without looking. This is delayed recall, not penmanship perfection."
+              "text": "Read سلام. (salām, peace.) What changes when a letter joins, and what stays the same? (The connectors at its edges change; its skeleton does not.) Where does the pen lift? (After alif.) Write the word once without looking. This is delayed recall, not penmanship perfection."
             }
           ]
         }
@@ -413,7 +417,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:78fcb59cf537010c",
+      "sourceHash": "fnv1a64:583946f87be612dc",
       "notice": null,
       "blocks": [
         {
@@ -532,7 +536,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6749fb2c7b4dfeb3",
+      "sourceHash": "fnv1a64:99252522f821985f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -656,7 +660,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e5d397833c65615c",
+      "sourceHash": "fnv1a64:ca32f384717a23fe",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -706,6 +710,10 @@
             {
               "kind": "speech",
               "text": "The dots are not decoration. They decide which letter you wrote. Trace the bowl once, then practise the three dot choices."
+            },
+            {
+              "kind": "speech",
+              "text": "ب comes from Phoenician bēt (\"house\") — ancestor of Greek beta and Latin B. Put it beside the alif you already know, from ʾālep (\"ox\"), and you have the word alpha-bet: the ox and the house, in that order, still naming every alphabet on earth."
             }
           ]
         },
@@ -720,7 +728,7 @@
             },
             {
               "kind": "speech",
-              "text": "Point right to left: م, ر, ح, ب, ا (alif)."
+              "text": "Point right to left: م, ر, ح, ب, ا."
             },
             {
               "kind": "speech",
@@ -764,7 +772,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b0be4403f2118931",
+      "sourceHash": "fnv1a64:49839bbf67de0e93",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -910,7 +918,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5992b7ae4d873471",
+      "sourceHash": "fnv1a64:a9e969119cff2430",
       "notice": null,
       "blocks": [
         {
@@ -1033,7 +1041,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c25ddf85b0b67fca",
+      "sourceHash": "fnv1a64:61f70b8872bb0f9c",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1157,7 +1165,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0c21e02f82fea71e",
+      "sourceHash": "fnv1a64:83ed41d33f33b1bc",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1262,7 +1270,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:efa83f12b63ebc4b",
+      "sourceHash": "fnv1a64:bb2ffdba9a259cfa",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1348,7 +1356,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5757bf691437aa58",
+      "sourceHash": "fnv1a64:669fd8ea7aa0d1e5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1494,7 +1502,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4a474be9522aa156",
+      "sourceHash": "fnv1a64:d084ec48eefb0039",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1538,7 +1546,7 @@
             },
             {
               "kind": "speech",
-              "text": "Everything else — م س ا (alif) and the الخير you read last lesson — is already yours."
+              "text": "Everything else — م س ا and the الخير you read last lesson — is already yours."
             }
           ]
         },
@@ -1636,7 +1644,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0d8526e1fcbd3536",
+      "sourceHash": "fnv1a64:7ee2a097f0f5b430",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1786,7 +1794,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8dfb926307c902fa",
+      "sourceHash": "fnv1a64:54fa0f16ce0e3154",
       "notice": null,
       "blocks": [
         {
@@ -1930,894 +1938,6 @@
             {
               "kind": "speech",
               "text": "Next chapter: introducing yourself — ismī… (\"my name is…\") — and how Arabic marks \"you\" by gender (anta to a man, anti to a woman), a different axis from the formal/informal split of the European languages."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "AR-W01-direction-and-alif",
-      "sequence": 90,
-      "title": "ا (alif) — right to left, then the first stroke",
-      "headword": "ا",
-      "romanization": "alif",
-      "gloss": "Arabic runs right-to-left; then one clean downstroke writes alif",
-      "script": "arabic",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type"
-      ],
-      "sourceHash": "fnv1a64:7cdaf39db14b8cd3",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on"
-        ],
-        "waitUntilStopped": [
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Before you draw a single line, Arabic's direction will feel strange—and freeing once you know it. You have already read Arabic in سلام (salām, \"peace\") and مرحبا (marḥaban, \"hello\"); now you learn to write it, one piece at a time."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "Arabic runs right-to-left",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "English marches left becomes right. Arabic marches right becomes left. The pen starts on the right edge of the word and moves toward the left. So in سلام (salām), the letter you meet first (rightmost) is س (s), and the letter you meet last (leftmost) is م (m) — the exact reverse of the reading order your eye is trained on."
-            },
-            {
-              "kind": "speech",
-              "text": "This is not exotic for its own sake: Arabic, Hebrew, and the old Phoenician alphabet all ran right-to-left. It is the older habit; left-to-right (Greek, Latin, and everything downstream) is the newcomer that flipped direction."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "unknown",
-          "title": "ا (alif) — one clean downstroke",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Meet alif, the first letter — and mercifully the simplest shape in the whole script. Break it apart — there is only one piece:"
-            },
-            {
-              "kind": "speech",
-              "text": "the upright — a single tall vertical stroke, drawn top-to-bottom."
-            },
-            {
-              "kind": "speech",
-              "text": "That's it. No dots, no curve, no tail. If you can draw a capital I without its serifs, you can draw alif."
-            },
-            {
-              "kind": "speech",
-              "text": "The cousin payoff. alif comes from Phoenician ʾālep (\"ox\") — the very same ancestor that became Greek alpha and your Latin A. Three scripts, one great-grandparent: the letter that starts alphabet, alpha, and abjad is the letter you just drew."
-            },
-            {
-              "kind": "speech",
-              "text": "The one rule to remember: alif is one of six letters that do not join to the letter after them. So even in the middle of a word, alif forces a little break — the pen lifts. You will feel that break when you write سلام (salām) two lessons from now."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Arabic runs right to left\" while sliding a finger right becomes left across سلام (salām)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Arabic runs **right to left**\" while sliding a finger right → left across *سلام*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "ا (alif) — one top-to-bottom vertical — three times",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: **ا** — one top-to-bottom vertical — three times]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"alif — from ʾālep, the ox — cousin of A\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"alif — from *ʾālep*, the ox — cousin of **A**\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which edge of a word does your pen start on? (The right.) Draw alif: how many strokes, and does it join to the next letter? (One vertical; no — it forces a break.) You have written the first letter of the Arabic alphabet—and met the ox that also gave you A."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "AR-W01-abjad-short-vowels",
-      "sequence": 100,
-      "title": "The abjad — short vowels hiding in plain sight",
-      "headword": "الحركات",
-      "romanization": "al-ḥarakāt",
-      "gloss": "Arabic letters normally show consonants while short a, i, and u stay hidden",
-      "script": "arabic",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type"
-      ],
-      "sourceHash": "fnv1a64:4afc7e8902435479",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on"
-        ],
-        "waitUntilStopped": [
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You can move right to left and draw ا (alif). Now notice why Arabic words often contain fewer written marks than their romanization suggests."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "Consonant skeletons",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Look again at سلام (salām): the consonant skeleton is s-l-m, while the short a is not written as a full letter. Arabic is an abjad. Its letters primarily record consonants, and the short vowels a, i, u are normally left out—rather like still recognizing “bld a hs” as “build a house.”"
-            },
-            {
-              "kind": "speech",
-              "text": "The name abjad recites the old first four letters, a-b-j-d, just as “ABC” names an alphabet. Alphabet itself performs the same trick with Greek alpha-beta."
-            },
-            {
-              "kind": "speech",
-              "text": "Beginner texts can add tiny ḥarakāt, small marks above or below a consonant, to show the short vowels. Everyday text usually omits them because readers supply the word from grammar and context. A later lesson will teach those marks one at a time; for now, expect to write the consonant skeleton."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "abjad — a consonant-first writing system",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *abjad* — a consonant-first writing system]"
-            },
-            {
-              "kind": "prompt",
-              "action": "POINT",
-              "instruction": "سلام (salām) — s-l-m visible, short a supplied",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU POINT: **سلام** — *s-l-m* visible, short *a* supplied]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "ḥarakāt — optional marks that can reveal short vowels",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *ḥarakāt* — optional marks that can reveal short vowels]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does an abjad normally leave out? (Short vowels.) Are they impossible to mark? (No. Beginner texts can add ḥarakāt.) What do you learn to recognize first? (The consonant skeleton.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "AR-W02-joining-sin-lam",
-      "sequence": 110,
-      "title": "س and ل — four shapes, one letter",
-      "headword": "س، ل",
-      "romanization": "sīn, lām",
-      "gloss": "letters change shape by position, taught gently on sin and lam",
-      "script": "arabic",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type"
-      ],
-      "sourceHash": "fnv1a64:050d713fcbb214ea",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on"
-        ],
-        "waitUntilStopped": [
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Last lesson: one lonely stroke (alif) that refuses to join. Now the rule that makes Arabic cursive — most letters do join, and when they join they change shape. This is the single biggest difference from the Latin and Cyrillic printing you know, and once it clicks, the script reads like handwriting instead of a code."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "The big idea — four shapes, one letter",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "In English print, an n is an n wherever it sits. In Arabic, a letter wears up to four coats depending on where it stands in the word:"
-            },
-            {
-              "kind": "speech",
-              "text": "isolated — standing alone."
-            },
-            {
-              "kind": "speech",
-              "text": "initial — first in a joined run (a little \"reach\" leftward to the next)."
-            },
-            {
-              "kind": "speech",
-              "text": "medial — joined on both sides."
-            },
-            {
-              "kind": "speech",
-              "text": "final — last in a run (joined only on the right)."
-            },
-            {
-              "kind": "speech",
-              "text": "They are the same letter — think cursive English, where the a in \"cat\" links differently than an a standing alone. The core skeleton never changes; only the connectors at the edges do."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "unknown",
-          "title": "ل (lām) — the tall hook",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "lām (\"l\") is easy to spot: a tall upright that dives into a bowl curving up at the base. Break it apart — upright, then base-bowl:"
-            },
-            {
-              "kind": "speech",
-              "text": "the upright — a tall vertical."
-            },
-            {
-              "kind": "speech",
-              "text": "the base bowl — a curve scooping up at the bottom."
-            },
-            {
-              "kind": "speech",
-              "text": "Its four coats keep that tall spine; only the tail changes. lām comes from Phoenician lāmed (\"ox-goad\") — the same ancestor as Greek lambda and your Latin L."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "unknown",
-          "title": "س (sīn) — the three teeth",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "sīn (\"s\") is three little teeth (small humps) followed by a bowl that trails below the line. Break it apart — teeth, then trailing bowl:"
-            },
-            {
-              "kind": "speech",
-              "text": "the three teeth — three quick humps in a row."
-            },
-            {
-              "kind": "speech",
-              "text": "the trailing bowl — a dip that scoops below the baseline."
-            },
-            {
-              "kind": "speech",
-              "text": "sīn is from Phoenician shin (\"tooth\") — and the shape really is a row of teeth. (Remember the \"tooth\" name; next lesson its cousin shīn ش will be the same teeth with three dots added on top.)"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"same letter, four coats — isolated, initial, medial, final\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"same letter, four coats — isolated, initial, medial, final\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "ل (tall upright + base bowl), then س (three teeth + bowl)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: **ل** (tall upright + base bowl), then **س** (three teeth + bowl)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"sīn from shin, tooth; lām from lāmed, cousin of L\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"*sīn* from *shin*, tooth; *lām* from *lāmed*, cousin of **L**\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "How many shapes can one Arabic letter wear, and what decides which? (Up to four — its position in the joined run.) What Phoenician word names sīn, and what does the shape look like? (shin — a tooth; and sīn is a row of teeth.) Which feature changes between the four coats? (The connectors at the edges; the core skeleton remains.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "AR-W02-lam-alif-joins",
-      "sequence": 120,
-      "title": "سل and لا — joining the letters you know",
-      "headword": "سل، لا",
-      "romanization": "sīn-lām, lām-alif",
-      "gloss": "join sin to lam, then write the obligatory lam-alif ligature",
-      "script": "arabic",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type"
-      ],
-      "sourceHash": "fnv1a64:4eb5f5e51205df77",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on"
-        ],
-        "waitUntilStopped": [
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You can draw س, ل, and ا separately. Now let the first two hold hands—and learn the special shape required when lām meets alif."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "س reaches into ل",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "In سل, initial س reaches leftward into ل. Keep sīn’s three teeth, then flow directly into lām’s tall upright. The skeletons stay recognizable; the connector turns them into one joined run."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "unknown",
-          "title": "The obligatory لا ligature",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Write lām followed by alif and they fuse into لا, a slanted stroke crossing the upright. This is an obligatory ligature: ordinary Arabic does not leave the two letters as separate full shapes."
-            },
-            {
-              "kind": "speech",
-              "text": "سل = initial sīn reaching into lām."
-            },
-            {
-              "kind": "speech",
-              "text": "لا = lām + alif in their fixed ligature."
-            },
-            {
-              "kind": "speech",
-              "text": "Together, these are the right-hand pieces you will soon use in سلام (salām)."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "سل — teeth flowing into the tall hook",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: **سل** — teeth flowing into the tall hook]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "لا — the fixed lām-alif ligature",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: **لا** — the fixed *lām-alif* ligature]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“same skeletons, connectors added”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “same skeletons, connectors added”]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What happens when س begins a joined run? (It reaches left into the next letter.) What happens when lām meets alif? (They must fuse into لا.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "AR-W03-dots-mim-ba-salam",
-      "sequence": 130,
-      "title": "م، ب (mīm, bāʾ) — dots that tell letters apart",
-      "headword": "م، ب",
-      "romanization": "mīm, bāʾ",
-      "gloss": "dots are meaningful pieces; then learn ba and mim",
-      "script": "arabic",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "wide-table"
-      ],
-      "sourceHash": "fnv1a64:85664130a1760d63",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "Dots are not decoration — they are the letter",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the sections called Dots are not decoration — they are the letter and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Two more letters—م (m) and ب (b)—teach the cleverest idea in Arabic handwriting: the dots are a piece you draw."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "Dots are not decoration — they are the letter",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Many Arabic letters share one skeleton and differ only by dots. You met sīn's teeth last lesson; add three dots above and the same teeth become shīn (ش, \"sh\"). The bowl-shape works the same way:"
-            },
-            {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 6,
-              "rowCount": 1,
-              "headers": [
-                "skeleton",
-                "no dot",
-                "one dot below",
-                "one dot above",
-                "two above",
-                "three above"
-              ],
-              "text": "There is a table here I cannot read to you — 6 columns and 1 rows, and it has more columns than can be held in the ear at once. Its columns are: skeleton, no dot, one dot below, one dot above, two above, three above. Come back and look at it when you have stopped."
-            },
-            {
-              "kind": "speech",
-              "text": "So when you draw ب, the dot below is not a flourish — it is the one thing that stops the letter being an n, a t, or a th. Draw the dot as deliberately as the stroke."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "unknown",
-          "title": "ب (bāʾ) — a boat with one dot below",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Break it apart — bowl, then the dot:"
-            },
-            {
-              "kind": "speech",
-              "text": "the bowl — a shallow boat-shaped dish sitting on the line."
-            },
-            {
-              "kind": "speech",
-              "text": "one dot BELOW — placed under the belly of the boat."
-            },
-            {
-              "kind": "speech",
-              "text": "bāʾ is from Phoenician bēt (\"house\") — the ancestor of Greek beta and your Latin B. The very word alpha-bet is ʾālep + bēt: the ox and the house you have now both drawn."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "unknown",
-          "title": "م (mīm) — a little head on a tail",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Break it apart — round head, then tail:"
-            },
-            {
-              "kind": "speech",
-              "text": "the round head — a small closed loop."
-            },
-            {
-              "kind": "speech",
-              "text": "the tail — a stroke dropping straight down (when mīm ends a word, as in salām)."
-            },
-            {
-              "kind": "speech",
-              "text": "mīm is from Phoenician mem (\"water\") — sibling of Greek mu and Latin M. Four scripts, one drop of water."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "ب — boat + one dot below — then say \"the dot makes it b, not n\"",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: **ب** — boat + one dot below — then say \"the dot makes it *b*, not *n*\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "م — round head + dropping tail",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: **م** — round head + dropping tail]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"bēt the house becomes B; mem the water becomes M; ʾālep the ox becomes A\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"*bēt* the house → *B*; *mem* the water → *M*; *ʾālep* the ox → *A*\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Why is the dot under ب not optional? (It is the only thing separating b from n, t, th—same skeleton, different dots.) Name the Phoenician meanings behind B and M. (house and water—bēt and mem.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "AR-W03-write-salam",
-      "sequence": 140,
-      "title": "سلام (salām) — your first whole written word",
-      "headword": "سلام",
-      "romanization": "salām",
-      "gloss": "assemble salam from sin, lam-alif, a pen lift, and final mim",
-      "script": "arabic",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type"
-      ],
-      "sourceHash": "fnv1a64:694ab241f0732e69",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on"
-        ],
-        "waitUntilStopped": [
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You now know every letter and connector needed for سلام (salām, “peace”). Assemble them slowly from right to left."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "Build the word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Start on the right with س (sīn), its three teeth reaching left."
-            },
-            {
-              "kind": "speech",
-              "text": "Flow into ل (lām), the tall hook."
-            },
-            {
-              "kind": "speech",
-              "text": "Fuse lām with alif as the obligatory لا ligature."
-            },
-            {
-              "kind": "speech",
-              "text": "Lift the pen after alif, because alif never joins the letter after it."
-            },
-            {
-              "kind": "speech",
-              "text": "Finish at the left with final م (mīm), its tail dropping below the line."
-            },
-            {
-              "kind": "speech",
-              "text": "Read back right to left: س, ل, ا, م = s, l, ā, m = سلام (salām). The short vowel stays hidden, while alif carries the long ā."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "سلام (salām) — teeth, hook, لا, lift, mīm",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: **سلام** — teeth, hook, **لا**, lift, *mīm*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "POINT",
-              "instruction": "the pen lift after alif",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU POINT: the pen lift after *alif*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "salām — peace, the word inside as-salāmu ʿalaykum",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *salām* — peace, the word inside *as-salāmu ʿalaykum*]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Where does the pen lift in سلام? (After alif, which cannot join forward.) Which two letters form لا? (lām + alif.) Read the word. (salām, “peace.”)"
             }
           ]
         }
