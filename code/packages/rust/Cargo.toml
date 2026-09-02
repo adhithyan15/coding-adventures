@@ -145,6 +145,7 @@ members = [
     "flow-matic-parser",
     "flow-matic-iir-compiler",
     "font-parser",
+    "font-subset",
     "glyph-parser",
     "font-parser-node",
     "font-parser-python",

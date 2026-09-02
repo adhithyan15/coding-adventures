@@ -1,0 +1,10 @@
+[package]
+name = "font-subset"
+version = "0.1.0"
+edition = "2021"
+description = "Build a minimal valid TrueType font containing only the glyphs you need"
+
+[dependencies]
+font-parser = { path = "../font-parser" }
+
+[dev-dependencies]
