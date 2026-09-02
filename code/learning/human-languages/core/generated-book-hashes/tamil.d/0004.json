@@ -1,0 +1,14 @@
+{
+  "language": "tamil",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:fd59069846c4258f",
+  "lessonIds": [
+    "TA-C04-po",
+    "TA-C04-poy-varugiren",
+    "TA-C04-naalai",
+    "TA-C04-mindum-sandippom",
+    "TA-W01-curves-va-ka",
+    "TA-C04-practice"
+  ],
+  "tex": "tamil/book/chapters/ch04-farewells.tex"
+}
