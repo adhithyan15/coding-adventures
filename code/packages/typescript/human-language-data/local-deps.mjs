@@ -52,12 +52,38 @@
 
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
+
+/**
+ * The only directory tree this script is allowed to run `npm` in.
+ *
+ * A `file:` specifier is just a path, and `resolve` will happily follow
+ * `file:../../../../../tmp/x` or `file:/anywhere`. `npm ci` then runs THAT
+ * directory's `preinstall`/`install`/`postinstall` scripts, so an unbounded
+ * walk turns "one line changed in a manifest" into "code of somebody's choosing
+ * runs at install time, from a directory an unprivileged local user can
+ * create". A hostile specifier in a repository manifest is already install-time
+ * execution on its own, so this is a containment boundary rather than the last
+ * line of defence — but it is the difference between a change that looks
+ * obviously wrong in review and one that does not.
+ *
+ * It doubles as the check that this script is running inside the repository at
+ * all: if this package is ever installed as a published tarball, its siblings
+ * are not here, the closure is empty, and nothing is executed.
+ */
+const PACKAGES_ROOT = resolve(HERE, "..");
+
 /** npm sets this while running a lifecycle script; it stops nested recursion. */
 const GUARD = "HUMAN_LANGUAGE_DATA_LOCAL_DEPS";
+
+/** Is `dir` inside the sibling-packages root (and not the root itself)? */
+function inPackagesRoot(dir) {
+  const inside = relative(PACKAGES_ROOT, dir);
+  return inside !== "" && !inside.startsWith("..") && !isAbsolute(inside);
+}
 
 /** A package's `file:`-linked dependencies, as absolute directories. */
 function localDependencies(packageDir) {
@@ -76,7 +102,14 @@ function localDependencies(packageDir) {
   const out = [];
   for (const [name, specifier] of Object.entries(declared)) {
     if (typeof specifier !== "string" || !specifier.startsWith("file:")) continue;
-    out.push({ name, dir: resolve(packageDir, specifier.slice("file:".length)) });
+    const dir = resolve(packageDir, specifier.slice("file:".length));
+    if (!inPackagesRoot(dir)) {
+      throw new Error(
+        `local-deps: '${name}' resolves to ${dir}, outside ${PACKAGES_ROOT}. ` +
+          `This script only installs sibling packages; fix the 'file:' path.`,
+      );
+    }
+    out.push({ name, dir });
   }
   return out;
 }
@@ -113,8 +146,21 @@ function alreadyLinked(packageDir) {
 }
 
 function install(packageDir) {
-  const command = existsSync(join(packageDir, "package-lock.json")) ? "ci" : "install";
-  execFileSync(process.platform === "win32" ? "npm.cmd" : "npm", [command, "--silent"], {
+  // `npm install` here would resolve versions fresh from the registry during
+  // what the caller invoked as `npm ci`, silently dropping the pinning `npm ci`
+  // exists to provide. A sibling without a lockfile is a repository problem,
+  // and saying so is better than quietly installing something else.
+  if (!existsSync(join(packageDir, "package-lock.json"))) {
+    throw new Error(
+      `local-deps: ${packageDir} has no package-lock.json, so its install ` +
+        `could not be reproducible. Commit one there.`,
+    );
+  }
+  // `execFileSync`, not a shell: the argv is fixed and nothing here is
+  // interpolated into a command line, so there is no argument-injection surface
+  // to begin with. Do not "fix" a Windows spawn failure by adding `shell: true`
+  // — that reintroduces exactly the surface this avoids.
+  execFileSync(process.platform === "win32" ? "npm.cmd" : "npm", ["ci", "--silent"], {
     cwd: packageDir,
     stdio: "inherit",
     env: { ...process.env, [GUARD]: "running" },

@@ -47,9 +47,10 @@
 // what goes into a committed `.svg` — is exactly the duplication you do not
 // want. But "it was escaped upstream" is a claim about today's generator, not a
 // property of this file, so every fragment is re-checked against a small
-// allowlist before it is written: five tags, ordinary attribute names, nothing
-// starting with `on`. A ledger that has been tampered with fails the build
-// rather than shipping a `<script>` inside a figure.
+// allowlist before it is written: five tags, sixteen attribute names, balanced
+// nesting, and no text a real serialiser could not have produced. A ledger that
+// has been tampered with fails the build rather than shipping a `<script>` —
+// or a forged citation — inside a figure.
 // ---------------------------------------------------------------------------
 
 import { fnv1a64 } from "./hash.js";
@@ -113,54 +114,134 @@ export const FILMSTRIP_LEDGER_PATH = "data/ductus/filmstrip-geometry.json";
 const ALLOWED_TAGS = new Set(["g", "path", "circle", "text", "tspan"]);
 
 /**
- * One tag: a name, then zero or more `name="value"` attributes with no angle
- * brackets inside the value. Anything a real serialiser would produce matches;
- * anything with an unquoted attribute, a stray bracket, a comment, a processing
- * instruction or a CDATA section does not, and is refused below.
+ * Every attribute name `ductusFrame` emits, and nothing else.
+ *
+ * A name DENYLIST (`on*` and friends) would be the easy version and the wrong
+ * one. The five tags above are inert today, so nothing in a value can execute —
+ * but that is a fact about today's tag list, not about this check. The day
+ * somebody adds `use` or `image` to draw a ligature, `href="javascript:..."`,
+ * `style="background-image:url(...)"` and `filter="url(http://...)"` all become
+ * live, and a denylist that never heard of them would wave them through. An
+ * allowlist fails instead, loudly, in the commit that widens the tag list.
+ *
+ * A ductus renderer that legitimately grows an attribute therefore has to add
+ * it here too. That is the intended cost.
  */
-const TAG =
-  /<\/?([A-Za-z][A-Za-z0-9]*)((?:\s+[A-Za-z_:][A-Za-z0-9_.:-]*="[^"<>]*")*)\s*\/?>/g;
-
-const ATTRIBUTE_NAME = /(^|\s)([A-Za-z_:][A-Za-z0-9_.:-]*)=/g;
+const ALLOWED_ATTRIBUTES = new Set([
+  "transform",
+  "class",
+  "d",
+  "fill",
+  "fill-rule",
+  "stroke",
+  "stroke-width",
+  "stroke-linecap",
+  "stroke-linejoin",
+  "cx",
+  "cy",
+  "r",
+  "x",
+  "y",
+  "text-anchor",
+  "font-size",
+]);
 
 /**
- * Refuse a frame fragment that is anything other than a handful of drawing
- * tags. The text BETWEEN tags is checked too: `svgMarkup` escapes `<` and `>`
- * into entities, so a literal bracket outside a tag means the fragment did not
- * come from it.
+ * One tag: an optional slash, a name, zero or more `name="value"` attributes
+ * with no angle brackets inside the value, and an optional self-closing slash.
+ * Anything a real serialiser would produce matches; an unquoted attribute, a
+ * stray bracket, a comment, a processing instruction, a doctype or a CDATA
+ * section does not, and is refused below.
+ *
+ * The alternatives inside the attribute group are disjoint — whitespace, then a
+ * name, then `="` — so the group cannot backtrack into itself and the scan stays
+ * linear in the fragment's length. That matters: this input is a file on disk,
+ * and a quadratic checker would be a denial of service on the build.
+ */
+const TAG =
+  /<(\/?)([A-Za-z][A-Za-z0-9]*)((?:\s+[A-Za-z_:][A-Za-z0-9_.:-]*="[^"<>]*")*)\s*(\/?)>/g;
+
+const ATTRIBUTE_NAME = /(?:^|\s)([A-Za-z_:][A-Za-z0-9_.:-]*)=/g;
+
+/** The five references `escapeXml` produces, plus numeric character references. */
+const ENTITY = /&(?:amp|lt|gt|quot|apos|#\d+|#x[0-9A-Fa-f]+);/g;
+
+/** C0 controls other than tab, newline and carriage return: illegal in XML 1.0. */
+// eslint-disable-next-line no-control-regex
+const CONTROL_CHARACTER = /[\u0000-\u0008\u000B\u000C\u000E-\u001F]/;
+
+/**
+ * Check the text between two tags.
+ *
+ * `svgMarkup` escapes `<`, `>` and `&` into references, so a literal bracket out
+ * here means the fragment did not come from it — and a bare `&`, or an entity
+ * name nobody defined, means the same thing while ALSO producing a file
+ * `rsvg-convert` will refuse during the book build. Catching it here turns a
+ * confusing failure at PDF time into a named failure at generation time.
+ */
+function assertSafeText(text: string, where: string): void {
+  if (text.includes("<") || text.includes(">")) {
+    throw new Error(`${where}: filmstrip markup has an unparsable fragment`);
+  }
+  if (CONTROL_CHARACTER.test(text)) {
+    throw new Error(`${where}: filmstrip markup contains a control character`);
+  }
+  if (text.replace(ENTITY, "").includes("&")) {
+    throw new Error(`${where}: filmstrip markup has an unescaped or unknown entity`);
+  }
+}
+
+/**
+ * Refuse a frame fragment that is anything other than a balanced tree of a
+ * handful of drawing tags.
+ *
+ * BALANCE is not a nicety here. Each fragment is embedded inside a
+ * `<g transform="...">` that positions it in its panel, so a fragment starting
+ * with `</g>` would close that wrapper and everything after it would escape the
+ * panel entirely — allowlisted tags, drawn anywhere on the figure, including a
+ * `<text>` that looks exactly like the citation line. Nothing in the tag-by-tag
+ * check above notices that, which is why the stack exists.
  */
 export function assertSafeFilmstripMarkup(markup: string, where: string): void {
   let cursor = 0;
+  const open: string[] = [];
   TAG.lastIndex = 0;
   for (let match = TAG.exec(markup); match !== null; match = TAG.exec(markup)) {
-    const between = markup.slice(cursor, match.index);
-    if (between.includes("<") || between.includes(">")) {
-      throw new Error(`${where}: filmstrip markup has an unparsable fragment`);
-    }
-    const tag = match[1].toLowerCase();
+    assertSafeText(markup.slice(cursor, match.index), where);
+    const closing = match[1] === "/";
+    const tag = match[2].toLowerCase();
+    const attributes = match[3] ?? "";
+    const selfClosing = match[4] === "/";
     if (!ALLOWED_TAGS.has(tag)) {
       throw new Error(`${where}: filmstrip markup uses disallowed tag '${tag}'`);
     }
-    const attributes = match[2] ?? "";
+    if (closing && (attributes !== "" || selfClosing)) {
+      throw new Error(`${where}: filmstrip markup has a malformed closing '${tag}'`);
+    }
     ATTRIBUTE_NAME.lastIndex = 0;
     for (
       let attribute = ATTRIBUTE_NAME.exec(attributes);
       attribute !== null;
       attribute = ATTRIBUTE_NAME.exec(attributes)
     ) {
-      // `onload` is a legal XML name and, in SVG, also a script. The whole
-      // prefix goes, not a list of today's handler names.
-      if (/^on/i.test(attribute[2])) {
+      if (!ALLOWED_ATTRIBUTES.has(attribute[1])) {
         throw new Error(
-          `${where}: filmstrip markup carries an event handler '${attribute[2]}'`,
+          `${where}: filmstrip markup uses disallowed attribute '${attribute[1]}'`,
         );
       }
     }
+    if (closing) {
+      if (open.pop() !== tag) {
+        throw new Error(`${where}: filmstrip markup closes '${tag}' that is not open`);
+      }
+    } else if (!selfClosing) {
+      open.push(tag);
+    }
     cursor = match.index + match[0].length;
   }
-  const tail = markup.slice(cursor);
-  if (tail.includes("<") || tail.includes(">")) {
-    throw new Error(`${where}: filmstrip markup has an unparsable fragment`);
+  assertSafeText(markup.slice(cursor), where);
+  if (open.length > 0) {
+    throw new Error(`${where}: filmstrip markup leaves '${open[open.length - 1]}' open`);
   }
 }
 

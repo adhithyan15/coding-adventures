@@ -151,14 +151,83 @@ describe("the fragment allowlist", () => {
 
   it("refuses a tag, an attribute or a bracket it was not promised", () => {
     for (const hostile of [
-      '<script>alert(1)</script>',
+      "<script>alert(1)</script>",
       '<image href="x"/>',
       '<g onload="alert(1)"><path d="M0 0"/></g>',
-      '<foreignObject><div/></foreignObject>',
+      "<foreignObject><div/></foreignObject>",
       '<path d="M0 0"/> < not a tag',
+      "<!-- a comment -->",
+      "<![CDATA[<script>alert(1)</script>]]>",
+      "<?xml-stylesheet href='x'?>",
+      "<path d='M0 0'/>",
+      "<path d=M00/>",
     ]) {
       expect(() => assertSafeFilmstripMarkup(hostile, "fixture")).toThrow();
     }
+  });
+
+  it("refuses an attribute the ductus renderer does not emit", () => {
+    // Inert today only because the five allowed tags are inert. The allowlist is
+    // what keeps that true the day somebody adds `use` or `image`.
+    for (const hostile of [
+      '<g xlink:href="javascript:alert(1)"/>',
+      '<text style="background-image:url(http://evil.example/x)">hi</text>',
+      '<circle clip-path="url(http://evil.example/#c)"/>',
+      '<path filter="url(http://evil.example/x#f)" d="M0 0"/>',
+    ]) {
+      expect(() => assertSafeFilmstripMarkup(hostile, "fixture")).toThrow(
+        /disallowed attribute/,
+      );
+    }
+  });
+
+  it("refuses a fragment that would escape the panel it is placed in", () => {
+    // Each fragment is embedded inside a `<g transform="...">` that positions
+    // it. A fragment beginning `</g>` closes that wrapper, and everything after
+    // it — allowlisted tags and all — is drawn loose on the figure, including a
+    // `<text>` indistinguishable from the real citation line.
+    expect(() =>
+      assertSafeFilmstripMarkup(
+        '</g><text x="0" y="0">Stroke order after a source nobody cited</text><g>',
+        "fixture",
+      ),
+    ).toThrow(/closes 'g' that is not open/);
+    expect(() => assertSafeFilmstripMarkup("<g><g></g>", "fixture")).toThrow(
+      /leaves 'g' open/,
+    );
+    expect(() => assertSafeFilmstripMarkup("<g></path></g>", "fixture")).toThrow(
+      /closes 'path' that is not open/,
+    );
+    expect(() => assertSafeFilmstripMarkup('</g class="x">', "fixture")).toThrow(
+      /malformed closing/,
+    );
+  });
+
+  it("refuses text no serialiser could have written", () => {
+    // `escapeXml` turns `&` into `&amp;`, so a bare or unknown reference means
+    // the fragment did not come from it — and would break the book's own
+    // SVG-to-PDF step later, where the message would name nothing useful.
+    expect(() => assertSafeFilmstripMarkup("<text>Bell &amp; Co</text>", "fixture")).not.toThrow();
+    expect(() => assertSafeFilmstripMarkup("<text>Bell &#38; Co</text>", "fixture")).not.toThrow();
+    expect(() => assertSafeFilmstripMarkup("<text>Bell & Co</text>", "fixture")).toThrow(
+      /unescaped or unknown entity/,
+    );
+    expect(() => assertSafeFilmstripMarkup("<text>&xxe;</text>", "fixture")).toThrow(
+      /unescaped or unknown entity/,
+    );
+    expect(() =>
+      assertSafeFilmstripMarkup("<text>a\u0000b</text>", "fixture"),
+    ).toThrow(/control character/);
+  });
+
+  it("scans a large hostile fragment in linear time", () => {
+    // A quadratic checker here would be a denial of service on the build, since
+    // the input is a file on disk. 3 MB of unterminated attribute must not stall.
+    const started = Date.now();
+    expect(() =>
+      assertSafeFilmstripMarkup(`<g ${'class="'.repeat(200_000)}`, "fixture"),
+    ).toThrow();
+    expect(Date.now() - started).toBeLessThan(5_000);
   });
 });
 

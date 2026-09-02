@@ -10,9 +10,14 @@
   `data/ductus/filmstrip-geometry.json`, generated and byte-checked by
   `script-ductus`. `check:figures` gates the SVGs as it always has.
 - Frames arrive as SVG fragments escaped by `script-ductus`'s audited
-  serialiser. `assertSafeFilmstripMarkup` re-checks each one against a five-tag
-  allowlist — no `<script>`, no `on*` attribute, no stray bracket — before it
-  can reach a committed file.
+  serialiser. `assertSafeFilmstripMarkup` re-checks each one before it can reach
+  a committed file: a five-tag and sixteen-attribute allowlist (an allowlist, not
+  an `on*` denylist, so `href`/`style`/`filter` are refused today rather than the
+  day a live tag is added), balanced nesting so a fragment cannot close the
+  positioning group and draw a forged citation loose on the figure, and text that
+  no real serialiser could have written — a stray bracket, a bare `&`, an unknown
+  entity or a control character. Every regex in it scans linearly, because the
+  input is a file on disk.
 - Long letters wrap onto further rows at six frames per row rather than running
   off the page. The citation prints under the strip; a source's full note on
   variation goes into `<desc>` so it travels in the file without burying the art.
