@@ -199,6 +199,20 @@ read/write channel; channel names scope those versions. Pipeline wiring fails
 closed unless the originator's write declaration and receiver's read declaration
 name the same version. Legacy v1 packages remain discoverable, but have no
 implicit message-schema compatibility.
+
+Schema v3 adds `allowed_tools`: the D18D tool identifiers an agent may call.
+Before v3 the signed manifest declared operating-system `capabilities` and
+`vault_access` and named **no tools at all**, so the tool surface a
+profile-backed supervisor enforces had no signed source — `HostProfile` requires
+`allowed_tools`, and nothing in the integrity boundary could supply it. The
+field is required at v3, so an agent that calls no tools declares `[]` rather
+than omitting it; identifiers are namespaced (`artifact.write`), stored sorted
+and deduplicated, and bounded. A bare namespace is rejected because it names no
+tool and would invite prefix matching, which is how one declared tool becomes a
+whole namespace. Schema v1 and v2 manifests may not carry the field: a consumer
+that trusts `version` must never be told something false about what the signed
+bytes authorize. Level 1 `SKILL.md` has no way to express a tool surface yet, so
+its parser continues to emit v2 until it does.
 Discovery supports explicit inspection and stable immediate-child `.agent`
 scans. It parses only authenticated manifest bytes, enforces signing-key tier
 ceilings, and returns inert candidates for explicit control-plane registration.

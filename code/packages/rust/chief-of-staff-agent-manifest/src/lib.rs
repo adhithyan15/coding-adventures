@@ -10,9 +10,21 @@ use core::fmt::{self, Display, Formatter};
 use std::collections::{BTreeMap, BTreeSet};
 
 /// Current agent-manifest schema version understood by this package.
-pub const MANIFEST_VERSION: i64 = 2;
+///
+/// Schema v3 adds `allowed_tools`: the D18D tool identifiers this agent may
+/// call. Before v3 the signed manifest declared operating-system
+/// `capabilities` and `vault_access` but named no tools at all, so a
+/// profile-backed supervisor had no signed source for its tool surface.
+pub const MANIFEST_VERSION: i64 = 3;
+/// Schema version that introduced per-channel payload-schema versions.
+///
+/// Still accepted for installed packages; it differs from v3 only by the
+/// absence of `allowed_tools`.
+pub const MANIFEST_V2_VERSION: i64 = 2;
 /// Oldest agent-manifest schema version accepted for installed packages.
 pub const LEGACY_MANIFEST_VERSION: i64 = 1;
+/// Maximum number of tool identifiers one manifest may declare.
+pub const MAX_ALLOWED_TOOLS: usize = 256;
 /// Canonical schema URL emitted by [`AgentManifest::to_json`].
 pub const MANIFEST_SCHEMA: &str = "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/agent_manifest.schema.json";
 /// Maximum accepted UTF-8 manifest size.
@@ -27,6 +39,7 @@ const ROOT_FIELDS: &[&str] = &[
     "channels",
     "vault_access",
     "capabilities",
+    "allowed_tools",
     "restart_policy",
     "justification",
 ];
@@ -89,6 +102,13 @@ pub struct AgentManifest {
     pub vault_access: Option<VaultAccess>,
     /// Validated OS capability profile.
     pub capabilities: Vec<Capability>,
+    /// D18D tool identifiers this agent may call, sorted and deduplicated.
+    ///
+    /// Schema v3 and later. Always empty for v1 and v2 manifests, which had no
+    /// way to declare a tool surface. An empty list on a v3 manifest is a
+    /// deliberate declaration that the agent calls no tools, not an omission:
+    /// the field is required at v3.
+    pub allowed_tools: Vec<String>,
     /// Supervisor behavior: `always`, `on-failure`, or `never`.
     pub restart_policy: String,
     /// Overall capability-profile justification.
@@ -279,7 +299,10 @@ pub fn parse_manifest(source: &str) -> Result<AgentManifest, ManifestError> {
         expect_string(schema, "$schema")?;
     }
     let version = expect_integer(object.required("version")?, "version")?;
-    if !matches!(version, LEGACY_MANIFEST_VERSION | MANIFEST_VERSION) {
+    if !matches!(
+        version,
+        LEGACY_MANIFEST_VERSION | MANIFEST_V2_VERSION | MANIFEST_VERSION
+    ) {
         return Err(ManifestError::UnsupportedVersion(version));
     }
     let agent = expect_string(object.required("agent")?, "agent")?;
@@ -294,6 +317,19 @@ pub fn parse_manifest(source: &str) -> Result<AgentManifest, ManifestError> {
         .map(parse_vault_access)
         .transpose()?;
     let capabilities = parse_capabilities(object.required("capabilities")?)?;
+    // `allowed_tools` is in ROOT_FIELDS so the strict-object check accepts the
+    // key at every version; the version gate has to be explicit, or a v1 or v2
+    // manifest could smuggle a tool surface past a consumer that trusts the
+    // declared version.
+    let allowed_tools = match version {
+        MANIFEST_VERSION => parse_allowed_tools(object.required("allowed_tools")?)?,
+        _ => {
+            if object.take("allowed_tools").is_some() {
+                return Err(ManifestError::InvalidField("allowed_tools"));
+            }
+            Vec::new()
+        }
+    };
     let restart_policy = object
         .take("restart_policy")
         .map(|value| expect_string(value, "restart_policy"))
@@ -310,6 +346,7 @@ pub fn parse_manifest(source: &str) -> Result<AgentManifest, ManifestError> {
         message_schema_versions,
         vault_access,
         capabilities,
+        allowed_tools,
         restart_policy,
         justification,
     };
@@ -330,7 +367,7 @@ fn parse_channels(
             },
             BTreeMap::new(),
         )),
-        MANIFEST_VERSION => {
+        MANIFEST_V2_VERSION | MANIFEST_VERSION => {
             let reads = parse_channel_bindings(object.required("reads")?, "channels.reads")?;
             let writes = parse_channel_bindings(object.required("writes")?, "channels.writes")?;
             let mut versions = BTreeMap::new();
@@ -411,9 +448,13 @@ fn parse_capabilities(value: JsonValue) -> Result<Vec<Capability>, ManifestError
 }
 
 fn validate_manifest(manifest: &AgentManifest) -> Result<(), ManifestError> {
-    if !matches!(manifest.version, LEGACY_MANIFEST_VERSION | MANIFEST_VERSION) {
+    if !matches!(
+        manifest.version,
+        LEGACY_MANIFEST_VERSION | MANIFEST_V2_VERSION | MANIFEST_VERSION
+    ) {
         return Err(ManifestError::UnsupportedVersion(manifest.version));
     }
+    validate_allowed_tools(manifest)?;
     if !(2..=64).contains(&manifest.agent.len()) || !valid_identifier(&manifest.agent) {
         return Err(ManifestError::InvalidField("agent"));
     }
@@ -446,7 +487,7 @@ fn validate_manifest(manifest: &AgentManifest) -> Result<(), ManifestError> {
         LEGACY_MANIFEST_VERSION if !manifest.message_schema_versions.is_empty() => {
             return Err(ManifestError::InvalidField("message_schema_versions"));
         }
-        MANIFEST_VERSION => {
+        MANIFEST_V2_VERSION | MANIFEST_VERSION => {
             let channel_count = manifest.channels.reads.len() + manifest.channels.writes.len();
             let channels = manifest
                 .channels
@@ -501,6 +542,84 @@ fn validate_manifest(manifest: &AgentManifest) -> Result<(), ManifestError> {
     }
     if manifest.justification.chars().count() < 10 {
         return Err(ManifestError::InvalidField("justification"));
+    }
+    Ok(())
+}
+
+fn parse_allowed_tools(value: JsonValue) -> Result<Vec<String>, ManifestError> {
+    let mut tools = expect_string_array(value, "allowed_tools")?;
+    tools.sort();
+    tools.dedup();
+    Ok(tools)
+}
+
+/// A D18D tool identifier: two or more dot-separated segments, each starting
+/// with a lowercase letter.
+///
+/// ```text
+///   artifact.create        ok    two segments
+///   context.append_entry   ok    underscores allowed inside a segment
+///   artifact.create_v2     ok    digits allowed after the first byte
+///   hue.bridge.status      ok    more than two segments
+///   artifact               NO    a bare namespace names no tool
+///   Artifact.create        NO    uppercase
+///   artifact..create       NO    empty segment
+///   .create / artifact.    NO    leading or trailing dot
+/// ```
+///
+/// The shape matters beyond tidiness: `allowed_tools` is matched against tool
+/// identifiers by the broker, and a manifest that could declare a bare
+/// namespace would invite prefix matching, which is how one declared tool
+/// becomes a whole namespace.
+fn valid_tool_id(value: &str) -> bool {
+    let mut segments = value.split('.');
+    let mut count = 0usize;
+    for segment in &mut segments {
+        count += 1;
+        if !valid_identifier_underscored(segment) {
+            return false;
+        }
+    }
+    count >= 2
+}
+
+fn valid_identifier_underscored(value: &str) -> bool {
+    value
+        .bytes()
+        .next()
+        .is_some_and(|byte| byte.is_ascii_lowercase())
+        && value
+            .bytes()
+            .all(|byte| byte.is_ascii_lowercase() || byte.is_ascii_digit() || byte == b'_')
+}
+
+fn validate_allowed_tools(manifest: &AgentManifest) -> Result<(), ManifestError> {
+    // v1 and v2 have no tool surface at all. A non-empty list on one of those
+    // would mean a consumer reading `version` learns something false about
+    // what the signed bytes authorize.
+    if manifest.version != MANIFEST_VERSION && !manifest.allowed_tools.is_empty() {
+        return Err(ManifestError::InvalidField("allowed_tools"));
+    }
+    if manifest.allowed_tools.len() > MAX_ALLOWED_TOOLS {
+        return Err(ManifestError::InvalidField("allowed_tools"));
+    }
+    let mut seen = BTreeSet::new();
+    for tool in &manifest.allowed_tools {
+        if !(3..=128).contains(&tool.len()) || !valid_tool_id(tool) {
+            return Err(ManifestError::InvalidField("allowed_tools"));
+        }
+        if !seen.insert(tool.as_str()) {
+            return Err(ManifestError::InvalidField("allowed_tools"));
+        }
+    }
+    // Sorted storage is part of the contract: `to_json` must be deterministic,
+    // and a consumer comparing two manifests compares two canonical orders.
+    if manifest
+        .allowed_tools
+        .windows(2)
+        .any(|pair| pair[0] > pair[1])
+    {
+        return Err(ManifestError::InvalidField("allowed_tools"));
     }
     Ok(())
 }
@@ -637,6 +756,12 @@ fn manifest_json(manifest: &AgentManifest) -> JsonValue {
             ]),
         ));
     }
+    if manifest.version == MANIFEST_VERSION {
+        fields.push((
+            "allowed_tools".to_string(),
+            strings(&manifest.allowed_tools),
+        ));
+    }
     fields.extend([
         (
             "capabilities".to_string(),
@@ -734,6 +859,27 @@ mod tests {
       "justification": "Uses only encrypted channels and no operating-system access."
     }"#;
 
+    const V3: &str = r#"{
+      "version": 3,
+      "agent": "weather-agent",
+      "description": "Reports a concise local weather forecast.",
+      "privilege_tier": 0,
+      "channels": {
+        "reads": {"weather-requests": 1},
+        "writes": {"weather-reports": 2}
+      },
+      "capabilities": [],
+      "allowed_tools": ["artifact.write", "artifact.create_v2", "context.append_entry"],
+      "justification": "Uses only encrypted channels and no operating-system access."
+    }"#;
+
+    fn v3_with_tools(tools: &str) -> String {
+        V3.replace(
+            r#""allowed_tools": ["artifact.write", "artifact.create_v2", "context.append_entry"]"#,
+            &format!(r#""allowed_tools": {tools}"#),
+        )
+    }
+
     #[test]
     fn parses_defaults_and_round_trips_schema_v1() {
         let manifest = parse_manifest(MINIMAL).unwrap();
@@ -749,15 +895,208 @@ mod tests {
     }
 
     #[test]
-    fn parses_and_round_trips_current_schema_v2() {
+    fn parses_and_round_trips_schema_v2() {
         let manifest = parse_manifest(CURRENT).unwrap();
-        assert_eq!(manifest.version, MANIFEST_VERSION);
+        assert_eq!(manifest.version, MANIFEST_V2_VERSION);
+        // v2 has no tool surface at all, and must not acquire one by default.
+        assert!(manifest.allowed_tools.is_empty());
         assert_eq!(manifest.message_schema_version("weather-requests"), Some(1));
         assert_eq!(manifest.message_schema_version("weather-reports"), Some(2));
 
         let json = manifest.to_json().unwrap();
         assert!(json.contains("\"weather-reports\": 2"));
         assert_eq!(parse_manifest(&json).unwrap(), manifest);
+    }
+
+    #[test]
+    fn parses_and_round_trips_schema_v3_with_tools() {
+        let manifest = parse_manifest(V3).unwrap();
+        assert_eq!(manifest.version, MANIFEST_VERSION);
+        // Stored sorted, not in source order: `to_json` must be deterministic
+        // and two manifests must compare in one canonical order.
+        assert_eq!(
+            manifest.allowed_tools,
+            vec![
+                "artifact.create_v2".to_string(),
+                "artifact.write".to_string(),
+                "context.append_entry".to_string(),
+            ]
+        );
+
+        let json = manifest.to_json().unwrap();
+        assert!(json.contains("\"allowed_tools\""));
+        assert_eq!(parse_manifest(&json).unwrap(), manifest);
+    }
+
+    #[test]
+    fn schema_v3_requires_allowed_tools_and_accepts_an_empty_declaration() {
+        // Required, so "calls no tools" is stated rather than defaulted into.
+        let missing = V3.replace(
+            r#""allowed_tools": ["artifact.write", "artifact.create_v2", "context.append_entry"],"#,
+            "",
+        );
+        assert_eq!(
+            parse_manifest(&missing),
+            Err(ManifestError::MissingField("allowed_tools"))
+        );
+
+        let empty = parse_manifest(&v3_with_tools("[]")).unwrap();
+        assert!(empty.allowed_tools.is_empty());
+        assert_eq!(parse_manifest(&empty.to_json().unwrap()).unwrap(), empty);
+    }
+
+    #[test]
+    fn earlier_schemas_may_not_declare_a_tool_surface() {
+        // `allowed_tools` is in ROOT_FIELDS, so the strict-object check accepts
+        // the key at any version. Without an explicit gate a v1 or v2 manifest
+        // could carry a tool surface that a consumer trusting `version` would
+        // never look for.
+        for source in [MINIMAL, CURRENT] {
+            let smuggled = source.replace(
+                "\"capabilities\": []",
+                "\"capabilities\": [], \"allowed_tools\": [\"artifact.write\"]",
+            );
+            assert_eq!(
+                parse_manifest(&smuggled),
+                Err(ManifestError::InvalidField("allowed_tools"))
+            );
+        }
+    }
+
+    #[test]
+    fn rejects_tool_identifiers_that_are_not_namespaced() {
+        // A bare namespace names no tool, and would invite prefix matching in
+        // the broker -- which is how one declared tool becomes a namespace.
+        for bad in [
+            r#"["artifact"]"#,
+            r#"["Artifact.create"]"#,
+            r#"["artifact..create"]"#,
+            r#"[".create"]"#,
+            r#"["artifact."]"#,
+            r#"["artifact.create!"]"#,
+            r#"["artifact.Create"]"#,
+            r#"["2artifact.create"]"#,
+            r#"["artifact.2create"]"#,
+            r#"["ab"]"#,
+        ] {
+            assert_eq!(
+                parse_manifest(&v3_with_tools(bad)),
+                Err(ManifestError::InvalidField("allowed_tools")),
+                "should have rejected {bad}"
+            );
+        }
+    }
+
+    #[test]
+    fn accepts_deeper_namespaces_and_deduplicates() {
+        let manifest = parse_manifest(&v3_with_tools(
+            r#"["hue.bridge.status", "artifact.write", "artifact.write"]"#,
+        ))
+        .unwrap();
+        assert_eq!(
+            manifest.allowed_tools,
+            vec![
+                "artifact.write".to_string(),
+                "hue.bridge.status".to_string()
+            ]
+        );
+    }
+
+    #[test]
+    fn rejects_more_tools_than_the_bound_allows() {
+        let too_many = (0..=MAX_ALLOWED_TOOLS)
+            .map(|index| format!("\"ns.tool_{index}\""))
+            .collect::<Vec<_>>()
+            .join(", ");
+        assert_eq!(
+            parse_manifest(&v3_with_tools(&format!("[{too_many}]"))),
+            Err(ManifestError::InvalidField("allowed_tools"))
+        );
+    }
+
+    #[test]
+    fn validate_rejects_a_hand_built_manifest_that_bypasses_the_parser() {
+        // parse_manifest sorts and dedups, so these states are only reachable
+        // by constructing the struct directly -- which consumers can do.
+        let mut manifest = parse_manifest(V3).unwrap();
+        manifest.allowed_tools = vec!["context.append_entry".into(), "artifact.write".into()];
+        assert_eq!(
+            manifest.validate(),
+            Err(ManifestError::InvalidField("allowed_tools"))
+        );
+
+        let mut duplicated = parse_manifest(V3).unwrap();
+        duplicated.allowed_tools = vec!["artifact.write".into(), "artifact.write".into()];
+        assert_eq!(
+            duplicated.validate(),
+            Err(ManifestError::InvalidField("allowed_tools"))
+        );
+
+        let mut downgraded = parse_manifest(V3).unwrap();
+        downgraded.version = MANIFEST_V2_VERSION;
+        assert_eq!(
+            downgraded.validate(),
+            Err(ManifestError::InvalidField("allowed_tools"))
+        );
+    }
+
+    #[test]
+    fn validate_rejects_each_malformed_field() {
+        // These branches guard the fields `validate_manifest` walks after the
+        // version gate. They were previously unexercised, which meant a typo in
+        // any one of them would have failed open.
+        let cases: [(&str, &str, &str); 6] = [
+            (
+                r#""capabilities": []"#,
+                r#""vault_access": {"secrets": [""], "mode": "leased", "max_lease_ttl": 300}, "capabilities": []"#,
+                "vault_access.secrets",
+            ),
+            (
+                r#""capabilities": []"#,
+                r#""vault_access": {"secrets": ["k"], "mode": "borrowed", "max_lease_ttl": 300}, "capabilities": []"#,
+                "vault_access.mode",
+            ),
+            (
+                r#""capabilities": []"#,
+                r#""capabilities": [{"category": "net", "action": "connect", "target": "", "justification": "Reaches the forecast service."}]"#,
+                "capabilities[].target",
+            ),
+            (
+                r#""capabilities": []"#,
+                r#""capabilities": [{"category": "net", "action": "connect", "target": "a:1", "justification": "short"}]"#,
+                "capabilities[].justification",
+            ),
+            (
+                r#""capabilities": []"#,
+                r#""capabilities": [], "restart_policy": "sometimes""#,
+                "restart_policy",
+            ),
+            (
+                r#""justification": "Uses only encrypted channels and no operating-system access.""#,
+                r#""justification": "too short""#,
+                "justification",
+            ),
+        ];
+        for (from, to, field) in cases {
+            let source = MINIMAL.replace(from, to);
+            assert_ne!(source, MINIMAL, "fixture substitution missed for {field}");
+            assert_eq!(
+                parse_manifest(&source),
+                Err(ManifestError::InvalidField(field)),
+                "should have rejected {field}"
+            );
+        }
+    }
+
+    #[test]
+    fn validate_rejects_an_incomplete_schema_version_map() {
+        // A v2 manifest whose declared channels and version map disagree.
+        let mut manifest = parse_manifest(CURRENT).unwrap();
+        manifest.message_schema_versions.remove("weather-reports");
+        assert_eq!(
+            manifest.validate(),
+            Err(ManifestError::InvalidField("message_schema_versions"))
+        );
     }
 
     #[test]
@@ -775,8 +1114,8 @@ mod tests {
     #[test]
     fn rejects_unsupported_or_malformed_versions() {
         assert_eq!(
-            parse_manifest(&MINIMAL.replace("\"version\": 1", "\"version\": 3")),
-            Err(ManifestError::UnsupportedVersion(3))
+            parse_manifest(&MINIMAL.replace("\"version\": 1", "\"version\": 4")),
+            Err(ManifestError::UnsupportedVersion(4))
         );
         assert_eq!(
             parse_manifest(&MINIMAL.replace("\"version\": 1", "\"version\": 1.0")),
