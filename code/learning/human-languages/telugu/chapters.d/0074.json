@@ -1,0 +1,21 @@
+{
+  "chapter": 74,
+  "title": "And, But, Or",
+  "label": "ch:te-and-but-or",
+  "canDo": "I can join two Telugu words or two Telugu clauses, and I can ask why and answer it.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "TE-C74-because",
+    "kind": "production",
+    "summary": "Complete TE-C74-because and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C74-LINK-01",
+      "TE-LEX-C74-LINK-02",
+      "TE-LEX-C74-LINK-03",
+      "TE-LEX-C74-LINK-04",
+      "TE-LEX-C74-LINK-05"
+    ]
+  }
+}

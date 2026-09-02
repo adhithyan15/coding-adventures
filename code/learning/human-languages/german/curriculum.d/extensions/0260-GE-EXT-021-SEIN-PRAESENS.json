@@ -1,0 +1,17 @@
+{
+  "id": "GE-EXT-021-SEIN-PRAESENS",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can produce each present form of German's verb for “to be” on its own — bin, bist, ist, sind, seid — and say that I am tired.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C16-ich-bin",
+    "GE-C16-du-bist",
+    "GE-C16-er-ist",
+    "GE-C16-wir-sind",
+    "GE-C16-ihr-seid",
+    "GE-C16-sie-sind",
+    "GE-C16-muede"
+  ]
+}

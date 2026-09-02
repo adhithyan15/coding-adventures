@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C26-sitzen
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 790
-chapter: 26
+chapter: 28
 type: word
 headword: sitzen
 gloss: to sit — the same inherited word as English sit, respelt by the other branch of the shift that separated helfen from help
@@ -67,7 +67,7 @@ hilfst*.
 So "strong" is a fact about a verb's **past**; the *du*/*er* break is a separate
 habit only some strong verbs have.
 
-Chapter 25 gave two ways to say you like something: **ich mag** with a thing,
+The doing verbs gave two ways to say you like something: **ich mag** with a thing,
 **gern** hung on a verb. This verb takes the second.
 
 > **Ich sitze gern.** — "I like sitting."
@@ -81,7 +81,7 @@ inherited word — Old English *sittan*, Old High German *sizzen*.
 The second, High German shift moved Germanic **p** to **f** in *helfen*. It
 moved Germanic **t** just as hard, to **z** (said *ts*) or **ss**: *sittan* →
 **sitzen**, *water* → **Wasser**, *eat* → **essen**, *ten* → **zehn**, *bite* →
-**beißen**. Chapter 11 handed you *Wasser* and Chapter 6 handed you *zehn* long
+**beißen**. The food lesson handed you *Wasser* and the first numbers handed you *zehn* long
 before there was a name for what had happened to them.
 
 Under both lies PIE ***\*sed-***, "to sit," one of the family's great providers.
@@ -105,7 +105,7 @@ Latin *sedēre* gives **session**, **sedentary** and **preside**; Latin *sedēs*
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-SITZEN-02, GE-ETYMON-SITZEN-03, GE-GRAMMAR-STRONG-VOWEL-09, GE-LEX-HELFEN-07, GE-GRAMMAR-GERN-11] -->
 
 [PAUSE 3s] Give the *du* and *er* forms of *sitzen*. (***Du sitzt, er sitzt*** —
-no break.) Which verb from Chapter 25 does break, and how? (***Helfen*** — *du
+no break.) Which of the doing verbs does break, and how? (***Helfen*** — *du
 hilfst*.) Which sound did the second shift turn German's **z** and **ss** out
 of? (An old **t**.) Name two pairs from that branch. (**Wasser/water**,
 **essen/eat**, **zehn/ten**.) Say you like sitting. (***Ich sitze gern***.)

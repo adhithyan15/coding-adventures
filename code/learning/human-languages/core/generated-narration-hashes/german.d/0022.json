@@ -1,15 +1,15 @@
 {
   "language": "german",
   "chapter": 22,
-  "sourceHash": "fnv1a64:aeba7c3ecb9a7a16",
+  "sourceHash": "fnv1a64:924dae033729a0ac",
   "lessonIds": [
-    "GE-C22-hund-katze"
+    "GE-C20-entschuldigung"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "german/narration/ch22.txt",
   "json": "german/narration/ch22.json",
-  "textHash": "fnv1a64:015dca0f2ba368b5",
-  "jsonHash": "fnv1a64:0e037f26c07cb9b6",
+  "textHash": "fnv1a64:62679db181eec2e9",
+  "jsonHash": "fnv1a64:7d0e92cdbd6b6d17",
   "findings": []
 }

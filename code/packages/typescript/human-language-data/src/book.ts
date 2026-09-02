@@ -1042,6 +1042,18 @@ function renderMarkdown(
       quote.push(line.slice(2));
       continue;
     }
+    // A line that is just `>` is markdown's blank line INSIDE a blockquote: it
+    // separates two quoted paragraphs. It does not start with "> ", so without
+    // this branch it fell through to the paragraph path and was emitted as a
+    // literal `>` between two `quote` environments -- a stray character that
+    // reached readers in 67 generated chapters across 13 books before anyone
+    // read a compiled page and saw it. Treat it as the separator it is.
+    if (line.trim() === ">") {
+      flushParagraph();
+      closeList();
+      flushQuote();
+      continue;
+    }
     if (quote.length > 0 && /^\s+/.test(line)) {
       quote.push(line.trim());
       continue;

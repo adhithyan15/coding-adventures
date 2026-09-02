@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C31-fuss",
     "language": "german",
-    "chapter": 31,
+    "chapter": 33,
     "sequence": 990,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:4f96d4bd25ac7568"
+    "sourceHash": "fnv1a64:2b047032c098449c"
   },
   "findings": []
 }

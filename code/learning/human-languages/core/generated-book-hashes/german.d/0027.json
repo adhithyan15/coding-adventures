@@ -1,12 +1,12 @@
 {
   "language": "german",
   "chapter": 27,
-  "sourceHash": "fnv1a64:c327e01c0746d6e7",
+  "sourceHash": "fnv1a64:a18de0c6f9243981",
   "lessonIds": [
-    "GE-C27-gehen",
-    "GE-C27-laufen",
-    "GE-C27-oeffnen",
-    "GE-C27-schliessen"
+    "GE-C25-nehmen",
+    "GE-C25-fragen",
+    "GE-C25-helfen",
+    "GE-C25-moegen-lieben"
   ],
-  "tex": "german/book/chapters/ch27-moving-verbs.tex"
+  "tex": "german/book/chapters/ch27-doing-verbs.tex"
 }

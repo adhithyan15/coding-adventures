@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C16-haeufig-unregelmaessig",
+    "language": "german",
+    "chapter": 17,
+    "sequence": 410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f3631990762151e"
+  },
+  "findings": []
+}

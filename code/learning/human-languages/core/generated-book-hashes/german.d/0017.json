@@ -1,11 +1,16 @@
 {
   "language": "german",
   "chapter": 17,
-  "sourceHash": "fnv1a64:9a11589bb4e3b607",
+  "sourceHash": "fnv1a64:9eff1a4cf258d12f",
   "lessonIds": [
-    "GE-C17-kopf",
-    "GE-C17-kopf-haupt",
-    "GE-C17-hand"
+    "GE-C16-ich-war",
+    "GE-C16-du-warst",
+    "GE-C16-er-war",
+    "GE-C16-wir-waren",
+    "GE-C16-drei-wurzeln",
+    "GE-C16-suppletion",
+    "GE-C16-haeufig-unregelmaessig",
+    "GE-C16-war-practice"
   ],
-  "tex": "german/book/chapters/ch17-head-and-hand.tex"
+  "tex": "german/book/chapters/ch17-drei-wurzeln.tex"
 }

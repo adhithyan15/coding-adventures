@@ -1,18 +1,17 @@
 {
   "language": "german",
   "chapter": 31,
-  "sourceHash": "fnv1a64:ce32c5ddfd94daaf",
+  "sourceHash": "fnv1a64:7988dbf34b4221cf",
   "lessonIds": [
-    "GE-C31-arm",
-    "GE-C31-finger",
-    "GE-C31-fuss",
-    "GE-C31-herz"
+    "GE-C29-freund",
+    "GE-C29-freundin",
+    "GE-C29-familie"
   ],
-  "voiceLessons": 4,
-  "drivablePrefix": 4,
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
   "text": "german/narration/ch31.txt",
   "json": "german/narration/ch31.json",
-  "textHash": "fnv1a64:d94003c2bce0d255",
-  "jsonHash": "fnv1a64:06f1588eda30f848",
+  "textHash": "fnv1a64:62dc768b6804e364",
+  "jsonHash": "fnv1a64:e64ed9954b50b293",
   "findings": []
 }

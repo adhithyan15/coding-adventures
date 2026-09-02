@@ -1,0 +1,15 @@
+{
+  "id": "TE-EXT-78-YESNO",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask a Telugu yes-or-no question, say I do not know, say I did not understand, and ask whether somebody is there.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C78-isit",
+    "TE-C78-doyouknow",
+    "TE-C78-dontknow",
+    "TE-C78-didntunderstand",
+    "TE-C78-isthere"
+  ]
+}

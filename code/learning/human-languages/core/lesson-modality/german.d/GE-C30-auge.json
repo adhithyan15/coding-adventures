@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C30-auge",
     "language": "german",
-    "chapter": 30,
+    "chapter": 32,
     "sequence": 930,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:71265027dead60e9"
+    "sourceHash": "fnv1a64:cfb56e43fa6b0e35"
   },
   "findings": []
 }

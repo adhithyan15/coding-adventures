@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C75-before",
+    "language": "telugu",
+    "chapter": 75,
+    "sequence": 2610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df965bf95585107d"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:340dec2b9c5735b1",
+  "lessonIds": [
+    "TE-C78-isit",
+    "TE-C78-doyouknow",
+    "TE-C78-dontknow",
+    "TE-C78-didntunderstand",
+    "TE-C78-isthere"
+  ],
+  "tex": "telugu/book/chapters/ch78-yes-or-no.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C76-bad",
+    "language": "telugu",
+    "chapter": 76,
+    "sequence": 2640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9405c3c878e3e101"
+  },
+  "findings": []
+}

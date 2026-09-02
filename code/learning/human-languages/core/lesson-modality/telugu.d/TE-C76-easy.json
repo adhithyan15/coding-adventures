@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C76-easy",
+    "language": "telugu",
+    "chapter": 76,
+    "sequence": 2660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e1e2e9598847cdb9"
+  },
+  "findings": []
+}

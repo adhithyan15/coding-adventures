@@ -1,0 +1,6 @@
+{
+  "language": "telugu",
+  "chapter": 78,
+  "output": "telugu/book/chapters/ch78-yes-or-no.tex",
+  "scriptSet": "telugu-comparisons"
+}

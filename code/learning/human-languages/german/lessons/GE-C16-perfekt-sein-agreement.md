@@ -1,60 +1,96 @@
 ---
+schema_version: 2
 id: GE-C16-perfekt-sein-agreement
-sequence: 330
-chapter: 16
+spine_node: SPINE-TALK-ABOUT-PAST
+sequence: 460
+chapter: 18
 type: grammar
-headword: gegangen — no agreement in the perfect
-gloss: German keeps one participle form for every subject
+headword: gegangen
+gloss: no agreement in the perfect — one participle for every subject, where French has four
 concept_tag: GE-PERFECT-NO-AGREEMENT
-prerequisites: [GE-C16-perfekt-sein]
+prerequisites: [GE-C16-perfekt-sein-ausnahmen]
 sounds: []
 roots: [germanic-participle-agreement]
-etymology_hook: "German lost participle agreement inside the perfect even though attributive participles still take adjective endings"
-est_minutes: 4
-reviews_of: [GE-C16-perfekt-sein, GE-C16-sein]
+etymology_hook: "Old High German did inflect the participle here and modern German dropped it, so the one place German is simpler than French is a loss rather than a design"
+duration:
+  max_seconds: 185
+requires:
+  knowledge: [GE-GRAMMAR-PERFEKT-SEIN-01, GE-GRAMMAR-PERFEKT-SEIN-AUSNAHMEN-01, GE-GRAMMAR-SEIN-ER-IST-01, GE-GRAMMAR-SEIN-WIR-SIND-01]
+introduces:
+  knowledge: [GE-GRAMMAR-PERFEKT-KEINE-KONGRUENZ-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [GE-CULTURE-PERFEKT-GERMANISCH-01]
+practises:
+  knowledge: [GE-GRAMMAR-PERFEKT-KEINE-KONGRUENZ-01, GE-GRAMMAR-PERFEKT-SEIN-01, GE-GRAMMAR-PERFEKT-SEIN-AUSNAHMEN-01, GE-GRAMMAR-SEIN-ER-IST-01, GE-GRAMMAR-SEIN-WIR-SIND-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, presentational]
+strands: [language-focus, meaning-input]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C16-perfekt-sein, GE-C16-perfekt-sein-ausnahmen]
 ---
 
-# Gegangen — no agreement in the perfect
+# gegangen — the participle that never changes
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-PERFEKT-SEIN-01, GE-GRAMMAR-SEIN-ER-IST-01] -->
 
-[PAUSE 2s] German and French both split their compound past between “have” and
-“be,” but their participles behave differently.
+[PAUSE 2s] French draws the same *have*-against-*be* line German does. Here is
+the place the two languages part company, and German comes out easier.
 
-| subject | French | German |
+## Grammar Lens: German agrees with nothing here
+<!-- hl-knowledge: introduces=[GE-GRAMMAR-PERFEKT-KEINE-KONGRUENZ-01]; assesses=[GE-GRAMMAR-SEIN-WIR-SIND-01] -->
+
+> Inside the perfect, the German participle takes **no ending at all**.
+> *Gegangen* is *gegangen* for every person, number and gender.
+
+| | French | German |
 |---|---|---|
-| he | il est **allé** | er ist **gegangen** |
-| she | elle est **allée** | sie ist **gegangen** |
-| they | ils sont **allés** | sie sind **gegangen** |
+| he went | *il est **allé*** | *er ist **gegangen*** |
+| she went | *elle est **allée*** | *sie ist **gegangen*** |
+| they went | *ils sont **allés*** | *sie sind **gegangen*** |
 
-In the German perfect, **gegangen never changes** for person, number, or gender.
-French preserves adjective-like agreement; German lost it in this position.
+French makes the participle agree with its subject and spells the agreement out
+three different ways. German changes the helper — *ist*, *sind* — and leaves the
+participle exactly where it found it.
 
-German participles still inflect when they stand before a noun as adjectives:
+Old High German did inflect it here, at least some of the time. Modern German
+lost that, along with most of its other adjective-like endings in this position.
+So the simplicity is not a design; it is an erosion, and German happens to have
+come out ahead.
 
-- der angekommen**e** Zug — the arrived train;
-- die eingeschlafen**e** Katze — the fallen-asleep cat.
+## Why it's said this way
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-PERFEKT-KEINE-KONGRUENZ-01, GE-GRAMMAR-PERFEKT-SEIN-AUSNAHMEN-01] -->
 
-So the participle did not lose every adjective ending everywhere. It is
-specifically the perfect construction where agreement disappeared.
+It would be easy to assume German copied this split from Latin, the way it
+borrowed so much else. It did not.
 
-Old High German varied in this position. Modern German simplified it to one
-unchanging form.
+The *haben*-perfect and the *sein*-perfect are **native Germanic developments**.
+They grew up alongside the Romance ones rather than out of them: neighbouring
+languages drifting the same way over centuries of contact, the same areal spread
+that pushed the simple past out of everyday speech in French, German and Italian
+together.
 
-The *haben/sein* split is a native Germanic development, not a borrowing from
-Latin. It grew alongside neighbouring Romance systems through centuries of
-contact. The **auxiliary split** is parallel; the **agreement outcome** differs.
+Two things to carry forward, and they point in opposite directions:
+
+- the **split** between the two helpers is shared with French;
+- the **agreement** is not.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-PERFEKT-KEINE-KONGRUENZ-01, GE-GRAMMAR-SEIN-ER-IST-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: “er ist gegangen; sie ist gegangen”]
-- [YOU SAY: “wir sind gegangen — same participle”]
-- [YOU SAY: “der angekommene Zug — adjective ending returns”]
+- [YOU SAY: "er ist gegangen; sie ist gegangen; sie sind gegangen"]
+- [YOU SAY: the participle, unchanged, three times — "gegangen, gegangen, gegangen"]
+- [YOU SAY: the comparison — "elle est allée … sie ist gegangen"]
+
+[REPEAT x2] "sie ist gegangen; sie sind gegangen."
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-PERFEKT-KEINE-KONGRUENZ-01, GE-GRAMMAR-PERFEKT-SEIN-01] -->
 
-[PAUSE 3s] Does the participle agree inside the German perfect? (**No**.) Where
-can it still take endings? (**Before a noun as an adjective**.) Does French
-agree? (**Yes**.) Did German inherit its split from Latin? (**No**; it developed
-in parallel.)
+[PAUSE 3s] Does the German participle agree with its subject in the perfect?
+(**No** — never.) What changes instead? (**The helper** — *ist*, *sind*.) Does
+French agree? (**Yes**.) Did German take this split from Latin? (**No** — it
+grew in parallel.) Next: the one place a German participle does take an ending.

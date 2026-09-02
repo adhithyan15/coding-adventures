@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C24-schreiben
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 740
-chapter: 24
+chapter: 26
 type: word
 headword: schreiben
 gloss: to write — the one verb in this chapter German did not inherit but borrowed, from Latin scribere
@@ -77,7 +77,7 @@ because runes were cut; German **reißen** and **ritzen** are its relatives. Two
 languages, two writing-words, both meaning *scratch*. Latin's verb reached
 English anyway: **scribe**, **script**, **describe**, **transcript**.
 
-And one closes a circle from Chapter 17. German **Hand** has **no Latin
+And one closes a circle back to **die Hand**. German **Hand** has **no Latin
 cousin** — Latin says *manus* — yet *manus* reached German as a loan:
 **Manuskript**. *Manu-* is *manus*, the hand; *-skript* is *scrīptum*, this
 verb. A **Manuskript** is written *by hand*: the Latin hand-word German never

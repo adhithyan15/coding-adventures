@@ -3,15 +3,15 @@ schema_version: 2
 id: GE-C31-herz
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 1000
-chapter: 31
+chapter: 33
 type: word
 headword: das Herz
-gloss: heart — the last name from Chapter 17's table, closing it with the same k-to-h Grimm's law swap already heard on hören and Hund
+gloss: heart — the last name from the *Hand* table, closing it with the same k-to-h Grimm's law swap already heard on hören and Hund
 concept_tag: GE-BODY-HEART
 prerequisites: [GE-C31-fuss, GE-C17-hand, GE-C26-hoeren, GE-C22-hund-katze]
 sounds: [herz-short-e]
 roots: [germanic-hertan, pie-kerd]
-etymology_hook: "Herz is Germanic *hertan, cousin of English heart, from PIE *ḱērd- — Grimm's law turning the old k into Germanic h, the same swap already heard on hören/akoúein and Hund/canis, now closing the table Chapter 17 opened: Hand, Arm, Finger, Fuß, Herz, all five finally taught"
+etymology_hook: "Herz is Germanic *hertan, cousin of English heart, from PIE *ḱērd- — Grimm's law turning the old k into Germanic h, the same swap already heard on hören/akoúein and Hund/canis, now closing the table the *Hand* lesson opened: Hand, Arm, Finger, Fuß, Herz, all five finally taught"
 duration:
   max_seconds: 260
 requires:
@@ -31,12 +31,12 @@ variety: standard-contemporary
 reviews_of: [GE-C31-fuss, GE-C31-finger, GE-C31-arm, GE-C17-hand, GE-C26-hoeren, GE-C22-hund-katze]
 ---
 
-# das Herz — Chapter 17's list, complete at last
+# das Herz — the body list, complete at last
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-FUSS-02, GE-LEX-HAND-02] -->
 
-[PAUSE 2s] Chapter 17 printed a five-word table and taught you one of them.
+[PAUSE 2s] The *Hand* lesson printed a five-word table and taught you one of them.
 This lesson teaches the fifth and closes it.
 
 ## You'll want to know: das Herz
@@ -60,13 +60,13 @@ the *z* said *ts*, exactly as in *Katze*.
 
 **Herz** is Proto-Germanic ***\*hertan***, cousin of English **heart**, from
 Proto-Indo-European ***\*ḱērd-***. The opening consonant is Grimm's law again
-— old **k** became Germanic **h** — the identical step Chapter 26 showed on
-**hören** (against Greek *akoúein*, English *acoustic*) and Chapter 22 showed
-on **Hund** (against Latin *canis*). Three separate words, one law, heard a
+— old **k** became Germanic **h** — the identical step already heard on
+**hören** (against Greek *akoúein*, English *acoustic*) and on **Hund**
+(against Latin *canis*). Three separate words, one law, heard a
 third time: *k* stays *k* in the languages that didn't shift, and softens to
 *h* in every Germanic one.
 
-Chapter 17's five-word list is finally complete. **Hand** was taught that chapter;
+That five-word list is finally complete. **Hand** was taught that chapter;
 **Arm**, **Finger**, **Fuß** and now **Herz** waited fourteen chapters for
 their turn. All five are native Germanic, all five are direct cousins of
 their English translations, and not one of them was borrowed from anywhere.
@@ -96,7 +96,7 @@ words, four different sound-law stories, and not one of them borrowed.
 
 [PAUSE 3s] Give "heart" with its article and plural. (**Das Herz, die
 Herzen**.) Which two earlier words showed the same Grimm's-law *k → h* swap?
-(**Hören** and **Hund**.) Name all five words from Chapter 17's original
+(**Hören** and **Hund**.) Name all five words from that original
 table, now that all five are taught. (**Hand, Arm, Finger, Fuß, Herz**.) Which
 one breaks the chapter's masculine pattern, and how? (**Herz** — it is
 **neuter**.)
