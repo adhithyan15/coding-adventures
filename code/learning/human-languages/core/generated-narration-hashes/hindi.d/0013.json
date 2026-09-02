@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 13,
-  "sourceHash": "fnv1a64:f0eda9d47d4d601f",
+  "sourceHash": "fnv1a64:3cb700373dd342e3",
   "lessonIds": [
     "HI-C13-sir",
     "HI-C13-haath",
@@ -12,7 +12,7 @@
   "drivablePrefix": 2,
   "text": "hindi/narration/ch13.txt",
   "json": "hindi/narration/ch13.json",
-  "textHash": "fnv1a64:8752ddf5376ceb80",
-  "jsonHash": "fnv1a64:a5abdb32dffea46e",
+  "textHash": "fnv1a64:d8463da90f28c7a3",
+  "jsonHash": "fnv1a64:b3697092597658c2",
   "findings": []
 }

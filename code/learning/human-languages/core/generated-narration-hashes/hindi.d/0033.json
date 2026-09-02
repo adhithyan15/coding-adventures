@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 33,
-  "sourceHash": "fnv1a64:53683873bc46b2b8",
+  "sourceHash": "fnv1a64:3e3045f0a63c8964",
   "lessonIds": [
     "HI-C33-shubh-dopahar"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "hindi/narration/ch33.txt",
   "json": "hindi/narration/ch33.json",
-  "textHash": "fnv1a64:749b59cbbde21161",
-  "jsonHash": "fnv1a64:f5676bd2a067c68c",
+  "textHash": "fnv1a64:a6e29d08595577b9",
+  "jsonHash": "fnv1a64:c80979c1171cc795",
   "findings": []
 }

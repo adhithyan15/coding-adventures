@@ -2,7 +2,7 @@
   "chapter": 2,
   "title": "Give your name",
   "label": "ch:urdu-name",
-  "canDo": "I can say my name in Urdu in one sentence, keeping hai at the end where Urdu puts it.",
+  "canDo": "I can say my name in Urdu in one sentence, keeping hai at the end where Urdu puts it. I can write alif, and say both directions a Nastaliq word runs in.",
   "spineNodes": [
     "SPINE-EXCHANGE-NAMES"
   ],

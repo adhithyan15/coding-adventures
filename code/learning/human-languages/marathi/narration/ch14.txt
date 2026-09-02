@@ -1,194 +1,226 @@
-Marathi, chapter 14: Friend and Family.
-6 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Marathi, chapter 14: The Core Verbs.
+6 lessons. All 6 can be done entirely by ear.
 
 
 Lesson 1 of 6.
-मित्र (mitra) — a friend, and a very old bond.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+असणे (asṇe) — "to be," and the word your sentence ends on.
 
 Warm-up.
 [pause 2 seconds]
-You can ask for bhākarī now. This chapter turns from what you'd request to who you'd share it with.
+You have already said it: mājhaṁ nāv … āhe. Now meet the verb that form belongs to, and notice where Marathi insists on putting it.
 
-You'll want to know: मित्र.
-मित्र — mitra — friend (masculine).
+You'll want to know: असणे and its present आहे.
+असणे — asṇe — to be.
+The ending -णे (-ṇe) is the Marathi infinitive, the same ending as bolṇe "to speak." Its present tense is short, irregular, and already yours: आहे (āhe) — "am, is, are."
+[a table of 3 rows, read aloud]
+who: मी (I). Marathi: आहे. said: āhe.
+who: तू (you, familiar). Marathi: आहेस. said: āhes.
+who: तुम्ही (you, respectful). Marathi: आहात. said: āhāt.
 
-The letters in this word.
-Two things worth pausing on. ि, the short i vowel sign, is new — written before the consonant it belongs to but said after it, so मि is read mi, not im. And त्र is त joined to र by a halant, the same conjunct mechanism as punhā's न्हा, just a different pair of letters. Mi-tra.
+Sounds you'll need: अ, स, णे and आ, हे.
+अ is the bare vowel a; स is sa; णे is the retroflex ण ṇa carrying the -e stroke — a-sa-ṇe. आ is that first letter with an upright stroke added, the long ā. हे is ह ha with the same -e stroke: ā-he.
 
-The word, taken apart — a friend, and a covenant before that.
-मित्र is a learned borrowing straight from Sanskrit मित्र mitra — taken up whole, not worn down by centuries of sound change the way most everyday words are. Its root is Indo-European mey-, "to bind," and the same word named a god: Avestan Mithra and Old Persian Mithra were divine witnesses to oaths — the bond itself, personified, before the word settled into ordinary Sanskrit as "friend."
+The word, taken apart — the oldest verb in the family.
+Sanskrit's word for "is" was अस्ति ásti, sitting on the stem as-, and that stem goes back to the Indo-European root h₁es-. It surfaces almost everywhere the family reaches: Latin est, Greek estí, German ist, and English is. Asṇe is built straight on it.
+आहे itself is the contested piece. Some trace it to ásti directly; others route it through a Middle Indo-Aryan verb acchai "stays, remains." The family is not in doubt, the exact line of descent is — so treat it as an open question rather than a settled fact.
 
-Grammar Lens: taken up whole, not worn down.
-Sanskrit-descended Marathi words come in two kinds: a tatsama, borrowed directly with its Sanskrit shape mostly intact — मित्र (mitra) is one — and a tadbhava, one that passed through centuries of Prakrit sound change and came out reshaped. भाकरी was neither: it never touched Sanskrit at all. This chapter will show both a tatsama and a tadbhava for family words, so you can hear the difference.
+Grammar Lens: the sentence ends on आहे.
+English slots is into the middle of a sentence: "My name is Sara." Marathi holds it back to the very end:
+माझं नाव सारा आहे — mājhaṁ nāv Sārā āhe — piece by piece, "my name Sara is."
+That is the rule for every Marathi verb, and āhe is where it becomes unmissable. Whatever else the sentence carries, the verb closes it.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: mitra — friend]
+[your turn — say: "asṇe" — to be — then its present, "āhe"]
 [pause 8 seconds for the answer]
-[your turn — say: what its root meant before "friend" — "to bind"]
+[your turn — say: the three persons — "mī āhe … tū āhes … tumhī āhāt"]
 [pause 8 seconds for the answer]
-[your turn — name: the god-name that shares this root — Mithra]
-[pause 8 seconds for the answer]
-[your turn — say: mitra, then bhākarī — a learned word beside a native one whose own root went no further back than "a heap, a lump"]
-[pause 8 seconds for the answer]
-[your turn — recall: Chapter 13's four requests and their three genders — pāṇī neuter, chahā masculine, dūdh neuter, bhākarī feminine]
+[your turn — say: your own name in Marathi order — "mājhaṁ nāv … āhe"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What did मित्र (mitra)'s root mean before "friend"? (To bind.) What god-name shares that root? (Mithra.) Is मित्र (mitra) a tatsama or a tadbhava? (Tatsama — taken up whole from Sanskrit.)
-Sources: Wiktionary: मित्र (mitra).
+What is the infinitive behind āhe? (असणे, asṇe.) Where does a Marathi verb stand? (Last — the sentence closes on it.) Which everyday English word is ásti's own cousin? (Is.) Next: a verb that changes shape according to who is speaking.
 
 
 Lesson 2 of 6.
-One step later — retrieve मित्र (mitra).
+जाणे (jāṇe) — "to go," and a present tense that gives you away.
 
 Warm-up.
-[pause 3 seconds]
-Say the Marathi word for friend before you uncover it: मित्र (mitra).
+[pause 2 seconds]
+Say "my name is …" once more, and hear where āhe lands. Every verb from here obeys that same rule. This one adds a second rule English has no use for.
 
-What you've built.
-Its old root meant to bind. Marathi took the Sanskrit form up whole, so it is a tatsama, not a word worn down through ordinary sound change.
+You'll want to know: जाणे.
+जाणे — jāṇe — to go.
+Strip the infinitive ending -णे and the stem is जा- jā-. On that stem Marathi builds the everyday present: जातो (jāto) and जाते (jāte).
+Both mean "I go." Neither is more correct than the other. Which one you may say is decided by something the English sentence never mentions.
+
+Sounds you'll need: जा, णे.
+ज is ja, and the upright stroke after it is the long ā — together जा jā. णे you met last lesson: retroflex ण with the -e stroke. Two syllables, jā-ṇe, with the tongue curled back for that second one.
+
+Grammar Lens: the ending declares who is speaking.
+English "I go" hides the speaker completely — a man and a woman say the same two words. Marathi will not let you:
+[a table of 4 rows, read aloud]
+speaking of: a man, of himself. Marathi: मी जातो. said: mī jāto.
+speaking of: a woman, of herself. Marathi: मी जाते. said: mī jāte.
+speaking of: a man, "he goes". Marathi: तो जातो. said: to jāto.
+speaking of: a woman, "she goes". Marathi: ती जाते. said: tī jāte.
+The -तो / -ते swap is the whole mechanism, and it runs through every verb: bolto / bolte, yeto / yete. Hindi marks gender on its verbs too, but Marathi makes it unavoidable in the plainest sentence a beginner can build. From your first "I go," you are choosing.
+Notice also what is missing: no separate word for "am." The ending carries the action, the person, and the gender at once.
 
 Guided Practice.
 [pause 1 second]
-Answer once, then repair only the missing piece.
-[question — say your answer, then pause 18 seconds]
-Give the word for friend, the old root meaning, and its borrowing type.
+[your turn — say: "jāṇe" — to go — then the stem, "jā-"]
+[pause 8 seconds for the answer]
+[your turn — say: "I go" in your own gender — "mī jāto" or "mī jāte"]
+[pause 8 seconds for the answer]
+[your turn — say: the pair — "to jāto … tī jāte"]
+[pause 8 seconds for the answer]
 
 Wrap-up Recall.
-[pause 2 seconds]
-मित्र (mitra) — bind — tatsama. Stop here; the next lesson adds family.
+[pause 3 seconds]
+What is the stem inside jāṇe? (जा-, jā-.) Which two endings split the present, and by what? (-तो / -ते, by the gender of the one the verb is about.) Can a Marathi speaker say "I go" without revealing it? (No — the choice is forced.) Next: the same ancient root, pointed the other way.
 
 
 Lesson 3 of 6.
-कुटुंब (kutumb) (kuṭumb) — family, and a gender Hindi disagrees with.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+येणे (yeṇe) — "to come," the other half of "to go".
 
 Warm-up.
 [pause 2 seconds]
-मित्र (mitra) was taken up whole from Sanskrit, not worn down. This next word was too — and it names the group your friend belongs to as well.
+Say "I go" in your own gender: mī jāto or mī jāte. Hold that shape. The next verb is closer to it than it sounds.
 
-You'll want to know: कुटुंब.
-कुटुंब (kutumb) — kuṭumb — family (neuter).
+You'll want to know: येणे.
+येणे — yeṇe — to come.
+Same infinitive ending, same machinery: stem ये- ye-, present येतो (yeto) and येते (yete), split by gender exactly as jāto / jāte was.
+You met yeto in Chapter 4 as a farewell — Marathi takes its leave by saying "I come," promising the return rather than announcing the departure.
 
-The letters in this word.
-One new mark: ु, the short u vowel sign, a small hook under the consonant — the short partner of dūdh's long ू. ट you have informally from marāṭhī; ं the familiar anusvāra. Ku-ṭu-mb.
+Sounds you'll need: ये, णे.
+य is ya, a soft English y as in yes. Add the -e stroke above and you have ये ye — the same stroke you have been putting on णे and on हे in āhe. Two syllables: ye-ṇe.
 
-The word, taken apart — borrowed whole, origin disputed.
-कुटुंब (kutumb) is a tatsama, a learned borrowing from Sanskrit कुटुम्ब kuṭumba, "household, family" — like मित्र (mitra), taken up whole rather than worn down by sound change. Unlike मित्र (mitra), its story does not reach a secure Indo-European root: a Dravidian origin for Sanskrit's own kuṭumba has been proposed, but it is not settled, so this lesson names the dispute rather than inventing a resolution.
-
-Grammar Lens: a gender Hindi disagrees with.
-The very same Sanskrit word carries two different genders in its two daughters: Marathi's कुटुंब (kutumb) (kuṭumb) is neuter, Hindi's कुटुंब (kutumb) (kuṭumb) is masculine. Both borrowed the identical tatsama; each language then had to assign it a gender inside its own system, and they assigned it differently. A word's gender is not carried in with its meaning — it is decided fresh by whichever language receives it.
+The word, taken apart — one root, two directions.
+Sanskrit had a verb of travelling, yā-, whose present was याति yāti "goes, travels." Middle Indo-Aryan turned that initial y- into a j-, giving Prakrit jāi — and that is Marathi जाणे (jāṇe).
+Now put a prefix on it. Sanskrit आ- ā- means "toward, hither," and आयाति āyāti is "travels toward here" — that is, comes. Worn down through the same centuries, āyāti is Marathi येणे (yeṇe).
+So going and coming are not two verbs in this family. They are one verb of travelling, and the only difference is a prefix meaning "this way." English keeps a faint echo of the same trick in go against in-coming, but it needs two separate roots to do what Sanskrit did with one.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: kuṭumb — family]
+[your turn — say: "yeṇe" — to come — then the stem, "ye-"]
 [pause 8 seconds for the answer]
-[your turn — state: its gender in Marathi against Hindi — neuter here, masculine there]
+[your turn — say: "I come" in your own gender — "mī yeto" or "mī yete"]
 [pause 8 seconds for the answer]
-[your turn — say: mitra, then kuṭumb — two tatsamas in a row]
-[pause 8 seconds for the answer]
-[your turn — recall: Chapter 13's own gender lineup — कुटुंब (kutumb) (kuṭumb)'s neuter joins पाणी and दूध, after bhākarī's feminine closed out all three genders in one chapter]
+[your turn — say: the derivation — "yāti … āyāti … yeṇe"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What gender is कुटुंब (kutumb) (kuṭumb) in Marathi, and how does that differ from Hindi? (Neuter here, masculine there — same borrowed word, different choice.) Is कुटुंब (kutumb) (kuṭumb)'s pre-Sanskrit origin settled? (No — a Dravidian source is proposed but disputed.)
-Sources: Wiktionary: कुटुंब (kutumb) (kuṭumb).
+What is the stem of yeṇe? (ये-, ye-.) Which Sanskrit root do jāṇe and yeṇe share? (yā-, to travel.) What single piece turns going into coming? (The prefix आ- ā-, "toward here.") Next: an infinitive that is also a noun, and the gender Hindi does not have.
 
 
 Lesson 4 of 6.
-One step later — retrieve कुटुंब (kutumb) (kuṭumb).
+खाणे (khāṇe) — "to eat," and Marathi's third gender.
 
 Warm-up.
-[pause 3 seconds]
-Say the Marathi word for family: कुटुंब (kuṭumb) (kutumb).
+[pause 2 seconds]
+Two infinitives so far: jāṇe, yeṇe. Say them. This third one is ordinary as a verb and quietly remarkable as a noun.
 
-What you've built.
-Marathi treats कुटुंब (kutumb) (kuṭumb) as neuter. Hindi assigns the same borrowed word masculine gender. Retrieve the Marathi choice, not a universal rule.
+You'll want to know: खाणे.
+खाणे — khāṇe — to eat.
+Stem खा- khā-, present खातो (khāto) and खाते (khāte) on the gendered pattern you already have.
+Its root is Sanskrit खादति khādati, "chews, eats" — a solidly Indo-Aryan word with no borrowing in its history. The -d- wore away on the road to Marathi; the long ā stayed.
+
+Sounds you'll need: खा, णे.
+ख is kha — a k with a genuine puff of breath after it, the sound in English kit said hard, not the k of skit. Marathi treats that puff as a different letter, not an accent. Add the long-ā stroke and the familiar णे: khā-ṇe.
+
+Grammar Lens: the infinitive is a neuter noun.
+खाणे (khāṇe) also simply means "eating" — the thing, not the act of doing it. Every -णे infinitive works this way; खाणंपिणं (khāṇaṁ-piṇaṁ), "eating and drinking," is how Marathi says food and drink.
+And as a noun it carries a gender — neuter, the third one. Hindi has two genders, masculine and feminine. Marathi kept all three that Sanskrit had, so words agreeing with a noun come in three shapes:
+[a table of 3 rows, read aloud]
+gender: masculine. "good": चांगला. said: chāṅglā.
+gender: feminine. "good": चांगली. said: chāṅglī.
+gender: neuter. "good": चांगलं. said: chāṅglaṁ.
+So "eating is good" is खाणं चांगलं आहे — khāṇaṁ chāṅglaṁ āhe, with the neuter ending twice over and the verb, as always, last.
 
 Guided Practice.
 [pause 1 second]
-Answer once, then repair only the missing piece.
-[question — say your answer, then pause 15 seconds]
-Give the Marathi word for family and its Marathi gender.
+[your turn — say: "khāṇe" — to eat — then "I eat" in your own gender]
+[pause 8 seconds for the answer]
+[your turn — say: the three shapes — "chāṅglā … chāṅglī … chāṅglaṁ"]
+[pause 8 seconds for the answer]
+[your turn — say: "eating is good" — "khāṇaṁ chāṅglaṁ āhe"]
+[pause 8 seconds for the answer]
 
 Wrap-up Recall.
-[pause 2 seconds]
-कुटुंब (kutumb) (kuṭumb) — family — neuter.
+[pause 3 seconds]
+What are the two things खाणे (khāṇe) means? (To eat, and eating as a noun.) How many genders does Marathi have, and how many does Hindi have? (Three against two — Marathi kept Sanskrit's neuter.) Which gender is an infinitive? (Neuter.) Next: a verb whose root you already own in a dozen English words.
 
 
 Lesson 5 of 6.
-भाऊ (bhāū) — brother, and this time the resemblance is real.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+पाहणे (pāhṇe) — "to see," a root you already own.
 
 Warm-up.
 [pause 2 seconds]
-मित्र (mitra) and कुटुंब (kutumb) (kuṭumb) were both taken up whole from Sanskrit. This next word was not — it was worn down, letter by letter, over centuries.
+Say "I eat" in your own gender — mī khāto or mī khāte. The next verb runs on the same endings, and on a root you have been using in English all your life without knowing it.
 
-You'll want to know: भाऊ.
-भाऊ — bhāū — brother (masculine).
+You'll want to know: पाहणे.
+पाहणे — pāhṇe — to see, to watch.
+Stem पाह- pāh-, present पाहतो (pāhto) and पाहते (pāhte). In everyday speech you will also hear बघणे (baghṇe) for the same job; pāhṇe is the one whose history repays digging.
 
-The letters in this word.
-One new letter: ऊ, the independent long ū, used here because a Marathi word cannot stack one vowel mark on top of another — after आ's ा, the second vowel needs its own full letter. भ you have from bheṭū. Bhā-ū.
+Sounds you'll need: पा, ह, णे.
+प is pa without the puff of breath that kha had. Add the upright stroke for long ā: पा pā. Then ह ha, and the णे you now know by heart. Three light syllables, pā-ha-ṇe, usually spoken as two: pāh-ṇe.
 
-The word, taken apart — worn down, but the family resemblance survives.
-भाऊ (bhāū) is a tadbhava — not borrowed whole like मित्र (mitra) or कुटुंब (kutumb) (kuṭumb), but the ordinary Prakrit-worn descendant of Sanskrit भ्रातृ bhrātṛ, three syllables ground down to two over a thousand years of speech. That root is Indo-European bʰréh₂tēr, and here the family resemblance to English is not a false friend — it is the real thing: brother, Latin frāter, and Sanskrit's own bhrātṛ are all the same word, worn down four different ways by four different languages.
+The word, taken apart — one root, a dozen English words.
+Sanskrit's verb for seeing was पश्यति paśyati, on the root paś-, and Marathi's pāhṇe descends from its prefixed form प्रपश्यति prapaśyati, "looks out at."
+Now the payoff. That paś- is the Indo-European root spek-, "to observe." Sanskrit dropped the s- and swapped the consonants around; Latin kept them in order as speciō, "I look." From the Latin side English inherited an enormous family, every one of them a cousin of pāhṇe:
+spectacle, inspect, respect, suspect, prospect, species, specimen, speculate, telescope, and — through Italian — spy.
+So a Marathi speaker asking you to pāhṇe something is asking you to inspect it, in the most literal ancestral sense the word has.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: bhāū — brother]
+[your turn — say: "pāhṇe" — to see — then "I see" in your own gender]
 [pause 8 seconds for the answer]
-[your turn — name: three languages that share this root — English, Latin, Sanskrit]
+[your turn — say: the derivation — "paśyati … prapaśyati … pāhṇe"]
 [pause 8 seconds for the answer]
-[your turn — say: the three so far — mitra, kuṭumb, bhāū]
+[your turn — say: four English cousins — "spectacle, inspect, species, spy"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is भाऊ (bhāū) a tatsama or a tadbhava? (Tadbhava — worn down by sound change, not borrowed whole.) Which English word is the very same word as भाऊ (bhāū)? (Brother.)
-Sources: Wiktionary: भाऊ (bhāū).
+What is the stem of pāhṇe? (पाह-, pāh-.) Which Sanskrit verb is it from? (पश्यति paśyati, in its prefixed form prapaśyati.) Name three English words from the same ancient root. (Spectacle, inspect, species, spy — any three.) Next: a verb Marathi mostly refuses to use, and what it says instead.
 
 
 Lesson 6 of 6.
-बहीण (bahīṇ) — sister, deliberately not English's cousin.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+माहीत असणे (māhīt asṇe) — "to know," which Marathi says sideways.
 
 Warm-up.
 [pause 2 seconds]
-Three words so far: mitra, kuṭumb, bhāū. Say them, and say which one is a genuine cousin of an English word. (Bhāū — brother.) Its pair is not so simple.
+Say "I go" and "I come" in your own gender — jāto or jāte, yeto or yete. Five verbs obeyed that pattern. This one refuses.
 
-You'll want to know: बहीण.
-बहीण — bahīṇ — sister (feminine).
+You'll want to know: माहीत असणे and जाणणे.
+माहीत असणे — māhīt asṇe — to know (everyday).
+जाणणे — jāṇṇe — to know (formal, literary).
+Marathi has an inherited verb for knowing and barely uses it. Everyday speech says māhīt asṇe, "to be known," built on asṇe.
 
-The letters in this word.
-Nothing new. ब from baraṃ, ह from namaskār, ी the familiar long ī, ण from every -णे verb. Ba-hī-ṇ.
+Sounds you'll need: मा, ही, त.
+म is ma; with the long-ā stroke, मा. ही is ह ha with the long -ī stroke, which leans forward ahead of its letter. त is ta: mā-hī-t.
 
-The word, taken apart — not sister's cousin.
-बहीण (bahīṇ) is a tadbhava, worn down like भाऊ (bhāū): Old Marathi bahiṇī, from Maharastri Prakrit bhaiṇī, from Sanskrit भगिनी bhaginī. There the resemblance to brother's pair ends. Bhaginī is traditionally connected to भज् bhaj-, "to share, to apportion" — a sister as one who shares in the household. That root has nothing to do with Indo-European swésōr, the ancestor of English sister. Two words that translate each other perfectly are, underneath, unrelated.
+Grammar Lens: knowledge comes to you, you do not do it.
+मला माहीत आहे — malā māhīt āhe — "I know."
+Word by word: "to me known is." Malā is "to me," and the knower sits there, not in the subject slot. Nobody acts; a fact is simply in your possession, and āhe closes the line.
+The same frame carries a language: मला मराठी येते — malā marāṭhī yete — "I know Marathi," literally "to me Marathi comes." Yete is feminine because the subject is मराठी, a feminine noun — not the speaker; a man says it too. The verb agrees with its subject, as always. Here the subject is not you.
 
-Grammar Lens: the chapter's whole shape, in two pairs.
-[a table of 2 rows, read aloud]
-word: मित्र, कुटुंब (kutumb) (mitra, kuṭumb). kind: tatsama. route: taken up whole from Sanskrit.
-word: भाऊ, बहीण (bhāū, bahīṇ). kind: tadbhava. route: worn down by Prakrit sound change.
-Notice, too, how each pair looks: मित्र (mitra) and कुटुंब (kutumb) (kuṭumb) carry conjuncts and marks a learner has to stop for; भाऊ (bhāū) and बहीण (bahīṇ) do not — plain consonants and vowels, the shape sound change tends to leave behind. And of the tadbhava pair, only भाऊ (bhāū) is a secure English cousin; बहीण (bahīṇ) is not.
+The word, taken apart — a loan beside an inheritance.
+माहीत is a loan: through Persian from Arabic māhiyat, "the particulars" — one of the administrative words the Deccan sultanates left in Marathi.
+जाणणे is pure inheritance: Sanskrit जानाति jānāti, root jñā-, from Indo-European gnō- — the root of English know, Latin nōscere (notice, recognize) and Greek gnōsis (diagnosis). Marathi kept the cousin and gave the daily work to the loan.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: all four — mitra, kuṭumb, bhāū, bahīṇ]
+[your turn — say: "malā māhīt āhe" — then literally, "to me known is"]
 [pause 8 seconds for the answer]
-[your turn — sort: which two are tatsama, which two are tadbhava]
+[your turn — say: "I know Marathi" — "malā marāṭhī yete"]
 [pause 8 seconds for the answer]
-[your turn — name: which sibling word is English's real cousin, and which is not — bhāū yes, bahīṇ no]
+[your turn — say: the inherited verb and its English cousin — "jāṇṇe … know"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is बहीण related to English sister? (No — a different Sanskrit root entirely.) Which sibling word is related to its English counterpart? (भाऊ, to brother.) Sort the chapter's four words into tatsama and tadbhava. (Mitra, kuṭumb — tatsama; bhāū, bahīṇ — tadbhava.) What did कुटुंब (kutumb)'s gender turn out to be, against Hindi's? (Neuter here, masculine there.) And what did मित्र (mitra)'s root mean before "friend"? (To bind.)
-Sources: Wiktionary: बहीण (bahīṇ); Wiktionary: भगिनी.
+Where does Marathi put the knower? (In the dative — malā, "to me.") Which verb finishes malā māhīt āhe, and where? (आहे, last.) Why yete in malā marāṭhī yete? (The subject is मराठी, feminine — agreeing with it, not the speaker.) Which know-verb was borrowed? (माहीत, through Persian.)

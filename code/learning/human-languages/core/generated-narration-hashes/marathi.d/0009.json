@@ -1,20 +1,24 @@
 {
   "language": "marathi",
   "chapter": 9,
-  "sourceHash": "fnv1a64:19ac63ce061a0f84",
+  "sourceHash": "fnv1a64:f9120d87a1f02a80",
   "lessonIds": [
-    "MR-R09-script-a-r3",
-    "MR-R09-script-b-r3",
-    "MR-R09-script-c-r3",
-    "MR-R09-script-d-r3",
-    "MR-C06-numbers-1-5",
-    "MR-C06-number-differences"
+    "MR-C02-naav",
+    "MR-C02-majhe",
+    "MR-C02-aahe",
+    "MR-C02-majhe-naav-aahe",
+    "MR-C02-tu-tumhi",
+    "MR-C02-kaay",
+    "MR-C02-tumche-naav-kaay-aahe",
+    "MR-C02-anand",
+    "MR-C02-practice",
+    "MR-R09-runway-tail-r2"
   ],
-  "voiceLessons": 6,
-  "drivablePrefix": 6,
+  "voiceLessons": 4,
+  "drivablePrefix": 0,
   "text": "marathi/narration/ch09.txt",
   "json": "marathi/narration/ch09.json",
-  "textHash": "fnv1a64:9f62d6e3963b4084",
-  "jsonHash": "fnv1a64:a0610e3d62cce7dd",
+  "textHash": "fnv1a64:4494f1e9cfc1a1f6",
+  "jsonHash": "fnv1a64:795884cf3dae09c7",
   "findings": []
 }

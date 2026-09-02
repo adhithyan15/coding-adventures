@@ -1,0 +1,27 @@
+{
+  "chapter": 28,
+  "title": "Too Dear: The Answer and the Counter",
+  "label": "ch:mw-bargain",
+  "canDo": "I can say that something is very expensive and ask for it a little cheaper, completing a three-turn bargaining exchange without learning a single new Devanagari sign.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "MW-C23-counter-four",
+    "kind": "four-skill-function-map",
+    "summary": "A strengthener, a softener, and a second asking word each arrive by ear before their spelling, join two source-printed lines, and close as a three-turn exchange scored separately in listening, speaking, reading, and writing.",
+    "assesses": [
+      "MW-LEX-GHANO-01",
+      "MW-SCRIPT-GHANO-01",
+      "MW-LEX-PRICE-ANSWER-01",
+      "MW-SCRIPT-PRICE-ANSWER-01",
+      "MW-LEX-THODU-01",
+      "MW-SCRIPT-THODU-01",
+      "MW-LEX-KARO-01",
+      "MW-SCRIPT-KARO-01",
+      "MW-LEX-BARGAIN-REQUEST-01",
+      "MW-SCRIPT-BARGAIN-REQUEST-01",
+      "MW-PERFORMANCE-BARGAIN-FOUR-SKILL-01"
+    ]
+  }
+}

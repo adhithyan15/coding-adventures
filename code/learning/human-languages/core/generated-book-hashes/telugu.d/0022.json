@@ -1,10 +1,9 @@
 {
   "language": "telugu",
   "chapter": 22,
-  "sourceHash": "fnv1a64:e7558e3b4b5d222e",
+  "sourceHash": "fnv1a64:a9f2338f9b0d7b70",
   "lessonIds": [
-    "TE-C22-pacha-pasupu",
-    "TE-S125-letter-ha"
+    "TE-C22-pacha-pasupu"
   ],
   "tex": "telugu/book/chapters/ch22-green-and-yellow.tex"
 }

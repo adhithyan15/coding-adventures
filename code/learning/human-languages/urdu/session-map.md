@@ -134,9 +134,9 @@ or three lessons after the word that first glossed its shape, and two review
 lessons per chapter re-surface everything readable so far. Run them one lesson
 per sitting in authored order and the spacing does the work of a review ledger.
 
-Two sittings are worth repeating rather than passing through once. **UR-W17-he**
+Two sittings are worth repeating rather than passing through once. **UR-W05-he**
 is the first letter taught in four positional faces, and its middle form reads
-as a different letter until the hand has made it several times. **UR-W18-pe**
+as a different letter until the hand has made it several times. **UR-W07-pe**
 teaches a shape that shrinks to a tooth when it joins while its three dots stay,
 which is the first time the reader has to identify a letter by what is added
 rather than by its outline.

@@ -2,57 +2,58 @@
 schema_version: 2
 id: ML-S129-letter-bha
 spine_node: SPINE-MEET-GREET
-sequence: 835
+sequence: 575
 delivery: script
-chapter: 36
+chapter: 25
 type: writing
 headword: "ഭ"
 gloss: the single character ഭ — recognised inside words you already say
 romanization: "bha"
-prerequisites: [ML-S128-vowel-sign-r]
+prerequisites: [ML-S124-letter-sa]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-128]
+  knowledge: [ML-SCRIPT-RECOG-124]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-129]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-128, ML-SCRIPT-RECOG-129]
+  knowledge: [ML-SCRIPT-RECOG-124, ML-SCRIPT-RECOG-129]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [ML-S128-vowel-sign-r]
+reviews_of: [ML-S124-letter-sa]
 ---
 
 # ഭ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-128] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-124] -->
 
-[PAUSE 1s] Before the new one: ൃ — what does it do?
+[PAUSE 1s] Before the new one: സ — what does it do?
 
-[PAUSE 2s] One character this time. One only — and it has been sitting in
-front of you on pages you have already read.
+[PAUSE 2s] One character this time. One only.
+It has been sitting in front of you on pages you have already read.
 
 ## Script you'll notice: ഭ
 <!-- hl-knowledge: introduces=[ML-SCRIPT-RECOG-129]; assesses=[] -->
 
 **ഭ** — *bha*.
 
-It is a **consonant** carrying its own *a*, and its sound is a *b* with a puff of breath after it — **bha**, not *ba*.
+It is a **consonant**, and in this script a consonant is never bare: it comes with an *a* already in it. So it is not *bh*, it is **bha**.
 
-Three words you have already used are built on it, and all three come from
-the Sanskrit layer.
+Its sound is a *b* with a puff of breath after it — **bha**, not *ba*. Two
+words already in your hands are built on it, and both come from the Sanskrit
+layer, which is the pattern this letter keeps.
 
-- **ശുഭ** *śubha* — good, auspicious — the first half of your evening and night greetings
-- **പ്രഭാതം** *prabhātaṁ* — dawn, inside **സുപ്രഭാതം** *suprabhātaṁ*
+- **ശുഭ** *śubha* — good, auspicious — the first half of the good-night
+  wish on the page before this one
 - **കുംഭം** *kuṁbhaṁ* — the month, met with the calendar
 
-Say each one and listen for the breath: *śu-bha*, *pra-bhā-taṁ*, *kuṁ-bhaṁ*.
+Say each one and listen for the breath: *śu-bha*, *kuṁ-bhaṁ*.
 
 ## Writing: ഭ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-129] -->
@@ -72,7 +73,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ഭ in the ones that have it]
 
-> ശുഭ  ·  പ്രഭാതം  ·  കുംഭം
+> ശുഭ  ·  കുംഭം  ·  ഭ
 
 - [YOU TRACE: ഭ three times, saying *bha* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ഭ once more]
@@ -81,4 +82,4 @@ and larger than it is printed.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-129] -->
 
 [PAUSE 3s] Which character is this — ഭ? What sound does it carry? (***bha***.)
-Which greeting of yours starts with it?
+Name one word you already say that contains it.

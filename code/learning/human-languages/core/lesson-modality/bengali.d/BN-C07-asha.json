@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C07-asha",
     "language": "bengali",
-    "chapter": 7,
-    "sequence": 420,
+    "chapter": 11,
+    "sequence": 660,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:9ba19014092357d3"
+    "sourceHash": "fnv1a64:49bde82f0cb3a65e"
   },
   "findings": []
 }

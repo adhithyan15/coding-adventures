@@ -1,18 +1,25 @@
 {
   "chapter": 16,
-  "title": "Heart",
-  "label": "ch:mr-heart",
-  "canDo": "I can name the heart in Marathi, name three English words that share its root, and say what makes it different from every other word this book has taken apart: it never drifted at all.",
+  "title": "Taking, Asking, Helping, Liking",
+  "label": "ch:mr-doing-verbs",
+  "canDo": "I can take, ask, help and say what I like and what I love in Marathi, build a fresh verb by putting करणे behind a noun, and say why मला मराठी आवडते has no room for me as its subject while मी प्रेम करतो does.",
   "spineNodes": [
-    "SPINE-CHECK-WELLBEING"
+    "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "MR-C13-hrudaya",
+    "lesson": "MR-C09-avadne",
     "kind": "production",
-    "summary": "The reader produces हृदय and its three secure English cousins — heart, cordial, cardiac — then sets it against वाचणे's drift from speaking to reading, समजणे's drift from waking to understanding, and डोळा's replacement of the old eye-word, naming हृदय as the one word among them that never drifted at all.",
+    "summary": "Say मला मराठी आवडते and hear that you are not its subject, set it against मी प्रेम करतो where you are, place both beside मला मराठी येते and मला मराठी समजते so one frame carries three meanings, and run the chapter's four verbs back with where each came from — Sanskrit ग्रह् beside English grab, विचार doing double duty as thought and question, Arabic मदद through Persian, and आवडणे with no Sanskrit ancestor to claim.",
     "assesses": [
-      "MR-LEX-HRUDAYA",
-      "MR-ETYMON-HRUDAYA-KERD"
+      "MR-LEX-GHENE",
+      "MR-ETYMON-GRAH-GRAB",
+      "MR-LEX-VICHARNE",
+      "MR-ETYMON-VICHAR-THINK-ASK",
+      "MR-LEX-MADAT-KARNE",
+      "MR-ETYMON-MADAT-ARABIC",
+      "MR-LEX-AVADNE",
+      "MR-GRAMMAR-DATIVE-LIKING",
+      "MR-LEX-PREM-KARNE"
     ]
   }
 }

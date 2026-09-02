@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "UR-W07-alif-madda",
+    "language": "urdu",
+    "chapter": 7,
+    "sequence": 255,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:eea2bf0b86d3a620",
+    "detachableSegments": [
+      "Script — the shape",
+      "The letters in this word"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

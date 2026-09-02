@@ -1,18 +1,20 @@
 {
   "language": "marathi",
   "chapter": 21,
-  "sourceHash": "fnv1a64:99ff5b9c4480379d",
+  "sourceHash": "fnv1a64:644f06b3ccbc457a",
   "lessonIds": [
-    "MR-A1F04-first-three-select",
-    "MR-A1F05-last-three-select",
-    "MR-A1F06-first-three-supported",
-    "MR-A1F07-first-three-spelling",
-    "MR-A1F08-last-three-supported",
-    "MR-A1F09-last-three-agreement",
-    "MR-A1F10-first-three-delayed",
-    "MR-A1F11-last-three-delayed",
-    "MR-A1F12-six-field-supported",
-    "MR-A1F13-six-field-independent"
+    "MR-R14-mitra-r2",
+    "MR-R14-kutumb-r2",
+    "MR-R14-siblings",
+    "MR-R14-eye-ear",
+    "MR-R14-mouth-nose",
+    "MR-R14-food",
+    "MR-R14-doing",
+    "MR-R14-mind",
+    "MR-R14-core",
+    "MR-R14-mitra-r3",
+    "MR-R14-numbers",
+    "MR-R14-kutumb-r3"
   ],
-  "tex": "marathi/book/chapters/ch21-a1-practical-form.tex"
+  "tex": "marathi/book/chapters/ch21-family-memory.tex"
 }

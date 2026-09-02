@@ -61,13 +61,38 @@ fn government_branch_member_recall_binds_member_with_citation() {
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
-    // The legislative branch is made up of Congress.
-    assert!(out.contains("\"M\":\"congress\""), "legislative -> congress: {out}");
-    // The answer carries the USA.gov citation as proof.
+
+    // JOINT BINDING: the answer AND its complete evidence, as one contiguous
+    // span. The assertions this replaces were the reason issue #13928 shipped
+    // unnoticed -- they checked `"M":"congress"` and, SEPARATELY, that the
+    // output mentioned usa.gov and `"trust":"authoritative"` somewhere. Two
+    // independent substring scans over one blob cannot tell WHICH answer the
+    // citation belongs to, so they passed while this library's only citation
+    // was a sentence about the EXECUTIVE branch attached to a LEGISLATIVE
+    // answer. Binding them together is what makes the test able to fail.
+    //
+    // Pinning the whole span also pins the two `cites` clauses added in
+    // #13928, in order and in full: delete either one, truncate any of the
+    // three sentences, or attach them to a different answer, and this fails.
     assert!(
-        out.contains("usa.gov/branches-of-government")
-            && out.contains("\"trust\":\"authoritative\""),
-        "carries the USA.gov citation: {out}"
+        out.contains(
+            "\"bindings\":{\"M\":\"congress\"},\"citations\":[{\"source\":\"The president, \
+             the vice president, and the president's cabinet are the members of the executive \
+             branch.\",\"locator\":\"https://www.usa.gov/branches-of-government\",\"trust\":\
+             \"authoritative\",\"corroborations\":[{\"source\":\"The legislative branch is made \
+             up of Congress:\",\"locator\":\"https://www.usa.gov/branches-of-government\"},\
+             {\"source\":\"The judicial branch includes the Supreme Court and other federal \
+             courts.\",\"locator\":\"https://www.usa.gov/branches-of-government\"}]}]"
+        ),
+        "legislative -> congress, carrying ALL THREE branch sentences: {out}"
+    );
+
+    // The sentence that actually supports THIS row must be present. Stated
+    // separately from the joint pin above because it is the specific
+    // regression #13928 fixed, and it should fail loudly and by name.
+    assert!(
+        out.contains("The legislative branch is made up of Congress:"),
+        "the row's OWN supporting sentence is present, not just a sibling branch's: {out}"
     );
 }
 

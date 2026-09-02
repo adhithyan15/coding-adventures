@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 15,
-  "output": "bengali/book/chapters/ch15-cloth-shirt-sari-glasses.tex",
+  "output": "bengali/book/chapters/ch15-three-words-no-new-pieces.tex",
   "unicodeScript": "Bengali",
   "scriptCommand": "bn"
 }

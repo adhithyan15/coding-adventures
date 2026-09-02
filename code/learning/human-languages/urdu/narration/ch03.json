@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Ask and Answer Names",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:2f9996f9c2375308",
+  "sourceHash": "fnv1a64:de2729c5f502c996",
   "lessons": [
     {
       "id": "UR-C03-aap-tum-tu",
@@ -276,6 +276,133 @@
               "feedback": {
                 "correct": "Right: کیا is kyā, 'what.'",
                 "incorrect": "The Urdu word is کیا — kyā."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-W03-lam",
+      "sequence": 75,
+      "title": "ل (lām) — alif, and then a bowl under the line",
+      "headword": "ل",
+      "romanization": "lām",
+      "gloss": "a tall upright that swings below the line into a bowl",
+      "script": "urdu-nastaliq",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ab6b73769a25f937",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ا. One stroke, top to bottom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ل (lām)."
+            },
+            {
+              "kind": "speech",
+              "text": "Start exactly as you started alif — a tall upright coming down — and then, without lifting, carry on below the baseline into a leftward bowl and back up."
+            },
+            {
+              "kind": "speech",
+              "text": "One movement, no pen lift. The bowl going below the line is the part to get right; it is what tells lām apart from alif at a glance."
+            },
+            {
+              "kind": "speech",
+              "text": "Its name is lām and it says l."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ا, then ل (lām) — the same descent, then the bowl below the line",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ا, then ل — the same descent, then the bowl below the line]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **l**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Do you lift the pen between the upright and the bowl? (No.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-W03-lam-bowl",
+              "prompt": "Does the bowl of lām sit on the baseline or below it?",
+              "assesses": [
+                "UR-SCRIPT-LAM-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "below it",
+                "below",
+                "below the line",
+                "under the baseline",
+                "beneath the line"
+              ],
+              "feedback": {
+                "correct": "Below the baseline -- that is what separates it from alif.",
+                "incorrect": "BELOW the baseline."
               }
             }
           ]
@@ -569,6 +696,137 @@
               "feedback": {
                 "correct": "Right: آپ سے مل کر خوشی ہوئی closes the introduction warmly.",
                 "incorrect": "Use آپ سے مل کر خوشی ہوئی — āp se mil kar khushī huī."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-W03-mim",
+      "sequence": 95,
+      "title": "م (mīm) — a round head, and a tail under the line",
+      "headword": "م",
+      "romanization": "mīm",
+      "gloss": "a round head with a tail dropping below the line",
+      "script": "urdu-nastaliq",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:6ea2c0a4e5c83119",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write س. Three teeth, then the bowl, no lift. Now write ل (lām) beside it: upright, then the bowl below the line."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "م (mīm)."
+            },
+            {
+              "kind": "speech",
+              "text": "A small round head sitting on the line, and from it a tail running straight down below the baseline."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep the head small and closed. Plenty of letters dip below the line — you have already written one in lām — but mīm's drop is a straight tail hanging off a round head, and that combination is what makes it easy to spot standing alone. Joined into the middle of a word the tail is trimmed away and the head survives."
+            },
+            {
+              "kind": "speech",
+              "text": "One movement, no lift."
+            },
+            {
+              "kind": "speech",
+              "text": "Its name is mīm and it says m."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "م (mīm) — the round head, then the tail below the line",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: م — the round head, then the tail below the line]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "m",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **m**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Is the head open or closed? (Closed.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-W03-mim-head",
+              "prompt": "When mīm is joined into the middle of a word, which part of it survives?",
+              "assesses": [
+                "UR-SCRIPT-MIM-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "the round head",
+                "the head",
+                "the round part",
+                "the loop",
+                "the head, not the tail"
+              ],
+              "feedback": {
+                "correct": "The head. The tail is trimmed when it joins.",
+                "incorrect": "The round HEAD survives; the tail is trimmed away."
               }
             }
           ]

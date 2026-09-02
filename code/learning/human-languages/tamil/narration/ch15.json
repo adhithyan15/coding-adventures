@@ -4,14 +4,14 @@
   "chapter": 15,
   "title": "Water and Rice",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:37175827ddc1837f",
+  "sourceHash": "fnv1a64:60357e1c57b9af72",
   "lessons": [
     {
       "id": "TA-C15-thanneer-arisi",
       "sequence": 590,
       "title": "தண்ணீர், அரிசி, சாதம் — water, and rice, the real staple",
       "headword": "தண்ணீர் அரிசி சாதம்",
-      "romanization": "",
+      "romanization": "taṇṇīr arisi sātam",
       "gloss": "water, and rice — the actual staple food here, not bread — with a widely-cited (if not fully certain) link from arisi to the English word \"rice\" itself",
       "script": "tamil",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1a1b674fcef23d70",
+      "sourceHash": "fnv1a64:75a30919b0258687",
       "notice": null,
       "blocks": [
         {
@@ -238,7 +238,7 @@
             },
             {
               "kind": "speech",
-              "text": "தண்ணீர் அரிசி சாதம் — water, and rice — the actual staple food here, not bread — with a widely-cited."
+              "text": "தண்ணீர் அரிசி சாதம் (taṇṇīr arisi sātam) — water, and rice — the actual staple food here, not bread — with a widely-cited."
             }
           ]
         },

@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1F08-last-three-supported
 spine_node: SPINE-NAME-EVERYDAY-THINGS
-sequence: 864
+sequence: 1064
 delivery: script
-chapter: 21
+chapter: 25
 type: writing
 headword: "आवडते पेय: ___ · आवडती कृती: ___ · मित्राचे नाव: ___"
 gloss: complete the last three visible rows from a support-language profile card

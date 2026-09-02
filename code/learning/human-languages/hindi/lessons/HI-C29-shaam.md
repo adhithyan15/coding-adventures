@@ -10,6 +10,7 @@ chapter: 29
 type: word
 headword: शाम
 gloss: "evening" (shaam) — another genuine Persian loanword, like subah; looks tempting to connect to Sanskrit श्यामा (śyāmā, "night/dark"), but that's a false cognate — different root entirely, despite the resemblance
+romanization: "shaam"
 concept_tag: TIME-EVENING
 prerequisites: [HI-C28-subah]
 sounds: [hindi-sha, hindi-anusvara]

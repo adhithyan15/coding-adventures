@@ -2,8 +2,8 @@
   "lesson": {
     "id": "TE-S119-vowel-sign-ii",
     "language": "telugu",
-    "chapter": 16,
-    "sequence": 431,
+    "chapter": 15,
+    "sequence": 421,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:0fbb4871795752c3",
+    "sourceHash": "fnv1a64:152c1a4afec5ca0c",
     "detachableSegments": [
       "Script you'll notice: ◌ీ",
       "Writing: ◌ీ — copy what you see"

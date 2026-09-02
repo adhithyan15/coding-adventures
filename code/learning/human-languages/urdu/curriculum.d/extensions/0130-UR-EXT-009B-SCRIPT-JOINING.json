@@ -1,0 +1,13 @@
+{
+  "id": "UR-EXT-009B-SCRIPT-JOINING",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can join letters into salam, write kaf and nun, and say why a gap can open inside a single word.",
+  "prerequisites": [],
+  "lessons": [
+    "UR-W04-joining",
+    "UR-W04-kaf",
+    "UR-W04-nun"
+  ]
+}

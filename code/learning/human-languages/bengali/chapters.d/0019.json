@@ -1,28 +1,21 @@
 {
   "chapter": 19,
-  "title": "Both Bodies of a Vowel",
-  "label": "ch:bn-both-bodies-of-a-vowel",
-  "canDo": "I can read six more Bengali words I already say — চা, পরিবার, জল, নীল, ভাই and এক — and say which of a vowel's two forms to write, and why, from whether there is a consonant in front of it.",
+  "title": "Please, Sorry, and Welcome",
+  "label": "ch:bn-please-sorry-welcome",
+  "canDo": "I can say please and sorry in Bengali, excuse myself politely, and welcome someone with a word that carries the same 'hither' prefix already met on the verb for coming.",
   "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR",
     "SPINE-MEET-GREET"
   ],
   "payoff": {
-    "lesson": "BN-W04-ek-read",
-    "kind": "reading",
-    "summary": "One is read as a vowel that opens a word with no consonant to carry it, which finally makes visible the claim the numbers chapter could only assert; then all six of the chapter's words are read back with nothing new introduced.",
+    "lesson": "BN-C13-sbagotom",
+    "kind": "production",
+    "summary": "The chapter closes on স্বাগতম, 'welcome', literally 'a good coming': su-, 'good' (PIE h1su-, cousin of Greek eu-), fused by ordinary sandhi onto āgata, 'arrived', which opens with the same ā- 'hither' prefix already met on āsā, this time riding √gam, PIE gʷem-, the secure direct ancestor of English come. The reader gives all four new words of the chapter — doya kore, dukkhito, maf korben, shbagotom — closing the two courtesy concepts, please and sorry, this book had never taught, and a third greeting concept, welcome.",
     "assesses": [
-      "BN-SCRIPT-CHA-01",
-      "BN-SCRIPT-CHAA-READ-01",
-      "BN-SCRIPT-PA-01",
-      "BN-SCRIPT-PORIBAR-READ-01",
-      "BN-SCRIPT-JA-01",
-      "BN-SCRIPT-JOL-READ-01",
-      "BN-SCRIPT-II-MATRA-01",
-      "BN-SCRIPT-NIL-READ-01",
-      "BN-SCRIPT-I-INDEP-01",
-      "BN-SCRIPT-BHAI-READ-01",
-      "BN-SCRIPT-E-INDEP-01",
-      "BN-SCRIPT-EK-READ-01"
+      "BN-LEX-C13-DOYAKORE-01",
+      "BN-LEX-C13-DUKKHITO-01",
+      "BN-LEX-C13-MAFKORBEN-01",
+      "BN-LEX-C13-SBAGOTOM-01"
     ]
   }
 }

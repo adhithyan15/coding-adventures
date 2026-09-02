@@ -1,24 +1,21 @@
 {
   "language": "urdu",
   "chapter": 17,
-  "sourceHash": "fnv1a64:156774201820667a",
+  "sourceHash": "fnv1a64:665dffab75bdc10e",
   "lessonIds": [
     "UR-C17-yih",
     "UR-C17-kaam",
-    "UR-W17-he",
     "UR-C17-kahan",
     "UR-C17-review-shapes",
-    "UR-W17-bari-ye",
     "UR-C17-maan",
     "UR-C17-review-hai",
-    "UR-W17-nun-ghunna",
     "UR-C17-practice"
   ],
   "voiceLessons": 4,
-  "drivablePrefix": 2,
+  "drivablePrefix": 3,
   "text": "urdu/narration/ch17.txt",
   "json": "urdu/narration/ch17.json",
-  "textHash": "fnv1a64:3245db52b01a7304",
-  "jsonHash": "fnv1a64:2338860f8295825a",
+  "textHash": "fnv1a64:2be88a15a38ac244",
+  "jsonHash": "fnv1a64:24411a8d9760be89",
   "findings": []
 }

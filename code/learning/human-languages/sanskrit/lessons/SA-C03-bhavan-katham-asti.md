@@ -5,6 +5,7 @@ chapter: 3
 type: phrase
 headword: भवान् कथम् अस्ति?
 gloss: how are you? (respectful)
+romanization: "bhavān katham asti?"
 concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [SA-C03-katham, SA-C02-bhavan-tvam, SA-C02-asti]
 sounds: []

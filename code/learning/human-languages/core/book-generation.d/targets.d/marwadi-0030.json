@@ -1,0 +1,6 @@
+{
+  "language": "marwadi",
+  "chapter": 30,
+  "output": "marwadi/book/chapters/ch30-bring-request.tex",
+  "scriptSet": "marwadi-main"
+}

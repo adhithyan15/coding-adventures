@@ -2,33 +2,36 @@
   "version": 1,
   "language": "marathi",
   "chapter": 8,
-  "title": "The First Verbs",
+  "title": "Two Sibilants, One Liquid, and Three Standalone Vowels",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:dce228abd1da8fbc",
+  "sourceHash": "fnv1a64:ff2977756dc07c3e",
   "lessons": [
     {
-      "id": "MR-C05-bolne",
-      "sequence": 165,
-      "title": "बोलणे (bolṇe) — \"to speak\"",
-      "headword": "बोलणे",
-      "romanization": "bolṇe",
-      "gloss": "to speak (bolṇe)",
+      "id": "MR-W08-la",
+      "sequence": 90,
+      "title": "ल — the plain l, beside the curled one you know",
+      "headword": "ल",
+      "romanization": "la",
+      "gloss": "dental la — the plain l, partner to the retroflex lla you already write",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
+        "writing-type",
+        "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:500a2ac6b70bac51",
+      "sourceHash": "fnv1a64:a9a78511937eefe4",
       "notice": {
-        "modality": "sight",
+        "modality": "pen",
         "needs": [
+          "a pen and something to write on",
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "Script"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -37,6 +40,47 @@
           "title": "Warm-up",
           "segments": [
             {
+              "kind": "speech",
+              "text": "You learned the harder l first. Here is the ordinary one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ल (la)."
+            },
+            {
+              "kind": "speech",
+              "text": "ल is plain la, the tongue at the teeth — the sound English writes with l. You already write ळ, the retroflex ḷ Marathi keeps alongside it, and which Hindi does not have at all."
+            },
+            {
+              "kind": "speech",
+              "text": "Meeting the rare one first was not an accident: ळ sits in kāḷjī and ḍoḷā, words this book needed early. Now the common one arrives, and with it bolṇe, \"to speak\", becomes readable end to end."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — observe and trace",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace ल twice, then trace ळ once beside it. Say la and ḷa, moving the tongue back only for the second."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
               "kind": "pause",
               "seconds": 2,
               "perItem": false,
@@ -44,124 +88,62 @@
             },
             {
               "kind": "speech",
-              "text": "Until now, verbs of being and meeting. Here is your first verb of doing — to speak — and the pattern that runs every Marathi verb."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Devanagari.) बो (bo) + ल (la) + णे (ṇe, the retroflex ण ṇa with the -e stroke) becomes बोलणे bolṇe."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "बोलणे (bolṇe, \"to speak\") is a native Indo-Aryan verb on the stem bol- — the same bol- as Hindi bolnā and Punjabi bolṇā. Its ending -णे (-ṇe) is the Marathi infinitive (\"to ___\"): bol-ṇe \"to speak,\" bheṭ-ṇe \"to meet,\" ye-ṇe \"to come.\" Strip -ṇe and you have the stem to build on: bol-."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: stem + gendered present ending",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "From the stem you build the present tense — and, as with yeto/yete, it splits by the speaker's gender:"
+              "text": "Which of the two does Hindi not have? (ळ.)"
             },
             {
               "kind": "speech",
-              "text": "मी बोलतो (mī bolto) — a man speaks."
+              "text": "Source: Opiaterein, Devanagari la stroke animation."
             },
             {
-              "kind": "speech",
-              "text": "मी बोलते (mī bolte) — a woman speaks."
-            },
-            {
-              "kind": "speech",
-              "text": "(plural / respectful: बोलतो / बोलता)."
-            },
-            {
-              "kind": "speech",
-              "text": "The verb still ends the sentence; the copula-less present tense is one word doing the work."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"bolṇe\" — to speak; then the stem (bol-)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"bolṇe\" — to speak; then the stem (*bol-*)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"I speak\" for your own gender (mī bolto / mī bolte)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"I speak\" for your own gender (*mī bolto* / *mī bolte*)]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What is the Marathi infinitive ending, and how does the present split? (-ṇe; the present ending changes with the speaker's gender — bolto m. / bolte f.)"
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-W08-la-r1",
+              "prompt": "Trace plain la, then name the Marathi letter for the curled l.",
+              "assesses": [
+                "MR-SCRIPT-LA-01",
+                "MR-SCRIPT-PA-01",
+                "MR-SCRIPT-NNA-01"
+              ],
+              "responseSeconds": 22,
+              "acceptedResponses": [
+                "ल; ळ"
+              ],
+              "feedback": {
+                "correct": "Two l's, and Marathi keeps both.",
+                "incorrect": "Repair only the shape, or only the name."
+              }
             }
           ]
         }
       ]
     },
     {
-      "id": "MR-C05-mi-marathi-bolto",
-      "sequence": 170,
-      "title": "मी मराठी बोलतो (mī marāṭhī bolto) — \"I speak Marathi\"",
-      "headword": "मी मराठी बोलतो",
-      "romanization": "mī marāṭhī bolto",
-      "gloss": "I speak Marathi (gendered)",
+      "id": "MR-W08-sha",
+      "sequence": 91,
+      "title": "श (śa) — the sh at the roof of the mouth",
+      "headword": "श",
+      "romanization": "śa",
+      "gloss": "palatal sha — the sh of shahar",
       "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-type",
+        "writing-block",
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:21fc752615af4207",
-      "notice": null,
+      "sourceHash": "fnv1a64:05293114f6f22736",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -169,6 +151,47 @@
           "title": "Warm-up",
           "segments": [
             {
+              "kind": "speech",
+              "text": "You write the plain s. Slide the tongue back along the roof of your mouth and it becomes something else."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "श (śa)."
+            },
+            {
+              "kind": "speech",
+              "text": "श is śa, English sh. Marathi keeps it distinct from the स you learned in your first chapter, and the pair behaves like every other pair in this runway: same air, different place."
+            },
+            {
+              "kind": "speech",
+              "text": "It opens śahar, \"city\" — one of the six labels the A1 form chapters will ask you to fill in. Draw the left hook, the upright, and the headline; the small loop at the top left is what separates it from म."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — guided copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy श (śa) twice with the model visible. Then write स once beside it and say both, sliding the tongue back only for the first."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
               "kind": "pause",
               "seconds": 2,
               "perItem": false,
@@ -176,128 +199,110 @@
             },
             {
               "kind": "speech",
-              "text": "Your first full action-sentence — and it names the language itself."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "मी (mī, I) + मराठी (marāṭhī, Marathi, the object) + बोलतो (bolto, speak) becomes \"I Marathi speak,\" verb last."
+              "text": "Which one opens śahar? (श.)"
             },
             {
               "kind": "speech",
-              "text": "A woman says मी मराठी बोलते (mī marāṭhī bolte)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "मराठी (marāṭhī) is \"[the language] of महाराष्ट्र (Mahārāṣṭra)\" — the \"great kingdom/realm,\" mahā (\"great,\" cousin of Latin magnus and English magnitude) + rāṣṭra (\"nation, realm\"). The people are the Marāṭhā, the land Mahārāṣṭra, and the tongue marāṭhī — all one root. It carries the same retroflex sounds you keep meeting: the ट (ṭa) of marāṭhī, the ळ of kāḷjī."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The present tense needs no separate \"am/do\" — बोलतो alone says \"I speak.\" Contrast Hindi, which adds a copula (maiṁ hindī boltā hūṁ); Marathi folds the \"am\" into the verb ending. Cleaner, and gendered."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
+              "text": "Source: Opiaterein, Devanagari sha stroke animation."
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"mī marāṭhī bolto/bolte\" — I speak Marathi",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"mī marāṭhī bolto/bolte\" — I speak Marathi]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the root of marāṭhī (Mahārāṣṭra = \"great realm\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the root of *marāṭhī* (*Mahārāṣṭra* = \"great realm\")]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Where does the name marāṭhī come from? (Mahārāṣṭra, \"great realm\" — mahā \"great\" + rāṣṭra \"nation.\")"
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-W08-sha-r1",
+              "prompt": "Copy palatal sha, then write plain sa from memory.",
+              "assesses": [
+                "MR-SCRIPT-SHA-01",
+                "MR-SCRIPT-LA-01",
+                "MR-SCRIPT-PA-01"
+              ],
+              "responseSeconds": 22,
+              "acceptedResponses": [
+                "श; स"
+              ],
+              "feedback": {
+                "correct": "Two sibilants, kept apart.",
+                "incorrect": "Repair only the one that came out wrong."
+              }
             }
           ]
         }
       ]
     },
     {
-      "id": "MR-C05-rahne",
-      "sequence": 175,
-      "title": "राहणे (rāhṇe) — \"to live, to stay\"",
-      "headword": "राहणे",
-      "romanization": "rāhṇe",
-      "gloss": "to live, to stay (rāhṇe)",
+      "id": "MR-W08-ssa",
+      "sequence": 92,
+      "title": "ष (ṣa) — the third sibilant, kept on the page",
+      "headword": "ष",
+      "romanization": "ṣa",
+      "gloss": "retroflex sha — a third sibilant, written apart and mostly said like sha",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
+        "writing-type",
+        "writing-block",
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:4df2cf5f3c0d1019",
+      "sourceHash": "fnv1a64:072cd370f100e1cf",
       "notice": {
-        "modality": "sight",
+        "modality": "pen",
         "needs": [
+          "a pen and something to write on",
           "your eyes, for letter shapes on the page",
           "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "Script"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
           "index": 0,
           "type": "warmup",
           "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Marathi writes three sibilants and says two. This is the third one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ष (ṣa)."
+            },
+            {
+              "kind": "speech",
+              "text": "ष is ṣa, the retroflex sibilant. Sanskrit distinguished it from श (śa); most Marathi speakers today say the two the same way, and keep them apart only in spelling."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth knowing rather than hiding: a letter can survive in the writing system after the sound behind it has merged. ष (ṣa) appears in tatsama words taken whole from Sanskrit, such as bhāṣā, \"language\" — another of the six form labels waiting for you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — delayed copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at ष (ṣa) for five seconds, cover it, and write it once. Uncover and set it beside श (śa): two shapes your mouth no longer separates."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
           "segments": [
             {
               "kind": "pause",
@@ -307,122 +312,108 @@
             },
             {
               "kind": "speech",
-              "text": "A second verb on the same engine — to live — and a first postposition to place yourself somewhere."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Devanagari.) रा (rā) + ह (ha) + णे (ṇe, retroflex) becomes राहणे rāhṇe."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "राहणे (rāhṇe, \"to live, remain, stay\") is from Sanskrit रह् (rah-, \"to remain\") — the same root behind Hindi rahnā. Present tense, gendered as always: मी पुण्यात राहतो (mī puṇyāt rāhto, a man) / राहते (rāhte, a woman) — \"I live in Pune.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: \"in\" comes after the noun",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Look at पुण्यात (puṇyāt) = पुणे (Puṇe, the city) + -ात (-āt, \"in\"). Marathi glues \"in\" onto the end of the noun — a postposition, not a preposition. Verb last, place-marker on the noun's tail: mī puṇyāt rāhto, \"I in-Pune live.\""
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"rāhṇe\" — to live; then \"mī puṇyāt rāhto/rāhte\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"rāhṇe\" — to live; then \"mī puṇyāt rāhto/rāhte\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "how \"in\" attaches (Puṇe + -āt becomes puṇyāt)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: how \"in\" attaches (*Puṇe* + *-āt* → *puṇyāt*)]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
+              "text": "Are श (śa) and ष (ṣa) different sounds for most speakers today? (No — different spellings.)"
             },
             {
               "kind": "speech",
-              "text": "Where does \"in\" go in Marathi, and on what root is rāhṇe? (On the end of the noun (-āt); Sanskrit rah- \"to remain.\")"
+              "text": "Source: Opiaterein, Devanagari ssa stroke animation."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-W08-ssa-r1",
+              "prompt": "Write retroflex sha after a delay, then say how most Marathi speakers pronounce it.",
+              "assesses": [
+                "MR-SCRIPT-SSA-01",
+                "MR-SCRIPT-SHA-01",
+                "MR-SCRIPT-LA-01"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "ष; the same as श"
+              ],
+              "feedback": {
+                "correct": "A spelling distinction, named as one.",
+                "incorrect": "Repair the shape, and keep the honest answer about the sound."
+              }
             }
           ]
         }
       ]
     },
     {
-      "id": "MR-C05-kaam-karne",
-      "sequence": 180,
-      "title": "काम करणे (kām karṇe) — \"to work\"",
-      "headword": "काम करणे",
-      "romanization": "kām karṇe",
-      "gloss": "to work (kām karṇe)",
+      "id": "MR-W08-u-independent",
+      "sequence": 93,
+      "title": "उ — short u standing on its own",
+      "headword": "उ",
+      "romanization": "u",
+      "gloss": "independent short u — the vowel written whole when nothing carries it",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
+        "writing-type",
+        "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fce552c4f34ae76b",
+      "sourceHash": "fnv1a64:9031f8e1a119f9f9",
       "notice": {
-        "modality": "sight",
+        "modality": "pen",
         "needs": [
+          "a pen and something to write on",
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "Script"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
           "index": 0,
           "type": "warmup",
           "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You already hang a short u under a consonant. What happens when there is no consonant to hang it on?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उ (u)."
+            },
+            {
+              "kind": "speech",
+              "text": "Then you write उ, the independent short u — the same vowel given its own full letter for the start of a word."
+            },
+            {
+              "kind": "speech",
+              "text": "Devanagari does this for every vowel: a mark when something carries it, a letter when nothing does. You have already seen the pair once, with अ and its mark. उ opens udyā, \"tomorrow\", in the farewell this book taught you chapters ago."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — guided copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy उ twice with the model visible. Then write the short-u mark beside it and say aloud which of the two needs a consonant to lean on."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
           "segments": [
             {
               "kind": "pause",
@@ -432,107 +423,273 @@
             },
             {
               "kind": "speech",
-              "text": "Your third verb — to work — and it closes a circle back to Chapter 1's greeting."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Devanagari.) काम (kām): का + म (ma). करणे (karṇe): क (ka) + र (ra) + णे (ṇe, retroflex)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "करणे (karṇe, \"to do, make\") is from Sanskrit √कृ (kṛ, \"to do\"), from PIE kʷer-. That is the very root hiding inside Chapter 1's नमस्कार (namaskār = \"the making of a bow\") and inside कर्म (karma, \"a thing done\"). And काम (kām, \"work\") is itself worn down from that same कर्म (karma). So \"to work\" is literally built twice from doing: काम करणे (kām karṇe) = \"work-do.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: noun + करणे makes a verb",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Marathi builds countless verbs as noun + करणे: kām karṇe (to work), madat karṇe (to help), sevā karṇe (to serve). Present tense, gendered: मी काम करतो (mī kām karto, m.) / करते (karte, f.) — \"I work.\""
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"kām karṇe\" — to work; then \"mī kām karto/karte\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"kām karṇe\" — to work; then \"mī kām karto/karte\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the root it shares with namaskār and karma (√kṛ, \"to do\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the root it shares with *namaskār* and *karma* (*√kṛ*, \"to do\")]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
+              "text": "Which word for tomorrow starts with it? (udyā.)"
             },
             {
               "kind": "speech",
-              "text": "What links karṇe, namaskār, and karma? (All from √kṛ, \"to do\" — and kām \"work\" is worn-down karma.)"
+              "text": "Source: Saurmandal, Devanagari u stroke order."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-W08-u-independent-r1",
+              "prompt": "Copy independent short u, then say which form needs a consonant to lean on.",
+              "assesses": [
+                "MR-SCRIPT-U-INDEPENDENT-01",
+                "MR-SCRIPT-SSA-01",
+                "MR-SCRIPT-U-MATRA-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "उ; the matra"
+              ],
+              "feedback": {
+                "correct": "Letter when alone, mark when carried.",
+                "incorrect": "Copy the full letter again, then name the leaning one."
+              }
             }
           ]
         }
       ]
     },
     {
-      "id": "MR-C05-practice",
-      "sequence": 185,
-      "title": "Chapter 8 recap — the first verbs",
-      "headword": "(recap)",
-      "romanization": "",
-      "gloss": "Chapter 8 recap — the first verbs",
+      "id": "MR-W08-uu-independent",
+      "sequence": 94,
+      "title": "ऊ — long ū standing on its own",
+      "headword": "ऊ",
+      "romanization": "ū",
+      "gloss": "independent long uu — the last sign of the second runway",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:ab5db34280a85abe",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more, and this runway is finished. It is the long partner of the letter you wrote a moment ago."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ऊ (ū)."
+            },
+            {
+              "kind": "speech",
+              "text": "ऊ is the independent long ū: उ (u) with a tail carried down and to the right, the same extra travel the long mark asked for below the line."
+            },
+            {
+              "kind": "speech",
+              "text": "Four forms, one vowel: उ and ऊ (ū) when it stands alone, the short and long marks when a consonant carries it. That symmetry is the whole vowel system of this script, and you now write all of it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — delayed copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at ऊ (ū) for five seconds, cover it, and write it once. Uncover and set the four u forms in a row: उ ऊ (ū) and the two marks. Repair only one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many written forms does this one vowel have? (Four.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Saurmandal, Devanagari uu stroke order."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-W08-uu-independent-r1",
+              "prompt": "Write independent long uu after a delay, then name the four forms of this vowel.",
+              "assesses": [
+                "MR-SCRIPT-UU-INDEPENDENT-01",
+                "MR-SCRIPT-U-INDEPENDENT-01",
+                "MR-SCRIPT-UU-MATRA-01"
+              ],
+              "responseSeconds": 28,
+              "acceptedResponses": [
+                "ऊ; independent short, independent long, short matra, long matra"
+              ],
+              "feedback": {
+                "correct": "The whole vowel, in all four of its forms.",
+                "incorrect": "Repair the shape, or name the form you missed."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-W08-e-independent",
+      "sequence": 95,
+      "title": "ए — the vowel that opens ek",
+      "headword": "ए",
+      "romanization": "e",
+      "gloss": "independent long e — the vowel that opens ek, one",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:1e243fe4b1f355d2",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One vowel left, and you have been reading it since the chapter where you learned to count."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ए (e)."
+            },
+            {
+              "kind": "speech",
+              "text": "ए is the independent long e — the same vowel as the े mark you write above the headline, given its own letter for the start of a word."
+            },
+            {
+              "kind": "speech",
+              "text": "It opens एक, ek, \"one\". That word has been printed beside its romanization since the counting chapter, which means you have been looking at this letter for a long time without being told what it was. Draw the left hook, the upright, and the headline; the mark version is what remains if you take the letter away and keep only the top."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — guided copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy एक twice with the model visible, naming both signs: independent e, then ka. Then write the े mark once on its own and say which of the two forms needs a consonant to lean on."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which number word starts with ए? (ek — one.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Saurmandal, Devanagari e stroke order."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-W08-e-independent-r1",
+              "prompt": "Copy ek, then say which form of this vowel needs a consonant to lean on.",
+              "assesses": [
+                "MR-SCRIPT-E-INDEPENDENT-01",
+                "MR-SCRIPT-UU-INDEPENDENT-01",
+                "MR-SCRIPT-E-MATRA-01"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "एक; the e-matra"
+              ],
+              "feedback": {
+                "correct": "A word you have counted with for chapters is now a word you can write.",
+                "incorrect": "Repair only the letter or only the mark, whichever slipped."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R08-runway-recall",
+      "sequence": 96,
+      "title": "Twenty-four signs, at real distance",
+      "headword": "चोवीस चिन्हे",
+      "romanization": "covīs cinhe",
+      "gloss": "the whole second runway at distance — twenty-four signs across four chapters",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ffcb38ee411f9ef",
+      "sourceHash": "fnv1a64:b85397e84bcb105b",
       "notice": null,
       "blocks": [
         {
@@ -541,6 +698,17 @@
           "title": "Warm-up",
           "segments": [
             {
+              "kind": "speech",
+              "text": "Four chapters ago the page was still full of shapes nobody had taught you. Close every model and find out what stayed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
               "kind": "pause",
               "seconds": 2,
               "perItem": false,
@@ -548,119 +716,110 @@
             },
             {
               "kind": "speech",
-              "text": "Three verbs, one engine — sentences about yourself."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "Sentences about yourself",
-          "segments": [
+              "text": "Which l does Hindi not have? (The curled ळ.)"
+            },
             {
-              "kind": "table",
-              "headers": [
-                "Marathi",
-                "Say it",
-                "English"
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two sibilants are kept apart only in spelling? (śa and ṣa.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many written forms does the u vowel have? (Four — two letters and two marks.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which number word opens with the independent e? (ek.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter ends every infinitive? (ṇa.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which nasal mark wears a crescent? (The candrabindu.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which sign did mājhe need? (jha.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And one from the chapter before: ba with the voice switched off? (pa, which is ba without the inner dot.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R08-runway-recall-check",
+              "prompt": "Name the plain l beside the curled one, the two sibilants Marathi writes apart and says alike, the three standalone vowels of this chapter, one letter from each of the three consonant rows in this runway, and ba with the voice switched off.",
+              "assesses": [
+                "MR-SCRIPT-LA-01",
+                "MR-SCRIPT-SHA-01",
+                "MR-SCRIPT-SSA-01",
+                "MR-SCRIPT-U-INDEPENDENT-01",
+                "MR-SCRIPT-UU-INDEPENDENT-01",
+                "MR-SCRIPT-E-INDEPENDENT-01",
+                "MR-SCRIPT-CANDRABINDU-01",
+                "MR-SCRIPT-RU-MATRA-01",
+                "MR-SCRIPT-A-INDEPENDENT-01",
+                "MR-SCRIPT-KHA-01",
+                "MR-SCRIPT-GHA-01",
+                "MR-SCRIPT-CHA-01",
+                "MR-SCRIPT-JHA-01",
+                "MR-SCRIPT-TTHA-01",
+                "MR-SCRIPT-DDA-01",
+                "MR-SCRIPT-NNA-01",
+                "MR-SCRIPT-PA-01"
               ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "Marathi: मी मराठी बोलतो / बोलते. Say it: mī marāṭhī bolto / bolte. English: I speak Marathi.",
-                "Marathi: मी पुण्यात राहतो / राहते. Say it: mī puṇyāt rāhto / rāhte. English: I live in Pune.",
-                "Marathi: मी काम करतो / करते. Say it: mī kām karto / karte. English: I work."
-              ]
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "unknown",
-          "title": "The engine, in one look",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Infinitive ends in -णे (-ṇe): bolṇe, rāhṇe, karṇe."
-            },
-            {
-              "kind": "speech",
-              "text": "Present = stem + a gendered ending — -to (m.) / -te (f.): bolto/ bolte, rāhto/rāhte, karto/karte. No separate \"am\" — the ending carries it."
-            },
-            {
-              "kind": "speech",
-              "text": "Verb goes last; \"in\" attaches to the noun's end (puṇyāt)."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "unknown",
-          "title": "Roots banked",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "बोलणे (bolṇe) — to speak (native bol-)."
-            },
-            {
-              "kind": "speech",
-              "text": "मराठी (marāṭhī) — from Mahārāṣṭra, \"great realm.\""
-            },
-            {
-              "kind": "speech",
-              "text": "राहणे (rāhṇe) — to live (Sanskrit rah-)."
-            },
-            {
-              "kind": "speech",
-              "text": "करणे (karṇe) — to do/work (√kṛ — root of namaskār, karma; kām from karma)."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "all three sentences for your own gender",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: all three sentences for your own gender]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"I speak Marathi and I work\" (mī marāṭhī bolto āṇi kām karto)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"I speak Marathi and I work\" (*mī marāṭhī bolto āṇi kām karto*)]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What three things does the Marathi present tense fold into one word? (The action, the person, and their gender — no separate \"am.\") From here, Marathi only opens further."
+              "responseSeconds": 70,
+              "acceptedResponses": [
+                "la beside lla; sha and ssa; u, uu and e; kha, jha, nna; pa"
+              ],
+              "feedback": {
+                "correct": "The runway held: every row, both sibilants, and all four u forms.",
+                "incorrect": "Repair one group only. A miss at this distance is information, not failure."
+              }
             }
           ]
         }

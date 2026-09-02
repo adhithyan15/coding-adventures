@@ -1,8 +1,8 @@
 Sanskrit, chapter 2: Introducing Yourself.
-8 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+12 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 8.
+Lesson 1 of 12.
 नाम (nāma) — "name," the source of a word half the world shares.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -29,7 +29,7 @@ Wrap-up Recall.
 What PIE root is nāma from, and name two of its descendants. (h₃nómn̥; any two of English name, Latin nōmen, Greek onoma, Hindi nām.)
 
 
-Lesson 2 of 8.
+Lesson 2 of 12.
 मम (mama) — "my," the ancestor of me and my.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -56,7 +56,45 @@ Wrap-up Recall.
 What is mama the genitive of, and its English cousins? (Aham, "I"; English me, my, mine.)
 
 
-Lesson 3 of 8.
+Lesson 3 of 12.
+◌ः (ḥ) — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ः and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one, the ones you have already met: न, द, ◌्. Say what each of them does.
+[pause 2 seconds]
+One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: ◌ः.
+◌ः — ḥ.
+It is a visarga: not a letter, but a soft breathed ḥ at the end of a syllable. It is the mark that ends a great many Sanskrit masculine nouns, so it is worth knowing on sight.
+Where it sits: a pair of dots to the right of the syllable, marking a voiceless post-vocalic breath.
+Worked through: न + ◌ः = नः — naḥ.
+You already say these words, and ◌ः (ḥ) is one of the shapes inside them — the rest of their shapes are still ahead of you, so here the character stands on its own:
+namaskāraḥ — hello (lit. "the making of a bow").
+dhanyavādaḥ — thank you.
+
+Writing: ◌ः — copy what you see.
+Put your pen on ◌ः (ḥ) and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
+This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at this, and find ◌ः (ḥ) in it]
+[pause 8 seconds for the answer]
+◌ः (ḥ).
+[once you have stopped driving — trace: ◌ः three times, saying ḥ as you finish each one]
+[your turn — look: back at any page of this chapter and find ◌ः (ḥ) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — ◌ः? What does it add to the end of a syllable? (A soft breathed ḥ.) Name one word you already say that contains it.
+
+
+Lesson 4 of 12.
 अस्ति (asti) — "is," the ancestor of is and est.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -83,7 +121,7 @@ Wrap-up Recall.
 What root is asti from, and its cousins across the family? (As- / PIE h₁es-; English is, Latin est, Hindi hai.)
 
 
-Lesson 4 of 8.
+Lesson 5 of 12.
 मम नाम … अस्ति (mama nāma … asti) — "my name is…"
 
 Warm-up.
@@ -94,7 +132,7 @@ The phrase, assembled.
 मम (my) + नाम (name) + your name + अस्ति (is) = mama nāma … asti, "my name is…" Mama nāma Aruṇaḥ asti. becomes "My name is Arun."
 
 Grammar Lens: Sanskrit keeps the "is".
-Where Tamil says only eṉ peyar Arun and Bengali āmār nām Arun — both dropping the verb (the zero copula) — Sanskrit says मम (mama) नाम (nāma) … अस्ति, with an explicit asti ("is"). This is the Indo-European way, the one Latin and English kept too (my name is …). The verb comes last, as in the modern Indian languages that descend from it. (In casual use asti can be dropped, but the "full-dress" Sanskrit sentence keeps it.)
+Where Tamil says only eṉ peyar Arun and Bengali āmār nām Arun — both dropping the verb (the zero copula) — Sanskrit says मम नाम … अस्ति (mama nāma … asti), with an explicit asti ("is"). This is the Indo-European way, the one Latin and English kept too (my name is …). The verb comes last, as in the modern Indian languages that descend from it. (In casual use asti can be dropped, but the "full-dress" Sanskrit sentence keeps it.)
 
 Guided Practice.
 [pause 1 second]
@@ -108,7 +146,54 @@ Wrap-up Recall.
 Give your name in Sanskrit, and say what it keeps that Tamil and Bengali drop. (Mama nāma … asti; the copula asti, "is.")
 
 
-Lesson 5 of 8.
+Lesson 6 of 12.
+आ (ā) — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: आ and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one, the ones you have already met: द, ◌्, ◌ः (ḥ). Say what each of them does.
+[pause 2 seconds]
+One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: आ.
+आ — ā.
+It is an independent vowel: the full-size letter a vowel wears when it opens a word and has no consonant to lean on. Inside a word the same vowel is written as a small sign instead.
+What it is made of:
+the joined upper-and-lower left body of a.
+a middle shoulder.
+an inner vertical stem.
+a trailing vertical stem.
+the top shirorekhā.
+You already say this word, and आ (ā) is one of the shapes inside it — the rest of its shapes are still ahead of you, so here the character stands on its own:
+ām / na — yes / no.
+
+Writing: आ.
+1. curve around the upper bowl, then continue down and around the lower bowl without lifting.
+2. lift and sweep the middle shoulder right.
+3. lift and draw the inner stem top-to-bottom.
+4. lift and draw the trailing stem top-to-bottom.
+5. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 4. The pen comes up 4 times and no more.
+verified modern printed teaching form; other Devanagari traditions split the shared a body into more strokes.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari आ (ā) stroke order.svg’, frames 1–5, Wikimedia Commons, 5 August 2023.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at this, and find आ (ā) in it]
+[pause 8 seconds for the answer]
+आ (ā).
+[once you have stopped driving — trace: आ three times, saying ā as you finish each one]
+[your turn — look: back at any page of this chapter and find आ (ā) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — आ? What sound does it carry? (ā.) Name one word you already say that contains it.
+
+
+Lesson 7 of 12.
 भवान् / त्वम् (bhavān / tvam) — "you," respectful and familiar.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -140,7 +225,7 @@ Wrap-up Recall.
 Which "you" is respectful, and what English word is tvam cousin to? (Bhavān — literally "your honour," taking a 3rd-person verb; tvam corresponds to archaic thou.)
 
 
-Lesson 6 of 8.
+Lesson 8 of 12.
 किम् (kim) — "what," the source of the question-words.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -169,7 +254,51 @@ Wrap-up Recall.
 What PIE root is kim from, and its cousins? (kʷo-; English what, Latin quis, Hindi kyā.)
 
 
-Lesson 7 of 8.
+Lesson 9 of 12.
+भ (bha) — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: भ and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one, the ones you have already met: ◌्, ◌ः (ḥ), आ (ā). Say what each of them does.
+[pause 2 seconds]
+One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: भ.
+भ — bha.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not bh, it is bha.
+What it is made of:
+a clockwise upper loop joined to a descending trunk.
+a clockwise lower bowl continuing through a rightward crossbar.
+a top-to-bottom right stem.
+the top shirorekhā.
+You already say this word, and भ (bha) is one of the shapes inside it — the rest of its shapes are still ahead of you, so here the character stands on its own:
+bhavān / tvam — you.
+
+Writing: भ.
+1. start at the upper loop's lower inner tip, sweep left and clockwise around the upper loop, descend the joined trunk, curl clockwise around the lower bowl, and continue right through the crossbar without lifting.
+2. lift and draw the right stem top-to-bottom.
+3. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 2. The pen comes up 2 times and no more.
+verified three-stroke teaching form; another learner source stages the upper and lower body parts separately.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: JackPotte, ‘Devanagari bʰ भ (bha).gif’, strokes 1–3, Wikimedia Commons, 29 March 2009.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at this, and find भ (bha) in it]
+[pause 8 seconds for the answer]
+भ (bha).
+[once you have stopped driving — trace: भ three times, saying bha as you finish each one]
+[your turn — look: back at any page of this chapter and find भ (bha) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — भ? What sound does it carry? (bha.) Name one word you already say that contains it.
+
+
+Lesson 10 of 12.
 तव नाम किम्? (tava nāma kim?) — "what's your name?"
 
 Warm-up.
@@ -196,7 +325,7 @@ Wrap-up Recall.
 Ask "what's your name?" respectfully, and give the "my/your" pair. (Bhavataḥ nāma kim?; mama "my" / tava "your.")
 
 
-Lesson 8 of 8.
+Lesson 11 of 12.
 आनन्दः (ānandaḥ) — "joy," and "a joy to meet you".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -223,3 +352,43 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What does ānandaḥ mean, and what is it built from? ("Joy, bliss"; ā- "fully" + nand "to rejoice.")
+
+
+Lesson 12 of 12.
+◌ि — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ि and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one, the ones you have already met: ◌ः (ḥ), आ (ā), भ (bha). Say what each of them does.
+[pause 2 seconds]
+One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: ◌ि.
+◌ि — i.
+It is a vowel sign. It is not a letter and never stands alone: it attaches to a consonant and replaces the a built into it. Replaces, not adds — the a is gone.
+Where it sits: a curl placed BEFORE (to the left of) the consonant, though pronounced after.
+Worked through: न + ◌ि = नि — ni.
+You already say these words, and ◌ि is one of the shapes inside them — the rest of their shapes are still ahead of you, so here the character stands on its own:
+asti — is.
+mama nāma … asti — my name is…
+kim — what.
+tava nāma kim? — what's your name?
+
+Writing: ◌ि — copy what you see.
+Put your pen on ◌ि and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
+This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at this, and find ◌ि in it]
+[pause 8 seconds for the answer]
+◌ि (i).
+[once you have stopped driving — trace: ◌ि three times, saying i as you finish each one]
+[your turn — look: back at any page of this chapter and find ◌ि once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — ◌ि? What vowel does it put on the consonant it attaches to — and what does it take off? (Puts i on; takes the built-in a off.) Name one word you already say that contains it.

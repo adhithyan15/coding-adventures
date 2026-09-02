@@ -2,11 +2,11 @@
 schema_version: 2
 id: BN-C04-practice
 spine_node: SPINE-TAKE-LEAVE
-sequence: 250
-chapter: 4
+sequence: 470
+chapter: 7
 type: practice
 headword: (dialogue)
-gloss: Chapter 4 recap — the farewells
+gloss: Chapter 7 recap — the farewells
 concept_tag: REVIEW
 prerequisites: [BN-C04-abar-dekha-hobe, BN-C04-kal-dekha-hobe]
 sounds: []
@@ -27,7 +27,7 @@ variety: standard-bengali
 reviews_of: [BN-C01-ashi, BN-C04-abar, BN-C04-dekha-hobe, BN-C04-abar-dekha-hobe, BN-C04-kal-dekha-hobe]
 ---
 
-# Chapter 4 — The farewells
+# Chapter 7 — The farewells
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C01-ASHI-01, BN-CONCEPT-C04-ABAR-01, BN-CONCEPT-C04-ABARDEKHAHOBE-01, BN-CONCEPT-C04-DEKHAHOBE-01, BN-CONCEPT-C04-KALDEKHAHOBE-01] -->

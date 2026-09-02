@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-R25-recognition-words
 spine_node: SPINE-RESPOND-BASIC
-sequence: 1050
-chapter: 25
+sequence: 1250
+chapter: 29
 type: review
 headword: आहे / मित्र / कुटुंब / समजणे
 romanization: āhe / mitra / kuṭumb / samajṇe

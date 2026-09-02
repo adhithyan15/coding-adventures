@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C09-vicharne
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 490
-chapter: 12
+sequence: 690
+chapter: 16
 type: word
 headword: विचारणे
 romanization: vichārṇe

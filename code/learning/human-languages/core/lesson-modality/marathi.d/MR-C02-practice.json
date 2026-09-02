@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C02-practice",
     "language": "marathi",
-    "chapter": 5,
-    "sequence": 100,
+    "chapter": 9,
+    "sequence": 300,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:6caf1f4491f5251e"
+    "sourceHash": "fnv1a64:4b93e266420672e4"
   },
   "findings": []
 }

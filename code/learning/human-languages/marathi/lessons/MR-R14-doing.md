@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-R14-doing
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 710
-chapter: 17
+sequence: 910
+chapter: 21
 type: review
 headword: घेणे / विचारणे / मदत करणे
 romanization: ghene / vicharne / madat karne

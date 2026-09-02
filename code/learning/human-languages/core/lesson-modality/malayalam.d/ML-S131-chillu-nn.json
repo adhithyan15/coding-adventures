@@ -2,8 +2,8 @@
   "lesson": {
     "id": "ML-S131-chillu-nn",
     "language": "malayalam",
-    "chapter": 38,
-    "sequence": 895,
+    "chapter": 2,
+    "sequence": 144,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:6dc8b080e8f04bdd",
+    "sourceHash": "fnv1a64:e5d745e95fae5f81",
     "detachableSegments": [
       "Script you'll notice: ൺ",
       "Writing: ൺ — copy what you see"

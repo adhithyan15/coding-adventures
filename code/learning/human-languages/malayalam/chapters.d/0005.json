@@ -10,7 +10,17 @@
     "lesson": "ML-C05-practice",
     "kind": "task",
     "summary": "Complete ML-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense Malayalam sentences with the chapter's first verbs.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "assesses": [
+      "ML-SCRIPT-RECOG-115",
+      "ML-SCRIPT-RECOG-142",
+      "ML-SCRIPT-RECOG-122",
+      "ML-SCRIPT-RECOG-143",
+      "ML-SCRIPT-RECOG-111",
+      "ML-SCRIPT-RECOG-144",
+      "ML-SCRIPT-RECOG-127",
+      "ML-SCRIPT-RECOG-145",
+      "ML-SCRIPT-RECOG-146"
+    ],
+    "note": "The checkpoint's reading check assesses the nine letters this chapter teaches. The legacy spoken lessons still carry no typed knowledge atoms, so their representativeness remains authored until migration."
   }
 }

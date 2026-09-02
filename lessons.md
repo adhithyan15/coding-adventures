@@ -279,6 +279,9 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 
 - **Every new source file needs a corresponding test file in the same commit.** Pytest-cov `fail_under=80` and similar gates trip on uncovered new code. Plan tests alongside implementation.
 - **Rust has no built-in coverage** — install `cargo-tarpaulin`. `cargo tarpaulin -p <name> --out stdout`; sum the per-file lines for your package's `src/`. Always report a real number, never "n/a".
+- **A Rust crate whose tests SPAWN A PROCESS must run tarpaulin with `--engine llvm`, or coverage dies with `SIGILL` while every test passes.** Tarpaulin's default Linux engine is ptrace: it patches INT3 breakpoints into the live process and steps each thread back over them. Per tarpaulin's own developer docs, "any threads that have hit a breakpoint need it disabled and stepped back to the start of the instruction otherwise you'll get a SIGILL as the ptrace continue/step commands will continue that thread with the program counter in an invalid position." A `Command::spawn` from a breakpointed worker thread does exactly that — the forked/cloned child resumes mid-instruction and the whole run aborts with `Failed to run tests: Error running test - SIGILL raised in <pid>`, *after* printing `test result: ok`. **The symptom is a coverage crash, not a test failure — don't go looking for a bug in the test.** Fix: add `--engine llvm` (uses `-C instrument-coverage`, no ptrace, so spawning is a non-event). Do **not** "fix" this by dropping the integration test from coverage: for the three `chief-of-staff-*-approval` adapters the spawning integration test is what covers most of `src/`, so excluding it would put the crate under the 80% bar.
+- **`-C instrument-coverage` INJECTS `__LLVM_PROFILE_RT_INIT_ONCE` into the child's own environment, which defeats a `Command::env_clear()` assertion.** Switching the approval adapters to `--engine llvm` traded the SIGILL for `Provider(InvalidResponse)` at the first `authorize()`. Cause: compiler-rt's profile runtime runs a startup constructor that `setenv()`s `__LLVM_PROFILE_RT_INIT_ONCE` as a one-time-init guard. The child sets it on **itself after `exec`**, so no `env_clear()` on the parent side can suppress it. The helper's security assertion `assert!(env::vars_os().all(|(name, _)| name == "CHIEF_APPROVAL_PROTOCOL"))` therefore panicked before writing a byte; the parent read EOF and mapped it to `InvalidResponse`. **Diagnosis trick that beat guessing: `chief-of-staff-notification-approval` PASSED while the other two failed, and the only structural difference was that its helper lacks that env assert — a free controlled experiment sitting in CI.** Fix: tolerate that one variable pinned on **name AND value** (`__LLVM_PROFILE_RT_INIT_ONCE=__LLVM_PROFILE_RT_INIT_ONCE`), never name alone — compiler-rt sets the guard with `setenv(..., overwrite=0)`, so a genuinely *inherited* variable of that name arrives carrying the parent's value, and a name-only allowlist is a one-variable smuggling channel straight through the leak check. Mutation-testing this does NOT prove the value pin: deleting `.env_clear()` from `src/lib.rs` leaks `PATH`/`HOME`/`CARGO_*` and so fails the weak and strong forms identically. **You do not need tarpaulin or Linux to reproduce this** — `RUSTFLAGS="-Cinstrument-coverage" cargo test -p <crate> --test <name>` reproduces it exactly on Windows, which turns an "only CI can verify" problem into a local one. Corollary: an instrumented child whose env was cleared has no `LLVM_PROFILE_FILE`, so it dumps `default_*.profraw` into the crate dir — hence `*.profraw` in `.gitignore`.
+- **CI installs `cargo-tarpaulin` UNPINNED (`cargo install cargo-tarpaulin`), so coverage can break with no repo change.** `chief-of-staff-biometric-approval` built and passed on ubuntu-latest with the ptrace engine on 2026-08-14 (PR #11506) and SIGILLed months later on untouched code — the tool moved, not the crate. Diff-based CI hides this: a package is only rebuilt when it changes, so a tool-drift breakage sits dormant until some unrelated PR triggers a near-full rebuild, and then looks like *that* PR's fault. When a package fails on code nobody edited, check the tool version before the diff. Same family as the existing "don't pin tool versions to `latest`" lesson.
 - **Tests requiring an external CLI must run a probe** (`git --version`, etc.) — `exec.LookPath("git")` only proves the binary exists, not that it works. **But whether a failed probe should SKIP depends on what the CLI is FOR, and getting that wrong is how conformance bugs ship.** Two cases, opposite answers:
   - The CLI is a *convenience* (a fixture generator, a formatter, a helper you could hand-roll): skipping is fine — the test still proves something without it.
   - The CLI is the *oracle* — the only independent implementation the test compares against: skipping is not degradation, it is total loss. `if !cli_available() { return; }` reports PASS while checking nothing, so on any machine or CI leg without the binary the test is indistinguishable from an empty function. `code/packages/rust/zstd` had exactly this shape: its `zstd`-CLI interop tests were the sole check that its output was real RFC 8878 rather than a self-consistent private format, and they opened with a skip. Three wire-format bugs (Lessons 95/96/98) plus an entire missing feature class (Huffman literals, FSE table descriptions — the decoder rejected nearly every real `.zst` file) survived behind that green checkmark, because every *other* test compared the crate's encoder against the crate's own decoder, and two halves wrong in the same way agree perfectly.
@@ -4535,6 +4538,62 @@ there immediately even while checks are queued, moving the parent PR's head and
 combining the changes. Before arming auto-merge, confirm that the PR targets the
 protected default branch. Keep a stacked child open without auto-merge until its
 parent lands, then retarget the child to the default branch and arm auto-merge.
+
+## A green PR is not a mergeable PR — check `mergeable`, not the check marks
+
+**Symptom:** fourteen of fifteen human-language PRs merged on their own. The
+fifteenth, #13815 (the Hindi romanization tranche, the largest single metric move
+of the batch — load-bearing headwords 71 -> 1), sat open for a day with
+**auto-merge armed, every check green, and zero failures**. Nothing surfaced it.
+The owner found it by looking at the PR list.
+
+**Root cause:** GitHub's check marks answer "did CI pass on this head?" They say
+nothing about whether the branch still applies to `main`. #13815's base moved 106
+commits while it was open — including other Hindi work that touched the same
+chapters — so its `mergeable` flipped to `CONFLICTING` / `mergeStateStatus:
+DIRTY`. **A conflicted PR reports no failing checks at all**, because there is
+nothing to fail: CI already ran, on the old head, and passed. `gh pr merge
+--auto` is a conditional that silently no-ops in this state, so arming it reads
+as completion while nothing is happening.
+
+**Why a monitor did not catch it:** the watcher polled `mergeable` and treated
+only `CONFLICTING` as a conflict. GitHub computes mergeability **lazily** — for a
+window after every push (and after every base change) the field reads `UNKNOWN`,
+not `CONFLICTING`. A poll that fires inside that window sees nothing wrong. On a
+repo taking ~100 commits/day to `main`, that window reopens constantly.
+
+**How to detect fast:**
+
+```
+gh pr list --state open --json number,mergeable,mergeStateStatus \
+  --template '{{range .}}{{.number}} {{.mergeable}} {{.mergeStateStatus}}{{"\n"}}{{end}}'
+```
+
+`MERGEABLE`+`BLOCKED` is normal (checks pending). `CONFLICTING`+`DIRTY` is dead
+in the water. `UNKNOWN` is **not** reassurance — it means GitHub has not computed
+it yet, so re-read rather than move on.
+
+**Fix:** merge `origin/main` into the branch, resolve, push again. Two rules that
+matter more than the resolution itself:
+
+* **Regenerate generated artifacts; never hand-merge them.** Every conflict in
+  #13815 was in generated output — narration, book chapters, lesson modality,
+  book/narration hashes, gentle-ramp snapshots. Taking either side of a textual
+  conflict produces a file that matches neither input. Take one side to clear the
+  conflict, then re-run every generator and let the output be the truth. Only
+  hand-merge authored files (there, one CHANGELOG).
+* **Re-verify after resolving.** A clean textual merge can still be wrong. Re-run
+  the gates and re-measure the metric the branch existed to move — #13815's
+  headline number was confirmed to survive at 1 before it was pushed.
+
+**The habit this should install:** never end a work session on "N PRs are in
+flight." End it on a freshly-read state table for every open PR. A watcher is not
+evidence; arming auto-merge is not babysitting. See also *Auto-merge can
+immediately merge a stacked PR into an unprotected feature base* above, and *A
+stale-branch merge can silently REVERT already-merged work* — all three are the
+same mistake: trusting a green signal that was never answering the question.
+
+Discovered: 2026-09-01, human-languages Indic wave-1 batch (15 PRs).
 
 ## One inline curriculum extension cannot own lessons from two path segments
 

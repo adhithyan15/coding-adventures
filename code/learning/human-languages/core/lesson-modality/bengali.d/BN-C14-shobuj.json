@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C14-shobuj",
     "language": "bengali",
-    "chapter": 14,
-    "sequence": 1140,
+    "chapter": 20,
+    "sequence": 1030,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:25e82d4b8c4d5add",
+    "sourceHash": "fnv1a64:0b17f9219a10b02c",
     "detachableSegments": [
       "The letters in this word"
     ]

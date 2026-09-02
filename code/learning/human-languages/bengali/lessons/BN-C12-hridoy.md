@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C12-hridoy
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 930
-chapter: 12
+sequence: 940
+chapter: 18
 type: word
 headword: হৃদয়
 romanization: hridoy
@@ -73,7 +73,7 @@ has the family been so wide or so certain.
 - [YOU SAY: "āmār hridoy" — my heart]
 - [YOU SAY: the wide family — "hṛd … heart, kardía, cor"]
 - [YOU SAY: all four of this chapter's words — "chokh, mukh, nāk, hridoy"]
-- [YOU SAY: one more word from Chapter 11, sharing this lesson's warmth of
+- [YOU SAY: one more word from Chapter 16, sharing this lesson's warmth of
   feeling — "bhāi," brother]
 
 ## Wrap-up Recall

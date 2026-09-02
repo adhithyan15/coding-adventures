@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-W02-tumi-read",
     "language": "bengali",
-    "chapter": 17,
-    "sequence": 1780,
+    "chapter": 4,
+    "sequence": 300,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:7d0edf4ac31e00fc",
+    "sourceHash": "fnv1a64:bd76732a2a32853c",
     "detachableSegments": [
       "Script"
     ],

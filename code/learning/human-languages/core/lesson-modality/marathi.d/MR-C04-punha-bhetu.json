@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C04-punha-bhetu",
     "language": "marathi",
-    "chapter": 7,
-    "sequence": 145,
+    "chapter": 11,
+    "sequence": 345,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:d7f272f6a1de2075"
+    "sourceHash": "fnv1a64:0ef95c1089a74908"
   },
   "findings": []
 }

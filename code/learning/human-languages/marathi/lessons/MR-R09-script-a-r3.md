@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-R09-script-a-r3
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 335
-chapter: 9
+sequence: 535
+chapter: 13
 type: review
 headword: ः / आ / भ
 romanization: "visarga / aa / bha"

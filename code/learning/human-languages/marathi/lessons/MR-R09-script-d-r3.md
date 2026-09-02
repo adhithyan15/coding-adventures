@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-R09-script-d-r3
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 338
-chapter: 9
+sequence: 538
+chapter: 13
 type: review
 headword: य / ळ / व
 romanization: "ya / lla / va"

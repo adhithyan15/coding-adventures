@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C07-mahit-asne",
     "language": "marathi",
-    "chapter": 10,
-    "sequence": 430,
+    "chapter": 14,
+    "sequence": 630,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:73f44daa1ff5c265"
+    "sourceHash": "fnv1a64:0b1e59f243978983"
   },
   "findings": []
 }

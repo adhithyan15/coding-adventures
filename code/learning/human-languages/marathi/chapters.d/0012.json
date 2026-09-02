@@ -1,25 +1,16 @@
 {
   "chapter": 12,
-  "title": "Taking, Asking, Helping, Liking",
-  "label": "ch:mr-doing-verbs",
-  "canDo": "I can take, ask, help and say what I like and what I love in Marathi, build a fresh verb by putting करणे behind a noun, and say why मला मराठी आवडते has no room for me as its subject while मी प्रेम करतो does.",
+  "title": "The First Verbs",
+  "label": "ch:first-verbs",
+  "canDo": "I can build short present-tense Marathi sentences with the chapter's first verbs.",
   "spineNodes": [
     "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "MR-C09-avadne",
-    "kind": "production",
-    "summary": "Say मला मराठी आवडते and hear that you are not its subject, set it against मी प्रेम करतो where you are, place both beside मला मराठी येते and मला मराठी समजते so one frame carries three meanings, and run the chapter's four verbs back with where each came from — Sanskrit ग्रह् beside English grab, विचार doing double duty as thought and question, Arabic मदद through Persian, and आवडणे with no Sanskrit ancestor to claim.",
-    "assesses": [
-      "MR-LEX-GHENE",
-      "MR-ETYMON-GRAH-GRAB",
-      "MR-LEX-VICHARNE",
-      "MR-ETYMON-VICHAR-THINK-ASK",
-      "MR-LEX-MADAT-KARNE",
-      "MR-ETYMON-MADAT-ARABIC",
-      "MR-LEX-AVADNE",
-      "MR-GRAMMAR-DATIVE-LIKING",
-      "MR-LEX-PREM-KARNE"
-    ]
+    "lesson": "MR-C05-practice",
+    "kind": "task",
+    "summary": "Complete MR-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense Marathi sentences with the chapter's first verbs.",
+    "assesses": [],
+    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
   }
 }

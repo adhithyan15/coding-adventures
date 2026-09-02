@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1ce99ce7fec5887c",
+  "sourceHash": "fnv1a64:0100386d17f740ed",
   "lessons": [
     {
       "id": "ML-C18-mani",
@@ -146,7 +146,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:27c9ecc07b02f493",
+      "sourceHash": "fnv1a64:7556862abdb69a73",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -173,7 +173,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ഉ — what does it do?"
+              "text": "Before the new one: ◌ം — what does it do?"
             },
             {
               "kind": "pause",

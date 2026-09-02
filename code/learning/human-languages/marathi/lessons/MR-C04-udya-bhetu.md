@@ -1,7 +1,7 @@
 ---
 id: MR-C04-udya-bhetu
-sequence: 150
-chapter: 7
+sequence: 350
+chapter: 11
 type: phrase
 headword: उद्या भेटू
 romanization: "udyā bheṭū"

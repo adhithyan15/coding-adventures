@@ -1,10 +1,11 @@
 {
   "language": "telugu",
   "chapter": 18,
-  "sourceHash": "fnv1a64:200ea9146c0c55bf",
+  "sourceHash": "fnv1a64:b48fc224e730ed7e",
   "lessonIds": [
     "TE-C18-ganta",
-    "TE-S121-letter-lla"
+    "TE-S121-letter-lla",
+    "TE-S139-letter-ddha"
   ],
   "tex": "telugu/book/chapters/ch18-telling-time.tex"
 }

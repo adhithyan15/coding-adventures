@@ -2,53 +2,57 @@
 schema_version: 2
 id: ML-S06-letter-chillu-ll
 spine_node: SPINE-MEET-GREET
-sequence: 395
+sequence: 114
 delivery: script
-chapter: 11
+chapter: 2
 type: writing
 headword: "ൾ"
 gloss: the single character ൾ — recognised inside words you already say
-romanization: "ll"
-prerequisites: [ML-S05-letter-na]
+romanization: "ḷ"
+prerequisites: [ML-S138-vowel-sign-ii]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-05]
+  knowledge: [ML-SCRIPT-RECOG-138]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-06]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-05, ML-SCRIPT-RECOG-06]
+  knowledge: [ML-SCRIPT-RECOG-138, ML-SCRIPT-RECOG-06]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [ML-S05-letter-na]
+reviews_of: [ML-S138-vowel-sign-ii]
 ---
 
 # ൾ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-138] -->
 
-[PAUSE 1s] Before the new one: ന — what does it do?
+[PAUSE 1s] Before the new one: ◌ീ — what does it do?
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
-for pages without knowing which mark on the page it was.
+[PAUSE 2s] One character this time. One only.
+It has been sitting in front of you on pages you have already read.
 
 ## Script you'll notice: ൾ
 <!-- hl-knowledge: introduces=[ML-SCRIPT-RECOG-06]; assesses=[] -->
 
-**ൾ** — *ll*.
+**ൾ** — *ḷ*.
 
-It is an **independent vowel** — the shape the vowel *ll* takes when a word begins with it, rather than the sign it becomes inside a word.
+It is a **chillu** — a consonant with its vowel stripped away and given a shape of its own, so that it can end a word without a dangling mark.
 
-You already say these, and every one of them has ൾ somewhere inside it:
+You have already said a word that ends with it.
 
-- **നീ / നിങ്ങൾ** — you (familiar / respectful)
-- **തിങ്കൾ ചൊവ്വ ബുധൻ വ്യാഴം വെള്ളി ശനി ഞായർ** — the seven weekdays
+- **നിങ്ങൾ** *niṅṅaḷ* — you (respectful)
+
+Every consonant in this script arrives carrying an *a*. A word that ends in a
+bare consonant therefore needs a way to say "no vowel here." Malayalam gives a
+handful of consonants a special end-of-word shape called a **chillu**, and
+**ൾ** is the chillu of the retroflex *ḷ*.
 
 ## Writing: ൾ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-06] -->
@@ -68,13 +72,13 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ൾ in the ones that have it]
 
-> നീ / നിങ്ങൾ  ·  തിങ്കൾ ചൊവ്വ ബുധൻ വ്യാഴം വെള്ളി ശനി ഞായർ  ·  നമസ്കാരം
+> നിങ്ങൾ  ·  നീ  ·  ൾ
 
-- [YOU TRACE: ൾ three times, saying *ll* as you finish each one]
+- [YOU TRACE: ൾ three times, saying *ḷ* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ൾ once more]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-06] -->
 
-[PAUSE 3s] Which character is this — ൾ? What sound does it carry? (***ll***.)
-Name one word you already say that contains it.
+[PAUSE 3s] Which character is this — ൾ? What sound does it carry? (***ḷ***.)
+What does a chillu tell you about the vowel? (That there isn't one.)

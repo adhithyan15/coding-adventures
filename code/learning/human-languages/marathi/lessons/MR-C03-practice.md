@@ -1,10 +1,10 @@
 ---
 id: MR-C03-practice
-sequence: 130
-chapter: 6
+sequence: 330
+chapter: 10
 type: practice
 headword: (recap)
-gloss: Chapter 6 recap — how are you
+gloss: Chapter 10 recap — how are you
 concept_tag: REVIEW
 prerequisites: [MR-C03-kaahi-harkat-nahi]
 sounds: []
@@ -13,7 +13,7 @@ est_minutes: 4
 reviews_of: [MR-C03-kasa, MR-C03-tumhi-kase-aahat, MR-C03-mi, MR-C03-mi-bara-aahe, MR-C03-kaahi-harkat-nahi]
 ---
 
-# Chapter 6 recap — how are you
+# Chapter 10 recap — how are you
 
 ## Warm-up
 

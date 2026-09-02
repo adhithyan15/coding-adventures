@@ -1,5 +1,10 @@
 {
   "language": "sanskrit",
   "chapter": 3,
-  "output": "sanskrit/book/chapters/ch03-responding.tex"
+  "output": "sanskrit/book/chapters/ch03-responding.tex",
+  "embeddedLessonIds": [
+    "SA-S01-letter-ma",
+    "SA-S06-vowel-sign-aa",
+    "SA-S203-vowel-sign-u"
+  ]
 }

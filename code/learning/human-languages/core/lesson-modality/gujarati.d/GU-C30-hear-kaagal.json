@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C30-hear-kaagal",
+    "language": "gujarati",
+    "chapter": 34,
+    "sequence": 1740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:36f29a844e77dfc4"
+  },
+  "findings": []
+}

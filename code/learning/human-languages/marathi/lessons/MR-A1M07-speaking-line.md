@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1M07-speaking-line
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 846
+sequence: 1046
 delivery: script
-chapter: 20
+chapter: 24
 type: writing
 headword: "मी बोलतो."
 gloss: retrieve the familiar masculine speaking sentence as its own message line

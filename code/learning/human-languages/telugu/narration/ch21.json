@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Dog and Cat",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3fa1988bd2a97e36",
+  "sourceHash": "fnv1a64:a1e9bdb42f54fc51",
   "lessons": [
     {
       "id": "TE-C21-kukka-pilli",
@@ -126,7 +126,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e54588efd4541e8f",
+      "sourceHash": "fnv1a64:a73dfac614806e8c",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -153,7 +153,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: డ — what does it do?"
+              "text": "Before the new one: ఢ — what does it do? And one from further back: ఖ?"
             },
             {
               "kind": "pause",
@@ -163,7 +163,7 @@
             },
             {
               "kind": "speech",
-              "text": "One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was."
+              "text": "One character this time — and you have been saying it for pages without knowing which mark on the page it was."
             }
           ]
         },
@@ -275,6 +275,10 @@
             {
               "kind": "speech",
               "text": "Which character is this — ఎ? What sound does it carry? (e.) Name one word you already say that contains it."
+            },
+            {
+              "kind": "speech",
+              "text": "One more, from much earlier: ఇ — what does it do?"
             }
           ]
         }

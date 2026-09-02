@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1F11-last-three-delayed
 spine_node: SPINE-NAME-EVERYDAY-THINGS
-sequence: 867
+sequence: 1067
 delivery: script
-chapter: 21
+chapter: 25
 type: writing
 headword: "आवडते पेय: चहा · आवडती कृती: वाचणे · मित्राचे नाव: मीरा"
 gloss: fill the last three rows after a short delay, separating labels from values

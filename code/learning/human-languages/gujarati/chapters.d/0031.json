@@ -1,0 +1,23 @@
+{
+  "chapter": 31,
+  "title": "The Table Is Set",
+  "label": "ch:gu-table-is-set",
+  "canDo": "I can hear and say five everyday Gujarati food words, and read and write one of them.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "GU-C27-plate-five",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Five food words enter meaning-first by ear, one lesson each; an oral checkpoint scores listening and speaking apart, rice reaches the page with signs taught before chapter 8, and an R1 return carries the chapter-16 table back at its fourth spacing window.",
+    "assesses": [
+      "GU-LEX-BHAAT-01",
+      "GU-LEX-DAAL-01",
+      "GU-LEX-SHAAK-01",
+      "GU-LEX-TEL-01",
+      "GU-LEX-KERI-01",
+      "GU-SCRIPT-BHAAT-01",
+      "GU-PERFORMANCE-PLATE-FIVE-ORAL-01"
+    ]
+  }
+}

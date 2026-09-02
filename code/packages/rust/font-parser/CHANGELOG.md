@@ -2,6 +2,45 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Added — OpenType `MATH` table
+
+`math_constants`, `italic_correction`, and `has_math_table`. This is the whole
+remaining font dependency for maths typesetting: every Appendix G decision — how
+far a fraction bar sits above the baseline, how thick it is, how much clearance
+a radical needs — needs a number from this table, and a renderer that invents
+them produces output that looks *almost* right.
+
+Fourteen constants are exposed, chosen as the set fractions, radicals and
+scripts consume, rather than transcribing all ~56 speculatively: an untested
+constant is a liability, not a feature.
+
+Verified against **fontTools** reading the same font, not against our own
+understanding. `tests/fixtures/stix-two-math.MATH` is the real table extracted
+from STIX Two Math (OFL 1.1, provenance recorded beside it), and every expected
+value came from the independent implementation. A hand-built fixture and a
+hand-written reader share their author's reading of the specification, so both
+are wrong together and agree perfectly — the shape this repository has hit four
+times.
+
+That oracle earned its place immediately: several `MathValue` record indices
+were wrong on first writing, recalled from memory rather than derived. The real
+table exposed them at once.
+
+The hazard worth naming, and pinned by its own test: almost every
+`MathConstants` entry is a `MathValue` — an `int16` followed by an `Offset16`
+device table. Reading them as bare `int16` *appears* to work, because the first
+field really is the value, while halving the stride so every constant after the
+first is wrong.
+
+`math_constants` returns `Ok(None)` for a font with no `MATH` table, keeping
+*absent* distinct from *corrupt*. Conflating them means silently typesetting
+with default constants.
+
+Rust only for now; the other ports of FNT00 do not carry this yet.
+
+
 ## [0.1.0] - 2026-04-01
 
 ### Added

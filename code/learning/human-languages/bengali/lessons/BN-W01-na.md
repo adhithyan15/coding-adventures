@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W01-na
 spine_node: SPINE-MEET-GREET
-sequence: 1600
+sequence: 70
 delivery: script
-chapter: 16
+chapter: 2
 type: writing
 headword: ন
 romanization: "nô"

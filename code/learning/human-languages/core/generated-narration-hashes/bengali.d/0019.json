@@ -1,26 +1,18 @@
 {
   "language": "bengali",
   "chapter": 19,
-  "sourceHash": "fnv1a64:f00c893f4dba75ab",
+  "sourceHash": "fnv1a64:618d64fd5b462254",
   "lessonIds": [
-    "BN-W04-cha",
-    "BN-W04-chaa-read",
-    "BN-W04-pa",
-    "BN-W04-poribar-read",
-    "BN-W04-ja",
-    "BN-W04-jol-read",
-    "BN-W04-ii-matra",
-    "BN-W04-nil-read",
-    "BN-W04-i-indep",
-    "BN-W04-bhai-read",
-    "BN-W04-e-indep",
-    "BN-W04-ek-read"
+    "BN-C13-doya-kore",
+    "BN-C13-dukkhito",
+    "BN-C13-maf-korben",
+    "BN-C13-sbagotom"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "bengali/narration/ch19.txt",
   "json": "bengali/narration/ch19.json",
-  "textHash": "fnv1a64:4bc9eb3fefca88b7",
-  "jsonHash": "fnv1a64:15948286d1acbdb7",
+  "textHash": "fnv1a64:6012397a4a28b58f",
+  "jsonHash": "fnv1a64:b772ec66b495e896",
   "findings": []
 }

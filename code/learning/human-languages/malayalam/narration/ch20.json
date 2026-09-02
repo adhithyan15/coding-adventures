@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Numbers 11–20 and Weather",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:e071347c6d895bfd",
+  "sourceHash": "fnv1a64:2e565de4f76adf19",
   "lessons": [
     {
       "id": "ML-C20-pathinonnu-irupathu",
@@ -261,7 +261,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:433c8db66eef87d9",
+      "sourceHash": "fnv1a64:92cf742660019b31",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -288,7 +288,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: യ — what does it do?"
+              "text": "Before the new one: ഷ — what does it do?"
             },
             {
               "kind": "pause",

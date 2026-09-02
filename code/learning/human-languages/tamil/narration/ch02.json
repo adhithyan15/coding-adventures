@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:b55db3804a8a541e",
+  "sourceHash": "fnv1a64:b819aa07f2453f7c",
   "lessons": [
     {
       "id": "TA-C02-peyar",
@@ -524,7 +524,7 @@
       "sequence": 160,
       "title": "உங்கள் பெயர் என்ன? (uṅgaḷ peyar eṉṉa?) — \"what's your name?\"",
       "headword": "உங்கள் பெயர் என்ன?",
-      "romanization": "",
+      "romanization": "uṅgaḷ peyar eṉṉa?",
       "gloss": "what's your name?",
       "script": "tamil",
       "modality": "voice",
@@ -532,7 +532,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8ac64f1e7a0c725",
+      "sourceHash": "fnv1a64:57a759fd748b6bcc",
       "notice": null,
       "blocks": [
         {
@@ -563,7 +563,7 @@
             },
             {
               "kind": "speech",
-              "text": "உங்கள் பெயர் (peyar) என்ன (eṉṉa)? = literally \"your name what?\" = \"what's your name?\""
+              "text": "உங்கள் பெயர் என்ன? (uṅgaḷ peyar eṉṉa?) = literally \"your name what?\" = \"what's your name?\""
             },
             {
               "kind": "speech",
@@ -626,7 +626,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does உங்கள் பெயர் (peyar) என்ன (eṉṉa)? literally say, and what's missing versus English? (\"Your name what?\"; no \"is\" — zero copula.)"
+              "text": "What does உங்கள் பெயர் என்ன? (uṅgaḷ peyar eṉṉa?) literally say, and what's missing versus English? (\"Your name what?\"; no \"is\" — zero copula.)"
             }
           ]
         }
@@ -637,7 +637,7 @@
       "sequence": 165,
       "title": "மகிழ்ச்சி (magiḻcci) — \"joy,\" and \"pleased to meet you\"",
       "headword": "மகிழ்ச்சி",
-      "romanization": "",
+      "romanization": "magiḻcci",
       "gloss": "joy / pleased to meet you",
       "script": "tamil",
       "modality": "voice",
@@ -645,7 +645,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5519f38ad4330a86",
+      "sourceHash": "fnv1a64:8f7678fe50e19c34",
       "notice": null,
       "blocks": [
         {
@@ -731,7 +731,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does மகிழ்ச்சி mean and from what verb? (\"Joy,\" from magiḻ, \"to rejoice.\") What rare Tamil sound does it contain? (ழ, ḻ — also in Tamiḻ.)"
+              "text": "What does மகிழ்ச்சி (magiḻcci) mean and from what verb? (\"Joy,\" from magiḻ, \"to rejoice.\") What rare Tamil sound does it contain? (ழ, ḻ — also in Tamiḻ.)"
             }
           ]
         }
@@ -785,7 +785,7 @@
               "rowCount": 4,
               "utterances": [
                 "என் பெயர் மீரா. (eṉ peyar Mira) means My name is Mira.",
-                "உங்கள் பெயர் என்ன? (uṅgaḷ peyar eṉṉa) means What's your name?",
+                "உங்கள் பெயர் என்ன? (uṅgaḷ peyar eṉṉa?) (uṅgaḷ peyar eṉṉa) means What's your name?",
                 "என் பெயர் அருண். (eṉ peyar Arun) means My name is Arun.",
                 "மகிழ்ச்சி. (magiḻcci) means Pleased to meet you."
               ]

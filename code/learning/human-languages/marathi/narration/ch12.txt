@@ -1,155 +1,161 @@
-Marathi, chapter 12: Taking, Asking, Helping, Liking.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Marathi, chapter 12: The First Verbs.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 4.
-घेणे (gheṇe) — "to take," which you have been saying since Chapter 7.
+Lesson 1 of 5.
+बोलणे (bolṇe) — "to speak".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Say "to write" and "to read" — lihiṇe, vāchṇe — and what lihiṇe's root meant before writing existed. (To scratch.) This next verb has been in your mouth since the farewells, unrecognised.
-
-You'll want to know: घेणे.
-घेणे — gheṇe — to take.
-काळजी घ्या — kāḷjī ghyā, "take care" — is this verb. घ्या ghyā is its respectful command, घे ghe the familiar one you would use with तू. The plain present is मी घेतो mī gheto / घेते ghete.
-Note the -त- that appears in the present but not the infinitive: ghe- on its own, ghe-t-o when conjugated. Marathi's commonest verbs are the ones that bend.
+Until now, verbs of being and meeting. Here is your first verb of doing — to speak — and the pattern that runs every Marathi verb.
 
 The letters in this word.
-घ is gha — a g with a real puff of breath behind it, a separate letter from ग ga, exactly as ख kha is separate from क ka. Add the -e stroke over the top and the retroflex णे: ghe-ṇe.
+(Skim if you read Devanagari.) बो (bo) + ल (la) + णे (ṇe, the retroflex ण ṇa with the -e stroke) becomes बोलणे bolṇe.
 
-The word, taken apart — the root of "grab".
-घेणे (gheṇe) comes through Prakrit gahaï from the Sanskrit root ग्रह् grah-, "to seize, to grasp" — the root of ग्रहण grahaṇ, an eclipse, which is the sky being seized.
-Its older Vedic shape was ग्रभ् grabh-, and that bh is the piece worth holding on to: Indo-European gʰrebʰ- kept its bh in Vedic and turned it into a b in Germanic, which is English grab. Marathi's gh- is what four thousand years did to the same first consonant. Grabh and grab are the same word.
+The word, taken apart.
+बोलणे (bolṇe, "to speak") is a native Indo-Aryan verb on the stem bol- — the same bol- as Hindi bolnā and Punjabi bolṇā. Its ending -णे (-ṇe) is the Marathi infinitive ("to ___"): bol-ṇe "to speak," bheṭ-ṇe "to meet," ye-ṇe "to come." Strip -ṇe and you have the stem to build on: bol-.
+
+Grammar Lens: stem + gendered present ending.
+From the stem you build the present tense — and, as with yeto/yete, it splits by the speaker's gender:
+मी बोलतो (mī bolto) — a man speaks.
+मी बोलते (mī bolte) — a woman speaks.
+(plural / respectful: बोलतो / बोलता).
+The verb still ends the sentence; the copula-less present tense is one word doing the work.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "gheṇe" — to take — then "mī gheto" or "ghete"]
+[your turn — say: "bolṇe" — to speak; then the stem (bol-)]
 [pause 8 seconds for the answer]
-[your turn — say: the farewell it was hiding in — "kāḷjī ghyā"]
-[pause 8 seconds for the answer]
-[your turn — say: the Vedic form and its English cousin — "grabh … grab"]
+[your turn — say: "I speak" for your own gender (mī bolto / mī bolte)]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which farewell has been using घेणे all along, and what does it literally say? (काळजी घ्या — "take care.") Which English word is the same word as Vedic grabh? (Grab.) What gender is घेणे when it acts as a noun? (Neuter, like every -णे form.) Say "to write" and "to take" in one breath. (Lihiṇe, gheṇe.)
+What is the Marathi infinitive ending, and how does the present split? (-ṇe; the present ending changes with the speaker's gender — bolto m. / bolte f.)
 
 
-Lesson 2 of 4.
-विचारणे (vichārṇe) — "to ask," built out of "a thought".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Lesson 2 of 5.
+मी मराठी बोलतो (mī marāṭhī bolto) — "I speak Marathi".
 
 Warm-up.
 [pause 2 seconds]
-Say "to take" — gheṇe. Say "to think" — vichār karṇe — and what its root meant. (To turn, to range about.) Hold that word. The next verb is it, with four letters fewer.
+Your first full action-sentence — and it names the language itself.
 
-You'll want to know: विचारणे.
-विचारणे — vichārṇe — to ask.
-मी विचारतो — mī vichārto — "I ask," विचारते vichārte if a woman speaks. And the same च rule holds: say it vitsārto, with the ts Marathi puts before a long ā.
+The phrase, assembled.
+मी (mī, I) + मराठी (marāṭhī, Marathi, the object) + बोलतो (bolto, speak) becomes "I Marathi speak," verb last.
+A woman says मी मराठी बोलते (mī marāṭhī bolte).
 
-The letters in this word.
-There is nothing new. विचारणे (vichārṇe) is विचार — the noun from the last chapter, letter for letter — with णे on the end. If you can write "a thought," you can write "to ask."
-
-The word, taken apart — one root, two verbs.
-Marathi builds both verbs on विचार:
-[a table of 2 rows, read aloud]
-विचार करणे means to think — "to do a thought".
-विचारणे (vichārṇe) means to ask — the thought made into a verb.
-Both sit on वि- plus चर् car-, "to move, to range." Thinking is ranging over something privately; asking is ranging over it out loud with somebody else. Marathi did not decide they were different enough to need different words.
-This is Marathi's own arrangement, not a family inheritance. Hindi's verb for asking, पूछना pūchnā, comes from an unrelated root, and Hindi's विचार stays a noun. Where a language draws its lines is a choice each language makes for itself.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: the pair, slowly — "vichār karṇe … vichārṇe"]
-[pause 8 seconds for the answer]
-[your turn — say: "I ask" in your own gender — "mī vichārto" or "vichārte"]
-[pause 8 seconds for the answer]
-[your turn — say: both with the Marathi ts — "vitsār karto … vitsārto"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What is the only difference between Marathi's "to think" and its "to ask"? (करणे — thinking adds "to do"; asking puts -णे straight onto विचार.) What did the shared root mean? (To move, to turn over.) How is the च said in both? (Nearer ts before the long ā.) And "to take"? (Gheṇe.)
-
-
-Lesson 3 of 4.
-मदत करणे (madat karṇe) — "to help," a word that travelled.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Say "to ask" — vichārṇe. And say "I know" — malā māhīt āhe — then name where माहीत was borrowed from. (Arabic, through Persian.) A second borrowed word from that same layer is coming.
-
-You'll want to know: मदत करणे.
-मदत करणे — madat karṇe — to help.
-Built the way kām karṇe and vichār karṇe are built: a noun, मदत madat ("help"), with करणे behind it. मी मदत करतो — mī madat karto — "I help," करते karte for a woman.
-That pattern is the most productive thing in the language: put करणे behind almost any noun and Marathi will accept the verb.
-
-The letters in this word.
-मदत is three bare consonants, each with its built-in a: म ma, द da, त ta — ma-da-t, with the last a falling away in speech as it usually does at the end of a Marathi word.
-
-The word, taken apart — help as a hand extended.
-मदत is Arabic madad, borrowed through Persian. Its Arabic root means to stretch out, to extend — madad is a thing extended: a hand, or reinforcements sent to an army. Help, named as reach.
-It belongs to the layer of Persian and Arabic administration that settled into Marathi under the Deccan sultanates — the same layer that gave you माहीत in malā māhīt āhe, and हरकत in kāhī harkat nāhī. Three everyday words, one route.
-One small tell worth keeping: Marathi writes मदत, with a final त. Hindi and Urdu write मदद, with a द. The same loan, landing differently in each language — which is what borrowing normally looks like.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "madat karṇe" — then "mī madat karto" or "karte"]
-[pause 8 seconds for the answer]
-[your turn — say: the three करणे verbs you have — "kām karṇe, vichār karṇe, madat karṇe"]
-[pause 8 seconds for the answer]
-[your turn — say: what the Arabic root meant — "to stretch out"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What did मदत's Arabic root mean before it meant help? (To stretch out, to extend.) Which road did it travel to reach Marathi? (Persian.) Name another word you have from that same layer. (माहीत, or हरकत in kāhī harkat nāhī.) And how does Marathi spell the end of the word, against Hindi and Urdu? (With त, not द.)
-
-
-Lesson 4 of 4.
-आवडणे (āvaḍṇe) — "to like," which is not something you do.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Three verbs from this chapter: gheṇe, vichārṇe, madat karṇe. Say them. Each let you be the one acting. The fourth will not.
-
-You'll want to know: आवडणे.
-आवडणे — āvaḍṇe — to like.
-मला मराठी आवडते — malā marāṭhī āvaḍte — "I like Marathi," or word for word, "to me Marathi pleases."
-
-The letters in this word.
-आ is the standalone long ā; व va; ड ḍa, a retroflex d made with the tongue curled back — new here, and not the द da of madat; then णे. Ā-va-ḍa-ṇe.
-
-Grammar Lens: the third sentence built this way.
-[a table of 3 rows, read aloud]
-Marathi: मला मराठी येते. word for word: to-me Marathi comes — I know it.
-Marathi: मला मराठी समजते. word for word: to-me Marathi is-understood — I understand it.
-Marathi: मला मराठी आवडते. word for word: to-me Marathi pleases — I like it.
-One frame, three meanings. You are मला in all three, never the subject, and the verb agrees with मराठी. Change the thing liked and the ending follows it: a masculine thing takes आवडतो, a neuter thing आवडतं.
-
-The word, taken apart — one native, one inherited.
-आवडणे (āvaḍṇe) is Marathi's own — straight down from Old Marathi, cousin to Konkani āvaḍ, with no Sanskrit ancestor securely established, so this lesson claims none. Hindi and Urdu say पसंद pasand, borrowed from Persian.
-Loving is a separate verb: प्रेम करणे prem karṇe, and there you are the subject — मी प्रेम करतो. प्रेम is Sanskrit preman, on प्री prī-, "to be dear," from Indo-European preyH-. Germanic built a verb "to love" on it, and from that English has friend — the one loved — and free.
+The word, taken apart.
+मराठी (marāṭhī) is "[the language] of महाराष्ट्र (Mahārāṣṭra)" — the "great kingdom/realm," mahā ("great," cousin of Latin magnus and English magnitude) + rāṣṭra ("nation, realm"). The people are the Marāṭhā, the land Mahārāṣṭra, and the tongue marāṭhī — all one root. It carries the same retroflex sounds you keep meeting: the ट (ṭa) of marāṭhī, the ळ of kāḷjī.
 
 Why it's said this way.
-Chapter 9's rule holds here: neither language is simply older. Marathi's दोन took its final n by copying तीन — an innovation. Hindi's पाँच kept a nasal Marathi dropped — a retention. Now a verb: Marathi kept its native word for liking, Hindi took a Persian one.
+The present tense needs no separate "am/do" — बोलतो alone says "I speak." Contrast Hindi, which adds a copula (maiṁ hindī boltā hūṁ); Marathi folds the "am" into the verb ending. Cleaner, and gendered.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "malā marāṭhī āvaḍte" — hearing "to me," not "I"]
+[your turn — say: "mī marāṭhī bolto/bolte" — I speak Marathi]
 [pause 8 seconds for the answer]
-[your turn — say: the one you do — "mī prem karto" or "karte"]
-[pause 8 seconds for the answer]
-[your turn — say: this chapter's four — "gheṇe, vichārṇe, madat karṇe, āvaḍṇe"]
+[your turn — say: the root of marāṭhī (Mahārāṣṭra = "great realm")]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Who is the subject of malā marāṭhī āvaḍte? (मराठी — not you.) Which of the two puts you in the subject's chair? (प्रेम करणे.) Which English words share प्रेम's root? (Friend, free.) Now the chapter's four sources — gheṇe, vichārṇe, madat karṇe, āvaḍṇe. (Sanskrit ग्रह्, cousin of grab; विचार, the thinking word itself; Arabic madad through Persian; and आवड, native.)
+Where does the name marāṭhī come from? (Mahārāṣṭra, "great realm" — mahā "great" + rāṣṭra "nation.")
+
+
+Lesson 3 of 5.
+राहणे (rāhṇe) — "to live, to stay".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+A second verb on the same engine — to live — and a first postposition to place yourself somewhere.
+
+The letters in this word.
+(Skim if you read Devanagari.) रा (rā) + ह (ha) + णे (ṇe, retroflex) becomes राहणे rāhṇe.
+
+The word, taken apart.
+राहणे (rāhṇe, "to live, remain, stay") is from Sanskrit रह् (rah-, "to remain") — the same root behind Hindi rahnā. Present tense, gendered as always: मी पुण्यात राहतो (mī puṇyāt rāhto, a man) / राहते (rāhte, a woman) — "I live in Pune."
+
+Grammar Lens: "in" comes after the noun.
+Look at पुण्यात (puṇyāt) = पुणे (Puṇe, the city) + -ात (-āt, "in"). Marathi glues "in" onto the end of the noun — a postposition, not a preposition. Verb last, place-marker on the noun's tail: mī puṇyāt rāhto, "I in-Pune live."
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "rāhṇe" — to live; then "mī puṇyāt rāhto/rāhte"]
+[pause 8 seconds for the answer]
+[your turn — say: how "in" attaches (Puṇe + -āt becomes puṇyāt)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Where does "in" go in Marathi, and on what root is rāhṇe? (On the end of the noun (-āt); Sanskrit rah- "to remain.")
+
+
+Lesson 4 of 5.
+काम करणे (kām karṇe) — "to work".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Your third verb — to work — and it closes a circle back to Chapter 1's greeting.
+
+The letters in this word.
+(Skim if you read Devanagari.) काम (kām): का + म (ma). करणे (karṇe): क (ka) + र (ra) + णे (ṇe, retroflex).
+
+The word, taken apart.
+करणे (karṇe, "to do, make") is from Sanskrit √कृ (kṛ, "to do"), from PIE kʷer-. That is the very root hiding inside Chapter 1's नमस्कार (namaskār = "the making of a bow") and inside कर्म (karma, "a thing done"). And काम (kām, "work") is itself worn down from that same कर्म (karma). So "to work" is literally built twice from doing: काम करणे (kām karṇe) = "work-do."
+
+Grammar Lens: noun + करणे makes a verb.
+Marathi builds countless verbs as noun + करणे: kām karṇe (to work), madat karṇe (to help), sevā karṇe (to serve). Present tense, gendered: मी काम करतो (mī kām karto, m.) / करते (karte, f.) — "I work."
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "kām karṇe" — to work; then "mī kām karto/karte"]
+[pause 8 seconds for the answer]
+[your turn — say: the root it shares with namaskār and karma (√kṛ, "to do")]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What links karṇe, namaskār, and karma? (All from √kṛ, "to do" — and kām "work" is worn-down karma.)
+
+
+Lesson 5 of 5.
+Chapter 12 recap — the first verbs.
+
+Warm-up.
+[pause 2 seconds]
+Three verbs, one engine — sentences about yourself.
+
+Sentences about yourself.
+[a table of 3 rows, read aloud]
+Marathi: मी मराठी बोलतो / बोलते. Say it: mī marāṭhī bolto / bolte. English: I speak Marathi.
+Marathi: मी पुण्यात राहतो / राहते. Say it: mī puṇyāt rāhto / rāhte. English: I live in Pune.
+Marathi: मी काम करतो / करते. Say it: mī kām karto / karte. English: I work.
+
+The engine, in one look.
+Infinitive ends in -णे (-ṇe): bolṇe, rāhṇe, karṇe.
+Present = stem + a gendered ending — -to (m.) / -te (f.): bolto/ bolte, rāhto/rāhte, karto/karte. No separate "am" — the ending carries it.
+Verb goes last; "in" attaches to the noun's end (puṇyāt).
+
+Roots banked.
+बोलणे (bolṇe) — to speak (native bol-).
+मराठी (marāṭhī) — from Mahārāṣṭra, "great realm."
+राहणे (rāhṇe) — to live (Sanskrit rah-).
+करणे (karṇe) — to do/work (√kṛ — root of namaskār, karma; kām from karma).
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: all three sentences for your own gender]
+[pause 8 seconds for the answer]
+[your turn — say: "I speak Marathi and I work" (mī marāṭhī bolto āṇi kām karto)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What three things does the Marathi present tense fold into one word? (The action, the person, and their gender — no separate "am.") From here, Marathi only opens further.

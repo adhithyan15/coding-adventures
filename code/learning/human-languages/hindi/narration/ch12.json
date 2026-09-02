@@ -4,14 +4,14 @@
   "chapter": 12,
   "title": "Family",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:176a67f8ab3a76f7",
+  "sourceHash": "fnv1a64:cbdd4c55cb593bd8",
   "lessons": [
     {
       "id": "HI-C12-pitaa-maataa",
       "sequence": 570,
       "title": "पिता, माता (pitā, mātā) — father and mother, cousins across a huge family",
       "headword": "पिता / माता / बाप / माँ",
-      "romanization": "",
+      "romanization": "pitā / mātā / bāp / māṁ",
       "gloss": "father and mother — respectable पिता and माता, everyday spoken बाप and माँ",
       "script": "devanagari",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:805b638502c83ac0",
+      "sourceHash": "fnv1a64:3f082f144e42dfd3",
       "notice": null,
       "blocks": [
         {
@@ -133,7 +133,7 @@
       "sequence": 580,
       "title": "भाई, बहन (bhāī, bahin) — one cousin word, one different word entirely",
       "headword": "भाई बहन",
-      "romanization": "",
+      "romanization": "bhāī bahin",
       "gloss": "brother (a PIE cousin of English \"brother\") and sister (a DIFFERENT Sanskrit word entirely, not the PIE cousin of \"sister\")",
       "script": "devanagari",
       "modality": "voice",
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f02c4c21edec4f25",
+      "sourceHash": "fnv1a64:79f7279a6564c676",
       "notice": null,
       "blocks": [
         {

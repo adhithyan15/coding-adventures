@@ -4,7 +4,7 @@
   "chapter": 51,
   "title": "Courtesy Words",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f4a31942a02885ab",
+  "sourceHash": "fnv1a64:c674f1828c03bc4e",
   "lessons": [
     {
       "id": "TE-C51-gratitude",
@@ -143,7 +143,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:43ee68632c04819f",
+      "sourceHash": "fnv1a64:a2f8a32415a485d5",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -170,7 +170,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ◌ృ — what does it do?"
+              "text": "Before the new one: ◌ృ — what does it do? And one from further back: భ?"
             },
             {
               "kind": "pause",
@@ -284,6 +284,10 @@
             {
               "kind": "speech",
               "text": "Which character is this — ఞ (ña)? Which letter does it usually sit under, and what does that pair sound like? (Under జ, in the block జ్ఞ, said gnya.)"
+            },
+            {
+              "kind": "speech",
+              "text": "One more, from much earlier: ◌ై — what does it do?"
             }
           ]
         }
@@ -548,7 +552,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d5ddb0c2170a4693",
+      "sourceHash": "fnv1a64:f2c67157dee7af15",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -575,7 +579,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ఞ (ña) — what does it do?"
+              "text": "Before the new one: ఞ (ña) — what does it do? And one from further back: ఋ?"
             },
             {
               "kind": "pause",
@@ -693,6 +697,10 @@
             {
               "kind": "speech",
               "text": "Which character is this — ◌ౌ? What vowel does it put on the consonant it attaches to, and what does it take off? (Puts au on; takes the built-in a off.) Name the word you already say that contains it."
+            },
+            {
+              "kind": "speech",
+              "text": "One more, from much earlier: ఖ — what does it do?"
             }
           ]
         }

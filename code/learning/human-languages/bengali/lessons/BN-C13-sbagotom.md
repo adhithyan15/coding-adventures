@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C13-sbagotom
 spine_node: SPINE-MEET-GREET
-sequence: 1030
-chapter: 13
+sequence: 980
+chapter: 19
 type: word
 headword: স্বাগতম
 romanization: shbagotom

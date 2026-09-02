@@ -4,14 +4,14 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:240ca52ae443a3c7",
+  "sourceHash": "fnv1a64:ad58059c4c0ba2c2",
   "lessons": [
     {
       "id": "HI-C04-phir",
       "sequence": 340,
       "title": "फिर (phir) — \"again,\" the seed of \"see you again\"",
       "headword": "फिर",
-      "romanization": "",
+      "romanization": "phir",
       "gloss": "again, then",
       "script": "devanagari",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fee98bbb013690ce",
+      "sourceHash": "fnv1a64:4f38ad9035b2827e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -77,7 +77,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "फ (pha, an aspirated p) + ि (the i-mātrā, written before but read after) + र (ra) becomes फिर."
+              "text": "फ (pha, an aspirated p) + ि (the i-mātrā, written before but read after) + र (ra) becomes फिर (phir)."
             }
           ]
         },
@@ -281,7 +281,7 @@
       "sequence": 360,
       "title": "फिर मिलेंगे (phir milenge) — \"we'll meet again\"",
       "headword": "फिर मिलेंगे",
-      "romanization": "",
+      "romanization": "phir milenge",
       "gloss": "we'll meet again (goodbye)",
       "script": "devanagari",
       "modality": "voice",
@@ -289,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f12d281c08de0465",
+      "sourceHash": "fnv1a64:d42aa8cbabccfdd6",
       "notice": null,
       "blocks": [
         {
@@ -399,7 +399,7 @@
       "sequence": 370,
       "title": "कल मिलते हैं (kal milte haiṁ) — \"see you tomorrow\"",
       "headword": "कल मिलते हैं",
-      "romanization": "",
+      "romanization": "kal milte haiṁ",
       "gloss": "see you tomorrow (and the कल puzzle)",
       "script": "devanagari",
       "modality": "sight",
@@ -407,7 +407,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ab433240f1b58e7e",
+      "sourceHash": "fnv1a64:05a80d161f3c6f65",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -458,7 +458,7 @@
             },
             {
               "kind": "speech",
-              "text": "कल मिलते हैं = kal (\"tomorrow\") + milte haiṁ (\"we meet,\" present used for a near-certain future) becomes \"see you tomorrow.\""
+              "text": "कल मिलते हैं (kal milte haiṁ) = kal (\"tomorrow\") + milte haiṁ (\"we meet,\" present used for a near-certain future) becomes \"see you tomorrow.\""
             }
           ]
         },
@@ -548,7 +548,7 @@
       "sequence": 380,
       "title": "चलता हूँ (chaltā hūṁ) — \"I'll be off\"",
       "headword": "चलता हूँ",
-      "romanization": "",
+      "romanization": "chaltā hūṁ",
       "gloss": "I'll be off (lit. \"I go\"), gendered",
       "script": "devanagari",
       "modality": "sight",
@@ -556,7 +556,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:068b50b529c0899f",
+      "sourceHash": "fnv1a64:215125685087407a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -592,7 +592,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "च (ca) + ल (la) + the long-ā mātrā becomes चलता (caltā); with हूँ (hūṁ, \"am,\" from Chapter 3). Read caltā hūṁ."
+              "text": "च (ca) + ल (la) + the long-ā mātrā becomes चलता (chaltā); with हूँ (hūṁ, \"am,\" from Chapter 3). Read chaltā hūṁ."
             }
           ]
         },
@@ -603,7 +603,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "चलता हूँ literally means \"I go / I move,\" used the way English says \"I'll be off / I'll get going.\" The verb is चलना (calnā, \"to move, walk, go\"), from Sanskrit चल् (cal-, \"to move, stir\") — the root behind cal (\"move!\"), calan (\"circulation\"), and cañcal (\"restless\"). Like Bengali āshi (\"I come\") and Marathi yeto, Hindi prefers to leave by saying \"I'm moving,\" never a blunt \"I'm leaving.\""
+              "text": "चलता हूँ (chaltā hūṁ) literally means \"I go / I move,\" used the way English says \"I'll be off / I'll get going.\" The verb is चलना (chalnā, \"to move, walk, go\"), from Sanskrit चल् (cal-, \"to move, stir\") — the root behind cal (\"move!\"), calan (\"circulation\"), and cañcal (\"restless\"). Like Bengali āshi (\"I come\") and Marathi yeto, Hindi prefers to leave by saying \"I'm moving,\" never a blunt \"I'm leaving.\""
             }
           ]
         },
@@ -614,11 +614,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "a man says चलता हूँ (caltā hūṁ)."
+              "text": "a man says चलता हूँ (chaltā hūṁ)."
             },
             {
               "kind": "speech",
-              "text": "a woman says चलती हूँ (caltī hūṁ)."
+              "text": "a woman says चलती हूँ (chaltī hūṁ)."
             },
             {
               "kind": "speech",
@@ -650,16 +650,16 @@
             },
             {
               "kind": "speech",
-              "text": "[YOU SAY (m.): caltā hūṁ, (f.): caltī hūṁ]."
+              "text": "[YOU SAY (m.): chaltā hūṁ, (f.): chaltī hūṁ]."
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the verb and root (calnā \"to move,\" Sanskrit cal-)",
+              "instruction": "the verb and root (chalnā \"to move,\" Sanskrit cal-)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the verb and root (*calnā* \"to move,\" Sanskrit *cal-*)]"
+              "source": "[YOU SAY: the verb and root (*chalnā* \"to move,\" Sanskrit *cal-*)]"
             },
             {
               "kind": "prompt",
@@ -685,7 +685,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does chaltā hūṁ literally mean, and how does a woman say it? (\"I go/move\" = I'll be off; caltī hūṁ, with the feminine -tī.)"
+              "text": "What does chaltā hūṁ literally mean, and how does a woman say it? (\"I go/move\" = I'll be off; chaltī hūṁ, with the feminine -tī.)"
             }
           ]
         }

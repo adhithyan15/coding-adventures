@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C03-tumi-kemon-achho",
     "language": "bengali",
-    "chapter": 3,
-    "sequence": 170,
+    "chapter": 5,
+    "sequence": 330,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:9ccc24f0d9be8511",
+    "sourceHash": "fnv1a64:a619fa7cae19cbeb",
     "detachableSegments": [
       "The letters in this word"
     ]

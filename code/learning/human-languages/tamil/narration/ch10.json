@@ -4,14 +4,14 @@
   "chapter": 10,
   "title": "Days of the Week",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6f8347ddc75007a6",
+  "sourceHash": "fnv1a64:66e21d74d6d5d57b",
   "lessons": [
     {
       "id": "TA-C10-vaara-kizhamai",
       "sequence": 520,
-      "title": "திங்கள்–ஞாயிறு — a home-grown and borrowed week",
+      "title": "திங்கள்–ஞாயிறு (thiṅgaḷ–ñāyiṟu) — a home-grown and borrowed week",
       "headword": "திங்கள்–ஞாயிறு",
-      "romanization": "",
+      "romanization": "thiṅgaḷ–ñāyiṟu",
       "gloss": "the seven weekdays — a mix of Tamil's OWN planet-words and Sanskrit borrowings",
       "script": "tamil",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff31b17db43deacb",
+      "sourceHash": "fnv1a64:77022bfc88b38708",
       "notice": null,
       "blocks": [
         {

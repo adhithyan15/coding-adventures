@@ -4,14 +4,14 @@
   "chapter": 26,
   "title": "Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:531c6e8d187571ea",
+  "sourceHash": "fnv1a64:2f9ee743eb28668b",
   "lessons": [
     {
       "id": "HI-C26-raat",
       "sequence": 770,
       "title": "रात (raat) — \"night,\" and an honest false cousin of Latin's nox",
       "headword": "रात",
-      "romanization": "",
+      "romanization": "raat",
       "gloss": "\"night\" — already met inside aadhi raat (\"midnight\"); despite meaning the same thing as Latin's nox, in a related Indo-European language, it comes from a COMPLETELY DIFFERENT PIE root — a genuine false cousin",
       "script": "devanagari",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c858ebedb333a8f2",
+      "sourceHash": "fnv1a64:b9abebbfb623c8c3",
       "notice": null,
       "blocks": [
         {

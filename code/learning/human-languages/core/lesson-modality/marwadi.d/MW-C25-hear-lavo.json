@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C25-hear-lavo",
+    "language": "marwadi",
+    "chapter": 30,
+    "sequence": 2450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:45625813e76d9b85"
+  },
+  "findings": []
+}

@@ -2,10 +2,11 @@
 schema_version: 2
 id: BN-C03-bhalo
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 180
-chapter: 3
+sequence: 340
+chapter: 5
 type: word
 headword: ভালো
+romanization: "bhālo"
 gloss: well, good — and the reply "আমি ভালো আছি"
 concept_tag: WORD-WELL
 prerequisites: [BN-C03-ami, BN-C03-tumi-kemon-achho]

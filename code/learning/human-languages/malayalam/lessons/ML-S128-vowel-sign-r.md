@@ -9,31 +9,31 @@ type: writing
 headword: "ൃ"
 gloss: the single character ൃ — recognised inside words you already say
 romanization: "-ṛ"
-prerequisites: [ML-S127-letter-ha]
+prerequisites: [ML-S125-letter-uu]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-127]
+  knowledge: [ML-SCRIPT-RECOG-125]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-128]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-127, ML-SCRIPT-RECOG-128]
+  knowledge: [ML-SCRIPT-RECOG-125, ML-SCRIPT-RECOG-128]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [ML-S127-letter-ha]
+reviews_of: [ML-S125-letter-uu]
 ---
 
 # ൃ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-127] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-125] -->
 
-[PAUSE 1s] Before the new one: ഹ — what does it do?
+[PAUSE 1s] Before the new one: ഊ — what does it do?
 
 [PAUSE 2s] One character this time. One only — and it has been sitting in
 front of you on pages you have already read.
@@ -52,7 +52,7 @@ a friend.
 - **സുഹൃത്ത്** *suhṛttŭ* — friend, met on the page before this one
 
 In both, look at the consonant the little hook is fastened to: **വ** becomes
-*vṛ*, and **ഹ** — the letter of the last lesson — becomes *hṛ*.
+*vṛ*, and **ഹ** — the *ha* you have read since the working-verbs chapter — becomes *hṛ*.
 
 ## Writing: ൃ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-128] -->

@@ -54,6 +54,23 @@ fn diphthong_sound_recall_binds_the_sound_with_citation() {
 
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
+    // FULL ANCHORED CITATION PIN. A fragment needle in this file
+    // matched only part of the sentence, so the citation could be
+    // truncated AT that point -- deleting everything after it -- while
+    // the test stayed green. Anchoring on the `"source":"` key and
+    // closing on the terminating quote pins head, tail, punctuation and
+    // length at once.
+    //
+    // Several tests load this library, because siblings import it as a
+    // dependency. The pin belongs in its OWN test: the others are not
+    // responsible for its provenance. That is also why the assertion has
+    // to be unique -- where a co-loaded sibling carries a byte-identical
+    // citation, an assertion either one satisfies pins neither.
+    // See issues #13916 and #13918.
+    assert!(
+        out.contains("\"source\":\"A Diphthong is sound produced by combining two vowels, gliding the tongue from one position to another during articulation (e.g., /ow/, /oy/). These lessons are designed to build students' accuracy and automaticity in recognizing diphthongs. The lessons also build students' proficiency in reading and spelling words that contain diphthongs. Diphthongs and Silent Letters Units (Lessons 95-98): 95 oi /oi/, oy /oi/, 96 ou /ow/, ow /ow/.\""),
+        "the citation is the whole source sentence, exactly: {out}"
+    );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     assert!(
         out.contains("\"Sound\":\"oi_sound\""),

@@ -1,15 +1,16 @@
 {
   "language": "urdu",
   "chapter": 2,
-  "sourceHash": "fnv1a64:70cc8a618f52d4d8",
+  "sourceHash": "fnv1a64:eb0ccf413091b9f6",
   "lessonIds": [
-    "UR-C02-mera-naam"
+    "UR-C02-mera-naam",
+    "UR-W02-alef"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "urdu/narration/ch02.txt",
   "json": "urdu/narration/ch02.json",
-  "textHash": "fnv1a64:b51d3358d9b6bb75",
-  "jsonHash": "fnv1a64:394aec242d6ba765",
+  "textHash": "fnv1a64:604ee00ebec076eb",
+  "jsonHash": "fnv1a64:71b3cbec23e3e44e",
   "findings": []
 }

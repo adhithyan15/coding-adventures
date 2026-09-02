@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C14-lal
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 1100
-chapter: 14
+sequence: 990
+chapter: 20
 type: word
 headword: লাল
 romanization: lal

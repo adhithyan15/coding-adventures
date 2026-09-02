@@ -3,6 +3,9 @@
   "chapter": 3,
   "output": "malayalam/book/chapters/ch03-responding.tex",
   "embeddedLessonIds": [
-    "ML-W03-santosham-delayed-copy"
+    "ML-W03-santosham-delayed-copy",
+    "ML-S126-letter-oo",
+    "ML-S139-vowel-sign-e",
+    "ML-S140-letter-i"
   ]
 }

@@ -9,31 +9,31 @@ type: writing
 headword: "്"
 gloss: the single character ് — recognised inside words you already say
 romanization: "virama"
-prerequisites: [ML-S01-letter-ka]
+prerequisites: [ML-S109-letter-ra]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-01]
+  knowledge: [ML-SCRIPT-RECOG-109]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-02]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-01, ML-SCRIPT-RECOG-02]
+  knowledge: [ML-SCRIPT-RECOG-109, ML-SCRIPT-RECOG-02]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [ML-S01-letter-ka]
+reviews_of: [ML-S109-letter-ra]
 ---
 
 # ◌് — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-109] -->
 
-[PAUSE 1s] Before the new one: ക — what does it do?
+[PAUSE 1s] Before the new one: ര — what does it do?
 
 [PAUSE 2s] One character this time. Just one — and you have been saying it
 for pages without knowing which mark on the page it was.

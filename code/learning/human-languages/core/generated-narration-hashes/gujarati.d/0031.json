@@ -1,0 +1,22 @@
+{
+  "language": "gujarati",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:09fc23244d22f583",
+  "lessonIds": [
+    "GU-C27-hear-bhaat",
+    "GU-C27-hear-daal",
+    "GU-C27-hear-shaak",
+    "GU-C27-hear-tel",
+    "GU-C27-hear-keri",
+    "GU-C27-plate-five",
+    "GU-C27-bhaat",
+    "GU-R27-plate-five-r1"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch31.txt",
+  "json": "gujarati/narration/ch31.json",
+  "textHash": "fnv1a64:c6b219c9365cd476",
+  "jsonHash": "fnv1a64:984956ddf508c648",
+  "findings": []
+}

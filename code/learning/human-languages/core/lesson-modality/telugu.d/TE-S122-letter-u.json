@@ -2,8 +2,8 @@
   "lesson": {
     "id": "TE-S122-letter-u",
     "language": "telugu",
-    "chapter": 19,
-    "sequence": 461,
+    "chapter": 3,
+    "sequence": 165,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:1b2eb08f8d9dd7b5",
+    "sourceHash": "fnv1a64:38b7da40f3dcb9f6",
     "detachableSegments": [
       "Script you'll notice: ఉ",
       "Writing: ఉ — copy what you see"

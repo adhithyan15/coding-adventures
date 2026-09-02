@@ -1,10 +1,10 @@
 {
   "language": "telugu",
   "chapter": 17,
-  "sourceHash": "fnv1a64:38eb7d56a9af2493",
+  "sourceHash": "fnv1a64:fe2f800e40fbc046",
   "lessonIds": [
     "TE-C17-madhyaahnam-ardharaatri",
-    "TE-S120-vowel-sign-ee"
+    "TE-S138-letter-gha"
   ],
   "tex": "telugu/book/chapters/ch17-noon-and-midnight.tex"
 }

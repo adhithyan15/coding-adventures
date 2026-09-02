@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 20,
-  "output": "marathi/book/chapters/ch20-a1-named-reader-message.tex",
+  "output": "marathi/book/chapters/ch20-heart.tex",
   "unicodeScript": "Devanagari",
   "scriptCommand": "mr"
 }

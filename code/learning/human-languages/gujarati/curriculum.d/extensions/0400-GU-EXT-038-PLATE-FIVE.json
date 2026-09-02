@@ -1,0 +1,20 @@
+{
+  "id": "GU-EXT-038-PLATE-FIVE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can hear and say five everyday Gujarati food words, write one of them, and retrieve all five one lesson later.",
+  "prerequisites": [
+    "GU-EXT-037-CORE-VERB-FIFTH-RETURN"
+  ],
+  "lessons": [
+    "GU-C27-hear-bhaat",
+    "GU-C27-hear-daal",
+    "GU-C27-hear-shaak",
+    "GU-C27-hear-tel",
+    "GU-C27-hear-keri",
+    "GU-C27-plate-five",
+    "GU-C27-bhaat",
+    "GU-R27-plate-five-r1"
+  ]
+}

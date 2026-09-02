@@ -10,6 +10,7 @@ chapter: 2
 type: word
 headword: आप / तुम
 gloss: you (respectful / familiar)
+romanization: "āp / tum"
 concept_tag: PRONOUN-YOU
 prerequisites: [HI-C02-naam]
 sounds: [independent-aa, matra-u]

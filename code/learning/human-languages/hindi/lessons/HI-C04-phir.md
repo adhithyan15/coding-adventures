@@ -10,6 +10,7 @@ chapter: 4
 type: word
 headword: फिर
 gloss: again, then
+romanization: "phir"
 concept_tag: HI-WORD-PHIR
 prerequisites: []
 sounds: [matra-i, retroflex-ra]

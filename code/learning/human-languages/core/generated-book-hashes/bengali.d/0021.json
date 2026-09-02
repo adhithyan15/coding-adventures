@@ -1,0 +1,16 @@
+{
+  "language": "bengali",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:8863c6cf729f4591",
+  "lessonIds": [
+    "BN-W03-mukh-read",
+    "BN-W02-lal-read",
+    "BN-W03-kalo-read",
+    "BN-W03-shada-read",
+    "BN-W04-ii-matra",
+    "BN-W04-nil-read",
+    "BN-W02-tin-read",
+    "BN-W04-ek-read"
+  ],
+  "tex": "bengali/book/chapters/ch21-last-sign-seven-words.tex"
+}

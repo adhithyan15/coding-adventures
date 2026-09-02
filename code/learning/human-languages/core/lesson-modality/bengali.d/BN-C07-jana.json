@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C07-jana",
     "language": "bengali",
-    "chapter": 7,
-    "sequence": 450,
+    "chapter": 11,
+    "sequence": 690,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:9cee0df0ef154a25"
+    "sourceHash": "fnv1a64:d03d9d4405984cac"
   },
   "findings": []
 }

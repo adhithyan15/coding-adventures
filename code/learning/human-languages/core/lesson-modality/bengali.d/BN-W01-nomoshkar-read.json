@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-W01-nomoshkar-read",
     "language": "bengali",
-    "chapter": 16,
-    "sequence": 1690,
+    "chapter": 2,
+    "sequence": 160,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:1db3c9f2d04fe9ed",
+    "sourceHash": "fnv1a64:cde5865e5c9e5ac7",
     "detachableSegments": [
       "Script"
     ],

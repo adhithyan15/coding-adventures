@@ -5,40 +5,40 @@ introduces_senses: []
 introduces_culture_claims: []
 id: SA-S01-letter-ma
 spine_node: SPINE-MEET-GREET
-sequence: 435
+sequence: 181
 delivery: script
-chapter: 8
+chapter: 3
 type: writing
 headword: "म"
 gloss: the single character म — recognised inside words you already say
 romanization: "ma"
-prerequisites: []
+prerequisites: [SA-S06-vowel-sign-aa]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: []
+  knowledge: [SA-SCRIPT-RECOG-06]
 introduces:
   knowledge: [SA-SCRIPT-RECOG-01]
 practises:
-  knowledge: [SA-SCRIPT-RECOG-01]
+  knowledge: [SA-SCRIPT-RECOG-202, SA-SCRIPT-RECOG-109, SA-SCRIPT-RECOG-06, SA-SCRIPT-RECOG-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: []
+reviews_of: [SA-S202-letter-bha, SA-S109-vowel-sign-i, SA-S06-vowel-sign-aa]
 ---
 
 # म — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-202, SA-SCRIPT-RECOG-109, SA-SCRIPT-RECOG-06] -->
 
-[PAUSE 1s] A horizontal head-line (shirorekha) runs across the top; letters hang beneath it like laundry on a line.
+[PAUSE 1s] Before the new one, the ones you have already met: भ · ◌ि · ◌ा. Say what each of them does.
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
+[PAUSE 2s] One character this time. One only — and you have been saying it
 for pages without knowing which mark on the page it was.
 
 ## Script you'll notice: म
@@ -50,37 +50,37 @@ It is a **consonant**, and in this script a consonant is never bare: it comes wi
 
 What it is made of:
 
-- a lower loop
-- an upper loop
-- right spine
-- top bar
+- a top-to-bottom left stem joined to a clockwise lower loop and rightward crossbar
+- a top-to-bottom right stem
+- the top shirorekhā
 
 You already say these, and every one of them has म somewhere inside it:
 
-- **नमस्ते** *namaste* — hello (lit. "a bow to you") (namaste)
-- **नमस्कारः** *namaskāraḥ* — hello (lit. "the making of a bow") (namaskāraḥ)
-- **स्वागतम्** *svāgatam* — welcome (lit. "well come") (svāgatam)
-- **आम् / न** *ām / na* — yes / no (ām / na)
+- **आम् / न** *ām / na* — yes / no
+- **नाम** *nāma* — name
+- **मम** *mama* — my
 
-## Writing: म — copy what you see
+## Writing: म
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-01] -->
 
-Put your pen on म and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+- **1.** descend the left stem, curl left and clockwise around the lower loop, and continue right through the crossbar without lifting
+- **2.** lift and draw the right stem top-to-bottom
+- **3.** lift and draw the top shirorekhā left-to-right
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+**Pen lifts: 2.** The pen comes up 2 times and no more.
+
+> verified three-stroke teaching form; another learner source stages the left stem and loop-crossbar separately
+
+> This is one attested teaching order and not a national standard — handwriting
+> here is taught with school-to-school variation. Source: JackPotte, ‘Devanagari m म.gif’, strokes 1–3, Wikimedia Commons, 29 March 2009.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-06, SA-SCRIPT-RECOG-01] -->
 
 [PAUSE 1s]
-- [YOU LOOK: at these words, and find म in the ones that have it]
+- [YOU LOOK: at this, and find म in it]
 
-> नमस्ते  ·  नमस्कारः  ·  अस्ति
+> आम् / न  ·  नाम  ·  मम
 
 - [YOU TRACE: म three times, saying *ma* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find म once more]

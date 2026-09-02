@@ -2,10 +2,11 @@
 schema_version: 2
 id: BN-C02-alaap
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 100
-chapter: 2
+sequence: 200
+chapter: 3
 type: phrase
 headword: আলাপ করে ভালো লাগলো
+romanization: "ālāp kore bhālo lāglo"
 gloss: pleased to meet you (lit. "having made acquaintance, [it] felt good")
 concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [BN-C02-amar-naam]

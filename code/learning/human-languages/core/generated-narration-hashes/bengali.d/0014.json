@@ -1,19 +1,18 @@
 {
   "language": "bengali",
   "chapter": 14,
-  "sourceHash": "fnv1a64:cca37cd960cd1c6d",
+  "sourceHash": "fnv1a64:411740a557832b47",
   "lessonIds": [
-    "BN-C14-lal",
-    "BN-C14-nil",
-    "BN-C14-kalo",
-    "BN-C14-shada",
-    "BN-C14-shobuj"
+    "BN-C10-cha",
+    "BN-C10-jol",
+    "BN-C10-dudh",
+    "BN-C10-bhat"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "bengali/narration/ch14.txt",
   "json": "bengali/narration/ch14.json",
-  "textHash": "fnv1a64:743294ac9d9170c6",
-  "jsonHash": "fnv1a64:987c48a1a44fe78f",
+  "textHash": "fnv1a64:56d45791aeff90e8",
+  "jsonHash": "fnv1a64:40f46ed16133c75b",
   "findings": []
 }

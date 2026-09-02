@@ -1,24 +1,26 @@
 {
   "chapter": 2,
-  "title": "Introducing Yourself",
-  "label": "ch:introductions",
-  "canDo": "I can introduce myself in Bengali, give my name, and understand the other person's name.",
+  "title": "Hanging From the Head-Line, One Piece at a Time",
+  "label": "ch:bn-script-first",
+  "canDo": "I can write nine Bengali pieces from memory — six consonants, a vowel sign, its independent twin and the hasanta — and read the greeting I have been saying since the first chapter by assembling it from those pieces, including its conjunct.",
   "spineNodes": [
-    "SPINE-EXCHANGE-NAMES"
+    "SPINE-MEET-GREET"
   ],
   "payoff": {
-    "lesson": "BN-C02-practice",
-    "kind": "task",
-    "summary": "Complete BN-C02-practice, the canonical closing checkpoint, and demonstrate the chapter promise: introduce myself in Bengali, give my name, and understand the other person's name.",
+    "lesson": "BN-W01-nomoshkar-read",
+    "kind": "reading",
+    "summary": "The greeting assembled from seven pieces the reader can each write from memory, including the conjunct and the letter written s but said sh, and introducing nothing new.",
     "assesses": [
-      "BN-CONCEPT-C02-ALAAP-01",
-      "BN-CONCEPT-C02-AMAR-01",
-      "BN-CONCEPT-C02-AMARNAAM-01",
-      "BN-CONCEPT-C02-KI-01",
-      "BN-CONCEPT-C02-NAAM-01",
-      "BN-CONCEPT-C02-PRACTICE-01",
-      "BN-CONCEPT-C02-TOMARNAAMKI-01",
-      "BN-CONCEPT-C02-TUMIAPNI-01"
+      "BN-SCRIPT-AA-01",
+      "BN-SCRIPT-AA-MATRA-01",
+      "BN-SCRIPT-HA-01",
+      "BN-SCRIPT-HASANTA-01",
+      "BN-SCRIPT-KA-01",
+      "BN-SCRIPT-MA-01",
+      "BN-SCRIPT-NA-01",
+      "BN-SCRIPT-NOMOSHKAR-READ-01",
+      "BN-SCRIPT-RA-01",
+      "BN-SCRIPT-SA-01"
     ]
   }
 }

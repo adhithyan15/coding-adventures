@@ -1,0 +1,28 @@
+{
+  "language": "marwadi",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:f25b8553725ebbdd",
+  "lessonIds": [
+    "MW-C24-hear-lo",
+    "MW-C24-lo",
+    "MW-C24-hear-pay",
+    "MW-C24-pay",
+    "MW-R24-pay-two",
+    "MW-C24-hear-do",
+    "MW-C24-do",
+    "MW-C24-hear-aakhri",
+    "MW-C24-aakhri",
+    "MW-C24-hear-final-price",
+    "MW-C24-final-price",
+    "MW-R24-final-two",
+    "MW-C24-final-four",
+    "MW-R24-script-close"
+  ],
+  "voiceLessons": 11,
+  "drivablePrefix": 1,
+  "text": "marwadi/narration/ch29.txt",
+  "json": "marwadi/narration/ch29.json",
+  "textHash": "fnv1a64:1ae3fe355e698b29",
+  "jsonHash": "fnv1a64:76ff57ae7b01ceab",
+  "findings": []
+}

@@ -1,0 +1,18 @@
+{
+  "language": "marwadi",
+  "chapter": 26,
+  "sourceHash": "fnv1a64:e1cc98223402e7f2",
+  "lessonIds": [
+    "MW-C21-hear-ye",
+    "MW-C21-ye",
+    "MW-C21-hear-dikhavo",
+    "MW-W21-kha",
+    "MW-C21-dikhavo",
+    "MW-R21-show-two",
+    "MW-C21-hear-show-request",
+    "MW-C21-show-request",
+    "MW-C21-show-three",
+    "MW-R21-script-close"
+  ],
+  "tex": "marwadi/book/chapters/ch26-show-request.tex"
+}

@@ -10,6 +10,7 @@ chapter: 34
 type: word
 headword: पढ़ना
 gloss: to read — and equally "to study", because the Sanskrit verb underneath it meant "to recite aloud"
+romanization: "paṛhnā"
 concept_tag: VERB-READ
 prerequisites: [HI-C34-samajhna, HI-C06-numbers-1-5, HI-C21-numbers-6-10]
 sounds: [retroflex-flap-rha, nuqta]

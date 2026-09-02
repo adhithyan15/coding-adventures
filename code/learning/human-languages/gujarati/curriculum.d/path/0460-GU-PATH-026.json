@@ -1,0 +1,19 @@
+{
+  "id": "GU-PATH-026",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "GU-C27-hear-bhaat",
+    "GU-C27-hear-daal",
+    "GU-C27-hear-shaak",
+    "GU-C27-hear-tel",
+    "GU-C27-hear-keri",
+    "GU-C27-plate-five",
+    "GU-C27-bhaat",
+    "GU-R27-plate-five-r1"
+  ],
+  "before": [],
+  "inline": [
+    "GU-EXT-038-PLATE-FIVE"
+  ],
+  "after": []
+}

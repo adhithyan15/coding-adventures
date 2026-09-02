@@ -1,0 +1,22 @@
+{
+  "language": "marwadi",
+  "chapter": 28,
+  "sourceHash": "fnv1a64:ae160b5652a40418",
+  "lessonIds": [
+    "MW-C23-hear-ghano",
+    "MW-C23-ghano",
+    "MW-C23-hear-price-answer",
+    "MW-C23-price-answer",
+    "MW-R23-answer-two",
+    "MW-C23-hear-thodu",
+    "MW-C23-thodu",
+    "MW-C23-hear-karo",
+    "MW-C23-karo",
+    "MW-C23-hear-bargain-request",
+    "MW-C23-bargain-request",
+    "MW-R23-bargain-two",
+    "MW-C23-counter-four",
+    "MW-R23-script-close"
+  ],
+  "tex": "marwadi/book/chapters/ch28-bargain.tex"
+}

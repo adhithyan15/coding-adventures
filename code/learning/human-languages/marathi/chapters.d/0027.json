@@ -1,0 +1,25 @@
+{
+  "chapter": 27,
+  "title": "Sit, and How You Feel",
+  "label": "ch:mr-wellbeing-verbs",
+  "canDo": "I can run a short visit in Marathi -- seat my guest, say how I feel on the dative frame, say that I am sleepy, and accept an offer with chalel.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MR-R23-wellbeing-verbs",
+    "kind": "production",
+    "summary": "Complete MR-R23-wellbeing-verbs and produce the whole small scene from memory: basa, mala baram vatam, chalel -- then name which of the four verbs Marathi built for itself rather than inheriting.",
+    "assesses": [
+      "MR-LEX-BASNE",
+      "MR-LEX-VATNE",
+      "MR-LEX-JHOPNE",
+      "MR-LEX-CHALNE",
+      "MR-SENSE-CHALEL-OKAY",
+      "MR-GRAMMAR-DATIVE-FEELING",
+      "MR-ETYMON-BASNE-WEYK",
+      "MR-ETYMON-JHOPNE-NOT-SWEP",
+      "MR-ETYMON-CHALNE-CAL"
+    ]
+  }
+}

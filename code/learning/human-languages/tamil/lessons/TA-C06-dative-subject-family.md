@@ -6,6 +6,7 @@ sequence: 400
 chapter: 6
 type: grammar
 headword: எனக்கு / నాకు / ನನಗೆ / എനിക്ക്
+romanization: "enakku / nāku / nanage / enikku"
 gloss: all four Dravidian sisters put the experiencer in visibly related dative forms
 prerequisites: [TA-C06-dative-subject]
 sounds: [dravidian-dative-cognates]
