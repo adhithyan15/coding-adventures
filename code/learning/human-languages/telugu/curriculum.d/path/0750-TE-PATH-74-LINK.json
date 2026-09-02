@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-74-LINK",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "TE-C74-and",
+    "TE-C74-but",
+    "TE-C74-or",
+    "TE-C74-why",
+    "TE-C74-because"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-74-LINK"
+  ],
+  "after": []
+}

@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-79-WHO",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "TE-C79-friends",
+    "TE-C79-our",
+    "TE-C79-he",
+    "TE-C79-me",
+    "TE-C79-garu"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-79-WHO"
+  ],
+  "after": []
+}

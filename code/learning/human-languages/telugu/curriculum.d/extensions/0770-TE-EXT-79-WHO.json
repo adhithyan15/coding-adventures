@@ -1,0 +1,15 @@
+{
+  "id": "TE-EXT-79-WHO",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about a third person in Telugu, mark a noun as an owner or an object, and address somebody respectfully.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C79-friends",
+    "TE-C79-our",
+    "TE-C79-he",
+    "TE-C79-me",
+    "TE-C79-garu"
+  ]
+}

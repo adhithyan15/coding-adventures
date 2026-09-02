@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:516263982b57a7b4",
+  "lessonIds": [
+    "TE-C76-very",
+    "TE-C76-bad",
+    "TE-C76-itisgood",
+    "TE-C76-easy",
+    "TE-C76-difficult"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch76.txt",
+  "json": "telugu/narration/ch76.json",
+  "textHash": "fnv1a64:36b52588a705f144",
+  "jsonHash": "fnv1a64:2be43fa751cbde01",
+  "findings": []
+}

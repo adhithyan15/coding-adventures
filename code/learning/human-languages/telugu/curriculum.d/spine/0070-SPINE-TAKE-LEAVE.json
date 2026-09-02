@@ -4,7 +4,8 @@
     "TE-PATH-50-LEAVE",
     "TE-PATH-59-WEATHER",
     "TE-PATH-66-FIELD",
-    "TE-PATH-73-TASTE"
+    "TE-PATH-73-TASTE",
+    "TE-PATH-75-WHEN"
   ],
   "omits": [
     "FAREWELL-CASUAL",
