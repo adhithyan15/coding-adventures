@@ -117,11 +117,31 @@ This is first because every feature below is worth less if migration silently
 loses data, and because it is the cheapest way to discover which of §3's gaps
 actually corrupt data versus merely render poorly.
 
-**The oracle problem is the interesting part.** Comparing our export against
-our import proves nothing — that is the same circularity that let the zstd
-decoder ship without Huffman support. A genuine round-trip test needs either
-real Anki as an oracle, or a corpus of real `.apkg` files exported from Anki
-with their expected contents recorded independently.
+**There is currently no Anki oracle at all.** This is worse than it sounds and
+was found while writing this document.
+
+The one committed fixture, `golden-v11-filtered-media.apkg`, is **produced by
+our own code**: a test builds a collection by inserting hand-chosen rows with
+`rusqlite` and then calls our own `write_legacy_apkg`. Real SQLite writes the
+bytes, so the *file format* is genuinely oracled — but the **Anki semantics are
+entirely our own understanding of them**. Nothing in the repository was
+produced by Anki.
+
+So every `.apkg` import and export test validates our model against our model.
+If our reading of what `queue = 2` means, or how `left` encodes learning steps,
+or what belongs in the `col` table's `models` JSON is wrong, every test still
+passes. That is precisely the circularity that let the zstd decoder ship
+without Huffman support: **two halves wrong in the same way agree perfectly.**
+
+The name `golden` makes this worse by implying external provenance the file
+does not have.
+
+Closing this needs a small corpus of genuinely Anki-produced `.apkg` files,
+committed with their provenance recorded, covering at minimum: a review-scheduled
+card, a card in learning, a cloze note, a deck with media, and a filtered deck.
+Sourcing them is a decision — Anki's own test suite, a deck exported from a real
+install, or a shared deck with a compatible licence — and it should be made
+explicitly rather than by whoever gets there first.
 
 ### 4.2 Then, by user impact
 
