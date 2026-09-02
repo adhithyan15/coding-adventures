@@ -2533,9 +2533,48 @@ impl WasmRuntime {
         // access to `host_functions`/a resolver at all) -- this is the
         // exact construction-order problem this function's own doc
         // comment names: no `Rc<RefCell<WasmInstance>>` exists yet at this
-        // point for a `LocalFunctionRef` to hold. A SEPARATE fixup pass,
-        // below, resolves every module-defined funcref-typed global's
-        // initial value for real, once `instance_rc` exists.
+        // point for a `LocalFunctionRef` to hold. `wasm-conformance`'s own
+        // `resolve_exported_global_funcrefs` (W35 fifth slice) resolves an
+        // EXPORTED module-defined funcref global's initial value for
+        // real, once `instance_rc` exists, AFTER this function returns.
+        //
+        // W35 fifth slice, security-review finding: a global initialized
+        // via `(global.get $idx)` -- copying ANOTHER global's value,
+        // rather than minting its own via `ref.func` -- is a DIFFERENT
+        // case that CANNOT wait for that later, export-scoped fixup: the
+        // source global named by `$idx` may be an IMPORT already resolved
+        // by the EXPORTING instance's own earlier fixup (this is exactly
+        // how a chain like `$B`'s `(global (export "g1") funcref
+        // (global.get $g0))`, where `$g0` is imported from an already-
+        // registered `$A`, must observe `$g0`'s real, already-resolved
+        // `FuncRefTarget` and NOT `$g0`'s raw flattened `value` -- which
+        // is only ever meaningful in `$A`'s own combined function-index
+        // space, never `$B`'s). Reinterpreting that raw value as a local
+        // index in `$B`'s own space (the ONLY thing a later, generic
+        // "resolve this exported global by its own instance" fixup could
+        // ever do, since IT has no idea the value originated from a
+        // `global.get` copy of something else) would silently misdispatch
+        // to whichever of `$B`'s own local functions happens to share that
+        // numeric index -- the exact silent-wrong-function hazard this
+        // whole mechanism exists to prevent, reproducing it one level
+        // removed. `global_get_index` (below `resolve_all_table_funcrefs`)
+        // detects this ONE syntactic shape the same way the elem-item
+        // loop already does; propagating the SOURCE global's own already-
+        // resolved `func_ref` (if any) at COPY time, using the source's
+        // OWN correct owner identity, is what keeps this correct
+        // regardless of which instance actually declared the function.
+        // Deliberately unconditional (not export-scoped, unlike the later
+        // fixup): a NON-exported pass-through global can just as easily
+        // feed an elem item's own `(global.get $idx)` (`element_func_refs`,
+        // further down), so it must be handled here too, not only for
+        // globals a future importer could reach directly. A source
+        // global whose OWN `func_ref` is still `None` at this point
+        // (the overwhelmingly common case -- a `ref.func`-initialized,
+        // never-exported, never-imported global, deliberately left
+        // unresolved by design, e.g. `return_call_ref.wast`'s own
+        // `$count`/`$even`/`$odd`) simply propagates `None` -- byte-for-
+        // byte the pre-existing behavior, since nothing upstream of this
+        // loop can have populated a LOCAL global's `func_ref` yet either.
         for global in &module.globals {
             global_types.push(global.global_type.clone());
             let globals_so_far: Vec<WasmValue> = globals.iter().map(|g| g.borrow().value).collect();
@@ -2548,7 +2587,10 @@ impl WasmRuntime {
                 &struct_field_storage,
                 &array_element_storage,
             )?;
-            globals.push(Rc::new(RefCell::new(GlobalStorage { value, func_ref: None })));
+            let func_ref = global_get_index(&global.init_expr)
+                .and_then(|idx| globals.get(idx as usize))
+                .and_then(|cell| cell.borrow().func_ref.clone());
+            globals.push(Rc::new(RefCell::new(GlobalStorage { value, func_ref })));
         }
 
         // A fixed, post-initialization snapshot of every global's value,

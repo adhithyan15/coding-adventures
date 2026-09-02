@@ -2377,6 +2377,59 @@ mod tests {
         );
     }
 
+    /// W35 fifth slice, security-review finding (round 1): a LOCAL global
+    /// whose own init expression is `(global.get $other)` -- copying
+    /// ANOTHER global's value, rather than minting its own via `ref.func`
+    /// -- is a DIFFERENT case from the elem-item one the fixup above
+    /// covers, and needs its own propagation at globals-construction time
+    /// (see `instantiate()`'s own updated doc comment on the globals
+    /// loop). `$B`'s own `$g1` copies `$A`'s exported `$g0` (a real
+    /// funcref); `$B` ALSO happens to declare `$decoy` (returns 999) as
+    /// its OWN local function index 0 -- the SAME numeric index as `$A`'s
+    /// own `$ax` (`$A` has no imports, so `$ax`, declared first, is index
+    /// 0 in `$A`'s combined space too). Before this fix, `$g1`'s raw
+    /// value (`$ax`'s index, `0`) would be resolved against `$B`'s OWN
+    /// function space by `resolve_exported_global_funcrefs`'s fallback
+    /// path, silently reaching `$decoy` (999) instead of `$ax` (42) --
+    /// the exact "silent wrong function, tagged as already resolved"
+    /// hazard a security review of the FIRST version of this fix caught
+    /// directly, before it ever reached a real corpus file.
+    #[test]
+    fn a_local_global_that_copies_an_imported_funcref_global_via_global_get_propagates_the_real_source_identity_not_a_raw_index() {
+        let results = outcomes(
+            r#"
+            (module $A
+              (func $ax (result i32) (i32.const 42))
+              (global (export "g0") funcref (ref.func $ax)))
+            (register "A" $A)
+            (module $B
+              (import "A" "g0" (global $g0 funcref))
+              (func $decoy (result i32) (i32.const 999))
+              (global (export "g1") funcref (global.get $g0))
+              (type $out-i32 (func (result i32)))
+              (table 1 funcref)
+              (elem (i32.const 0) funcref (global.get 1))
+              (func (export "call_via_g1") (type $out-i32)
+                (call_indirect (type $out-i32) (i32.const 0))))
+            (assert_return (invoke "call_via_g1") (i32.const 42))
+            "#,
+        );
+        assert_eq!(results[0], (DirectiveKind::Module, DirectiveOutcome::Pass));
+        assert_eq!(results[1], (DirectiveKind::Register, DirectiveOutcome::Pass));
+        assert_eq!(
+            results[2],
+            (DirectiveKind::Module, DirectiveOutcome::Pass),
+            "$B must link against $A's exported funcref global"
+        );
+        assert_eq!(
+            results[3],
+            (DirectiveKind::AssertReturn, DirectiveOutcome::Pass),
+            "expected call_via_g1 to reach $A's REAL $ax (42) via $g1's propagated FuncRefTarget, not \
+             misdispatch to $B's own local index 0 ($decoy, 999) -- got: {:?}",
+            results[3].1
+        );
+    }
+
     /// W35 fourth slice: the "ephemeral trap-discarded instance" case --
     /// `linking3.wast`'s own `$Ms`/`"get table[0]"` example, hand-built.
     /// An anonymous module (wrapped in `assert_trap`, so it goes through

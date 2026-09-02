@@ -2,6 +2,70 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.35] — 2026-09-02 — security-review finding: propagate `func_ref` at globals-construction time for a `global.get`-copied global (W35 fifth slice, round 1)
+
+A security review of 0.6.34 (immediately below), run before pushing per
+this repo's standing pre-push gate, found a real gap in the SAME class
+of bug that release fixed: a security-review sub-agent was asked to
+verify the fix could not introduce a NEW silent-misdispatch case while
+closing the one it targeted, and it found one, reproduced directly (not
+theorized) before this fix landed:
+
+```wat
+(module $A (func $ax (result i32) (i32.const 42))
+         (global (export "g0") funcref (ref.func $ax)))
+(register "A" $A)
+(module $B
+  (import "A" "g0" (global $g0 funcref))
+  (func $decoy (result i32) (i32.const 999))   ;; $B's own local index 0
+  (global (export "g1") funcref (global.get $g0)))  ;; copies $g0's value
+```
+
+`$g1` is a NEW, independent `GlobalStorage` cell -- `global.get` in a
+constant expression copies a value, it does not alias storage the way
+an IMPORT does. `instantiate()`'s globals-construction loop evaluates
+`$g1`'s init expr against a flattened `&[WasmValue]` snapshot (reads
+only `.value`, never `.func_ref`), so `$g1`'s raw value becomes `$ax`'s
+index in `$A`'s own combined function space (`0`). 0.6.34's
+`resolve_exported_global_funcrefs` (run later, once `$B` is `Rc`-wrapped)
+sees `$g1` is exported, funcref-typed, and unresolved, and resolves that
+raw `0` against `$B`'s OWN function space -- silently reaching `$decoy`
+(999) instead of `$ax` (42) whenever the raw index happens to be in
+range for `$B` too (as it is here). The result is tagged `func_ref:
+Some(..)`, so nothing downstream ever re-checks it -- a genuine,
+undetectable wrong-function dispatch, not a crash: precisely the hazard
+class W35's whole `owner_instance_identity` mechanism exists to prevent,
+reproduced one level removed from the case 0.6.34 closed.
+
+**Fix**: `instantiate()`'s globals-construction loop now ALSO applies
+`global_get_index` (0.6.34's own single-instruction `global.get`
+detector, already used for elem items) to every global's own init
+expression: when a global's init is exactly `(global.get $idx)`, its
+`func_ref` is propagated directly from the SOURCE global's own cell
+(`globals[idx].borrow().func_ref.clone()`) at copy time, using the
+source's own already-correct owner identity, rather than left to be
+reinterpreted later as a raw index in whichever instance happens to
+declare the copy. Deliberately unconditional (every global, not just
+exported ones) -- unlike `resolve_exported_global_funcrefs`'s own
+export-only scoping -- because a non-exported pass-through global can
+just as easily feed an elem item's own `global.get`, which the elem-item
+loop can only see correctly if THIS propagation already ran. Verified
+NOT to reintroduce `resolve_all_table_funcrefs`'s own previously-reverted
+regression (`return_call_ref.wast`'s unexported, `ref.func`-initialized
+`$count`/`$even`/`$odd`): this new propagation only ever fires for a
+`global.get`-initialized global, never a `ref.func`-initialized one, so
+those three globals are byte-for-byte unaffected.
+
+**Verification**: the exact scenario above, confirmed to reproduce the
+bug (misdispatch to `$decoy`, 999) with this fix reverted and to pass
+(reaches `$ax`, 42) with it applied -- a real A/B, not just a green run.
+New regression test in `wasm-conformance` (see that crate's own
+CHANGELOG). Corpus baseline re-diffed against the ORIGINAL (pre-0.6.34)
+baseline: still exactly the one `elem.wast` change, zero real failures
+anywhere, confirming this second fix causes no corpus regression either.
+`cargo test -p wasm-runtime`: 77 (lib) + 43 (integration suites) passed,
+0 failed. `cargo clippy --release --all-targets`: clean.
+
 ## [0.6.34] — 2026-09-02 — `resolve_exported_global_funcrefs`: cross-instance funcref-GLOBAL propagation (W35 fifth slice)
 
 Closes the residual gap this crate's own 0.6.33 entry (immediately below)
