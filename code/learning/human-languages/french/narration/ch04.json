@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ec0f68883c275cfe",
+  "sourceHash": "fnv1a64:b5ea1ad61fdc9340",
   "lessons": [
     {
       "id": "FR-C04-au-revoir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1db881ea75cc37d5",
+      "sourceHash": "fnv1a64:2d10f55dae9dd965",
       "notice": null,
       "blocks": [
         {
@@ -82,11 +82,14 @@
             {
               "kind": "speech",
               "text": "re-vise (\"look again\"), e-vident (\"seen out\"), pro-vide, super-vise, sur-vey."
-            },
-            {
-              "kind": "speech",
-              "text": "A goodbye that sees — French and German agree."
-            },
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — a goodbye that sees",
+          "segments": [
             {
               "kind": "speech",
               "text": "Here's a satisfying cross-language pair: German says the exact same thing. Auf Wiedersehen = auf (\"on\") + wieder (\"again\") + sehen (\"to see\") = \"on the seeing-again.\" French and German, side by side, both promise a re-seeing; Spanish adiós instead commends you to God. Same moment, two different pictures."
@@ -94,7 +97,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -134,7 +137,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -165,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:10ff815d3018b5a0",
+      "sourceHash": "fnv1a64:8ac5cb4bc70b0ae5",
       "notice": null,
       "blocks": [
         {
@@ -219,7 +222,7 @@
             },
             {
               "kind": "speech",
-              "text": "tard = \"late,\" from Latin tarde, \"slowly, late.\" And that is exactly the Spanish word tarde (\"afternoon / late\") you met in Chapter 2 — French kept it meaning late, Spanish grew it into afternoon. Same Latin tarde. English keeps it in tardy and retard (\"hold back, make late\")."
+              "text": "tard = \"late,\" from Latin tarde, \"slowly, late.\" English keeps it in tardy and retard (\"hold back, make late\")."
             },
             {
               "kind": "speech",
@@ -229,6 +232,17 @@
         },
         {
           "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — one Latin word, two everyday meanings",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Spanish inherited that identical Latin tarde — the word you met in Chapter 2 — but the two languages grew it in different directions. French kept it meaning late (tard); Spanish grew it into afternoon (tarde). One Latin word, two everyday meanings. And where French leans on à for its soft goodbyes, Spanish leans on hasta (\"until\"): hasta luego is the twin of à plus tard."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "grammar",
           "title": "Grammar Lens: the \"à …\" farewells",
           "segments": [
@@ -254,7 +268,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -294,7 +308,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -325,7 +339,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec345aa06dcc9d70",
+      "sourceHash": "fnv1a64:e78f48f8f63192a6",
       "notice": null,
       "blocks": [
         {
@@ -352,11 +366,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "nasal-in — bien = byɛ̃, nasal (your Chapter 1 sound)."
+              "text": "nasal-in — bien = byan, nasal (your Chapter 1 sound)."
             },
             {
               "kind": "speech",
-              "text": "bientôt = byɛ̃-TOH; the circumflex on ô just marks a long o, and the final t is silent. Whole phrase: ah byɛ̃-TOH."
+              "text": "bientôt = byan-TOH; the circumflex on ô just marks a long o, and the final t is silent. Whole phrase: ah byan-TOH."
             }
           ]
         },
@@ -420,11 +434,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"à bientôt\" — ah byɛ̃-TOH",
+              "instruction": "\"à bientôt\" — ah byan-TOH",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"à bientôt\" — *ah byɛ̃-TOH*]"
+              "source": "[YOU SAY: \"à bientôt\" — *ah byan-TOH*]"
             },
             {
               "kind": "prompt",
@@ -478,7 +492,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1dcea8be89335333",
+      "sourceHash": "fnv1a64:905873b3be8612be",
       "notice": null,
       "blocks": [
         {
@@ -505,7 +519,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "nasal-in — demain = duh-Mɛ̃: the -ain is a nasal (like pain, main); the final consonant is silent. ah duh-Mɛ̃."
+              "text": "nasal-in — demain = duh-MAN: the -ain is a nasal (like pain, main); the final consonant is silent. ah duh-MAN."
             }
           ]
         },
@@ -536,12 +550,23 @@
             },
             {
               "kind": "speech",
-              "text": "The hidden twin. Spanish mañana (\"tomorrow / morning\") comes from Latin (hōra) maneana — built on the same māne, \"morning.\" So French demain and Spanish mañana are cousins through Latin māne: both turn \"morning\" into \"tomorrow,\" just assembled differently (French from-morning, Spanish morning-ish hour). English keeps māne too, in the poetic matins (morning prayers) and matinée (a morning/daytime show)."
+              "text": "English keeps māne too, in the poetic matins (morning prayers) and matinée (a morning/daytime show)."
             }
           ]
         },
         {
           "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — the hidden twin",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Spanish mañana (\"tomorrow / morning\") comes from Latin (hōra) maneana — built on the same māne, \"morning.\" So French demain and Spanish mañana are cousins through one Latin word: both turn \"morning\" into \"tomorrow,\" just assembled differently — French says from-morning, Spanish says morning-ish hour."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "grammar",
           "title": "Grammar Lens: the \"à …\" farewells, complete",
           "segments": [
@@ -571,7 +596,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -584,11 +609,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"à demain\" — ah duh-Mɛ̃",
+              "instruction": "\"à demain\" — ah duh-MAN",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"à demain\" — *ah duh-Mɛ̃*]"
+              "source": "[YOU SAY: \"à demain\" — *ah duh-MAN*]"
             },
             {
               "kind": "prompt",
@@ -611,7 +636,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -642,7 +667,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b5dadbc9d383bb2",
+      "sourceHash": "fnv1a64:655a1339604a2422",
       "notice": null,
       "blocks": [
         {
@@ -664,8 +689,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Choosing the right goodbye",
+          "type": "guided-production",
+          "title": "Guided Practice: choosing the right goodbye",
           "segments": [
             {
               "kind": "table",
@@ -676,18 +701,18 @@
               "columns": 2,
               "rowCount": 4,
               "utterances": [
-                "you're…: parting plainly / politely. say: Au revoir.",
-                "you're…: expecting to meet again shortly. say: À bientôt.",
-                "you're…: casual \"see you\". say: À plus (tard).",
-                "you're…: leaving for the day. say: À demain."
+                "you're…: parting plainly / politely. say: au revoir.",
+                "you're…: expecting to meet again shortly. say: à bientôt.",
+                "you're…: casual \"see you\". say: à plus (tard).",
+                "you're…: leaving for the day. say: à demain."
               ]
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The whole exchange, start to finish",
+          "type": "input",
+          "title": "The exchange, start to finish",
           "segments": [
             {
               "kind": "speech",
@@ -695,7 +720,7 @@
             },
             {
               "kind": "speech",
-              "text": "— Salut! Je m'appelle Chloé. Comment tu t'appelles? — Je m'appelle Marc. Enchanté. — Ça va? — Ça va bien, merci, et toi? — Très bien. Bon… à demain, Marc. — À demain, Chloé. Au revoir!"
+              "text": "— Salut! Je m'appelle Chloé. Comment tu t'appelles? — Je m'appelle Marc. Enchanté. — Ça va? — Ça va bien, merci, et toi? — Très bien. Bon… à demain, Marc. — Oui, à demain, Chloé. Au revoir!"
             }
           ]
         },
@@ -784,9 +809,10 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-type"
+        "writing-type",
+        "writing-block"
       ],
-      "sourceHash": "fnv1a64:6df2b4f3b0d65d38",
+      "sourceHash": "fnv1a64:33ade3aa97306e70",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -815,8 +841,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The three accents, and what they do",
+          "type": "input",
+          "title": "You'll want to know: the three accents, and what they do",
           "segments": [
             {
               "kind": "speech",
@@ -834,8 +860,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The circumflex is a tombstone for a lost s",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — the circumflex is a tombstone for a lost s",
           "segments": [
             {
               "kind": "speech",
@@ -869,8 +895,8 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "How to write them",
+          "type": "writing",
+          "title": "Writing: the three accents",
           "segments": [
             {
               "kind": "speech",
@@ -948,9 +974,10 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-type"
+        "writing-type",
+        "writing-block"
       ],
-      "sourceHash": "fnv1a64:d331c582d116496e",
+      "sourceHash": "fnv1a64:e6f5347054a09840",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -979,8 +1006,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The problem it solves",
+          "type": "input",
+          "title": "You'll want to know: the problem the cedilla solves",
           "segments": [
             {
               "kind": "speech",
@@ -1012,7 +1039,7 @@
             },
             {
               "kind": "speech",
-              "text": "reçu = ruh-SÜ (\"received\")."
+              "text": "reçu = ruh-SU (\"received\")."
             },
             {
               "kind": "speech",
@@ -1022,8 +1049,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "Where the hook came from",
+          "type": "etymology",
+          "title": "The mark, taken apart",
           "segments": [
             {
               "kind": "speech",
@@ -1033,8 +1060,8 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "How to write it",
+          "type": "writing",
+          "title": "Writing: the cedilla",
           "segments": [
             {
               "kind": "speech",
@@ -1103,9 +1130,10 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-type"
+        "writing-type",
+        "writing-block"
       ],
-      "sourceHash": "fnv1a64:37c9708187ac645d",
+      "sourceHash": "fnv1a64:2de51ab3c2c783ac",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1134,8 +1162,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The problem it solves",
+          "type": "input",
+          "title": "You'll want to know: the problem the trema solves",
           "segments": [
             {
               "kind": "speech",
@@ -1165,8 +1193,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "How to write it",
+          "type": "writing",
+          "title": "Writing: the trema",
           "segments": [
             {
               "kind": "speech",

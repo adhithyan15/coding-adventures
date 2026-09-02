@@ -116,4 +116,7 @@ table friction_context {
     source "It is the type of frictional force which acts between the surfaces of two objects when they are kept at rest about each other."
     locator "https://testbook.com/physics/types-of-friction"
     trust consensus
+    cites "Sliding friction can be defined as the friction which is generated between the surfaces of any two objects when they are in a sliding motion against each other." locator "https://testbook.com/physics/types-of-friction"
+    cites "Rolling friction is a type of kinetic friction. It can be determined as the friction force which prevents the motion of any spherical object like a wheel or a ball, etc." locator "https://testbook.com/physics/types-of-friction"
+    cites "Fluid friction is the type of friction that exists between the layers of fluid when they are in relative motion with each other." locator "https://testbook.com/physics/types-of-friction"
 }

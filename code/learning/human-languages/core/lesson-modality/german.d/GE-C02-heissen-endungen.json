@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C02-heissen-endungen",
+    "language": "german",
+    "chapter": 2,
+    "sequence": 72,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:07f4e84dc2e32999"
+  },
+  "findings": []
+}

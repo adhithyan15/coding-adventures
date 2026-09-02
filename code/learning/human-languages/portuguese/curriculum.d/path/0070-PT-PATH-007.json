@@ -2,9 +2,12 @@
   "id": "PT-PATH-007",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "PT-C01-noite"
+    "PT-C01-noite",
+    "PT-C01-practice"
   ],
   "before": [],
   "inline": [],
-  "after": []
+  "after": [
+    "PT-EXT-007-CONSOLIDATION"
+  ]
 }

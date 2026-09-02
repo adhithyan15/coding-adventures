@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C01-die-plural",
+    "language": "german",
+    "chapter": 1,
+    "sequence": 57,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:471bd510a1d79036"
+  },
+  "findings": []
+}

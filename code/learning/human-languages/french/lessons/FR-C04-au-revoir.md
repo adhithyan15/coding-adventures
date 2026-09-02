@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: FR-C04-au-revoir
+spine_node: SPINE-TAKE-LEAVE
 sequence: 140
 chapter: 4
 type: word
@@ -10,24 +12,42 @@ prerequisites: []
 sounds: [r-uvular, vowel-oi, liaison]
 roots: [videre-latin]
 etymology_hook: "au revoir = 'à le revoir' — 'until the re-seeing' (voir ← vidēre 'to see' → vision, video)"
-est_minutes: 3
 reviews_of: [FR-C03-practice]
+duration:
+  max_seconds: 252
+requires:
+  knowledge: []
+introduces:
+  knowledge: [FR-LEX-AUREVOIR-01, FR-ETYMON-VOIR-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [FR-LEX-AUREVOIR-01, FR-ETYMON-VOIR-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 ---
 
 # au revoir — "goodbye," i.e. "until we see each other again"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You can open a French conversation; now close it. The standard
 goodbye is **au revoir** — and where Spanish *adiós* commends you *to God*,
 French makes a promise to **see you again**.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[FR-LEX-AUREVOIR-01]; assesses=[] -->
 
 - `r-uvular` — two guttural French *r*'s: *oh ruh-VWAHR*.
 - `vowel-oi` — **-voir** = *vwahr* (the *oi* = *wa*, as in *soir* from Chapter 1).
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[FR-ETYMON-VOIR-02]; assesses=[] -->
 
 **au revoir** is **au** + **revoir** = "at the **re-seeing**":
 
@@ -42,7 +62,8 @@ that this isn't the end. It's built on **voir**, from Latin **vidēre**, "to see
 - **re-vise** ("look again"), **e-vid**ent ("seen out"), **pro-vide**,
   **super-vise**, **sur-vey**.
 
-### A goodbye that *sees* — French and German agree
+## Why it's said this way — a goodbye that sees
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 Here's a satisfying cross-language pair: **German says the exact same thing.**
 *Auf Wiedersehen* = *auf* ("on") + *wieder* ("again") + *sehen* ("to see") = "on
@@ -50,6 +71,7 @@ the seeing-again." French and German, side by side, both promise a **re-seeing**
 Spanish *adiós* instead commends you *to God*. Same moment, two different pictures.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-AUREVOIR-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "au revoir" — *oh ruh-VWAHR*]
@@ -57,6 +79,7 @@ Spanish *adiós* instead commends you *to God*. Same moment, two different pictu
 - [YOU SAY: French *au revoir* and German *auf Wiedersehen* — both "see you again"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-AUREVOIR-01, FR-ETYMON-VOIR-02] -->
 
 [PAUSE 3s] What does *au revoir* literally mean? ("Until the seeing-again.") What
 Latin verb is *voir* from, and two English cousins? (*vidēre* — vision, video,

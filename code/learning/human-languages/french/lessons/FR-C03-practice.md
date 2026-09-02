@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: FR-C03-practice
+spine_node: SPINE-COURTESY-THANK
 sequence: 135
 chapter: 3
 type: practice-mix
@@ -9,19 +11,36 @@ concept_tag: CH3-PRACTICE
 prerequisites: [FR-C03-merci, FR-C03-de-rien, FR-C03-aller, FR-C03-comment-ca-va, FR-C03-comment-registers, FR-C03-comme-ci-comme-ca]
 sounds: []
 roots: []
-est_minutes: 4
 reviews_of: [FR-C03-merci, FR-C03-de-rien, FR-C03-comment-ca-va, FR-C03-comment-registers, FR-C03-comme-ci-comme-ca, FR-C02-practice]
+duration:
+  max_seconds: 295
+requires:
+  knowledge: [FR-LEX-MERCI-01, FR-ETYMON-MERCI-02, FR-CULTURE-MERCI-03, FR-LEX-DERIEN-04, FR-ETYMON-RIEN-05, FR-LEX-ALLER-06, FR-ETYMON-ALLER-07, FR-LEX-CAVA-08, FR-GRAM-REGISTER-09, FR-SOUND-LIAISON-10, FR-LEX-COMMECI-11, FR-CULTURE-SHRUG-12]
+introduces:
+  knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [FR-LEX-MERCI-01, FR-ETYMON-MERCI-02, FR-CULTURE-MERCI-03, FR-LEX-DERIEN-04, FR-ETYMON-RIEN-05, FR-LEX-ALLER-06, FR-ETYMON-ALLER-07, FR-LEX-CAVA-08, FR-GRAM-REGISTER-09, FR-SOUND-LIAISON-10, FR-LEX-COMMECI-11, FR-CULTURE-SHRUG-12]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 ---
 
 # Practice — "comment ça va ?", start to finish
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] No new words. This chapter's atoms — *merci, de rien, aller, ça va,
 comme ci comme ça* — assemble into a real exchange, run formally and informally.
 It picks up right where the Chapter 2 introduction left off.
 
 ## The exchange
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **Formal** (a stranger, an elder):
 
@@ -41,6 +60,7 @@ The glue word is **et vous ? / et toi ?** — "and you?" (*et* = "and," Latin
 Spanish *¿y usted? / ¿y tú?*
 
 ## What you've built this chapter
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - **merci** — thank you (← *mercēs*, "reward / mercy").
 - **de rien** — you're welcome (← *rem*, "a thing" → "nothing"; twin of Spanish
@@ -52,6 +72,7 @@ Spanish *¿y usted? / ¿y tú?*
 - **bien / ça va / comme ci comme ça / pas mal** — the answer ladder.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-MERCI-01, FR-LEX-DERIEN-04, FR-LEX-ALLER-06, FR-LEX-CAVA-08, FR-GRAM-REGISTER-09, FR-LEX-COMMECI-11] -->
 
 [PAUSE 1s]
 - [YOU SAY: the full *formal* exchange, both voices]
@@ -61,6 +82,7 @@ Spanish *¿y usted? / ¿y tú?*
 [REPEAT x2] "Ça va ? — Ça va, et toi ?" until it's reflex.
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-MERCI-01, FR-ETYMON-MERCI-02, FR-CULTURE-MERCI-03, FR-LEX-DERIEN-04, FR-ETYMON-RIEN-05, FR-LEX-ALLER-06, FR-ETYMON-ALLER-07, FR-LEX-CAVA-08, FR-GRAM-REGISTER-09, FR-SOUND-LIAISON-10, FR-LEX-COMMECI-11, FR-CULTURE-SHRUG-12] -->
 
 [PAUSE 3s] Which verb carries French "how are you?", and how does its metaphor
 differ from Spanish's? (*aller*, "to go" — *how does it go?* — vs *estar*, "to

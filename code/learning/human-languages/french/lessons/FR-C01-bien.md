@@ -22,7 +22,7 @@ of everyday conversation, and its root reaches straight into English.
 
 ## Sounds you'll need
 
-- `nasal-in` — **ien** is a **nasal** *byɛ̃*: air through the nose, and the
+- `nasal-in` — **ien** is a **nasal** *byan*: air through the nose, and the
   *n* itself is silent. Not "bee-en." → [reference](../pronunciation-reference.md)
 
 ## The word, taken apart
@@ -52,7 +52,7 @@ This is the same *well* vs. *good* split as English, and the same *bien* vs.
 ## Guided Practice
 
 [PAUSE 1s]
-- [YOU SAY: "bien" — nasal *byɛ̃*]
+- [YOU SAY: "bien" — nasal *byan*]
 - [YOU SAY: "très bien"]
 - [YOU SAY: "bien" then English "benefit", "benevolent"]
 

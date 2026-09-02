@@ -8,14 +8,18 @@
     "derived": "pen",
     "drivable": false,
     "reasons": [
-      "writing-type"
+      "writing-type",
+      "writing-block"
     ],
     "coreModality": "pen",
     "coreReasons": [
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:6df2b4f3b0d65d38"
+    "sourceHash": "fnv1a64:33ade3aa97306e70",
+    "detachableSegments": [
+      "Writing: the three accents"
+    ]
   },
   "findings": []
 }

@@ -10,8 +10,22 @@
   "payoff": {
     "lesson": "GE-C02-practice",
     "kind": "task",
-    "summary": "Complete GE-C02-practice, the canonical closing checkpoint, and demonstrate the chapter promise: introduce myself in German, give my name, and understand the other person's name.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Now a first real exchange — giving your name, asking for someone else's, and saying you are glad to meet them: Ich heiße Mira. — Wie heißen Sie? — Ich heiße Arun. — Freut mich. It is built the way the greetings were: each piece taken apart first, then assembled — and, because German is English's sibling, most of those pieces are direct English cousins. GE-C02-practice puts the four lines back together at the end.",
+    "assesses": [
+      "GE-LEX-ICH-02",
+      "GE-LEX-DU-SIE-02",
+      "GE-LEX-HEISSEN-02",
+      "GE-LEX-ICH-HEISSE-01",
+      "GE-LEX-WIE-02",
+      "GE-LEX-WIE-HEISSEN-SIE-01",
+      "GE-LEX-MICH-01",
+      "GE-LEX-FREUT-MICH-02",
+      "GE-ETYMON-ICH-03",
+      "GE-ETYMON-MICH-02",
+      "GE-ETYMON-HEISSEN-03",
+      "GE-ETYMON-WIE-03",
+      "GE-ETYMON-FREUEN-FROH-03"
+    ],
+    "note": "Chapter 2 is now generated from schema-v2 lessons, so the payoff is atom-scored: GE-C02-practice runs every headword of the exchange and every cousin-root the chapter argued for. The pronunciation atoms and the two transferable grammar rules — the verb endings and verb-second — are drilled in their own lessons and are deliberately not claimed here."
   }
 }

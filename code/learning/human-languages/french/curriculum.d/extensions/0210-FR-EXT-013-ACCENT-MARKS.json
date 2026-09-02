@@ -1,0 +1,13 @@
+{
+  "id": "FR-EXT-013-ACCENT-MARKS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read and write the French accents, the cedilla and the trema, and say what each one changes.",
+  "prerequisites": [],
+  "lessons": [
+    "FR-W01-accents",
+    "FR-W02-cedille",
+    "FR-W03-trema"
+  ]
+}

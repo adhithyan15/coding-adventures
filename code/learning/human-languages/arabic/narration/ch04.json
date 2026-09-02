@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9563dd3c2f44136a",
+  "sourceHash": "fnv1a64:266b570390ad5dd4",
   "lessons": [
     {
       "id": "AR-W10-ayn",
@@ -368,7 +368,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:05b37c3821332dd2",
+      "sourceHash": "fnv1a64:70f1483d00228753",
       "notice": {
         "modality": "pen",
         "needs": [
