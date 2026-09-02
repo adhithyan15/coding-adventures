@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R68-three-joins",
+    "language": "hindi",
+    "chapter": 68,
+    "sequence": 2640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f5697f2d0ea72df6"
+  },
+  "findings": []
+}

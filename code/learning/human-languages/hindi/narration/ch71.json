@@ -1,0 +1,410 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 71,
+  "title": "Why, and Because",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:4f8969086d54a40b",
+  "lessons": [
+    {
+      "id": "HI-C71-kyon",
+      "sequence": 2720,
+      "title": "क्यों (kyoṁ) — why",
+      "headword": "क्यों",
+      "romanization": "kyoṁ",
+      "gloss": "why — the k- word the deixis lesson listed and never taught",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:53ab38b359d87d29",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve the two items before this one by name: सकना and चाहना. Then run the k- words the deixis lesson gave you — क्या, कहाँ, and kaun. There is one more in that family, and it is the one a listener most often wants."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: क्यों",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क्यों — kyoṁ — why."
+            },
+            {
+              "kind": "speech",
+              "text": "आप क्यों नहीं आ सकते? — āp kyoṁ nahīṁ ā sakte? — Why can't you come?"
+            },
+            {
+              "kind": "speech",
+              "text": "क्यों (kyoṁ) goes where any Hindi question word goes: in the sentence's ordinary slot, in front of the verb — not dragged to the front the way English drags why. The rest of the sentence keeps the order it always had, verb last."
+            },
+            {
+              "kind": "speech",
+              "text": "On its own, क्यों (kyoṁ)? is a complete turn. It is how you ask somebody to explain what they have just said, and it costs one syllable."
+            },
+            {
+              "kind": "speech",
+              "text": "The deixis lesson generalised the य- / व- / क- system and listed the k- words. This is one of the ones it listed and did not teach. Its क- is the same ancient stem as क्या and kaun, and it is Latin's qu- in quis and English's wh- in who — one Indo-European kʷ-, three different spellings of the same sound."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyoṁ? on its own, as a whole turn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyoṁ?* on its own, as a whole turn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āp kyoṁ nahīṁ ā sakte?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āp kyoṁ nahīṁ ā sakte?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four k- words together — kyā, kaun, kahāṁ, kyoṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four k- words together — *kyā*, *kaun*, *kahāṁ*, *kyoṁ*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-C71-kyon-r1",
+              "prompt": "Ask why the listener cannot come.",
+              "assesses": [
+                "HI-JOIN-KYON-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "āp kyoṁ nahīṁ ā sakte?",
+                "आप क्यों नहीं आ सकते?"
+              ],
+              "feedback": {
+                "correct": "The question word stays in the sentence's own slot.",
+                "incorrect": "Leave the word order alone and put kyoṁ in front of the verb."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does क्यों (kyoṁ) stand in the sentence? (In its ordinary slot, in front of the verb — not fronted.) Which family does it belong to? (The k- question words.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: क्यों (kyoṁ)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C71-kyonki",
+      "sequence": 2730,
+      "title": "क्योंकि (kyoṁki) — because",
+      "headword": "क्योंकि",
+      "romanization": "kyoṁki",
+      "gloss": "because — literally why-that, the question word and the complementiser welded into one",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:910f11936d7955d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask क्यों (kyoṁ)? out loud. Then notice that you have no way at all to answer it. Now say कि — the word from the last chapter that hangs a clause on a verb. The answer is those two words stuck together."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: क्यों + कि",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मैं कल नहीं आ सकता क्योंकि मैं काम करता हूँ. — maiṁ kal nahīṁ ā saktā kyoṁki maiṁ kām kartā hūṁ. — I can't come tomorrow because I work."
+            },
+            {
+              "kind": "speech",
+              "text": "Read the word: क्योंकि (kyoṁki) is क्यों + कि, why-that. Nothing is hidden in it. Hindi answers why by saying why-that and then a whole ordinary sentence, verb last, exactly as after plain कि."
+            },
+            {
+              "kind": "speech",
+              "text": "The order is fixed and it is the useful way round: the claim first, the reason second. English can lead with because; the ordinary Hindi sentence does not."
+            },
+            {
+              "kind": "speech",
+              "text": "That example is worth memorising whole, because it is the shape of an entire exam task: a written message that says you cannot meet and why. It needs three things this book has now given you — the negation, सकना, and क्योंकि (kyoṁki) — and it needed all three."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at what the word is made of one more time. क्यों (kyoṁ) comes down from Sanskrit; कि was borrowed from Persian. Hindi welded them into a single conjunction and nobody notices the seam. That is this language in one word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two pieces separately — kyoṁ, ki — then welded, kyoṁki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two pieces separately — *kyoṁ*, *ki* — then welded, *kyoṁki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ kal nahīṁ ā saktā kyoṁki maiṁ kām kartā hūṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ kal nahīṁ ā saktā kyoṁki maiṁ kām kartā hūṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which half of that sentence comes first — the claim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which half of that sentence comes first — **the claim**]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-C71-kyonki-r1",
+              "prompt": "Ask why the listener cannot come, then answer it: you cannot come tomorrow because you work.",
+              "assesses": [
+                "HI-JOIN-KYONKI-01",
+                "HI-JOIN-KYON-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "āp kyoṁ nahīṁ ā sakte? — maiṁ kal nahīṁ ā saktā kyoṁki maiṁ kām kartā hūṁ",
+                "आप क्यों नहीं आ सकते? मैं कल नहीं आ सकता क्योंकि मैं काम करता हूँ"
+              ],
+              "feedback": {
+                "correct": "Claim first, reason after kyoṁki.",
+                "incorrect": "Put the claim first and kyoṁki in front of the reason."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two words is क्योंकि (kyoṁki) made of? (क्यों + कि.) Which half of a क्योंकि (kyoṁki) sentence comes first? (The claim; the reason follows.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: क्योंकि (kyoṁki)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R71-reasons",
+      "sequence": 2740,
+      "title": "Two turns: why, and because",
+      "headword": "क्यों? — क्योंकि …",
+      "romanization": "kyoṁ? — kyoṁki …",
+      "gloss": "asking for a reason and giving one, in two turns",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cddd09cfd7851665",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "क्योंकि (kyoṁki) is two words you already had. Say them apart, then together, then say where the verb of each half sits."
+            },
+            {
+              "kind": "speech",
+              "text": "Reach back three chapters while you are here: या offers a choice and लेकिन contradicts. Neither can give a reason, which is what this chapter added."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyoṁ? — then kyoṁki …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyoṁ?* — then *kyoṁki …*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ kal nahīṁ ā saktā kyoṁki maiṁ kām kartā hūṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ kal nahīṁ ā saktā kyoṁki maiṁ kām kartā hūṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ ānā chāhtā hūṁ lekin maiṁ nahīṁ ā saktā — the joiner and the two modal verbs in one sentence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ ānā chāhtā hūṁ lekin maiṁ nahīṁ ā saktā* — the joiner and the two modal verbs in one sentence]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-R71-reasons-run",
+              "prompt": "Take both turns: ask why the listener cannot come, then answer with a reason.",
+              "assesses": [
+                "HI-JOIN-KYON-01",
+                "HI-JOIN-KYONKI-01",
+                "HI-LEX-SAKNA-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "āp kyoṁ nahīṁ ā sakte? — maiṁ kal nahīṁ ā saktā kyoṁki maiṁ kām kartā hūṁ",
+                "आप क्यों नहीं आ सकते? मैं कल नहीं आ सकता क्योंकि मैं काम करता हूँ"
+              ],
+              "feedback": {
+                "correct": "A question and a reason: the smallest complete exchange in the book.",
+                "incorrect": "Ask with kyoṁ, answer with the claim first and kyoṁki before the reason."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word asks for a reason, and which gives one? (क्यों asks, क्योंकि (kyoṁki) gives.) What is the second one made of? (The first one, plus कि.) Then stop."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

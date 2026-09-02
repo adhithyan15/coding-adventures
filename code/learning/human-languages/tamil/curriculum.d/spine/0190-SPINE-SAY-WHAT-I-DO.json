@@ -5,12 +5,12 @@
     "TA-PATH-029",
     "TA-PATH-030",
     "TA-PATH-030-C",
-    "TA-PATH-42-VERBS"
+    "TA-PATH-42-VERBS",
+    "TA-PATH-77-SAY"
   ],
   "omits": [
     "VERB-INFINITIVE",
     "VERB-PRESENT-HABITUAL",
-    "VERB-SAY",
     "VERB-SPEAK",
     "VERB-HEAR",
     "VERB-LEARN",

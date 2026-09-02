@@ -1,0 +1,19 @@
+{
+  "chapter": 32,
+  "title": "Saying It Is Not So",
+  "label": "ch:mr-sentence-negation",
+  "canDo": "I can negate a whole Marathi sentence, say that I do not know, and decline an offer with nako rather than nahii.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "MR-R32-not-so",
+    "kind": "production",
+    "summary": "Complete MR-R32-not-so and produce all three unaided: I do not like milk, I do not know, and no thank you.",
+    "assesses": [
+      "MR-GRAMMAR-NEGATE-NAHI",
+      "MR-PHRASE-MAHIT-NAHI",
+      "MR-LEX-NAKO"
+    ]
+  }
+}

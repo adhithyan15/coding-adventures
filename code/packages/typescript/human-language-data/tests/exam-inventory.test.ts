@@ -895,21 +895,32 @@ describe("the committed Marathi A1 inventory", () => {
     // its SCRIPT (15/24, after the previous tranche took closure 44 -> 0) and its
     // mental- and evaluative-notion verbs; the columns that carry an exam paper
     // are empty.
+    //
+    // 88 -> 111: the joining tranche (chapters 30-36). Coordination went 0/5 to
+    // 5/5 and Subordination 1/7 to 5/7, and because a conjunction is a tool
+    // rather than a topic, twelve further points fell in five other columns --
+    // the negated sentence closed four function points, the polar particle three
+    // more, and the two punctuation marks their own. Seventeen new words and
+    // endings; twenty-three points. Coordination therefore leaves the
+    // empty-category list below, which is the movement, and Demonstratives,
+    // Temporal notions, Housing and Shopping stay in it, which is the remaining
+    // work.
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(301);
-    expect(coverage.covered).toBe(88);
-    expect(coverage.unmapped).toBe(213);
+    expect(coverage.covered).toBe(111);
+    expect(coverage.unmapped).toBe(190);
     // Zero partials is a property of the "existing atoms only" rule above, not a
     // coincidence: with no guessed ids, a point is either fully probed or null.
     expect(coverage.partial).toBe(0);
-    for (const empty of ["Demonstratives", "Coordination", "Temporal notions", "Housing", "Shopping"]) {
+    for (const empty of ["Demonstratives", "Temporal notions", "Housing", "Shopping"]) {
       expect(coverage.byCategory[empty]?.covered, empty).toBe(0);
     }
+    expect(coverage.byCategory["Coordination"]!.covered).toBe(5);
     expect(coverage.byCategory["Devanagari letters and signs"]!.covered).toBeGreaterThan(0);
     expect(coverage.byCategory["Sound system"]!.covered).toBeGreaterThan(0);
     expect(formatExamCoverage(coverage)).toContain(
-      "marathi A1 (partial inventory): 88/301 points covered (29%)",
+      "marathi A1 (partial inventory): 111/301 points covered (37%)",
     );
   }, 60_000);
 });
@@ -1040,25 +1051,31 @@ describe("the committed Tamil A1 inventory", () => {
   it("reports a gap that is GRAMMAR-shaped, with the script column nearly closed", () => {
     // Pinned so a future tranche has to say which points it moved. It may rise;
     // a fall means coverage was lost and wants explaining.
+    //
+    // 155 -> 174 (HL-C304, chapters 74-81). The clause-joining tranche closed
+    // the whole Iṇaittoḍar column plus the polar -ā, eṉ, eppōdu, the additive
+    // -um, negative coordination, four communicative functions, both numeral
+    // points — by declaring the atoms chapter 7 was already teaching — and the
+    // diglossia point the file named as the most Tamil-specific one in it.
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(262);
-    expect(coverage.covered).toBe(155);
-    expect(coverage.unmapped).toBe(107);
+    expect(coverage.covered).toBe(174);
+    expect(coverage.unmapped).toBe(88);
     // Zero partials is a property of the "existing atoms only" rule, not a
     // coincidence: with no guessed ids, a point is either fully probed or null.
     expect(coverage.partial).toBe(0);
-    // THE FINDING. Tamil cannot join two clauses at all — no `-um ... -um`, no
-    // `aanaal`, no `alladu`, no quotative `enru` — which is the same empty
-    // column Hindi and Telugu reported, and it is what stops the well-taught
-    // verb and lexis columns from becoming sentences.
-    expect(coverage.byCategory["Iṇaittoḍar (joining clauses)"]).toEqual({ enumerated: 7, covered: 0 });
+    // WAS THE FINDING, AND IS NOW THE PAYMENT. Tamil could not join two clauses
+    // at all — no `-um ... -um`, no `aanaal`, no `alladu`, no quotative `enru`.
+    // Chapters 74-81 teach all seven, which is what lets the well-taught verb
+    // and lexis columns become sentences.
+    expect(coverage.byCategory["Iṇaittoḍar (joining clauses)"]).toEqual({ enumerated: 7, covered: 7 });
     // The two columns that carry this track, and they are not the ones French
     // and German lead on.
     expect(coverage.byCategory["Vinaiccol (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Tamiḻ eḻuttu (script and orthography)"]!.covered).toBeGreaterThan(5);
     expect(formatExamCoverage(coverage)).toContain(
-      "tamil A1 (partial inventory): 155/262 points covered (59%)",
+      "tamil A1 (partial inventory): 174/262 points covered (66%)",
     );
   }, 60_000);
 });

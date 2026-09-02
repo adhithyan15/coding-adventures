@@ -1,0 +1,12 @@
+{
+  "id": "HI-PATH-70-CAN",
+  "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+  "lessons": [
+    "HI-C70-sakna"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-070-ABILITY"
+  ],
+  "after": []
+}

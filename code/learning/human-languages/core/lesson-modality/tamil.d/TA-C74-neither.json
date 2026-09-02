@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C74-neither",
+    "language": "tamil",
+    "chapter": 74,
+    "sequence": 3060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e95d0a0b594ccd3"
+  },
+  "findings": []
+}

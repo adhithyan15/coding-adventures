@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, afterEach } from "vitest";
-import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { runCompletionPlan } from "../src/plan-cli.js";
@@ -153,106 +153,59 @@ describe("the plan CLI", () => {
     // `listExamInventories` dedupes nothing, so two files declaring the same
     // (language, level) produced two items with the IDENTICAL id, a doubled
     // projection, and a shrunken inventory backlog.
+    //
+    // This assertion used to pin the absolute corpus total, e.g.
+    // `851 uncovered point(s) across 10 written`. That number is NOT what this
+    // test is about -- it was only standing in for "the duplicate did not double
+    // the count" -- and pinning it made this the most contended line in the
+    // repo. In one day it read 529 -> 686 -> 793 -> 792 -> 775 -> 774 -> 786 ->
+    // 839 -> 851, because it rises when an inventory lands and falls when a
+    // tranche covers points. Every parallel author had to edit it, four PRs sat
+    // DIRTY on it at once, and -- worse than the churn -- two branches that both
+    // lower it merge QUIETLY because they agree, leaving an agreed wrong value.
+    // Composing it by arithmetic was wrong every time it was tried, including
+    // once when the arithmetic happened to agree.
+    //
+    // A ratchet is not available either: the number legitimately RISES when an
+    // inventory lands, because an inventory enumerates points that were
+    // previously unmeasurable. A ceiling would fail on exactly the work we most
+    // want. So assert the invariant this test actually owns -- duplication
+    // changes nothing -- by comparing the two runs. HL-C310.
+    const clean = run(corpus());
     const root = corpus();
     cpSync(
       join(root, "core", "exam-inventory-french-a1.json"),
       join(root, "core", "exam-inventory-fr-a1.json"),
     );
     const { out } = run(root);
-    // 103 -> 98: the French questions chapter covered five A1 points (HL-C229).
-    // German A2 adds 51 source-bounded points; three already have exact atoms.
-    // 146 -> 196: Spanish A1 contributed 0 uncovered points while it enumerated
-    // grammar only. Enumerating its functional, notional and orthographic
-    // dimensions added 50 points with no corresponding atom, and this total is
-    // the sum across all four written inventories.
-    // 196 -> 194: HL23 §10 authors `saber` (chapter 389) and maps `A1-F2-16`
-    // and `A1-F2-17`, the two PCIC ability points, onto it. The backlog falls
-    // because two points were CLOSED, not because an inventory shrank — the
-    // Spanish denominator is still 273.
-    // 194 -> 190. HL23 §13 maps four `Nociones evaluativas` points: A1-NG6-03, -08
-    // and -10 are closed by the qualities rung's own lessons, and -09 needed no
-    // authoring at all — its note claimed the corpus never introduces `saber`, which
-    // stopped being true when chapter 389 authored it two slices earlier.
-    // 190 -> 317, and 4 -> 5 written. `core/exam-inventory-hindi-a1.json`
-    // enumerates 282 A1 points and the track covers 155 of them, so Hindi
-    // contributes its 127 unmapped points to the total. The unmeasured remainder
-    // falls 20 -> 19 for the same reason: Hindi stopped being a proxy.
-    //
-    // The Hindi denominator is 282 and not 172 because its point set is derived
-    // structurally from the DELE-sourced Spanish inventory used as a proxy for
-    // LEVEL. A first draft built from CEFR descriptors alone reached 172 and
-    // measured 67%; the proxy added 110 demands the descriptors never
-    // enumerated -- `apna`, object-marking `ko`, transport, payment, `aaj` --
-    // and the honest figure fell to 55%. A ruler drawn too short flatters the
-    // corpus, so the bigger denominator is the point, not a side effect.
-    // 530 -> 529: retiring hand-written French chapter 6 closed A1-PRON-03,
-    // obligatory liaison, which the generated chapter teaches as a named rule
-    // with its own atom instead of two passing mentions inside `sounds` blocks.
-    // 686 -> 793, and 7 -> 8 written. Two inventories landed independently
-    // and met in an earlier merge, so that figure was RE-MEASURED rather than
-    // added up by hand:
-    //   +157  Telugu A1: 326 points enumerated, 169 covered.
-    //   +107  Tamil A1:  262 points enumerated, 155 covered.
-    //
-    // 793 -> 792: French chapter 8 closed A1-LEX-07, telling the time -- the
-    // generated chapter teaches et quart, et demie and moins le quart, which the
-    // hand-written one named in a sentence and then deferred.
-    //
-    // 792 -> 748: the Telugu chapter 74-80 vocabulary tranche was authored
-    // against `exam-inventory-telugu-a1.json`'s OWN uncovered list rather than
-    // by topic, so 35 headwords closed 44 points. Telugu went 169/326 (52%) to
-    // 213/326 (65%) against an unchanged denominator.
-    //
-    // 748 -> 786, and 8 -> 9 written. `core/exam-inventory-sanskrit-a1.json`
-    // enumerates 164 A1 points and the corpus covers 126, so Sanskrit
-    // contributes its 38 uncovered points. RE-MEASURED ON THE MERGED TREE by
-    // running the CLI: this line has moved 529 -> 686 -> 793 -> 792 -> 748 and
-    // now again, the Telugu tranche and this inventory having landed from
-    // opposite directions while both branches were open. Composing it by
-    // arithmetic has been wrong every time it has been tried.
-    expect(out).toMatch(/851 uncovered point\(s\) across 10 written/);
-    // 190 -> 403, and 4 -> 5 written. Marathi's own A1 inventory enumerates 301
-    // points and the corpus covers 88, so it contributes 213. Nothing regressed:
-    // a twentieth track stopped being unmeasurable, and the backlog grew by
-    // exactly the debt that was previously invisible. The size of the jump is
-    // itself the finding — Marathi's target list is DERIVED from the Spanish
-    // one, which is the only DELE-sourced set here, so its denominator is what an
-    // attributable A1 inventory actually asks for rather than what a
-    // descriptor-led guess remembered to include.
-    expect(out).toMatch(/851 uncovered point\(s\) across 10 written/);
-    // 529 -> 686, and 6 -> 7 written. `core/exam-inventory-telugu-a1.json`
-    // enumerates 326 A1 points and the corpus covers 169, so Telugu contributes
-    // its 157 unmapped points. The unmeasured remainder falls 18 -> 17 for the
-    // same reason: a twenty-first track stopped being unmeasurable, and the
-    // backlog grew by exactly the debt that was previously invisible.
-    //
-    // 326 is the largest denominator here, and deliberately so. Telugu's point
-    // set is derived from the same DELE-sourced Spanish proxy as Hindi's and
-    // Marathi's, and it splits several of the proxy's points in two wherever the
-    // corpus covers one half and not the other -- the parts of a dwelling but not
-    // the word for a house, the age question but not the age answer. A merged
-    // point would have scored those as covered, which is the flattering
-    // direction; splitting them is what makes the 52% honest.
-    //
-    // Tamil's 262 is the smallest Indic denominator and that is a property of
-    // the LANGUAGE: eight Spanish past-tense points collapse into one Tamil gap
-    // because Tamil's past is one slot in one machine, four article points
-    // collapse into two because Tamil has no article, and nine punctuation
-    // points collapse into one because modern Tamil uses the same marks as
-    // English. Every collapse lists all of its source points in `derivedFrom`,
-    // which is what the totality test above checks.
-    //
-    // Sanskrit's 164 is smaller still, and for a different reason than Tamil's
-    // 262: not collapse but REACH. Fifteen of the proxy's modern-life fields --
-    // the telephone, the bank, the restaurant, unemployment, the internet --
-    // are gathered into fifteen Modern-life points rather than enumerated
-    // further, because a classical corpus answers almost none of them and
-    // splitting them finer would only have multiplied identical gap notes. The
-    // unmeasured remainder falls 16 -> 15 for the ordinary reason: a
-    // twenty-second track stopped being unmeasurable.
-    expect(out).toMatch(/0 complete and 10 partial of 138/);
-    expect(out).toMatch(/the other 14 track\(s\)/);
-  }, 120_000);
+
+    const gap = /(\d+) uncovered point\(s\) across (\d+) written/;
+    const before = clean.out.match(gap);
+    const after = out.match(gap);
+    expect(before, "clean corpus must report an exam-point gap").not.toBeNull();
+    expect(after, "duplicated corpus must report an exam-point gap").not.toBeNull();
+
+    // The duplicate must change NEITHER figure. Comparing the runs keeps the
+    // real claim while letting both numbers move freely as authors land work.
+    expect(after![1]).toBe(before![1]);
+    expect(after![2]).toBe(before![2]);
+
+    // And the written count must equal the distinct (language, level) pairs on
+    // disk -- derived from the directory listing, which is not produced by the
+    // plan engine, so this is a genuine cross-check rather than f(x) == x.
+    const distinct = new Set(
+      readdirSync(join(defaultCurriculumRoot(), "core"))
+        .filter((f) => /^exam-inventory-.*\.json$/.test(f))
+        .map((f) => {
+          const doc = JSON.parse(
+            readFileSync(join(defaultCurriculumRoot(), "core", f), "utf8"),
+          ) as { language?: string; level?: string };
+          return `${doc.language}/${doc.level}`;
+        }),
+    );
+    expect(Number(before![2])).toBe(distinct.size);
+    expect(distinct.size).toBeGreaterThan(0);
+  });
 
   it("rejects a flag used as another flag's value", () => {
     expect(run(corpus()).code).toBe(0);

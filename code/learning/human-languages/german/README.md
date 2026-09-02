@@ -97,7 +97,7 @@ French *nuit* — one Indo-European word, split four ways.
   Fuß*, *das Herz* — completes the five-word Hand/Arm/Finger/Fuß/Herz set
   Chapter 21 named but only a fifth of which it taught.
 
-**All thirty-five chapters are authored and in the book (315 pages).**
+**All thirty-five chapters are authored and in the book (327 pages).**
 
 ---
 
@@ -113,9 +113,9 @@ language.
 finish a chapter, and names the lesson that proves it. It is authored intent —
 no validator may rewrite it.
 
-**Twenty-five of thirty-five chapters are atom-scored: 1–4 and 15–35.** Those
+**Twenty-six of thirty-five chapters are atom-scored: 1–5 and 15–35.** Those
 are exactly the chapters whose lessons have been migrated to schema version 2
-and so declare real knowledge atoms. Chapters 5–14 are still schema v1 and carry
+and so declare real knowledge atoms. Chapters 6–14 are still schema v1 and carry
 no `practises.knowledge`, so a payoff written for them could only assess
 invented atoms — they carry an authored payoff anchored to real lesson content
 and an empty `assesses` until the migration reaches them. They are left out on purpose: an absent entry is debt the gap report can
@@ -126,6 +126,7 @@ actually assesses, floored at 0.5 by `core/chapter-policy.json`:
 
 | Chapter | Payoff lesson | Assessed / introduced |
 |---|---|---|
+| 5 The First Verbs | `GE-C05-practice` | 21 / 30 = 0.70 |
 | 15 The Wrapped Participle | `GE-C15-partizip-practice` | 7 / 7 = 1.00 |
 | 16 The Past Built From Have | `GE-C15-perfekt-practice` | 8 / 8 = 1.00 |
 | 17 The Simple Past | `GE-C15-praeteritum-practice` | 9 / 9 = 1.00 |

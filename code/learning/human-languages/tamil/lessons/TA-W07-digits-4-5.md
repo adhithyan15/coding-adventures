@@ -17,9 +17,9 @@ duration:
 requires:
   knowledge: [TA-LEX-NUMBERS-1-5-01]
 introduces:
-  knowledge: []
+  knowledge: [TA-SCRIPT-W07-DIGITS-02]
 practises:
-  knowledge: [TA-LEX-NUMBERS-1-5-01]
+  knowledge: [TA-LEX-NUMBERS-1-5-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02]
 skills: [listening, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -36,7 +36,7 @@ reviews_of: [TA-W07-digits-1-3]
 [PAUSE 2s] Read **௧ ௨ ௩**. Two shapes remain in the first group.
 
 ## Script
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01] -->
+<!-- hl-knowledge: introduces=[TA-SCRIPT-W07-DIGITS-02]; assesses=[TA-LEX-NUMBERS-1-5-01, TA-SCRIPT-W07-DIGITS-01] -->
 
 - **௪** means 4: *naanku*.
 - **௫** means 5: *aintu*.
@@ -44,14 +44,14 @@ reviews_of: [TA-W07-digits-1-3]
 Point through **௧ ௨ ௩ ௪ ௫** once.
 
 ## Writing — observe and trace
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02] -->
 <!-- hl-writing-stage: observe-trace -->
 
 Keep both models visible. Trace **௪** once and **௫** once. Then circle the one
 you hear: [YOU HEAR: *aintu*]. (**௫**.)
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02] -->
 
 [PAUSE 3s] Which shape means four? (**௪**.) Read **௫**. (***Aintu.***) This
 lesson added two shapes, not five.

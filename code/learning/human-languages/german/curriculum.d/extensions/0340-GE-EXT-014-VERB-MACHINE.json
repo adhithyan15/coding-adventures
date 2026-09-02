@@ -1,0 +1,17 @@
+{
+  "id": "GE-EXT-014-VERB-MACHINE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can take any regular German verb apart into stem and ending, name all six persons, hear the endings apart, and ask where someone lives.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C05-verbstamm",
+    "GE-C05-er-sie-es",
+    "GE-C05-wir",
+    "GE-C05-ihr",
+    "GE-C05-endungen-hoerbar",
+    "GE-C05-in",
+    "GE-C05-wo"
+  ]
+}

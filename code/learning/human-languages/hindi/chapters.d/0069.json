@@ -1,0 +1,18 @@
+{
+  "chapter": 69,
+  "title": "Where a Clause Ends, and What Goes Inside One",
+  "label": "ch:hi-clause-as-object",
+  "canDo": "I can say where a Hindi clause ends -- on its verb -- and hang a whole second clause on a thinking verb with ki.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "HI-R69-reported",
+    "kind": "production",
+    "summary": "Complete HI-R69-reported and say that you think the tea is good, then name the last word of each of the two halves.",
+    "assesses": [
+      "HI-GRAMMAR-VERB-FINAL-01",
+      "HI-JOIN-KI-01"
+    ]
+  }
+}

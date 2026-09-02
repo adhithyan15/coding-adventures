@@ -261,6 +261,22 @@ first-person can-do sentence and the lesson that pays it off.
   two recognition-at-distance lessons that answer the R4 window the longer track
   opened on the book's earliest signs, sounds and words. Payoff:
   [`MR-R25-dative-frame`](./lessons/MR-R25-dative-frame.md).
+- **Chapters 30–36 — the joining column** ([`lessons/MR-C3*`, `MR-R3*`,
+  `MR-W3*`](./lessons/)): the seventeen words and endings that turn a track full
+  of nameable things into a track that can say a sentence about two of them.
+  **30** the flat joiners **आणि · किंवा · पण**, all in one slot; **31** the three
+  shapes that need a word in more than one place, **ना … ना**, the confirmation
+  tag **… ना?**, and **एक … दुसरा**; **32** sentence-final **नाही** — the first
+  time the track can deny a verb rather than answer a question — with **नको**
+  kept carefully apart from it; **33** the polar **… का?**, the rising voice that
+  can replace it, and the single trailing **?** and **!**; **34** **का …?** for
+  *why*, **कारण** for *because* (the first clause put UNDERNEATH another), and
+  the comma; **35** **की**, which makes any sentence the object of a thinking
+  verb, and **-ण्यासाठी**, which makes any verb a purpose; **36** the
+  **जेव्हा … तेव्हा** frame, the **-ल्यावर** that packs it into one word, and
+  **सुद्धा**, whose *too* becomes *not even* the moment the sentence is negated.
+  Every chapter closes on a review; the last one runs every joining word in the
+  book once. A1 exam coverage 88/301 → **111/301**.
 
 Chapters 9–12 are **not in the ledger with scored payoffs**, and that gap is
 deliberate. Their original lessons are still schema v1, so they declare no

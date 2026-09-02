@@ -4,7 +4,8 @@
     "TA-PATH-020",
     "TA-PATH-022",
     "TA-PATH-025",
-    "TA-PATH-027"
+    "TA-PATH-027",
+    "TA-PATH-79-WHEN"
   ],
   "omits": [
     "GREETING-DAY"

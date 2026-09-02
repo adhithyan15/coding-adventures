@@ -140,8 +140,27 @@ twice before this branch are rescued here. What is left is four atoms, all
 introduced by these chapters' own last lessons, which nothing later exists to
 revisit — a structural tail, not an oversight.
 
+## Chapters 68-74 - the joining column
+
+| Chapter | Lessons | Job |
+|---|---|---|
+| 68 | C68-aur, C68-ya, C68-lekin, R68-three-joins | one slot, three relations: add, offer, contradict |
+| 69 | C69-verb-last, C69-ki, R69-reported | where a clause ends, and what can go inside one |
+| 70 | C70-sakna, C70-chahna, C70-infinitive-object, R70-can-want | able, willing, and the **-ना** form as a noun |
+| 71 | C71-kyon, C71-kyonki, R71-reasons | ask why, and answer it |
+| 72 | C72-kab, C72-jab-tab, R72-when | **क-** asks, **ज-** frames, **त-** answers |
+| 73 | C73-kar, R73-chain | two actions, one clause, one ending |
+| 74 | C74-kya-polar, C74-question-rise, C74-na-tag, R74-ask | the question with a particle, with a voice, and with a tag |
+
+Every one of the seven chapters opens by retrieving the two preceding items **by
+name** and closes on a review. That is not decoration: a naive append raises the
+reinforcement-miss count because items late in a chapter have nowhere left to be
+revisited, and the fix belongs at the chapter boundary. This tranche's own
+reinforcement debt is zero and `atomsNeverRevisited` fell by two.
+
 ## Next
 
 Specify and build the project-owned pre-A1-to-A2 assessment bridge in #13424;
 Chapter 6 continues with postpositions (*ko, se, meṁ, par*) and the ergative
-*ne*.
+*ne*. The joining tranche measured and deliberately left **चाहिए** and
+**जानना**, and the independent vowel **ए** that the first of them needs.

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C73-kar",
+    "language": "hindi",
+    "chapter": 73,
+    "sequence": 2780,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:45ee788e34523a8e"
+  },
+  "findings": []
+}

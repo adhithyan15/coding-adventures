@@ -1,0 +1,19 @@
+{
+  "id": "GE-PATH-014-B",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "GE-C05-was",
+    "GE-C05-lernen",
+    "GE-C05-deutsch",
+    "GE-C05-ich-lerne-deutsch",
+    "GE-C05-pronomen-regel",
+    "GE-C05-practice"
+  ],
+  "before": [
+    "GE-EXT-014-SENTENCE-PIECES"
+  ],
+  "inline": [],
+  "after": [
+    "GE-EXT-014-CONSOLIDATION"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 75,
+  "title": "Yes or No",
+  "label": "ch:ta-yes-or-no",
+  "canDo": "I can turn any sentence I know into a yes-or-no question, answer one, and ask permission.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "TA-C75-permission",
+    "kind": "production",
+    "summary": "Complete TA-C75-permission and ask to be let in, then grant the same request.",
+    "assesses": [
+      "TA-GRAMMAR-C75-POLAR-01",
+      "TA-PRAGMATICS-C75-ANSWER-02",
+      "TA-SCRIPT-READ-SARIYAA-01",
+      "TA-PRAGMATICS-C75-PERMISSION-03"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "id": "HI-EXT-074-POLAR-QUESTION",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can turn any statement I own into a yes-or-no question with a fronted kyaa, hear one carried by the voice alone, and check a fact with the naa tag.",
+  "prerequisites": [
+    "HI-EXT-073-CHAINED-ACTIONS"
+  ],
+  "lessons": [
+    "HI-C74-kya-polar",
+    "HI-C74-question-rise",
+    "HI-C74-na-tag",
+    "HI-R74-ask"
+  ]
+}

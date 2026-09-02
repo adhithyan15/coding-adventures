@@ -1,0 +1,18 @@
+{
+  "language": "marathi",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:a3a067d57691c445",
+  "lessonIds": [
+    "MR-C31-naa-naa",
+    "MR-C31-naa-tag",
+    "MR-C31-dusra",
+    "MR-R31-pairs"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "marathi/narration/ch31.txt",
+  "json": "marathi/narration/ch31.json",
+  "textHash": "fnv1a64:b66b4b638ecda7c4",
+  "jsonHash": "fnv1a64:f511b0a3177dcec7",
+  "findings": []
+}

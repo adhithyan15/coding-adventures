@@ -5,7 +5,9 @@
     "MR-PATH-012-C",
     "MR-PATH-013",
     "MR-PATH-014",
-    "MR-PATH-014-C"
+    "MR-PATH-014-C",
+    "MR-PATH-037",
+    "MR-PATH-038"
   ],
   "omits": [
     "VERB-INFINITIVE",

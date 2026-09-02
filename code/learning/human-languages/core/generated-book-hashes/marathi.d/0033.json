@@ -1,0 +1,11 @@
+{
+  "language": "marathi",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:f49632e050f81db4",
+  "lessonIds": [
+    "MR-C33-kaa-polar",
+    "MR-W33-question-mark",
+    "MR-R33-ask-and-answer"
+  ],
+  "tex": "marathi/book/chapters/ch33-polar-question.tex"
+}
