@@ -1,0 +1,15 @@
+{
+  "id": "TE-EXT-74-LINK",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can join two Telugu words or two Telugu clauses, and I can ask why and answer it.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C74-and",
+    "TE-C74-but",
+    "TE-C74-or",
+    "TE-C74-why",
+    "TE-C74-because"
+  ]
+}

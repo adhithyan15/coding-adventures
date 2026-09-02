@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 13,
-  "sourceHash": "fnv1a64:d26e6b5bb3b7dc17",
+  "sourceHash": "fnv1a64:1b366a5219539681",
   "lessonIds": [
     "GE-C13-schwarz-weiss",
     "GE-C13-rot-blau"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "german/narration/ch13.txt",
   "json": "german/narration/ch13.json",
-  "textHash": "fnv1a64:6ed1e69f52088e78",
-  "jsonHash": "fnv1a64:fc72ac45d2c3a0db",
+  "textHash": "fnv1a64:6b5fe6a8cd64abc6",
+  "jsonHash": "fnv1a64:dd200539abec83b0",
   "findings": []
 }

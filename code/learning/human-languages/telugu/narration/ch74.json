@@ -1,0 +1,684 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 74,
+  "title": "And, But, Or",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:cb855651ef3cd1f7",
+  "lessons": [
+    {
+      "id": "TE-C74-and",
+      "sequence": 2530,
+      "title": "మరియు (mariyu) — and",
+      "headword": "మరియు",
+      "romanization": "mariyu",
+      "gloss": "and",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d48e09dbd233f0ba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did vagaru mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మరియు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మరియు (mariyu) — \"and\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Telugu's everyday speech often joins two things by simply saying them one after the other, or by hanging a small -ఉ on the end of each. మరియు (mariyu) is the written, spoken-carefully form, and it is the one a list on a page will use."
+            },
+            {
+              "kind": "speech",
+              "text": "Put it between two nouns you already have: నీళ్ళు మరియు (mariyu) పాలు — \"water and milk\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first way you have had to put two things in one sentence."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mariyu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mariyu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mariyu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mariyu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "join two words you know with mariyu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: join two words you know with *mariyu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dayacēsi, then say mariyu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dayacēsi*, then say *mariyu*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మరియు (mariyu) mean? (\"and\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C74-but",
+      "sequence": 2540,
+      "title": "కానీ (kānī) — but",
+      "headword": "కానీ",
+      "romanization": "kānī",
+      "gloss": "but",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cff73761ef58778e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did mariyu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కానీ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కానీ (kānī) — \"but\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కానీ (kānī) turns a sentence around. Where మరియు (mariyu) adds, కానీ (kānī) takes back: it warns the listener that what comes next does not match what came before."
+            },
+            {
+              "kind": "speech",
+              "text": "నాకు టీ ఇష్టం, కానీ (kānī) పాలు వద్దు — \"I like tea, but no milk.\" This one word is what lets you disagree politely instead of only saying లేదు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two clauses, and a way to set the second against the first."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kānī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kānī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kānī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kānī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say something you like, then kānī, then something about it you do not",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say something you like, then *kānī*, then something about it you do not]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kṣamin̄caṇḍi, then say kānī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kṣamin̄caṇḍi*, then say *kānī*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కానీ (kānī) mean? (\"but\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C74-or",
+      "sequence": 2550,
+      "title": "లేదా (lēdā) — or",
+      "headword": "లేదా",
+      "romanization": "lēdā",
+      "gloss": "or",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14d7fecc2feb727f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kānī mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: లేదా",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "లేదా (lēdā) — \"or\"."
+            },
+            {
+              "kind": "speech",
+              "text": "You have met its first half already: లే- is the same root behind లేదు, \"there isn't\". లేదా (lēdā) is literally the or-else of that root — \"failing that\"."
+            },
+            {
+              "kind": "speech",
+              "text": "టీ లేదా (lēdā) పాలు? — \"tea or milk?\" That is the whole of an offered choice, and you can now make one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A choice you can put to somebody."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lēdā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lēdā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lēdā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lēdā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "offer a choice between two drinks you know, using lēdā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: offer a choice between two drinks you know, using *lēdā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say anukō, then say lēdā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *anukō*, then say *lēdā*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does లేదా (lēdā) mean? (\"or\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C74-why",
+      "sequence": 2560,
+      "title": "ఎందుకు (enduku) — why?",
+      "headword": "ఎందుకు",
+      "romanization": "enduku",
+      "gloss": "why?",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c13798aba103875",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did lēdā mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఎందుకు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎందుకు (enduku) — \"why?\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Another word off the ఎ- question row you already know: ఎక్కడ \"where\", ఎవరు \"who\", and now ఎందుకు (enduku) \"why\". The row keeps its shape and you keep getting the words free."
+            },
+            {
+              "kind": "speech",
+              "text": "It goes where its answer goes, not at the front: మీరు ఎందుకు (enduku) వెళ్తారు? — \"why do you go?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The question the next word answers."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enduku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enduku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enduku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enduku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask enduku about something somebody just told you",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask *enduku* about something somebody just told you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say aḍugu, then say enduku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *aḍugu*, then say *enduku*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఎందుకు (enduku) mean? (\"why?\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C74-because",
+      "sequence": 2570,
+      "title": "ఎందుకంటే (endukaṇṭē) — because",
+      "headword": "ఎందుకంటే",
+      "romanization": "endukaṇṭē",
+      "gloss": "because",
+      "script": "telugu",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:1f992c7ba3a38982",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did enduku mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఎందుకంటే",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎందుకంటే (endukaṇṭē) — \"because\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at it: it is ఎందుకు (enduku) with అంటే glued on — \"if you ask why\". Telugu answers the question by repeating it and then continuing, which is the gluing habit of your very first lesson doing real work."
+            },
+            {
+              "kind": "speech",
+              "text": "నేను వెళ్తాను, ఎందుకంటే (endukaṇṭē) పని ఉంది — \"I'll go, because there is work.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the reason clause comes second",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Telugu can put the reason first, as పని ఉంది కాబట్టి నేను వెళ్తాను. With ఎందుకంటే (endukaṇṭē) it goes second, after the thing being explained, exactly where English puts it. Use ఎందుకంటే (endukaṇṭē) while that ordering is still the one you think in."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A reason, attached to the thing it explains."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "endukaṇṭē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *endukaṇṭē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "endukaṇṭē, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *endukaṇṭē*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "answer an enduku question with endukaṇṭē and one word you know",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: answer an *enduku* question with *endukaṇṭē* and one word you know]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ganṭa, then say endukaṇṭē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ganṭa*, then say *endukaṇṭē*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఎందుకంటే (endukaṇṭē) mean? (\"because\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

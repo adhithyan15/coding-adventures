@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 12,
-  "sourceHash": "fnv1a64:8f39891bf2f8c2d6",
+  "sourceHash": "fnv1a64:82662450e5849a9b",
   "lessonIds": [
     "GE-C12-elf-zwoelf",
     "GE-C12-zahlen-13-20"
@@ -10,7 +10,7 @@
   "drivablePrefix": 1,
   "text": "german/narration/ch12.txt",
   "json": "german/narration/ch12.json",
-  "textHash": "fnv1a64:ad93e46ef5dcda71",
-  "jsonHash": "fnv1a64:6b179a8e99bb66a8",
+  "textHash": "fnv1a64:0a6c7c2fbfa8239c",
+  "jsonHash": "fnv1a64:066c2bddcbbfc161",
   "findings": []
 }

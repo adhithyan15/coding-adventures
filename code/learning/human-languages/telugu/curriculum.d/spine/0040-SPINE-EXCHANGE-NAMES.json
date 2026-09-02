@@ -10,7 +10,8 @@
     "TE-PATH-48-ROLE",
     "TE-PATH-54-TREE",
     "TE-PATH-61-KITCHEN",
-    "TE-PATH-68-SOUND"
+    "TE-PATH-68-SOUND",
+    "TE-PATH-77-FROM"
   ],
   "omits": [
     "PRONOUN-ME",

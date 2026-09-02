@@ -580,7 +580,7 @@ You are…: making no promises. Say: Bis später.
 You are…: leaving for the day. Say: Bis morgen.
 
 The exchange.
-Everything from chapter 1 to here, in one conversation:
+Everything from your first greeting to here, in one conversation:
 [a table of 6 rows, read aloud]
 Hallo! Ich heiße Anna. Wie heißen Sie? means Hello! My name is Anna. What is your name?
 Ich heiße Peter. Freut mich. means My name is Peter. Pleased to meet you.

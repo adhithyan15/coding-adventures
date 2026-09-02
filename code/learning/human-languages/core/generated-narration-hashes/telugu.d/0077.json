@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:ff4c67e0cc8d03af",
+  "lessonIds": [
+    "TE-C77-from",
+    "TE-C77-town",
+    "TE-C77-country",
+    "TE-C77-india",
+    "TE-C77-thirty"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch77.txt",
+  "json": "telugu/narration/ch77.json",
+  "textHash": "fnv1a64:4a62b4aa210e1cc7",
+  "jsonHash": "fnv1a64:e4c753fe12b8b4a0",
+  "findings": []
+}

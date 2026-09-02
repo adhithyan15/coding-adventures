@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:e2951445602599c3",
+  "lessonIds": [
+    "TE-C79-friends",
+    "TE-C79-our",
+    "TE-C79-he",
+    "TE-C79-me",
+    "TE-C79-garu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch79.txt",
+  "json": "telugu/narration/ch79.json",
+  "textHash": "fnv1a64:3911dc8cb07ea811",
+  "jsonHash": "fnv1a64:3f3fec5d953c8057",
+  "findings": []
+}

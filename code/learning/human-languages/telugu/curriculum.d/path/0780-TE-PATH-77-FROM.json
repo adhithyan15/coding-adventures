@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-77-FROM",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "TE-C77-from",
+    "TE-C77-town",
+    "TE-C77-country",
+    "TE-C77-india",
+    "TE-C77-thirty"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-77-FROM"
+  ],
+  "after": []
+}

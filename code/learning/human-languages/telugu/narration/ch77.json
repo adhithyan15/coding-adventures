@@ -1,0 +1,688 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 77,
+  "title": "Where You Are From",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ff4c67e0cc8d03af",
+  "lessons": [
+    {
+      "id": "TE-C77-from",
+      "sequence": 2680,
+      "title": "నుంచి (nunci) — from",
+      "headword": "నుంచి",
+      "romanization": "nunci",
+      "gloss": "from",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:361bfd71f2505a7a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kaṣṭaṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నుంచి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నుంచి (nunci) — \"from\"."
+            },
+            {
+              "kind": "speech",
+              "text": "You already have -కు, \"to\", and -లో, \"in\". నుంచి (nunci) is the third of the set and the one an introduction needs."
+            },
+            {
+              "kind": "speech",
+              "text": "Like them it follows its noun: గ్రామం నుంచి (nunci) — \"from the village\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the third relation word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three now sit behind a noun and do three different jobs: -లో puts you inside, -కు sends you toward, నుంచి (nunci) takes you out of. Telugu has no words in front of nouns at all; everything a preposition would do in English is done by a piece glued to the back."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The direction you came out of."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nunci",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nunci*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nunci, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nunci*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say grāmaṁ nunci, then grāmāniki — out of, and into",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *grāmaṁ nunci*, then *grāmāniki* — out of, and into]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say eppuḍu vastāru?, then snēhituḍu, then say nunci",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *eppuḍu vastāru?*, then *snēhituḍu*, then say *nunci*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నుంచి (nunci) mean? (\"from\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C77-town",
+      "sequence": 2690,
+      "title": "పట్టణం (paṭṭaṇaṁ) — a town",
+      "headword": "పట్టణం",
+      "romanization": "paṭṭaṇaṁ",
+      "gloss": "a town",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:20aa78796d9a7b06",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did nunci mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పట్టణం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పట్టణం (paṭṭaṇaṁ) — \"a town\"."
+            },
+            {
+              "kind": "speech",
+              "text": "You already have గ్రామం, the village. పట్టణం (paṭṭaṇaṁ) is the larger settlement, the one with the shops and the bargaining in it."
+            },
+            {
+              "kind": "speech",
+              "text": "నేను పట్టణం (paṭṭaṇaṁ) నుంచి (nunci) — \"I am from a town.\" That sentence needs no verb, exactly like నా పేరు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Somewhere to be from."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭṭaṇaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭṭaṇaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭṭaṇaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭṭaṇaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say grāmaṁ, then paṭṭaṇaṁ, and say which is bigger",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *grāmaṁ*, then *paṭṭaṇaṁ*, and say which is bigger]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mundu, then koḍuku, then say paṭṭaṇaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mundu*, then *koḍuku*, then say *paṭṭaṇaṁ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పట్టణం (paṭṭaṇaṁ) mean? (\"a town\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C77-country",
+      "sequence": 2700,
+      "title": "దేశం (dēśaṁ) — a country",
+      "headword": "దేశం",
+      "romanization": "dēśaṁ",
+      "gloss": "a country",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cd25a68559f0b436",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did paṭṭaṇaṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: దేశం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దేశం (dēśaṁ) — \"a country\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit tatsama, and the same word behind Hindi desh. It scales the ladder up once more: గ్రామం, పట్టణం (paṭṭaṇaṁ), దేశం (dēśaṁ)."
+            },
+            {
+              "kind": "speech",
+              "text": "ఏ దేశం (dēśaṁ)? — \"which country?\" is a question you will be asked in the first minute of any exam interview."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The largest place you can be from."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēśaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēśaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēśaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēśaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say grāmaṁ, paṭṭaṇaṁ, dēśaṁ, smallest to largest",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *grāmaṁ*, *paṭṭaṇaṁ*, *dēśaṁ*, smallest to largest]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say saṁvatsaraṁ, then kūturu, then say dēśaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *saṁvatsaraṁ*, then *kūturu*, then say *dēśaṁ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does దేశం (dēśaṁ) mean? (\"a country\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C77-india",
+      "sequence": 2710,
+      "title": "భారతదేశం (Bhāratadēśaṁ) — India",
+      "headword": "భారతదేశం",
+      "romanization": "Bhāratadēśaṁ",
+      "gloss": "India",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:251829680bc3d916",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did dēśaṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: భారతదేశం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "భారతదేశం (Bhāratadēśaṁ) — \"India\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Your first Telugu proper name, and you can already read half of it: భారత plus the దేశం (dēśaṁ) you learned a moment ago."
+            },
+            {
+              "kind": "speech",
+              "text": "నేను భారతదేశం (Bhāratadēśaṁ) నుంచి (nunci) — \"I am from India.\" Swap in the name of wherever you are actually from and the sentence still works."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A place with a name, in a sentence that says you came from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Bhāratadēśaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Bhāratadēśaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Bhāratadēśaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Bhāratadēśaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say nēnu Bhāratadēśaṁ nunci, then say it with your own country instead",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *nēnu Bhāratadēśaṁ nunci*, then say it with your own country instead]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say cālā manci, then cevi, then say Bhāratadēśaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *cālā manci*, then *cevi*, then say *Bhāratadēśaṁ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does భారతదేశం (Bhāratadēśaṁ) mean? (\"India\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C77-thirty",
+      "sequence": 2720,
+      "title": "ముప్పై (muppai) — thirty (and the tens above it)",
+      "headword": "ముప్పై",
+      "romanization": "muppai",
+      "gloss": "thirty (and the tens above it)",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7c07ecffdf4e520e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did Bhāratadēśaṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ముప్పై",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ముప్పై (muppai) — \"thirty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Your counting stopped at ఇరవై, twenty. The tens above it are built the same way, from the units you already know:"
+            },
+            {
+              "kind": "speech",
+              "text": "ముప్పై (muppai) 30, నలభై 40, యాభై 50, అరవై 60, డెబ్బై 70, ఎనభై 80, తొంభై 90, వంద 100. Every one but వంద ends in the same -ై twenty does."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: an age, at last",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have long been able to ask నీ వయసెంత? and unable to answer it, because the numbers stopped at twenty and no word for a year existed. With the tens and with సంవత్సరం, the answer is now sayable: నాకు ముప్పై (muppai) సంవత్సరాలు — \"I am thirty\", literally \"to me, thirty years\". Note the dative నాకు: an age is something that has arrived at you, like every other Telugu experience."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Numbers past twenty: an age, a price, a year."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muppai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muppai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muppai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muppai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "count the tens aloud: iravai, muppai, nalabhai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: count the tens aloud: *iravai*, *muppai*, *nalabhai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ceḍḍa, then kannu, then say muppai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ceḍḍa*, then *kannu*, then say *muppai*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ముప్పై (muppai) mean? (\"thirty (and the tens above it)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
