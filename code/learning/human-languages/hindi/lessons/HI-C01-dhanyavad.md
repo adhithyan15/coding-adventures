@@ -10,6 +10,7 @@ chapter: 1
 type: word
 headword: धन्यवाद
 gloss: thank you (dhanyavād — formal, Sanskritic)
+romanization: "dhanyavād"
 concept_tag: COURTESY-THANKS
 prerequisites: [HI-C01-namaskar]
 sounds: [devanagari-inherent-a, matra-aa, halant-conjunct]

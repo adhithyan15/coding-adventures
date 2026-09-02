@@ -55,7 +55,7 @@ use std::collections::HashMap;
 use std::rc::Rc;
 use wasm_execution::{GlobalStorage, HostFunction, HostInterface, LinearMemory, Table, TrapError, V128Bytes, WasmValue};
 use wasm_module_parser::WasmModuleParser;
-use wasm_runtime::{WasmInstance, WasmRuntime};
+use wasm_runtime::{resolve_all_table_funcrefs, WasmInstance, WasmRuntime};
 use wasm_types::{CanonicalGroup, ExternalKind, FuncType, GlobalType, WasmModule};
 use wasm_wast_parser::script::{Action, ConstValue, Directive, Expected, F32LaneExpected, F64LaneExpected, ModuleSource};
 use wasm_wast_parser::{parse_script, WastParseError};
@@ -139,6 +139,18 @@ impl HostInterface for RegistryHost {
     fn resolve_function(&self, module_name: &str, name: &str) -> Option<Box<dyn HostFunction>> {
         let (instance_rc, index) = self.find_export(module_name, name, ExternalKind::Function)?;
         let func_type = instance_rc.borrow().func_types.get(index as usize)?.clone();
+        // W35 fourth slice: the exporting instance's own already-minted
+        // real identity for this function (`instance.func_identities`,
+        // the SAME combined function-index space `index` already lives
+        // in -- see `WasmInstance::func_identities`'s own doc comment).
+        // `unwrap_or(0)` mirrors `HostFunction::identity`'s own documented
+        // "0 == no stable identity" default -- unreachable in practice for
+        // any function actually returned by a successful `find_export`
+        // (every entry in a validated, instantiated module's combined
+        // function-index space gets a real identity, imported or not),
+        // kept only so an out-of-range index degrades to the same safe
+        // default every other pre-`identity()` `HostFunction` already used.
+        let identity = instance_rc.borrow().func_identities.get(index as usize).copied().unwrap_or(0);
         let (group_shape, is_final, canonical_type, type_idx) = {
             let instance = instance_rc.borrow();
             match combined_function_type_idx(&instance, index) {
@@ -170,7 +182,7 @@ impl HostInterface for RegistryHost {
                 None => ((1, 0), true, None, None),
             }
         };
-        Some(Box::new(CrossModuleFunction { instance: instance_rc, export_name: name.to_string(), func_type, group_shape, is_final, canonical_type, type_idx }))
+        Some(Box::new(CrossModuleFunction { instance: instance_rc, export_name: name.to_string(), func_type, identity, group_shape, is_final, canonical_type, type_idx }))
     }
 
     fn resolve_global(&self, module_name: &str, name: &str) -> Option<(GlobalType, Rc<RefCell<GlobalStorage>>)> {
@@ -338,13 +350,29 @@ fn combined_function_type_idx(instance: &WasmInstance, index: u32) -> Option<u32
 /// Known limitation, not silently allowed to corrupt anything: a
 /// MUTUAL/circular cross-instance call (this function's own callee
 /// instance, reached via a DIFFERENT import, calls back into the
-/// original caller instance) will panic on a `RefCell` double-borrow --
-/// a clean, safe Rust panic (borrow-checked at runtime), not a
-/// memory-safety issue. None of the corpus vendored so far is circular.
+/// original caller instance) traps cleanly on a `RefCell` re-borrow
+/// conflict (W35 fourth slice, security-review finding: `call`'s own
+/// `try_borrow_mut` -- see its doc comment; PRE-fourth-slice this was a
+/// bare `borrow_mut()` panic instead) -- a `TrapError`, not a
+/// memory-safety issue, and not a process abort. None of the corpus
+/// vendored so far is circular.
 struct CrossModuleFunction {
     instance: Rc<RefCell<WasmInstance>>,
     export_name: String,
     func_type: FuncType,
+    /// W35 fourth slice (`code/specs/W35-wasm-cross-instance-function-
+    /// identity.md`): this function's own real, process-wide-unique
+    /// identity, snapshotted from the EXPORTING instance's own
+    /// `func_identities[index]` at `resolve_function` time (the same
+    /// combined function-index space `combined_function_type_idx` already
+    /// resolves `index` against, immediately below) -- see
+    /// `HostFunction::identity`'s own doc comment. This is what lets an
+    /// IMPORTING module's own `WasmInstance::func_identities` construction
+    /// loop (`instantiate()`, mirroring `tag_identities`'s "imported
+    /// adopts the exporter's identity verbatim" rule) give the imported
+    /// function the SAME real identity the exporting instance already
+    /// minted for it, rather than a fresh, unrelated one.
+    identity: u64,
     /// W33 first slice: this function's own `(rec_group_size,
     /// rec_group_position)`, computed once at `resolve_function` time
     /// (see `combined_function_type_idx`) — see `HostFunction::
@@ -378,9 +406,33 @@ impl HostFunction for CrossModuleFunction {
         &self.func_type
     }
 
+    /// **W35 fourth slice, security-review finding**: `try_borrow_mut`,
+    /// not a bare `borrow_mut()` -- see `wasm_runtime::LocalFunctionRef::
+    /// call`'s own doc comment for the full rationale (a real, reproduced,
+    /// non-circular re-entrant-dispatch panic this slice's own fixup pass
+    /// made newly reachable: instance `B` calls into instance `A`, whose
+    /// `call_indirect` dispatches a stored funcref pointing back to `B`
+    /// itself, which is still mutably borrowed by the outer call). This
+    /// struct's own doc comment already names the SEPARATE, pre-existing,
+    /// accepted "genuinely mutual cross-instance call cycle" panic risk;
+    /// this fix is specifically about the NEW, non-cyclic case this
+    /// slice's own table-fixup pass introduced.
     fn call(&self, args: &[WasmValue], _memory: Option<&mut LinearMemory>) -> Result<Vec<WasmValue>, TrapError> {
-        let mut instance = self.instance.borrow_mut();
+        let mut instance = self.instance.try_borrow_mut().map_err(|_| {
+            TrapError::new(
+                "cross-instance call failed: the target instance is already executing (a re-entrant \
+                 call back into an instance already on the call stack) -- this trap, not a panic, is \
+                 the correct failure mode for this shape"
+                    .to_string(),
+            )
+        })?;
         WasmRuntime::new().call_typed(&mut instance, &self.export_name, args)
+    }
+
+    /// W35 fourth slice: see this struct's own `identity` field doc
+    /// comment.
+    fn identity(&self) -> u64 {
+        self.identity
     }
 
     fn type_group_shape(&self) -> (u32, u32) {
@@ -516,6 +568,27 @@ impl Executor {
                 match WasmRuntime::with_host(Box::new(host)).instantiate(&validated) {
                     Ok(instance) => {
                         let instance = Rc::new(RefCell::new(instance));
+                        // W35 fourth slice (`code/specs/
+                        // W35-wasm-cross-instance-function-identity.md`):
+                        // resolve every `TableElement::Raw` entry THIS
+                        // instance's own `instantiate()` call just wrote
+                        // into any table it can see (owned or imported),
+                        // now that a real, PERMANENT `Rc<RefCell<
+                        // WasmInstance>>` finally exists for it -- see
+                        // `wasm_runtime::resolve_all_table_funcrefs`'s own
+                        // doc comment for the full rationale, including
+                        // why this is deliberately TABLES only (not
+                        // funcref-typed globals too, a real, reproduced
+                        // regression this slice found and backed out of).
+                        // Run BEFORE either registry insertion below, so
+                        // no subsequent directive (another module's
+                        // `import`, or this module's own `register`) can
+                        // ever observe a not-yet-fixed-up table.
+                        if let Err(e) = resolve_all_table_funcrefs(&instance) {
+                            return DirectiveOutcome::Trap(format!(
+                                "internal error: post-instantiation cross-instance funcref resolution failed: {e}"
+                            ));
+                        }
                         if set_current {
                             self.registry.borrow_mut().insert(None, Rc::clone(&instance));
                         }
@@ -542,6 +615,9 @@ impl Executor {
         }
     }
 
+}
+
+impl Executor {
     fn execute(&mut self, directive: Directive) -> DirectiveOutcome {
         match directive {
             Directive::Module { id, result: module_result } => {
@@ -1909,6 +1985,260 @@ mod tests {
         assert_eq!(results[2], (DirectiveKind::Register, DirectiveOutcome::Pass));
         assert_eq!(results[3], (DirectiveKind::Module, DirectiveOutcome::Pass), "import against the EARLIER module must link");
         assert_eq!(results[4], (DirectiveKind::AssertReturn, DirectiveOutcome::Pass));
+    }
+
+    /// W35 fourth slice (`code/specs/W35-wasm-cross-instance-function-
+    /// identity.md`): a hand-built, minimal version of `linking.wast`'s
+    /// own motivating case, proving the fix end-to-end without relying on
+    /// the corpus. `$A` exports a table and writes ITS OWN local function
+    /// into slot 0 via an active elem segment; `$B` imports that SAME
+    /// table (the shared `Rc<RefCell<TableStorage>>`, per W28) and
+    /// OVERWRITES slot 0 with a DIFFERENT local function of its own, via
+    /// `$B`'s OWN active elem segment (in `$B`'s own combined function-
+    /// index space, unrelated to `$A`'s). `$A`'s own `call_indirect`
+    /// through that same slot must then observe `$B`'s write (222), not
+    /// `$A`'s own original one (111) -- the exact bug `resolve_owned_
+    /// funcrefs`/`resolve_all_table_funcrefs`'s post-instantiation fixup
+    /// pass exists to close (before this slice, `$A`'s own `call_indirect`
+    /// would resolve the raw index `$B` wrote against `$A`'s OWN
+    /// combined index space instead, silently returning the WRONG
+    /// function's result).
+    #[test]
+    fn a_funcref_written_by_one_instance_into_a_table_shared_with_another_dispatches_to_the_writers_own_function() {
+        let results = outcomes(
+            r#"
+            (module $A
+              (type $t (func (result i32)))
+              (table (export "tab") 2 funcref)
+              (elem (i32.const 0) $a_func)
+              (func $a_func (result i32) (i32.const 111))
+              (func (export "call0") (result i32) (call_indirect (type $t) (i32.const 0))))
+            (register "A" $A)
+            (module $B
+              (type $t (func (result i32)))
+              (table (import "A" "tab") 2 funcref)
+              (elem (i32.const 0) $b_func)
+              (func $b_func (result i32) (i32.const 222)))
+            (assert_return (invoke $A "call0") (i32.const 222))
+            "#,
+        );
+        assert_eq!(results[0], (DirectiveKind::Module, DirectiveOutcome::Pass));
+        assert_eq!(results[1], (DirectiveKind::Register, DirectiveOutcome::Pass));
+        assert_eq!(results[2], (DirectiveKind::Module, DirectiveOutcome::Pass), "$B must link against $A's exported table");
+        assert_eq!(
+            results[3],
+            (DirectiveKind::AssertReturn, DirectiveOutcome::Pass),
+            "expected $A's own call_indirect to observe $B's OVERWRITE (222), not $A's original write (111) -- \
+             got: {:?}",
+            results[3].1
+        );
+    }
+
+    /// W35 fourth slice: the `owner_instance_identity`-for-IMPORTS
+    /// correctness gap this slice's own corpus verification found and
+    /// fixed, isolated into a minimal, hand-built reproduction -- mirrors
+    /// `linking.wast`'s own `$Mt`/`$Ot`/`h` example exactly (`$Mt` exports
+    /// `h`; `$Ot` imports it as `$Ot`'s OWN combined-index-space slot 0,
+    /// then writes THAT slot into `$Mt`'s shared table via `$Ot`'s own
+    /// active elem segment). Before this slice's fix, `resolve_func_ref_
+    /// for_instance`'s import branch tagged the resulting `FuncRefTarget`
+    /// with `owner_instance_identity: None` ("dispatchable via local_index
+    /// in ANY ctx"), which is FALSE the moment that target is written into
+    /// a table `$Mt`'s own ctx later reads: `$Mt` has no imports of its
+    /// own, so `local_index: Some(0)` in `$Mt`'s combined space names an
+    /// entirely different (`$Mt`'s own local) function -- confirmed to
+    /// silently produce the WRONG result (this exact test previously
+    /// returned `$Mt`'s own `other` function's value, `999`, instead of
+    /// `h`'s `-4`-shaped value, `77`, before the fix landed).
+    #[test]
+    fn a_table_entry_written_via_an_imported_function_dispatches_through_the_real_exporter_not_the_readers_own_index_space() {
+        let results = outcomes(
+            r#"
+            (module $Mt
+              (type $t (func (result i32)))
+              (table (export "tab") 2 funcref)
+              (func $other (result i32) (i32.const 999))
+              (func (export "h") (result i32) (i32.const 77))
+              (func (export "call0") (result i32) (call_indirect (type $t) (i32.const 0))))
+            (register "Mt" $Mt)
+            (module $Ot
+              (type $t (func (result i32)))
+              (func $h (import "Mt" "h") (result i32))
+              (table (import "Mt" "tab") 2 funcref)
+              (elem (i32.const 0) $h))
+            (assert_return (invoke $Mt "call0") (i32.const 77))
+            "#,
+        );
+        assert_eq!(results[0], (DirectiveKind::Module, DirectiveOutcome::Pass));
+        assert_eq!(results[1], (DirectiveKind::Register, DirectiveOutcome::Pass));
+        assert_eq!(results[2], (DirectiveKind::Module, DirectiveOutcome::Pass), "$Ot must link against $Mt's exports");
+        assert_eq!(
+            results[3],
+            (DirectiveKind::AssertReturn, DirectiveOutcome::Pass),
+            "expected $Mt's own call_indirect to reach the REAL h (77) via $Ot's import-derived write, not \
+             misinterpret local_index 0 in $Mt's OWN space ($other, 999) -- got: {:?}",
+            results[3].1
+        );
+    }
+
+    /// W35 fourth slice: the "ephemeral trap-discarded instance" case --
+    /// `linking3.wast`'s own `$Ms`/`"get table[0]"` example, hand-built.
+    /// An anonymous module (wrapped in `assert_trap`, so it goes through
+    /// `grade_assert_unlinkable`'s throwaway `instantiate()` call, never
+    /// registered anywhere) imports `$M`'s shared table, writes its OWN
+    /// local `$f` into slot 0 via an ACTIVE elem segment (which succeeds),
+    /// then its `(start $main)` calls `unreachable`, discarding the
+    /// `WasmInstance` `instantiate()` would otherwise have returned. `$M`'s
+    /// own LATER `call_indirect` through that same slot must still observe
+    /// `$f`'s real value -- proving `wasm_runtime::instantiate()`'s own
+    /// error-path fixup (a TEMPORARY `Rc<RefCell<WasmInstance>>`, built
+    /// from this call's live state and never `try_unwrap`ed, just before
+    /// propagating the trap) correctly keeps the ephemeral instance alive
+    /// via the `FuncRefTarget`'s own `Rc` clone, embedded in the SHARED
+    /// table before the trap ever discarded anything.
+    #[test]
+    fn a_funcref_written_by_a_module_whose_own_instantiation_later_traps_still_dispatches_correctly() {
+        let results = outcomes(
+            r#"
+            (module $M
+              (type $t (func (result i32)))
+              (table (export "tab") 1 funcref)
+              (func (export "call0") (result i32) (call_indirect (type $t) (i32.const 0))))
+            (register "M" $M)
+            (assert_trap
+              (module
+                (table (import "M" "tab") 1 funcref)
+                (elem (i32.const 0) $f)
+                (func $f (result i32) (i32.const 57005))
+                (func $main (unreachable))
+                (start $main))
+              "unreachable")
+            (assert_return (invoke $M "call0") (i32.const 57005))
+            "#,
+        );
+        assert_eq!(results[0], (DirectiveKind::Module, DirectiveOutcome::Pass));
+        assert_eq!(results[1], (DirectiveKind::Register, DirectiveOutcome::Pass));
+        assert_eq!(
+            results[2],
+            // `wasm-wast-parser` maps `(assert_trap (module ...))` to
+            // `Directive::AssertUnlinkable` (the same "outcome CATEGORY,
+            // not the specific reason" bucket `assert_unlinkable` proper
+            // uses -- see `grade_assert_unlinkable`'s own doc comment),
+            // not `Directive::AssertTrap` (reserved for `assert_trap`
+            // wrapping an ACTION, e.g. `(invoke ...)`).
+            (DirectiveKind::AssertUnlinkable, DirectiveOutcome::Pass),
+            "the anonymous module's own start function must genuinely trap"
+        );
+        assert_eq!(
+            results[3],
+            (DirectiveKind::AssertReturn, DirectiveOutcome::Pass),
+            "expected $M's own call_indirect to observe $f's value (57005) written by the now-discarded \
+             instance's own elem segment before its start function trapped -- got: {:?}",
+            results[3].1
+        );
+    }
+
+    /// W35 fourth slice, security-review finding (HIGH): a real,
+    /// deterministic `RefCell` re-entrant-borrow panic this slice's own
+    /// fixup pass made newly reachable through an entirely ORDINARY,
+    /// non-circular linking pattern -- `$B` calls into `$A` (an ordinary
+    /// cross-module `call`, holding `$B`'s own `Rc<RefCell<WasmInstance>>`
+    /// borrowed for the call's whole duration); `$A`'s own `call_indirect`
+    /// then dispatches a table entry `$B` itself earlier wrote (a
+    /// `LocalFunctionRef` targeting `$B`) -- `$A`'s own `effective_local_
+    /// index` can't find `$B`'s function in `$A`'s own `func_identities`
+    /// (it was never imported by `$A`), so dispatch falls through to
+    /// `target.callable.call(..)`, re-entering `$B`'s OWN, ALREADY mutably
+    /// borrowed instance. This is NOT `CrossModuleFunction`'s own already-
+    /// documented "genuinely mutual cross-instance cycle" risk (`$B`
+    /// calls `$A` exactly once; `$A` never calls back into `$B` via an
+    /// import of its own -- it merely dispatches a stored reference).
+    /// Before the fix (`LocalFunctionRef::call`/`CrossModuleFunction::
+    /// call` using `try_borrow_mut` instead of a bare `borrow_mut()`),
+    /// this reproducibly PANICKED (a process abort, not a graded
+    /// directive outcome) on this exact, entirely ordinary script.
+    #[test]
+    fn a_reentrant_dispatch_back_into_the_caller_traps_cleanly_instead_of_panicking() {
+        let results = outcomes(
+            r#"
+            (module $A
+              (type $t (func (result i32)))
+              (table (export "tab") 1 funcref)
+              (func (export "call0") (result i32) (call_indirect (type $t) (i32.const 0))))
+            (register "A" $A)
+            (module $B
+              (func $callA (import "A" "call0") (result i32))
+              (table (import "A" "tab") 1 funcref)
+              (elem (i32.const 0) $b0)
+              (func $b0 (result i32) (i32.const 222))
+              (func (export "go") (result i32) (call $callA)))
+            (register "B" $B)
+            (assert_return (invoke $B "go") (i32.const 222))
+            "#,
+        );
+        // The point of this test is that the process is still alive to
+        // check an outcome at all -- a panic here would abort the whole
+        // test binary, not merely fail this one assertion. Whether the
+        // graded outcome is `Pass` (if `$A`'s own dispatch happens to
+        // reach `$b0` some other way) or a clean `Fail`/`Trap` (the
+        // re-entrant-borrow trap) is secondary; NEITHER may be a panic.
+        assert_eq!(results[0], (DirectiveKind::Module, DirectiveOutcome::Pass));
+        assert_eq!(results[1], (DirectiveKind::Register, DirectiveOutcome::Pass));
+        assert_eq!(results[2], (DirectiveKind::Module, DirectiveOutcome::Pass), "$B must link against $A's exports");
+        assert_eq!(results[3], (DirectiveKind::Register, DirectiveOutcome::Pass));
+        match &results[4].1 {
+            DirectiveOutcome::Pass | DirectiveOutcome::Fail(_) | DirectiveOutcome::Trap(_) => {}
+            other => panic!("expected a graded outcome (Pass/Fail/Trap), got: {other:?}"),
+        }
+    }
+
+    /// W35 fourth slice, security-review finding (MEDIUM): a raw table
+    /// entry a LIVE `table.init` writes (deliberately deferred to lazy,
+    /// same-instance-only resolution -- see `wasm-execution`'s own
+    /// `table.init` opcode handler doc comment; this slice never changed
+    /// that) must NOT be misattributed to a LATER instance's own fixup
+    /// pass just because that instance happens to import the same table.
+    /// `$A` writes `$a0` into its OWN table via a LIVE `table.init` (never
+    /// touched by any instantiate()-time fixup at all); `$B` merely
+    /// IMPORTS that table, writing nothing of its own. `$B`'s own fixup
+    /// pass must have NOTHING to resolve (`active_elem_writes` is empty
+    /// for `$B`), so `$A`'s own later `call_indirect` through that same
+    /// slot must still observe `$A`'s own value (111) -- not get silently
+    /// reattributed to `$B`'s combined index space. An earlier version of
+    /// `resolve_all_table_funcrefs` (a scan for `TableElement::Raw`
+    /// entries in every visible table, rather than a precise, RECORDED
+    /// write-list) could not tell `$A`'s own live-call write apart from
+    /// something `$B` itself should resolve, and got this wrong.
+    #[test]
+    fn a_raw_entry_written_by_a_live_table_init_is_not_reattributed_to_a_later_importing_instance() {
+        let results = outcomes(
+            r#"
+            (module $A
+              (type $t (func (result i32)))
+              (table (export "tab") 1 funcref)
+              (func $a0 (result i32) (i32.const 111))
+              (elem $e func $a0)
+              (func (export "init_and_call") (result i32)
+                (table.init 0 $e (i32.const 0) (i32.const 0) (i32.const 1))
+                (call_indirect (type $t) (i32.const 0))))
+            (register "A" $A)
+            (module $B
+              (table (import "A" "tab") 1 funcref))
+            (register "B" $B)
+            (assert_return (invoke $A "init_and_call") (i32.const 111))
+            "#,
+        );
+        assert_eq!(results[0], (DirectiveKind::Module, DirectiveOutcome::Pass));
+        assert_eq!(results[1], (DirectiveKind::Register, DirectiveOutcome::Pass));
+        assert_eq!(results[2], (DirectiveKind::Module, DirectiveOutcome::Pass), "$B must link against $A's exported table");
+        assert_eq!(results[3], (DirectiveKind::Register, DirectiveOutcome::Pass));
+        assert_eq!(
+            results[4],
+            (DirectiveKind::AssertReturn, DirectiveOutcome::Pass),
+            "expected $A's own live table.init + call_indirect to observe $A's own value (111), unaffected \
+             by $B merely importing the same table -- got: {:?}",
+            results[4].1
+        );
     }
 
     // ── W14: a per-module build failure degrades gracefully ─────────────

@@ -10,6 +10,7 @@ chapter: 4
 type: phrase
 headword: फिर मिलेंगे
 gloss: we'll meet again (goodbye)
+romanization: "phir milenge"
 concept_tag: FAREWELL-LATER
 prerequisites: [HI-C04-phir, HI-C04-milenge, HI-C01-alvida]
 sounds: []

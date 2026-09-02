@@ -989,3 +989,193 @@ wiring" discipline W33/W34 both used.
   behavior is expected there — confirm the `func_ref_heap`-handle
   rewiring of `call_ref`'s operand resolution is a genuinely transparent
   refactor for the single-instance case, not an accidental regression.
+
+## Addendum (2026-09-01): fourth slice shipped, epic CLOSED — `elem.wast`/`linking.wast`/`linking0.wast`/`linking3.wast` all real (non-"not yet supported") failures resolved, except one confirmed pre-existing, unrelated bug
+
+Re-verified this document's own citations fresh before writing any code:
+`linking.wast`'s "Tables" section (lines 269-354) and `elem.wast`'s
+"Element sections across multiple modules change the same table" section
+(lines 926-974) both matched this document's own line-number and content
+claims exactly. **This slice's real, delivered scope turned out
+substantially larger than this document's own §"Recommended slice
+decomposition" item 4 predicted** ("mostly verification, not new
+machinery") — closely mirroring how slice 3's own major deviation was
+found only once its own literal design was actually attempted. Three
+distinct, concrete gaps were found and fixed, each documented at length
+in the relevant crate's own CHANGELOG (not repeated in full here):
+
+**What shipped** (`wasm-execution` 0.9.89 → 0.9.90, `wasm-runtime` 0.6.26
+→ 0.6.27, `wasm-conformance` 0.1.114 → 0.1.115):
+
+1. **The resolution fixup pass** (`wasm-runtime::resolve_all_table_
+   funcrefs`, `pub`), called by `wasm-conformance::Executor::
+   instantiate_and_register` immediately after a module is wrapped in its
+   own permanent `Rc<RefCell<WasmInstance>>` and before either registry
+   insertion — exactly the "real, permanent home" slice 3 identified as
+   the missing piece. Deviates from this document's own §"Design"/task
+   description in two ways, both evidence-backed: (a) walks EVERY table
+   an instance can see (imported ones included), not just ones it
+   declares — `linking.wast`'s own `$Ot` writes into `$Mt`'s IMPORTED
+   table via `$Ot`'s own elem segment, the document's own motivating case,
+   which an "owned tables only" fixup would miss entirely; (b)
+   deliberately does NOT also resolve funcref-typed globals, a real,
+   reproduced regression (`return_call_ref.wast`, `31/31 → 30/31`, "func_
+   ref heap limit exceeded") backed out during this slice's own
+   verification — see `wasm-conformance`'s own CHANGELOG for the full
+   root-cause trace. Also required a table-element-type check
+   (`combined_table_element_type`) that this document's own design never
+   named: `Table`/`TableStorage` do not track their declared element type
+   at runtime, so an externref table's `Raw` entries (a real, opaque
+   payload) must never be reinterpreted as function indices — reproduced
+   directly against `elem.wast`'s own "Initializing a table with an
+   externref-type element segment" test before this check existed.
+2. **A real correctness bug in slice 3's own `owner_instance_identity`
+   tagging for IMPORTS**, found by this slice's own corpus verification,
+   not anticipated by this document's own design: slice 3 tagged every
+   import-branch `FuncRefTarget` `owner_instance_identity: None` ("an
+   import is dispatchable via local_index in ANY ctx that holds it").
+   That claim was accidentally true for every case reachable before this
+   slice and FALSE the moment this slice's own fixup pass makes durable
+   cross-instance storage of such a target possible — reproduced directly
+   against `linking.wast`'s own `$Mt`/`$Ot`/`h` example (a confirmed
+   silent wrong answer: `4` instead of `-4`). Fixed in both
+   `wasm-execution::WasmExecutionContext::resolve_function_ref` and
+   `wasm-runtime::resolve_func_ref_for_instance`'s own import branches
+   (`Some(resolving_ctx's_own_instance_identity)`, mirroring the
+   LOCAL-function branch exactly). Fixing this naively reproduced a
+   SECOND, worse failure (a guaranteed `RefCell` "already borrowed" panic
+   on the SAME motivating example, since the corrected dispatch path
+   re-enters `CrossModuleFunction::call`, which borrows the SAME instance
+   already mutably borrowed by the call this dispatch happens inside of)
+   — fixed by giving `wasm_execution::effective_local_index` a second,
+   identity-based fallback (scan the CURRENT ctx's own `func_identities`
+   for a match before falling through to `callable.call(..)`), which
+   both avoids the re-borrow AND is more efficient for exactly this case.
+3. **A previously-unnamed "ephemeral trap-discarded instance" case**,
+   found only during full-corpus verification, not predicted by this
+   document's §"Design" or §"Recommended slice decomposition" at all:
+   `linking0.wast`/`linking3.wast` (and 3 of `linking.wast`'s own
+   remaining failures) share a shape where an ANONYMOUS module writes
+   into a SHARED table via its own active elem segment and only THEN
+   traps (a later data segment, or its own start function) — discarding
+   the `WasmInstance` entirely, so `wasm-conformance`'s own registry-level
+   fixup never gets a chance to run (the module never reaches
+   registration). Fixed inside `wasm-runtime::instantiate()` itself: on
+   EITHER trap path, before propagating the error, a TEMPORARY
+   `Rc<RefCell<WasmInstance>>` (built from the call's own live state, and
+   crucially NEVER `Rc::try_unwrap`ed, since the error path doesn't need a
+   bare owned value back) is fixed up the same way, then dropped — kept
+   alive afterward purely via the `Rc` clones any resolved `FuncRefTarget`
+   embeds in the now-permanently-shared table storage. This does NOT
+   reintroduce slice 3's own self-referential-cycle problem: that problem
+   was specifically about the SUCCESS path needing `try_unwrap` to
+   succeed, which this new code path never attempts.
+4. **`CrossModuleFunction::identity()`** (`wasm-conformance`), implemented
+   from a new field snapshotted from the exporting instance's own
+   `func_identities[index]` at `resolve_function` time — exactly as this
+   document's own "Call-site audit" table specified, and load-bearing for
+   finding (2)'s own identity-based dispatch fallback to work across a
+   real cross-module import.
+5. **A deliberate, documented non-implementation**: this document's own
+   task description (and, by extension, its intended reading of
+   `build_engine`'s own "not this slice's job" comment) suggested wiring
+   a real `SelfFunctionResolver` into `wasm-conformance`'s own per-call
+   execution (not just the one-time fixup pass). A careful re-entrancy
+   analysis proved this UNSOUND, not merely unneeded: it would require
+   holding `instance_rc.borrow_mut()` for a call's whole duration while
+   ALSO giving a resolver a clone of that SAME `Rc` — the first live
+   `ref.func` of a LOCAL function during that call (an ordinary, already-
+   tested pattern) would panic on a guaranteed double-borrow. Left
+   un-implemented, with the concrete `RefCell`-semantics reasoning
+   recorded in `wasm-runtime`'s own CHANGELOG — `build_engine`'s
+   pre-existing "no Rc available" justification turns out to be doubly
+   correct.
+
+**Corpus outcome** (full baseline diff, 257 files, programmatic,
+per-file — see `wasm-conformance`'s own CHANGELOG for the complete
+table): `linking.wast` (55/65 → **65/65**), `linking0.wast` (0/1 →
+**1/1**), and `linking3.wast` (5/6 → **6/6**) all reach FULL pass.
+`elem.wast` reaches 18/19 (was 13/19) — the one remaining failure is
+CONFIRMED, via `git stash` A/B against the pre-slice-4 baseline, to be a
+PRE-EXISTING, W35-UNRELATED bug (an externref table's null-handling after
+a cross-module active-elem overwrite, nothing to do with function-
+reference identity) — not a partial fix of this spec's own scope. Zero
+other file's tally moved. This closes the epic W07's own addendum opened,
+with one honestly-reported exception (`elem.wast`'s pre-existing bug,
+now separately visible and fixable on its own, unrelated to this spec).
+
+**Security review (post-implementation, before push)**: a dedicated pass
+focused on this slice's own three highest-risk properties (re-entrancy/
+borrow-panic risk, cycle-driven resource exhaustion, `owner_instance_
+identity` correctness) found two real, actionable issues, both fixed
+before merge, both now covered by permanent regression tests in
+`wasm-conformance`'s own test suite:
+- **HIGH — a NEW, deterministic `RefCell` re-entrant-borrow panic** on an
+  entirely ORDINARY (non-circular) linking pattern, distinct from the
+  pre-existing, accepted "genuinely mutual cross-instance cycle" risk:
+  instance `B` calls into instance `A`; `A`'s own `call_indirect`
+  dispatches a table entry `B` itself wrote; the corrected `owner_
+  instance_identity` dispatch (finding (2) in the "What shipped" list
+  above) correctly falls through to `target.callable.call(..)`, which
+  re-enters `B`'s OWN, already-borrowed instance -- a guaranteed panic
+  with a bare `borrow_mut()`. Fixed: both `LocalFunctionRef::call`
+  (`wasm-runtime`) and `CrossModuleFunction::call` (`wasm-conformance`)
+  now use `try_borrow_mut`, converting the conflict into a clean
+  `TrapError` instead of a process-aborting panic -- this ALSO updates
+  the pre-existing "mutual cycle" risk itself: it now traps cleanly too,
+  not just the new case this slice introduced.
+- **MEDIUM — silent misattribution of a foreign instance's raw table
+  write**: the fixup pass's first version scanned every currently-`Raw`
+  table entry visible to an instance, assuming any such entry must be
+  something THAT instance itself just wrote. False: a LIVE `table.init`/
+  `table.set` on some OTHER, already-registered instance sharing the
+  table can leave a `Raw` entry there too, at any later point -- a scan
+  could not tell that apart from an entry it should resolve in its OWN
+  context, silently dispatching to the wrong instance's function. Fixed:
+  `WasmInstance` gained `active_elem_writes` (`Vec<(table_index, offset,
+  count)>`), populated ONLY at the exact moment an active elem segment is
+  applied; the fixup pass now resolves ONLY those exact, recorded slots,
+  never scanning.
+- **LOW, not fixed, re-characterized instead**: the fixup pass makes an
+  `Rc` self-reference cycle (instance → table → resolved local funcref →
+  same instance) the COMMON case for any module with a funcref table plus
+  an active elem segment referencing its own function, not the rare case
+  this section's own original text described. The section's own
+  conclusion still holds unchanged: `wasm-conformance`'s `ModuleRegistry`
+  is rebuilt fresh per `.wast` file (`Executor::new()`, in `run_wast_
+  source`) and dropped as a whole when that file's directives are
+  exhausted, so any such cycle is bounded by "at most this one file's own
+  instances," never unbounded within a single script -- but the
+  `wasm_conformance_report` binary itself processes all 257 corpus files
+  in ONE process, so cyclic garbage from an EARLIER file's own registry
+  is never reclaimed (no cycle collector in safe Rust) for the remainder
+  of that one report run. Bounded in practice by the corpus's own fixed,
+  trusted size (the same "not a concern for THIS crate's actual use"
+  reasoning this section already applies to the identical class of risk),
+  not by any structural fix -- `Weak`-based or mark-and-sweep instance-
+  lifetime management remains explicitly out of scope, per this spec's
+  own "Explicitly out of scope" section.
+
+**Genuine, documented follow-on gaps this slice does NOT close** (see
+each crate's own CHANGELOG for the full reasoning):
+- Funcref-typed GLOBALS still lack real cross-instance resolution (the
+  identical bug this spec fixed for TABLES) — deliberately left open
+  because eagerly resolving them regresses `return_call_ref.wast`'s own
+  deep-recursion tests via `global.get`'s unconditional `func_ref_heap`
+  minting. Needs a `global.get` fast path mirroring `effective_local_
+  index`'s own same-instance optimization before this can be revisited.
+  Not confirmed as a cause of any current corpus failure (this document's
+  own original text already flagged this as unconfirmed-by-corpus).
+- `elem.wast`'s own one remaining `assert_return` failure (externref
+  table null-handling after a cross-module overwrite) is a real,
+  separate, unfixed bug — out of this spec's own scope (funcref identity
+  only), flagged here so a future session doesn't assume this spec's
+  fix makes `elem.wast` fully clean.
+- The genuinely-mutual cross-instance call cycle `CrossModuleFunction`'s
+  own doc comment already documents now traps cleanly (see the security
+  review above), rather than panicking — a strict improvement made as a
+  side effect of fixing this slice's own new re-entrancy finding, not a
+  deliberate general fix for the cycle case itself, which remains a real,
+  accepted limitation (a cross-instance call that traps rather than
+  completing) that comment already scopes as
+  out-of-scope for this whole campaign).

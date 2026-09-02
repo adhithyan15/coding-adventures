@@ -10,6 +10,7 @@ chapter: 11
 type: word
 headword: काला सफ़ेद
 gloss: black and white — one Sanskrit word tangled up with time and death, one a Persian loan
+romanization: "kālā safed"
 concept_tag: HI-COLOUR-BLACK-WHITE
 prerequisites: [HI-C10-shanivaar-ravivaar]
 sounds: [devanagari-long-aa, nukta-f]

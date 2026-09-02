@@ -10,6 +10,7 @@ chapter: 37
 type: word
 headword: दूध
 gloss: milk — masculine, and literally "the milked thing", a past participle that hardened into a noun
+romanization: "dūdh"
 concept_tag: HI-DRINK-MILK
 prerequisites: [HI-C37-chai, HI-C15-paani-roti]
 sounds: [devanagari-long-uu, aspirated-dha]

@@ -54,6 +54,40 @@
 %     executive                          vice_president                        the members of the executive branch."
 %     executive                          president_cabinet                     (one sentence; it names all three executive members at once)
 %
+% ALL THREE SENTENCES ARE NOW ENCODED, NOT JUST DOCUMENTED HERE. That table
+% above is the whole reason this file needed fixing (issue #13928). It named
+% three distinct sentences, one per branch — and for a long time only ONE of
+% them, the executive sentence, was written into the `table` block as the
+% `source`. There were no `cites`. So every answer this library returned was
+% evidenced by the executive sentence regardless of which row matched:
+%
+%     ? government_branch_member(legislative, $M)
+%       -> congress, cited by "The president, the vice president, and the
+%          president's cabinet are the members of the executive branch."
+%
+% An answer about the LEGISLATIVE branch, evidenced by a sentence about the
+% EXECUTIVE one. That is worse than the known table-level attribution limit
+% (issue #13893), where sibling rows at least share a citation that covers
+% them; here the citation was about a different subject than the answer.
+%
+% The lesson is not "someone was careless". The right evidence was identified
+% at authoring time and written down HERE, in a comment — and a comment is not
+% machine-checkable, so nothing could tell that two thirds of it never reached
+% the table. Same root cause as issue #13918: prose that describes provenance
+% is not provenance. The two missing sentences are `cites` clauses below.
+%
+% WHAT THIS DOES AND DOES NOT BUY. Every row's supporting sentence is now
+% PRESENT on every answer. It is still not ATTRIBUTED per-answer — the
+% executive answers also carry the legislative and judicial sentences as
+% corroborations, because provenance in this language is table-level (#13893).
+% The gain is the difference between evidence that is incomplete and evidence
+% that is wrong, which is the difference worth having.
+%
+% One detail the table above gets slightly wrong: the page's legislative
+% sentence ends in a COLON — "made up of Congress:" — because a list of the
+% two chambers follows it. The `cites` clause below carries the colon, which
+% also makes it byte-identical to `congress-chamber.adj`'s own `source`.
+%
 % curl-fetched the raw page directly and read it byte-for-byte before
 % writing this file (not just an AI-summarized WebFetch) — confirmed all
 % three quoted sentences appear verbatim in the page's own "Legislative
@@ -100,4 +134,6 @@ table government_branch_member {
     source "The president, the vice president, and the president's cabinet are the members of the executive branch."
     locator "https://www.usa.gov/branches-of-government"
     trust authoritative
+    cites "The legislative branch is made up of Congress:" locator "https://www.usa.gov/branches-of-government"
+    cites "The judicial branch includes the Supreme Court and other federal courts." locator "https://www.usa.gov/branches-of-government"
 }

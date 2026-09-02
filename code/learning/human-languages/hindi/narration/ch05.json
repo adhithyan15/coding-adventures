@@ -4,14 +4,14 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:eb5e4375926f5273",
+  "sourceHash": "fnv1a64:ef4a110cdb5b9d64",
   "lessons": [
     {
       "id": "HI-C05-bolna",
       "sequence": 400,
       "title": "बोलना (bolnā) — \"to speak,\" your first full verb",
       "headword": "बोलना",
-      "romanization": "",
+      "romanization": "bolnā",
       "gloss": "to speak",
       "script": "devanagari",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6a78e77b7794d863",
+      "sourceHash": "fnv1a64:1ace085f5a32067a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -156,7 +156,7 @@
       "sequence": 410,
       "title": "रहना (rahnā) — \"to live, to stay\"",
       "headword": "रहना / में",
-      "romanization": "",
+      "romanization": "rahnā / meṁ",
       "gloss": "to live, to stay; में = in",
       "script": "devanagari",
       "modality": "sight",
@@ -165,7 +165,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:bdaa9a69a400803d",
+      "sourceHash": "fnv1a64:43a5d7b76a85df46",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -298,7 +298,7 @@
       "sequence": 420,
       "title": "करना (karnā) — \"to do,\" the most useful verb in Hindi",
       "headword": "करना / काम करना",
-      "romanization": "",
+      "romanization": "karnā / kām karnā",
       "gloss": "to do, to make (and काम करना, \"to work\")",
       "script": "devanagari",
       "modality": "sight",
@@ -306,7 +306,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c6b8dae55f7a3d02",
+      "sourceHash": "fnv1a64:e14ce2f2c6b9795f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -475,7 +475,7 @@
       "sequence": 430,
       "title": "बोलता हूँ (boltā hūṁ) — one stem, and the two things Hindi makes it agree with",
       "headword": "बोलता हूँ, बोलती हूँ, बोलते हैं",
-      "romanization": "",
+      "romanization": "boltā hūṁ, boltī hūṁ, bolte haiṁ",
       "gloss": "the present-habitual template — stem + -tā/-tī/-te + honā",
       "script": "devanagari",
       "modality": "voice",
@@ -483,7 +483,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c024d49817a49d08",
+      "sourceHash": "fnv1a64:10babc69aa60e6ce",
       "notice": null,
       "blocks": [
         {
@@ -510,7 +510,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "बोलना — the infinitive, and how to strip -nā to get the stem."
+              "text": "बोलना (bolnā) — the infinitive, and how to strip -nā to get the stem."
             },
             {
               "kind": "speech",
@@ -638,7 +638,7 @@
       "sequence": 440,
       "title": "मैं हिंदी बोलता हूँ (maiṁ hindī boltā hūṁ) — \"I speak Hindi\"",
       "headword": "मैं हिंदी बोलता हूँ",
-      "romanization": "",
+      "romanization": "maiṁ hindī boltā hūṁ",
       "gloss": "I speak Hindi (gendered)",
       "script": "devanagari",
       "modality": "sight",
@@ -646,7 +646,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ad7a3b2278051e36",
+      "sourceHash": "fnv1a64:fab735f61393e78e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -693,7 +693,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मैं हिंदी बोलता हूँ = मैं (maiṁ, \"I\") + हिंदी (hindī, \"Hindi,\" the object) + बोलता (boltā, \"speak,\" m.) + हूँ (hūṁ, \"am\") becomes literally \"I Hindi speaking am.\" Verb-frame last, exactly as always."
+              "text": "मैं हिंदी बोलता हूँ (maiṁ hindī boltā hūṁ) = मैं (maiṁ, \"I\") + हिंदी (hindī, \"Hindi,\" the object) + बोलता (boltā, \"speak,\" m.) + हूँ (hūṁ, \"am\") becomes literally \"I Hindi speaking am.\" Verb-frame last, exactly as always."
             },
             {
               "kind": "speech",
@@ -712,7 +712,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is new is the word order: मैं हिंदी बोलता हूँ puts the object before the verb frame, so the sentence ends on hūṁ. Hindi's verb goes last, always."
+              "text": "What is new is the word order: मैं हिंदी बोलता हूँ (maiṁ hindī boltā hūṁ) puts the object before the verb frame, so the sentence ends on hūṁ. Hindi's verb goes last, always."
             }
           ]
         },

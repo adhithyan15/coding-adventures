@@ -10,6 +10,7 @@ chapter: 6
 type: etymology
 headword: तीन, चार
 gloss: three and four descend from Sanskrit neuter forms through Prakrit weight trades
+romanization: "tīn, chār"
 prerequisites: [HI-C06-numbers-1-5]
 sounds: [prakrit-gemination, compensatory-lengthening]
 roots: [sanskrit-trini, sanskrit-catvari, pie-number-four]

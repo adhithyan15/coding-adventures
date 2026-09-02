@@ -61,6 +61,23 @@ fn congress_chamber_recall_binds_parent_with_citation() {
 
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
+    // FULL ANCHORED CITATION PIN. A fragment needle in this file
+    // matched only part of the sentence, so the citation could be
+    // truncated AT that point -- deleting everything after it -- while
+    // the test stayed green. Anchoring on the `"source":"` key and
+    // closing on the terminating quote pins head, tail, punctuation and
+    // length at once.
+    //
+    // Several tests load this library, because siblings import it as a
+    // dependency. The pin belongs in its OWN test: the others are not
+    // responsible for its provenance. That is also why the assertion has
+    // to be unique -- where a co-loaded sibling carries a byte-identical
+    // citation, an assertion either one satisfies pins neither.
+    // See issues #13916 and #13918.
+    assert!(
+        out.contains("\"source\":\"The legislative branch is made up of Congress:\""),
+        "the citation is the whole source sentence, exactly: {out}"
+    );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     assert!(out.contains("\"P\":\"congress\""), "senate -> congress: {out}");
     // The answer carries the USA.gov citation as proof.

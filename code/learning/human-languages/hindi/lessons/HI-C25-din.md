@@ -10,6 +10,7 @@ chapter: 25
 type: word
 headword: दिन
 gloss: "day" — shares its ultimate PIE root with Latin's diēs, but through a separate derivational branch (din patterns with Baltic/Slavic "day"-words); Sanskrit's own दिव्/द्यु are actually the closer, more direct cousins of diēs
+romanization: "din"
 concept_tag: TIME-DAY
 prerequisites: [HI-C17-dopahar-aadhi-raat]
 sounds: [devanagari-short-i, devanagari-na]
