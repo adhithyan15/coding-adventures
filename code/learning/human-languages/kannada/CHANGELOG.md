@@ -87,6 +87,16 @@ so the Hindi book has been **printing `long =\i` to readers**. Found by grepping
 the corpus for the same leak after `KA-C02-niinu-niivu` turned out to have one;
 those two files were the only cases in 22 tracks.
 
+Counted from the directory of the merged tree, never derived: `handwritten.d`
+holds **31** entries on `origin/main` and **28** on this branch. **Kannada's
+count is 0.** The corpus-wide figure has moved 38 → 31 while this work was in
+flight, as Arabic, Urdu and several French and German chapters were retired
+alongside it, which is exactly why it is re-counted rather than adjusted.
+
+The corpus-wide narrator refusal pin moves to **51**, measured against the
+merged tree rather than derived: main had already moved 54 → 52 for French
+chapter 7 while this branch held 53.
+
 Verified: human-language-data 124 test files / 1730 tests, all eleven `check:*`
 gates, language-ladder 39 files / 442 tests, and the whole Kannada book compiled
 under XeLaTeX — 433 pages, **zero missing characters**, zero overfull and zero
