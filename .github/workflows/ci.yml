@@ -1965,6 +1965,25 @@ jobs:
           cmake -S "$engram_output/qt" -B "$engram_output/qt/build" -DCMAKE_BUILD_TYPE=Release
           cmake --build "$engram_output/qt/build" --config Release --parallel
 
+          # Engram's own suite, which the parent workspace cannot reach: the
+          # package opts OUT of it (`[workspace]` empty in its Cargo.toml), so
+          # `cargo test` at the workspace root never sees these tests and the
+          # epic's "changing Engram triggers executing verification" stayed
+          # false even after the tests existed.
+          #
+          # `native_complete_gate.rs` is the one that matters here: it asserts
+          # Engram lowers with ZERO capability degradations on all five native
+          # backends, and pins the XAML style drops by property so a new one
+          # cannot arrive unnoticed (#14132).
+          #
+          # Note this does NOT contradict the comment above about Engram being
+          # unable to reach native-complete. That is about `--emit-project`,
+          # where the strict profile rewrites main.cpp into a binding shape
+          # Engram's [host_assets] override conflicts with. The gate analyses
+          # capability lowering with no project emission, so the two are
+          # different questions and both answers are true.
+          cargo test --manifest-path code/programs/mosaic/engram-app/Cargo.toml
+
           toolkit_output="$RUNNER_TEMP/mosaic-qt-toolkit"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend qt --output "$toolkit_output" --emit-project
           cmake -S "$toolkit_output/qt" -B "$toolkit_output/qt/build" -DCMAKE_BUILD_TYPE=Release
