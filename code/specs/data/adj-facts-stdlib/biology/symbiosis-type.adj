@@ -26,7 +26,7 @@
 %
 %     type            description                                                        quote (verbatim)
 %     --------------  -----------------------------------------------------------------  --------------------------------------------------------------------------------------------------------------------
-%     mutualism        both_parties_benefit                                                "Where both parties benefit, the relationship is described as mutualistic."
+%     mutualism        both_parties_benefit                                                "Finally, where both parties benefit, the relationship is described as mutualistic."
 %     commensalism      one_organism_benefits_and_the_other_is_not_significantly_harmed_or_helped   "Commensalism describes a relationship between two living organisms where one benefits and the other is not significantly harmed or helped."
 %     parasitism        the_parasite_benefits_while_the_host_is_harmed                      "In a parasitic relationship, the parasite benefits while the host is harmed."
 %
@@ -67,7 +67,7 @@ table symbiosis_type {
     row (commensalism, one_organism_benefits_and_the_other_is_not_significantly_harmed_or_helped)
     row (parasitism, the_parasite_benefits_while_the_host_is_harmed)
 
-    source "Where both parties benefit, the relationship is described as mutualistic."
+    source "Finally, where both parties benefit, the relationship is described as mutualistic."
     locator "https://en.wikipedia.org/wiki/Symbiosis"
     trust consensus
 }

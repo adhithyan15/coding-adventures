@@ -95,3 +95,29 @@ fn symbiosis_type_abstains_honestly_on_an_untabled_term() {
         "amensalism is a real interaction category the source names, but its own sentence bundles it together with competition rather than stating one clean fact -- honest abstention, never invented: {out}"
     );
 }
+
+const SYMBIOSIS_TYPE_PIN: &str = r#""bindings":{"D":"both_parties_benefit"},"citations":[{"source":"Finally, where both parties benefit, the relationship is described as mutualistic.","locator":"https://en.wikipedia.org/wiki/Symbiosis","trust":"consensus""#;
+
+#[test]
+fn symbiosis_type_citation_is_the_pages_whole_sentence() {
+    let dir = scratch("reground");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"symbiosis-type.adj\"
+? symbiosis_type(mutualism, $D)
+",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The shipped value was a FRAGMENT PUNCTUATED INTO A SENTENCE: the page's
+    // wording, with one character changed so it would read as standalone. It
+    // therefore appeared on no page. Every quote-keyed screen passed it,
+    // because the quotes were all correct.
+    assert!(
+        out.contains(SYMBIOSIS_TYPE_PIN),
+        "the mutualism citation is the page's own sentence: {out}"
+    );
+}
