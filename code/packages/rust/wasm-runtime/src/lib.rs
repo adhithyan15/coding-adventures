@@ -1847,15 +1847,32 @@ pub fn resolve_all_table_funcrefs(instance_rc: &Rc<RefCell<WasmInstance>>) -> Re
 /// unbounded for thousands of tail-call-optimized "logical" recursive
 /// steps that never actually return to reset the heap (see
 /// `func_ref_heap`'s own doc comment: cleared "at the start of every
-/// call," not every loop iteration). Resolving those globals' `func_ref`
-/// unconditionally reproduces exactly that exhaustion. Scoping to
-/// EXPORTED globals only sidesteps it structurally: a global this
-/// instance never exports can only ever be read back through its OWN
-/// combined index space (the raw, pre-W35 `value` -- already correct for
-/// that case, exactly as it always was), and only an EXPORTED global can
-/// ever be `import`ed by a genuinely DIFFERENT instance in the first
-/// place, which is the only scenario that ever needs a real,
-/// self-contained, cross-instance-safe `FuncRefTarget` at all.
+/// call," not every loop iteration). Resolving THOSE globals' `func_ref`
+/// unconditionally would reproduce exactly that exhaustion. Scoping
+/// resolution BY THIS FUNCTION to EXPORTED globals only keeps `$count`/
+/// `$even`/`$odd` themselves untouched (they are never exported), but --
+/// security-review correction, round 2 -- **the real, narrower invariant
+/// that actually protects them is "a `ref.func`-initialized local global
+/// stays deferred," not "export scoping alone."** `instantiate()`'s own
+/// globals-construction loop (below, search `global_get_index`) ALSO
+/// propagates `func_ref` for a `global.get`-initialized global,
+/// UNCONDITIONALLY (regardless of export status) -- deliberately, so a
+/// non-exported pass-through global can still correctly feed an elem
+/// item's own `global.get` (see that loop's own doc comment). This is
+/// safe for the corpus TODAY only because no vendored `.wast` file
+/// combines a `global.get`-of-an-already-resolved-global chain with a
+/// hot, tail-call-recursive read loop (confirmed by direct grep across
+/// all 257 files) -- but it is NOT structurally impossible to construct
+/// such a module (e.g. a local alias of an imported funcref global, read
+/// every step of an unbounded `return_call` loop the way `$count` reads
+/// itself). Should such a case ever appear, `push_func_ref`'s own
+/// `MAX_FUNC_REF_HEAP_LEN` cap (`wasm-execution`) turns it into a clean,
+/// safely-trapped "func_ref heap limit exceeded" error -- a spurious-trap
+/// compatibility regression, never memory corruption or a silent wrong
+/// answer -- see `wasm-runtime`'s own `a_global_get_alias_of_an_imported_
+/// funcref_global_read_in_a_deep_tail_recursion_loop_traps_cleanly_
+/// instead_of_corrupting_state` test for a direct, reproduced proof of
+/// that bound, not just an assertion of it.
 ///
 /// **Why this was missing despite `HostInterface::resolve_global`'s own
 /// import-arm doc comment (`instantiate()`, the `ImportTypeInfo::Global`
@@ -1890,9 +1907,24 @@ pub fn resolve_exported_global_funcrefs(instance_rc: &Rc<RefCell<WasmInstance>>)
     for idx in exported_global_indices {
         let (storage, is_funcref) = {
             let instance = instance_rc.borrow();
+            // W35 fifth slice, own-review correction (found by this
+            // slice's own new bounded-trap regression test, not a
+            // reported finding): `ValueType::NonNullConcreteFuncRef(_)`
+            // -- `(ref $t)`, the NON-nullable concrete function reference
+            // (`wasm_types::ValueType`'s own doc comment: "only a func
+            // type... via `(ref $t)` in the text format") -- is JUST AS
+            // much funcref-family as `Funcref`/`ConcreteFuncRef` (its
+            // nullable counterpart), and just as reachable as an exported
+            // global's declared type. Missing it here isn't merely an
+            // incompleteness: a global declared `(ref $t)` was silently
+            // skipped by this whole function (treated as "not funcref,
+            // nothing to resolve"), leaving its `func_ref` `None` forever
+            // -- exactly the pre-fix bug for every OTHER funcref shape,
+            // just for a type this function's own first version forgot to
+            // recognize.
             let is_funcref = matches!(
                 instance.global_types.get(idx as usize).map(|t| &t.value_type),
-                Some(ValueType::Funcref) | Some(ValueType::ConcreteFuncRef(_))
+                Some(ValueType::Funcref) | Some(ValueType::ConcreteFuncRef(_)) | Some(ValueType::NonNullConcreteFuncRef(_))
             );
             let Some(cell) = instance.globals.get(idx as usize) else {
                 continue;
@@ -2575,6 +2607,25 @@ impl WasmRuntime {
         // `$count`/`$even`/`$odd`) simply propagates `None` -- byte-for-
         // byte the pre-existing behavior, since nothing upstream of this
         // loop can have populated a LOCAL global's `func_ref` yet either.
+        //
+        // Security-review correction (round 2): being unconditional here
+        // DOES mean a `global.get`-initialized global CAN end up with
+        // `func_ref: Some` even when never exported -- so `resolve_
+        // exported_global_funcrefs`'s own "a global this instance never
+        // exports can only ever be read back through its OWN raw value"
+        // framing (see that function's own doc comment) is no longer the
+        // reason `return_call_ref.wast` stays safe; being `ref.func`-
+        // initialized (not `global.get`-initialized) is. No vendored
+        // corpus file combines a `global.get`-of-an-already-resolved-
+        // global chain with a hot tail-call-recursive read loop today
+        // (confirmed by direct grep across all 257 files), but nothing
+        // here PREVENTS one from existing -- see `resolve_exported_
+        // global_funcrefs`'s own doc comment and this crate's own
+        // `a_global_get_alias_of_an_imported_funcref_global_read_in_a_
+        // deep_tail_recursion_loop_traps_cleanly_instead_of_corrupting_
+        // state` test for why that residual case is bounded (a clean
+        // `MAX_FUNC_REF_HEAP_LEN` trap, never memory corruption or a
+        // silent wrong answer) rather than a correctness hazard.
         for global in &module.globals {
             global_types.push(global.global_type.clone());
             let globals_so_far: Vec<WasmValue> = globals.iter().map(|g| g.borrow().value).collect();

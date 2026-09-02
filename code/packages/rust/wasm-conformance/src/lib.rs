@@ -2430,6 +2430,85 @@ mod tests {
         );
     }
 
+    /// W35 fifth slice, security-review finding (round 2): the residual
+    /// risk flagged against the immediately-preceding fix -- making
+    /// `func_ref` propagation UNCONDITIONAL for `global.get`-initialized
+    /// globals (not export-scoped, unlike `resolve_exported_global_
+    /// funcrefs`) means a NON-exported alias of an imported funcref
+    /// global (`$B`'s own `$galias`, never exported) can now carry a real
+    /// `func_ref`, so reading it via `global.get` inside a hot,
+    /// self-tail-recursive loop (`$count`, ordinary `return_call` self-
+    /// recursion -- structurally the exact same "read a func_ref: Some
+    /// global once per recursive step, inside a call that never returns
+    /// to reset any per-call scratch state" shape `return_call_ref.wast`'s
+    /// own `$count`/`$even`/`$odd` already exercise, just reading
+    /// `$galias` and `drop`-ing it instead of actually dispatching through
+    /// it) mints a FRESH `func_ref_heap` handle on every single step, same
+    /// as any other `func_ref: Some` global would. No vendored corpus
+    /// file currently combines these two shapes (confirmed by direct grep
+    /// across all 257 files), so this is a PROACTIVE proof, not a
+    /// regression fix: the failure mode this residual case can hit is a
+    /// clean, safely-graded `MAX_FUNC_REF_HEAP_LEN` trap
+    /// (`wasm_execution::push_func_ref`'s own enforcement, mirroring
+    /// `push_v128`/`push_caught_exception`) -- NEVER memory corruption,
+    /// a panic, or (this test's own specific concern) a SILENT WRONG
+    /// ANSWER -- exactly the same class of bounded, honest failure this
+    /// whole campaign already accepts for genuine resource exhaustion
+    /// elsewhere (`assert_exhaustion`'s own call-depth guard). A small
+    /// count (100, far under the 1,000,000-entry cap) proves the
+    /// self-recursion-plus-alias-read mechanism itself is correct and
+    /// terminates normally; a count one past the cap
+    /// (`count($n)` reads `$galias` once per recursive step for `$n` down
+    /// to `1` -- `$n` reads total, none for the `$n == 0` base case -- so
+    /// `MAX_FUNC_REF_HEAP_LEN + 1` reads is the smallest count that
+    /// actually exceeds `push_func_ref`'s own `>=` cap check) must cleanly
+    /// trap, never panic, hang, or complete with a wrong answer.
+    #[test]
+    fn a_global_get_alias_of_an_imported_funcref_global_read_in_a_deep_tail_recursion_loop_traps_cleanly_instead_of_corrupting_state() {
+        let results = outcomes(
+            r#"
+            (module $A
+              (type $t (func (param i32) (result i32)))
+              (elem declare func $ax)
+              (func $ax (type $t) (param $n i32) (result i32) (local.get $n))
+              (global (export "g0") (ref $t) (ref.func $ax)))
+            (register "A" $A)
+            (module $B
+              (type $t (func (param i32) (result i32)))
+              (import "A" "g0" (global $g0 (ref $t)))
+              (global $galias (ref $t) (global.get $g0))
+              (func $count (export "count") (param $n i32) (result i32)
+                (if (result i32) (i32.eqz (local.get $n))
+                  (then (i32.const 0))
+                  (else
+                    (drop (global.get $galias))
+                    (return_call $count (i32.sub (local.get $n) (i32.const 1)))))))
+            (assert_return (invoke "count" (i32.const 100)) (i32.const 0))
+            (assert_trap (invoke "count" (i32.const 1000001)) "func_ref heap limit exceeded")
+            "#,
+        );
+        assert_eq!(results[0], (DirectiveKind::Module, DirectiveOutcome::Pass));
+        assert_eq!(results[1], (DirectiveKind::Register, DirectiveOutcome::Pass));
+        assert_eq!(
+            results[2],
+            (DirectiveKind::Module, DirectiveOutcome::Pass),
+            "$B must link against $A's exported funcref global"
+        );
+        assert_eq!(
+            results[3],
+            (DirectiveKind::AssertReturn, DirectiveOutcome::Pass),
+            "a bounded read count through the alias must work correctly -- got: {:?}",
+            results[3].1
+        );
+        assert_eq!(
+            results[4],
+            (DirectiveKind::AssertTrap, DirectiveOutcome::Pass),
+            "exceeding MAX_FUNC_REF_HEAP_LEN reads through a global.get-aliased funcref global must be a clean \
+             trap, never a panic, hang, or (worst of all) a silently wrong return value -- got: {:?}",
+            results[4].1
+        );
+    }
+
     /// W35 fourth slice: the "ephemeral trap-discarded instance" case --
     /// `linking3.wast`'s own `$Ms`/`"get table[0]"` example, hand-built.
     /// An anonymous module (wrapped in `assert_trap`, so it goes through

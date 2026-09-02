@@ -2,6 +2,58 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.36] — 2026-09-02 — round-2 security review: doc-comment corrections + a real, own-caught bug (`NonNullConcreteFuncRef`)
+
+Round 2 of the pre-push security review (on 0.6.35, immediately below)
+returned two things, both addressed here:
+
+1. **Stale doc comments, correction requested by the reviewer.**
+   `resolve_exported_global_funcrefs`'s own "Why exported only" doc
+   comment, and the globals-construction loop's own doc comment, both
+   still framed `return_call_ref.wast`'s safety as resting on "export
+   scoping" -- no longer accurate once 0.6.35 made `func_ref` propagation
+   unconditional (not export-scoped) for `global.get`-initialized
+   globals. Corrected to state the REAL, narrower invariant: `$count`/
+   `$even`/`$odd` stay safe because they are `ref.func`-initialized, not
+   `global.get`-initialized -- 0.6.35's own propagation only ever touches
+   the latter shape. Both comments now explicitly name the residual,
+   currently-untested-but-bounded risk (see item 3) and point at the new
+   regression test proving the bound, rather than asserting safety with
+   no caveat.
+
+2. **A real bug this slice's own new regression test caught while
+   proving the residual risk is bounded** (not something the review
+   flagged directly -- found writing the proof): `resolve_exported_
+   global_funcrefs`'s own `is_funcref` type check only matched
+   `ValueType::Funcref`/`ValueType::ConcreteFuncRef` -- missing
+   `ValueType::NonNullConcreteFuncRef` (`(ref $t)`, the non-nullable
+   concrete function reference), which is just as much funcref-family and
+   just as legal for a global's declared type. An exported global
+   declared `(ref $t)` (as opposed to `(ref null $t)`/bare `funcref`) was
+   silently skipped by this whole function -- `func_ref` staying `None`
+   forever, reproducing the ORIGINAL `elem.wast` bug class for that one
+   type shape. Fixed by adding the missing arm to the `matches!`.
+
+3. **New regression test proving the residual risk is bounded, not a
+   live hazard**: `a_global_get_alias_of_an_imported_funcref_global_
+   read_in_a_deep_tail_recursion_loop_traps_cleanly_instead_of_
+   corrupting_state` (in `wasm-conformance`, see that crate's own
+   CHANGELOG) -- a non-exported alias of an imported funcref global, read
+   once per step inside a `return_call`-based self-recursive loop
+   (structurally identical to `return_call_ref.wast`'s own `$count`),
+   confirmed to run correctly for a small count and to trap CLEANLY (via
+   `push_func_ref`'s own pre-existing `MAX_FUNC_REF_HEAP_LEN` cap) for a
+   count one past that cap -- never a panic, never memory corruption,
+   never a silently wrong answer. No vendored corpus file currently
+   combines these two shapes (confirmed by direct grep across all 257
+   files), so this is a proactive proof of a bound, not a regression fix.
+
+`cargo test -p wasm-runtime`: 77 (lib) + 43 (integration suites) passed,
+0 failed (unchanged from 0.6.35 -- this slice's own new test lives in
+`wasm-conformance`). `cargo clippy --release --all-targets`: clean.
+Corpus baseline re-diffed against the ORIGINAL pre-fix baseline: still
+exactly the one `elem.wast` change, zero real failures anywhere.
+
 ## [0.6.35] — 2026-09-02 — security-review finding: propagate `func_ref` at globals-construction time for a `global.get`-copied global (W35 fifth slice, round 1)
 
 A security review of 0.6.34 (immediately below), run before pushing per
