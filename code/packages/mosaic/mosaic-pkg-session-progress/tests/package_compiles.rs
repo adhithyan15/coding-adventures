@@ -104,7 +104,7 @@ fn session_progress_layout_binds_all_counter_slots() {
         ("metric-total", "total-label", "total-value"),
     ] {
         assert!(
-            source.contains(&format!("Column [ {metric} ]")),
+            source.contains(&format!("Box [ {metric} ]")),
             "SessionProgress.mll must expose {metric}"
         );
         assert!(
