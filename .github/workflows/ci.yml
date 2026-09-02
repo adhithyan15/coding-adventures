@@ -1302,6 +1302,24 @@ jobs:
       # deliberately, since a suite that silently passes when its oracle is
       # missing is not a suite. That makes installing it here a requirement
       # rather than a convenience.
+      # `font-subset` writes a font file, and a font writer checked only by
+      # our own parser proves nothing -- a wrong idea of how the table
+      # directory is padded would be shared by both halves and they would agree
+      # perfectly. `tests/fonttools_oracle.rs` hands the subset to fontTools
+      # and asks whether the retained glyphs still have the same outlines at
+      # the same ids.
+      #
+      # Unlike poppler this installs identically everywhere: fontTools is pure
+      # Python, so one pip command covers Linux, macOS and Windows rather than
+      # three package managers with three different names.
+      - name: Install fontTools for the font-subset oracle
+        if: needs.detect.outputs.needs_rust == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check --quiet fonttools
+          python3 -c "import fontTools; print('fontTools', fontTools.version)"
+
       - name: Install qpdf for the PDF oracle tests
         if: needs.detect.outputs.needs_rust == 'true'
         shell: bash
