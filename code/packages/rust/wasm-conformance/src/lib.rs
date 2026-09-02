@@ -59,7 +59,7 @@ use std::collections::HashMap;
 use std::rc::Rc;
 use wasm_execution::{GlobalStorage, HostFunction, HostInterface, LinearMemory, Table, TrapError, V128Bytes, WasmValue};
 use wasm_module_parser::WasmModuleParser;
-use wasm_runtime::{resolve_all_table_funcrefs, WasmInstance, WasmRuntime};
+use wasm_runtime::{resolve_all_table_funcrefs, resolve_exported_global_funcrefs, WasmInstance, WasmRuntime};
 use wasm_types::{CanonicalGroup, ExternalKind, FuncType, GlobalType, WasmModule};
 use wasm_wast_parser::script::{Action, ConstValue, Directive, Expected, F32LaneExpected, F64LaneExpected, ModuleSource};
 use wasm_wast_parser::{parse_script, WastParseError};
@@ -800,8 +800,8 @@ impl Executor {
                         // WasmInstance>>` finally exists for it -- see
                         // `wasm_runtime::resolve_all_table_funcrefs`'s own
                         // doc comment for the full rationale, including
-                        // why this is deliberately TABLES only (not
-                        // funcref-typed globals too, a real, reproduced
+                        // why this was originally TABLES only (a broader
+                        // attempt at globals too caused a real, reproduced
                         // regression this slice found and backed out of).
                         // Run BEFORE either registry insertion below, so
                         // no subsequent directive (another module's
@@ -810,6 +810,25 @@ impl Executor {
                         if let Err(e) = resolve_all_table_funcrefs(&instance) {
                             return DirectiveOutcome::Trap(format!(
                                 "internal error: post-instantiation cross-instance funcref resolution failed: {e}"
+                            ));
+                        }
+                        // W35 fifth slice: the analogous fixup for
+                        // EXPORTED funcref-typed GLOBALS specifically --
+                        // see `wasm_runtime::resolve_exported_global_
+                        // funcrefs`'s own doc comment for why "exported
+                        // only" (not every module-defined funcref global,
+                        // which is exactly the shape of the earlier
+                        // regression the comment above refers to) is both
+                        // sufficient to fix `elem.wast`'s own
+                        // "Initializing a table with imported funcref
+                        // global" case and provably safe against
+                        // reintroducing that regression. Same placement
+                        // rationale as the table fixup immediately above:
+                        // must run before this instance is ever
+                        // `register`ed/imported from.
+                        if let Err(e) = resolve_exported_global_funcrefs(&instance) {
+                            return DirectiveOutcome::Trap(format!(
+                                "internal error: post-instantiation cross-instance global funcref resolution failed: {e}"
                             ));
                         }
                         if set_current {
@@ -2300,6 +2319,60 @@ mod tests {
             (DirectiveKind::AssertReturn, DirectiveOutcome::Pass),
             "expected $Mt's own call_indirect to reach the REAL h (77) via $Ot's import-derived write, not \
              misinterpret local_index 0 in $Mt's OWN space ($other, 999) -- got: {:?}",
+            results[3].1
+        );
+    }
+
+    /// W35 fifth slice (`code/specs/W35-wasm-cross-instance-function-
+    /// identity.md`): a hand-built, minimal reproduction of `elem.wast`'s
+    /// own "Initializing a table with imported funcref global" case --
+    /// this crate's own corpus baseline's LAST remaining real (non-"not
+    /// yet supported") failure anywhere in the 257-file testsuite before
+    /// this slice. `$module4` exports a funcref-typed GLOBAL, populated
+    /// via `ref.func` on one of ITS OWN local functions (`$const-i32`,
+    /// which returns 42); the importer imports that global and writes it
+    /// into ITS OWN table via an active elem segment whose item is
+    /// `(global.get 0)`, not a literal `ref.func`/`ref.null` -- exactly
+    /// the shape `resolve_exported_global_funcrefs`/`element_func_refs`
+    /// exist to carry a real cross-instance-safe `FuncRefTarget` through.
+    /// `call_imported_elem`'s own `call_indirect` through that table slot
+    /// must then invoke `$module4`'s real function (42), not misdispatch
+    /// to `call_imported_elem`'s OWN local index 0 (itself) -- which, at
+    /// the exact byte-level coincidence this corpus case has, is the
+    /// unbounded self-recursion this fix closes: before it, this same
+    /// scenario traps with "call stack exhausted" (a stack overflow, not
+    /// merely a wrong numeric answer) instead of returning 42.
+    #[test]
+    fn a_table_entry_populated_via_an_imported_funcref_global_dispatches_to_the_exporters_own_function() {
+        let results = outcomes(
+            r#"
+            (module $module4
+              (func $const-i32 (result i32) (i32.const 42))
+              (global (export "f") funcref (ref.func $const-i32)))
+            (register "module4" $module4)
+            (module
+              (import "module4" "f" (global funcref))
+              (type $out-i32 (func (result i32)))
+              (table 10 funcref)
+              (elem (offset (i32.const 0)) funcref (global.get 0))
+              (func (export "call_imported_elem") (type $out-i32)
+                (call_indirect (type $out-i32) (i32.const 0))))
+            (assert_return (invoke "call_imported_elem") (i32.const 42))
+            "#,
+        );
+        assert_eq!(results[0], (DirectiveKind::Module, DirectiveOutcome::Pass));
+        assert_eq!(results[1], (DirectiveKind::Register, DirectiveOutcome::Pass));
+        assert_eq!(
+            results[2],
+            (DirectiveKind::Module, DirectiveOutcome::Pass),
+            "the importer must link against $module4's exported funcref global"
+        );
+        assert_eq!(
+            results[3],
+            (DirectiveKind::AssertReturn, DirectiveOutcome::Pass),
+            "expected call_imported_elem's own call_indirect to reach $module4's REAL function (42) via the \
+             imported global's resolved FuncRefTarget, not misdispatch to its own local index 0 (itself) -- \
+             got: {:?}",
             results[3].1
         );
     }
