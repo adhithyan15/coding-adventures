@@ -83,6 +83,14 @@ function classifyBlock(title: string): LessonBlockType {
   // Checked before the looser prefixes below because a writing section's title
   // normally names the letter it teaches ("Writing: మ — the tick on top").
   if (normalized.startsWith("writing")) return "writing";
+  // "Across the family" is the comparative cognate table: one idea shown across
+  // Kannada and its Dravidian sisters, which the books already draw as their own
+  // `cognates` box. Two lessons authored the heading before any block type
+  // matched it, so it classified as `unknown` -- and schema v2 rejects
+  // `unknown`, which blocked those lessons from ever being generated. Same call
+  // as "The letters in this word" above: the honest label beats leaving real
+  // authored prose unclassifiable.
+  if (normalized.startsWith("across the family")) return "cognates";
   if (normalized.includes("taken apart")) return "etymology";
   if (normalized.startsWith("why it's said this way")) return "culture-pragmatics";
   if (

@@ -2,7 +2,5 @@
   "language": "kannada",
   "chapter": 1,
   "output": "kannada/book/chapters/ch01-greetings.tex",
-  "embeddedLessonIds": [
-    "KA-S01-letter-na"
-  ]
+  "scriptSet": "kannada-comparisons"
 }

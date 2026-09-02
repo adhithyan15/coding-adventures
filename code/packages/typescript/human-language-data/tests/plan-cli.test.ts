@@ -183,7 +183,11 @@ describe("the plan CLI", () => {
     // added up by hand:
     //   +157  Telugu A1: 326 points enumerated, 169 covered.
     //   +107  Tamil A1:  262 points enumerated, 155 covered.
-    expect(out).toMatch(/749 uncovered point\(s\) across 8 written/);
+    //
+    // 793 -> 792: French chapter 8 closed A1-LEX-07, telling the time -- the
+    // generated chapter teaches et quart, et demie and moins le quart, which the
+    // hand-written one named in a sentence and then deferred.
+    expect(out).toMatch(/748 uncovered point\(s\) across 8 written/);
     // 190 -> 403, and 4 -> 5 written. Marathi's own A1 inventory enumerates 301
     // points and the corpus covers 88, so it contributes 213. Nothing regressed:
     // a twentieth track stopped being unmeasurable, and the backlog grew by
@@ -192,16 +196,18 @@ describe("the plan CLI", () => {
     // one, which is the only DELE-sourced set here, so its denominator is what an
     // attributable A1 inventory actually asks for rather than what a
     // descriptor-led guess remembered to include.
-    expect(out).toMatch(/749 uncovered point\(s\) across 8 written/);
-    // 793 -> 749. The Telugu chapter 74-80 vocabulary tranche was authored
+    expect(out).toMatch(/748 uncovered point\(s\) across 8 written/);
+    // 792 -> 748. The Telugu chapter 74-80 vocabulary tranche was authored
     // against `exam-inventory-telugu-a1.json`'s OWN uncovered list rather than by
     // topic, so 35 headwords closed 44 points and the corpus-wide backlog fell by
     // exactly that many. Telugu went 169/326 (52%) to 213/326 (65%) against an
     // unchanged denominator: no point was added, removed or reworded to move it.
-    // Tamil's inventory landed on main while this branch was open, which is why
-    // the base is 793 and not the 686 this branch was cut against. Re-measured
-    // with `npm run plan` on the merged tree, never subtracted.
+    // The base moved twice while this branch was open -- Tamil's inventory took
+    // it to 793 and French chapter 8 to 792 -- which is why it is not the 686
+    // this branch was cut against. Re-measured on the merged tree, never
+    // subtracted.
     //
+
 
     // 529 -> 686, and 6 -> 7 written. `core/exam-inventory-telugu-a1.json`
     // enumerates 326 A1 points and the corpus covers 169, so Telugu contributes

@@ -18,8 +18,15 @@ The word, taken apart.
 ಹೆಸರು (hesaru, "name") is native Dravidian, from Proto-Dravidian pesar — and it hides a famous Kannada sound-law: an old initial p became h. So pesar becomes hesar becomes hesaru. That makes it a cousin of Tamil peyar (same root; Tamil kept the p, Kannada softened it to h) — and, like peyar, not related to Sanskrit nāma (Hindi nām, English name).
 Across the family: Kannada hesaru, Tamil peyar, Telugu pēru, Malayalam pēr — one Dravidian word; only Hindi nām / English name are Indo-European.
 
-Sounds you'll need.
-ಹ (ha) + ೆ (the e-sign) becomes ಹೆ (he); ಸ (sa); ರು (ru). Read ಹೆ, ಸ, ರು becomes hesaru.
+Across the family — the same idea, five ways.
+[a table of 6 rows, read aloud]
+Language: Kannada. "Name": ಹೆಸರು hesaru. Source: Dravidian pesar (p becomes h).
+Language: Tamil. "Name": peyar. Source: the same Dravidian root (kept p).
+Language: Telugu. "Name": pēru. Source: the same Dravidian root.
+Language: Malayalam. "Name": pēr. Source: the same Dravidian root.
+Language: Hindi. "Name": nām. Source: Sanskrit (Indo-European).
+Language: English. "Name": name. Source: Indo-European.
+The p becomes h shift is why hesaru looks unlike its sisters — but it is the same word.
 
 Guided Practice.
 [pause 1 second]
@@ -48,10 +55,7 @@ The letters in this word.
 (Skim if you read Kannada.) ನ (na) + the conjunct ನ್ನ (nna) becomes nanna — a doubled, held nn.
 
 The word, taken apart.
-ನನ್ನ (nanna) means "my." It belongs to Kannada's native Dravidian first-person family, not to the Indo-European family behind English I/my. You will meet the related word for "I" in its own lesson; today you only need nanna.
-
-Sounds you'll need.
-ನ (na) + the conjunct ನ್ನ (nna) becomes nanna — a doubled, held nn.
+ನನ್ನ (nanna) means "my." It belongs to Kannada's native Dravidian first-person family, not to the Indo-European family behind English I/my. The stem underneath is Dravidian nān — the same one behind Tamil nāṉ / eṉ. You will meet the related word for "I" in its own lesson; today you only need nanna.
 
 Guided Practice.
 [pause 1 second]
@@ -72,7 +76,7 @@ Warm-up.
 [pause 2 seconds]
 Assemble the two atoms — and notice, as in Tamil, no word for "is."
 
-The phrase, assembled.
+You'll want to know: The phrase, assembled.
 nanna (my) + hesaru (name) + your name.
 ನನ್ನ ಹೆಸರು … (nanna hesaru …) = "my name …" becomes "my name is…"
 Nanna hesaru Arun. becomes "My name is Arun."
@@ -110,9 +114,6 @@ The word, taken apart.
 Grammar Lens: respect by the plural.
 nīnu (familiar) vs. nīvu (respectful, and literally plural) — the same politeness-by-plural as Tamil nīṅgaḷ and French vous: one respected person addressed as "you all." For a first meeting, nīvu.
 
-Sounds you'll need.
-ನೀ (n=i) + ನು (nu) becomes n=i nu; ನೀ + ವು (vu) becomes n=i vu.
-
 Guided Practice.
 [pause 1 second]
 [your turn — say: "nīnu" (familiar), "nīvu" (respectful)]
@@ -138,9 +139,6 @@ The letters in this word.
 The word, taken apart.
 ಏನು (ēnu, "what") is native Dravidian, on the interrogative stem yā- / e- — the same Dravidian question-root as Tamil eṉṉa, heading Kannada's question family: ēnu (what), yāru (who), elli (where), yāke (why).
 
-Sounds you'll need.
-ಏ (independent long ē, word-initial) + ನು (nu) becomes ēnu.
-
 Guided Practice.
 [pause 1 second]
 [your turn — say: "ēnu"]
@@ -160,7 +158,7 @@ Warm-up.
 [pause 2 seconds]
 Assemble the question — your + name + what — still no "is."
 
-The phrase, assembled.
+You'll want to know: The phrase, assembled.
 ನಿಮ್ಮ (nimma, "your") = the possessive of nīvu ("you," respectful).
 ನಿಮ್ಮ ಹೆಸರು ಏನು? (nimma hesaru ēnu?) = literally "your name what?" = "what's your name?"
 Three words, no verb — the zero copula holds for questions too.
@@ -221,7 +219,7 @@ Warm-up.
 [pause 2 seconds]
 The warm close — and, true to Kannada, a Sanskrit word where Tamil used a native one.
 
-The phrase.
+You'll want to know: The phrase.
 The full form is ನಿಮ್ಮನ್ನು ಭೇಟಿಯಾಗಿ ಸಂತೋಷ (nimmannu bhēṭiyāgi santōṣa) — "having met you, joy."
 
 The word, taken apart.
@@ -284,7 +282,7 @@ Warm-up.
 [pause 2 seconds]
 Every atom built. Here's the exchange.
 
-The dialogue.
+You'll want to know: The dialogue.
 [a table of 4 rows, read aloud]
 ನನ್ನ ಹೆಸರು ಮೀರಾ. (nanna hesaru Mira) means My name is Mira.
 ನಿಮ್ಮ ಹೆಸರು ಏನು? (nimma hesaru ēnu?) (nimma hesaru ēnu) means What's your name?
