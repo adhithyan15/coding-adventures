@@ -1,19 +1,21 @@
 {
   "language": "marathi",
   "chapter": 8,
-  "sourceHash": "fnv1a64:dce228abd1da8fbc",
+  "sourceHash": "fnv1a64:ff2977756dc07c3e",
   "lessonIds": [
-    "MR-C05-bolne",
-    "MR-C05-mi-marathi-bolto",
-    "MR-C05-rahne",
-    "MR-C05-kaam-karne",
-    "MR-C05-practice"
+    "MR-W08-la",
+    "MR-W08-sha",
+    "MR-W08-ssa",
+    "MR-W08-u-independent",
+    "MR-W08-uu-independent",
+    "MR-W08-e-independent",
+    "MR-R08-runway-recall"
   ],
-  "voiceLessons": 2,
+  "voiceLessons": 1,
   "drivablePrefix": 0,
   "text": "marathi/narration/ch08.txt",
   "json": "marathi/narration/ch08.json",
-  "textHash": "fnv1a64:a4946d7037610f67",
-  "jsonHash": "fnv1a64:184e0e4051b1990a",
+  "textHash": "fnv1a64:cd93f6c8744f274e",
+  "jsonHash": "fnv1a64:472096e2128f0468",
   "findings": []
 }

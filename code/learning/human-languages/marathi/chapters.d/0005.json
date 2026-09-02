@@ -1,16 +1,23 @@
 {
   "chapter": 5,
-  "title": "Introducing Yourself",
-  "label": "ch:introductions",
-  "canDo": "I can introduce myself in Marathi, give my name, and understand the other person's name.",
+  "title": "Marks Above, Below, and Beside the Letter",
+  "label": "ch:marks-runway",
+  "canDo": "I can write and name the six Devanagari marks the rest of this book leans on, and say where each one sits relative to its letter.",
   "spineNodes": [
     "SPINE-EXCHANGE-NAMES"
   ],
   "payoff": {
-    "lesson": "MR-C02-practice",
+    "lesson": "MR-R05-marks-recall",
     "kind": "task",
-    "summary": "Complete MR-C02-practice, the canonical closing checkpoint, and demonstrate the chapter promise: introduce myself in Marathi, give my name, and understand the other person's name.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Retrieve all six marks cold, by name and by placement, with no model on the page.",
+    "assesses": [
+      "MR-SCRIPT-I-MATRA-01",
+      "MR-SCRIPT-U-MATRA-01",
+      "MR-SCRIPT-UU-MATRA-01",
+      "MR-SCRIPT-RU-MATRA-01",
+      "MR-SCRIPT-CANDRABINDU-01",
+      "MR-SCRIPT-A-INDEPENDENT-01"
+    ],
+    "note": "The payoff adds no sign; it retrieves every sign the chapter taught, which is what makes it fully representative."
   }
 }

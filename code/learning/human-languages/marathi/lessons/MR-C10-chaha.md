@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C10-chaha
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 530
-chapter: 13
+sequence: 730
+chapter: 17
 type: word
 headword: चहा
 romanization: chahā
@@ -51,7 +51,7 @@ something that is not water at all.
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Nothing new. **च** you already say near *ts* from Chapter 9's **चार**; **ह** is
+Nothing new. **च** you already say near *ts* from Chapter 13's **चार**; **ह** is
 **नमस्कार**'s; **ा** the familiar long *ā*. *Cha-hā*.
 
 ## The word, taken apart — the one word in this chapter with no Sanskrit in it

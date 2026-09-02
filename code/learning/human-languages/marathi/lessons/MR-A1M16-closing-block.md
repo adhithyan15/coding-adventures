@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1M16-closing-block
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 855
+sequence: 1055
 delivery: script
-chapter: 20
+chapter: 24
 type: writing
 headword: closing block
 gloss: order thanks, a warm return, and tomorrow as three known closing lines

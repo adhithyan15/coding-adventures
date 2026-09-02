@@ -1,7 +1,7 @@
 ---
 id: MR-C02-naav
-sequence: 60
-chapter: 5
+sequence: 260
+chapter: 9
 type: word
 headword: नाव
 romanization: "nāv"

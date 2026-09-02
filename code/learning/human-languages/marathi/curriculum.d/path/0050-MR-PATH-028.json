@@ -1,0 +1,18 @@
+{
+  "id": "MR-PATH-028",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "MR-W05-i-matra",
+    "MR-W05-u-matra",
+    "MR-W05-uu-matra",
+    "MR-W05-ru-matra",
+    "MR-W05-candrabindu",
+    "MR-W05-a-independent",
+    "MR-R05-marks-recall"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "MR-EXT-031-MARKS-RUNWAY"
+  ]
+}

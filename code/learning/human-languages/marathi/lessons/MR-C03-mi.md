@@ -1,7 +1,7 @@
 ---
 id: MR-C03-mi
-sequence: 115
-chapter: 6
+sequence: 315
+chapter: 10
 type: word
 headword: मी
 romanization: "mī"

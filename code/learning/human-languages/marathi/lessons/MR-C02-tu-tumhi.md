@@ -1,7 +1,7 @@
 ---
 id: MR-C02-tu-tumhi
-sequence: 80
-chapter: 5
+sequence: 280
+chapter: 9
 type: word
 headword: तू / तुम्ही
 romanization: "tū / tumhī"

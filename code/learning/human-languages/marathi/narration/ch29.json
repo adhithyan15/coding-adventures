@@ -1,0 +1,367 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 29,
+  "title": "The Twelve, Further Apart",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:ab8846a22fe4e449",
+  "lessons": [
+    {
+      "id": "MR-R25-twelve-verbs",
+      "sequence": 1220,
+      "title": "The twelve, further apart",
+      "headword": "बारा क्रियापदं",
+      "romanization": "bārā kriyāpadaṁ",
+      "gloss": "twelve verbs, at a wider distance — the second pass over the whole run",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a42fd367a89a8eb8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The four you ask for: देणे, पिणे, आणणे, ठेवणे. Say them without looking anywhere."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then the four that pass between two people: sāṅgṇe, म्हणणे, शिकणे, मिळणे."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R25-twelve-verbs-check",
+              "prompt": "Name the four verbs of a visit: sitting, feeling, sleeping, walking.",
+              "assesses": [
+                "MR-LEX-BASNE",
+                "MR-LEX-VATNE",
+                "MR-LEX-JHOPNE",
+                "MR-LEX-CHALNE"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "basne, vatne, jhopne, chalne",
+                "बसणे, वाटणे, झोपणे, चालणे"
+              ],
+              "feedback": {
+                "correct": "All four are back at the wider distance.",
+                "incorrect": "Repair in order: basne, vatne, jhopne, chalne."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Twelve verbs, three runs of four. Say the one you would use to accept an offer. (Chālel.) Say the one you would use to ask for water. (Dyā.) Then stop."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R25-dative-frame",
+      "sequence": 1230,
+      "title": "One frame, four sentences",
+      "headword": "मला …",
+      "romanization": "malā …",
+      "gloss": "the dative frame, four sentences deep — knowing, liking, feeling, getting",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b009c09b5550a81",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "मला is where things arrive. Say the two oldest ones: मला माहीत आहे, मला मराठी आवडते."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say each one, then say the word-for-word English under it."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R25-dative-frame-check",
+              "prompt": "Say that you feel fine, that you are sleepy, and that you get it — all on the mala frame.",
+              "assesses": [
+                "MR-GRAMMAR-DATIVE-FEELING",
+                "MR-LEX-VATNE",
+                "MR-LEX-MILNE"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "mala baram vatam, mala jhop yete, mala miltam",
+                "मला बरं वाटतं, मला झोप येते, मला मिळतं"
+              ],
+              "feedback": {
+                "correct": "The frame carries all three.",
+                "incorrect": "Repair in order: mala baram vatam, mala jhop yete, mala miltam."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मला do in every one of these? (It is where the knowing, the liking, the feeling and the getting arrive.) And name the body word this book gave you for where feeling is said to sit. (हृदय.) Then stop."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R25-recognition-script",
+      "sequence": 1240,
+      "title": "Recognition at distance: two signs and one sound",
+      "headword": "ह / ो / चा",
+      "romanization": "ha / o / chā",
+      "gloss": "two signs from the very first doorway and one sound, recognised at a long distance",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66b85c0e953561cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The first two shapes this book ever asked you to make were ह and the ो mark, and together they wrote हो. Make them both from memory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say चालणे and चार one after the other and hear the same leaning in both."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R25-recognition-script-check",
+              "prompt": "How is cha said before a long aa in most Marathi mouths?",
+              "assesses": [
+                "MR-SOUND-CHA-TSAA"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "nearer ts than ch",
+                "tsa",
+                "ts"
+              ],
+              "feedback": {
+                "correct": "Right: chaar comes out nearer tsaar.",
+                "incorrect": "Repair: before a long aa, cha leans toward ts."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write हो once without a model, say चार with its leaning consonant, then stop."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R25-recognition-words",
+      "sequence": 1250,
+      "title": "Recognition at distance: five things from further back",
+      "headword": "आहे / मित्र / कुटुंब / समजणे",
+      "romanization": "āhe / mitra / kuṭumb / samajṇe",
+      "gloss": "the copula, the two family words, counting, and understanding — recognised at a long distance",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9edb56c165b9594c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count to five out loud — ek, don, tīn, chār, pāch — and then put आहे at the end of a sentence about yourself, where Marathi keeps it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Both were taken up from Sanskrit whole rather than worn down, and कुटुंब takes a gender Hindi does not give it."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R25-recognition-words-check",
+              "prompt": "Give friend and family in Marathi, and say which gender kutumb takes.",
+              "assesses": [
+                "MR-LEX-MITRA",
+                "MR-LEX-KUTUMB",
+                "MR-GRAMMAR-KUTUMB-NEUTER"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "mitra, kutumb, neuter",
+                "मित्र, कुटुंब, neuter"
+              ],
+              "feedback": {
+                "correct": "Both words and the gender are back at distance.",
+                "incorrect": "Repair: mitra, kutumb, and kutumb is neuter."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say that Marathi is understandable to you (मला मराठी समजते) and then that you are learning it (मी मराठी शिकतो / शिकते). What did मित्र's root mean before it meant friend? (To bind.) Then stop."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C03-mi-bara-aahe",
     "language": "marathi",
-    "chapter": 6,
-    "sequence": 120,
+    "chapter": 10,
+    "sequence": 320,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:3f82328b82bcc151"
+    "sourceHash": "fnv1a64:e87343a23bb7c1ca"
   },
   "findings": []
 }

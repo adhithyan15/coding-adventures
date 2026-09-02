@@ -1,19 +1,20 @@
 {
   "language": "marathi",
   "chapter": 18,
-  "sourceHash": "fnv1a64:e6f424fb5a7f392f",
+  "sourceHash": "fnv1a64:12c61c7f678b3d7c",
   "lessonIds": [
-    "MR-R18-script-warmup",
-    "MR-R18-script-a-r4",
-    "MR-R18-script-b-r4",
-    "MR-R18-script-c-r4",
-    "MR-R18-script-d-r4"
+    "MR-C11-mitra",
+    "MR-R11-mitra-r1",
+    "MR-C11-kutumb",
+    "MR-R11-kutumb-r1",
+    "MR-C11-bhau",
+    "MR-C11-bahin"
   ],
-  "voiceLessons": 5,
-  "drivablePrefix": 5,
+  "voiceLessons": 2,
+  "drivablePrefix": 0,
   "text": "marathi/narration/ch18.txt",
   "json": "marathi/narration/ch18.json",
-  "textHash": "fnv1a64:943cd12739ce8e28",
-  "jsonHash": "fnv1a64:dee28fad84ba18c3",
+  "textHash": "fnv1a64:8ddc20cd1ae637d7",
+  "jsonHash": "fnv1a64:4e83ff4bdf3303d6",
   "findings": []
 }

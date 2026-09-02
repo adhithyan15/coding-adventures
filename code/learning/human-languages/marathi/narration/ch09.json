@@ -2,262 +2,34 @@
   "version": 1,
   "language": "marathi",
   "chapter": 9,
-  "title": "Numbers One to Five",
-  "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:19ac63ce061a0f84",
+  "title": "Introducing Yourself",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:f9120d87a1f02a80",
   "lessons": [
     {
-      "id": "MR-R09-script-a-r3",
-      "sequence": 335,
-      "title": "Three signs after a durable gap",
-      "headword": "ः / आ / भ",
-      "romanization": "visarga / aa / bha",
-      "gloss": "durable script retrieval — first doorway batch",
+      "id": "MR-C02-naav",
+      "sequence": 260,
+      "title": "नाव (nāv) — \"name\"",
+      "headword": "नाव",
+      "romanization": "nāv",
+      "gloss": "name (nāv)",
       "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:4b8d9d606946cb29",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Close the earlier script pages and keep one blank line ready."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Cover the answer. Write dhanyavād, then the two-dot breath sign, independent long ā, and breathy bha from their spoken names. Compare: धन्यवाद; ः आ भ. Stop after one retrieval and one repair."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-R09-script-a-r3-check",
-              "prompt": "Write dhanyavad, visarga, independent aa, and bha after a durable gap.",
-              "assesses": [
-                "MR-SCRIPT-DHANYAVAD-WRITE-01",
-                "MR-SCRIPT-VISARGA-01",
-                "MR-SCRIPT-AA-INDEPENDENT-01",
-                "MR-SCRIPT-BHA-01"
-              ],
-              "responseSeconds": 32,
-              "acceptedResponses": [
-                "धन्यवाद; ः आ भ"
-              ],
-              "feedback": {
-                "correct": "The word and all three signs survived at durable distance.",
-                "incorrect": "Repair only the missed word-piece or sign."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-R09-script-b-r3",
-      "sequence": 336,
-      "title": "Three more signs after a durable gap",
-      "headword": "े / ं / त",
-      "romanization": "e / anusvara / ta",
-      "gloss": "durable script retrieval — second doorway batch",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:06d3805ee695cea6",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Close the earlier script pages and keep one blank line ready."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Cover the answer. Write the e-mark, one-dot anusvāra, and dental ta from their spoken names. Then compare: े ं त. Stop after one retrieval and one repair."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-R09-script-b-r3-check",
-              "prompt": "Write e-mark, anusvara, and ta after a durable gap.",
-              "assesses": [
-                "MR-SCRIPT-E-MATRA-01",
-                "MR-SCRIPT-ANUSVARA-01",
-                "MR-SCRIPT-TA-01"
-              ],
-              "responseSeconds": 28,
-              "acceptedResponses": [
-                "े ं त"
-              ],
-              "feedback": {
-                "correct": "All three survived at durable distance.",
-                "incorrect": "Repair only the missed sign."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-R09-script-c-r3",
-      "sequence": 337,
-      "title": "Keep three voiced consonants apart",
-      "headword": "द / ध / ब",
-      "romanization": "da / dha / ba",
-      "gloss": "durable script retrieval — voiced consonant batch",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:e3208c50becb52fc",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Close the earlier script pages and keep one blank line ready."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Cover the answer. Write dental da, breathy dha, and quiet ba from sound. Then compare: द ध ब. Stop after one retrieval and one repair."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-R09-script-c-r3-check",
-              "prompt": "Write da, dha, and ba after a durable gap.",
-              "assesses": [
-                "MR-SCRIPT-DA-01",
-                "MR-SCRIPT-DHA-01",
-                "MR-SCRIPT-BA-01"
-              ],
-              "responseSeconds": 28,
-              "acceptedResponses": [
-                "द ध ब"
-              ],
-              "feedback": {
-                "correct": "Voice and breath remain separate.",
-                "incorrect": "Repair only the confused consonant."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-R09-script-d-r3",
-      "sequence": 338,
-      "title": "The final three doorway signs",
-      "headword": "य / ळ / व",
-      "romanization": "ya / lla / va",
-      "gloss": "durable script retrieval — final doorway batch",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:791548d87d3a77e3",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Close the earlier script pages and keep one blank line ready."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Cover the answer. Write ya, Marathi curled-back ḷa, and va from sound. Then compare: य ळ व. Stop after one retrieval and one repair."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "MR-R09-script-d-r3-check",
-              "prompt": "Write ya, lla, and va after a durable gap.",
-              "assesses": [
-                "MR-SCRIPT-YA-01",
-                "MR-SCRIPT-LLA-01",
-                "MR-SCRIPT-VA-01"
-              ],
-              "responseSeconds": 28,
-              "acceptedResponses": [
-                "य ळ व"
-              ],
-              "feedback": {
-                "correct": "All three survived at durable distance.",
-                "incorrect": "Repair only the missed sign."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-C06-numbers-1-5",
-      "sequence": 360,
-      "title": "एक, दोन, तीन, चार, पाच — one to five",
-      "headword": "एक दोन तीन चार पाच",
-      "romanization": "ek don tīn chār pāch",
-      "gloss": "one to five — nearly Hindi's, with two tells in the spelling and one in the sound",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:75f6d343b299b9fd",
-      "notice": null,
+      "sourceHash": "fnv1a64:89aebc04614a6474",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -272,202 +44,40 @@
             },
             {
               "kind": "speech",
-              "text": "Marathi and Hindi both use Devanagari and both descend from Sanskrit, so their numbers look almost identical. Almost is where the interest is."
+              "text": "To introduce yourself you need one word first: name. In Marathi it is नाव (nāv) — and it is a very old word wearing a Marathi coat."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know: the five",
+          "type": "script",
+          "title": "The letters in this word",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "",
-                "Marathi",
-                "said"
-              ],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "1. Marathi: एक. said: ek.",
-                "2. Marathi: दोन. said: don.",
-                "3. Marathi: तीन. said: tīn.",
-                "4. Marathi: चार. said: chār — but see below.",
-                "5. Marathi: पाच. said: pāch."
-              ]
+              "kind": "speech",
+              "text": "(Skim if you read Devanagari.) ना (nā, the न na with the ा long-ā stroke) + व (va) becomes नाव nāv. Two letters, read left to right."
             }
           ]
         },
         {
           "index": 2,
-          "type": "notice",
-          "title": "What you've built: three Marathi tells",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Set them against Hindi. Two differences are visible and one is audible:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "number",
-                "Hindi",
-                "Marathi"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "number: 2. Hindi: दो do. Marathi: दोन don: final n.",
-                "number: 5. Hindi: पाँच pāṁch. Marathi: पाच pāch: no nasal mark.",
-                "number: 4. Hindi: चार chār. Marathi: चार tsār: same spelling, different sound."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Do not explain all three histories yet. First make the five forms automatic; the next lesson earns the deeper comparison."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ek, don, tīn, tsār, pāch\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ek, don, tīn, tsār, pāch\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the visible tells — don has n; pāch has no nasal mark",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the visible tells — *don* has *n*; *pāch* has no nasal mark]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the audible tell — written chār, Marathi tsār",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the audible tell — written *chār*, Marathi *tsār*]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Count to five in Marathi. (Ek, don, tīn, tsār, pāch.) Where does Marathi add a letter compared with Hindi? (दोन, don.) Which form drops a nasal mark? (पाच, pāch.) What differs in चार without differing in spelling? (Marathi's च is nearer ts before ā.) Next: explain where those differences came from."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "MR-C06-number-differences",
-      "sequence": 370,
-      "title": "Why Marathi two rhymes with three",
-      "headword": "दोन · तीन · पाच · चार",
-      "romanization": "don · tīn · pāch · chār",
-      "gloss": "why Marathi two rhymes with three, and why Hindi preserves a different piece of five",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:41afbb0812b0a17e",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Count once: ek, don, tīn, tsār, pāch. Which two words end in n? (Don and tīn.)"
-            }
-          ]
-        },
-        {
-          "index": 1,
           "type": "etymology",
-          "title": "The word, taken apart — दोन borrowed from “three”",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "The tempting guess is that Marathi दोन don kept something Hindi दो do lost. It did not."
-            },
-            {
-              "kind": "speech",
-              "text": "Sanskrit's neuter word for three, त्रीणि trī́ṇi, became Prakrit tiṇṇi. In three, the ṇ genuinely belongs to the word. The doubled consonant is a Prakrit trade for the lost r."
-            },
-            {
-              "kind": "speech",
-              "text": "The word for two was then reshaped to match its neighbour: Prakrit doṇṇi copied the shape of tiṇṇi. Marathi don's final n is therefore an innovation, a rhyme borrowed from the number next door. Hindi do simply never took it."
-            },
-            {
-              "kind": "speech",
-              "text": "English numbers did this too: four acquired its initial f- by analogy with five. Familiar sequences pull neighbouring words toward one another."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "notice",
-          "title": "What you've built: पाच and the nasal Hindi kept",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Marathi पाच pāch and Hindi पाँच pāṁch tell the opposite story. Hindi's chandrabindu ँ records the nasal of Sanskrit pañca; Marathi's spelling drops it."
-            },
-            {
-              "kind": "speech",
-              "text": "So neither language is simply “older.” Marathi innovated in don, while Hindi retained an older feature in pāṁch. Comparing both descendants reveals the history that either one alone could hide."
+              "text": "नाव (nāv) comes from Sanskrit नामन् (nāman, \"name\"). Watch the small Marathi sound-shift: the Sanskrit -m- softened to -v-, so nām became nāv. (Hindi kept the m: nām.) That Sanskrit nāman traces back to the same ancient root, h₃nómn̥, that gave English name and noun, Latin nōmen, Greek onoma. A cousin from before either language had a name for itself."
             }
           ]
         },
         {
           "index": 3,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: चार and the change its spelling hides",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
           "segments": [
             {
               "kind": "speech",
-              "text": "Both write चार, but Marathi pronounces च before ā nearer ts: tsār. The letters stayed aligned while the sound moved."
+              "text": "Marathi softens many old Sanskrit consonants this way — m leaning to v, hard sounds going soft. Spotting the shift lets you read a Sanskrit word straight into its Marathi form."
             }
           ]
         },
@@ -485,38 +95,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the borrowed rhyme — tiṇṇi … doṇṇi",
+              "instruction": "\"nāv\" — name",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the borrowed rhyme — *tiṇṇi … doṇṇi*]"
+              "source": "[YOU SAY: \"nāv\" — name]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "innovation — Marathi don's final n",
+              "instruction": "the English cousin from the same root (\"name\")",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: innovation — Marathi *don*'s final *n*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "retention — Hindi pāṁch's nasal",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: retention — Hindi *pāṁch*'s nasal]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "same spelling, shifted sound — chār / tsār",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: same spelling, shifted sound — *chār / tsār*]"
+              "source": "[YOU SAY: the English cousin from the same root (\"name\")]"
             }
           ]
         },
@@ -533,25 +125,1118 @@
             },
             {
               "kind": "speech",
-              "text": "Did Marathi don preserve an ancient ending? (No: two copied three.) Which language retains Sanskrit pañca's nasal in writing? (Hindi.) Why can neither daughter be called simply older? (Each changed or retained a different feature.) What does Marathi change without respelling चार? (Ch shifts toward ts before ā.)"
+              "text": "What is nāv, and what happened to the m of Sanskrit nām? (\"Name\"; it softened to v — a Marathi sound-shift.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C02-majhe",
+      "sequence": 265,
+      "title": "माझं (mājhaṁ) — \"my\"",
+      "headword": "माझं",
+      "romanization": "mājhaṁ",
+      "gloss": "my (mājhaṁ, neuter)",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:97386ffbab1e4e86",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"My name.\" The word for my — and it changes shape with the gender of what it owns."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Devanagari.) मा (mā) + झं (jhaṁ, the झ jha with an anusvara ं for the light nasal) becomes माझं mājhaṁ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "माझं (mājhaṁ, \"my\") sits on the first-person root ma- — the very root behind English me, my, mine, Latin meus, and Hindi merā. One tiny syllable, ma, marks \"belonging to me\" across the whole Indo-European family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: \"my\" agrees in three genders",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Marathi keeps three genders, and \"my\" picks its ending from the noun: माझा (mājhā, masculine), माझी (mājhī, feminine), माझं (mājhaṁ, neuter). The word नाव (nāv, \"name\") is neuter, so \"my name\" is माझं नाव (mājhaṁ nāv). You met this gender-agreement idea already with the goodbye yeto/yete; it runs through the whole language."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"mājhā / mājhī / mājhaṁ\" — the three genders of \"my\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"mājhā / mājhī / mājhaṁ\" — the three genders of \"my\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"mājhaṁ nāv\" — my name (neuter, to match nāv)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"mājhaṁ nāv\" — my name (neuter, to match *nāv*)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why is \"my name\" mājhaṁ nāv and not mājhā nāv? (nāv is neuter, so \"my\" takes the neuter form mājhaṁ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C02-aahe",
+      "sequence": 270,
+      "title": "आहे (āhe) — \"is\"",
+      "headword": "आहे",
+      "romanization": "āhe",
+      "gloss": "is (āhe)",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:1c03c99a3f01d56b",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The little verb that finishes almost every Marathi sentence about what something is — and, in Marathi, it comes last."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Devanagari.) आ (ā, the standalone long-ā vowel, used when a word begins with a vowel) + हे (he) becomes आहे āhe."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आहे (āhe, \"is\") descends from Sanskrit अस्ति (ásti, \"is\"), on the root √as (\"to be\"). That same √as / PIE h₁es- is the ancestor of Latin est, German ist, and English is itself — the deepest, oldest verb in the family, worn down to āhe in Marathi."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the verb goes last",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Marathi is a subject–object–verb language: \"my name Mira is.\" The copula आहे sits at the end, where English puts it in the middle. It changes with the subject — you will meet आहेस (āhes, \"you are\") and आहात (āhāt, \"you are,\" respectful) in Chapter 9."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"āhe\" — is",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"āhe\" — is]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English cousin from the same root (\"is\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English cousin from the same root (\"is\")]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does āhe sit in a Marathi sentence, and what English word is its cousin? (At the end; English is, both from √as.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C02-majhe-naav-aahe",
+      "sequence": 275,
+      "title": "माझं नाव … आहे (mājhaṁ nāv … āhe) — \"my name is…\"",
+      "headword": "माझं नाव … आहे",
+      "romanization": "mājhaṁ nāv … āhe",
+      "gloss": "my name is… (mājhaṁ nāv … āhe)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6535a9c9b88da4cf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now assemble the three atoms you just met into your first full sentence about yourself."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The phrase, assembled",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "माझं (mājhaṁ, my) + नाव (nāv, name) + [your name] + आहे (āhe, is) becomes माझं नाव मीरा आहे (mājhaṁ nāv Mīrā āhe) — \"my name is Mira.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Notice the shape:"
+            },
+            {
+              "kind": "speech",
+              "text": "माझं (mājhaṁ) is neuter, agreeing with the neuter नाव (nāv)."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb आहे (āhe) comes last — \"my name Mira is.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A man or a woman says it the same way here; the gender lived in mājhaṁ (matching nāv), which is settled."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Marathi drops nothing and reorders everything to English eyes: possessor, thing, value, then is. Learn this frame and you can swap in any name — or, later, any fact about yourself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"mājhaṁ nāv Mīrā āhe\" — my name is Mira",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"mājhaṁ nāv Mīrā āhe\" — my name is Mira]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it with your own name in the blank",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it with your own name in the blank]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Put \"my name is Arun\" into Marathi. (mājhaṁ nāv Arun āhe.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C02-tu-tumhi",
+      "sequence": 280,
+      "title": "तू / तुम्ही (tū / tumhī) — \"you\"",
+      "headword": "तू / तुम्ही",
+      "romanization": "tū / tumhī",
+      "gloss": "you (tū familiar / tumhī respectful)",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:93eddd24430b4cbc",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before you can ask someone their name, you need \"you\" — and Marathi gives you two, one warm, one respectful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Devanagari.) तू (tū, the त ta with the long-u stroke ू). And तुम्ही (tumhī): तु + म्ही (mhī, the म ma with a halant joining ह ha)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तू (tū, familiar \"you\") comes from Sanskrit त्वम् (tvam), from PIE tū — the very root of English archaic thou, Latin tū, French tu, and Hindi tū. The respectful तुम्ही (tumhī) is grammatically plural: you honour one person by addressing them as many, exactly as French does with vous. It takes the plural verb आहात (āhāt), not āhes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: two \"you\"s, a choice of respect",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तू (tū) — a friend, a child, someone close."
+            },
+            {
+              "kind": "speech",
+              "text": "तुम्ही (tumhī) — an elder, a stranger, anyone you show courtesy to."
+            },
+            {
+              "kind": "speech",
+              "text": "Choosing between them is a small act of politeness Marathi makes you perform every time you speak to someone."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"tū\" (close) / \"tumhī\" (respectful)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"tū\" (close) / \"tumhī\" (respectful)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English cousin of tū (\"thou\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English cousin of *tū* (\"thou\")]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which \"you\" for a teacher, and why? (tumhī — the respectful plural, courtesy-by-plural like French vous.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C02-kaay",
+      "sequence": 285,
+      "title": "काय (kāy) — \"what\"",
+      "headword": "काय",
+      "romanization": "kāy",
+      "gloss": "what (kāy)",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:88399bb81839acbf",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One more atom before the question \"what's your name?\" — the word what itself."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Devanagari.) का (kā) + य (ya) becomes काय kāy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "काय (kāy, \"what\") grows from the ancient interrogative stem ka-, from PIE kʷo- — the very root behind English wh- words (what, who, when, where, why) and Latin qu- (quis, quid). Marathi keeps the k- plainly across its whole question family: काय (kāy, what), कोण (koṇ, who), कुठे (kuṭhe, where), का (kā, why), कसं (kasaṁ, how — Chapter 10). Learn to hear that opening k- and you can spot a Marathi question coming."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English wh-, Latin qu-, and Marathi k- are three coats on one 5,000-year-old question-root — the family resemblance survives the different spellings."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"kāy\" — what",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"kāy\" — what]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "three more Marathi k- questions (koṇ, kuṭhe, kā)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: three more Marathi *k-* questions (*koṇ, kuṭhe, kā*)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What do Marathi kāy, English what, and Latin quid share? (One PIE question-root kʷo-.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C02-tumche-naav-kaay-aahe",
+      "sequence": 290,
+      "title": "तुमचं नाव काय आहे? (tumchaṁ nāv kāy āhe?) — \"what's your name?\"",
+      "headword": "तुमचं नाव काय आहे?",
+      "romanization": "tumchaṁ nāv kāy āhe?",
+      "gloss": "what's your name? (tumchaṁ nāv kāy āhe?)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:089fee89fcd5e103",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now turn the question outward — ask someone else's name."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The phrase, assembled",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तुमचं (tumchaṁ, \"your,\" neuter to match nāv) + नाव (nāv, name) + काय (kāy, what) + आहे (āhe, is) becomes तुमचं नाव काय आहे? (tumchaṁ nāv kāy āhe?) — literally \"your name what is?\", verb last."
+            },
+            {
+              "kind": "speech",
+              "text": "The \"your\" mirrors the \"my\" set you learned:"
+            },
+            {
+              "kind": "speech",
+              "text": "माझं (mājhaṁ) — my."
+            },
+            {
+              "kind": "speech",
+              "text": "तुमचं (tumchaṁ) — your (respectful, from tumhī)."
+            },
+            {
+              "kind": "speech",
+              "text": "तुझं (tujhaṁ) — your (familiar, from tū)."
+            },
+            {
+              "kind": "speech",
+              "text": "All three are shown here in the neuter, agreeing with the neuter नाव (nāv)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "To a friend you would say तुझं नाव काय आहे? (tujhaṁ nāv kāy āhe?), swapping the respectful tumchaṁ for the familiar tujhaṁ — the same tū / tumhī choice of respect, now on the possessive."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"tumchaṁ nāv kāy āhe?\" — what's your name? (respectful)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"tumchaṁ nāv kāy āhe?\" — what's your name? (respectful)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the familiar version (tujhaṁ nāv kāy āhe?)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the familiar version (*tujhaṁ nāv kāy āhe?*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the respectful and familiar \"your name\" forms. (tumchaṁ / tujhaṁ — both neuter before nāv.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C02-anand",
+      "sequence": 295,
+      "title": "भेटून आनंद झाला (bheṭūn ānand jhālā) — \"pleased to meet you\"",
+      "headword": "भेटून आनंद झाला",
+      "romanization": "bheṭūn ānand jhālā",
+      "gloss": "pleased to meet you (bheṭūn ānand jhālā)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:89e7a12529d35c76",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Names exchanged — now the warm close of a first meeting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The phrase, assembled",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भेटून (bheṭūn, \"having met\") + आनंद (ānand, \"joy\") + झाला (jhālā, \"happened\") becomes literally \"having met [you], joy happened.\" Marathi does not say \"I am pleased\"; it says the joy itself occurred."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The heart of it is आनंद (ānand, \"joy, bliss\"), pure Sanskrit: आ- (ā-, \"fully\") + नन्द (nand, \"to rejoice\"). It is the ānanda of the scriptural phrase sat-cit-ānanda (\"being–consciousness–bliss\") — and one of the most common given names across India. So a Marathi speaker meets you and names the feeling joy."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The verb झाला (jhālā, \"happened/became\") also carries gender — jhālā by default here for the event ānand. And भेटून (bheṭūn) is built on भेटणे (bheṭṇe, \"to meet\") — a verb you will meet again in Chapter 11's goodbye, punhā bheṭū (\"we'll meet again\")."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"bheṭūn ānand jhālā\" — pleased to meet you",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"bheṭūn ānand jhālā\" — pleased to meet you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what ānand literally means (\"joy\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *ānand* literally means (\"joy\")]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Literally, what does a Marathi speaker say when meeting you? (\"Having met you, joy happened\" — bheṭūn ānand jhālā.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C02-practice",
+      "sequence": 300,
+      "title": "Chapter 9 recap — introducing yourself",
+      "headword": "(recap)",
+      "romanization": "",
+      "gloss": "Chapter 9 recap — introducing yourself",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b93e266420672e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Run the whole first exchange, atom by atom, then whole."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The whole exchange",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Marathi",
+                "Say it",
+                "English"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "Marathi: माझं नाव मीरा आहे. Say it: mājhaṁ nāv Mīrā āhe. English: My name is Mira.",
+                "Marathi: तुमचं नाव काय आहे? Say it: tumchaṁ nāv kāy āhe? English: What's your name?",
+                "Marathi: माझं नाव अरुण आहे. Say it: mājhaṁ nāv Aruṇ āhe. English: My name is Arun.",
+                "Marathi: भेटून आनंद झाला. Say it: bheṭūn ānand jhālā. English: Pleased to meet you."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "Atoms banked this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाव (nāv) — name; Sanskrit nāman becomes English name (the m softened to v in Marathi)."
+            },
+            {
+              "kind": "speech",
+              "text": "माझं (mājhaṁ) — my; root ma- becomes English me/my; three genders mājhā/mājhī/mājhaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "आहे (āhe) — is; Sanskrit ásti (√as) becomes English is; the verb comes last."
+            },
+            {
+              "kind": "speech",
+              "text": "तू / तुम्ही (tū / tumhī) — familiar / respectful \"you\"; tū becomes thou; courtesy-by-plural."
+            },
+            {
+              "kind": "speech",
+              "text": "काय (kāy) — what; PIE kʷo-, the k- question family."
+            },
+            {
+              "kind": "speech",
+              "text": "आनंद (ānand) — joy; Sanskrit ānanda."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the full four-line exchange, both parts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the full four-line exchange, both parts]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"my name is [you]\" and \"what's your name?\" to a friend (tujhaṁ)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"my name is [you]\" and \"what's your name?\" to a friend (*tujhaṁ*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two Marathi distinctives showed up again this chapter? (Three genders on mājhaṁ; the verb āhe going last.) Next chapter: tumhī kase āhāt? — \"how are you?\""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R09-runway-tail-r2",
+      "sequence": 301,
+      "title": "The last six (śevaṭce sahā), one chapter on",
+      "headword": "last six",
+      "romanization": "śevaṭce sahā",
+      "gloss": "first real retrieval of the runway's last six signs, one chapter on and with no page",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:aa55b24f58d32383",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You closed the runway a chapter ago and have been introducing yourself since. Nothing to look at here — this is the first time those six are asked for cold."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which l does Marathi keep that Hindi does not? (The curled one.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two sibilants are told apart only in spelling? (śa and ṣa.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which vowel opens the word for one? (e.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And how many written forms does the u vowel have? (Four — two letters and two marks.)"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "MR-C06-number-differences-don-ending",
-              "prompt": "Did Marathi don preserve an ancient final n?",
+              "id": "MR-R09-runway-tail-r2-check",
+              "prompt": "A chapter after learning them, name the plain l beside the curled one, the two sibilants written apart but said alike, and the three vowels that stand alone as well as leaning.",
               "assesses": [
-                "MR-ETYMON-DON-ANALOGY"
+                "MR-SCRIPT-LA-01",
+                "MR-SCRIPT-SHA-01",
+                "MR-SCRIPT-SSA-01",
+                "MR-SCRIPT-U-INDEPENDENT-01",
+                "MR-SCRIPT-UU-INDEPENDENT-01",
+                "MR-SCRIPT-E-INDEPENDENT-01"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 42,
               "acceptedResponses": [
-                "no",
-                "no it copied three",
-                "it copied the pattern of three"
+                "la beside lla; sha and ssa; u, uu and e"
               ],
               "feedback": {
-                "correct": "Correct: don's final n arose by analogy with the word for three.",
-                "incorrect": "No. Marathi two copied the pattern of three; the final n is not an ancient ending."
+                "correct": "The tail of the runway came back without a model, which is the first real test of it.",
+                "incorrect": "Repair one group only. This is the first retrieval, not the last."
               }
             }
           ]

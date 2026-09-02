@@ -1,0 +1,16 @@
+{
+  "id": "MR-EXT-035-SECOND-RUNWAY-DURABLE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can name every sign of the second runway from its sound and its place on the line, after a durable gap and with nothing to look at.",
+  "prerequisites": [
+    "MR-EXT-034-SIBILANT-RUNWAY"
+  ],
+  "lessons": [
+    "MR-R13-marks-r3",
+    "MR-R13-two-rows-r3",
+    "MR-R13-curled-r3",
+    "MR-R13-sibilants-r3"
+  ]
+}

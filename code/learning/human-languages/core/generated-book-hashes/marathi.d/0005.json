@@ -1,0 +1,15 @@
+{
+  "language": "marathi",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:5bb2925fd534fec3",
+  "lessonIds": [
+    "MR-W05-i-matra",
+    "MR-W05-u-matra",
+    "MR-W05-uu-matra",
+    "MR-W05-ru-matra",
+    "MR-W05-candrabindu",
+    "MR-W05-a-independent",
+    "MR-R05-marks-recall"
+  ],
+  "tex": "marathi/book/chapters/ch05-marks-runway.tex"
+}

@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1F01-avadti-kruti
 spine_node: SPINE-NAME-EVERYDAY-THINGS
-sequence: 824
+sequence: 1024
 delivery: script
-chapter: 19
+chapter: 23
 type: writing
 headword: "आवडती कृती: वाचणे"
 gloss: read and trace favorite activity, changing only the agreement ending for feminine kruti

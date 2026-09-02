@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-A1F07-first-three-spelling",
     "language": "marathi",
-    "chapter": 21,
-    "sequence": 863,
+    "chapter": 25,
+    "sequence": 1063,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:56dfff25da763ef5",
+    "sourceHash": "fnv1a64:fe14f71be58ef2f8",
     "detachableSegments": [
       "Writing — bounded spelling repair"
     ],

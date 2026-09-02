@@ -2,8 +2,8 @@
 schema_version: 2
 id: MR-C12-dola
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 600
-chapter: 15
+sequence: 800
+chapter: 19
 type: word
 headword: डोळा
 romanization: ḍoḷā
@@ -32,7 +32,7 @@ variety: standard-colloquial
 reviews_of: [MR-C11-bahin, MR-C11-bhau, MR-C07-pahne]
 ---
 
-# डोळा (ḍoḷā) — the letter you've heard since Chapter 7, formally
+# डोळा (ḍoḷā) — the letter you've heard since Chapter 11, formally
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-BAHIN, MR-LEX-BHAU] -->
@@ -50,7 +50,7 @@ chapter turns to the body you'd ask after when you check how someone is.
 <!-- hl-knowledge: introduces=[MR-SCRIPT-RETROFLEX-LA]; assesses=[] -->
 
 **ड** you have from *āvaḍṇe*; **ो** the familiar *o* mark, from *bolṇe*. Then
-**ळ** — the **retroflex "l"** you first met, unlabeled, inside Chapter 7's
+**ळ** — the **retroflex "l"** you first met, unlabeled, inside Chapter 11's
 **काळजी**. Formally: tongue curled back, same place as **ट** and **ण**.
 Standard Hindi dropped this sound centuries ago; Marathi kept it, sharing it
 with the Dravidian languages to the south and with Gujarati. *Ḍo-ḷā*.
@@ -74,9 +74,9 @@ built on something that once just meant *swing*.
 - [YOU SAY: **ḍoḷā** — eye]
 - [YOU SAY: what its Sanskrit root actually meant — "a swing"]
 - [YOU NAME: the word Marathi's eye-word replaced — **akṣi**, Hindi's **āṅkh**]
-- [YOU SAY: what you do with your **डोळे** — **pāhṇe**, "to see," Chapter 10's
+- [YOU SAY: what you do with your **डोळे** — **pāhṇe**, "to see," Chapter 14's
   verb whose own root was Indo-European *\*spek-*]
-- [YOU RECALL: Chapter 14's tatsama/tadbhava split — **मित्र, कुटुंब** taken up
+- [YOU RECALL: Chapter 18's tatsama/tadbhava split — **मित्र, कुटुंब** taken up
   whole, **भाऊ, बहीण** worn down — and **कुटुंब**'s own neuter gender against
   Hindi's masculine]
 

@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C08-vachne",
     "language": "marathi",
-    "chapter": 11,
-    "sequence": 460,
+    "chapter": 15,
+    "sequence": 660,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:fa48effba5348430",
+    "sourceHash": "fnv1a64:f252c05f07778a52",
     "detachableSegments": [
       "The letters in this word"
     ]

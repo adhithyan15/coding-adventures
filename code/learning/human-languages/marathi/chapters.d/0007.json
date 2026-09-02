@@ -1,16 +1,22 @@
 {
   "chapter": 7,
-  "title": "Farewells",
-  "label": "ch:farewells",
-  "canDo": "I can end a Marathi conversation politely and choose a farewell that fits the situation.",
+  "title": "The Curled Row, and One Letter from the Lips",
+  "label": "ch:retroflex-runway",
+  "canDo": "I can write the four retroflex consonants and plain pa, and hear the curled row apart from the dental one.",
   "spineNodes": [
-    "SPINE-TAKE-LEAVE"
+    "SPINE-EXCHANGE-NAMES"
   ],
   "payoff": {
-    "lesson": "MR-C04-practice",
+    "lesson": "MR-R07-retroflex-recall",
     "kind": "task",
-    "summary": "Complete MR-C04-practice, the canonical closing checkpoint, and demonstrate the chapter promise: end a Marathi conversation politely and choose a farewell that fits the situation.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Retrieve the curled row and plain pa cold, together with two marks from two chapters back.",
+    "assesses": [
+      "MR-SCRIPT-TTA-01",
+      "MR-SCRIPT-TTHA-01",
+      "MR-SCRIPT-DDA-01",
+      "MR-SCRIPT-NNA-01",
+      "MR-SCRIPT-PA-01"
+    ],
+    "note": "The payoff reaches back two chapters as well as covering its own, so the earlier marks get retrieval at distance rather than only at first meeting."
   }
 }

@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-A1F04-first-three-select",
     "language": "marathi",
-    "chapter": 21,
-    "sequence": 860,
+    "chapter": 25,
+    "sequence": 1060,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:d35736804de9e35f",
+    "sourceHash": "fnv1a64:7a984694c269ae58",
     "delivery": "script"
   },
   "findings": []

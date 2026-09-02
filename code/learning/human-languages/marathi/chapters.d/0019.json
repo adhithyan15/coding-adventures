@@ -1,23 +1,26 @@
 {
   "chapter": 19,
-  "title": "Six Small Form Labels",
-  "label": "ch:mr-a1-form-labels",
-  "canDo": "I can read, copy, and retrieve six Marathi form labels, while keeping the two favorite-label agreement endings distinct.",
+  "title": "Eye, Ear, Mouth, and Nose",
+  "label": "ch:mr-face-parts",
+  "canDo": "I can name the eye, ear, mouth, and nose in Marathi, say the retroflex ळ formally for the first time, and tell which of the four carries the most secure English cognate and which replaced its own inherited word entirely.",
   "spineNodes": [
-    "SPINE-NAME-EVERYDAY-THINGS"
+    "SPINE-CHECK-WELLBEING"
   ],
   "payoff": {
-    "lesson": "MR-A1F03-last-three-delayed",
-    "kind": "task",
-    "summary": "After a delay and without a visible answer model, write the final three form labels and repair agreement before other spelling.",
+    "lesson": "MR-C12-naak",
+    "kind": "production",
+    "summary": "The chapter closes on नाक, completing the face: the reader produces डोळा, कान, तोंड and नाक with their genders, and sorts the four by kind of history — डोळा replaced the old Indo-Aryan eye-word with one that once meant \"swing\"; कान's root is honestly disputed; तोंड keeps a formal doublet, मुख, standing beside it; नाक alone reaches English नोज़ / nose without qualification.",
     "assesses": [
-      "MR-A1-FORM-LABEL-AVDATE-PEY",
-      "MR-A1-FORM-AGREEMENT-NEUTER",
-      "MR-A1-FORM-LABEL-AVADTI-KRUTI",
-      "MR-A1-FORM-AGREEMENT-FEMININE",
-      "MR-A1-FORM-LABEL-MITRACHE-NAAV",
-      "MR-A1-FORM-POSSESSIVE-NEUTER"
-    ],
-    "note": "This is label retrieval, not independent form completion or A1 readiness."
+      "MR-LEX-DOLA",
+      "MR-SCRIPT-RETROFLEX-LA",
+      "MR-ETYMON-DOLA-SWING",
+      "MR-LEX-KAAN",
+      "MR-ETYMON-KAAN-DISPUTED",
+      "MR-SOUND-KARNA-GEMINATION",
+      "MR-LEX-TOND",
+      "MR-GRAMMAR-TOND-MUKH-DOUBLET",
+      "MR-LEX-NAAK",
+      "MR-ETYMON-NAAK-NOSE"
+    ]
   }
 }

@@ -1,0 +1,25 @@
+{
+  "chapter": 26,
+  "title": "Give, Bring, Put",
+  "label": "ch:mr-request-verbs",
+  "canDo": "I can ask for four everyday actions in Marathi -- give, drink, bring, put -- and name the Indo-European root under each.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "MR-R22-request-verbs",
+    "kind": "production",
+    "summary": "Complete MR-R22-request-verbs and ask, unaided, for water to be given, tea to be brought, and milk to be put down, each with the polite kripaya frame.",
+    "assesses": [
+      "MR-LEX-DENE",
+      "MR-LEX-PINE",
+      "MR-LEX-ANNE",
+      "MR-LEX-THEVNE",
+      "MR-PHRASE-KRUPAYA",
+      "MR-ETYMON-DENE-DEH3",
+      "MR-ETYMON-PINE-SAME-ROOT",
+      "MR-ETYMON-ANNE-AA-NI",
+      "MR-ETYMON-THEVNE-STEH2"
+    ]
+  }
+}

@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-R14-food",
     "language": "marathi",
-    "chapter": 17,
-    "sequence": 700,
+    "chapter": 21,
+    "sequence": 900,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:c219410de0c3cdfd"
+    "sourceHash": "fnv1a64:f836bcdd26b83152"
   },
   "findings": []
 }

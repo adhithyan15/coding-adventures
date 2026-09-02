@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C02-tumche-naav-kaay-aahe",
     "language": "marathi",
-    "chapter": 5,
-    "sequence": 90,
+    "chapter": 9,
+    "sequence": 290,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:f1e3d88a96734a0f"
+    "sourceHash": "fnv1a64:089fee89fcd5e103"
   },
   "findings": []
 }

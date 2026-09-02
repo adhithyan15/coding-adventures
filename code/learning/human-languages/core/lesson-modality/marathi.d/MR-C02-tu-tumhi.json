@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C02-tu-tumhi",
     "language": "marathi",
-    "chapter": 5,
-    "sequence": 80,
+    "chapter": 9,
+    "sequence": 280,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:18005e3a83fa1f26",
+    "sourceHash": "fnv1a64:93eddd24430b4cbc",
     "detachableSegments": [
       "The letters in this word"
     ]

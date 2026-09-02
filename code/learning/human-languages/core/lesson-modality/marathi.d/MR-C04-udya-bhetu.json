@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C04-udya-bhetu",
     "language": "marathi",
-    "chapter": 7,
-    "sequence": 150,
+    "chapter": 11,
+    "sequence": 350,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:cdddd85bd37ccdf7",
+    "sourceHash": "fnv1a64:3a8aa32b90ffe042",
     "detachableSegments": [
       "The letters in this word"
     ]

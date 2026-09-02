@@ -1,12 +1,18 @@
 {
   "language": "marathi",
   "chapter": 13,
-  "sourceHash": "fnv1a64:eea0e624dc644375",
+  "sourceHash": "fnv1a64:64e58a8bf1e79280",
   "lessonIds": [
-    "MR-C10-paani",
-    "MR-C10-chaha",
-    "MR-C10-dudh",
-    "MR-C10-bhakari"
+    "MR-R09-script-a-r3",
+    "MR-R09-script-b-r3",
+    "MR-R09-script-c-r3",
+    "MR-R09-script-d-r3",
+    "MR-C06-numbers-1-5",
+    "MR-C06-number-differences",
+    "MR-R13-marks-r3",
+    "MR-R13-two-rows-r3",
+    "MR-R13-curled-r3",
+    "MR-R13-sibilants-r3"
   ],
-  "tex": "marathi/book/chapters/ch13-request-food-drink.tex"
+  "tex": "marathi/book/chapters/ch13-numbers-1-5.tex"
 }

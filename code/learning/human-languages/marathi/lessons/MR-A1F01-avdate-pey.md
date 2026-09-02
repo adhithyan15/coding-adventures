@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1F01-avdate-pey
 spine_node: SPINE-NAME-EVERYDAY-THINGS
-sequence: 823
+sequence: 1023
 delivery: script
-chapter: 19
+chapter: 23
 type: writing
 headword: "आवडते पेय: चहा"
 gloss: read and trace favorite drink, noticing the neuter agreement in the printed label
