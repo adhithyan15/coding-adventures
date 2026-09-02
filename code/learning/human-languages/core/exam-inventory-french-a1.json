@@ -252,7 +252,13 @@
       "id": "A1-V-11",
       "category": "Le verbe",
       "label": "vouloir, pouvoir, devoir in the singular",
-      "probe": null
+      "probe": [
+        "FR-LEX-VOULOIR-01",
+        "FR-LEX-POUVOIR-02",
+        "FR-LEX-DEVOIR-03",
+        "FR-GRAMMAR-MODAL-CHAIN-04"
+      ],
+      "note": "Found while authoring the A2 inventory, which is what an inventory is for. Chapter 33 gives vouloir, pouvoir and devoir a lesson each with je / tu / il printed, and types the rule that the second verb never changes -- je veux partir, je peux partir, je dois partir. The point was reading as a content gap and was sending an author to write what already exists. All four atoms are listed because the point names three verbs and the construction they share."
     },
     {
       "id": "A1-V-12",

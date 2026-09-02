@@ -665,7 +665,14 @@ describe("the committed French A1 inventory", () => {
     // it read FR-GRAMMAR-PLEASE-REGISTER-04, chapter 19's s'il vous plait, which
     // DEMONSTRATES the tu/vous register without naming it. Chapter 2 owns the
     // point directly and both its atoms are added.
-    expect(coverage.covered).toBe(31);
+    //
+    // 31 -> 32: A1-V-11, vouloir / pouvoir / devoir in the singular. Nothing was
+    // authored for it. It was found while writing the A2 inventory -- chapter 33
+    // has given each of the three its own lesson with je / tu / il printed since
+    // it was written, and types the chain rule besides. The point was reading as
+    // a content gap and would have sent an author to write what already exists,
+    // which is the failure mode an inventory is supposed to PREVENT.
+    expect(coverage.covered).toBe(32);
     expect(coverage.byCategory["L'interrogation"]).toEqual({ enumerated: 5, covered: 5 });
     // The shape, not the score: vocabulary is still a strong column and the
     // sentence-level categories are still empty. No quantity of headwords moves
@@ -674,6 +681,84 @@ describe("the committed French A1 inventory", () => {
       expect(coverage.byCategory[empty]?.covered, empty).toBe(0);
     }
     expect(coverage.byCategory["Lexique de base"]!.covered).toBeGreaterThan(0);
+  }, 60_000);
+});
+
+describe("the committed French A2 inventory", () => {
+  const inventory = loadExamInventory("french", "A2");
+
+  it("keeps every point's probe key, because a MISSING probe scores as covered", () => {
+    for (const point of inventory.points) {
+      expect(point, `${point.id} has no probe key`).toHaveProperty("probe");
+    }
+  });
+
+  it("refuses an empty probe, which would score as covered", () => {
+    for (const point of inventory.points) {
+      expect(Array.isArray(point.probe) ? point.probe.length : 1).toBeGreaterThan(0);
+    }
+  });
+
+  it("probes only atoms that EXIST, so a guessed id cannot under-report", () => {
+    // This caught a real one on the first run. A2-F-11 probed
+    // FR-IDIOM-CA-MARCHE-AGREEMENT-01, which is a real, committed, correctly
+    // spelled unit -- declared in `introduces_idioms`. `measureExamCoverage`
+    // resolves against `introducedAtoms`, which reads `introduces.knowledge` and
+    // the block directives and NOTHING else, so an idiom or a culture claim in a
+    // probe is indistinguishable from a typo: the point silently reports
+    // uncovered. The three namespaces are separate and only one of them is
+    // probeable.
+    const { lessons } = loadEverything();
+    const taught = trackIntroducedAtoms(lessons, "french");
+    const unknown: string[] = [];
+    for (const point of inventory.points) {
+      for (const atom of point.probe ?? []) if (!taught.has(atom)) unknown.push(`${point.id}:${atom}`);
+    }
+    expect(unknown).toEqual([]);
+  }, 60_000);
+
+  it("mirrors the A1 file's categories, so the two read as one ladder", () => {
+    // The A2 file is comparable to the A1 file BY CONSTRUCTION, not by accident:
+    // same category names in the same order, plus `Actes de parole` at the front
+    // (A2 is where the exam starts testing what you can DO with a paragraph) and
+    // `Lexique` renamed from `Lexique de base` because it is no longer basic.
+    // A future reader must be able to see a point move from one column to the
+    // other; that only works if the columns are the same shape.
+    const a1 = new Set(loadExamInventory("french", "A1").points.map((p) => p.category));
+    const a2 = new Set(inventory.points.map((p) => p.category));
+    const shared = [...a1].filter((c) => a2.has(c));
+    expect(shared.sort()).toEqual([
+      "L'adjectif", "L'adverbe", "L'interrogation", "La negation", "La phrase",
+      "Le nom", "Le verbe", "Les determinants", "Les prepositions", "Les pronoms",
+      "Prononciation et orthographe",
+    ]);
+    expect([...a2].filter((c) => !a1.has(c)).sort()).toEqual(["Actes de parole", "Lexique"]);
+  });
+
+  it("reports the gap as FUNCTION- and PAST-TENSE-shaped, which is the finding", () => {
+    const { lessons } = loadEverything();
+    const coverage = measureExamCoverage(inventory, lessons);
+    expect(coverage.enumerated).toBe(104);
+    // Pinned so a future tranche has to say which points it moved. It may rise;
+    // a fall means coverage was lost and wants explaining.
+    expect(coverage.covered).toBe(16);
+    // The shape, and it is a sharper finding than the number. FIFTEEN of the
+    // sixteen `Actes de parole` are uncovered, because A2 is the level at which
+    // the exam stops asking for words and starts asking for a paragraph that
+    // does something -- and this corpus is a vocabulary corpus with a grammar
+    // spine. The one that is covered, grading an opinion, is covered by half:
+    // the corpus can say `aimer` against `aimer bien` and cannot yet disagree.
+    // The same story runs through the past: A2's construct is dominated by the
+    // passe compose and the imparfait, and the two French chapters that carry
+    // them are still HAND-WRITTEN, so neither owns an atom.
+    expect(coverage.byCategory["Actes de parole"]).toEqual({ enumerated: 16, covered: 1 });
+    for (const empty of ["Le nom", "Les determinants", "L'adjectif", "Les prepositions",
+                         "L'adverbe", "La phrase", "La negation"]) {
+      expect(coverage.byCategory[empty]?.covered, empty).toBe(0);
+    }
+    // Where it IS strong is exactly where the retirement work has already been:
+    // everyday verbs, the question system, and register.
+    expect(coverage.byCategory["Lexique"]!.covered).toBe(7);
   }, 60_000);
 });
 

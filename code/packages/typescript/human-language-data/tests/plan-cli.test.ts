@@ -102,7 +102,14 @@ describe("the plan CLI", () => {
     // all; the file carries a Register category that says so and a deliberately
     // uncovered point, SA-A1-RG-02, rather than pretending a functional
     // inventory measures a pariksha.
-    expect(out).toMatch(/0 complete and 10 partial of 138/);
+    // 9 -> 10 partial: `exam-inventory-french-a2.json` lands. It is the SECOND
+    // A2 file and only the second file at any level above A1, and it is partial
+    // in all four dimensions for a reason the German A2 file does not share:
+    // Goethe publishes a finite ~1,300-item A2 word list to close a lexicon
+    // against, and there is no published French equivalent. So its fifteen
+    // lexical points are enumerated at the level of the DOMAIN, and every
+    // covered one carries a note naming the exact set the corpus holds.
+    expect(out).toMatch(/0 complete and 11 partial of 138/);
   }, 120_000);
 
   it("does not let an unreadable inventory look like an absent one", () => {
@@ -132,7 +139,9 @@ describe("the plan CLI", () => {
     // 7 -> 8: Sanskrit A1 joins it as well. French is still the only file this
     // test corrupts, so this number stays the written total minus exactly one.
     // 8 -> 9: Kannada A1 joins it, on the same rule.
-    expect(out).toMatch(/0 complete and 9 partial of 138/);
+    // 9 -> 10: French A2 joins the readable remainder. Only the French A1 file
+    // is corrupted by this test, so this stays the written total minus one.
+    expect(out).toMatch(/0 complete and 10 partial of 138/);
     expect(out).toMatch(/1 exist but could not be READ/);
   }, 120_000);
 
