@@ -1,0 +1,12 @@
+{
+  "id": "PA-EXT-053-PREA1-SCRIPT-RUNWAY-C10",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read cāh and dudh, and I can say what the aḍḍak does without giving it a sound.",
+  "prerequisites": [],
+  "lessons": [
+    "PA-S10-chachcha",
+    "PA-S10-addak-dhadda"
+  ]
+}

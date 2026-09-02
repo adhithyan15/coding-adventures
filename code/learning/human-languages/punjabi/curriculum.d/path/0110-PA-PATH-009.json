@@ -1,0 +1,22 @@
+{
+  "id": "PA-PATH-009",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "PA-C04-phir",
+    "PA-C04-milaange",
+    "PA-C04-phir-milaange",
+    "PA-R04-wellbeing-r2",
+    "PA-C04-rab-raakha",
+    "PA-S04-phappha-gagga",
+    "PA-C04-practice"
+  ],
+  "before": [
+    "PA-EXT-009-LANGUAGE-SPECIFIC"
+  ],
+  "inline": [
+    "PA-EXT-021-WELLBEING-R2",
+    "PA-EXT-047-PREA1-SCRIPT-RUNWAY-C4",
+    "PA-EXT-057-C4-FAREWELL-CHECKPOINT"
+  ],
+  "after": []
+}

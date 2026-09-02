@@ -1,12 +1,14 @@
 {
   "language": "punjabi",
   "chapter": 8,
-  "sourceHash": "fnv1a64:82fae30fb7096206",
+  "sourceHash": "fnv1a64:a2d00ca576be15ed",
   "lessonIds": [
     "PA-C08-sochna",
+    "PA-S08-khakkha-jhajja-pairin",
     "PA-C08-samajhna",
     "PA-C08-parhna",
-    "PA-C08-likhna"
+    "PA-C08-likhna",
+    "PA-S08-pappa"
   ],
   "tex": "punjabi/book/chapters/ch08-mind-and-tone.tex"
 }

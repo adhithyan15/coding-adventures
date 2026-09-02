@@ -1,22 +1,21 @@
 {
   "chapter": 10,
-  "title": "Numbers One to Five",
-  "label": "ch:numbers-one-to-five",
-  "canDo": "I can count from one to five in Bengali script and say what দুই kept that Hindi and Marathi flattened away.",
+  "title": "Two Marks Inside a Verb",
+  "label": "ch:bn-two-marks-inside-a-verb",
+  "canDo": "I can write the independent ও, explain why a vowel following a vowel cannot be a sign, add the dot that turns য into a glide, and read হওয়া — the verb of being — straight off the page.",
   "spineNodes": [
-    "SPINE-COUNT-ONE-TO-FIVE"
+    "SPINE-MEET-GREET"
   ],
   "payoff": {
-    "lesson": "BN-C06-numbers-1-5",
-    "kind": "production",
-    "summary": "Count ek, dui, tin, chār, pā̃ch aloud, name the chandrabindu riding পাঁচ, and set দুই beside Hindi do and Marathi don to show the -i it preserved.",
+    "lesson": "BN-W04-howa-read",
+    "kind": "reading",
+    "summary": "The verb of being is read whole from four pieces bought in this chapter and the last, and set beside হ্যাঁ to show that stacked pieces make one syllable and pieces in a row make several.",
     "assesses": [
-      "BN-LEX-NUMBERS-ONE-TO-FIVE",
-      "BN-SCRIPT-CHANDRABINDU-NASAL",
-      "BN-ETYMON-DUI-COMPARISON",
-      "BN-HISTORY-DV-NUMERAL-SIMPLIFICATION",
-      "BN-HISTORY-DUI-AREAL-COMPANY",
-      "BN-SOUND-INHERENT-O-NOT-IN-NUMBERS"
+      "BN-SCRIPT-HOWA-READ-01",
+      "BN-SCRIPT-O-INDEP-01",
+      "BN-SCRIPT-NUKTA-01",
+      "BN-SCRIPT-YA-01",
+      "BN-SCRIPT-HA-01"
     ]
   }
 }

@@ -3,7 +3,7 @@
     "id": "BN-C03-ami",
     "language": "bengali",
     "chapter": 5,
-    "sequence": 310,
+    "sequence": 340,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:587411728843e0ea",
+    "sourceHash": "fnv1a64:b0afcb98cef2639b",
     "detachableSegments": [
       "The letters in this word"
     ]

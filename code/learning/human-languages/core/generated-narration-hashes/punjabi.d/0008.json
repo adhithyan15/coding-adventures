@@ -1,18 +1,20 @@
 {
   "language": "punjabi",
   "chapter": 8,
-  "sourceHash": "fnv1a64:db78e652bd6374fe",
+  "sourceHash": "fnv1a64:dad3bdbeaf6275c4",
   "lessonIds": [
     "PA-C08-sochna",
+    "PA-S08-khakkha-jhajja-pairin",
     "PA-C08-samajhna",
     "PA-C08-parhna",
-    "PA-C08-likhna"
+    "PA-C08-likhna",
+    "PA-S08-pappa"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "punjabi/narration/ch08.txt",
   "json": "punjabi/narration/ch08.json",
-  "textHash": "fnv1a64:6ca1905a00f9fe5a",
-  "jsonHash": "fnv1a64:124768049f17e92b",
+  "textHash": "fnv1a64:8ba50dd2789eb2a1",
+  "jsonHash": "fnv1a64:6bf9d4cb02d99213",
   "findings": []
 }

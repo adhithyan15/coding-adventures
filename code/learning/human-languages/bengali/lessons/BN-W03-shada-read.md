@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W03-shada-read
 spine_node: SPINE-MEET-GREET
-sequence: 1070
+sequence: 1220
 delivery: script
-chapter: 21
+chapter: 24
 type: writing
 headword: সাদা
 romanization: "shādā"

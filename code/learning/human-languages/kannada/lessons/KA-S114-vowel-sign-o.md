@@ -2,38 +2,38 @@
 schema_version: 2
 id: KA-S114-vowel-sign-o
 spine_node: SPINE-MEET-GREET
-sequence: 386
+sequence: 332
 delivery: script
-chapter: 10
+chapter: 6
 type: writing
 headword: "ೊ"
 gloss: the single character ೊ — recognised inside words you already say
 romanization: "o"
-prerequisites: [KA-S113-letter-lla]
+prerequisites: [KA-S110-letter-ba]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [KA-SCRIPT-RECOG-113]
+  knowledge: [KA-SCRIPT-RECOG-110]
 introduces:
   knowledge: [KA-SCRIPT-RECOG-114]
 practises:
-  knowledge: [KA-SCRIPT-RECOG-113, KA-SCRIPT-RECOG-114]
+  knowledge: [KA-SCRIPT-RECOG-110, KA-SCRIPT-RECOG-114]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [KA-S113-letter-lla]
+reviews_of: [KA-S110-letter-ba]
 ---
 
 # ◌ೊ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-113] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-110] -->
 
-[PAUSE 1s] Before the new one: ಳ — what does it do?
+[PAUSE 1s] Before the new one: ಬ — what does it do?
 
 [PAUSE 2s] One character this time. Just one — and you have been saying it
 for pages without knowing which mark on the page it was.

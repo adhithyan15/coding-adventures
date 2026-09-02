@@ -9,27 +9,27 @@ headword: ਪੁੱਛਣਾ
 romanization: puchhṇā
 gloss: to ask — cousin to the Persian word for asking, and neither borrowed it from the other
 concept_tag: VERB-ASK
-prerequisites: [PA-C09-laina]
+prerequisites: [PA-C09-laina, PA-S08-pappa]
 sounds: [aunkar-u, addak-doubling, retroflex-na]
 roots: [sanskrit-prcchati, prakrit-pucchai, pie-prek]
 etymology_hook: puchhṇā comes through Prakrit pucchaï from Sanskrit pṛcchati “asks”, on PIE *preḱ- — Latin precārī and poscere behind English pray, prayer, precarious and postulate, German fragen, and Persian porsīdan, which is a cousin rather than a loan.
 duration:
   max_seconds: 280
 requires:
-  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-LAINA, PA-SCRIPT-ADDAK-DOUBLING, PA-COMPARISON-PANJ-MATCH, PA-HISTORY-PANJ-CONVERGENCE]
+  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-LAINA, PA-SCRIPT-ADDAK-DOUBLING, PA-COMPARISON-PANJ-MATCH, PA-HISTORY-PANJ-CONVERGENCE, PA-SCRIPT-RECOG-PA-01]
 introduces:
   knowledge: [PA-LEX-PUCHHNA, PA-ETYMON-PUCHHNA-PRACH]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-LEX-PUCHHNA, PA-ETYMON-PUCHHNA-PRACH, PA-GRAMMAR-NA-INFINITIVE, PA-LEX-LAINA, PA-ETYMON-LAINA-LABH, PA-LEX-LIKHNA, PA-SCRIPT-ADDAK-DOUBLING, PA-COMPARISON-PANJ-MATCH, PA-ETYMON-PERSIAN-PANJ-INDEPENDENT, PA-HISTORY-PANJ-CONVERGENCE]
+  knowledge: [PA-LEX-PUCHHNA, PA-ETYMON-PUCHHNA-PRACH, PA-GRAMMAR-NA-INFINITIVE, PA-LEX-LAINA, PA-ETYMON-LAINA-LABH, PA-LEX-LIKHNA, PA-SCRIPT-ADDAK-DOUBLING, PA-COMPARISON-PANJ-MATCH, PA-ETYMON-PERSIAN-PANJ-INDEPENDENT, PA-HISTORY-PANJ-CONVERGENCE, PA-SCRIPT-RECOG-PA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [PA-C09-laina, PA-C08-likhna, PA-C06-panj-convergence]
+reviews_of: [PA-C09-laina, PA-C08-likhna, PA-C06-panj-convergence, PA-S08-pappa]
 ---
 
 # ਪੁੱਛਣਾ — “to ask,” and a Persian cousin that is not a loan
@@ -49,7 +49,7 @@ The stem is **puchh-**, and the consonant in the middle is **held**: say
 *puch-chhṇā*, leaning on it, the way English leans on the middle of *bookkeeper*.
 
 ## The letters in this word
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-ADDAK-DOUBLING] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-ADDAK-DOUBLING, PA-SCRIPT-RECOG-PA-01] -->
 
 **ਪ** *p* with **ੁ** for *u* tucked under it; then **ੱ**, the *addak* from
 Chapter 6 — the little mark that says “**double the next consonant**”; then

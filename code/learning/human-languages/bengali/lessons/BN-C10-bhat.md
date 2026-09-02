@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C10-bhat
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 810
-chapter: 14
+sequence: 900
+chapter: 16
 type: word
 headword: ভাত
 romanization: bhāt
@@ -12,7 +12,7 @@ concept_tag: BN-FOOD-RICE
 prerequisites: [BN-C10-dudh]
 sounds: [bha-aspirate]
 roots: [bhaj-share]
-etymology_hook: "ভাত is Sanskrit ভক্ত bhakta, 'portioned, shared out,' the past participle of √bhaj 'to divide, to distribute,' PIE bʰeh₂g- — the same Sanskrit verb, by a different noun, will name a person two lessons from now"
+etymology_hook: "ভাত is Sanskrit *bhakta*, 'portioned, shared out,' the past participle of √bhaj 'to divide, to distribute,' PIE bʰeh₂g- — the same Sanskrit verb, by a different noun, will name a person two lessons from now"
 duration:
   max_seconds: 280
 requires:
@@ -55,8 +55,8 @@ itself — and a root worth remembering, because it comes back.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ভাত** is Sanskrit **ভক্ত** (*bhakta*), "portioned out, shared" — the past
-participle of **√ভজ্** (*√bhaj*), "to divide, to distribute, to allot." PIE
+**ভাত** is Sanskrit *bhakta*, "portioned out, shared" — the past
+participle of *√bhaj*, "to divide, to distribute, to allot." PIE
 **\*bʰeh₂g-** sits behind it. Rice, in this word's own history, is not "the
 grain" but **the share that was given out** — the meal as a portion handed to
 you.
@@ -82,7 +82,7 @@ shared" — √bhaj, "to divide."**) Offer all four of this chapter's words,
 politely, in one breath. (**Chā khān, jôl khān, dudh khān, bhāt khān.**) Why
 do দুধ and ভাত both drop their final vowel? (**Each ends in one plain
 consonant, easily said bare.**) A
-quick run back through Chapter 11 while you're at it: which verb does Bengali
+quick run back through Chapter 13 while you're at it: which verb does Bengali
 reach for when আছে runs out of future? (**হবে.**) How many forms of "I come"
 does a Bengali speaker need, whoever is talking? (**One** — *āmi āsi*.) And
 "you go" to a stranger, versus to a friend? (**যান** *jān*, versus **যাও**

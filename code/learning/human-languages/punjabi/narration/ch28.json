@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Supported Forms, Then Head and Na at Distance",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:4f761495280bcc3e",
+  "sourceHash": "fnv1a64:e76a631f8c17fce1",
   "lessons": [
     {
       "id": "PA-R28-form-supported-r3",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:0cf3e7a1cae6f88d",
+      "sourceHash": "fnv1a64:f31d86d1d2cc3cb3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -132,7 +132,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a7e1b868b4588cf",
+      "sourceHash": "fnv1a64:fdfa05eec4f21241",
       "notice": null,
       "blocks": [
         {

@@ -13,7 +13,7 @@ prerequisites: [KA-C32-iru]
 sounds: [long-o, kannada-ha]
 roots: [hoogu-go-dravidian, proto-dravidian-p-to-h]
 etymology_hook: "ಹೋಗು is native Dravidian *pōku 'go' — Kannada alone among the four literary Dravidian languages turned old word-initial *p- into h-, so Tamil pōgu/pattu/pāl/peyar answer Kannada hōgu/hattu/hālu/hesaru while Telugu and Malayalam keep the p; Old Kannada texts still write ಪ, which is the proof"
-reviews_of: [KA-C32-iru, KA-C07-numbers-6-10, KA-C02-hesaru, KA-C04-hoogu]
+reviews_of: [KA-C32-iru, KA-C07-hattu, KA-C02-hesaru, KA-C04-hoogu]
 duration:
   max_seconds: 260
 requires:

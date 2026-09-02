@@ -1,22 +1,21 @@
 {
   "chapter": 17,
-  "title": "Family, on the Page",
-  "label": "ch:bn-family-on-the-page",
-  "canDo": "I can read পরিবার and ভাই, and say why the i at the end of ভাই takes its full letter even though it is nowhere near the start of the word.",
+  "title": "Three Words Free, and One Dot",
+  "label": "ch:bn-three-words-and-a-dot",
+  "canDo": "I can read চা, জল and দুধ off the page without learning a single new shape, then write the retroflex ড and the dot that turns it into the flap inside পড়া — the verb for what I am doing.",
   "spineNodes": [
     "SPINE-MEET-GREET"
   ],
   "payoff": {
-    "lesson": "BN-W04-bhai-read",
+    "lesson": "BN-W04-pora-read",
     "kind": "reading",
-    "summary": "Brother read as three pieces, with the independent-vowel rule doing work in an unexpected place — nothing to lean on turns out to mean what it says, not start of word.",
+    "summary": "The verb for what the reader is doing is read off the page, once the dot beneath ড has turned a retroflex stop into the flap Bengali actually says.",
     "assesses": [
-      "BN-SCRIPT-AA-MATRA-01",
-      "BN-SCRIPT-BHA-01",
-      "BN-SCRIPT-BHAI-READ-01",
-      "BN-SCRIPT-BHALO-READ-01",
-      "BN-SCRIPT-I-INDEP-01",
-      "BN-SCRIPT-PORIBAR-READ-01"
+      "BN-SCRIPT-PORA-READ-01",
+      "BN-SCRIPT-DDA-01",
+      "BN-SCRIPT-NUKTA-01",
+      "BN-SCRIPT-CHAA-READ-01",
+      "BN-SCRIPT-JOL-READ-01"
     ]
   }
 }

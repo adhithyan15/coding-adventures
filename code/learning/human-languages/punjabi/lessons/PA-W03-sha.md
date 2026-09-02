@@ -9,32 +9,32 @@ type: writing
 headword: "ਸ਼"
 romanization: "sha"
 gloss: "trace the Gurmukhi letter sha"
-prerequisites: [PA-W03-bha]
+prerequisites: [PA-W03-bha, PA-S13-pairin-bindi]
 sounds: []
 roots: []
 duration:
   max_seconds: 165
 requires:
-  knowledge: [PA-SCRIPT-BHA-01]
+  knowledge: [PA-SCRIPT-BHA-01, PA-SCRIPT-RECOG-SHA-01]
 introduces:
   knowledge: [PA-SCRIPT-SHA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-SCRIPT-BHA-01, PA-SCRIPT-SHA-01]
+  knowledge: [PA-SCRIPT-BHA-01, PA-SCRIPT-SHA-01, PA-SCRIPT-RECOG-SHA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-W03-bha]
+reviews_of: [PA-W03-bha, PA-S13-pairin-bindi]
 ---
 
 # ਸ਼ — one dotted sound
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-BHA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-BHA-01, PA-SCRIPT-RECOG-SHA-01] -->
 
 Point once to **ਭ**, then put it away. This session adds only **ਸ਼**.
 

@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Build the Language Label and Values",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a6e3ac548cc60e54",
+  "sourceHash": "fnv1a64:1035243c3fc59088",
   "lessons": [
     {
       "id": "PA-W03-bha",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:81b0fdc01d42defd",
+      "sourceHash": "fnv1a64:55a94f766512c843",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -110,7 +110,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:26d5e315a947cafa",
+      "sourceHash": "fnv1a64:0280c50ba304387a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -290,7 +290,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:eb4ee69aea1984ac",
+      "sourceHash": "fnv1a64:1980117d770a1f24",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -380,7 +380,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:99a1e1194298eba6",
+      "sourceHash": "fnv1a64:c632664a18d7af46",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -470,7 +470,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8f0e3200ab6af1b8",
+      "sourceHash": "fnv1a64:775562cdbec15cea",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -560,7 +560,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7a6465e69711c489",
+      "sourceHash": "fnv1a64:9a14cf9704e73c95",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -740,7 +740,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5b27f4aac0b0a3ab",
+      "sourceHash": "fnv1a64:a60b322034a780ad",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -830,7 +830,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d8d6cb1afdebdaed",
+      "sourceHash": "fnv1a64:f66383661eb449bd",
       "notice": {
         "modality": "pen",
         "needs": [

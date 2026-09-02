@@ -1,8 +1,8 @@
 Punjabi, chapter 5: The First Verbs.
-5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+8 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 5.
+Lesson 1 of 8.
 ਬੋਲਣਾ (bolṇā) — "to speak," your first full verb.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -13,107 +13,174 @@ Until now, "to be." Here is a verb that does something — in a shape you'll see
 
 The letters in this word.
 ਬ (ba) + ੋ (the horā, o-sign) becomes ਬੋ (bo); ਲ (la); ਣਾ (ṇā, retroflex ṇ + long ā). Read ਬੋ, ਲ, ਣਾ becomes bolṇā.
+None of these pieces is yours to read yet. A later session in this chapter teaches ਬ, ਲ and ੋ; until then the word travels by ear.
 
 The word, taken apart.
-ਬੋਲਣਾ (bolṇā, "to speak") is a native Indo-Aryan verb (the same word as Hindi bolnā). Its ending -ਣਾ (-ṇā) is the point: every Punjabi verb, named in the dictionary, ends in -ṇā (or -nā) — the infinitive marker, Punjabi's "to ___": bol-ṇā "to speak," mil-ṇā "to meet" (from milāṁge), rakh-ṇā "to keep" (from rabb rākhā). Strip the -ṇā and you have the stem (bol-) that takes all the other endings.
+ਬੋਲਣਾ (bolṇā, "to speak") is a native Indo-Aryan verb (the same word as Hindi bolnā). Its ending -ਣਾ (-ṇā) is the point: every Punjabi verb, named in the dictionary, ends in -ṇā (or -nā) — Punjabi's "to ___": bol-ṇā "to speak," mil-ṇā "to meet" (from milāṁge), rakh-ṇā "to keep" (from rabb rākhā).
 
 Grammar Lens: stem + ending.
-The stem bol- holds the action; endings pin down who and when: bol-dā (speaking, m.), bol-dī (speaking, f.), bol (speak!, familiar command). Every tense is built by adding to a stem like this.
+Strip the -ṇā and you have the stem: bol-. The stem holds the action; endings pin down who and when: bol-dā (speaking, m.), bol-dī (speaking, f.), bol (speak!, familiar command). Every tense in this book is built by adding to a stem like this.
 
 Guided Practice.
 [pause 1 second]
 [your turn — say: "bolṇā"]
 [pause 8 seconds for the answer]
-[your turn — say: the infinitive ending every Punjabi verb takes (-ṇā/-nā)]
+[your turn — say: the stem left when you strip -ṇā (bol-)]
 [pause 8 seconds for the answer]
-[your turn — say: three such verbs you now know (bolṇā, milṇā, rakhṇā)]
+[your turn — say: three verbs whose stems you can now hear (bol-, mil-, rakh-)]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What ending does a Punjabi infinitive carry, and what is bolṇā's stem? (-ṇā/-nā; the stem is bol-.)
+What is bolṇā's stem, and what do you take off to find it? (bol-; the infinitive ending -ṇā.)
+[question — say your answer, then pause 14 seconds]
+Say to speak aloud, then type it romanized and the stem it leaves behind.
 
 
-Lesson 2 of 5.
-ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ (maiṁ panjābī boldā hāṁ) — "I speak Punjabi".
+Lesson 2 of 8.
+ਪੰਜਾਬੀ (panjābī) — the language names itself after five rivers.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Your first complete, moving sentence — and the language names itself after five rivers.
+You have a verb for speaking. Before you can say what you speak, you need the name of the language itself.
 
 The letters in this word.
-ਪੰਜਾਬੀ (panjābī): ਪੰ (paṁ, with the ṭippī nasal) + ਜਾ (jā) + ਬੀ (bī). And ਬੋਲਦਾ (boldā) = the stem bol- + -ਦਾ (-dā), the present-habitual, masculine.
+ਪੰ (paṁ, with the ṭippī nasal) + ਜਾ (jā) + ਬੀ (bī) becomes ਪੰਜਾਬੀ (panjābī).
+Shapes to notice only. Say the word; the reading comes later.
 
-The sentence, taken apart.
-ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ = ਮੈਂ (maiṁ, "I") + ਪੰਜਾਬੀ (panjābī, the object) + ਬੋਲਦਾ (boldā, "speak," m.) + ਹਾਂ (hāṁ, "am") — literally "I Punjabi speaking am," verb-frame last.
-The name ਪੰਜਾਬੀ (panjābī) is Persian: ਪੰਜ (panj, "five" — cousin of English five, Latin quinque, Greek pente!) + ਆਬ (āb, "water, river") = "[the language] of the five rivers," for the five great rivers of the Punjab. So the very name of the language is a little Persian geography lesson — and panj "five" is a distant cousin of English five, from the same Indo-European root.
-
-Grammar Lens: the present habitual, gendered.
-To say "I do X," Punjabi uses stem + -dā/-dī + the copula, and the participle agrees with the speaker's gender:
-a man: ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ (boldā hāṁ).
-a woman: ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦੀ ਹਾਂ (boldī hāṁ).
-The -dā/-dī marks the speaker — a feature English has no trace of.
+The word, taken apart.
+ਪੰਜਾਬੀ (panjābī) is the name of the language — and it is Persian: panj ("five") + āb ("water, river") = "[the language] of the five rivers," for the five great rivers that cross the Punjab. The very name of the language is a small Persian geography lesson.
+And panj itself is an old relative: it is a distant cousin of English five, Latin quinque and Greek pente, all from one Indo-European word for the number. A later chapter comes back to panj as an ordinary number you can count with.
 
 Guided Practice.
 [pause 1 second]
-[YOU SAY (m.): maiṁ panjābī boldā hāṁ, (f.): maiṁ panjābī boldī hāṁ].
-[your turn — say: what panjābī means (panj "five" + āb "water" = "five rivers")]
+[your turn — say: "panjābī"]
+[pause 8 seconds for the answer]
+[your turn — say: its two Persian halves (panj "five" + āb "water, river")]
 [pause 8 seconds for the answer]
 [your turn — say: the English cousin of panj (five)]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Build "I speak Punjabi" as a woman, and unpack the name panjābī. (Maiṁ panjābī boldī hāṁ; panj "five" + āb "river" — "the five-rivers language.")
+Unpack the name panjābī, and name the English cousin of its first half. (Panj "five" + āb "river"; panj is cousin to English five.)
+[question — say your answer, then pause 14 seconds]
+Say the name of the language aloud, then type it romanized and its two Persian halves.
 
 
-Lesson 3 of 5.
-ਰਹਿਣਾ (rahiṇā) — "to live, to stay".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Lesson 3 of 8.
+ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ (maiṁ panjābī boldā hāṁ) — "I speak Punjabi".
 
 Warm-up.
 [pause 2 seconds]
-A second verb, so you can say where you live — and see the stem + ending machine work again.
+Three words you already own — "I," the language, the verb. Here they become your first complete, moving sentence.
 
-The letters in this word.
-ਰ (ra) + ਹਿ (hi) + ਣਾ (ṇā, the retroflex infinitive) becomes ਰਹਿਣਾ (rahiṇā).
+The sentence, taken apart.
+ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ (maiṁ panjābī boldā hāṁ) = ਮੈਂ (maiṁ, "I") + ਪੰਜਾਬੀ (panjābī, the object) + ਬੋਲਦਾ (boldā, "speak," m.) + ਹਾਂ (hāṁ, "am") — literally "I Punjabi speaking am," with the verb-frame last, exactly as hai first showed you.
+ਬੋਲਦਾ (boldā) is the stem bol- plus -ਦਾ (-dā). Nothing new has been added to the verb but an ending.
 
-The word, taken apart.
-ਰਹਿਣਾ (rahiṇā, "to live, to remain, to stay") is from Sanskrit ਰਹ੍ (rah-, "to remain") — the same verb as Hindi rahnā. It covers both "reside" and "keep on": maiṁ Amritsar rahindā hāṁ ("I live in Amritsar"). Stem rahi- + -dā/-dī + copula, exactly like bolṇā.
-
-Grammar Lens: "in" comes after the noun (or is dropped).
-ਮੈਂ ਅੰਮ੍ਰਿਤਸਰ ਰਹਿੰਦਾ ਹਾਂ (maiṁ Amritsar rahindā hāṁ, "I live in Amritsar"). Punjabi, like Hindi, uses postpositions (vic, "in") where English uses prepositions — and with a place-name it often drops "in" entirely. The verb, as ever, is last.
+Grammar Lens: the present habitual, gendered.
+To say "I do X," Punjabi uses stem + -dā/-dī + the copula, and the participle agrees with the speaker's gender:
+a man: ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ (maiṁ panjābī boldā hāṁ) (boldā hāṁ).
+a woman: ਮੈਂ ਪੰਜਾਬੀ (panjābī) ਬੋਲਦੀ ਹਾਂ (boldī hāṁ).
+The -dā/-dī marks the speaker — a feature English has no trace of.
 
 Guided Practice.
 [pause 1 second]
-[YOU SAY (m.): maiṁ Amritsar rahindā hāṁ, (f.): … rahindī hāṁ].
-[your turn — say: the root (rah- "to remain," shared with Hindi rahnā)]
+[your turn — say: maiṁ panjābī boldā hāṁ (a man), maiṁ panjābī boldī hāṁ (a woman)]
+[pause 8 seconds for the answer]
+[your turn — say: which ending would be yours (-dā or -dī)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Build "I speak Punjabi" as a woman, and say which word changed. (Maiṁ panjābī boldī hāṁ — the participle, boldā becoming boldī.)
+[question — say your answer, then pause 16 seconds]
+Build I speak Punjabi as a woman aloud, then type it romanized and name the ending that made it feminine.
+
+
+Lesson 4 of 8.
+ਰਹਿਣਾ (rahiṇā) — "to live, to stay".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+A second verb, so you can say where you live — and watch the stem + ending machine work a second time.
+
+The letters in this word.
+ਰ (ra) + ਹਿ (hi) + ਣਾ (ṇā, the retroflex infinitive) becomes ਰਹਿਣਾ (rahiṇā). The opening ਰ is one you read already.
+
+The word, taken apart.
+ਰਹਿਣਾ (rahiṇā, "to live, to remain, to stay") is from Sanskrit rah- ("to remain") — the same verb as Hindi rahnā. It covers both "reside" and "keep on": maiṁ Amritsar rahindā hāṁ ("I live in Amritsar"). Stem rahi- + -dā/-dī + copula, exactly like bolṇā.
+
+Grammar Lens: "in" comes after the noun (or is dropped).
+maiṁ Amritsar rahindā hāṁ — "I live in Amritsar." Punjabi, like Hindi, uses postpositions (vic, "in") where English uses prepositions — and with a place-name it often drops "in" entirely. The verb, as ever, is last.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: maiṁ Amritsar rahindā hāṁ (a man), maiṁ Amritsar rahindī hāṁ (a woman)]
+[pause 8 seconds for the answer]
+[your turn — say: where Punjabi puts "in," if it says it at all (after the noun)]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
 Say "I live in Amritsar," and name the root of rahiṇā. (Maiṁ Amritsar rahindā/rahindī hāṁ; Sanskrit rah-, "to remain.")
+[question — say your answer, then pause 16 seconds]
+Say I live in Amritsar aloud as a man, then type it romanized and say where a Punjabi in-word would sit.
 
 
-Lesson 4 of 5.
+Lesson 5 of 8.
+ਕਰਨਾ (karnā) — "to do," the verb whose root you met in your first greeting.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+The third verb of the chapter — and the one whose root has been sitting inside a word you have said since your very first greeting.
+
+The letters in this word.
+ਕ (ka) + ਰ (ra) + ਨਾ (nā) becomes ਕਰਨਾ (karnā). Two of the three pieces are already yours to read.
+
+The word, taken apart.
+ਕਰਨਾ (karnā, "to do, to make") is from the Sanskrit root √kṛ ("to do"), from PIE kʷer- — one of Sanskrit's most productive roots. You met its family in Chapter 1's ਨਮਸਤੇ/ਨਮਸਕਾਰ (namaskār = namas + kār, "the making of a bow") and in karma ("a thing done"). Strip -nā and the stem is kar-, exactly as bol- and rahi- came out of their infinitives.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "karnā" and its stem (kar-)]
+[pause 8 seconds for the answer]
+[your turn — say: the Chapter-1 word that shares its root (namaskār — the "making" of a bow)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What Sanskrit root is karnā from, and name a Chapter-1 word built on it. (√kṛ, "to do"; namaskār — "the making of a bow.")
+[question — say your answer, then pause 14 seconds]
+Say to do aloud, then type it romanized and name the Chapter-1 word built on the same root.
+
+
+Lesson 6 of 8.
 ਕੰਮ ਕਰਨਾ (kamm karnā) — "to work".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-The last verb of the chapter — and its root already sits inside a Chapter-1 word.
+You have "to do." Put a noun in front of it and Punjabi builds a whole family of verbs.
 
 The letters in this word.
-ਕੰਮ (kamm, "work"): ਕੰ (kaṁ, with the ṭippī nasal) + ਮ (ma). ਕਰਨਾ (karnā, "to do"): ਕ (ka) + ਰ (ra) + ਨਾ (nā).
+ਕੰਮ (kamm, "work"): ਕੰ (kaṁ, with the ṭippī nasal) + ਮ (ma). Both ਕ and ਮ are already yours.
 
 The word, taken apart.
-ਕਰਨਾ (karnā, "to do, to make") is from Sanskrit √ਕ੍ਰੁ / ਕ੍ਰ (√kṛ, "to do"), from PIE kʷer- — one of Sanskrit's most productive roots. You met its family in Chapter 1's ਨਮਸਤੇ/ਨਮਸਕਾਰ (namaskār = namas + kār, "the making of a bow") and in karma ("a thing done"). Like Hindi, Punjabi builds countless verbs as noun + ਕਰਨਾ:
-ਕੰਮ ਕਰਨਾ (kamm karnā) = "work-do" = "to work" (kamm, "work").
-ਗੱਲ ਕਰਨਾ (gall karnā) = "to have a chat" (gall, the "matter/talk" from Chapter 3's koī gall nahīṁ).
+ਕੰਮ (kamm) is the noun "work" — the thing done, from the same √kṛ family as karnā. Said on its own it means a job, a task, a piece of business: bahut kamm hai ("there is a lot of work").
+
+Grammar Lens: noun + ਕਰਨਾ.
+Like Hindi, Punjabi builds countless verbs as noun + ਕਰਨਾ (karnā):
+ਕੰਮ ਕਰਨਾ (kamm karnā) = "work-do" = "to work".
+gall karnā = "to have a chat" (gall, the "matter/talk" you already know from koī gall nahīṁ).
 So maiṁ kamm kardā hāṁ = "I work." Learn karnā and a whole grammar of "do-verbs" opens up.
 
 Guided Practice.
@@ -122,22 +189,67 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: "I work" (m./f.) — maiṁ kamm kardā hāṁ / kardī hāṁ]
 [pause 8 seconds for the answer]
-[your turn — say: the Chapter-1 word that shares its root (namaskār — the "making" of a bow)]
+[your turn — say: one more noun-plus-karnā verb (gall karnā, "to have a chat")]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Sanskrit root is karnā from, and name a Chapter-1 word built on it. (√kṛ, "to do"; namaskār — "the making of a bow.")
+How does Punjabi say "to work," and what is the pattern? (Kamm karnā, "work-do"; a noun in front of karnā.)
+[question — say your answer, then pause 14 seconds]
+Say to work aloud, then type it romanized and the pattern it is built on.
 
 
-Lesson 5 of 5.
+Lesson 7 of 8.
+ਬ, ਲ, ੋ — three pieces met inside a word you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ਬ, ਲ, ੋ until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+The stem of this chapter's first verb is three pieces, and they are today's three.
+First, say the last things you learned once more, out loud and from memory:
+[your turn — say: tusī̃ kivēṁ ho — maiṁ ṭhīk hāṁ — koī gall nahīṁ, rabb rākhā]
+[pause 8 seconds for the answer]
+
+Script you'll notice: ਬ, ਲ, ੋ.
+ਬ.
+babbā — ba. A consonant, the voiced b of bat, with no breath after it.
+ਲ.
+lallā — la. A consonant, a clear l made at the teeth — never the dark l at the end of English full.
+ੋ.
+horā — -o. A mātrā for o, written as a single stroke above the head-line.
+Now put them where you have already heard them:
+ਬ + ੋ becomes ਬੋ (bo); ਬੋ + ਲ becomes ਬੋਲ (bol).
+ਬੋਲ — bol — speak — the bare stem of this chapter's first verb.
+You are not being asked to write any of this. You are being asked to recognise it the next time it goes past.
+
+Writing: copy what you can see.
+Keep ਬ, ਲ, ੋ in front of you and do not cover any of them. Follow each shape once with a finger, then copy it once with a pencil, larger than it is printed. Say its sound as your hand stops.
+This is observe-and-trace with the model visible. Nothing in these chapters asks you to write a Punjabi word from memory; that ladder starts later, and it starts from these same shapes.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at ਬੋਲ and point to each of today's pieces in turn]
+[pause 8 seconds for the answer]
+[your turn — say: ba, la, -o, then the whole word — bol]
+[pause 8 seconds for the answer]
+[your turn — look: back at the headword at the top of any earlier lesson in this chapter and find one shape you now know]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Name today's pieces: babbā, lallā, horā. Which of them is a mātrā or a mark rather than a letter, and what does ਬੋਲ say? (bol, “speak — the bare stem of this chapter's first verb”.)
+Source: Unicode Gurmukhi chart.
+
+
+Lesson 8 of 8.
 Chapter 5 — The first verbs.
 
 Warm-up.
 [pause 2 seconds]
 No new words. Three verbs, one engine — build real sentences about yourself.
 
-Build the sentences.
+The exchange — three sentences about yourself.
 [pause 1 second after each]
 [your turn — say: "I speak Punjabi" (m./f.) — maiṁ panjābī boldā/boldī hāṁ]
 [pause 8 seconds for the answer]
@@ -145,17 +257,23 @@ Build the sentences.
 [pause 8 seconds for the answer]
 [your turn — say: "I work" — maiṁ kamm kardā/kardī hāṁ]
 [pause 8 seconds for the answer]
+[question — say your answer, then pause 14 seconds]
+You hear maiṁ panjābī boldī hāṁ. Type what the speaker says and what the ending tells you about her.
+[question — say your answer, then pause 26 seconds]
+Say your language, your city and your work aloud as a man; then type the three romanized sentences.
 
-The engine.
+Guided Practice — the engine.
 [pause 2 seconds]
-[your turn — say: the ending every infinitive carries (-ṇā/-nā)]
+[your turn — say: what you strip off an infinitive to reach the stem (-ṇā/-nā)]
 [pause 8 seconds for the answer]
 [your turn — say: the two agreements in a present sentence (-dā/-dī for gender; hāṁ/haiṁ/ho for person)]
 [pause 8 seconds for the answer]
-[your turn — say: where the verb sits (last)]
+[your turn — say: where the verb sits, and which side of a noun "in" would sit (last; after the noun)]
+[pause 8 seconds for the answer]
+[your turn — look: at ਬੋਲ and name this chapter's three pieces — babbā, lallā, horā]
 [pause 8 seconds for the answer]
 
-Roots you now carry.
+The word, taken apart — roots you now carry.
 [pause 2 seconds]
 bolṇā "to speak" (native Indo-Aryan).
 rahiṇā "to live" from rah- "to remain".
@@ -165,3 +283,5 @@ panjābī from panj "five" (cousin of English five) + āb "river".
 Wrap-up Recall.
 [pause 3 seconds]
 In one breath, tell me your language, your city, and your work in Punjabi (as a woman). (Maiṁ panjābī boldī hāṁ. Maiṁ … rahindī hāṁ. Maiṁ kamm kardī hāṁ.)
+[pause 2 seconds]
+Independent Gurmukhi reading and writing are not scored here. Romanization is evidence for spoken recall only; a typed romanization never counts as Gurmukhi writing.

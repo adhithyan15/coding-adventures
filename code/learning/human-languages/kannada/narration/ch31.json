@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "Good Afternoon",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:78462173a639be4f",
+  "sourceHash": "fnv1a64:af46dcc8877406ba",
   "lessons": [
     {
       "id": "KA-C31-shubha-madhyahna",
@@ -121,34 +121,32 @@
       ]
     },
     {
-      "id": "KA-S130-letter-ii",
-      "sequence": 601,
-      "title": "ಈ (ī) — one character, standing where you have only seen it riding",
-      "headword": "ಈ",
-      "romanization": "ī",
-      "gloss": "the single character ಈ — the standing form of a long vowel you have read since chapter one",
+      "id": "KA-S131-vowel-sign-vocalic-r",
+      "sequence": 605,
+      "title": "◌ೃ (vowel sign ṛ) — one character, and the pair met the other way round",
+      "headword": "ೃ",
+      "romanization": "vowel sign ṛ",
+      "gloss": "the single character ೃ — the riding half of ಋ, the pair learned the other way round",
       "script": "kannada",
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "script-block",
-        "sight-cue"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:f6cc0900434dc3e6",
+      "sourceHash": "fnv1a64:f43dbec6291a99e7",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script you'll notice: ಈ",
+          "Script you'll notice: ◌ೃ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ಈ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ೃ and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -164,7 +162,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ಥ — which plain letter is it built on?"
+              "text": "Before the new one: ಓ — does it stand alone or ride on a consonant, and what is its other shape?"
             },
             {
               "kind": "pause",
@@ -174,69 +172,53 @@
             },
             {
               "kind": "speech",
-              "text": "One character this time. Its riding half has been on the page since your second chapter."
+              "text": "One character this time, and today the halves arrive in the opposite order from every vowel so far."
             }
           ]
         },
         {
           "index": 1,
           "type": "script",
-          "title": "Script you'll notice: ಈ",
+          "title": "Script you'll notice: ◌ೃ",
           "segments": [
             {
               "kind": "speech",
-              "text": "ಈ — ī, the long i."
+              "text": "◌ೃ (vowel sign ṛ) — the riding form of ಋ (ṛ)."
             },
             {
               "kind": "speech",
-              "text": "By now the arrangement should be familiar, because this is the fourth vowel you have seen it in. One sound, two shapes:"
+              "text": "Every vowel until now came standing first and riding second: ಉ then ು, ಊ then ೂ, ಈ then ೀ. This one is the reverse. You have had the standing letter since the chapter that taught ಋ, in a word you say:"
             },
             {
               "kind": "speech",
-              "text": "ಈ (ī) — standing alone, at the start of a word."
+              "text": "ಋತು ṛtu — season."
             },
             {
               "kind": "speech",
-              "text": "ೀ — riding on the consonant before it."
+              "text": "What you have not seen is that vowel riding a consonant. It becomes a small hook tucked underneath:"
             },
             {
               "kind": "speech",
-              "text": "You read the riding one in the very first word you used for you:"
+              "text": "ಹ plus ◌ೃ (vowel sign ṛ) gives ಹೃ — hṛ."
             },
             {
               "kind": "speech",
-              "text": "ನೀವು nīvu — you."
+              "text": "Standing at the front of a word, look for ಋ. Tucked under a consonant, look for ◌ೃ (vowel sign ṛ). Same vowel, two places it can sit."
             },
             {
               "kind": "speech",
-              "text": "That ೀ hanging off ನ is today's vowel. Pull the consonant away and it stands up as ಈ (ī)."
-            },
-            {
-              "kind": "speech",
-              "text": "And it has a short partner you already know, so the full square is:"
-            },
-            {
-              "kind": "speech",
-              "text": "ಇ i short, standing, ಿ short, riding."
-            },
-            {
-              "kind": "speech",
-              "text": "ಈ ī long, standing, ೀ long, riding."
-            },
-            {
-              "kind": "speech",
-              "text": "Four shapes, two sounds, and the only questions are short or long and standing or riding. Notice that ಈ (ī) is built out of ಇ with an added stroke — the same way ಊ was built out of ಉ. Kannada makes the long vowel out of the short one and lets you see the seam."
+              "text": "What it sounds like. An r doing a vowel's work — close to the ri in a quick bring it. Kannada took the sound and both shapes from Sanskrit, which is where the words needing it come from."
             }
           ]
         },
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ಈ — copy what you see",
+          "title": "Writing: ◌ೃ — copy what you see",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ಈ (ī) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Put your pen on ◌ೃ (vowel sign ṛ) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -258,42 +240,33 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these two and say which one is the long standing vowel",
+              "instruction": "at these two and say which one is standing and which one is riding",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: at these two and say which one is the long standing vowel]"
+              "source": "[YOU LOOK: at these two and say which one is standing and which one is riding]"
             },
             {
               "kind": "speech",
-              "text": "ಇ, ಈ (ī)."
+              "text": "ಋತು, ಹೃ."
             },
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "ಈ three times, holding the ī long as you finish each one",
+              "instruction": "◌ೃ (vowel sign ṛ) three times under a ಹ, saying hṛ as you finish each one",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU TRACE: ಈ three times, holding the *ī* long as you finish each one]"
+              "source": "[YOU TRACE: ◌ೃ three times under a ಹ, saying *hṛ* as you finish each one]"
             },
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at ನೀವು and find the riding half of today's letter inside it",
+              "instruction": "at ಋ and ◌ೃ (vowel sign ṛ) side by side, and say which one opens a word",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: at ನೀವು and find the riding half of today's letter inside it]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the square — \"i, ī, and the same two riding\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the square — \"i, ī, and the same two riding\"]"
+              "source": "[YOU LOOK: at ಋ and ◌ೃ side by side, and say which one opens a word]"
             }
           ]
         },
@@ -310,7 +283,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which character is this — ಈ? What sound does it carry? (ī, the long i.) What is its riding half, and in which word have you read it? (ೀ, in nīvu.) Which short letter is its shape built on? (ಇ.)"
+              "text": "Which character is this — ◌ೃ (vowel sign ṛ)? Which standing letter is it the other half of? (ಋ.) Where does it sit on the page? (Tucked under the consonant it rides.) Name the word you already say that carries the standing one. (ṛtu, season.)"
             }
           ]
         }

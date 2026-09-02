@@ -2,7 +2,7 @@
 schema_version: 2
 id: BN-C03-kemon
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 320
+sequence: 350
 chapter: 5
 type: word
 headword: কেমন

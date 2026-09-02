@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S122-letter-ca
 spine_node: SPINE-MEET-GREET
-sequence: 461
+sequence: 415
 delivery: script
-chapter: 18
+chapter: 13
 type: writing
 headword: "ಚ"
 gloss: the single character ಚ — recognised inside words you already say
@@ -47,9 +47,8 @@ It is a **consonant**, and in this script a consonant is never bare: it comes wi
 
 You already say these, and every one of them has ಚ somewhere inside it:
 
-- **ಚೆನ್ನಾಗಿ** *cennāgi* — well, nicely — and the reply "ನಾನು ಚೆನ್ನಾಗಿದ್ದೇನೆ
-- **ವಸಂತ ಋತು ಬೇಸಿಗೆ ಮಳೆಗಾಲ ಚಳಿಗಾಲ** — spring, summer, monsoon, winter
-- **ಚೈತ್ರ ವೈಶಾಖ ಜ್ಯೇಷ್ಠ ಆಷಾಢ ಶ್ರಾವಣ ಭಾದ್ರಪದ ಆಶ್ವಯುಜ ಕಾರ್ತೀಕ ಮಾರ್ಗಶಿರ ಪುಷ್ಯ ಮಾಘ ಫಾಲ್ಗುಣ** — the twelve lunisolar months
+- **ಚೆನ್ನಾಗಿ** *cennāgi* — well, nicely — and the reply "ನಾನು ಚೆನ್ನಾಗಿದ್ದೇನೆ"
+- **ಚೈತ್ರ ವೈಶಾಖ ಜ್ಯೇಷ್ಠ ಆಷಾಢ ಶ್ರಾವಣ ಭಾದ್ರಪದ ಆಶ್ವಯುಜ ಕಾರ್ತೀಕ ಮಾರ್ಗಶಿರ ಪುಷ್ಯ ಮಾಘ ಫಾಲ್ಗುಣ** — the twelve lunisolar months, which the months lesson will name
 
 ## Writing: ಚ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-122] -->

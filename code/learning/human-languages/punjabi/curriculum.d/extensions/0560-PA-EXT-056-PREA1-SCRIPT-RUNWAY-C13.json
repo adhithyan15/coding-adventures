@@ -1,0 +1,11 @@
+{
+  "id": "PA-EXT-056-PREA1-SCRIPT-RUNWAY-C13",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can recognize the dot beneath a letter as the mark of a borrowed sound.",
+  "prerequisites": [],
+  "lessons": [
+    "PA-S13-pairin-bindi"
+  ]
+}

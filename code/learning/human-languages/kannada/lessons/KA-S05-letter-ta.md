@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S05-letter-ta
 spine_node: SPINE-MEET-GREET
-sequence: 385
+sequence: 265
 delivery: script
-chapter: 10
+chapter: 5
 type: writing
 headword: "ತ"
 gloss: the single character ತ — recognised inside words you already say

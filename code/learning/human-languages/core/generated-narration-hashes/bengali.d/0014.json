@@ -1,18 +1,18 @@
 {
   "language": "bengali",
   "chapter": 14,
-  "sourceHash": "fnv1a64:411740a557832b47",
+  "sourceHash": "fnv1a64:c81909e55ed7177e",
   "lessonIds": [
-    "BN-C10-cha",
-    "BN-C10-jol",
-    "BN-C10-dudh",
-    "BN-C10-bhat"
+    "BN-C08-bhaba",
+    "BN-C08-bojha",
+    "BN-C08-pora",
+    "BN-C08-lekha"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "bengali/narration/ch14.txt",
   "json": "bengali/narration/ch14.json",
-  "textHash": "fnv1a64:56d45791aeff90e8",
-  "jsonHash": "fnv1a64:40f46ed16133c75b",
+  "textHash": "fnv1a64:62a88a273feadd92",
+  "jsonHash": "fnv1a64:bc521659afdc129f",
   "findings": []
 }

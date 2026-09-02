@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 28,
-  "sourceHash": "fnv1a64:4f761495280bcc3e",
+  "sourceHash": "fnv1a64:e76a631f8c17fce1",
   "lessonIds": [
     "PA-R28-form-supported-r3",
     "PA-R28-head-na-r4"
@@ -11,6 +11,6 @@
   "text": "punjabi/narration/ch28.txt",
   "json": "punjabi/narration/ch28.json",
   "textHash": "fnv1a64:001a4af4bc3c1980",
-  "jsonHash": "fnv1a64:69b8458ed49376ee",
+  "jsonHash": "fnv1a64:5eb211d7a32aac1c",
   "findings": []
 }

@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C14-shobuj
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 1030
-chapter: 20
+sequence: 1190
+chapter: 23
 type: word
 headword: সবুজ
 romanization: shobuj

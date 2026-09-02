@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S119-vowel-sign-oo
 spine_node: SPINE-MEET-GREET
-sequence: 431
+sequence: 385
 delivery: script
-chapter: 15
+chapter: 10
 type: writing
 headword: "ೋ"
 gloss: the single character ೋ — recognised inside words you already say

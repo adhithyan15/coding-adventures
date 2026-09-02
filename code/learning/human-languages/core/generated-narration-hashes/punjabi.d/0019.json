@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 19,
-  "sourceHash": "fnv1a64:b65dc632d05991d5",
+  "sourceHash": "fnv1a64:675cf6e08f9ae5b1",
   "lessonIds": [
     "PA-W04-residence-select",
     "PA-W04-residence-supported",
@@ -15,6 +15,6 @@
   "text": "punjabi/narration/ch19.txt",
   "json": "punjabi/narration/ch19.json",
   "textHash": "fnv1a64:cd2d4f40e6f7ce20",
-  "jsonHash": "fnv1a64:c408db03ca951fed",
+  "jsonHash": "fnv1a64:f23dbb57e1696866",
   "findings": []
 }

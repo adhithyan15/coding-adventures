@@ -2,9 +2,9 @@
 schema_version: 2
 id: KA-S03-sign-virama
 spine_node: SPINE-MEET-GREET
-sequence: 365
+sequence: 155
 delivery: script
-chapter: 8
+chapter: 3
 type: writing
 headword: "್"
 gloss: the single character ್ — recognised inside words you already say

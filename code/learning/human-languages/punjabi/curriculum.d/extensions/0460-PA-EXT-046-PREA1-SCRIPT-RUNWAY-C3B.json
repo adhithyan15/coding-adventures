@@ -1,0 +1,11 @@
+{
+  "id": "PA-EXT-046-PREA1-SCRIPT-RUNWAY-C3B",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can recognize the three retroflex letters as one row, and read ṭhīk.",
+  "prerequisites": [],
+  "lessons": [
+    "PA-S03-retroflex-row"
+  ]
+}

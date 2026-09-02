@@ -7,6 +7,7 @@ chapter: 10
 type: word
 headword: ಸೋಮವಾರ ಮಂಗಳವಾರ ಬುಧವಾರ ಗುರುವಾರ ಶುಕ್ರವಾರ ಶನಿವಾರ ಭಾನುವಾರ
 gloss: the seven weekdays — fully Sanskritic, like Hindi, but Sunday uses a DIFFERENT sun-name
+romanization: "sōmavāra maṅgaḷavāra budhavāra guruvāra śukravāra śanivāra bhānuvāra"
 concept_tag: KA-DAYS-WEEK
 prerequisites: [KA-C09-kshamisi]
 sounds: [kannada-anusvara, kannada-conjunct-kra]

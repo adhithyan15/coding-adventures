@@ -9,26 +9,26 @@ headword: ਕਿਵੇਂ
 romanization: "kivēṁ"
 gloss: "how"
 concept_tag: QUESTION-HOW
-prerequisites: [PA-C02-ki]
+prerequisites: [PA-C02-ki, PA-S02-mamma-rara-lava, PA-S02-sassa-tatta-sihari, PA-S03-nanna-bihari-dulava]
 sounds: [sihari-i, laava-e, bindi-nasal]
 roots: [ka-interrogative]
 duration:
   max_seconds: 210
 requires:
-  knowledge: [PA-LEX-KI-02]
+  knowledge: [PA-LEX-KI-02, PA-SCRIPT-RECOG-BIHARI-01, PA-SCRIPT-RECOG-KA-01, PA-SCRIPT-RECOG-LAVA-01]
 introduces:
   knowledge: [PA-LEX-KIVEIN-03, PA-ETYMON-QUESTION-K-03]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-LEX-KI-02, PA-LEX-KIVEIN-03, PA-ETYMON-QUESTION-K-03]
+  knowledge: [PA-LEX-KI-02, PA-LEX-KIVEIN-03, PA-ETYMON-QUESTION-K-03, PA-SCRIPT-RECOG-BIHARI-01, PA-SCRIPT-RECOG-KA-01, PA-SCRIPT-RECOG-LAVA-01]
 skills: [listening, speaking]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-C02-ki]
+reviews_of: [PA-C02-ki, PA-S02-mamma-rara-lava, PA-S02-sassa-tatta-sihari, PA-S03-nanna-bihari-dulava]
 ---
 
 # ਕਿਵੇਂ (kivēṁ) — "how," another of the k- questions
@@ -40,7 +40,7 @@ reviews_of: [PA-C02-ki]
 like all of Punjabi's question-words, it starts with **k-**.
 
 ## The letters in this word
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-RECOG-BIHARI-01, PA-SCRIPT-RECOG-KA-01, PA-SCRIPT-RECOG-LAVA-01] -->
 
 **ਕ** (*ka*) + **ਿ** (the *sihārī*, *i*-sign, written before) → **ਕਿ** (*ki*);
 **ਵ** (*va*) + **ੇ** (*e*-sign) + **ਂ** (nasal) → **ਵੇਂ** (*vēṁ*). Read **ਕਿ·ਵੇਂ**
