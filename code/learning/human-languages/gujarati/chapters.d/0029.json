@@ -1,0 +1,23 @@
+{
+  "chapter": 29,
+  "title": "The Time Words Reach the Page",
+  "label": "ch:gu-time-words-written",
+  "canDo": "I can read and write the six Gujarati time words I could previously only hear and say.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "GU-C25-time-written",
+    "kind": "four-skill-vocabulary-time",
+    "summary": "Six words that chapter 28 left oral reach the page one at a time, each spelled entirely from signs taught before chapter 8, then a payoff scores reading, speaking, and model-free writing separately and an R1 return writes the other three from sound.",
+    "assesses": [
+      "GU-SCRIPT-SAVAAR-01",
+      "GU-SCRIPT-BAPOR-01",
+      "GU-SCRIPT-SAANJ-01",
+      "GU-SCRIPT-DIVAS-01",
+      "GU-SCRIPT-MAHINO-01",
+      "GU-SCRIPT-ATYAARE-01",
+      "GU-PERFORMANCE-TIME-EIGHT-WRITTEN-01"
+    ]
+  }
+}

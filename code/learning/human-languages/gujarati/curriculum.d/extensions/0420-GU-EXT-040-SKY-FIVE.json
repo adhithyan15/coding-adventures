@@ -1,0 +1,20 @@
+{
+  "id": "GU-EXT-040-SKY-FIVE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can hear and say five everyday Gujarati outdoor words, write one of them, and retrieve all five one lesson later.",
+  "prerequisites": [
+    "GU-EXT-039-HOUSE-FIVE"
+  ],
+  "lessons": [
+    "GU-C29-hear-sooraj",
+    "GU-C29-hear-chandra",
+    "GU-C29-hear-aakaash",
+    "GU-C29-hear-varsaad",
+    "GU-C29-hear-nadi",
+    "GU-C29-sky-five",
+    "GU-C29-nadi",
+    "GU-R29-sky-five-r1"
+  ]
+}

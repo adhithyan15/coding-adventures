@@ -1,10 +1,10 @@
 ---
 id: MR-C05-practice
-sequence: 185
-chapter: 8
+sequence: 385
+chapter: 12
 type: practice
 headword: (recap)
-gloss: Chapter 8 recap — the first verbs
+gloss: Chapter 12 recap — the first verbs
 concept_tag: REVIEW
 prerequisites: [MR-C05-kaam-karne]
 sounds: []
@@ -13,7 +13,7 @@ est_minutes: 4
 reviews_of: [MR-C05-bolne, MR-C05-mi-marathi-bolto, MR-C05-rahne, MR-C05-kaam-karne]
 ---
 
-# Chapter 8 recap — the first verbs
+# Chapter 12 recap — the first verbs
 
 ## Warm-up
 

@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Face Words",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:e8db842833e4d130",
+  "sourceHash": "fnv1a64:32b919142940833e",
   "lessons": [
     {
       "id": "ML-C37-kannu",
@@ -534,7 +534,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:12e06ab15e70d20f",
+      "sourceHash": "fnv1a64:d945360643a16607",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -562,7 +562,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ഭ — what does it do?"
+              "text": "Before the new one: ◌ൃ — what does it do?"
             },
             {
               "kind": "pause",

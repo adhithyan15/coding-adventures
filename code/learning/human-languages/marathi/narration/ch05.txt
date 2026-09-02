@@ -1,275 +1,168 @@
-Marathi, chapter 5: Introducing Yourself.
-9 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Marathi, chapter 5: Marks Above, Below, and Beside the Letter.
+7 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 9.
-नाव (nāv) — "name".
+Lesson 1 of 7.
+ि — short i, written before, read after.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-To introduce yourself you need one word first: name. In Marathi it is नाव (nāv) — and it is a very old word wearing a Marathi coat.
-
-The letters in this word.
-(Skim if you read Devanagari.) ना (nā, the न na with the ा long-ā stroke) + व (va) becomes नाव nāv. Two letters, read left to right.
-
-The word, taken apart.
-नाव (nāv) comes from Sanskrit नामन् (nāman, "name"). Watch the small Marathi sound-shift: the Sanskrit -m- softened to -v-, so nām became nāv. (Hindi kept the m: nām.) That Sanskrit nāman traces back to the same ancient root, h₃nómn̥, that gave English name and noun, Latin nōmen, Greek onoma. A cousin from before either language had a name for itself.
-
-Why it's said this way.
-Marathi softens many old Sanskrit consonants this way — m leaning to v, hard sounds going soft. Spotting the shift lets you read a Sanskrit word straight into its Marathi form.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "nāv" — name]
-[pause 8 seconds for the answer]
-[your turn — say: the English cousin from the same root ("name")]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What is nāv, and what happened to the m of Sanskrit nām? ("Name"; it softened to v — a Marathi sound-shift.)
-
-
-Lesson 2 of 9.
-माझं (mājhaṁ) — "my".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
-[pause 2 seconds]
-"My name." The word for my — and it changes shape with the gender of what it owns.
+Say dhanyavād once from memory. Every mark in this chapter hangs on a consonant your hand already knows.
 
-The letters in this word.
-(Skim if you read Devanagari.) मा (mā) + झं (jhaṁ, the झ jha with an anusvara ं for the light nasal) becomes माझं mājhaṁ.
+Script.
+ि (i).
+The short-i mark is the one that breaks the rule you would guess. It is written to the LEFT of its consonant and read to the RIGHT of it: कि is ki, never ik. The eye meets the mark first; the ear meets it second.
+Draw the upright on the left of the letter, then carry the curve up and over the headline so it hooks back to the right. The hook is what tells this mark apart from its long partner, which you will meet later.
 
-The word, taken apart.
-माझं (mājhaṁ, "my") sits on the first-person root ma- — the very root behind English me, my, mine, Latin meus, and Hindi merā. One tiny syllable, ma, marks "belonging to me" across the whole Indo-European family.
-
-Grammar Lens: "my" agrees in three genders.
-Marathi keeps three genders, and "my" picks its ending from the noun: माझा (mājhā, masculine), माझी (mājhī, feminine), माझं (mājhaṁ, neuter). The word नाव (nāv, "name") is neuter, so "my name" is माझं नाव (mājhaṁ nāv). You met this gender-agreement idea already with the goodbye yeto/yete; it runs through the whole language.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "mājhā / mājhī / mājhaṁ" — the three genders of "my"]
-[pause 8 seconds for the answer]
-[your turn — say: "mājhaṁ nāv" — my name (neuter, to match nāv)]
-[pause 8 seconds for the answer]
+Writing — observe and trace.
+Keep कि in front of you. Trace the mark alone twice, then trace it beside क twice more. Say ki each time your pen finishes the hook, so the hand and the ear learn the same order the page will use.
 
 Wrap-up Recall.
-[pause 3 seconds]
-Why is "my name" mājhaṁ nāv and not mājhā nāv? (nāv is neuter, so "my" takes the neuter form mājhaṁ.)
+[pause 2 seconds]
+Which side of क does the mark sit on? (The left.) Which side do you hear it on? (The right.)
+Source: Unicode Devanagari chart, U+093F.
+[question — say your answer, then pause 20 seconds]
+Trace the short-i mark and say where it is written relative to its letter.
 
 
-Lesson 3 of 9.
-आहे (āhe) — "is".
+Lesson 2 of 7.
+ु — short u, a small hook below.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
-[pause 2 seconds]
-The little verb that finishes almost every Marathi sentence about what something is — and, in Marathi, it comes last.
+One mark went to the left. This one goes straight down, and it is the mark you will meet most often of all.
 
-The letters in this word.
-(Skim if you read Devanagari.) आ (ā, the standalone long-ā vowel, used when a word begins with a vowel) + हे (he) becomes आहे āhe.
+Script.
+ु (u).
+The short-u mark is a small hook tucked under the letter, opening to the right. It hangs from the foot of the stem, not from the headline.
+तु is tu — the opening syllable of the polite tumhī you already say. Start at the base of त, dip below the line, and curl right. Keep it small: its long partner is the same hook drawn deeper.
 
-The word, taken apart.
-आहे (āhe, "is") descends from Sanskrit अस्ति (ásti, "is"), on the root √as ("to be"). That same √as / PIE h₁es- is the ancestor of Latin est, German ist, and English is itself — the deepest, oldest verb in the family, worn down to āhe in Marathi.
-
-Grammar Lens: the verb goes last.
-Marathi is a subject–object–verb language: "my name Mira is." The copula आहे sits at the end, where English puts it in the middle. It changes with the subject — you will meet आहेस (āhes, "you are") and आहात (āhāt, "you are," respectful) in Chapter 5.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "āhe" — is]
-[pause 8 seconds for the answer]
-[your turn — say: the English cousin from the same root ("is")]
-[pause 8 seconds for the answer]
+Writing — guided copy.
+Copy तु twice with the model visible, saying tu as the hook closes. Then write the short-i mark once beside it from memory and check it still leans left.
 
 Wrap-up Recall.
-[pause 3 seconds]
-Where does āhe sit in a Marathi sentence, and what English word is its cousin? (At the end; English is, both from √as.)
+[pause 2 seconds]
+Above the line, below it, or beside it? (Below.)
+Source: Unicode Devanagari chart, U+0941.
+[question — say your answer, then pause 22 seconds]
+Copy the short-u hook under ta, then name the mark that is written to the left of its letter.
 
 
-Lesson 4 of 9.
-माझं नाव … आहे (mājhaṁ nāv … āhe) — "my name is…"
+Lesson 3 of 7.
+ू — long ū, the deeper hook below.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
-[pause 2 seconds]
-Now assemble the three atoms you just met into your first full sentence about yourself.
+You have the short hook. The long one is the same gesture, carried further.
 
-The phrase, assembled.
-माझं (mājhaṁ, my) + नाव (nāv, name) + [your name] + आहे (āhe, is) becomes माझं नाव मीरा आहे (mājhaṁ nāv Mīrā āhe) — "my name is Mira."
-Notice the shape:
-माझं (mājhaṁ) is neuter, agreeing with the neuter नाव (nāv).
-The verb आहे (āhe) comes last — "my name Mira is."
-A man or a woman says it the same way here; the gender lived in mājhaṁ (matching nāv), which is settled.
+Script.
+ू (ū).
+Long ū is the short hook drawn deeper and turned back on itself, so it finishes pointing down-left rather than right. Same place, same start, more travel.
+दू is dū — the first syllable of the word for milk. Say tu and dū one after the other and you can hear the length the extra travel is paying for.
 
-Why it's said this way.
-Marathi drops nothing and reorders everything to English eyes: possessor, thing, value, then is. Learn this frame and you can swap in any name — or, later, any fact about yourself.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "mājhaṁ nāv Mīrā āhe" — my name is Mira]
-[pause 8 seconds for the answer]
-[your turn — say: it with your own name in the blank]
-[pause 8 seconds for the answer]
+Writing — delayed copy.
+Look at दू for five seconds, cover it, and write it once. Uncover and compare the depth of the hook against the short one you wrote a moment ago. Repair only if the two look the same.
 
 Wrap-up Recall.
-[pause 3 seconds]
-Put "my name is Arun" into Marathi. (mājhaṁ nāv Arun āhe.)
+[pause 2 seconds]
+tu or dū — which hook travels further? (dū.)
+Source: Unicode Devanagari chart, U+0942.
+[question — say your answer, then pause 24 seconds]
+Write long uu after a delay, then say what separates it from short u.
 
 
-Lesson 5 of 9.
-तू / तुम्ही (tū / tumhī) — "you".
+Lesson 4 of 7.
+ृ (ṛ) — the vocalic r mark, said ru.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
-[pause 2 seconds]
-Before you can ask someone their name, you need "you" — and Marathi gives you two, one warm, one respectful.
+A third mark below the line. This one is not a vowel you have a letter for in English.
 
-The letters in this word.
-(Skim if you read Devanagari.) तू (tū, the त ta with the long-u stroke ू). And तुम्ही (tumhī): तु + म्ही (mhī, the म ma with a halant joining ह ha).
+Script.
+ृ (ṛ).
+This mark writes a sound Sanskrit treated as a vowel made of r. Marathi speakers say it ru, so कृ is heard as kṛ, close to kru.
+The shape is a small curl below the letter that opens to the left — the mirror of the short-u hook, and that mirroring is exactly how to remember it. It appears in tatsama words the language borrowed whole, like kṛtī, "activity".
 
-The word, taken apart.
-तू (tū, familiar "you") comes from Sanskrit त्वम् (tvam), from PIE tū — the very root of English archaic thou, Latin tū, French tu, and Hindi tū. The respectful तुम्ही (tumhī) is grammatically plural: you honour one person by addressing them as many, exactly as French does with vous. It takes the plural verb आहात (āhāt), not āhes.
-
-Grammar Lens: two "you"s, a choice of respect.
-तू (tū) — a friend, a child, someone close.
-तुम्ही (tumhī) — an elder, a stranger, anyone you show courtesy to.
-Choosing between them is a small act of politeness Marathi makes you perform every time you speak to someone.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "tū" (close) / "tumhī" (respectful)]
-[pause 8 seconds for the answer]
-[your turn — say: the English cousin of tū ("thou")]
-[pause 8 seconds for the answer]
+Writing — guided copy.
+Copy कृ twice with the model visible. Then put the short-u hook beside it and check that the two curls open in opposite directions.
 
 Wrap-up Recall.
-[pause 3 seconds]
-Which "you" for a teacher, and why? (tumhī — the respectful plural, courtesy-by-plural like French vous.)
+[pause 2 seconds]
+How does a Marathi speaker say this vowel? (ru.)
+Source: Unicode Devanagari chart, U+0943.
+[question — say your answer, then pause 22 seconds]
+Copy the vocalic-r curl on ka, then say which direction it opens compared with short u.
 
 
-Lesson 6 of 9.
-काय (kāy) — "what".
+Lesson 5 of 7.
+ँ (ã) — the moon holding a dot.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
-[pause 2 seconds]
-One more atom before the question "what's your name?" — the word what itself.
+You already write one nasal mark above the headline. Here is its second, softer cousin.
 
-The letters in this word.
-(Skim if you read Devanagari.) का (kā) + य (ya) becomes काय kāy.
+Script.
+ँ (ã).
+The candrabindu is one dot cradled in a small upward crescent — a moon holding a dot, which is exactly what its name says.
+Set it beside the anusvāra you already write:
+ं closes the vowel onto a nasal consonant. ँ (ã) leaves the vowel open and sends the air through the nose while you are still saying it. Draw the crescent first, sitting on the headline, then place the single dot inside it.
 
-The word, taken apart.
-काय (kāy, "what") grows from the ancient interrogative stem ka-, from PIE kʷo- — the very root behind English wh- words (what, who, when, where, why) and Latin qu- (quis, quid). Marathi keeps the k- plainly across its whole question family: काय (kāy, what), कोण (koṇ, who), कुठे (kuṭhe, where), का (kā, why), कसं (kasaṁ, how — Chapter 6). Learn to hear that opening k- and you can spot a Marathi question coming.
-
-Why it's said this way.
-English wh-, Latin qu-, and Marathi k- are three coats on one 5,000-year-old question-root — the family resemblance survives the different spellings.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "kāy" — what]
-[pause 8 seconds for the answer]
-[your turn — say: three more Marathi k- questions (koṇ, kuṭhe, kā)]
-[pause 8 seconds for the answer]
+Writing — observe and trace.
+Trace ँ (ã) twice, then trace ं once beside it. Point at which of the two carries a crescent. Repair only the mark that came out wrong.
 
 Wrap-up Recall.
-[pause 3 seconds]
-What do Marathi kāy, English what, and Latin quid share? (One PIE question-root kʷo-.)
+[pause 2 seconds]
+Which of the two nasal marks has a moon under it? (The candrabindu.)
+Source: Unicode Devanagari chart, U+0901.
+[question — say your answer, then pause 20 seconds]
+Trace the moon-and-dot, then name the mark that is a dot with no crescent.
 
 
-Lesson 7 of 9.
-तुमचं नाव काय आहे? (tumchaṁ nāv kāy āhe?) — "what's your name?"
+Lesson 6 of 7.
+अ — the vowel your consonants have been hiding.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
-[pause 2 seconds]
-Now turn the question outward — ask someone else's name.
+Say क on its own. You did not say a bare k. Something came after it.
 
-The phrase, assembled.
-तुमचं (tumchaṁ, "your," neuter to match nāv) + नाव (nāv, name) + काय (kāy, what) + आहे (āhe, is) becomes तुमचं नाव काय आहे? (tumchaṁ nāv kāy āhe?) — literally "your name what is?", verb last.
-The "your" mirrors the "my" set you learned:
-माझं (mājhaṁ) — my.
-तुमचं (tumchaṁ) — your (respectful, from tumhī).
-तुझं (tujhaṁ) — your (familiar, from tū).
-All three are shown here in the neuter, agreeing with the neuter नाव (nāv).
+Script.
+अ (a).
+Every Devanagari consonant carries a short a inside it unless a mark or a halant takes it away: क is ka, not k. अ is that same hidden vowel written out on its own, for when a word begins with it and there is no consonant to hide inside.
+You already write its long partner आ, and the relationship is visible: आ is अ with one upright added on the right. Draw the left loop, the vertical stem, then the headline that ties them together.
 
-Why it's said this way.
-To a friend you would say तुझं नाव काय आहे? (tujhaṁ nāv kāy āhe?), swapping the respectful tumchaṁ for the familiar tujhaṁ — the same tū / tumhī choice of respect, now on the possessive.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "tumchaṁ nāv kāy āhe?" — what's your name? (respectful)]
-[pause 8 seconds for the answer]
-[your turn — say: the familiar version (tujhaṁ nāv kāy āhe?)]
-[pause 8 seconds for the answer]
+Writing — delayed copy.
+Look at अ for five seconds, cover it, and write it once. Then add the upright and check that you have made आ. If the two came out identical, the upright is missing.
 
 Wrap-up Recall.
-[pause 3 seconds]
-Give the respectful and familiar "your name" forms. (tumchaṁ / tujhaṁ — both neuter before nāv.)
+[pause 2 seconds]
+What does क say on its own? (ka — the vowel is already inside.)
+Source: Saurmandal, Devanagari a stroke order.
+[question — say your answer, then pause 26 seconds]
+Write independent short a after a delay, then turn it into long aa.
 
 
-Lesson 8 of 9.
-भेटून आनंद झाला (bheṭūn ānand jhālā) — "pleased to meet you".
+Lesson 7 of 7.
+Six marks, named without the page — cold retrieval of the six marks, by name and by placement.
 
 Warm-up.
-[pause 2 seconds]
-Names exchanged — now the warm close of a first meeting.
-
-The phrase, assembled.
-भेटून (bheṭūn, "having met") + आनंद (ānand, "joy") + झाला (jhālā, "happened") becomes literally "having met [you], joy happened." Marathi does not say "I am pleased"; it says the joy itself occurred.
-
-The word, taken apart.
-The heart of it is आनंद (ānand, "joy, bliss"), pure Sanskrit: आ- (ā-, "fully") + नन्द (nand, "to rejoice"). It is the ānanda of the scriptural phrase sat-cit-ānanda ("being–consciousness–bliss") — and one of the most common given names across India. So a Marathi speaker meets you and names the feeling joy.
-
-Why it's said this way.
-The verb झाला (jhālā, "happened/became") also carries gender — jhālā by default here for the event ānand. And भेटून (bheṭūn) is built on भेटणे (bheṭṇe, "to meet") — a verb you will meet again in Chapter 7's goodbye, punhā bheṭū ("we'll meet again").
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "bheṭūn ānand jhālā" — pleased to meet you]
-[pause 8 seconds for the answer]
-[your turn — say: what ānand literally means ("joy")]
-[pause 8 seconds for the answer]
+Close the chapter. Nothing here needs the page: every answer is a name and a place.
 
 Wrap-up Recall.
-[pause 3 seconds]
-Literally, what does a Marathi speaker say when meeting you? ("Having met you, joy happened" — bheṭūn ānand jhālā.)
-
-
-Lesson 9 of 9.
-Chapter 5 recap — introducing yourself.
-
-Warm-up.
 [pause 2 seconds]
-Run the whole first exchange, atom by atom, then whole.
-
-The whole exchange.
-[a table of 4 rows, read aloud]
-Marathi: माझं नाव मीरा आहे. Say it: mājhaṁ nāv Mīrā āhe. English: My name is Mira.
-Marathi: तुमचं नाव काय आहे? Say it: tumchaṁ nāv kāy āhe? English: What's your name?
-Marathi: माझं नाव अरुण आहे. Say it: mājhaṁ nāv Aruṇ āhe. English: My name is Arun.
-Marathi: भेटून आनंद झाला. Say it: bheṭūn ānand jhālā. English: Pleased to meet you.
-
-Atoms banked this chapter.
-नाव (nāv) — name; Sanskrit nāman becomes English name (the m softened to v in Marathi).
-माझं (mājhaṁ) — my; root ma- becomes English me/my; three genders mājhā/mājhī/mājhaṁ.
-आहे (āhe) — is; Sanskrit ásti (√as) becomes English is; the verb comes last.
-तू / तुम्ही (tū / tumhī) — familiar / respectful "you"; tū becomes thou; courtesy-by-plural.
-काय (kāy) — what; PIE kʷo-, the k- question family.
-आनंद (ānand) — joy; Sanskrit ānanda.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: the full four-line exchange, both parts]
-[pause 8 seconds for the answer]
-[your turn — say: "my name is [you]" and "what's your name?" to a friend (tujhaṁ)]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What two Marathi distinctives showed up again this chapter? (Three genders on mājhaṁ; the verb āhe going last.) Next chapter: tumhī kase āhāt? — "how are you?"
+Which mark is written before its letter but read after it? (i-mātrā.)
+[pause 2 seconds]
+Which two hang under the line, and which of them travels further? (Short u and long ū; the long one.)
+[pause 2 seconds]
+Which curl opens the opposite way from short u? (The vocalic r.)
+[pause 2 seconds]
+Which nasal mark sits in a crescent? (The candrabindu.)
+[pause 2 seconds]
+What vowel is already inside every consonant you write? (Short a.)
+[question — say your answer, then pause 40 seconds]
+Name the mark that is written left of its letter, the two that hang below, the one that opens the other way, the nasal with a crescent, and the vowel your consonants already hide.

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C28-hear-baarnun",
+    "language": "gujarati",
+    "chapter": 32,
+    "sequence": 1540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8690b615abc1f46"
+  },
+  "findings": []
+}

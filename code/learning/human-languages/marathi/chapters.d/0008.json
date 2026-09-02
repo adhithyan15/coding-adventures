@@ -1,16 +1,23 @@
 {
   "chapter": 8,
-  "title": "The First Verbs",
-  "label": "ch:first-verbs",
-  "canDo": "I can build short present-tense Marathi sentences with the chapter's first verbs.",
+  "title": "Two Sibilants, One Liquid, and Three Standalone Vowels",
+  "label": "ch:sibilant-runway",
+  "canDo": "I can write the last six signs of the second runway, and name every sign in it after four chapters' distance.",
   "spineNodes": [
-    "SPINE-SAY-WHAT-I-DO"
+    "SPINE-EXCHANGE-NAMES"
   ],
   "payoff": {
-    "lesson": "MR-C05-practice",
+    "lesson": "MR-R08-runway-recall",
     "kind": "task",
-    "summary": "Complete MR-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense Marathi sentences with the chapter's first verbs.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Retrieve the whole twenty-four-sign runway at real distance, one group at a time.",
+    "assesses": [
+      "MR-SCRIPT-LA-01",
+      "MR-SCRIPT-SHA-01",
+      "MR-SCRIPT-SSA-01",
+      "MR-SCRIPT-U-INDEPENDENT-01",
+      "MR-SCRIPT-UU-INDEPENDENT-01",
+      "MR-SCRIPT-E-INDEPENDENT-01"
+    ],
+    "note": "The payoff covers its own chapter completely and reaches across all four, which is the R3/R4 retrieval the earlier chapters were owed."
   }
 }

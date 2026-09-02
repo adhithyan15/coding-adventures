@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 26,
-  "sourceHash": "fnv1a64:2e6a2a0c1b1d3716",
+  "sourceHash": "fnv1a64:6be936f0f0fcd151",
   "lessonIds": [
     "TE-C26-udayam",
     "TE-S129-letter-vocalic-r"
@@ -10,7 +10,7 @@
   "drivablePrefix": 1,
   "text": "telugu/narration/ch26.txt",
   "json": "telugu/narration/ch26.json",
-  "textHash": "fnv1a64:ba104b82e2863631",
-  "jsonHash": "fnv1a64:f1bf2cb68941e0b5",
+  "textHash": "fnv1a64:4017e30466a27ee7",
+  "jsonHash": "fnv1a64:cd0d88b3a9c5e20b",
   "findings": []
 }

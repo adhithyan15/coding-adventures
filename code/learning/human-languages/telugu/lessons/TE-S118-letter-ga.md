@@ -2,9 +2,9 @@
 schema_version: 2
 id: TE-S118-letter-ga
 spine_node: SPINE-MEET-GREET
-sequence: 421
+sequence: 411
 delivery: script
-chapter: 15
+chapter: 14
 type: writing
 headword: "గ"
 gloss: the single character గ — recognised inside words you already say
@@ -19,24 +19,24 @@ requires:
 introduces:
   knowledge: [TE-SCRIPT-RECOG-118]
 practises:
-  knowledge: [TE-SCRIPT-RECOG-117, TE-SCRIPT-RECOG-118]
+  knowledge: [TE-SCRIPT-RECOG-118, TE-SCRIPT-RECOG-117, TE-SCRIPT-RECOG-114, TE-SCRIPT-RECOG-111]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [TE-S117-letter-va]
+reviews_of: [TE-S117-letter-va, TE-S114-letter-la, TE-S111-letter-sa]
 ---
 
 # గ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-117] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-117, TE-SCRIPT-RECOG-114] -->
 
-[PAUSE 1s] Before the new one: వ — what does it do?
+[PAUSE 1s] Before the new one: వ — what does it do? And one from further back: ల?
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
-for pages without knowing which mark on the page it was.
+[PAUSE 2s] One character this time — and you have been saying it for pages
+without knowing which mark on the page it was.
 
 ## Script you'll notice: గ
 <!-- hl-knowledge: introduces=[TE-SCRIPT-RECOG-118]; assesses=[] -->
@@ -76,7 +76,9 @@ and larger than it is printed.
 - [YOU LOOK: back at any page of this chapter and find గ once more]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-118] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-118, TE-SCRIPT-RECOG-111] -->
 
 [PAUSE 3s] Which character is this — గ? What sound does it carry? (***ga***.)
 Name one word you already say that contains it.
+
+One more, from much earlier: స — what does it do?

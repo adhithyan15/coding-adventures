@@ -1,0 +1,6 @@
+{
+  "language": "marwadi",
+  "chapter": 31,
+  "output": "marwadi/book/chapters/ch31-counter-exchange.tex",
+  "scriptSet": "marwadi-main"
+}

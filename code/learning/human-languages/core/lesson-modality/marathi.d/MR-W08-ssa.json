@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "MR-W08-ssa",
+    "language": "marathi",
+    "chapter": 8,
+    "sequence": 92,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:072cd370f100e1cf",
+    "detachableSegments": [
+      "Script",
+      "Writing — delayed copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-R14-kutumb-r2",
     "language": "marathi",
-    "chapter": 17,
-    "sequence": 660,
+    "chapter": 21,
+    "sequence": 860,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:5a5de9eaa4b9fd88"
+    "sourceHash": "fnv1a64:610df818ef31fef5"
   },
   "findings": []
 }

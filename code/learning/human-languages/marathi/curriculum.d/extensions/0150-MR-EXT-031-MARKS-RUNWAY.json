@@ -1,0 +1,19 @@
+{
+  "id": "MR-EXT-031-MARKS-RUNWAY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write and name the six Devanagari marks the rest of this book leans on, and say for each one whether it sits before, above, or below its letter.",
+  "prerequisites": [
+    "MR-EXT-021-SCRIPT-DOORWAY"
+  ],
+  "lessons": [
+    "MR-W05-i-matra",
+    "MR-W05-u-matra",
+    "MR-W05-uu-matra",
+    "MR-W05-ru-matra",
+    "MR-W05-candrabindu",
+    "MR-W05-a-independent",
+    "MR-R05-marks-recall"
+  ]
+}

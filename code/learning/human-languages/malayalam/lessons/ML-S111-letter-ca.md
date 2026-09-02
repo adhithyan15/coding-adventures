@@ -2,41 +2,41 @@
 schema_version: 2
 id: ML-S111-letter-ca
 spine_node: SPINE-MEET-GREET
-sequence: 366
+sequence: 284
 delivery: script
-chapter: 8
+chapter: 5
 type: writing
 headword: "ച"
 gloss: the single character ച — recognised inside words you already say
 romanization: "ca"
-prerequisites: [ML-S110-letter-va]
+prerequisites: [ML-S143-vowel-sign-o]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-110]
+  knowledge: [ML-SCRIPT-RECOG-143]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-111]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-110, ML-SCRIPT-RECOG-111]
+  knowledge: [ML-SCRIPT-RECOG-143, ML-SCRIPT-RECOG-111]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [ML-S110-letter-va]
+reviews_of: [ML-S143-vowel-sign-o]
 ---
 
 # ച — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-110] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-143] -->
 
-[PAUSE 1s] Before the new one: വ — what does it do?
+[PAUSE 1s] Before the new one: ◌ൊ — what does it do?
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
-for pages without knowing which mark on the page it was.
+[PAUSE 2s] One character this time. One only.
+It has not been on a page yet: it arrives with the word on the next one.
 
 ## Script you'll notice: ച
 <!-- hl-knowledge: introduces=[ML-SCRIPT-RECOG-111]; assesses=[] -->
@@ -45,10 +45,10 @@ for pages without knowing which mark on the page it was.
 
 It is a **consonant**, and in this script a consonant is never bare: it comes with an *a* already in it. So it is not *c*, it is **ca**.
 
-You already say these, and every one of them has ച somewhere inside it:
+- **കൊച്ചി** *kocci* — Kochi, where it is doubled into **ച്ച** in the
+  middle of the name
 
-- **ജോലി ചെയ്യുക** *jōli ceyyuka* — to work (lit. "work-do")
-- **ഒന്ന് രണ്ട് മൂന്ന് നാല് അഞ്ച്** — one to five
+The sound is the *ch* of "church," and doubling it holds it longer.
 
 ## Writing: ച — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-111] -->
@@ -68,7 +68,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ച in the ones that have it]
 
-> നമസ്കാരം
+> കൊച്ചി  ·  ച  ·  ക
 
 - [YOU TRACE: ച three times, saying *ca* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ച once more]

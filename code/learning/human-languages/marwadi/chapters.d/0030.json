@@ -1,0 +1,21 @@
+{
+  "chapter": 30,
+  "title": "Bring It Over: The Food Counter's Own Word",
+  "label": "ch:mw-bring-request",
+  "canDo": "I can order any of the seven food words this book has taught, and tell the five asking words apart by the job each one does.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "MW-C25-request-five",
+    "kind": "four-skill-function-map",
+    "summary": "The asking word a food counter needs arrives by ear, joins a food noun in the shortest complete sentence this track writes, and the five asking words taught so far are then separated by job in four separately scored skills.",
+    "assesses": [
+      "MW-LEX-LAVO-01",
+      "MW-SCRIPT-LAVO-01",
+      "MW-LEX-BRING-REQUEST-01",
+      "MW-SCRIPT-BRING-REQUEST-01",
+      "MW-PERFORMANCE-REQUEST-FOUR-SKILL-01"
+    ]
+  }
+}

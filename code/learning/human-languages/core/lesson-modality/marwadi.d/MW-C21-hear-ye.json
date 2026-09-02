@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C21-hear-ye",
+    "language": "marwadi",
+    "chapter": 26,
+    "sequence": 1980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f034c17a66d320c9"
+  },
+  "findings": []
+}

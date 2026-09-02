@@ -1,11 +1,5 @@
 {
   "language": "telugu",
   "kind": "script-closure",
-  "finding": {
-    "language": "telugu",
-    "kind": "script-closure",
-    "count": 13,
-    "unit": "glyph(s)",
-    "detail": "teach every load-bearing glyph before asking the learner to decode it"
-  }
+  "finding": null
 }

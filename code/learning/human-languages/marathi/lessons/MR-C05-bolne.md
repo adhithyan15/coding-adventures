@@ -1,7 +1,7 @@
 ---
 id: MR-C05-bolne
-sequence: 165
-chapter: 8
+sequence: 365
+chapter: 12
 type: word
 headword: बोलणे
 romanization: "bolṇe"

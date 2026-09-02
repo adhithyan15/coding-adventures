@@ -1,18 +1,20 @@
 {
   "language": "marathi",
   "chapter": 11,
-  "sourceHash": "fnv1a64:b4807b67fa14d5d9",
+  "sourceHash": "fnv1a64:bb0daa9a9c7b3f4b",
   "lessonIds": [
-    "MR-C08-vichar-karne",
-    "MR-C08-samajne",
-    "MR-C08-vachne",
-    "MR-C08-lihine"
+    "MR-C04-punha",
+    "MR-C04-bhetu",
+    "MR-C04-punha-bhetu",
+    "MR-C04-udya-bhetu",
+    "MR-C04-kalji-ghya",
+    "MR-C04-practice"
   ],
-  "voiceLessons": 0,
+  "voiceLessons": 2,
   "drivablePrefix": 0,
   "text": "marathi/narration/ch11.txt",
   "json": "marathi/narration/ch11.json",
-  "textHash": "fnv1a64:a3ec1bf7cc2dc66b",
-  "jsonHash": "fnv1a64:660950d524197228",
+  "textHash": "fnv1a64:c5aaf9c8349c633a",
+  "jsonHash": "fnv1a64:3b63dd97ec9108f6",
   "findings": []
 }

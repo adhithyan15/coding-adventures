@@ -2,8 +2,8 @@
   "lesson": {
     "id": "MR-C02-majhe-naav-aahe",
     "language": "marathi",
-    "chapter": 5,
-    "sequence": 75,
+    "chapter": 9,
+    "sequence": 275,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:4de6f129d1b999b1"
+    "sourceHash": "fnv1a64:6535a9c9b88da4cf"
   },
   "findings": []
 }

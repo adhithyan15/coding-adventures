@@ -2,52 +2,57 @@
 schema_version: 2
 id: ML-S116-letter-u
 spine_node: SPINE-MEET-GREET
-sequence: 461
+sequence: 217
 delivery: script
-chapter: 17
+chapter: 4
 type: writing
 headword: "ഉ"
 gloss: the single character ഉ — recognised inside words you already say
 romanization: "u"
-prerequisites: [ML-S120-sign-anusvara]
+prerequisites: [ML-S110-letter-va]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-120]
+  knowledge: [ML-SCRIPT-RECOG-110]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-116]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-120, ML-SCRIPT-RECOG-116]
+  knowledge: [ML-SCRIPT-RECOG-110, ML-SCRIPT-RECOG-116]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [ML-S120-sign-anusvara]
+reviews_of: [ML-S110-letter-va]
 ---
 
 # ഉ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-120] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-110] -->
 
-[PAUSE 1s] Before the new one: ◌ം — what does it do?
+[PAUSE 1s] Before the new one: വ — what does it do?
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
-for pages without knowing which mark on the page it was.
+[PAUSE 2s] One character this time. One only.
+It has not been on a page yet: it arrives with the word on the next one.
 
 ## Script you'll notice: ഉ
 <!-- hl-knowledge: introduces=[ML-SCRIPT-RECOG-116]; assesses=[] -->
 
 **ഉ** — *u*.
 
-It is an **independent vowel** — the shape the vowel *u* takes when a word begins with it, rather than the sign it becomes inside a word.
+It is an **independent vowel** — the shape this vowel takes when a word *begins* with it, rather than the sign it becomes inside a word.
 
-You already say these, and every one of them has ഉ somewhere inside it:
+Every Malayalam verb you are about to meet ends in the same two letters,
+**ഉക** *-uka*, and this is the first of them.
 
-- **ഉച്ച** *ucca* — noon, most likely from a different Sanskrit metaphor than Kannada and Telugu
+- **ഉക** *-uka* — the ending that makes a Malayalam verb's dictionary form
+
+You already read its sign form, **◌ു**, in the name **അരുൺ**. Where the
+vowel opens a syllable instead of riding on a consonant, it needs the full
+letter **ഉ**.
 
 ## Writing: ഉ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-116] -->
@@ -67,7 +72,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ഉ in the ones that have it]
 
-> ഉച്ച  ·  നമസ്കാരം
+> ഉക  ·  അരുൺ  ·  ഉ
 
 - [YOU TRACE: ഉ three times, saying *u* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ഉ once more]

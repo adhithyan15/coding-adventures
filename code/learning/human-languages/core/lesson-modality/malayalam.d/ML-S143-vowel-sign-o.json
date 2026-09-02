@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-S143-vowel-sign-o",
+    "language": "malayalam",
+    "chapter": 5,
+    "sequence": 282,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6d0cf2eb76cb0c6a",
+    "detachableSegments": [
+      "Script you'll notice: ◌ൊ",
+      "Writing: ◌ൊ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

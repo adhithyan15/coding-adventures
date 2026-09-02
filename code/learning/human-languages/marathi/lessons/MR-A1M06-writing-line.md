@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1M06-writing-line
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 845
+sequence: 1045
 delivery: script
-chapter: 20
+chapter: 24
 type: writing
 headword: "मी माझं नाव लिहितो."
 gloss: retrieve the known name-writing sentence as one separate message line

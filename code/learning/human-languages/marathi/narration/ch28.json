@@ -1,0 +1,750 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 28,
+  "title": "What Passes Between Two People",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:4aa577f7606ae7f4",
+  "lessons": [
+    {
+      "id": "MR-C24-sangne",
+      "sequence": 1170,
+      "title": "sāṅgṇe — to tell, by ear first",
+      "headword": "सांगणे",
+      "romanization": "sāṅgṇe",
+      "gloss": "to tell — a word you can use by ear today, whose last consonant your hand has not been taught yet",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:315afbd74119e137",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have asked someone's name with a whole question. There is a shorter way, and it turns on a verb you have not met."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: sāṅgṇe",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sāṅgṇe — to tell."
+            },
+            {
+              "kind": "speech",
+              "text": "Asked of a person you are being polite to, it comes out sāṅgā:"
+            },
+            {
+              "kind": "speech",
+              "text": "tumchaṁ nāv sāṅgā. — Tell me your name."
+            },
+            {
+              "kind": "speech",
+              "text": "Two syllables, and it does the work your longer question was doing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This word is here by ear only, on purpose. Its middle consonant is ga — a letter this book has shown you inside other words but has never taught your hand to make, and asking you to read a shape nobody taught you would be the one thing a gentle ramp must not do."
+            },
+            {
+              "kind": "speech",
+              "text": "So carry sāṅgṇe the way a child carries a word off a shop sign: sayable, understandable, useful today, and readable later. The letter is owed to you, and it is written down as owed."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart — proclaiming, and counting people",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sāṅgṇe comes through Prakrit saṁgai from Sanskrit śaṃsati, \"recites, proclaims,\" on the root śaṃs-. Behind that sits Indo-European ḱens-, \"to proclaim, to declare,\" which Latin took up as cēnseō, \"I assess, I declare.\" Two English words fall out of that Latin verb: census — the formal declaring of who lives where — and censor, the official who did the declaring. Telling someone your name is, at root, the same act as being counted."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāṅgṇe — to tell",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāṅgṇe* — to tell]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tumchaṁ nāv sāṅgā. — tell me your name",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tumchaṁ nāv sāṅgā.* — tell me your name]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "basā, then tumchaṁ nāv sāṅgā — seat your visitor, then ask",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: *basā*, then *tumchaṁ nāv sāṅgā* — seat your visitor, then ask]"
+            },
+            {
+              "kind": "prompt",
+              "action": "NAME",
+              "instruction": "two English words on the same root — census, censor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU NAME: two English words on the same root — **census**, **censor**]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask someone to tell you their name. (Tumchaṁ nāv sāṅgā.) What did the Sanskrit root mean? (To recite, to proclaim.) Why is this word not printed here in its own script? (Its ga has not been taught yet.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: sāṅgṇe; Wiktionary: shams-."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C24-mhanne",
+      "sequence": 1180,
+      "title": "म्हणणे (mhaṇṇe) — to say these words",
+      "headword": "म्हणणे",
+      "romanization": "mhaṇṇe",
+      "gloss": "to say these words — the readable partner of the verb you took by ear",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:c601b47c95bf0ef5",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last word arrived by ear alone, with one letter still owed to your hand. This one owes you nothing: every piece of it is already yours to write."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: म्हणणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "म्हणणे — mhaṇṇe — to say."
+            },
+            {
+              "kind": "speech",
+              "text": "मी \"नमस्कार\" म्हणतो / म्हणते. — mī \"namaskār\" mhaṇto / mhaṇte. — I say \"namaskār.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Two verbs, two jobs. Sāṅgṇe tells a person something. म्हणणे (mhaṇṇe) utters the words themselves — what came out of the mouth, quoted."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "म bound to ह by the halant you have written since नमस्कार, then ण twice, then े. म्ह-ण-णे. Say it with the breath and the m together, not one after the other."
+            },
+            {
+              "kind": "speech",
+              "text": "The same verb gives म्हणून mhaṇūn, \"therefore\" — literally having said that, which is how a good many Marathi sentences turn a corner."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart — a b that became an m",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "म्हणणे (mhaṇṇe) comes through Prakrit bhaṇai from Sanskrit भणति bhaṇati, \"speaks.\" The opening भ bh- did something Marathi is fond of: it shifted to the म्ह mh- cluster, breath and nasal at once. Hindi kept a plainer descendant in bhannā. Set beside sāṅgṇe, which came from a root for proclaiming, Marathi ended up with one verb for reciting outward and one for plain uttering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhaṇṇe — to say",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **mhaṇṇe** — to say]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mī \"namaskār\" mhaṇto or mhaṇte, whichever declares you",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **mī \"namaskār\" mhaṇto** or **mhaṇte**, whichever declares you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "sāṅgā and म्हणतो — telling a person, uttering the words",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: *sāṅgā* and **म्हणतो** — telling a person, uttering the words]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "म्हणणे (mhaṇṇe), and notice that every piece was already yours",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **म्हणणे**, and notice that every piece was already yours]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ ALOUD",
+              "instruction": "नमस्कार, whose halant and whose र you are reusing here",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ ALOUD: **नमस्कार**, whose halant and whose **र** you are reusing here]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which Sanskrit consonant became Marathi's म्ह? (भ bh-.) What does म्हणून mean? (Therefore — \"having said that\".)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: म्हणणे (mhaṇṇe); Wiktionary: भणति."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C24-shikne",
+      "sequence": 1190,
+      "title": "शिकणे (shikṇe) — to learn",
+      "headword": "शिकणे",
+      "romanization": "shikṇe",
+      "gloss": "to learn — built, at root, out of wanting to be able",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:3e8b43fa725e8893",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can tell someone your name and you can quote what you said. The sentence a beginner most wants next is the one about what they are doing right now."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शिकणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शिकणे — shikṇe — to learn."
+            },
+            {
+              "kind": "speech",
+              "text": "मी मराठी शिकतो / शिकते. — mī marāṭhī shikto / shikte. — I am learning Marathi."
+            },
+            {
+              "kind": "speech",
+              "text": "Said to a stranger in Maharashtra, that sentence usually ends the awkward part of the conversation and starts the good part."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "श the sha you write in कशी, then ि, then क, then णे. शि-क-णे. Keep श and the retroflex ष apart in your ear: this word takes the softer one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart — wanting to be able",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शिकणे (shikṇe) continues Sanskrit शिक्षते śikṣate, and that form is not a plain verb: it is the desiderative of शक् śak-, \"to be able.\" A desiderative is the shape Sanskrit puts a root into to mean wanting to do it. So to learn was built, quite literally, as to want to be able."
+            },
+            {
+              "kind": "speech",
+              "text": "Two familiar words fall out of the same root: शक्ति śakti, \"power, what one is able to do,\" and शिक्षा śikṣā, \"instruction.\" Every one of them is the same idea turned a different way."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shikṇe — to learn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **shikṇe** — to learn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mī marāṭhī shikto or shikte, whichever declares you",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **mī marāṭhī shikto** or **shikte**, whichever declares you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the Sanskrit root under it meant — to be able",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the Sanskrit root under it meant — **to be able**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "mī \"namaskār\" mhaṇto, then mī marāṭhī shikto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **mī \"namaskār\" mhaṇto**, then **mī marāṭhī shikto**]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say that you are learning Marathi. (Mī marāṭhī shikto / shikte.) What does शक्ति mean, and how is it related? (Power — the same root, without the wanting.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: शिकणे (shikṇe); Wiktionary: शक्."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C24-milne",
+      "sequence": 1200,
+      "title": "मिळणे (miḷṇe) — to be got, to be found",
+      "headword": "मिळणे",
+      "romanization": "miḷṇe",
+      "gloss": "to be got, to be found — a fourth verb that puts you in the dative, and it carries ळ",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:aa76a3873903bc94",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "मला बरं वाटतं put the feeling at you rather than in you. One more everyday verb works the same way, and it is the one you need in a shop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मिळणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मिळणे — miḷṇe — to be got, to be found, to be available."
+            },
+            {
+              "kind": "speech",
+              "text": "पाणी मिळेल का? — pāṇī miḷel kā? — Is water to be had?"
+            },
+            {
+              "kind": "speech",
+              "text": "मला मिळतं. — malā miḷtaṁ. — I get it."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word the second one is to me it is got. English makes the person the getter; Marathi makes the thing the one that arrives. That is now the fourth sentence standing on the same dative frame."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "म, ि, then ळ — the retroflex ḷ that Hindi lost and Marathi kept, the letter inside डोळा and काळजी — then णे. मि-ळ-णे. Curl the tongue back for ळ and let it flap."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart — meeting, and getting",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मिळणे (miḷṇe) continues Sanskrit मिलति milati, \"meets, joins, comes together.\" The Sanskrit l hardened on the way into Marathi and came out as ळ. The sense travelled too: what joins you is what you get, so a verb about meeting became the ordinary verb for a thing being available. Hindi's मिलना milnā kept both senses side by side and kept the plain l."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miḷṇe — to be got",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **miḷṇe** — to be got]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṇī miḷel kā? — is water to be had?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **pāṇī miḷel kā?** — is water to be had?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "the four dative sentences — malā māhīt āhe, malā marāṭhī āvaḍte, malā baraṁ vāṭtaṁ, malā miḷtaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: the four dative sentences — **malā māhīt āhe**, **malā marāṭhī āvaḍte**, **malā baraṁ vāṭtaṁ**, **malā miḷtaṁ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "NAME",
+              "instruction": "the other two words you know carrying ळ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU NAME: the other two words you know carrying **ळ**]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask whether water is to be had. (Pāṇī miḷel kā?) What did the Sanskrit verb behind मिळणे (miḷṇe) mean? (To meet, to join.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: मिळणे (miḷṇe); Wiktionary: मिलति."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R24-passing-verbs",
+      "sequence": 1210,
+      "title": "Four things that pass between two people",
+      "headword": "म्हणणे / शिकणे / मिळणे",
+      "romanization": "mhaṇṇe / shikṇe / miḷṇe",
+      "gloss": "say, learn, get — three of the four, plus the one still carried by ear",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f95d8a10fd2a4339",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the four in order: sāṅgṇe, then म्हणणे (mhaṇṇe), शिकणे (shikṇe), मिळणे (miḷṇe). Three of them you can also write; one is still owed a letter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Run the three aloud, then repair only what went missing."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R24-passing-verbs-check",
+              "prompt": "Ask for a name, say you are learning Marathi, and ask whether water is to be had.",
+              "assesses": [
+                "MR-LEX-SANGNE",
+                "MR-LEX-SHIKNE",
+                "MR-LEX-MILNE"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "tumcham naav sanga, mi marathi shikto, paani milel ka",
+                "tumcham nav sanga, मी मराठी शिकतो, पाणी मिळेल का"
+              ],
+              "feedback": {
+                "correct": "The whole exchange runs.",
+                "incorrect": "Repair in order: sanga, shikto, milel ka."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the four was built out of wanting to be able? (शिकणे (shikṇe).) Which one puts you in the dative? (मिळणे (miḷṇe).) Then stop."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

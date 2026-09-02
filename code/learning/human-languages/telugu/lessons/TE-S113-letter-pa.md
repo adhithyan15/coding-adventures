@@ -2,41 +2,41 @@
 schema_version: 2
 id: TE-S113-letter-pa
 spine_node: SPINE-MEET-GREET
-sequence: 376
+sequence: 235
 delivery: script
-chapter: 10
+chapter: 4
 type: writing
 headword: "ప"
 gloss: the single character ప — recognised inside words you already say
 romanization: "pa"
-prerequisites: [TE-S112-letter-ca]
+prerequisites: [TE-S145-digit-6]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [TE-SCRIPT-RECOG-112]
+  knowledge: [TE-SCRIPT-RECOG-145]
 introduces:
   knowledge: [TE-SCRIPT-RECOG-113]
 practises:
-  knowledge: [TE-SCRIPT-RECOG-112, TE-SCRIPT-RECOG-113]
+  knowledge: [TE-SCRIPT-RECOG-113, TE-SCRIPT-RECOG-145, TE-SCRIPT-RECOG-06, TE-SCRIPT-RECOG-140]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [TE-S112-letter-ca]
+reviews_of: [TE-S145-digit-6, TE-S06-letter-ra, TE-S140-digit-1]
 ---
 
 # ప — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-112] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-145, TE-SCRIPT-RECOG-06] -->
 
-[PAUSE 1s] Before the new one: చ — what does it do?
+[PAUSE 1s] Before the new one: ౬ — what amount does it stand for? And one from further back: ర?
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
-for pages without knowing which mark on the page it was.
+[PAUSE 2s] One character this time — and you have been saying it for pages
+without knowing which mark on the page it was.
 
 ## Script you'll notice: ప
 <!-- hl-knowledge: introduces=[TE-SCRIPT-RECOG-113]; assesses=[] -->
@@ -50,7 +50,6 @@ You already say these, and every one of them has ప somewhere inside it:
 - **పేరు** *pēru* — name
 - **పరవాలేదు** *paravālēdu* — it's okay / no problem / you're welcome
 - **రేపు కలుద్దాం** *rēpu kaluddām* — see you tomorrow
-- **పని చేయు** *pani cēyu* — to work (lit. "work-do")
 
 ## Writing: ప — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-113] -->
@@ -76,7 +75,9 @@ and larger than it is printed.
 - [YOU LOOK: back at any page of this chapter and find ప once more]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-113] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-113, TE-SCRIPT-RECOG-140] -->
 
 [PAUSE 3s] Which character is this — ప? What sound does it carry? (***pa***.)
 Name one word you already say that contains it.
+
+One more, from much earlier: ౧ — what amount does it stand for?

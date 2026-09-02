@@ -1,20 +1,20 @@
 {
   "language": "marathi",
   "chapter": 7,
-  "sourceHash": "fnv1a64:a8c172a79e230b16",
+  "sourceHash": "fnv1a64:76dd92867a6ae0af",
   "lessonIds": [
-    "MR-C04-punha",
-    "MR-C04-bhetu",
-    "MR-C04-punha-bhetu",
-    "MR-C04-udya-bhetu",
-    "MR-C04-kalji-ghya",
-    "MR-C04-practice"
+    "MR-W07-tta",
+    "MR-W07-ttha",
+    "MR-W07-dda",
+    "MR-W07-nna",
+    "MR-W07-pa",
+    "MR-R07-retroflex-recall"
   ],
-  "voiceLessons": 2,
+  "voiceLessons": 1,
   "drivablePrefix": 0,
   "text": "marathi/narration/ch07.txt",
   "json": "marathi/narration/ch07.json",
-  "textHash": "fnv1a64:e58e0541d4ca233e",
-  "jsonHash": "fnv1a64:5427fef7c376098e",
+  "textHash": "fnv1a64:6aedf790fdecc03b",
+  "jsonHash": "fnv1a64:1ff2811576ea3902",
   "findings": []
 }
