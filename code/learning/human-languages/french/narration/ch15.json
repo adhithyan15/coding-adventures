@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "The Compound Past",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:237798a3995c753e",
+  "sourceHash": "fnv1a64:71dc35ad3261708d",
   "lessons": [
     {
       "id": "FR-C15-passe-compose",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:55da64decb750874",
+      "sourceHash": "fnv1a64:62450c84b5f5fe00",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "French's everyday past tense. You already have both halves of it: the verb avoir from last chapter, and the verbs from Chapter 5."
+              "text": "French's everyday past tense. You already have both halves of it: the verb avoir from last chapter, and your first regular verbs."
             }
           ]
         },

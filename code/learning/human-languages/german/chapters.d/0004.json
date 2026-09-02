@@ -2,15 +2,33 @@
   "chapter": 4,
   "title": "Farewells",
   "label": "ch:farewells",
-  "canDo": "I can end a German conversation politely and choose a farewell that fits the situation.",
+  "canDo": "I can end a German conversation politely, choose a farewell that fits the situation, and write German's three distinctive marks — the eszett, the umlaut, and a capital on every noun.",
   "spineNodes": [
     "SPINE-TAKE-LEAVE"
   ],
   "payoff": {
     "lesson": "GE-C04-practice",
-    "kind": "task",
-    "summary": "Complete GE-C04-practice, the canonical closing checkpoint, and demonstrate the chapter promise: end a German conversation politely and choose a farewell that fits the situation.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "kind": "dialogue",
+    "summary": "German parts formally with a promise to see each other again, casually with a word that travelled from French through Walloon and Low German before it got here, and softly with bis — \"until\" — plus a word for time. This chapter takes auf Wiedersehen apart into the three words it is made of, then teaches bis as a recipe and fills its slot three times: bald, später, morgen. GE-C04-practice closes the arc with the first conversation that runs from hello to goodbye.",
+    "assesses": [
+      "GE-LEX-SEHEN-01",
+      "GE-LEX-WIEDER-01",
+      "GE-LEX-AUF-01",
+      "GE-LEX-AUF-WIEDERSEHEN-01",
+      "GE-LEX-TSCHUESS-01",
+      "GE-LEX-BIS-01",
+      "GE-LEX-BALD-01",
+      "GE-LEX-BIS-BALD-01",
+      "GE-LEX-SPAET-01",
+      "GE-LEX-SPAETER-02",
+      "GE-LEX-BIS-SPAETER-01",
+      "GE-LEX-MORGEN-TOMORROW-01",
+      "GE-LEX-BIS-MORGEN-01",
+      "GE-GRAMMAR-CAPITAL-SPLITS-SENSE-02",
+      "GE-GRAMMAR-ESZETT-VOWEL-LENGTH-02",
+      "GE-GRAMMAR-UMLAUT-MARKS-GRAMMAR-03",
+      "GE-GRAMMAR-GROSSSCHREIBUNG-01"
+    ],
+    "note": "Chapter 4 is now generated from schema-v2 lessons, so the payoff is atom-scored rather than authored. It claims all thirteen lexical atoms — the three words auf Wiedersehen is built from, the two register-bearing goodbyes, and the bis recipe with each of its three time words — plus the four transferable grammar rules the chapter teaches: that a capital separates der Morgen from morgen, that the eszett marks a long vowel, that an umlaut marks a grammatical change, and Grossschreibung itself. The writing atoms belong here because chapter 4 owns the three writing lessons as well as the farewells; leaving them out put the payoff at 14/30, below the 0.5 representativeness floor. The per-word pronunciation and etymology atoms are drilled in their own lessons and are deliberately not claimed."
   }
 }

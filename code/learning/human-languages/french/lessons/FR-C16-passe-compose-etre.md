@@ -18,7 +18,7 @@ reviews_of: [FR-C16-etre, FR-C16-etre-roots, FR-C15-passe-compose, FR-C03-aller]
 
 ## Warm-up
 
-[PAUSE 2s] Chapter 15 built **j’ai parlé** with *avoir*. A smaller family uses
+[PAUSE 2s] The compound past built **j’ai parlé** with *avoir*. A smaller family uses
 **être**, and its participle agrees with the subject.
 
 ## Start with aller

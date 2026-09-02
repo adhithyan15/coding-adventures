@@ -36,7 +36,7 @@ reviews_of: [FR-C28-sucre, FR-C28-cafe]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-SUCRE-07, FR-LEX-LAIT-05] -->
 
-[PAUSE 2s] Chapter 28 handed you *le lait* and *le sucre*, and three more
+[PAUSE 2s] The café chapter handed you *le lait* and *le sucre*, and three more
 things to ask for. Now the people you'd ask them with — starting with the one
 whose name teaches French's most useful spelling rule.
 

@@ -71,3 +71,33 @@ fn chemistry_particle_charge_recall_binds_charge_with_citation() {
     // charge.
     assert!(out.contains("\"abstained\":true"), "positron abstains: {out}");
 }
+
+const SUB_PIN: &str = r#""bindings":{"C":"positive"},"citations":[{"source":"Atomic nuclei consist of electrically positive protons and electrically neutral neutrons. These are held together by the strongest known fundamental force, called the strong force. The nucleus makes up much less than .01% of the volume of the atom, but typically contains more than 99.9% of the mass of the atom. The chemical properties of a substance are determined by the negatively charged electrons enshrouding the nucleus.","locator":"https://www.energy.gov/science/doe-explainsnuclei","trust":"authoritative""#;
+
+#[test]
+fn subatomic_particles_source_is_one_contiguous_doe_passage() {
+    let dir = scratch("cite_sub");
+    std::fs::copy(
+        facts_stdlib().join("chemistry/subatomic-particles.adj"),
+        dir.join("subatomic-particles.adj"),
+    )
+    .expect("copy shipped subatomic-particles.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"subatomic-particles.adj\"\n? particle_charge(proton, $C)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The old value joined two real sentences with an ellipsis. Both halves
+    // sit in the SAME block on the DOE page, separated by two sentences the
+    // author dropped -- "the strong force" and the mass/volume figures, which
+    // are substantive rather than filler. The page's contiguous passage
+    // covers ALL THREE rows (proton/neutron/electron) on its own, which is
+    // presumably why both halves were wanted in the first place.
+    assert!(
+        out.contains(SUB_PIN),
+        "the envelope is the page's contiguous passage: {out}"
+    );
+}

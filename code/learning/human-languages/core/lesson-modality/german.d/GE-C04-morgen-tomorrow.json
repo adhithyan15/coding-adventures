@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C04-morgen-tomorrow",
+    "language": "german",
+    "chapter": 4,
+    "sequence": 165,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1f22f86bd0574b55"
+  },
+  "findings": []
+}

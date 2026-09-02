@@ -1,0 +1,18 @@
+{
+  "language": "marathi",
+  "chapter": 9,
+  "sourceHash": "fnv1a64:0273a2275da1aa7a",
+  "lessonIds": [
+    "MR-C02-naav",
+    "MR-C02-majhe",
+    "MR-C02-aahe",
+    "MR-C02-majhe-naav-aahe",
+    "MR-C02-tu-tumhi",
+    "MR-C02-kaay",
+    "MR-C02-tumche-naav-kaay-aahe",
+    "MR-C02-anand",
+    "MR-C02-practice",
+    "MR-R09-runway-tail-r2"
+  ],
+  "tex": "marathi/book/chapters/ch09-introductions.tex"
+}

@@ -29,7 +29,7 @@ bare: **père** and **mère**. And they are secretly the *same words* as English
 - **la mère** ("mother") ← Latin **māter** ← PIE **\*méh₂tēr**.
 
 Note the articles: *le* père (masculine), *la* mère (feminine) — the gender
-you have been tracking since Chapter 1.
+you have been tracking since your first lesson.
 
 ## The English connection (one sound-law)
 

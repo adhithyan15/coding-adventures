@@ -72,7 +72,7 @@ book has kept since *la main*.
 ## Why it's said this way: si, not oui
 <!-- hl-knowledge: introduces=[]; assesses=[FR-PRAGMATICS-SI-05, FR-CULTURE-OUI-04] -->
 
-Chapter 18's **si** — the "yes" for contradicting a negative — fits this
+The **si** you learned — the "yes" for contradicting a negative — fits this
 table exactly:
 
 > **Vous ne voulez pas de sucre ?** — ***Si, un peu.*** ("You don't want

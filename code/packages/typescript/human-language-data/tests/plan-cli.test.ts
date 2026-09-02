@@ -92,7 +92,10 @@ describe("the plan CLI", () => {
     // dimension is partial for a reason worth keeping visible — the track's sound
     // material lives in per-lesson `sounds:` front matter and in a reference page,
     // neither of which declares an atom, so no probe can reach it.
-    expect(out).toMatch(/0 complete and 7 partial of 138/);
+    // 7 -> 8 partial: `exam-inventory-tamil-a1.json` lands, partial in all four
+    // for the same reason every proxy-derived file is: a proxy lends a level and
+    // cannot close a dimension.
+    expect(out).toMatch(/0 complete and 8 partial of 138/);
   }, 120_000);
 
   it("does not let an unreadable inventory look like an absent one", () => {
@@ -118,7 +121,8 @@ describe("the plan CLI", () => {
     // 5 -> 6: Telugu A1 joins the readable remainder. The French file is still
     // the only one this test corrupts, so this number tracks the written total
     // minus exactly one.
-    expect(out).toMatch(/0 complete and 6 partial of 138/);
+    // 6 -> 7: Tamil A1 joins it too, on the same rule.
+    expect(out).toMatch(/0 complete and 7 partial of 138/);
     expect(out).toMatch(/1 exist but could not be READ/);
   }, 120_000);
 
@@ -171,20 +175,24 @@ describe("the plan CLI", () => {
     // enumerated -- `apna`, object-marking `ko`, transport, payment, `aaj` --
     // and the honest figure fell to 55%. A ruler drawn too short flatters the
     // corpus, so the bigger denominator is the point, not a side effect.
-    // 530 -> 668, from THREE independent movements that met in this merge
-    // and MUST NOT be added together by hand -- the figure below was re-measured
-    // with `npm run plan`, not derived:
-    //    -1  retiring hand-written French chapter 6 closed A1-PRON-03, obligatory
-    //        liaison, which the generated chapter teaches as a named rule with
-    //        its own atom instead of two passing mentions inside `sounds` blocks.
-    //   -18  the Hindi pre-A1 vocabulary round-four tranche (chapters 68-74)
-    //        filled 18 probes that were `null`, so 18 enumerated points stopped
-    //        being uncovered. The denominator did not move.
-    //  +157  `core/exam-inventory-telugu-a1.json` landed: 326 A1 points
-    //        enumerated, 169 covered, so Telugu contributes its 157 unmapped.
-    // Two of those LOWER the number and one RAISES it, which is exactly why the
-    // total has to be measured rather than assumed to compose.
-    expect(out).toMatch(/668 uncovered point\(s\) across 7 written/);
+    // 530 -> 529: retiring hand-written French chapter 6 closed A1-PRON-03,
+    // obligatory liaison, which the generated chapter teaches as a named rule
+    // with its own atom instead of two passing mentions inside `sounds` blocks.
+    // 686 -> 775, and 7 -> 8 written. FOUR independent movements have now met in
+    // this file, and the figure below is RE-MEASURED with `npm run plan` against
+    // the merged tree -- never added up by hand, because two lower it and two
+    // raise it:
+    //     -1  retiring hand-written French chapter 6 closed A1-PRON-03,
+    //         obligatory liaison, taught in the generated chapter as a named
+    //         rule with its own atom rather than two passing mentions.
+    //    -18  the Hindi pre-A1 vocabulary tranche filled 18 probes that were
+    //         `null`; 18 enumerated points stopped being uncovered, denominator
+    //         unmoved.
+    //   +157  `core/exam-inventory-telugu-a1.json`: 326 A1 points, 169 covered.
+    //   +107  `core/exam-inventory-tamil-a1.json`:  262 A1 points, 155 covered.
+    // Composing these by arithmetic gives 793 or 668 depending which side you
+    // start from. Both are wrong; the merged tree measures 775.
+    expect(out).toMatch(/775 uncovered point\(s\) across 8 written/);
     // 190 -> 403, and 4 -> 5 written. Marathi's own A1 inventory enumerates 301
     // points and the corpus covers 88, so it contributes 213. Nothing regressed:
     // a twentieth track stopped being unmeasurable, and the backlog grew by
@@ -193,7 +201,7 @@ describe("the plan CLI", () => {
     // one, which is the only DELE-sourced set here, so its denominator is what an
     // attributable A1 inventory actually asks for rather than what a
     // descriptor-led guess remembered to include.
-    expect(out).toMatch(/668 uncovered point\(s\) across 7 written/);
+    expect(out).toMatch(/775 uncovered point\(s\) across 8 written/);
     // 529 -> 686, and 6 -> 7 written. `core/exam-inventory-telugu-a1.json`
     // enumerates 326 A1 points and the corpus covers 169, so Telugu contributes
     // its 157 unmapped points. The unmeasured remainder falls 18 -> 17 for the
@@ -207,8 +215,16 @@ describe("the plan CLI", () => {
     // the word for a house, the age question but not the age answer. A merged
     // point would have scored those as covered, which is the flattering
     // direction; splitting them is what makes the 52% honest.
-    expect(out).toMatch(/0 complete and 7 partial of 138/);
-    expect(out).toMatch(/the other 17 track\(s\)/);
+    //
+    // Tamil's 262 is the smallest Indic denominator and that is a property of
+    // the LANGUAGE: eight Spanish past-tense points collapse into one Tamil gap
+    // because Tamil's past is one slot in one machine, four article points
+    // collapse into two because Tamil has no article, and nine punctuation
+    // points collapse into one because modern Tamil uses the same marks as
+    // English. Every collapse lists all of its source points in `derivedFrom`,
+    // which is what the totality test above checks.
+    expect(out).toMatch(/0 complete and 8 partial of 138/);
+    expect(out).toMatch(/the other 16 track\(s\)/);
   }, 120_000);
 
   it("rejects a flag used as another flag's value", () => {

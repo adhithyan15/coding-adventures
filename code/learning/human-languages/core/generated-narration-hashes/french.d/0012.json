@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 12,
-  "sourceHash": "fnv1a64:8b504d6740122b60",
+  "sourceHash": "fnv1a64:dfc2faa271f418ce",
   "lessonIds": [
     "FR-C12-nombres-11-16",
     "FR-C12-nombres-17-20"
@@ -10,7 +10,7 @@
   "drivablePrefix": 0,
   "text": "french/narration/ch12.txt",
   "json": "french/narration/ch12.json",
-  "textHash": "fnv1a64:ba25cd8c811e667f",
-  "jsonHash": "fnv1a64:3e2062a44a557414",
+  "textHash": "fnv1a64:1fa7802eb77e95dd",
+  "jsonHash": "fnv1a64:bc4701adc0b7c99f",
   "findings": []
 }
