@@ -1,5 +1,57 @@
 # Changelog
 
+## Unreleased — chapter 5 is generated, and stops being hand-written LaTeX
+
+`kannada/book/chapters/ch05-first-verbs.tex` is now built by the generator from
+its six lessons. It was one of the five `handwritten` ledger entries Kannada
+owned; four remain.
+
+The flip itself is one line of ledger. The work was the migration underneath it:
+all five `KA-C05-*` content lessons were schema v1, which declares no knowledge
+atoms at all, and `book.ts` refuses to generate a chapter from a v1 lesson. So
+each now carries v2 frontmatter, an `hl-knowledge` directive on every body
+block, and eight new atoms that name what the chapter actually teaches:
+
+    KA-LEX-C05-MATANADU-01 / KA-GRAMMAR-C05-MATANADU-02   the verb, and stem+tense+person
+    KA-LEX-C05-KANNADA-01  / KA-GRAMMAR-C05-KANNADA-02    the sentence, and no 1st-person gender
+    KA-LEX-C05-IRU-01      / KA-GRAMMAR-C05-IRU-02        "to be/stay/live", and -alli after the noun
+    KA-LEX-C05-MAADU-01    / KA-GRAMMAR-C05-MAADU-02      "work-do", and noun + māḍu
+
+Three headings in `KA-C05-practice` classified as `unknown`, which v2 rejects.
+They were fixed by PREFIXING the existing text rather than rewriting it, so no
+Kannada or English prose byte was retyped:
+
+  * `Build the sentences`   -> `Guided Practice: Build the sentences`
+  * `The engine`            -> `You'll want to know: The engine`
+  * `Roots you now carry`   -> `The word, taken apart: Roots you now carry`
+
+### Nothing was dropped, and that was measured rather than asserted
+
+`handwritten_parity.py` reported chapter 5 clean, but its block-gap number is
+not on its own trustworthy — it counts LaTeX environments, so a word taught in a
+paragraph inside a surviving box costs zero blocks while costing a whole lesson.
+So the chapter was sized a second way, by counting the words the `.tex` teaches
+against the lessons that own them, and the flip was gated on token loss:
+
+- distinct Kannada tokens: **22 hand-written -> 34 generated, 0 lost**
+- Kannada tokens in the chapter owned by no lesson: **0**
+- `cousinweb` etymology boxes **3 -> 5**, `grammarlens` **4 -> 4**, `sounds` **1 -> 1**
+
+The generated chapter is longer because it publishes the warm-up and wrap-up
+recall blocks the hand-written version left out. The one piece of hand-written
+framing that does not survive verbatim — "Until now, 'to be' and 'to be-not.'
+Now verbs that *act*" — is already the substance of `KA-C05-maatanaadu`'s own
+warm-up, so it is paraphrased in place rather than lost.
+
+Counted against the merged tree, never derived: `handwritten.d` holds **37**
+entries on `origin/main` and **36** on this branch. The `grouped-shards`
+handwritten ratchet is deliberately untouched, per its own in-file directive.
+
+Verified: human-language-data 124 test files / 1730 tests, all eleven `check:*`
+gates, language-ladder 39 files / 442 tests, and the whole Kannada book compiled
+under XeLaTeX — 421 pages, zero overfull boxes — with chapter 5's pages read on
+the page rather than in the source.
+
 ## Unreleased — counting one word at a time, and a script ladder that arrives before the words it reads
 
 Chapter 7 taught all ten numbers in **two** lessons, each opening on a

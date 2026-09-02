@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:982164e4b1a0a6d0",
+  "sourceHash": "fnv1a64:eb695ffc1767edb2",
   "lessons": [
     {
       "id": "KA-C05-maatanaadu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bbb27b107deab7c0",
+      "sourceHash": "fnv1a64:0c1a783efd216ed8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -341,7 +341,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ee8ab5fecf9fc491",
+      "sourceHash": "fnv1a64:69d4d853fd30aba4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -475,7 +475,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5356e4c5fb6d672e",
+      "sourceHash": "fnv1a64:4ebc10e0ed85da92",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -609,7 +609,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:60ff5c01ea880037",
+      "sourceHash": "fnv1a64:e46cfdc978d41eca",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -759,7 +759,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:05f3abbe98b985e3",
+      "sourceHash": "fnv1a64:eb8458b81d0d744d",
       "notice": null,
       "blocks": [
         {
@@ -781,8 +781,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Build the sentences",
+          "type": "guided-production",
+          "title": "Guided Practice: Build the sentences",
           "segments": [
             {
               "kind": "pause",
@@ -830,8 +830,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The engine",
+          "type": "input",
+          "title": "You'll want to know: The engine",
           "segments": [
             {
               "kind": "pause",
@@ -870,8 +870,8 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Roots you now carry",
+          "type": "etymology",
+          "title": "The word, taken apart: Roots you now carry",
           "segments": [
             {
               "kind": "pause",

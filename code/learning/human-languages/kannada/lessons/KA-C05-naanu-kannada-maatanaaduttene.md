@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: KA-C05-naanu-kannada-maatanaaduttene
+spine_node: SPINE-EXCHANGE-NAMES
 sequence: 270
 chapter: 5
 type: phrase
@@ -10,22 +12,37 @@ concept_tag: KA-WORD-KANNADA
 prerequisites: [KA-C05-maatanaadu, KA-C03-naanu]
 sounds: [double-nn]
 roots: [kannada]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [KA-LEX-C05-MATANADU-01]
+introduces:
+  knowledge: [KA-LEX-C05-KANNADA-01, KA-GRAMMAR-C05-KANNADA-02]
+practises:
+  knowledge: [KA-LEX-C05-MATANADU-01, KA-LEX-C05-KANNADA-01, KA-GRAMMAR-C05-KANNADA-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [KA-C05-maatanaadu, KA-C03-naanu]
 ---
 
 # ನಾನು ಕನ್ನಡ ಮಾತನಾಡುತ್ತೇನೆ (nānu kannaḍa mātanāḍuttēne) — "I speak Kannada"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Your first full, moving sentence — and it names one of the classical
 languages of India.
 
 ## The letters in this word
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **ಕನ್ನಡ** (*kannaḍa*): **ಕ** (*ka*) + **ನ್ನ** (*nna*, doubled) + **ಡ** (*ḍa*).
 
 ## The sentence, taken apart
+<!-- hl-knowledge: introduces=[KA-LEX-C05-KANNADA-01]; assesses=[] -->
 
 **ನಾನು ಕನ್ನಡ ಮಾತನಾಡುತ್ತೇನೆ** = **ನಾನು** (*nānu*, "I") + **ಕನ್ನಡ** (*kannaḍa*, the
 object) + **ಮಾತನಾಡುತ್ತೇನೆ** (*mātanāḍuttēne*, "speak") — "I Kannada speak," the
@@ -35,6 +52,7 @@ over a thousand years old and holds the second-most Jnanpith literary awards of
 any Indian language — a classical tongue, spoken by some fifty million.
 
 ## Grammar Lens: no gender on "I speak"
+<!-- hl-knowledge: introduces=[KA-GRAMMAR-C05-KANNADA-02]; assesses=[] -->
 
 *Mātanāḍuttēne* is the same whether a man or a woman says it — Kannada, like Tamil
 and Telugu, marks **no gender in the first or second person** (only the third:
@@ -42,6 +60,7 @@ and Telugu, marks **no gender in the first or second person** (only the third:
 speaker's gender (*boltā/boltī*).
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C05-MATANADU-01, KA-LEX-C05-KANNADA-01, KA-GRAMMAR-C05-KANNADA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "nānu kannaḍa mātanāḍuttēne"]
@@ -49,6 +68,7 @@ speaker's gender (*boltā/boltī*).
 - [YOU SAY: does "I speak" change for a man vs. a woman? (No — no 1st-person gender)]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C05-KANNADA-01, KA-GRAMMAR-C05-KANNADA-02] -->
 
 [PAUSE 3s] Say "I speak Kannada," and give the likely root of the name. (*Nānu
 kannaḍa mātanāḍuttēne*; *kar-nāḍu*, "the high/black land.")

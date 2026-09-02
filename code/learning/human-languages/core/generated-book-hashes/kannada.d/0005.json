@@ -1,0 +1,14 @@
+{
+  "language": "kannada",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:27e9275b3908b296",
+  "lessonIds": [
+    "KA-C05-maatanaadu",
+    "KA-S05-letter-ta",
+    "KA-C05-naanu-kannada-maatanaaduttene",
+    "KA-C05-iru",
+    "KA-C05-kelasa-maadu",
+    "KA-C05-practice"
+  ],
+  "tex": "kannada/book/chapters/ch05-first-verbs.tex"
+}
