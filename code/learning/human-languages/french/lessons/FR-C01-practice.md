@@ -1,26 +1,45 @@
 ---
+schema_version: 2
 id: FR-C01-practice
+spine_node: SPINE-TAKE-LEAVE
 sequence: 55
 chapter: 1
 type: practice-mix
 headword: (practice)
 gloss: the French greetings, all together
 concept_tag: CH1-PRACTICE
-prerequisites: [FR-C01-salut, FR-C01-bonjour, FR-C01-bonsoir, FR-C01-bonne-nuit]
+prerequisites: [FR-C01-salut, FR-W01-salut-dictation, FR-C01-bien, FR-C01-le-la, FR-C01-bonjour, FR-C01-bonsoir, FR-C01-bonne-nuit]
 sounds: []
 roots: []
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [FR-LEX-SALUT-01, FR-ORTHO-SALUT-01, FR-LEX-BIEN-02, FR-LEX-BON-03, FR-GRAM-ADJ-AGREEMENT-04, FR-GRAM-LE-LA-GENDER-05, FR-LEX-JOUR-06, FR-LEX-BONJOUR-07, FR-LEX-SOIR-08, FR-LEX-BONSOIR-09, FR-LEX-NUIT-10, FR-LEX-BONNE-NUIT-11]
+introduces:
+  knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [FR-LEX-SALUT-01, FR-ORTHO-SALUT-01, FR-LEX-BIEN-02, FR-LEX-BON-03, FR-GRAM-ADJ-AGREEMENT-04, FR-GRAM-LE-LA-GENDER-05, FR-LEX-JOUR-06, FR-LEX-BONJOUR-07, FR-LEX-SOIR-08, FR-LEX-BONSOIR-09, FR-LEX-NUIT-10, FR-LEX-BONNE-NUIT-11]
+skills: [listening, speaking, reading, writing]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+variety: standard-contemporary
+register: neutral
 reviews_of: [FR-C01-salut, FR-C01-bonjour, FR-C01-bonsoir, FR-C01-bonne-nuit]
 ---
 
 # Practice — the French greetings
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] No new words — just the ones you built, until the register and the
 agreement are automatic.
 
 ## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-SALUT-01, FR-LEX-BIEN-02, FR-LEX-BON-03, FR-GRAM-ADJ-AGREEMENT-04, FR-GRAM-LE-LA-GENDER-05, FR-LEX-JOUR-06, FR-LEX-BONJOUR-07, FR-LEX-SOIR-08, FR-LEX-BONSOIR-09, FR-LEX-NUIT-10, FR-LEX-BONNE-NUIT-11] -->
 
 - **salut** — casual "hi/bye" (← *salus*, "health").
 - **bien** — "well," a one-word answer (← *bene*; Spanish kept the same word).
@@ -35,6 +54,7 @@ Two threads run through it all: **register** (*salut* vs *bonjour*) and
 **agreement** (*bon jour* / *bon soir* / *bonne nuit*).
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-SALUT-01, FR-LEX-BIEN-02, FR-LEX-BONJOUR-07, FR-LEX-BONSOIR-09, FR-LEX-BONNE-NUIT-11, FR-GRAM-ADJ-AGREEMENT-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: greet a friend casually, then a shopkeeper politely — *salut* /
@@ -56,6 +76,7 @@ once from memory, then uncover it and check the silent final **t**. This is a
 chapter-level retrieval of the tiny trace-to-dictation runway, not a new word.
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-BONJOUR-07] -->
 
 [PAUSE 3s] French *bonjour* is singular; the Spanish morning greeting is
 plural — name it. (*Buenos días*.) Next chapter: introducing yourself —

@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 1,
-  "sourceHash": "fnv1a64:6896df8baa8a75d3",
+  "sourceHash": "fnv1a64:cd0d9cdb45286562",
   "lessonIds": [
     "FR-C01-salut",
     "FR-W01-salut-observe",
@@ -19,11 +19,5 @@
     "FR-C01-bonne-nuit",
     "FR-C01-practice"
   ],
-  "voiceLessons": 9,
-  "drivablePrefix": 1,
-  "text": "french/narration/ch01.txt",
-  "json": "french/narration/ch01.json",
-  "textHash": "fnv1a64:9921ecb25facf851",
-  "jsonHash": "fnv1a64:e36216aa7c4b5757",
-  "findings": []
+  "tex": "french/book/chapters/ch01-greetings.tex"
 }

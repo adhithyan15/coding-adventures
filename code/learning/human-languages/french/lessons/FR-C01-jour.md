@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: FR-C01-jour
+spine_node: SPINE-TIME-OF-DAY
 sequence: 25
 chapter: 1
 type: word
@@ -9,29 +11,49 @@ concept_tag: TIME-DAY
 prerequisites: [FR-C01-le-la]
 sounds: [j-zh, vowel-ou, r-uvular]
 roots: [diurnum]
-est_minutes: 4
+etymology_hook: "jour ← Latin diurnum, 'daytime', from diēs — the detour that makes journal, journey and adjourn cousins of Spanish día"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [FR-GRAM-LE-LA-GENDER-05]
+introduces:
+  knowledge: [FR-LEX-JOUR-06]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [FR-LEX-JOUR-06, FR-GRAM-LE-LA-GENDER-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+variety: standard-contemporary
+register: neutral
 reviews_of: [FR-C01-le-la]
 ---
 
 # jour — "day," and a detour through Latin that explains English *journey*
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Your first French noun. In Spanish "day" is *día*; in French it's
 *jour* — they look nothing alike, yet they're cousins. The gap between them is
 the whole lesson, and it cracks open a shelf of English words.
 
 ## You'll want to know first
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - [le / la / les](./FR-C01-le-la.md) — gender and the articles; *jour* is
   masculine, *le jour*.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - `j-zh` — **j** is the soft *zh* of *measure*: *jour* starts *zh-*.
 - `vowel-ou` — **ou** = *oo*. So *jour* = *zhoor*. → [reference](../pronunciation-reference.md)
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[FR-LEX-JOUR-06]; assesses=[] -->
 
 **le jour** — "the day" (masculine). Root: Latin **diurnum** ("daytime,
 daily") — itself from **dies** ("day"). That extra step through *diurnum* is
@@ -57,6 +79,7 @@ French:
 > family this whole book is built to show.
 
 ## Grammar Lens
+<!-- hl-knowledge: introduces=[]; assesses=[FR-GRAM-LE-LA-GENDER-05] -->
 
 *jour* is **masculine** — *le jour* — a gender it inherited from its Latin
 source. As always, learn it with the article. Plural: French adds a
@@ -64,6 +87,7 @@ source. As always, learn it with the article. Plural: French adds a
 tells your ear it's plural.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-JOUR-06, FR-GRAM-LE-LA-GENDER-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: "le jour" — *luh zhoor*]
@@ -71,6 +95,7 @@ tells your ear it's plural.
 - [YOU SAY: "les jours" — plural, heard only in the *les*]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-JOUR-06] -->
 
 [PAUSE 3s] *jour* and Spanish *día* share which grandparent root? (Latin
 *dies*.) What English travel-word is literally "a day's worth"? (*Journey*,
