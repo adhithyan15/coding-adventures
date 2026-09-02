@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C23-hear-ghano",
+    "language": "marwadi",
+    "chapter": 28,
+    "sequence": 2170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38296cb9d04ba461"
+  },
+  "findings": []
+}

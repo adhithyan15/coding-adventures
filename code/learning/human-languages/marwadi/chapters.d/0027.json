@@ -1,0 +1,23 @@
+{
+  "chapter": 27,
+  "title": "How Much Is This? No New Signs",
+  "label": "ch:mw-price-question",
+  "canDo": "I can ask the price of one named thing and ask for the total at the end, at a shop counter, a food stall, or a rickshaw, using no Devanagari sign I have not already written.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "MW-C22-price-three",
+    "kind": "four-skill-function-map",
+    "summary": "The asking word arrives by ear, joins two source-printed price questions that add no new sign, and the first of them is then run unchanged over a shopping word, a food word, and a transport word in four separately scored skills.",
+    "assesses": [
+      "MW-LEX-KITNO-01",
+      "MW-SCRIPT-KITNO-01",
+      "MW-LEX-PRICE-QUESTION-01",
+      "MW-SCRIPT-PRICE-QUESTION-01",
+      "MW-LEX-TOTAL-QUESTION-01",
+      "MW-SCRIPT-TOTAL-QUESTION-01",
+      "MW-PERFORMANCE-PRICE-FOUR-SKILL-01"
+    ]
+  }
+}

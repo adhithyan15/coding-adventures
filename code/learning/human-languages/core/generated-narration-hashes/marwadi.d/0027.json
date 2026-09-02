@@ -1,0 +1,23 @@
+{
+  "language": "marwadi",
+  "chapter": 27,
+  "sourceHash": "fnv1a64:9d999ea95266ab8c",
+  "lessonIds": [
+    "MW-C22-hear-kitno",
+    "MW-C22-kitno",
+    "MW-C22-hear-price-question",
+    "MW-C22-price-question",
+    "MW-R22-price-two",
+    "MW-C22-hear-total-question",
+    "MW-C22-total-question",
+    "MW-C22-price-three",
+    "MW-R22-script-close"
+  ],
+  "voiceLessons": 8,
+  "drivablePrefix": 1,
+  "text": "marwadi/narration/ch27.txt",
+  "json": "marwadi/narration/ch27.json",
+  "textHash": "fnv1a64:226731f05e700545",
+  "jsonHash": "fnv1a64:8d17f30ffe6ba7dd",
+  "findings": []
+}

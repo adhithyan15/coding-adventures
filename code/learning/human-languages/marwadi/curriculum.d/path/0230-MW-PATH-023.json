@@ -1,0 +1,25 @@
+{
+  "id": "MW-PATH-023",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "MW-C24-hear-lo",
+    "MW-C24-lo",
+    "MW-C24-hear-pay",
+    "MW-C24-pay",
+    "MW-R24-pay-two",
+    "MW-C24-hear-do",
+    "MW-C24-do",
+    "MW-C24-hear-aakhri",
+    "MW-C24-aakhri",
+    "MW-C24-hear-final-price",
+    "MW-C24-final-price",
+    "MW-R24-final-two",
+    "MW-C24-final-four",
+    "MW-R24-script-close"
+  ],
+  "before": [],
+  "inline": [
+    "MW-EXT-037-FINAL-PRICE"
+  ],
+  "after": []
+}

@@ -1,0 +1,22 @@
+{
+  "language": "marwadi",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:f1c3bb4fd4eb7199",
+  "lessonIds": [
+    "MW-C24-hear-lo",
+    "MW-C24-lo",
+    "MW-C24-hear-pay",
+    "MW-C24-pay",
+    "MW-R24-pay-two",
+    "MW-C24-hear-do",
+    "MW-C24-do",
+    "MW-C24-hear-aakhri",
+    "MW-C24-aakhri",
+    "MW-C24-hear-final-price",
+    "MW-C24-final-price",
+    "MW-R24-final-two",
+    "MW-C24-final-four",
+    "MW-R24-script-close"
+  ],
+  "tex": "marwadi/book/chapters/ch29-final-price.tex"
+}

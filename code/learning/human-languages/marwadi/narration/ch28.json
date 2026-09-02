@@ -1,0 +1,1244 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 28,
+  "title": "Too Dear: The Answer and the Counter",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:d134e917be59818e",
+  "lessons": [
+    {
+      "id": "MW-C23-hear-ghano",
+      "sequence": 2170,
+      "title": "Hear ghaṇo — very",
+      "headword": "ghaṇo",
+      "romanization": "ghaṇo",
+      "gloss": "very — the word that turns a plain description into a reaction",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:38296cb9d04ba461",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the price payoff, the request payoff, and the six-word weather payoff, then say expensive and cheap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ghaṇo — very."
+            },
+            {
+              "kind": "speech",
+              "text": "Two beats. The first carries the breathed gh of ghar; the second carries the same retroflex ṇ as kitṇo and pāṇī."
+            },
+            {
+              "kind": "speech",
+              "text": "The source prints it in front of a description, where English puts very: the food is ghaṇo tasty. Put it in front of mahaṅgo and you have said more than that a thing costs money: you have said it costs too much, which is the whole reason a bargain begins."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C23-hear-ghano-meaning",
+              "prompt": "What does ghaṇo do to the word after it?",
+              "assesses": [
+                "MW-LEX-GHANO-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "very",
+                "it means very",
+                "makes it stronger",
+                "intensifies it"
+              ],
+              "feedback": {
+                "correct": "Right: ghaṇo strengthens the description that follows it.",
+                "incorrect": "It describes nothing on its own. It turns expensive into very expensive."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C23-ghano",
+      "sequence": 2180,
+      "title": "घणो (ghaṇo) — very, on the page",
+      "headword": "घणो",
+      "romanization": "ghaṇo",
+      "gloss": "very, written from the gha of ghar and the retroflex n of paani",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:bf0203421176bb03",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say very, then write home and clarified butter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घ + णो becomes घणो — ghaṇo — very."
+            },
+            {
+              "kind": "speech",
+              "text": "Three signs, none of them new. Write घर, घी, and घणो (ghaṇo) one under the other: the same घ opens all three. Then write कितणो beside घणो (ghaṇo) and check the णो at the end is drawn the same way in both."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at घणो (ghaṇo), cover it, wait five seconds, and write it from the sound."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C23-ghano-delayed",
+              "prompt": "From ghaṇo, write the word that means very.",
+              "assesses": [
+                "MW-SCRIPT-GHANO-01",
+                "MW-LEX-GHANO-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "घणो",
+                "घणो very"
+              ],
+              "feedback": {
+                "correct": "Right: घणो, the घ of घर with the णो of कितणो.",
+                "incorrect": "Write घ first, then णो."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C23-hear-price-answer",
+      "sequence": 2190,
+      "title": "Hear ye ghaṇo mahaṅgo hai — this is very expensive",
+      "headword": "ye ghaṇo mahaṅgo hai",
+      "romanization": "ye ghaṇo mahaṅgo hai",
+      "gloss": "this is very expensive — the reply that starts a bargain",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dfbbd5eac96d9009",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the price question, write very and expensive, then say and write the sweet crumbled wheat dessert."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ye ghaṇo mahaṅgo hai — this is very expensive."
+            },
+            {
+              "kind": "speech",
+              "text": "Four words, every one of them already yours. ye points, ghaṇo strengthens, mahaṅgo describes, hai closes. The order is fixed: the strengthener always comes before the word it strengthens."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it once flat, as a fact, and once slowly, the way you would actually say it across a counter when you mean to keep talking. The words do not change; the pace does, and the pace is what tells a seller a bargain has begun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Marwari Pathshala, Lesson 9; Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C23-hear-price-answer-meaning",
+              "prompt": "What does ye ghaṇo mahaṅgo hai say?",
+              "assesses": [
+                "MW-LEX-PRICE-ANSWER-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "this is very expensive",
+                "it is very expensive",
+                "this costs too much",
+                "very expensive"
+              ],
+              "feedback": {
+                "correct": "Right: point, strengthen, describe, close.",
+                "incorrect": "Take it in four: ye, ghaṇo, mahaṅgo, hai."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C23-price-answer",
+      "sequence": 2200,
+      "title": "ये घणो महंगो है। (ye ghaṇo mahaṅgo hai.) — the reply on the page",
+      "headword": "ये घणो महंगो है।",
+      "romanization": "ye ghaṇo mahaṅgo hai.",
+      "gloss": "this is very expensive, written from four words already written",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d0a3124776c8808e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 22,
+              "perItem": false,
+              "source": "[PAUSE 22s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say this is very expensive, write temple, then write ख."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ये | घणो (ghaṇo) | महंगो | है।."
+            },
+            {
+              "kind": "speech",
+              "text": "Four written words, each written before. The dot above महंगो is the same ं that sits in मंदिर; it is the only mark in the line that is easy to drop, so check for it last."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the line once. Cover it for ten seconds and write all four words. Open the model, check the dot first, and repair only the word that changed."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Marwari Pathshala, Lesson 9; Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C23-price-answer-write",
+              "prompt": "Write the line that says this is very expensive.",
+              "assesses": [
+                "MW-SCRIPT-PRICE-ANSWER-01"
+              ],
+              "responseSeconds": 22,
+              "acceptedResponses": [
+                "ये घणो महंगो है।",
+                "ये घणो महंगो है"
+              ],
+              "feedback": {
+                "correct": "Four known words, and the dot is where it belongs.",
+                "incorrect": "Rebuild one word at a time: ये | घणो | महंगो | है।"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R23-answer-two",
+      "sequence": 2210,
+      "title": "Retrieve the question and the reply",
+      "headword": "ये कितणे कू है? — ये घणो महंगो है।",
+      "romanization": "ye kitṇe kū hai? — ye ghaṇo mahaṅgo hai.",
+      "gloss": "the price question and its reply, retrieved as one turn and its answer",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dbf6b5f9e8982016",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the seven-word food payoff, write य, write lentils, then write the total question from the last chapter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear the two lines in the wrong order and say which one has to come first. Give both meanings. Read two cards. Write both from sound, one under the other, and read the pair aloud as a single exchange."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Marwari Pathshala, Lesson 9; Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R23-answer-two-recall",
+              "prompt": "Write the price question, then the reply that says it costs too much.",
+              "assesses": [
+                "MW-LEX-PRICE-QUESTION-01",
+                "MW-LEX-PRICE-ANSWER-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "ये कितणे कू है? — ये घणो महंगो है।",
+                "ये कितणे कू है? ये घणो महंगो है।",
+                "ये कितणे कू है ये घणो महंगो है"
+              ],
+              "feedback": {
+                "correct": "Question and reply stay separately retrievable and in order.",
+                "incorrect": "Repair only the missed line, then write the pair again in order."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C23-hear-thodu",
+      "sequence": 2220,
+      "title": "Hear thoṛu — a little",
+      "headword": "thoṛu",
+      "romanization": "thoṛu",
+      "gloss": "a little — the softener that keeps a counter-offer polite",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc8ddfa2f7e90e5d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 22,
+              "perItem": false,
+              "source": "[PAUSE 22s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the three-word transport payoff, then say cart and bus and write both."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "thoṛu — a little."
+            },
+            {
+              "kind": "speech",
+              "text": "Two beats. The first is the breathed th of ṭhelā; the middle carries the flapped ṛ you already say inside kapṛā and ghoṛo."
+            },
+            {
+              "kind": "speech",
+              "text": "Hold it against ghaṇo, which you learned four lessons ago. ghaṇo makes a word bigger; thoṛu makes an amount smaller. A seller hears the difference at once, and it is the difference between complaining about a price and offering to meet it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C23-hear-thodu-meaning",
+              "prompt": "What does thoṛu mean, and how does it differ from ghaṇo?",
+              "assesses": [
+                "MW-LEX-THODU-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "a little; ghaṇo means very",
+                "a little",
+                "a little bit",
+                "some; ghaṇo means very"
+              ],
+              "feedback": {
+                "correct": "Right: thoṛu makes an amount small, ghaṇo makes a description strong.",
+                "incorrect": "One shrinks and one strengthens: thoṛu is the small one."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C23-thodu",
+      "sequence": 2230,
+      "title": "थोड़ु (thoṛu) — a little, on the page",
+      "headword": "थोड़ु",
+      "romanization": "thoṛu",
+      "gloss": "a little, written with the dotted flap of kapda and the short u of dukan",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:b4def7748217272d",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 22,
+              "perItem": false,
+              "source": "[PAUSE 22s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say a little, then write clothes and horse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "थो + ड़ु becomes थोड़ु — thoṛu — a little."
+            },
+            {
+              "kind": "speech",
+              "text": "Three of this track's most easily confused marks meet in four signs. ड़ is ड with the nukta under it, exactly as in कपड़ा and घोड़ो; the short ु hangs beneath it. Write कपड़ा, घोड़ो, and थोड़ु (thoṛu) in a column and check that all three dots sit at the same height."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at थोड़ु (thoṛu), cover it, wait five seconds, and write it. Check the dot, then the ु below it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C23-thodu-delayed",
+              "prompt": "From thoṛu, write the word that means a little.",
+              "assesses": [
+                "MW-SCRIPT-THODU-01",
+                "MW-LEX-THODU-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "थोड़ु",
+                "थोड़ु a little"
+              ],
+              "feedback": {
+                "correct": "Right: the dot under ड and the short u below it.",
+                "incorrect": "Build थो first, then add ड़ with its dot and ु."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C23-hear-karo",
+      "sequence": 2240,
+      "title": "Hear karo — make it",
+      "headword": "karo",
+      "romanization": "karo",
+      "gloss": "make it; do it — the second asking word this track teaches",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:85554b5c311da5d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the seven-word shopping payoff, then write a little and cheap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "karo — make it; do it."
+            },
+            {
+              "kind": "speech",
+              "text": "Two beats, and the ending is one you have already heard. Say dikhāvo and karo one after the other: both close on the same -o, because both are the same kind of asking word, said to one person across a counter."
+            },
+            {
+              "kind": "speech",
+              "text": "dikhāvo asks somebody to show you a thing. karo asks them to make something so — and what they are to make it, you say in front of the word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C23-hear-karo-meaning",
+              "prompt": "What does karo ask somebody to do?",
+              "assesses": [
+                "MW-LEX-KARO-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "make it so",
+                "make it",
+                "do it",
+                "make it that way"
+              ],
+              "feedback": {
+                "correct": "Right: karo asks for the thing to be made a certain way.",
+                "incorrect": "It shares its ending with dikhāvo because it is the same kind of asking word."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C23-karo",
+      "sequence": 2250,
+      "title": "करो (karo) — make it, on the page",
+      "headword": "करो",
+      "romanization": "karo",
+      "gloss": "make it, written from three of the first signs this track ever taught",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:f4ce765e49ea682f",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 22,
+              "perItem": false,
+              "source": "[PAUSE 22s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say make it, write राम, write ख, then write how much and very."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क + रो becomes करो — karo — make it."
+            },
+            {
+              "kind": "speech",
+              "text": "Three signs, and the middle one is र, the very first sign this book taught. Set करो (karo) beside ख and say both: क and ख differ only by breath, and only one of them belongs in this word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at करो (karo), cover it, wait five seconds, and write it from the sound. Check that you wrote क and not ख."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C23-karo-delayed",
+              "prompt": "From karo, write the word that asks for something to be made so.",
+              "assesses": [
+                "MW-SCRIPT-KARO-01",
+                "MW-LEX-KARO-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "करो",
+                "करो make it"
+              ],
+              "feedback": {
+                "correct": "Right: क, not ख, and then रो.",
+                "incorrect": "There is no breath in this word: write क, then रो."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C23-hear-bargain-request",
+      "sequence": 2260,
+      "title": "Hear thoṛu sasto karo — make it a little cheaper",
+      "headword": "thoṛu sasto karo",
+      "romanization": "thoṛu sasto karo",
+      "gloss": "make it a little cheaper — the counter-offer, heard whole",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:04bc45813285dd4f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say this is very expensive, then say item and cheap and write both."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "thoṛu sasto karo — make it a little cheaper."
+            },
+            {
+              "kind": "speech",
+              "text": "Three words, all yours: thoṛu shrinks the amount, sasto is the sastā you learned in Chapter 19, and karo asks."
+            },
+            {
+              "kind": "speech",
+              "text": "The source prints sasto here, with -o rather than the -ā the earlier lesson taught. Both forms are used; the ending shifts with what the word is describing. Learn the printed line as it stands, and treat sastā and sasto as the same word wearing two endings rather than two different words."
+            },
+            {
+              "kind": "speech",
+              "text": "Say the whole exchange in order: ask the price, say it is too much, then this."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C23-hear-bargain-request-meaning",
+              "prompt": "What does thoṛu sasto karo ask for?",
+              "assesses": [
+                "MW-LEX-BARGAIN-REQUEST-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "make it a little cheaper",
+                "make it cheaper",
+                "a little cheaper please",
+                "lower the price a little"
+              ],
+              "feedback": {
+                "correct": "Right: shrink, describe, ask.",
+                "incorrect": "Take it in three: thoṛu, sasto, karo."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C23-bargain-request",
+      "sequence": 2270,
+      "title": "थोड़ु सस्तो करो। (thoṛu sasto karo.) — the counter-offer on the page",
+      "headword": "थोड़ु सस्तो करो।",
+      "romanization": "thoṛu sasto karo.",
+      "gloss": "make it a little cheaper, written with the vowel-killer already taught for sasta",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d5c24367e25b59b5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 22,
+              "perItem": false,
+              "source": "[PAUSE 22s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ् on its own, then write wife and item, and point to the vowel-killer in each."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "थोड़ु (thoṛu) | सस्तो | करो (karo)।."
+            },
+            {
+              "kind": "speech",
+              "text": "Three written words. सस्तो is the सस्ता of Chapter 19 with ो where ा stood; its vowel-killer between the two स does not move. The stop at the end is the । you have written since Chapter 9."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the line once. Cover it for ten seconds and write all three words. Open the model and check two marks first: the dot under ड़ and the vowel-killer inside सस्तो. Repair only the word that changed."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C23-bargain-request-write",
+              "prompt": "Write the line that asks for a little off the price.",
+              "assesses": [
+                "MW-SCRIPT-BARGAIN-REQUEST-01"
+              ],
+              "responseSeconds": 22,
+              "acceptedResponses": [
+                "थोड़ु सस्तो करो।",
+                "थोड़ु सस्तो करो"
+              ],
+              "feedback": {
+                "correct": "The dot and the vowel-killer both survived.",
+                "incorrect": "Rebuild one word at a time: थोड़ु | सस्तो | करो।"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R23-bargain-two",
+      "sequence": 2280,
+      "title": "Retrieve a little and make it",
+      "headword": "थोड़ु — करो",
+      "romanization": "thoṛu — karo",
+      "gloss": "the softener and the asking word, retrieved apart from the line they share",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7e0f5d4fd9d26438",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the five-word transport payoff, then write vehicle and very."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear each word alone, out of its line, and give its meaning. Read two cards. Write both from sound. Then rebuild the whole counter-offer from those two words plus the one you already had, and say it once at speaking pace."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R23-bargain-two-recall",
+              "prompt": "Write a little, then the word that asks for something to be made so.",
+              "assesses": [
+                "MW-LEX-THODU-01",
+                "MW-LEX-KARO-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "थोड़ु — करो",
+                "थोड़ु करो",
+                "थोड़ु, करो"
+              ],
+              "feedback": {
+                "correct": "Both come back on their own, not only inside the line.",
+                "incorrect": "Repair only the missed word, then repeat the pair."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C23-counter-four",
+      "sequence": 2290,
+      "title": "Payoff — ask, react, counter",
+      "headword": "ये कितणे कू है? — ये घणो महंगो है। — थोड़ु सस्तो करो।",
+      "romanization": "ye kitṇe kū hai? — ye ghaṇo mahaṅgo hai. — thoṛu sasto karo.",
+      "gloss": "a three-turn bargaining exchange in four separately scored skills",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a1ff38c606038c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the price payoff and the seven-word shopping payoff, then write clothes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three turns, in this order and no other."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear the three lines shuffled and put them back in order."
+            },
+            {
+              "kind": "speech",
+              "text": "Produce all three from meaning cues, as one continuous exchange."
+            },
+            {
+              "kind": "speech",
+              "text": "Read the three printed lines and say who speaks which."
+            },
+            {
+              "kind": "speech",
+              "text": "Write all three from dictation, without a model."
+            },
+            {
+              "kind": "speech",
+              "text": "Pass each skill separately. You can now open a price, react to it, and make one counter-offer. Hearing a number in reply, agreeing a final price, and paying are still untaught."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Marwari Pathshala, Lesson 9; Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C23-counter-four-payoff",
+              "prompt": "Complete all four scored checks, then write the third turn of the exchange.",
+              "assesses": [
+                "MW-PERFORMANCE-BARGAIN-FOUR-SKILL-01"
+              ],
+              "responseSeconds": 45,
+              "acceptedResponses": [
+                "थोड़ु सस्तो करो।",
+                "थोड़ु सस्तो करो"
+              ],
+              "feedback": {
+                "correct": "A three-turn exchange now passes in all four skills.",
+                "incorrect": "Repair only the failed skill or turn, then retry that part."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R23-script-close",
+      "sequence": 2300,
+      "title": "Close the writing loop for ़, ् and ं",
+      "headword": "़ — ् — ं",
+      "romanization": "nukta — virāma — anusvāra",
+      "gloss": "delayed closure for the three marks this chapter can least afford to drop",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:591238814eda8c15",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the three-turn bargaining payoff, say expensive, then write ख."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three marks change a word without adding a letter, and all three are easy to lose. Write each on its own from a spoken cue: the dot under a letter, the vowel-killer, the dot above the headstroke."
+            },
+            {
+              "kind": "speech",
+              "text": "Then write थोड़ु (thoṛu), कपड़ा, पत्नी, बच्चा, and महंगो from dictation and mark which of the three you used in each. Finish with both lines of this chapter. Repair only the missed mark and rewrite its word once."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Marwari Pathshala, Lesson 9; Unicode Devanagari chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R23-script-close-recall",
+              "prompt": "Write the mark that goes under a letter, then the one that goes above the headstroke.",
+              "assesses": [
+                "MW-SCRIPT-NUKTA-01",
+                "MW-SCRIPT-ANUSVARA-01"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "़ — ं",
+                "़ ं",
+                "़, ं"
+              ],
+              "feedback": {
+                "correct": "Both marks close on their own, away from the words that carry them.",
+                "incorrect": "One hangs below the letter, one sits above the line."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -23,8 +23,9 @@ twelve family and relationship labels by ear before their spelling, add only
 reading, and writing. Chapters 14--22 extend the same meaning-first pattern
 through places, weather, shopping, and transport vocabulary. Chapters 23--25
 carry it into food and drink, adding no new sign at all in the first of the
-three and only **ट** and **य** in the other two. Every lesson is
-at most five minutes.
+three and only **ट** and **य** in the other two. Chapters 26--31 then stop
+adding nouns and teach one transaction instead, isolating a single new sign,
+**ख**, across sixty lessons. Every lesson is at most five minutes.
 
 ## What this starter edition can honestly claim
 
@@ -54,10 +55,19 @@ as lentils, clarified butter, vegetables, flatbread, hard wheat rolls, the
 sweet crumbled wheat dessert, and tea. The first three need no sign the hand
 has not already made; **ट** is isolated against the **ठ** of **ठेला** before
 the two bread words, and **य** against the **भ** of **भाई** before tea. The
-seven form a food map in all four skills, while offering food, accepting or
-refusing it, asking for more, and naming a meal stay untaught.
-The track now contains 197 canonical lessons and 53 distinct taught
-headwords. That is still a small pre-A1
+seven form a food map in all four skills.
+Chapters 26--31 then give those nineteen everyday nouns something to do. One
+five-turn counter exchange -- **ये कपड़ा दिखावो। / ये कितणे कू है? / ये घणो
+महंगो है। / थोड़ु सस्तो करो। / पैसा ले लो।** -- is taught once and run
+unchanged at a shop, a food stall, and a roadside, with only the noun moving.
+Along the way the reader gains **ये, कितणो, घणो, थोड़ु, आखरी** and five asking
+words, **दिखावो, करो, लो, दो, लावो**, each separated from the others by the job
+it does; **चाय लावो।** orders any of the seven food words. Only **ख** is new,
+isolated against **क** by breath one lesson before it is needed. Understanding
+a number a seller names, refusing a final price and walking away, asking for
+more, and naming a meal all stay untaught.
+The track now contains 257 canonical lessons and 71 distinct taught
+headwords, five of them verbs. That is still a small pre-A1
 capability, not completion of pre-A1 and not exam readiness. The curriculum map
 records every untouched spine concept explicitly so the remaining work stays
 measurable.
@@ -104,6 +114,12 @@ bargaining exchange. The same lesson supplies **कपड़ा, महंगो
 Marwari Pathshala Lesson 10 supplies **बस, गाड़ी, ठेला, रिक्शा, घोड़ो** for
 Chapters 21--22; the book teaches a transport vocabulary map without claiming
 the still-untaught ticket, timetable, location, or problem-report exchanges.
+Marwari Pathshala Lessons 6 and 9 supply the Chapter 26--31 transaction:
+**दिखावो, ये, कितणो, कू, हुआ, थोड़ु, सस्तो, करो, लो, दो, आखरी, दोगे** and
+**लावो**, together with the printed lines the book teaches whole. Two forms are
+named rather than flattened: the source prints **सस्तो** where Chapter 19 taught
+**सस्ता**, and **कितणे** where Chapter 27 teaches **कितणो**, so the book teaches
+the printed form and records that the ending shifts.
 Marwari Pathshala Lesson 6 supplies **दाल, घी, सबजी, रोटी, बाटी, चूरमा, चाय**
 for Chapters 23--25, and independently prints **पाणी** with the same spelling
 Chapter 4 already teaches. That source writes vegetables as **सबजी**, without a

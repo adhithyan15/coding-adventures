@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C25-request-five",
+    "language": "marwadi",
+    "chapter": 30,
+    "sequence": 2500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:006ffaa79de5ca2a"
+  },
+  "findings": []
+}
