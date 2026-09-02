@@ -388,6 +388,59 @@ pub fn load(bytes: &[u8]) -> Result<FontFile, FontError> {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Raw table access — for crates that read tables this one does not
+// ─────────────────────────────────────────────────────────────────────────────
+//
+// FNT02 (`glyph-parser`) reads `glyf` and `loca`, which are outline data rather
+// than metrics and so are deliberately out of this crate's scope. But there
+// should be exactly ONE implementation of the table directory in the repository:
+// a second crate re-deriving "where does `glyf` start" is how two readers come
+// to disagree about the same font.
+//
+// So this crate stays the only thing that parses the directory, and hands out
+// byte ranges to whoever needs a table it does not itself interpret.
+
+impl FontFile {
+    /// The raw font bytes.
+    pub fn data(&self) -> &[u8] {
+        &self.data
+    }
+
+    /// Locate a table by its four-byte tag and return its bytes.
+    ///
+    /// Returns `None` if the font has no such table, or if the directory
+    /// entry's offset and length fall outside the file -- a truncated font
+    /// should read as "table absent" rather than panic in the caller's slice.
+    pub fn table(&self, tag: &[u8; 4]) -> Option<&[u8]> {
+        let num_tables = read_u16(&self.data, 4).ok()?;
+        for i in 0..num_tables as usize {
+            let rec = 12 + i * 16;
+            if self.data.get(rec..rec + 4)? != tag {
+                continue;
+            }
+            let offset = read_u32(&self.data, rec + 8).ok()? as usize;
+            let length = read_u32(&self.data, rec + 12).ok()? as usize;
+            return self.data.get(offset..offset.checked_add(length)?);
+        }
+        None
+    }
+
+    /// `head.indexToLocFormat`: 0 = short `loca` offsets, 1 = long.
+    ///
+    /// Getting this backwards does not fail loudly -- it yields offsets that
+    /// are plausible and wrong, so the caller reads real bytes from the wrong
+    /// place and draws a glyph-shaped thing that is not the glyph.
+    pub fn index_to_loc_format(&self) -> Result<i16, FontError> {
+        read_i16(&self.data, self.tables.head as usize + 50)
+    }
+
+    /// `maxp.numGlyphs`.
+    pub fn num_glyphs(&self) -> Result<u16, FontError> {
+        read_u16(&self.data, self.tables.maxp as usize + 4)
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // font_metrics
 // ─────────────────────────────────────────────────────────────────────────────
 

@@ -4,6 +4,15 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — raw table access for FNT02
+
+`FontFile::data`, `FontFile::table`, `FontFile::index_to_loc_format` and
+`FontFile::num_glyphs`. `glyph-parser` reads `glyf` and `loca`, which are
+outline data and so deliberately outside this crate's metrics-only scope — but
+it should not re-derive the table directory to find them. Keeping the directory
+in exactly one crate is the point: a second implementation of "where does
+`glyf` start" is how two readers come to disagree about the same font.
+
 ### Added — OpenType `MATH` table
 
 `math_constants`, `italic_correction`, and `has_math_table`. This is the whole
