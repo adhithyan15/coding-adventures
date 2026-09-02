@@ -1133,6 +1133,11 @@ fn analyze_package_degradations_with_runtime_and_tokens(
                         &composed.layout.def.root,
                     )
                 }
+                Backend::SwiftUI => {
+                    mosaic_emit_swiftui::pipeline::radio_groups_with_native_semantics(
+                        &composed.layout.def.root,
+                    )
+                }
                 _ => HashSet::new(),
             };
             collect_native_degradations(
@@ -1469,16 +1474,23 @@ fn ignored_native_property(
                 "the backend lowers HostCheckbox to a two-state control and ignores the authored indeterminate state",
             ))
         }
-        // #13007 — Compose/Flutter/Qt now apply real mutual-exclusion
-        // wiring (selectableGroup/ButtonGroup/synthesized groupValue)
-        // for a literal `group:` value shared by 2+ resolvable
-        // siblings — see each backend's `radio_groups_with_native_
-        // semantics`. SwiftUI has no idiomatic ancestor-grouping
-        // widget for N independently-bound Toggles and stays
-        // unconditionally degraded (tracked separately). A `slot:`-
-        // bound group, or a literal value with no qualifying peer,
-        // still can't be resolved at compile time on any backend and
-        // keeps reporting the degradation.
+        // #13007 — all four backends now apply real mutual-exclusion
+        // wiring for a literal `group:` shared by resolvable siblings:
+        // Qt a ButtonGroup, Compose selectableGroup, Flutter a
+        // synthesized groupValue, SwiftUI a Picker. See each backend's
+        // `radio_groups_with_native_semantics`, which is the SAME
+        // predicate its emitter uses -- so what is reported here cannot
+        // drift from what was actually emitted.
+        //
+        // SwiftUI took longest because it has no container that groups
+        // Toggles after the fact; a Picker replaces the run instead,
+        // which makes it a sibling-level transform and only sound when
+        // the members are genuinely interchangeable options. Its
+        // predicate is correspondingly stricter than the others'.
+        //
+        // A `slot:`-bound group, or a literal value with no qualifying
+        // peer, still cannot be resolved at compile time on any backend
+        // and keeps reporting the degradation.
         ("HostRadio", "group")
             if matches!(
                 backend,
@@ -2289,11 +2301,10 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 // Dependencies this package's `[host_assets]` declared. The
                 // emitter cannot know what a replacement host file imports, so
                 // without this the emitted project does not resolve.
-                let pubspec =
-                    mosaic_app_bindings::flutter_pubspec_with_host_asset_dependencies(
-                        &pubspec,
-                        &host_asset_dependencies_for(host_asset_dependencies, "flutter"),
-                    );
+                let pubspec = mosaic_app_bindings::flutter_pubspec_with_host_asset_dependencies(
+                    &pubspec,
+                    &host_asset_dependencies_for(host_asset_dependencies, "flutter"),
+                );
                 let runtime_distribution = if let Some(source) = runtime_library {
                     let file_name = runtime_file_name(source)?;
                     format!(
@@ -5785,11 +5796,12 @@ layout Controls {
     /// #13007 — a literal `group:` value shared by 2 real sibling
     /// `HostRadio`s (matching `mosaic-pkg-deck-options`'s actual
     /// authoring shape) gets real native mutual-exclusion wiring on
-    /// Compose/Flutter/Qt, so the degradation disappears there.
-    /// SwiftUI has no idiomatic ancestor-grouping widget and keeps
-    /// reporting it.
+    /// every native backend, so the degradation disappears on all of
+    /// them. SwiftUI was the last: it has no container that groups
+    /// Toggles after the fact, so a qualifying run becomes one `Picker`
+    /// instead, whose single selection is exclusive by construction.
     #[test]
-    fn literal_radio_group_with_two_siblings_is_native_on_compose_flutter_qt_not_swiftui() {
+    fn literal_radio_group_with_two_siblings_is_native_on_every_backend() {
         let pkg = make_package("mosaic-pkg-leech-action", &["LeechAction"]);
         fs::write(
             pkg.path().join("src/LeechAction.mil"),
@@ -5821,13 +5833,7 @@ layout LeechAction {
             (Backend::Compose, vec![]),
             (Backend::Flutter, vec![]),
             (Backend::Qt, vec![]),
-            (
-                Backend::SwiftUI,
-                vec![
-                    ("property.radio-group-ignored", "root.children[0].props[2]"),
-                    ("property.radio-group-ignored", "root.children[1].props[2]"),
-                ],
-            ),
+            (Backend::SwiftUI, vec![]),
             (Backend::Xaml, vec![]),
         ] {
             let out = TempDir::new().unwrap();
@@ -7198,7 +7204,11 @@ files = [
     /// silently written somewhere.
     #[test]
     fn targets_the_writer_rejects_fail_the_build() {
-        for rejected in ["./MosaicHost.cpp", "sub/../MosaicHost.cpp", "/MosaicHost.cpp"] {
+        for rejected in [
+            "./MosaicHost.cpp",
+            "sub/../MosaicHost.cpp",
+            "/MosaicHost.cpp",
+        ] {
             let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
             let host_dir = pkg.path().join("host").join("qt");
             fs::create_dir_all(&host_dir).unwrap();
@@ -7400,10 +7410,6 @@ files = [
         assert!(generated.exists());
         assert_ne!(fs::read_to_string(&generated).unwrap(), "// unrelated\n");
     }
-
-
-
-
 
     /// A `host_asset` that overwrites the generated Qt runtime host is recorded.
     ///
