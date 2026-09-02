@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C80-may",
+    "language": "telugu",
+    "chapter": 80,
+    "sequence": 2850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08a6c1d774782b04"
+  },
+  "findings": []
+}

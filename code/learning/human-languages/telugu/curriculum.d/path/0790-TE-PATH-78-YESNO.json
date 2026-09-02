@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-78-YESNO",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "TE-C78-isit",
+    "TE-C78-doyouknow",
+    "TE-C78-dontknow",
+    "TE-C78-didntunderstand",
+    "TE-C78-isthere"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-78-YESNO"
+  ],
+  "after": []
+}

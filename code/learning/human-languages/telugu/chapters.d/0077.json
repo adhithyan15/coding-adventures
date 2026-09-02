@@ -1,0 +1,21 @@
+{
+  "chapter": 77,
+  "title": "Where You Are From",
+  "label": "ch:te-where-you-are-from",
+  "canDo": "I can say which town and country I am from in Telugu, count past twenty, and give my age.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "TE-C77-thirty",
+    "kind": "production",
+    "summary": "Complete TE-C77-thirty and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C77-FROM-01",
+      "TE-LEX-C77-FROM-02",
+      "TE-LEX-C77-FROM-03",
+      "TE-LEX-C77-FROM-04",
+      "TE-LEX-C77-FROM-05"
+    ]
+  }
+}

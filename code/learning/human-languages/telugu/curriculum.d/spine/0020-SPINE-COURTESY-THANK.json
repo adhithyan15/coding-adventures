@@ -5,7 +5,8 @@
     "TE-PATH-51-COURTESY",
     "TE-PATH-56-HOUSE",
     "TE-PATH-65-MANNERS",
-    "TE-PATH-72-MARKET"
+    "TE-PATH-72-MARKET",
+    "TE-PATH-80-WISH"
   ],
   "omits": [
     "COURTESY-THANKS-CASUAL"
