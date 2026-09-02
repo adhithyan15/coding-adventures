@@ -1,0 +1,27 @@
+{
+  "chapter": 29,
+  "title": "Take the Money: Closing the Bargain",
+  "label": "ch:mw-final-price",
+  "canDo": "I can ask for a final price and hand over the money, so that a purchase runs from asking to see a thing all the way to paying for it, without learning a new Devanagari sign.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "MW-C24-final-four",
+    "kind": "four-skill-function-map",
+    "summary": "Take and give arrive as a one-beat pair, the word for final joins them, and the two closing lines of a purchase are scored separately in listening, speaking, reading, and writing.",
+    "assesses": [
+      "MW-LEX-LO-01",
+      "MW-SCRIPT-LO-01",
+      "MW-LEX-PAY-01",
+      "MW-SCRIPT-PAY-01",
+      "MW-LEX-DO-01",
+      "MW-SCRIPT-DO-01",
+      "MW-LEX-AAKHRI-01",
+      "MW-SCRIPT-AAKHRI-01",
+      "MW-LEX-FINAL-PRICE-01",
+      "MW-SCRIPT-FINAL-PRICE-01",
+      "MW-PERFORMANCE-FINAL-PRICE-FOUR-SKILL-01"
+    ]
+  }
+}

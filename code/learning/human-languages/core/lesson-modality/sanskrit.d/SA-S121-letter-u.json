@@ -2,8 +2,8 @@
   "lesson": {
     "id": "SA-S121-letter-u",
     "language": "sanskrit",
-    "chapter": 20,
-    "sequence": 1001,
+    "chapter": 15,
+    "sequence": 701,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:a6e4deb80b76f616",
+    "sourceHash": "fnv1a64:e83908e3a1f42af7",
     "detachableSegments": [
       "Script you'll notice: उ",
       "Writing: उ"

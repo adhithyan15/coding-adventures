@@ -1,21 +1,21 @@
 {
   "language": "sanskrit",
   "chapter": 24,
-  "sourceHash": "fnv1a64:fa4441efa49999f1",
+  "sourceHash": "fnv1a64:8b056dd4608b997e",
   "lessonIds": [
     "SA-C24-water",
     "SA-C24-rice",
     "SA-C24-fruit",
+    "SA-S123-letter-o",
     "SA-C24-cloth",
     "SA-C24-lamp",
-    "SA-S122-letter-pha",
-    "SA-S123-letter-o"
+    "SA-S122-letter-pha"
   ],
   "voiceLessons": 5,
-  "drivablePrefix": 5,
+  "drivablePrefix": 3,
   "text": "sanskrit/narration/ch24.txt",
   "json": "sanskrit/narration/ch24.json",
-  "textHash": "fnv1a64:fb3bc115dbdf797a",
-  "jsonHash": "fnv1a64:109735e9ac5bba2c",
+  "textHash": "fnv1a64:1d99cba2c5648967",
+  "jsonHash": "fnv1a64:be0b08f9cc235c38",
   "findings": []
 }

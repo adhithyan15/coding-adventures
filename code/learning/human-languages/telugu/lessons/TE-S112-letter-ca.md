@@ -2,41 +2,41 @@
 schema_version: 2
 id: TE-S112-letter-ca
 spine_node: SPINE-MEET-GREET
-sequence: 366
+sequence: 355
 delivery: script
-chapter: 9
+chapter: 8
 type: writing
 headword: "చ"
 gloss: the single character చ — recognised inside words you already say
 romanization: "ca"
-prerequisites: [TE-S111-letter-sa]
+prerequisites: [TE-S134-vowel-sign-uu]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [TE-SCRIPT-RECOG-111]
+  knowledge: [TE-SCRIPT-RECOG-134]
 introduces:
   knowledge: [TE-SCRIPT-RECOG-112]
 practises:
-  knowledge: [TE-SCRIPT-RECOG-111, TE-SCRIPT-RECOG-112]
+  knowledge: [TE-SCRIPT-RECOG-112, TE-SCRIPT-RECOG-134, TE-SCRIPT-RECOG-148, TE-SCRIPT-RECOG-123]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [TE-S111-letter-sa]
+reviews_of: [TE-S134-vowel-sign-uu, TE-S148-digit-9, TE-S123-letter-dda]
 ---
 
 # చ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-111] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-134, TE-SCRIPT-RECOG-148] -->
 
-[PAUSE 1s] Before the new one: స — what does it do?
+[PAUSE 1s] Before the new one: ◌ూ — what does it do? And one from further back: ౯?
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
-for pages without knowing which mark on the page it was.
+[PAUSE 2s] One character this time — and you have been saying it for pages
+without knowing which mark on the page it was.
 
 ## Script you'll notice: చ
 <!-- hl-knowledge: introduces=[TE-SCRIPT-RECOG-112]; assesses=[] -->
@@ -50,7 +50,6 @@ You already say these, and every one of them has చ somewhere inside it:
 - **పని చేయు** *pani cēyu* — to work (lit. "work-do")
 - **నాకు తెలుగు వచ్చు** *nāku telugu vaccu* — 'I know Telugu'
 - **దయచేసి** *dayacēsi* — please (dayacēsi
-- **క్షమించండి** — please forgive / sorry
 
 ## Writing: చ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-112] -->
@@ -70,13 +69,15 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find చ in the ones that have it]
 
-> నమస్కారం
+> దయచేసి  ·  నమస్కారం
 
 - [YOU TRACE: చ three times, saying *ca* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find చ once more]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-112] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-112, TE-SCRIPT-RECOG-123] -->
 
 [PAUSE 3s] Which character is this — చ? What sound does it carry? (***ca***.)
 Name one word you already say that contains it.
+
+One more, from much earlier: డ — what does it do?

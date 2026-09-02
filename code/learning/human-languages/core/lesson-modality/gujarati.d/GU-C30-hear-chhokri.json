@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C30-hear-chhokri",
+    "language": "gujarati",
+    "chapter": 34,
+    "sequence": 1710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:80485c3923f751f9"
+  },
+  "findings": []
+}

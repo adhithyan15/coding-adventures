@@ -1,0 +1,23 @@
+{
+  "chapter": 32,
+  "title": "Inside the House",
+  "label": "ch:gu-inside-the-house",
+  "canDo": "I can hear and say five everyday Gujarati household words, and read and write one of them.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "GU-C28-house-five",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Five household words enter meaning-first by ear, one lesson each; an oral checkpoint scores listening and speaking apart, window reaches the page with signs taught before chapter 8, and an R1 return carries the chapter-17 family words back at their fourth spacing window.",
+    "assesses": [
+      "GU-LEX-BAARNUN-01",
+      "GU-LEX-BAARI-01",
+      "GU-LEX-KHURSHI-01",
+      "GU-LEX-CHAAVI-01",
+      "GU-LEX-DIVO-01",
+      "GU-SCRIPT-BAARI-01",
+      "GU-PERFORMANCE-HOUSE-FIVE-ORAL-01"
+    ]
+  }
+}

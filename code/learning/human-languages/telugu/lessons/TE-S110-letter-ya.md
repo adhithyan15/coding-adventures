@@ -2,41 +2,41 @@
 schema_version: 2
 id: TE-S110-letter-ya
 spine_node: SPINE-MEET-GREET
-sequence: 346
+sequence: 315
 delivery: script
-chapter: 7
+chapter: 6
 type: writing
 headword: "య"
 gloss: the single character య — recognised inside words you already say
 romanization: "ya"
-prerequisites: [TE-S109-letter-na]
+prerequisites: [TE-S149-digit-0]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [TE-SCRIPT-RECOG-109]
+  knowledge: [TE-SCRIPT-RECOG-149]
 introduces:
   knowledge: [TE-SCRIPT-RECOG-110]
 practises:
-  knowledge: [TE-SCRIPT-RECOG-109, TE-SCRIPT-RECOG-110]
+  knowledge: [TE-SCRIPT-RECOG-110, TE-SCRIPT-RECOG-149, TE-SCRIPT-RECOG-111, TE-SCRIPT-RECOG-06]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [TE-S109-letter-na]
+reviews_of: [TE-S149-digit-0, TE-S111-letter-sa, TE-S06-letter-ra]
 ---
 
 # య — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-109] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-149, TE-SCRIPT-RECOG-111] -->
 
-[PAUSE 1s] Before the new one: న — what does it do?
+[PAUSE 1s] Before the new one: ౦ — what amount does it stand for? And one from further back: స?
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
-for pages without knowing which mark on the page it was.
+[PAUSE 2s] One character this time — and you have been saying it for pages
+without knowing which mark on the page it was.
 
 ## Script you'll notice: య
 <!-- hl-knowledge: introduces=[TE-SCRIPT-RECOG-110]; assesses=[] -->
@@ -74,7 +74,9 @@ and larger than it is printed.
 - [YOU LOOK: back at any page of this chapter and find య once more]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-110] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-110, TE-SCRIPT-RECOG-06] -->
 
 [PAUSE 3s] Which character is this — య? What sound does it carry? (***ya***.)
 Name one word you already say that contains it.
+
+One more, from much earlier: ర — what does it do?

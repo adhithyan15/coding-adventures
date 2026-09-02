@@ -1,10 +1,11 @@
 {
   "language": "telugu",
   "chapter": 33,
-  "sourceHash": "fnv1a64:e8cf8b1c5fc5a86f",
+  "sourceHash": "fnv1a64:1094f3391fc6da43",
   "lessonIds": [
     "TE-C33-anuko",
     "TE-C33-artham-cesuko",
+    "TE-S130-letter-tha",
     "TE-C33-caduvu",
     "TE-C33-raayu"
   ],

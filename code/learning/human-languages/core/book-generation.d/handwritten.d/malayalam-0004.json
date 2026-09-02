@@ -1,5 +1,10 @@
 {
   "language": "malayalam",
   "chapter": 4,
-  "output": "malayalam/book/chapters/ch04-farewells.tex"
+  "output": "malayalam/book/chapters/ch04-farewells.tex",
+  "embeddedLessonIds": [
+    "ML-S110-letter-va",
+    "ML-S116-letter-u",
+    "ML-S141-vowel-sign-uu"
+  ]
 }

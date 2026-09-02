@@ -5,6 +5,7 @@ chapter: 2
 type: phrase
 headword: मम नाम … अस्ति
 gloss: my name is…
+romanization: "mama nāma … asti"
 concept_tag: INTRO-MY-NAME-IS
 prerequisites: [SA-C02-mama, SA-C02-nama, SA-C02-asti]
 sounds: []

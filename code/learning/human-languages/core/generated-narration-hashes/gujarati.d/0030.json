@@ -1,0 +1,23 @@
+{
+  "language": "gujarati",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:59018154ec6e9cfa",
+  "lessonIds": [
+    "GU-R26-numbers-r4",
+    "GU-R26-hovun-javun-r4",
+    "GU-R26-aavvun-khaavun-r4",
+    "GU-R26-jovun-jaanvun-r4",
+    "GU-R26-vicharvun-samajvun-r4",
+    "GU-R26-vanchvun-lakhvun-r4",
+    "GU-R26-levun-puchhvun-r4",
+    "GU-R26-time-written-r2",
+    "GU-R26-madad-gamvun-paani-r4"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "gujarati/narration/ch30.txt",
+  "json": "gujarati/narration/ch30.json",
+  "textHash": "fnv1a64:18a472f3ce2ab86f",
+  "jsonHash": "fnv1a64:8bb680a562c88212",
+  "findings": []
+}

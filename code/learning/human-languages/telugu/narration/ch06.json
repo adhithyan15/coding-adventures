@@ -4,8 +4,165 @@
   "chapter": 6,
   "title": "Case Endings and Dative Subjects",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:00b294a07b618e12",
+  "sourceHash": "fnv1a64:d4c62bf2299fd3d7",
   "lessons": [
+    {
+      "id": "TE-S149-digit-0",
+      "sequence": 305,
+      "title": "౦ — the Telugu numeral for 0",
+      "headword": "౦",
+      "romanization": "0",
+      "gloss": "the Telugu numeral ౦ — the digit 0, read as a quantity",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:1a6ad6574757fe39",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ౦",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ౦ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ౯ — what amount does it stand for? And one from further back: ౮?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One numeral this time, and it is read the way every numeral is read: as an amount."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ౦",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "౦ (0) is zero, and it closes the set."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a ring, and you have seen that ring before: ం, the sunna, is drawn the same way. On the page the difference is where it sits — the sunna rides after a letter inside a word, the zero stands in a row of numerals. Context, not shape, tells you which one you are looking at."
+            },
+            {
+              "kind": "speech",
+              "text": "With ౦ (0) in hand the other nine become worth something, because Telugu numerals use place value exactly the way your own digits do. ౧ then ౦ (0) is ten. ౨ then ౦ (0) is twenty. Three digits make hundreds. Nothing new has to be learned for that — the system is one you already own, wearing different characters."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ౦ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ౦ (0) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at this row and say the value of each numeral in it, left to right",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at this row and say the value of each numeral in it, left to right]"
+            },
+            {
+              "kind": "speech",
+              "text": "౧౦, ౨౦, ౯౯, ౧౦౦."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "౦ three times, saying \"0\" as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ౦ three times, saying \"0\" as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "for ౦ (0) on any page of a Telugu book, calendar or doorplate you can find",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: for ౦ on any page of a Telugu book, calendar or doorplate you can find]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which numeral is this — ౦? What amount does it stand for? (౦ is 0, and ౧౦ is ten.)"
+            },
+            {
+              "kind": "speech",
+              "text": "One more, from much earlier: ౪ — what amount does it stand for?"
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "TE-C06-dative-ku",
       "sequence": 310,
@@ -177,6 +334,171 @@
             {
               "kind": "speech",
               "text": "What does -కు (-ku) mean? (\"To\" or \"for.\") Where does it go? (On the end of the noun.) What is \"to me\"? (నాకు nāku — nēnu shrinks to nā- first.) Why does it sometimes appear as -కి? (It adjusts to the preceding vowel — same suffix.) How does that differ from Latin? (Latin fuses case+number+declension into one ending — and -īs doesn't even fix which case; Telugu's carries one meaning, unambiguously, with the seam visible.) Next: the sentence where Telugu leaves out the subject entirely."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-S110-letter-ya",
+      "sequence": 315,
+      "title": "య (ya) — one character, met inside words you already say",
+      "headword": "య",
+      "romanization": "ya",
+      "gloss": "the single character య — recognised inside words you already say",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:4b9b4c9bfa4ea7b3",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: య",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: య and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ౦ (0) — what amount does it stand for? And one from further back: స?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: య",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "య — ya."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not y, it is ya."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these, and every one of them has య (ya) somewhere inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "ధన్యవాదములు dhanyavādamulu — thank you (dhanyavādamulu — \"utterances of 'worthy'\")."
+            },
+            {
+              "kind": "speech",
+              "text": "పని చేయు pani cēyu — to work (lit. \"work-do\")."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: య — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on య (ya) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find య (ya) in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find య in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "ధన్యవాదములు, నమస్కారం."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "య three times, saying ya as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: య three times, saying *ya* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find య (ya) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find య once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — య? What sound does it carry? (ya.) Name one word you already say that contains it."
+            },
+            {
+              "kind": "speech",
+              "text": "One more, from much earlier: ర — what does it do?"
             }
           ]
         }
@@ -363,344 +685,6 @@
             {
               "kind": "speech",
               "text": "What does నాకు తెలుగు వచ్చు (nāku telugu vaccu) literally say? (\"To-me Telugu comes.\") Which verb is doing the work, and where did you meet it? (వచ్చు \"to come\" — Chapter 4.) What has English got that Telugu hasn't? (A nominative \"I\" — nēnu is replaced by the dative nāku.) Why the dative? (Knowing happens to you.) Which English word keeps the same idea? (Methinks.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "TE-S01-letter-ta",
-      "sequence": 325,
-      "title": "త (ta) — one character, met inside words you already say",
-      "headword": "త",
-      "romanization": "ta",
-      "gloss": "the single character త — recognised inside words you already say",
-      "script": "telugu",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "writing-block",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:113659e6c521e242",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script you'll notice: త",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: త and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Rounded, curvy letters, most crowned with a small tick or check-mark headstroke; no continuous top line."
-            },
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script you'll notice: త",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "త — ta."
-            },
-            {
-              "kind": "speech",
-              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not t, it is ta."
-            },
-            {
-              "kind": "speech",
-              "text": "You already say these, and every one of them has త (ta) somewhere inside it:"
-            },
-            {
-              "kind": "speech",
-              "text": "సంతోషం — joy / pleased to meet you."
-            },
-            {
-              "kind": "speech",
-              "text": "వెళ్ళి వస్తాను veḷḷi vastānu — goodbye (lit. \"I'll go and come back\")."
-            },
-            {
-              "kind": "speech",
-              "text": "నేను తెలుగు మాట్లాడతాను — I speak Telugu."
-            },
-            {
-              "kind": "speech",
-              "text": "నాకు తెలుగు వచ్చు nāku telugu vaccu — 'I know Telugu'."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "writing",
-          "title": "Writing: త — copy what you see",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Put your pen on త (ta) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
-            },
-            {
-              "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "LOOK",
-              "instruction": "at these words, and find త (ta) in the ones that have it",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU LOOK: at these words, and find త in the ones that have it]"
-            },
-            {
-              "kind": "speech",
-              "text": "సంతోషం, వెళ్ళి వస్తాను, నమస్కారం."
-            },
-            {
-              "kind": "prompt",
-              "action": "TRACE",
-              "instruction": "త three times, saying ta as you finish each one",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU TRACE: త three times, saying *ta* as you finish each one]"
-            },
-            {
-              "kind": "prompt",
-              "action": "LOOK",
-              "instruction": "back at any page of this chapter and find త (ta) once more",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU LOOK: back at any page of this chapter and find త once more]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which character is this — త? What sound does it carry? (ta.) Name one word you already say that contains it."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "TE-S109-letter-na",
-      "sequence": 326,
-      "title": "న (na) — one character, met inside words you already say",
-      "headword": "న",
-      "romanization": "na",
-      "gloss": "the single character న — recognised inside words you already say",
-      "script": "telugu",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "writing-block",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:614c7635f23af4fc",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script you'll notice: న",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: న and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Rounded, curvy letters, most crowned with a small tick or check-mark headstroke; no continuous top line."
-            },
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script you'll notice: న",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "న — na."
-            },
-            {
-              "kind": "speech",
-              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not n, it is na."
-            },
-            {
-              "kind": "speech",
-              "text": "You already say these, and every one of them has న (na) somewhere inside it:"
-            },
-            {
-              "kind": "speech",
-              "text": "నమస్కారం namaskāram — hello / greetings (namaskāram — \"a making of a bow\")."
-            },
-            {
-              "kind": "speech",
-              "text": "ధన్యవాదములు dhanyavādamulu — thank you (dhanyavādamulu — \"utterances of 'worthy'\")."
-            },
-            {
-              "kind": "speech",
-              "text": "అవును avunu — yes (avunu)."
-            },
-            {
-              "kind": "speech",
-              "text": "నువ్వు / మీరు nuvvu / mīru — you (familiar / respectful)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "writing",
-          "title": "Writing: న — copy what you see",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Put your pen on న (na) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
-            },
-            {
-              "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "LOOK",
-              "instruction": "at these words, and find న (na) in the ones that have it",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU LOOK: at these words, and find న in the ones that have it]"
-            },
-            {
-              "kind": "speech",
-              "text": "నమస్కారం, ధన్యవాదములు, లేదు."
-            },
-            {
-              "kind": "prompt",
-              "action": "TRACE",
-              "instruction": "న three times, saying na as you finish each one",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU TRACE: న three times, saying *na* as you finish each one]"
-            },
-            {
-              "kind": "prompt",
-              "action": "LOOK",
-              "instruction": "back at any page of this chapter and find న (na) once more",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU LOOK: back at any page of this chapter and find న once more]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which character is this — న? What sound does it carry? (na.) Name one word you already say that contains it."
             }
           ]
         }

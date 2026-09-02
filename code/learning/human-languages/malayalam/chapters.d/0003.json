@@ -12,7 +12,11 @@
     "lesson": "ML-C03-practice",
     "kind": "task",
     "summary": "Complete ML-C03-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in Malayalam, answer naturally, and return the question.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "assesses": [
+      "ML-SCRIPT-RECOG-126",
+      "ML-SCRIPT-RECOG-139",
+      "ML-SCRIPT-RECOG-140"
+    ],
+    "note": "The checkpoint's reading check assesses the three letters this chapter teaches. The legacy spoken lessons still carry no typed knowledge atoms, so their representativeness remains authored until migration."
   }
 }

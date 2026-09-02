@@ -1,10 +1,11 @@
 {
   "language": "telugu",
   "chapter": 33,
-  "sourceHash": "fnv1a64:791f531f16275b91",
+  "sourceHash": "fnv1a64:38798cc5ed406637",
   "lessonIds": [
     "TE-C33-anuko",
     "TE-C33-artham-cesuko",
+    "TE-S130-letter-tha",
     "TE-C33-caduvu",
     "TE-C33-raayu"
   ],
@@ -12,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "telugu/narration/ch33.txt",
   "json": "telugu/narration/ch33.json",
-  "textHash": "fnv1a64:6cf429e862d299b4",
-  "jsonHash": "fnv1a64:f2fe985de93c279e",
+  "textHash": "fnv1a64:8f168473905640db",
+  "jsonHash": "fnv1a64:bfc97a9df79b0f74",
   "findings": []
 }

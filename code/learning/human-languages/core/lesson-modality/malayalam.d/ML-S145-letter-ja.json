@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "ML-S145-letter-ja",
+    "language": "malayalam",
+    "chapter": 5,
+    "sequence": 302,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4af34b0c25c82945",
+    "detachableSegments": [
+      "Script you'll notice: ജ",
+      "Writing: ജ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

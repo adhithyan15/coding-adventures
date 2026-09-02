@@ -1,19 +1,21 @@
 {
   "language": "sanskrit",
   "chapter": 4,
-  "sourceHash": "fnv1a64:1c703f23366d237c",
+  "sourceHash": "fnv1a64:6f8fea6906605401",
   "lessonIds": [
     "SA-C04-gacchami",
     "SA-C04-punah",
+    "SA-S110-letter-ra",
     "SA-C04-punar-darshanaya",
     "SA-C04-shvah",
+    "SA-S113-letter-pa",
     "SA-C04-practice"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 0,
   "text": "sanskrit/narration/ch04.txt",
   "json": "sanskrit/narration/ch04.json",
-  "textHash": "fnv1a64:a8c777357573cc97",
-  "jsonHash": "fnv1a64:f7e46563988f6adc",
+  "textHash": "fnv1a64:547c72d973cf09ec",
+  "jsonHash": "fnv1a64:c15d3b40f7dd06c5",
   "findings": []
 }

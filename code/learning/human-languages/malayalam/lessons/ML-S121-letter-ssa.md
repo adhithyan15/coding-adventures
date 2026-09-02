@@ -9,31 +9,31 @@ type: writing
 headword: "ഷ"
 gloss: the single character ഷ — recognised inside words you already say
 romanization: "ṣa"
-prerequisites: [ML-S116-letter-u]
+prerequisites: [ML-S120-sign-anusvara]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-116]
+  knowledge: [ML-SCRIPT-RECOG-120]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-121]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-116, ML-SCRIPT-RECOG-121]
+  knowledge: [ML-SCRIPT-RECOG-120, ML-SCRIPT-RECOG-121]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [ML-S116-letter-u]
+reviews_of: [ML-S120-sign-anusvara]
 ---
 
 # ഷ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-116] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-120] -->
 
-[PAUSE 1s] Before the new one: ഉ — what does it do?
+[PAUSE 1s] Before the new one: ◌ം — what does it do?
 
 [PAUSE 2s] One character this time. Just one — and you have been saying it
 for pages without knowing which mark on the page it was.

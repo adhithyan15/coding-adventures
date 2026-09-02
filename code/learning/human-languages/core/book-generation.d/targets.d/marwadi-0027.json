@@ -1,0 +1,6 @@
+{
+  "language": "marwadi",
+  "chapter": 27,
+  "output": "marwadi/book/chapters/ch27-price-question.tex",
+  "scriptSet": "marwadi-main"
+}

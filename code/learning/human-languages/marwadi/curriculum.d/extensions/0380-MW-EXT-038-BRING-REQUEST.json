@@ -1,0 +1,19 @@
+{
+  "id": "MW-EXT-038-BRING-REQUEST",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "function",
+  "canDo": "I can order a named food or drink, and tell the five asking words this book has taught apart by the job each one does, in four separately scored skills.",
+  "prerequisites": [
+    "MW-EXT-037-FINAL-PRICE"
+  ],
+  "lessons": [
+    "MW-C25-hear-lavo",
+    "MW-C25-lavo",
+    "MW-C25-hear-bring-request",
+    "MW-C25-bring-request",
+    "MW-R25-bring-two",
+    "MW-C25-request-five",
+    "MW-R25-script-close"
+  ]
+}

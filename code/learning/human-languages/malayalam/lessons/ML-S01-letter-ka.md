@@ -2,41 +2,41 @@
 schema_version: 2
 id: ML-S01-letter-ka
 spine_node: SPINE-MEET-GREET
-sequence: 335
+sequence: 325
 delivery: script
 chapter: 6
 type: writing
 headword: "ക"
 gloss: the single character ക — recognised inside words you already say
 romanization: "ka"
-prerequisites: []
+prerequisites: [ML-S146-letter-la]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: []
+  knowledge: [ML-SCRIPT-RECOG-146]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-01]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-01]
+  knowledge: [ML-SCRIPT-RECOG-146, ML-SCRIPT-RECOG-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: []
+reviews_of: [ML-S146-letter-la]
 ---
 
 # ക — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-146] -->
 
-[PAUSE 1s] Highly rounded and loopy — full circles, hooks and curls, with almost no straight lines.
+[PAUSE 1s] Before the new one: ല — what does it do?
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
-for pages without knowing which mark on the page it was.
+[PAUSE 2s] One character this time. One only.
+It has been sitting in front of you on pages you have already read.
 
 ## Script you'll notice: ക
 <!-- hl-knowledge: introduces=[ML-SCRIPT-RECOG-01]; assesses=[] -->
@@ -45,12 +45,14 @@ for pages without knowing which mark on the page it was.
 
 It is a **consonant**, and in this script a consonant is never bare: it comes with an *a* already in it. So it is not *k*, it is **ka**.
 
-You already say these, and every one of them has ക somewhere inside it:
+Highly rounded and loopy — full circles, hooks and curls, with almost no
+straight lines. You wrote this one in the first chapter, inside the greeting;
+here it is again, loose in the middle of four words you now say every day.
 
-- **നമസ്കാരം** *namaskāram* — hello / greetings (namaskāram — "a making of a bow")
+- **നമസ്കാരം** *namaskāram* — hello / greetings
 - **നാളെ കാണാം** *nāḷe kāṇāṁ* — see you tomorrow
 - **താമസിക്കുക** *tāmasikkuka* — to live, to stay
-- **ജോലി ചെയ്യുക** *jōli ceyyuka* — to work (lit. "work-do")
+- **ജോലി ചെയ്യുക** *jōli ceyyuka* — to work
 
 ## Writing: ക — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-01] -->
