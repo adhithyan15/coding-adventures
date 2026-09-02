@@ -1,0 +1,15 @@
+{
+  "id": "HI-PATH-74-ASK",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "lessons": [
+    "HI-C74-kya-polar",
+    "HI-C74-question-rise",
+    "HI-C74-na-tag",
+    "HI-R74-ask"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-074-POLAR-QUESTION"
+  ],
+  "after": []
+}

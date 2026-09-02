@@ -1,0 +1,18 @@
+{
+  "language": "hindi",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:ba2f7e481d288912",
+  "lessonIds": [
+    "HI-C70-sakna",
+    "HI-C70-chahna",
+    "HI-C70-infinitive-object",
+    "HI-R70-can-want"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "hindi/narration/ch70.txt",
+  "json": "hindi/narration/ch70.json",
+  "textHash": "fnv1a64:fa90ea5d0652ebd0",
+  "jsonHash": "fnv1a64:239f90b4d840e9c8",
+  "findings": []
+}

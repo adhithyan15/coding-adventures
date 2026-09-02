@@ -1,0 +1,18 @@
+{
+  "chapter": 72,
+  "title": "When, and Then",
+  "label": "ch:hi-when-then",
+  "canDo": "I can ask when with kab and set one event against another with the jab/tab frame, hearing each word's job from its first letter.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "HI-R72-when",
+    "kind": "production",
+    "summary": "Complete HI-R72-when and run all three: ask when the listener can come, say when you feel happiness, and give a reason you cannot come.",
+    "assesses": [
+      "HI-JOIN-KAB-01",
+      "HI-JOIN-JAB-TAB-01"
+    ]
+  }
+}

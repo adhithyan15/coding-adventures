@@ -1,0 +1,13 @@
+{
+  "id": "HI-PATH-70-INFINITIVE",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "HI-C70-infinitive-object",
+    "HI-R70-can-want"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-070-INFINITIVE-OBJECT"
+  ],
+  "after": []
+}

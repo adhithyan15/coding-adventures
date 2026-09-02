@@ -187,7 +187,13 @@ describe("the plan CLI", () => {
     // 793 -> 792: French chapter 8 closed A1-LEX-07, telling the time -- the
     // generated chapter teaches et quart, et demie and moins le quart, which the
     // hand-written one named in a sentence and then deferred.
-    expect(out).toMatch(/748 uncovered point\(s\) across 8 written/);
+    //
+    // 748 -> 727: the Hindi joining tranche (chapters 68-74) closed twenty-one
+    // of Hindi's own 127. RE-MEASURED with `npm run plan` against the merged
+    // tree rather than derived: this branch was written when the total was 686
+    // across 7 inventories, and Telugu, Tamil, French chapter 8 and three
+    // Marathi migrations landed in between.
+    expect(out).toMatch(/727 uncovered point\(s\) across 8 written/);
     // 190 -> 403, and 4 -> 5 written. Marathi's own A1 inventory enumerates 301
     // points and the corpus covers 88, so it contributes 213. Nothing regressed:
     // a twentieth track stopped being unmeasurable, and the backlog grew by
@@ -196,7 +202,7 @@ describe("the plan CLI", () => {
     // one, which is the only DELE-sourced set here, so its denominator is what an
     // attributable A1 inventory actually asks for rather than what a
     // descriptor-led guess remembered to include.
-    expect(out).toMatch(/748 uncovered point\(s\) across 8 written/);
+    expect(out).toMatch(/727 uncovered point\(s\) across 8 written/);
     // 792 -> 748. The Telugu chapter 74-80 vocabulary tranche was authored
     // against `exam-inventory-telugu-a1.json`'s OWN uncovered list rather than by
     // topic, so 35 headwords closed 44 points and the corpus-wide backlog fell by

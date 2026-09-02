@@ -1,0 +1,18 @@
+{
+  "language": "hindi",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:453a4c17509bc542",
+  "lessonIds": [
+    "HI-C68-aur",
+    "HI-C68-ya",
+    "HI-C68-lekin",
+    "HI-R68-three-joins"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 0,
+  "text": "hindi/narration/ch68.txt",
+  "json": "hindi/narration/ch68.json",
+  "textHash": "fnv1a64:0e2770bfd7700932",
+  "jsonHash": "fnv1a64:27bbedb5b6412a56",
+  "findings": []
+}

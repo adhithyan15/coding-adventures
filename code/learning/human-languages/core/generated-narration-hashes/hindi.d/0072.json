@@ -1,0 +1,17 @@
+{
+  "language": "hindi",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:36917a9ae0826e43",
+  "lessonIds": [
+    "HI-C72-kab",
+    "HI-C72-jab-tab",
+    "HI-R72-when"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 1,
+  "text": "hindi/narration/ch72.txt",
+  "json": "hindi/narration/ch72.json",
+  "textHash": "fnv1a64:5bba5fcf41aa3275",
+  "jsonHash": "fnv1a64:632fd28beba81d8a",
+  "findings": []
+}
