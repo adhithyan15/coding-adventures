@@ -1,65 +1,88 @@
 ---
+schema_version: 2
 id: GE-C04-auf-wiedersehen
-sequence: 145
+spine_node: SPINE-TAKE-LEAVE
+sequence: 151
 chapter: 4
-type: word
+type: phrase
 headword: auf Wiedersehen
-gloss: goodbye (formal — literally "on the seeing-again")
+gloss: goodbye, formally — literally "on the seeing-again"
 concept_tag: FAREWELL
-prerequisites: []
-sounds: [w-is-v, ie-long-ee, h-pronounced]
-roots: [wieder-german, sehen-german]
-etymology_hook: "auf Wiedersehen = auf + wieder ('again') + sehen ('to see') — 'on the seeing-again'; sehen = English see"
-est_minutes: 3
-reviews_of: [GE-C03-practice]
+prerequisites: [GE-C01-der-die-das, GE-C04-sehen, GE-C04-wieder, GE-C04-auf]
+sounds: [w-as-v, ie-long-ee, h-silent-lengthening]
+roots: [wieder-german, sehwan-germanic]
+etymology_hook: "auf Wiedersehen is auf plus wieder plus sehen, on the seeing-again, and it is the exact twin of French au revoir"
+duration:
+  max_seconds: 180
+requires:
+  knowledge: [GE-LEX-AUF-01, GE-LEX-WIEDER-01, GE-LEX-SEHEN-01, GE-LEX-DER-DIE-DAS-02]
+introduces:
+  knowledge: [GE-LEX-AUF-WIEDERSEHEN-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [GE-CULTURE-FAREWELL-METAPHORS-01]
+practises:
+  knowledge: [GE-LEX-AUF-WIEDERSEHEN-01, GE-LEX-AUF-01, GE-LEX-WIEDER-01, GE-LEX-SEHEN-01, GE-LEX-DER-DIE-DAS-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: formal
+variety: standard-contemporary
+reviews_of: [GE-C04-auf, GE-C04-wieder, GE-C04-sehen]
 ---
 
 # auf Wiedersehen — "goodbye," i.e. "till we see again"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-AUF-01, GE-LEX-WIEDER-01, GE-LEX-SEHEN-01] -->
 
-[PAUSE 2s] You can open a German conversation; now close it. The formal goodbye
-is **auf Wiedersehen** — and it's the exact twin of French *au revoir*: both mean
-"**until we see each other again**."
+[PAUSE 2s] Three lessons, three words. Now snap them together — nothing here is
+new.
 
-## Sounds you'll need
+## You'll want to know: auf Wiedersehen
+<!-- hl-knowledge: introduces=[GE-LEX-AUF-WIEDERSEHEN-01]; assesses=[GE-LEX-AUF-01, GE-LEX-WIEDER-01, GE-LEX-SEHEN-01, GE-LEX-DER-DIE-DAS-02] -->
 
-- `w-is-v` — **Wiedersehen**: German *w* says *v*. *owf VEE-der-zay-en*.
-- `ie-long-ee` — *ie* = a long *ee* (*Wieder* = *VEE-der*).
-- Nouns are capitalized in German, so *Wiedersehen* takes a capital W.
+> **auf Wiedersehen** — "goodbye," to a stranger, an elder, or on the telephone.
 
-## The word, taken apart
+Said *owf VEE-der-zay-en*. Piece by piece:
 
-**auf Wiedersehen** breaks cleanly into three familiar pieces:
+| German | English |
+|---|---|
+| *auf* | on, upon |
+| *wieder* | again |
+| *sehen* | to see |
 
-- **auf** = "on / upon" (cognate of English *up / of*).
-- **wieder** = "again" (cognate of English *withering*? no — of the *with-* in
-  *withdraw*; think "back").
-- **sehen** = "to see" — a **straight cognate of English *see*** (both from
-  Germanic *sehwan*).
+So it reads **"on the seeing-again"** → "until we see each other again." Note the
+capital **W**: welded together the three words became a *noun*, and German
+capitalises every noun. *Ein Wiedersehen* on its own is "a reunion."
 
-So *auf Wiedersehen* = **"on the seeing-again"** → "until we see each other
-again." Put it beside the other two tracks and the picture is lovely:
+## Why it's said this way
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-AUF-WIEDERSEHEN-01] -->
 
-| language | goodbye | metaphor |
+Set the three goodbyes side by side and each language shows what it thinks
+parting is:
+
+| Language | Goodbye | The metaphor |
 |---|---|---|
-| **German** | *auf Wiedersehen* | "till we **see** again" |
-| **French** | *au revoir* | "till the **re-seeing**" |
-| **Spanish** | *adiós* | "to **God**" |
+| German | *auf Wiedersehen* | "till we **see** again" |
+| French | *au revoir* | "till the **re-seeing**" |
+| Spanish | *adiós* | "to **God**" |
 
-German and French shake hands on a **re-seeing**; Spanish commends you to God.
-(*Wiedersehen* even works as a noun — *ein Wiedersehen* is "a reunion.")
+German and French shake hands on a re-seeing; Spanish commends you to God. The
+German and the French are not merely similar — they are the same sentence built
+from each language's own parts.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-AUF-WIEDERSEHEN-01, GE-LEX-SEHEN-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "auf Wiedersehen" — *owf VEE-der-zay-en*]
-- [YOU SAY: pull it apart — auf (on) + wieder (again) + sehen (see)]
-- [YOU SAY: German *sehen* = English *see*; *auf Wiedersehen* = French *au revoir*]
+- [YOU SAY: pull it apart — "auf", "wieder", "sehen"]
+- [YOU SAY: "auf Wiedersehen" then "au revoir" — the same sentence, twice]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-AUF-WIEDERSEHEN-01, GE-LEX-SEHEN-01, GE-LEX-WIEDER-01] -->
 
-[PAUSE 3s] What does *auf Wiedersehen* literally mean? ("On the seeing-again.")
-What English word is *sehen*? (*See*.) Which language's goodbye matches its
-metaphor exactly? (French *au revoir*.) Next: the casual bye, **tschüss** — with
-a secret past.
+[PAUSE 3s] What does *auf Wiedersehen* literally say? ("On the seeing-again.")
+What are its three pieces? (*Auf*, *wieder*, *sehen*.) Why the capital **W**?
+(The welded word is a noun, and German capitalises nouns.)

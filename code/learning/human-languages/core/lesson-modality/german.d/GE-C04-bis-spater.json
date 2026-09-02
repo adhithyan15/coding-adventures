@@ -3,7 +3,7 @@
     "id": "GE-C04-bis-spater",
     "language": "german",
     "chapter": 4,
-    "sequence": 165,
+    "sequence": 163,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:6eb967cfba8dcf4f"
+    "sourceHash": "fnv1a64:020033f1360ea25b"
   },
   "findings": []
 }
