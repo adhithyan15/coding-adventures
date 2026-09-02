@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: TA-C01-vanakkam-family-register
+spine_node: SPINE-RESPOND-BASIC
 sequence: 20
 chapter: 1
 type: etymology
@@ -9,18 +11,33 @@ romanization: "vaṇakkam / namaskāram"
 prerequisites: [TA-C01-vanakkam]
 sounds: [tamil-retroflex-n]
 roots: [vaṇaṅku, sanskrit-namas]
-est_minutes: 4
 reviews_of: [TA-C01-vanakkam]
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [TA-ROOT-C01-VANAKKAM-FAMILY-REGISTER-01]
+practises:
+  knowledge: [TA-ROOT-C01-VANAKKAM-FAMILY-REGISTER-01]
+skills: [reading]
+modes: [interpretive]
+strands: [language-focus]
+register: neutral
+variety: standard-colloquial
 ---
+
 
 # வணக்கம் — one bow, two lexical loyalties
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] *Vaṇakkam* names a bow. Neighboring languages name the same gesture
 with a different inherited or borrowed root.
 
-## Across the family
+## The word, taken apart — across the family
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 | Language | "Hello" | Source |
 |---|---|---|
@@ -34,7 +51,8 @@ with a different inherited or borrowed root.
 Four tracks use Sanskrit *namas-*, "bow." Tamil kept its own verb. The gesture
 and social meaning match; the lexical loyalty differs.
 
-## Where the word fits
+## Why it's said this way
+<!-- hl-knowledge: introduces=[TA-ROOT-C01-VANAKKAM-FAMILY-REGISTER-01]; assesses=[] -->
 
 Say *vaṇakkam* with pressed palms or a small head-bow: the gesture is the word.
 It works as **hello and goodbye**, at any time, to almost anyone. It is respectful
@@ -42,6 +60,7 @@ without being stiff; cinema and formal speech can also use it as a ringing
 one-word salutation to a whole room.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-ROOT-C01-VANAKKAM-FAMILY-REGISTER-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "vaṇakkam" with a small bow]
@@ -49,6 +68,7 @@ one-word salutation to a whole room.
 - [YOU CHOOSE: greeting or parting → **வணக்கம்** works]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-ROOT-C01-VANAKKAM-FAMILY-REGISTER-01] -->
 
 [PAUSE 3s] Which Dravidian language kept its native bow-word? (**Tamil**.) What
 did the neighbors borrow? (Sanskrit ***namas-***.) Can *vaṇakkam* greet and part?

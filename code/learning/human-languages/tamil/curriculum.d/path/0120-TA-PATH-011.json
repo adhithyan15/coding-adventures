@@ -2,9 +2,12 @@
   "id": "TA-PATH-011",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "TA-C03-paravayillai"
+    "TA-C03-paravayillai",
+    "TA-C03-practice"
   ],
   "before": [],
-  "inline": [],
+  "inline": [
+    "TA-EXT-011-CONSOLIDATION"
+  ],
   "after": []
 }

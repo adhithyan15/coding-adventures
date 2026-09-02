@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-S125-letter-u",
+    "language": "tamil",
+    "chapter": 8,
+    "sequence": 492,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:75203be08d72c0f2",
+    "detachableSegments": [
+      "Script you'll notice: உ",
+      "Writing: உ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

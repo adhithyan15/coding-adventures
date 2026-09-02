@@ -34,7 +34,7 @@ reviews_of: [TA-C06-dative-stacking, TA-C06-dative-ukku, TA-C05-naan-tamizh-pesu
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-DATIVE-STACKING-01] -->
 
-[PAUSE 2s] In Chapter 5 you said **நான் தமிழ் பேசுகிறேன்** — "**I** speak Tamil,"
+[PAUSE 2s] In Chapter 5 you said ***nāṉ tamiḻ pēsugiṟēṉ*** — "**I** speak Tamil,"
 with *nāṉ* as the subject. Now say "I **know** Tamil." Tamil will not let you use
 *nāṉ*.
 

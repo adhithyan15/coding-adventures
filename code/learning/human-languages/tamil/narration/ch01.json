@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cf571c650aef2b40",
+  "sourceHash": "fnv1a64:6b00158133c2ec5f",
   "lessons": [
     {
       "id": "TA-C01-vanakkam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:b55f10876077d66f",
+      "sourceHash": "fnv1a64:d24def0569c2eb85",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -74,7 +74,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Say it va-ṇak-kam. The ṇ is a retroflex n — curl the tongue back to the roof of the mouth, further back than an English n. The kk is held, a beat longer than a single k, and that length is doing real work: Tamil distinguishes words by it."
+              "text": "Say it va-ṇak-kam. The ṇ is a retroflex n — curl the tongue back to the roof of the mouth, further back than an English n. The kk is held, a beat longer than a single k, and that length is doing real work: Tamil distinguishes words by it."
             }
           ]
         },
@@ -85,7 +85,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "வணக்கம் (vaṇakkam) comes from the verb வணங்கு (vaṇaṅku), “to bow, to pay homage.” Turned into a noun of the action, it means “a bowing, an act of reverence” — the idea of namaste, but from a native Tamil root, not a Sanskrit one. That is Tamil's whole personality: an old language that keeps its home-grown words where its neighbours borrowed."
+              "text": "வணக்கம் (vaṇakkam) comes from the verb vaṇaṅku, “to bow, to pay homage.” Turned into a noun of the action, it means “a bowing, an act of reverence” — the idea of namaste, but from a native Tamil root, not a Sanskrit one. That is Tamil's whole personality: an old language that keeps its home-grown words where its neighbours borrowed."
             }
           ]
         },
@@ -250,7 +250,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7b2bbc20662a036",
+      "sourceHash": "fnv1a64:29a8dff0dd75a040",
       "notice": null,
       "blocks": [
         {
@@ -272,8 +272,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Across the family",
+          "type": "etymology",
+          "title": "The word, taken apart — across the family",
           "segments": [
             {
               "kind": "table",
@@ -301,8 +301,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "Where the word fits",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
           "segments": [
             {
               "kind": "speech",
@@ -382,7 +382,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89e7a1b21edb4f63",
+      "sourceHash": "fnv1a64:e5cc6dedb8f4a28b",
       "notice": null,
       "blocks": [
         {
@@ -404,8 +404,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The word",
+          "type": "input",
+          "title": "You'll want to know: ஆம்",
           "segments": [
             {
               "kind": "speech",
@@ -417,7 +417,7 @@
             },
             {
               "kind": "speech",
-              "text": "Stretch it and you get ஆமாம் (āmām) — \"yes, indeed; that's right.\" Tamil doubles words for warmth and certainty, the way sari sari does."
+              "text": "Stretch it and you get āmām — \"yes, indeed; that's right.\" Tamil doubles words for warmth and certainty, the way sari sari does."
             },
             {
               "kind": "speech",
@@ -443,7 +443,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ஆம் (ām) is the plain “yes.” Doubled for emphasis it becomes ஆமாம் (āmām), “yes, indeed.”"
+              "text": "ஆம் (ām) is the plain “yes.” Doubled for emphasis it becomes āmām, “yes, indeed.”"
             }
           ]
         },
@@ -511,7 +511,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say ஆம் (ām). What does ஆமாம் add? (Emphasis — \"yes, indeed.\") Next: the word for no."
+              "text": "Say ஆம். What does āmām add? (Emphasis — \"yes, indeed.\") Next: the word for no."
             }
           ]
         }
@@ -530,7 +530,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a94793df014883b",
+      "sourceHash": "fnv1a64:816301d55864bb87",
       "notice": null,
       "blocks": [
         {
@@ -552,8 +552,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The word",
+          "type": "input",
+          "title": "You'll want to know: இல்லை",
           "segments": [
             {
               "kind": "speech",
@@ -580,7 +580,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Say it il-lai, with the l held across the join — the same doubling you met in vaṇak-kam. The ending is the diphthong ai, as in English “eye,” not two separate vowels."
+              "text": "Say it il-lai, with the l held across the join — the same doubling you met in vaṇak-kam. The ending is the diphthong ai, as in English “eye,” not two separate vowels."
             }
           ]
         },
@@ -591,7 +591,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "இல்லை (illai) is built on இல் (il), “not-being, absence” — so it is not really the adjective “no” but the statement “[it] is not, [there] is not.” Its positive twin is உண்டு (uṇḍu), “there is.”"
+              "text": "இல்லை (illai) is built on இல் (il), “not-being, absence” — so it is not really the adjective “no” but the statement “[it] is not, [there] is not.” Its positive twin is uṇḍu, “there is.”"
             }
           ]
         },
@@ -678,7 +678,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6865a826571e7c10",
+      "sourceHash": "fnv1a64:266c64ab7cd01a85",
       "notice": null,
       "blocks": [
         {
@@ -700,8 +700,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The word",
+          "type": "input",
+          "title": "You'll want to know: நன்றி",
           "segments": [
             {
               "kind": "speech",
@@ -728,7 +728,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Say it naṇ-ṛi. Tamil hears three different n sounds and this word uses two of them: a dental n (tongue on the teeth) to open, then an alveolar one (on the ridge just behind them). The ṛ is its own sound again, not the English r. English ears flatten all of this to “nandri,” which is close enough to be understood."
+              "text": "Say it naṉ-ṟi. Tamil hears three different n sounds and this word uses two of them: a dental n (tongue on the teeth) to open, then an alveolar ṉ (on the ridge just behind them). The ṟ is its own sound again, not the English r. English ears flatten all of this to “nandri,” which is close enough to be understood."
             }
           ]
         },
@@ -739,7 +739,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "நன்றி (naṉṟi) grows from the root நல் (nal), “good” — so it literally means “goodness.” To thank, in Tamil, is to name the good someone did you."
+              "text": "நன்றி (naṉṟi) grows from the root nal, “good” — so it literally means “goodness.” To thank, in Tamil, is to name the good someone did you."
             }
           ]
         },
@@ -750,7 +750,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Tamil hears three of every n, l, and r. You have now met ந (dental n), ன (alveolar ṉ), and ண (retroflex ṇ) — three letters for three tongue positions (on the teeth / on the ridge / curled back). Tamil does the same for l (ல ள ழ) and r (ர ற). English fuses each set into one letter; Tamil keeps them apart, and the differences change meaning. Learn them word by word, not as a chart."
+              "text": "Tamil hears three of every n, l, and r. You have now heard two of the three ns inside this one word: a dental n (tongue on the teeth) and an alveolar ṉ (on the ridge behind them). There is a third, the retroflex ṇ you met in vaṇakkam — curled back. Tamil does the same for l (l, ḷ, ḻ) and for r (r, ṟ). English fuses each set into one letter; Tamil keeps them apart, and the differences change meaning."
+            },
+            {
+              "kind": "speech",
+              "text": "Each of those sounds has its own letter, and you will meet the letters one at a time later, spelling words you already say. Learn the sounds word by word, not as a chart."
             }
           ]
         },
@@ -826,7 +830,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8f96ca690bf1dd3",
+      "sourceHash": "fnv1a64:525c7e3b91418208",
       "notice": null,
       "blocks": [
         {
@@ -848,8 +852,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Across the family",
+          "type": "etymology",
+          "title": "The word, taken apart — across the family",
           "segments": [
             {
               "kind": "table",
@@ -876,8 +880,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "Where explicit thanks fits",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
           "segments": [
             {
               "kind": "speech",
@@ -961,7 +965,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db956268e9eac39c",
+      "sourceHash": "fnv1a64:21c1c361efe64cde",
       "notice": null,
       "blocks": [
         {
@@ -983,8 +987,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The word",
+          "type": "input",
+          "title": "You'll want to know: சரி",
           "segments": [
             {
               "kind": "speech",
@@ -1109,7 +1113,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8b47a2a83f2b182",
+      "sourceHash": "fnv1a64:4f0ae42e8fc0cd04",
       "notice": null,
       "blocks": [
         {
@@ -1131,8 +1135,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Using them",
+          "type": "input",
+          "title": "The exchange — built from the five words",
           "segments": [
             {
               "kind": "speech",
@@ -1140,11 +1144,15 @@
             },
             {
               "kind": "speech",
-              "text": "— வணக்கம் (vaṇakkam). — வணக்கம் (vaṇakkam). — சரி (sari)? — ஆம் (ām). — நன்றி (naṉṟi). — சரி (sari). — Hello. — Hello. — Alright? — Yes. — Thank you. — Alright."
+              "text": "— vaṇakkam. — vaṇakkam. — sari? — ām. — naṉṟi. — sari. — Hello. — Hello. — Alright? — Yes. — Thank you. — Alright."
             },
             {
               "kind": "speech",
               "text": "Every reply is one word. Tamil is comfortable with that in a way English is not."
+            },
+            {
+              "kind": "speech",
+              "text": "Say the exchange, don't read it. Each of these five words is printed in Tamil in its own lesson, and the letters arrive later, one at a time."
             }
           ]
         },
@@ -1251,7 +1259,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aac58ccad5a75246",
+      "sourceHash": "fnv1a64:d8d2147bc70dd082",
       "notice": null,
       "blocks": [
         {
@@ -1273,8 +1281,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Say them back",
+          "type": "notice",
+          "title": "What you've built — say them back",
           "segments": [
             {
               "kind": "speech",
@@ -1283,34 +1291,41 @@
             {
               "kind": "table",
               "headers": [
-                "",
-                "",
+                "Say this",
                 "Meaning"
               ],
-              "columns": 3,
+              "columns": 2,
               "rowCount": 5,
               "utterances": [
-                "வணக்கம், vaṇakkam. Meaning: hello / greetings.",
-                "நன்றி, naṉṟi. Meaning: thank you.",
-                "ஆம், ām. Meaning: yes.",
-                "இல்லை, illai. Meaning: no / there isn't.",
-                "சரி, sari. Meaning: okay / correct."
+                "vaṇakkam means hello / greetings.",
+                "naṉṟi means thank you.",
+                "ām means yes.",
+                "illai means no / there isn't.",
+                "sari means okay / correct."
               ]
             },
             {
               "kind": "speech",
-              "text": "The Tamil is printed beside each word on purpose. You are expected to recognise only the opening வ of வணக்கம் (vaṇakkam), and you may keep that model visible when you copy it below. Nothing asks you to read or write the other shapes. Formal letter construction still begins later, when every shape will spell a word you already say."
+              "text": "These are five spoken words, so the recap gives you the sound and nothing to decode. One shape is the exception, because it is the one your hand has already met: வணக்கம் (vaṇakkam), whose opening வ you copied. Keep that model visible when you copy it again below."
+            },
+            {
+              "kind": "speech",
+              "text": "The other four are printed in Tamil in their own lessons, where you were shown them and asked to read nothing. Formal letter construction still begins later, one letter at a time, always spelling a word you already say."
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "A promise for later",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
           "segments": [
             {
               "kind": "speech",
-              "text": "Tamil has a warm departure exchange built around going and coming back. It belongs in the later chapter where you learn those actions one at a time. For now, repeating வணக்கம் (vaṇakkam) is enough when you part."
+              "text": "Tamil does not like a blunt goodbye. A bare \"I am leaving\" sounds final in Tamil, even ill-omened, so the everyday farewell is built instead on going and coming back — a promise of return rather than an exit. That whole exchange is a chapter of its own: it needs two verbs you have not met, and you will learn them one at a time."
+            },
+            {
+              "kind": "speech",
+              "text": "Which is why வணக்கம் (vaṇakkam) is the farewell you already own. It parts as well as it meets, it carries the same respect in both directions, and it commits you to nothing you cannot yet say. Use it when you leave, and the departure exchange will be waiting when its verbs are."
             }
           ]
         },

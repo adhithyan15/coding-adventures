@@ -10,8 +10,13 @@
   "payoff": {
     "lesson": "TA-C05-practice",
     "kind": "task",
-    "summary": "Complete TA-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense Tamil sentences with the chapter's first verbs.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Build a short present-tense sentence about yourself out loud — speak, live, work — by putting the stem, the present marker and the person ending together.",
+    "assesses": [
+      "TA-LEX-C05-PESU-01",
+      "TA-LEX-C05-NAAN-TAMIZH-PESUGIREN-01",
+      "TA-LEX-C05-VAAZH-01",
+      "TA-LEX-C05-VELAI-SEY-01",
+      "TA-LEX-C05-PRACTICE-01"
+    ]
   }
 }

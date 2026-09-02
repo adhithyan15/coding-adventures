@@ -1,0 +1,18 @@
+{
+  "language": "tamil",
+  "chapter": 1,
+  "sourceHash": "fnv1a64:09e42faed7ea8af1",
+  "lessonIds": [
+    "TA-C01-vanakkam",
+    "TA-W00-va-guided-copy",
+    "TA-C01-vanakkam-family-register",
+    "TA-C01-aam",
+    "TA-C01-illai",
+    "TA-C01-nandri",
+    "TA-C01-nandri-family-register",
+    "TA-C01-sari",
+    "TA-C01-answering",
+    "TA-C01-practice"
+  ],
+  "tex": "tamil/book/chapters/ch01-greetings.tex"
+}

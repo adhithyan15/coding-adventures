@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: TA-C05-naan-tamizh-pesugiren
+spine_node: SPINE-EXCHANGE-NAMES
 chapter: 5
 sequence: 310
 type: phrase
@@ -10,18 +12,33 @@ concept_tag: TA-WORD-TAMIZH
 prerequisites: [TA-C05-pesu, TA-C03-naan]
 sounds: [zh-retroflex]
 roots: [tamizh]
-est_minutes: 4
 reviews_of: [TA-C05-pesu, TA-C03-naan]
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [TA-LEX-C05-NAAN-TAMIZH-PESUGIREN-01]
+practises:
+  knowledge: [TA-LEX-C05-NAAN-TAMIZH-PESUGIREN-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
 ---
+
 
 # நான் தமிழ் பேசுகிறேன் (nāṉ tamiḻ pēsugiṟēṉ) — "I speak Tamil"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[TA-LEX-C05-NAAN-TAMIZH-PESUGIREN-01]; assesses=[] -->
 
 [PAUSE 2s] Your first full, moving sentence — and it names the language itself,
 with a sound almost no other language has.
 
 ## The sentence, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **நான் தமிழ் பேசுகிறேன்** = **நான்** (*nāṉ*, "I") + **தமிழ்** (*tamiḻ*, "Tamil,"
 the object) + **பேசுகிறேன்** (*pēsugiṟēṉ*, "speak") — "**I Tamil speak**," the
@@ -37,6 +54,7 @@ approximately right matters more than getting it perfect; nobody will mistake
 what you mean.
 
 ## Grammar Lens: no gender on "I speak"
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 Notice *pēsugiṟēṉ* is the same whether a man or a woman says it — Tamil marks
 **no gender in the first or second person** (only the third: *pēsugiṟāṉ* he /
@@ -44,6 +62,7 @@ Notice *pēsugiṟēṉ* is the same whether a man or a woman says it — Tamil 
 or female speaker (*boltā/boltī*). Tamil saves gender for "he/she/it."
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C05-NAAN-TAMIZH-PESUGIREN-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "nāṉ tamiḻ pēsugiṟēṉ"]
@@ -51,6 +70,7 @@ or female speaker (*boltā/boltī*). Tamil saves gender for "he/she/it."
 - [YOU SAY: does "I speak" change for a man vs. a woman? (No — Tamil marks no gender in the 1st person)]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C05-NAAN-TAMIZH-PESUGIREN-01] -->
 
 [PAUSE 3s] Say "I speak Tamil," and name the rare sound in the word *tamiḻ*.
 (*Nāṉ tamiḻ pēsugiṟēṉ*; the retroflex *ḻ* — ழ.)
