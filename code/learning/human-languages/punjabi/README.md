@@ -12,7 +12,10 @@ before the whole; and a book you can read straight through.
   font renders it. Displaying a word is not treated as teaching its letters:
   the gentle reading-and-writing runway teaches each load-bearing sign before
   it is scored, while learners who already read Gurmukhi can skim those steps.
-  The remaining script-closure debt is tracked explicitly in #13068.
+  **Script closure is now 0**: #13068's recognition runway puts every
+  load-bearing Gurmukhi sign in front of the reader, one to three at a time, in
+  the chapter before the first lesson that decodes it, and no glyph the track
+  shows is left untaught.
 - **Two vocabularies, front and centre.** The recurring thread is Punjab's
   place on the road between Persia and India: "thank you" is both the
   Sanskritic **dhannavād** and the Perso-Arabic **shukrīā**, and the script
@@ -58,10 +61,12 @@ book-only human validation remain explicit backlog.
   awarding script credit. In the book.
 - **Chapter 4 — Farewells** ([`lessons/PA-C04-*`](./lessons/)): phir, milāṁge,
   **phir milāṁge**, rabb rākhā ("God keep you"; Arabic + Sanskrit), practice.
-  In the book.
-- **Chapter 5 — First Verbs** ([`lessons/PA-C05-*`](./lessons/)): bolṇā, **maiṁ
-  panjābī boldā hāṁ** (*panj* "five" + *āb* "river"), rahiṇā, kamm karnā,
-  practice. The gendered present habitual. In the book.
+  In the book, generated from the lessons.
+- **Chapter 5 — First Verbs** ([`lessons/PA-C05-*`](./lessons/)): bolṇā,
+  panjābī (*panj* "five" + *āb* "river"), **maiṁ panjābī boldā hāṁ**, rahiṇā,
+  karnā, kamm karnā, practice. The gendered present habitual. One new headword
+  per lesson: the two sessions that used to pack several were split. In the book,
+  generated from the lessons.
 - **Chapter 6 — Numbers 1–5** ([`lessons/PA-C06-*`](./lessons/)): a short
   counting-and-Gurmukhi lesson followed by a prerequisite-ordered explanation
   of why native Punjabi *panj* and Persian *panj* are convergence, not
@@ -209,10 +214,11 @@ Compiles with XeLaTeX using the **vendored** Noto Sans Gurmukhi font
 (`../../_fonts/NotoSansGurmukhi-Static.ttf`). Build the isolated entrypoint with
 `code/scripts/check-book-compile.sh --strict punjabi` from the repository root.
 Generated Gurmukhi runs use that font while section bookmarks use the lessons'
-Latin romanization. The full 268-page, thirty-six-chapter build is warning-free — zero overfull,
+Latin romanization. The full 303-page, thirty-six-chapter build is warning-free — zero overfull,
 underfull, missing-character, Hyperref, duplicate-destination, and
-font-substitution warnings — and the handwritten section bookmarks retain
-readable Gurmukhi plus romanization.
+font-substitution warnings. **Every chapter is now generated from its lessons;**
+the track has no hand-written `.tex` chapters left, so no chapter escapes the
+lesson-level gates.
 
 ## Files
 

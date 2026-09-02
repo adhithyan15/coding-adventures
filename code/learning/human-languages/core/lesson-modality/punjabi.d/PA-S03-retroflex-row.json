@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "PA-S03-retroflex-row",
+    "language": "punjabi",
+    "chapter": 3,
+    "sequence": 185,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a384a4c059288265",
+    "detachableSegments": [
+      "Script you'll notice: ਟ · ਠ · ਡ",
+      "Writing: copy what you can see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

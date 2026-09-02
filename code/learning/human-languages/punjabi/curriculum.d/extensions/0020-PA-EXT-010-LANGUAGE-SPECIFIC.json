@@ -7,7 +7,11 @@
   "prerequisites": [],
   "lessons": [
     "PA-C05-bolna",
+    "PA-C05-panjabi",
     "PA-C05-main-punjabi-bolda-han",
+    "PA-C05-rahna",
+    "PA-C05-karna",
+    "PA-C05-kamm-karna",
     "PA-C06-numbers-1-5"
   ]
 }

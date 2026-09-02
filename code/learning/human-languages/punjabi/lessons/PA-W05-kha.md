@@ -9,32 +9,32 @@ type: writing
 headword: "ਖ"
 romanization: "kha"
 gloss: "trace the Gurmukhi letter kha"
-prerequisites: [PA-W05-work-label]
+prerequisites: [PA-W05-work-label, PA-S08-khakkha-jhajja-pairin]
 sounds: []
 roots: []
 duration:
   max_seconds: 165
 requires:
-  knowledge: [PA-SCRIPT-KA-01]
+  knowledge: [PA-SCRIPT-KA-01, PA-SCRIPT-RECOG-KHA-01]
 introduces:
   knowledge: [PA-SCRIPT-KHA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-SCRIPT-KA-01, PA-SCRIPT-KHA-01]
+  knowledge: [PA-SCRIPT-KA-01, PA-SCRIPT-KHA-01, PA-SCRIPT-RECOG-KHA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-W05-ka]
+reviews_of: [PA-W05-ka, PA-S08-khakkha-jhajja-pairin]
 ---
 
 # ਖ — one new base for a work value
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-KA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-KA-01, PA-SCRIPT-RECOG-KHA-01] -->
 
 Write **ਕ** once. Today adds a different base; compare the two without naming a whole word.
 

@@ -9,32 +9,32 @@ type: writing
 headword: "ਫ"
 romanization: "pha"
 gloss: "trace the Gurmukhi letter pha"
-prerequisites: [PA-W07-age-no-model]
+prerequisites: [PA-W07-age-no-model, PA-S04-phappha-gagga]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [PA-SCRIPT-PA-01]
+  knowledge: [PA-SCRIPT-PA-01, PA-SCRIPT-RECOG-PHA-01]
 introduces:
   knowledge: [PA-SCRIPT-PHA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-SCRIPT-PA-01, PA-SCRIPT-PHA-01]
+  knowledge: [PA-SCRIPT-PA-01, PA-SCRIPT-PHA-01, PA-SCRIPT-RECOG-PHA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-W03-pa]
+reviews_of: [PA-W03-pa, PA-S04-phappha-gagga]
 ---
 
 # ਫ — one new base shape
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-PA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-PA-01, PA-SCRIPT-RECOG-PHA-01] -->
 
 Write the familiar **ਪ** once. The new base begins similarly but is not the same
 letter.

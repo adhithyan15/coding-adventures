@@ -1,0 +1,18 @@
+{
+  "id": "PA-PATH-014",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "PA-C10-paani",
+    "PA-C10-chaa",
+    "PA-S10-chachcha",
+    "PA-C10-dudh",
+    "PA-C10-roti",
+    "PA-S10-addak-dhadda"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-014-LANGUAGE-SPECIFIC",
+    "PA-EXT-053-PREA1-SCRIPT-RUNWAY-C10"
+  ],
+  "after": []
+}

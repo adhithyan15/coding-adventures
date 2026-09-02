@@ -9,32 +9,32 @@ type: writing
 headword: "ਜ"
 romanization: "ja"
 gloss: "trace ja before writing Punjabi"
-prerequisites: [PA-W03-tippi]
+prerequisites: [PA-W03-tippi, PA-S07-naana-jajja-vavva]
 sounds: []
 roots: []
 duration:
   max_seconds: 165
 requires:
-  knowledge: [PA-SCRIPT-PA-01, PA-SCRIPT-TIPPI-WRITING-01]
+  knowledge: [PA-SCRIPT-PA-01, PA-SCRIPT-TIPPI-WRITING-01, PA-SCRIPT-RECOG-JA-01]
 introduces:
   knowledge: [PA-SCRIPT-JA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-SCRIPT-PA-01, PA-SCRIPT-TIPPI-WRITING-01, PA-SCRIPT-JA-01]
+  knowledge: [PA-SCRIPT-PA-01, PA-SCRIPT-TIPPI-WRITING-01, PA-SCRIPT-JA-01, PA-SCRIPT-RECOG-JA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-W03-tippi]
+reviews_of: [PA-W03-tippi, PA-S07-naana-jajja-vavva]
 ---
 
 # ਜ — the middle base
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-PA-01, PA-SCRIPT-TIPPI-WRITING-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-PA-01, PA-SCRIPT-TIPPI-WRITING-01, PA-SCRIPT-RECOG-JA-01] -->
 
 Read **ਪੰ** once, then cover it.
 

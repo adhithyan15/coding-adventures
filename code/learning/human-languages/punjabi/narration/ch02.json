@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:92e90a71f2457bb6",
+  "sourceHash": "fnv1a64:09bb424fd834602f",
   "lessons": [
     {
       "id": "PA-C02-naam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:23f9bac69def9884",
+      "sourceHash": "fnv1a64:2349ccefeb7e4be2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -66,7 +66,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਨਾਂ (nāṁ, \"name\") from Sanskrit ਨਾਮਨ੍ (nāman), from Proto-Indo-European h₃nómn (with a syllabic final n) — the same ancient root as English name, Latin nōmen (English noun, nominate), and Greek onoma. So Punjabi nāṁ and English name are cousins from before either language existed. (The Hindi form is nām; Punjabi nasalises the ending to nāṁ.)"
+              "text": "ਨਾਂ (nāṁ, \"name\") from Sanskrit nāman (a Sanskrit word, so it is written here the way Sanskrit is written in this book — in roman letters, not in Gurmukhi), from Proto-Indo-European h₃nómn (with a syllabic final n) — the same ancient root as English name, Latin nōmen (English noun, nominate), and Greek onoma. So Punjabi nāṁ and English name are cousins from before either language existed. (The Hindi form is nām; Punjabi nasalises the ending to nāṁ.)"
             }
           ]
         },
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bbc1fa8dbb8d64db",
+      "sourceHash": "fnv1a64:23ecef4229681eb5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -208,7 +208,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Punjabi possessives change to match what is owned: ਮੇਰਾ (merā, masculine), ਮੇਰੀ (merī, feminine), ਮੇਰੇ (mere, plural). nāṁ (\"name\") is masculine, so it takes merā: merā nāṁ. (You will meet merī the first time you own a feminine noun.)"
+              "text": "Punjabi possessives change to match what is owned: ਮੇਰਾ (merā, masculine), merī (feminine), mere (plural). nāṁ (\"name\") is masculine, so it takes merā: merā nāṁ. (You will meet merī the first time you own a feminine noun.)"
             }
           ]
         },
@@ -302,7 +302,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6e4bc1acf3d40c62",
+      "sourceHash": "fnv1a64:845055c71e47d9fa",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -349,7 +349,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਹੈ (hai, \"is\") from Sanskrit ਅਸ੍ਤਿ (asti, \"is\"), from Proto-Indo-European h₁es- — the root of \"to be\" across the whole family: English is, German ist, Latin est, Spanish es. Punjabi hai is the Indian cousin of the same tiny verb."
+              "text": "ਹੈ (hai, \"is\") from Sanskrit asti (\"is\"), from Proto-Indo-European h₁es- — the root of \"to be\" across the whole family: English is, German ist, Latin est, Spanish es. Punjabi hai is the Indian cousin of the same tiny verb."
             }
           ]
         },
@@ -869,6 +869,185 @@
       ]
     },
     {
+      "id": "PA-S02-mamma-rara-lava",
+      "sequence": 125,
+      "title": "ਮ, ਰ, ੇ — three pieces met inside a word you already say",
+      "headword": "ਮ · ਰ · ੇ",
+      "romanization": "ma · ra · -e",
+      "gloss": "three pieces of Gurmukhi, met inside a word you already say",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:3c332c8aa260e22f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ਮ, ਰ, ੇ"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ਮ, ਰ, ੇ until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You are about to say merā nāṁ out loud for a whole chapter. Three of the marks that spell it stop being decoration now."
+            },
+            {
+              "kind": "speech",
+              "text": "First, say the last things you learned once more, out loud and from memory:"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhannavād, shukrīā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhannavād* · *shukrīā*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ਮ, ਰ, ੇ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮ."
+            },
+            {
+              "kind": "speech",
+              "text": "mammā — ma. A consonant. In Gurmukhi a bare consonant already carries an a, so this is ma, never a bare m."
+            },
+            {
+              "kind": "speech",
+              "text": "ਰ."
+            },
+            {
+              "kind": "speech",
+              "text": "rārā — ra. A consonant, tapped once with the tip of the tongue — closer to Spanish pero than to English r."
+            },
+            {
+              "kind": "speech",
+              "text": "ੇ."
+            },
+            {
+              "kind": "speech",
+              "text": "lāvā̃ — -e. Not a letter. A mātrā — a vowel sign — and it rides on the head-line above the consonant it changes."
+            },
+            {
+              "kind": "speech",
+              "text": "Now put them where you have already heard them:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਮ + ੇ becomes ਮੇ (me); ਰ + ਾ becomes ਰਾ (rā) ਮੇਰਾ — merā — my."
+            },
+            {
+              "kind": "speech",
+              "text": "You are not being asked to write any of this. You are being asked to recognise it the next time it goes past."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: copy what you can see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ਮ, ਰ, ੇ in front of you and do not cover any of them. Follow each shape once with a finger, then copy it once with a pencil, larger than it is printed. Say its sound as your hand stops."
+            },
+            {
+              "kind": "speech",
+              "text": "This is observe-and-trace with the model visible. Nothing in these chapters asks you to write a Punjabi word from memory; that ladder starts later, and it starts from these same shapes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at ਮੇਰਾ (merā) and point to each of today's pieces in turn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **ਮੇਰਾ** and point to each of today's pieces in turn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ma, ra, -e, then the whole word — merā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ma*, *ra*, *-e*, then the whole word — *merā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at the headword at the top of any earlier lesson in this chapter and find one shape you now know",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at the headword at the top of any earlier lesson in this chapter and find one shape you now know]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name today's pieces: mammā, rārā, lāvā̃. Which of them is a mātrā or a mark rather than a letter, and what does ਮੇਰਾ say? (merā, “my”.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Gurmukhi chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "PA-C02-tuhada-naam-ki-hai",
       "sequence": 130,
       "title": "ਤੁਹਾਡਾ ਨਾਂ ਕੀ ਹੈ? (tuhāḍā nāṁ kī hai?) — \"what's your name?\"",
@@ -881,7 +1060,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0b29ac8d42932fb",
+      "sourceHash": "fnv1a64:0500e9bafd2aa435",
       "notice": null,
       "blocks": [
         {
@@ -1015,7 +1194,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b065f1d295493d60",
+      "sourceHash": "fnv1a64:f2be4908d9bd90fa",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1062,7 +1241,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The Punjabi \"pleased to meet you\" is ਤੁਹਾਨੂੰ ਮਿਲ ਕੇ ਖ਼ੁਸ਼ੀ ਹੋਈ (tuhānū̃ mil ke khushī hoī) — literally \"having met you, happiness happened.\" The key word ਖ਼ੁਸ਼ੀ (khushī, \"happiness\") is not Sanskrit — it is Persian (khush, \"happy, pleasant\"), one of the thousands of Persian words woven through Punjabi. So even introducing yourself draws on Punjabi's two vocabularies: Sanskrit (nāṁ, hai) and Perso-Arabic (khushī) — the thread you first met in Chapter 1's shukrīā."
+              "text": "The Punjabi \"pleased to meet you\" is tuhānū̃ mil ke khushī hoī — literally \"having met you, happiness happened.\" The key word ਖ਼ੁਸ਼ੀ (khushī, \"happiness\") is not Sanskrit — it is Persian (khush, \"happy, pleasant\"), one of the thousands of Persian words woven through Punjabi. So even introducing yourself draws on Punjabi's two vocabularies: Sanskrit (nāṁ, hai) and Perso-Arabic (khushī) — the thread you first met in Chapter 1's shukrīā."
             }
           ]
         },
@@ -1140,6 +1319,185 @@
                 "correct": "Right: the welcome uses Persian khush, happy.",
                 "incorrect": "It means pleased to meet you and khushī comes through Persian khush."
               }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-S02-sassa-tatta-sihari",
+      "sequence": 145,
+      "title": "ਸ, ਤ, ਕ — three pieces met inside a word you already say",
+      "headword": "ਸ · ਤ · ਕ",
+      "romanization": "sa · ta · ka",
+      "gloss": "three pieces of Gurmukhi, met inside a word you already say",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:e461940b455dab0f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ਸ, ਤ, ਕ"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ਸ, ਤ, ਕ until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three more consonants — and with the two you met a moment ago, whole words start falling out."
+            },
+            {
+              "kind": "speech",
+              "text": "First, say the last things you learned once more, out loud and from memory:"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hai, merā nāṁ … hai, tū̃ / tusī̃",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hai* · *merā nāṁ … hai* · *tū̃ / tusī̃*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ਸ, ਤ, ਕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸ."
+            },
+            {
+              "kind": "speech",
+              "text": "sassā — sa. A consonant, a plain s. It is also the letter the whole script is often taught from first."
+            },
+            {
+              "kind": "speech",
+              "text": "ਤ."
+            },
+            {
+              "kind": "speech",
+              "text": "tattā — ta. A consonant, the dental t: tongue on the teeth, softer than any English t."
+            },
+            {
+              "kind": "speech",
+              "text": "ਕ."
+            },
+            {
+              "kind": "speech",
+              "text": "kakkā — ka. A consonant, the plain k of skin — no puff of breath, unlike the k of English kin."
+            },
+            {
+              "kind": "speech",
+              "text": "Now put them where you have already heard them:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਸ + ਾ + ਰ + ਾ becomes ਸਾਰਾ (sārā, “whole”) ਤ + ਾ + ਰ + ਾ becomes ਤਾਰਾ (tārā, “star”) ਕ + ਰ becomes ਕਰ (kar, “do!”) ਤਾਰਾ — tārā — star."
+            },
+            {
+              "kind": "speech",
+              "text": "You are not being asked to write any of this. You are being asked to recognise it the next time it goes past."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: copy what you can see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ਸ, ਤ, ਕ in front of you and do not cover any of them. Follow each shape once with a finger, then copy it once with a pencil, larger than it is printed. Say its sound as your hand stops."
+            },
+            {
+              "kind": "speech",
+              "text": "This is observe-and-trace with the model visible. Nothing in these chapters asks you to write a Punjabi word from memory; that ladder starts later, and it starts from these same shapes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at ਤਾਰਾ and point to each of today's pieces in turn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **ਤਾਰਾ** and point to each of today's pieces in turn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sa, ta, ka, then the whole word — tārā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sa*, *ta*, *ka*, then the whole word — *tārā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at the headword at the top of any earlier lesson in this chapter and find one shape you now know",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at the headword at the top of any earlier lesson in this chapter and find one shape you now know]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name today's pieces: sassā, tattā, kakkā. Which of them is a mātrā or a mark rather than a letter, and what does ਤਾਰਾ say? (tārā, “star”.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Gurmukhi chart."
             }
           ]
         }

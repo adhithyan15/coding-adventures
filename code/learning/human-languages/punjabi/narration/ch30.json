@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Build One Fictional Phone Field",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:4f20dc662bea5247",
+  "sourceHash": "fnv1a64:8a8ec40e5ef1b009",
   "lessons": [
     {
       "id": "PA-W08-pha",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cf1dc96dc3fd2f59",
+      "sourceHash": "fnv1a64:abf1ccfe417ef27f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -200,7 +200,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:57de8a338c8429a3",
+      "sourceHash": "fnv1a64:76499ea00553119d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -290,7 +290,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:29ceb0e262dd1927",
+      "sourceHash": "fnv1a64:6613e43703345135",
       "notice": {
         "modality": "pen",
         "needs": [

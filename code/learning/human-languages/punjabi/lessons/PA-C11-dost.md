@@ -9,27 +9,27 @@ headword: ਦੋਸਤ
 romanization: dost
 gloss: friend — a Persian word that literally means "the one you chose"
 concept_tag: PA-FAMILY-FRIEND
-prerequisites: [PA-C10-roti]
+prerequisites: [PA-C10-roti, PA-S09-aunkar-tippi, PA-S09-dulainkar-oora]
 sounds: [dental-da, dental-ta]
 roots: [persian-dost, pie-geus-taste-choose]
 etymology_hook: ਦੋਸਤ is borrowed from Classical Persian dōst, from Old Persian dauštā, from a Proto-Indo-European root meaning "to taste, to choose" — the same root that gives English choose, through Old English cēosan, and gusto and disgust, through Latin gustare, "to taste."
 duration:
   max_seconds: 250
 requires:
-  knowledge: [PA-LEX-ROTI, PA-ETYMON-ROTI-UNKNOWN, PA-LEX-DUDH, PA-LEX-CHA, PA-LEX-PAANI]
+  knowledge: [PA-LEX-ROTI, PA-ETYMON-ROTI-UNKNOWN, PA-LEX-DUDH, PA-LEX-CHA, PA-LEX-PAANI, PA-SCRIPT-RECOG-DULAINKAR-01, PA-SCRIPT-RECOG-TIPPI-01]
 introduces:
   knowledge: [PA-LEX-DOST, PA-ETYMON-DOST-CHOOSE]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-LEX-DOST, PA-ETYMON-DOST-CHOOSE, PA-LEX-ROTI, PA-ETYMON-ROTI-UNKNOWN, PA-LEX-DUDH, PA-LEX-CHA, PA-LEX-PAANI]
+  knowledge: [PA-LEX-DOST, PA-ETYMON-DOST-CHOOSE, PA-LEX-ROTI, PA-ETYMON-ROTI-UNKNOWN, PA-LEX-DUDH, PA-LEX-CHA, PA-LEX-PAANI, PA-SCRIPT-RECOG-DULAINKAR-01, PA-SCRIPT-RECOG-TIPPI-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [PA-C10-roti, PA-C10-dudh, PA-C10-chaa]
+reviews_of: [PA-C10-roti, PA-C10-dudh, PA-C10-chaa, PA-S09-aunkar-tippi, PA-S09-dulainkar-oora]
 ---
 
 # ਦੋਸਤ — the one you chose
@@ -47,7 +47,7 @@ Chapter 2's **ਤੂੰ** was really for.
 > **ਦੋਸਤ** — *dost* — **friend**
 
 ## The letters in this word
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-RECOG-DULAINKAR-01, PA-SCRIPT-RECOG-TIPPI-01] -->
 
 **ਦ** *d*, **ੋ** the *o* sign, **ਸ** *s*, **ਤ** *t*. Every letter already
 yours, from **ਦੋ**, "two," and **ਸਤਿ**, "truth."
