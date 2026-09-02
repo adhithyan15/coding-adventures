@@ -56,9 +56,9 @@ A single event moved them.
 
 The old Roman year began in **March**, not January. Counting from March,
 *September* genuinely was the seventh month and *December* the tenth — the names
-were accurate. Later, two months named for two rulers, **juillet** (Julius) and
-**août** (Augustus), were fixed into the middle of the year, and the start of the
-year was moved back to January. The counting months were shoved two places along.
+were accurate. Later, two months named for **Julius Caesar** and the emperor
+**Augustus** were fixed into the middle of the year, and the start of the year
+was moved back to January. The counting months were shoved two places along.
 Their Latin names never caught up.
 
 So every December, in French and in English alike, you are saying the Roman word
@@ -69,6 +69,6 @@ for **ten**. Spanish carries the identical fault: *diciembre* is *decem* too.
 
 [PAUSE 3s] What does *septembre* mean, and which month is it? (**Seven** — and
 it is the ninth.) In which month did the old Roman year begin? (**March**.)
-Which two months were pushed in, and for whom? (**Juillet** and **août**, for
-Julius and Augustus.) What number are you saying when you say *décembre*?
+Which two months were pushed in, and for whom? (The two named for **Julius
+Caesar** and **Augustus**.) What number are you saying when you say *décembre*?
 (**Ten**, Latin *decem*.)

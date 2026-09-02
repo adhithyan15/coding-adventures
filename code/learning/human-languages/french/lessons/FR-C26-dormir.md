@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C26-dormir
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 800
-chapter: 26
+sequence: 900
+chapter: 28
 type: word
 headword: dormir
 gloss: to sleep — Latin dormīre, unchanged in French, and the source of dormitory and dormant, though not of the dormouse

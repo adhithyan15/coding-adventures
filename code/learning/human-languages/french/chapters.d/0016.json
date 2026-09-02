@@ -1,15 +1,15 @@
 {
   "chapter": 16,
-  "title": "To Be, and the Past That Takes It",
-  "label": "ch:etre",
-  "canDo": "I can use the French verb for “to be” and form the past of verbs that select it.",
+  "title": "To Have, and How Old You Are",
+  "label": "ch:avoir-age",
+  "canDo": "I can use the French verb for “to have” to talk about possession and age.",
   "spineNodes": [
     "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "FR-C16-pronominal-past",
+    "lesson": "FR-C14-age",
     "kind": "task",
-    "summary": "Complete FR-C16-pronominal-past, the canonical closing checkpoint, and demonstrate the chapter promise: use the French verb for “to be” and form the past of verbs that select it.",
+    "summary": "Complete FR-C14-age, the canonical closing checkpoint, and demonstrate the chapter promise: use the French verb for “to have” to talk about possession and age.",
     "assesses": [],
     "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
   }

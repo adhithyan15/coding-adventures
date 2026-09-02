@@ -1,25 +1,24 @@
 {
   "chapter": 31,
-  "title": "Eyes, Nose, Mouth, Stomach",
-  "label": "ch:fr-eyes-nose-mouth-stomach",
-  "canDo": "I can name the eye and its irregular-looking plural yeux, the nose, the mouth and the stomach in French, extending Chapter 17's head and hand.",
+  "title": "The People You Introduce",
+  "label": "ch:fr-the-people-you-introduce",
+  "canDo": "I can introduce a friend, name my family, name a child and name any person, using French's four different relationships between grammatical gender and the person meant, and elide le or la to l' before a vowel.",
   "spineNodes": [
-    "SPINE-CHECK-WELLBEING"
+    "SPINE-EXCHANGE-NAMES"
   ],
   "payoff": {
-    "lesson": "FR-C31-ventre",
+    "lesson": "FR-C29-personne",
     "kind": "task",
-    "summary": "Say j'ai mal au ventre, take ventriloquist apart as \"belly-speaker,\" and close the chapter's own four words (l'œil/les yeux, le nez, la bouche, le ventre) beside Chapter 17's head and hand. Reaches back past the chapter to la main's nasal -ain, contrasted with ventre's own different nasal vowel, and further back to le café, l'ami and l'œuf, one word from each of this book's four newest chapters.",
+    "summary": "Say la personne, always feminine even naming a man, then line the chapter's four words up by how each one handles gender: l'ami changes, la famille is fixed, l'enfant is one spelling with two articles, la personne is fixed regardless of sex. Reaches back to Chapter 18's non for a sound contrast (personne's double -nn- blocks the nasal non has) and to its ne ... pas negation, which personne itself joins as \"nobody.\"",
     "assesses": [
-      "FR-LEX-VENTRE-07",
-      "FR-ETYMON-VENTRE-08",
-      "FR-LEX-BOUCHE-05",
-      "FR-LEX-NEZ-03",
-      "FR-LEX-OEIL-01",
-      "FR-SOUND-MAIN-03",
-      "FR-LEX-CAFE-01",
+      "FR-LEX-PERSONNE-08",
+      "FR-ETYMON-PERSONNE-09",
       "FR-LEX-AMI-01",
-      "FR-LEX-OEUF-07"
+      "FR-GRAMMAR-ELISION-ARTICLE-02",
+      "FR-LEX-FAMILLE-04",
+      "FR-LEX-ENFANT-06",
+      "FR-SOUND-NON-03",
+      "FR-GRAMMAR-NEGATION-04"
     ]
   }
 }

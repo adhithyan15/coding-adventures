@@ -1,19 +1,21 @@
 {
   "chapter": 20,
-  "title": "Sorry",
-  "label": "ch:fr-sorry",
-  "canDo": "I can apologise in French and pick between je suis désolé(e), pardon and excusez-moi for the situation I am actually in.",
+  "title": "Yes and No",
+  "label": "ch:fr-yes-and-no",
+  "canDo": "I can answer yes or no in French, send non through my nose as a nasal vowel, and recognise the ne … pas pair that carries negation inside a sentence.",
   "spineNodes": [
-    "SPINE-POLITE-REQUEST-REPAIR"
+    "SPINE-RESPOND-BASIC"
   ],
   "payoff": {
-    "lesson": "FR-C20-je-suis-desole",
+    "lesson": "FR-C18-non",
     "kind": "production",
-    "summary": "Say je suis désolé(e) knowing it literally means 'I am desolate', then place pardon as the quick reflex and excusez-moi as the attention-getter. The chapter's only lesson, so the payoff covers everything it introduces.",
+    "summary": "The oui / non pair said back to back, non's -on nasal placed against bon and bonjour, and the ne … pas frame named as the sentence-level negation to come.",
     "assesses": [
-      "FR-LEX-DESOLE-02",
-      "FR-ETYMON-DESOLE-03",
-      "FR-PRAGMATICS-SORRY-04"
-    ]
+      "FR-LEX-OUI-02",
+      "FR-LEX-NON-02",
+      "FR-SOUND-NON-03",
+      "FR-GRAMMAR-NEGATION-04"
+    ],
+    "note": "Chapter 18 has no terminal practice lesson, so the payoff is the last lesson by sequence; it reaches back to reassess oui."
   }
 }

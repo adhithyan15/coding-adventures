@@ -1,15 +1,15 @@
 {
   "chapter": 13,
-  "title": "Colours",
-  "label": "ch:colours",
-  "canDo": "I can name basic colours in French and use them to describe something.",
+  "title": "Bread, Water, Wine",
+  "label": "ch:food",
+  "canDo": "I can name and request bread, water, and wine in French.",
   "spineNodes": [
     "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "FR-C13-rouge-bleu",
+    "lesson": "FR-C11-eau-vin",
     "kind": "task",
-    "summary": "Complete FR-C13-rouge-bleu, the canonical closing checkpoint, and demonstrate the chapter promise: name basic colours in French and use them to describe something.",
+    "summary": "Complete FR-C11-eau-vin, the canonical closing checkpoint, and demonstrate the chapter promise: name and request bread, water, and wine in French.",
     "assesses": [],
     "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
   }

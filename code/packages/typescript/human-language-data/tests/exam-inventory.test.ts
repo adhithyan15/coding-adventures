@@ -639,7 +639,14 @@ describe("the committed French A1 inventory", () => {
     // The chapter now teaches all three, and the probe lists all seven atoms
     // rather than a sample: a candidate asked for half past does not get partial
     // credit for o'clock.
-    expect(coverage.covered).toBe(27);
+    //
+    // 27 -> 28: the chapter-9 split closed A1-LEX-06, days/months/seasons. This
+    // one was deliberately held back through two earlier tranches: the days were
+    // taught, but the track owned two headwords -- `les mois` and `les saisons`
+    // -- for twelve months and four seasons, so any probe naming a month would
+    // have been a claim the corpus could not support. Splitting chapter 9 into
+    // three chapters taught all sixteen, and the probe resolves honestly.
+    expect(coverage.covered).toBe(28);
     expect(coverage.byCategory["L'interrogation"]).toEqual({ enumerated: 5, covered: 5 });
     // The shape, not the score: vocabulary is still a strong column and the
     // sentence-level categories are still empty. No quantity of headwords moves

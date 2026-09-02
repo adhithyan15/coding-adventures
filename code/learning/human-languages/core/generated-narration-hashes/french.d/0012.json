@@ -1,16 +1,16 @@
 {
   "language": "french",
   "chapter": 12,
-  "sourceHash": "fnv1a64:dfc2faa271f418ce",
+  "sourceHash": "fnv1a64:ff539d8ada0b512e",
   "lessonIds": [
-    "FR-C12-nombres-11-16",
-    "FR-C12-nombres-17-20"
+    "FR-C10-parents",
+    "FR-C10-freres-soeurs"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
   "text": "french/narration/ch12.txt",
   "json": "french/narration/ch12.json",
-  "textHash": "fnv1a64:1fa7802eb77e95dd",
-  "jsonHash": "fnv1a64:bc4701adc0b7c99f",
+  "textHash": "fnv1a64:12d0ce48e3dc97d0",
+  "jsonHash": "fnv1a64:c45189055f149b77",
   "findings": []
 }

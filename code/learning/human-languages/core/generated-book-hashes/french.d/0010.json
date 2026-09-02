@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:26fe321a1f2195ec",
+  "lessonIds": [
+    "FR-C09-juillet",
+    "FR-C09-aout",
+    "FR-C09-septembre",
+    "FR-C09-octobre",
+    "FR-C09-novembre",
+    "FR-C09-decembre",
+    "FR-C09-mois-practice-2"
+  ],
+  "tex": "french/book/chapters/ch10-months-caesars.tex"
+}

@@ -1,84 +1,61 @@
-French, chapter 13: Colours.
+French, chapter 13: Bread, Water, Wine.
 2 lessons. All 2 can be done entirely by ear.
 
 
 Lesson 1 of 2.
-noir, blanc — one inherited, one borrowed.
+le pain — bread, and the people you share it with.
 
 Warm-up.
 [pause 2 seconds]
-Two colours, two completely different life stories. One walked straight down from Latin. The other was borrowed from the Germanic neighbours — and that direction, Germanic into Romance, is the opposite of what usually happens.
+Food at last. le pain ("bread") is the heart of the French table — and its Latin root hides one of the loveliest word-stories in English: your companion is, literally, someone you share bread with.
 
-noir — the expected one.
-noir ("black") from Latin niger. No surprises: niger becomes negro/nero in the sister languages, and into English in denigrate ("to blacken someone's name").
+Taken apart.
+le pain ("bread") from Latin pānis — the nasal vowel -ain (pɛ̃), with a silent final -n. Masculine: le pain.
 
-blanc — the imported one.
-You'd expect Latin albus ("white"). It's not there. French says blanc, from Frankish blank — a Germanic word meaning "shining, gleaming." The Franks who gave France its name gave it its word for white too.
-Why did albus lose? Probably because blank was vivid: not just "white" but "bright, flashing." Colour words often get replaced by the more dramatic option.
-
-Where albus went.
-It didn't die — it stopped being a colour:
-[a table of 4 rows, read aloud]
-word: aube. meaning: dawn. the white inside: the sky going white.
-word: aubépine. meaning: hawthorn. the white inside: the "white thorn".
-word: album (Eng.) meaning: album. the white inside: a blank white tablet.
-word: albinos (Eng.) meaning: albino. the white inside: white-skinned.
-So Latin's white is still all around you — just never where you'd look for it.
+The "bread" family in English.
+The root pān- ("bread") feeds a surprising table of English words:
+companion / company from com- ("with") + pānis — "one you break bread with." A company was first a group sharing meals.
+pantry — the room where the bread (and food) is kept.
+pannier — a bread-basket, now the bag over a bike or donkey.
+So le pain is the same root as companion — French kept the bread, English kept the friendship built on it.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "noir, blanc"]
+[your turn — say: "le pain" — nasal -ain, silent -n]
 [pause 8 seconds for the answer]
-[your turn — say: "le vin blanc, le vin rouge" — wine you already know from Ch.11]
+[your turn — say: "un pain, du pain" ("a loaf, some bread")]
 [pause 8 seconds for the answer]
-[your turn — say: the pairing — "noir from Latin, blanc from the Franks"]
-[pause 8 seconds for the answer]
-[your turn — say: "l'aube" — and hear the old Latin white in it]
+[your turn — say: "pain becomes companion, pantry" — the share-bread family]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which of the two is inherited from Latin? (Noir from niger.) Where does blanc come from? (Frankish blank, "shining" — a Germanic word borrowed into French.) Why is that direction surprising? (Latin usually lends to Germanic, not the other way.) Where did Latin albus end up? (In aube, "dawn," and album — no longer a colour.) Next: red and blue, and one more borrowing.
+Give "bread" with its article. (le pain.) What Latin word is it from? (pānis.) What does companion literally mean, from this root? ("One you share bread with" — com- + pānis.) Next: l'eau and le vin — water and wine.
 
 
 Lesson 2 of 2.
-rouge, bleu — an ancient word and a borrowed one.
+l'eau, le vin — water and wine.
 
 Warm-up.
 [pause 2 seconds]
-Last lesson: one inherited colour, one borrowed. This lesson repeats the pattern — and shows that French's borrowing from Germanic wasn't a one-off.
+The two drinks of the French table — and one of them, eau, is the single most worn-down word French took from Latin. It began as aqua and ended as a bare "oh."
 
-rouge — very, very old.
-rouge from Latin rubeus ("reddish"). But rubeus itself descends from a root so old it predates Latin: PIE h₁rewdʰ-. Its children are everywhere:
-[a table of 3 rows, read aloud]
-language: Latin. word: ruber, rubeus becomes rouge, ruby, rubric.
-language: English. word: red, rust, ruddy.
-language: German. word: rot.
-So rouge and red are not lookalikes — they are actual cousins, separated for maybe five thousand years. Red is one of humanity's oldest named colours.
+l'eau (water) — Latin aqua, dissolved.
+l'eau ("water") from Latin aqua. Watch the erosion: aqua becomes ewe becomes eaue becomes eau, until only the vowel sound "oh" remains — three silent letters e-a-u spelling one sound. It even takes l' (not le/la) because it starts with a vowel. French quite literally drank the consonants out of aqua.
+The original aqua, though, is loud in English — because English borrowed the Latin word whole: aquatic, aquarium, aqueduct, aqualung, and Italian acqua (which barely changed). So l'eau and aquarium are the far ends of the same word.
 
-bleu — borrowed, then lent onward.
-bleu from Frankish blāo. Another Germanic word, borrowed exactly like blanc. And then something neat happened: English took bleu from French — so English blue is a Germanic word that went to France, changed clothes, and came back. German kept the original at home: blau.
-French also has azur (from the same source as Spanish azul, ultimately Arabic lāzaward, "lapis lazuli") — the poetic blue of the sky, and the Côte d'Azur.
-
-The pattern of the chapter.
-[a table of 4 rows, read aloud]
-colour: noir. source: Latin niger.
-colour: blanc. source: Germanic blank.
-colour: rouge. source: Latin rubeus (ancient PIE root).
-colour: bleu. source: Germanic blāo.
-Half of French's basic colour vocabulary walked in from the north.
+le vin (wine) — Latin vīnum, kept.
+le vin ("wine") from Latin vīnum (nasal vɛ̃). Unlike eau, this one held its shape — and English shares it: wine itself is vīnum borrowed into old Germanic, plus vine, vinegar (vin + aigre, "sour wine"), vintage, vineyard, vinyl. Wine mattered enough to keep its name across every border.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "rouge, bleu"]
+[your turn — say: "l'eau, le vin" — eau = "oh"; vin nasal]
 [pause 8 seconds for the answer]
-[your turn — say: "le vin rouge" — Ch.11's wine, now with its colour]
+[your turn — say: the erosion — "aqua becomes eau, worn to one vowel"]
 [pause 8 seconds for the answer]
-[your turn — say: "bleu, blanc, rouge" — the flag, all three learned]
-[pause 8 seconds for the answer]
-[your turn — say: the cousins — "rouge, red, rot"]
+[your turn — say: "eau corresponds to aquarium; vin becomes wine, vinegar"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What are rouge and English red to each other? (Cousins — both from PIE h₁rewdʰ-.) Where does bleu come from? (Germanic blāo — the second Germanic colour loan.) What did English do with it? (Borrowed it back from French as blue.) What are the three flag colours? (Bleu, blanc, rouge — and two of the three are loanwords.) Next chapter: describing what you see.
+Give "water" and "wine" with articles. (l'eau, le vin.) What Latin word became eau, and what's left of it? (aqua — worn down to just the sound "oh".) Where did the loud version of aqua survive? (English — aquatic/aquarium; and Italian acqua.) Name an English cousin of vin. (wine/vine/vinegar/vintage.) Next chapter: ordering and asking for these at a table.

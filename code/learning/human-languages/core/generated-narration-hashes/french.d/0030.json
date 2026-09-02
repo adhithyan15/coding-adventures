@@ -1,18 +1,18 @@
 {
   "language": "french",
   "chapter": 30,
-  "sourceHash": "fnv1a64:a8464c260a68a8a4",
+  "sourceHash": "fnv1a64:9404a7e7e860e758",
   "lessonIds": [
-    "FR-C30-fromage",
-    "FR-C30-beurre",
-    "FR-C30-sel",
-    "FR-C30-oeuf"
+    "FR-C28-cafe",
+    "FR-C28-the",
+    "FR-C28-lait",
+    "FR-C28-sucre"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 4,
   "text": "french/narration/ch30.txt",
   "json": "french/narration/ch30.json",
-  "textHash": "fnv1a64:d4801f5edb2116af",
-  "jsonHash": "fnv1a64:ecfced3f71aedab0",
+  "textHash": "fnv1a64:7ffc9030d54f0e08",
+  "jsonHash": "fnv1a64:5a18d858a14b1753",
   "findings": []
 }

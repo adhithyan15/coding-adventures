@@ -1,7 +1,7 @@
 ---
 id: FR-C10-freres-soeurs
-sequence: 250
-chapter: 10
+sequence: 350
+chapter: 12
 type: word
 headword: le frère, la sœur
 gloss: brother and sister — frater and soror, behind fraternal and sorority
@@ -11,7 +11,7 @@ sounds: [oe-ligature, e-grave]
 roots: [frater-latin, soror-latin]
 etymology_hook: "frère ← frater (→ fraternal, friar, fraternity), sœur ← soror (→ sorority, sorority); the œ ligature spells the worn-down soror"
 est_minutes: 4
-reviews_of: [FR-C10-parents, FR-C09-saisons]
+reviews_of: [FR-C10-parents, FR-C09-saisons-practice]
 ---
 
 # le frère, la sœur — brother and sister

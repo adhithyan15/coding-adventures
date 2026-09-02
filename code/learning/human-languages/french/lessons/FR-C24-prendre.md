@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C24-prendre
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 710
-chapter: 24
+sequence: 810
+chapter: 26
 type: word
 headword: prendre
 gloss: to take — the grasping verb English borrowed a dozen times over, from prehensile to prison to surprise

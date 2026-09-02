@@ -1,16 +1,16 @@
 {
   "language": "french",
   "chapter": 14,
-  "sourceHash": "fnv1a64:34537d5a86a25237",
+  "sourceHash": "fnv1a64:2e36b2cbb1986f0d",
   "lessonIds": [
-    "FR-C14-avoir",
-    "FR-C14-age"
+    "FR-C12-nombres-11-16",
+    "FR-C12-nombres-17-20"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 0,
   "text": "french/narration/ch14.txt",
   "json": "french/narration/ch14.json",
-  "textHash": "fnv1a64:45ee4492198308e0",
-  "jsonHash": "fnv1a64:f1631f473639d4b0",
+  "textHash": "fnv1a64:62f722e03d521a2f",
+  "jsonHash": "fnv1a64:467624a01eecd5c5",
   "findings": []
 }

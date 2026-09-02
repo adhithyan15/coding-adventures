@@ -45,12 +45,23 @@ it("pins French modality", () => expectLanguageModality("french"));
 // 16 -> 17 culture claims: English `noon` is Latin nona hora, "the ninth hour",
 // which drifted from mid-afternoon to midday; it lived only in a hand-written
 // culture block and is now owned by FR-C08-midi.
+// 108 -> 128 lessons: retiring handwritten chapter 9, which is the first FRENCH
+// CHAPTER SPLIT. Its two schema-v1 lessons owned `les mois` and `les saisons` --
+// two headwords for TWELVE months and FOUR seasons. Sixteen words plus the
+// au/en rule cannot fit `maxNewAtomsPerChapter` at one atom per word, and length
+// is never a cost here, so chapter 9 became three chapters: the months to juin,
+// the months from juillet, and the seasons. Twenty lessons replace two, and
+// every later French chapter renumbered by +2 (old 10-33 -> 12-35).
+// 17 -> 19 culture claims: the Februa, the purification festival February is
+// named for; and the two men who put themselves in a calendar of gods. Both
+// lived only in hand-written blocks and are now owned by FR-C09-fevrier and
+// FR-C09-aout.
 it("pins French lesson-content budgets", () =>
   expectLanguageLessonBudgets("french", {
-    lessons: 108,
+    lessons: 128,
     idioms: 3,
     senses: 7,
-    cultureClaims: 17,
+    cultureClaims: 19,
     unitPrefix: "FR",
   }));
 

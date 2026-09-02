@@ -2,446 +2,24 @@
   "version": 1,
   "language": "french",
   "chapter": 27,
-  "title": "Sitting, Standing, Opening, Closing",
+  "title": "Verbs of the Mind",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:cc7506d89c3d7682",
+  "sourceHash": "fnv1a64:f389d2269b10e8ae",
   "lessons": [
     {
-      "id": "FR-C27-sasseoir",
-      "sequence": 830,
-      "title": "s'asseoir — \"to sit down,\" a verb you do to yourself",
-      "headword": "s'asseoir",
-      "romanization": "s'asseoir",
-      "gloss": "to sit down — a verb you do to yourself, from Latin sedēre, and the one French verb that ships with two accepted sets of forms",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:8085079bccf724b4",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You have walked and you have run. Now stop. French does not say \"I sit\" — it says \"I seat myself,\" and that extra word is one you own."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: the word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "s'asseoir — to sit down. Said sah-SWAHR. Je m'assieds. — I sit down. Said juh mah-SYAY."
-            },
-            {
-              "kind": "speech",
-              "text": "The m' is the me inside je m'appelle: French treats sitting as something you do to yourself, so the pronoun is not optional."
-            },
-            {
-              "kind": "speech",
-              "text": "Keep two ideas apart. S'asseoir is the movement, lowering yourself into a chair. Je suis assis is the state after it, \"I am seated.\" English lets sit cover both; French makes you choose."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: one verb, two accepted sets",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The only verb in this book with two correct answers, both in dictionaries. Learn this series whole:"
-            },
-            {
-              "kind": "speech",
-              "text": "je m'assieds — mah-SYAY."
-            },
-            {
-              "kind": "speech",
-              "text": "tu t'assieds — tah-SYAY."
-            },
-            {
-              "kind": "speech",
-              "text": "il s'assied — sah-SYAY (three identical to the ear)."
-            },
-            {
-              "kind": "speech",
-              "text": "nous nous asseyons — noo-zah-say-YOHN."
-            },
-            {
-              "kind": "speech",
-              "text": "vous vous asseyez — voo-zah-say-YAY."
-            },
-            {
-              "kind": "speech",
-              "text": "ils s'asseyent — sah-SAY."
-            },
-            {
-              "kind": "speech",
-              "text": "Then recognise the rival singulars je m'assois, tu t'assois, il s'assoit — ordinary spoken French. Their plurals (assoyons, assoyez) are much rarer in France, so the series above is the safer one to own. Since 1990 the infinitive may also be spelled s'assoir. Nothing here is wrong; the language never chose."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart: sedēre",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "s'asseoir from Vulgar Latin adsedēre, a remaking of Classical adsidēre — ad- \"at\" plus sedēre, \"to sit.\" Latin had built the compound; French only wore it down. And sedēre is everywhere in English:"
-            },
-            {
-              "kind": "speech",
-              "text": "sedentary, sitting work; a session, \"a sitting\"; sediment, what sits at the bottom."
-            },
-            {
-              "kind": "speech",
-              "text": "reside, sit back; preside and president, sitting in front; assiduous, sitting at a task."
-            },
-            {
-              "kind": "speech",
-              "text": "siege — an army sitting down before a city; possess, obsess, subsidy."
-            },
-            {
-              "kind": "speech",
-              "text": "A bishop's see is his sedēs, his seat."
-            },
-            {
-              "kind": "speech",
-              "text": "Dormir English only borrowed. This root it owns from birth too: sit, seat and settle come down the Germanic road from the same source."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"s'asseoir\" — sah-SWAHR",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"s'asseoir\" — *sah-SWAHR*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"je m'assieds\" then \"nous nous asseyons\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"je m'assieds\" then \"nous nous asseyons\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"je m'appelle\" then \"je m'assieds\" — the same little m'",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"je m'appelle\" then \"je m'assieds\" — the same little *m'*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"je m'assieds\" then \"je suis assis\" — movement, then state",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"je m'assieds\" then \"je suis assis\" — movement, then state]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"je marche, je cours, je m'assieds, je dors\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"je marche, je cours, je m'assieds, je dors\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"j'entends\" — the ear needs no chair",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"j'entends\" — the ear needs no chair]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"sedentary, session, siege\" — every one a sitting",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"sedentary, session, siege\" — every one a sitting]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"I sit down\" and \"we sit down.\" (Je m'assieds. Nous nous asseyons.) Why is the pronoun there? (French sits you yourself down — the same m' as in je m'appelle.) What is a siege, literally? (A sitting — an army sitting down before a city.) Which English words are cousins of sedēre by birth rather than borrowing? (Sit, seat, settle.) Now the pair: \"je cours\" and \"je dors.\""
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C27-se-lever",
-      "sequence": 840,
-      "title": "se lever, debout — standing, which French says in two pieces",
-      "headword": "se lever, debout",
-      "romanization": "se lever, debout",
-      "gloss": "to stand — French has no single verb for it, so the movement is se lever (\"to lighten yourself\") and the state is être debout, literally \"on end\"",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:c28e70d764129151",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You sat down. Getting up is harder, because French has no single verb for \"to stand.\" It splits the idea in two."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: the movement",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "se lever — to get up, to rise. Said suh luh-VAY. Je me lève. — I get up. Said juh muh LEV."
-            },
-            {
-              "kind": "speech",
-              "text": "Reflexive, as s'asseoir is: you raise yourself. After that verb's two paradigms this is a relief — an ordinary -er verb with one habit. Silent ending, and the e takes a grave accent; spoken ending, and it flattens:"
-            },
-            {
-              "kind": "speech",
-              "text": "je me lève — LEV."
-            },
-            {
-              "kind": "speech",
-              "text": "tu te lèves — LEV."
-            },
-            {
-              "kind": "speech",
-              "text": "il se lève — LEV."
-            },
-            {
-              "kind": "speech",
-              "text": "nous nous levons — luh-VOHN, flat."
-            },
-            {
-              "kind": "speech",
-              "text": "vous vous levez — luh-VAY, flat."
-            },
-            {
-              "kind": "speech",
-              "text": "ils se lèvent — LEV."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "input",
-          "title": "You'll want to know: the state",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "debout — standing, upright. Said duh-BOO. Je suis debout. — I am standing."
-            },
-            {
-              "kind": "speech",
-              "text": "Se lever is the movement, debout the state — the split between sitting down and being seated. Debout is no verb: attach it to être."
-            },
-            {
-              "kind": "speech",
-              "text": "And it is transparent once opened: de + bout, \"on end.\" A bout is a tip or end, so standing is being set on your end. French did once have a plain verb for standing, ester; it survives only in a courtroom phrase, which is why the language builds this from pieces."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart: lightness",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "lever from Latin levāre, \"to raise\" — built on levis, \"light in weight.\" To raise a thing is to lighten it. Hence elevate, elevator, levitate, levity; a lever, which lightens a load; alleviate, relieve, relief; leaven."
-            },
-            {
-              "kind": "speech",
-              "text": "So two of this book's verbs come from one corner of Roman thought. Penser is pēnsāre, \"to weigh\"; lever is levāre, \"to make light.\" Thinking weighs, rising un-weighs, and sedēre just sits there."
-            },
-            {
-              "kind": "speech",
-              "text": "One correction. Bout comes from bouter, \"to strike,\" taken from Frankish — and its English relative by descent is beat. Butt looks closer but is a later borrowing back out of French."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"se lever\" — suh luh-VAY",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"se lever\" — *suh luh-VAY*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"je me lève\" then \"nous nous levons\" — sharp, then flat",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"je me lève\" then \"nous nous levons\" — sharp, then flat]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"je m'assieds\" then \"je me lève\" — down, then up",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"je m'assieds\" then \"je me lève\" — down, then up]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"je suis debout\" — the state, on être",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"je suis debout\" — the state, on *être*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"je me lève et je cours\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"je me lève et je cours\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"je pense\" then \"je me lève\" — weighing, then lightening",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"je pense\" then \"je me lève\" — weighing, then lightening]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"elevate, lever, relief\" — all a raising",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"elevate, lever, relief\" — all a raising]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"I get up\" and \"we get up.\" (Je me lève. Nous nous levons — the accent appears only when the ending is silent.) How does French say \"I am standing\"? (Je suis debout — a state pinned to être, not a verb, and debout is de + bout, \"on end.\") Penser came from weighing; what does lever come from? (Levis, \"light in weight\".) And the opposite movement? (Je m'assieds.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C27-ouvrir",
+      "id": "FR-C25-comprendre",
       "sequence": 850,
-      "title": "ouvrir — \"to open,\" an -ir verb wearing -er endings",
-      "headword": "ouvrir",
-      "romanization": "ouvrir",
-      "gloss": "to open — an -ir verb that takes -er endings, from a Latin verb reshaped to look like its own opposite, and the source of English overt and overture",
+      "title": "comprendre — \"to understand,\" which is just taking, together",
+      "headword": "comprendre",
+      "romanization": "comprendre",
+      "gloss": "to understand — literally com- + prendre, \"to take together,\" so in French understanding IS grasping, and the verb conjugates exactly like the one it is built from",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:415a896a1af941ca",
+      "sourceHash": "fnv1a64:660a5341a9e060a4",
       "notice": null,
       "blocks": [
         {
@@ -457,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can sit and rise. Now something for the hand. This verb is French conjugation's small trap: spelled like one family, behaving like another."
+              "text": "This is the cheapest verb you will ever learn, because you already own all of it. Prendre was \"to take.\" Put com- in front, and French tells you what it thinks understanding actually is."
             }
           ]
         },
@@ -468,81 +46,81 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ouvrir — to open. Said oo-VREER. J'ouvre la main. — I open my hand."
+              "text": "comprendre — to understand. Said kohn-PRAHN-druh: two nasals in a row, kohn then prahn. Je comprends. — I understand. Vous comprenez? — Do you understand?"
             },
             {
               "kind": "speech",
-              "text": "French says la main where English says \"my hand\"; with your own body the article does the work. And listen to that nasal — pain, main — the same -ain you have been making since the bread."
+              "text": "The -ds of je comprends is silent, exactly as in je prends."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: the endings it should not have",
+          "type": "etymology",
+          "title": "The word, taken apart: taking things together",
           "segments": [
             {
               "kind": "speech",
-              "text": "Ouvrir ends in -ir, so you would expect it to run like dormir. It does not. It takes the endings of marcher, an -er verb, exactly:"
+              "text": "comprendre is com- (\"together, with\") + prendre (\"to take\"), and Latin had already built it: comprehendere, \"to grasp several things at once.\" Nothing has been added since. To understand, in French, is to get your hand around the whole of it."
             },
             {
               "kind": "speech",
-              "text": "j'ouvre — JOOVR."
+              "text": "English took the long Latin form and the short French one both:"
             },
             {
               "kind": "speech",
-              "text": "tu ouvres — OOVR."
+              "text": "comprehend — the full Latin spelling, straight through."
             },
             {
               "kind": "speech",
-              "text": "il ouvre — OOVR."
+              "text": "comprehensive — having taken everything in; comprehension."
             },
             {
               "kind": "speech",
-              "text": "nous ouvrons — oo-VROHN."
+              "text": "comprise — from French compris, \"taken together\": what a thing takes in."
             },
             {
               "kind": "speech",
-              "text": "vous ouvrez — oo-VRAY."
-            },
-            {
-              "kind": "speech",
-              "text": "ils ouvrent — OOVR."
-            },
-            {
-              "kind": "speech",
-              "text": "Four identical to the ear, nous and vous audible: the shape of je marche, nous marchons. A small group of -ir verbs does this, and ouvrir is the one you meet most. The spelling promises one thing; listen to what the verb does."
+              "text": "And you can hear the metaphor still alive in English: we say we grasp an idea, or that a point is over our heads — out of reach of the hand."
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart: reshaped by its own opposite",
+          "type": "grammar",
+          "title": "Grammar Lens: the same verb, so the same forms",
           "segments": [
             {
               "kind": "speech",
-              "text": "Latin's verb for opening was aperīre, which ouvrir does not look much like — because the word was remodelled on the way into popular Latin operīre. The likeliest cause is the pull of its own opposite, cooperīre, \"to cover,\" which became French couvrir. Opening and covering ended up rhyming and have stayed matched since. The meaning stayed aperīre's; only the shape moved."
+              "text": "Because comprendre is prendre with a prefix, it breaks in exactly the same places. Nothing new to memorise — say the six and hear the nasal die in the plural, just as before:"
             },
             {
               "kind": "speech",
-              "text": "English collected both ends:"
+              "text": "je comprends — kohn-PRAHN."
             },
             {
               "kind": "speech",
-              "text": "from aperīre — an aperture; an aperitif, the drink that opens a meal."
+              "text": "tu comprends — kohn-PRAHN."
             },
             {
               "kind": "speech",
-              "text": "from Old French ovrir — overt, its past participle \"opened,\" and overture, ouverture."
+              "text": "il comprend — kohn-PRAHN (three identical to the ear)."
             },
             {
               "kind": "speech",
-              "text": "from the covering half — curfew, Old French cuevrefeu, \"cover-fire,\" the bell that said to bank the hearth."
+              "text": "nous comprenons — kohn-pruh-NOHN, nasal gone from the stem."
             },
             {
               "kind": "speech",
-              "text": "Set that beside the hand. Maintenir is manū tenēre, \"to hold in the hand\" — and ouvrir la main releases that grip."
+              "text": "vous comprenez — kohn-pruh-NAY."
+            },
+            {
+              "kind": "speech",
+              "text": "ils comprennent — kohn-PREN, the doubled n again."
+            },
+            {
+              "kind": "speech",
+              "text": "This is worth more than one verb. Every French verb built on prendre behaves this way, so the pattern you drilled once now pays out repeatedly."
             }
           ]
         },
@@ -560,65 +138,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ouvrir\" — oo-VREER",
+              "instruction": "\"je prends\" then \"je comprends\" — the second is the first, plus com-",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ouvrir\" — *oo-VREER*]"
+              "source": "[YOU SAY: \"je prends\" then \"je comprends\" — the second is the first, plus *com-*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"j'ouvre la main\" — and hear pain, main",
+              "instruction": "\"nous prenons, nous comprenons\" — both lose the nasal",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"j'ouvre la main\" — and hear *pain*, *main*]"
+              "source": "[YOU SAY: \"nous prenons, nous comprenons\" — both lose the nasal]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"je marche, nous marchons\" then \"j'ouvre, nous ouvrons\" — one shape",
+              "instruction": "\"vous comprenez?\" then answer \"oui\" and then \"non\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"je marche, nous marchons\" then \"j'ouvre, nous ouvrons\" — one shape]"
+              "source": "[YOU SAY: \"vous comprenez ?\" then answer \"oui\" and then \"non\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"je m'assieds, je me lève, j'ouvre la main\"",
+              "instruction": "\"comprendre, comprehend, comprise\" — one family, two spellings",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"je m'assieds, je me lève, j'ouvre la main\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"je suis debout et j'ouvre la main\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"je suis debout et j'ouvre la main\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"maintenir\" then \"ouvrir\" — holding in the hand, then letting go",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"maintenir\" then \"ouvrir\" — holding in the hand, then letting go]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"aperture, aperitif, overt, overture\" — every one an opening",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"aperture, aperitif, overt, overture\" — every one an opening]"
+              "source": "[YOU SAY: \"comprendre, comprehend, comprise\" — one family, two spellings]"
             }
           ]
         },
@@ -635,26 +186,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I open my hand\" and \"we open.\" (J'ouvre la main. Nous ouvrons.) Which endings does ouvrir borrow, despite its spelling? (The -er set — marcher's.) What is an aperitif, literally? (The opener — the drink that opens a meal.) Why does ouvrir not look like Latin aperīre? (It was reshaped to match its own opposite, the verb for covering.)"
+              "text": "What two pieces is comprendre made of, and what does the whole literally mean? (Com- \"together\" + prendre \"to take\" — to take together.) Say \"we understand.\" (Nous comprenons — nasal gone, like nous prenons.) Someone asks vous comprenez? — give both possible answers. (Oui or non.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "FR-C27-fermer",
+      "id": "FR-C25-penser",
       "sequence": 860,
-      "title": "fermer — \"to close,\" which in French means \"to make firm\"",
-      "headword": "fermer",
-      "romanization": "fermer",
-      "gloss": "to close — from Latin firmāre, \"to make firm,\" so a French door is not shut but made fast; the same verb gave Italian \"to stop\" and Spanish \"to sign\"",
+      "title": "penser — \"to think,\" which began as weighing",
+      "headword": "penser",
+      "romanization": "penser",
+      "gloss": "to think — from a Latin verb meaning \"to weigh,\" which is why English pensive, ponder, compensate, expense and even the flower pansy all sit in one family",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc6a120bc7e54756",
+      "sourceHash": "fnv1a64:a949b4e20ba1900f",
       "notice": null,
       "blocks": [
         {
@@ -670,7 +221,7 @@
             },
             {
               "kind": "speech",
-              "text": "The last of the four, and the opposite of the one before it. French chose an unexpected picture: to close a thing is to make it firm."
+              "text": "Understanding, you saw with comprendre, is grasping. This verb says thinking is weighing — and once you know that, half a dozen English words you use in money and medicine suddenly line up behind it."
             }
           ]
         },
@@ -681,69 +232,69 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "fermer — to close. Said fer-MAY. Je ferme la main. — I close my hand. Il pleut. Je ferme. — It's raining. I'm closing up."
+              "text": "penser — to think. Said pahn-SAY: the -en- is the nasal you have been making since prendre, and -er is a clean ay. Je pense. — I think. Vous pensez? — Do you think so?"
             },
             {
               "kind": "speech",
-              "text": "A regular -er verb: je ferme, tu fermes, il ferme, nous fermons, vous fermez, ils ferment."
+              "text": "A completely regular -er verb after the strain of comprendre: je pense, tu penses, il pense, nous pensons, vous pensez, ils pensent. Four of the six sound identical — pahns — and only nous and vous stand out."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: two opposites, one set of endings",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Ouvrir borrowed the -er endings against its own spelling. Fermer owns them outright. So the two opposites conjugate in step, and drill as one pair:"
+              "text": "Two nasals sit close together in French and beginners flatten them into one. Hold them apart by saying them back to back:"
             },
             {
               "kind": "speech",
-              "text": "j'ouvre / je ferme."
+              "text": "non — the -on nasal, rounded, lips pushed forward."
             },
             {
               "kind": "speech",
-              "text": "nous ouvrons / nous fermons."
+              "text": "pense — the -en nasal, unrounded, mouth wider and flatter."
             },
             {
               "kind": "speech",
-              "text": "ils ouvrent / ils ferment."
+              "text": "Same trick every time: your lips tell the two apart, not your tongue."
             }
           ]
         },
         {
           "index": 3,
           "type": "etymology",
-          "title": "The word, taken apart: making it firm",
+          "title": "The word, taken apart: weighing a thing",
           "segments": [
             {
               "kind": "speech",
-              "text": "fermer from Latin firmāre, \"to make firm,\" from firmus, \"firm.\" A Roman door was not closed, it was secured. English took the adjective and left the verb: firm, affirm, confirm, infirm and the infirmary, the firmament — the sky as a solid vault."
+              "text": "penser from Latin pēnsāre, \"to weigh carefully,\" a repeated-action form of pendere, \"to weigh, to hang.\" Roman weighing was done by hanging things from a balance, which is why one root covers both. English inherited the whole scale:"
             },
             {
               "kind": "speech",
-              "text": "Probably also farm. Old French ferme meant a fixed rent, from Medieval Latin firma, \"a fixed payment,\" so a farm began as a lease and not a field. Etymologists call this history a confused one, because Old English feorm, \"food-rent,\" sat nearby and may have pulled on it. Likely, not clean."
+              "text": "pensive — weighing something in your mind."
             },
             {
               "kind": "speech",
-              "text": "The best part is the split. One Latin verb, three languages, three jobs:"
+              "text": "compensate — to weigh one thing against another until they balance; expense and expend, money weighed out; dispense, weighed apart."
             },
             {
               "kind": "speech",
-              "text": "French fermer — to close."
+              "text": "pension — originally a weighing-out, a payment; poise, a balance held."
             },
             {
               "kind": "speech",
-              "text": "Italian fermare — to stop."
+              "text": "suspend and pendant — the hanging half of the same root."
             },
             {
               "kind": "speech",
-              "text": "Spanish firmar — to sign, because a signature makes a paper firm."
+              "text": "The prettiest cousin is a flower. French pensée means \"a thought\" — and English borrowed it, sound and all, as pansy."
             },
             {
               "kind": "speech",
-              "text": "And Spanish and Portuguese do not close with this verb at all. Their words come from Latin's bolt. So French shuts a door by making it solid while its neighbours slide a bar across."
+              "text": "One honest note: English think is Germanic and is not related to any of this. The two words mean the same thing and share no history."
             }
           ]
         },
@@ -761,74 +312,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"fermer\" — fer-MAY",
+              "instruction": "\"penser\" — pahn-SAY",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"fermer\" — *fer-MAY*]"
+              "source": "[YOU SAY: \"penser\" — *pahn-SAY*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"j'ouvre la main\" then \"je ferme la main\"",
+              "instruction": "\"non, pense\" — the round nasal, then the flat one",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"j'ouvre la main\" then \"je ferme la main\"]"
+              "source": "[YOU SAY: \"non, pense\" — the round nasal, then the flat one]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the chapter's four — \"je m'assieds, je me lève, j'ouvre, je ferme\"",
+              "instruction": "\"je pense\" then \"je comprends\" — I think, I understand",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the chapter's four — \"je m'assieds, je me lève, j'ouvre, je ferme\"]"
+              "source": "[YOU SAY: \"je pense\" then \"je comprends\" — I think, I understand]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"je suis debout et je ferme\"",
+              "instruction": "\"penser, pensive, compensate, pansy\" — all a weighing",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"je suis debout et je ferme\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"il pleut, je ferme\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"il pleut, je ferme\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"vous fermez, s'il vous plaît\" then \"tu fermes, s'il te plaît\" — formal, then familiar",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"vous fermez, s'il vous plaît\" then \"tu fermes, s'il te plaît\" — formal, then familiar]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"je suis désolé, je ferme\" — the apology before the refusal",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"je suis désolé, je ferme\" — the apology before the refusal]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"fermer, firm, affirm, confirm\" — all a making-firm",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"fermer, firm, affirm, confirm\" — all a making-firm]"
+              "source": "[YOU SAY: \"penser, pensive, compensate, pansy\" — all a **weighing**]"
             }
           ]
         },
@@ -845,7 +360,384 @@
             },
             {
               "kind": "speech",
-              "text": "Say the chapter's four with je. (Je m'assieds, je me lève, j'ouvre, je ferme.) What did firmāre mean, and what is a French door doing when it closes? (Making firm — being secured, not barred.) One Latin verb, three languages: Italian and Spanish? (Fermare, \"to stop\"; firmar, \"to sign\".) Now close politely in both registers, then apologise. (Vous fermez, s'il vous plaît. Tu fermes, s'il te plaît. Je suis désolé.) And the hand? (J'ouvre la main, je ferme la main.)"
+              "text": "Say \"I think\" and \"do you think so.\" (Je pense. Vous pensez?) What did Latin pēnsāre mean, and name three English cousins. (To weigh — pensive, compensate, expense, pension, poise.) What flower is French for \"a thought\"? (The pansy, from pensée.) Which of non and pense has the rounded lips? (Non — pense is flat and wide.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C25-lire",
+      "sequence": 870,
+      "title": "lire — \"to read,\" which used to mean \"to pick up\"",
+      "headword": "lire",
+      "romanization": "lire",
+      "gloss": "to read — from a Latin verb that first meant \"to gather,\" which is why reading, electing, collecting and being elegant all turn out to be the same act",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:41a2ca88b63dbd60",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A short word with an enormous family behind it. Before lire meant reading, its Latin ancestor meant gathering — and that older sense is why a dozen English words that seem unrelated turn out to be relatives."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lire — to read. Said leer, with the throaty French r at the end. Je lis le français. — I read French."
+            },
+            {
+              "kind": "speech",
+              "text": "Lire is irregular, and its stem grows an s in the plural. Say the six:"
+            },
+            {
+              "kind": "speech",
+              "text": "je lis — lee, the -s silent."
+            },
+            {
+              "kind": "speech",
+              "text": "tu lis — lee."
+            },
+            {
+              "kind": "speech",
+              "text": "il lit — lee (three identical again)."
+            },
+            {
+              "kind": "speech",
+              "text": "nous lisons — lee-ZOHN, and there is the s."
+            },
+            {
+              "kind": "speech",
+              "text": "vous lisez — lee-ZAY."
+            },
+            {
+              "kind": "speech",
+              "text": "ils lisent — LEEZ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: gathering, then reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lire from Latin legere, whose first meaning was \"to gather, to pick out.\" Reading was a later use of it: your eye picks the letters up off the page one after another. Both senses left English words behind."
+            },
+            {
+              "kind": "speech",
+              "text": "The reading half:"
+            },
+            {
+              "kind": "speech",
+              "text": "legible, able to be picked out; lecture, \"a reading\"; lesson, from lectiō, the passage read aloud."
+            },
+            {
+              "kind": "speech",
+              "text": "legend — literally \"things which must be read.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The gathering half, which is the surprise:"
+            },
+            {
+              "kind": "speech",
+              "text": "collect — gather together; select, gather apart; elect, pick out; neglect, fail to pick up at all."
+            },
+            {
+              "kind": "speech",
+              "text": "elegant — originally \"choosy,\" someone who picks well; diligent; intellect, what picks between things."
+            },
+            {
+              "kind": "speech",
+              "text": "One honest limit. Greek's legein — the -logy in every science name — is a cousin, not a parent: it descends from the same ancient root alongside Latin legere, rather than from it. And French le livre, \"book,\" is not in this family at all; that is Latin liber, a separate word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"lire\" — leer, throaty r",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"lire\" — *leer*, throaty *r*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je lis\" then \"nous lisons\" — the s appears",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je lis\" then \"nous lisons\" — the *s* appears]"
+            },
+            {
+              "kind": "speech",
+              "text": "[YOU READ ALOUD, gathering the words one by one: \"le chien, le chat\"]."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je lis le français\" then \"je pense\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je lis le français\" then \"je pense\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"legible, lecture, collect, elect, elegant\" — all a picking out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"legible, lecture, collect, elect, elegant\" — all a **picking out**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I read French\" and \"we read.\" (Je lis le français. Nous lisons — the s only appears in the plural.) What did Latin legere mean first? (To gather, to pick out — reading came second.) Which of collect, elegant and book is not in this family? (Book — French livre is from liber, a different word.) Now read these two aloud. (Le chien, le chat.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C25-ecrire",
+      "sequence": 880,
+      "title": "écrire — \"to write,\" born from a scratch",
+      "headword": "écrire",
+      "romanization": "écrire",
+      "gloss": "to write — Latin scrībere, \"to scratch,\" with a propped-up é- that French added in front of every borrowed sc-, sp- and st- word",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b46f0f531c4776f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can think, understand and read. The last of the four is the one that puts something back out — and its French spelling still carries a repair job the language did more than a thousand years ago."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "écrire — to write. Said ay-KREER: the é is a sharp ay, then the throaty r at the end, as in lire. J'écris le français. — I write French."
+            },
+            {
+              "kind": "speech",
+              "text": "Irregular, and the stem grows a v in the plural:"
+            },
+            {
+              "kind": "speech",
+              "text": "j'écris — ay-KREE."
+            },
+            {
+              "kind": "speech",
+              "text": "tu écris — ay-KREE."
+            },
+            {
+              "kind": "speech",
+              "text": "il écrit — ay-KREE."
+            },
+            {
+              "kind": "speech",
+              "text": "nous écrivons — ay-kree-VOHN, and there is the v."
+            },
+            {
+              "kind": "speech",
+              "text": "vous écrivez — ay-kree-VAY."
+            },
+            {
+              "kind": "speech",
+              "text": "ils écrivent — ay-KREEV."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: scratching, and a propped-up é",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "écrire from Latin scrībere, \"to scratch, to incise.\" A Roman wrote by scratching a stylus across wax, and the verb never forgot it. English took the Latin form whole:"
+            },
+            {
+              "kind": "speech",
+              "text": "scribe, script, scripture, scribble."
+            },
+            {
+              "kind": "speech",
+              "text": "describe — scratch it down; prescribe, subscribe, inscribe."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the é. Latin scrībere began with sc-, and a French-speaking mouth could not start a word that way, so it propped one up with a vowel in front: scrībere becomes escrire becomes écrire. The same repair ran through the whole language — schola became école, spatha became épée, stella became étoile. That accent is not decoration: it is standing where an s used to be."
+            },
+            {
+              "kind": "speech",
+              "text": "And the best cousin belongs to both halves of this chapter. Manuscript is manus + scrībere — \"scratched by hand.\" La main and écrire meet inside one English word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"écrire\" — ay-KREER",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"écrire\" — *ay-KREER*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"j'écris\" then \"nous écrivons\" — the v appears in the plural",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"j'écris\" then \"nous écrivons\" — the *v* appears in the plural]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four of this chapter — \"je comprends, je pense, je lis, j'écris\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four of this chapter — \"je comprends, je pense, je lis, j'écris\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"j'écris à la main\" — I write by hand; that is manuscript, taken apart",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"j'écris à la main\" — I write by hand; that is *manuscript*, taken apart]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"j'aime lire\" then \"j'aime écrire\" — I like reading, I like writing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"j'aime lire\" then \"j'aime écrire\" — I like reading, I like writing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je prends le pain, et j'écris\" — the taking verb, still there",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je prends le pain, et j'écris\" — the taking verb, still there]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"lire, écrire\" — gathering off the page, scratching onto it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"lire, écrire\" — gathering off the page, scratching onto it]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I write\" and \"we write.\" (J'écris. Nous écrivons — the v arrives in the plural.) What did scrībere literally mean, and why does écrire start with an é? (To scratch; French propped a vowel in front of Latin's sc-, the same repair that made école and étoile.) Pull manuscript apart. (Manus \"hand\" — your la main — plus scrībere, \"scratched\": written by hand.) Now say the four verbs of this chapter with je. (Je comprends, je pense, je lis, j'écris.)"
             }
           ]
         }

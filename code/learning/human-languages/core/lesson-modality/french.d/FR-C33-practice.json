@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C33-practice",
     "language": "french",
-    "chapter": 33,
-    "sequence": 1220,
+    "chapter": 35,
+    "sequence": 1320,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:b8594ed6679a96f5"
+    "sourceHash": "fnv1a64:c7fc8e33abe762bc"
   },
   "findings": []
 }

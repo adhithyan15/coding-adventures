@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C10-freres-soeurs",
     "language": "french",
-    "chapter": 10,
-    "sequence": 250,
+    "chapter": 12,
+    "sequence": 350,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:db502b2cdfbc65f4"
+    "sourceHash": "fnv1a64:a6a4149f028451c1"
   },
   "findings": []
 }

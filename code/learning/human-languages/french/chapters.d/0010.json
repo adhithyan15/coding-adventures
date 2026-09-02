@@ -1,16 +1,24 @@
 {
   "chapter": 10,
-  "title": "Family",
-  "label": "ch:family",
-  "canDo": "I can identify close family members in French and say who someone is.",
+  "title": "The Months: Caesars and Counting",
+  "label": "ch:months-caesars",
+  "canDo": "I can name the last six months in French and explain why four of them are counting wrong.",
   "spineNodes": [
     "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "FR-C10-freres-soeurs",
+    "lesson": "FR-C09-mois-practice-2",
     "kind": "task",
-    "summary": "Complete FR-C10-freres-soeurs, the canonical closing checkpoint, and demonstrate the chapter promise: identify close family members in French and say who someone is.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Two men put themselves in a calendar of gods, and the four months after them have been miscounting ever since. juillet is Julius Caesar and aout is the emperor Augustus; wedging those two into the middle is what pushed septembre to decembre two places out of place.",
+    "assesses": [
+      "FR-LEX-JUILLET-01",
+      "FR-LEX-AOUT-02",
+      "FR-ETYMON-MOIS-EMPEREURS-03",
+      "FR-LEX-SEPTEMBRE-04",
+      "FR-LEX-OCTOBRE-05",
+      "FR-LEX-NOVEMBRE-06",
+      "FR-LEX-DECEMBRE-07"
+    ],
+    "note": "Authored as part of the chapter-9 split: length is never a cost, so sixteen months-and-seasons became three chapters rather than one dense one. The payoff is atom-scored -- it assesses every atom its chapter introduces."
   }
 }

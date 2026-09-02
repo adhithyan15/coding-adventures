@@ -1,21 +1,16 @@
 {
   "chapter": 18,
-  "title": "Yes and No",
-  "label": "ch:fr-yes-and-no",
-  "canDo": "I can answer yes or no in French, send non through my nose as a nasal vowel, and recognise the ne … pas pair that carries negation inside a sentence.",
+  "title": "To Be, and the Past That Takes It",
+  "label": "ch:etre",
+  "canDo": "I can use the French verb for “to be” and form the past of verbs that select it.",
   "spineNodes": [
-    "SPINE-RESPOND-BASIC"
+    "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "FR-C18-non",
-    "kind": "production",
-    "summary": "The oui / non pair said back to back, non's -on nasal placed against bon and bonjour, and the ne … pas frame named as the sentence-level negation to come.",
-    "assesses": [
-      "FR-LEX-OUI-02",
-      "FR-LEX-NON-02",
-      "FR-SOUND-NON-03",
-      "FR-GRAMMAR-NEGATION-04"
-    ],
-    "note": "Chapter 18 has no terminal practice lesson, so the payoff is the last lesson by sequence; it reaches back to reassess oui."
+    "lesson": "FR-C16-pronominal-past",
+    "kind": "task",
+    "summary": "Complete FR-C16-pronominal-past, the canonical closing checkpoint, and demonstrate the chapter promise: use the French verb for “to be” and form the past of verbs that select it.",
+    "assesses": [],
+    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
   }
 }

@@ -1,15 +1,15 @@
 {
   "language": "french",
   "chapter": 21,
-  "sourceHash": "fnv1a64:7e75bbea32d4d7a6",
+  "sourceHash": "fnv1a64:e59cdad803d2718e",
   "lessonIds": [
-    "FR-C21-le-temps"
+    "FR-C19-sil-vous-plait"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "french/narration/ch21.txt",
   "json": "french/narration/ch21.json",
-  "textHash": "fnv1a64:b6b6643ea92e5448",
-  "jsonHash": "fnv1a64:b0f844fa5559a099",
+  "textHash": "fnv1a64:ef18cafd03505544",
+  "jsonHash": "fnv1a64:687d671d88bd0361",
   "findings": []
 }

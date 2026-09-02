@@ -1,18 +1,18 @@
 {
   "language": "french",
   "chapter": 29,
-  "sourceHash": "fnv1a64:9793c99fbc1690b1",
+  "sourceHash": "fnv1a64:dec6de2854b590a8",
   "lessonIds": [
-    "FR-C29-ami",
-    "FR-C29-famille",
-    "FR-C29-enfant",
-    "FR-C29-personne"
+    "FR-C27-sasseoir",
+    "FR-C27-se-lever",
+    "FR-C27-ouvrir",
+    "FR-C27-fermer"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 4,
   "text": "french/narration/ch29.txt",
   "json": "french/narration/ch29.json",
-  "textHash": "fnv1a64:b165a95111693c80",
-  "jsonHash": "fnv1a64:c525243e608bb6e2",
+  "textHash": "fnv1a64:8638392fd435466d",
+  "jsonHash": "fnv1a64:a065f9d0508356c5",
   "findings": []
 }

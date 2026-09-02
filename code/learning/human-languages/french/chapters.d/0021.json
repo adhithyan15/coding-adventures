@@ -1,20 +1,19 @@
 {
   "chapter": 21,
-  "title": "Weather",
-  "label": "ch:fr-weather",
-  "canDo": "I can talk about the weather in French — quel temps fait-il, il fait chaud, il fait froid, il pleut.",
+  "title": "Please",
+  "label": "ch:fr-please",
+  "canDo": "I can say please in French and choose between s'il vous plaît and s'il te plaît depending on who I am speaking to.",
   "spineNodes": [
-    "SPINE-TIME-OF-DAY"
+    "SPINE-POLITE-REQUEST-REPAIR"
   ],
   "payoff": {
-    "lesson": "FR-C21-le-temps",
+    "lesson": "FR-C19-sil-vous-plait",
     "kind": "production",
-    "summary": "Use le temps in both its senses, build the weather with faire (il fait chaud / il fait froid), and say il pleut with the Latin pl- cluster French kept intact. The chapter's only lesson, so the payoff covers everything it introduces.",
+    "summary": "Say s'il vous plaît with its silent final -t, take it apart into 'if it pleases you', then switch to s'il te plaît for a friend. The chapter's only lesson, so the payoff covers everything it introduces.",
     "assesses": [
-      "FR-LEX-TEMPS-02",
-      "FR-GRAMMAR-IL-FAIT-03",
-      "FR-LEX-IL-PLEUT-04",
-      "FR-ETYMON-PLEUVOIR-05"
+      "FR-LEX-PLEASE-02",
+      "FR-ETYMON-PLAIRE-03",
+      "FR-GRAMMAR-PLEASE-REGISTER-04"
     ]
   }
 }

@@ -1,7 +1,7 @@
 ---
 id: FR-C12-nombres-11-16
-sequence: 265
-chapter: 12
+sequence: 365
+chapter: 14
 type: word
 headword: onze — seize
 gloss: 11–16, the six fused numbers French inherited whole from Latin

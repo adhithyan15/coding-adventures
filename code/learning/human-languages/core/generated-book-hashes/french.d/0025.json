@@ -1,12 +1,9 @@
 {
   "language": "french",
   "chapter": 25,
-  "sourceHash": "fnv1a64:7fd319b97f9cfe41",
+  "sourceHash": "fnv1a64:9d53237fa490a41f",
   "lessonIds": [
-    "FR-C25-comprendre",
-    "FR-C25-penser",
-    "FR-C25-lire",
-    "FR-C25-ecrire"
+    "FR-C23-vert-jaune"
   ],
-  "tex": "french/book/chapters/ch25-verbs-of-the-mind.tex"
+  "tex": "french/book/chapters/ch25-green-and-yellow.tex"
 }

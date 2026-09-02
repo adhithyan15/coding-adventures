@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 11,
+  "sourceHash": "fnv1a64:de4230bb380ea6f9",
+  "lessonIds": [
+    "FR-C09-printemps",
+    "FR-C09-ete",
+    "FR-C09-automne",
+    "FR-C09-hiver",
+    "FR-C09-en-saison",
+    "FR-C09-saisons-practice"
+  ],
+  "tex": "french/book/chapters/ch11-seasons.tex"
+}

@@ -1,17 +1,12 @@
 {
   "language": "french",
   "chapter": 32,
-  "sourceHash": "fnv1a64:95a698fb852c82dc",
+  "sourceHash": "fnv1a64:aa1e64e14e55410b",
   "lessonIds": [
-    "FR-C32-intonation",
-    "FR-C32-est-ce-que",
-    "FR-C32-ou",
-    "FR-C32-quand",
-    "FR-C32-comment",
-    "FR-C32-combien",
-    "FR-C32-pourquoi",
-    "FR-C32-inversion",
-    "FR-C32-quel"
+    "FR-C30-fromage",
+    "FR-C30-beurre",
+    "FR-C30-sel",
+    "FR-C30-oeuf"
   ],
-  "tex": "french/book/chapters/ch32-questions.tex"
+  "tex": "french/book/chapters/ch32-cheese-butter-salt-egg.tex"
 }

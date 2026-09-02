@@ -1,24 +1,30 @@
 {
   "chapter": 29,
-  "title": "The People You Introduce",
-  "label": "ch:fr-the-people-you-introduce",
-  "canDo": "I can introduce a friend, name my family, name a child and name any person, using French's four different relationships between grammatical gender and the person meant, and elide le or la to l' before a vowel.",
+  "title": "Sitting, Standing, Opening, Closing",
+  "label": "ch:fr-sitting-standing-opening-closing",
+  "canDo": "I can sit down, get up, open and close in French, hold both accepted paradigms of s'asseoir apart, say why French needs two pieces — se lever and debout — where English has one verb \"to stand,\" and know that ouvrir takes marcher's endings despite its -ir spelling.",
   "spineNodes": [
-    "SPINE-EXCHANGE-NAMES"
+    "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "FR-C29-personne",
+    "lesson": "FR-C27-fermer",
     "kind": "task",
-    "summary": "Say la personne, always feminine even naming a man, then line the chapter's four words up by how each one handles gender: l'ami changes, la famille is fixed, l'enfant is one spelling with two articles, la personne is fixed regardless of sex. Reaches back to Chapter 18's non for a sound contrast (personne's double -nn- blocks the nasal non has) and to its ne ... pas negation, which personne itself joins as \"nobody.\"",
+    "summary": "Say the chapter's four with je — je m'assieds, je me lève, j'ouvre, je ferme — drill ouvrir and fermer as one pair now that both carry the same endings, and take fermer apart into firmāre, 'to make firm', the verb that gave Italian fermare 'to stop' and Spanish firmar 'to sign'. Reaches back past the chapter to open and close la main from Chapter 17, to close because il pleut from Chapter 21, and to ask in both registers and then apologise, from Chapters 19 and 20.",
     "assesses": [
-      "FR-LEX-PERSONNE-08",
-      "FR-ETYMON-PERSONNE-09",
-      "FR-LEX-AMI-01",
-      "FR-GRAMMAR-ELISION-ARTICLE-02",
-      "FR-LEX-FAMILLE-04",
-      "FR-LEX-ENFANT-06",
-      "FR-SOUND-NON-03",
-      "FR-GRAMMAR-NEGATION-04"
+      "FR-LEX-FERMER-10",
+      "FR-ETYMON-FERMER-11",
+      "FR-LEX-OUVRIR-07",
+      "FR-ETYMON-OUVRIR-08",
+      "FR-GRAMMAR-OUVRIR-ER-ENDINGS-09",
+      "FR-LEX-LEVER-04",
+      "FR-LEX-DEBOUT-06",
+      "FR-LEX-ASSEOIR-01",
+      "FR-LEX-MAIN-02",
+      "FR-LEX-PLEASE-02",
+      "FR-GRAMMAR-PLEASE-REGISTER-04",
+      "FR-LEX-DESOLE-02",
+      "FR-PRAGMATICS-SORRY-04",
+      "FR-LEX-IL-PLEUT-04"
     ]
   }
 }

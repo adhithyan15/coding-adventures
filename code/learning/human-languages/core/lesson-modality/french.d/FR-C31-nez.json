@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C31-nez",
     "language": "french",
-    "chapter": 31,
-    "sequence": 1000,
+    "chapter": 33,
+    "sequence": 1100,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:4b8b13f49dc24c38"
+    "sourceHash": "fnv1a64:e24a5e1aafaea581"
   },
   "findings": []
 }

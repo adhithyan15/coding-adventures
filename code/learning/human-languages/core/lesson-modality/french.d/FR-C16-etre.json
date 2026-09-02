@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C16-etre",
     "language": "french",
-    "chapter": 16,
-    "sequence": 305,
+    "chapter": 18,
+    "sequence": 405,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:e792d992c72f3868"
+    "sourceHash": "fnv1a64:f1809b8f4843cde1"
   },
   "findings": []
 }

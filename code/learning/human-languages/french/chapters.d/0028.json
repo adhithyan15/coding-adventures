@@ -1,24 +1,31 @@
 {
   "chapter": 28,
-  "title": "Coffee, Tea, Milk, Sugar",
-  "label": "ch:fr-coffee-tea-milk-sugar",
-  "canDo": "I can ask for coffee, tea, milk or sugar in French, and trace each word to the road it travelled to get there — one unbroken, one forked, one never borrowed, one from Sanskrit.",
+  "title": "Hearing, Sleeping, Walking, Running",
+  "label": "ch:fr-hearing-sleeping-walking-running",
+  "canDo": "I can say that I hear, sleep, walk and run in French, use ça marche for \"that works,\" and say why entendre carries English's intend inside it while the Latin verb for hearing ended up in English instead.",
   "spineNodes": [
-    "SPINE-POLITE-REQUEST-REPAIR"
+    "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "FR-C28-sucre",
+    "lesson": "FR-C26-courir",
     "kind": "task",
-    "summary": "Ask for sugar, trace sucre to Sanskrit śárkarā through Arabic sukkar, and set the chapter's four masculine drink-words beside l'eau's lone feminine exception. Reaches back past the chapter to Chapter 18's si, the answer that contradicts a negative, and to the langue d'oïl / langue d'oc split behind oui itself.",
+    "summary": "Run the chapter's four verbs together with je — j'entends, je dors, je marche, je cours — then use courir's spelling to settle why canis became chien while currere stayed hard at the front: the ca- shift only ever struck c before a. Reaches back past the chapter to le chien and its palatalization from Chapter 22, le chat from the same chapter, il fait chaud and il pleut from Chapter 21, and the ne … pas negation from Chapter 18.",
     "assesses": [
-      "FR-LEX-SUCRE-07",
-      "FR-ETYMON-SUCRE-08",
-      "FR-LEX-LAIT-05",
-      "FR-ETYMON-LAIT-06",
-      "FR-LEX-CAFE-01",
-      "FR-ETYMON-CAFE-02",
-      "FR-CULTURE-OUI-04",
-      "FR-PRAGMATICS-SI-05"
+      "FR-LEX-COURIR-10",
+      "FR-ETYMON-COURIR-11",
+      "FR-LEX-MARCHER-07",
+      "FR-ETYMON-MARCHER-08",
+      "FR-SEMANTICS-MARCHER-WORK-09",
+      "FR-LEX-DORMIR-04",
+      "FR-GRAMMAR-DORMIR-STEM-06",
+      "FR-LEX-ENTENDRE-01",
+      "FR-ETYMON-ENTENDRE-02",
+      "FR-GRAMMAR-NEGATION-04",
+      "FR-LEX-CHIEN-02",
+      "FR-ETYMON-CHIEN-03",
+      "FR-LEX-CHAT-04",
+      "FR-LEX-IL-PLEUT-04",
+      "FR-GRAMMAR-IL-FAIT-03"
     ]
   }
 }

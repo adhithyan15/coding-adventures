@@ -1,16 +1,16 @@
 {
   "language": "french",
   "chapter": 15,
-  "sourceHash": "fnv1a64:71dc35ad3261708d",
+  "sourceHash": "fnv1a64:4e1c14a178a0f5b8",
   "lessonIds": [
-    "FR-C15-passe-compose",
-    "FR-C15-passe-simple"
+    "FR-C13-noir-blanc",
+    "FR-C13-rouge-bleu"
   ],
   "voiceLessons": 2,
   "drivablePrefix": 2,
   "text": "french/narration/ch15.txt",
   "json": "french/narration/ch15.json",
-  "textHash": "fnv1a64:d1815092a808f260",
-  "jsonHash": "fnv1a64:ba35cb2453f6ef38",
+  "textHash": "fnv1a64:1246d79647f5fa86",
+  "jsonHash": "fnv1a64:cecec8e9f1cbc85d",
   "findings": []
 }

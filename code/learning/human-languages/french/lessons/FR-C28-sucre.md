@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C28-sucre
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 900
-chapter: 28
+sequence: 1000
+chapter: 30
 type: word
 headword: le sucre
 gloss: sugar — masculine, closing a chapter where every drink-word is; the fourth and longest road of the four

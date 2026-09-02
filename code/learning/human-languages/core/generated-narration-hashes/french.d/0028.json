@@ -1,18 +1,18 @@
 {
   "language": "french",
   "chapter": 28,
-  "sourceHash": "fnv1a64:1f4507b2ea6abc38",
+  "sourceHash": "fnv1a64:f8b818fd298af4b3",
   "lessonIds": [
-    "FR-C28-cafe",
-    "FR-C28-the",
-    "FR-C28-lait",
-    "FR-C28-sucre"
+    "FR-C26-entendre",
+    "FR-C26-dormir",
+    "FR-C26-marcher",
+    "FR-C26-courir"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 4,
   "text": "french/narration/ch28.txt",
   "json": "french/narration/ch28.json",
-  "textHash": "fnv1a64:3360c3081c76aa81",
-  "jsonHash": "fnv1a64:c89f94214f1d5d93",
+  "textHash": "fnv1a64:bef65ad745f94cc6",
+  "jsonHash": "fnv1a64:a41c2802e898a588",
   "findings": []
 }

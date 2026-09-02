@@ -2,24 +2,24 @@
   "version": 1,
   "language": "french",
   "chapter": 18,
-  "title": "Yes and No",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:e5e33f58fada17a0",
+  "title": "To Be, and the Past That Takes It",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:a69ff0464c9fd29b",
   "lessons": [
     {
-      "id": "FR-C18-oui",
-      "sequence": 640,
-      "title": "oui — yes",
-      "headword": "oui",
-      "romanization": "oui",
-      "gloss": "yes",
+      "id": "FR-C16-etre",
+      "sequence": 405,
+      "title": "être — “to be”",
+      "headword": "être",
+      "romanization": "être",
+      "gloss": "to be — the six present forms",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2178c4eaa1e0aab1",
+      "sourceHash": "fnv1a64:f1809b8f4843cde1",
       "notice": null,
       "blocks": [
         {
@@ -35,77 +35,65 @@
             },
             {
               "kind": "speech",
-              "text": "Where Spanish kept Latin's word for yes, French built a brand-new one — and named half a country after it."
+              "text": "You have avoir, “to have.” Meet its partner être, the auxiliary and everyday verb “to be.”"
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "unknown",
+          "title": "The six forms",
           "segments": [
             {
-              "kind": "speech",
-              "text": "oui = yes. Just two sounds, wee."
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "je suis, nous sommes.",
+                "tu es, vous êtes.",
+                "il/elle est, ils/elles sont."
+              ]
             },
             {
               "kind": "speech",
-              "text": "Its Romance cousins (Spanish sí, Italian sì) come from Latin sīc \"thus.\" French took a different road entirely. oui comes from Old French oïl, and oïl is a squeezed-down Latin phrase:"
+              "text": "These forms are old and frequent, so sound change has worn away any neat modern pattern. Learn the row as a rhythm:"
             },
             {
               "kind": "speech",
-              "text": "hoc ille (\"this [is] it\") becomes o-ïl becomes oui."
+              "text": "suis, es, est — sommes, êtes, sont."
             },
             {
               "kind": "speech",
-              "text": "You answered \"yes\" by saying, in effect, \"that's the one.\""
+              "text": "Use the subject pronoun every time; unlike Spanish or Italian, French verb sounds often do not identify the person by themselves."
+            },
+            {
+              "kind": "speech",
+              "text": "Examples:"
+            },
+            {
+              "kind": "speech",
+              "text": "Je suis français. — I am French."
+            },
+            {
+              "kind": "speech",
+              "text": "Elle est fatiguée. — She is tired."
+            },
+            {
+              "kind": "speech",
+              "text": "Nous sommes prêts. — We are ready."
+            },
+            {
+              "kind": "speech",
+              "text": "The present forms continue Latin esse, “to be”: suis beside sum, est beside est, sommes beside sumus, and sont beside sunt. Other tenses draw on different roots; the next micro-lesson maps those seams."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: A word that split a country",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "This mattered so much it became a map. In the Middle Ages France was divided by how people said yes:"
-            },
-            {
-              "kind": "speech",
-              "text": "the north said oïl becomes the langue d'oïl (which became modern French)."
-            },
-            {
-              "kind": "speech",
-              "text": "the south said oc becomes the langue d'oc — still visible in the region name Languedoc, and in the language Occitan."
-            },
-            {
-              "kind": "speech",
-              "text": "One little answer-word, drawn as a border."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: The other “yes,” si",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "French keeps a second yes — si — for one special job: contradicting a negative. When someone says something isn't so and you insist it is, you answer si, not oui:"
-            },
-            {
-              "kind": "speech",
-              "text": "Tu ne viens pas? (\"You're not coming?\") — Si! (\"Yes I am!\")"
-            },
-            {
-              "kind": "speech",
-              "text": "(That si is the Latin sīc the Spanish sí also comes from — French kept it only for this contradicting move.)"
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -118,34 +106,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"oui\" — wee",
+              "instruction": "“je suis, tu es, il est”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"oui\" — *wee*]"
+              "source": "[YOU SAY: “je suis, tu es, il est”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the origin — \"hoc ille becomes oïl becomes oui\": that's the one",
+              "instruction": "“nous sommes, vous êtes, ils sont”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the origin — \"hoc ille → oïl → oui\": *that's the one*]"
+              "source": "[YOU SAY: “nous sommes, vous êtes, ils sont”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the contradiction — \"Tu ne viens pas? — Si!\"",
+              "instruction": "“Je suis français. Elle est fatiguée.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the contradiction — \"Tu ne viens pas ? — Si !\"]"
+              "source": "[YOU SAY: “Je suis français. Elle est fatiguée.”]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "“Suis, es, est — sommes, êtes, sont.”"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -157,44 +154,26 @@
             },
             {
               "kind": "speech",
-              "text": "How do you say yes in French? (oui.) What Latin phrase is it worn down from? (hoc ille, \"this is it,\" via oïl.) What were the langue d'oïl and langue d'oc named after? (The two medieval words for yes.) When do you answer si instead of oui? (To contradict a negative — Tu ne viens pas? — Si!)"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "FR-C18-oui-negative",
-              "prompt": "French has two words for yes. Which one contradicts a negative?",
-              "assesses": [
-                "FR-PRAGMATICS-SI-05"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "si",
-                "si!"
-              ],
-              "feedback": {
-                "correct": "Right: si contradicts a negative; oui answers an ordinary positive question.",
-                "incorrect": "Use si when you insist that a negative statement is wrong."
-              }
+              "text": "Give the six present forms. (Suis, es, est, sommes, êtes, sont.) Which pronoun goes with êtes? (Vous.) Which Latin verb supplies this row? (Esse.) Next: find the fu- and ét- pieces inside the wider paradigm."
             }
           ]
         }
       ]
     },
     {
-      "id": "FR-C18-non",
-      "sequence": 650,
-      "title": "non — no / not",
-      "headword": "non",
-      "romanization": "non",
-      "gloss": "no / not",
+      "id": "FR-C16-etre-roots",
+      "sequence": 410,
+      "title": "suis / fus / étais — three stems",
+      "headword": "suis / fus / étais",
+      "romanization": "suis / fus / étais",
+      "gloss": "three historical stems inside être",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e767454d5c29297b",
+      "sourceHash": "fnv1a64:1d1d2dfc93e4aab0",
       "notice": null,
       "blocks": [
         {
@@ -210,55 +189,220 @@
             },
             {
               "kind": "speech",
-              "text": "After French's home-grown oui, its no is the family word, shared straight with Spanish — but said the French way, through the nose."
+              "text": "The present of être comes from Latin esse. Its other forms expose two more historical pieces."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "French",
+                "source"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "French: suis, es, est, sommes, êtes, sont. source: Latin esse, “be”.",
+                "French: fus, fut. source: ancient perfect stem fuī.",
+                "French: été, étant, étais, était. source: Latin stāre, “stand”."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Every ét- form comes from the standing verb: participle été, present participle étant, imperfect étais / était. A paradigm patched from different roots is suppletive, like English go / went."
+            },
+            {
+              "kind": "speech",
+              "text": "The fu- stem is related to the root of English be. The ét- limb is even more striking because Spanish kept the same stāre source as a separate verb, estar."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "language",
+                "what happened to esse and stāre"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "language: Spanish. what happened to esse and stāre: kept ser and estar separate.",
+                "language: French. what happened to esse and stāre: kept être and absorbed a whole ét- limb."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "French also preserves stāre outside être, for example in rester, “stay.” But it no longer has a separate standing-based “to be.”"
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "guided-production",
+          "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "non = no. It comes from Latin nōn, the same source as Spanish no and Italian no:"
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
             },
             {
-              "kind": "table",
-              "headers": [
-                "Latin nōn",
-                ", which gives:"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "Latin nōn: Spanish. , which gives:: no.",
-                "Latin nōn: Italian. , which gives:: no.",
-                "Latin nōn: French. , which gives:: non."
-              ]
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“suis from esse”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “suis ← esse”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“fus from fuī”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “fus ← fuī”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“été, étant, étais from stāre”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “été, étant, étais ← stāre”]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
               "kind": "speech",
-              "text": "Spanish dropped the n and left a clean no. French kept the n — but turned it into a nasal vowel: you don't quite touch your tongue to say the final n, you send the vowel through your nose. That's the sound written ‑on in non, bon, bonjour — you've met it before."
+              "text": "“Es-, fu-, ét-: three stems, one verb.”"
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: The seed of French negation",
+          "type": "recall",
+          "title": "Wrap-up Recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "The word that actually carries negation inside a French sentence isn't non but its unstressed twin, ne — both worn down from the same Latin nōn. Modern French usually reinforces ne with a second word, giving the pair ne … pas:"
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
             },
             {
               "kind": "speech",
-              "text": "Je ne parle pas français = \"I do not speak French.\""
+              "text": "Which root supplies the present? (Esse.) Which supplies fus? (Fuī.) Which supplies every ét- form? (Stāre, “stand.”) What is such patching called? (Suppletion.) What did Spanish do differently? (Kept the two verbs separate.) Next: build the compound past with être."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C16-passe-compose-etre",
+      "sequence": 415,
+      "title": "Je suis allé — the past built from “be”",
+      "headword": "je suis allé(e)",
+      "romanization": "je suis allé(e)",
+      "gloss": "the compound past with être and subject agreement",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2c1c41c087bbc9fa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
             },
             {
               "kind": "speech",
-              "text": "For now, non on its own is your answer-word. In ne … pas, the ne is non's cousin from nōn; the pas was added later — it originally meant \"a step\" (Latin passus), as in \"not walk a step\" — and simply stuck. That fuller sentence negation is something you'll build later."
+              "text": "The compound past built j’ai parlé with avoir. A smaller family uses être, and its participle agrees with the subject."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Start with aller",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 5,
+              "utterances": [
+                "je suis allé, I went.",
+                "tu es allé, you went.",
+                "il est allé, he went.",
+                "nous sommes allés, we went.",
+                "ils sont allés, they went."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The family centres on arriving, leaving, and changing state: aller, venir, partir, arriver, entrer, sortir, naître, mourir, rester, tomber."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not interpret that as “every verb involving movement.” Marcher, courir, nager, and danser take avoir. Some verbs switch with a direct object: je suis monté (“I went up”) but j’ai monté les valises (“I took the suitcases up”)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "Agreement with the subject",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "subject",
+                "sentence"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "subject: il. sentence: Il est allé.",
+                "subject: elle. sentence: Elle est allée.",
+                "subject: ils. sentence: Ils sont allés.",
+                "subject: elles. sentence: Elles sont allées."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The participle takes the subject’s gender and number like an adjective. That is its history: elle est allée began as “she is gone,” with gone describing her state just as fatiguée would."
+            },
+            {
+              "kind": "speech",
+              "text": "This connects both auxiliary systems:"
+            },
+            {
+              "kind": "speech",
+              "text": "with avoir, agreement can follow a preceding object;"
+            },
+            {
+              "kind": "speech",
+              "text": "with être, agreement follows the subject."
+            },
+            {
+              "kind": "speech",
+              "text": "Underneath both, the participle was an adjective agreeing with what it described."
             }
           ]
         },
@@ -276,29 +420,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"non\" — nasal, through the nose, like the -on in bon",
+              "instruction": "“je suis allé; elle est allée”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"non\" — nasal, through the nose, like the *-on* in *bon*]"
+              "source": "[YOU SAY: “je suis allé; elle est allée”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pair with yes — \"oui / non\"",
+              "instruction": "“ils sont allés; elles sont allées”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pair with yes — \"oui / non\"]"
+              "source": "[YOU SAY: “ils sont allés; elles sont allées”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the family — Latin nōn becomes Spanish no, French non",
+              "instruction": "the contrast — “j’ai parlé; je suis allé”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the family — Latin *nōn* → Spanish *no*, French *non*]"
+              "source": "[YOU SAY: the contrast — “j’ai parlé; je suis allé”]"
             }
           ]
         },
@@ -315,7 +459,144 @@
             },
             {
               "kind": "speech",
-              "text": "How do you say no in French? (non.) What Latin word is it from, and which Spanish word is its twin? (nōn; Spanish no.) What did French do to the n that Spanish dropped? (Kept it as a nasal vowel — the -on sound.) What pair does full French negation usually wrap around the verb? (ne … pas.)"
+              "text": "Which broad family takes être? (Arriving, leaving, and change of state.) Does courir? (No: j’ai couru.) What does the participle agree with here? (The subject.) Why? (It began as an adjective.) Next: the special agreement logic of pronominal verbs."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C16-pronominal-past",
+      "sequence": 420,
+      "title": "Elle s’est lavée — pronominal past agreement",
+      "headword": "elle s'est lavée / lavé les mains",
+      "romanization": "elle s'est lavée / lavé les mains",
+      "gloss": "agreement in the compound past of pronominal verbs",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82aea081cfdc0748",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "All pronominal verbs use être in the compound past: je me suis levé, elle s’est lavée. Their agreement, however, follows the direct object rather than blindly following the subject."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "sentence",
+                "why"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "sentence: Elle s’est lavée. why: se means “herself,” a preceding direct object.",
+                "sentence: Elle s’est lavé les mains. why: direct object les mains follows, so no agreement.",
+                "sentence: Elles se sont parlé. why: se means “to each other,” an indirect object."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The auxiliary looks like être, but the decision is the same one used with avoir: agree with a preceding direct object."
+            },
+            {
+              "kind": "speech",
+              "text": "Ask two questions:"
+            },
+            {
+              "kind": "speech",
+              "text": "What received the action directly?"
+            },
+            {
+              "kind": "speech",
+              "text": "Does that direct object come before the participle?"
+            },
+            {
+              "kind": "speech",
+              "text": "In elle s’est lavée, se is direct and precedes, so add -e. In elle s’est lavé les mains, les mains is direct but follows, so leave lavé unchanged. In se parler, the person is indirect — you speak to someone — so there is no agreement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Verbs that exist only pronominally",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Verbs such as se souvenir (remember), s’enfuir (flee), and s’évanouir (faint) have no ordinary non-reflexive partner. They simply agree with the subject: elles se sont souvenues."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Elle s’est lavée.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Elle s’est lavée.”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Elle s’est lavé les mains.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Elle s’est lavé les mains.”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Elles se sont parlé.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Elles se sont parlé.”]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which auxiliary do pronominal verbs take? (Être.) Do they always agree with the subject? (No.) What controls ordinary pronominal agreement? (A preceding direct object.) Why no agreement in se sont parlé? (Se is indirect.) How do inherently pronominal verbs behave? (They agree with the subject.)"
             }
           ]
         }

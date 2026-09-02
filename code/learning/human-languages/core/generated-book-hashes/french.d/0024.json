@@ -1,12 +1,9 @@
 {
   "language": "french",
   "chapter": 24,
-  "sourceHash": "fnv1a64:63714e77bdd41f52",
+  "sourceHash": "fnv1a64:df3e0293eccd9560",
   "lessonIds": [
-    "FR-C24-prendre",
-    "FR-C24-demander",
-    "FR-C24-aider",
-    "FR-C24-aimer"
+    "FR-C22-chien-chat"
   ],
-  "tex": "french/book/chapters/ch24-taking-asking-helping-loving.tex"
+  "tex": "french/book/chapters/ch24-dog-and-cat.tex"
 }

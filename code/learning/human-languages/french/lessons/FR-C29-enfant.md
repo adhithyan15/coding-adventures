@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C29-enfant
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 930
-chapter: 29
+sequence: 1030
+chapter: 31
 type: word
 headword: l'enfant
 gloss: child — one spelling for both genders, the article alone showing which; literally "not yet speaking"

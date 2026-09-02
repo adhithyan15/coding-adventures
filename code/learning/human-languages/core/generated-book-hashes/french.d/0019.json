@@ -1,9 +1,10 @@
 {
   "language": "french",
   "chapter": 19,
-  "sourceHash": "fnv1a64:298172841af8e4ae",
+  "sourceHash": "fnv1a64:5327442a14a20eba",
   "lessonIds": [
-    "FR-C19-sil-vous-plait"
+    "FR-C17-tete",
+    "FR-C17-main"
   ],
-  "tex": "french/book/chapters/ch19-please.tex"
+  "tex": "french/book/chapters/ch19-head-and-hand.tex"
 }

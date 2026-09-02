@@ -1,204 +1,172 @@
-French, chapter 26: Hearing, Sleeping, Walking, Running.
+French, chapter 26: Taking, Asking, Helping, Loving.
 4 lessons. All 4 can be done entirely by ear.
 
 
 Lesson 1 of 4.
-entendre — "to hear," and the stretching inside it.
+prendre — "to take," the verb your hand does.
 
 Warm-up.
 [pause 2 seconds]
-You can think and understand. Now the ear — and French's word for it is English's intend.
+You already have la main, the hand. Here is the verb that hand performs — and it turns out to be hiding inside a surprising number of English words you use without thinking.
 
 You'll want to know: the word.
-entendre — to hear. Two nasal an sounds in a row, then the -dre of prendre: say it ahn-TAHN-druh. J'entends le chien. — I hear the dog.
-The -ds of j'entends is silent, as in je prends.
+prendre — to take. Said PRAHN-druh: the -en- is the nasal vowel of an, sent through the nose, not a clean en. Je prends le pain. — I take the bread.
+The -ds of je prends is silent. You say prahn, and stop.
 
-Grammar Lens: the nasal that stays put.
-Prendre's nasal dies in the plural. Entendre looks like its twin and does the opposite — the stem never moves:
-j'entends — jahn-TAHN.
-tu entends — ahn-TAHN.
-il entend — ahn-TAHN (three identical to the ear).
-nous entendons — ahn-tahn-DOHN, nasal still there.
-vous entendez — ahn-tahn-DAY.
-ils entendent — ahn-TAHND.
+The word, taken apart: prendre.
+prendre from Latin prehendere, "to grasp, to seize," which Romans themselves shortened to prendere. That short form is the one French inherited — and English borrowed the family repeatedly:
+prehensile — a tail that grasps.
+apprehend — to seize (ad- "toward" + grasp); reprehensible, something to be seized back on.
+prison from Latin prehensiō, "a seizing" — a jail is, literally, a taking-hold.
+surprise — French sur- "over" + prendre: an over-taking.
+enterprise, something undertaken; apprentice, one who takes on.
+impregnable — from Old French imprenable, "not takeable." Nothing to do with pregnancy.
+Manus gave you a hand that holds — manual, maintain. Prendere gives you the hand that closes.
 
-The word, taken apart: a stretching.
-entendre from Latin intendere — in- "toward" plus tendere, "to stretch." To intendere was to stretch a thing out and aim it: a bowstring, a journey, your attention. English kept the family — intend, plainest of them, plus intent, intense, tension, a tent (a stretched skin), extend and pretend.
-Set your three mind-verbs together: French pictures each as a different thing the body does.
-comprendre — to grasp together, built on prendre.
-penser — to weigh, from pēnsāre.
-entendre — to stretch toward.
-
-Why it's said this way: the sense that took over.
-From its oldest French records entendre already covers a span at once: to hear, to attend, to understand, to intend. Nothing arrived late. What happened since is that the other senses fell away and hearing took the word outright — because Latin's verb for hearing, audīre, wore down in French to ouïr and stopped being usable. English kept that family instead: audio, audience, audible, audition.
-The abandoned senses survive in phrases French never rebuilt:
-entendu — "understood," "agreed."
-s'entendre — to hear one another, and so to get along.
-l'entente — an understanding between parties, borrowed into English whole in Entente Cordiale.
-So the two languages split one Latin pair: French hears with the verb English uses for intending, and English hears with the verb French let go.
+Grammar Lens: the stem that doubles.
+Prendre is irregular, and its irregularity is one clean rule: the stem loses its d, and in the ils form it doubles its n. Say the six:
+je prends — prahn.
+tu prends — prahn.
+il prend — prahn (all three identical to the ear).
+nous prenons — pruh-NOHN, and the nasal is gone.
+vous prenez — pruh-NAY, nasal gone again.
+ils prennent — PREN, a doubled n and a flat e.
+So the nasal survives in the singular and dies in the plural. That is the whole verb.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "entendre" — ahn-TAHN-druh, two nasals]
+[your turn — say: "prendre" — PRAHN-druh, nasal in the middle]
 [pause 8 seconds for the answer]
-[your turn — say: "j'entends le chien"]
+[your turn — say: "je prends le pain" then "nous prenons le pain" — nasal, then no nasal]
 [pause 8 seconds for the answer]
-[your turn — say: "nous prenons" then "nous entendons" — one flattens, one holds]
+[your turn — say: "je prends la main" — I take the hand, the manus you already have]
 [pause 8 seconds for the answer]
-[your turn — say: "j'écris, je comprends, j'entends"]
-[pause 8 seconds for the answer]
-[your turn — say: the three pictures — stretching, grasping, weighing]
-[pause 8 seconds for the answer]
-[your turn — say: "intend, tension, tent" — all a stretching]
+[your turn — say: the family — "prehensile, apprehend, prison, surprise" — all a grasp]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "I hear the dog" and "we hear." (J'entends le chien. Nous entendons — and unlike nous prenons, nothing flattens.) What did intendere mean, and which English verb is its plainest survival? (To stretch toward; intend.) Why did French hand hearing to this verb? (Latin's audīre wore down to ouïr and fell out of use — English kept the audīre words instead.) What does s'entendre mean? (To get along.)
+Say "I take the bread." (Je prends le pain — and the -ds is silent.) What happens to the nasal in nous prenons? (It disappears; the stem flattens to pruh-.) What did Latin prehendere mean, and what is a prison literally? (To grasp; a prison is "a seizing".) And the hand that does the taking? (La main.)
 
 
 Lesson 2 of 4.
-dormir — "to sleep," and the room named after it.
+demander — "to ask," and the trap it sets in English.
 
 Warm-up.
 [pause 2 seconds]
-After a verb that changed jobs, here is one that never changed. Dormir is Latin's word for sleeping, handed on almost untouched — and it hides one trap.
+Prendre was taking. This one is the opposite move: putting a question out. And it is the word most likely to make you sound furious when you meant to sound polite.
 
 You'll want to know: the word.
-dormir — to sleep. Said dor-MEER, with the throaty French r in the middle and at the end. Le chat dort. — The cat is sleeping.
-French has no separate "is sleeping" form. Il dort covers both "he sleeps" and "he is sleeping"; the plain present does all the work.
+demander — to ask. Said duh-mahn-DAY: the -an- is that same nasal from prendre, and the -er ending is a clean ay. Je demande l'heure. — I ask the time.
+It is an ordinary -er verb, so nothing in it breaks: je demande, tu demandes, il demande, nous demandons, vous demandez, ils demandent. Only nous and vous are audible; the other four all sound duh-MAHND.
 
-Grammar Lens: the m that goes missing.
-The stem is dorm-, and in the singular French throws the m away. Listen for where it comes back:
-je dors — dor.
-tu dors — dor.
-il dort — dor (three identical, the m gone).
-nous dormons — dor-MOHN, and there it is.
-vous dormez — dor-MAY.
-ils dorment — DORM.
-One rule, and you have the whole verb: singular loses the last stem consonant, plural gets it back. A small family of -ir verbs shares the shape, so learning it once is worth more than one verb.
+The word, taken apart: a thing put in your hand.
+demander from Latin dēmandāre, "to hand over, to entrust" — dē- plus mandāre. And mandāre is itself two words: manus, "hand," plus dare, "to give." Giving into the hand.
+So the manus you met in la main is sitting inside this verb too:
+mandate — what was placed in someone's hands to carry out.
+command — com- + mandāre: to entrust an order; and commandment, ten of them.
+mandatory — handed over as an obligation; remand, handed back.
+One family, two very different jobs: manual is work done by the hand, mandate is a charge given into it.
 
-The word, taken apart: dormīre.
-dormir from Latin dormīre, "to sleep." Spanish kept dormir, Italian dormire, Portuguese dormir — the verb crossed into its daughter languages untouched, which is rarer than it sounds. English has no inherited descendant; it borrowed the family later, through French:
-dormitory from dormītōrium, a sleeping place; French wore the identical word down to dortoir.
-dormant — Old French dormant, "sleeping"; a dormant volcano is asleep.
-dormer — a roof window, from Old French dormeor, because the room behind it was where you slept.
-And an honest stop. The dormouse looks like the best cousin of the lot and is not one. The story needs an Anglo-Norman word for "sleeper" that nobody has found in a text, and dormouse's real origin is unknown. A guess in circulation, not an etymology.
+Why it's said this way: the false friend.
+Careful. French demander means simply "to ask." It is neutral, everyday and perfectly polite. English demand is forceful — a thing you insist on.
+Je demande l'heure is "I'm asking the time," not "I demand the time." The English word drifted toward force; the French one never did. Translate demander as ask, every time, and you will never be rude by accident.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "dormir" — dor-MEER, throaty r]
+[your turn — say: "demander" — duh-mahn-DAY, nasal in the middle]
 [pause 8 seconds for the answer]
-[your turn — say: "je dors" then "nous dormons" — the m vanishes, then returns]
+[your turn — say: "je demande l'heure" — I ask the time, not demand it]
 [pause 8 seconds for the answer]
-[your turn — say: "le chat dort" — the cat, the travelling word out of Egypt]
+[your turn — say: "je prends, je demande" — take, then ask]
 [pause 8 seconds for the answer]
-[your turn — say: "j'entends le chat" then "le chat dort"]
-[pause 8 seconds for the answer]
-[your turn — say: "dormir, dormitory, dormant" — one Latin verb, borrowed back]
-[pause 8 seconds for the answer]
-[your turn — say: "je comprends" then "je dors"]
+[your turn — say: the family — "mandate, command, mandatory" — a hand and a giving]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "the cat is sleeping" and "we sleep." (Le chat dort. Nous dormons — the m is silent in the singular and audible in the plural.) Where does dormitory come from? (Latin dormītōrium, "a sleeping place" — and French wore the same word down to dortoir.) Is the dormouse in this family? (No — that is folk etymology; the word's real origin is unknown.) And chat — an inherited Latin word, or a traveller? (A traveller, from cattus, moving with the cat itself out of Egypt.)
+Say "I ask the time." (Je demande l'heure.) Does demander carry the force of English demand? (No — it is the ordinary, polite word for asking.) What two Latin words are inside mandāre, and which one do you already know? (Manus "hand" — the source of la main — plus dare, "to give.")
 
 
 Lesson 3 of 4.
-marcher — "to walk," and the step hiding inside French negation.
+aider — "to help," and the English word that is really the same word.
 
 Warm-up.
 [pause 2 seconds]
-You can hear and you can sleep. Now move. This verb does a second job too, used dozens of times a day.
+You can ask for something now. This is the verb for what you hope the other person then does — and it is one of the rare cases where the English cousin is not a distant relative but the very same word, spelled shorter.
 
 You'll want to know: the word.
-marcher — to walk. Said mar-SHAY: the -er is a clean ay, and the ch is sh, never k. Je marche. — I walk.
-After dormir's vanishing m, this one asks nothing: an ordinary -er verb. Je marche, tu marches, il marche, nous marchons, vous marchez, ils marchent — four of the six sound identical, just marsh.
+aider — to help. Said ay-DAY: the ai- is a plain ay, the -er ending is another ay. Two of them in a row. Vous m'aidez. — You are helping me.
+Another ordinary -er verb: j'aide, tu aides, il aide, nous aidons, vous aidez, ils aident. The j' is the elision you already make in j'ai.
 
-Why it's said this way: ça marche.
-Marcher is also the everyday verb for a thing working. A machine, a plan, an arrangement: if it functions, it walks.
-Ça marche. — "That works." Also "Fine," "Deal," "Sounds good." Ça ne marche pas. — "That doesn't work."
-There is your ne … pas from the answer-word non, round a real verb at last. And ça marche alone is an agreement, two words long.
-Entendre once held several jobs and shed all but hearing. Marcher holds two right now.
+The word, taken apart: aid, by the other road.
+aider from Latin adiūtāre, a repeated-action form of adiuvāre — ad- "toward" plus iuvāre, "to help." English took the same verb through French and clipped it:
+aid — the noun and verb; aide, a person who is your help.
+aide-de-camp — literally a "camp helper," an officer's assistant.
+adjutant, the officer who assists; adjuvant, a substance in medicine that helps another one work.
+Two honesty notes. English help is Germanic and has no connection to aider whatsoever. And juvenile is not in this family: that is Latin iuvenis, "young," a different word that merely resembles iuvāre.
 
-The word, taken apart: a step, or a hammer.
-Here the honest answer is that nobody is certain. Old French marchier first meant "to trample, to tread on," and two accounts compete:
-Frankish markōn, "to mark, to press a step in" — preferred by most reference works.
-Late Latin marcāre, from marcus, "a hammer" — a blow and a tread being one motion.
-Three consequences, in falling order of certainty:
-English march, the verb, is borrowed straight from marcher. Secure whichever origin is right.
-English mark is Germanic, from Old English mearc. A relative only if the Frankish account holds — conditional, not a fact.
-French la marche, a borderland, with marquis and German margrave, comes from the Germanic noun marka, "boundary" — a separate arrival.
-And one cousin you own already. The pas in ne … pas began as Latin passus, "a step." Je ne marche pas is, underneath, "I do not walk a step."
+Grammar Lens: asking for it politely.
+Put the verb together with the courtesy you already have:
+Vous m'aidez, s'il vous plaît. — Help me, please. Tu m'aides, s'il te plaît. — the same request, to a friend.
+The register has to match on both halves. Vous takes s'il vous plaît; tu takes s'il te plaît. Mixing them — tu m'aides, s'il vous plaît — is the mistake a beginner makes most, and a French ear catches it instantly.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "marcher" — mar-SHAY, sh not k]
+[your turn — say: "aider" — ay-DAY, two ay sounds]
 [pause 8 seconds for the answer]
-[your turn — say: "je marche" then "nous marchons"]
+[your turn — say: "j'aide" then "vous aidez"]
 [pause 8 seconds for the answer]
-[your turn — say: "ça marche" — that works, that's fine]
+[your turn — say: "vous m'aidez, s'il vous plaît" — both halves formal]
 [pause 8 seconds for the answer]
-[your turn — say: "non", then "je ne marche pas" — and pas is a step]
+[your turn — say: "tu m'aides, s'il te plaît" — both halves familiar]
 [pause 8 seconds for the answer]
-[your turn — say: "j'entends, je dors, je marche"]
-[pause 8 seconds for the answer]
-[your turn — say: "nous dormons, nous marchons" — one stem shifts, one never does]
+[your turn — say: "je demande, vous aidez" — I ask, you help]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "I walk" and "that works." (Je marche. Ça marche.) What are the two competing origins? (Frankish markōn, "to press a step in," or Latin marcus, "a hammer." Genuinely unsettled.) Which English word is certainly related, and which only might be? (March, borrowed straight from marcher; mark only if the Frankish account is right.) What did pas mean before it meant "not"? (A step.)
+Ask a stranger for help, politely. (Vous m'aidez, s'il vous plaît.) And a friend? (Tu m'aides, s'il te plaît — both halves change together.) What Latin verb is aider from, and which English word is the same word? (Adiūtāre; English aid.) Is English help related? (No — it is Germanic, unrelated.)
 
 
 Lesson 4 of 4.
-courir — "to run," and why it is not chourir.
+aimer — one verb for "like" and "love," and the word that weakens it.
 
 Warm-up.
 [pause 2 seconds]
-Hearing, sleeping, walking — and now the fastest of the four. Its Latin root is one of the busiest in English, and its spelling settles a question the dog raised.
+Three verbs so far: je prends, je demande, j'aide. The fourth does a job English needs two words for — and the way you soften it is the opposite of what you would guess.
 
 You'll want to know: the word.
-courir — to run. Said koo-REER, throaty at both rs. Le chien court. — The dog runs.
+aimer — to like and to love. Said ay-MAY: the ai- is ay, the -mer is may. J'aime le chien. — I like the dog. J'aime le chat. — I like the cat.
+An ordinary -er verb: j'aime, tu aimes, il aime, nous aimons, vous aimez, ils aiment. French does not choose between "like" and "love" — the thing you name does. A dog, a colour, a food: that reads as like. A person: love.
 
-Grammar Lens: the same endings, a different stem.
-Courir takes dormir's singular endings — -s, -s, -t, all silent:
-je cours — koor.
-tu cours — koor.
-il court — koor.
-nous courons — koo-ROHN.
-vous courez — koo-RAY.
-ils courent — KOOR.
-But the resemblance stops there. Dormir sheds a consonant in the singular: dorm- becomes dor-. Courir sheds nothing — its stem cour- has nothing spare to lose.
+The word, taken apart: amāre.
+aimer from Latin amāre, "to love," and English is full of it:
+amateur — one who does a thing for love, not for money.
+amorous, full of love; enamoured, in it; paramour, beside it.
+amiable and amicable — from amīcus, "friend"; amity between nations.
+An honest stop, though: unlike viridis behind vert, amāre has no agreed ancestor beyond Latin. It is often guessed to be a nursery word, a baby's amma, but that is a guess. The trail genuinely ends at Latin.
 
-The word, taken apart: currere.
-Marcher left a choice between a Frankish verb and a Latin hammer. This one leaves none. courir from Latin currere, "to run," which English mined harder than almost any other verb:
-current and currency both run; a cursor runs across a screen; a course is a run, a corridor a running-place.
-courier, one who runs; curriculum, literally "a running."
-concur, run together; occur, run up against; excursion.
-Now the spelling question. Chien came from canis, and its c turned into ch — the shift that made champ and chanter. So why is this verb not chourir? Because that shift only struck c before a. Currere had c before u, untouched, so the k survived. One rule, two regular outcomes.
-One honest limit. Latin carrus, "wagon," gave English car and cargo, and descends from the same very old root. But Latin borrowed carrus from Gaulish: a cousin by another road, not a word built out of currere.
+Why it's said this way: bien makes it weaker.
+Je t'aime. — I love you. Full strength. Je t'aime bien. — I like you. Much weaker.
+Every English speaker gets this backwards. Bien means "well," so je t'aime bien looks like it ought to be more. It is less. Adding bien — or beaucoup — downgrades love to friendly liking, which is exactly why je t'aime bien is the polite way to turn someone down.
+With a thing, no such danger: j'aime bien le chat is simply "I quite like the cat." The trap only bites when the object is a person.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the chapter's four with je — "j'entends, je dors, je marche, je cours"]
+[your turn — say: "j'aime le chien" then "j'aime le chat" — liking, because they are animals]
 [pause 8 seconds for the answer]
-[your turn — say: "le chien court" then "le chat dort"]
+[your turn — say: "j'aime le vert" — I like green]
 [pause 8 seconds for the answer]
-[your turn — say: "il fait chaud, je cours"]
+[your turn — say: "je t'aime" then "je t'aime bien" — love, then only liking]
 [pause 8 seconds for the answer]
-[your turn — say: "il pleut, je ne cours pas"]
+[your turn — say: the four verbs — "je prends, je demande, j'aide, j'aime"]
 [pause 8 seconds for the answer]
-[your turn — say: "je dors, nous dormons" then "je cours, nous courons" — one sheds]
+[your turn — say: "vous m'aidez, s'il vous plaît" — the request, once more]
 [pause 8 seconds for the answer]
-[your turn — say: "chien" then "courir" — ch before a, k before u]
-[pause 8 seconds for the answer]
-[your turn — say: "current, course, courier, curriculum" — every one a running]
-[pause 8 seconds for the answer]
-[your turn — say: "ça marche" — the agreement, two words]
+[your turn — say: "aimer, amateur, amiable" — the amāre family, which stops at Latin]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say the chapter's four verbs with je. (J'entends, je dors, je marche, je cours.) What does curriculum literally mean? (A running — from currere.) Why did canis become chien while currere stayed hard? (The shift only hit c before a.) Which of the four began as a stretching? (Entendre — intendere, to stretch toward.) Now: "the dog runs" and "it is hot." (Le chien court. Il fait chaud.)
+Which is stronger, je t'aime or je t'aime bien? (Je t'aime — bien makes it weaker.) Say "I like the dog" and "I like green." (J'aime le chien. J'aime le vert.) What does amateur literally mean, and how far back does amāre go? (One who does it for love; the trail stops at Latin.) Say the chapter's four verbs with je. (Je prends, je demande, j'aide, j'aime.)

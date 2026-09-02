@@ -1,7 +1,7 @@
 ---
 id: FR-C16-passe-compose-etre
-sequence: 315
-chapter: 16
+sequence: 415
+chapter: 18
 type: phrase
 headword: je suis allé(e)
 gloss: the compound past with être and subject agreement

@@ -1,0 +1,18 @@
+{
+  "language": "french",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:d7f94ccee9d733c3",
+  "lessonIds": [
+    "FR-C33-vouloir",
+    "FR-C33-pouvoir",
+    "FR-C33-devoir",
+    "FR-C33-practice"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "french/narration/ch35.txt",
+  "json": "french/narration/ch35.json",
+  "textHash": "fnv1a64:1a96a2a51c2a308d",
+  "jsonHash": "fnv1a64:24f546ebe9cd3201",
+  "findings": []
+}

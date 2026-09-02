@@ -507,7 +507,17 @@
       "id": "A1-LEX-06",
       "category": "Lexique de base",
       "label": "days, months, seasons",
-      "probe": null
+      "probe": [
+        "FR-LEX-LUNDI-02",
+        "FR-LEX-DIMANCHE-11",
+        "FR-LEX-JANVIER-01",
+        "FR-LEX-DECEMBRE-07",
+        "FR-LEX-PRINTEMPS-01",
+        "FR-LEX-ETE-03",
+        "FR-LEX-AUTOMNE-04",
+        "FR-LEX-HIVER-05"
+      ],
+      "note": "Three sets, so the probe samples the two open-ended ones and lists the closed one in full: a weekday from each end of the week, a month from each end of the year, and all four seasons, because four is the whole set and a sample of it would be a weaker claim. Held back until the chapter-9 split actually taught the twelve months and four seasons -- before that the track owned two headwords, `les mois` and `les saisons`, for sixteen words."
     },
     {
       "id": "A1-LEX-07",

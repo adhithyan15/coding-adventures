@@ -1,16 +1,21 @@
 {
   "language": "french",
   "chapter": 9,
-  "sourceHash": "fnv1a64:cf19a546bc695813",
+  "sourceHash": "fnv1a64:53f3fcca6e16693f",
   "lessonIds": [
-    "FR-C09-mois",
-    "FR-C09-saisons"
+    "FR-C09-janvier",
+    "FR-C09-fevrier",
+    "FR-C09-mars",
+    "FR-C09-avril",
+    "FR-C09-mai",
+    "FR-C09-juin",
+    "FR-C09-mois-practice-1"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 2,
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
   "text": "french/narration/ch09.txt",
   "json": "french/narration/ch09.json",
-  "textHash": "fnv1a64:554d3cc3486706e3",
-  "jsonHash": "fnv1a64:8e89fd443b2bb121",
+  "textHash": "fnv1a64:d14bc7688be5973a",
+  "jsonHash": "fnv1a64:34b6f235347b3c1e",
   "findings": []
 }

@@ -1,7 +1,7 @@
 ---
 id: FR-C11-pain
-sequence: 255
-chapter: 11
+sequence: 355
+chapter: 13
 type: word
 headword: le pain
 gloss: bread — and the "companion" who shares it

@@ -1,16 +1,16 @@
 {
   "language": "french",
   "chapter": 17,
-  "sourceHash": "fnv1a64:c6ff20dadd4a9448",
+  "sourceHash": "fnv1a64:5ad04ce701cf57ac",
   "lessonIds": [
-    "FR-C17-tete",
-    "FR-C17-main"
+    "FR-C15-passe-compose",
+    "FR-C15-passe-simple"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
   "text": "french/narration/ch17.txt",
   "json": "french/narration/ch17.json",
-  "textHash": "fnv1a64:2f55c106300264e6",
-  "jsonHash": "fnv1a64:7e2b235b864d7c8d",
+  "textHash": "fnv1a64:815346bc14bcc742",
+  "jsonHash": "fnv1a64:ad1b4c39fd4a3a3f",
   "findings": []
 }

@@ -1,12 +1,12 @@
 {
   "language": "french",
   "chapter": 28,
-  "sourceHash": "fnv1a64:ee3622ff8c2a07d3",
+  "sourceHash": "fnv1a64:49232fd17f67eadf",
   "lessonIds": [
-    "FR-C28-cafe",
-    "FR-C28-the",
-    "FR-C28-lait",
-    "FR-C28-sucre"
+    "FR-C26-entendre",
+    "FR-C26-dormir",
+    "FR-C26-marcher",
+    "FR-C26-courir"
   ],
-  "tex": "french/book/chapters/ch28-coffee-tea-milk-sugar.tex"
+  "tex": "french/book/chapters/ch28-hearing-sleeping-walking-running.tex"
 }

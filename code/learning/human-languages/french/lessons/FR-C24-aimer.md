@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C24-aimer
 spine_node: SPINE-SAY-WHAT-I-LIKE
-sequence: 740
-chapter: 24
+sequence: 840
+chapter: 26
 type: word
 headword: aimer
 gloss: to like AND to love — one French verb where English keeps two, so the strength comes from what follows it, and adding bien makes it WEAKER

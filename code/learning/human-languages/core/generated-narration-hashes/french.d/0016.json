@@ -1,18 +1,16 @@
 {
   "language": "french",
   "chapter": 16,
-  "sourceHash": "fnv1a64:7624ec792357c233",
+  "sourceHash": "fnv1a64:35eadb16cbc5e751",
   "lessonIds": [
-    "FR-C16-etre",
-    "FR-C16-etre-roots",
-    "FR-C16-passe-compose-etre",
-    "FR-C16-pronominal-past"
+    "FR-C14-avoir",
+    "FR-C14-age"
   ],
-  "voiceLessons": 4,
-  "drivablePrefix": 4,
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
   "text": "french/narration/ch16.txt",
   "json": "french/narration/ch16.json",
-  "textHash": "fnv1a64:37b55af3866e3cdb",
-  "jsonHash": "fnv1a64:708cd880dc22c3bf",
+  "textHash": "fnv1a64:382c2611fa8000ce",
+  "jsonHash": "fnv1a64:8a82264a261f5b40",
   "findings": []
 }

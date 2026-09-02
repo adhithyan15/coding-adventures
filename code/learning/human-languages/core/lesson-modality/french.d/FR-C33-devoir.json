@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C33-devoir",
     "language": "french",
-    "chapter": 33,
-    "sequence": 1210,
+    "chapter": 35,
+    "sequence": 1310,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:0b117fe5ee9ba964"
+    "sourceHash": "fnv1a64:115aa43b61351057"
   },
   "findings": []
 }

@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C14-avoir",
     "language": "french",
-    "chapter": 14,
-    "sequence": 285,
+    "chapter": 16,
+    "sequence": 385,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "sight-cue"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:39141d6140d500e2"
+    "sourceHash": "fnv1a64:3f27c604eaf6371b"
   },
   "findings": []
 }

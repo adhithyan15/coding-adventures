@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C28-cafe
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 870
-chapter: 28
+sequence: 970
+chapter: 30
 type: word
 headword: le café
 gloss: coffee — masculine, and the one drink-word nearly all of Europe borrowed along the same single road

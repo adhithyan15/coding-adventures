@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C27-fermer
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 860
-chapter: 27
+sequence: 960
+chapter: 29
 type: word
 headword: fermer
 gloss: to close — from Latin firmāre, "to make firm," so a French door is not shut but made fast; the same verb gave Italian "to stop" and Spanish "to sign"

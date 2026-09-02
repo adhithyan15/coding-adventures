@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C15-passe-compose",
     "language": "french",
-    "chapter": 15,
-    "sequence": 295,
+    "chapter": 17,
+    "sequence": 395,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:62450c84b5f5fe00"
+    "sourceHash": "fnv1a64:9668679de5bfa0e3"
   },
   "findings": []
 }

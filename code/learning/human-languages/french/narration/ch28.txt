@@ -1,136 +1,204 @@
-French, chapter 28: Coffee, Tea, Milk, Sugar.
+French, chapter 28: Hearing, Sleeping, Walking, Running.
 4 lessons. All 4 can be done entirely by ear.
 
 
 Lesson 1 of 4.
-le café — coffee, one word the whole road agrees on.
+entendre — "to hear," and the stretching inside it.
 
 Warm-up.
 [pause 2 seconds]
-You already know how to ask nicely — s'il vous plaît. Now something worth asking for: the first of four everyday words for what's on the table.
+You can think and understand. Now the ear — and French's word for it is English's intend.
 
 You'll want to know: the word.
-le café — coffee. Masculine.
-Un café, s'il vous plaît. — "A coffee, please."
-Café also names the place you drink it, exactly the way English cafe does — one word, two jobs, in both languages at once.
+entendre — to hear. Two nasal an sounds in a row, then the -dre of prendre: say it ahn-TAHN-druh. J'entends le chien. — I hear the dog.
+The -ds of j'entends is silent, as in je prends.
 
-The word, taken apart: one road, not four.
-café comes from Ottoman Turkish kahve, which comes from Arabic qahwa. Arabic lexicographers record qahwa as an older word for wine — it only attached to the coffee bean once the drink spread out of Yemen, in the fifteenth century.
-From Ottoman kahve, the word crossed into Europe through Italian caffè — and stopped there. French café, English coffee, German Kaffee, Italian caffè itself: every one of these is the same borrowing, taken at a different stop on a single road out of the Ottoman Empire. Nobody translated it; everybody just repeated it.
+Grammar Lens: the nasal that stays put.
+Prendre's nasal dies in the plural. Entendre looks like its twin and does the opposite — the stem never moves:
+j'entends — jahn-TAHN.
+tu entends — ahn-TAHN.
+il entend — ahn-TAHN (three identical to the ear).
+nous entendons — ahn-tahn-DOHN, nasal still there.
+vous entendez — ahn-tahn-DAY.
+ils entendent — ahn-TAHND.
+
+The word, taken apart: a stretching.
+entendre from Latin intendere — in- "toward" plus tendere, "to stretch." To intendere was to stretch a thing out and aim it: a bowstring, a journey, your attention. English kept the family — intend, plainest of them, plus intent, intense, tension, a tent (a stretched skin), extend and pretend.
+Set your three mind-verbs together: French pictures each as a different thing the body does.
+comprendre — to grasp together, built on prendre.
+penser — to weigh, from pēnsāre.
+entendre — to stretch toward.
+
+Why it's said this way: the sense that took over.
+From its oldest French records entendre already covers a span at once: to hear, to attend, to understand, to intend. Nothing arrived late. What happened since is that the other senses fell away and hearing took the word outright — because Latin's verb for hearing, audīre, wore down in French to ouïr and stopped being usable. English kept that family instead: audio, audience, audible, audition.
+The abandoned senses survive in phrases French never rebuilt:
+entendu — "understood," "agreed."
+s'entendre — to hear one another, and so to get along.
+l'entente — an understanding between parties, borrowed into English whole in Entente Cordiale.
+So the two languages split one Latin pair: French hears with the verb English uses for intending, and English hears with the verb French let go.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "le café" — masculine]
+[your turn — say: "entendre" — ahn-TAHN-druh, two nasals]
 [pause 8 seconds for the answer]
-[your turn — say: "un café, s'il vous plaît"]
+[your turn — say: "j'entends le chien"]
 [pause 8 seconds for the answer]
-[your turn — say: the road — "qahwa, kahve, caffè, café" — one word, four stops]
+[your turn — say: "nous prenons" then "nous entendons" — one flattens, one holds]
 [pause 8 seconds for the answer]
-[your turn — say: the surprise — "qahwa once meant wine"]
+[your turn — say: "j'écris, je comprends, j'entends"]
+[pause 8 seconds for the answer]
+[your turn — say: the three pictures — stretching, grasping, weighing]
+[pause 8 seconds for the answer]
+[your turn — say: "intend, tension, tent" — all a stretching]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "coffee, please." (Un café, s'il vous plaît. — masculine.) What Arabic word is café from, and what did it mean before coffee existed? (Qahwa — "wine.") Name the road it travelled. (Arabic qahwa becomes Ottoman kahve becomes Italian caffè becomes French café, with English coffee and German Kaffee the same borrowing at other stops.) Is s'il vous plaît the right register here? (Yes — spoken, to someone you don't know well.)
+Say "I hear the dog" and "we hear." (J'entends le chien. Nous entendons — and unlike nous prenons, nothing flattens.) What did intendere mean, and which English verb is its plainest survival? (To stretch toward; intend.) Why did French hand hearing to this verb? (Latin's audīre wore down to ouïr and fell out of use — English kept the audīre words instead.) What does s'entendre mean? (To get along.)
 
 
 Lesson 2 of 4.
-le thé — tea, the word that took the other road.
+dormir — "to sleep," and the room named after it.
 
 Warm-up.
 [pause 2 seconds]
-You just saw café travel Europe as one word, unchanged at every stop. Tea took the opposite kind of trip — it split.
+After a verb that changed jobs, here is one that never changed. Dormir is Latin's word for sleeping, handed on almost untouched — and it hides one trap.
 
 You'll want to know: the word.
-le thé — tea. Masculine.
-Un thé, s'il vous plaît. — "A tea, please."
+dormir — to sleep. Said dor-MEER, with the throaty French r in the middle and at the end. Le chat dort. — The cat is sleeping.
+French has no separate "is sleeping" form. Il dort covers both "he sleeps" and "he is sleeping"; the plain present does all the work.
 
-The word, taken apart: two ports, two words.
-China writes "tea" with one character everywhere, but doesn't say it the same way everywhere. In Mandarin it's chá. In the Hokkien of the south-eastern coast — the Amoy dialect — it's tê.
-Traders who bought the leaf overland or through Mandarin-speaking ports carried home chá: it travelled into Persian, into Arabic, into Hindi. Dutch traders bought their tea specifically at Amoy, in Hokkien territory, and carried home tê instead — which became Dutch thee, then French thé, English tea, German Tee.
-So café and thé make a matched pair with opposite stories: café is one word repeated unchanged at every stop; thé is the same original word, worn into two different shapes depending which Chinese port a trader happened to deal with.
+Grammar Lens: the m that goes missing.
+The stem is dorm-, and in the singular French throws the m away. Listen for where it comes back:
+je dors — dor.
+tu dors — dor.
+il dort — dor (three identical, the m gone).
+nous dormons — dor-MOHN, and there it is.
+vous dormez — dor-MAY.
+ils dorment — DORM.
+One rule, and you have the whole verb: singular loses the last stem consonant, plural gets it back. A small family of -ir verbs shares the shape, so learning it once is worth more than one verb.
+
+The word, taken apart: dormīre.
+dormir from Latin dormīre, "to sleep." Spanish kept dormir, Italian dormire, Portuguese dormir — the verb crossed into its daughter languages untouched, which is rarer than it sounds. English has no inherited descendant; it borrowed the family later, through French:
+dormitory from dormītōrium, a sleeping place; French wore the identical word down to dortoir.
+dormant — Old French dormant, "sleeping"; a dormant volcano is asleep.
+dormer — a roof window, from Old French dormeor, because the room behind it was where you slept.
+And an honest stop. The dormouse looks like the best cousin of the lot and is not one. The story needs an Anglo-Norman word for "sleeper" that nobody has found in a text, and dormouse's real origin is unknown. A guess in circulation, not an etymology.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "le thé" — masculine]
+[your turn — say: "dormir" — dor-MEER, throaty r]
 [pause 8 seconds for the answer]
-[your turn — say: "un café, un thé" — both masculine, both borrowed]
+[your turn — say: "je dors" then "nous dormons" — the m vanishes, then returns]
 [pause 8 seconds for the answer]
-[your turn — say: the fork — "chá overland, tê by Dutch ship"]
+[your turn — say: "le chat dort" — the cat, the travelling word out of Egypt]
 [pause 8 seconds for the answer]
-[your turn — say: the pair — "café: one road. thé: two."]
+[your turn — say: "j'entends le chat" then "le chat dort"]
+[pause 8 seconds for the answer]
+[your turn — say: "dormir, dormitory, dormant" — one Latin verb, borrowed back]
+[pause 8 seconds for the answer]
+[your turn — say: "je comprends" then "je dors"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "tea, please." (Un thé, s'il vous plaît. — masculine.) What Chinese dialect gave French thé its shape, and by what route? (Hokkien tê, carried by Dutch ships from the port of Amoy.) What's the overland word that chá-family languages use instead? (Chá, into Persian, Arabic, Hindi.) How is thé's story different from café's? (Café stayed one word everywhere; thé split in two depending on the port.)
+Say "the cat is sleeping" and "we sleep." (Le chat dort. Nous dormons — the m is silent in the singular and audible in the plural.) Where does dormitory come from? (Latin dormītōrium, "a sleeping place" — and French wore the same word down to dortoir.) Is the dormouse in this family? (No — that is folk etymology; the word's real origin is unknown.) And chat — an inherited Latin word, or a traveller? (A traveller, from cattus, moving with the cat itself out of Egypt.)
 
 
 Lesson 3 of 4.
-le lait — milk, the word French never had to borrow.
+marcher — "to walk," and the step hiding inside French negation.
 
 Warm-up.
 [pause 2 seconds]
-Café and thé both crossed an ocean to reach French. This word never left home.
+You can hear and you can sleep. Now move. This verb does a second job too, used dozens of times a day.
 
 You'll want to know: the word.
-le lait — milk. Masculine, like café and thé.
-Du lait, s'il vous plaît. — "Some milk, please."
+marcher — to walk. Said mar-SHAY: the -er is a clean ay, and the ch is sh, never k. Je marche. — I walk.
+After dormir's vanishing m, this one asks nothing: an ordinary -er verb. Je marche, tu marches, il marche, nous marchons, vous marchez, ils marchent — four of the six sound identical, just marsh.
 
-The word, taken apart: inherited, not borrowed.
-lait comes from Latin lac (stem lact-) — a word Latin-speakers in Gaul simply kept saying, generation after generation, until it wore down into lait. No port, no trade route: this one was inherited, not borrowed, unlike café's single road or thé's forked one.
-English shows the same split tête showed for "head": the inherited, everyday English word for this drink is milk — and it has nothing to do with lac. Milk descends from a completely different Proto-Indo-European root, one meaning "to milk a cow." English only meets lac's stem lact- in learned words borrowed straight from written Latin much later: lactic, lactose, lactate. So French lait and English lactic are close cousins; French lait and English milk are not related at all.
+Why it's said this way: ça marche.
+Marcher is also the everyday verb for a thing working. A machine, a plan, an arrangement: if it functions, it walks.
+Ça marche. — "That works." Also "Fine," "Deal," "Sounds good." Ça ne marche pas. — "That doesn't work."
+There is your ne … pas from the answer-word non, round a real verb at last. And ça marche alone is an agreement, two words long.
+Entendre once held several jobs and shed all but hearing. Marcher holds two right now.
+
+The word, taken apart: a step, or a hammer.
+Here the honest answer is that nobody is certain. Old French marchier first meant "to trample, to tread on," and two accounts compete:
+Frankish markōn, "to mark, to press a step in" — preferred by most reference works.
+Late Latin marcāre, from marcus, "a hammer" — a blow and a tread being one motion.
+Three consequences, in falling order of certainty:
+English march, the verb, is borrowed straight from marcher. Secure whichever origin is right.
+English mark is Germanic, from Old English mearc. A relative only if the Frankish account holds — conditional, not a fact.
+French la marche, a borderland, with marquis and German margrave, comes from the Germanic noun marka, "boundary" — a separate arrival.
+And one cousin you own already. The pas in ne … pas began as Latin passus, "a step." Je ne marche pas is, underneath, "I do not walk a step."
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "le lait" — masculine]
+[your turn — say: "marcher" — mar-SHAY, sh not k]
 [pause 8 seconds for the answer]
-[your turn — say: "un café, un thé, du lait" — three drinks, one gender]
+[your turn — say: "je marche" then "nous marchons"]
 [pause 8 seconds for the answer]
-[your turn — say: the cousins — "lait, lactic, lactose"]
+[your turn — say: "ça marche" — that works, that's fine]
 [pause 8 seconds for the answer]
-[your turn — say: the non-cousins — "lait and milk share no root at all"]
+[your turn — say: "non", then "je ne marche pas" — and pas is a step]
+[pause 8 seconds for the answer]
+[your turn — say: "j'entends, je dors, je marche"]
+[pause 8 seconds for the answer]
+[your turn — say: "nous dormons, nous marchons" — one stem shifts, one never does]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "milk, please." (Du lait, s'il vous plaît. — masculine.) Is lait borrowed, like café and thé, or inherited straight from Latin? (Inherited — from lac, stem lact-.) Which English words are close cousins of lait? (Lactic, lactose, lactate — learned borrowings of the same stem.) Is English milk one of those cousins? (No — a completely different, unrelated root.)
+Say "I walk" and "that works." (Je marche. Ça marche.) What are the two competing origins? (Frankish markōn, "to press a step in," or Latin marcus, "a hammer." Genuinely unsettled.) Which English word is certainly related, and which only might be? (March, borrowed straight from marcher; mark only if the Frankish account is right.) What did pas mean before it meant "not"? (A step.)
 
 
 Lesson 4 of 4.
-le sucre — sugar, the longest road of the four.
+courir — "to run," and why it is not chourir.
 
 Warm-up.
 [pause 2 seconds]
-Coffee took one road, tea forked into two, milk never left home. Sugar's road is the longest of all — and it ends the chapter with a whole table's worth of masculine drink-words.
+Hearing, sleeping, walking — and now the fastest of the four. Its Latin root is one of the busiest in English, and its spelling settles a question the dog raised.
 
 You'll want to know: the word.
-le sucre — sugar. Masculine.
-Du sucre, s'il vous plaît. — "Some sugar, please."
+courir — to run. Said koo-REER, throaty at both rs. Le chien court. — The dog runs.
 
-The word, taken apart: grit, gravel, sugar.
-sucre from Old French çucre from Arabic sukkar from Persian shakar from Sanskrit śárkarā, which first meant "grit, gravel" — crystallized sugar looked like gravel to whoever named it first.
-Sucre passed through Arabic just like café did, but through a different Arabic word (sukkar, not qahwa): a shared language of transmission, not a shared root. Where lait is inherited straight from Latin, sucre is borrowed — from further back than café or thé, all the way to Sanskrit.
+Grammar Lens: the same endings, a different stem.
+Courir takes dormir's singular endings — -s, -s, -t, all silent:
+je cours — koor.
+tu cours — koor.
+il court — koor.
+nous courons — koo-ROHN.
+vous courez — koo-RAY.
+ils courent — KOOR.
+But the resemblance stops there. Dormir sheds a consonant in the singular: dorm- becomes dor-. Courir sheds nothing — its stem cour- has nothing spare to lose.
 
-Grammar Lens: a lean, and its one loud exception.
-Four drink-words, four masculine articles: le café, le thé, le lait, le sucre. Not a rule to trust — a lean: French tends to make plain substances masculine. This lean has a loud exception: l'eau, "water," is feminine. You still learn each word with its article, the promise this book has kept since la main.
-
-Why it's said this way: si, not oui.
-The si you learned — the "yes" for contradicting a negative — fits this table exactly:
-Vous ne voulez pas de sucre? — Si, un peu. ("You don't want sugar? — Yes, a little.")
-Plain oui here would agree you don't want it; si is what pushes back. That same oui once mattered enough to split a country — langue d'oïl in the north, langue d'oc in the south.
+The word, taken apart: currere.
+Marcher left a choice between a Frankish verb and a Latin hammer. This one leaves none. courir from Latin currere, "to run," which English mined harder than almost any other verb:
+current and currency both run; a cursor runs across a screen; a course is a run, a corridor a running-place.
+courier, one who runs; curriculum, literally "a running."
+concur, run together; occur, run up against; excursion.
+Now the spelling question. Chien came from canis, and its c turned into ch — the shift that made champ and chanter. So why is this verb not chourir? Because that shift only struck c before a. Currere had c before u, untouched, so the k survived. One rule, two regular outcomes.
+One honest limit. Latin carrus, "wagon," gave English car and cargo, and descends from the same very old root. But Latin borrowed carrus from Gaulish: a cousin by another road, not a word built out of currere.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "le sucre" — masculine]
+[your turn — say: the chapter's four with je — "j'entends, je dors, je marche, je cours"]
 [pause 8 seconds for the answer]
-[your turn — say: all four — "le café, le thé, le lait, le sucre"]
+[your turn — say: "le chien court" then "le chat dort"]
 [pause 8 seconds for the answer]
-[your turn — say: the exception — "l'eau" — feminine, against the lean]
+[your turn — say: "il fait chaud, je cours"]
 [pause 8 seconds for the answer]
-[your turn — say: the contradiction — "Vous ne voulez pas de sucre? — Si!"]
+[your turn — say: "il pleut, je ne cours pas"]
+[pause 8 seconds for the answer]
+[your turn — say: "je dors, nous dormons" then "je cours, nous courons" — one sheds]
+[pause 8 seconds for the answer]
+[your turn — say: "chien" then "courir" — ch before a, k before u]
+[pause 8 seconds for the answer]
+[your turn — say: "current, course, courier, curriculum" — every one a running]
+[pause 8 seconds for the answer]
+[your turn — say: "ça marche" — the agreement, two words]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "sugar, please." (Du sucre, s'il vous plaît. — masculine.) Trace sucre back to Sanskrit. (Sukkar from shakar from śárkarā, "grit, gravel.") Do café and sucre share a root? (No — a language of transmission, Arabic, not a root; qahwa and sukkar are different words.) What is the lean about French drink-words, and what breaks it? (Masculine by default — broken by l'eau, feminine.) When do you answer si instead of oui? (Contradicting a negative — the same word-pair that once split France into langue d'oïl and langue d'oc.)
+Say the chapter's four verbs with je. (J'entends, je dors, je marche, je cours.) What does curriculum literally mean? (A running — from currere.) Why did canis become chien while currere stayed hard? (The shift only hit c before a.) Which of the four began as a stretching? (Entendre — intendere, to stretch toward.) Now: "the dog runs" and "it is hot." (Le chien court. Il fait chaud.)

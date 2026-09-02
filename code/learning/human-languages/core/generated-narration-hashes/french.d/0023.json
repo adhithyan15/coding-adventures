@@ -1,15 +1,15 @@
 {
   "language": "french",
   "chapter": 23,
-  "sourceHash": "fnv1a64:1a8564ce5039677f",
+  "sourceHash": "fnv1a64:fab5df9f13b66ad1",
   "lessonIds": [
-    "FR-C23-vert-jaune"
+    "FR-C21-le-temps"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "french/narration/ch23.txt",
   "json": "french/narration/ch23.json",
-  "textHash": "fnv1a64:18f59d596b5f62a9",
-  "jsonHash": "fnv1a64:d452f4ad9250f357",
+  "textHash": "fnv1a64:cd548ab2352250fe",
+  "jsonHash": "fnv1a64:f5cb02df81c6c78a",
   "findings": []
 }

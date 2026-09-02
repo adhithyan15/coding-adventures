@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C28-cafe",
     "language": "french",
-    "chapter": 28,
-    "sequence": 870,
+    "chapter": 30,
+    "sequence": 970,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:44483f1e104e5e61"
+    "sourceHash": "fnv1a64:29e027c65540488b"
   },
   "findings": []
 }

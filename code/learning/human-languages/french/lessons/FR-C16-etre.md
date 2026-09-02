@@ -1,7 +1,7 @@
 ---
 id: FR-C16-etre
-sequence: 305
-chapter: 16
+sequence: 405
+chapter: 18
 type: word
 headword: être
 gloss: to be — the six present forms

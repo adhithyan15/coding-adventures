@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C31-oeil
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 990
-chapter: 31
+sequence: 1090
+chapter: 33
 type: word
 headword: l'œil, les yeux
 gloss: eye — masculine, with a plural that looks irregular but is the REGULAR outcome of Latin oculos; œil's own singular is the piece that changed

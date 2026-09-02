@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C18-oui
 spine_node: SPINE-RESPOND-BASIC
-sequence: 640
-chapter: 18
+sequence: 740
+chapter: 20
 type: word
 headword: oui
 gloss: yes

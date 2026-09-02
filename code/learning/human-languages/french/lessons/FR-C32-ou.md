@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C32-ou
 spine_node: SPINE-ASK-LOCATION
-sequence: 1120
-chapter: 32
+sequence: 1220
+chapter: 34
 type: word
 headword: où
 gloss: "where — and the accent that separates it from a completely different word"

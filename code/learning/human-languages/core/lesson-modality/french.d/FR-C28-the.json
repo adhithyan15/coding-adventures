@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C28-the",
     "language": "french",
-    "chapter": 28,
-    "sequence": 880,
+    "chapter": 30,
+    "sequence": 980,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:1fa0bad096f50f69"
+    "sourceHash": "fnv1a64:615007f885dbccb5"
   },
   "findings": []
 }

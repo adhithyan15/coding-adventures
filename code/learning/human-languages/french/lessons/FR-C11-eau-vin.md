@@ -1,7 +1,7 @@
 ---
 id: FR-C11-eau-vin
-sequence: 260
-chapter: 11
+sequence: 360
+chapter: 13
 type: word
 headword: l'eau, le vin
 gloss: water and wine — eau, the most eroded Latin word of all

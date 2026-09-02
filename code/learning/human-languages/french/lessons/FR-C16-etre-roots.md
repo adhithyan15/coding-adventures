@@ -1,7 +1,7 @@
 ---
 id: FR-C16-etre-roots
-sequence: 310
-chapter: 16
+sequence: 410
+chapter: 18
 type: etymology
 headword: suis / fus / étais
 gloss: three historical stems inside être

@@ -1,15 +1,15 @@
 {
   "language": "french",
   "chapter": 22,
-  "sourceHash": "fnv1a64:b63f5af8a547ebf0",
+  "sourceHash": "fnv1a64:51eee8ff84c4651b",
   "lessonIds": [
-    "FR-C22-chien-chat"
+    "FR-C20-je-suis-desole"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "french/narration/ch22.txt",
   "json": "french/narration/ch22.json",
-  "textHash": "fnv1a64:22577b2b42dee2a4",
-  "jsonHash": "fnv1a64:1aec402aea96f17d",
+  "textHash": "fnv1a64:8431a67fb92b0521",
+  "jsonHash": "fnv1a64:7d757944e77f83b8",
   "findings": []
 }

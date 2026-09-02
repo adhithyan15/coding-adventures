@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C20-je-suis-desole
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 670
-chapter: 20
+sequence: 770
+chapter: 22
 type: phrase
 headword: je suis désolé(e)
 gloss: I'm sorry (literally "I am desolate")

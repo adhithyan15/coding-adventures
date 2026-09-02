@@ -1,7 +1,7 @@
 ---
 id: FR-C13-noir-blanc
-sequence: 275
-chapter: 13
+sequence: 375
+chapter: 15
 type: word
 headword: noir, blanc
 gloss: black and white — one word inherited from Latin, one borrowed from the Germanic neighbours

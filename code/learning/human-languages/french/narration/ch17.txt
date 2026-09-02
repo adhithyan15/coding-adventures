@@ -1,93 +1,108 @@
-French, chapter 17: Head and Hand.
-2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+French, chapter 17: The Compound Past.
+2 lessons. All 2 can be done entirely by ear.
 
 
 Lesson 1 of 2.
-la tête — "the head".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+j'ai parlé — the past built from "have".
 
 Warm-up.
 [pause 2 seconds]
-The first body part, and one of the best etymologies in French. The word for head is not the Latin word for head.
+French's everyday past tense. You already have both halves of it: the verb avoir from last chapter, and your first regular verbs.
 
-You'll want to know: The word.
-la tête — the head. Feminine, so la.
-
-The word, taken apart: Latin had a perfectly good word.
-Latin's word for "head" was caput. You can see it surviving all over Europe:
+The recipe.
+avoir (conjugated) + past participle.
 [a table of 4 rows, read aloud]
-Portuguese, cabeça.
-Spanish, cabeza.
-Italian, capo (now "chief, boss").
-English, captain, capital, decapitate.
-French has caput too, and in two layers. Inherited, worn down by use: chef ("chief," originally "head"), chapitre, cap (a headland), achever ("to finish" — to bring to a head). Re-borrowed later, straight from written Latin: capital, capitaine, décapiter.
-What French does not use it for is the thing on your shoulders.
-Tête comes from Latin testa: an earthenware pot, a shell, a potsherd.
+infinitive: parler. ends in: -er. participle: parlé.
+infinitive: habiter. ends in: -er. participle: habité.
+infinitive: finir. ends in: -ir. participle: fini.
+infinitive: vendre. ends in: -re. participle: vendu.
+So:
+[a table of 5 rows, read aloud]
+j'ai parlé, I spoke / I have spoken.
+tu as parlé, you spoke.
+il a parlé, he spoke.
+nous avons parlé, we spoke.
+ils ont parlé, they spoke.
+Only avoir changes. The participle sits there unchanged.
+Note the sound: parler, parlé and parlez are all pronounced the same. Three spellings, one sound — the context tells you which.
 
-Why it's said this way: Why a pot?
-Soldiers' slang. Roman troops called the skull a testa the way English speakers say someone got hit on the noggin — a noggin being a small mug. It was a joke, it spread, and eventually the joke replaced the real word in Gaul and Italy.
-So a French speaker saying j'ai mal à la tête is, historically, saying "my pot hurts."
-Testa is still visible in English test — which began as the shallow pot an alchemist used to assay metals.
+Where the endings come from.
+[a table of 3 rows, read aloud]
+French: parlé. from Latin: -ātum.
+French: fini. from Latin: -ītum.
+French: vendu. from Latin: -ūtum.
+The same -t- that English kept in finite, acute, statute.
+A footnote on the third one: -ūtus was a rare ending in Latin (minūtus, tribūtus). French and Italian took that small class and spread it over a whole conjugation. So -é and -i are straight inheritance; -u is mostly the language tidying up by analogy.
 
-Sounds you'll need: The circumflex is a receipt.
-Look at the accent: tête. Chapter W01 taught what a circumflex records — a letter that used to be there, almost always an s.
-testa becomes Old French teste becomes modern tête.
-The s stopped being pronounced, and the accent was put in to mark the grave. That is why English, which borrowed from Old French before the s fell, still has it in test.
+The buried possessive.
+Here is why this tense exists. Latin could say:
+habeō litterās scriptās — "I have letters written."
+That is not a past tense. It is avoir in its ordinary sense — I possess some letters — with scriptās as an adjective describing them, agreeing with litterās in gender and number.
+Over centuries the phrase stopped meaning "I possess a written thing" and started meaning simply "I wrote." A possessive construction hardened into a tense.
+And the fossil is still visible: when the object comes first, the participle still agrees with it, exactly as an adjective would.
+Les lettres que j'ai écrites. — "The letters that I wrote."
+That -es is a two-thousand-year-old adjective ending doing its old job.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "la tête"]
+[your turn — say: "j'ai parlé, tu as parlé, il a parlé, nous avons parlé, ils ont parlé"]
 [pause 8 seconds for the answer]
-[your turn — say: "j'ai mal à la tête" — "my head hurts"]
+[your turn — say: the three homophones — "parler, parlé, parlez"]
 [pause 8 seconds for the answer]
-[your turn — say: the joke — "testa = a pot"]
+[your turn — say: "J'ai travaillé" ("I worked") — Ch. 5's verb]
 [pause 8 seconds for the answer]
-[your turn — say: the receipt — "teste becomes tê-te"]
+[your turn — say: the old meaning — "I have a thing spoken"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "the head." (La tête — feminine.) Does it come from Latin caput? (No — from testa, an earthenware pot.) Why a pot? (Roman soldiers' slang for the skull, which replaced the proper word.) Where did caput survive in French? (Inherited in chef, chapitre, cap, achever; re-borrowed in capital, capitaine, décapiter — just never for the head itself.) What does the circumflex on tête record? (A lost s — teste, still visible in English test.) Next: the hand.
+What two pieces make the passé composé? (Avoir + the past participle.) What is parler's participle? (Parlé from -ātum.) What did j'ai parlé originally mean? ("I have [a thing] spoken" — a possessive.) Why does the participle sometimes agree? (Because it was an adjective describing the object.) Next: what this tense pushed out of the language.
 
 
 Lesson 2 of 2.
-la main — "the hand".
+il parla — the past you read but never say.
 
 Warm-up.
 [pause 2 seconds]
-Where tête abandoned its Latin ancestor, this one kept it — and then lent it to English several dozen times over.
+French has a second past tense. You will meet it in every novel and never hear it spoken. Knowing why is worth more than knowing its endings.
 
-You'll want to know: The word.
-la main — the hand. Feminine, and worth flagging: it ends in a consonant and still takes la. French gender is not predictable from the ending, which is why this book always gives you the article.
-The -ain is the nasal vowel of pain, the bread — say them together: pain, main.
+What it looks like.
+[a table of 3 rows, read aloud]
+he spoke. passé simple: il parla. passé composé: il a parlé.
+they spoke. passé simple: ils parlèrent. passé composé: ils ont parlé.
+he had. passé simple: il eut. passé composé: il a eu.
+You do not need to produce these. You need to recognise them, because they fill the past tense of essentially all French literature.
 
-The word, taken apart: manus in English.
-Main comes from Latin manus, "hand." That word is inside an enormous number of English words, and once you see it you cannot unsee it:
-[a table of 6 rows, read aloud]
-English: manual. literally: done by hand.
-English: manufacture. literally: made by hand (manus + facere "to make").
-English: manuscript. literally: written by hand (manus + scrībere).
-English: maintain. literally: hold in the hand (manū tenēre).
-English: manage. literally: to handle — via Italian maneggiare, of horses.
-English: manoeuvre. literally: work by hand (manū operārī).
-Manufacture is the one worth pausing on. It means "made by hand" — and it now names precisely the thing that isn't.
+The direct inheritance.
+il parla from Vulgar Latin parabolāvit — the plain Latin perfect, handed straight down. Which means the passé simple is the same tense as:
+[a table of 4 rows, read aloud]
+language: French. "he spoke": il parla. status: books only.
+language: Spanish. "he spoke": habló. status: everyday speech.
+language: Portuguese. "he spoke": falou. status: everyday speech.
+language: Italian. "he spoke": parlò. status: regional — see below.
+Same Latin ancestor, four different fates.
 
-The phrase, taken apart: French kept it too.
-Maintenir / English maintain is Latin manū tenēre, "to hold in the hand" — a hand, plus the verb tenēre, "to hold."
-So maintenance — the least romantic word in any office — is literally keeping something in hand.
+The retreat, three times over.
+Now the striking part. French is not alone:
+[a table of 3 rows, read aloud]
+language: French. simple past: passé simple. what replaced it in speech: passé composé (j'ai parlé).
+language: German. simple past: Präteritum. what replaced it in speech: Perfekt (ich habe gesagt).
+language: Italian. simple past: passato remoto. what replaced it in speech: passato prossimo (ho parlato).
+Three languages — two Romance, one Germanic — each built a compound past out of "have," and each let that compound push the inherited simple past out of everyday conversation and into writing.
+Not three separate inventions, though. They are neighbours: France, southern Germany and northern Italy form a connected block, and the change spread through it by contact over the same few centuries. Linguists call this an areal change — one that travels across language boundaries because the speakers do.
+And Spanish and Portuguese, out at the western edge of that block, largely didn't get it. They kept their simple past where it was. (Though Spain's Spanish has since started drifting the same way, with he hablado taking ground from habló — the change reaching the edge late.)
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "la main" — and hear pain, main]
+[your turn — say: the pair — "il parla … il a parlé"]
 [pause 8 seconds for the answer]
-[your turn — say: "j'ai mal à la main"]
+[your turn — say: the sisters — "il parla, habló, falou, parlò"]
 [pause 8 seconds for the answer]
-[your turn — say: the family — "manual, manuscript, maintain — all a hand"]
+[your turn — say: where you'd meet it — "in a novel, not a conversation"]
 [pause 8 seconds for the answer]
-[your turn — say: the irony — "manufacture = made by hand"]
+[your turn — say: the three retreats — "passé simple, Präteritum, passato remoto"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "the hand." (La main — feminine, despite the consonant ending.) What Latin word is it from? (Manus.) Give three English words built on it. (Manual, manufacture, manuscript, maintain, manage, manoeuvre.) What does manufacture literally mean? ("Made by hand" — now the name for the opposite.) And maintenir? (Manū tenēre, "hold in the hand".) Next: the rest of the body.
+Where does the passé simple live? (In writing — literature, not speech.) What is il parla descended from? (Vulgar Latin parabolāvit, the plain perfect.) Which languages still use that same tense in ordinary speech? (Spanish and Portuguese — habló, falou.) Which three languages replaced it with a compound? (French, German, Italian — a connected, contact-driven change.) Next chapter: the other auxiliary, and the verbs that refuse avoir.

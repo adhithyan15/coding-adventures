@@ -1,7 +1,7 @@
 ---
 id: FR-C13-rouge-bleu
-sequence: 280
-chapter: 13
+sequence: 380
+chapter: 15
 type: word
 headword: rouge, bleu
 gloss: red and blue — one ancient inherited root, and a second Germanic loan

@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C29-enfant",
     "language": "french",
-    "chapter": 29,
-    "sequence": 930,
+    "chapter": 31,
+    "sequence": 1030,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:5b297e3ef5ff6b9f"
+    "sourceHash": "fnv1a64:d0e1537d9da2e8fa"
   },
   "findings": []
 }

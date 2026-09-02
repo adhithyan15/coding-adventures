@@ -1,9 +1,9 @@
 {
   "language": "french",
   "chapter": 23,
-  "sourceHash": "fnv1a64:d520a52bdfee2b10",
+  "sourceHash": "fnv1a64:129d15f9a927e548",
   "lessonIds": [
-    "FR-C23-vert-jaune"
+    "FR-C21-le-temps"
   ],
-  "tex": "french/book/chapters/ch23-green-and-yellow.tex"
+  "tex": "french/book/chapters/ch23-weather.tex"
 }

@@ -1,16 +1,16 @@
 {
   "language": "french",
   "chapter": 13,
-  "sourceHash": "fnv1a64:065584545ac3079c",
+  "sourceHash": "fnv1a64:30611c725d0eb00f",
   "lessonIds": [
-    "FR-C13-noir-blanc",
-    "FR-C13-rouge-bleu"
+    "FR-C11-pain",
+    "FR-C11-eau-vin"
   ],
   "voiceLessons": 2,
   "drivablePrefix": 2,
   "text": "french/narration/ch13.txt",
   "json": "french/narration/ch13.json",
-  "textHash": "fnv1a64:d1689b83301e3678",
-  "jsonHash": "fnv1a64:8d31d218e701b94a",
+  "textHash": "fnv1a64:d9c4331598b430b1",
+  "jsonHash": "fnv1a64:fff0f250af20b839",
   "findings": []
 }

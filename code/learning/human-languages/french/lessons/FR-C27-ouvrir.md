@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C27-ouvrir
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 850
-chapter: 27
+sequence: 950
+chapter: 29
 type: word
 headword: ouvrir
 gloss: to open — an -ir verb that takes -er endings, from a Latin verb reshaped to look like its own opposite, and the source of English overt and overture

@@ -2,276 +2,24 @@
   "version": 1,
   "language": "french",
   "chapter": 29,
-  "title": "The People You Introduce",
+  "title": "Sitting, Standing, Opening, Closing",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:9793c99fbc1690b1",
+  "sourceHash": "fnv1a64:dec6de2854b590a8",
   "lessons": [
     {
-      "id": "FR-C29-ami",
-      "sequence": 910,
-      "title": "l'ami, l'amie — the friend, and why the article gives way",
-      "headword": "l'ami, l'amie",
-      "romanization": "l'ami, l'amie",
-      "gloss": "friend — masculine or feminine by a regular swap, and the reason le/la elides to l' before a vowel",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:74f9295ba2f32596",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The café chapter handed you le lait and le sucre, and three more things to ask for. Now the people you'd ask them with — starting with the one whose name teaches French's most useful spelling rule."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: the word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "un ami — a (male) friend. une amie — a (female) friend. Same sound, ah-MEE; the feminine just adds a silent -e. A regular swap: the article and ending follow who the friend is."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: why it's l'ami, not le ami",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Say le ami out loud: two vowels collide, euh then ah, and French won't stand for it. So le and la both drop their vowel before a word that starts with one, and glue on with an apostrophe: l'ami, l'amie — one form for both genders once the article elides. This is the exact same move as l'eau — French never tolerates le or la sitting next to another vowel sound. It also happens to a pronoun you already use daily: je ai became j'ai by the identical rule."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart: loved, then chosen",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ami from Latin amicus, \"friend\" — built on the verb amāre, \"to love.\" English kept the adjective whole in amicable, amiable, and amity (\"friendship\" between nations). A French ami is, at the root, someone you love."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"un ami, une amie\" — the regular swap",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"un ami, une amie\" — the regular swap]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"l'ami, l'amie\" — never le ami",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"l'ami, l'amie\" — never *le ami*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the family — \"l'eau, j'ai, l'ami\" — one rule, three words",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the family — \"l'eau, j'ai, l'ami\" — one rule, three words]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"amicable, amiable, amity\" — all built on amāre, to love",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"amicable, amiable, amity\" — all built on **amāre**, to love]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give \"a friend\" for a man and for a woman. (un ami, une amie.) Why do you say l'ami instead of le ami? (Two vowels can't sit together — the article elides, the same rule behind l'eau and j'ai.) What Latin verb is ami built on, and what does it mean? (Amāre, \"to love.\")"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C29-famille",
-      "sequence": 920,
-      "title": "la famille — the family, feminine no matter who's in it",
-      "headword": "la famille",
-      "romanization": "la famille",
-      "gloss": "family — feminine and fixed, whoever is in it, and once meant the household's servants",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:10e13748637618a1",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "L'ami changes shape with who it names. This word never does — whoever is in the family, the word itself stays exactly as it is. (And before you had l'ami, you already had le sucre — every one of this book's nouns keeps its article.)"
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: the word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "la famille — the family. Feminine, fixed — no elision here, since famille starts with a consonant: la famille, never l'famille."
-            },
-            {
-              "kind": "speech",
-              "text": "The double -ll- after i is not said like an English L: famille is fah-MEE-yuh, the -ille landing as a y-sound, the l itself silent. You'll meet this -ille spelling again."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: the household, servants included",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "famille from Latin familia, \"the household\" — built on famulus, \"servant, slave.\" Roman familia named everyone under one roof: parents, children, and the servants who worked there, all together. It broadened to mean \"blood relatives\" only because relatives usually were the people sharing that roof. Where ami is built on loving someone, famille is built on living with them."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"la famille\" — feminine, no elision",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"la famille\" — feminine, no elision]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the sound — \"fa-MI-yuh,\" not \"fa-MILL\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the sound — \"fa-MI-yuh,\" not \"fa-MILL\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the contrast — \"un ami: loving. la famille: living together.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the contrast — \"un ami: loving. la famille: living together.\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"the family.\" (La famille — feminine.) Why doesn't it elide to l'famille? (It starts with a consonant — elision only happens before a vowel.) What did Latin familia originally include besides relatives? (The household's servants, from famulus.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C29-enfant",
+      "id": "FR-C27-sasseoir",
       "sequence": 930,
-      "title": "l'enfant — the child, one word for both",
-      "headword": "l'enfant",
-      "romanization": "l'enfant",
-      "gloss": "child — one spelling for both genders, the article alone showing which; literally \"not yet speaking\"",
+      "title": "s'asseoir — \"to sit down,\" a verb you do to yourself",
+      "headword": "s'asseoir",
+      "romanization": "s'asseoir",
+      "gloss": "to sit down — a verb you do to yourself, from Latin sedēre, and the one French verb that ships with two accepted sets of forms",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b297e3ef5ff6b9f",
+      "sourceHash": "fnv1a64:b3c513be53d729e5",
       "notice": null,
       "blocks": [
         {
@@ -287,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "La famille stays fixed no matter who's in it. This member of it does something different again: one spelling, for a boy or a girl alike."
+              "text": "You have walked and you have run. Now stop. French does not say \"I sit\" — it says \"I seat myself,\" and that extra word is one you own."
             }
           ]
         },
@@ -298,27 +46,90 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "l'enfant — the child. Starts with a vowel, so the article elides again, exactly like l'ami: un enfant (a boy), une enfant (a girl) — but the word itself never changes. Only un/une tells you which."
+              "text": "s'asseoir — to sit down. Said sah-SWAHR. Je m'assieds. — I sit down. Said juh mah-SYAY."
+            },
+            {
+              "kind": "speech",
+              "text": "The m' is the me inside je m'appelle: French treats sitting as something you do to yourself, so the pronoun is not optional."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep two ideas apart. S'asseoir is the movement, lowering yourself into a chair. Je suis assis is the state after it, \"I am seated.\" English lets sit cover both; French makes you choose."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: not yet speaking",
+          "type": "grammar",
+          "title": "Grammar Lens: one verb, two accepted sets",
           "segments": [
             {
               "kind": "speech",
-              "text": "enfant from Latin īnfāns, \"not speaking\" — in- \"not\" + fāns, \"speaking\" (from fārī, \"to speak\"). Literally, a baby too young to talk."
+              "text": "The only verb in this book with two correct answers, both in dictionaries. Learn this series whole:"
             },
             {
               "kind": "speech",
-              "text": "But Romans already stretched īnfāns to cover children well past babyhood long before French existed, and French enfant simply inherited that wider sense — it didn't narrow English infant into something broader. The two words split apart in a different way: English kept the narrow, original \"not-yet-speaking\" sense for its borrowing, while French's everyday word carried the older, already-widened Latin meaning forward."
+              "text": "je m'assieds — mah-SYAY."
+            },
+            {
+              "kind": "speech",
+              "text": "tu t'assieds — tah-SYAY."
+            },
+            {
+              "kind": "speech",
+              "text": "il s'assied — sah-SYAY (three identical to the ear)."
+            },
+            {
+              "kind": "speech",
+              "text": "nous nous asseyons — noo-zah-say-YOHN."
+            },
+            {
+              "kind": "speech",
+              "text": "vous vous asseyez — voo-zah-say-YAY."
+            },
+            {
+              "kind": "speech",
+              "text": "ils s'asseyent — sah-SAY."
+            },
+            {
+              "kind": "speech",
+              "text": "Then recognise the rival singulars je m'assois, tu t'assois, il s'assoit — ordinary spoken French. Their plurals (assoyons, assoyez) are much rarer in France, so the series above is the safer one to own. Since 1990 the infinitive may also be spelled s'assoir. Nothing here is wrong; the language never chose."
             }
           ]
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: sedēre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "s'asseoir from Vulgar Latin adsedēre, a remaking of Classical adsidēre — ad- \"at\" plus sedēre, \"to sit.\" Latin had built the compound; French only wore it down. And sedēre is everywhere in English:"
+            },
+            {
+              "kind": "speech",
+              "text": "sedentary, sitting work; a session, \"a sitting\"; sediment, what sits at the bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "reside, sit back; preside and president, sitting in front; assiduous, sitting at a task."
+            },
+            {
+              "kind": "speech",
+              "text": "siege — an army sitting down before a city; possess, obsess, subsidy."
+            },
+            {
+              "kind": "speech",
+              "text": "A bishop's see is his sedēs, his seat."
+            },
+            {
+              "kind": "speech",
+              "text": "Dormir English only borrowed. This root it owns from birth too: sit, seat and settle come down the Germanic road from the same source."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -331,43 +142,70 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"un enfant, une enfant\" — one spelling, two articles",
+              "instruction": "\"s'asseoir\" — sah-SWAHR",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"un enfant, une enfant\" — one spelling, two articles]"
+              "source": "[YOU SAY: \"s'asseoir\" — *sah-SWAHR*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the elision — \"l'enfant,\" never le enfant",
+              "instruction": "\"je m'assieds\" then \"nous nous asseyons\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the elision — \"l'enfant,\" never *le enfant*]"
+              "source": "[YOU SAY: \"je m'assieds\" then \"nous nous asseyons\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"in- + fari\" — not speaking",
+              "instruction": "\"je m'appelle\" then \"je m'assieds\" — the same little m'",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"in- + fari\" — not speaking]"
+              "source": "[YOU SAY: \"je m'appelle\" then \"je m'assieds\" — the same little *m'*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the family so far — \"l'ami, la famille, l'enfant\"",
+              "instruction": "\"je m'assieds\" then \"je suis assis\" — movement, then state",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the family so far — \"l'ami, la famille, l'enfant\"]"
+              "source": "[YOU SAY: \"je m'assieds\" then \"je suis assis\" — movement, then state]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je marche, je cours, je m'assieds, je dors\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je marche, je cours, je m'assieds, je dors\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"j'entends\" — the ear needs no chair",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"j'entends\" — the ear needs no chair]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"sedentary, session, siege\" — every one a sitting",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"sedentary, session, siege\" — every one a sitting]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -379,26 +217,26 @@
             },
             {
               "kind": "speech",
-              "text": "How do you tell a boy child from a girl child in French, if the word itself never changes? (The article — un enfant / une enfant.) What does enfant literally mean, and where does that meaning come from? (\"Not speaking\" — in- + fārī, \"to speak.\") Does French narrow Latin's meaning or keep it wide? (Keeps it wide — Latin had already stretched infans past babyhood.)"
+              "text": "Say \"I sit down\" and \"we sit down.\" (Je m'assieds. Nous nous asseyons.) Why is the pronoun there? (French sits you yourself down — the same m' as in je m'appelle.) What is a siege, literally? (A sitting — an army sitting down before a city.) Which English words are cousins of sedēre by birth rather than borrowing? (Sit, seat, settle.) Now the pair: \"je cours\" and \"je dors.\""
             }
           ]
         }
       ]
     },
     {
-      "id": "FR-C29-personne",
+      "id": "FR-C27-se-lever",
       "sequence": 940,
-      "title": "la personne — the person, and the mask behind the word",
-      "headword": "la personne",
-      "romanization": "la personne",
-      "gloss": "person — feminine no matter who is meant, even a man, and secretly \"nobody\" when it stands next to ne",
+      "title": "se lever, debout — standing, which French says in two pieces",
+      "headword": "se lever, debout",
+      "romanization": "se lever, debout",
+      "gloss": "to stand — French has no single verb for it, so the movement is se lever (\"to lighten yourself\") and the state is être debout, literally \"on end\"",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e706ac7aac58b8db",
+      "sourceHash": "fnv1a64:d020939918b40abe",
       "notice": null,
       "blocks": [
         {
@@ -414,88 +252,89 @@
             },
             {
               "kind": "speech",
-              "text": "L'ami changes with its friend; l'enfant doesn't, but its article does. This last one is the strangest of the four: it never changes at all — not even for a man."
+              "text": "You sat down. Getting up is harder, because French has no single verb for \"to stand.\" It splits the idea in two."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: the word",
+          "title": "You'll want to know: the movement",
           "segments": [
             {
               "kind": "speech",
-              "text": "la personne — the person. Always feminine — grammatically, whether you mean a man, a woman, or anyone at all:"
+              "text": "se lever — to get up, to rise. Said suh luh-VAY. Je me lève. — I get up. Said juh muh LEV."
             },
             {
               "kind": "speech",
-              "text": "Cet homme est une bonne personne. — \"That man is a good person.\""
+              "text": "Reflexive, as s'asseoir is: you raise yourself. After that verb's two paradigms this is a relief — an ordinary -er verb with one habit. Silent ending, and the e takes a grave accent; spoken ending, and it flattens:"
             },
             {
               "kind": "speech",
-              "text": "Homme is masculine; personne describing him stays feminine regardless. Grammatical gender here has come loose from the person's actual sex entirely — further even than ami, which at least tracks who's meant."
+              "text": "je me lève — LEV."
+            },
+            {
+              "kind": "speech",
+              "text": "tu te lèves — LEV."
+            },
+            {
+              "kind": "speech",
+              "text": "il se lève — LEV."
+            },
+            {
+              "kind": "speech",
+              "text": "nous nous levons — luh-VOHN, flat."
+            },
+            {
+              "kind": "speech",
+              "text": "vous vous levez — luh-VAY, flat."
+            },
+            {
+              "kind": "speech",
+              "text": "ils se lèvent — LEV."
             }
           ]
         },
         {
           "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: not nasal, on purpose",
+          "type": "input",
+          "title": "You'll want to know: the state",
           "segments": [
             {
               "kind": "speech",
-              "text": "Personne looks like it should rhyme with non's nasal -on — it doesn't. Double -nn- blocks the nasal: non is nasal, said through the nose, but personne ends oral, pehr-SUN, the vowel staying in the mouth. One consonant, doubled, is the difference between a nasal ending and a plain one."
+              "text": "debout — standing, upright. Said duh-BOO. Je suis debout. — I am standing."
+            },
+            {
+              "kind": "speech",
+              "text": "Se lever is the movement, debout the state — the split between sitting down and being seated. Debout is no verb: attach it to être."
+            },
+            {
+              "kind": "speech",
+              "text": "And it is transparent once opened: de + bout, \"on end.\" A bout is a tip or end, so standing is being set on your end. French did once have a plain verb for standing, ester; it survives only in a courtroom phrase, which is why the language builds this from pieces."
             }
           ]
         },
         {
           "index": 3,
           "type": "etymology",
-          "title": "The word, taken apart: the mask, not \"sounding through\"",
+          "title": "The word, taken apart: lightness",
           "segments": [
             {
               "kind": "speech",
-              "text": "personne from Latin persona, a theatrical mask — from Etruscan phersu, most likely from Greek prósōpon, \"face.\" A tidy but doubted story derives it from per- + sonāre, \"sound through\" (the mask an actor's voice rang through); linguists reject it on the vowel length, so treat it as folk etymology, not fact."
+              "text": "lever from Latin levāre, \"to raise\" — built on levis, \"light in weight.\" To raise a thing is to lighten it. Hence elevate, elevator, levitate, levity; a lever, which lightens a load; alleviate, relieve, relief; leaven."
             },
             {
               "kind": "speech",
-              "text": "Pair personne with ne and it flips to \"nobody\" — je ne vois personne = \"I see nobody.\" Behind an empty mask, no one at all."
+              "text": "So two of this book's verbs come from one corner of Roman thought. Penser is pēnsāre, \"to weigh\"; lever is levāre, \"to make light.\" Thinking weighs, rising un-weighs, and sedēre just sits there."
+            },
+            {
+              "kind": "speech",
+              "text": "One correction. Bout comes from bouter, \"to strike,\" taken from Frankish — and its English relative by descent is beat. Butt looks closer but is a later borrowing back out of French."
             }
           ]
         },
         {
           "index": 4,
-          "type": "grammar",
-          "title": "Grammar Lens: four people, four kinds of gender",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The chapter's four words, side by side:"
-            },
-            {
-              "kind": "speech",
-              "text": "l'ami / l'amie — changes with who's meant; elides either way."
-            },
-            {
-              "kind": "speech",
-              "text": "la famille — fixed feminine, whoever's in it; no elision."
-            },
-            {
-              "kind": "speech",
-              "text": "l'enfant — one spelling; only un/une shows which; elides."
-            },
-            {
-              "kind": "speech",
-              "text": "la personne — fixed feminine, even naming a man."
-            },
-            {
-              "kind": "speech",
-              "text": "Four different relationships between gender and the person named — none of them the \"normal\" case. Each is its own rule, learned with the word."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -508,43 +347,70 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"la personne\" — always feminine",
+              "instruction": "\"se lever\" — suh luh-VAY",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"la personne\" — always feminine]"
+              "source": "[YOU SAY: \"se lever\" — *suh luh-VAY*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"cet homme est une bonne personne\"",
+              "instruction": "\"je me lève\" then \"nous nous levons\" — sharp, then flat",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"cet homme est une bonne personne\"]"
+              "source": "[YOU SAY: \"je me lève\" then \"nous nous levons\" — sharp, then flat]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the contrast — \"non\" nasal, \"personne\" not",
+              "instruction": "\"je m'assieds\" then \"je me lève\" — down, then up",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the contrast — \"non\" nasal, \"personne\" not]"
+              "source": "[YOU SAY: \"je m'assieds\" then \"je me lève\" — down, then up]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the flip — \"je ne vois personne\" — nobody",
+              "instruction": "\"je suis debout\" — the state, on être",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the flip — \"je ne vois personne\" — nobody]"
+              "source": "[YOU SAY: \"je suis debout\" — the state, on *être*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je me lève et je cours\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je me lève et je cours\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je pense\" then \"je me lève\" — weighing, then lightening",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je pense\" then \"je me lève\" — weighing, then lightening]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"elevate, lever, relief\" — all a raising",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"elevate, lever, relief\" — all a raising]"
             }
           ]
         },
         {
-          "index": 6,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -556,7 +422,430 @@
             },
             {
               "kind": "speech",
-              "text": "Is personne ever masculine, even describing a man? (No — always feminine, grammatically.) Why doesn't personne nasalize like non? (Double -nn- blocks it.) What does ne … personne mean, and what does that use share with ne … pas? (\"Nobody\" — the same negation frame built around ne.) Is persona really built on \"sounding through\"? (Probably not — a folk etymology; the real root is likely Etruscan phersu, \"mask.\")"
+              "text": "Say \"I get up\" and \"we get up.\" (Je me lève. Nous nous levons — the accent appears only when the ending is silent.) How does French say \"I am standing\"? (Je suis debout — a state pinned to être, not a verb, and debout is de + bout, \"on end.\") Penser came from weighing; what does lever come from? (Levis, \"light in weight\".) And the opposite movement? (Je m'assieds.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C27-ouvrir",
+      "sequence": 950,
+      "title": "ouvrir — \"to open,\" an -ir verb wearing -er endings",
+      "headword": "ouvrir",
+      "romanization": "ouvrir",
+      "gloss": "to open — an -ir verb that takes -er endings, from a Latin verb reshaped to look like its own opposite, and the source of English overt and overture",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3562edfba12e0f79",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can sit and rise. Now something for the hand. This verb is French conjugation's small trap: spelled like one family, behaving like another."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ouvrir — to open. Said oo-VREER. J'ouvre la main. — I open my hand."
+            },
+            {
+              "kind": "speech",
+              "text": "French says la main where English says \"my hand\"; with your own body the article does the work. And listen to that nasal — pain, main — the same -ain you have been making since the bread."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the endings it should not have",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ouvrir ends in -ir, so you would expect it to run like dormir. It does not. It takes the endings of marcher, an -er verb, exactly:"
+            },
+            {
+              "kind": "speech",
+              "text": "j'ouvre — JOOVR."
+            },
+            {
+              "kind": "speech",
+              "text": "tu ouvres — OOVR."
+            },
+            {
+              "kind": "speech",
+              "text": "il ouvre — OOVR."
+            },
+            {
+              "kind": "speech",
+              "text": "nous ouvrons — oo-VROHN."
+            },
+            {
+              "kind": "speech",
+              "text": "vous ouvrez — oo-VRAY."
+            },
+            {
+              "kind": "speech",
+              "text": "ils ouvrent — OOVR."
+            },
+            {
+              "kind": "speech",
+              "text": "Four identical to the ear, nous and vous audible: the shape of je marche, nous marchons. A small group of -ir verbs does this, and ouvrir is the one you meet most. The spelling promises one thing; listen to what the verb does."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: reshaped by its own opposite",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin's verb for opening was aperīre, which ouvrir does not look much like — because the word was remodelled on the way into popular Latin operīre. The likeliest cause is the pull of its own opposite, cooperīre, \"to cover,\" which became French couvrir. Opening and covering ended up rhyming and have stayed matched since. The meaning stayed aperīre's; only the shape moved."
+            },
+            {
+              "kind": "speech",
+              "text": "English collected both ends:"
+            },
+            {
+              "kind": "speech",
+              "text": "from aperīre — an aperture; an aperitif, the drink that opens a meal."
+            },
+            {
+              "kind": "speech",
+              "text": "from Old French ovrir — overt, its past participle \"opened,\" and overture, ouverture."
+            },
+            {
+              "kind": "speech",
+              "text": "from the covering half — curfew, Old French cuevrefeu, \"cover-fire,\" the bell that said to bank the hearth."
+            },
+            {
+              "kind": "speech",
+              "text": "Set that beside the hand. Maintenir is manū tenēre, \"to hold in the hand\" — and ouvrir la main releases that grip."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ouvrir\" — oo-VREER",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ouvrir\" — *oo-VREER*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"j'ouvre la main\" — and hear pain, main",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"j'ouvre la main\" — and hear *pain*, *main*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je marche, nous marchons\" then \"j'ouvre, nous ouvrons\" — one shape",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je marche, nous marchons\" then \"j'ouvre, nous ouvrons\" — one shape]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je m'assieds, je me lève, j'ouvre la main\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je m'assieds, je me lève, j'ouvre la main\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je suis debout et j'ouvre la main\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je suis debout et j'ouvre la main\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"maintenir\" then \"ouvrir\" — holding in the hand, then letting go",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"maintenir\" then \"ouvrir\" — holding in the hand, then letting go]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"aperture, aperitif, overt, overture\" — every one an opening",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"aperture, aperitif, overt, overture\" — every one an opening]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I open my hand\" and \"we open.\" (J'ouvre la main. Nous ouvrons.) Which endings does ouvrir borrow, despite its spelling? (The -er set — marcher's.) What is an aperitif, literally? (The opener — the drink that opens a meal.) Why does ouvrir not look like Latin aperīre? (It was reshaped to match its own opposite, the verb for covering.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C27-fermer",
+      "sequence": 960,
+      "title": "fermer — \"to close,\" which in French means \"to make firm\"",
+      "headword": "fermer",
+      "romanization": "fermer",
+      "gloss": "to close — from Latin firmāre, \"to make firm,\" so a French door is not shut but made fast; the same verb gave Italian \"to stop\" and Spanish \"to sign\"",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:172d73abab3f0fb5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last of the four, and the opposite of the one before it. French chose an unexpected picture: to close a thing is to make it firm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fermer — to close. Said fer-MAY. Je ferme la main. — I close my hand. Il pleut. Je ferme. — It's raining. I'm closing up."
+            },
+            {
+              "kind": "speech",
+              "text": "A regular -er verb: je ferme, tu fermes, il ferme, nous fermons, vous fermez, ils ferment."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: two opposites, one set of endings",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ouvrir borrowed the -er endings against its own spelling. Fermer owns them outright. So the two opposites conjugate in step, and drill as one pair:"
+            },
+            {
+              "kind": "speech",
+              "text": "j'ouvre / je ferme."
+            },
+            {
+              "kind": "speech",
+              "text": "nous ouvrons / nous fermons."
+            },
+            {
+              "kind": "speech",
+              "text": "ils ouvrent / ils ferment."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: making it firm",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fermer from Latin firmāre, \"to make firm,\" from firmus, \"firm.\" A Roman door was not closed, it was secured. English took the adjective and left the verb: firm, affirm, confirm, infirm and the infirmary, the firmament — the sky as a solid vault."
+            },
+            {
+              "kind": "speech",
+              "text": "Probably also farm. Old French ferme meant a fixed rent, from Medieval Latin firma, \"a fixed payment,\" so a farm began as a lease and not a field. Etymologists call this history a confused one, because Old English feorm, \"food-rent,\" sat nearby and may have pulled on it. Likely, not clean."
+            },
+            {
+              "kind": "speech",
+              "text": "The best part is the split. One Latin verb, three languages, three jobs:"
+            },
+            {
+              "kind": "speech",
+              "text": "French fermer — to close."
+            },
+            {
+              "kind": "speech",
+              "text": "Italian fermare — to stop."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish firmar — to sign, because a signature makes a paper firm."
+            },
+            {
+              "kind": "speech",
+              "text": "And Spanish and Portuguese do not close with this verb at all. Their words come from Latin's bolt. So French shuts a door by making it solid while its neighbours slide a bar across."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"fermer\" — fer-MAY",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"fermer\" — *fer-MAY*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"j'ouvre la main\" then \"je ferme la main\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"j'ouvre la main\" then \"je ferme la main\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the chapter's four — \"je m'assieds, je me lève, j'ouvre, je ferme\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the chapter's four — \"je m'assieds, je me lève, j'ouvre, je ferme\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je suis debout et je ferme\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je suis debout et je ferme\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"il pleut, je ferme\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"il pleut, je ferme\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vous fermez, s'il vous plaît\" then \"tu fermes, s'il te plaît\" — formal, then familiar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"vous fermez, s'il vous plaît\" then \"tu fermes, s'il te plaît\" — formal, then familiar]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je suis désolé, je ferme\" — the apology before the refusal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je suis désolé, je ferme\" — the apology before the refusal]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"fermer, firm, affirm, confirm\" — all a making-firm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"fermer, firm, affirm, confirm\" — all a making-firm]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the chapter's four with je. (Je m'assieds, je me lève, j'ouvre, je ferme.) What did firmāre mean, and what is a French door doing when it closes? (Making firm — being secured, not barred.) One Latin verb, three languages: Italian and Spanish? (Fermare, \"to stop\"; firmar, \"to sign\".) Now close politely in both registers, then apologise. (Vous fermez, s'il vous plaît. Tu fermes, s'il te plaît. Je suis désolé.) And the hand? (J'ouvre la main, je ferme la main.)"
             }
           ]
         }

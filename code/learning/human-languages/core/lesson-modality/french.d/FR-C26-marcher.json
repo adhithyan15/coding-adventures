@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C26-marcher",
     "language": "french",
-    "chapter": 26,
-    "sequence": 810,
+    "chapter": 28,
+    "sequence": 910,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:be4597c62b602a09"
+    "sourceHash": "fnv1a64:1aa199a21e833e0e"
   },
   "findings": []
 }

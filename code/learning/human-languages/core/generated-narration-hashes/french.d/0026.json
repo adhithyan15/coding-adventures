@@ -1,18 +1,18 @@
 {
   "language": "french",
   "chapter": 26,
-  "sourceHash": "fnv1a64:ecef97df0f365423",
+  "sourceHash": "fnv1a64:7db82c31f93b5fc7",
   "lessonIds": [
-    "FR-C26-entendre",
-    "FR-C26-dormir",
-    "FR-C26-marcher",
-    "FR-C26-courir"
+    "FR-C24-prendre",
+    "FR-C24-demander",
+    "FR-C24-aider",
+    "FR-C24-aimer"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 4,
   "text": "french/narration/ch26.txt",
   "json": "french/narration/ch26.json",
-  "textHash": "fnv1a64:9bbe1f0d826a66e8",
-  "jsonHash": "fnv1a64:812ce7deb6cc965e",
+  "textHash": "fnv1a64:324bab344c0fe6e4",
+  "jsonHash": "fnv1a64:cfc5cbda58b4d3fb",
   "findings": []
 }

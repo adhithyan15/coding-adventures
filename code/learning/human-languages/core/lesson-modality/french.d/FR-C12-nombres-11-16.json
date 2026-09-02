@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C12-nombres-11-16",
     "language": "french",
-    "chapter": 12,
-    "sequence": 265,
+    "chapter": 14,
+    "sequence": 365,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -17,7 +17,7 @@
       "wide-table"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:39499961d8e8b20a"
+    "sourceHash": "fnv1a64:407497ec7c56e5a5"
   },
   "findings": []
 }

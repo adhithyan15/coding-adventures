@@ -1,17 +1,17 @@
 ---
 id: FR-C10-parents
-sequence: 245
-chapter: 10
+sequence: 345
+chapter: 12
 type: word
 headword: le père, la mère
 gloss: father and mother — the PIE root behind paternal and maternal
 concept_tag: FR-FAMILY-PARENTS
-prerequisites: [FR-C09-saisons, FR-C01-bonjour]
+prerequisites: [FR-C09-saisons-practice, FR-C01-bonjour]
 sounds: [nasal-none, e-grave]
 roots: [pater-latin, mater-latin]
 etymology_hook: "père ← pater, mère ← mater — the same PIE *ph2tēr/*méh2tēr that split into English father/mother (Grimm's law p→f, t→th) and Latin paternal/maternal"
 est_minutes: 4
-reviews_of: [FR-C09-saisons, FR-C01-bonjour]
+reviews_of: [FR-C09-saisons-practice, FR-C01-bonjour]
 ---
 
 # le père, la mère — the oldest words in the family

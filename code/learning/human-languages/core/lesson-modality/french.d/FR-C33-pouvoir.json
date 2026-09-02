@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C33-pouvoir",
     "language": "french",
-    "chapter": 33,
-    "sequence": 1200,
+    "chapter": 35,
+    "sequence": 1300,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:c4dd26105d88046f"
+    "sourceHash": "fnv1a64:7df368005d04346c"
   },
   "findings": []
 }

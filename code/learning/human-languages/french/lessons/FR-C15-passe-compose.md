@@ -1,7 +1,7 @@
 ---
 id: FR-C15-passe-compose
-sequence: 295
-chapter: 15
+sequence: 395
+chapter: 17
 type: word
 headword: j'ai parlé
 gloss: the passé composé — a past tense built out of "have", and a possessive that hardened

@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C32-combien
 spine_node: SPINE-ASK-LOCATION
-sequence: 1150
-chapter: 32
+sequence: 1250
+chapter: 34
 type: word
 headword: combien
 gloss: "how much and how many — one word where English needs two"

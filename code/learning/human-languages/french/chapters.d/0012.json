@@ -1,15 +1,15 @@
 {
   "chapter": 12,
-  "title": "Numbers Eleven to Twenty",
-  "label": "ch:numbers-11-20",
-  "canDo": "I can count from eleven to twenty in French and recognize how the number forms are built.",
+  "title": "Family",
+  "label": "ch:family",
+  "canDo": "I can identify close family members in French and say who someone is.",
   "spineNodes": [
     "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "FR-C12-nombres-17-20",
+    "lesson": "FR-C10-freres-soeurs",
     "kind": "task",
-    "summary": "Complete FR-C12-nombres-17-20, the canonical closing checkpoint, and demonstrate the chapter promise: count from eleven to twenty in French and recognize how the number forms are built.",
+    "summary": "Complete FR-C10-freres-soeurs, the canonical closing checkpoint, and demonstrate the chapter promise: identify close family members in French and say who someone is.",
     "assesses": [],
     "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
   }

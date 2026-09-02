@@ -1,7 +1,7 @@
 ---
 id: FR-C12-nombres-17-20
-sequence: 270
-chapter: 12
+sequence: 370
+chapter: 14
 type: word
 headword: dix-sept — vingt
 gloss: 17–20 — the seam where French gives up fusing and just says "ten-seven"

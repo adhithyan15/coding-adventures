@@ -1,12 +1,12 @@
 {
   "language": "french",
   "chapter": 29,
-  "sourceHash": "fnv1a64:ca14c0860c02bf00",
+  "sourceHash": "fnv1a64:c9c4d7ab0164f05b",
   "lessonIds": [
-    "FR-C29-ami",
-    "FR-C29-famille",
-    "FR-C29-enfant",
-    "FR-C29-personne"
+    "FR-C27-sasseoir",
+    "FR-C27-se-lever",
+    "FR-C27-ouvrir",
+    "FR-C27-fermer"
   ],
-  "tex": "french/book/chapters/ch29-the-people-you-introduce.tex"
+  "tex": "french/book/chapters/ch29-sitting-standing-opening-closing.tex"
 }

@@ -1,29 +1,33 @@
-French, chapter 23: Green and Yellow.
+French, chapter 23: Weather.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-vert, jaune — the expected inheritance, and a hidden PIE-level cousin.
+le temps, il pleut — the same Latin word, a different fate for "rain".
 
 Warm-up.
 [pause 2 seconds]
-French's green word is exactly what you'd expect. Its yellow word hides something you won't expect at all — a secret cousin sitting inside German.
+You've seen Spanish's tiempo mean both "time" and "weather" at once, from Latin tempus. French has the exact same word, the exact same double meaning — because this widening happened within Latin itself, before French and Spanish went their separate ways.
 
-The word, taken apart: vert.
-vert ("green") from Latin viridis — and this is genuinely the standard source of "green" across nearly every Romance language: Spanish verde, Italian verde, Portuguese verde, Catalan verd. No surprise here — a clean, shared inheritance.
+The two words: le temps — time and weather.
+le temps = both "time" and "weather" — from Latin tempus, same as Spanish's tiempo (English kept only the "time" half: temporal, tempo). So quel temps fait-il? ("what's the weather like?") is literally "what time does it make?" — the identical construction inside Spanish's ¿qué tiempo hace?.
 
-The word, taken apart: jaune.
-jaune ("yellow") from Latin galbinus, which literally meant "yellow-green" — an extended form of galbus, from Proto-Indo- European ghel-, "to shine" (with derivatives covering green, yellow, and gold alike — the same root gives Greek khlōros, "greenish- yellow"). Here's the genuinely surprising part: this same PIE root, ghel-, is also usually cited as the source of German's gelb and English's yellow — by a completely separate, Germanic path (Proto- Germanic gelwaz). Honesty check, though: the galbus becomes ghel- link itself is less secure than it looks — some modern Latin scholarship treats galbus's origin as unknown rather than confirming the connection. So jaune and gelb are probably cousins at the Proto-Indo-European level, despite one reaching French through Latin and the other reaching German directly through Germanic — just don't treat that link as airtight.
+Grammar Lens: il fait chaud / il fait froid.
+Il fait chaud. — "It's hot." — literally "it makes hot." Il fait froid. — "It's cold." — literally "it makes cold."
+Same hacer-style periphrasis as Spanish, just with French's own faire ("to make/do").
+
+The word, taken apart: il pleut.
+Il pleut. — "It's raining." — from pleuvoir from Latin pluere, "to rain" — the same Latin verb behind Spanish's llueve. But here's the honest difference: Spanish underwent the pl- becomes ll- shift (pluere becomes llover), while French kept the pl- cluster fully intact — pleuvoir still visibly starts with pl-, just like the Latin original. So the same Latin verb took two different sound-change paths in its two daughters: one eroded the cluster, one preserved it.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "vert" — green, the standard Romance word]
+[your turn — say: "le temps" — time, or weather, depending on context]
 [pause 8 seconds for the answer]
-[your turn — say: "jaune" — yellow, literally "yellow-green"]
+[your turn — say: "il fait chaud. il fait froid." — it's hot/cold]
 [pause 8 seconds for the answer]
-[your turn — say: the probable cousin — "jaune, gelb" — likely the same ancient PIE root, two completely different paths, though the link isn't airtight]
+[your turn — say: "il pleut" — it's raining, pl- kept intact from Latin]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is vert a typical or unusual Romance word for "green"? (Typical — the standard source across nearly all Romance languages.) What did Latin galbinus, the source of jaune, literally mean? ("Yellow-green.") What German word is usually called jaune's deep PIE cousin, and how solid is that link? (Gelb — both usually traced to PIE ghel-, "to shine," though modern Latin scholarship treats galbus's origin as genuinely unknown, so the connection is probable, not certain.)
+What two things does le temps mean, and where does this polysemy come from? ("Time" and "weather" — from Latin tempus, already double-sensed before French/Spanish split apart.) Does French's il pleut show the same pl- becomes ll- shift as Spanish's llueve? (No — French kept the pl- cluster intact; only Spanish underwent that shift.)

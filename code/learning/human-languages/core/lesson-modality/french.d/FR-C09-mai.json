@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C09-mai",
+    "language": "french",
+    "chapter": 9,
+    "sequence": 236,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:77cf1135f82868a9"
+  },
+  "findings": []
+}

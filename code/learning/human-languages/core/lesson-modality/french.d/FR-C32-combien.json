@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C32-combien",
     "language": "french",
-    "chapter": 32,
-    "sequence": 1150,
+    "chapter": 34,
+    "sequence": 1250,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:f3644626c4a5e82d"
+    "sourceHash": "fnv1a64:106167ca1414d216"
   },
   "findings": []
 }

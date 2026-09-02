@@ -1,18 +1,15 @@
 {
   "language": "french",
   "chapter": 25,
-  "sourceHash": "fnv1a64:2f5bd522d0d2e9d2",
+  "sourceHash": "fnv1a64:d680024161e88f82",
   "lessonIds": [
-    "FR-C25-comprendre",
-    "FR-C25-penser",
-    "FR-C25-lire",
-    "FR-C25-ecrire"
+    "FR-C23-vert-jaune"
   ],
-  "voiceLessons": 4,
-  "drivablePrefix": 4,
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
   "text": "french/narration/ch25.txt",
   "json": "french/narration/ch25.json",
-  "textHash": "fnv1a64:df2e1890cd9841f0",
-  "jsonHash": "fnv1a64:10db56cf492a3d07",
+  "textHash": "fnv1a64:73ddd75f1b3278a3",
+  "jsonHash": "fnv1a64:0127823042aa7e4f",
   "findings": []
 }
