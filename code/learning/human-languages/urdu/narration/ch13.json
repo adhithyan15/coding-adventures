@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Four Colors",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:fa4c9848ccad8edb",
+  "sourceHash": "fnv1a64:80ba835a808d79ce",
   "lessons": [
     {
       "id": "UR-C13-lal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63197ae0e3a8c2bc",
+      "sourceHash": "fnv1a64:cec4e4b6e1b189f4",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Recall روٹی — bread, an honest dead end with no English cousin. This lesson opens a new kind of word: colors, starting with the one you'd use for a ripe tomato or a bride's dress."
+              "text": "Recall roṭī — bread, an honest dead end with no English cousin. This lesson opens a new kind of word: colors, starting with the one you'd use for a ripe tomato or a bride's dress."
             }
           ]
         },
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "میرا کوٹ لال ہے۔ — merā koṭ lāl hai. — \"My coat is red.\""
+              "text": "merā koṭ lāl hai. — \"My coat is red.\""
             }
           ]
         },
@@ -72,7 +72,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "لال (lāl) is borrowed from Classical Persian لَال, \"red.\" No further ancestor is documented for the Persian word itself — the trail simply stops, the same honest kind of dead end روٹی's Sanskrit root hit last lesson, except this time on the Persian side of the book's two layers rather than the inherited one."
+              "text": "لال (lāl) is borrowed from Classical Persian لَال, \"red.\" No further ancestor is documented for the Persian word itself — the trail simply stops, the same honest kind of dead end roṭī's Sanskrit root hit last lesson, except this time on the Persian side of the book's two layers rather than the inherited one."
             }
           ]
         },
@@ -102,11 +102,11 @@
             {
               "kind": "prompt",
               "action": "CONNECT",
-              "instruction": "lāl from Persian, no further root — like روٹی's Sanskrit root, but on the other side of the book's two layers",
+              "instruction": "lāl from Persian, no further root — like roṭī's Sanskrit root, but on the other side of the book's two layers",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU CONNECT: **lāl** ← Persian, no further root — like **روٹی**'s Sanskrit root, but on the other side of the book's two layers]"
+              "source": "[YOU CONNECT: **lāl** ← Persian, no further root — like *roṭī*'s Sanskrit root, but on the other side of the book's two layers]"
             }
           ]
         },
@@ -123,7 +123,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does لال (lāl) mean, and which layer does it belong to — inherited or Persian? (Red; Persian.) Does لال (lāl) change its ending for a feminine noun? (No — it stays لال (lāl).) Does لال (lāl) have a documented ancestor before Persian? (No — an honest dead end.) Is خدا حافظ written as one word or two in Urdu spelling? (Two, spaced — unlike Persian's joined form.) When you read میرا نام... ہے right to left, does the spoken order of the words change? (No — the script direction changes, the spoken order does not.)"
+              "text": "What does لال (lāl) mean, and which layer does it belong to — inherited or Persian? (Red; Persian.) Does لال (lāl) change its ending for a feminine noun? (No — it stays لال (lāl).) Does لال (lāl) have a documented ancestor before Persian? (No — an honest dead end.) Is khudā hāfiz written as one word or two in Urdu spelling? (Two, spaced — unlike Persian's joined form.) When you read میرا نام... ہے right to left, does the spoken order of the words change? (No — the script direction changes, the spoken order does not.)"
             },
             {
               "kind": "speech",
@@ -146,7 +146,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7093d5ffc5951d80",
+      "sourceHash": "fnv1a64:1288a3b47713887e",
       "notice": null,
       "blocks": [
         {
@@ -177,7 +177,7 @@
             },
             {
               "kind": "speech",
-              "text": "میری ٹوپی سفید ہے۔ — merī ṭopī safed hai. — \"My cap is white.\""
+              "text": "merī ṭopī safed hai. — \"My cap is white.\""
             },
             {
               "kind": "speech",
@@ -196,7 +196,7 @@
             },
             {
               "kind": "speech",
-              "text": "This time a third road leads somewhere new: that same PIE root, through Proto-Germanic, gives English white as well. پوچھنا and porsīdan were cousins by two roads; سفید (safed), śvetá, and white are cousins by three."
+              "text": "This time a third road leads somewhere new: that same PIE root, through Proto-Germanic, gives English white as well. pūchhnā and porsīdan were cousins by two roads; سفید (safed), śvetá, and white are cousins by three."
             }
           ]
         },
@@ -256,7 +256,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does سفید (safed) mean? (White.) Name its two settled cousins in other languages. (Sanskrit śvetá; English white.) Recall ٹھیک and how a short Urdu word once bridged to a Hindi cognate — how is that bridge different from what سفید (safed) just did? (ٹھیک's bridge was Urdu-to-Hindi, the same modern language pair; سفید (safed)'s is a PIE root three languages deep.) How did the earlier take-leave dialogue end? (With خدا حافظ, spoken by both voices.)"
+              "text": "What does سفید (safed) mean? (White.) Name its two settled cousins in other languages. (Sanskrit śvetá; English white.) Recall ṭhīk and how a short Urdu word once bridged to a Hindi cognate — how is that bridge different from what سفید (safed) just did? (ṭhīk's bridge was Urdu-to-Hindi, the same modern language pair; سفید (safed)'s is a PIE root three languages deep.) How did the earlier take-leave dialogue end? (With khudā hāfiz, spoken by both voices.)"
             },
             {
               "kind": "speech",
@@ -279,7 +279,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8a0eef04fb974f1",
+      "sourceHash": "fnv1a64:7ad3620fb4787a3f",
       "notice": null,
       "blocks": [
         {
@@ -295,7 +295,7 @@
             },
             {
               "kind": "speech",
-              "text": "Recall سفید (safed) — white, cousin of Sanskrit śvetá and English white, three roads from one PIE root. This word is inherited rather than Persian, and it breaks the \"never changes\" rule the last two colors kept."
+              "text": "Recall safed — white, cousin of Sanskrit śvetá and English white, three roads from one PIE root. This word is inherited rather than Persian, and it breaks the \"never changes\" rule the last two colors kept."
             }
           ]
         },
@@ -310,11 +310,11 @@
             },
             {
               "kind": "speech",
-              "text": "میرا کوٹ کالا ہے۔ — merā koṭ kālā hai. — \"My coat is black.\""
+              "text": "merā koṭ kālā hai. — \"My coat is black.\""
             },
             {
               "kind": "speech",
-              "text": "میری ٹوپی کالی ہے۔ — merī ṭopī kālī hai. — \"My cap is black.\""
+              "text": "merī ṭopī kālī hai. — \"My cap is black.\""
             }
           ]
         },
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "کالا (kālā) ends in ا — and a color ending in ا changes with the noun it describes, exactly the way merā/merī changed for gender back in the family chapter. Masculine stays کالا (kālā); feminine becomes کالی. لال (lāl) and سفید (safed) never had to make this choice, because neither one ends in ا. Watch for it again on the last color of this chapter."
+              "text": "کالا (kālā) ends in ا — and a color ending in ا changes with the noun it describes, exactly the way merā/merī changed for gender back in the family chapter. Masculine stays کالا (kālā); feminine becomes کالی. لال (lāl) and safed never had to make this choice, because neither one ends in ا. Watch for it again on the last color of this chapter."
             }
           ]
         },
@@ -336,7 +336,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "کالا (kālā) is inherited from Sanskrit kāla, \"black, dark\" — so far, the same kind of story as بھائی or آنکھ. But کالا (kālā)'s root does not continue into Proto-Indo-European at all. It is usually traced instead to Proto-Dravidian kār-, \"black, to be burnt\": Sanskrit itself borrowed this color word from its Dravidian neighbours, long before any of it reached Urdu. Inherited from Sanskrit, yes — but Sanskrit's own source sits outside the Indo-European family this book has been tracing."
+              "text": "کالا (kālā) is inherited from Sanskrit kāla, \"black, dark\" — so far, the same kind of story as bhāī or āṅkh. But کالا (kālā)'s root does not continue into Proto-Indo-European at all. It is usually traced instead to Proto-Dravidian kār-, \"black, to be burnt\": Sanskrit itself borrowed this color word from its Dravidian neighbours, long before any of it reached Urdu. Inherited from Sanskrit, yes — but Sanskrit's own source sits outside the Indo-European family this book has been tracing."
             }
           ]
         },
@@ -366,11 +366,11 @@
             {
               "kind": "prompt",
               "action": "CONTRAST",
-              "instruction": "سفید (safed) never changes; کالا (kālā) always agrees",
+              "instruction": "safed never changes; کالا (kālā) always agrees",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU CONTRAST: **سفید** never changes; **کالا** always agrees]"
+              "source": "[YOU CONTRAST: *safed* never changes; **کالا** always agrees]"
             },
             {
               "kind": "prompt",
@@ -396,7 +396,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does کالا (kālā) mean, and what does it become before a feminine noun? (Black; kālī.) Is کالا (kālā)'s ultimate root Indo-European? (No — Proto-Dravidian, borrowed into Sanskrit.) Which two colors so far never change their ending? (لال (lāl) and سفید (safed).) Does خدا حافظ need a verb or an agreement ending to work as a farewell? (No — speakers use the fixed formula simply as \"goodbye,\" no conjugation required.) When choosing kaise or kaisī, whose gender decides the choice — yours, or the person you're addressing? (The person you're addressing.)"
+              "text": "What does کالا (kālā) mean, and what does it become before a feminine noun? (Black; kālī.) Is کالا (kālā)'s ultimate root Indo-European? (No — Proto-Dravidian, borrowed into Sanskrit.) Which two colors so far never change their ending? (لال (lāl) and safed.) Does khudā hāfiz need a verb or an agreement ending to work as a farewell? (No — speakers use the fixed formula simply as \"goodbye,\" no conjugation required.) When choosing kaise or kaisī, whose gender decides the choice — yours, or the person you're addressing? (The person you're addressing.)"
             },
             {
               "kind": "speech",
@@ -419,7 +419,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6eedde6e548e1803",
+      "sourceHash": "fnv1a64:149338884f971851",
       "notice": null,
       "blocks": [
         {
@@ -450,7 +450,7 @@
             },
             {
               "kind": "speech",
-              "text": "میرا کوٹ نیلا ہے۔ — merā koṭ nīlā hai. — \"My coat is blue.\""
+              "text": "merā koṭ nīlā hai. — \"My coat is blue.\""
             },
             {
               "kind": "speech",
@@ -469,7 +469,7 @@
             },
             {
               "kind": "speech",
-              "text": "But Sanskrit's related word nīlī, \"the indigo plant,\" did not stop there. It travelled forward: into Persian nīla, then Arabic an-nīl (\"the indigo\"), then Portuguese anil, and finally into English as aniline, the name nineteenth-century chemists gave the dye compound first found in indigo. سفید (safed) reached English through a shared PIE root, inherited by both languages independently. نیلا (nīlā)'s route to English is a completely different shape: one word, borrowed forward through four languages, arriving in English only a couple of centuries ago."
+              "text": "But Sanskrit's related word nīlī, \"the indigo plant,\" did not stop there. It travelled forward: into Persian nīla, then Arabic an-nīl (\"the indigo\"), then Portuguese anil, and finally into English as aniline, the name nineteenth-century chemists gave the dye compound first found in indigo. safed reached English through a shared PIE root, inherited by both languages independently. نیلا (nīlā)'s route to English is a completely different shape: one word, borrowed forward through four languages, arriving in English only a couple of centuries ago."
             }
           ]
         },
@@ -490,11 +490,11 @@
             {
               "kind": "prompt",
               "action": "SORT",
-              "instruction": "agrees — کالا (kālā), نیلا (nīlā); never changes — لال (lāl), سفید (safed)",
+              "instruction": "agrees — کالا (kālā), نیلا (nīlā); never changes — lāl, safed",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SORT: agrees — **کالا, نیلا**; never changes — **لال, سفید**]"
+              "source": "[YOU SORT: agrees — **کالا, نیلا**; never changes — *lāl, safed*]"
             },
             {
               "kind": "prompt",
@@ -508,11 +508,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all four colors — لال (lāl), سفید (safed), کالا (kālā), نیلا (nīlā) — with کوٹ or ٹوپی",
+              "instruction": "all four colors — lāl, safed, kālā, nīlā — with koṭ or ṭopī",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all four colors — **لال, سفید, کالا, نیلا** — with **کوٹ** or **ٹوپی**]"
+              "source": "[YOU SAY: all four colors — *lāl, safed, kālā, nīlā* — with *koṭ* or *ṭopī*]"
             }
           ]
         },
@@ -529,7 +529,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which two of this chapter's four colors agree with the noun they describe, and which two never change? (Agree: کالا (kālā), نیلا (nīlā). Never change: لال (lāl), سفید (safed).) What English word ultimately comes from the same root as نیلا (nīlā)'s cousin nīlī? (Aniline.) Recall the phrase that closed a first introduction with a pleased response — say it now. (آپ سے مل کر خوشی ہوئی.) Does Urdu spell خدا حافظ joined, the way Persian does, or spaced? (Spaced.) Reading میرا نام... ہے right to left changes which direction — the script's, or the spoken word order's? (Only the script's.)"
+              "text": "Which two of this chapter's four colors agree with the noun they describe, and which two never change? (Agree: کالا (kālā), نیلا (nīlā). Never change: لال (lāl), safed.) What English word ultimately comes from the same root as نیلا (nīlā)'s cousin nīlī? (Aniline.) Recall the phrase that closed a first introduction with a pleased response — say it now. (آپ سے مل کر khushī huī.) Does Urdu spell khudā hāfiz joined, the way Persian does, or spaced? (Spaced.) Reading میرا نام... ہے right to left changes which direction — the script's, or the spoken word order's? (Only the script's.)"
             },
             {
               "kind": "speech",

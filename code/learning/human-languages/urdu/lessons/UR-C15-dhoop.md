@@ -37,7 +37,7 @@ reviews_of: [UR-C15-barish]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-BARISH, UR-ETYMON-BARISH-PERSIAN] -->
 
-[PAUSE 2s] Recall **بارش** — rain, Persian, and a dead end. This word
+[PAUSE 2s] Recall *bārish* — rain, Persian, and a dead end. This word
 means the opposite in the sky, and reaches a dead end from the other
 side of the book's two layers.
 
@@ -46,7 +46,7 @@ side of the book's two layers.
 
 > **دھوپ** — *dhūp* — **sunshine**
 
-> **آج دھوپ ہے۔** — *āj dhūp hai.* — "There's sunshine today."
+> *āj dhūp hai.* — "There's sunshine today."
 
 **دھوپ** is feminine.
 
@@ -54,27 +54,27 @@ side of the book's two layers.
 <!-- hl-knowledge: introduces=[UR-ETYMON-DHOOP-PRAKRIT]; assesses=[UR-LEX-DHOOP] -->
 
 **دھوپ** is inherited from Ashokan Prakrit **\*dhuppā**, "sunshine." No
-further root is documented behind that. **بارش** hit its dead end on the
+further root is documented behind that. *bārish* hit its dead end on the
 Persian side; **دھوپ** hits the same kind of honest wall on the inherited
-side — the same shape **کان** and **روٹی** already showed, not every
+side — the same shape **کان** and *roṭī* already showed, not every
 inherited word traces back to a tidy Indo-European root.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-DHOOP, UR-ETYMON-DHOOP-PRAKRIT, UR-LEX-BARISH] -->
 
 - [YOU SAY: **dhūp** — sunshine; then **āj dhūp hai**]
-- [YOU CONTRAST: **بارش**, Persian dead end; **دھوپ**, inherited dead end
+- [YOU CONTRAST: *bārish*, Persian dead end; **دھوپ**, inherited dead end
   — opposite weather, same kind of etymological wall]
 - [YOU NAME: two other inherited dead ends already met — **کان** and
-  **روٹی**]
-- [YOU SAY: **آج بارش ہے یا دھوپ؟** — "Is it rain today, or sunshine?"]
+  *roṭī*]
+- [YOU SAY: *āj bārish hai yā dhūp?* — "Is it rain today, or sunshine?"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-DHOOP, UR-ETYMON-DHOOP-PRAKRIT, UR-SCRIPT-KHUDA-HAFIZ-SPACED, UR-LEX-AANKH] -->
 
 [PAUSE 3s] What does **دھوپ** mean, and is it masculine or feminine?
 (**Sunshine**; **feminine**.) Is **دھوپ**'s root documented past Prakrit?
-(**No — a dead end.**) Recall whether **خدا حافظ** is written as one word
+(**No — a dead end.**) Recall whether *khudā hāfiz* is written as one word
 or two in Urdu spelling. (**Two, spaced, unlike Persian's joined
 form.**) What does **آنکھ** mean? (**Eye.**)
 

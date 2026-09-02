@@ -14,7 +14,7 @@ You'll want to know first — one word.
 پانی (pānī) is masculine.
 
 Grammar Lens: naming what you'd take.
-میں پانی لیتا ہوں۔ — maiṅ pānī letā hūṅ. — I take/get water (man speaking). میں پانی لیتی ہوں۔ — maiṅ pānī letī hūṅ. — I take/get water (woman speaking).
+maiṅ pānī letā hūṅ. — I take/get water (man speaking). maiṅ pānī letī hūṅ. — I take/get water (woman speaking).
 لینا's stem le- slots a noun in front of it the same way any transitive verb does. You already hold the whole verb; پانی (pānī) is the first noun you have had to put in front of it.
 
 The word, taken apart — a drink-word, not a water-word.
@@ -49,10 +49,10 @@ You'll want to know first — one word.
 چائے (chāy) is feminine.
 
 The letters in this word.
-From the right edge: چ ch, already yours from sochnā and samajhnā; then ا long ā; then ئ, hamza-ye, the vowel-glide letter بھائی introduced; then ے, broad final e from kaise. چائے (chāy)'s ئ does the same job it did in بھائی: keeping ā and the vowel after it from colliding.
+From the right edge: چ ch, already yours from sochnā and samajhnā; then ا long ā; then ئ, hamza-ye, the vowel-glide letter bhāī introduced; then ے, broad final e from kaise. چائے (chāy)'s ئ does the same job it did in bhāī: keeping ā and the vowel after it from colliding.
 
-The word, taken apart — the same road as خدا and حافظ (hāfiz).
-چائے is borrowed from Classical Persian چای (chāy), which traces back to Northern Chinese chá, carried overland through Central Asia into Persian before Urdu ever had it. That is the same road خدا and دل travelled in earlier chapters — Persian into Urdu — just with a Chinese starting point this time instead of one further west.
+The word, taken apart — the same road as khudā and hāfiz (hāfiz).
+چائے is borrowed from Classical Persian چای (chāy), which traces back to Northern Chinese chá, carried overland through Central Asia into Persian before Urdu ever had it. That is the same road khudā and dil travelled in earlier chapters — Persian into Urdu — just with a Chinese starting point this time instead of one further west.
 Tea that instead reached Europe by sea kept a different form, from southern coastal Chinese, which is why English says tea and French says thé instead of chai. One drink, two words, sorted by whether it travelled by land or by water.
 
 Guided Practice.
@@ -67,7 +67,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which three languages did چائے (chāy) pass through, in order? (Chinese, then Persian, then Urdu.) Why does English say "tea" instead of "chai"? (It arrived by sea, carrying a different Chinese form.) Which earlier Urdu word already used the hamza-ye letter? (بھائی.)
+Which three languages did چائے (chāy) pass through, in order? (Chinese, then Persian, then Urdu.) Why does English say "tea" instead of "chai"? (It arrived by sea, carrying a different Chinese form.) Which earlier Urdu word already used the hamza-ye letter? (bhāī.)
 Sources: Wiktionary: چائے (chāy).
 
 
@@ -86,7 +86,7 @@ You'll want to know first — one word.
 دودھ (dūdh) is masculine.
 
 The letters in this word.
-From the right edge: د d, then و carrying long ū, then د again, then ھ. دھ extends the two-eyed he to a sixth base letter: it has now aspirated ج، ٹ، ڑ، چ، ک, and here it aspirates د, giving dh.
+From the right edge: د d, then و carrying long ū, then د again, then ھ. دھ extends the two-eyed he to a sixth base letter: it has now aspirated jīm, ṭe, ṛe, che, kāf, and here it aspirates د, giving dh.
 
 The word, taken apart — the cousin you'd guess wrong.
 dūdh continues Sanskrit dugdhá, literally "milked," from Proto-Indo-European dʰewgʰ-, "to be fit, to yield, to produce." That root also gives Sanskrit duh-, "to milk" — the verb sitting directly under this noun.
@@ -95,7 +95,7 @@ Here is the trap. English dough looks like the obvious match, and it is not: dou
 Guided Practice.
 [your turn — say: dūdh — milk; then merā dūdh]
 [pause 8 seconds for the answer]
-[your turn — count: six letters now carrying ھ — ج، ٹ، ڑ، چ، ک، د]
+[your turn — count: six letters now carrying ھ — jīm, ṭe, ṛe, che, kāf, dāl]
 [pause 8 seconds for the answer]
 [your turn — reject: دودھ (dūdh) is NOT related to English dough]
 [pause 8 seconds for the answer]
@@ -111,11 +111,11 @@ Which English word is the REAL cousin of دودھ (dūdh) — dough, or doughty?
 
 
 Lesson 4 of 4.
-روٹی (roṭī) — "bread," and پسند closes the chapter.
+روٹی (roṭī) — "bread," and pasand closes the chapter.
 
 Warm-up.
 [pause 2 seconds]
-Three drinks so far: pānī, chāy, dūdh — and recall دودھ's real English cousin was doughty, not the tempting dough. This chapter's fourth and final word is the one you would eat, not drink.
+Three drinks so far: pānī, chāy, dūdh — and recall dūdh's real English cousin was doughty, not the tempting dough. This chapter's fourth and final word is the one you would eat, not drink.
 
 You'll want to know first — one word.
 روٹی — roṭī — bread.
@@ -123,10 +123,10 @@ You'll want to know first — one word.
 روٹی (roṭī) is feminine.
 
 The word, taken apart — another honest dead end.
-roṭī continues Sauraseni Prakrit roṭṭa-, from Sanskrit roṭikā, "a kind of bread." That word is built inside Sanskrit itself, on a root meaning "to strike, to crush" — the pounding and rolling that turns grain into flatbread. The trail stops there: no proposed Proto-Indo-European ancestor, no English cousin. کان and پڑھنا hit the same honest wall earlier in this book. Not every word gets a Greek or Latin relative, and saying so plainly is better than inventing one.
+roṭī continues Sauraseni Prakrit roṭṭa-, from Sanskrit roṭikā, "a kind of bread." That word is built inside Sanskrit itself, on a root meaning "to strike, to crush" — the pounding and rolling that turns grain into flatbread. The trail stops there: no proposed Proto-Indo-European ancestor, no English cousin. کان and paṛhnā hit the same honest wall earlier in this book. Not every word gets a Greek or Latin relative, and saying so plainly is better than inventing one.
 
-Grammar Lens: مجھے... پسند ہے, one more time.
-مجھے روٹی پسند ہے۔ — mujhe roṭī pasand hai. — I like bread.
+Grammar Lens: mujhe... pasand ہے, one more time.
+mujhe roṭī pasand hai. — I like bread.
 The dative-experiencer frame from Chapter 8 was built for -nā infinitives — paṛhnā, likhnā. It works just as well for a plain noun: whatever pleases you sits in the subject slot, and ہے agrees with it, not with you.
 
 Guided Practice.
@@ -141,7 +141,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Does روٹی (roṭī) have a secure English cousin? (No — the trail stops at Sanskrit.) Of this chapter's four foods, which one is the Persian loan? (چائے (chāy).) Say "I like bread" using the frame from Chapter 8.
+Does روٹی (roṭī) have a secure English cousin? (No — the trail stops at Sanskrit.) Of this chapter's four foods, which one is the Persian loan? (chāʾe.) Say "I like bread" using the frame from Chapter 8.
 Sources: Wiktionary: روٹی (roṭī).
 [question — say your answer, then pause 10 seconds]
 Type the Urdu sentence 'I like bread.'

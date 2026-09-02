@@ -10,7 +10,8 @@
 import { describe, it, expect } from "vitest";
 import { parseLesson } from "../src/parse.js";
 import { measureScriptClosure } from "../src/script-closure.js";
-import { loadEverything } from "../src/loader.js";
+import { measureScriptRamp } from "../src/ramp.js";
+import { loadEverything, loadChapterPolicy } from "../src/loader.js";
 
 // TAMIL LETTER KA, MA, NA; TAMIL SIGN VIRAMA.
 const KA = "க";
@@ -197,18 +198,58 @@ describe("the real corpus", () => {
     expect(report.tracks.map((t) => t.language)).toContain("tamil");
   });
 
-  it("finds far more closure debt than the pace budget ever could", () => {
-    // The point of the whole module. HL08's glyph budget flags tens of lessons
-    // for arriving too fast; closure flags hundreds for arriving untaught, and
-    // a track can satisfy the budget perfectly while teaching nothing.
-    expect(report.summary.violations).toBeGreaterThan(500);
-    // Was `toBeGreaterThan(5)`, asserting the debt was large. It has stopped being
-    // a fact about the corpus and started being a fact about how much of it has
-    // been fixed: the Chinese, Japanese and Gujarati script tranches each removed
-    // a track, 8 -> 5, and the floor failed. Debt assertions belong the other way
-    // up, so this is now a CEILING on the same footing as the forward-reference
-    // one — it may fall, never grow, and whoever raises it writes down why.
-    // `violations` above still carries this test's stated point on its own.
+  it("finds closure debt the pace budget structurally cannot see", () => {
+    // The point of the whole module -- and it is a RELATIVE claim about two
+    // instruments, not an absolute claim about a number. HL08's glyph budget
+    // flags a lesson for arriving too FAST; closure flags it for arriving
+    // UNTAUGHT. A track can satisfy the pace budget perfectly while teaching no
+    // letters at all, and that is precisely the lesson closure has to catch.
+    //
+    // This assertion was a literal FLOOR on the debt twice, and both times it
+    // failed BECAUSE THE WORK SUCCEEDED: `toBeGreaterThan(5)` broke when the
+    // Chinese, Japanese and Gujarati tranches removed whole tracks, and
+    // `toBeGreaterThan(500)` broke when the Urdu prose pass (HL-C242) took the
+    // corpus 518 -> 481. A floor on debt is the wrong shape for a programme
+    // whose goal is zero debt, and with many tracks reducing closure at once a
+    // third literal would only buy a third re-pin of a shared file.
+    //
+    // So the property is stated as a relation instead, and it holds at 481, at
+    // 1, and -- explicitly -- at 0.
+    const paceBudget = measureScriptRamp(lessons, loadChapterPolicy());
+    const flaggedByPace = new Set(paceBudget.lessons.map((v) => v.lessonId));
+    const closure = report.summary.violations;
+
+    if (closure > 0) {
+      // While ANY closure debt exists, some of it must sit in a lesson the pace
+      // budget calls gentle. That is the whole reason this module was written,
+      // and it cannot be satisfied by the budget's own findings.
+      const invisibleToPace = report.violations.filter((v) => !flaggedByPace.has(v.lessonId));
+      expect(invisibleToPace.length).toBeGreaterThan(0);
+    } else {
+      // Debt paid in full. This branch exists so that success reads as success
+      // rather than as a broken test -- but it still has to prove the corpus
+      // was genuinely measured, not that the module returned an empty report.
+      expect(report.tracks.some((t) => t.shownGlyphs > 0)).toBe(true);
+    }
+
+    // NOT SILENCE, in either branch. If `measureScriptClosure` broke and
+    // reported nothing, every line above could pass vacuously; these fail.
+    // Real tracks, real letters taught somewhere, and a violations list whose
+    // length agrees with the summary that is derived from it.
+    expect(report.summary.tracksWithScript).toBeGreaterThanOrEqual(10);
+    expect(report.tracks.reduce((n, t) => n + t.shownGlyphs, 0)).toBeGreaterThan(0);
+    expect(report.tracks.reduce((n, t) => n + t.taughtGlyphs, 0)).toBeGreaterThan(0);
+    expect(report.violations).toHaveLength(closure);
+    // And the summary must be reconstructible from the per-track rows it was
+    // derived from. This is the check that catches a module quietly
+    // UNDER-reporting -- the one failure a relative property cannot see on its
+    // own, because a halved debt still contains lessons the pace budget misses.
+    // Two independent paths to the same number, neither of them a literal.
+    expect(closure).toBe(report.tracks.reduce((n, t) => n + t.violations, 0));
+
+    // A CEILING, which is the right shape for debt and needs no maintenance as
+    // it falls: it may drop to 0 without anyone editing this file. Was
+    // `toBeGreaterThan(5)` for the same wrong reason as the assertion above.
     expect(report.summary.tracksTeachingNothing).toBeLessThanOrEqual(5); // 8 -> 5: chinese (HL-C209), japanese (HL-C211), gujarati (HL-C215)
   });
 

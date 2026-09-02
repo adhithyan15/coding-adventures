@@ -37,7 +37,7 @@ reviews_of: [UR-C03-aap-tum-tu, UR-C02-mera-naam]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-AAP-TUM-TU, UR-PRAGMATICS-YOU-REGISTER] -->
 
-[PAUSE 2s] Which “you” opens a respectful first meeting? (**آپ**, *āp*.) Now
+[PAUSE 2s] Which “you” opens a respectful first meeting? (*āp*.) Now
 add the question word.
 
 ## You'll want to know first — کیا
@@ -46,7 +46,8 @@ add the question word.
 > **کیا** — *kyā* — **what**
 
 Read right to left: **ک** *k*, **ی** supplying the *y* glide here, then **ا**
-long *ā*. The same **ی** carried long *ī* in **جی** and **نہیں**. Its job
+long *ā*. The same **ی** carried long *ī* in *jī* and *nahī̃* — words you say
+but cannot spell yet. Its job
 depends on the word; here the learned shape is *kyā*.
 
 ## The word, taken apart
@@ -69,5 +70,5 @@ you must read here.
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KYA, UR-SCRIPT-KYA, UR-ETYMON-KYA-QUESTION-FAMILY] -->
 <!-- hl-activity: {"id":"UR-C03-kya-what","kind":"text","assesses":["UR-LEX-KYA"],"prompt":"Type Urdu for 'what'.","answer":"کیا","accepted":["kya","kyā"],"feedback":{"correct":"Right: کیا is kyā, 'what.'","incorrect":"The Urdu word is کیا — kyā."},"response_seconds":8} -->
 
-Which letter acts as *y* here but as long *ī* in **جی**? (**ی**.) What does
+Which letter acts as *y* here but as long *ī* in *jī*? (**ی**.) What does
 **کیا** mean? (**What**.)

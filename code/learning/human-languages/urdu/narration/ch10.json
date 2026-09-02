@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Four Words on the Face",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1632ce3078cbdd02",
+  "sourceHash": "fnv1a64:f53e1edfd3d3198c",
   "lessons": [
     {
       "id": "UR-C10-kaan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28aba40e2f673778",
+      "sourceHash": "fnv1a64:d1bdbc9ad25ec370",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "کان (kān) is masculine, so merā keeps the form you already know from بھائی and خاندان."
+              "text": "کان (kān) is masculine, so merā keeps the form you already know from bhāī and khāndān."
             }
           ]
         },
@@ -65,11 +65,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "kān continues Sanskrit karṇa by way of Prakrit and Apabhramsa kaṇṇa. That much is solid. Where karṇa itself comes from is not: the trail runs out inside Indo-Aryan, with only a loose, unconfirmed suggestion linking it to Persian کر (kar), \"deaf.\" No English cousin, no settled Indo-European root — the same honest dead end پڑھنا's paṭh- hit two chapters ago."
+              "text": "kān continues Sanskrit karṇa by way of Prakrit and Apabhramsa kaṇṇa. That much is solid. Where karṇa itself comes from is not: the trail runs out inside Indo-Aryan, with only a loose, unconfirmed suggestion linking it to Persian کر (kar), \"deaf.\" No English cousin, no settled Indo-European root — the same honest dead end paṛhnā's paṭh- hit two chapters ago."
             },
             {
               "kind": "speech",
-              "text": "Notice the pattern from last chapter still holds: کان (kān) is inherited, straight from Sanskrit, the same road as بھائی and بہن. خاندان, the word that closed that chapter, was Persian instead — the body's own words stay native even where their history goes quiet."
+              "text": "Notice the pattern from last chapter still holds: کان (kān) is inherited, straight from Sanskrit, the same road as bhāī and bahan. khāndān, the word that closed that chapter, was Persian instead — the body's own words stay native even where their history goes quiet."
             }
           ]
         },
@@ -143,7 +143,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:783c8604dd5f5f22",
+      "sourceHash": "fnv1a64:873115c134810e46",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -209,7 +209,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "nāk continues Sauraseni Prakrit ṇakka, from Proto-Indo-Iranian náHs, from Proto-Indo-European néh₂s, \"nose.\" English nose comes from that very root. Where کان (kān)'s ancestry ran out unanswered — recall karṇa's own origin was left unsettled last lesson — ناک's does not: nāk and nose are genuine cousins, joining بھائی and brother as this book's settled Indo-European matches."
+              "text": "nāk continues Sauraseni Prakrit ṇakka, from Proto-Indo-Iranian náHs, from Proto-Indo-European néh₂s, \"nose.\" English nose comes from that very root. Where کان (kān)'s ancestry ran out unanswered — recall karṇa's own origin was left unsettled last lesson — ناک's does not: nāk and nose are genuine cousins, joining bhāī and brother as this book's settled Indo-European matches."
             }
           ]
         },
@@ -311,7 +311,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7ceb4a20534b429b",
+      "sourceHash": "fnv1a64:8757547df3558a4f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -366,7 +366,7 @@
             },
             {
               "kind": "speech",
-              "text": "کھ extends the two-eyed he to a fifth base letter. It has already aspirated ج in samajh-, ٹ in ṭhīk, ڑ in paṛh-, and چ in pūchh-; here it does the same job to ک, giving kh."
+              "text": "کھ extends the two-eyed he to a fifth base letter. It has already aspirated jīm in samajh-, ṭe in ṭhīk, ṛe in paṛh-, and che in pūchh-; here it does the same job to ک, giving kh."
             },
             {
               "kind": "speech",
@@ -411,11 +411,11 @@
             {
               "kind": "prompt",
               "action": "COUNT",
-              "instruction": "five letters now carrying ھ — ج، ٹ، ڑ، چ، ک",
+              "instruction": "five letters now carrying ھ — jīm, ṭe, ṛe, che, kāf",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU COUNT: five letters now carrying **ھ** — **ج، ٹ، ڑ، چ، ک**]"
+              "source": "[YOU COUNT: five letters now carrying **ھ** — *jīm, ṭe, ṛe, che, kāf*]"
             },
             {
               "kind": "prompt",
@@ -441,7 +441,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which letter does کھ newly pair the two-eyed he with, and name two letters it already paired with? (ک; any two of ج، ٹ، ڑ، چ.) What job does ن do in آنکھ (āṅkh)? (Marks the آ as nasal — it is not its own consonant.) Is آنکھ (āṅkh)'s English cousin settled? (Yes — eye.)"
+              "text": "Which letter does کھ newly pair the two-eyed he with, and name two letters it already paired with? (ک; any two of jīm، ṭe، ṛe، che.) What job does ن do in آنکھ (āṅkh)? (Marks the آ as nasal — it is not its own consonant.) Is آنکھ (āṅkh)'s English cousin settled? (Yes — eye.)"
             },
             {
               "kind": "speech",
@@ -454,7 +454,7 @@
     {
       "id": "UR-C10-munh",
       "sequence": 410,
-      "title": "منہ (muṅh) — \"mouth,\" and the نون آنکھ (āṅkh) already used without explaining",
+      "title": "منہ (muṅh) — \"mouth,\" and the نون āṅkh already used without explaining",
       "headword": "منہ",
       "romanization": "muṅh",
       "gloss": "mouth — the plain نون that already nasalized آنکھ, unglossed, and a Greek word possibly hiding behind the same root",
@@ -464,7 +464,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:805c1d108f8b6eae",
+      "sourceHash": "fnv1a64:9cf162d33c9c328c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -489,7 +489,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three face words: kān, nāk, āṅkh — recall that کان and ناک shared the same three letters, reversed. One more word closes the chapter, and it finally explains something آنکھ already did."
+              "text": "Three face words: kān, nāk, āṅkh — recall that کان and ناک shared the same three letters, reversed. One more word closes the chapter, and it finally explains something āṅkh already did."
             }
           ]
         },
@@ -523,11 +523,11 @@
             },
             {
               "kind": "speech",
-              "text": "That middle ن does the same job it did in آنکھ (āṅkh), unglossed at the time: it marks the vowel before it as nasal, not a separate n sound. Say muṅh by nasalizing the u, with no clean n in between."
+              "text": "That middle ن does the same job it did in āṅkh, unglossed at the time: it marks the vowel before it as nasal, not a separate n sound. Say muṅh by nasalizing the u, with no clean n in between."
             },
             {
               "kind": "speech",
-              "text": "Keep this apart from میں maiṅ and ہوں hūṅ, whose nasal ending is written with a different letter entirely: ں, nūn ghunna, a dedicated nasalization mark. منہ (muṅh) and آنکھ (āṅkh) nasalize with a plain ن doing double duty; میں and ہوں nasalize with ں, a letter built for exactly that job and nothing else. Same sound, two different letters, depending on which word you are in."
+              "text": "Keep this apart from میں maiṅ and ہوں hūṅ, whose nasal ending is written with a different letter entirely: ں, nūn ghunna, a dedicated nasalization mark. منہ (muṅh) and āṅkh nasalize with a plain ن doing double duty; میں and ہوں nasalize with ں, a letter built for exactly that job and nothing else. Same sound, two different letters, depending on which word you are in."
             }
           ]
         },
@@ -538,7 +538,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "muṅh continues Sanskrit múkha, \"mouth, face.\" One proposal, from the Sanskrit etymologist Manfred Mayrhofer, ties it to a Proto-Indo-European gesture-root mu-, \"pressed lips\" — the same root that would sit behind Greek mŷthos (\"word,\" behind English myth) and German Maul, \"mouth.\" Mayrhofer himself calls a non-Indo-European origin less likely but does not rule it out. Hold this one the way you held بہن's link to bhaj- — a real proposal, not a verdict."
+              "text": "muṅh continues Sanskrit múkha, \"mouth, face.\" One proposal, from the Sanskrit etymologist Manfred Mayrhofer, ties it to a Proto-Indo-European gesture-root mu-, \"pressed lips\" — the same root that would sit behind Greek mŷthos (\"word,\" behind English myth) and German Maul, \"mouth.\" Mayrhofer himself calls a non-Indo-European origin less likely but does not rule it out. Hold this one the way you held bahan's link to bhaj- — a real proposal, not a verdict."
             }
           ]
         },
@@ -598,7 +598,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which earlier word in this chapter used a plain نون for nasalization the same way منہ (muṅh) does? (آنکھ (āṅkh).) Which letter does میں use instead? (ں, nūn ghunna.) Is منہ (muṅh)'s link to Greek mŷthos certain? (No — a proposal, held loosely.)"
+              "text": "Which earlier word in this chapter used a plain نون for nasalization the same way منہ (muṅh) does? (āṅkh.) Which letter does میں use instead? (ں, nūn ghunna.) Is منہ (muṅh)'s link to Greek mŷthos certain? (No — a proposal, held loosely.)"
             },
             {
               "kind": "speech",
@@ -614,13 +614,12 @@
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "آنکھ",
-                "aankh",
-                "āṅkh"
+                "āṅkh",
+                "aankh"
               ],
               "feedback": {
-                "correct": "Right: آنکھ nasalized its آ with a plain نون, exactly like منہ.",
-                "incorrect": "It was آنکھ — āṅkh."
+                "correct": "Right: āṅkh nasalized its آ with a plain نون, exactly like منہ.",
+                "incorrect": "It was āṅkh."
               }
             }
           ]

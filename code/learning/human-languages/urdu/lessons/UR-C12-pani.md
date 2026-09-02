@@ -53,9 +53,9 @@ chapters back, gets its first real use since it was taught.
 ## Grammar Lens: naming what you'd take
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-LENA, UR-ETYMON-LENA-TAKE, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-LEX-PANI] -->
 
-> **میں پانی لیتا ہوں۔** — *maiṅ pānī letā hūṅ.* — I take/get water (man
+> *maiṅ pānī letā hūṅ.* — I take/get water (man
 > speaking).
-> **میں پانی لیتی ہوں۔** — *maiṅ pānī letī hūṅ.* — I take/get water
+> *maiṅ pānī letī hūṅ.* — I take/get water
 > (woman speaking).
 
 **لینا**'s stem **le-** slots a noun in front of it the same way any
