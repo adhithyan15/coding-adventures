@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Water, Tea, Milk, Bread",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:db08ec16c24f2790",
+  "sourceHash": "fnv1a64:4b66b6362b1e06d9",
   "lessons": [
     {
       "id": "UR-C12-pani",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1feffbb79d00e6f8",
+      "sourceHash": "fnv1a64:5618dfb9620d7678",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "میں پانی لیتا ہوں۔ — maiṅ pānī letā hūṅ. — I take/get water (man speaking). میں پانی لیتی ہوں۔ — maiṅ pānī letī hūṅ. — I take/get water (woman speaking)."
+              "text": "maiṅ pānī letā hūṅ. — I take/get water (man speaking). maiṅ pānī letī hūṅ. — I take/get water (woman speaking)."
             },
             {
               "kind": "speech",
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f2c43f8f91dd8ad1",
+      "sourceHash": "fnv1a64:68319c21bd1ab3eb",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -205,18 +205,18 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "From the right edge: چ ch, already yours from sochnā and samajhnā; then ا long ā; then ئ, hamza-ye, the vowel-glide letter بھائی introduced; then ے, broad final e from kaise. چائے (chāy)'s ئ does the same job it did in بھائی: keeping ā and the vowel after it from colliding."
+              "text": "From the right edge: چ ch, already yours from sochnā and samajhnā; then ا long ā; then ئ, hamza-ye, the vowel-glide letter bhāī introduced; then ے, broad final e from kaise. چائے (chāy)'s ئ does the same job it did in bhāī: keeping ā and the vowel after it from colliding."
             }
           ]
         },
         {
           "index": 3,
           "type": "etymology",
-          "title": "The word, taken apart — the same road as خدا and حافظ (hāfiz)",
+          "title": "The word, taken apart — the same road as khudā and hāfiz (hāfiz)",
           "segments": [
             {
               "kind": "speech",
-              "text": "چائے is borrowed from Classical Persian چای (chāy), which traces back to Northern Chinese chá, carried overland through Central Asia into Persian before Urdu ever had it. That is the same road خدا and دل travelled in earlier chapters — Persian into Urdu — just with a Chinese starting point this time instead of one further west."
+              "text": "چائے is borrowed from Classical Persian چای (chāy), which traces back to Northern Chinese chá, carried overland through Central Asia into Persian before Urdu ever had it. That is the same road khudā and dil travelled in earlier chapters — Persian into Urdu — just with a Chinese starting point this time instead of one further west."
             },
             {
               "kind": "speech",
@@ -280,7 +280,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which three languages did چائے (chāy) pass through, in order? (Chinese, then Persian, then Urdu.) Why does English say \"tea\" instead of \"chai\"? (It arrived by sea, carrying a different Chinese form.) Which earlier Urdu word already used the hamza-ye letter? (بھائی.)"
+              "text": "Which three languages did چائے (chāy) pass through, in order? (Chinese, then Persian, then Urdu.) Why does English say \"tea\" instead of \"chai\"? (It arrived by sea, carrying a different Chinese form.) Which earlier Urdu word already used the hamza-ye letter? (bhāī.)"
             },
             {
               "kind": "speech",
@@ -303,7 +303,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9cbb9d36416b6317",
+      "sourceHash": "fnv1a64:2b416fc057b0a6ed",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -358,7 +358,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "From the right edge: د d, then و carrying long ū, then د again, then ھ. دھ extends the two-eyed he to a sixth base letter: it has now aspirated ج، ٹ، ڑ، چ، ک, and here it aspirates د, giving dh."
+              "text": "From the right edge: د d, then و carrying long ū, then د again, then ھ. دھ extends the two-eyed he to a sixth base letter: it has now aspirated jīm, ṭe, ṛe, che, kāf, and here it aspirates د, giving dh."
             }
           ]
         },
@@ -394,11 +394,11 @@
             {
               "kind": "prompt",
               "action": "COUNT",
-              "instruction": "six letters now carrying ھ — ج، ٹ، ڑ، چ، ک، د",
+              "instruction": "six letters now carrying ھ — jīm, ṭe, ṛe, che, kāf, dāl",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU COUNT: six letters now carrying **ھ** — **ج، ٹ، ڑ، چ، ک، د**]"
+              "source": "[YOU COUNT: six letters now carrying **ھ** — *jīm, ṭe, ṛe, che, kāf, dāl*]"
             },
             {
               "kind": "prompt",
@@ -464,7 +464,7 @@
     {
       "id": "UR-C12-roti",
       "sequence": 460,
-      "title": "روٹی (roṭī) — \"bread,\" and پسند closes the chapter",
+      "title": "روٹی (roṭī) — \"bread,\" and pasand closes the chapter",
       "headword": "روٹی",
       "romanization": "roṭī",
       "gloss": "bread — an honest dead end, and پسند put back to work on everything this chapter taught",
@@ -474,7 +474,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7872a4c93be0619b",
+      "sourceHash": "fnv1a64:3915c83964475f79",
       "notice": null,
       "blocks": [
         {
@@ -490,7 +490,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three drinks so far: pānī, chāy, dūdh — and recall دودھ's real English cousin was doughty, not the tempting dough. This chapter's fourth and final word is the one you would eat, not drink."
+              "text": "Three drinks so far: pānī, chāy, dūdh — and recall dūdh's real English cousin was doughty, not the tempting dough. This chapter's fourth and final word is the one you would eat, not drink."
             }
           ]
         },
@@ -520,18 +520,18 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "roṭī continues Sauraseni Prakrit roṭṭa-, from Sanskrit roṭikā, \"a kind of bread.\" That word is built inside Sanskrit itself, on a root meaning \"to strike, to crush\" — the pounding and rolling that turns grain into flatbread. The trail stops there: no proposed Proto-Indo-European ancestor, no English cousin. کان and پڑھنا hit the same honest wall earlier in this book. Not every word gets a Greek or Latin relative, and saying so plainly is better than inventing one."
+              "text": "roṭī continues Sauraseni Prakrit roṭṭa-, from Sanskrit roṭikā, \"a kind of bread.\" That word is built inside Sanskrit itself, on a root meaning \"to strike, to crush\" — the pounding and rolling that turns grain into flatbread. The trail stops there: no proposed Proto-Indo-European ancestor, no English cousin. کان and paṛhnā hit the same honest wall earlier in this book. Not every word gets a Greek or Latin relative, and saying so plainly is better than inventing one."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: مجھے... پسند ہے, one more time",
+          "title": "Grammar Lens: mujhe... pasand ہے, one more time",
           "segments": [
             {
               "kind": "speech",
-              "text": "مجھے روٹی پسند ہے۔ — mujhe roṭī pasand hai. — I like bread."
+              "text": "mujhe roṭī pasand hai. — I like bread."
             },
             {
               "kind": "speech",
@@ -595,7 +595,7 @@
             },
             {
               "kind": "speech",
-              "text": "Does روٹی (roṭī) have a secure English cousin? (No — the trail stops at Sanskrit.) Of this chapter's four foods, which one is the Persian loan? (چائے (chāy).) Say \"I like bread\" using the frame from Chapter 8."
+              "text": "Does روٹی (roṭī) have a secure English cousin? (No — the trail stops at Sanskrit.) Of this chapter's four foods, which one is the Persian loan? (chāʾe.) Say \"I like bread\" using the frame from Chapter 8."
             },
             {
               "kind": "speech",
@@ -611,13 +611,12 @@
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "مجھے روٹی پسند ہے",
-                "mujhe roti pasand hai",
-                "mujhe roṭī pasand hai"
+                "mujhe roṭī pasand hai",
+                "mujhe roti pasand hai"
               ],
               "feedback": {
-                "correct": "Right: مجھے روٹی پسند ہے — روٹی is the subject, not میں.",
-                "incorrect": "Use مجھے روٹی پسند ہے — mujhe roṭī pasand hai."
+                "correct": "Right — and روٹی is the subject of that sentence, not میں.",
+                "incorrect": "Use mujhe roṭī pasand hai."
               }
             }
           ]

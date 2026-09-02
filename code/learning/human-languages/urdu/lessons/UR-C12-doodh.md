@@ -55,7 +55,7 @@ it hands the two-eyed **ھ** a sixth letter to aspirate.
 
 From the right edge: **د** *d*, then **و** carrying long *ū*, then **د**
 again, then **ھ**. **دھ** extends the two-eyed *he* to a sixth base
-letter: it has now aspirated **ج، ٹ، ڑ، چ، ک**, and here it aspirates
+letter: it has now aspirated *jīm, ṭe, ṛe, che, kāf*, and here it aspirates
 **د**, giving *dh*.
 
 ## The word, taken apart — the cousin you'd guess wrong
@@ -78,7 +78,7 @@ ancestor; bread dough does not.
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-DOODH, UR-ETYMON-DOODH-DOUGHTY, UR-SCRIPT-DO-CHASHMI-HE, UR-LEX-CHAI] -->
 
 - [YOU SAY: **dūdh** — milk; then **merā dūdh**]
-- [YOU COUNT: six letters now carrying **ھ** — **ج، ٹ، ڑ، چ، ک، د**]
+- [YOU COUNT: six letters now carrying **ھ** — *jīm, ṭe, ṛe, che, kāf, dāl*]
 - [YOU REJECT: **دودھ** is NOT related to English **dough**]
 - [YOU CONNECT: **دودھ** ← *\*dʰewgʰ-* → English **doughty**, the real
   cousin]

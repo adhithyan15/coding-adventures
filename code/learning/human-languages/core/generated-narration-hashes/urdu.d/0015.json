@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 15,
-  "sourceHash": "fnv1a64:aaac884bae67ef81",
+  "sourceHash": "fnv1a64:9be67799a10f2144",
   "lessonIds": [
     "UR-C15-barish",
     "UR-C15-dhoop",
@@ -13,7 +13,7 @@
   "drivablePrefix": 3,
   "text": "urdu/narration/ch15.txt",
   "json": "urdu/narration/ch15.json",
-  "textHash": "fnv1a64:fd5dce85fefda727",
-  "jsonHash": "fnv1a64:e59815234ae9f31e",
+  "textHash": "fnv1a64:0c742dd8a5faee67",
+  "jsonHash": "fnv1a64:542537141dfc867e",
   "findings": []
 }

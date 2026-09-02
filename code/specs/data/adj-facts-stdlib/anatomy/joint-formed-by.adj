@@ -77,4 +77,6 @@ table joint_formed_by {
     source "The atlantoaxial joint, formed by the 1st (atlas) and 2nd (axis) cervical vertebrae, is a pivot joint."
     locator "https://www.ncbi.nlm.nih.gov/books/NBK507893/"
     trust authoritative
+    cites "Examples of condyloid joints are the knuckles, formed by the distal metacarpals and proximal phalanges of the medial 4 fingers." locator "https://www.ncbi.nlm.nih.gov/books/NBK507893/"
+    cites "A saddle joint is an articulation between 2 saddle-shaped bones, which are concave in one direction and convex in another. This joint type is biaxial. One example is the joint formed by the trapezium and 1st metacarpal bone." locator "https://www.ncbi.nlm.nih.gov/books/NBK507893/"
 }

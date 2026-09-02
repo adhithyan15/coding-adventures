@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 1,
-  "sourceHash": "fnv1a64:2d6d888b44c53554",
+  "sourceHash": "fnv1a64:d3f7da967468a0ad",
   "lessonIds": [
     "IT-C01-ciao",
     "IT-W01-ciao-guided-copy",
@@ -18,7 +18,7 @@
   "drivablePrefix": 0,
   "text": "italian/narration/ch01.txt",
   "json": "italian/narration/ch01.json",
-  "textHash": "fnv1a64:bb656ecf5aad27da",
-  "jsonHash": "fnv1a64:280312934dc60af9",
+  "textHash": "fnv1a64:12798e3e87943da2",
+  "jsonHash": "fnv1a64:bcdda1ddb2cb008c",
   "findings": []
 }

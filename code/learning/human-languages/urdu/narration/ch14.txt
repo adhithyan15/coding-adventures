@@ -18,7 +18,7 @@ You'll want to know first — one word.
 
 The letters in this word.
 From the right edge: ق, م, ی, ض.
-ق qāf is a new letter, said with the back of the tongue drawn further back in the throat than ک kāf — in relaxed speech many speakers merge the two, but careful and formal pronunciation keeps them apart. ض zād is also new: like ظ, already known from حافظ, it represents the plain z sound in Urdu, even though Arabic once told the two letters apart. Urdu keeps both spellings without keeping the sound distinction Arabic makes.
+ق qāf is a new letter, said with the back of the tongue drawn further back in the throat than ک kāf — in relaxed speech many speakers merge the two, but careful and formal pronunciation keeps them apart. ض zād is also new: like zoʾe, already known from hāfiz, it represents the plain z sound in Urdu, even though Arabic once told the two letters apart. Urdu keeps both spellings without keeping the sound distinction Arabic makes.
 
 The word, taken apart — the same word, worn two ways.
 قمیض (qamīz) is borrowed from Classical Persian qamīs, from Arabic qamīṣ, probably from Latin camisia, from Proto-West Germanic hamiþi, from Proto-Indo-European ḱam-, "cover, clothes." That same Latin camisia also gives French chemise, borrowed straight into English as chemise. Two roads out of one Late Latin word: one east through Arabic and Persian into Urdu, one north through French into English — and both landed, centuries later, meaning a piece of clothing worn on the upper body.
@@ -26,7 +26,7 @@ The word, taken apart — the same word, worn two ways.
 Guided Practice.
 [your turn — say: qamīz — shirt; then merī qamīz nīlī hai]
 [pause 8 seconds for the answer]
-[your turn — name: ق and ض, the two new letters, and what each is close to — ک and ظ]
+[your turn — name: ق and ض, the two new letters, and what each is close to — ک and zoʾe]
 [pause 8 seconds for the answer]
 [your turn — connect: qamīz from Latin camisia becomes English chemise, two roads, one Late Latin source]
 [pause 8 seconds for the answer]
@@ -35,7 +35,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does قمیض (qamīz) mean, and is it masculine or feminine? (Shirt; feminine.) Which English word probably shares قمیض (qamīz)'s Latin source? (Chemise.) What does آپ کا نام کیا ہے؟ ask, and which word is fixed there regardless of who is asked? ("What is your name?"; کا, in this frame.) Name the two new letters in this word and one letter each is close to. (ق, close to ک; ض, close to ظ.)
+What does قمیض (qamīz) mean, and is it masculine or feminine? (Shirt; feminine.) Which English word probably shares قمیض (qamīz)'s Latin source? (Chemise.) What does آپ کا نام کیا ہے؟ ask, and which word is fixed there regardless of who is asked? ("What is your name?"; کا, in this frame.) Name the two new letters in this word and one letter each is close to. (ق, close to ک; ض, close to zoʾe.)
 Sources: Wiktionary: قمیض (qamīz), Wiktionary: chemise.
 
 
@@ -46,7 +46,7 @@ Before we start: this one needs your eyes, so it is not fully a driving lesson. 
 
 Warm-up.
 [pause 2 seconds]
-Recall قمیض (qamīz) and its long-shot cousin English chemise. This word's English cousin is even closer, and its Sanskrit cousin is a word you likely already know.
+Recall qamīz and its long-shot cousin English chemise. This word's English cousin is even closer, and its Sanskrit cousin is a word you likely already know.
 
 You'll want to know first — one word.
 جوتا — jūtā — shoe.
@@ -55,7 +55,7 @@ You'll want to know first — one word.
 
 The letters in this word.
 From the right edge: ج, و, ت, ا.
-ت te is new, and it shares its base shape with ٹ, already known from ٹھیک: the same scoop, but ت carries two dots above where ٹ carries a small raised loop instead. Two dots make it plain dental t; the loop makes it the retroflex ṭ the tongue curls back for.
+ت te is new, and it shares its base shape with ṭe, already known from ṭhīk: the same scoop, but ت carries two dots above where ṭe carries a small raised loop instead. Two dots make it plain dental t; the loop makes it the retroflex ṭ the tongue curls back for.
 
 The word, taken apart — three words, one old root.
 jūtā continues Sauraseni Prakrit jutta, "joined," from Sanskrit yukta, "joined, yoked," from Proto-Indo-European yewg-, "to yoke." That root gives English yoke directly, the wooden bar that joins two oxen. It also gives Sanskrit its own word yoga — literally "a joining, a yoking" — the same root, kept inside one language this time rather than split across two. جوتا keeps the oldest, plainest sense: a thing joined onto the foot.
@@ -63,16 +63,16 @@ jūtā continues Sauraseni Prakrit jutta, "joined," from Sanskrit yukta, "joined
 Guided Practice.
 [your turn — say: jūtā — shoe; then merā jūtā kālā hai]
 [pause 8 seconds for the answer]
-[your turn — contrast: ت, two dots, plain t; ٹ, raised loop, retroflex ṭ]
+[your turn — contrast: ت, two dots, plain t; ṭe, raised loop, retroflex ṭ]
 [pause 8 seconds for the answer]
 [your turn — connect: jūtā from yukta from PIE yewg- becomes English yoke, and becomes Sanskrit's own yoga]
 [pause 8 seconds for the answer]
-[your turn — say: نیلی قمیض (qamīz) and کالا جوتا (jūtā) together]
+[your turn — say: nīlī qamīz and کالا جوتا (jūtā) together]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does جوتا (jūtā) mean, and is it masculine or feminine? (Shoe; masculine.) Name جوتا (jūtā)'s two English-family cousins. (Yoke, and Sanskrit's own yoga.) What marks ت apart from the already-known ٹ? (Two dots above, instead of a raised loop.) When asking how someone is, does kaise/kaisī agree with your own gender or the gender of the person you're asking? (The person you're asking.) Recall ٹھیک's Hindi bridge — does it come before or after you can already read the Urdu form yourself? (After.) What line closes the take-leave dialogue this book opened early on? (خدا حافظ, spoken by both voices.)
+What does جوتا (jūtā) mean, and is it masculine or feminine? (Shoe; masculine.) Name جوتا (jūtā)'s two English-family cousins. (Yoke, and Sanskrit's own yoga.) What marks ت apart from the already-known ṭe? (Two dots above, instead of a raised loop.) When asking how someone is, does kaise/kaisī agree with your own gender or the gender of the person you're asking? (The person you're asking.) Recall ṭhīk's Hindi bridge — does it come before or after you can already read the Urdu form yourself? (After.) What line closes the take-leave dialogue this book opened early on? (khudā hāfiz, spoken by both voices.)
 Sources: Wiktionary: جوتا (jūtā), Wiktionary: yukta.
 
 
@@ -81,12 +81,12 @@ Lesson 3 of 4.
 
 Warm-up.
 [pause 2 seconds]
-Recall جوتا (jūtā), cousin of English yoke and Sanskrit yoga. This word has no such cousin behind it — but it made one of its own, going the other direction.
+Recall jūtā, cousin of English yoke and Sanskrit yoga. This word has no such cousin behind it — but it made one of its own, going the other direction.
 
 You'll want to know first — one word.
 ٹوپی — ṭopī — cap, hat.
-میری ٹوپی سفید ہے۔ — merī ṭopī safed hai. — "My cap is white."
-ٹوپی (ṭopī) is feminine, like روٹی and قمیض (qamīz).
+merī ṭopī safed hai. — "My cap is white."
+ٹوپی (ṭopī) is feminine, like روٹی and qamīz.
 
 The word, taken apart — nothing behind it, something ahead.
 ٹوپی (ṭopī) is inherited from Sauraseni Prakrit ṭopiā, "helmet," related to Sanskrit ṭopikā. No further root is documented behind that — another honest dead end, like روٹی and کان.
@@ -99,12 +99,12 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — connect: ṭopī becomes English topee, borrowed directly, no intermediate language]
 [pause 8 seconds for the answer]
-[your turn — say: کالا جوتا (jūtā) and سفید ٹوپی (ṭopī) together]
+[your turn — say: kālā jūtā and safed ṭopī together]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does ٹوپی (ṭopī) mean, and is it masculine or feminine? (Cap/hat; feminine.) Does ٹوپی (ṭopī) have a documented root before Prakrit? (No — a dead end.) What English word borrows ٹوپی (ṭopī) directly, and roughly when? (Topee, 1825–35.) Recall the frame that put ٹھیک inside a full sentence — say it now with میں. (میں ٹھیک ہوں۔) Does خدا حافظ need a conjugated verb to work as a farewell? (No — it's used as a fixed formula, no agreement ending required.)
+What does ٹوپی (ṭopī) mean, and is it masculine or feminine? (Cap/hat; feminine.) Does ٹوپی (ṭopī) have a documented root before Prakrit? (No — a dead end.) What English word borrows ٹوپی (ṭopī) directly, and roughly when? (Topee, 1825–35.) Recall the frame that put ṭhīk inside a full sentence — say it now with میں. (میں ṭhīk ہوں۔) Does khudā hāfiz need a conjugated verb to work as a farewell? (No — it's used as a fixed formula, no agreement ending required.)
 Sources: Wiktionary: ٹوپی (ṭopī), Dictionary.com: topee.
 
 
@@ -113,7 +113,7 @@ Lesson 4 of 4.
 
 Warm-up.
 [pause 2 seconds]
-Recall this chapter's three words: قمیض (qamīz), borrowed from Arabic through Persian; جوتا (jūtā), inherited all the way from Proto-Indo- European; ٹوپی (ṭopī), borrowed out of Urdu into English as topee. This chapter's last word takes the shortest road of all.
+Recall this chapter's three words: qamīz, borrowed from Arabic through Persian; jūtā, inherited all the way from Proto-Indo- European; ٹوپی (ṭopī), borrowed out of Urdu into English as topee. This chapter's last word takes the shortest road of all.
 
 You'll want to know first — one word.
 کوٹ — koṭ — coat.
@@ -122,19 +122,19 @@ You'll want to know first — one word.
 
 The word, taken apart — a third layer, and every direction covered.
 کوٹ is borrowed directly from English coat — a modern loan, one generation old rather than a thousand years. It happens to look identical to an older, unrelated کوٹ meaning "fort," inherited from Sanskrit koṭṭa — the two are homographs, not cousins, and the spelling gives no warning either way.
-This book has named two layers before now: the inherited Indo-Aryan core, and the Persian-Arabic literary layer borrowed centuries ago. کوٹ (koṭ) is the first clear example of a third layer — everyday English loans, arriving through more recent contact. And this chapter has now shown every direction a loanword can travel in one small set of four: Persian and Arabic into Urdu (قمیض (qamīz)), Urdu straight out into English (ٹوپی (ṭopī)), and English straight into Urdu (کوٹ (koṭ)).
+This book has named two layers before now: the inherited Indo-Aryan core, and the Persian-Arabic literary layer borrowed centuries ago. کوٹ (koṭ) is the first clear example of a third layer — everyday English loans, arriving through more recent contact. And this chapter has now shown every direction a loanword can travel in one small set of four: Persian and Arabic into Urdu (qamīz), Urdu straight out into English (ٹوپی (ṭopī)), and English straight into Urdu (کوٹ (koṭ)).
 
 Guided Practice.
 [your turn — say: koṭ — coat; then merā koṭ nīlā hai]
 [pause 8 seconds for the answer]
 [your turn — name: three layers now — inherited, Persian-Arabic, and modern English]
 [pause 8 seconds for the answer]
-[your turn — sort: قمیض (qamīz) in, ٹوپی (ṭopī) out, کوٹ (koṭ) in — three loans, three directions]
+[your turn — sort: qamīz in, ٹوپی (ṭopī) out, کوٹ (koṭ) in — three loans, three directions]
 [pause 8 seconds for the answer]
-[your turn — say: all four clothing words — قمیض (qamīz), جوتا (jūtā), ٹوپی (ṭopī), کوٹ (koṭ) — each with a color from the earlier chapter]
+[your turn — say: all four clothing words — qamīz, jūtā, ṭopī, koṭ — each with a color from the earlier chapter]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does کوٹ (koṭ) mean, and where does it come from? (Coat; borrowed directly from English.) Which of this chapter's four words was borrowed out of Urdu rather than into it? (ٹوپی (ṭopī), into English as topee.) Recall the farewell that closes almost any Urdu conversation — say it now. (خدا حافظ.) What does the standard reply to the wellbeing question say about the speaker? (میں ٹھیک ہوں، شکریہ — "I am fine, thank you.")
+What does کوٹ (koṭ) mean, and where does it come from? (Coat; borrowed directly from English.) Which of this chapter's four words was borrowed out of Urdu rather than into it? (ٹوپی (ṭopī), into English as topee.) Recall the farewell that closes almost any Urdu conversation — say it now. (khudā hāfiz.) What does the standard reply to the wellbeing question say about the speaker? (میں ṭhīk ہوں، شکریہ — "I am fine, thank you.")
 Sources: Wiktionary: کوٹ (koṭ).
