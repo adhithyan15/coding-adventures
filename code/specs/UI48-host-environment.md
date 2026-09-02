@@ -15,11 +15,16 @@
 
 A Mosaic app cannot respond to its own runtime environment. It cannot know how
 wide its window is, whether it is being touched or clicked, which way a device
-is held, or whether the user asked for reduced motion. Nothing in the stack
-carries that information, so nothing can act on it.
+is held, or whether the user asked for reduced motion.
+
+It is not that the stack has no environment concept. It has one — and it is
+frozen at startup. `StartContext` already carries `locale`, `color_scheme`,
+`text_scale`, and `platform`. What is missing is a **change channel**: nothing
+tells the app when any of it moves, and four of the axes that matter most are
+not in the struct at all.
 
 UI47 gave the app a way to ask the host to *do* something. This is the inbound
-half: a way for the host to tell the app what it *is*.
+half: a way for the host to tell the app what it *is*, and to keep telling it.
 
 ---
 
@@ -54,6 +59,19 @@ gap, not a partial one.
 **The one runtime conditional is `If ( when: slot: … )`**, which branches on an
 app data slot. That is the mechanism an app would have to abuse to fake
 responsiveness — and §3 explains why it must not.
+
+**But two pieces of the answer already exist**, which is why this spec proposes
+an extension rather than a new subsystem:
+
+- **`StartContext` is already an environment struct.** `protocol_version`,
+  `locale`, `color_scheme`, `text_scale`, `platform`, `restored_snapshot`. It is
+  delivered once, at `Runtime::start`, and never updated.
+- **`Event` is already the generic host→app channel.** `{ protocol_version,
+  sequence, name, payload }` — a name and a JSON payload, dispatched through
+  `Runtime::dispatch`. It is not bound to a control: its own doc comment calls
+  it "a semantic UI event **or a completed host effect**", so it is already the
+  transport UI47 uses for effect completion. A host can originate one for any
+  reason.
 
 ---
 
@@ -142,16 +160,38 @@ in a toolkit component:
 | `xaml` | `SizeChanged`; `PointerDeviceType`; `UISettings` |
 | `paint` | Fixed — a snapshot backend *declares* its environment at render time |
 
-### 5.2 Transport — the standard app ABI
+### 5.2 Transport — events, which already exist
 
-The environment is a struct on `mosaic-app-runtime`, delivered the same way
-props are, and exposed across `mosaic-app-capi` so generated native hosts carry
-it. A host reports its environment at startup and again whenever it changes.
+**Events are the primitive.** The environment is not a new channel; it is
+`StartContext` extended with the missing axes, plus one reserved event that
+redelivers it whenever it changes:
 
-A host that never reports one gets a documented default —
-`regular`/`fine`/`hover`/`landscape`/`light`/`no-preference`. **Every existing
-host therefore keeps its current behavior exactly**, which is what makes this
-additive rather than a breaking change to seven shipped bindings.
+- **Initial value** — the axes in §4 join `StartContext`, beside the
+  `color_scheme`, `text_scale`, `locale`, and `platform` already there. An app
+  therefore knows its environment *before* first render and cannot flash a
+  desktop shell into a phone window.
+- **Change** — a single reserved event, `environmentChanged`, whose payload is
+  the whole environment. Dispatched through the existing `Runtime::dispatch`;
+  no new ABI surface, and it versions with `protocol_version` like everything
+  else.
+
+Three consequences of choosing events, each of which is a reason rather than an
+accident:
+
+1. **One coalesced event, not one per axis.** Rotating a device changes
+   orientation and size-class together; a stylus being set down can change
+   pointer and hover together. Per-axis events would expose intermediate states
+   that never existed and force N re-renders. Apple's trait collection changes
+   atomically for the same reason. The payload is the whole struct.
+2. **Emitted on bucket change, never per pixel.** A resize fires continuously;
+   `size-class` does not. Because §4 is a coarse vocabulary, the host observes
+   at native frequency and dispatches only when a *bucket* flips — typically a
+   handful of events in a session rather than sixty a second crossing the ABI.
+   The coarse vocabulary is what makes the event channel affordable.
+3. **A host that never dispatches one keeps today's behavior exactly.** The
+   defaults are `regular`/`fine`/`hover`/`landscape`/`no-preference`. This is
+   what makes the change additive across seven shipped bindings rather than a
+   break.
 
 ### 5.3 Selection — the kernel picks the variant
 
@@ -223,6 +263,69 @@ mechanism for everything that is *not* a standard navigation shell.
 
 ---
 
+## 5.5 What "the generated code absorbs the quirks" can and cannot mean
+
+Standardizing on events puts every platform difference in one place: the
+emitter. That is the right place — an emitter already knows its platform, and
+`resizeEvent` versus `matchMedia` versus `WindowSizeClass` is exactly the kind
+of difference emitted code should hide. But the claim has a hard boundary, and
+pretending otherwise is how a portable abstraction turns into a leaky one.
+
+**Mechanical quirks — absorbed.** These are differences in *how you learn* a
+fact both platforms agree exists:
+
+- Observation API — `resizeEvent`, `matchMedia` + `ResizeObserver`,
+  `MediaQuery`, `WindowSizeClass`, `horizontalSizeClass`, `SizeChanged`.
+- Coalescing and debounce policy, which differs per toolkit.
+- Units — density-independent pixels, points, CSS pixels, physical pixels.
+- Synthesis where an axis is missing. macOS never adopted size classes, so the
+  Apple emitter derives buckets from window width; the app cannot tell.
+
+**Semantic divergence — not absorbed, and must not be.** These are cases where
+platforms disagree about what *exists*, and flattening them produces an app
+that is wrong everywhere rather than portable:
+
+- **Navigation models.** Android's system back button and iOS's interactive
+  swipe-back are not the same gesture with different plumbing; they imply
+  different information architecture. No event shape reconciles them.
+- **"Touch" is not one thing.** A Windows 2-in-1 in tablet mode, an iPad with a
+  trackpad attached, and a phone are three different combinations of
+  `pointer`/`hover`, which is precisely why §4 keeps them as separate axes.
+- **Window models.** Tiling, snapping, split-screen, and Stage Manager change
+  what a "resize" means and how often it happens.
+
+The rule this spec adopts: **an emitter may synthesize a value in the closed
+vocabulary; it may not invent vocabulary, and it may not silently paper over a
+platform that cannot answer.** Where a backend genuinely cannot supply an axis,
+it reports the documented default and emits a degradation — the same mechanism
+the kernel already uses when a backend cannot honor an authored construct — so
+the gap is visible in the build rather than discovered by a user.
+
+### 5.6 Where events are the wrong answer
+
+Two limits, both consequences of events being a *transport* rather than a
+semantics.
+
+**Events cannot reach styles.** mosstyle bakes its values into each emitted
+component's inline styles; there is no runtime style layer to update. An event
+can change a slot, and a slot can gate a layout branch, but nothing can restyle
+a live tree. So the 44×44 touch target that motivated UI30's touch variant is
+still unreachable by events alone. This is why §5.3's variant selection stays in
+the design: the event is the *signal*, and swapping the emitted component is the
+*mechanism*. This is the same shape the light/dark theme swap already uses, and
+it is why §4 lists `color-scheme` — the two mechanisms should converge.
+
+**Native adaptive containers should not round-trip.** A `UISplitViewController`
+or a WinUI `NavigationView` adapts internally, in the platform's own layout
+pass. Routing its behavior through an event — resize, dispatch, adapter state,
+new props, re-render — would be slower, would jank against the platform's own
+animation, and would replace a real native control with a hand-rolled
+imitation. For the container in §5.4, the correct amount of environment
+plumbing is **none**: the control already knows. Events serve everything that is
+*not* a standard native adaptive control.
+
+---
+
 ## 6. What this deliberately does not do
 
 - **It does not add `If ( when: env: … )`.** §3 is the reasoning. If a genuine
@@ -243,9 +346,11 @@ mechanism for everything that is *not* a standard navigation shell.
 
 Sliced so each lands independently and provably.
 
-- **ENV1 — vocabulary and runtime type.** The struct, its defaults, and its
-  serialization in `mosaic-app-runtime` + `mosaic-app-capi`. No emitter changes;
-  no behavior change. Proves the default keeps every existing host identical.
+- **ENV1 — extend `StartContext`, add `environmentChanged`.** The §4 axes join
+  the struct beside `color_scheme`/`text_scale`/`platform`, with defaults, plus
+  the one reserved event through the existing `Runtime::dispatch`. No emitter
+  changes and no new ABI surface; the test that matters is that a host which
+  dispatches nothing behaves identically to today.
 - **ENV2 — artifact carries every variant** (UI30's ML5). Compile all authored
   variants into one artifact with stable per-variant names.
 - **ENV3 — selection.** The kernel selector: environment in, variant out, with
