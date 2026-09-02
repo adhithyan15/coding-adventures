@@ -1,9 +1,10 @@
 {
   "language": "german",
   "chapter": 20,
-  "sourceHash": "fnv1a64:6e8a30fa3c3b3c6b",
+  "sourceHash": "fnv1a64:9c5feb748c016424",
   "lessonIds": [
-    "GE-C20-entschuldigung"
+    "GE-C18-ja",
+    "GE-C18-nein"
   ],
-  "tex": "german/book/chapters/ch20-sorry.tex"
+  "tex": "german/book/chapters/ch20-yes-and-no.tex"
 }

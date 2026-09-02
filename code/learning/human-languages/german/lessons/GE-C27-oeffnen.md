@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C27-oeffnen
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 850
-chapter: 27
+chapter: 29
 type: word
 headword: öffnen
 gloss: to open — built on offen, which is English open, which is really the word up; and the doorway into German's separable verbs
@@ -63,8 +63,8 @@ said. Now a noun you already have, whose **d** is spoken as a **t**:
 <!-- hl-knowledge: introduces=[GE-GRAMMAR-SEPARABLE-09]; assesses=[GE-LEX-OEFFNEN-07, GE-LEX-HAND-02] -->
 
 *Öffnen* is the neutral, slightly formal word. What people say out loud is
-**aufmachen**, and both halves are yours already: **auf** from Chapter 4's *auf
-Wiedersehen*, **machen** from Chapter 5.
+**aufmachen**, and both halves are yours already: **auf** from *auf
+Wiedersehen*, **machen** from your first verbs.
 
 Here is the German part. In an ordinary sentence, **the prefix leaves the verb
 and waits at the end**:
@@ -77,7 +77,7 @@ German does this to hundreds of verbs, and calls them **separable**.
 ## The word, taken apart: open was never a root
 <!-- hl-knowledge: introduces=[GE-ETYMON-OFFEN-08]; assesses=[GE-LEX-OEFFNEN-07, GE-ETYMON-HELFEN-08, GE-GRAMMAR-SEPARABLE-09] -->
 
-Behind the verb is the adjective **offen**, "open" — which Chapter 25 already
+Behind the verb is the adjective **offen**, "open" — which the doing verbs already
 put beside **open** as a **p**-to-**f** pair from the second shift.
 
 The better secret is that **neither word is a root**. Old English *open* goes

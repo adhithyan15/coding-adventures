@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C24-lesen
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 730
-chapter: 24
+chapter: 26
 type: word
 headword: lesen
 gloss: to read — a verb that first meant "to gather", and the first one in this book whose vowel changes in the du and er forms
@@ -72,7 +72,7 @@ of verbs, not about *lesen*.
 
 **lesen** is Proto-Germanic ***\*lesaną***, "**to gather**." That sense still
 lives in **die Weinlese**, the grape harvest — the *wine-gathering*, built on
-the **Wein** of Chapter 11. Reading came second: you pick the letters up, one
+the **Wein** you already have. Reading came second: you pick the letters up, one
 after another.
 
 Now the trap. Latin **legere** also meant "to gather," also came to mean "to

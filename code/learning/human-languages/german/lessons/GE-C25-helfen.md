@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C25-helfen
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 770
-chapter: 25
+chapter: 27
 type: word
 headword: helfen
 gloss: to help — the same word as English help, separated by one sound law, and still strong in German the way English's help once was
@@ -65,7 +65,7 @@ a noun form this book has not taught. Keep to **Ich helfe** on its own.
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-HELFEN-07, GE-LEX-BITTE-PLEASE-02] -->
 
 The noun is **die Hilfe**, "help" — the same *e* to *i* change, frozen. And
-Chapter 19 gave you the shape for asking politely: name the thing, then say
+**bitte** gave you the shape for asking politely: name the thing, then say
 **bitte**.
 
 > **Hilfe, bitte.** — "Help, please."

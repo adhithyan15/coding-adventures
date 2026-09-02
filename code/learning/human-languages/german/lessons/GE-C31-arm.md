@@ -3,15 +3,15 @@ schema_version: 2
 id: GE-C31-arm
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 970
-chapter: 31
+chapter: 33
 type: word
 headword: der Arm
-gloss: arm — named on Chapter 17's own table and now finally taught, a word Grimm's law never had to touch
+gloss: arm — named on the *Hand* table and now finally taught, a word Grimm's law never had to touch
 concept_tag: GE-BODY-ARM
 prerequisites: [GE-C30-nase, GE-C17-hand]
 sounds: [arm-open-a]
 roots: [germanic-armaz, pie-h2er]
-etymology_hook: "Arm sat inside Chapter 17's own Hand/Arm/Finger/Fuß/Herz table, named but not yet taught; it is Germanic *armaz, cousin of English arm, from PIE *h2er- 'to fit together' — a root close enough to the sounds Grimm's law shifts that it simply never needed to move"
+etymology_hook: "Arm sat inside the Hand/Arm/Finger/Fuß/Herz table, named but not yet taught; it is Germanic *armaz, cousin of English arm, from PIE *h2er- 'to fit together' — a root close enough to the sounds Grimm's law shifts that it simply never needed to move"
 duration:
   max_seconds: 210
 requires:
@@ -36,7 +36,7 @@ reviews_of: [GE-C30-nase, GE-C17-hand]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-HAND-02] -->
 
-[PAUSE 2s] Chapter 17's *Hand* lesson ran a table — **Hand, Arm, Finger, Fuß,
+[PAUSE 2s] The *Hand* lesson ran a table — **Hand, Arm, Finger, Fuß,
 Herz** — to show how closely German and English match on the body. Only *Hand*
 was actually taught. Here is the second name from that table.
 
@@ -84,7 +84,7 @@ today for the same reason *Hand* and *hand* do.
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ARM-02, GE-SOUND-ARM-03, GE-ETYMON-ARM-04] -->
 
 [PAUSE 3s] Give "arm" with its article and plural. (**Der Arm, die Arme**.)
-Which Chapter 17 table already named this word? (**Hand**'s table —
+Which earlier table already named this word? (**Hand**'s table —
 *Hand, Arm, Finger, Fuß, Herz*.) Why does *Arm* look almost identical to
 English *arm*, when *Vater*/*father* do not? (**Its sounds were never in
 Grimm's law's path.**)

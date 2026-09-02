@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C26-schlafen
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 810
-chapter: 26
+chapter: 28
 type: word
 headword: schlafen
 gloss: to sleep — the same word as English sleep under two coats of German paint, and a second way for a strong verb to break
@@ -37,7 +37,7 @@ reviews_of: [GE-C26-stehen, GE-C26-sitzen, GE-C21-das-wetter]
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-SITZEN-02, GE-LEX-STEHEN-04] -->
 
 [PAUSE 2s] *Sitzen* and *stehen* held their vowels still. This one does not —
-and it does not break the way the Chapter 24 verbs broke either.
+and it does not break the way the mind verbs broke either.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -59,7 +59,7 @@ and it does not break the way the Chapter 24 verbs broke either.
 ## Grammar Lens: the second kind of break
 <!-- hl-knowledge: introduces=[GE-GRAMMAR-UMLAUT-BREAK-08]; assesses=[GE-LEX-SCHLAFEN-06, GE-GRAMMAR-STRONG-VOWEL-09, GE-LEX-REGNET-05] -->
 
-Chapter 24 gave you one break: long *e* goes to **i** for *du* and *er* — *du
+**Lesen** gave you one break: long *e* goes to **i** for *du* and *er* — *du
 liest*, *er hilft*. Here is the other: **a** takes two dots and becomes **ä** —
 *du schläfst*, *er schläft*.
 
