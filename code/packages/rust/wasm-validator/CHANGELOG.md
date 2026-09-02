@@ -2,6 +2,54 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.89] - 2026-09-02 - `ArrayRefAny` subtyping + `array.fill`/`array.copy` type-checking -- W38 slices 0/2
+
+Per `code/specs/W38-wasm-gc-array-bulk-ops.md`.
+
+**Slice 0**: `is_assignable` gains `ArrayRefAny`'s own subtyping edges,
+the array-hierarchy mirror of W37's `StructRefAny` arms one hierarchy
+over -- `ArrayRef(_)`/`NonNullArrayRef(_)`/the pre-existing
+`NonNullArrayAny` are all assignable to the new abstract array top, and
+`arrayref <: eqref <: anyref`, matching the real spec's `array <: eq <:
+any` hierarchy exactly.
+
+**Slice 2**: two new `0xFB` match arms in the per-function byte-layout
+stack-effect pass --
+
+- `0x10` (`array.fill`): real mutability check (`array_element_field(...)
+  .mutable`), the array-hierarchy mirror of `array.set`'s (`0x0E`)
+  existing check, applied to the same "immutable" `assert_invalid` shape
+  `array_fill.wast` vendors for this instruction specifically.
+- `0x11` (`array.copy`): real DESTINATION mutability check plus the real
+  spec's own `match-storagetype` relation between the two array types --
+  this second check is `field_is_structural_subtype` (W34 third slice),
+  read closely to be the exact real-spec relation this rule needs, reused
+  directly with **zero new subtyping logic**. `array_copy.wast`'s own
+  vendored `assert_invalid` cases ("immutable array", "array types do not
+  match") probe both rules.
+
+Both arms decode their own immediates mirroring `wasm-execution`'s decode
+shape exactly, so the two crates' byte-offset bookkeeping never desyncs
+(the established `ref.cast`-commit-documented risk this file's own
+comments already warn about).
+
+New tests (`tests/type_check.rs`): `valid_array_fill_and_copy`,
+`invalid_array_fill_on_an_immutable_array_is_rejected`,
+`invalid_array_copy_on_an_immutable_destination_is_rejected`,
+`invalid_array_copy_rejects_a_source_storage_type_that_does_not_match_the_destination`.
+
+**Value-type checking scope note** (re-verified, not assumed): this
+slice's `array.fill` arm pops the fill value via `pop_val` (permissive,
+matching this crate's own pre-existing `array.set`/`array.new` value-pop
+convention), not `pop_expect` against the array's declared element type --
+consistent with this crate's established "no instruction-level
+type-checker" scope boundary (W05 §4.3). `array_fill.wast`'s own two
+"type mismatch" `assert_invalid` cases (wrong value type for the array's
+declared element type) therefore stay `NotYetSupported` after this slice,
+not `Pass` -- a real, pre-existing scope gap this slice's own corpus
+re-verification found and reports honestly, not a regression it
+introduces.
+
 ## [0.2.88] - 2026-09-02 - GC reftype tables (W37): one new `is_assignable` gap found and closed
 
 Per `code/specs/W37-wasm-gc-reftype-tables.md`. `table_element_types`

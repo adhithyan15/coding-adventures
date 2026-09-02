@@ -4692,6 +4692,64 @@ fn invalid_array_new_fixed_count_over_the_dos_guard_ceiling_is_rejected() {
     );
 }
 
+// ── W38 slice 2 (`code/specs/W38-wasm-gc-array-bulk-ops.md`): array.fill /
+// array.copy -- mirrors the `array_set`/`array_new_fixed` test pairs
+// directly above, one instruction group later. Real corpus shapes:
+// `array_fill.wast`'s own "immutable" `assert_invalid` case and
+// `array_copy.wast`'s own "immutable"/"array types do not match"
+// `assert_invalid` cases (confirmed by direct read).
+
+#[test]
+fn valid_array_fill_and_copy() {
+    assert_valid(
+        r#"(module
+             (type $mvec (array (mut i32)))
+             (func (param $v (ref $mvec)) (param $val i32)
+               (array.fill $mvec (local.get $v) (i32.const 0) (local.get $val) (i32.const 2)))
+             (type $svec (array (mut i32)))
+             (func (param $dest (ref $mvec)) (param $src (ref $svec))
+               (array.copy $mvec $svec (local.get $dest) (i32.const 0) (local.get $src) (i32.const 0) (i32.const 1))))"#,
+    );
+}
+
+#[test]
+fn invalid_array_fill_on_an_immutable_array_is_rejected() {
+    // Mirrors `array_fill.wast`'s own "array.fill-immutable" case exactly.
+    assert_invalid(
+        r#"(module
+             (type $a (array i8))
+             (func (export "array.fill-immutable") (param $1 (ref $a)) (param $2 i32)
+               (array.fill $a (local.get $1) (i32.const 0) (local.get $2) (i32.const 0))))"#,
+    );
+}
+
+#[test]
+fn invalid_array_copy_on_an_immutable_destination_is_rejected() {
+    // Mirrors `array_copy.wast`'s own "array.copy-immutable" case exactly.
+    assert_invalid(
+        r#"(module
+             (type $a (array i8))
+             (type $b (array (mut i8)))
+             (func (export "array.copy-immutable") (param $1 (ref $a)) (param $2 (ref $b))
+               (array.copy $a $b (local.get $1) (i32.const 0) (local.get $2) (i32.const 0) (i32.const 0))))"#,
+    );
+}
+
+#[test]
+fn invalid_array_copy_rejects_a_source_storage_type_that_does_not_match_the_destination() {
+    // Mirrors `array_copy.wast`'s own "array.copy-packed-invalid" case
+    // exactly (`field_is_structural_subtype`'s own W34 machinery, reused
+    // here per this spec's own design section 6 -- zero new subtyping
+    // logic).
+    assert_invalid(
+        r#"(module
+             (type $a (array (mut i8)))
+             (type $b (array i16))
+             (func (export "array.copy-packed-invalid") (param $1 (ref $a)) (param $2 (ref $b))
+               (array.copy $a $b (local.get $1) (i32.const 0) (local.get $2) (i32.const 0) (i32.const 0))))"#,
+    );
+}
+
 #[test]
 fn valid_struct_new_and_array_new_as_global_const_exprs() {
     // The real GC proposal extends constant expressions to allow these five

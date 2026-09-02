@@ -1,5 +1,40 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.102 — 2026-09-02 — feat: `arrayref` keyword + `array.fill`/`array.copy` -- W38 slices 1-2, GC array bulk ops
+
+Slices 1-2 of `code/specs/W38-wasm-gc-array-bulk-ops.md`'s six-slice plan.
+
+**Slice 1**: `parse_value_type`'s bare-atom dispatch gains `"arrayref" =>
+Ok(ValueType::ArrayRefAny)` (Correction 3), one new arm in the same match
+W37 already extended for `structref`. Previously a hard parse error
+("expected a value type, found \"arrayref\""); real corpus need:
+`array_init_elem.wast:118`/`array_new_elem.wast:107` both declare
+`(array (mut arrayref))` storage types. New unit test:
+`array_element_naming_bare_arrayref_keyword_is_array_ref_any`.
+
+**Slice 2**: two new binary-encoder functions, `encode_array_fill`/
+`encode_array_copy`, wired into `encode_gc_struct_array_instr`'s dispatch
+alongside the other five array instruction groups (each its own
+minimally-sized function, matching this file's established
+one-function-per-shape convention) --
+
+- `array.fill $t <arrayref> <offset> <value> <count>` → `0xFB 0x10
+  <type_idx>`
+- `array.copy $dest $src <destref> <d> <srcref> <s> <n>` → `0xFB 0x11
+  <dest_type_idx> <src_type_idx>` (operand order confirmed against
+  `array_copy.wast`'s own real corpus call sites: dest type first)
+
+Both sub-opcode byte values (`0x10`/`0x11`) are real, spec-text-fetched
+values, cross-checked against the real GC proposal's own binary grammar
+page and against this repo's own pre-existing, already-verified `0x06`-
+`0x0F` array block (they fill the one gap immediately after `array.len`).
+`array.init_data`/`array.init_elem`/`array.new_data`/`array.new_elem`
+remain deliberately unwired (later W38 slices, real data-/elem-segment
+integration not attempted here).
+
+New unit test: `array_fill_and_copy_encode_correctly` (byte-for-byte,
+mirroring `array_get_get_s_get_u_set_len_encode_correctly`'s own shape).
+
 ## 0.1.101 — 2026-09-02 — fix: reject malformed numeric-literal grammar instead of silently accepting it
 
 `simd_const.wast` was the single largest "not yet supported" file in the

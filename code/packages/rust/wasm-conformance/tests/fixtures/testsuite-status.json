@@ -640,10 +640,10 @@
         "not_yet_supported": 0
       },
       "assert_invalid": {
-        "pass": 3,
+        "pass": 1,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 0
+        "not_yet_supported": 2
       },
       "assert_malformed": {
         "pass": 0,
@@ -652,16 +652,16 @@
         "not_yet_supported": 0
       },
       "assert_return": {
-        "pass": 0,
+        "pass": 22,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 22
+        "not_yet_supported": 0
       },
       "assert_trap": {
-        "pass": 0,
+        "pass": 4,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 4
+        "not_yet_supported": 0
       },
       "assert_unlinkable": {
         "pass": 0,
@@ -670,10 +670,10 @@
         "not_yet_supported": 0
       },
       "module": {
-        "pass": 0,
+        "pass": 1,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 1
+        "not_yet_supported": 0
       },
       "register": {
         "pass": 0,
@@ -15955,10 +15955,10 @@
       "not_yet_supported": 10
     },
     "assert_invalid": {
-      "pass": 2661,
+      "pass": 2659,
       "fail": 0,
       "trap": 0,
-      "not_yet_supported": 101
+      "not_yet_supported": 103
     },
     "assert_malformed": {
       "pass": 1714,
@@ -15967,16 +15967,16 @@
       "not_yet_supported": 226
     },
     "assert_return": {
-      "pass": 52307,
+      "pass": 52329,
       "fail": 0,
       "trap": 0,
-      "not_yet_supported": 457
+      "not_yet_supported": 435
     },
     "assert_trap": {
-      "pass": 4853,
+      "pass": 4857,
       "fail": 0,
       "trap": 0,
-      "not_yet_supported": 115
+      "not_yet_supported": 111
     },
     "assert_unlinkable": {
       "pass": 254,
@@ -15985,10 +15985,10 @@
       "not_yet_supported": 0
     },
     "module": {
-      "pass": 2142,
+      "pass": 2143,
       "fail": 0,
       "trap": 0,
-      "not_yet_supported": 111
+      "not_yet_supported": 110
     },
     "register": {
       "pass": 75,
