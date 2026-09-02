@@ -17,9 +17,9 @@
     "assesses": [
       "AR-C01-SALAM-01",
       "AR-SCRIPT-WRITE-SALAM-03",
-      "AR-C01-MARHABA-04",
-      "AR-C01-FULL-GREETING-07",
-      "AR-SCRIPT-WRITE-FULL-GREETING-09"
+      "AR-C01-MARHABA-05",
+      "AR-C01-FULL-GREETING-11",
+      "AR-SCRIPT-WRITE-FULL-GREETING-13"
     ],
     "note": "The closing checkpoint now scores spoken meaning, reading, guided writing, and delayed transcription from the migrated chapter-1 ramp."
   }

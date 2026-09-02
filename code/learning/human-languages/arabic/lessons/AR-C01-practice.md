@@ -14,14 +14,14 @@ roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [AR-C01-SALAM-01, AR-SCRIPT-SIN-LAM-02, AR-SCRIPT-WRITE-SALAM-03, AR-C01-MARHABA-04, AR-SCRIPT-RA-HA-05, AR-SCRIPT-BA-FAMILY-06, AR-C01-FULL-GREETING-07, AR-SCRIPT-AYN-YA-08, AR-SCRIPT-WRITE-FULL-GREETING-09]
+  knowledge: [AR-C01-SALAM-01, AR-SCRIPT-SIN-LAM-02, AR-SCRIPT-WRITE-SALAM-03, AR-C01-MARHABA-05, AR-SCRIPT-RA-HA-06, AR-SCRIPT-BA-FAMILY-07, AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-FULL-GREETING-13]
 introduces:
   knowledge: []
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [AR-C01-SALAM-01, AR-SCRIPT-SIN-LAM-02, AR-SCRIPT-WRITE-SALAM-03, AR-C01-MARHABA-04, AR-SCRIPT-RA-HA-05, AR-SCRIPT-BA-FAMILY-06, AR-C01-FULL-GREETING-07, AR-SCRIPT-AYN-YA-08, AR-SCRIPT-WRITE-FULL-GREETING-09]
+  knowledge: [AR-C01-SALAM-01, AR-SCRIPT-SIN-LAM-02, AR-SCRIPT-WRITE-SALAM-03, AR-C01-MARHABA-05, AR-SCRIPT-RA-HA-06, AR-SCRIPT-BA-FAMILY-07, AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-FULL-GREETING-13]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -33,13 +33,13 @@ reviews_of: [AR-C01-salam, AR-C01-marhaba, AR-C01-al, AR-C01-as-salamu-alaykum, 
 # Chapter 1 — the day of greetings
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01, AR-C01-MARHABA-04, AR-C01-FULL-GREETING-07] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01, AR-C01-MARHABA-05, AR-C01-FULL-GREETING-11] -->
 
 [PAUSE 2s] A dozen letters, learned one greeting at a time, and now the whole
 day of Arabic greetings and their fixed replies.
 
 ## You'll want to know — Read them back
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01, AR-SCRIPT-SIN-LAM-02, AR-SCRIPT-WRITE-SALAM-03, AR-C01-MARHABA-04, AR-SCRIPT-RA-HA-05, AR-SCRIPT-BA-FAMILY-06, AR-C01-FULL-GREETING-07, AR-SCRIPT-AYN-YA-08, AR-SCRIPT-WRITE-FULL-GREETING-09] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01, AR-SCRIPT-SIN-LAM-02, AR-SCRIPT-WRITE-SALAM-03, AR-C01-MARHABA-05, AR-SCRIPT-RA-HA-06, AR-SCRIPT-BA-FAMILY-07, AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-FULL-GREETING-13] -->
 
 Sound each out **right to left** before checking:
 
@@ -53,7 +53,7 @@ Sound each out **right to left** before checking:
 | **شكرا** | *shukran* | thank you |
 
 ## The exchange — greetings and replies
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01, AR-C01-MARHABA-04, AR-C01-FULL-GREETING-07] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01, AR-C01-MARHABA-05, AR-C01-FULL-GREETING-11] -->
 
 | When | Greeting | Reply |
 |---|---|---|
@@ -69,7 +69,7 @@ but *al-khayr*). The letters arrived inside real words — about a dozen of them
 half the alphabet — never as a chart to memorize.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01, AR-SCRIPT-SIN-LAM-02, AR-SCRIPT-WRITE-SALAM-03, AR-C01-MARHABA-04, AR-SCRIPT-RA-HA-05, AR-SCRIPT-BA-FAMILY-06, AR-C01-FULL-GREETING-07, AR-SCRIPT-AYN-YA-08, AR-SCRIPT-WRITE-FULL-GREETING-09] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01, AR-SCRIPT-SIN-LAM-02, AR-SCRIPT-WRITE-SALAM-03, AR-C01-MARHABA-05, AR-SCRIPT-RA-HA-06, AR-SCRIPT-BA-FAMILY-07, AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-FULL-GREETING-13] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
 [PAUSE 1s]
@@ -81,7 +81,7 @@ half the alphabet — never as a chart to memorize.
   repair one shape]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01, AR-SCRIPT-SIN-LAM-02, AR-SCRIPT-WRITE-SALAM-03, AR-C01-MARHABA-04, AR-SCRIPT-RA-HA-05, AR-SCRIPT-BA-FAMILY-06, AR-C01-FULL-GREETING-07, AR-SCRIPT-AYN-YA-08, AR-SCRIPT-WRITE-FULL-GREETING-09] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01, AR-SCRIPT-SIN-LAM-02, AR-SCRIPT-WRITE-SALAM-03, AR-C01-MARHABA-05, AR-SCRIPT-RA-HA-06, AR-SCRIPT-BA-FAMILY-07, AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-FULL-GREETING-13] -->
 
 [PAUSE 3s] Read all six greetings aloud, right to left. Name the two "engines"
 that build them. (The three-consonant *root*, and the attached *al-* with

@@ -138,7 +138,7 @@ function sandbox(): string {
 // So this literal stays. A number that only moves when a person deliberately
 // changes the thing it measures is a tripwire, not a maintenance tax.
 //
-// It has now moved five times in quick succession, every time as designed --
+// It has now moved six times in quick succession, every time as designed --
 // and once, in the middle, it went WRONG, which is worth reading before the
 // next retirement PR edits this line.
 //
@@ -166,7 +166,9 @@ function sandbox(): string {
 // resolved by taking either side of a text conflict. Re-derive it from
 // `handwritten.d` on the merged tree, which is what this branch did.
 //
-// 56 -> 54: German chapters 1 and 2, the track the corpus-wide measurement
+// 56 -> 55: Arabic's chapter one (#14034).
+//
+// 55 -> 53: German chapters 1 and 2, the track the corpus-wide measurement
 // named as worst-blocked at 16 hand-written chapters and 78 prose blocks.
 // Unlike Punjabi and Telugu, German did NOT report clean beforehand, so the
 // prose was carried into the lesson markdown first -- `handwritten_parity.py
@@ -239,7 +241,7 @@ describe("the chapter-owned real book-generation ledger", () => {
     expect(readdirSync(join(directory, "indexes.d"))).toHaveLength(tracks);
     // The handwritten count STAYS PINNED, and deliberately so — see the note
     // above on why this particular literal is not part of the write-lock.
-    expect(readdirSync(join(directory, "handwritten.d"))).toHaveLength(54);
+    expect(readdirSync(join(directory, "handwritten.d"))).toHaveLength(53);
     // The total is chapter-scaled, so it is proved against the independently
     // authored `chapters.d` instead.
     expect(
@@ -277,7 +279,7 @@ describe("the chapter-owned real book-generation ledger", () => {
     );
     // The split, pinned. A chapter moved from `handwritten` to `targets` keeps
     // the COMBINED set identical, so only this literal sees the flip.
-    expect(identities.handwritten.size).toBe(54);
+    expect(identities.handwritten.size).toBe(53);
     expect(identities.languages.size).toBe(
       loadLanguageRegistry(root).languages.length,
     );
