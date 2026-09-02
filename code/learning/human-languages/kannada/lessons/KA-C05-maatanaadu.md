@@ -63,12 +63,6 @@ Every Kannada verb is built this way — a stem, a tense-marker, a person-ending
 And, like Tamil and Telugu, Kannada marks **no gender in the first person**:
 *mātanāḍuttēne* is the same for a man or a woman.
 
-## Sounds you'll need
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
-
-ಮಾ (*mā*) + ತ (*ta*) + ನಾ (*nā*) + ಡು
-(*ḍu*) → ಮಾತನಾಡು.
-
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C05-MATANADU-01, KA-GRAMMAR-C05-MATANADU-02] -->
 

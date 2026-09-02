@@ -1,56 +1,68 @@
 # Changelog
 
-## Unreleased — chapter 5 is generated, and stops being hand-written LaTeX
+## Unreleased — chapters 3 and 5 are generated, and stop being hand-written LaTeX
 
-`kannada/book/chapters/ch05-first-verbs.tex` is now built by the generator from
-its six lessons. It was one of the five `handwritten` ledger entries Kannada
-owned; four remain.
+`ch03-responding.tex` joins `ch05-first-verbs.tex` in the generator. Both were
+`handwritten` ledger entries; Kannada owned five and now owns **three** —
+chapters 1, 2 and 4, each of which still holds `cognates` prose no lesson has.
 
-The flip itself is one line of ledger. The work was the migration underneath it:
-all five `KA-C05-*` content lessons were schema v1, which declares no knowledge
-atoms at all, and `book.ts` refuses to generate a chapter from a v1 lesson. So
-each now carries v2 frontmatter, an `hl-knowledge` directive on every body
-block, and eight new atoms that name what the chapter actually teaches:
+Eleven `KA-C0[35]-*` lessons moved from schema v1 to v2 (v1 declares no
+knowledge atoms, and `book.ts` refuses to generate from a v1 lesson), gaining 19
+atoms between them. `KA-C03-practice` sat in no curriculum path segment, which
+v2 forbids for a lesson declaring a spine node; it now sits in a new
+`KA-PATH-008-RECAP` under `SPINE-CHECK-WELLBEING`, placed after
+`KA-PATH-008` so it still follows `KA-C03-paravaagilla`, with a matching
+`KA-EXT-007-CONSOLIDATION`.
 
-    KA-LEX-C05-MATANADU-01 / KA-GRAMMAR-C05-MATANADU-02   the verb, and stem+tense+person
-    KA-LEX-C05-KANNADA-01  / KA-GRAMMAR-C05-KANNADA-02    the sentence, and no 1st-person gender
-    KA-LEX-C05-IRU-01      / KA-GRAMMAR-C05-IRU-02        "to be/stay/live", and -alli after the noun
-    KA-LEX-C05-MAADU-01    / KA-GRAMMAR-C05-MAADU-02      "work-do", and noun + māḍu
+### Two defects that only the rendered page showed
 
-Three headings in `KA-C05-practice` classified as `unknown`, which v2 rejects.
-They were fixed by PREFIXING the existing text rather than rewriting it, so no
-Kannada or English prose byte was retyped:
+**The same syllable breakdown printed twice, under the same title.** Fourteen
+chapter-1-to-5 lessons carry both a `## The letters in this word` block and a
+`## Sounds you'll need` block. The hand-written LaTeX printed only one of them.
+Generated, both print — and because Kannada's preamble titles the `sounds` box
+*"The letters in this word"*, the reader met that heading twice on one page with
+near-identical text under each. No already-generated Kannada chapter carries
+both blocks (0 of 229), so the duplicate was removed from the four lessons in
+these two chapters — but only after proving mechanically that the removed block
+was a strict subset: every non-ASCII character and every token of it already
+appears in the block that stays.
 
-  * `Build the sentences`   -> `Guided Practice: Build the sentences`
-  * `The engine`            -> `You'll want to know: The engine`
-  * `Roots you now carry`   -> `The word, taken apart: Roots you now carry`
+**Four lessons were not NFC-normalized.** The proof above failed at first on
+`hē` not equalling `hē` — one precomposed U+0113, one `e` plus a combining
+macron U+0304. Seven of Kannada's 268 lessons carry decomposed romanization and
+all seven are in the hand-written chapters. The four in chapters 3 and 5 are now
+NFC; the remaining three (chapters 2 and 4) go with their own chapters.
 
 ### Nothing was dropped, and that was measured rather than asserted
 
-`handwritten_parity.py` reported chapter 5 clean, but its block-gap number is
-not on its own trustworthy — it counts LaTeX environments, so a word taught in a
-paragraph inside a surviving box costs zero blocks while costing a whole lesson.
-So the chapter was sized a second way, by counting the words the `.tex` teaches
-against the lessons that own them, and the flip was gated on token loss:
+`handwritten_parity.py` reported both chapters clean. That agreed with the
+artifacts, but its block-gap number is not trustworthy alone in either
+direction — it counts LaTeX environments, so a word taught in a paragraph inside
+a surviving box costs zero blocks while costing a whole lesson. So both chapters
+were sized a second way, by counting the words the `.tex` teaches against the
+lessons that own them, and each flip was gated on token loss against the
+pre-migration tree:
 
-- distinct Kannada tokens: **22 hand-written -> 34 generated, 0 lost**
-- Kannada tokens in the chapter owned by no lesson: **0**
-- `cousinweb` etymology boxes **3 -> 5**, `grammarlens` **4 -> 4**, `sounds` **1 -> 1**
+| chapter | Kannada tokens | lost | tokens owned by no lesson |
+|---|---|---|---|
+| 3 | 28 → 33 | **0** | 0 |
+| 5 | 22 → 34 | **0** | 0 |
 
-The generated chapter is longer because it publishes the warm-up and wrap-up
-recall blocks the hand-written version left out. The one piece of hand-written
-framing that does not survive verbatim — "Until now, 'to be' and 'to be-not.'
-Now verbs that *act*" — is already the substance of `KA-C05-maatanaadu`'s own
-warm-up, so it is paraphrased in place rather than lost.
+`cousinweb` goes 4 → 6 and 3 → 5, `grammarlens` 2 → 3 and 4 → 4, `sounds` 3 → 3
+and 1 → 1. The chapters grow because the generator publishes the warm-up and
+wrap-up-recall blocks the hand-written versions dropped.
+
+One genuine discrepancy surfaced: the hand-written book romanised Tamil
+எப்படி as *eppaṭi*, the lessons as *eppaḍi*. The book's form is restored, in
+three places — a deliberate three-character change the census reports exactly.
 
 Counted against the merged tree, never derived: `handwritten.d` holds **37**
-entries on `origin/main` and **36** on this branch. The `grouped-shards`
-handwritten ratchet is deliberately untouched, per its own in-file directive.
+entries on `origin/main` and **35** on this branch.
 
 Verified: human-language-data 124 test files / 1730 tests, all eleven `check:*`
 gates, language-ladder 39 files / 442 tests, and the whole Kannada book compiled
-under XeLaTeX — 421 pages, zero overfull boxes — with chapter 5's pages read on
-the page rather than in the source.
+under XeLaTeX — 421 pages, zero overfull and zero underfull boxes — with the
+changed pages read on the page rather than in the source.
 
 ## Unreleased — counting one word at a time, and a script ladder that arrives before the words it reads
 
