@@ -89,9 +89,6 @@ The letters in this word.
 The word, taken apart.
 പോകുക (pōkuka, "to go") and വരിക (varika, "to come") are native Dravidian verbs. Notice the ending -ഉക (-uka) — this is how Malayalam names a verb in the dictionary, its "to ___" form (where Tamil uses a bare stem). Malayalam, like all its family, does not say a plain "goodbye": it says "I go, and I come back."
 
-Sounds you'll need.
-പോ (pō) + കുക (kuka, the -uka infinitive) becomes പോകുക (pōkuka). Its partner വരിക (varika, “to come”).
-
 Guided Practice.
 [pause 1 second]
 [your turn — say: "pōkuka" (to go) and "varika" (to come)]
@@ -153,6 +150,7 @@ The letters in this word.
 
 The word, taken apart.
 പോയി വരാം (pōyi varāṁ) = പോയി (pōyi, "having gone") + വരാം (varāṁ, "I'll come") — literally "having gone, I'll come [back]," i.e. "I'll go and come back." A Malayali never signs off with a bare "I'm leaving." It is the same "go-and-come-back" farewell across the Dravidian south (Tamil pōy varugiṟēṉ, Kannada hōgi baruttēne, Telugu veḷḷi vastānu). The warm reply is പോയി വരൂ (pōyi varū, "go and come [back]").
+It reaches past Dravidian, too: Bengali, an Indo-Aryan language with no shared ancestor for these words, says goodbye with āshi — "I come." The whole south, and beyond, prefers a promise of return to a blunt farewell.
 
 Grammar Lens: the -ആം ending, "let me / I will".
 -ആം (-āṁ) added to a verb stem means "I/we will" or "let me" — a soft, volitional future: varāṁ ("I'll come"), kāṇāṁ ("let's see," coming next lesson), ceyyāṁ ("I'll do it"). It is Malayalam's gentle way of promising an action.
@@ -185,9 +183,6 @@ The letters in this word.
 
 The word, taken apart.
 നാളെ (nāḷe, "tomorrow") is native Dravidian, from നാൾ (nāḷ, "day") — the very same nāḷ behind Tamil's nāḷai and Kannada's nāḷe. കാണാം (kāṇāṁ, "let's see") is from കാണുക (kāṇuka, "to see") + -āṁ — so the phrase is "tomorrow, let's see [each other]." One family, one word for "day," one habit of parting until the next.
-
-Sounds you'll need.
-നാളെ (nāḷe): നാ (nā) + ളെ (ḷe, retroflex ള ḷ). കാണാം (kāṇāṃ) = kāṇ (“see”) + -āṃ (“let's”).
 
 Guided Practice.
 [pause 1 second]
@@ -239,7 +234,7 @@ Warm-up.
 [pause 2 seconds]
 No new words. Three ways to part — none of them a blunt "goodbye."
 
-The farewells.
+The exchange — the farewells.
 [pause 1 second after each]
 [your turn — say: the everyday goodbye — pōyi varāṁ ("I'll go and come back")]
 [pause 8 seconds for the answer]
@@ -250,7 +245,7 @@ The farewells.
 [your turn — say: "we'll meet again" — vīṇḍuṁ kāṇāṁ]
 [pause 8 seconds for the answer]
 
-The atoms.
+Guided Practice — the atoms.
 [pause 2 seconds]
 [your turn — say: the two verbs and their "-uka" form (pōkuka go, varika come)]
 [pause 8 seconds for the answer]
@@ -259,7 +254,7 @@ The atoms.
 [your turn — say: the -āṁ ending — "I will / let's"]
 [pause 8 seconds for the answer]
 
-Roots you now carry.
+The roots, taken apart.
 [pause 2 seconds]
 pōyi varāṁ — "having gone, I'll come"; the Dravidian promise-of-return goodbye.
 nāḷe from nāḷ "day" (shared with Tamil & Kannada); kāṇ "to see".

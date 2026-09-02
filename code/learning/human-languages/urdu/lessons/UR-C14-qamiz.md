@@ -58,7 +58,7 @@ From the right edge: **ق**, **م**, **ی**, **ض**.
 **ق** *qāf* is a new letter, said with the back of the tongue drawn
 further back in the throat than **ک** *kāf* — in relaxed speech many
 speakers merge the two, but careful and formal pronunciation keeps them
-apart. **ض** *zād* is also new: like **ظ**, already known from **حافظ**,
+apart. **ض** *zād* is also new: like *zoʾe*, already known from *hāfiz*,
 it represents the plain **z** sound in Urdu, even though Arabic once told
 the two letters apart. Urdu keeps both spellings without keeping the
 sound distinction Arabic makes.
@@ -80,7 +80,7 @@ worn on the upper body.
 
 - [YOU SAY: **qamīz** — shirt; then **merī qamīz nīlī hai**]
 - [YOU NAME: **ق** and **ض**, the two new letters, and what each is close
-  to — **ک** and **ظ**]
+  to — **ک** and *zoʾe*]
 - [YOU CONNECT: **qamīz** ← Latin **camisia** → English **chemise**, two
   roads, one Late Latin source]
 - [YOU SAY: **نیلی قمیض** — a blue shirt]
@@ -94,6 +94,6 @@ Latin source? (**Chemise.**) What does **آپ کا نام کیا ہے؟**
 ask, and which word is fixed there regardless of who is asked? (**"What
 is your name?"**; **کا**, in this frame.) Name the two new letters in
 this word and one
-letter each is close to. (**ق, close to ک; ض, close to ظ.**)
+letter each is close to. (**ق, close to ک; ض, close to zoʾe.**)
 
 Sources: [Wiktionary: قمیض](https://en.wiktionary.org/wiki/%D9%82%D9%85%DB%8C%D8%B6), [Wiktionary: chemise](https://en.wiktionary.org/wiki/chemise).

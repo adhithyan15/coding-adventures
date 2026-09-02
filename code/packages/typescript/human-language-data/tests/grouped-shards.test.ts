@@ -144,9 +144,12 @@ function sandbox(): string {
 // Punjabi under NOTHING WOULD BE LOST before it, and now reports the track as
 // having nothing hand-written left at all.
 //
-// 67 -> 66: Italian chapter one, same move again (#13990).
+// 67 -> 66 and 66 -> 61: Italian chapter one (#13990) and Malayalam chapters 1-5
+// (#14032), the same move again. Both changed the literal without extending this
+// note; the retirement programme is now frequent enough that this comment is a
+// conflict magnet, so record the move in one line and keep the reasoning short.
 //
-// 66 -> 64: German chapters 1 and 2, the track the corpus-wide measurement named
+// 61 -> 59: German chapters 1 and 2, the track the corpus-wide measurement named
 // as worst-blocked at 16 hand-written chapters and 78 prose blocks. Unlike
 // Punjabi, German did NOT report clean beforehand, so the prose was carried into
 // the lesson markdown first -- `handwritten_parity.py german` fell from 78 blocks
@@ -218,7 +221,7 @@ describe("the chapter-owned real book-generation ledger", () => {
     expect(readdirSync(join(directory, "indexes.d"))).toHaveLength(tracks);
     // The handwritten count STAYS PINNED, and deliberately so — see the note
     // above on why this particular literal is not part of the write-lock.
-    expect(readdirSync(join(directory, "handwritten.d"))).toHaveLength(64);
+    expect(readdirSync(join(directory, "handwritten.d"))).toHaveLength(59);
     // The total is chapter-scaled, so it is proved against the independently
     // authored `chapters.d` instead.
     expect(
@@ -256,7 +259,7 @@ describe("the chapter-owned real book-generation ledger", () => {
     );
     // The split, pinned. A chapter moved from `handwritten` to `targets` keeps
     // the COMBINED set identical, so only this literal sees the flip.
-    expect(identities.handwritten.size).toBe(64);
+    expect(identities.handwritten.size).toBe(59);
     expect(identities.languages.size).toBe(
       loadLanguageRegistry(root).languages.length,
     );

@@ -64,8 +64,8 @@ A written question still ends in the mirrored **؟**, closing **آپ کا نام
 ## Grammar Lens: into the frame
 <!-- hl-knowledge: introduces=[]; assesses=[UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-LEX-PUCHHNA, UR-LEX-LENA] -->
 
-> **میں پوچھتا ہوں** — *maiṅ pūchhtā hūṅ* — **I ask** (man speaking)
-> **میں پوچھتی ہوں** — *maiṅ pūchhtī hūṅ* — **I ask** (woman speaking)
+> *maiṅ pūchhtā hūṅ* — **I ask** (man speaking)
+> *maiṅ pūchhtī hūṅ* — **I ask** (woman speaking)
 
 ## The word, taken apart — one root, two roads into Urdu
 <!-- hl-knowledge: introduces=[UR-ETYMON-PUCHHNA-ASK, UR-REGISTER-TWO-ROADS-ONE-ROOT]; assesses=[UR-LEX-PUCHHNA, UR-ETYMON-KYA-QUESTION-FAMILY, UR-LEX-WELLBEING-QUESTION] -->

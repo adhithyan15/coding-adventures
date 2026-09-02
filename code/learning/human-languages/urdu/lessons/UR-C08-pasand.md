@@ -40,10 +40,10 @@ reviews_of: [UR-C08-madad, UR-C08-lena, UR-C07-parhna, UR-C06-ana, UR-C04-main-h
 [PAUSE 2s] Say **maiṅ madad kartā hūṅ** and name which half takes the endings.
 Every sentence so far opened with **میں** *maiṅ*, “I.” This one takes that away.
 
-## You'll want to know first — مجھے, the shape of “to me”
+## You'll want to know first — *mujhe*, the shape of “to me”
 <!-- hl-knowledge: introduces=[UR-GRAMMAR-DATIVE-EXPERIENCER]; assesses=[UR-LEX-MAIN] -->
 
-> **مجھے** — *mujhe* — **to me**
+> *mujhe* — **to me**
 
 **Mujhe** is what **میں** *maiṅ* becomes when the sentence refuses to let you be
 its subject. It is not “I.”
@@ -51,24 +51,25 @@ its subject. It is not “I.”
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-KAISE-KAISI, UR-SCRIPT-DO-CHASHMI-HE, UR-SCRIPT-MAIN-HUN] -->
 
-From the right edge: **م** *m*, **ج** *j*, **ھ** aspirating it to *jh*, then broad
+From the right edge: **م** *m*, then *jīm* carrying *j*, then the two-eyed
+*he* aspirating it to *jh*, then broad
 final **ے** for *e* — the shape that ends **کیسے** *kaise*. All four already
 yours.
 
 ## Grammar Lens: the thing you like is the subject
 <!-- hl-knowledge: introduces=[UR-LEX-PASAND]; assesses=[UR-GRAMMAR-DATIVE-EXPERIENCER, UR-LEX-PARHNA, UR-GRAMMAR-COPULA-FINAL] -->
 
-> **مجھے پڑھنا پسند ہے۔** — *mujhe paṛhnā pasand hai.* — **I like reading.**
+> *mujhe paṛhnā pasand hai.* — **I like reading.**
 
 Taken apart: **mujhe** + **paṛhnā** (“reading”) + **pasand** (“pleasing”) +
 **hai**. Literally: “**To me, reading is pleasing.**”
 
-**پڑھنا** is the **subject**, which is what **ہے** agrees with. No Urdu sentence
+*paṛhnā* is the **subject**, which is what **ہے** agrees with. No Urdu sentence
 puts *I* in front of *like*. And any **-nā** infinitive drops into that slot,
 because an Urdu infinitive doubles as a noun — so every verb of the last three
 chapters is likeable.
 
-> **مجھے لکھنا پسند ہے۔** — *mujhe likhnā pasand hai.* — **I like writing.**
+> *mujhe likhnā pasand hai.* — **I like writing.**
 
 Urdu keeps company with unrelated languages: Spanish *me gusta el libro*, “to me
 the book pleases”; Italian *mi piace*; Tamil *enakku piḍikkum*, “it catches me”;
@@ -85,9 +86,9 @@ grammar put that person elsewhere: **mujhe**.
 
 Where *sand* goes next is genuinely **disputed**. One proposal ties it to the root
 behind Latin *candēre*, “to glow” — English **candid**, **incendiary** — and
-Sanskrit *candra*, “moon,” Urdu's **چاند** *chānd*. Lovely, but unsettled.
+Sanskrit *candra*, “moon,” Urdu's *chānd*. Lovely, but unsettled.
 
-It came by the Persian road that gave you **خوشی** *khushī*, and sits beside
+It came by the Persian road that gave you *khushī*, and sits beside
 Arabic **مدد** *madad*. *Lenā* and *pūchhnā* are inherited; *madad* and *pasand*
 are borrowed. Urdu's hands stayed home; its social words travelled.
 
@@ -106,9 +107,9 @@ are borrowed. Urdu's hands stayed home; its social words travelled.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-PASAND, UR-GRAMMAR-DATIVE-EXPERIENCER, UR-LEX-MADAD-KARNA, UR-GRAMMAR-CONJUNCT-VERB, UR-LEX-PARHNA, UR-LEX-LENA, UR-LEX-PUCHHNA] -->
-<!-- hl-activity: {"id":"UR-C08-pasand-dative","kind":"text","assesses":["UR-GRAMMAR-DATIVE-EXPERIENCER"],"prompt":"Type the Urdu word for 'to me' — the form maiṅ takes when it cannot be the subject.","answer":"مجھے","accepted":["mujhe","mujhe.","mujhay"],"feedback":{"correct":"Right: مجھے — mujhe, 'to me'.","incorrect":"The form is مجھے — mujhe, 'to me'."},"response_seconds":8} -->
+<!-- hl-activity: {"id":"UR-C08-pasand-dative","kind":"text","assesses":["UR-GRAMMAR-DATIVE-EXPERIENCER"],"prompt":"Type the Urdu word for 'to me' — the form maiṅ takes when it cannot be the subject.","answer":"mujhe","accepted":["mujhe.","mujhay"],"feedback":{"correct":"Right: mujhe, 'to me'. Its letters come later; the word is yours now.","incorrect":"The form is mujhe, 'to me'."},"response_seconds":8} -->
 
 [PAUSE 3s] In *mujhe paṛhnā pasand hai*, what is the subject, and what part of
-speech is *pasand*? (**پڑھنا**; a **noun and adjective** from **Persian**.)
+speech is *pasand*? (*paṛhnā*; a **noun and adjective** from **Persian**.)
 
 Sources: [Wiktionary: پسند](https://en.wiktionary.org/wiki/%D9%BE%D8%B3%D9%86%D8%AF); [Wiktionary: پسندیدن](https://en.wiktionary.org/wiki/%D9%BE%D8%B3%D9%86%D8%AF%DB%8C%D8%AF%D9%86).

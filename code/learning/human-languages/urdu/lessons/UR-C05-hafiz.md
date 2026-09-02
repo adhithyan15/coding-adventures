@@ -37,7 +37,8 @@ reviews_of: [UR-C05-khuda]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KHUDA, UR-SCRIPT-KHUDA] -->
 
-[PAUSE 2s] Read **خدا** and say **khudā**. Keep it separate while one second
+[PAUSE 2s] Say **khudā** — a word you hold by ear, not yet by eye. Keep it
+separate while one second
 word is added.
 
 ## You'll want to know first — one word

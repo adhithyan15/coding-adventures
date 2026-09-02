@@ -37,7 +37,7 @@ reviews_of: [UR-C01-shukriya, UR-C01-ji-han]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-JI-HAN, UR-REGISTER-JI-RESPECT, UR-SCRIPT-NUN-GHUNNA-01, UR-LEX-SHUKRIYA] -->
 
-[PAUSE 2s] Say **جی ہاں، شکریہ** — “yes, thank you.” Now learn the answer
+[PAUSE 2s] Say **jī hā̃, shukriyā** — “yes, thank you.” Now learn the answer
 that contrasts with *yes*.
 
 ## Script — recombine known shapes
@@ -63,8 +63,8 @@ This is inherited Indo-Aryan vocabulary and is shared with Hindi **नहीं*
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-JI-HAN, UR-REGISTER-JI-RESPECT, UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-LEX-SHUKRIYA] -->
 
-- **جی ہاں** — *jī hā̃* — yes
-- **نہیں** — *nahī̃* — no
+- *jī hā̃* — yes. Said, not yet read: its first letter is one you have not met.
+- **نہیں** — *nahī̃* — no. This one you built out of known shapes a moment ago.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-SCRIPT-NUN-RECOGNITION-01] -->

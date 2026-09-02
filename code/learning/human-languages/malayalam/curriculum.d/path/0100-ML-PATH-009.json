@@ -3,9 +3,12 @@
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
     "ML-C03-sukhamaano",
-    "ML-C03-sukham"
+    "ML-C03-sukham",
+    "ML-C03-practice"
   ],
   "before": [],
-  "inline": [],
+  "inline": [
+    "ML-EXT-009-CHECKPOINT"
+  ],
   "after": []
 }

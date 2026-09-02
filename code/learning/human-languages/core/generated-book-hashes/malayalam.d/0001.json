@@ -1,8 +1,8 @@
 {
   "language": "malayalam",
   "chapter": 1,
-  "output": "malayalam/book/chapters/ch01-greetings.tex",
-  "embeddedLessonIds": [
+  "sourceHash": "fnv1a64:547a3d0852b626de",
+  "lessonIds": [
     "ML-C01-namaskaram",
     "ML-W01-na-ma-trace",
     "ML-W01-na-ma-guided-copy",
@@ -12,7 +12,12 @@
     "ML-W01-aa-ra-anusvaram",
     "ML-W01-namaskaram-read",
     "ML-W01-namaskaram-dictation",
-    "ML-C01-practice",
-    "ML-S133-letter-a"
-  ]
+    "ML-C01-nandi",
+    "ML-C01-athe",
+    "ML-S133-letter-a",
+    "ML-C01-illa",
+    "ML-C01-sari",
+    "ML-C01-practice"
+  ],
+  "tex": "malayalam/book/chapters/ch01-greetings.tex"
 }
