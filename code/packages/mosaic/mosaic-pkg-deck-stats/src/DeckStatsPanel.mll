@@ -20,7 +20,7 @@ layout DeckStatsPanel {
       }
     }
     Row [ deck-stats-grid ] {
-      Column [ deck-stat-total ] {
+      Box [ deck-stat-total ] {
         Text [ deck-total-value ] (
           content : slot: total-value
         )
@@ -28,7 +28,7 @@ layout DeckStatsPanel {
           content : slot: total-label
         )
       }
-      Column [ deck-stat-new ] {
+      Box [ deck-stat-new ] {
         Text [ deck-new-value ] (
           content : slot: new-value
         )
@@ -36,7 +36,7 @@ layout DeckStatsPanel {
           content : slot: new-label
         )
       }
-      Column [ deck-stat-due ] {
+      Box [ deck-stat-due ] {
         Text [ deck-due-value ] (
           content : slot: due-value
         )
@@ -44,7 +44,7 @@ layout DeckStatsPanel {
           content : slot: due-label
         )
       }
-      Column [ deck-stat-learning ] {
+      Box [ deck-stat-learning ] {
         Text [ deck-learning-value ] (
           content : slot: learning-value
         )
@@ -52,7 +52,7 @@ layout DeckStatsPanel {
           content : slot: learning-label
         )
       }
-      Column [ deck-stat-hidden ] {
+      Box [ deck-stat-hidden ] {
         Text [ deck-hidden-value ] (
           content : slot: hidden-value
         )

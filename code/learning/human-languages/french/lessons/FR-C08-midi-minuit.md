@@ -11,7 +11,7 @@ sounds: [nasal-in, silent-h]
 roots: [medius-dies-latin, media-nox-latin]
 etymology_hook: "midi ← medius diēs 'mid-day', minuit ← media nox 'mid-night' — the two hours named not by number but by the middle of day and night"
 est_minutes: 4
-reviews_of: [FR-C08-heure, FR-C07-jours-2]
+reviews_of: [FR-C08-heure, FR-C07-dimanche]
 ---
 
 # midi and minuit — noon and midnight

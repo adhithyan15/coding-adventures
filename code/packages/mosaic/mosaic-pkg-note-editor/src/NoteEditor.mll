@@ -14,7 +14,7 @@ layout NoteEditor {
           content : slot: note-id-value
         )
       }
-      Column [ note-type-meta ] {
+      Box [ note-type-meta ] {
         Text [ note-type-label ] (
           content : slot: note-type-label
         )
@@ -22,7 +22,7 @@ layout NoteEditor {
           content : slot: note-type-value
         )
       }
-      Column [ deck-meta ] {
+      Box [ deck-meta ] {
         Text [ deck-label ] (
           content : slot: deck-label
         )
@@ -73,7 +73,7 @@ layout NoteEditor {
           }
         }
       }
-      Column [ focused-field-column ] {
+      Box [ focused-field-column ] {
         Text [ selected-field-label ] (
           content : slot: selected-field-label
         )

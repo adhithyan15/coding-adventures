@@ -1,16 +1,23 @@
 {
   "language": "french",
   "chapter": 7,
-  "sourceHash": "fnv1a64:b303679faa1f6f60",
+  "sourceHash": "fnv1a64:c80d4714467efee8",
   "lessonIds": [
-    "FR-C07-jours-1",
-    "FR-C07-jours-2"
+    "FR-C07-lune",
+    "FR-C07-lundi",
+    "FR-C07-mardi",
+    "FR-C07-mercredi",
+    "FR-C07-jeudi",
+    "FR-C07-vendredi",
+    "FR-C07-samedi",
+    "FR-C07-dimanche",
+    "FR-C07-practice"
   ],
-  "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
   "text": "french/narration/ch07.txt",
   "json": "french/narration/ch07.json",
-  "textHash": "fnv1a64:9e5a5270e9d9b801",
-  "jsonHash": "fnv1a64:079e7d09d3f7cc3a",
+  "textHash": "fnv1a64:039d7889f31af664",
+  "jsonHash": "fnv1a64:24ff1485047ab88e",
   "findings": []
 }

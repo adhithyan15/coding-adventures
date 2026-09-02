@@ -4,18 +4,21 @@
     "language": "urdu",
     "chapter": 1,
     "sequence": 10,
-    "modality": "voice",
-    "derived": "voice",
-    "drivable": true,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
     "reasons": [
-      "no-visual-dependency"
+      "script-block"
     ],
     "coreModality": "voice",
     "coreReasons": [
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:22f7084edd86a5e8"
+    "sourceHash": "fnv1a64:4fdcfcd54a771dfd",
+    "detachableSegments": [
+      "Script — notice the direction"
+    ]
   },
   "findings": []
 }
