@@ -355,10 +355,17 @@ describe("corpus snapshot", () => {
       trackChapters: loadTrackChapters(),
       policy: loadChapterPolicy(),
     });
-    // HL-C156: kannada, telugu leave this list — each now carries
-    // one-character script segments whose typed-atom payoff debt is not yet paid.
+    // HL-C156: kannada, telugu left this list — each carried one-character
+    // script segments whose typed-atom payoff debt was not yet paid.
     // Capability closure makes nine more tracks clean. Tracks omitted from this list
     // still carry typed-atom payoff debt, even though none lacks a chapter capability.
+    //
+    // telugu is BACK: retiring its five hand-written chapters into the generator
+    // required migrating their 30 lessons to schema v2, which gave chapters 1-5
+    // typed atoms for the first time -- and a payoff that names them. Its debt
+    // was never about the script segments; it was that a v1 chapter has no atoms
+    // for a payoff to be representative OF. kannada stays out until its own
+    // chapters are migrated.
     expect(report.tracks.filter((t) => t.clean).map((t) => t.language).sort()).toEqual([
       "bengali",
       "chinese",
@@ -369,6 +376,7 @@ describe("corpus snapshot", () => {
       "marathi",
       "marwadi",
       "punjabi",
+      "telugu",
     ]);
   });
 
