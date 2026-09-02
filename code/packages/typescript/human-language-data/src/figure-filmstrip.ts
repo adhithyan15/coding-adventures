@@ -380,7 +380,22 @@ export function renderScriptFilmstripFigure(
   if (entry.frames.length === 0) {
     throw new Error(`${lessonId}: filmstrip entry has no frames`);
   }
-  if (entry.viewBox.width <= 0 || entry.viewBox.height <= 0) {
+  // The four viewBox members are the ONLY ledger values that reach an attribute
+  // without going through `escapeXml`, because they are supposed to be numbers.
+  // "Supposed to be" is a claim about the type declaration; the ledger is JSON,
+  // and JSON parses into whatever it says. A string here would be interpolated
+  // straight into `viewBox="..."` and could close the attribute and open an
+  // `onload` — so the type is CHECKED, not assumed. A real number cannot
+  // contain a quote, which ends the whole class of problem rather than escaping
+  // around it.
+  //
+  // Note what the old `<g transform="translate(x - s*minX, ...)">` form did for
+  // free: it consumed these values in arithmetic, so a string degraded to `NaN`
+  // and never reached the output as text. Moving to a nested viewport put them
+  // in an attribute verbatim, which is exactly the kind of consequence a
+  // security fix is most likely to carry in with it.
+  const viewBox = assertFiniteViewBox(entry.viewBox, lessonId);
+  if (viewBox.width <= 0 || viewBox.height <= 0) {
     throw new Error(`${lessonId}: filmstrip entry has an empty viewBox`);
   }
   if (entry.source.citation.trim() === "" || entry.source.url.trim() === "") {
@@ -394,7 +409,7 @@ export function renderScriptFilmstripFigure(
 
   // The panel takes its height from the letter's own box, so the nested viewport
   // below fits exactly and `preserveAspectRatio` never has to letterbox.
-  const frameHeight = round((entry.viewBox.height * FRAME_WIDTH) / entry.viewBox.width);
+  const frameHeight = round((viewBox.height * FRAME_WIDTH) / viewBox.width);
   const columns = Math.min(entry.frames.length, MAX_COLUMNS);
   const rows = Math.ceil(entry.frames.length / columns);
   const gridWidth = columns * FRAME_WIDTH + (columns - 1) * FRAME_GAP;
@@ -484,8 +499,8 @@ export function renderScriptFilmstripFigure(
     // so keeps every renderer agreeing about it.
     parts.push(
       `<svg x="${x}" y="${y}" width="${FRAME_WIDTH}" height="${frameHeight}" ` +
-        `viewBox="${entry.viewBox.minX} ${entry.viewBox.minY} ${entry.viewBox.width} ` +
-        `${entry.viewBox.height}" preserveAspectRatio="xMidYMid meet" ` +
+        `viewBox="${viewBox.minX} ${viewBox.minY} ${viewBox.width} ` +
+        `${viewBox.height}" preserveAspectRatio="xMidYMid meet" ` +
         `overflow="hidden">${frame.markup}</svg>`,
     );
   });
@@ -509,6 +524,73 @@ export function renderScriptFilmstripFigure(
   };
 }
 
+/**
+ * The viewBox, proven to be four finite numbers.
+ *
+ * Exported because `renderScriptFilmstripFigure` is not the only door: a caller
+ * with a ledger entry in hand should be able to make the same check.
+ */
+export function assertFiniteViewBox(
+  box: FilmstripViewBox,
+  where: string,
+): FilmstripViewBox {
+  const checked = { minX: 0, minY: 0, width: 0, height: 0 };
+  for (const key of ["minX", "minY", "width", "height"] as const) {
+    const value: unknown = box?.[key];
+    if (typeof value !== "number" || !Number.isFinite(value)) {
+      throw new Error(`${where}: filmstrip viewBox ${key} is not a finite number`);
+    }
+    checked[key] = value;
+  }
+  return checked;
+}
+
+function assertString(value: unknown, where: string, field: string): string {
+  if (typeof value !== "string") {
+    throw new Error(`${where}: filmstrip ${field} is not a string`);
+  }
+  return value;
+}
+
+/**
+ * Prove one entry has the shape its type claims.
+ *
+ * `readLedgerFile<T>` parses JSON and casts; the cast is a promise to the
+ * compiler, not a check at runtime. Everything downstream — the escaping, the
+ * markup allowlist, the viewBox interpolation — assumes strings are strings and
+ * numbers are numbers, so that assumption is established here, once, at the
+ * point the file is read, rather than re-argued at each use.
+ */
+export function assertFilmstripEntry(entry: FilmstripEntry, where: string): void {
+  assertString(entry.script, where, "script");
+  assertString(entry.glyph, where, "glyph");
+  assertString(entry.font, where, "font");
+  if (entry.sequence !== undefined) assertString(entry.sequence, where, "sequence");
+  assertString(entry.summary, where, "summary");
+  assertString(entry.source?.citation, where, "source.citation");
+  assertString(entry.source?.url, where, "source.url");
+  if (entry.source.variation !== undefined) {
+    assertString(entry.source.variation, where, "source.variation");
+  }
+  if (typeof entry.penLifts !== "number" || !Number.isInteger(entry.penLifts)) {
+    throw new Error(`${where}: filmstrip penLifts is not a whole number`);
+  }
+  assertFiniteViewBox(entry.viewBox, where);
+  if (!Array.isArray(entry.frames)) {
+    throw new Error(`${where}: filmstrip frames is not a list`);
+  }
+  for (const frame of entry.frames) {
+    if (typeof frame?.number !== "number" || !Number.isInteger(frame.number)) {
+      throw new Error(`${where}: filmstrip frame number is not a whole number`);
+    }
+    assertString(frame.label, where, `frame ${frame.number} label`);
+    assertString(frame.markup, where, `frame ${frame.number} markup`);
+    if (typeof frame.startsAfterLift !== "boolean") {
+      throw new Error(`${where}: filmstrip frame ${frame.number} lift flag is not a boolean`);
+    }
+  }
+}
+
 /** Index a ledger by `script:glyph`, rejecting a malformed or duplicated file. */
 export function indexFilmstripLedger(
   ledger: FilmstripLedger,
@@ -518,6 +600,7 @@ export function indexFilmstripLedger(
   }
   const index = new Map<string, FilmstripEntry>();
   for (const entry of ledger.entries) {
+    assertFilmstripEntry(entry, FILMSTRIP_LEDGER_PATH);
     const key = `${entry.script}:${entry.glyph}`;
     if (index.has(key)) {
       throw new Error(`${FILMSTRIP_LEDGER_PATH}: duplicate entry ${key}`);

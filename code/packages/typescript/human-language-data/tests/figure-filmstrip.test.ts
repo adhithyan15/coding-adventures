@@ -3,6 +3,8 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { defaultCurriculumRoot } from "../src/loader.js";
 import {
+  assertFilmstripEntry,
+  assertFiniteViewBox,
   assertSafeFilmstripMarkup,
   indexFilmstripLedger,
   renderScriptFilmstripFigure,
@@ -127,6 +129,61 @@ describe("the printed filmstrip", () => {
     expect(() =>
       renderScriptFilmstripFigure("X", entry({ viewBox: { minX: 0, minY: 0, width: 0, height: 4 } })),
     ).toThrow(/empty viewBox/);
+  });
+
+  it("refuses a viewBox that is not four finite numbers", () => {
+    // These four are the only ledger values that reach an attribute without
+    // going through `escapeXml`, because they are supposed to be numbers. The
+    // ledger is JSON, so "supposed to be" has to be checked: a string here
+    // would close `viewBox="..."` and open whatever came next.
+    for (const hostile of [
+      '-41" onload="alert(document.domain)" data-x="',
+      '-41"/><script>alert(1)</script><svg viewBox="-41',
+      '-41"/><text>Stroke order after A. Ttacker</text><svg viewBox="-41',
+      Number.NaN,
+      Number.POSITIVE_INFINITY,
+      null,
+      undefined,
+    ]) {
+      const hostileEntry = entry();
+      (hostileEntry.viewBox as unknown as Record<string, unknown>).minX = hostile;
+      expect(() => renderScriptFilmstripFigure("X", hostileEntry)).toThrow(
+        /viewBox minX is not a finite number/,
+      );
+    }
+    expect(assertFiniteViewBox({ minX: -1, minY: -2, width: 3, height: 4 }, "f")).toEqual({
+      minX: -1,
+      minY: -2,
+      width: 3,
+      height: 4,
+    });
+  });
+
+  it("proves an entry has the shape its type claims", () => {
+    // `readLedgerFile<T>` parses JSON and casts; the cast is a promise to the
+    // compiler, not a check at runtime.
+    expect(() => assertFilmstripEntry(entry(), "f")).not.toThrow();
+    const cases: Array<[string, (value: Record<string, unknown>) => void]> = [
+      ["glyph is not a string", (e) => (e.glyph = 7)],
+      ["source.url is not a string", (e) => (e.source = { citation: "c", url: 7 })],
+      ["penLifts is not a whole number", (e) => (e.penLifts = "one")],
+      ["frames is not a list", (e) => (e.frames = "none")],
+      [
+        "frame 1 markup is not a string",
+        (e) => ((e.frames as Array<Record<string, unknown>>)[0].markup = 7),
+      ],
+      [
+        "frame 1 lift flag is not a boolean",
+        (e) => ((e.frames as Array<Record<string, unknown>>)[0].startsAfterLift = "yes"),
+      ],
+    ];
+    for (const [message, break_] of cases) {
+      const broken = entry() as unknown as Record<string, unknown>;
+      break_(broken);
+      expect(() => assertFilmstripEntry(broken as unknown as FilmstripEntry, "f")).toThrow(
+        message,
+      );
+    }
   });
 
   it("is a pure function of the ledger entry", () => {

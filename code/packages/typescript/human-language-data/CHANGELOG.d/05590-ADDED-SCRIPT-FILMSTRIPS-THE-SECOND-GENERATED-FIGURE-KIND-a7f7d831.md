@@ -23,6 +23,11 @@
   has to be on the allowlist, and one `translate` with the right numbers would
   otherwise drop an allowlisted `<text>` exactly where the citation line goes:
   containment is geometry, so it gets a geometry answer rather than an assertion.
+- `indexFilmstripLedger` proves each entry has the shape its TypeScript type
+  claims. `readLedgerFile<T>` parses JSON and casts, and a cast is a promise to
+  the compiler rather than a check at runtime — so strings are checked to be
+  strings and the four `viewBox` members to be finite numbers, which is what
+  keeps them safe to write into an attribute without escaping.
 - Long letters wrap onto further rows at six frames per row rather than running
   off the page. The citation prints under the strip; a source's full note on
   variation goes into `<desc>` so it travels in the file without burying the art.
