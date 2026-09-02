@@ -81,7 +81,7 @@ table muscle_body_aspect {
     row (sartorius, anterior)
     row (gastrocnemius, posterior)
 
-    source "The rectus abdominis ... is a pair of segmented skeletal muscle on the ventral aspect of a person's abdomen."
+    source "The rectus abdominis, (Latin: straight abdominal) also known as the \"abdominal muscle\" or simply better known as the \"abs\", and sometimes informally referred to as the \"six-pack\", is a pair of segmented skeletal muscle on the ventral aspect of a person's abdomen."
     locator "https://en.wikipedia.org/wiki/Rectus_abdominis_muscle"
     trust consensus
 }
