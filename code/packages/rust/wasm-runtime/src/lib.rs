@@ -1279,6 +1279,19 @@ pub struct WasmInstance {
     /// (a plain `u64` copy -- unlike `SelfFunctionResolver` itself, this
     /// needs no live `Rc<RefCell<WasmInstance>>` at all).
     pub instance_identity: u64,
+    /// `(table_index, offset, count)` for every entry an ACTIVE elem
+    /// segment wrote during THIS instance's own `instantiate()` call
+    /// (W35 fourth slice, security-review finding) -- the exact,
+    /// precisely-bounded set of table slots [`resolve_all_table_funcrefs`]
+    /// is safe to resolve, in THIS instance's own combined function-index
+    /// space. See that function's own doc comment for why this replaced
+    /// an earlier, less precise "scan every currently-`Raw` entry"
+    /// design: a table's `Raw` entries are not exclusively "unresolved
+    /// writes this instance just made" -- a LIVE `table.init`/`table.set`
+    /// on some OTHER, already-registered instance sharing the same table
+    /// can also leave one there, at any later point, which a scan-based
+    /// fixup could not tell apart from this instance's own write.
+    pub active_elem_writes: Vec<(u32, u32, u32)>,
 }
 
 /// Process-wide counter minting a fresh, never-repeating canonical tag
@@ -1468,8 +1481,48 @@ impl HostFunction for LocalFunctionRef {
     /// ([`WasmRuntime::call_by_index`]), not `call_typed`
     /// (`CrossModuleFunction`'s own shape) -- `func_index` here need not
     /// even be exported (`linking.wast`'s own `$g` example).
+    ///
+    /// **W35 fourth slice, security-review finding**: `try_borrow_mut`,
+    /// NOT a plain `borrow_mut()` that panics on conflict. Before this
+    /// slice, a `LocalFunctionRef` was never actually reachable from
+    /// production code at all (`resolve_func_ref_for_instance`'s own
+    /// doc comment: "not currently called by `instantiate()`"), so this
+    /// path never ran. This slice's own fixup pass makes it reachable —
+    /// and a REAL, deterministic, ordinary (non-circular) linking pattern
+    /// reaches it with `self.instance` ALREADY mutably borrowed: instance
+    /// `B` calls into instance `A` (an ordinary, already-tested cross-
+    /// module `call`, holding `B`'s own `Rc<RefCell<WasmInstance>>`
+    /// borrowed for the whole call); `A`'s own `call_indirect` reads a
+    /// table entry `B` earlier wrote (a `LocalFunctionRef` targeting
+    /// `B` itself); `A`'s own `effective_local_index` can't find `B`'s
+    /// function in `A`'s own `func_identities` (it isn't imported by
+    /// `A`), so dispatch falls through to `callable.call(..)` here --
+    /// re-entering `B`'s own, ALREADY-borrowed `Rc<RefCell<WasmInstance>>`.
+    /// This is NOT the pre-existing, accepted "genuinely mutual
+    /// cross-instance cycle" risk (`CrossModuleFunction`'s own doc
+    /// comment) -- `B` calling `A` once, with `A` merely dispatching a
+    /// stored reference back to `B`, is a completely ordinary linking
+    /// shape, not a deliberately-constructed cycle. A bare `borrow_mut()`
+    /// here would be a NEW, easily-triggered process panic (a real DoS
+    /// against the embedding host, and specifically a real diagnostic
+    /// gap for this crate's own conformance harness: an entire report run
+    /// aborting instead of one directive grading `Fail`/`Trap`) on an
+    /// ordinary corpus pattern, not the malicious-cycle corner case. A
+    /// borrow conflict becomes a clean, catchable `TrapError` instead --
+    /// this repo's own "never trade loud for silent" convention cuts the
+    /// OTHER way here: a Rust panic is technically "loud," but it is an
+    /// uncatchable process abort in this crate's own callers (a batch
+    /// report run, or a real host embedding this interpreter), which is
+    /// WORSE than a gracefully reported trap, not better.
     fn call(&self, args: &[WasmValue], _memory: Option<&mut LinearMemory>) -> Result<Vec<WasmValue>, TrapError> {
-        let mut instance = self.instance.borrow_mut();
+        let mut instance = self.instance.try_borrow_mut().map_err(|_| {
+            TrapError::new(
+                "cross-instance funcref dispatch failed: the target instance is already executing \
+                 (a re-entrant call back into an instance already on the call stack) -- this trap, not a panic, \
+                 is the correct failure mode for this shape"
+                    .to_string(),
+            )
+        })?;
         WasmRuntime::new().call_by_index(&mut instance, self.func_index as usize, args)
     }
 }
@@ -1520,7 +1573,39 @@ pub fn resolve_func_ref_for_instance(instance_rc: &Rc<RefCell<WasmInstance>>, fu
             identity: hf.identity(),
             callable: hf.clone(),
             local_index: Some(func_index),
-            owner_instance_identity: None,
+            // W35 fourth slice, a real gap this slice's own corpus
+            // verification found (NOT `None`, contrary to this field's own
+            // doc comment as slice 3 left it): `func_index` here is only
+            // meaningful as "`ctx.host_functions[func_index]`" within THIS
+            // resolving instance's own combined index space -- it is NOT
+            // universally safe "in whatever ctx currently holds it" the
+            // way that comment claims, once this target can be written
+            // into a table/global SHARED with a genuinely different
+            // instance (exactly what this slice's own fixup pass, unlike
+            // slices 1-3, now does). Reproduced directly against
+            // `linking.wast`'s own `$Ot` example: `$Ot` imports `$Mt`'s
+            // `h` export as `$Ot`'s OWN combined-index-space slot 0, then
+            // writes it (via `$Ot`'s own active elem segment) into
+            // `$Mt`'s SHARED table at index 2. With `owner_instance_
+            // identity: None` here, `$Mt`'s own later `call_indirect`
+            // through that SAME table slot (`$Mt`'s own ctx, whose
+            // `instance_identity` differs from `$Ot`'s) incorrectly
+            // trusted `local_index: Some(0)` as ITS OWN slot 0 -- but
+            // `$Mt` has NO imports, so `$Mt`'s own slot 0 is `$g`, a
+            // COMPLETELY DIFFERENT function -- producing a confirmed,
+            // silent WRONG ANSWER (`(assert_return (invoke $Mt "call"
+            // (i32.const 2)) (i32.const -4))` returned `4` instead).
+            // Tagging the RESOLVING instance's own identity here (mirroring
+            // the LOCAL-function branch below exactly) makes
+            // `effective_local_index` correctly fall through to
+            // `target.callable.call(..)` -- the real, already-resolved
+            // `CrossModuleFunction`/host function, safe to invoke from ANY
+            // instance -- whenever a genuinely different instance's ctx
+            // dispatches this target, while still taking the cheap
+            // `local_index` path (byte-for-byte unchanged performance) for
+            // every SAME-instance read, which is every case any
+            // pre-slice-4 test ever reached.
+            owner_instance_identity: Some(instance.instance_identity),
         });
     }
     let func_type = instance
@@ -1554,6 +1639,148 @@ pub fn resolve_func_ref_for_instance(instance_rc: &Rc<RefCell<WasmInstance>>, fu
         local_index: Some(func_index),
         owner_instance_identity: Some(owner),
     })
+}
+
+/// The declared element-type TAG (`wasm_types::TableType::element_type`)
+/// for the COMBINED-index-space table `index` in `instance` (W35 fourth
+/// slice) -- mirrors `combined_function_type_idx`-style helpers already
+/// used at this crate's own call sites, just for tables' "imports first,
+/// then module-defined" index space instead of functions'. `None` at an
+/// out-of-range index (never expected for a validated module, but handled
+/// without panicking).
+///
+/// **Why this matters for [`resolve_all_table_funcrefs`] below**: `Table`/
+/// `TableStorage` (`wasm-execution`) do NOT track their own declared
+/// element type at runtime -- an EXTERNREF (or any other non-funcref
+/// reference) table's entries are `TableElement::Raw(u32)` for a
+/// completely different reason than an unresolved FUNCREF entry is
+/// (`TableElement`'s own doc comment: "the ONLY variant a non-funcref ...
+/// table entry ever uses"). Reproduced directly during this slice's own
+/// corpus verification: resolving every `Raw` entry in every table
+/// unconditionally corrupted `elem.wast`'s own "Initializing a table with
+/// an externref-type element segment" test -- a real `(ref.extern 42)`
+/// value, stored as `Raw(42)`, got reinterpreted as function index `42`.
+fn combined_table_element_type(instance: &WasmInstance, index: u32) -> Option<u8> {
+    let imported_table_count = instance.module.imports.iter().filter(|i| i.kind == ExternalKind::Table).count() as u32;
+    if index < imported_table_count {
+        instance
+            .module
+            .imports
+            .iter()
+            .filter(|i| i.kind == ExternalKind::Table)
+            .nth(index as usize)
+            .and_then(|imp| match &imp.type_info {
+                ImportTypeInfo::Table(tt) => Some(tt.element_type),
+                _ => None,
+            })
+    } else {
+        instance.module.tables.get((index - imported_table_count) as usize).map(|tt| tt.element_type)
+    }
+}
+
+/// This codebase's single-byte encoding for a FUNCREF-family table
+/// (`wasm_types::TableType::element_type`'s own doc comment: "every
+/// concrete function reference is funcref-family"). See
+/// `combined_table_element_type`'s own doc comment.
+const FUNCREF_ELEMENT_TYPE: u8 = 0x70;
+
+/// The "resolution fixup pass" (W35 fourth slice, `code/specs/
+/// W35-wasm-cross-instance-function-identity.md`) for TABLES specifically:
+/// resolve every `TableElement::Raw` entry `instance`'s own
+/// `active_elem_writes` names (owned or imported table -- see the "why
+/// ALL tables" note below) into a real, cross-instance-safe
+/// `TableElement::Func`, via [`resolve_func_ref_for_instance`]. `pub` so
+/// both this crate's own `instantiate()` (its error path -- see that
+/// function's own doc comment) and `wasm-conformance`'s `ModuleRegistry`-
+/// driven post-registration fixup call the exact same logic, rather than
+/// maintaining two independent copies that could silently drift apart.
+///
+/// **Why driven by `active_elem_writes` (a precise, recorded list),
+/// NOT a scan for `TableElement::Raw` entries** -- a security-review
+/// finding, not the original design: an earlier version of this pass
+/// scanned every currently-`Raw` entry in every table `instance.tables`
+/// exposes, on the theory that "the only `Raw` entries left, by the time
+/// `instance`'s own fixup runs, are ones `instance` itself just wrote."
+/// That theory is FALSE in general: a LIVE `table.init`/`table.set`/
+/// `table.fill`/`table.grow` on some OTHER, ALREADY-registered instance
+/// sharing the SAME table can leave a `Raw` entry there too, at any LATER
+/// point in the script -- well after `instance`'s own fixup already ran.
+/// A scan-based fixup running for a THIRD instance that merely imports
+/// that same table (without writing to it) could not tell such a
+/// foreign, stale entry apart from one it should resolve using its OWN
+/// context, misattributing it to the WRONG instance's combined
+/// function-index space -- a silent wrong dispatch, exactly the bug
+/// class this whole spec exists to fix, not reintroduce. Driving strictly
+/// off `active_elem_writes` (populated ONLY by `instantiate()`'s own
+/// active-elem-segment application, at the exact moment it happens, for
+/// THIS instance alone) makes that misattribution structurally
+/// impossible: no scanning, no guessing about provenance, only the exact
+/// slots this instance's own instantiate() call is certain it just wrote.
+///
+/// **Why ALL tables, not just ones `instance` itself DECLARES**: a
+/// module can write into an IMPORTED (shared) table via its own active
+/// elem segment, in ITS OWN combined function-index space --
+/// `linking.wast`'s own `$Ot` (imports `$Mt`'s `"tab"`, then overwrites
+/// two of its entries via `$Ot`'s OWN `elem`) is exactly this shape. An
+/// "owned tables only" fixup would never touch the entries `$Ot` itself
+/// just wrote (imported, not owned, from `$Ot`'s perspective), leaving
+/// them `Raw` forever -- `active_elem_writes` names the TABLE INDEX
+/// directly (regardless of ownership), so this is handled for free.
+///
+/// **Why funcref-typed tables only**: see `combined_table_element_type`'s
+/// own doc comment -- an externref table's `Raw` entries are a real,
+/// opaque payload, never a function index, and must never be
+/// reinterpreted as one. (Belt-and-suspenders here: `wasm-validator`
+/// already guarantees an elem segment only ever targets a funcref-family
+/// table, so this check should never actually trigger in practice for an
+/// entry `active_elem_writes` names -- kept anyway as a second,
+/// independent line of defense against exactly the class of bug this
+/// function exists to prevent.)
+///
+/// **Why NOT globals too** (a deliberate narrowing from this pass's own
+/// original design): see `wasm-conformance::resolve_owned_funcrefs`'s own
+/// doc comment for the full, reproduced regression (`return_call_ref.
+/// wast`'s own deep tail-recursion tests exhausting `wasm-execution`'s
+/// `func_ref_heap` once a funcref-typed global's `func_ref` becomes
+/// `Some`, since `global.get` mints a FRESH heap handle on every read
+/// with no `owner_instance_identity`-style same-instance fast path).
+/// Since no vendored corpus file needs cross-instance funcref-GLOBAL
+/// resolution at all (confirmed by direct grep, per the spec's own text),
+/// this pass is scoped to tables only.
+pub fn resolve_all_table_funcrefs(instance_rc: &Rc<RefCell<WasmInstance>>) -> Result<(), TrapError> {
+    // One short, shared borrow to snapshot everything needed -- dropped
+    // before any resolution call runs, so `resolve_func_ref_for_instance`'s
+    // own (also shared) `.borrow()` never overlaps a MUTABLE borrow of
+    // `instance_rc` here. Never calls `instance_rc.borrow_mut()` at all:
+    // the actual mutation goes through `Table`'s OWN inner
+    // `Rc<RefCell<TableStorage>>` (a DIFFERENT `RefCell`), exactly like a
+    // live `table.set` opcode handler already does.
+    let (tables, writes) = {
+        let instance = instance_rc.borrow();
+        (instance.tables.clone(), instance.active_elem_writes.clone())
+    };
+
+    for (table_index, offset, count) in writes {
+        let Some(table) = tables.get(table_index as usize) else {
+            continue; // defensive only -- `instantiate()` never records an out-of-range table index
+        };
+        if combined_table_element_type(&instance_rc.borrow(), table_index) != Some(FUNCREF_ELEMENT_TYPE) {
+            continue;
+        }
+        for slot in offset..offset.saturating_add(count) {
+            if let Some(TableElement::Raw(func_idx)) = table.get(slot)? {
+                let target = resolve_func_ref_for_instance(instance_rc, func_idx)?;
+                // `Table` is `Clone` over a shared `Rc<RefCell<TableStorage>>`
+                // (W28) -- mutating THIS local clone's inner storage is
+                // observable through every other clone, no `&mut
+                // WasmInstance` needed at all.
+                let mut t = table.clone();
+                t.set(slot, Some(TableElement::Func(target)))?;
+            }
+        }
+    }
+
+    Ok(())
 }
 
 /// Real [`SelfFunctionResolver`] implementation (W35 third slice, design
@@ -2175,6 +2402,42 @@ impl WasmRuntime {
         // in the 257-file corpus -- each block's OWN internal
         // per-segment-atomicity/bounds-checking logic is unchanged, only
         // their RELATIVE order moved.
+        // W35 fourth slice, security-review finding: `(table_index,
+        // offset, count)` for every entry an ACTIVE elem segment writes
+        // below -- the EXACT set of slots this call's own fixup (success
+        // path: `wasm-conformance`'s registry-driven `resolve_all_table_
+        // funcrefs`; error path: immediately below) is safe to resolve.
+        //
+        // This replaces an earlier, LESS precise design (scan every
+        // currently-`Raw` entry in every visible table) that a security
+        // review found unsound: a table's `Raw` entries are NOT
+        // exclusively "unresolved writes THIS instance's own instantiate()
+        // call just made" -- a LIVE `table.init`/`table.set`/`table.fill`/
+        // `table.grow` on some OTHER, ALREADY-registered instance sharing
+        // the SAME table can leave a `Raw` entry there at any LATER point
+        // in the script, well after this instance's own fixup already
+        // ran. Scanning "every currently-`Raw` entry" at THIS instance's
+        // own fixup time could not distinguish that stale, foreign entry
+        // from one this instance itself just wrote -- misattributing it
+        // to the WRONG instance's combined index space, a silent wrong
+        // dispatch, exactly the class of bug this whole spec exists to
+        // fix, not reintroduce. Recording the PRECISE ranges here, at the
+        // exact moment this instance's own active elem segment writes
+        // them, makes that misattribution structurally impossible: no
+        // scanning, no guessing, only the slots this call is certain it
+        // just wrote.
+        let mut active_elem_writes: Vec<(u32, u32, u32)> = Vec::new();
+
+        // W35 fourth slice: the elem-segment and data-segment loops below
+        // are wrapped in an IIFE returning `Result<(), TrapError>` --
+        // their own bodies are BYTE-FOR-BYTE UNCHANGED from before this
+        // slice (every `?` inside still propagates exactly where it always
+        // did, just now out of this closure instead of `instantiate()`
+        // itself) -- purely so a trap from EITHER loop can be intercepted
+        // once, uniformly, right below, before propagating: see the
+        // "ephemeral trap-discarded instance" handling immediately after
+        // this closure's own call site for why.
+        let elem_data_result: Result<(), TrapError> = (|| -> Result<(), TrapError> {
         for elem in &module.elements {
             if elem.is_passive {
                 continue;
@@ -2258,6 +2521,14 @@ impl WasmRuntime {
                 for (j, &func_idx) in elem.function_indices.iter().enumerate() {
                     table.set((offset_num + j as u64) as u32, func_idx.map(TableElement::Raw))?;
                 }
+                // W35 fourth slice: record exactly what was just written,
+                // now that the whole segment's own bounds check and every
+                // `table.set` above succeeded -- see `active_elem_writes`'s
+                // own doc comment above this closure for why this
+                // precision (not a post-hoc scan) is load-bearing.
+                if count > 0 {
+                    active_elem_writes.push((elem.table_index, offset_num as u32, count as u32));
+                }
             }
         }
 
@@ -2301,6 +2572,72 @@ impl WasmRuntime {
             };
             mem.write_bytes(offset_num, &seg.data)?;
         }
+        Ok(())
+        })();
+
+        if let Err(e) = elem_data_result {
+            // W35 fourth slice: a module whose OWN active elem segment
+            // writes into a table (owned OR imported/SHARED, e.g.
+            // `linking0.wast`/`linking3.wast`'s own anonymous
+            // `assert_trap`-wrapped modules) before a LATER data-segment
+            // trap discards the `WasmInstance` this function would
+            // otherwise have returned -- see this function's own extended
+            // doc comment on the "MAJOR deviation" for why NEITHER
+            // `instantiate()`'s own SUCCESS path (this exact same
+            // resolution, deferred to `wasm-conformance`'s registry-driven
+            // fixup, per that section) NOR this ERROR path can use the
+            // spec's own literal "wrap `instance`, fix up, `Rc::try_unwrap`
+            // back to a bare value" recipe -- but this ERROR path doesn't
+            // need `try_unwrap` to succeed at all, since it is about to
+            // return `Err`, never a bare owned `WasmInstance`. A TEMPORARY
+            // `Rc<RefCell<WasmInstance>>`, built from this call's own
+            // current state and never unwrapped, is enough: any
+            // `FuncRefTarget` this resolves and durably writes into a
+            // SHARED table (via `resolve_all_table_funcrefs`) holds its
+            // OWN `Rc` clone of this temporary instance, keeping it alive
+            // via ordinary refcounting long after this `instantiate()`
+            // call returns and its own local `temp_rc` variable is
+            // dropped -- exactly the same "an `Rc` survives via whoever
+            // still holds a clone, not via who declared it" reasoning
+            // `wasm-conformance`'s own `ModuleRegistry` already relies on.
+            // Best-effort (`let _ =`): a failure INSIDE the fixup itself
+            // (only possible for a segment naming a genuinely out-of-range
+            // function index -- unreachable for anything that passed
+            // `wasm-validator::validate`) must never mask or replace the
+            // REAL, original instantiation trap `e` -- that's still the
+            // error this function promises to report.
+            let temp_instance = WasmInstance {
+                module: module.clone(),
+                memories: memories.clone(),
+                tables: tables.clone(),
+                globals: globals.clone(),
+                global_types: global_types.clone(),
+                func_types: func_types.clone(),
+                func_type_indices: func_type_indices.clone(),
+                canonical_types: canonical_types.clone(),
+                func_bodies: func_bodies.clone(),
+                host_functions: host_functions.clone(),
+                tags: tags.clone(),
+                tag_identities: tag_identities.clone(),
+                exports: module.exports.iter().map(|ex| (ex.name.clone(), ex.kind, ex.index)).collect(),
+                v128_heap: v128_heap.clone(),
+                gc_heap: gc_heap.clone(),
+                dropped_data_segments: vec![false; module.data.len()],
+                dropped_elements: vec![false; module.elements.len()],
+                func_identities: func_identities.clone(),
+                instance_identity: NEXT_INSTANCE_IDENTITY.fetch_add(1, Ordering::Relaxed),
+                // Whatever this call's own closure successfully recorded
+                // before the trap that brought us here -- exactly the
+                // slots THIS instance itself wrote, nothing more (an
+                // elem segment that never got applied, because an
+                // EARLIER one in the same loop already trapped, was
+                // never pushed above).
+                active_elem_writes: active_elem_writes.clone(),
+            };
+            let temp_rc = Rc::new(RefCell::new(temp_instance));
+            let _ = resolve_all_table_funcrefs(&temp_rc);
+            return Err(e);
+        }
 
         // Build export list.
         let exports: Vec<(String, ExternalKind, u32)> = module
@@ -2342,6 +2679,7 @@ impl WasmRuntime {
             // from the dedicated `NEXT_INSTANCE_IDENTITY` counter -- see
             // `WasmInstance::instance_identity`'s own doc comment.
             instance_identity: NEXT_INSTANCE_IDENTITY.fetch_add(1, Ordering::Relaxed),
+            active_elem_writes,
         };
 
         // **Major, evidence-backed deviation from the spec's own literal
@@ -2456,7 +2794,27 @@ impl WasmRuntime {
         // trap, the same `Err` path any other instantiation-time fault
         // (a data/elem segment out of bounds) already takes.
         if let Some(start_idx) = module.start {
-            self.call_engine(&mut instance, start_idx as usize, &[])?;
+            if let Err(e) = self.call_engine(&mut instance, start_idx as usize, &[]) {
+                // W35 fourth slice: the identical "ephemeral trap-discarded
+                // instance" case the elem/data-segment loops handle above,
+                // just for a START FUNCTION's own trap instead --
+                // `linking3.wast`'s own `$Ms`/`"get table[0]"` example is
+                // exactly this shape: an anonymous module's ACTIVE elem
+                // segment (applied above, successfully, before this point)
+                // writes into `$Ms`'s SHARED table, and only THEN does its
+                // `(start $main)` call `unreachable`, discarding the
+                // `WasmInstance` this function would otherwise return.
+                // `instance` is already the REAL, fully-built value here
+                // (unlike the elem/data case, no need to reconstruct a
+                // temporary clone of it) -- move it into a temporary `Rc`,
+                // fix up, and let it drop (never `try_unwrap`ed) exactly
+                // like the elem/data path above. See that path's own doc
+                // comment for the full "an `Rc` survives via whoever still
+                // holds a clone" rationale.
+                let temp_rc = Rc::new(RefCell::new(instance));
+                let _ = resolve_all_table_funcrefs(&temp_rc);
+                return Err(e);
+            }
         }
 
         Ok(instance)
@@ -4082,13 +4440,28 @@ mod tests {
     }
 
     #[test]
-    fn resolve_func_ref_for_instance_of_an_imported_function_reuses_its_existing_identity_and_is_owner_agnostic() {
+    fn resolve_func_ref_for_instance_of_an_imported_function_reuses_its_existing_identity_and_tags_the_resolving_instance_as_owner() {
         // The import-branch counterpart to the local-function test above --
         // mirrors `wasm_execution::WasmExecutionContext::resolve_function_
         // ref`'s own import branch exactly (see that method's own already-
         // shipped unit test, `ref_func_of_an_imported_function_reuses_its_
         // existing_identity_and_callable`, for the `wasm-execution`-layer
         // half of this same contract).
+        //
+        // W35 fourth slice: `owner_instance_identity` is `Some(this
+        // instance's own identity)`, NOT `None` -- a real, corpus-
+        // verification-found correction to slice 3's own original claim
+        // that an import's `local_index` is "dispatchable via local_index
+        // in ANY ctx that holds it." That claim is false the moment this
+        // target can be written into a table/global SHARED with a
+        // genuinely different instance (this slice's own fixup pass makes
+        // exactly that possible): `func_index` here (`0`) is only
+        // meaningful as `THIS instance's` own `host_functions[0]` -- a
+        // DIFFERENT instance reading this same target from a shared table
+        // must fall through to `target.callable.call(..)` instead (see
+        // `wasm_execution::FuncRefTarget::owner_instance_identity`'s own
+        // doc comment for the full, reproduced `linking.wast` trace this
+        // fixes).
         let func_type = FuncType { params: vec![], results: vec![] };
         let runtime = WasmRuntime::with_host(Box::new(FuncIdentityTestHost { func_type: func_type.clone(), identity: 555 }));
         let module = WasmModule {
@@ -4107,8 +4480,10 @@ mod tests {
         let target = resolve_func_ref_for_instance(&instance_rc, 0).expect("resolving an import must succeed");
         assert_eq!(target.identity, 555, "an imported function's target must adopt the exporter's identity verbatim");
         assert_eq!(
-            target.owner_instance_identity, None,
-            "an import is dispatchable via local_index in ANY ctx that holds it -- no owning-instance check needed"
+            target.owner_instance_identity,
+            Some(instance_rc.borrow().instance_identity),
+            "an import's local_index is only meaningful for the instance that resolved it -- a different instance \
+             reading this target from a shared table/global must dispatch via `callable.call(..)` instead"
         );
     }
 

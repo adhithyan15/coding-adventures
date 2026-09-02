@@ -2,6 +2,92 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.90] - 2026-09-01 (W35 fourth slice, epic closed — `owner_instance_identity` correctness fix for imports)
+
+Slice 4 of 4 for `code/specs/W35-wasm-cross-instance-function-identity.md`
+— the epic's closing slice. Almost all of this slice's actual machinery
+lives in `wasm-runtime`/`wasm-conformance` (see their own CHANGELOGs); this
+crate's own change is a real, corpus-verification-found correctness fix in
+the `owner_instance_identity` mechanism slice 3 introduced.
+
+### Real bug found and fixed: `owner_instance_identity: None` for imports was UNSOUND, not just "not yet needed"
+
+Slice 3 tagged every import-branch `FuncRefTarget` (in both
+`WasmExecutionContext::resolve_function_ref` and its `..._for_dispatch`
+wrapper's `LocalFunctionPlaceholder` fallback) with `owner_instance_
+identity: None`, on the claim "an import is always resolvable via
+`ctx.host_functions` in whatever ctx currently holds it — no instance
+check needed." That claim was true for every case reachable BEFORE this
+slice (nothing could durably store a resolved target somewhere a
+DIFFERENT instance would later read it) — but breaks the moment
+`wasm-conformance`'s own new fixup pass (this slice) makes exactly that
+possible.
+
+Reproduced directly against `linking.wast`'s own `$Mt`/`$Ot`/`h` example:
+`$Mt` exports `h`; `$Ot` imports it as `$Ot`'s OWN combined-index-space
+slot 0, then writes that slot (via `$Ot`'s own active elem segment) into
+`$Mt`'s SHARED table. `$Mt`'s own later `call_indirect` through that slot
+has a DIFFERENT `instance_identity` than `$Ot`'s — with `owner_instance_
+identity: None`, `effective_local_index` incorrectly trusted `local_index:
+Some(0)` as `$Mt`'s OWN slot 0 (`$Mt` has no imports, so its own slot 0 is
+`$g`, a completely unrelated function) — a confirmed, silent WRONG ANSWER
+(`(assert_return (invoke $Mt "call" (i32.const 2)) (i32.const -4))`
+returned `4` instead).
+
+**Fix**: both production construction sites now tag `owner_instance_
+identity: Some(self.instance_identity)` (the RESOLVING ctx's own
+identity), not `None`. Zero behavior change for every SAME-instance
+dispatch (every case any pre-slice-4 test reaches: `effective_local_index`
+still takes the cheap `local_index` path whenever the owner matches,
+which it always does for a same-ctx read) — only a genuinely
+cross-instance read now correctly falls through to `target.callable.
+call(..)`.
+
+### Second-order fix: `effective_local_index` gained an identity-based fallback to avoid a NEW re-entrant `RefCell` panic
+
+Fixing the bug above naively (falling through to `target.callable.call(..)`
+whenever the owner mismatches) reproduced a DIFFERENT, worse failure:
+`$Mt`'s own `call_indirect` dispatching a target whose `callable` is a
+`wasm-conformance::CrossModuleFunction` wrapping `$Mt`'s OWN `Rc<RefCell<
+WasmInstance>>` (since `$Ot`'s import target IS `$Mt`'s `h`) panics with
+"already borrowed" — `$Mt`'s own instance is ALREADY mutably borrowed by
+the very call this dispatch is happening inside of. This is a NEW,
+guaranteed-reachable case on this exact motivating corpus example, not the
+rare, already-accepted genuinely-mutual cross-instance cycle
+`CrossModuleFunction`'s own doc comment already documents as an out-of-
+scope risk.
+
+Fix: `effective_local_index`, on an owner mismatch, now additionally scans
+`ctx.instance_identity`'s own `func_identities` for `target.identity`
+(excluding the reserved `0` value) before giving up and falling through to
+`callable.call(..)`. Since `func_identities` is process-wide-unique and
+verbatim-adopted across every import, a match proves the CURRENT ctx
+already has this exact real function reachable in its own combined index
+space (imported, or — as in `$Mt`'s case — the function IS this ctx's own
+local one) — dispatching through THAT index is correct and needs no `Rc`
+re-borrow at all. Falls through to `callable.call(..)` only when truly no
+match exists (a genuinely different instance's function, reached only
+through the foreign `callable`).
+
+### Doc-comment corrections
+
+- `FuncRefTarget::owner_instance_identity`'s own doc comment updated: every
+  production construction site now sets `Some(..)`; `None` remains a
+  valid, meaningful state on the type (exercised directly by this crate's
+  own unit tests) but is no longer reachable from any production code
+  path.
+
+### Verification
+
+- `cargo test -p wasm-execution`: existing suite unchanged pass rate
+  (verified via `git stash` A/B against `wasm-runtime`/`wasm-conformance`'s
+  own changes together, since this bug was only reachable once all three
+  crates' slice-4 changes landed together).
+- Full corpus baseline diff — see `wasm-conformance`'s own CHANGELOG for
+  the complete per-file accounting.
+- `cargo clippy -p wasm-execution -p wasm-runtime -p wasm-validator -p
+  wasm-conformance --all-targets -- -D warnings`: clean.
+
 ## [0.9.89] - 2026-09-01 (W35 third slice — `GlobalStorage`, `owner_instance_identity`, `SelfFunctionResolver` setters)
 
 Slice 3 of 4 for `code/specs/W35-wasm-cross-instance-function-identity.md`

@@ -46,6 +46,7 @@ fn instance_with_v128_const(lanes: [i32; 4]) -> wasm_runtime::WasmInstance {
         dropped_elements: vec![],
         func_identities: vec![0],
         instance_identity: 0,
+        active_elem_writes: vec![],
     }
 }
 
