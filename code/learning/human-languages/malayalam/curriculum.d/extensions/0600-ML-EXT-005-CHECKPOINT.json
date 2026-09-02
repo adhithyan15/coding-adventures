@@ -1,0 +1,13 @@
+{
+  "id": "ML-EXT-005-CHECKPOINT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can give my name, ask for someone else's, and say I am pleased to meet them at the Chapter 2 checkpoint.",
+  "prerequisites": [
+    "ML-EXT-005-SANTOSHAM-WRITING"
+  ],
+  "lessons": [
+    "ML-C02-practice"
+  ]
+}
