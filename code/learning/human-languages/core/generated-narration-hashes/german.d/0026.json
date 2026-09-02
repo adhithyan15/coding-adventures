@@ -1,18 +1,15 @@
 {
   "language": "german",
   "chapter": 26,
-  "sourceHash": "fnv1a64:97bd382b6178ea48",
+  "sourceHash": "fnv1a64:765ba018cb32e37b",
   "lessonIds": [
-    "GE-C24-denken",
-    "GE-C24-verstehen",
-    "GE-C24-lesen",
-    "GE-C24-schreiben"
+    "GE-C22-hund-katze"
   ],
-  "voiceLessons": 4,
-  "drivablePrefix": 4,
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
   "text": "german/narration/ch26.txt",
   "json": "german/narration/ch26.json",
-  "textHash": "fnv1a64:a6ad73f1d01ca5e6",
-  "jsonHash": "fnv1a64:22a31a07091323f7",
+  "textHash": "fnv1a64:fcecb29190a3ffd1",
+  "jsonHash": "fnv1a64:b7673ea65b0c008f",
   "findings": []
 }

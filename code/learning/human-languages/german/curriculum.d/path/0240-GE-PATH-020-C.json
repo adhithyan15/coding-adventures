@@ -1,0 +1,25 @@
+{
+  "id": "GE-PATH-020-C",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "lessons": [
+    "GE-C15-praeteritum",
+    "GE-C15-sagte",
+    "GE-C15-machte",
+    "GE-C15-dentales-praeteritum",
+    "GE-C15-hatte",
+    "GE-C15-register",
+    "GE-C15-konnte",
+    "GE-C15-hochfrequent",
+    "GE-C15-praeteritum-map",
+    "GE-C15-praeteritum-practice"
+  ],
+  "before": [
+    "GE-EXT-020-C-PRAETERITUM"
+  ],
+  "inline": [
+    "GE-EXT-020-C-ETYMOLOGY"
+  ],
+  "after": [
+    "GE-EXT-020-C-CONSOLIDATION"
+  ]
+}

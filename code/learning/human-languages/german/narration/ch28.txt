@@ -1,202 +1,189 @@
-German, chapter 28: Sitting, Standing, Sleeping, Hearing.
+German, chapter 28: Verbs of the Mind.
 4 lessons. All 4 can be done entirely by ear.
 
 
 Lesson 1 of 4.
-sitzen — the same word as sit, respelt by one law.
+denken — the verb that was inside danke all along.
 
 Warm-up.
 [pause 2 seconds]
-Helfen is help, split by the second sound shift: Germanic p became German f. That law has other branches. This verb rides one.
+You learned early on that danke is built on a verb meaning "to think." Here is that verb, with its own forms at last.
 
 Sounds you'll need.
-tz-affricate — tz is one squeezed sound, ts, as in English cats.
-i-short — a short, tight i: sitzen = ZIT-sen, buzzed at the front because German s before a vowel is voiced.
+vowel-e-german — a short, open e.
+ng-cluster — n before k is the ng of sing: denken = DENG-ken.
 
-You'll want to know: sitzen.
-sitzen means "to sit."
-ich sitze — I sit, wir sitzen — we sit.
-du sitzt — you sit, ihr sitzt — you all sit.
-er sitzt — he sits, sie sitzen — they sit.
-Ich sitze. — a whole sentence, two words.
+You'll want to know: denken.
+denken means "to think," with the same audible endings you drilled on wohnen, machen and lernen:
+ich denke — I think, wir denken — we think.
+du denkst — you think, ihr denkt — you all think.
+er denkt — he thinks, sie denken — they think.
+Ich denke, also bin ich. — "I think, therefore I am."
+It also carries the weather straight into a new sentence:
+Ich denke, es ist kalt. — "I think it is cold."
 
-Grammar Lens: strong does not mean it breaks.
-Sitzen is a strong verb — its past is saß, not sitzte. But its present never breaks its vowel: du sitzt, er sitzt. Beside it, helfen breaks to du hilfst.
-So "strong" is a fact about a verb's past; the du/er break is a separate habit only some strong verbs have.
-The doing verbs gave two ways to say you like something: ich mag with a thing, gern hung on a verb. This verb takes the second.
-Ich sitze gern. — "I like sitting."
+The word, taken apart: think, thank, and one shifted consonant.
+denken is Proto-Germanic þankijaną. English think is that same inherited word — a loan in neither direction.
+One consonant separates them, and you have been taught how to read it. With Haupt beside head you met Grimm's law, which turned Proto-Indo-European k into Germanic h. The same law turned PIE t into Germanic þ, the th sound. English kept it and spells it th: think. German later softened it to d.
+Germanic þankō meant both "a thought" and "gratitude" — hence German Dank and Gedanke, and English thank beside think. To thank was to hold someone in thought. German also kept a sibling verb, dünken, "to seem"; English had that one too and let it collapse into think.
 
-The word, taken apart: the shift's other branch.
-sitzen is Proto-Germanic sitjaną, and English sit is the same inherited word — Old English sittan, Old High German sizzen.
-The second, High German shift moved Germanic p to f in helfen. It moved Germanic t just as hard, to z (said ts) or ss: sittan becomes sitzen, water becomes Wasser, eat becomes essen, ten becomes zehn, bite becomes beißen. The food lesson handed you Wasser and the first numbers handed you zehn long before there was a name for what had happened to them.
-Under both lies PIE sed-, "to sit," one of the family's great providers. Latin sedēre gives session, sedentary and preside; Latin sedēs, "a seat," gives the bishop's see. Greek hédra, also "a seat," gives cathedral — the church with the bishop's chair — and polyhedron.
+Grammar Lens: also does not mean "also".
+In Ich denke, also bin ich, the word also means "therefore." English also is eall swā, "all so," meaning likewise; German also is al + so, meaning thus. Same bricks, different building. A German saying also is drawing a conclusion, not adding to a list.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ich sitze, du sitzt, er sitzt" — the i never moves]
+[your turn — say: "ich denke, du denkst, er denkt"]
 [pause 8 seconds for the answer]
-[your turn — say: the contrast — "du sitzt" beside "du hilfst"]
+[your turn — say: "wir denken, ihr denkt, sie denken"]
 [pause 8 seconds for the answer]
-[your turn — say: "Ich sitze gern."]
+[your turn — say: "Ich denke, also bin ich."]
 [pause 8 seconds for the answer]
-[your turn — say: the t branch four times — "sitzen/sit, Wasser/water, essen/eat, zehn/ten"]
+[your turn — say: "Ich denke, es ist kalt. Das Wetter ist gut."]
 [pause 8 seconds for the answer]
-[your turn — say: the p branch beside it — "helfen/help"]
+[your turn — say: the family — "denken, danke, Dank, Gedanke"]
 [pause 8 seconds for the answer]
-[your turn — say: the seat words — "sitzen, sedēre, hédra, cathedral"]
+[your turn — say: the shift — PIE t, Germanic th, German d: think, denken]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the du and er forms of sitzen. (Du sitzt, er sitzt — no break.) Which of the doing verbs does break, and how? (Helfen — du hilfst.) Which sound did the second shift turn German's z and ss out of? (An old t.) Name two pairs from that branch. (Wasser/water, essen/eat, zehn/ten.) Say you like sitting. (Ich sitze gern.)
+Which chapter-3 word is built on denken? (Danke.) Is English think a borrowing? (No — both inherited þankijaną.) Which law turned PIE t into the Germanic th German made a d? (Grimm's law, as in Haupt and head.) What does German also mean? (Therefore.)
 
 
 Lesson 2 of 4.
-stehen — the verb that was hiding inside verstehen.
+verstehen — standing around a thing until you see it.
 
 Warm-up.
 [pause 2 seconds]
-Verstehen was broken into ver- plus stehen, and named stehen as English stand. Here is that verb alone, and the letter the two languages disagree about.
+You can say ich denke. Thinking happens in the Kopf; this is the verb for when it lands — and English built its own word from the same picture, separately.
 
 Sounds you'll need.
-st-initial-scht — st at the start of a German word is said sht.
-h-silent-lengthening — the h is silent and marks the long vowel: stehen = SHTAY-en.
+v-as-f — German v is said f, so ver- is fair-.
+h-silent-lengthening — the h is silent; it marks the vowel before it as long. verstehen = fair-SHTAY-en.
 
-You'll want to know: stehen.
-stehen means "to stand."
-ich stehe — I stand, wir stehen — we stand.
-du stehst — you stand, ihr steht — you all stand.
-er steht — he stands, sie stehen — they stand.
-Like sitzen, it keeps its vowel all the way through. Two postures, two sentences:
-Ich sitze. Ich stehe.
+You'll want to know: verstehen.
+verstehen means "to understand," with the ordinary endings:
+ich verstehe, wir verstehen.
+du verstehst, ihr versteht.
+er versteht, sie verstehen.
+Ich verstehe. — said on its own, constantly. Ich verstehe Deutsch. — "I understand German."
 
-The word, taken apart: the missing n.
-Germanic ran two stems off one root here: a short stāną and a longer standaną with an n wedged inside. English generalised the long one and got stand; German took the short one and got stehen, Old High German stān.
-German did not lose the n. It kept it in the past: ich stand, and the participle gestanden. German's past tense is spelt the way English's present is, out of the same drawer of stems.
-The root is PIE steh₂-, the one verstehen named, and it is everywhere. Latin stāre gave state, station, stable, constant. Greek hístēmi, "I set up," gave static, system and ecstasy — standing outside yourself. German built die Stadt, a city: a standing-place. English built stead, steady and instead.
-
-Why it's said this way: two postures, two Latin cousins.
-Notice the shape of what has happened. Sitzen goes back to sed-, and so does Latin's sedēre. Stehen goes back to steh₂-, and so does Latin's stāre.
-Nothing was borrowed in either direction. Two families inherited the same two roots and held them to the same two meanings for thousands of years, because sitting and standing are things everybody does.
+The word, taken apart: one picture, built twice.
+Break it in two: ver- plus stehen, "to stand." Stehen is English stand, the same inherited word, Proto-Germanic standaną. The prefix ver- is old and worn, and here it carries its ancient sense "around, about." So verstehen is literally "to stand around" a thing.
+Now English. Understand is under + stand — and that under is not "underneath." The usual explanation is that Old English under also carried the sense "among, between," a cousin of Latin inter; so understand is "to stand among" a thing. That reading is standard but not certain, and no honest account will claim otherwise.
+Either way the important fact holds: each language welded a prefix onto its own inherited verb "to stand" and got a word for comprehension. Neither borrowed the compound. The green-and-yellow lesson showed the same move with grün: Germanic and Latin each built "green" from a verb for "grow," independently. This is that coincidence one family closer in.
+The verb underneath is one of the family's biggest roots, PIE steh₂-: German der Verstand ("reason"), English stand, stead, stall, and — from Latin's stāre — state, station, stable, constant.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ich stehe, du stehst, er steht" — SHTAY, not STAY]
+[your turn — say: "ich verstehe, du verstehst, er versteht"]
 [pause 8 seconds for the answer]
-[your turn — say: both postures — "Ich sitze. Ich stehe."]
+[your turn — say: "Ich verstehe Deutsch."]
 [pause 8 seconds for the answer]
-[your turn — say: the verb inside the verb — "stehen, verstehen"]
+[your turn — say: both verbs — "Ich denke. Ich verstehe."]
 [pause 8 seconds for the answer]
-[your turn — say: where the n went — "ich stehe, ich stand, gestanden"]
+[your turn — say: the pieces — "ver- + stehen" beside "under + stand"]
 [pause 8 seconds for the answer]
-[your turn — say: the Latin pair — "sitzen/sedēre, stehen/stāre"]
+[your turn — say: the parallel — like grün beside viridis, built, not shared]
 [pause 8 seconds for the answer]
-[your turn — say: what stands in English — "state, station, stable, stead"]
+[your turn — say: where it happens — "der Kopf" — and what stands in it, "der Verstand"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the du and er forms. (Du stehst, er steht.) Which letter does English's stand carry that German's stehen does not? (An n.) Where does German still keep it? (In the past — ich stand, gestanden.) Which longer verb already taught has stehen inside it? (Verstehen.) Say "I sit. I stand." (Ich sitze. Ich stehe.)
+What are the two pieces of verstehen? (Ver- + stehen.) Which English verb is stehen? (Stand.) Did English borrow understand from German? (No — each built its own compound.) How solid is the "under = among" account? (Standard, but not certain.) Say "I think" and "I understand." (Ich denke. Ich verstehe.)
 
 
 Lesson 3 of 4.
-schlafen — sleep, under two coats of paint.
+lesen — gathering, and the first verb that changes its vowel.
 
 Warm-up.
 [pause 2 seconds]
-Sitzen and stehen held their vowels still. This one does not — and it does not break the way the mind verbs broke either.
+Every German verb so far has kept its vowel in every form. This one does not — and its older meaning is gathering.
 
 Sounds you'll need.
-sch-sh — sch is English sh: schlafen = SHLAH-fen.
-vowel-ae — ä is a flat eh: schläft = SHLEFT.
+long-e — a long e, English ay without the glide.
+s-voiced — a single s between vowels buzzes like z: LAY-zen.
 
-You'll want to know: schlafen.
-schlafen means "to sleep."
-ich schlafe, wir schlafen.
-du schläfst, ihr schlaft.
-er schläft, sie schlafen.
-Die Katze schläft. — "The cat is sleeping."
+You'll want to know: lesen.
+lesen means "to read."
+ich lese — I read, wir lesen — we read.
+du liest — you read, ihr lest — you all read.
+er liest — he reads, sie lesen — they read.
+Ich lese Deutsch. — "I read German."
 
-Grammar Lens: the second kind of break.
-Lesen gave you one break: long e goes to i for du and er — du liest, er hilft. Here is the other: a takes two dots and becomes ä — du schläfst, er schläft.
-Those two dots are the umlaut, the mark that turns Buch into Bücher. The break lands in the same slot as before, du and er and nobody else, so only its raw material is new: e verbs brighten to i, a verbs to ä.
-Es regnet. Die Katze schläft.
+Grammar Lens: the vowel that breaks in the middle.
+Four forms keep the e of lesen. Two swap it for a long ie: du liest, er liest.
+That is the mark of a strong verb: the vowel changes inside the word, in exactly two present-tense forms — du and er/sie/es. Nothing else moves; the endings stay the familiar -e / -st / -t. It is a rule about a whole class of verbs, not about lesen.
 
-The word, taken apart: two coats of paint.
-schlafen is Proto-Germanic slēpaną, and English sleep is the same inherited word — Old English slæpan, Old High German slāfan.
-Two German changes sit between them. The first you know: the second shift, Germanic p to German f, as in helfen. The second is new — German turned s into sh before l, m, n and w, and wrote it down: sleep becomes schlafen, swim becomes schwimmen, snow becomes Schnee, smith becomes Schmied. It did the same before p and t and never spelt it, which is why stehen is said SHTAY-en.
-Now the honest part. The old Indo-European verb for sleeping was swep-, still in plain view: Latin somnus gives insomnia and somnolent, Latin sopor gives soporific, Greek hýpnos gives hypnosis, and Old Norse sofa is Swedish sova today. German and English both threw that verb away and built a new one on sleb-, "to be slack" — German still has schlaff, "limp." They made that swap together, before they were two languages.
+The word, taken apart: reading is picking up.
+lesen is Proto-Germanic lesaną, "to gather." That sense still lives in die Weinlese, the grape harvest — the wine-gathering, built on the Wein you already have. Reading came second: you pick the letters up, one after another.
+Now the trap. Latin legere also meant "to gather," also came to mean "to read," and stands behind legible, lecture, lesson and collect. It looks like one shared word. It probably is not: the sounds do not correspond as they should, and the standard account ties lesen to a separate root, whose clearest cousin is Lithuanian lèsti, "to peck up grain." Treat it as you treated grün beside viridis.
+English read is a third story: Old English rædan, "to advise," which is German raten and das Rätsel ("riddle"). Lesen and read are no relation.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ich schlafe, du schläfst, er schläft" — the a brightens to ä]
+[your turn — say: "ich lese, du liest, er liest" — hear the vowel break]
 [pause 8 seconds for the answer]
-[your turn — say: the three verbs — "Ich sitze. Ich stehe. Ich schlafe."]
+[your turn — say: "wir lesen, ihr lest, sie lesen" — and back]
 [pause 8 seconds for the answer]
-[your turn — say: "Es regnet. Die Katze schläft."]
+[your turn — say: "Ich lese Deutsch. Ich verstehe Deutsch."]
 [pause 8 seconds for the answer]
-[your turn — say: both breaks in the same slot — "du hilfst" beside "du schläfst"]
+[your turn — say: the old meaning — "die Weinlese"]
 [pause 8 seconds for the answer]
-[your turn — say: the sch row — "schlafen, schwimmen, Schnee, Schmied"]
+[your turn — say: the three so far — "denken, verstehen, lesen"]
 [pause 8 seconds for the answer]
-[your turn — say: the verb they both threw away — "somnus, hypnos, sova"]
+[your turn — say: why lesen is not legere — the reason grün is not viridis]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the du and er forms. (Du schläfst, er schläft — two dots on the a.) Which two people does a German verb break for? (Du and er, always.) Name the two changes between sleep and schlafen. (p to f, and s to sch.) Why is stehen said SHTAY-en? (Same change, never spelt.) Say "the cat is sleeping." (Die Katze schläft.)
+Which two forms of a strong verb break their vowel, and what are they here? (Du and er/sie/es — du liest, er liest.) What did lesen mean first? (To gather — die Weinlese.) Is it Latin legere? (Probably not — the sounds do not correspond.) And English read? (No relation — it meant "to advise," and is German raten.)
 
 
 Lesson 4 of 4.
-hören — hear, and the end of a chapter that never moved.
+schreiben — the one borrowed verb.
 
 Warm-up.
 [pause 2 seconds]
-Ich sitze. Ich stehe. Ich schlafe. Three verbs that stay put. Here is the fourth — the sense that works with your eyes shut.
+Three verbs in, all three English's own blood relatives. The fourth breaks the run: German borrowed it; English did not.
 
 Sounds you'll need.
-umlaut-oe — ö is the e of bed said with rounded lips.
-r-uvular — the r is a soft scrape at the back: hören = HUR-en.
+sch-sh — sch is one sound, English sh.
+diphthong-ei — ei is said eye: schreiben = SHRY-ben.
 
-You'll want to know: hören.
-hören means "to hear."
-ich höre, wir hören.
-du hörst, ihr hört.
-er hört, sie hören.
-The ö never moves. Schlafen grew its dots for du and er; hören was born with them, so nothing is left to break.
-Der Hund hört. Die Katze hört.
+You'll want to know: schreiben.
+schreiben means "to write."
+ich schreibe — I write, wir schreiben — we write.
+du schreibst — you write, ihr schreibt — you all write.
+er schreibt — he writes, sie schreiben — they write.
+Ich schreibe Deutsch., Die Hand schreibt.
 
-Grammar Lens: liking it, the mögen way.
-gern hangs on this verb like any other:
-Ich höre gern. — "I like listening."
-Gern is English yearn: underneath, "I hear yearningly." Beside it is the other way of liking, ich mag — English may, with the power drained out.
+Grammar Lens: strong, but not here.
+Lesen taught you to watch du and er. Here: du schreibst, er schreibt — the vowel does not move. Schreiben is strong (its past is schrieb), but its present is smooth. So the rule is exact: a strong verb may break its vowel there. Hold the pair: du liest, but du schreibst.
 
-The word, taken apart: the s that became an r.
-hören is Proto-Germanic hauzijaną, and English hear is the same inherited word.
-This time the change is one they share. Gothic still says hausjan, with an s; Old English hīeran and Old High German hōren had both turned it to r. Sitzen shows where German left English; hören shows a road they walked together.
-The h is Grimm's law, the first shift: an old k became Germanic h. Greek kept the k — akoúein, "to hear," which English borrowed back as acoustic. Same swap that made kwon- into Hund while Latin kept canis.
-Some break the root up further, into "sharp" plus "ear" — which would make hören "sharp-eared" and put das Ohr inside it. Cited often, not settled.
-
-Why it's said this way: gehören is not "hear".
-gehören means "to belong." It is ge- welded onto hören, and began as "to hearken to": what belongs to you answers when called.
+The word, taken apart: a Latin verb that became German.
+schreiben is Latin scrībere, and before that "to scratch." German took it in with the writing itself, and early: the loan passed through German sound changes — sc- became sch- — and joined the native strong verbs, its past becoming schrieb. A late loan would have done neither.
+English refused it. Write is Old English wrītan, also "to scratch," because runes were cut; German reißen and ritzen are its relatives. Two languages, two writing-words, both meaning scratch. Latin's verb reached English anyway: scribe, script, describe, transcript.
+And one closes a circle back to die Hand. German Hand has no Latin cousin — Latin says manus — yet manus reached German as a loan: Manuskript. Manu- is manus, the hand; -skript is scrīptum, this verb. A Manuskript is written by hand: the Latin hand-word German never inherited, bolted to the Latin writing-verb it did.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: all four — "Ich sitze. Ich stehe. Ich schlafe. Ich höre."]
+[your turn — say: "Die Hand schreibt. Ich schreibe Deutsch."]
 [pause 8 seconds for the answer]
-[your turn — say: the four er forms — "er sitzt, er steht, er schläft, er hört"]
+[your turn — say: the four "I" forms — "ich denke, ich verstehe, ich lese, ich schreibe"]
 [pause 8 seconds for the answer]
-[your turn — say: "Der Hund hört. Die Katze schläft."]
+[your turn — say: the four "he" forms — "er denkt, er versteht, er liest, er schreibt" — only liest broke]
 [pause 8 seconds for the answer]
-[your turn — say: "Ich höre gern."]
+[your turn — say: three inherited, one borrowed — "denken/think, verstehen/stand, lesen/gather", then "schreiben/scrībere"]
 [pause 8 seconds for the answer]
-[your turn — say: the shared change — "hausjan, hīeran, hōren"]
+[your turn — say: denken's d — PIE t, Germanic th: Grimm's law]
 [pause 8 seconds for the answer]
-[your turn — say: the h row — "hören/akoúein, Hund/canis"]
+[your turn — say: "Ich denke, also bin ich." — and what also does]
 [pause 8 seconds for the answer]
-[your turn — say: "gehören is belong"]
+[your turn — say: Manuskript — manus plus scrīptum]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give all four ich forms of this chapter. (Ich sitze, ich stehe, ich schlafe, ich höre.) Which breaks its vowel? (Schlafen — a to ä.) Which letter did Gothic keep where German and English have r? (An s.) Which law put the h on hören and Hund? (Grimm's law.)
+Say all four "I" forms. (Ich denke, ich verstehe, ich lese, ich schreibe.) Which is the loan? (Schreiben, from scrībere, "to scratch" — as English write also meant.) Which "he" form breaks its vowel? (Only liest.) Which half of Manuskript did German never inherit? (Manus, its own Hand.) And German also? (Therefore.)

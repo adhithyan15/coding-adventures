@@ -13,7 +13,6 @@
   "omits": [
     "VERB-INFINITIVE",
     "VERB-PRESENT-HABITUAL",
-    "VERB-SAY",
     "VERB-SPEAK",
     "VERB-SEE",
     "VERB-KNOW",
@@ -24,5 +23,7 @@
     "VERB-ANSWER",
     "VERB-MEET"
   ],
-  "relocates": {}
+  "relocates": {
+    "VERB-SAY": "SPINE-TALK-ABOUT-PAST"
+  }
 }

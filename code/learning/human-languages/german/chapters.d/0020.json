@@ -1,22 +1,25 @@
 {
   "chapter": 20,
-  "title": "Yes and No",
-  "label": "ch:ge-yes-and-no",
-  "canDo": "I can answer yes or no in German and take nein apart into ni + ein, the same 'not one' English froze into none.",
+  "title": "The Past That Takes To Be",
+  "label": "ch:ge-perfekt-sein",
+  "canDo": "I can build the German past of verbs of motion and change with the verb for “to be” instead of the verb for “to have”, and say why the participle never changes.",
   "spineNodes": [
-    "SPINE-RESPOND-BASIC"
+    "SPINE-TALK-ABOUT-PAST"
   ],
   "payoff": {
-    "lesson": "GE-C18-nein",
-    "kind": "production",
-    "summary": "Say nein to rhyme with nine, split it into ni + ein and match it to English none, then run the PIE \\*ne chain — nōn, non, nein, nahīṃ.",
+    "lesson": "GE-C16-haben-oder-sein",
+    "kind": "task",
+    "summary": "Motion and change of state build their perfect on sein rather than haben — ich bin gegangen beside ich habe gelernt. The chapter teaches the rule, then the four verbs that follow it (kommen, fahren, werden, bleiben), then the short list that has to be learned outright, and finally the one place German is simpler than French: the participle in the perfect agrees with nothing at all.",
     "assesses": [
-      "GE-LEX-JA-02",
-      "GE-LEX-NEIN-02",
-      "GE-SOUND-NEIN-03",
-      "GE-ETYMON-NEIN-04",
-      "GE-ETYMON-NEGATION-05"
+      "GE-GRAMMAR-PERFEKT-SEIN-01",
+      "GE-LEX-KOMMEN-01",
+      "GE-LEX-FAHREN-01",
+      "GE-LEX-WERDEN-01",
+      "GE-LEX-BLEIBEN-01",
+      "GE-GRAMMAR-PERFEKT-SEIN-AUSNAHMEN-01",
+      "GE-GRAMMAR-PERFEKT-KEINE-KONGRUENZ-01",
+      "GE-GRAMMAR-PARTIZIP-ATTRIBUTIV-01"
     ],
-    "note": "Chapter 18 has no terminal practice lesson, so the payoff is the last lesson by sequence; it reaches back to reassess ja."
+    "note": "The second half of the hand-written chapter 16, now a chapter of its own. The payoff claims all eight atoms: the practice lesson runs the whole haben/sein table, the French comparison that shows the missing agreement, and the attributive participle that is the one place the ending returns."
   }
 }

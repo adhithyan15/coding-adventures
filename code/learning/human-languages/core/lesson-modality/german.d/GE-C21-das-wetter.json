@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C21-das-wetter",
     "language": "german",
-    "chapter": 23,
+    "chapter": 25,
     "sequence": 680,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:412aa2b037a800a5"
+    "sourceHash": "fnv1a64:69560efbaeb3d5eb"
   },
   "findings": []
 }

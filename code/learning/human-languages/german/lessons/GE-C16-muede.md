@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C16-muede
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 355
-chapter: 16
+sequence: 485
+chapter: 18
 type: word
 headword: müde
 gloss: tired — the first adjective that says something about a person, and it needs no ending here

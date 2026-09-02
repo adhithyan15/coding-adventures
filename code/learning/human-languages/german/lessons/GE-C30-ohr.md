@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C30-ohr
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 940
-chapter: 32
+chapter: 34
 type: word
 headword: das Ohr
 gloss: ear — another direct Germanic cousin of its English translation, and the sense hören already named

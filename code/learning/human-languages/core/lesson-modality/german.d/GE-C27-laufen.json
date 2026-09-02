@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C27-laufen",
     "language": "german",
-    "chapter": 29,
+    "chapter": 31,
     "sequence": 840,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:9dfa4ffbfd8d3a9c"
+    "sourceHash": "fnv1a64:67d15b30d68a5cd3"
   },
   "findings": []
 }

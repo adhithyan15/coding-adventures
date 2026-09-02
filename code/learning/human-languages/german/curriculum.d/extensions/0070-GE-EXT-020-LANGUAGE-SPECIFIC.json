@@ -3,10 +3,15 @@
   "stage": "A2",
   "kind": "required",
   "category": "language-specific",
-  "canDo": "I can form the German Perfekt that speech actually uses, and recognize the Präteritum the written language keeps — the two pasts sein draws its war/waren forms from.",
+  "canDo": "I can build the past participle of any regular German verb I know, and say why the marking arrives at both ends of the word rather than only at the end.",
   "prerequisites": [],
   "lessons": [
-    "GE-C15-perfekt",
-    "GE-C15-praeteritum"
+    "GE-C15-sagen",
+    "GE-C15-gesagt",
+    "GE-C15-partizip",
+    "GE-C15-gemacht",
+    "GE-C15-gelernt",
+    "GE-C15-gewohnt",
+    "GE-C15-ge-praefix"
   ]
 }

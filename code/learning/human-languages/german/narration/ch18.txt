@@ -1,368 +1,323 @@
-German, chapter 18: The Past That Takes To Be.
+German, chapter 18: I Am, You Are.
 9 lessons. You can do the first 8 of them in the car; after that you will want to have stopped.
 
 
 Lesson 1 of 9.
-ich bin gegangen — the perfect built on sein.
+sein — "to be".
 
 Warm-up.
 [pause 2 seconds]
-You built the everyday past with haben — ich habe gelernt. A particular family of verbs refuses haben and takes this chapter's verb instead.
+You have met the German verb for to have. Here is its partner — the most irregular verb in German, and the one verb whose forms you will not be able to guess.
 
-Grammar Lens: which verbs take sein.
-Verbs of motion and change of state build their perfect with sein, not haben.
-An action that leaves you somewhere else, or leaves you something else, takes sein. An ordinary activity that leaves you where you were keeps haben: ich habe gearbeitet, ich habe getanzt.
-Gehen is the model, and because every present form of sein now belongs to you, the whole thing reads off without a single new word:
-[a table of 4 rows, read aloud]
-ich bin gegangen means I went / I have gone.
-du bist gegangen means you went.
-er ist gegangen means he went.
-wir sind gegangen means we went.
-The recipe is the one you already know, with the helper swapped:
-present form of sein + past participle, and the participle goes last.
+You'll want to know: sein.
+sein — "to be."
+The -en on the end is the infinitive ending you already own from gehen and sehen: the dictionary form of a German verb wears it, and sein wears it too.
+That is where the resemblance stops. Gehen and sehen keep their stem in every form — ich gehe, ich sehe. Sein keeps nothing. Not one of its present forms contains the letters s-e-i-n in that order.
+This is the only verb in the book that has to be met one form at a time, and the next several lessons do exactly that: one form each, said until it is automatic, before any of them are ever seen side by side.
 
 Sounds you'll need.
-ge-prefix — gegangen opens with the same unstressed ge- that wrapped gelernt and gesagt. It is never stressed; the weight falls on -gang-.
-ich-laut — and ich keeps its soft ending right before it, so the phrase runs ich bin ge-GANG-en without a break.
+s-voiced — a German s before a vowel buzzes like English z, exactly as it does in sehen. So sein opens with a z.
+diphthong-ei — German ei is the vowel of English eye, never "ee".
+final-t — worth having ready now, because two of the forms coming up end in a crisp, fully released t.
+Put together, sein sounds like English zine.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ich bin gegangen; du bist gegangen; er ist gegangen; wir sind gegangen"]
+[your turn — say: "sein" (zine) — buzzing z, ei as in eye]
 [pause 8 seconds for the answer]
-[your turn — say: the contrast — "ich habe gelernt … ich bin gegangen"]
+[your turn — say: "gehen, sehen, sein" — three infinitives, one ending]
 [pause 8 seconds for the answer]
-[your turn — say: the rule — "motion and change take sein"]
+[your turn — say: "sein — to be"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"ich bin gegangen."
+"sein, sein — zine."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which family of verbs takes sein? (Motion and change of state.) Say "I went." (Ich bin gegangen.) Where does the participle sit? (At the end.) Which helper does arbeiten take? (Haben — it is an activity, not a change.) Next: the first of the family, and it is the one you say most.
+What does sein mean? ("To be.") Which ending does it share with gehen and sehen? (-en, the infinitive.) How does the s sound? (Like English z.) And the ei? (Like English eye.) Next: the first form, and it looks nothing like the word you just learned.
 
 
 Lesson 2 of 9.
-kommen — "to come".
+ich bin — "I am".
 
 Warm-up.
 [pause 2 seconds]
-Motion takes sein. Here is the motion verb you will use as often as gehen, and it is an English word you already own.
+You have ich, and you have the infinitive sein. Put them together and you get a form that shares no letters with either half of that sentence except the i.
 
-You'll want to know: kommen.
-kommen — "to come."
-ich bin gekommen — "I came."
-The infinitive wears the -en you know. The participle is gekommen: the ge- wrap in front, and -en rather than -t at the back, because this is one of the old strong verbs rather than a regular one.
-Coming is arriving somewhere you were not. That is motion with a result, so it takes sein, exactly as gehen does.
-
-The word, taken apart.
-kommen and English come are the same word, both from Germanic kwemaną. No Latin anywhere in the line — French venir and Spanish venir come from Latin venīre instead, which is where English gets advent, convene and venue.
-So English, as usual, owns both halves: the everyday come from the Germanic side, the formal convene from the Latin.
+You'll want to know: ich bin.
+ich bin — "I am."
+One syllable, short i, ordinary b, ordinary n. There is no rule behind it and nothing to derive it from: bin is simply the form that goes with ich, and it is learned the way you learned hallo.
+It rhymes with English bin, and that rhyme is not an accident — see below.
 
 Sounds you'll need.
-vowel-o — the o is short and open, the vowel of English cot, not the uh English puts in come.
-ge-prefix — gekommen keeps the unstressed ge-; the stress is on -KOMM-.
+ich-laut — ich still ends in the soft breathy sound you met when you first said "I": tongue where it sits for ee, air pushed past it, no scrape.
+i-short — the i of bin is short and clipped, the vowel of English bin, not the long ee of ihm.
+
+The word, taken apart.
+Bin rhymes with English be for a reason, even though the vowels have drifted apart. Both come from Proto-Indo-European bʰuH- — "to grow, to become."
+So German kept that ancient root in the present tense and English kept it as the infinitive: be and bin are the same old word wearing different jobs. Hold on to that; two lessons from now it explains something about the whole verb.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "kommen" — short open o]
+[your turn — say: "ich bin" — short i, soft ending on ich]
 [pause 8 seconds for the answer]
-[your turn — say: "ich bin gekommen"]
+[your turn — say: "ich bin Anna." "ich bin Peter."]
 [pause 8 seconds for the answer]
-[your turn — say: "ich bin gegangen … ich bin gekommen"]
+[your turn — say: "bin — be" — the same old root]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"ich bin gekommen."
+"ich bin, ich bin."
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does kommen mean? ("To come.") Say "I came." (Ich bin gekommen.) Which helper, and why? (Sein — it is motion.) Which English word is it? (Come.) Next: the verb that covers everything with a vehicle under it.
+Say "I am." (Ich bin.) Is the i of bin long or short? (Short — English bin.) Which English word comes from the same root as bin? (Be.) Next: the same verb for the person you are talking to.
 
 
 Lesson 3 of 9.
-fahren — "to travel, to drive".
+du bist — "you are".
 
 Warm-up.
 [pause 2 seconds]
-Gehen is going on your feet. When there is a vehicle under you, German changes the verb.
+Du is the familiar "you" — the one for a friend. Its verb ending is -st, and for once sein uses it.
 
-You'll want to know: fahren.
-fahren — "to travel, to go by vehicle, to drive."
-ich bin gefahren — "I travelled, I drove."
-German keeps two verbs where English makes do with go. You gehen on foot and you fahren in anything with wheels — a car, a bus, a train, a bicycle. Getting that pair right is one of the first things that makes a learner sound German rather than translated.
-It is motion, so the helper is sein.
+You'll want to know: du bist.
+du bist — "you are."
+Take bin, drop the n, add the familiar -st: bi- plus -st is bist. That is the same ending as du gehst, du heißt, du siehst.
+Of the six present forms of sein, this is the only one that can be derived from another one. Enjoy it; it does not happen again.
 
 Sounds you'll need.
-vowel-a-long — the a is long and open, as in war.
-h-silent-lengthening — and the h after it is the silent stretcher you met in gehen and sehen: it is not breathed, it only holds the vowel. FAH-ren rhymes with the way gehen and sehen are built.
-
-The word, taken apart.
-fahren is English fare — the old verb meaning "to travel," which English demoted to a noun and then almost forgot. It is still there in:
-[a table of 4 rows, read aloud]
-English word: farewell. what it is really saying: travel well.
-English word: thoroughfare. what it is really saying: a way you can travel through.
-English word: seafaring. what it is really saying: sea-travelling.
-English word: the fare you pay. what it is really saying: what the travelling costs.
-So auf Wiedersehen and farewell are built the same way: both are a wish handed over at the door, one about seeing again, one about travelling well.
+u-long — du has a long, rounded oo, the vowel of English do, held.
+final-t — German releases a final t fully and audibly. Bist ends with a small puff of air; English tends to swallow it.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "fahren" — long a, silent h]
+[your turn — say: "du bist" — long u, crisp final t]
 [pause 8 seconds for the answer]
-[your turn — say: "ich bin gefahren"]
+[your turn — say: "ich bin … du bist" — the pair]
 [pause 8 seconds for the answer]
-[your turn — say: the pair — "gehen on foot, fahren with wheels"]
-[pause 8 seconds for the answer]
-[your turn — say: "fahren — fare — farewell"]
+[your turn — say: "du bist Peter."]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"Ich bin gefahren."
+"ich bin, du bist."
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does fahren mean? ("To travel, to go by vehicle.") Which verb would you use walking to the shop? (Gehen.) Say "I drove." (Ich bin gefahren.) Which English word is fahren? (Fare — as in farewell.) Next: the verb for becoming something else.
+Say "you are," to a friend. (Du bist.) Which ending is that? (-st, the familiar one.) Which form is bist built on? (Bin.) Is the final t released or swallowed? (Released.) Next: the form for everybody else.
 
 
 Lesson 4 of 9.
-werden — "to become".
+er ist — "he is".
 
 Warm-up.
 [pause 2 seconds]
-The rule has two halves. Gehen, kommen and fahren are the motion half. This one word is the whole of the other half.
+Bin and bist both start with b. The third form does not, and it is the one you will hear most.
 
-You'll want to know: werden.
-werden — "to become."
-ich bin geworden — "I became."
-Sein says what you are. Werden says what you turn into. Where sein sits still, werden moves — and that is exactly why it takes sein as its helper: becoming is change of state in its purest form.
-Ich bin müde geworden. — "I got tired."
-Notice what that sentence does. The adjective you learned with sein now describes an arrival rather than a condition. German makes the difference with the verb; English does it with be against get.
+You'll want to know: er ist.
+er ist — "he is."
+er is "he." The same ist serves three more subjects without changing at all: sie ist ("she is"), es ist ("it is"), and das ist ("that is") — es and das both already yours.
+So one two-letter word covers everything that is not ich and not du, in the singular. It is the workhorse of the whole verb.
 
 Sounds you'll need.
-w-as-v — the w is English v, as in war and wir.
-d-t-final — and in wird ("he becomes") the final d devoices to a t, the same rule that turned sind into zint.
+r-final — the r at the end of er is not a full English r. It softens towards a vowel, close to air said without the tongue curling.
+final-t — ist ends in the same released t as bist.
 
 The word, taken apart.
-werden is a lost English verb — weorthan, "to turn, to come to be" — and its bones are still in the language:
-[a table of 3 rows, read aloud]
-English: toward. the buried meaning: turning to.
-English: backward. the buried meaning: turning back.
-English: worth. the buried meaning: what a thing turns out to be.
-So werden means "to turn into," and every time you say toward you are using the same root without knowing it.
+Ist is the one form of sein whose relatives you can name on sight:
+[a table of 4 rows, read aloud]
+language: German. "is": ist.
+language: English. "is": is.
+language: Latin. "is": est.
+language: French. "is": est.
+All from Proto-Indo-European h₁es-, "to be" — and the infinitive sein is built on that root too. So sein and ist really do belong to each other; it is bin and bist that came from somewhere else.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "werden" — VAIR-den]
+[your turn — say: "er ist, sie ist, es ist"]
 [pause 8 seconds for the answer]
-[your turn — say: "ich bin geworden"]
+[your turn — say: "Das ist gut." — "that is good"]
 [pause 8 seconds for the answer]
-[your turn — say: "Ich bin müde geworden." — "I got tired"]
-[pause 8 seconds for the answer]
-[your turn — say: "werden — toward — worth"]
+[your turn — say: "ich bin, du bist, er ist"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"Ich bin müde geworden."
+"Das ist gut."
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does werden mean? ("To become.") Why does it take sein? (It is change of state — the other half of the rule.) Say "I became." (Ich bin geworden.) Which English words hide the same root? (Toward, backward, worth.) Next: the two verbs that break the rule by standing still.
+Say "he is." (Er ist.) Which other subjects take the same form? (Sie, es, das.) Say "that is good." (Das ist gut.) Which Latin word is ist? (Est.) Next: the form for more than one.
 
 
 Lesson 5 of 9.
-bleiben — "to stay".
+wir sind — "we are".
 
 Warm-up.
 [pause 2 seconds]
-Werden takes sein because it is pure change. This verb takes sein too — and it means staying exactly where you are.
+Three singular forms down. The plural starts here, and after bin, bist, ist, this one will finally look like the verb it belongs to.
 
-You'll want to know: bleiben.
-bleiben — "to stay, to remain."
-ich bin geblieben — "I stayed."
-By the rule as stated, this verb should take haben. Staying is not motion and it is not change; it is the absence of both. It takes sein anyway, and every German learner meets it as a fact rather than a consequence.
-The honest way to hold it: bleiben is on the sein list because it is about where you are rather than what you do, and that is the deeper thing the motion rule was pointing at all along.
+You'll want to know: wir sind.
+wir sind — "we are."
+wir is "we." And sind shares its first two letters with the infinitive sein, which is the first visible family resemblance in this verb.
+Its Latin twin is sunt, "they are" — same s, same n, same closing stop, the same root wearing a different vowel.
 
 Sounds you'll need.
-diphthong-ei — ei is the eye vowel again, exactly as in sein. So bleiben is BLY-ben, never blee-ben. The two verbs of this chapter that break the rule both carry that vowel.
-
-The word, taken apart.
-bleiben is be- plus an old Germanic verb lība-, "to remain." English lost the verb and kept its leavings — literally: what remains after everything else has gone is what English calls the leftovers, and leave in the sense of what is left belongs to the same family.
-German still uses the verb every day; English kept only the residue of it, which is a fitting fate for a word meaning "to be left over."
+w-as-v — German w is English v. Wir begins like veer.
+ie-long-ee — ie is a long ee. Wir is veer, not wire.
+d-t-final — the d at the end of sind is spoken as a t, the same final devoicing you met on und. Say zint.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "bleiben" — BLY-ben, the eye vowel]
+[your turn — say: "wir sind" — veer zint, final d as t]
 [pause 8 seconds for the answer]
-[your turn — say: "ich bin geblieben"]
+[your turn — say: "wir sind gut."]
 [pause 8 seconds for the answer]
-[your turn — say: the odd pair — "ich bin geworden … ich bin geblieben"]
+[your turn — say: "sein … sind" — the family resemblance]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"Ich bin geblieben."
+"wir sind, wir sind."
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does bleiben mean? ("To stay.") Say "I stayed." (Ich bin geblieben.) Does the motion rule predict its helper? (No — it has to be learned.) How is ei pronounced? (Like English eye.) Next: the rest of the verbs that have to be learned, including this chapter's own verb.
+Say "we are." (Wir sind.) How is the final d pronounced? (As a t.) How does wir begin? (Like English v.) Which Latin word is sind? (Sunt.) Next: the plural "you."
 
 
 Lesson 6 of 9.
-ich bin gewesen — and the rest of the learned list.
+ihr seid — "you are," to several people.
 
 Warm-up.
 [pause 2 seconds]
-Bleiben was the first verb the rule failed to predict. Here is the whole of the rest of that list, and it is short.
+Du is one friend. For two or more friends German has a separate word, and English used to have one as well.
 
-Grammar Lens: the verbs you simply learn.
-Besides motion and change, a small fixed set of verbs takes sein and has to be learned.
-[a table of 6 rows, read aloud]
-verb: sein. perfect: ich bin gewesen. meaning: I have been.
-verb: bleiben. perfect: ich bin geblieben. meaning: I stayed.
-verb: gelingen. perfect: es ist gelungen. meaning: it succeeded.
-verb: geschehen. perfect: es ist geschehen. meaning: it happened.
-verb: passieren. perfect: es ist passiert. meaning: it happened.
-verb: begegnen. perfect: ich bin begegnet. meaning: I met.
-Sein and bleiben head the list because they are the two that most clearly contradict the rule: one says a thing simply is, the other says it stays. The rest are events that arrive of their own accord — succeeding, happening, running into somebody — and German treats an arrival as a change.
+You'll want to know: ihr seid.
+ihr seid — "you are," said to more than one person you would each call du.
+ihr is the familiar plural "you" — a crowd of friends, a group of children, your own family. English once had ye here and let it go, which is why one English you now does the work of four German words.
+seid opens exactly like the infinitive: sei- is sein without its n. Both the s and the ei behave as they did there.
 
-The word, taken apart.
-Look closely at gewesen. Strip the ge- wrap and the -en ending and what is left is wes- — the third of the three roots inside this verb, the one that gave war and English was.
-So sein reaches for that root twice: once for its past tense, once for its participle. The infinitive comes from one root, the present from two, the past and participle from a third. There is no part of this verb that belongs to all of it.
+Sounds you'll need.
+ie-long-ee — ihr is eer, one long vowel; the h only stretches it.
+s-voiced — seid opens with the buzzing z of sein.
+diphthong-ei — and carries the eye vowel through. Say zite.
+Wir sind and ihr seid are the two plural forms, and they sound nothing alike, which makes them easy to keep apart.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ich bin gewesen; ich bin geblieben"]
+[your turn — say: "ihr seid" — eer zite]
 [pause 8 seconds for the answer]
-[your turn — say: "es ist passiert" — "it happened"]
+[your turn — say: "wir sind … ihr seid"]
 [pause 8 seconds for the answer]
-[your turn — say: "war … gewesen" — the same root twice]
+[your turn — say: "sein … seid" — the same opening]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"ich bin gewesen."
+"ihr seid, ihr seid."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Name the two verbs at the head of the learned list. (Sein and bleiben.) Say "I have been." (Ich bin gewesen.) Say "it happened." (Es ist passiert — or es ist geschehen.) Which root is hiding inside gewesen? (wes-, the one behind war.) Next: the ending German does not put on any of these.
+Say "you are" to a group of friends. (Ihr seid.) Which English word did that job before English dropped it? (Ye.) Which part of seid comes straight out of sein? (sei-.) Next: the last form, and the one that does double duty.
 
 
 Lesson 7 of 9.
-gegangen — the participle that never changes.
+sie sind / Sie sind — "they are," and "you are," politely.
 
 Warm-up.
 [pause 2 seconds]
-French draws the same have-against-be line German does. Here is the place the two languages part company, and German comes out easier.
+The polite Sie is literally the word for "they," worn as a courtesy. Its verb form follows from that, and costs you nothing new.
 
-Grammar Lens: German agrees with nothing here.
-Inside the perfect, the German participle takes no ending at all. Gegangen is gegangen for every person, number and gender.
-[a table of 3 rows, read aloud]
-he went. French: il est allé. German: er ist gegangen.
-she went. French: elle est allée. German: sie ist gegangen.
-they went. French: ils sont allés. German: sie sind gegangen.
-French makes the participle agree with its subject and spells the agreement out three different ways. German changes the helper — ist, sind — and leaves the participle exactly where it found it.
-Old High German did inflect it here, at least some of the time. Modern German lost that, along with most of its other adjective-like endings in this position. So the simplicity is not a design; it is an erosion, and German happens to have come out ahead.
+You'll want to know: sie sind and Sie sind.
+sie sind — "they are." Sie sind — "you are," to someone you would address formally.
+The form is sind, the very same word you learned for wir. Nothing changes in the mouth at all: wir sind, sie sind, Sie sind are three subjects and one verb form.
 
-Why it's said this way.
-It would be easy to assume German copied this split from Latin, the way it borrowed so much else. It did not.
-The haben-perfect and the sein-perfect are native Germanic developments. They grew up alongside the Romance ones rather than out of them: neighbouring languages drifting the same way over centuries of contact, the same areal spread that pushed the simple past out of everyday speech in French, German and Italian together.
-Two things to carry forward, and they point in opposite directions:
-the split between the two helpers is shared with French;
-the agreement is not.
+Grammar Lens: the capital carries the politeness.
+On the page, sie and Sie differ by exactly one capital letter — and German already spends capitals on grammar rather than decoration. In speech there is no difference at all; the context tells you which one is meant.
+[a table of 2 rows, read aloud]
+sie sind means they are.
+Sie sind means you are, formally.
+That is the whole of it. Six subjects, and you have now met every present form of the verb.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "er ist gegangen; sie ist gegangen; sie sind gegangen"]
+[your turn — say: "sie sind" — "they are"]
 [pause 8 seconds for the answer]
-[your turn — say: the participle, unchanged, three times — "gegangen, gegangen, gegangen"]
+[your turn — say: "Sie sind Herr Peter Schmidt?" — politely]
 [pause 8 seconds for the answer]
-[your turn — say: the comparison — "elle est allée … sie ist gegangen"]
+[your turn — say: "wir sind, sie sind, Sie sind" — one form, three subjects]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"sie ist gegangen; sie sind gegangen."
+"sie sind, Sie sind."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Does the German participle agree with its subject in the perfect? (No — never.) What changes instead? (The helper — ist, sind.) Does French agree? (Yes.) Did German take this split from Latin? (No — it grew in parallel.) Next: the one place a German participle does take an ending.
+Say "they are." (Sie sind.) Say "you are" to a stranger. (Sie sind — same sound.) What separates the two on paper? (The capital S.) How many different present forms of this verb have you now met? (Five — bin, bist, ist, sind, seid.) Next: one adjective, so you can finally say something about yourself.
 
 
 Lesson 8 of 9.
-der angekommene Zug — where the ending comes back.
+müde — "tired".
 
 Warm-up.
 [pause 2 seconds]
-The participle takes no ending in the perfect. That is a fact about the perfect, not about participles — and the difference matters.
+Ich bin is a sentence waiting for one more word. Here is the word that finishes it most often.
 
-Grammar Lens: in front of a noun, it inflects.
-A German participle standing in front of a noun is working as an adjective, and it takes the endings adjectives take there.
-[a table of 3 rows, read aloud]
-ein geschriebener Brief means a written letter.
-der angekommene Zug means the arrived train.
-die eingeschlafene Katze means the fallen-asleep cat.
-Each noun keeps its capital, and each participle now carries a small ending chosen by the article in front of it. That is the ordinary German adjective machine, applied to a participle. (Katze, "cat", gets a lesson of its own later; here it is only carrying the ending.)
-So German did not lose participle endings everywhere. It lost them in exactly one construction: the perfect.
+You'll want to know: müde.
+müde — "tired."
+Ich bin müde. — "I am tired."
+Two syllables, stress on the first: mü-duh. It is an adjective, and after sein an adjective takes no ending at all — the same bare form serves every subject. Ich bin müde, du bist müde, wir sind müde.
+That is worth noticing, because German adjectives are famous for their endings. They only take them in front of a noun. Standing after sein, they stand still.
 
 Sounds you'll need.
-ge-prefix — all three participles above still carry their ge- wrap, and it is still unstressed. In angekommen it has slid into the middle of the word, behind an-, which is where German puts it when a prefix comes first.
+umlaut-ue — ü is the vowel you make by rounding your lips for oo and then saying ee without moving them. The dots are the fronting mark you already know: the mouth shifts forward, the lips stay round.
+The final -e is a soft uh, never silent. mü-duh, two beats, the weight on the first.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "der angekommene Zug"]
+[your turn — say: "müde" — round the lips, say ee]
 [pause 8 seconds for the answer]
-[your turn — say: "die eingeschlafene Katze"]
+[your turn — say: "Ich bin müde."]
 [pause 8 seconds for the answer]
-[your turn — say: the contrast — "sie ist gegangen" (no ending) … "die eingeschlafene Katze" (ending)]
+[your turn — say: "Er ist müde. Wir sind müde." — the adjective never changes]
 [pause 8 seconds for the answer]
-[your turn — say: "die müde Mutter" — an ordinary adjective doing the same thing]
-[pause 8 seconds for the answer]
+[repeat that twice]
+"Ich bin müde."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Where does a German participle still take an ending? (In front of a noun, as an adjective.) Where does it never take one? (In the perfect.) Say "the arrived train." (Der angekommene Zug.) What is the participle behaving as, in that phrase? (An adjective.) Next: choosing between the two helpers, on the spot.
+Say "I am tired." (Ich bin müde.) How do you make the ü? (Round for oo, say ee.) Does müde change after sein? (No — no ending.) Say "we are tired." (Wir sind müde.) Next: everything at once, on purpose.
 
 
 Lesson 9 of 9.
-Practice — haben or sein?
+Practice — the whole present of sein.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
-No new words. The only skill left in this chapter is picking the right helper without stopping to think, and that is drill.
+No new words. Every form below has had its own lesson, so this is the first time it is safe to put them all on one page — as a recap, not as something to memorise from cold.
 
-Grammar Lens: the whole family in one place.
-[a table of 8 rows, read aloud]
-verb: gehen. perfect: ich bin gegangen. why: motion.
-verb: kommen. perfect: ich bin gekommen. why: motion.
-verb: fahren. perfect: ich bin gefahren. why: motion.
-verb: werden. perfect: ich bin geworden. why: change of state.
-verb: bleiben. perfect: ich bin geblieben. why: learned.
-verb: sein. perfect: ich bin gewesen. why: learned.
-verb: lernen. perfect: ich habe gelernt. why: ordinary activity.
-verb: machen. perfect: ich habe gemacht. why: ordinary activity.
-Read the right-hand column and you can see how much of the work the motion rule does on its own: only two rows have to be memorised outright.
+Grammar Lens: the six forms, assembled.
+[a table of 3 rows, read aloud]
+singular: ich bin. plural: wir sind.
+singular: du bist. plural: ihr seid.
+singular: er/sie/es ist. plural: sie/Sie sind.
+Six subjects, five different forms — sind does double duty. Look at that with fresh eyes now that you can say all of it: bin and ist do not look like forms of the same word, and the next chapter explains why they aren't.
 
 The exchange.
 [a table of 5 rows, read aloud]
-Wo bist du gewesen? means Where have you been?
-Ich bin nach Berlin gefahren. means I travelled to Berlin.
-Und Anna? Ist sie gekommen? means And Anna? Did she come?
-Anna ist zu Hause geblieben. means Anna stayed at home.
-Ich habe viel gelernt. Jetzt bin ich müde. means I learned a lot. Now I am tired.
-Note the third and fourth lines: ist sie gekommen, Anna ist geblieben — a feminine subject both times, and not one letter added to either participle.
+Hallo! Wie geht es dir? means Hello! How are you?
+Danke, ich bin müde. means Thanks — I am tired.
+Du bist müde? Ich auch. means You are tired? Me too.
+Dann sind wir müde. Aber das ist gut. means Then we are tired. But that is good.
+Bis morgen! means See you tomorrow!
+Three small joining words slip in there without needing lessons of their own, because each can be read straight off the translation: auch ("too"), dann ("then") and aber ("but").
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the contrast pair — "ich habe gelernt … ich bin gegangen"]
+[your turn — say: the six in order — "ich bin, du bist, er ist, wir sind, ihr seid, sie sind"]
 [pause 8 seconds for the answer]
-[your turn — say: the family — "bin gekommen, bin gefahren, bin geworden, bin geblieben, bin gewesen"]
+[your turn — say: the same six backwards]
 [pause 8 seconds for the answer]
-[your turn — say: the French comparison — "elle est allée … sie ist gegangen", no ending at all]
-[pause 8 seconds for the answer]
-[your turn — say: the one place the ending returns — "der angekommene Zug"]
+[your turn — say: "Ich bin müde." "Du bist müde." "Wir sind müde."]
 [pause 8 seconds for the answer]
 [your turn — say: the whole exchange, both voices]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"ich habe gelernt … ich bin gegangen."
-
-What you've built — where this volume pauses.
-You have gone from guten Tag to two working past tenses, and the method has not changed once: take the word apart, find the English cousin sleeping inside it, and let the family tree do the memorising for you.
-The next volume picks the thread back up with describing what you see.
+"ich bin, du bist, er ist, wir sind, ihr seid, sie sind."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which helper for tanzen, "to dance"? (Haben — an activity.) Which for fahren? (Sein — motion.) Which two verbs on the sein list mean the opposite of change? (Sein and bleiben.) Say "she stayed." (Sie ist geblieben — no ending on the participle.)
+Run the six forms without looking. Which one form covers wir, sie and Sie? (Sind.) Which is the only form built out of another one? (Bist, from bin.) Say "that is good." (Das ist gut.) Say "you are tired" to a group. (Ihr seid müde.) Next: where these forms came from — three different verbs, none of them each other.

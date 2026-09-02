@@ -1,15 +1,17 @@
 {
   "language": "german",
   "chapter": 21,
-  "sourceHash": "fnv1a64:dfb796de425240ab",
+  "sourceHash": "fnv1a64:12d04bf8b21ce7da",
   "lessonIds": [
-    "GE-C19-bitte-requests"
+    "GE-C17-kopf",
+    "GE-C17-kopf-haupt",
+    "GE-C17-hand"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 1,
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
   "text": "german/narration/ch21.txt",
   "json": "german/narration/ch21.json",
-  "textHash": "fnv1a64:090c901d05b51694",
-  "jsonHash": "fnv1a64:5a6f655ecefeefd0",
+  "textHash": "fnv1a64:6375f52447cc4e24",
+  "jsonHash": "fnv1a64:60bbf1904404f2e9",
   "findings": []
 }

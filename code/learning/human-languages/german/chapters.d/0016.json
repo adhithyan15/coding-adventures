@@ -1,26 +1,25 @@
 {
   "chapter": 16,
-  "title": "I Am, You Are",
-  "label": "ch:sein",
-  "canDo": "I can say what someone is in German, using any of the six present forms of the verb for “to be” — and say that I am tired.",
+  "title": "The Past Built From Have",
+  "label": "ch:perfekt",
+  "canDo": "I can say what I did in German — haben in second place, the participle waiting at the end of the clause — and read it as a plain past rather than as “have done”.",
   "spineNodes": [
-    "SPINE-SAY-WHAT-I-DO"
+    "SPINE-TALK-ABOUT-PAST"
   ],
   "payoff": {
-    "lesson": "GE-C16-praesens-practice",
+    "lesson": "GE-C15-perfekt-practice",
     "kind": "task",
-    "summary": "sein is the one German verb whose forms cannot be guessed from its infinitive, so this chapter meets them one at a time — bin, bist, ist, sind, seid, sind — and only assembles the grid once every cell has had its own lesson. It closes with müde, the adjective that finishes ich bin, and a short exchange that runs on nothing but this verb.",
+    "summary": "The Perfekt is haben plus a participle, and its cost is the four person slots rather than the recipe: ich habe, du hast, er hat, wir haben each get their own lesson before any of them share a page. The bracket that leaves the participle stranded at the end of the clause gets one of its own too, then gestern to fill the gap it opens, and finally the translation trap — ich habe gesagt is “I said”.",
     "assesses": [
-      "GE-LEX-SEIN-01",
-      "GE-SOUND-SEIN-01",
-      "GE-GRAMMAR-SEIN-ICH-BIN-01",
-      "GE-GRAMMAR-SEIN-DU-BIST-01",
-      "GE-GRAMMAR-SEIN-ER-IST-01",
-      "GE-GRAMMAR-SEIN-WIR-SIND-01",
-      "GE-GRAMMAR-SEIN-IHR-SEID-01",
-      "GE-GRAMMAR-SEIN-SIE-SIND-01",
-      "GE-LEX-MUEDE-01"
+      "GE-GRAMMAR-PERFEKT-HABEN-01",
+      "GE-GRAMMAR-PERFEKT-ICH-01",
+      "GE-GRAMMAR-PERFEKT-DU-01",
+      "GE-GRAMMAR-PERFEKT-ER-01",
+      "GE-GRAMMAR-PERFEKT-WIR-01",
+      "GE-GRAMMAR-PARTIZIP-FINAL-01",
+      "GE-LEX-GESTERN-01",
+      "GE-GRAMMAR-PERFEKT-ALS-VERGANGENHEIT-01"
     ],
-    "note": "Chapter 16 is generated from schema-v2 lessons, so the payoff is atom-scored. It claims every atom the chapter introduces, because the practice lesson is where the six forms are first allowed to appear together: the grid there is a recap of six lessons, not an introduction, which is the only condition under which a paradigm table may be printed at all."
+    "note": "Chapter 16 is generated from schema-v2 lessons, so the payoff is atom-scored. The four-slot table in the practice lesson is a recap of four lessons rather than an introduction to four forms, which is what makes printing it permissible."
   }
 }
