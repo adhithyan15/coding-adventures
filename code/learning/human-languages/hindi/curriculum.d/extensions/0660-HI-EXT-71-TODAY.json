@@ -1,0 +1,15 @@
+{
+  "id": "HI-EXT-71-TODAY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say today, add also, raise with very, and ask when and why.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C71-today",
+    "HI-C71-also",
+    "HI-C71-very",
+    "HI-C71-when",
+    "HI-C71-why"
+  ]
+}

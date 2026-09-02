@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C71-when",
+    "language": "hindi",
+    "chapter": 71,
+    "sequence": 2790,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4e64216e62bab250"
+  },
+  "findings": []
+}

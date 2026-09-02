@@ -1,0 +1,15 @@
+{
+  "id": "HI-EXT-70-LEISURE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a game, say that I play it, and say that I am resting.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C70-game",
+    "HI-C70-play",
+    "HI-C70-cricket",
+    "HI-C70-song",
+    "HI-C70-rest"
+  ]
+}

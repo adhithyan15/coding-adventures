@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:90edd02142348a95",
+  "lessonIds": [
+    "HI-C69-vehicle",
+    "HI-C69-railway",
+    "HI-C69-station",
+    "HI-C69-ticket",
+    "HI-C69-go"
+  ],
+  "tex": "hindi/book/chapters/ch69-ways-of-going.tex"
+}

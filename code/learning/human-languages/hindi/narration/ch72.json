@@ -1,0 +1,666 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 72,
+  "title": "What It Costs",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:48ef4b868b22acfe",
+  "lessons": [
+    {
+      "id": "HI-C72-money",
+      "sequence": 2810,
+      "title": "पैसा (paisā) — money",
+      "headword": "पैसा",
+      "romanization": "paisā",
+      "gloss": "money",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1f4c33e72dec6915",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the word for \"why\". The next five words are what you need at a counter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पैसा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पैसा (paisā) — \"money\"."
+            },
+            {
+              "kind": "speech",
+              "text": "It began as a fraction. Sanskrit पाद (pāda) is a quarter and अंश (aṁśa) is a part, and the coin they named was a small share of a larger one. For a long while a पैसा (paisā) was one hundredth of a rupee."
+            },
+            {
+              "kind": "speech",
+              "text": "Then the small coin ate the whole idea. Today पैसा as one coin is nearly gone, and पैसा as money in general is what people say: paisā nahīṁ hai is \"there is no money\", about a wallet or about a country."
+            },
+            {
+              "kind": "speech",
+              "text": "The ै on the प is the ai matra, two strokes above the headline, and it is the same one inside कैसे."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five words for buying something."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "paisā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *paisā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paisā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paisā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "पैसा (paisā), and find the ै it shares with कैसे",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: पैसा, and find the ै it shares with कैसे]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पैसा (paisā) mean? (\"money\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C72-rupee",
+      "sequence": 2820,
+      "title": "रुपया (rupayā) — a rupee",
+      "headword": "रुपया",
+      "romanization": "rupayā",
+      "gloss": "a rupee",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:07f5148e7e437ea9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say paisā, then write पैसा: प with ै above it, then स, then ा."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रुपया",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रुपया (rupayā) — \"a rupee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit रूप्य (rūpya) is \"wrought silver, a stamped coin\", and it comes straight from रूप (rūpa), \"form, shape\". A rupee is a piece of metal that has been given a shape — the name says nothing about value and everything about the stamping."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth holding beside पैसा (paisā). पैसा (paisā) was named for being a fraction; रुपया (rupayā) was named for being formed. One word looks at how small it is, the other at how it was made."
+            },
+            {
+              "kind": "speech",
+              "text": "The ु under the र is the short u matra, hanging below the letter rather than above it."
+            },
+            {
+              "kind": "speech",
+              "text": "A price is said in रुपये: दस रुपये, and you have counted to ten already."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Money in general, and the unit it is counted in."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rupayā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rupayā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das rupaye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das rupaye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "पैसा (paisā) once more, then रुपया (rupayā) beside the printed model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: पैसा once more, then रुपया beside the printed model]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रुपया (rupayā) mean? (\"a rupee\".) And पैसा (paisā)? (\"money\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C72-price",
+      "sequence": 2830,
+      "title": "दाम (dām) — a price",
+      "headword": "दाम",
+      "romanization": "dām",
+      "gloss": "a price",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:76139aa89c5444bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the unit a price is counted in, and then say ten of them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दाम",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दाम (dām) — \"a price\"."
+            },
+            {
+              "kind": "speech",
+              "text": "This one has travelled further than any word in the chapter. The Greek coin was the drachmē; traders carried the name east; Sanskrit wrote it द्रम्म (dramma); Hindi wore it down to दाम (dām). A Greek weight of silver ended up as the ordinary Hindi word for what a thing costs."
+            },
+            {
+              "kind": "speech",
+              "text": "Now put it with a word you have had since the second chapter. क्या is \"what\", and."
+            },
+            {
+              "kind": "speech",
+              "text": "दाम क्या है? — dām kyā hai? — \"what is the price?\""
+            },
+            {
+              "kind": "speech",
+              "text": "is a whole question, built from one new word and two you already own. This is the sentence a market runs on, and you can now say it."
+            },
+            {
+              "kind": "speech",
+              "text": "You have also seen दाम (dām) before, standing in a row of look-alikes beside नाम and काम when you were learning to pick a name out of a line. Now it means something."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three: पैसा (paisā), रुपया (rupayā), दाम (dām) — and a question you can ask with the third."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dām kyā hai?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dām kyā hai?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it again, pointing at something in the room",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it again, pointing at something in the room]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you ask what something costs? (dām kyā hai?) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C72-expensive",
+      "sequence": 2840,
+      "title": "महँगा (mahãgā) — expensive",
+      "headword": "महँगा",
+      "romanization": "mahãgā",
+      "gloss": "expensive",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:101a11b00f1bde6e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write दाम (dām) from memory: द, then ा, then म. Then say the question you built with it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: महँगा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "महँगा (mahãgā) — \"expensive\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit महार्घ (mahārgha): महा is \"great\" and अर्घ is \"value, price\". So the word is \"great-priced\", which is what it still means."
+            },
+            {
+              "kind": "speech",
+              "text": "The moon-and-dot ँ over the ह sends the vowel through the nose. Say it aloud with the nasal and without it, and you will hear that the nasal is not decoration — it is part of the word."
+            },
+            {
+              "kind": "speech",
+              "text": "महँगा (mahãgā) behaves like बड़ा and पुराना, which you already own: it comes before the thing it describes and changes its ending to agree with it. You do not have to work the agreement yet. Hear it, and notice the -आ ending it shares with those two."
+            },
+            {
+              "kind": "speech",
+              "text": "बहुत महँगा (mahãgā) puts last chapter's word to work on this one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four: a price, and a judgement to pass on it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mahãgā, with the nose in the middle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mahãgā*, with the nose in the middle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahut mahãgā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahut mahãgā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "महँगा (mahãgā), putting the ँ above the ह",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: महँगा, putting the ँ above the ह]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does महँगा (mahãgā) mean? (\"expensive\".) Say that the price is very high."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C72-buy",
+      "sequence": 2850,
+      "title": "ख़रीदना (kharīdnā) — to buy",
+      "headword": "ख़रीदना",
+      "romanization": "kharīdnā",
+      "gloss": "to buy",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad199d178307801b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the four words of this chapter so far."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ख़रीदना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ख़रीदना (kharīdnā) — \"to buy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Persian خریدن (kharīdan), \"to buy\", with the Persian ending swapped for the Hindi -ना you now recognise on sight. The whole Persian half of the shopping vocabulary came in this way, over centuries of trade."
+            },
+            {
+              "kind": "speech",
+              "text": "The dot under the ख़ is the nuqta, and it matters. Plain ख is the aspirated k you met in खेल; ख़ with the dot is a scraped sound further back in the throat, the one Persian and Arabic brought with them. Many printers leave the dot off and the word still reads, but the two letters are not the same."
+            },
+            {
+              "kind": "speech",
+              "text": "Put the chapter together and you can shop: दाम (dām) क्या है? to ask, बहुत महँगा (mahãgā) to complain, and ख़रीदना (kharīdnā) for what you came to do."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: पैसा (paisā), रुपया (rupayā), दाम (dām), महँगा (mahãgā), ख़रीदना (kharīdnā). Enough to stand at a counter and settle what a thing costs."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kharīdnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kharīdnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dām kyā hai?, then bahut mahãgā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dām kyā hai?*, then *bahut mahãgā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "महँगा (mahãgā) from memory, then ख़रीदना (kharīdnā) beside the printed model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: महँगा from memory, then ख़रीदना beside the printed model]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ख़रीदना (kharīdnā) mean? (\"to buy\".) Ask what a thing costs."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

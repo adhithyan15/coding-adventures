@@ -12,9 +12,12 @@ it("pins Hindi continuity", () => expectLanguageContinuity("hindi"));
 it("pins Hindi modality", () => expectLanguageModality("hindi"));
 it("pins Hindi lesson-content budgets", () =>
   expectLanguageLessonBudgets("hindi", {
-    lessons: 287,
+    // pre-A1 vocabulary round four: +35 lessons, +7 chapters (chapters 68-74).
+    lessons: 322,
     idioms: 21,
-    senses: 22,
+    // +2: HI-C70-song declares gana's singing sense and HI-C73-drink declares
+    // khana's eating sense, which is what covers HI-A1-V-26.
+    senses: 24,
     cultureClaims: 27,
     unitPrefix: "HI",
   }));

@@ -1,0 +1,15 @@
+{
+  "id": "HI-EXT-72-COST",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name money and a price, ask what a thing costs, and say that I buy it.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C72-money",
+    "HI-C72-rupee",
+    "HI-C72-price",
+    "HI-C72-expensive",
+    "HI-C72-buy"
+  ]
+}

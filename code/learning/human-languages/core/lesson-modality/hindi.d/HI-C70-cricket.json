@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C70-cricket",
+    "language": "hindi",
+    "chapter": 70,
+    "sequence": 2730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0428a69e8399124e"
+  },
+  "findings": []
+}

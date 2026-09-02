@@ -2,6 +2,81 @@
 
 ## [Unreleased]
 
+### Added - 35 more pre-A1 words, chosen against the A1 exam inventory: 155/282 -> 173/282
+
+Seven chapters (68-74), five lessons each, one new headword per lesson. The
+pre-A1 vocabulary criterion moves **155 -> 190 of 300**, and the shortfall the
+completion plan tracks falls 145 -> 110, exactly 35.
+
+The words were NOT chosen by topic. `npm run plan` names the vocabulary item as
+a count and cannot say which words; `core/exam-inventory-hindi-a1.json` can, and
+every one of its 127 uncovered points carried a note naming the missing word and
+the mock item that needs it. Choosing against that list closed **18 exam points
+with 35 words**:
+
+    68  MEET-GREET              desh, Bharat, shahar, bhasha, angrezi
+    69  POLITE-REQUEST-REPAIR   gari, rel, steshan, tikat, jana
+    70  EXCHANGE-NAMES          khel, khelna, kriket, gana, aram
+    71  CHECK-WELLBEING         aaj, bhi, bahut, kab, kyon
+    72  RESPOND-BASIC           paisa, rupaya, dam, mahanga, kharidna
+    73  COURTESY-THANK          hotal, nashta, bil, vetar, pina
+    74  TAKE-LEAVE              khula, band, pravesh, nikas, der
+
+**A1 exam coverage: 155/282 (55%) -> 173/282 (61%).** Core lexis 35/65 -> 43/65,
+adverbs 7/10 -> 9/10, questions 5/10 -> 7/10, the verb 11/27 -> 13/27,
+communicative functions 44/65 -> 46/65, the noun 6/9 -> 7/9, the adjective
+5/9 -> 6/9. The denominator did not move; 18 points that had `probe: null`
+now name atoms that exist.
+
+Four of those points were called out by name in the previous entry as the
+track's most conspicuous holes and are now closed: **`jana` is taught**
+(HI-A1-V-25, "the single highest-traffic missing verb in the level"); **`aaj`
+is taught** (HI-A1-ADV-03); **`kab` and `kyon` are taught in their own lessons**
+rather than named in passing in a list (HI-A1-Q-07, HI-A1-Q-08); and **the
+public-sign vocabulary exists** — `khula`, `band`, `pravesh`, `nikas` are items
+1 to 4 of BOTH mocks' reading papers and the first 35 of that paper's 100
+points (HI-A1-F-60, HI-A1-LEX-62).
+
+The verb criterion closed too. Hindi taught **2** distinct verb headwords at or
+below pre-A1 against a target of 5; `jana`, `khelna`, `kharidna` and `pina`
+bring it to **6**, and `verb-vocabulary/hindi/pre-A1` has left the plan. Each of
+the four is a canonical `VERB-*` concept owned by an A1 or A2 spine node, so
+each required deleting the concept from that node's `omits` and adding it to
+its `relocates` — the ledger mechanism, not a retag.
+
+**The writing ramp is interleaved rather than blocked.** Every word arrives
+glossed and romanized first, which is what makes its headword exposure rather
+than something the reader must decode; the SPELLING of it is asked for one
+lesson later, when the next word is being introduced by ear. So lesson 2 of each
+chapter writes word 1 while hearing word 2, lesson 4 writes word 3, and the
+payoff lesson writes words 4 and 5 and says all five. Twenty-one of the
+thirty-five lessons carry `writing` alongside listening, speaking and reading.
+
+**Zero new Devanagari glyphs.** All 35 headwords, every example sentence and
+every citation are spelled from the 47 glyphs the track's own writing lessons
+teach. The corpus still shows 11 it has never taught and that number did not
+move. This ruled out real candidates — `daktar` needs the candra-o sign,
+`thoda` needs `tha`, `parhna` needs `dha`-nuqta — and is why the health chapter
+that was designed for this tranche was cut: with no word for the doctor it
+closed one exam point, against five for the small-words chapter that replaced
+it. HI-A1-LEX-43 stays uncovered and its note says why.
+
+Three lessons teach a word against a look-alike the reader already holds, which
+is where a beginner's eye actually fails: `bhi` against `abhi`, `bil` against
+`bilkul` and `billi`, `band` against `bandar`. Two lessons declare a second
+sense rather than a second headword — `gana` is both the song and the singing,
+`khana` is both the food the reader has held since the tea chapter and the
+doing word, which is what covers HI-A1-V-26.
+
+Notes were rewritten on five points this tranche moved WITHOUT closing, so the
+file does not contradict itself: HI-A1-LEX-18 (breakfast now taught, lunch and
+dinner not), HI-A1-LEX-40 (a verb of buying exists, no dwelling transaction
+does), HI-A1-LEX-53 (`gana` gives the music corner a foothold, five arts
+domains remain), HI-A1-F-24 (the content words for saying where you are from
+exist, the `se` frame does not), HI-A1-ADJ-05 (`Bharat` is taught as a NAME,
+the relational adjective is not).
+
+
 ### Added - an A1 exam inventory, measured against a proxy with a real syllabus behind it
 
 `core/exam-inventory-hindi-a1.json` enumerates **282 things an A1 Hindi

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C74-exit",
+    "language": "hindi",
+    "chapter": 74,
+    "sequence": 2940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7d141b64bdc09ce"
+  },
+  "findings": []
+}

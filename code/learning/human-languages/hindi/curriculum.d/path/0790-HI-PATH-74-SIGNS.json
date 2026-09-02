@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-74-SIGNS",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "HI-C74-open",
+    "HI-C74-closed",
+    "HI-C74-entrance",
+    "HI-C74-exit",
+    "HI-C74-late"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-74-SIGNS"
+  ],
+  "after": []
+}

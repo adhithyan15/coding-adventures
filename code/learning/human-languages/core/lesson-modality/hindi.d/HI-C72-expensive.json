@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C72-expensive",
+    "language": "hindi",
+    "chapter": 72,
+    "sequence": 2840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:101a11b00f1bde6e"
+  },
+  "findings": []
+}

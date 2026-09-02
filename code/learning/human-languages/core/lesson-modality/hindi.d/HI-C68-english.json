@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C68-english",
+    "language": "hindi",
+    "chapter": 68,
+    "sequence": 2650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1142896deb8f4c89"
+  },
+  "findings": []
+}

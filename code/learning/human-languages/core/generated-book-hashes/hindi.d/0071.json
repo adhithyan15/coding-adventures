@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:53c0c32c244c0ebc",
+  "lessonIds": [
+    "HI-C71-today",
+    "HI-C71-also",
+    "HI-C71-very",
+    "HI-C71-when",
+    "HI-C71-why"
+  ],
+  "tex": "hindi/book/chapters/ch71-today-and-how-much.tex"
+}

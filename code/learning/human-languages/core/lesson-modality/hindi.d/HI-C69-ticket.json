@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C69-ticket",
+    "language": "hindi",
+    "chapter": 69,
+    "sequence": 2690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38de6e5fb24c6b1c"
+  },
+  "findings": []
+}

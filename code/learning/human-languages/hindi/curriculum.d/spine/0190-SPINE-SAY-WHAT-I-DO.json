@@ -12,7 +12,6 @@
   "omits": [
     "VERB-INFINITIVE",
     "VERB-PRESENT-HABITUAL",
-    "VERB-GO",
     "VERB-SAY",
     "VERB-SEE",
     "VERB-HEAR",
@@ -22,11 +21,13 @@
     "VERB-EAT",
     "VERB-SLEEP",
     "VERB-WORK",
-    "VERB-PLAY",
     "VERB-RUN",
     "VERB-SIT",
     "VERB-ANSWER",
     "VERB-MEET"
   ],
-  "relocates": {}
+  "relocates": {
+    "VERB-GO": "SPINE-POLITE-REQUEST-REPAIR",
+    "VERB-PLAY": "SPINE-EXCHANGE-NAMES"
+  }
 }

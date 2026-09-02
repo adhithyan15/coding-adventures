@@ -1,0 +1,21 @@
+{
+  "chapter": 71,
+  "title": "Today, and How Much",
+  "label": "ch:hi-today-and-how-much",
+  "canDo": "I can place a thing in today, add myself to it, raise it, and ask when and why when I ask after somebody.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "HI-C71-why",
+    "kind": "production",
+    "summary": "Complete HI-C71-why and say all five words in order, then say the six Hindi asking words as one family.",
+    "assesses": [
+      "HI-LEX-C71-TODAY-01",
+      "HI-LEX-C71-TODAY-02",
+      "HI-LEX-C71-TODAY-03",
+      "HI-LEX-C71-TODAY-04",
+      "HI-LEX-C71-TODAY-05"
+    ]
+  }
+}

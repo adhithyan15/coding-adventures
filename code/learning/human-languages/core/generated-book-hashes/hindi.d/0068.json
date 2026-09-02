@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:63e9a0ac9e7a65f8",
+  "lessonIds": [
+    "HI-C68-country",
+    "HI-C68-india",
+    "HI-C68-city",
+    "HI-C68-language",
+    "HI-C68-english"
+  ],
+  "tex": "hindi/book/chapters/ch68-where-you-come-from.tex"
+}

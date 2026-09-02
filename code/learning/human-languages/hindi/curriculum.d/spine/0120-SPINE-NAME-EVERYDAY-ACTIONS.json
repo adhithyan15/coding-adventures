@@ -5,10 +5,8 @@
     "HI-PATH-029-D"
   ],
   "omits": [
-    "VERB-DRINK",
     "VERB-GIVE",
     "VERB-PUT",
-    "VERB-BUY",
     "VERB-OPEN",
     "VERB-CLOSE",
     "VERB-STAND",
@@ -17,5 +15,8 @@
     "VERB-COME",
     "VERB-WALK"
   ],
-  "relocates": {}
+  "relocates": {
+    "VERB-BUY": "SPINE-RESPOND-BASIC",
+    "VERB-DRINK": "SPINE-COURTESY-THANK"
+  }
 }

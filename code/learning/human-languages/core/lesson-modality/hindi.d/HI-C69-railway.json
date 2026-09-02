@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C69-railway",
+    "language": "hindi",
+    "chapter": 69,
+    "sequence": 2670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7041fdd0b5512103"
+  },
+  "findings": []
+}

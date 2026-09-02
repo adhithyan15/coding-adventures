@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:de7f911be5b1f155",
+  "lessonIds": [
+    "HI-C73-eating-house",
+    "HI-C73-breakfast",
+    "HI-C73-bill",
+    "HI-C73-waiter",
+    "HI-C73-drink"
+  ],
+  "tex": "hindi/book/chapters/ch73-the-eating-house.tex"
+}
