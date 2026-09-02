@@ -2,24 +2,24 @@
   "version": 1,
   "language": "bengali",
   "chapter": 12,
-  "title": "Eye, Mouth, Nose, and Heart",
+  "title": "The Mind and the Page",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6f56ed66ba6d8ddf",
+  "sourceHash": "fnv1a64:469e9afe1033beac",
   "lessons": [
     {
-      "id": "BN-C12-chokh",
-      "sequence": 900,
-      "title": "চোখ (chokh) — \"eye,\" built on the root of \"to see\"",
-      "headword": "চোখ",
-      "romanization": "chokh",
-      "gloss": "eye — built on the same Sanskrit root as \"to see,\" worn down through three centuries of Bengali spelling before it looked like this",
+      "id": "BN-C08-bhaba",
+      "sequence": 700,
+      "title": "ভাবা (bhābā) — \"to think,\" and the verb it was built out of",
+      "headword": "ভাবা",
+      "romanization": "bhābā",
+      "gloss": "to think — and the machinery that made a \"become\" verb into a \"think\" verb",
       "script": "bengali",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f5271cd10674b60d",
+      "sourceHash": "fnv1a64:450efd757a18276b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -44,22 +44,22 @@
             },
             {
               "kind": "speech",
-              "text": "A new chapter, and a new use for Chapter 3's check-in — the parts of you that check-in is actually asking about."
+              "text": "You already have the verb \"to be.\" Sanskrit built \"to think\" out of it, by a trick Bengali still uses every day."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: চোখ",
+          "title": "You'll want to know: ভাবা",
           "segments": [
             {
               "kind": "speech",
-              "text": "চোখ — chokh — eye."
+              "text": "ভাবা — bhābā — to think."
             },
             {
               "kind": "speech",
-              "text": "আমার চোখ (āmār chokh) — my eye."
+              "text": "আমি ভাবি (āmi bhābi), \"I think.\" আপনি ভাবেন (āpni bhāben), respectfully."
             }
           ]
         },
@@ -70,7 +70,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "চোখ is চ with the vowel sign ো (cho) plus খ (kh, the puffed sound you already own from খাওয়া), silent at the end — one bare consonant, so no trailing vowel: chokh, not chokho."
+              "text": "ভাবা (bhābā) is ভা (bhā) + বা (bā). ভ is bh, a b with breath behind it; ব is the plain b underneath. Two letters, one puff of air between them."
             }
           ]
         },
@@ -81,12 +81,41 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "চোখ (chokh) traces to Sanskrit চক্ষুস্ (cakṣus), \"eye\" — a noun built directly on √চক্ষ্ (√cakṣ, \"to see\"), from PIE kʷeḱ-, \"to appear, to see.\" The nearest named cousin outside Indo-Aryan is Persian čašm, \"eye\"; no secure English descendant is claimed for this one. And the word itself has travelled: Old Bengali softened cakṣus down through চখু (cakhu) and চউখ (coukh) to today's চোখ (chokh) — half kept from Sanskrit, half worn smooth by three centuries of sound change, which is why this kind of word gets its own name, ardhatatsama, \"half a tatsama.\""
+              "text": "ভাবা (bhābā) is Sanskrit ভাবয়তি (bhāvayati), and bhāvayati is not its own verb: it is হওয়া's verb with a gear changed. Bhavati is \"it becomes\"; bhāvayati is \"he makes it become\" — and from making-something-be to imagining it is one short step. So Bengali bhābi and Bengali hôi are one root, √ভূ (√bhū), which is also English be and been, Latin futūrus (English future), and Greek phúsis (English physics). The noun bhāva, \"a state of mind,\" sits between them: thinking is holding a state."
             }
           ]
         },
         {
           "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens: the gear that makes someone else do it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sanskrit changed that gear with a lengthened vowel. Bengali changes it with the ending -আনো (-āno), and it is completely alive:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "plain verb",
+                "the made-to-happen verb"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "plain verb: দেখা (dækhā), to see. the made-to-happen verb: দেখানো (dækhāno), to show — make see.",
+                "plain verb: খাওয়া (khāwā), to eat. the made-to-happen verb: খাওয়ানো (khāwāno), to feed — make eat.",
+                "plain verb: করা (kôrā), to do. the made-to-happen verb: করানো (kôrāno), to have it done."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "One suffix, and a verb you already own becomes a verb about making someone else do it. There is no separate word for \"show\" or \"feed\" to learn; there is a gear. That is the same machinery that built ভাবা (bhābā) itself, two thousand years earlier and one language back."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -99,43 +128,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"chokh\" — eye, no trailing vowel",
+              "instruction": "\"bhābā\" — think — then \"āmi bhābi\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"chokh\" — eye, no trailing vowel]"
+              "source": "[YOU SAY: \"bhābā\" — think — then \"āmi bhābi\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"āmār chokh\" — my eye",
+              "instruction": "the be-verb it was built from — \"hôwā … āmi hôi\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"āmār chokh\" — my eye]"
+              "source": "[YOU SAY: the be-verb it was built from — \"hôwā … āmi hôi\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the verb it grew from — \"cakṣ … cakṣus … chokh\"",
+              "instruction": "see, then make-see — \"dækhā … dækhāno\" — and eat, then feed — \"khāwā … khāwāno\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the verb it grew from — \"cakṣ … cakṣus … chokh\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the other \"see\" verb you already own — \"dækhā\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the other \"see\" verb you already own — \"dækhā\"]"
+              "source": "[YOU SAY: see, then make-see — \"dækhā … dækhāno\" — and eat, then feed — \"khāwā … khāwāno\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -147,26 +167,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"my eye\" in Bengali. (আমার চোখ (chokh).) What Sanskrit verb is চোখ (chokh) built on? (√cakṣ, \"to see.\") Is চোখ (chokh) a tatsama, kept whole like বন্ধু, or fully worn down like ভাই? (Neither — an ardhatatsama, half of each.)"
+              "text": "Which verb from last chapter shares ভাবা (bhābā)'s root? (হওয়া — both are √bhū; thinking is making something be.) What does -আনো do to a verb? (Hands the doing to someone else — দেখা \"see\" becomes দেখানো \"show.\") Give the Bengali for \"show.\" (দেখানো, dækhāno.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "BN-C12-mukh",
-      "sequence": 910,
-      "title": "মুখ (mukh) — \"mouth, face,\" a word two families both claim",
-      "headword": "মুখ",
-      "romanization": "mukh",
-      "gloss": "mouth, face — a word so old that scholars still argue over which language family it belongs to",
+      "id": "BN-C08-bojha",
+      "sequence": 710,
+      "title": "বোঝা (bojhā) — \"to understand,\" the third knowing",
+      "headword": "বোঝা",
+      "romanization": "bojhā",
+      "gloss": "to understand — the third knowing, and the harmony that this time moves the spelling",
       "script": "bengali",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:52d0908b20971d13",
+      "sourceHash": "fnv1a64:9bb8345c96d198b8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -191,22 +211,22 @@
             },
             {
               "kind": "speech",
-              "text": "চোখ (chokh) was half old sound, half new. This word is a full tatsama again — and its own history is a real, unresolved argument among linguists."
+              "text": "Last chapter split \"know\" in two. This verb makes it three — and it plays the vowel game you already met, but this time the page tells you."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: মুখ",
+          "title": "You'll want to know: বোঝা",
           "segments": [
             {
               "kind": "speech",
-              "text": "মুখ — mukh — mouth, face."
+              "text": "বোঝা — bojhā — to understand."
             },
             {
               "kind": "speech",
-              "text": "আমার মুখ (āmār mukh) — my mouth, my face."
+              "text": "আমি বুঝি (āmi bujhi), \"I understand.\" Look again at that vowel: not bojhi."
             }
           ]
         },
@@ -217,7 +237,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "মুখ is ম with the vowel sign ু (mu) plus খ (kh), silent at the end — one bare consonant again: mukh, not mukho."
+              "text": "বোঝা (bojhā) is বো (bo) + ঝা (jhā). ঝ is jh, the breathy partner of জ — the j you met in জানা. And বো is the plain ব of ভাবা (bhābā) wearing the o-sign ো."
             }
           ]
         },
@@ -228,12 +248,49 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "মুখ is a tatsama, taken whole from Sanskrit মুখ (mukha) — a tadbhava twin, মু (mu), also exists, but only buried inside compound words, never standing alone. What makes মুখ worth pausing on is where mukha itself came from, and nobody fully agrees. One well-known account, Pokorny's, derives it from Dravidian, a language family with no Sanskrit or PIE connection at all. Another, Mayrhofer's, argues for an Indo-European source instead, pointing to the word's presence in the Rigveda and in Iranian languages as evidence it is old enough to be inherited rather than borrowed. Both scholars are serious; neither has won. The honest report is that মুখ's deepest root is still an open question."
+              "text": "বোঝা (bojhā) is Sanskrit √বুধ্ (√budh), \"to wake up, to notice\" — the root that gave a prince his title: the Buddha is \"the awakened one,\" and bodhi is the awakening. Understanding, in this family, is waking up to something."
+            },
+            {
+              "kind": "speech",
+              "text": "Behind it is PIE bʰewdʰ-, and English holds two of its children: bid and forbid, from Old English bēodan, \"to announce, to command\" — a bidding is something made known to you. Greek took peúthomai, \"I learn by asking.\""
             }
           ]
         },
         {
           "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens: the harmony again, and this time you can see it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দেখা's rule was that the -i of \"I\" closes the stem vowel while the spelling stands still. Here is the same rule on a different vowel — and the spelling moves with it:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Bengali",
+                "said"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "Bengali: আমি বুঝি. said: bujhi — the -i raises ো to ু.",
+                "Bengali: সে বোঝে. said: bojhe — stays o.",
+                "Bengali: তুমি বোঝো. said: bojho — stays o."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Same law as dekhi against dækhe: the high -i pulls the stem vowel up after it. Bengali simply chose to write this one down."
+            },
+            {
+              "kind": "speech",
+              "text": "And now three knowings where English has one: জানা for a fact, চেনা for a person, বোঝা (bojhā) for the thing that finally lands. ভাবা (bhābā) is the turning-over; বোঝা (bojhā) is when it arrives."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -246,43 +303,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"mukh\" — mouth, face",
+              "instruction": "\"bojhā\" — understand — then \"āmi bujhi\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"mukh\" — mouth, face]"
+              "source": "[YOU SAY: \"bojhā\" — understand — then \"āmi bujhi\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"āmār mukh\" — my face",
+              "instruction": "the pair, then the older pair — \"bujhi … bojhe\" and \"dekhi … dækhe\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"āmār mukh\" — my face]"
+              "source": "[YOU SAY: the pair, then the older pair — \"bujhi … bojhe\" and \"dekhi … dækhe\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two rival accounts — \"Dravidian … or Indo-European\"",
+              "instruction": "think, then understand — \"āmi bhābi … āmi bujhi\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two rival accounts — \"Dravidian … or Indo-European\"]"
+              "source": "[YOU SAY: think, then understand — \"āmi bhābi … āmi bujhi\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "an eye, then a mouth — \"chokh … mukh\"",
+              "instruction": "the three knowings — \"jānā … chenā … bojhā\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: an eye, then a mouth — \"chokh … mukh\"]"
+              "source": "[YOU SAY: the three knowings — \"jānā … chenā … bojhā\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -294,26 +351,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"my face\" in Bengali. (আমার মুখ (mukh).) Is মুখ (mukh)'s ultimate origin settled? (No — genuinely disputed between a Dravidian and an Indo-European account.) What is মুখ (mukh)'s tadbhava twin, and where does it survive? (মু, only inside compound words, never alone.)"
+              "text": "Why is it bujhi and not bojhi? (The -i ending raises the stem vowel — the same harmony as dekhi against dækhe, only written down this time.) Which of the three knowings would you use of a person? (চেনা — জানা is for facts, বোঝা (bojhā) for grasping.) Which awakened prince is named from this root? (The Buddha — √budh, \"to wake.\")"
             }
           ]
         }
       ]
     },
     {
-      "id": "BN-C12-nak",
-      "sequence": 920,
-      "title": "নাক (nāk) — \"nose,\" the same word as English's, worn down differently",
-      "headword": "নাক",
-      "romanization": "nāk",
-      "gloss": "nose — the direct cousin of English \"nose,\" worn down by Bengali's own sound changes rather than Latin's or English's",
+      "id": "BN-C08-pora",
+      "sequence": 720,
+      "title": "পড়া (pôṛā) — \"to read,\" and a letter Sanskrit never needed",
+      "headword": "পড়া",
+      "romanization": "pôṛā",
+      "gloss": "to read — and the flapped letter Sanskrit never wrote",
       "script": "bengali",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:009471eb1c32b168",
+      "sourceHash": "fnv1a64:82000b92553f73de",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -338,22 +395,22 @@
             },
             {
               "kind": "speech",
-              "text": "মুখ (mukh)'s origin was an open argument. This one is settled, and it lands somewhere you have seen before."
+              "text": "This word carries a consonant Sanskrit did not have. It is the sound of a whole family of words wearing down, and once you hear it you will meet it everywhere."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: নাক",
+          "title": "You'll want to know: পড়া",
           "segments": [
             {
               "kind": "speech",
-              "text": "নাক — nāk — nose."
+              "text": "পড়া — pôṛā — to read, to study."
             },
             {
               "kind": "speech",
-              "text": "আমার নাক (āmār nāk) — my nose."
+              "text": "আমি পড়ি (āmi poṛi), \"I read.\" সে পড়ে (se pôṛe), \"he reads.\""
             }
           ]
         },
@@ -364,7 +421,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "নাক is ন with the vowel sign া (nā) plus ক (k), silent at the end: nāk, not nāko."
+              "text": "পড়া (pôṛā) is প (pô) + ড়া (ṛā). প is a plain p. ড় is ড (ḍ) with a dot underneath, and the dot changes everything: it is not a d at all but a flap — curl the tongue back and flick it forward once, as in the middle of an American ladder."
             }
           ]
         },
@@ -375,12 +432,40 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "নাক (nāk) is Sanskrit নস্ (nas), inherited through Prakrit ṇakka — a tadbhava, like ভাই and বোন before it. Its PIE root is néh₂s-, and this one is as secure as roots get: it is the direct ancestor of English nose itself, and of Latin nāsus, which gives English nasal. Three languages, one inherited word, three different roads of sound change — Bengali's road ran the vowel through Prakrit's a, dropped Sanskrit's final -s, and doubled the k along the way."
+              "text": "পড়া (pôṛā) is Sanskrit √পঠ্ (√paṭh), \"to recite aloud\" — reading was reading out, which is why পড়া (pôṛā) still covers studying as well as reading. And paṭhati became pôṛe by a rule that runs through the whole language: a single retroflex stop between two vowels softens into the flap ড়. That is why the letter exists; Sanskrit, which never softened them, had no use for it."
+            },
+            {
+              "kind": "speech",
+              "text": "Watch it swallow a second verb whole. Sanskrit √পত্ (√pat), \"to fall,\" went the same road — patati becomes pôṛe — so Bengali's \"he reads\" and \"he falls\" are now spelled and said alike, and only the sentence tells them apart. Past Sanskrit, paṭh goes cold: no secure Indo-European pedigree, and none will be invented for it. The falling twin is the rich one — PIE peth₂- gave Greek ptérón, \"wing\" (pterodactyl, helicopter), Latin petere, \"to make for\" (petition, appetite), and English feather."
             }
           ]
         },
         {
           "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens: the harmony, on a third vowel",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Bengali",
+                "said"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "Bengali: আমি পড়ি. said: poṛi — the -i lifts the vowel.",
+                "Bengali: সে পড়ে. said: pôṛe — the open inherent vowel stands."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Third verb, third pair, one law: the high -i of \"I\" pulls the stem vowel up after it. দেখি against দেখে, বুঝি against বোঝে, পড়ি against পড়ে."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -393,43 +478,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"nāk\" — nose",
+              "instruction": "\"pôṛā\" — read — then \"āmi poṛi,\" flapping the ড়",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"nāk\" — nose]"
+              "source": "[YOU SAY: \"pôṛā\" — read — then \"āmi poṛi,\" flapping the ড়]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"āmār nāk\" — my nose",
+              "instruction": "the three pairs — \"dekhi … dækhe,\" \"bujhi … bojhe,\" \"poṛi … pôṛe\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"āmār nāk\" — my nose]"
+              "source": "[YOU SAY: the three pairs — \"dekhi … dækhe,\" \"bujhi … bojhe,\" \"poṛi … pôṛe\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the three cousins — \"nāk … nose … nāsus\"",
+              "instruction": "read it, think about it, understand it — \"poṛi … bhābi … bujhi\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the three cousins — \"nāk … nose … nāsus\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "three of this chapter's words — \"chokh … mukh … nāk\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: three of this chapter's words — \"chokh … mukh … nāk\"]"
+              "source": "[YOU SAY: read it, think about it, understand it — \"poṛi … bhābi … bujhi\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -441,26 +517,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"my nose\" in Bengali. (আমার নাক (nāk).) Which two English words share নাক (nāk)'s root directly? (Nose, and nasal by way of Latin nāsus.) Is that link as secure as মুখ (mukh)'s, or more so? (More — নাক (nāk)'s root is settled; মুখ (mukh)'s is still argued over.)"
+              "text": "What is the dot under ড় telling you to do? (Flap it — curl the tongue back and flick, not a d.) Which two Sanskrit verbs both arrived at পড়া (pôṛā)? (√paṭh \"recite\" and √pat \"fall\" — the same softening ate both.) Does the reading twin have an English cousin? (No — the falling twin does: feather, petition, pterodactyl.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "BN-C12-hridoy",
-      "sequence": 930,
-      "title": "হৃদয় (hridoy) — \"heart,\" the oldest cousin this book has shown you",
-      "headword": "হৃদয়",
-      "romanization": "hridoy",
-      "gloss": "heart — a word kept whole from Sanskrit, and the oldest, most secure English cousin this book has shown you",
+      "id": "BN-C08-lekha",
+      "sequence": 730,
+      "title": "লেখা (lekhā) — \"to write,\" and the noun hiding in every verb",
+      "headword": "লেখা",
+      "romanization": "lekhā",
+      "gloss": "to write — and the dictionary form that is quietly a noun",
       "script": "bengali",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ace5e34488c3d602",
+      "sourceHash": "fnv1a64:107c63190534d2d6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -485,22 +561,22 @@
             },
             {
               "kind": "speech",
-              "text": "Three body words, three different histories — half-worn, disputed, and settled. This last one closes the chapter on the most secure cousin of them all."
+              "text": "Four chapters ago you said dækhā hôbe and were told it meant \"a seeing will happen.\" This word explains why that was not a flourish."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: হৃদয়",
+          "title": "You'll want to know: লেখা",
           "segments": [
             {
               "kind": "speech",
-              "text": "হৃদয় — hridoy — heart."
+              "text": "লেখা — lekhā — to write."
             },
             {
               "kind": "speech",
-              "text": "আমার হৃদয় (āmār hridoy) — my heart."
+              "text": "আমি লিখি (āmi likhi), \"I write.\" সে লেখে (se lekhe), \"he writes.\" The harmony, written down as in বুঝি: -i lifts ে to ি."
             }
           ]
         },
@@ -511,7 +587,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "হৃদয় (hridoy) is হ with the vowel sign ৃ (hri, the \"vocalic r\" sign, a vowel Bengali keeps only in words borrowed from Sanskrit) plus দ (dô) plus য় (yô, a glide, not a plain stop — this is why the word ends audibly, -doy, rather than falling silent the way দুধ and নাক (nāk) did)."
+              "text": "লেখা (lekhā) is লে (le) + খা (khā). ল is a clear l; খ the puffed kh you own from খাওয়া."
             }
           ]
         },
@@ -522,12 +598,42 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "হৃদয় (hridoy) is a tatsama, Sanskrit হৃদয় (hridoy) (hṛdaya) taken whole. A tadbhava twin also exists, হিয়া (hiya), but it lives in poetry and song rather than everyday speech — the reverse of মুখ (mukh)'s pair, where the tatsama is the everyday word. Inside হৃদয় (hridoy) sits হৃদ্ (hṛd), and its PIE root is ḱérd-, \"heart\" — the direct ancestor of English heart itself, Greek kardía (English cardiac), and Latin cor (English core, courage). Four languages, one root, and nowhere in this book has the family been so wide or so certain."
+              "text": "লেখা (lekhā) is Sanskrit √লিখ্ (√likh) — and likh does not mean \"write.\" It means to scratch, to engrave. Which is what writing was."
+            },
+            {
+              "kind": "speech",
+              "text": "Ask English the same. Latin scrībere, behind scribe, also began as \"to scratch\"; Germanic wrītan, behind write itself, meant \"to score, to carve\" — what you do to a rune-stick. Three unrelated roots, one picture. That is convergence, not kinship: লেখা (lekhā) and write are not cousins, and past Sanskrit likh has no secure pedigree. The finding here is a shared idea, not a family tree."
             }
           ]
         },
         {
           "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens: the dictionary form is also a noun",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "the same word",
+                "as a verb",
+                "as a noun"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "the same word: লেখা (lekhā). as a verb: to write. as a noun: a piece of writing.",
+                "the same word: পড়া (pôṛā). as a verb: to read. as a noun: study, homework.",
+                "the same word: দেখা. as a verb: to see. as a noun: a seeing, a meeting."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Every -া form you have met does this. That is what Chapter 7's দেখা হবে was: not \"we will see\" but \"a seeing will happen.\" It also builds nouns straight out of verbs — লেখাপড়া (lekhāpôṛā), \"writing-reading,\" is the ordinary word for education. And the causative from three lessons back still runs on top: লেখানো (lekhāno), \"to get something written.\""
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -540,52 +646,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hridoy\" — heart",
+              "instruction": "\"lekhā\" — write — then \"āmi likhi … se lekhe\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hridoy\" — heart]"
+              "source": "[YOU SAY: \"lekhā\" — write — then \"āmi likhi … se lekhe\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"āmār hridoy\" — my heart",
+              "instruction": "the chapter's four — \"bhābā, bojhā, pôṛā, lekhā\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"āmār hridoy\" — my heart]"
+              "source": "[YOU SAY: the chapter's four — \"bhābā, bojhā, pôṛā, lekhā\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the wide family — \"hṛd … heart, kardía, cor\"",
+              "instruction": "education, flapping the ড় — \"lekhāpôṛā\" — then \"lekhāno,\" get it written",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the wide family — \"hṛd … heart, kardía, cor\"]"
+              "source": "[YOU SAY: education, flapping the ড় — \"lekhāpôṛā\" — then \"lekhāno,\" get it written]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all four of this chapter's words — \"chokh, mukh, nāk, hridoy\"",
+              "instruction": "the five you could already write — \"ek, dui, tin, chār, pā̃ch\" — and which one wears the chandrabindu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all four of this chapter's words — \"chokh, mukh, nāk, hridoy\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "one more word from Chapter 11, sharing this lesson's warmth of feeling — \"bhāi,\" brother",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: one more word from Chapter 11, sharing this lesson's warmth of feeling — \"bhāi,\" brother]"
+              "source": "[YOU SAY: the five you could already write — \"ek, dui, tin, chār, pā̃ch\" — and which one wears the chandrabindu]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -597,7 +694,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"my heart\" in Bengali. (আমার হৃদয় (hridoy).) Name three English words that share হৃদয় (hridoy)'s root. (Heart, cardiac, core — or courage.) Two quick reaches further back: what does the dot under ড় tell you to do, the letter পড়া taught? (Flap it, curling the tongue back.) And what does the ending -আনো do to a verb, the way ভাবা showed on দেখা? (Hands the doing to someone else — দেখা \"see\" becomes দেখানো \"show.\")"
+              "text": "What was দেখা হবে saying? (\"A seeing will happen\" — দেখা is a noun as much as a verb, and so is লেখা (lekhā).) Is write a cousin of লেখা (lekhā)? (No — both roots meant \"scratch,\" which is coincidence.) What did দুই keep that Hindi's do flattened, who else in the east kept it, and did dv- survive in anyone's everyday numeral? (The -i after it; Assamese, Odia and Nepali; and no — only re-borrowings like দ্বার keep dv-.)"
             }
           ]
         }

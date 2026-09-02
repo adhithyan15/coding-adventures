@@ -1,19 +1,20 @@
 {
   "language": "bengali",
   "chapter": 5,
-  "sourceHash": "fnv1a64:15618e854fd87ec4",
+  "sourceHash": "fnv1a64:148fe1ca3edc71be",
   "lessonIds": [
-    "BN-C05-bola",
-    "BN-C05-ami-bangla-boli",
-    "BN-C05-kaj-kora",
-    "BN-C05-thaka",
-    "BN-C05-practice"
+    "BN-C03-ami",
+    "BN-C03-kemon",
+    "BN-C03-tumi-kemon-achho",
+    "BN-C03-bhalo",
+    "BN-C03-kono-bepar-na",
+    "BN-C03-practice"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 0,
   "text": "bengali/narration/ch05.txt",
   "json": "bengali/narration/ch05.json",
-  "textHash": "fnv1a64:d4cd887f96d2eb89",
-  "jsonHash": "fnv1a64:16945b88291e7cc9",
+  "textHash": "fnv1a64:4128157ee1a9c757",
+  "jsonHash": "fnv1a64:f2e09a2148a66efc",
   "findings": []
 }

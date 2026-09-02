@@ -2,41 +2,41 @@
 schema_version: 2
 id: ML-S113-letter-nna
 spine_node: SPINE-MEET-GREET
-sequence: 386
+sequence: 94
 delivery: script
-chapter: 10
+chapter: 2
 type: writing
 headword: "ണ"
 gloss: the single character ണ — recognised inside words you already say
 romanization: "ṇa"
-prerequisites: [ML-S112-letter-pa]
+prerequisites: [ML-S137-letter-aa]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-112]
+  knowledge: [ML-SCRIPT-RECOG-137]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-113]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-112, ML-SCRIPT-RECOG-113]
+  knowledge: [ML-SCRIPT-RECOG-137, ML-SCRIPT-RECOG-113]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [ML-S112-letter-pa]
+reviews_of: [ML-S137-letter-aa]
 ---
 
 # ണ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-112] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-137] -->
 
-[PAUSE 1s] Before the new one: പ — what does it do?
+[PAUSE 1s] Before the new one: ആ — what does it do?
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
-for pages without knowing which mark on the page it was.
+[PAUSE 2s] One character this time. One only.
+It has been sitting in front of you on pages you have already read.
 
 ## Script you'll notice: ണ
 <!-- hl-knowledge: introduces=[ML-SCRIPT-RECOG-113]; assesses=[] -->
@@ -45,12 +45,13 @@ for pages without knowing which mark on the page it was.
 
 It is a **consonant**, and in this script a consonant is never bare: it comes with an *a* already in it. So it is not *ṇ*, it is **ṇa**.
 
-You already say these, and every one of them has ണ somewhere inside it:
+You have already said a word that ends with it.
 
-- **ആണ്** — is (the copula)
-- **എന്റെ പേര് … ആണ്** — my name is…
-- **നാളെ കാണാം** *nāḷe kāṇāṁ* — see you tomorrow
-- **ക്ഷമിക്കണം** *kṣamikkaṇaṁ* — (you) should forgive / sorry
+- **ആണ്** *āṇŭ* — is (the copula)
+
+This is not the **ന** of **നന്ദി**. **ണ** is a **retroflex** *ṇ*: the
+tongue curls back to the roof of the mouth. Malayalam keeps the two apart in
+spelling because it keeps them apart in sound.
 
 ## Writing: ണ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-113] -->
@@ -70,7 +71,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ണ in the ones that have it]
 
-> ആണ്  ·  നമസ്കാരം
+> ആണ്  ·  നന്ദി  ·  ണ
 
 - [YOU TRACE: ണ three times, saying *ṇa* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ണ once more]

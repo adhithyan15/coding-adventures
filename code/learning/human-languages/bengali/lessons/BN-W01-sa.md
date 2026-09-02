@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W01-sa
 spine_node: SPINE-MEET-GREET
-sequence: 1650
+sequence: 120
 delivery: script
-chapter: 16
+chapter: 2
 type: writing
 headword: স
 romanization: "shô"

@@ -9,31 +9,31 @@ type: writing
 headword: "ഗ"
 gloss: the single character ഗ — recognised inside words you already say
 romanization: "ga"
-prerequisites: [ML-S131-chillu-nn]
+prerequisites: [ML-S130-letter-tha]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-131]
+  knowledge: [ML-SCRIPT-RECOG-130]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-132]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-131, ML-SCRIPT-RECOG-132]
+  knowledge: [ML-SCRIPT-RECOG-130, ML-SCRIPT-RECOG-132]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [ML-S131-chillu-nn]
+reviews_of: [ML-S130-letter-tha]
 ---
 
 # ഗ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-131] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-130] -->
 
-[PAUSE 1s] Before the new one: ൺ — what does it do?
+[PAUSE 1s] Before the new one: ഥ — what does it do?
 
 [PAUSE 2s] One character this time. One only — and it has been sitting in
 front of you on pages you have already read.

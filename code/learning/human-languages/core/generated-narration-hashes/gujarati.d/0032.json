@@ -1,0 +1,22 @@
+{
+  "language": "gujarati",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:b6810ff2ad4f181c",
+  "lessonIds": [
+    "GU-C28-hear-baarnun",
+    "GU-C28-hear-baari",
+    "GU-C28-hear-khurshi",
+    "GU-C28-hear-chaavi",
+    "GU-C28-hear-divo",
+    "GU-C28-house-five",
+    "GU-C28-baari",
+    "GU-R28-house-five-r1"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch32.txt",
+  "json": "gujarati/narration/ch32.json",
+  "textHash": "fnv1a64:f071733a5e41a03b",
+  "jsonHash": "fnv1a64:50275d7929f7432e",
+  "findings": []
+}

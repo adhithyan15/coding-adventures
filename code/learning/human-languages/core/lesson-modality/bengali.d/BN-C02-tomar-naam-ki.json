@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C02-tomar-naam-ki",
     "language": "bengali",
-    "chapter": 2,
-    "sequence": 130,
+    "chapter": 3,
+    "sequence": 230,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:6151514d9f54e202"
+    "sourceHash": "fnv1a64:86d50e05e36118c1"
   },
   "findings": []
 }

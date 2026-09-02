@@ -5,40 +5,40 @@ introduces_senses: []
 introduces_culture_claims: []
 id: SA-S110-letter-ra
 spine_node: SPINE-MEET-GREET
-sequence: 546
+sequence: 221
 delivery: script
-chapter: 11
+chapter: 4
 type: writing
 headword: "र"
 gloss: the single character र — recognised inside words you already say
 romanization: "ra"
-prerequisites: [SA-S109-vowel-sign-i]
+prerequisites: [SA-S203-vowel-sign-u]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [SA-SCRIPT-RECOG-109]
+  knowledge: [SA-SCRIPT-RECOG-203]
 introduces:
   knowledge: [SA-SCRIPT-RECOG-110]
 practises:
-  knowledge: [SA-SCRIPT-RECOG-109, SA-SCRIPT-RECOG-110]
+  knowledge: [SA-SCRIPT-RECOG-06, SA-SCRIPT-RECOG-01, SA-SCRIPT-RECOG-203, SA-SCRIPT-RECOG-110]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [SA-S109-vowel-sign-i]
+reviews_of: [SA-S06-vowel-sign-aa, SA-S01-letter-ma, SA-S203-vowel-sign-u]
 ---
 
 # र — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-109] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-06, SA-SCRIPT-RECOG-01, SA-SCRIPT-RECOG-203] -->
 
-[PAUSE 1s] Before the new one: ◌ि — what does it do?
+[PAUSE 1s] Before the new one, the ones you have already met: ◌ा · म · ◌ु. Say what each of them does.
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
+[PAUSE 2s] One character this time. One only — and you have been saying it
 for pages without knowing which mark on the page it was.
 
 ## Script you'll notice: र
@@ -54,12 +54,9 @@ What it is made of:
 - a diagonal tail
 - the top shirorekhā
 
-You already say these, and every one of them has र somewhere inside it:
+You already say this word, and र is one of the shapes inside it — the rest of its shapes are still ahead of you, so here the character stands on its own:
 
-- **नमस्कारः** *namaskāraḥ* — hello (lit. "the making of a bow") (namaskāraḥ)
-- **पुनर्दर्शनाय** *punardarśanāya* — until we meet again (lit. "for seeing again")
-- **करोमि** *karomi* — I do, I make (कार्यं करोमि, "I work")
-- **एक द्व त्रि चतुर् पञ्च** *eka dva tri catur pañca* — one to five
+- *namaskāraḥ* — hello (lit. "the making of a bow")
 
 ## Writing: र
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-110] -->
@@ -70,18 +67,18 @@ You already say these, and every one of them has र somewhere inside it:
 
 **Pen lifts: 2.** The pen comes up 2 times and no more.
 
-> Verified three-stroke teaching form; another animated learner source joins the loop and diagonal tail.
+> verified three-stroke teaching form; another animated learner source joins the loop and diagonal tail
 
 > This is one attested teaching order and not a national standard — handwriting
 > here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-र-order.gif’, strokes 1–3, Wikimedia Commons, 10 May 2009.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-110] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-203, SA-SCRIPT-RECOG-110] -->
 
 [PAUSE 1s]
-- [YOU LOOK: at these words, and find र in the ones that have it]
+- [YOU LOOK: at this, and find र in it]
 
-> नमस्कारः  ·  पुनर्दर्शनाय  ·  नमस्ते
+> र
 
 - [YOU TRACE: र three times, saying *ra* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find र once more]

@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "SA-S207-letter-ca",
+    "language": "sanskrit",
+    "chapter": 7,
+    "sequence": 341,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0d1f62eb5e78aa4c",
+    "detachableSegments": [
+      "Script you'll notice: च",
+      "Writing: च"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

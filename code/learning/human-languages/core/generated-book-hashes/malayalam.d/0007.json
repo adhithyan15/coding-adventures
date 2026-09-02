@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 7,
-  "sourceHash": "fnv1a64:09c0740f27879b5a",
+  "sourceHash": "fnv1a64:360c2519240b00e9",
   "lessonIds": [
     "ML-C07-numbers-1-5",
     "ML-W07-digits-1-3",
@@ -18,8 +18,7 @@
     "ML-W07-numbers-6-10-delayed-copy",
     "ML-W07-numbers-6-10-dictation",
     "ML-C07-numbers-practice",
-    "ML-S02-sign-virama",
-    "ML-S110-letter-va"
+    "ML-S02-sign-virama"
   ],
   "tex": "malayalam/book/chapters/ch07-numbers-1-10.tex"
 }

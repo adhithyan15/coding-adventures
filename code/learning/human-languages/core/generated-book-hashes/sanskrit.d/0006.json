@@ -1,10 +1,11 @@
 {
   "language": "sanskrit",
   "chapter": 6,
-  "sourceHash": "fnv1a64:dc3834900a96d249",
+  "sourceHash": "fnv1a64:e438565472e17e8f",
   "lessonIds": [
     "SA-C06-numbers-1-5",
     "SA-C06-number-cognates",
+    "SA-S206-letter-nya",
     "SA-C06-pancha-travels"
   ],
   "tex": "sanskrit/book/chapters/ch06-numbers-1-5.tex"

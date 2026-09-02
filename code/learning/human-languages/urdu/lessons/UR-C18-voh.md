@@ -9,7 +9,7 @@ headword: وہ
 romanization: voh
 gloss: that, and he, she, they — the far partner of yih, inherited from the same Old Indo-Aryan pair
 concept_tag: UR-THAT
-prerequisites: [UR-W18-pe]
+prerequisites: [UR-C18-review-madda, UR-W07-pe]
 sounds: [rtl, short-vowels-unwritten]
 roots: [sanskrit-asau]
 etymology_hook: voh descends from the Old Indo-Aryan far demonstrative that Sanskrit wrote as asau, the partner of the near iyam behind yih; the pair came down together, and Urdu still runs its whole pointing system on the same two-way near-versus-far split, using the far word for he, she, it and they as well, so that the third person and the distant thing are named by one word.
@@ -29,7 +29,7 @@ modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: contemporary-standard-urdu
-reviews_of: [UR-W18-pe, UR-C17-yih, UR-C03-aap-tum-tu, UR-C17-maan]
+reviews_of: [UR-W07-pe, UR-C17-yih, UR-C03-aap-tum-tu, UR-C17-maan]
 ---
 
 # وہ — "that," and everyone who is not here
@@ -46,7 +46,7 @@ as *āp*.
 > **وہ** — *voh* — **that**; and **he**, **she**, **they**
 
 Two letters. The second is **ہ**, closing the word with its round curl. The
-first is new, and it is the last letter this chapter owes you.
+first is **و**, which you learned to write in chapter eight.
 
 **وہ** is the far partner of **یہ**. One points at what is beside you; the other
 points at what is over there:

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C27-hear-tel",
+    "language": "gujarati",
+    "chapter": 31,
+    "sequence": 1490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:79ad1015c4ef99c0"
+  },
+  "findings": []
+}

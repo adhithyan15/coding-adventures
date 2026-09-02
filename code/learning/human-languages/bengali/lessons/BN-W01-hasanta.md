@@ -2,9 +2,9 @@
 schema_version: 2
 id: BN-W01-hasanta
 spine_node: SPINE-MEET-GREET
-sequence: 1670
+sequence: 140
 delivery: script
-chapter: 16
+chapter: 2
 type: writing
 headword: ্
 romanization: "(hasanta)"

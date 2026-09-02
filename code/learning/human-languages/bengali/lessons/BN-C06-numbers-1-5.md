@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C06-numbers-1-5
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 340
-chapter: 6
+sequence: 630
+chapter: 10
 type: word
 headword: এক দুই তিন চার পাঁচ
 romanization: ek dui tin chār pā̃ch

@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C07-dekha
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 440
-chapter: 7
+sequence: 680
+chapter: 11
 type: word
 headword: দেখা
 romanization: dækhā
@@ -34,7 +34,7 @@ reviews_of: [BN-C04-dekha-hobe, BN-C07-howa]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Chapter 4 buried this verb inside *dækhā hôbe*, "a seeing will
+[PAUSE 2s] Chapter 7 buried this verb inside *dækhā hôbe*, "a seeing will
 happen." Prised out on its own, it carries a sound rule that runs through every
 verb in this chapter.
 

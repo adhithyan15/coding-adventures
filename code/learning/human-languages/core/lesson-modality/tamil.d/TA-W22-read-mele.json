@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "TA-W22-read-mele",
+    "language": "tamil",
+    "chapter": 66,
+    "sequence": 2550,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:70f24065644a3152",
+    "detachableSegments": [
+      "Script you'll notice: two letters, one sign, used twice",
+      "Script you'll notice: the hook goes in front, the sound comes after"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

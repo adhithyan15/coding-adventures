@@ -1,0 +1,12 @@
+{
+  "language": "bengali",
+  "chapter": 22,
+  "sourceHash": "fnv1a64:db3f0e1245e994e3",
+  "lessonIds": [
+    "BN-C15-kapor",
+    "BN-C15-jama",
+    "BN-C15-shari",
+    "BN-C15-choshma"
+  ],
+  "tex": "bengali/book/chapters/ch22-cloth-shirt-sari-glasses.tex"
+}

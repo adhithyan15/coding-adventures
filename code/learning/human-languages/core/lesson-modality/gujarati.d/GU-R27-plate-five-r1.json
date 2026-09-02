@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "GU-R27-plate-five-r1",
+    "language": "gujarati",
+    "chapter": 31,
+    "sequence": 1530,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:814f0d02e62fb7f6",
+    "detachableSegments": [
+      "Writing — from sound, every model covered"
+    ]
+  },
+  "findings": []
+}

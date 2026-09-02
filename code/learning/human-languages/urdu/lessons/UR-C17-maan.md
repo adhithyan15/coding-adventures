@@ -9,7 +9,7 @@ headword: ماں
 romanization: māṅ
 gloss: mother — inherited from Sanskrit mātā, cousin of English mother, and neighbour of borrowed Persian mādar
 concept_tag: UR-MOTHER
-prerequisites: [UR-W17-bari-ye]
+prerequisites: [UR-C17-review-shapes, UR-W06-bari-ye]
 sounds: [rtl, short-vowels-unwritten, nasal-vowel]
 roots: [sanskrit-matr, pie-mehter]
 etymology_hook: māṅ comes down through Prakrit from Sanskrit mātā, stem mātṛ, from Proto-Indo-European *méh₂tēr -- the root behind English mother, Latin mater, Greek mētēr and Persian mādar; Urdu holds two of these at once, the inherited māṅ used at home and the borrowed Persian mādar kept for formal and literary registers, which is the same native-beside-borrowed pairing the track has met in bhāī beside khāndān.
@@ -29,7 +29,7 @@ modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: contemporary-standard-urdu
-reviews_of: [UR-W17-bari-ye, UR-C09-bhai, UR-C09-bahan, UR-C09-khandan]
+reviews_of: [UR-W06-bari-ye, UR-C09-bhai, UR-C09-bahan, UR-C09-khandan]
 ---
 
 # ماں — "mother," and a sentence you can read whole

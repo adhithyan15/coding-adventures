@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C24-hear-pay",
+    "language": "marwadi",
+    "chapter": 29,
+    "sequence": 2330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a7d7ccb53d54a99"
+  },
+  "findings": []
+}

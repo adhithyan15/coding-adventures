@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C05-kaj-kora",
     "language": "bengali",
-    "chapter": 5,
-    "sequence": 280,
+    "chapter": 9,
+    "sequence": 600,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:3a3821ca2f0ab905",
+    "sourceHash": "fnv1a64:97f8f5bae1ae1939",
     "detachableSegments": [
       "The letters in this word"
     ]

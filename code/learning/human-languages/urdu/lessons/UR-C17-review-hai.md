@@ -29,7 +29,7 @@ modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus, fluency]
 register: neutral
 variety: contemporary-standard-urdu
-reviews_of: [UR-C17-maan, UR-W17-bari-ye, UR-C17-kaam, UR-C17-yih, UR-C06-hona, UR-C02-mera-naam]
+reviews_of: [UR-C17-maan, UR-W06-bari-ye, UR-C17-kaam, UR-C17-yih, UR-C06-hona, UR-C02-mera-naam]
 ---
 
 # ہے — the smallest word, in every sentence you own

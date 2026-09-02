@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "ML-S138-vowel-sign-ii",
+    "language": "malayalam",
+    "chapter": 2,
+    "sequence": 112,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:63997cc98a85f1a4",
+    "detachableSegments": [
+      "Script you'll notice: ◌ീ",
+      "Writing: ◌ീ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

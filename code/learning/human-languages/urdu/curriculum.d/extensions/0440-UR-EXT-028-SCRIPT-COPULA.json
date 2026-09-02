@@ -1,0 +1,19 @@
+{
+  "id": "UR-EXT-028-SCRIPT-COPULA",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read yih, kaam, kahan, maan and the copula hai off the page rather than from the romanization, and write mera naam ... hai from dictation.",
+  "prerequisites": [
+    "UR-EXT-027-SCRIPT-SEVEN"
+  ],
+  "lessons": [
+    "UR-C17-yih",
+    "UR-C17-kaam",
+    "UR-C17-kahan",
+    "UR-C17-review-shapes",
+    "UR-C17-maan",
+    "UR-C17-review-hai",
+    "UR-C17-practice"
+  ]
+}

@@ -2,8 +2,8 @@
   "lesson": {
     "id": "ML-S110-letter-va",
     "language": "malayalam",
-    "chapter": 7,
-    "sequence": 356,
+    "chapter": 4,
+    "sequence": 216,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:92b68e5e9daa1a6c",
+    "sourceHash": "fnv1a64:f368b2cdf3587522",
     "detachableSegments": [
       "Script you'll notice: വ",
       "Writing: വ — copy what you see"

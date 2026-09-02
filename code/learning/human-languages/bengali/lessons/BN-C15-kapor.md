@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C15-kapor
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 1200
-chapter: 15
+sequence: 1120
+chapter: 22
 type: word
 headword: কাপড়
 romanization: kapor

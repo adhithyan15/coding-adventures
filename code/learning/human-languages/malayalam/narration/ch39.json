@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Tea, Coffee, Milk",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:69ff1388b0351478",
+  "sourceHash": "fnv1a64:9a3c4256160740ee",
   "lessons": [
     {
       "id": "ML-C39-chaaya",
@@ -444,7 +444,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:4580e12f1121a981",
+      "sourceHash": "fnv1a64:f9e92684bc4cf187",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -472,7 +472,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ൺ — what does it do?"
+              "text": "Before the new one: ഥ — what does it do?"
             },
             {
               "kind": "pause",

@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C04-abar",
     "language": "bengali",
-    "chapter": 4,
-    "sequence": 210,
+    "chapter": 7,
+    "sequence": 430,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:e82dd6c8fc56ae37",
+    "sourceHash": "fnv1a64:436ceb00540e0dcb",
     "detachableSegments": [
       "The letters in this word"
     ]

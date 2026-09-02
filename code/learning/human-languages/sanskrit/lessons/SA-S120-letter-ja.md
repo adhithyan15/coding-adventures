@@ -5,38 +5,38 @@ introduces_senses: []
 introduces_culture_claims: []
 id: SA-S120-letter-ja
 spine_node: SPINE-MEET-GREET
-sequence: 951
+sequence: 781
 delivery: script
-chapter: 19
+chapter: 16
 type: writing
 headword: "ज"
 gloss: the single character ज — recognised inside words you already say
 romanization: "ja"
-prerequisites: [SA-S119-letter-kha]
+prerequisites: [SA-S218-letter-ga]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [SA-SCRIPT-RECOG-119]
+  knowledge: [SA-SCRIPT-RECOG-218]
 introduces:
   knowledge: [SA-SCRIPT-RECOG-120]
 practises:
-  knowledge: [SA-SCRIPT-RECOG-119, SA-SCRIPT-RECOG-120]
+  knowledge: [SA-SCRIPT-RECOG-115, SA-SCRIPT-RECOG-217, SA-SCRIPT-RECOG-218, SA-SCRIPT-RECOG-120]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [SA-S119-letter-kha]
+reviews_of: [SA-S115-vowel-sign-au, SA-S217-letter-nna, SA-S218-letter-ga]
 ---
 
 # ज — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-119] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-115, SA-SCRIPT-RECOG-217, SA-SCRIPT-RECOG-218] -->
 
-[PAUSE 1s] Before the new one: ख — what does it do?
+[PAUSE 1s] Before the new one, the ones you have already met: ◌ौ · ण · ग. Say what each of them does.
 
 [PAUSE 2s] One character this time. One only — and you have been saying it
 for pages without knowing which mark on the page it was.
@@ -56,11 +56,7 @@ What it is made of:
 
 You already say these, and every one of them has ज somewhere inside it:
 
-- **जानाति** *jānāti* — he, she, or it knows
-- **ज्ञान** *jñāna* — knowledge
-
-The root behind *jānāti* is written ज्ञ — ज and ञ joined — and it is said *jña*
-in some regions and *gya* in others. The letter is steady even where the sound is not.
+- **जानाति** *jānāti* — he, she, or it knows — the root ज्ञा, the class that plants a syllable inside the verb, and the chapter's six roots gathered up
 
 ## Writing: ज
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-120] -->
@@ -71,18 +67,18 @@ in some regions and *gya* in others. The letter is steady even where the sound i
 
 **Pen lifts: 2.** The pen comes up 2 times and no more.
 
-> Verified three-stroke teaching form fitted to the bundled printed outline.
+> verified three-stroke teaching form fitted to the bundled printed outline
 
 > This is one attested teaching order and not a national standard — handwriting
 > here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-ज-order.gif’, strokes 1–3, Wikimedia Commons, 10 May 2009.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-120] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-218, SA-SCRIPT-RECOG-120] -->
 
 [PAUSE 1s]
-- [YOU LOOK: at these words, and find ज in the ones that have it]
+- [YOU LOOK: at this, and find ज in it]
 
-> जानाति  ·  खादति
+> जानाति
 
 - [YOU TRACE: ज three times, saying *ja* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ज once more]

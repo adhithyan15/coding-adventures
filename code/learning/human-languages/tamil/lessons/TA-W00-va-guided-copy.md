@@ -7,6 +7,7 @@ delivery: script
 chapter: 1
 type: writing
 headword: "வ"
+romanization: "va"
 gloss: copy the first visible shape of the greeting once with the model present
 prerequisites: [TA-C01-vanakkam]
 sounds: [tamil-inherent-a]
@@ -27,13 +28,13 @@ variety: standard-spoken
 reviews_of: [TA-C01-vanakkam]
 ---
 
-# வ — copy one visible shape with help
+# வ (va) — copy one visible shape with help
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-PHONO-VANAKKAM-01, TA-PRAGMATIC-VANAKKAM-03] -->
 
 Point to **வணக்கம்** and say *vaṇakkam* once. Keep the model on the page.
-Find the first shape, **வ**, which your finger just followed.
+Find the first shape, **வ** (*va*), which your finger just followed.
 
 ## Writing — one supported copy
 <!-- hl-knowledge: introduces=[TA-SCRIPT-FIRST-VISIBLE-SHAPE-00]; assesses=[TA-PHONO-VANAKKAM-01, TA-PRAGMATIC-VANAKKAM-03] -->
@@ -49,6 +50,6 @@ later Tamil writing sequence will teach letter construction explicitly.
 ## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-PHONO-VANAKKAM-01, TA-PRAGMATIC-VANAKKAM-03, TA-SCRIPT-FIRST-VISIBLE-SHAPE-00] -->
 
-Compare your one copy with **வ** while both remain visible. Repair one curve if
+Compare your one copy with **வ** (*va*) while both remain visible. Repair one curve if
 you want, then stop. Say *vaṇakkam* once more: one known greeting, one tiny hand
 movement.

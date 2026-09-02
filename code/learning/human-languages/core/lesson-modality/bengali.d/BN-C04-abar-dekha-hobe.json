@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C04-abar-dekha-hobe",
     "language": "bengali",
-    "chapter": 4,
-    "sequence": 230,
+    "chapter": 7,
+    "sequence": 450,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:cb222a12664e6489"
+    "sourceHash": "fnv1a64:f0398e4a091c148a"
   },
   "findings": []
 }

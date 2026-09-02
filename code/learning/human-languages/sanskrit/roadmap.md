@@ -105,20 +105,54 @@ where a word needs them.
 
 ## The script ladder
 
-The script is taught inline and never as a gated reading course, but it is
-still a ladder: `SA-S01`–`SA-S123` teach one Devanagari character each, placed
-**last in a chapter** so that the words carrying that character have already
-been met in romanization. Characters taught, in the order the reader meets them:
+The script is taught inline and never as a gated reading course, but it is still
+a ladder: `SA-S01`–`SA-S224` teach **one Devanagari character each — one in the
+whole lesson, headword and body together**, and that is checked mechanically by
+walking the corpus in reading order rather than trusted. Segments are spaced at
+HL11 §4's `minLessonsBetweenScriptSegments: 2`, so at least two content lessons
+sit between any two of them and the script never becomes the course.
 
-म त · न स · अ ि · आ र · ् क · ा े · प · ह · ◌ौ · ट ठ · ष · ख · ज · उ · फ ओ
+The ladder starts in **chapter 1**. It used to start in chapter 8, which was the
+whole problem: closure is measured in READING ORDER, so a character taught late
+cannot retire an earlier violation, and the violations lived in chapters 1–13.
+Characters taught, in the order the reader meets them:
 
-The first fourteen follow the shared 24-position Devanagari letter ledger. The
-nine added after ◌ौ were chosen by **debt** instead: each is a character the
-corpus was showing without ever teaching, ordered so that it arrives before the
-lessons that need it. That took the never-taught count from 18 to 9. The nine
-that remain — ऋ ङ (no cited stroke order in the shared script file) and
-इ ई घ ड ँ ू ◌ै (no Sanskrit headword carries them yet) — are backlog `HL-C217`,
-and the second group is a **vocabulary** job before it is a script job.
+| chapter | characters |
+|---|---|
+| 1 | न द ◌् |
+| 2 | ◌ः आ भ ◌ि |
+| 3 | ◌ा म ◌ु |
+| 4 | र प |
+| 5 | य ◌ृ अ |
+| 6 | ञ |
+| 7 | च क ख |
+| 8 | ◌े व |
+| 9 | त ◌ं |
+| 10 | स ◌ी |
+| 11 | ह ए |
+| 12 | ठ |
+| 13 | ध |
+| 14 | ट ल ◌ो थ |
+| 15 | ब उ ष ◌ौ |
+| 16 | ण ग ज |
+| 17 | श छ |
+| 22–28 | ड ◌ू ओ फ ◌ै इ |
+
+The order is not the shared 24-position letter ledger and not authoring
+convenience: it is **scheduled against the demand curve**, so each character
+lands before the first lesson that asks the reader to decode it, subject to one
+further rule — a segment may only teach a character some ALREADY-TAUGHT headword
+contains, so its "you already say these" list is true. Where the anchor word's
+other shapes are not yet taught, the word is printed romanized and the character
+stands alone; the ladder earns the right to print whole words as it climbs.
+
+48 of the 53 characters the track shows are now taught, and 31 lessons still
+decode an untaught one (from 46). What remains is **cadence-bound, not
+order-bound** — at one segment per lesson the same scheduler reaches 25, at one
+per two it reaches 30 — and is written up in backlog `HL-C241`. `ऋ` and `ङ` have
+no cited stroke order in the shared script file and so have no lesson at all;
+`ौ ई ँ घ` carry no Sanskrit headword, and for `ई ँ घ` that is a **vocabulary**
+job before it is a script job.
 
 ## Planned
 

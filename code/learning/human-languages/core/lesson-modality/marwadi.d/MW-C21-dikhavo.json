@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C21-dikhavo",
+    "language": "marwadi",
+    "chapter": 26,
+    "sequence": 2020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:027bc71626d6836c"
+  },
+  "findings": []
+}

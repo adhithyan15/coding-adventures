@@ -50,6 +50,20 @@ Keep the dialogue table open. Copy **സന്തോഷം** once from its visib
 then compare your two new shapes, **ഷ** and **ോ**, with the model. This is
 supported checkpoint writing, not spelling from memory.
 
+## Script check — the letters of this chapter
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-112, ML-SCRIPT-RECOG-134, ML-SCRIPT-RECOG-135, ML-SCRIPT-RECOG-136, ML-SCRIPT-RECOG-137, ML-SCRIPT-RECOG-113, ML-SCRIPT-RECOG-138, ML-SCRIPT-RECOG-06, ML-SCRIPT-RECOG-07, ML-SCRIPT-RECOG-131] -->
+
+[PAUSE 2s] Cover the romanizations. Find each letter once in the Malayalam
+above, then say the word it sits in.
+
+- **പേര്** — **പ** *pa*, **◌േ** *ē*
+- **എന്റെ** — **എ** *e*, **റ** *ṟa*
+- **ആണ്** — **ആ** *ā*, **ണ** *ṇa*
+- **നിങ്ങൾ** — **◌ീ** *ī* (in **നീ**), **ൾ** *ḷ*
+- **അരുൺ** — **◌ു** *u*, **ൺ** *ṇ*
+
+- [YOU LOOK: at each letter, then find it in the word beside it]
+
 ## Wrap-up Recall
 
 [PAUSE 3s] Give your name, ask someone else's, say you're pleased. (*Enṟe pēru

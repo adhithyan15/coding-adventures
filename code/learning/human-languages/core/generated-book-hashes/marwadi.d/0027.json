@@ -1,0 +1,17 @@
+{
+  "language": "marwadi",
+  "chapter": 27,
+  "sourceHash": "fnv1a64:d83746a0dc578134",
+  "lessonIds": [
+    "MW-C22-hear-kitno",
+    "MW-C22-kitno",
+    "MW-C22-hear-price-question",
+    "MW-C22-price-question",
+    "MW-R22-price-two",
+    "MW-C22-hear-total-question",
+    "MW-C22-total-question",
+    "MW-C22-price-three",
+    "MW-R22-script-close"
+  ],
+  "tex": "marwadi/book/chapters/ch27-price-question.tex"
+}

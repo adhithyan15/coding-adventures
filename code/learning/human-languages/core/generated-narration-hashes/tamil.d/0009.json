@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 9,
-  "sourceHash": "fnv1a64:8d142a110d0ab471",
+  "sourceHash": "fnv1a64:117081936cfa63c9",
   "lessonIds": [
     "TA-C09-mannikkavum",
     "TA-C09-sorry-register",
@@ -11,7 +11,7 @@
   "drivablePrefix": 1,
   "text": "tamil/narration/ch09.txt",
   "json": "tamil/narration/ch09.json",
-  "textHash": "fnv1a64:7c2f98f842dcb57e",
-  "jsonHash": "fnv1a64:a6631696e2f72c9d",
+  "textHash": "fnv1a64:035a639174c8fb5a",
+  "jsonHash": "fnv1a64:f9e6a2d3bbeec117",
   "findings": []
 }

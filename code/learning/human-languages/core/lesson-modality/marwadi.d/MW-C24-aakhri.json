@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C24-aakhri",
+    "language": "marwadi",
+    "chapter": 29,
+    "sequence": 2390,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e65d72b2327c00c7"
+  },
+  "findings": []
+}

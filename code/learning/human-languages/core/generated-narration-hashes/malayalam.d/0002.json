@@ -1,16 +1,26 @@
 {
   "language": "malayalam",
   "chapter": 2,
-  "sourceHash": "fnv1a64:7d4b111dc2ad9916",
+  "sourceHash": "fnv1a64:9620b124b94658f4",
   "lessonIds": [
     "ML-C02-peru",
+    "ML-S112-letter-pa",
+    "ML-S134-vowel-sign-ee",
     "ML-C02-enre",
+    "ML-S135-letter-e",
+    "ML-S136-letter-rra",
     "ML-C02-aanu",
+    "ML-S137-letter-aa",
+    "ML-S113-letter-nna",
     "ML-C02-enre-peru-aanu",
     "ML-C02-nii-ningal",
+    "ML-S138-vowel-sign-ii",
+    "ML-S06-letter-chillu-ll",
     "ML-C02-entu",
     "ML-C02-ninre-peru-entaanu",
     "ML-C02-santosham",
+    "ML-S07-vowel-sign-u",
+    "ML-S131-chillu-nn",
     "ML-W02-santosham-guided-copy",
     "ML-C02-practice"
   ],
@@ -18,7 +28,7 @@
   "drivablePrefix": 0,
   "text": "malayalam/narration/ch02.txt",
   "json": "malayalam/narration/ch02.json",
-  "textHash": "fnv1a64:3d5f88bbe8cb2b53",
-  "jsonHash": "fnv1a64:03d3065268af4a95",
+  "textHash": "fnv1a64:43481e5b79592082",
+  "jsonHash": "fnv1a64:69c1d04e4136307a",
   "findings": []
 }

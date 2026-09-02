@@ -2,8 +2,8 @@
   "lesson": {
     "id": "BN-C08-lekha",
     "language": "bengali",
-    "chapter": 8,
-    "sequence": 530,
+    "chapter": 12,
+    "sequence": 730,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:dc5f581e610afc54",
+    "sourceHash": "fnv1a64:107c63190534d2d6",
     "detachableSegments": [
       "The letters in this word"
     ]

@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Numbers One to Five",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b71b55b764f4ae2d",
+  "sourceHash": "fnv1a64:21e475398d751b79",
   "lessons": [
     {
       "id": "SA-C06-numbers-1-5",
@@ -349,6 +349,207 @@
                 "correct": "Correct: both branches inherited related number forms from an older common source.",
                 "incorrect": "No. The Latin and Sanskrit forms are inherited cousins, not loans from one another."
               }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-S206-letter-nya",
+      "sequence": 321,
+      "title": "ञ (ña) — one character, met inside words you already say",
+      "headword": "ञ",
+      "romanization": "ña",
+      "gloss": "the single character ञ — recognised inside words you already say",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:6761d90be1795144",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ञ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ञ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one, the ones you have already met: य, ◌ृ, अ. Say what each of them does."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ञ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ञ — ña."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not ñ, it is ña."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "a clockwise open-left bowl."
+            },
+            {
+              "kind": "speech",
+              "text": "a rightward shoulder rising to the headline."
+            },
+            {
+              "kind": "speech",
+              "text": "a short descending lower stem."
+            },
+            {
+              "kind": "speech",
+              "text": "the top shirorekhā."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these words, and ञ (ña) is one of the shapes inside them — the rest of their shapes are still ahead of you, so here the character stands on its own:"
+            },
+            {
+              "kind": "speech",
+              "text": "eka dva tri catur pañca — one to five — Old Indo-Aryan ancestors preserved in Sanskrit, and cousins of the English ones."
+            },
+            {
+              "kind": "speech",
+              "text": "eka, dva, tri, catur, pañca — the Sanskrit, Latin, and English number family and the sound laws between them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ञ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start at the open upper-left tip and curve clockwise around the bowl to the open lower-left tip."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift at the bowl's right junction, sweep right through the shoulder, then curve upward along the right side to the headline."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift at the lower right-side junction and descend the short stem below the bowl."
+            },
+            {
+              "kind": "speech",
+              "text": "4. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 3. The pen comes up 3 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "verified four-stroke teaching form fitted to the bundled printed outline."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-ञ (ña)-order.gif’, strokes 1–4, Wikimedia Commons, 10 May 2009."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at this, and find ञ (ña) in it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at this, and find ञ in it]"
+            },
+            {
+              "kind": "speech",
+              "text": "ञ (ña)."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ञ three times, saying ña as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ञ three times, saying *ña* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ञ (ña) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ञ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ञ? What sound does it carry? (ña.) Name one word you already say that contains it."
             }
           ]
         }

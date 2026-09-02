@@ -1,22 +1,25 @@
 {
   "language": "sanskrit",
   "chapter": 14,
-  "sourceHash": "fnv1a64:e99d632cb33b1417",
+  "sourceHash": "fnv1a64:f217f10cf21de2b0",
   "lessonIds": [
     "SA-C14-this",
+    "SA-S116-letter-tta",
     "SA-C14-that",
     "SA-C14-here",
+    "SA-S213-letter-la",
     "SA-C14-there",
     "SA-C14-who",
+    "SA-S214-vowel-sign-o",
     "SA-C14-where",
     "SA-C14-deixis-system",
-    "SA-S113-letter-pa"
+    "SA-S215-letter-tha"
   ],
   "voiceLessons": 7,
-  "drivablePrefix": 7,
+  "drivablePrefix": 1,
   "text": "sanskrit/narration/ch14.txt",
   "json": "sanskrit/narration/ch14.json",
-  "textHash": "fnv1a64:cdc4b5bcfe1dd735",
-  "jsonHash": "fnv1a64:81102cda1badf815",
+  "textHash": "fnv1a64:cd64cb17a613482c",
+  "jsonHash": "fnv1a64:a5d79fa7e071d3b9",
   "findings": []
 }

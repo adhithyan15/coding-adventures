@@ -12,31 +12,31 @@ type: writing
 headword: "ौ"
 gloss: the single character ◌ौ — recognised inside words you already say
 romanization: "au"
-prerequisites: [SA-S114-letter-ha]
+prerequisites: [SA-S118-letter-ssa]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [SA-SCRIPT-RECOG-114]
+  knowledge: [SA-SCRIPT-RECOG-118]
 introduces:
   knowledge: [SA-SCRIPT-RECOG-115]
 practises:
-  knowledge: [SA-SCRIPT-RECOG-114, SA-SCRIPT-RECOG-115]
+  knowledge: [SA-SCRIPT-RECOG-216, SA-SCRIPT-RECOG-121, SA-SCRIPT-RECOG-118, SA-SCRIPT-RECOG-115]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [SA-S114-letter-ha]
+reviews_of: [SA-S216-letter-ba, SA-S121-letter-u, SA-S118-letter-ssa]
 ---
 
 # ◌ौ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-114] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-216, SA-SCRIPT-RECOG-121, SA-SCRIPT-RECOG-118] -->
 
-[PAUSE 1s] Before the new one: ह — what does it do?
+[PAUSE 1s] Before the new one, the ones you have already met: ब · उ · ष. Say what each of them does.
 
 [PAUSE 2s] One character this time. One only — and you have been saying it
 for pages without knowing which mark on the page it was.
@@ -46,20 +46,17 @@ for pages without knowing which mark on the page it was.
 
 **◌ौ** — *au*.
 
-It is a **vowel sign**. It is not a letter and never stands alone: it attaches to a consonant and **replaces** the *a* built into it with *au*. Replaces, not adds — the *a* is gone.
+It is a **vowel sign**. It is not a letter and never stands alone: it attaches to a consonant and **replaces** the *a* built into it. Replaces, not adds — the *a* is gone.
 
 Where it sits: the ā bar plus a double stroke above.
 
-Worked through: **क** + **◌ौ** = **कौ** — *kau*.
+Worked through: **न** + **◌ौ** = **नौ** — *nau*.
 
-You already say these, and every one of them has ◌ौ somewhere inside it:
+No word in this book has put ◌ौ in front of you yet, and that is worth
+saying plainly rather than hiding: this one is here because it is built from two
+shapes you already know, and because the running text of later chapters uses it.
 
-- **द्वौ** *dvau* — two (of two masculine things)
-- **कर्णौ** *karṇau* — two ears
 
-Both of those are **dual** forms — two of something, not one and not many.
-The *-au* ending is how the commonest family of masculine nouns says *exactly two*,
-so ◌ौ is a mark you have been reading every time the book counted to two.
 
 ## Writing: ◌ौ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-115] -->
@@ -74,12 +71,12 @@ and larger than it is printed.
 > shape gets into your hand in the meantime.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-115] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-118, SA-SCRIPT-RECOG-115] -->
 
 [PAUSE 1s]
-- [YOU LOOK: at these words, and find ◌ौ in the ones that have it]
+- [YOU LOOK: at this, and find ◌ौ in it]
 
-> कर्णौ  ·  नमस्ते
+> ◌ौ
 
 - [YOU TRACE: ◌ौ three times, saying *au* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ◌ौ once more]

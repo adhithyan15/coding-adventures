@@ -21,6 +21,16 @@ The ramp is deliberately uneven in quantity but gentle in difficulty:
 - Chapter 28 turns that tranche ear-first: eight time words arrive as sound and
   meaning, only two of them reach the page, and both returns at the end are
   measured retrieval rather than adjacent review.
+- Chapter 29 pays that deferral back: the six time words chapter 28 left oral
+  reach the page, each spelled entirely from signs taught before chapter 8, so
+  no new glyph lesson was needed.
+- Chapter 30 is a retrieval chapter, not a teaching one. Nine zero-new-atom
+  lessons return the first five numbers and the fifteen core verbs of chapters
+  12-16 at distances of 98 to 104 positions, which is the fourth spacing window.
+- Chapters 31-34 continue the ear-first vocabulary tranche: twenty new headwords
+  at one per lesson, five per chapter, each glossed on first meeting, each
+  chapter closing on an oral checkpoint, one word to the page, and an R1 return
+  that also carries a named distant band of older material.
 
 ## Canonical session inventory
 
@@ -57,15 +67,22 @@ canonical `sequence` order.
 | 151-157 | 26 | City, School, and Road | `GU-C22-hear-shahar` -> `GU-C22-shahar` -> `GU-C22-hear-shaalaa` -> `GU-C22-shaalaa` -> `GU-C22-hear-rasto` -> `GU-C22-rasto` -> `GU-C22-route-three` |
 | 158-165 | 27 | Village and Shop Complete Ten | `GU-C23-hear-gaam` -> `GU-R23-route-three-r1` -> `GU-C23-gaam` -> `GU-C23-hear-dukaan` -> `GU-C23-dukaan` -> `GU-R23-map-ten` -> `GU-C23-map-ten` -> `GU-R23-shaalaa-rasto-r2` |
 | 166-179 | 28 | The Day and Its Times | `GU-C24-hear-savaar` -> `GU-C24-hear-bapor` -> `GU-C24-hear-saanj` -> `GU-C24-hear-raat` -> `GU-C24-day-parts-four` -> `GU-C24-raat` -> `GU-C24-hear-divas` -> `GU-C24-hear-mahino` -> `GU-C24-hear-aaj` -> `GU-C24-aaj` -> `GU-C24-hear-atyaare` -> `GU-C24-time-eight` -> `GU-R24-time-eight-r1` -> `GU-R24-map-ten-r3` |
+| 180-187 | 29 | The Time Words Reach the Page | `GU-C25-savaar` -> `GU-C25-bapor` -> `GU-C25-saanj` -> `GU-C25-divas` -> `GU-C25-mahino` -> `GU-C25-atyaare` -> `GU-C25-time-written` -> `GU-R25-time-written-r1` |
+| 188-196 | 30 | Fifth Return: The Core Verbs | `GU-R26-numbers-r4` -> `GU-R26-hovun-javun-r4` -> `GU-R26-aavvun-khaavun-r4` -> `GU-R26-jovun-jaanvun-r4` -> `GU-R26-vicharvun-samajvun-r4` -> `GU-R26-vanchvun-lakhvun-r4` -> `GU-R26-levun-puchhvun-r4` -> `GU-R26-time-written-r2` -> `GU-R26-madad-gamvun-paani-r4` |
+| 197-204 | 31 | The Table Is Set | `GU-C27-hear-bhaat` -> `GU-C27-hear-daal` -> `GU-C27-hear-shaak` -> `GU-C27-hear-tel` -> `GU-C27-hear-keri` -> `GU-C27-plate-five` -> `GU-C27-bhaat` -> `GU-R27-plate-five-r1` |
+| 205-212 | 32 | Inside the House | `GU-C28-hear-baarnun` -> `GU-C28-hear-baari` -> `GU-C28-hear-khurshi` -> `GU-C28-hear-chaavi` -> `GU-C28-hear-divo` -> `GU-C28-house-five` -> `GU-C28-baari` -> `GU-R28-house-five-r1` |
+| 213-220 | 33 | Sun, Sky, and River | `GU-C29-hear-sooraj` -> `GU-C29-hear-chandra` -> `GU-C29-hear-aakaash` -> `GU-C29-hear-varsaad` -> `GU-C29-hear-nadi` -> `GU-C29-sky-five` -> `GU-C29-nadi` -> `GU-R29-sky-five-r1` |
+| 221-228 | 34 | People, Paper, and a Book | `GU-C30-hear-chhokro` -> `GU-C30-hear-chhokri` -> `GU-C30-hear-maanas` -> `GU-C30-hear-pustak` -> `GU-C30-hear-kaagal` -> `GU-C30-people-five` -> `GU-C30-kaagal` -> `GU-R30-people-five-r1` |
 
 ## Current boundary
 
-The current book contains 28 chapters and 179 lessons. It teaches all 41
+The current book contains 34 chapters and 228 lessons. It teaches all 41
 Gujarati forms that the book shows, includes the complete pre-A1 writing-stage
-ladder, and carries the doorway and conversation material through measured
-distant retrieval. Every native-script headword now carries a romanization, so
-no lesson asks the reader to decode a sign nobody taught. It has begun, but has
-not completed, the 300-headword pre-A1 vocabulary target, which now stands at
-52. Later vocabulary, composition, timed mocks, rubrics, calibration, and
+ladder, and carries the doorway, conversation, number and core-verb material
+through measured distant retrieval. Every native-script headword carries a
+romanization, so no lesson asks the reader to decode a sign nobody taught, and
+no lesson shows a glyph the book has not already introduced. It has begun, but
+has not completed, the 300-headword pre-A1 vocabulary target, which now stands
+at 72. Later vocabulary, composition, timed mocks, rubrics, calibration, and
 book-only learner evidence remain explicit backlog rather than present-tense
 readiness claims.

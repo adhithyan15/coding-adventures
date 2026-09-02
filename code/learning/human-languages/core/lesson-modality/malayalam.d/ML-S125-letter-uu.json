@@ -2,8 +2,8 @@
   "lesson": {
     "id": "ML-S125-letter-uu",
     "language": "malayalam",
-    "chapter": 33,
-    "sequence": 703,
+    "chapter": 31,
+    "sequence": 635,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:a23053bd343b7d57",
+    "sourceHash": "fnv1a64:4bcb464a15e5bd31",
     "detachableSegments": [
       "Script you'll notice: ഊ",
       "Writing: ഊ — copy what you see"

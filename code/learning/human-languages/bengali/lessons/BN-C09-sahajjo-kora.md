@@ -2,8 +2,8 @@
 schema_version: 2
 id: BN-C09-sahajjo-kora
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 620
-chapter: 9
+sequence: 760
+chapter: 13
 type: word
 headword: সাহায্য করা
 romanization: sāhājjo kôrā
@@ -34,7 +34,7 @@ reviews_of: [BN-C09-jijnasa-kora, BN-C07-jaowa, BN-C06-numbers-1-5]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Chapter 6 said Bengali's inherent vowel leans to **o**, then admitted
+[PAUSE 2s] Chapter 10 said Bengali's inherent vowel leans to **o**, then admitted
 it could not show you. This word can — and it is the word you will most want when
 stuck.
 
@@ -58,7 +58,7 @@ Two rules land at the end, neither a quirk. Bengali reads a doubled **য** as
 **jj**, not *yy*. And nothing is written after it, so it takes the **inherent**
 vowel, which leans to **o**: *sāhājj**o***, never *sāhājja*.
 
-Chapter 6 could not show that inherent **o** in *ek, dui, tin, chār, pā̃ch*,
+Chapter 10 could not show that inherent **o** in *ek, dui, tin, chār, pā̃ch*,
 since none of the five ends in a bare consonant. This one does. **সা** takes the
 *s → sh* tilt, so the whole is *shāhājjo*.
 
@@ -78,7 +78,7 @@ holds the pieces without ever building the word.
 ## Grammar Lens: asking for help is where the respect ladder bites
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Another noun + করা, like জিজ্ঞাসা করা. The respect sits where Chapter 7 put it —
+Another noun + করা, like জিজ্ঞাসা করা. The respect sits where Chapter 11 put it —
 in করা’s ending:
 
 | who you are asking | "help" |

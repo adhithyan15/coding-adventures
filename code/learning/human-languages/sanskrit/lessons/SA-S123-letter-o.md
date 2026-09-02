@@ -5,38 +5,38 @@ introduces_senses: []
 introduces_culture_claims: []
 id: SA-S123-letter-o
 spine_node: SPINE-MEET-GREET
-sequence: 1172
+sequence: 1151
 delivery: script
 chapter: 24
 type: writing
 headword: "ओ"
 gloss: the single character ओ — recognised inside words you already say
 romanization: "o"
-prerequisites: [SA-S122-letter-pha]
+prerequisites: [SA-S222-vowel-sign-uu]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [SA-SCRIPT-RECOG-122]
+  knowledge: [SA-SCRIPT-RECOG-222]
 introduces:
   knowledge: [SA-SCRIPT-RECOG-123]
 practises:
-  knowledge: [SA-SCRIPT-RECOG-122, SA-SCRIPT-RECOG-123]
+  knowledge: [SA-SCRIPT-RECOG-220, SA-SCRIPT-RECOG-221, SA-SCRIPT-RECOG-222, SA-SCRIPT-RECOG-123]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [SA-S122-letter-pha]
+reviews_of: [SA-S220-letter-cha, SA-S221-letter-dda, SA-S222-vowel-sign-uu]
 ---
 
 # ओ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-122] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-220, SA-SCRIPT-RECOG-221, SA-SCRIPT-RECOG-222] -->
 
-[PAUSE 1s] Before the new one: फ — what does it do?
+[PAUSE 1s] Before the new one, the ones you have already met: छ · ड · ◌ू. Say what each of them does.
 
 [PAUSE 2s] One character this time. One only — and you have been saying it
 for pages without knowing which mark on the page it was.
@@ -46,7 +46,7 @@ for pages without knowing which mark on the page it was.
 
 **ओ** — *o*.
 
-It is an **independent vowel** — the shape the vowel *o* takes when a word begins with it, rather than the sign it becomes inside a word.
+It is an **independent vowel**: the full-size letter a vowel wears when it opens a word and has no consonant to lean on. Inside a word the same vowel is written as a small sign instead.
 
 What it is made of:
 
@@ -57,13 +57,9 @@ What it is made of:
 - a separate upper arc
 - the top shirorekhā
 
-You already say this word, and it has ओ inside it:
+You already say these, and every one of them has ओ somewhere inside it:
 
 - **ओदनः** *odanaḥ* — cooked rice
-
-Look at आ and then at ओ. The whole of आ is in there; ओ adds one arc over the top.
-That is how the vowel letters are built — not twelve unrelated shapes but a few
-shapes wearing marks.
 
 ## Writing: ओ
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-123] -->
@@ -77,18 +73,18 @@ shapes wearing marks.
 
 **Pen lifts: 5.** The pen comes up 5 times and no more.
 
-> Verified modern printed teaching form; traditional and everyday handwriting may divide or simplify the curves differently.
+> verified modern printed teaching form; traditional and everyday handwriting may divide or simplify the curves differently
 
 > This is one attested teaching order and not a national standard — handwriting
 > here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari ओ stroke order.svg’, panels 1–6, Wikimedia Commons, 5 August 2023.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-123] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-222, SA-SCRIPT-RECOG-123] -->
 
 [PAUSE 1s]
-- [YOU LOOK: at these words, and find ओ in the ones that have it]
+- [YOU LOOK: at this, and find ओ in it]
 
-> ओदनः  ·  फलम्
+> ओदनः
 
 - [YOU TRACE: ओ three times, saying *o* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ओ once more]

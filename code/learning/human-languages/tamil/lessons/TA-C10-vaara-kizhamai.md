@@ -6,6 +6,7 @@ sequence: 520
 chapter: 10
 type: word
 headword: திங்கள்–ஞாயிறு
+romanization: "thiṅgaḷ–ñāyiṟu"
 gloss: the seven weekdays — a mix of Tamil's OWN planet-words and Sanskrit borrowings
 concept_tag: TA-DAYS-WEEK
 prerequisites: [TA-C09-sorry-register]

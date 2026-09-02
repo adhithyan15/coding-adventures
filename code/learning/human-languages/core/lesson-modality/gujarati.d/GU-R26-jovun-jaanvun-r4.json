@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "GU-R26-jovun-jaanvun-r4",
+    "language": "gujarati",
+    "chapter": 30,
+    "sequence": 1410,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1101e7ed80642578",
+    "detachableSegments": [
+      "Writing — from sound, every model covered"
+    ]
+  },
+  "findings": []
+}

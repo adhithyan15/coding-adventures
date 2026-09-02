@@ -1,8 +1,45 @@
 Urdu, chapter 7: Four Verbs of the Mind.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+6 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 4.
+Lesson 1 of 6.
+آ (alif madda) — alif, with a wave on its head.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write ا. One tall downstroke, top to bottom, and it refuses to join to whatever comes after it.
+
+Script — the shape.
+آ (alif madda).
+The tall stroke you already know, and then one small wave laid across the top of it, drawn left to right like a shallow lazy S. Two movements: the downstroke, a lift, the wave.
+Its name is آ alif madda — madda means "an extension" — and it says a long ā.
+Now the reason it exists, which is the useful part.
+Plain ا does two different jobs. At the start of a word it is a carrier: a place for a short vowel to sit, with the vowel itself left off the page. Inside a word it is the long ā you have been reading in kām, nām, salām.
+So what does a writer do when a word starts with a long ā? Both jobs want the same stroke, and the answer used to be to write alif twice — carrier plus vowel — which is awkward to write and worse to read. The wave is the shorthand that replaced it. آ (alif madda) at the front of a word means: this begins on a long ā.
+That gives you a rule you can apply on sight. Long ā at the start of a word is written آ (alif madda); the same long ā in the middle of a word is written plain ا. One sound, two spellings, decided by position.
+
+The letters in this word.
+Two words, every letter already yours. Copy each with the model in view.
+آنا آسان.
+آنا ānā "to come" — a word you can now write rather than take on trust. آسان āsān "easy" — look closely: آ (alif madda) at the front, plain ا in the middle, one long vowel spelled two ways inside a single word.
+
+Guided Practice.
+[once you have stopped driving — write: آ (alif madda) — the downstroke, lift, then the wave across its head]
+[once you have stopped driving — write: آنا, then آسان]
+[once you have stopped driving — point: at both alifs in آسان and say which is which]
+[your turn — say: ānā, and name the two movements that make آ (alif madda)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How many movements make آ (alif madda)? (Two — stroke, then wave.) Which verb can you now write? (آنا.) Which of آسان's two alifs carries the wave? (The first.)
+[question — say your answer, then pause 12 seconds]
+Where in a word do you write آ (alif madda) rather than plain ا for a long ā?
+
+
+Lesson 2 of 6.
 سوچنا (sochnā) — “to think,” and it used to mean “to grieve”.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -46,7 +83,7 @@ How many dots does چ carry, and where? (Three, below.) What did śocati mean be
 Sources: Wiktionary: سوچنا (sochnā); Zero Zabar: The Urdu alphabet.
 
 
-Lesson 2 of 4.
+Lesson 3 of 6.
 سمجھنا (samajhnā) — “to understand,” which is a way of waking up.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -92,7 +129,47 @@ What does ھ do, and does it sound by itself? (It aspirates the letter before it
 Sources: Wiktionary: سمجھنا (samajhnā); Zero Zabar: The Urdu alphabet.
 
 
-Lesson 3 of 4.
+Lesson 4 of 6.
+پ (pe) — three dots under a boat.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write آنا and آسان, and say which alif wears the wave.
+
+Script — the shape.
+پ (pe).
+A shallow open curve lying along the baseline, like a small flat-bottomed boat — and then a lift, and three dots placed underneath it, arranged as a triangle with its point downward.
+Two parts, one lift. Its name is پ pe and it says p.
+The shapes it wears by position follow the pattern you have already seen twice:
+standing alone and closing a joined word: the full boat, dots beneath.
+opening a word and in the middle: the boat shrinks to a small tooth — a short upward point on the line — with the three dots still beneath it.
+Note what survives the shrinking. The curve goes; the three dots stay. On a page of Nastaliq you find pe by counting dots below the line, not by looking for a boat.
+That triangle of dots is worth one sentence of history. Arabic has no p, so the Arabic alphabet has no letter for it. Persian needed one, invented it by taking the shape that carries a single dot below and giving it three, and Urdu inherited the invention along with the script. The same trick made letters for ch, zh and g. So the dots under pe are a record of a borrowed alphabet being altered to fit a language it was not built for — which every language that took this alphabet has done, Urdu among them. Sindhi went furthest of Urdu's neighbours, and carries around fifty letters to Urdu's thirty-nine.
+
+The letters in this word.
+Three words, pe in three different places, and no letter in any of them that is not already yours. Copy each with the model in view.
+آپ پیر اپنا.
+آپ āp — the respectful "you," and the word this book has addressed you with from the beginning. Pe closes it, wearing the full boat, because alif madda hands nothing to the left.
+پیر pair "foot" — pe opens it, shrunk to a tooth with its three dots still underneath.
+اپنا apnā "one's own" — pe sits in the middle, the same tooth, hemmed in on both sides.
+
+Guided Practice.
+[once you have stopped driving — write: پ (pe) — the boat, then a lift, then three dots beneath]
+[once you have stopped driving — write: آپ, then پیر, then اپنا]
+[once you have stopped driving — point: at the pe in پیر and the pe in آپ, and say what changed]
+[your turn — say: āp, and say who you would use it with rather than tum]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How many dots does pe carry, and where? (Three, underneath.) Why did Persian have to invent this letter? (Arabic has no p.) Write "you." (آپ.)
+[question — say your answer, then pause 12 seconds]
+When pe shrinks to a tooth at the start of a word, what stays the same?
+
+
+Lesson 5 of 6.
 پڑھنا (paṛhnā) — “to read,” and “to study,” and “to recite”.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -106,8 +183,8 @@ You'll want to know first — one word.
 It is also the ordinary word for “to study”: the noun پڑھائی paṛhāī is “studies, schooling.” Urdu does not keep reading and studying in separate boxes. Strip the -nā and the stem is paṛh-.
 
 The letters in this word.
-From the right edge: پ p, then ڑ, then ھ, then ن n, then ا long ā.
-Two are yours: پ, the low scoop with three dots below, from آپ āp; and ھ, the two-eyed he from سمجھنا (samajhnā) — ڑ plus ھ gives ṛh.
+From the right edge: پ (pe) p, then ڑ, then ھ, then ن n, then ا long ā.
+Two are yours: پ (pe), the low scoop with three dots below, from آپ āp; and ھ, the two-eyed he from سمجھنا (samajhnā) — ڑ plus ھ gives ṛh.
 ڑ is new, and built from two things you have met. Its body is ر r, from شکریہ shukriyā. On top sits the very mark that rides on ٹ in ٹھیک ṭhīk: Urdu's retroflex sign, meaning curl the tongue back. ٹ is a curled t; ڑ is a curled r, flicked rather than rolled.
 
 Grammar Lens: into the frame.
@@ -133,7 +210,7 @@ Name the two everyday meanings of paṛhnā. (To read; to study.) What does the 
 Sources: Wiktionary: پڑھنا (paṛhnā); Zero Zabar: The Urdu alphabet.
 
 
-Lesson 4 of 4.
+Lesson 6 of 6.
 لکھنا (likhnā) — “to write,” with nothing new left to decode.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.

@@ -1,0 +1,24 @@
+{
+  "chapter": 26,
+  "title": "Show It To Me: The First Transaction",
+  "label": "ch:mw-show-request",
+  "canDo": "I can point at one thing and ask a shopkeeper, a food seller, or a driver to show it to me, after learning only ख.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "MW-C21-show-three",
+    "kind": "four-skill-function-map",
+    "summary": "A pointing word and an asking word join one already-taught noun, and the resulting request is then run unchanged over a shopping word, a food word, and a transport word in four separately scored skills.",
+    "assesses": [
+      "MW-LEX-YE-01",
+      "MW-SCRIPT-YE-01",
+      "MW-LEX-DIKHAVO-01",
+      "MW-SCRIPT-KHA-01",
+      "MW-SCRIPT-DIKHAVO-01",
+      "MW-LEX-SHOW-REQUEST-01",
+      "MW-SCRIPT-SHOW-REQUEST-01",
+      "MW-PERFORMANCE-SHOW-FOUR-SKILL-01"
+    ]
+  }
+}

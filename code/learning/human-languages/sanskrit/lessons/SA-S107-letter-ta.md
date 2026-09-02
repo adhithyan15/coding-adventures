@@ -5,40 +5,40 @@ introduces_senses: []
 introduces_culture_claims: []
 id: SA-S107-letter-ta
 spine_node: SPINE-MEET-GREET
-sequence: 436
+sequence: 441
 delivery: script
-chapter: 8
+chapter: 9
 type: writing
 headword: "त"
 gloss: the single character त — recognised inside words you already say
 romanization: "ta"
-prerequisites: []
+prerequisites: [SA-S208-letter-va]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: []
+  knowledge: [SA-SCRIPT-RECOG-208]
 introduces:
   knowledge: [SA-SCRIPT-RECOG-107]
 practises:
-  knowledge: [SA-SCRIPT-RECOG-107]
+  knowledge: [SA-SCRIPT-RECOG-119, SA-SCRIPT-RECOG-112, SA-SCRIPT-RECOG-208, SA-SCRIPT-RECOG-107]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: []
+reviews_of: [SA-S119-letter-kha, SA-S112-vowel-sign-e, SA-S208-letter-va]
 ---
 
 # त — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-119, SA-SCRIPT-RECOG-112, SA-SCRIPT-RECOG-208] -->
 
-[PAUSE 1s] A horizontal head-line (shirorekha) runs across the top; letters hang beneath it like laundry on a line.
+[PAUSE 1s] Before the new one, the ones you have already met: ख · ◌े · व. Say what each of them does.
 
-[PAUSE 2s] One character this time. Just one — and you have been saying it
+[PAUSE 2s] One character this time. One only — and you have been saying it
 for pages without knowing which mark on the page it was.
 
 ## Script you'll notice: त
@@ -56,10 +56,10 @@ What it is made of:
 
 You already say these, and every one of them has त somewhere inside it:
 
-- **नमस्ते** *namaste* — hello (lit. "a bow to you") (namaste)
-- **स्वागतम्** *svāgatam* — welcome (lit. "well come") (svāgatam)
-- **अस्ति** *asti* — is
-- **भवान् / त्वम्** *bhavān / tvam* — you (respectful / familiar)
+- **भवान् / त्वम्** *bhavān / tvam* — you
+- **तव नाम किम्?** *tava nāma kim?* — what's your name?
+- **न चिन्ता** *na cintā* — no worry / it's nothing / you're welcome
+- **खादति** *khādati* — he, she, or it eats — the everyday eat-verb, which is not the one English is related to
 
 ## Writing: त
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-107] -->
@@ -70,18 +70,18 @@ You already say these, and every one of them has त somewhere inside it:
 
 **Pen lifts: 2.** The pen comes up 2 times and no more.
 
-> Verified three-stroke teaching form; everyday handwriting may join or simplify the body differently.
+> verified three-stroke teaching form; everyday handwriting may join or simplify the body differently
 
 > This is one attested teaching order and not a national standard — handwriting
 > here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-त-order.gif’, strokes 1–3, Wikimedia Commons, 10 May 2009.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-107] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-208, SA-SCRIPT-RECOG-107] -->
 
 [PAUSE 1s]
-- [YOU LOOK: at these words, and find त in the ones that have it]
+- [YOU LOOK: at this, and find त in it]
 
-> नमस्ते  ·  स्वागतम्  ·  नमस्कारः
+> भवान् / त्वम्  ·  तव नाम किम्?  ·  न चिन्ता
 
 - [YOU TRACE: त three times, saying *ta* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find त once more]

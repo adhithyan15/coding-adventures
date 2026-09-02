@@ -1,0 +1,907 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 26,
+  "title": "Show It To Me: The First Transaction",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:ad3b42f343d47e27",
+  "lessons": [
+    {
+      "id": "MW-C21-hear-ye",
+      "sequence": 1980,
+      "title": "Hear ye — this one",
+      "headword": "ye",
+      "romanization": "ye",
+      "gloss": "this — the word that points at one thing in front of you",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f034c17a66d320c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the seven-word food payoff, write य, then say tea and clothes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ye — this."
+            },
+            {
+              "kind": "speech",
+              "text": "One beat. It points at the single thing in front of you and at nothing else. The source prints it in front of an ordinary noun, exactly the way the next chapters will use it: ye vastu, this item."
+            },
+            {
+              "kind": "speech",
+              "text": "Every word this book has taught so far names a thing. ye does not name anything. It is the first Marwadi word here whose whole job is to pick one out."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C21-hear-ye-meaning",
+              "prompt": "What does ye do in front of a noun?",
+              "assesses": [
+                "MW-LEX-YE-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "this",
+                "it means this",
+                "points at this one",
+                "this one"
+              ],
+              "feedback": {
+                "correct": "Right: ye picks out the one thing in front of you.",
+                "incorrect": "It names nothing. It points: ye vastu is this item."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C21-ye",
+      "sequence": 1990,
+      "title": "ये (ye) — this, on the page",
+      "headword": "ये",
+      "romanization": "ye",
+      "gloss": "this, written with two signs the hand already owns",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:9e644a6745d47ccc",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 16,
+              "perItem": false,
+              "source": "[PAUSE 16s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say this, then write tea."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "य + े becomes ये — ye — this."
+            },
+            {
+              "kind": "speech",
+              "text": "In चाय the glide य closed a word and carried no vowel mark. Here the same sign opens a word and carries े above the headstroke. One sign, two jobs, and nothing new to learn."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at ये (ye), cover it, wait five seconds, and write it. Check that े sits on top of the headstroke and not beside the stem."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C21-ye-delayed",
+              "prompt": "From ye, write the word for this.",
+              "assesses": [
+                "MW-SCRIPT-YE-01",
+                "MW-LEX-YE-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ये",
+                "ये this"
+              ],
+              "feedback": {
+                "correct": "Right: ये is य with the e mark.",
+                "incorrect": "Write य first, then add े above the headstroke."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C21-hear-dikhavo",
+      "sequence": 2000,
+      "title": "Hear dikhāvo — show it",
+      "headword": "dikhāvo",
+      "romanization": "dikhāvo",
+      "gloss": "show it — the source's asking form, said to one person across a counter",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:647faf01a3dab248",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ये (ye), then say shop and item and write shop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dikhāvo — show it."
+            },
+            {
+              "kind": "speech",
+              "text": "Three beats: di-khā-vo, the middle one long. The middle beat carries a breath after the k that the k of kapṛā does not have. Hear both, then say both: ka — khā."
+            },
+            {
+              "kind": "speech",
+              "text": "The source prints this form twice, once for a menu and once for another colour. It is the asking form used to one person across a counter, not a command shouted at anyone, and this lesson teaches the printed form rather than the whole system of asking forms behind it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Marwari Pathshala, Lesson 9; Marwari Pathshala, Lesson 6."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C21-hear-dikhavo-meaning",
+              "prompt": "What are you asking for when you say dikhāvo?",
+              "assesses": [
+                "MW-LEX-DIKHAVO-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "show it",
+                "show it to me",
+                "show",
+                "show me"
+              ],
+              "feedback": {
+                "correct": "Right: dikhāvo asks somebody to show you the thing.",
+                "incorrect": "It asks for an action, not a thing: di-khā-vo, show it."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-W21-kha",
+      "sequence": 2010,
+      "title": "ख (kha) — the breathed partner of क",
+      "headword": "ख",
+      "romanization": "kha",
+      "gloss": "the Devanagari kha consonant",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:5f62654c04a1b0f3",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — one sign"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one sign until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 22,
+              "perItem": false,
+              "source": "[PAUSE 22s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say show it, then write कपड़ा and point to its dotted ड़."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one sign",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ख — kha."
+            },
+            {
+              "kind": "speech",
+              "text": "The sound first, because it is the part a reader can check without a model. Say क of कपड़ा, then say it again with a puff of breath released on the release: that puff is the whole difference, and it is the difference ख (kha) records."
+            },
+            {
+              "kind": "speech",
+              "text": "The sign is built under the headstroke like every sign so far, with two parts side by side and the vertical stem closing it on the right."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace ख (kha) once and copy it once. Write क beside it. Say the pair aloud with a hand in front of your mouth: the breath moves your hand on ख (kha) and not on क. Cover both, wait five seconds, and write ख (kha) from that breath cue."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Devanagari chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-W21-kha-write",
+              "prompt": "Write the breathed partner of क.",
+              "assesses": [
+                "MW-SCRIPT-KHA-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ख",
+                "ख kha"
+              ],
+              "feedback": {
+                "correct": "Right: ख is the k released with a puff of breath.",
+                "incorrect": "Say क, then क with breath. The breathed one is ख."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C21-dikhavo",
+      "sequence": 2020,
+      "title": "दिखावो (dikhāvo) — the asking word on the page",
+      "headword": "दिखावो",
+      "romanization": "dikhāvo",
+      "gloss": "show it, written after the breathed kha is isolated",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:027bc71626d6836c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 18,
+              "perItem": false,
+              "source": "[PAUSE 18s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say show it, write ख (kha), then write wind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दि + खा + वो becomes दिखावो — dikhāvo — show it."
+            },
+            {
+              "kind": "speech",
+              "text": "Three groups, one for each beat you already hear. ि is written before द and read after it, the order you first met in मंदिर. वो is the व of हवा with the ो of घोड़ो."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the three groups once. Cover the word, wait five seconds, and write it. Check the ि stands to the left of द and that ख (kha) carries ा."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C21-dikhavo-delayed",
+              "prompt": "From dikhāvo, write the word that asks somebody to show you the thing.",
+              "assesses": [
+                "MW-SCRIPT-DIKHAVO-01",
+                "MW-LEX-DIKHAVO-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "दिखावो",
+                "दिखावो show it"
+              ],
+              "feedback": {
+                "correct": "Right: दिखावो asks for the thing to be shown.",
+                "incorrect": "Build it in three groups: दि, खा, वो."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R21-show-two",
+      "sequence": 2030,
+      "title": "Retrieve this and show it",
+      "headword": "ये — दिखावो",
+      "romanization": "ye — dikhāvo",
+      "gloss": "this, and the word that asks for it to be shown",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b9bc106986f27957",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the seven-word food payoff, then write tea and य."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear both words in both orders and give each meaning. Read two cards. Write both from sound, then circle the one sign in them that is new this chapter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R21-show-two-recall",
+              "prompt": "Write this, then the word that asks for it to be shown.",
+              "assesses": [
+                "MW-LEX-YE-01",
+                "MW-LEX-DIKHAVO-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "ये — दिखावो",
+                "ये दिखावो",
+                "ये, दिखावो"
+              ],
+              "feedback": {
+                "correct": "One word points, the other asks. Both stay distinct.",
+                "incorrect": "Repair only the missed word, then repeat the pair."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C21-hear-show-request",
+      "sequence": 2040,
+      "title": "Hear ye kapṛā dikhāvo — show me this cloth",
+      "headword": "ye kapṛā dikhāvo",
+      "romanization": "ye kapṛā dikhāvo",
+      "gloss": "show me this cloth — the first complete thing this track can ask for",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:725d0133cc83b929",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say clothes and goods, then write both."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ye kapṛā dikhāvo — show me this cloth."
+            },
+            {
+              "kind": "speech",
+              "text": "Three words, and you already own all three. Point first, name the thing second, ask last: that order does not change when the noun changes."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear the line twice. Say it once with your hand out, as if the cloth were on the counter in front of you."
+            },
+            {
+              "kind": "speech",
+              "text": "The source prints dikhāvo with its own objects. Here it takes a noun this book has already taught, so nothing in the line is unfamiliar except the joining."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C21-hear-show-request-meaning",
+              "prompt": "What does ye kapṛā dikhāvo ask for?",
+              "assesses": [
+                "MW-LEX-SHOW-REQUEST-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "show me this cloth",
+                "show this cloth",
+                "show me this clothes",
+                "show me this cloth please"
+              ],
+              "feedback": {
+                "correct": "Right: point, name, ask.",
+                "incorrect": "Take it in three: ye, kapṛā, dikhāvo."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C21-show-request",
+      "sequence": 2050,
+      "title": "ये कपड़ा दिखावो। (ye kapṛā dikhāvo.) — a whole line, no new sign",
+      "headword": "ये कपड़ा दिखावो।",
+      "romanization": "ye kapṛā dikhāvo.",
+      "gloss": "show me this cloth, written entirely from signs already taught",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f150db4c3de0f1e6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 18,
+              "perItem": false,
+              "source": "[PAUSE 18s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say show me this cloth, then write expensive."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ये (ye) | कपड़ा | दिखावो (dikhāvo)।."
+            },
+            {
+              "kind": "speech",
+              "text": "Three written words, each one already written on its own in an earlier lesson. The full stop is the । you first met in पाछे मिलसू. Nothing here is new but the joining, which is the point of the chapter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the line once. Cover it for ten seconds and write all three words. Open the model and repair only the word that changed, then rewrite that word alone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C21-show-request-write",
+              "prompt": "Write the line that asks for this cloth to be shown.",
+              "assesses": [
+                "MW-SCRIPT-SHOW-REQUEST-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "ये कपड़ा दिखावो।",
+                "ये कपड़ा दिखावो"
+              ],
+              "feedback": {
+                "correct": "Three known words and one known stop.",
+                "incorrect": "Rebuild one word at a time: ये | कपड़ा | दिखावो।"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C21-show-three",
+      "sequence": 2060,
+      "title": "Payoff — one request, three counters",
+      "headword": "ये कपड़ा — ये सबजी — ये गाड़ी दिखावो।",
+      "romanization": "ye kapṛā — ye sabjī — ye gāṛī dikhāvo.",
+      "gloss": "one request run over a shopping word, a food word, and a transport word",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9dc28a428ba00282",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the seven-word shopping payoff, the five-word transport payoff, and the seven-word food payoff."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The middle word is the only one that changes."
+            },
+            {
+              "kind": "speech",
+              "text": "Identify which of the three lines you heard."
+            },
+            {
+              "kind": "speech",
+              "text": "Produce all three from meaning cues alone."
+            },
+            {
+              "kind": "speech",
+              "text": "Read three printed lines and say which counter each belongs at."
+            },
+            {
+              "kind": "speech",
+              "text": "Write all three from dictation, without a model."
+            },
+            {
+              "kind": "speech",
+              "text": "Pass each skill separately. Asking to see something is one move; asking what it costs, saying it is too dear, and settling on a price are still untaught."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Marwari Pathshala, Lesson 9; Marwari Pathshala, Lesson 6; Marwari Pathshala, Lesson 10."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C21-show-three-payoff",
+              "prompt": "Complete all four scored checks, then write the request with the food word in the middle.",
+              "assesses": [
+                "MW-PERFORMANCE-SHOW-FOUR-SKILL-01"
+              ],
+              "responseSeconds": 45,
+              "acceptedResponses": [
+                "ये सबजी दिखावो।",
+                "ये सबजी दिखावो"
+              ],
+              "feedback": {
+                "correct": "One asking word now runs over three noun sets in four skills.",
+                "incorrect": "Repair only the failed skill or word, then retry that part."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R21-script-close",
+      "sequence": 2070,
+      "title": "Close the writing loop for ख (kha)",
+      "headword": "ख",
+      "romanization": "kha",
+      "gloss": "delayed closure for the chapter's only new sign, plus the three least-drilled older signs",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:88c98d5123400b6a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the three-counter request payoff, then say rickshaw and flatbread."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Without a model, write four single signs from sound cues: ख (kha), य, श, ट. Three of those four have been on the page for chapters without being asked for on their own, which is why they are here."
+            },
+            {
+              "kind": "speech",
+              "text": "Then write दिखावो (dikhāvo), ये (ye), रिक्शा, रोटी, and चाय from dictation. Repair only the missed unit and rewrite its word once."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Marwari Pathshala, Lesson 9; Unicode Devanagari chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R21-script-close-recall",
+              "prompt": "Write the breathed k, then the sign inside rickshaw.",
+              "assesses": [
+                "MW-SCRIPT-KHA-01",
+                "MW-SCRIPT-SHA-01"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "ख — श",
+                "ख श",
+                "ख, श"
+              ],
+              "feedback": {
+                "correct": "The new sign and an older one both close independently.",
+                "incorrect": "Repair the missed sign, then rewrite the word it lives in."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
