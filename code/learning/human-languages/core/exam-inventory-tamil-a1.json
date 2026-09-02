@@ -3,7 +3,7 @@
   "language": "tamil",
   "level": "A1",
   "about": "A PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS. NOTHING IN THIS FILE MAY BE ATTRIBUTED TO ANY TAMIL EXAMINING OR LANGUAGE BODY -- not to the Singapore Ministry of Education, whose Tamil Language syllabus core/exam-levels.json names as one of the two nearest things to a ladder, not to the Tamil Nadu state syllabi it names as the other, not to any university, board or diaspora examination. AND NOTHING IN IT MAY BE ATTRIBUTED TO DELE, THE INSTITUTO CERVANTES OR THE PLAN CURRICULAR ABOUT TAMIL: they published a Spanish syllabus and have said nothing whatever about this language. Three claims are stacked here and they have very different strengths, so read them apart. (1) THE POINT SET is derived structurally from core/exam-inventory-es-a1.json, which restates the A1 grammar, function, notion and orthography inventories the Instituto Cervantes publishes behind DELE -- a real awarding body with a published syllabus, finite and split into A1 and A2 columns. That is the strongest thing in this file, and all it establishes is a LEVEL: what an A1 candidate must be able to handle, asked as a language-neutral demand rather than as a piece of Spanish grammar. (2) THE TAMIL EXPONENTS are editorial throughout and are this project's judgement and nobody else's. Deciding that Spanish's four article points are answered by the single fact that Tamil has no article, that its gustar frame is answered by the dative-subject sentence with pidi, that its three-way este/ese/aquel is answered honestly by Tamil's two-way near/far rather than by an invented middle term, or that its nine punctuation points collapse into one -- all of that is chosen here. The CATEGORY NAMES are the project's own too: Tamil grammatical terms where a standard one exists (peyarccol, vinaiccol, vetrumai, vinaaccol, etirmarai), and a plain description where inventing a Tamil term would have been a pretence. (3) THE COVERAGE NUMBER this file produces is a measure of the corpus against this list. It is not an exam-readiness claim and cannot become one while every scope dimension is `partial`. WHY A PROXY AT ALL: no awarding body publishes a content syllabus for Tamil that this project has found. NOT SEARCHED, BY INSTRUCTION, and that was a DECISION rather than an omission: BACKLOG.d HL-C287 and HL-C290 record the sourcing question as settled -- the Hindi tranche ran it against the best-placed South Asian candidate and came back empty, there is no South Asian equivalent of the Plan Curricular, and no further agent-hours are to be spent hunting one per track. This file follows that instruction and states the consequence rather than hiding it: if a Tamil content syllabus does exist, this file has not ruled it out. What core/exam-levels.json DOES record for Tamil was re-read before this file was written, and it carries something Telugu's bare entry does not -- a caveat that Tamil's DIGLOSSIA makes no CEFR mapping clean, because the literary and spoken registers diverge sharply and this curriculum teaches spoken Tamil first. That caveat is load-bearing here: it is why there is an Iruvalakku category at all, and why its first point is the one a reader should look at before any other. THE EVIDENCE BASE IS AS THIN AS TELUGU'S AND THINNER THAN HINDI'S OR MARATHI'S, AND THAT IS THE MOST IMPORTANT THING TO KNOW ABOUT IT. Hindi's inventory could pin exponents against two checked-in timed A1 mocks and quote the item that needs each word; Marathi's could pin them against the eleven paper parts of its task-shapes/a1.json. Tamil has NEITHER. There is no tamil/assessment-spec.md, no tamil/assessment.json, no tamil/task-shapes/ and no tamil/mocks/ -- the directory holds lessons, chapters, curriculum, narration, a book, a roadmap, a session map and a pronunciation reference, and nothing that fixes what an A1 paper would ask. Every exponent choice below is bounded by the proxy alone, and every gap note says what is missing from the CORPUS rather than what some paper demands. Writing that contract is the single change that would most improve this file, and it is the reason no note here cites an item number. PROXY ACCOUNTING: every one of the proxy's 273 points is accounted for. 270 are cited by some point's `derivedFrom` and 3 are listed in `proxy.notTransferred` with a reason. Points marked `tamilSpecific` answer no Spanish demand at all -- the rational/irrational noun split that governs all Tamil agreement, the stacking case suffix, strong against weak verbs, the two-way negative, the three n letters, the retroflex series and the sound Tamil is named for, the courtesy vocabulary, and the diglossia column. A proxy is a scaffold, not a template to translate, and those are why. LEVEL PURITY IS NOT A CONSTRAINT ON THIS CURRICULUM, so a point is recorded as covered when the corpus teaches it, whether or not it teaches it at A1: the thirteen body-part atoms and the nine flora atoms are both well past A1 and both count.",
-  "source": "PROJECT-DEFINED. LEVEL PROXY: code/learning/human-languages/core/exam-inventory-es-a1.json, the DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Its own source is https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/niveles/02_gramatica_inventario_a1-a2.htm and the sibling function, notion and orthography inventories. Nothing about Tamil is attributed to DELE, the Instituto Cervantes or the Plan Curricular. EXAM ENVELOPE: NONE EXISTS. Unlike hindi/assessment-spec.md with hindi/task-shapes/a1.json and hindi/mocks/a1/, and unlike marathi/assessment-spec.md with marathi/task-shapes/a1.json, the tamil track ships no assessment spec, no assessment.json, no task shapes and no mocks, so no project-internal contract bounds the exponent choices or the gap notes below. PROFICIENCY BACKBONE: core/exam-levels.json, tracks.tamil -- exam 'no single international ladder; Singapore MOE Tamil and Tamil Nadu state syllabi are the nearest', basis 'editorial', mapping 'cefr', with a caveat naming diglossia and recording that this curriculum teaches spoken Tamil first. CORPUS EVIDENCE: every probe was checked mechanically against the atoms declared by the 359 lesson files in code/learning/human-languages/tamil/lessons/, which introduce 442 distinct atoms between them -- 262 LEX, 88 SCRIPT, 46 ETYMON, 22 GRAMMAR, 14 PRAGMATICS, 6 SOUND, 2 ROOT, and two singletons that are spelling slips rather than kinds: one TA-PHONO- and one TA-PRAGMATIC- in the singular, both on chapter 1's greeting lesson. Those two are counted here because a probe can name them and TA-A1-F-01 does. The script points' claims were taken by walking every character in the Tamil block of Unicode that any lesson puts on a page and comparing it with the set the script lessons teach: 52 shown, 52 taught, and the letter inventory those are compared against is tamil/pronunciation-reference.md. NOT SEARCHED, BY INSTRUCTION: no external search for a Tamil awarding-body syllabus was performed for this file. code/learning/human-languages/BACKLOG.d/02610-HL-C287-USE-SPANISH-AS-A-LEVEL-PROXY-WHEN-A-TRACK-HAS-NO-SYL-f1667cbc.md and 02610-HL-C290-ANCHORING-AN-EXAM-INVENTORY-WHEN-NO-SYLLABUS-EXISTS-b3f27a1e.md record that search as settled and direct that it not be repeated per track. See `about`.",
+  "source": "PROJECT-DEFINED. LEVEL PROXY: code/learning/human-languages/core/exam-inventory-es-a1.json, the DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Its own source is https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/niveles/02_gramatica_inventario_a1-a2.htm and the sibling function, notion and orthography inventories. Nothing about Tamil is attributed to DELE, the Instituto Cervantes or the Plan Curricular. EXAM ENVELOPE: NONE EXISTS. Unlike hindi/assessment-spec.md with hindi/task-shapes/a1.json and hindi/mocks/a1/, and unlike marathi/assessment-spec.md with marathi/task-shapes/a1.json, the tamil track ships no assessment spec, no assessment.json, no task shapes and no mocks, so no project-internal contract bounds the exponent choices or the gap notes below. PROFICIENCY BACKBONE: core/exam-levels.json, tracks.tamil -- exam 'no single international ladder; Singapore MOE Tamil and Tamil Nadu state syllabi are the nearest', basis 'editorial', mapping 'cefr', with a caveat naming diglossia and recording that this curriculum teaches spoken Tamil first. CORPUS EVIDENCE: every probe was checked mechanically against the atoms declared by the 390 lesson files in code/learning/human-languages/tamil/lessons/, which introduce 477 distinct atoms between them -- 271 LEX, 99 SCRIPT, 46 ETYMON, 30 GRAMMAR, 21 PRAGMATICS, 6 SOUND, 2 ROOT, and two singletons that are spelling slips rather than kinds: one TA-PHONO- and one TA-PRAGMATIC- in the singular, both on chapter 1's greeting lesson. Those two are counted here because a probe can name them and TA-A1-F-01 does. The script points' claims were taken by walking every character in the Tamil block of Unicode that any lesson puts on a page and comparing it with the set the script lessons teach: 52 shown, 52 taught, and the letter inventory those are compared against is tamil/pronunciation-reference.md. NOT SEARCHED, BY INSTRUCTION: no external search for a Tamil awarding-body syllabus was performed for this file. code/learning/human-languages/BACKLOG.d/02610-HL-C287-USE-SPANISH-AS-A-LEVEL-PROXY-WHEN-A-TRACK-HAS-NO-SYL-f1667cbc.md and 02610-HL-C290-ANCHORING-AN-EXAM-INVENTORY-WHEN-NO-SYLLABUS-EXISTS-b3f27a1e.md record that search as settled and direct that it not be repeated per track. See `about`.",
   "anchors": [
     {
       "id": "ES-A1-PROXY",
@@ -20,7 +20,7 @@
     {
       "id": "TA-CORPUS",
       "kind": "project-owned",
-      "title": "code/learning/human-languages/tamil/ -- 359 lessons, 73 chapters, curriculum.d and chapters.d",
+      "title": "code/learning/human-languages/tamil/ -- 390 lessons, 81 chapters, curriculum.d and chapters.d",
       "note": "Our own work. It is what every probe resolves against and it is finite and auditable, but agreeing with it is not corroboration: the corpus cannot tell you what an exam would ask, only what this course happens to teach. Where a point's note says a word is missing, that absence was read out of this directory."
     },
     {
@@ -76,7 +76,7 @@
       "note": "No published A1 Tamil word list exists that this project has found -- no Singapore MOE word list adopted here, no ranked frequency band adopted by any Tamil body. What the proxy supplies is a bounded set of DOMAINS, which is a real improvement on topic areas chosen by whoever wrote the next chapter: the walk added education, work, media, services, documents, the arts, government and religion, and Tamil holds almost none of them. A domain point claims the track has a usable foothold in that domain, NOT that it holds the domain's full A1 vocabulary. No per-word count is claimed complete and none should be inferred: this file deliberately contains no 'holds N headwords' point, because a probe cannot honestly express one."
     }
   },
-  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is itself the finding -- an unmapped point is uncovered, never skipped. Every atom named in every probe was checked mechanically against the 442 atoms the tamil track actually introduces; a probe naming an atom that does not exist would report 'not covered' forever and be indistinguishable from real debt, so an id was never invented to fill a point, and no probe here points at a lesson somebody intends to write. ONE HABIT IS NAMED SO IT IS NOT A HIDDEN GENEROSITY: this track files a lot of vocabulary under atom kinds other than LEX. The good-afternoon greeting carries only an ETYMON atom, the parts of the day carry ETYMON and PRAGMATICS atoms, the retroflex contrast carries a SOUND atom, and the weekdays carry a GRAMMAR atom. Probing those points therefore names an etymology, pragmatics, sound or grammar atom rather than a lexis one. The word IS introduced by that lesson; the track simply files it differently, and the note on each such point says so. A POINT IS NOT COUNTED AS COVERED WHEN ONLY PART OF WHAT IT NAMES IS TAUGHT, and this is where most of the uncovered points come from rather than from total absence: `nalla` without an antonym leaves general evaluation uncovered; `inru` and `nerru` without a word for tomorrow leave the today / yesterday / tomorrow point uncovered; `vilai` and `evvalavu` are both taught and nothing joins them into a question, so asking a price is uncovered; the age QUESTION is taught and the answer needs a numeral the course does not reach. That is deliberate, because a candidate asked for the other half of a pair gets no partial credit. `derivedFrom` records each point's provenance -- the proxy point ids whose demand it answers, or an empty list with `tamilSpecific: true`. `anchorIds` records which anchor each point leans on, and the anchor's `kind` says whether that was something read or something decided. Neither field is read by any code; both are carried so the derivation can be audited rather than trusted.",
+  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is itself the finding -- an unmapped point is uncovered, never skipped. Every atom named in every probe was checked mechanically against the 477 atoms the tamil track actually introduces; a probe naming an atom that does not exist would report 'not covered' forever and be indistinguishable from real debt, so an id was never invented to fill a point, and no probe here points at a lesson somebody intends to write. ONE HABIT IS NAMED SO IT IS NOT A HIDDEN GENEROSITY: this track files a lot of vocabulary under atom kinds other than LEX. The good-afternoon greeting carries only an ETYMON atom, the parts of the day carry ETYMON and PRAGMATICS atoms, the retroflex contrast carries a SOUND atom, and the weekdays carry a GRAMMAR atom. Probing those points therefore names an etymology, pragmatics, sound or grammar atom rather than a lexis one. The word IS introduced by that lesson; the track simply files it differently, and the note on each such point says so. A POINT IS NOT COUNTED AS COVERED WHEN ONLY PART OF WHAT IT NAMES IS TAUGHT, and this is where most of the uncovered points come from rather than from total absence: `nalla` without an antonym leaves general evaluation uncovered; `inru` and `nerru` without a word for tomorrow leave the today / yesterday / tomorrow point uncovered; `vilai` and `evvalavu` are both taught and nothing joins them into a question, so asking a price is uncovered; the age QUESTION is taught and the answer needs a numeral the course does not reach. That is deliberate, because a candidate asked for the other half of a pair gets no partial credit. `derivedFrom` records each point's provenance -- the proxy point ids whose demand it answers, or an empty list with `tamilSpecific: true`. `anchorIds` records which anchor each point leans on, and the anchor's `kind` says whether that was something read or something decided. Neither field is read by any code; both are carried so the derivation can be audited rather than trusted.",
   "points": [
     {
       "id": "TA-A1-N-01",
@@ -748,14 +748,19 @@
       "id": "TA-A1-NUM-08",
       "category": "Eṇṇuppeyar (numerals and quantity)",
       "label": "the Tamil digits ௧-௰ as written on a page",
-      "probe": null,
+      "probe": [
+        "TA-SCRIPT-W07-DIGITS-01",
+        "TA-SCRIPT-W07-DIGITS-02",
+        "TA-SCRIPT-W07-DIGITS-03",
+        "TA-SCRIPT-W07-DIGITS-04"
+      ],
       "anchorIds": [
         "TA-CORPUS",
         "ED-TAMIL"
       ],
       "derivedFrom": [],
       "tamilSpecific": true,
-      "note": "Tamil-specific, and a NEAR MISS worth naming precisely. Eight lessons in chapter 7 -- TA-W07-digits-1-3, -4-5, -6-8, -9-10 and their copy and dictation lessons -- teach the Tamil digits, and every one of them declares an EMPTY introduces list. The material exists and cannot be probed. One frontmatter field per lesson would close this point without authoring a line of content."
+      "note": "CLOSED BY DECLARATION, NOT BY NEW CONTENT. The eight chapter-7 lessons already taught the digits and declared nothing; each of the four teaching lessons now introduces one atom and the copy, dictation and practice lessons practise them. No line of content was written."
     },
     {
       "id": "TA-A1-CASE-01",
@@ -1433,7 +1438,9 @@
       "id": "TA-A1-NEG-05",
       "category": "Etirmaṟai (negation)",
       "label": "negative coordination: neither one nor the other",
-      "probe": null,
+      "probe": [
+        "TA-GRAMMAR-C74-JOIN-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "TA-CORPUS",
@@ -1442,13 +1449,15 @@
       "derivedFrom": [
         "A1-CO-02"
       ],
-      "note": "Untaught."
+      "note": "Chapter 74 teaches pālum tēnīrum illai -- Tamil keeps the join it has and puts illai after it, rather than swapping the coordinator the way English swaps both...and for neither...nor."
     },
     {
       "id": "TA-A1-Q-01",
       "category": "Vināccol (asking questions)",
       "label": "the yes-or-no question, formed with -ā on the end",
-      "probe": null,
+      "probe": [
+        "TA-GRAMMAR-C75-POLAR-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "TA-CORPUS",
@@ -1459,7 +1468,7 @@
         "A1-F1-04",
         "A1-F1-05"
       ],
-      "note": "THE MOST CONSEQUENTIAL SINGLE GAP IN THE GRAMMAR COLUMN. Tamil turns a statement into a polar question by suffixing -ā, and nothing in 359 lessons teaches it. The learner can ask the five wh- questions the course supplies and cannot ask a single question of their own devising."
+      "note": "Chapter 75 teaches -ā on the LAST word of a statement, on nalamā, pālā and sariyā. The learner can now question any sentence the course has given them."
     },
     {
       "id": "TA-A1-Q-02",
@@ -1564,7 +1573,9 @@
       "id": "TA-A1-Q-08",
       "category": "Vināccol (asking questions)",
       "label": "when: eppōdu",
-      "probe": null,
+      "probe": [
+        "TA-LEX-C79-WHEN-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "TA-CORPUS",
@@ -1573,13 +1584,16 @@
       "derivedFrom": [
         "A1-OS-03"
       ],
-      "note": "Untaught, and it is the one member of the e- series chapter 40 leaves out. The chapter teaches the SYSTEM -- i- near, a- far, e- question -- so a learner who was given eppōdu would have got it nearly free."
+      "note": "Chapter 79 teaches eppōdu against the ippōdu it already had, closing the i- / a- / e- set chapter 40 opened."
     },
     {
       "id": "TA-A1-Q-09",
       "category": "Vināccol (asking questions)",
       "label": "why: ēṉ, and because: ēṉeṉṟāl",
-      "probe": null,
+      "probe": [
+        "TA-LEX-C78-WHY-01",
+        "TA-LEX-C78-WHY-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "TA-CORPUS",
@@ -1589,7 +1603,7 @@
         "A1-ADV-08",
         "A1-SUB-06"
       ],
-      "note": "Neither taught. A learner cannot ask for a reason or give one."
+      "note": "Chapter 78 teaches both halves: ēṉ as the long-vowel member of the e- question family, and ēṉeṉṟāl taken apart as ēṉ plus the eṉ- saying-verb the previous chapter introduced."
     },
     {
       "id": "TA-A1-Q-10",
@@ -1758,7 +1772,9 @@
       "id": "TA-A1-ADV-08",
       "category": "Vinaiyaḍai (adverbs)",
       "label": "also and too",
-      "probe": null,
+      "probe": [
+        "TA-GRAMMAR-C74-JOIN-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "TA-CORPUS",
@@ -1767,7 +1783,7 @@
       "derivedFrom": [
         "A1-ADV-06"
       ],
-      "note": "Tamil's additive -um is a suffix rather than a word, and it is untaught. It is one of the highest-frequency morphemes in the language."
+      "note": "Chapter 74 separates the two jobs of -um in its own lesson: two tails join, one tail adds. nāṉum, nīṅgaḷum, iduvum."
     },
     {
       "id": "TA-A1-ADV-09",
@@ -1910,7 +1926,9 @@
       "id": "TA-A1-CJ-01",
       "category": "Iṇaittoḍar (joining clauses)",
       "label": "joining two nouns: the -um ... -um pattern",
-      "probe": null,
+      "probe": [
+        "TA-GRAMMAR-C74-JOIN-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "TA-CORPUS",
@@ -1919,13 +1937,15 @@
       "derivedFrom": [
         "A1-CO-01"
       ],
-      "note": "Tamil has no word for and between nouns; it suffixes -um to each. Untaught, and it is the first thing a learner needs to list two things they want."
+      "note": "Chapter 74 teaches the pattern on pālum tēnīrum, with the ya- and va- glides after a vowel-final noun. The same lesson is where a learner first joins two words they already had."
     },
     {
       "id": "TA-A1-CJ-02",
       "category": "Iṇaittoḍar (joining clauses)",
       "label": "joining with but",
-      "probe": null,
+      "probe": [
+        "TA-LEX-C76-JOIN-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "TA-CORPUS",
@@ -1935,13 +1955,15 @@
         "A1-CO-04",
         "A1-F2-09"
       ],
-      "note": "ānāl is untaught."
+      "note": "Chapter 76 teaches āṉāl on tēnīr vēṇḍum, āṉāl pāl vēṇḍām -- two clauses the course could already build separately. The spoken clip āṉā is named beside it and developed in chapter 81."
     },
     {
       "id": "TA-A1-CJ-03",
       "category": "Iṇaittoḍar (joining clauses)",
       "label": "joining with or",
-      "probe": null,
+      "probe": [
+        "TA-LEX-C76-JOIN-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "TA-CORPUS",
@@ -1951,13 +1973,16 @@
         "A1-CO-03",
         "A1-F3-02"
       ],
-      "note": "alladu is untaught, so a preference cannot be offered as a choice."
+      "note": "Chapter 76 teaches alladu between two things and between two clauses, and takes the word apart as al-la-du, 'it is not that'."
     },
     {
       "id": "TA-A1-CJ-04",
       "category": "Iṇaittoḍar (joining clauses)",
       "label": "a clause as the object of a verb of saying or thinking",
-      "probe": null,
+      "probe": [
+        "TA-GRAMMAR-C77-SAY-02",
+        "TA-PRAGMATICS-C77-OPINION-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "TA-CORPUS",
@@ -1968,13 +1993,17 @@
         "A1-F2-02",
         "A1-F2-11"
       ],
-      "note": "Tamil uses the quotative eṉṟu. Untaught, which is why ninai ('to think') cannot yet take an opinion as its object."
+      "note": "Chapter 77 teaches the quotative eṉṟu after the quoted words, then puts a whole clause under ninai in idu nalla vīḍu eṉṟu niṉaikkiṟēṉ. Both halves are probed: the marker alone would leave the point half-taught, which is exactly the partial-credit case this file refuses."
     },
     {
       "id": "TA-A1-CJ-05",
       "category": "Iṇaittoḍar (joining clauses)",
       "label": "causal and purpose clauses",
-      "probe": null,
+      "probe": [
+        "TA-LEX-C78-WHY-02",
+        "TA-LEX-C78-WHY-03",
+        "TA-GRAMMAR-C78-WHY-04"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "TA-CORPUS",
@@ -1984,13 +2013,15 @@
         "A1-SUB-06",
         "A1-SUB-07"
       ],
-      "note": "Untaught. See TA-A1-Q-09."
+      "note": "Chapter 78 gives three answers to ēṉ: ēṉeṉṟāl joins the reason after the result, adaṉāl points back at a reason already stated, and -kkāga marks purpose. HONEST BOUNDARY: -kkāga is taught on a NOUN (uṅgaḷukkāga). Purpose on a verb needs the verbal noun, which the track has not reached, and this point is counted covered on the causal clause plus nominal purpose."
     },
     {
       "id": "TA-A1-CJ-06",
       "category": "Iṇaittoḍar (joining clauses)",
       "label": "simultaneity: when",
-      "probe": null,
+      "probe": [
+        "TA-GRAMMAR-C79-WHEN-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "TA-CORPUS",
@@ -1999,13 +2030,15 @@
       "derivedFrom": [
         "A1-SUB-08"
       ],
-      "note": "Untaught."
+      "note": "Chapter 79 teaches -um pōdu on varum pōdu, after teaching pōdu as the shared piece inside ippōdu, appōdu and eppōdu. The lesson names the homophony with chapter 74's joining -um rather than letting the learner collide with it."
     },
     {
       "id": "TA-A1-CJ-07",
       "category": "Iṇaittoḍar (joining clauses)",
       "label": "distributive: one ... the other",
-      "probe": null,
+      "probe": [
+        "TA-GRAMMAR-C80-OTHER-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "TA-CORPUS",
@@ -2014,7 +2047,7 @@
       "derivedFrom": [
         "A1-CO-05"
       ],
-      "note": "Untaught."
+      "note": "Chapter 80 teaches oṉṟu iṅgē, maṟṟadu aṅgē -- two halves, no joining word, and no verb, which is the no-copula pairing the course taught at TA-C37-ivar-en-nanbar."
     },
     {
       "id": "TA-A1-T-01",
@@ -2632,7 +2665,10 @@
       "id": "TA-A1-F-27",
       "category": "Toḍarbāḍal (communicative functions)",
       "label": "ask a preference by offering alternatives",
-      "probe": null,
+      "probe": [
+        "TA-LEX-C76-JOIN-02",
+        "TA-PRAGMATICS-C76-CHOICE-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -2643,7 +2679,7 @@
         "A1-F3-02",
         "A1-F3-03"
       ],
-      "note": "Needs alladu ('or'), which is untaught. See TA-A1-CJ-03."
+      "note": "Chapter 76 offers the choice as TWO whole questions with alladu between them -- pāl vēṇḍumā, alladu tēnīr vēṇḍumā? -- and gives the short doorway form beside it."
     },
     {
       "id": "TA-A1-F-28",
@@ -2722,7 +2758,9 @@
       "id": "TA-A1-F-32",
       "category": "Toḍarbāḍal (communicative functions)",
       "label": "ask permission, and grant it",
-      "probe": null,
+      "probe": [
+        "TA-PRAGMATICS-C75-PERMISSION-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -2733,7 +2771,7 @@
         "A1-F4-05",
         "A1-F4-06"
       ],
-      "note": "aṉumati ('permission') is taught in chapter 63 as a NOUN. Nothing lets a learner ask for permission or give it, which needs the -alāmā question and therefore the polar -ā at TA-A1-Q-01."
+      "note": "Chapter 75 teaches nāṉ uḷḷē varalāmā?, built from the -lām already visible in chapter 4's nāḷai pārkkalām plus the polar -ā, and grants it two ways: ām, varalām and sari."
     },
     {
       "id": "TA-A1-F-33",
@@ -2853,7 +2891,9 @@
       "id": "TA-A1-F-39",
       "category": "Toḍarbāḍal (communicative functions)",
       "label": "ask what something costs",
-      "probe": null,
+      "probe": [
+        "TA-PRAGMATICS-C80-PRICE-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -2864,7 +2904,7 @@
         "A1-NG6-02",
         "A1-NE12-03"
       ],
-      "note": "vilai ('a price') and evvaḷavu ('how much') are BOTH taught, in chapters 68 and 39, and nothing puts them into a question. This is the cheapest uncovered function in the file: one lesson."
+      "note": "Chapter 80 puts vilai and evvaḷavu into one question and adds vilai kuṟaivā? for pushing back on the answer. This was the cheapest uncovered function in the file and it cost one lesson."
     },
     {
       "id": "TA-A1-F-40",
@@ -2941,7 +2981,10 @@
       "id": "TA-A1-F-44",
       "category": "Toḍarbāḍal (communicative functions)",
       "label": "give an opinion",
-      "probe": null,
+      "probe": [
+        "TA-GRAMMAR-C77-SAY-02",
+        "TA-PRAGMATICS-C77-OPINION-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -2954,7 +2997,7 @@
         "A1-F2-04",
         "A1-F2-05"
       ],
-      "note": "ninai is taught and the quotative eṉṟu that would let it take an opinion is not. See TA-A1-CJ-04."
+      "note": "See TA-A1-CJ-04. The quotative is what ninai was waiting for, and the opinion frame is the first thing in the track that is the learner's own rather than a fact."
     },
     {
       "id": "TA-A1-F-45",
@@ -3225,14 +3268,19 @@
       "id": "TA-A1-L-10",
       "category": "Tamiḻ eḻuttu (script and orthography)",
       "label": "the Tamil digits",
-      "probe": null,
+      "probe": [
+        "TA-SCRIPT-W07-DIGITS-01",
+        "TA-SCRIPT-W07-DIGITS-02",
+        "TA-SCRIPT-W07-DIGITS-03",
+        "TA-SCRIPT-W07-DIGITS-04"
+      ],
       "anchorIds": [
         "TA-CORPUS",
         "ED-TAMIL"
       ],
       "derivedFrom": [],
       "tamilSpecific": true,
-      "note": "See TA-A1-NUM-08: taught across eight lessons, none of which declares an atom."
+      "note": "See TA-A1-NUM-08: the same four atoms, now declared by the lessons that were always teaching them."
     },
     {
       "id": "TA-A1-L-11",
@@ -4579,7 +4627,10 @@
       "id": "TA-A1-REG-01",
       "category": "Iruvaḻakku (the two registers)",
       "label": "Tamil is diglossic: the written language and the spoken language are different languages",
-      "probe": null,
+      "probe": [
+        "TA-PRAGMATICS-C81-REG-01",
+        "TA-PRAGMATICS-C81-REG-02"
+      ],
       "anchorIds": [
         "TA-EXAM-LEVELS",
         "TA-CORPUS",
@@ -4587,7 +4638,7 @@
       ],
       "derivedFrom": [],
       "tamilSpecific": true,
-      "note": "THE SINGLE MOST TAMIL-SPECIFIC POINT IN THIS FILE, and it is untaught. core/exam-levels.json names diglossia as the reason no CEFR mapping for Tamil is clean and records that this curriculum teaches SPOKEN Tamil first. No lesson tells the learner that. A reader who studies these 359 lessons and then opens a Tamil newspaper will not recognise the verb endings."
+      "note": "Chapter 81 states the diglossia plainly and evidences it from the tranche itself -- āṉāl/āṉā, ēṉeṉṟāl/ēṉṉā, eṉṟu/-ṉṉu -- then says which form this book puts at the top of a lesson and why: the written form predicts the spoken clip and the clip does not predict it back."
     },
     {
       "id": "TA-A1-REG-02",

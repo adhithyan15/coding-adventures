@@ -1,0 +1,14 @@
+{
+  "id": "TA-EXT-79-WHEN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can ask when something is and say when I will do a thing.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C79-when-question",
+    "TA-C79-then",
+    "TA-W34-read-eppothu",
+    "TA-C79-when-clause"
+  ]
+}

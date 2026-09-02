@@ -15,11 +15,11 @@ roots: [proto-dravidian-numbers]
 duration:
   max_seconds: 180
 requires:
-  knowledge: [TA-LEX-NUMBERS-1-5-01]
+  knowledge: [TA-LEX-NUMBERS-1-5-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02]
 introduces:
   knowledge: []
 practises:
-  knowledge: [TA-LEX-NUMBERS-1-5-01]
+  knowledge: [TA-LEX-NUMBERS-1-5-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02]
 skills: [listening, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -37,7 +37,7 @@ reviews_of: [TA-C07-numbers-1-5, TA-W07-digits-4-5]
 appears below.
 
 ## Script
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02] -->
 
 | numeral | word | said |
 |---|---|---|
@@ -51,14 +51,14 @@ Follow each word with your finger while saying it. The letters have appeared
 earlier; this step only joins familiar pieces.
 
 ## Writing — observe and trace
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02] -->
 <!-- hl-writing-stage: observe-trace -->
 
 Trace **ஒன்று — ௧** once with the model visible. Read the other four rows; do
 not copy the whole table yet.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01, TA-SCRIPT-W07-DIGITS-01, TA-SCRIPT-W07-DIGITS-02] -->
 
 [PAUSE 3s] Read **௩ — மூன்று**. (***Muunru**, three.*) Which word belongs to
 **௫**? (**ஐந்து**, *aintu*.) No new shape was added.

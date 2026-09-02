@@ -1,0 +1,20 @@
+{
+  "chapter": 80,
+  "title": "One, the Other, and the Price",
+  "label": "ch:ta-one-the-other-and-the-price",
+  "canDo": "I can tell two things apart, choose between them, and ask what one costs.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C80-price",
+    "kind": "production",
+    "summary": "Complete TA-C80-price and run the whole counter exchange, from choosing to asking.",
+    "assesses": [
+      "TA-LEX-C80-OTHER-01",
+      "TA-GRAMMAR-C80-OTHER-02",
+      "TA-SCRIPT-READ-MARRADU-01",
+      "TA-PRAGMATICS-C80-PRICE-03"
+    ]
+  }
+}

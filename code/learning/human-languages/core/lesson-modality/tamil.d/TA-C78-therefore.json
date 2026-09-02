@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C78-therefore",
+    "language": "tamil",
+    "chapter": 78,
+    "sequence": 3220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58a0eb02a6212f8b"
+  },
+  "findings": []
+}

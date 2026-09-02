@@ -1,0 +1,15 @@
+{
+  "id": "TA-PATH-76-CHOICE",
+  "spine_node": "SPINE-SAY-WHAT-I-WANT",
+  "lessons": [
+    "TA-C76-but",
+    "TA-C76-or",
+    "TA-W31-read-aanaal",
+    "TA-C76-choice"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-76-CHOICE"
+  ],
+  "after": []
+}

@@ -1032,25 +1032,31 @@ describe("the committed Tamil A1 inventory", () => {
   it("reports a gap that is GRAMMAR-shaped, with the script column nearly closed", () => {
     // Pinned so a future tranche has to say which points it moved. It may rise;
     // a fall means coverage was lost and wants explaining.
+    //
+    // 155 -> 174 (HL-C304, chapters 74-81). The clause-joining tranche closed
+    // the whole Iṇaittoḍar column plus the polar -ā, eṉ, eppōdu, the additive
+    // -um, negative coordination, four communicative functions, both numeral
+    // points — by declaring the atoms chapter 7 was already teaching — and the
+    // diglossia point the file named as the most Tamil-specific one in it.
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(262);
-    expect(coverage.covered).toBe(155);
-    expect(coverage.unmapped).toBe(107);
+    expect(coverage.covered).toBe(174);
+    expect(coverage.unmapped).toBe(88);
     // Zero partials is a property of the "existing atoms only" rule, not a
     // coincidence: with no guessed ids, a point is either fully probed or null.
     expect(coverage.partial).toBe(0);
-    // THE FINDING. Tamil cannot join two clauses at all — no `-um ... -um`, no
-    // `aanaal`, no `alladu`, no quotative `enru` — which is the same empty
-    // column Hindi and Telugu reported, and it is what stops the well-taught
-    // verb and lexis columns from becoming sentences.
-    expect(coverage.byCategory["Iṇaittoḍar (joining clauses)"]).toEqual({ enumerated: 7, covered: 0 });
+    // WAS THE FINDING, AND IS NOW THE PAYMENT. Tamil could not join two clauses
+    // at all — no `-um ... -um`, no `aanaal`, no `alladu`, no quotative `enru`.
+    // Chapters 74-81 teach all seven, which is what lets the well-taught verb
+    // and lexis columns become sentences.
+    expect(coverage.byCategory["Iṇaittoḍar (joining clauses)"]).toEqual({ enumerated: 7, covered: 7 });
     // The two columns that carry this track, and they are not the ones French
     // and German lead on.
     expect(coverage.byCategory["Vinaiccol (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Tamiḻ eḻuttu (script and orthography)"]!.covered).toBeGreaterThan(5);
     expect(formatExamCoverage(coverage)).toContain(
-      "tamil A1 (partial inventory): 155/262 points covered (59%)",
+      "tamil A1 (partial inventory): 174/262 points covered (66%)",
     );
   }, 60_000);
 });

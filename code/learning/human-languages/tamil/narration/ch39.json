@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Asking for What You Want",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9c4c9f5b33ee8f42",
+  "sourceHash": "fnv1a64:3ae034c67771783b",
   "lessons": [
     {
       "id": "TA-C39-vendum",
@@ -198,7 +198,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:99891ce4af69b90a",
+      "sourceHash": "fnv1a64:afbf7f75d9eb13c6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -331,6 +331,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **எவ்வளவு** — find all three **வ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "௧ ௨ ௩ ௪ ௫ — then answer evvaḷavu? by pointing at one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **௧ ௨ ௩ ௪ ௫** — then answer *evvaḷavu?* by pointing at one]"
             }
           ]
         },

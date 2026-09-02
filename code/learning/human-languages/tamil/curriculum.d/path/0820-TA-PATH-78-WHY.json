@@ -1,0 +1,16 @@
+{
+  "id": "TA-PATH-78-WHY",
+  "spine_node": "SPINE-SAY-WHY",
+  "lessons": [
+    "TA-C78-why",
+    "TA-C78-because",
+    "TA-W33-read-een",
+    "TA-C78-therefore",
+    "TA-C78-for-the-sake-of"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-78-WHY"
+  ],
+  "after": []
+}

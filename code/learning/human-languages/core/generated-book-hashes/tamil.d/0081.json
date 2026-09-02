@@ -1,0 +1,10 @@
+{
+  "language": "tamil",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:f083840c178979e0",
+  "lessonIds": [
+    "TA-C81-two-tamils",
+    "TA-C81-which-tamil"
+  ],
+  "tex": "tamil/book/chapters/ch81-two-tamils.tex"
+}

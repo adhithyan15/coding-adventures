@@ -1,0 +1,15 @@
+{
+  "id": "TA-PATH-80-OTHER",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "TA-C80-other",
+    "TA-C80-one-and-other",
+    "TA-W35-read-marradu",
+    "TA-C80-price"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-80-OTHER"
+  ],
+  "after": []
+}
